@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <table>
+        <tr>
+            <td>ID</td>
+        </tr>
+        {% for arGuia in arGuias %}
+            <tr>
+                <td>{{ arGuia.codigoGuiaPk }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

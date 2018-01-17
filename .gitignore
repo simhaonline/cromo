@@ -11,3 +11,7 @@
 ###< symfony/web-server-bundle ###
 /nbproject/private/
 /nbproject/*
+###> symfony/webpack-encore-pack ###
+/node_modules/
+/public/build/
+###< symfony/webpack-encore-pack ###

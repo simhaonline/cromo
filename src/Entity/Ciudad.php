@@ -31,6 +31,15 @@ class Ciudad
      */
     protected $guiasCiudadDestinoRel;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Despacho", mappedBy="ciudadOrigenRel")
+     */
+    protected $despachosCiudadOrigenRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Despacho", mappedBy="ciudadDestinoRel")
+     */
+    protected $despachosCiudadDestinoRel;
 
     /**
      * @return mixed
@@ -79,6 +88,55 @@ class Ciudad
     {
         $this->guiasCiudadOrigenRel = $guiasCiudadOrigenRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasCiudadDestinoRel()
+    {
+        return $this->guiasCiudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $guiasCiudadDestinoRel
+     */
+    public function setGuiasCiudadDestinoRel($guiasCiudadDestinoRel): void
+    {
+        $this->guiasCiudadDestinoRel = $guiasCiudadDestinoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosCiudadOrigenRel()
+    {
+        return $this->despachosCiudadOrigenRel;
+    }
+
+    /**
+     * @param mixed $despachosCiudadOrigenRel
+     */
+    public function setDespachosCiudadOrigenRel($despachosCiudadOrigenRel): void
+    {
+        $this->despachosCiudadOrigenRel = $despachosCiudadOrigenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosCiudadDestinoRel()
+    {
+        return $this->despachosCiudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $despachosCiudadDestinoRel
+     */
+    public function setDespachosCiudadDestinoRel($despachosCiudadDestinoRel): void
+    {
+        $this->despachosCiudadDestinoRel = $despachosCiudadDestinoRel;
+    }
+
 
 }
 

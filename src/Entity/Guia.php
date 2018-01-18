@@ -17,6 +17,10 @@ class Guia
      */
     private $codigoGuiaPk;
 
+    /**
+     * @ORM\Column(name="numero", type="float", nullable=true)
+     */
+    private $numero;
 
     /**
      * @ORM\Column(name="codigo_sede_ingreso_fk", type="string", length=20, nullable=true)
@@ -154,6 +158,11 @@ class Guia
     private $estadoCumplido = false;
 
     /**
+     * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
+     */
+    private $codigoDespachoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Sede", inversedBy="guiasSedeIngresoRel")
      * @ORM\JoinColumn(name="codigo_sede_ingreso_fk", referencedColumnName="codigo_sede_pk")
      */
@@ -182,6 +191,12 @@ class Guia
      * @ORM\JoinColumn(name="codigo_ciudad_destino_fk", referencedColumnName="codigo_ciudad_pk")
      */
     private $ciudadDestinoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Despacho", inversedBy="guiasDespachoRel")
+     * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
+     */
+    private $despachoRel;
 
     /**
      * @return mixed
@@ -295,6 +310,471 @@ class Guia
     {
         $this->clienteRel = $clienteRel;
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero($numero): void
+    {
+        $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreDestinatario()
+    {
+        return $this->nombreDestinatario;
+    }
+
+    /**
+     * @param mixed $nombreDestinatario
+     */
+    public function setNombreDestinatario($nombreDestinatario): void
+    {
+        $this->nombreDestinatario = $nombreDestinatario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSedeIngresoFk()
+    {
+        return $this->codigoSedeIngresoFk;
+    }
+
+    /**
+     * @param mixed $codigoSedeIngresoFk
+     */
+    public function setCodigoSedeIngresoFk($codigoSedeIngresoFk): void
+    {
+        $this->codigoSedeIngresoFk = $codigoSedeIngresoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSedeCargoFk()
+    {
+        return $this->codigoSedeCargoFk;
+    }
+
+    /**
+     * @param mixed $codigoSedeCargoFk
+     */
+    public function setCodigoSedeCargoFk($codigoSedeCargoFk): void
+    {
+        $this->codigoSedeCargoFk = $codigoSedeCargoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentoCliente()
+    {
+        return $this->documentoCliente;
+    }
+
+    /**
+     * @param mixed $documentoCliente
+     */
+    public function setDocumentoCliente($documentoCliente): void
+    {
+        $this->documentoCliente = $documentoCliente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemitente()
+    {
+        return $this->remitente;
+    }
+
+    /**
+     * @param mixed $remitente
+     */
+    public function setRemitente($remitente): void
+    {
+        $this->remitente = $remitente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDireccionDestinatario()
+    {
+        return $this->direccionDestinatario;
+    }
+
+    /**
+     * @param mixed $direccionDestinatario
+     */
+    public function setDireccionDestinatario($direccionDestinatario): void
+    {
+        $this->direccionDestinatario = $direccionDestinatario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTelefonoDestinatario()
+    {
+        return $this->telefonoDestinatario;
+    }
+
+    /**
+     * @param mixed $telefonoDestinatario
+     */
+    public function setTelefonoDestinatario($telefonoDestinatario): void
+    {
+        $this->telefonoDestinatario = $telefonoDestinatario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaIngreso()
+    {
+        return $this->fechaIngreso;
+    }
+
+    /**
+     * @param mixed $fechaIngreso
+     */
+    public function setFechaIngreso($fechaIngreso): void
+    {
+        $this->fechaIngreso = $fechaIngreso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDespacho()
+    {
+        return $this->fechaDespacho;
+    }
+
+    /**
+     * @param mixed $fechaDespacho
+     */
+    public function setFechaDespacho($fechaDespacho): void
+    {
+        $this->fechaDespacho = $fechaDespacho;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaEntrega()
+    {
+        return $this->fechaEntrega;
+    }
+
+    /**
+     * @param mixed $fechaEntrega
+     */
+    public function setFechaEntrega($fechaEntrega): void
+    {
+        $this->fechaEntrega = $fechaEntrega;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaCumplido()
+    {
+        return $this->fechaCumplido;
+    }
+
+    /**
+     * @param mixed $fechaCumplido
+     */
+    public function setFechaCumplido($fechaCumplido): void
+    {
+        $this->fechaCumplido = $fechaCumplido;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaSoporte()
+    {
+        return $this->fechaSoporte;
+    }
+
+    /**
+     * @param mixed $fechaSoporte
+     */
+    public function setFechaSoporte($fechaSoporte): void
+    {
+        $this->fechaSoporte = $fechaSoporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnidades()
+    {
+        return $this->unidades;
+    }
+
+    /**
+     * @param mixed $unidades
+     */
+    public function setUnidades($unidades): void
+    {
+        $this->unidades = $unidades;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPesoReal()
+    {
+        return $this->pesoReal;
+    }
+
+    /**
+     * @param mixed $pesoReal
+     */
+    public function setPesoReal($pesoReal): void
+    {
+        $this->pesoReal = $pesoReal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPesoVolumen()
+    {
+        return $this->pesoVolumen;
+    }
+
+    /**
+     * @param mixed $pesoVolumen
+     */
+    public function setPesoVolumen($pesoVolumen): void
+    {
+        $this->pesoVolumen = $pesoVolumen;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPesoFacturado()
+    {
+        return $this->pesoFacturado;
+    }
+
+    /**
+     * @param mixed $pesoFacturado
+     */
+    public function setPesoFacturado($pesoFacturado): void
+    {
+        $this->pesoFacturado = $pesoFacturado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDeclara()
+    {
+        return $this->vrDeclara;
+    }
+
+    /**
+     * @param mixed $vrDeclara
+     */
+    public function setVrDeclara($vrDeclara): void
+    {
+        $this->vrDeclara = $vrDeclara;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrFlete()
+    {
+        return $this->vrFlete;
+    }
+
+    /**
+     * @param mixed $vrFlete
+     */
+    public function setVrFlete($vrFlete): void
+    {
+        $this->vrFlete = $vrFlete;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrManejo()
+    {
+        return $this->vrManejo;
+    }
+
+    /**
+     * @param mixed $vrManejo
+     */
+    public function setVrManejo($vrManejo): void
+    {
+        $this->vrManejo = $vrManejo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRecaudo()
+    {
+        return $this->vrRecaudo;
+    }
+
+    /**
+     * @param mixed $vrRecaudo
+     */
+    public function setVrRecaudo($vrRecaudo): void
+    {
+        $this->vrRecaudo = $vrRecaudo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoDespachado()
+    {
+        return $this->estadoDespachado;
+    }
+
+    /**
+     * @param mixed $estadoDespachado
+     */
+    public function setEstadoDespachado($estadoDespachado): void
+    {
+        $this->estadoDespachado = $estadoDespachado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoEntregado()
+    {
+        return $this->estadoEntregado;
+    }
+
+    /**
+     * @param mixed $estadoEntregado
+     */
+    public function setEstadoEntregado($estadoEntregado): void
+    {
+        $this->estadoEntregado = $estadoEntregado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoSoporte()
+    {
+        return $this->estadoSoporte;
+    }
+
+    /**
+     * @param mixed $estadoSoporte
+     */
+    public function setEstadoSoporte($estadoSoporte): void
+    {
+        $this->estadoSoporte = $estadoSoporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoCumplido()
+    {
+        return $this->estadoCumplido;
+    }
+
+    /**
+     * @param mixed $estadoCumplido
+     */
+    public function setEstadoCumplido($estadoCumplido): void
+    {
+        $this->estadoCumplido = $estadoCumplido;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoFk()
+    {
+        return $this->codigoDespachoFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoFk
+     */
+    public function setCodigoDespachoFk($codigoDespachoFk): void
+    {
+        $this->codigoDespachoFk = $codigoDespachoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSedeIngresoRel()
+    {
+        return $this->sedeIngresoRel;
+    }
+
+    /**
+     * @param mixed $sedeIngresoRel
+     */
+    public function setSedeIngresoRel($sedeIngresoRel): void
+    {
+        $this->sedeIngresoRel = $sedeIngresoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSedeCargoRel()
+    {
+        return $this->sedeCargoRel;
+    }
+
+    /**
+     * @param mixed $sedeCargoRel
+     */
+    public function setSedeCargoRel($sedeCargoRel): void
+    {
+        $this->sedeCargoRel = $sedeCargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoRel()
+    {
+        return $this->despachoRel;
+    }
+
+    /**
+     * @param mixed $despachoRel
+     */
+    public function setDespachoRel($despachoRel): void
+    {
+        $this->despachoRel = $despachoRel;
+    }
+
+
 }
 

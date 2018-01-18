@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Movimiento;
+namespace App\Controller\Movimiento\Guia;
 
 use App\Entity\Guia;
 use Symfony\Component\HttpFoundation\Response;

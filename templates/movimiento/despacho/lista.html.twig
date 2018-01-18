@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>NUMERO</th>
+            <th>ORIGEN</th>
+            <th>DESTINO</th>
+            <th>UND</th>
+            <th>PR</th>
+            <th>PV</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arDespacho in arDespachos %}
+            <tr>
+                <td>{{ arDespacho.codigoDespachoPk }}</td>
+                <td>{{ arDespacho.numero }}</td>
+                <td>{{ arDespacho.ciudadOrigen }}</td>
+                <td>{{ arDespacho.ciudadDestino }}</td>
+                <td>{{ arDespacho.unidades }}</td>
+                <td>{{ arDespacho.pesoReal }}</td>
+                <td>{{ arDespacho.pesoVolumen }}</td>
+                <td style="text-align: center"><a href="{{ path('mto_despacho_detalle', { 'codigoDespacho': arDespacho.codigoDespachoPk }) }}"><img src="{{ asset('img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

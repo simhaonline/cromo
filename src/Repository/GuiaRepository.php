@@ -15,18 +15,52 @@ class GuiaRepository extends ServiceEntityRepository
 
     public function listaMovimiento(): array
     {
-        // automatically knows to select Products
-        // the "p" is an alias you'll use in the rest of the query
-        $qb = $this->createQueryBuilder('g')
-            ->andWhere('g.codigoGuiaPk > :cod')
-            ->setParameter('cod', 0)
-            ->orderBy('g.codigoGuiaPk', 'ASC')
-            ->getQuery();
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, g.numero, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudadOrigen, cd.nombre AS ciudadDestino
+        FROM App\Entity\Guia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadOrigenRel co
+        LEFT JOIN g.ciudadDestinoRel cd'
+        );
 
-        return $qb->execute();
+        // returns an array of Product objects
+        return $query->execute();
 
-        // to get just one result:
-        // $product = $qb->setMaxResults(1)->getOneOrNullResult();
+    }
+
+    public function guiasDespacho($codigoDespacho): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, g.numero, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudadOrigen, cd.nombre AS ciudadDestino
+        FROM App\Entity\Guia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadOrigenRel co
+        LEFT JOIN g.ciudadDestinoRel cd
+        WHERE g.codigoDespachoFk = :codigoDespacho'
+        )->setParameter('codigoDespacho', $codigoDespacho);
+
+        // returns an array of Product objects
+        return $query->execute();
+
+    }
+
+    public function guiasDespachoPendiente(): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, g.numero, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudadOrigen, cd.nombre AS ciudadDestino
+        FROM App\Entity\Guia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadOrigenRel co
+        LEFT JOIN g.ciudadDestinoRel cd
+        WHERE g.estadoDespachado = 0'
+        );
+
+        // returns an array of Product objects
+        return $query->execute();
+
     }
 
 }

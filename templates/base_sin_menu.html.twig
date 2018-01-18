@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Cromo{% endblock %}</title>
+    {% block stylesheets %}
+        <!-- Bootstrap Core CSS -->
+        <link rel="stylesheet" href="{{ asset('build/vendor/bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('build/vendor/metisMenu/metisMenu.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('build/dist/css/sb-admin-2.css') }}">
+        <link rel="stylesheet" href="{{ asset('build/vendor/morrisjs/morris.css') }}">
+        <link rel="stylesheet" href="{{ asset('build/vendor/font-awesome/css/font-awesome.min.css') }}">
+    {% endblock %}
+</head>
+<body>
+    <div id="wrapper">
+    {% block body %}
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Dashboard</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+        {% block content %}
+
+        {% endblock %}
+        </div>
+    {% endblock %}
+    </div>
+{% block javascripts %}
+    <script src="{{ asset('build/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('build/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('build/vendor/metisMenu/metisMenu.min.js') }}"></script>
+    <script src="{{ asset('build/vendor/raphael/raphael.min.js') }}"></script>
+    <script src="{{ asset('build/vendor/morrisjs/morris.min.js') }}"></script>
+    <script src="{{ asset('build/data/morris-data.js') }}"></script>
+    <script src="{{ asset('build/dist/js/sb-admin-2.js') }}"></script>
+{% endblock %}
+</body>
+</html>

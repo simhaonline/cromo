@@ -27,6 +27,37 @@ class Cliente
      */
     protected $guiasClienteRel;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoClientePk()
+    {
+        return $this->codigoClientePk;
+    }
+
+    /**
+     * @param mixed $codigoClientePk
+     */
+    public function setCodigoClientePk($codigoClientePk): void
+    {
+        $this->codigoClientePk = $codigoClientePk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreCorto()
+    {
+        return $this->nombreCorto;
+    }
+
+    /**
+     * @param mixed $nombreCorto
+     */
+    public function setNombreCorto($nombreCorto): void
+    {
+        $this->nombreCorto = $nombreCorto;
+    }
 
 }
 

@@ -11,7 +11,10 @@
 ###< symfony/web-server-bundle ###
 /nbproject/private/
 /nbproject/*
+/.idea/
+/.idea/*
 ###> symfony/webpack-encore-pack ###
 /node_modules/
 /public/build/
 ###< symfony/webpack-encore-pack ###
+composer.lock

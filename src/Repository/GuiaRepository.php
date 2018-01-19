@@ -17,7 +17,8 @@ class GuiaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, g.numero, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudadOrigen, cd.nombre AS ciudadDestino
+            'SELECT g.codigoGuiaPk, g.numero, g.fechaIngreso, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudadOrigen, cd.nombre AS ciudadDestino,
+        g.estadoDespachado, g.estadoImpreso, g.estadoEntregado, g.estadoSoporte, g.estadoCumplido, g.comentario
         FROM App\Entity\Guia g 
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadOrigenRel co

@@ -30,6 +30,7 @@ class DespachoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arDespacho = $em->getRepository(Despacho::class)->find($codigoDespacho);
         $form = $this->createFormBuilder()
+            ->add('btnRetirarGuia', SubmitType::class, array('label' => 'Retirar'))
             ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
             ->getForm();
         $form->handleRequest($request);
@@ -37,6 +38,13 @@ class DespachoController extends Controller
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new \App\Formato\Despacho();
                 $formato->Generar($em, $codigoDespacho);
+            }
+            if ($form->get('btnRetirarGuia')->isClicked()) {
+                $arrGuias = $request->request->get('ChkSeleccionar');
+                $respuesta = $this->getDoctrine()->getRepository(Despacho::class)->retirarGuia($arrGuias);
+                if($respuesta) {
+                    $em->flush();
+                }
             }
         }
 

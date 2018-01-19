@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Despacho;
+use App\Entity\Guia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -32,4 +33,19 @@ class DespachoRepository extends ServiceEntityRepository
 
     }
 
+    public function retirarGuia($arrGuias): array
+    {
+        $em = $this->getEntityManager();
+        if($arrGuias) {
+            if (count($arrGuias) > 0) {
+                foreach ($arrGuias AS $codigoGuia) {
+                    $arGuia = $em->getRepository(Guia::class)->find($codigoGuia);
+                    $arGuia->setDespachoRel(null);
+                    $arGuia->setEstadoDespachado(0);
+                    $em->persist($arGuia);
+                }
+                $em->flush();
+            }
+        }
+    }
 }

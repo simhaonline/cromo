@@ -138,6 +138,11 @@ class Guia
     private $vrRecaudo = 0;
 
     /**
+     * @ORM\Column(name="estado_impreso", type="boolean", nullable=true)
+     */
+    private $estadoImpreso = false;
+
+    /**
      * @ORM\Column(name="estado_despachado", type="boolean", nullable=true)
      */
     private $estadoDespachado = false;
@@ -161,6 +166,11 @@ class Guia
      * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
      */
     private $codigoDespachoFk;
+
+    /**
+     * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
+     */
+    private $comentario;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Sede", inversedBy="guiasSedeIngresoRel")
@@ -774,6 +784,39 @@ class Guia
     {
         $this->despachoRel = $despachoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoImpreso()
+    {
+        return $this->estadoImpreso;
+    }
+
+    /**
+     * @param mixed $estadoImpreso
+     */
+    public function setEstadoImpreso($estadoImpreso): void
+    {
+        $this->estadoImpreso = $estadoImpreso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param mixed $comentario
+     */
+    public function setComentario($comentario): void
+    {
+        $this->comentario = $comentario;
+    }
+
 
 
 }

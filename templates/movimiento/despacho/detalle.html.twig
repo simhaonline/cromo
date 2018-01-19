@@ -15,6 +15,7 @@
             <th>CLIENTE</th>
             <th>ORIGEN</th>
             <th>DESTINO</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -25,6 +26,7 @@
                 <td>{{ arGuia.clienteNombreCorto }}</td>
                 <td>{{ arGuia.ciudadOrigen }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
+                <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -32,7 +34,10 @@
 
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('mto_despacho_detalle_adicionar_guia', {'codigoDespacho': arDespacho.codigoDespachoPk }) }}', 'DespachoAdicionarGuia', 600, 900)">Nuevo</a>
+            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('mto_despacho_detalle_adicionar_guia', {'codigoDespacho': arDespacho.codigoDespachoPk }) }}', 'DespachoAdicionarGuia', 600, 900)">Adicionar</a>
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
         </div>
     </div>
     {{ form_end(form) }}

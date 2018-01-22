@@ -18,9 +18,277 @@ class DespachoRecogida
     private $codigoDespachoRecogidaPk;
 
     /**
+     * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoOperacionFk;
+
+    /**
+     * @ORM\Column(name="codigo_ruta_recogida_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoRutaRecogidaFk;
+
+    /**
      * @ORM\Column(name="fecha", type="datetime", nullable=true)
      */
     private $fecha;
+
+    /**
+     * @ORM\Column(name="codigo_vehiculo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoVehiculoFk;
+
+    /**
+     * @ORM\Column(name="unidades", type="float")
+     */
+    private $unidades = 0;
+
+    /**
+     * @ORM\Column(name="peso_real", type="float")
+     */
+    private $pesoReal = 0;
+
+    /**
+     * @ORM\Column(name="peso_volumen", type="float")
+     */
+    private $pesoVolumen = 0;
+
+    /**
+     * @ORM\Column(name="vr_declara", type="float")
+     */
+    private $vrDeclara = 0;
+
+    /**
+     * @ORM\Column(name="estado_descargado", type="boolean", nullable=true)
+     */
+    private $estadoDescargado = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Operacion", inversedBy="despachosRecogidasOperacionRel")
+     * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
+     */
+    private $operacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Vehiculo", inversedBy="despachosRecogidasVehiculoRel")
+     * @ORM\JoinColumn(name="codigo_vehiculo_fk", referencedColumnName="codigo_vehiculo_pk")
+     */
+    private $vehiculoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RutaRecogida", inversedBy="despachosRecogidasRutaRecogidaRel")
+     * @ORM\JoinColumn(name="codigo_ruta_recogida_fk", referencedColumnName="codigo_ruta_recogida_pk")
+     */
+    private $rutaRecogidaRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoRecogidaPk()
+    {
+        return $this->codigoDespachoRecogidaPk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoRecogidaPk
+     */
+    public function setCodigoDespachoRecogidaPk($codigoDespachoRecogidaPk): void
+    {
+        $this->codigoDespachoRecogidaPk = $codigoDespachoRecogidaPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperacionFk()
+    {
+        return $this->codigoOperacionFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionFk
+     */
+    public function setCodigoOperacionFk($codigoOperacionFk): void
+    {
+        $this->codigoOperacionFk = $codigoOperacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoVehiculoFk()
+    {
+        return $this->codigoVehiculoFk;
+    }
+
+    /**
+     * @param mixed $codigoVehiculoFk
+     */
+    public function setCodigoVehiculoFk($codigoVehiculoFk): void
+    {
+        $this->codigoVehiculoFk = $codigoVehiculoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnidades()
+    {
+        return $this->unidades;
+    }
+
+    /**
+     * @param mixed $unidades
+     */
+    public function setUnidades($unidades): void
+    {
+        $this->unidades = $unidades;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPesoReal()
+    {
+        return $this->pesoReal;
+    }
+
+    /**
+     * @param mixed $pesoReal
+     */
+    public function setPesoReal($pesoReal): void
+    {
+        $this->pesoReal = $pesoReal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPesoVolumen()
+    {
+        return $this->pesoVolumen;
+    }
+
+    /**
+     * @param mixed $pesoVolumen
+     */
+    public function setPesoVolumen($pesoVolumen): void
+    {
+        $this->pesoVolumen = $pesoVolumen;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDeclara()
+    {
+        return $this->vrDeclara;
+    }
+
+    /**
+     * @param mixed $vrDeclara
+     */
+    public function setVrDeclara($vrDeclara): void
+    {
+        $this->vrDeclara = $vrDeclara;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionRel()
+    {
+        return $this->operacionRel;
+    }
+
+    /**
+     * @param mixed $operacionRel
+     */
+    public function setOperacionRel($operacionRel): void
+    {
+        $this->operacionRel = $operacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVehiculoRel()
+    {
+        return $this->vehiculoRel;
+    }
+
+    /**
+     * @param mixed $vehiculoRel
+     */
+    public function setVehiculoRel($vehiculoRel): void
+    {
+        $this->vehiculoRel = $vehiculoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRutaRecogidaFk()
+    {
+        return $this->codigoRutaRecogidaFk;
+    }
+
+    /**
+     * @param mixed $codigoRutaRecogidaFk
+     */
+    public function setCodigoRutaRecogidaFk($codigoRutaRecogidaFk): void
+    {
+        $this->codigoRutaRecogidaFk = $codigoRutaRecogidaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoDescargado()
+    {
+        return $this->estadoDescargado;
+    }
+
+    /**
+     * @param mixed $estadoDescargado
+     */
+    public function setEstadoDescargado($estadoDescargado): void
+    {
+        $this->estadoDescargado = $estadoDescargado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRutaRecogidaRel()
+    {
+        return $this->rutaRecogidaRel;
+    }
+
+    /**
+     * @param mixed $rutaRecogidaRel
+     */
+    public function setRutaRecogidaRel($rutaRecogidaRel): void
+    {
+        $this->rutaRecogidaRel = $rutaRecogidaRel;
+    }
+
+
 
 }
 

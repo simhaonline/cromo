@@ -71,7 +71,7 @@
                                     <a href="#">Recogida <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li><a href="{{ path('mto_recogida_recogida_lista') }}">Recogida</a></li>
-                                        <li><a href="#">Despacho</a></li>
+                                        <li><a href="{{ path('mto_recogida_despacho_lista') }}">Despacho</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
@@ -96,7 +96,9 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Dashboard</h1>
+                    {% set route = app.request.attributes.get('_route') %}
+                    {% set parametros = app.request.attributes.get('_route_params') %}
+                    <h2 class="page-header">Dashboard {{ route }}</h2>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>

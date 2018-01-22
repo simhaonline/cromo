@@ -21,6 +21,60 @@ class RutaRecogida
      */
     private $nombre;
 
+    /**
+     * @ORM\OneToMany(targetEntity="DespachoRecogida", mappedBy="rutaRecogidaRel")
+     */
+    protected $despachosRecogidasRutaRecogidaRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRutaRecogidaPk()
+    {
+        return $this->codigoRutaRecogidaPk;
+    }
+
+    /**
+     * @param mixed $codigoRutaRecogidaPk
+     */
+    public function setCodigoRutaRecogidaPk($codigoRutaRecogidaPk): void
+    {
+        $this->codigoRutaRecogidaPk = $codigoRutaRecogidaPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosRecogidasRutaRecogidaRel()
+    {
+        return $this->despachosRecogidasRutaRecogidaRel;
+    }
+
+    /**
+     * @param mixed $despachosRecogidasRutaRecogidaRel
+     */
+    public function setDespachosRecogidasRutaRecogidaRel($despachosRecogidasRutaRecogidaRel): void
+    {
+        $this->despachosRecogidasRutaRecogidaRel = $despachosRecogidasRutaRecogidaRel;
+    }
+
+
 
 }
 

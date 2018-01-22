@@ -76,5 +76,45 @@ class Vehiculo
      */
     private $registroNacionalCarga;
 
+    /**
+     * @ORM\Column(name="configuracion", type="string", length=20, nullable=true)
+     */
+    private $configuracion;
+
+    /**
+     * @ORM\Column(name="fecha_vence_tecnicomecanica", type="date", nullable=true)
+     */
+    private $fechaVenceTecnicomecanica;
+
+    /**
+     * @ORM\Column(name="codigo_aseguradora_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoAseguradoraFk;
+
+    /**
+     * @ORM\Column(name="codigo_color_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoColorFk;
+
+    /**
+     * @ORM\Column(name="codigo_marca_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoMarcaFk;
+
+    /**
+     * @ORM\Column(name="codigo_linea_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoLineaFk;
+
+    /**
+     * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
+     */
+    private $comentario;
+
+    /**
+     * @ORM\OneToMany(targetEntity="DespachoRecogida", mappedBy="vehiculoRel")
+     */
+    protected $despachosRecogidasVehiculoRel;
+
 }
 

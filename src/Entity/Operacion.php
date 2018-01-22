@@ -32,9 +32,14 @@ class Operacion
     protected $guiasOperacionCargoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="Recogida", mappedBy="osperacionRel")
+     * @ORM\OneToMany(targetEntity="Recogida", mappedBy="operacionRel")
      */
     protected $recogidasOperacionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="DespachoRecogida", mappedBy="operacionRel")
+     */
+    protected $despachosRecogidasOperacionRel;
 
     /**
      * @return mixed

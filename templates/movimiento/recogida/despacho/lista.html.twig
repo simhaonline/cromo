@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>OP</th>
+            <th>RUTA</th>
+            <th>FECHA</th>
+            <th>UND</th>
+            <th>PES</th>
+            <th>VOL</th>
+            <th>DE</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arDespachoRecogida in arDespachosRecogida %}
+            <tr>
+                <td>{{ arDespachoRecogida.codigoDespachoRecogidaPk }}</td>
+                <td>{{ arDespachoRecogida.codigoOperacionFk }}</td>
+                <td>{{ arDespachoRecogida.codigoRutaRecogidaFk }}</td>
+                <td>{{ arDespachoRecogida.fecha | date('Y-m-d') }}</td>
+                <td>{{ arDespachoRecogida.unidades }}</td>
+                <td>{{ arDespachoRecogida.pesoReal }}</td>
+                <td>{{ arDespachoRecogida.pesoVolumen }}</td>
+                <td>{{ arDespachoRecogida.estadoDescargado?'SI':'NO' }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

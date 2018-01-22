@@ -24,7 +24,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Cromo v2.0</a>
+                <a class="navbar-brand" href="{{ path('inicio') }}">Cromo v2.0</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -64,16 +64,24 @@
                         <li>
                             <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
                         </li>
-
-
                         <li>
                             <a href="#"><i class="fa fa-sitemap fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="{{ path('mto_guia_lista') }}">Guia</a>
+                                    <a href="#">Recogida <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="{{ path('mto_recogida_recogida_lista') }}">Recogida</a></li>
+                                        <li><a href="#">Despacho</a></li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
                                 </li>
                                 <li>
-                                    <a href="{{ path('mto_despacho_lista') }}">Despacho</a>
+                                    <a href="#">Transporte <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="{{ path('mto_transporte_guia_lista') }}">Guia</a></li>
+                                        <li><a href="{{ path('mto_transporte_despacho_lista') }}">Despacho</a></li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

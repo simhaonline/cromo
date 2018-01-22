@@ -23,14 +23,14 @@ class Guia
     private $numero;
 
     /**
-     * @ORM\Column(name="codigo_sede_ingreso_fk", type="string", length=20, nullable=true)
+     * @ORM\Column(name="codigo_operacion_ingreso_fk", type="string", length=20, nullable=true)
      */
-    private $codigoSedeIngresoFk;
+    private $codigoOperacionIngresoFk;
 
     /**
-     * @ORM\Column(name="codigo_sede_cargo_fk", type="string", length=20, nullable=true)
+     * @ORM\Column(name="codigo_operacion_cargo_fk", type="string", length=20, nullable=true)
      */
-    private $codigoSedeCargoFk;
+    private $codigoOperacionCargoFk;
 
     /**
      * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
@@ -48,7 +48,7 @@ class Guia
     private $codigoCiudadDestinoFk;
 
     /**
-     * @ORM\Column(name="documentoCliente", type="string", length=80, nullable=true)
+     * @ORM\Column(name="documento_cliente", type="string", length=80, nullable=true)
      */
     private $documentoCliente;
 
@@ -173,16 +173,16 @@ class Guia
     private $comentario;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Sede", inversedBy="guiasSedeIngresoRel")
-     * @ORM\JoinColumn(name="codigo_sede_ingreso_fk", referencedColumnName="codigo_sede_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Operacion", inversedBy="guiasOperacionIngresoRel")
+     * @ORM\JoinColumn(name="codigo_operacion_ingreso_fk", referencedColumnName="codigo_operacion_pk")
      */
-    private $sedeIngresoRel;
+    private $operacionIngresoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Sede", inversedBy="guiasSedeCargoRel")
-     * @ORM\JoinColumn(name="codigo_sede_cargo_fk", referencedColumnName="codigo_sede_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Operacion", inversedBy="guiasOperacionCargoRel")
+     * @ORM\JoinColumn(name="codigo_operacion_cargo_fk", referencedColumnName="codigo_operacion_pk")
      */
-    private $sedeCargoRel;
+    private $operacionCargoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cliente", inversedBy="guiasClienteRel")
@@ -740,38 +740,6 @@ class Guia
     /**
      * @return mixed
      */
-    public function getSedeIngresoRel()
-    {
-        return $this->sedeIngresoRel;
-    }
-
-    /**
-     * @param mixed $sedeIngresoRel
-     */
-    public function setSedeIngresoRel($sedeIngresoRel): void
-    {
-        $this->sedeIngresoRel = $sedeIngresoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSedeCargoRel()
-    {
-        return $this->sedeCargoRel;
-    }
-
-    /**
-     * @param mixed $sedeCargoRel
-     */
-    public function setSedeCargoRel($sedeCargoRel): void
-    {
-        $this->sedeCargoRel = $sedeCargoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getDespachoRel()
     {
         return $this->despachoRel;
@@ -815,6 +783,70 @@ class Guia
     public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperacionIngresoFk()
+    {
+        return $this->codigoOperacionIngresoFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionIngresoFk
+     */
+    public function setCodigoOperacionIngresoFk($codigoOperacionIngresoFk): void
+    {
+        $this->codigoOperacionIngresoFk = $codigoOperacionIngresoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperacionCargoFk()
+    {
+        return $this->codigoOperacionCargoFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionCargoFk
+     */
+    public function setCodigoOperacionCargoFk($codigoOperacionCargoFk): void
+    {
+        $this->codigoOperacionCargoFk = $codigoOperacionCargoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionIngresoRel()
+    {
+        return $this->operacionIngresoRel;
+    }
+
+    /**
+     * @param mixed $operacionIngresoRel
+     */
+    public function setOperacionIngresoRel($operacionIngresoRel): void
+    {
+        $this->operacionIngresoRel = $operacionIngresoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionCargoRel()
+    {
+        return $this->operacionCargoRel;
+    }
+
+    /**
+     * @param mixed $operacionCargoRel
+     */
+    public function setOperacionCargoRel($operacionCargoRel): void
+    {
+        $this->operacionCargoRel = $operacionCargoRel;
     }
 
 

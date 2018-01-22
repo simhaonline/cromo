@@ -25,7 +25,6 @@ class GuiaRepository extends ServiceEntityRepository
         LEFT JOIN g.ciudadDestinoRel cd'
         );
 
-        // returns an array of Product objects
         return $query->execute();
 
     }
@@ -42,7 +41,6 @@ class GuiaRepository extends ServiceEntityRepository
         WHERE g.codigoDespachoFk = :codigoDespacho'
         )->setParameter('codigoDespacho', $codigoDespacho);
 
-        // returns an array of Product objects
         return $query->execute();
 
     }

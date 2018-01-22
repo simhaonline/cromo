@@ -42,6 +42,16 @@ class Ciudad
     protected $despachosCiudadDestinoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Recogida", mappedBy="ciudadRel")
+     */
+    protected $recogidasCiudadRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Recogida", mappedBy="ciudadDestinoRel")
+     */
+    protected $recogidasCiudadDestinoRel;
+
+    /**
      * @return mixed
      */
     public function getNombre()

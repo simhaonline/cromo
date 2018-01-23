@@ -14,7 +14,7 @@ class DespachoRepository extends ServiceEntityRepository
         parent::__construct($registry, Despacho::class);
     }
 
-    public function listaMovimiento(): array
+    public function lista(): array
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(

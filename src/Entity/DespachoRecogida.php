@@ -38,6 +38,11 @@ class DespachoRecogida
     private $codigoVehiculoFk;
 
     /**
+     * @ORM\Column(name="cantidad", type="float")
+     */
+    private $cantidad = 0;
+
+    /**
      * @ORM\Column(name="unidades", type="float")
      */
     private $unidades = 0;
@@ -79,6 +84,11 @@ class DespachoRecogida
      * @ORM\JoinColumn(name="codigo_ruta_recogida_fk", referencedColumnName="codigo_ruta_recogida_pk")
      */
     private $rutaRecogidaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Recogida", mappedBy="despachoRecogidaRel")
+     */
+    protected $recogidasDespachoRecogidaRel;
 
     /**
      * @return mixed
@@ -287,6 +297,23 @@ class DespachoRecogida
     {
         $this->rutaRecogidaRel = $rutaRecogidaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
+    }
+
+    /**
+     * @param mixed $cantidad
+     */
+    public function setCantidad($cantidad): void
+    {
+        $this->cantidad = $cantidad;
+    }
+
 
 
 

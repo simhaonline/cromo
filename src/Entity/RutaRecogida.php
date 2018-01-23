@@ -17,9 +17,20 @@ class RutaRecogida
     private $codigoRutaRecogidaPk;
 
     /**
+     * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoOperacionFk;
+
+    /**
      * @ORM\Column(name="nombre", type="string", length=100, nullable=true)
      */
     private $nombre;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Operacion", inversedBy="rutasRecogidasOperacionRel")
+     * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
+     */
+    private $operacionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="DespachoRecogida", mappedBy="rutaRecogidaRel")

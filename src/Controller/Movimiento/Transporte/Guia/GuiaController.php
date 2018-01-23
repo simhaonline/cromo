@@ -16,10 +16,7 @@ class GuiaController extends Controller
     */    
     public function lista()
     {
-        $arGuias = $this->getDoctrine()
-            ->getRepository(Guia::class)
-            ->listaMovimiento();
-
+        $arGuias = $this->getDoctrine()->getRepository(Guia::class)->lista();
         return $this->render('movimiento/transporte/guia/lista.html.twig', ['arGuias' => $arGuias]);
     }
 

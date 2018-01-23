@@ -13,7 +13,7 @@ class RecogidaRepository extends ServiceEntityRepository
         parent::__construct($registry, Recogida::class);
     }
 
-    public function listaMovimiento(): array
+    public function lista(): array
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
@@ -23,6 +23,37 @@ class RecogidaRepository extends ServiceEntityRepository
         LEFT JOIN r.clienteRel c
         LEFT JOIN r.ciudadRel co
         LEFT JOIN r.ciudadDestinoRel cd'
+        );
+        return $query->execute();
+
+    }
+
+    public function despacho($codigoRecogidaDespacho): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT r.codigoRecogidaPk, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad, cd.nombre AS ciudadDestino
+        FROM App\Entity\Recogida r 
+        LEFT JOIN r.clienteRel c
+        LEFT JOIN r.ciudadRel co
+        LEFT JOIN r.ciudadDestinoRel cd
+        WHERE r.codigoDespachoRecogidaFk = :codigoDespachoRecogida'
+        )->setParameter('codigoDespachoRecogida', $codigoRecogidaDespacho);
+
+        return $query->execute();
+
+    }
+
+    public function despachoPendiente(): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT r.codigoRecogidaPk, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad, cd.nombre AS ciudadDestino
+        FROM App\Entity\Recogida r 
+        LEFT JOIN r.clienteRel c
+        LEFT JOIN r.ciudadRel co
+        LEFT JOIN r.ciudadDestinoRel cd
+        WHERE r.estadoProgramado = 0'
         );
         return $query->execute();
 

@@ -98,12 +98,17 @@ class Recogida
     private $estadoRecogido = false;
 
     /**
+     * @ORM\Column(name="codigo_despacho_recogida_fk", type="integer", nullable=true)
+     */
+    private $codigoDespachoRecogidaFk;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Operacion", inversedBy="recogidasOperacionCargoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Operacion", inversedBy="recogidasOperacionRel")
      * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
      */
     private $operacionRel;
@@ -125,6 +130,12 @@ class Recogida
      * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
      */
     private $clienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\DespachoRecogida", inversedBy="recogidasDespachoRecogidaRel")
+     * @ORM\JoinColumn(name="codigo_despacho_recogida_fk", referencedColumnName="codigo_despacho_recogida_pk")
+     */
+    private $despachoRecogidaRel;
 
     /**
      * @return mixed
@@ -476,6 +487,38 @@ class Recogida
     public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoRecogidaFk()
+    {
+        return $this->codigoDespachoRecogidaFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoRecogidaFk
+     */
+    public function setCodigoDespachoRecogidaFk($codigoDespachoRecogidaFk): void
+    {
+        $this->codigoDespachoRecogidaFk = $codigoDespachoRecogidaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoRecogidaRel()
+    {
+        return $this->despachoRecogidaRel;
+    }
+
+    /**
+     * @param mixed $despachoRecogidaRel
+     */
+    public function setDespachoRecogidaRel($despachoRecogidaRel): void
+    {
+        $this->despachoRecogidaRel = $despachoRecogidaRel;
     }
 
 

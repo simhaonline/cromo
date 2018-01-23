@@ -18,7 +18,7 @@ class DespachoController extends Controller
     */    
     public function lista()
     {
-        $arDespachos = $this->getDoctrine()->getRepository(Despacho::class)->listaMovimiento();
+        $arDespachos = $this->getDoctrine()->getRepository(Despacho::class)->lista();
         return $this->render('movimiento/transporte/despacho/lista.html.twig', ['arDespachos' => $arDespachos]);
     }
 
@@ -79,7 +79,7 @@ class DespachoController extends Controller
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
-        $arGuias = $this->getDoctrine()->getRepository(Guia::class)->guiasDespachoPendiente();
+        $arGuias = $this->getDoctrine()->getRepository(Guia::class)->despachoPendiente();
         return $this->render('movimiento/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
 }

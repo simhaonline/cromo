@@ -7,10 +7,12 @@
             <th>OP</th>
             <th>RUTA</th>
             <th>FECHA</th>
+            <th>CAN</th>
             <th>UND</th>
             <th>PES</th>
             <th>VOL</th>
             <th>DE</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -20,10 +22,12 @@
                 <td>{{ arDespachoRecogida.codigoOperacionFk }}</td>
                 <td>{{ arDespachoRecogida.codigoRutaRecogidaFk }}</td>
                 <td>{{ arDespachoRecogida.fecha | date('Y-m-d') }}</td>
-                <td>{{ arDespachoRecogida.unidades }}</td>
-                <td>{{ arDespachoRecogida.pesoReal }}</td>
-                <td>{{ arDespachoRecogida.pesoVolumen }}</td>
-                <td>{{ arDespachoRecogida.estadoDescargado?'SI':'NO' }}</td>
+                <td style="text-align: right">{{ arDespachoRecogida.cantidad }}</td>
+                <td style="text-align: right">{{ arDespachoRecogida.unidades }}</td>
+                <td style="text-align: right">{{ arDespachoRecogida.pesoReal }}</td>
+                <td style="text-align: right">{{ arDespachoRecogida.pesoVolumen }}</td>
+                <td style="text-align: center">{{ arDespachoRecogida.estadoDescargado?'SI':'NO' }}</td>
+                <td style="text-align: center"><a href="{{ path('mto_recogida_despacho_detalle', { 'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}"><img src="{{ asset('build/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>

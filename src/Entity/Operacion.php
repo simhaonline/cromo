@@ -42,6 +42,11 @@ class Operacion
     protected $despachosRecogidasOperacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RutaRecogida", mappedBy="operacionRel")
+     */
+    protected $rutasRecogidasOperacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoOperacionPk()

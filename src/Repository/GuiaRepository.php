@@ -13,7 +13,7 @@ class GuiaRepository extends ServiceEntityRepository
         parent::__construct($registry, Guia::class);
     }
 
-    public function listaMovimiento(): array
+    public function lista(): array
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
@@ -29,7 +29,7 @@ class GuiaRepository extends ServiceEntityRepository
 
     }
 
-    public function guiasDespacho($codigoDespacho): array
+    public function despacho($codigoDespacho): array
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
@@ -45,7 +45,7 @@ class GuiaRepository extends ServiceEntityRepository
 
     }
 
-    public function guiasDespachoPendiente(): array
+    public function despachoPendiente(): array
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
@@ -56,8 +56,6 @@ class GuiaRepository extends ServiceEntityRepository
         LEFT JOIN g.ciudadDestinoRel cd
         WHERE g.estadoDespachado = 0'
         );
-
-        // returns an array of Product objects
         return $query->execute();
 
     }

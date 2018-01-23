@@ -21,6 +21,7 @@ class DespachoRecogidaRepository extends ServiceEntityRepository
         dr.fecha, 
         dr.codigoOperacionFk,
         dr.codigoRutaRecogidaFk,
+        dr.cantidad,
         dr.unidades,
         dr.pesoReal,
         dr.pesoVolumen,
@@ -28,5 +29,24 @@ class DespachoRecogidaRepository extends ServiceEntityRepository
         FROM App\Entity\DespachoRecogida dr');
         return $query->execute();
 
+    }
+
+    public function liquidar($codigoDespachoRecogida): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT COUNT(r.codigoRecogidaPk) as cantidad, SUM(r.unidades) as unidades, SUM(r.pesoReal) as pesoReal, SUM(r.pesoVolumen) as pesoVolumen
+        FROM App\Entity\Recogida r
+        WHERE r.codigoDespachoRecogidaFk = :codigoDespachoRecogida')
+            ->setParameter('codigoDespachoRecogida', $codigoDespachoRecogida);
+        $arrRecogidas = $query->execute();
+        $arDespachoRecogida = $em->getRepository(DespachoRecogida::class)->find($codigoDespachoRecogida);
+        $arDespachoRecogida->setUnidades($arrRecogidas['unidades']);
+        $arDespachoRecogida->setPesoReal($arrRecogidas['pesoReal']);
+        $arDespachoRecogida->setPesoVolumen($arrRecogidas['pesoVolumen']);
+        $arDespachoRecogida->setCantidad($arrRecogidas['cantidad']);
+        $em->persist($arDespachoRecogida);
+        $em->flush();
+        return true;
     }
 }

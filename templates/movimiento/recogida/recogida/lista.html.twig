@@ -9,6 +9,9 @@
             <th>CLIENTE</th>
             <th>ORIGEN</th>
             <th>DESTINO</th>
+            <th>UND</th>
+            <th>PES</th>
+            <th>VOL</th>
             <th>P</th>
             <th>R</th>
             <th></th>
@@ -23,8 +26,11 @@
                 <td>{{ arRecogida.clienteNombreCorto }}</td>
                 <td>{{ arRecogida.ciudad }}</td>
                 <td>{{ arRecogida.ciudadDestino }}</td>
-                <td>{{ arRecogida.estadoProgramado?'SI':'NO' }}</td>
-                <td>{{ arRecogida.estadoRecogido?'SI':'NO' }}</td>
+                <td style="text-align: right">{{ arRecogida.unidades }}</td>
+                <td style="text-align: right">{{ arRecogida.pesoReal }}</td>
+                <td style="text-align: right">{{ arRecogida.pesoVolumen }}</td>
+                <td style="text-align: center">{{ arRecogida.estadoProgramado?'SI':'NO' }}</td>
+                <td style="text-align: center">{{ arRecogida.estadoRecogido?'SI':'NO' }}</td>
                 <td style="text-align: center"><a href="{{ path('mto_recogida_recogida_detalle', { 'codigoRecogida': arRecogida.codigoRecogidaPk }) }}"><img src="{{ asset('build/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}

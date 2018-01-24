@@ -28,6 +28,11 @@ class Cliente
     protected $guiasClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Recogida", mappedBy="clienteRel")
+     */
+    protected $recogidasClienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoClientePk()
@@ -57,6 +62,38 @@ class Cliente
     public function setNombreCorto($nombreCorto): void
     {
         $this->nombreCorto = $nombreCorto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasClienteRel()
+    {
+        return $this->guiasClienteRel;
+    }
+
+    /**
+     * @param mixed $guiasClienteRel
+     */
+    public function setGuiasClienteRel($guiasClienteRel): void
+    {
+        $this->guiasClienteRel = $guiasClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasClienteRel()
+    {
+        return $this->recogidasClienteRel;
+    }
+
+    /**
+     * @param mixed $recogidasClienteRel
+     */
+    public function setRecogidasClienteRel($recogidasClienteRel): void
+    {
+        $this->recogidasClienteRel = $recogidasClienteRel;
     }
 
 }

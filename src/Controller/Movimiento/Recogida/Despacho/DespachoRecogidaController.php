@@ -40,11 +40,12 @@ class DespachoRecogidaController extends Controller
                 $formato = new \App\Formato\Despacho();
                 $formato->Generar($em, $codigoDespachoRecogida);
             }
-            if ($form->get('btnRetirarGuia')->isClicked()) {
-                $arrGuias = $request->request->get('ChkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(Despacho::class)->retirarGuia($arrGuias);
+            if ($form->get('btnRetirarRecogida')->isClicked()) {
+                $arrRecogidas = $request->request->get('ChkSeleccionar');
+                $respuesta = $this->getDoctrine()->getRepository(DespachoRecogida::class)->retirarRecogida($arrRecogidas);
                 if($respuesta) {
                     $em->flush();
+                    $em->getRepository(DespachoRecogida::class)->liquidar($codigoDespachoRecogida);
                 }
             }
         }

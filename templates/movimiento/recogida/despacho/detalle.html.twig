@@ -7,16 +7,68 @@
         </div>
     </div>
     <br /><br />
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td class="titulo">NUMERO:</td>
+            <td class="td-in-well">{{ arDespachoRecogida.codigoDespachoRecogidaPk }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arDespachoRecogida.fecha |date("Y/m/d") }}</td>
+            <td class="titulo" >CANTIDAD:</td>
+            <td align="right">{{ arDespachoRecogida.cantidad }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">RUTA:</td>
+            <td class="td-in-well">{{ arDespachoRecogida.rutaRecogidaRel.nombre }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">UNIDADES:</td>
+            <td align="right">{{ arDespachoRecogida.unidades }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">PESO:</td>
+            <td align="right">{{ arDespachoRecogida.pesoReal }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">PESO:</td>
+            <td align="right">{{ arDespachoRecogida.pesoVolumen }}</td>
+        </tr>
+        <tr>
+            <td class="titulo" >COMENTARIO: </td>
+            <td class="td-in-well" colspan="5">{{ arDespachoRecogida.comentario }}</td>
+        </tr>
+    </table>
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
             <th>ID</th>
+            <th>REG</th>
+            <th>FECHA</th>
+            <th>CLIENTE</th>
+            <th>ORIGEN</th>
+            <th>DESTINO</th>
+            <th>R</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         {% for arRecogida in arRecogidas %}
             <tr>
                 <td>{{ arRecogida.codigoRecogidaPk }}</td>
+                <td>{{ arRecogida.fechaRegistro | date('Y-m-d') }}</td>
+                <td>{{ arRecogida.fecha | date('Y-m-d') }}</td>
+                <td>{{ arRecogida.clienteNombreCorto }}</td>
+                <td>{{ arRecogida.ciudad }}</td>
+                <td>{{ arRecogida.ciudadDestino }}</td>
+                <td>{{ arRecogida.estadoRecogido?'SI':'NO' }}</td>
+                <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecogida.codigoRecogidaPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>

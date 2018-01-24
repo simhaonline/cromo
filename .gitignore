@@ -18,3 +18,4 @@
 /public/build/
 ###< symfony/webpack-encore-pack ###
 composer.lock
+symfony.lock

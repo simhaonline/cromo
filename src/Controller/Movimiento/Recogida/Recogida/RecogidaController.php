@@ -16,9 +16,7 @@ class RecogidaController extends Controller
     public function lista()
     {
         $arRecogidas = $this->getDoctrine()
-            ->getRepository(Recogida::class)
-            ->listaMovimiento();
-
+            ->getRepository(Recogida::class)->lista();
         return $this->render('movimiento/recogida/recogida/lista.html.twig', ['arRecogidas' => $arRecogidas]);
     }
 

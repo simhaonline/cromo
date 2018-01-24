@@ -68,6 +68,11 @@ class DespachoRecogida
     private $estadoDescargado = false;
 
     /**
+     * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
+     */
+    private $comentario;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Operacion", inversedBy="despachosRecogidasOperacionRel")
      * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
      */
@@ -312,6 +317,38 @@ class DespachoRecogida
     public function setCantidad($cantidad): void
     {
         $this->cantidad = $cantidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param mixed $comentario
+     */
+    public function setComentario($comentario): void
+    {
+        $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasDespachoRecogidaRel()
+    {
+        return $this->recogidasDespachoRecogidaRel;
+    }
+
+    /**
+     * @param mixed $recogidasDespachoRecogidaRel
+     */
+    public function setRecogidasDespachoRecogidaRel($recogidasDespachoRecogidaRel): void
+    {
+        $this->recogidasDespachoRecogidaRel = $recogidasDespachoRecogidaRel;
     }
 
 

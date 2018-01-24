@@ -17,8 +17,24 @@
             <td class="td-in-well">{{ arRecogida.codigoRecogidaPk }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arRecogida.fechaRegistro |date("Y/m/d") }}</td>
-            <td class="titulo" ></td>
-            <td align="right"></td>
+            <td class="titulo" >UNIDADES:</td>
+            <td align="right">{{ arRecogida.unidades }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">PESO:</td>
+            <td align="right">{{ arRecogida.pesoReal }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">VOLUMEN:</td>
+            <td align="right">{{ arRecogida.pesoVolumen }}</td>
         </tr>
         <tr>
             <td class="titulo" >COMENTARIO: </td>

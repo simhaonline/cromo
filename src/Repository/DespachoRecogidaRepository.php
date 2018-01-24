@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\DespachoRecogida;
+use App\Entity\Recogida;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -31,22 +32,39 @@ class DespachoRecogidaRepository extends ServiceEntityRepository
 
     }
 
-    public function liquidar($codigoDespachoRecogida): array
+    public function liquidar($codigoDespachoRecogida): bool
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT COUNT(r.codigoRecogidaPk) as cantidad, SUM(r.unidades) as unidades, SUM(r.pesoReal) as pesoReal, SUM(r.pesoVolumen) as pesoVolumen
+            'SELECT COUNT(r.codigoRecogidaPk) as cantidad, SUM(r.unidades+0) as unidades, SUM(r.pesoReal+0) as pesoReal, SUM(r.pesoVolumen+0) as pesoVolumen
         FROM App\Entity\Recogida r
         WHERE r.codigoDespachoRecogidaFk = :codigoDespachoRecogida')
             ->setParameter('codigoDespachoRecogida', $codigoDespachoRecogida);
-        $arrRecogidas = $query->execute();
+        $arrRecogidas = $query->getSingleResult();
         $arDespachoRecogida = $em->getRepository(DespachoRecogida::class)->find($codigoDespachoRecogida);
-        $arDespachoRecogida->setUnidades($arrRecogidas['unidades']);
-        $arDespachoRecogida->setPesoReal($arrRecogidas['pesoReal']);
-        $arDespachoRecogida->setPesoVolumen($arrRecogidas['pesoVolumen']);
-        $arDespachoRecogida->setCantidad($arrRecogidas['cantidad']);
+        $arDespachoRecogida->setUnidades(intval($arrRecogidas['unidades']));
+        $arDespachoRecogida->setPesoReal(intval($arrRecogidas['pesoReal']));
+        $arDespachoRecogida->setPesoVolumen(intval($arrRecogidas['pesoVolumen']));
+        $arDespachoRecogida->setCantidad(intval($arrRecogidas['cantidad']));
         $em->persist($arDespachoRecogida);
         $em->flush();
+        return true;
+    }
+
+    public function retirarRecogida($arrRecogidas): bool
+    {
+        $em = $this->getEntityManager();
+        if($arrRecogidas) {
+            if (count($arrRecogidas) > 0) {
+                foreach ($arrRecogidas AS $codigo) {
+                    $arRecogida = $em->getRepository(Recogida::class)->find($codigo);
+                    $arRecogida->setDespachoRecogidaRel(null);
+                    $arRecogida->setEstadoProgramado(0);
+                    $em->persist($arRecogida);
+                }
+                $em->flush();
+            }
+        }
         return true;
     }
 }

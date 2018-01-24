@@ -1,0 +1,28 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>IDENTIFICACION</th>
+            <th>NOMBRE</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arAuxiliar in arAuxiliares %}
+            <tr>
+                <td>{{ arAuxiliar.codigoAuxiliarPk }}</td>
+                <td>{{ arAuxiliar.numeroIdentificacion }}</td>
+                <td>{{ arAuxiliar.nombreCorto }}</td>
+                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arAuxiliar.codigoAuxiliarPk }}" /></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-toolbar" style="float: right">
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

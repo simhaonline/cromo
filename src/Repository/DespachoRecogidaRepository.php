@@ -14,7 +14,7 @@ class DespachoRecogidaRepository extends ServiceEntityRepository
         parent::__construct($registry, DespachoRecogida::class);
     }
 
-    public function listaMovimiento(): array
+    public function lista(): array
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
@@ -26,7 +26,8 @@ class DespachoRecogidaRepository extends ServiceEntityRepository
         dr.unidades,
         dr.pesoReal,
         dr.pesoVolumen,
-        dr.estadoDescargado
+        dr.estadoDescargado,
+        dr.vrPago
         FROM App\Entity\DespachoRecogida dr');
         return $query->execute();
 

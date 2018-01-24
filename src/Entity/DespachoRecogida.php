@@ -58,6 +58,11 @@ class DespachoRecogida
     private $pesoVolumen = 0;
 
     /**
+     * @ORM\Column(name="vr_pago", type="float")
+     */
+    private $vrPago = 0;
+
+    /**
      * @ORM\Column(name="vr_declara", type="float")
      */
     private $vrDeclara = 0;
@@ -94,6 +99,11 @@ class DespachoRecogida
      * @ORM\OneToMany(targetEntity="Recogida", mappedBy="despachoRecogidaRel")
      */
     protected $recogidasDespachoRecogidaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="DespachoRecogidaAuxiliar", mappedBy="despachoRecogidaRel")
+     */
+    protected $despachosRecogidasAuxiliaresDespachoRecogidaRel;
 
     /**
      * @return mixed
@@ -349,6 +359,38 @@ class DespachoRecogida
     public function setRecogidasDespachoRecogidaRel($recogidasDespachoRecogidaRel): void
     {
         $this->recogidasDespachoRecogidaRel = $recogidasDespachoRecogidaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPago()
+    {
+        return $this->vrPago;
+    }
+
+    /**
+     * @param mixed $vrPago
+     */
+    public function setVrPago($vrPago): void
+    {
+        $this->vrPago = $vrPago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosRecogidasAuxiliaresDespachoRecogidaRel()
+    {
+        return $this->despachosRecogidasAuxiliaresDespachoRecogidaRel;
+    }
+
+    /**
+     * @param mixed $despachosRecogidasAuxiliaresDespachoRecogidaRel
+     */
+    public function setDespachosRecogidasAuxiliaresDespachoRecogidaRel($despachosRecogidasAuxiliaresDespachoRecogidaRel): void
+    {
+        $this->despachosRecogidasAuxiliaresDespachoRecogidaRel = $despachosRecogidasAuxiliaresDespachoRecogidaRel;
     }
 
 

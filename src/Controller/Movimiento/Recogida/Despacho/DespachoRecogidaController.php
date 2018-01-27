@@ -116,5 +116,59 @@ class DespachoRecogidaController extends Controller
         return $this->render('movimiento/recogida/despacho/detalleAdicionarAuxiliar.html.twig', ['arAuxiliares' => $arAuxiliares, 'form' => $form->createView()]);
     }
 
+    /**
+     * @Route("/mto/recogida/despacho/descargar/{codigoDespachoRecogida}", name="mto_recogida_despacho_descargar")
+     */
+    public function descargar(Request $request, $codigoDespachoRecogida)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arDespachoRecogida = $em->getRepository(DespachoRecogida::class)->find($codigoDespachoRecogida);
+        $form = $this->createFormBuilder()
+            ->add('btnDescargarRecogida', SubmitType::class, array('label' => 'Descargar'))
+            ->add('btnActualizarRecogida', SubmitType::class, array('label' => 'Actualizar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnDescargarRecogida')->isClicked()) {
+                $arrRecogidas = $request->request->get('ChkSeleccionar');
+                $respuesta = $this->getDoctrine()->getRepository(DespachoRecogida::class)->descargarRecogida($arrRecogidas);
+                if($respuesta) {
+                    $em->flush();
+                }
+            }
+            if ($form->get('btnActualizarRecogida')->isClicked()) {
+                $arrControles = $request->request->All();
+                $this->actualizarDetalle($arrControles, $codigoDespachoRecogida);
+                $em->getRepository(DespachoRecogida::class)->liquidar($codigoDespachoRecogida);
+            }
+        }
+        $arRecogidas = $this->getDoctrine()->getRepository(Recogida::class)->despachoSinDescargar($codigoDespachoRecogida);
+        return $this->render('movimiento/recogida/despacho/descargar.html.twig', [
+            'arDespachoRecogida' => $arDespachoRecogida,
+            'arRecogidas' => $arRecogidas,
+            'form' => $form->createView()]);
+    }
+
+    private function actualizarDetalle($arrControles, $codigoDespachoRecogida)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if (isset($arrControles['LblCodigo'])) {
+            foreach ($arrControles['LblCodigo'] as $codigo) {
+                $arRecogida = $em->getRepository(Recogida::class)->find($codigo);
+                if ($arrControles['TxtUnidades' . $codigo] != '') {
+                    $arRecogida->setUnidades($arrControles['TxtUnidades' . $codigo]);
+                }
+                if ($arrControles['TxtPesoReal' . $codigo] != '') {
+                    $arRecogida->setPesoReal($arrControles['TxtPesoReal' . $codigo]);
+                }
+                if ($arrControles['TxtPesoVolumen' . $codigo] != '') {
+                    $arRecogida->setPesoVolumen($arrControles['TxtPesoVolumen' . $codigo]);
+                }
+                $em->persist($arRecogida);
+            }
+            $em->flush();
+        }
+    }
+
 }
 

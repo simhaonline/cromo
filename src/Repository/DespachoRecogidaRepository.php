@@ -21,6 +21,7 @@ class DespachoRecogidaRepository extends ServiceEntityRepository
             'SELECT dr.codigoDespachoRecogidaPk, 
         dr.fecha, 
         dr.codigoOperacionFk,
+        dr.codigoVehiculoFk,
         dr.codigoRutaRecogidaFk,
         dr.cantidad,
         dr.unidades,
@@ -59,9 +60,29 @@ class DespachoRecogidaRepository extends ServiceEntityRepository
             if (count($arrRecogidas) > 0) {
                 foreach ($arrRecogidas AS $codigo) {
                     $arRecogida = $em->getRepository(Recogida::class)->find($codigo);
-                    $arRecogida->setDespachoRecogidaRel(null);
-                    $arRecogida->setEstadoProgramado(0);
-                    $em->persist($arRecogida);
+                    if($arRecogida->getEstadoRecogido() == 0) {
+                        $arRecogida->setDespachoRecogidaRel(null);
+                        $arRecogida->setEstadoProgramado(0);
+                        $em->persist($arRecogida);
+                    }
+                }
+                $em->flush();
+            }
+        }
+        return true;
+    }
+
+    public function descargarRecogida($arrRecogidas): bool
+    {
+        $em = $this->getEntityManager();
+        if($arrRecogidas) {
+            if (count($arrRecogidas) > 0) {
+                foreach ($arrRecogidas AS $codigo) {
+                    $arRecogida = $em->getRepository(Recogida::class)->find($codigo);
+                    if($arRecogida->getEstadoRecogido() == 0 && $arRecogida->getUnidades() > 0 && $arRecogida->getPesoReal() > 0 && $arRecogida->getPesoVolumen() > 0) {
+                        $arRecogida->setEstadoRecogido(1);
+                        $em->persist($arRecogida);
+                    }
                 }
                 $em->flush();
             }

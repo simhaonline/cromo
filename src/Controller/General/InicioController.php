@@ -3,6 +3,7 @@
 namespace App\Controller\General;
 
 use App\Formato\Despacho;
+use App\Entity\Recogida;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -15,6 +16,7 @@ class InicioController extends Controller
     */    
     public function inicio(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         return $this->render('general/inicio.html.twig');
     }
 }

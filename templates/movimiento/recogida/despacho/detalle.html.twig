@@ -4,6 +4,7 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('mto_recogida_despacho_descargar', {'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}', 'DespachoRecogidaDescargar', 600, 900)">Descargar</a>
         </div>
     </div>
     <br /><br />
@@ -74,6 +75,9 @@
                             <th>CLIENTE</th>
                             <th>ORIGEN</th>
                             <th>DESTINO</th>
+                            <th>UND</th>
+                            <th>PES</th>
+                            <th>VOL</th>
                             <th>R</th>
                             <th></th>
                         </tr>
@@ -87,6 +91,9 @@
                                 <td>{{ arRecogida.clienteNombreCorto }}</td>
                                 <td>{{ arRecogida.ciudad }}</td>
                                 <td>{{ arRecogida.ciudadDestino }}</td>
+                                <td style="text-align: right">{{ arRecogida.unidades }}</td>
+                                <td style="text-align: right">{{ arRecogida.pesoReal }}</td>
+                                <td style="text-align: right">{{ arRecogida.pesoVolumen }}</td>
                                 <td>{{ arRecogida.estadoRecogido?'SI':'NO' }}</td>
                                 <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecogida.codigoRecogidaPk }}" /></td>
                             </tr>

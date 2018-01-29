@@ -17,8 +17,10 @@ class RecogidaController extends Controller
     public function principal(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $arrResumenRecogidas = $em->getRepository(Recogida::class)->resumenCuenta('2018/01/26', '2018/01/26');
-        return $this->render('tablero/recogida.html.twig');
+        $arrResumenRecogidas = $em->getRepository(Recogida::class)->resumenCuenta('2018/01/28', '2018/01/28');
+        return $this->render('tablero/recogida.html.twig', [
+            'arrResumenRecogidas' => $arrResumenRecogidas
+            ]);
     }
 }
 

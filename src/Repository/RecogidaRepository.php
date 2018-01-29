@@ -83,8 +83,8 @@ class RecogidaRepository extends ServiceEntityRepository
             'SELECT COUNT(r.codigoRecogidaPk) as cantidad
         FROM App\Entity\Recogida r
         WHERE r.estadoProgramado = 0 AND r.fecha >= :fechaDesde AND  r.fecha <= :fechaHasta')
-            ->setParameter('fechaDesde', $fechaDesde)
-            ->setParameter('fechaHasta', $fechaHasta);
+            ->setParameter('fechaDesde', $fechaDesde . " 00:00")
+            ->setParameter('fechaHasta', $fechaHasta . " 23:59");
         $arrRecogidas = $query->getSingleResult();
         if($arrRecogidas) {
             $cantidad = $arrRecogidas['cantidad'];
@@ -100,8 +100,8 @@ class RecogidaRepository extends ServiceEntityRepository
             'SELECT COUNT(r.codigoRecogidaPk) as cantidad
         FROM App\Entity\Recogida r
         WHERE r.estadoProgramado = 1 AND r.estadoRecogido = 0 AND r.fecha >= :fechaDesde AND  r.fecha <= :fechaHasta')
-            ->setParameter('fechaDesde', $fechaDesde)
-            ->setParameter('fechaHasta', $fechaHasta);
+            ->setParameter('fechaDesde', $fechaDesde . " 00:00")
+            ->setParameter('fechaHasta', $fechaHasta . " 23:59");
         $arrRecogidas = $query->getSingleResult();
         if($arrRecogidas) {
             $cantidad = $arrRecogidas['cantidad'];
@@ -115,9 +115,9 @@ class RecogidaRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT COUNT(r.codigoRecogidaPk) as cantidad
         FROM App\Entity\Recogida r
-        WHERE r.fecha >= :fechaDesde AND  r.fecha <= :fechaHasta')
-            ->setParameter('fechaDesde', $fechaDesde)
-            ->setParameter('fechaHasta', $fechaHasta);
+        WHERE r.estadoRecogido = 1 AND r.fecha >= :fechaDesde AND  r.fecha <= :fechaHasta')
+            ->setParameter('fechaDesde', $fechaDesde . " 00:00")
+            ->setParameter('fechaHasta', $fechaHasta . " 23:59");
         $arrRecogidas = $query->getSingleResult();
         if($arrRecogidas) {
             $cantidad = $arrRecogidas['cantidad'];

@@ -6,6 +6,7 @@ use App\Entity\DespachoRecogida;
 use App\Entity\DespachoRecogidaAuxiliar;
 use App\Entity\Recogida;
 use App\Entity\Auxiliar;
+use App\Entity\Monitoreo;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -33,12 +34,24 @@ class DespachoRecogidaController extends Controller
             ->add('btnRetirarRecogida', SubmitType::class, array('label' => 'Retirar'))
             ->add('btnRetirarAuxiliar', SubmitType::class, array('label' => 'Retirar'))
             ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
+            ->add('btnMonitoreo', SubmitType::class, array('label' => 'Monitoreo'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new \App\Formato\Despacho();
                 $formato->Generar($em, $codigoDespachoRecogida);
+            }
+            if ($form->get('btnMonitoreo')->isClicked()) {
+                if(!$arDespachoRecogida->getEstadoMonitoreo()) {
+                    $respuesta = $this->getDoctrine()->getRepository(Monitoreo::class)->generar(
+                        $arDespachoRecogida->getCodigoVehiculoFk());
+                    $arDespachoRecogida->setEstadoMonitoreo(1);
+                    if($respuesta) {
+                        $em->persist($arDespachoRecogida);
+                        $em->flush();
+                    }
+                }
             }
             if ($form->get('btnRetirarRecogida')->isClicked()) {
                 $arrRecogidas = $request->request->get('ChkSeleccionar');

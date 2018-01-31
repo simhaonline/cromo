@@ -18,7 +18,13 @@ class DespachoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT d.codigoDespachoPk, d.numero, co.nombre AS ciudadOrigen, cd.nombre AS ciudadDestino,
+            'SELECT d.codigoDespachoPk, 
+        d.numero,
+        d.codigoOperacionFk,
+        d.codigoVehiculoFk,
+        d.codigoRutaFk, 
+        co.nombre AS ciudadOrigen, 
+        cd.nombre AS ciudadDestino,
         d.unidades,
         d.pesoReal,
         d.pesoVolumen,

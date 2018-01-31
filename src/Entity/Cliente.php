@@ -18,9 +18,44 @@ class Cliente
     private $codigoClientePk;
 
     /**
-     * @ORM\Column(name="nombre_corto", type="string", length=100, nullable=true)
+     * @ORM\Column(name="nit", type="string", length=20, nullable=true)
+     */
+    private $nit;
+
+    /**
+     * @ORM\Column(name="nombre_corto", type="string", length=150, nullable=true)
      */
     private $nombreCorto;
+
+    /**
+     * @ORM\Column(name="nombre1", type="string", length=50, nullable=true)
+     */
+    private $nombre1;
+
+    /**
+     * @ORM\Column(name="nombre2", type="string", length=50, nullable=true)
+     */
+    private $nombre2;
+
+    /**
+     * @ORM\Column(name="apellido1", type="string", length=50, nullable=true)
+     */
+    private $apellido1;
+
+    /**
+     * @ORM\Column(name="apellido2", type="string", length=50, nullable=true)
+     */
+    private $apellido2;
+
+    /**
+     * @ORM\Column(name="direccion", type="string", length=200, nullable=true)
+     */
+    private $direccion;
+
+    /**
+     * @ORM\Column(name="telefono", type="string", length=30, nullable=true)
+     */
+    private $telefono;
 
     /**
      * @ORM\OneToMany(targetEntity="Guia", mappedBy="clienteRel")

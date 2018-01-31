@@ -22,6 +22,52 @@ class Ciudad
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_division", type="string", length=10, nullable=true)
+     */
+    private $codigoDivision;
+
+    /**
+     * @ORM\Column(name="nombre_division", type="string", length=100, nullable=true)
+     */
+    private $nombreDivision;
+
+    /**
+     * @ORM\Column(name="codigo_zona", type="string", length=10, nullable=true)
+     */
+    private $codigoZona;
+
+    /**
+     * @ORM\Column(name="nombre_zona", type="string", length=100, nullable=true)
+     */
+    private $nombreZona;
+
+    /**
+     * @ORM\Column(name="codigo_municipio", type="string", length=10, nullable=true)
+     */
+    private $codigoMunicipio;
+
+    /**
+     * @ORM\Column(name="nombre_municipio", type="string", length=100, nullable=true)
+     */
+    private $nombreMunicipio;
+
+    /**
+     * @ORM\Column(name="codigo_departamento_fk", type="string", length=2, nullable=true)
+     */
+    private $codigoDepartamentoFk;
+
+    /**
+     * @ORM\Column(name="codigo_ruta_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoRutaFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Ruta", inversedBy="ciudadesRutaRel")
+     * @ORM\JoinColumn(name="codigo_ruta_fk", referencedColumnName="codigo_ruta_pk")
+     */
+    private $rutaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="Guia", mappedBy="ciudadOrigenRel")
      */
     protected $guiasCiudadOrigenRel;

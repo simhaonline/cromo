@@ -28,6 +28,21 @@ class Despacho
     private $manifiesto;
 
     /**
+     * @ORM\Column(name="fecha_registro", type="datetime", nullable=true)
+     */
+    private $fechaRegistro;
+
+    /**
+     * @ORM\Column(name="fecha_salida", type="date", nullable=true)
+     */
+    private $fechaSalida;
+
+    /**
+     * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoOperacionFk;
+
+    /**
      * @ORM\Column(name="codigo_ciudad_origen_fk", type="string", length=20, nullable=true)
      */
     private $codigoCiudadOrigenFk;
@@ -36,6 +51,16 @@ class Despacho
      * @ORM\Column(name="codigo_ciudad_destino_fk", type="string", length=20, nullable=true)
      */
     private $codigoCiudadDestinoFk;
+
+    /**
+     * @ORM\Column(name="codigo_vehiculo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoVehiculoFk;
+
+    /**
+     * @ORM\Column(name="codigo_ruta_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoRutaFk;
 
     /**
      * @ORM\Column(name="unidades", type="float")
@@ -73,6 +98,21 @@ class Despacho
     private $vrRecaudo = 0;
 
     /**
+     * @ORM\Column(name="vr_flete_pago", type="float")
+     */
+    private $vrFletePago = 0;
+
+    /**
+     * @ORM\Column(name="vr_anticipo", type="float")
+     */
+    private $vrAnticipo = 0;
+
+    /**
+     * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
+     */
+    private $comentario;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Ciudad", inversedBy="despachosCiudadOrigenRel")
      * @ORM\JoinColumn(name="codigo_ciudad_origen_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -83,6 +123,24 @@ class Despacho
      * @ORM\JoinColumn(name="codigo_ciudad_destino_fk", referencedColumnName="codigo_ciudad_pk")
      */
     private $ciudadDestinoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Operacion", inversedBy="despachosOperacionRel")
+     * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
+     */
+    private $operacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Vehiculo", inversedBy="despachosVehiculoRel")
+     * @ORM\JoinColumn(name="codigo_vehiculo_fk", referencedColumnName="codigo_vehiculo_pk")
+     */
+    private $vehiculoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Ruta", inversedBy="despachosRutaRel")
+     * @ORM\JoinColumn(name="codigo_ruta_fk", referencedColumnName="codigo_ruta_pk")
+     */
+    private $rutaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="Guia", mappedBy="despachoRel")
@@ -327,6 +385,182 @@ class Despacho
     public function setGuiasDespachoRel($guiasDespachoRel): void
     {
         $this->guiasDespachoRel = $guiasDespachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperacionFk()
+    {
+        return $this->codigoOperacionFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionFk
+     */
+    public function setCodigoOperacionFk($codigoOperacionFk): void
+    {
+        $this->codigoOperacionFk = $codigoOperacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionRel()
+    {
+        return $this->operacionRel;
+    }
+
+    /**
+     * @param mixed $operacionRel
+     */
+    public function setOperacionRel($operacionRel): void
+    {
+        $this->operacionRel = $operacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoVehiculoFk()
+    {
+        return $this->codigoVehiculoFk;
+    }
+
+    /**
+     * @param mixed $codigoVehiculoFk
+     */
+    public function setCodigoVehiculoFk($codigoVehiculoFk): void
+    {
+        $this->codigoVehiculoFk = $codigoVehiculoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVehiculoRel()
+    {
+        return $this->vehiculoRel;
+    }
+
+    /**
+     * @param mixed $vehiculoRel
+     */
+    public function setVehiculoRel($vehiculoRel): void
+    {
+        $this->vehiculoRel = $vehiculoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * @param mixed $fechaRegistro
+     */
+    public function setFechaRegistro($fechaRegistro): void
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaSalida()
+    {
+        return $this->fechaSalida;
+    }
+
+    /**
+     * @param mixed $fechaSalida
+     */
+    public function setFechaSalida($fechaSalida): void
+    {
+        $this->fechaSalida = $fechaSalida;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param mixed $comentario
+     */
+    public function setComentario($comentario): void
+    {
+        $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrFletePago()
+    {
+        return $this->vrFletePago;
+    }
+
+    /**
+     * @param mixed $vrFletePago
+     */
+    public function setVrFletePago($vrFletePago): void
+    {
+        $this->vrFletePago = $vrFletePago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAnticipo()
+    {
+        return $this->vrAnticipo;
+    }
+
+    /**
+     * @param mixed $vrAnticipo
+     */
+    public function setVrAnticipo($vrAnticipo): void
+    {
+        $this->vrAnticipo = $vrAnticipo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRutaFk()
+    {
+        return $this->codigoRutaFk;
+    }
+
+    /**
+     * @param mixed $codigoRutaFk
+     */
+    public function setCodigoRutaFk($codigoRutaFk): void
+    {
+        $this->codigoRutaFk = $codigoRutaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRutaRel()
+    {
+        return $this->rutaRel;
+    }
+
+    /**
+     * @param mixed $rutaRel
+     */
+    public function setRutaRel($rutaRel): void
+    {
+        $this->rutaRel = $rutaRel;
     }
 
 

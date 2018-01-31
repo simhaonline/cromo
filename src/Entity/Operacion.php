@@ -47,6 +47,11 @@ class Operacion
     protected $rutasRecogidasOperacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Despacho", mappedBy="operacionRel")
+     */
+    protected $despachosOperacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoOperacionPk()
@@ -108,6 +113,70 @@ class Operacion
     public function setGuiasOperacionCargoRel($guiasOperacionCargoRel): void
     {
         $this->guiasOperacionCargoRel = $guiasOperacionCargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasOperacionRel()
+    {
+        return $this->recogidasOperacionRel;
+    }
+
+    /**
+     * @param mixed $recogidasOperacionRel
+     */
+    public function setRecogidasOperacionRel($recogidasOperacionRel): void
+    {
+        $this->recogidasOperacionRel = $recogidasOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosRecogidasOperacionRel()
+    {
+        return $this->despachosRecogidasOperacionRel;
+    }
+
+    /**
+     * @param mixed $despachosRecogidasOperacionRel
+     */
+    public function setDespachosRecogidasOperacionRel($despachosRecogidasOperacionRel): void
+    {
+        $this->despachosRecogidasOperacionRel = $despachosRecogidasOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRutasRecogidasOperacionRel()
+    {
+        return $this->rutasRecogidasOperacionRel;
+    }
+
+    /**
+     * @param mixed $rutasRecogidasOperacionRel
+     */
+    public function setRutasRecogidasOperacionRel($rutasRecogidasOperacionRel): void
+    {
+        $this->rutasRecogidasOperacionRel = $rutasRecogidasOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosOperacionRel()
+    {
+        return $this->despachosOperacionRel;
+    }
+
+    /**
+     * @param mixed $despachosOperacionRel
+     */
+    public function setDespachosOperacionRel($despachosOperacionRel): void
+    {
+        $this->despachosOperacionRel = $despachosOperacionRel;
     }
 
 

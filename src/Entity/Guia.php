@@ -168,6 +168,11 @@ class Guia
     private $codigoDespachoFk;
 
     /**
+     * @ORM\Column(name="codigo_ruta_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoRutaFk;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -207,6 +212,12 @@ class Guia
      * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
      */
     private $despachoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Ruta", inversedBy="guiasRutaRel")
+     * @ORM\JoinColumn(name="codigo_ruta_fk", referencedColumnName="codigo_ruta_pk")
+     */
+    private $rutaRel;
 
     /**
      * @return mixed

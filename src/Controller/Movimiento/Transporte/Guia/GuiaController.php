@@ -14,9 +14,11 @@ class GuiaController extends Controller
    /**
     * @Route("/mto/transporte/guia/lista", name="mto_transporte_guia_lista")
     */    
-    public function lista()
+    public function lista(Request $request)
     {
-        $arGuias = $this->getDoctrine()->getRepository(Guia::class)->lista();
+        $paginator  = $this->get('knp_paginator');
+        $query = $this->getDoctrine()->getRepository(Guia::class)->lista();
+        $arGuias = $paginator->paginate($query, $request->query->getInt('page', 1),10);
         return $this->render('movimiento/transporte/guia/lista.html.twig', ['arGuias' => $arGuias]);
     }
 

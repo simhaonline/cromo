@@ -48,7 +48,7 @@ class DespachoController extends Controller
             }
         }
 
-        $arGuias = $this->getDoctrine()->getRepository(Guia::class)->guiasDespacho($codigoDespacho);
+        $arGuias = $this->getDoctrine()->getRepository(Guia::class)->despacho($codigoDespacho);
         return $this->render('movimiento/transporte/despacho/detalle.html.twig', [
             'arDespacho' => $arDespacho,
             'arGuias' => $arGuias,
@@ -80,7 +80,7 @@ class DespachoController extends Controller
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         $arGuias = $this->getDoctrine()->getRepository(Guia::class)->despachoPendiente();
-        return $this->render('movimiento/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        return $this->render('movimiento/transporte/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
 }
 

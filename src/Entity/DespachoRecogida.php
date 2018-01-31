@@ -73,6 +73,11 @@ class DespachoRecogida
     private $estadoDescargado = false;
 
     /**
+     * @ORM\Column(name="estado_monitoreo", type="boolean", nullable=true)
+     */
+    private $estadoMonitoreo = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -391,6 +396,22 @@ class DespachoRecogida
     public function setDespachosRecogidasAuxiliaresDespachoRecogidaRel($despachosRecogidasAuxiliaresDespachoRecogidaRel): void
     {
         $this->despachosRecogidasAuxiliaresDespachoRecogidaRel = $despachosRecogidasAuxiliaresDespachoRecogidaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoMonitoreo()
+    {
+        return $this->estadoMonitoreo;
+    }
+
+    /**
+     * @param mixed $estadoMonitoreo
+     */
+    public function setEstadoMonitoreo($estadoMonitoreo): void
+    {
+        $this->estadoMonitoreo = $estadoMonitoreo;
     }
 
 

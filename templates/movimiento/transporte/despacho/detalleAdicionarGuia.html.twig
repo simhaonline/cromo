@@ -5,10 +5,14 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>OI</th>
+            <th>OC</th>
             <th>NUMERO</th>
             <th>CLIENTE</th>
-            <th>ORIGEN</th>
             <th>DESTINO</th>
+            <th>UND</th>
+            <th>PES</th>
+            <th>VOL</th>
             <th></th>
         </tr>
         </thead>
@@ -16,11 +20,15 @@
         {% for arGuia in arGuias %}
             <tr>
                 <td>{{ arGuia.codigoGuiaPk }}</td>
+                <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
+                <td>{{ arGuia.codigoOperacionCargoFk }}</td>
                 <td>{{ arGuia.numero }}</td>
                 <td>{{ arGuia.clienteNombreCorto }}</td>
-                <td>{{ arGuia.ciudadOrigen }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
-                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
+                <td style="text-align: right">{{ arGuia.unidades }}</td>
+                <td style="text-align: right">{{ arGuia.pesoReal }}</td>
+                <td style="text-align: right">{{ arGuia.pesoVolumen }}</td>
+                <td  style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>

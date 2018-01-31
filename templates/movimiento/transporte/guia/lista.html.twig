@@ -4,11 +4,15 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>OI</th>
+            <th>OC</th>
             <th>NUMERO</th>
             <th>FECHA</th>
             <th>CLIENTE</th>
-            <th>ORIGEN</th>
             <th>DESTINO</th>
+            <th>UND</th>
+            <th>PES</th>
+            <th>VOL</th>
             <th>I</th>
             <th>D</th>
             <th>E</th>
@@ -21,19 +25,34 @@
         {% for arGuia in arGuias %}
             <tr>
                 <td>{{ arGuia.codigoGuiaPk }}</td>
+                <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
+                <td>{{ arGuia.codigoOperacionCargoFk }}</td>
                 <td>{{ arGuia.numero }}</td>
                 <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
                 <td>{{ arGuia.clienteNombreCorto }}</td>
-                <td>{{ arGuia.ciudadOrigen }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
-                <td>{{ arGuia.estadoImpreso?'SI':'NO' }}</td>
-                <td>{{ arGuia.estadoDespachado?'SI':'NO' }}</td>
-                <td>{{ arGuia.estadoEntregado?'SI':'NO' }}</td>
-                <td>{{ arGuia.estadoSoporte?'SI':'NO' }}</td>
-                <td>{{ arGuia.estadoCumplido?'SI':'NO' }}</td>
+                <td class="numero">{{ arGuia.unidades }}</td>
+                <td class="numero">{{ arGuia.pesoReal }}</td>
+                <td class="numero">{{ arGuia.pesoVolumen }}</td>
+                <td class="estado">{{ arGuia.estadoImpreso?'SI':'NO' }}</td>
+                <td class="estado">{{ arGuia.estadoDespachado?'SI':'NO' }}</td>
+                <td class="estado">{{ arGuia.estadoEntregado?'SI':'NO' }}</td>
+                <td class="estado">{{ arGuia.estadoSoporte?'SI':'NO' }}</td>
+                <td class="estado">{{ arGuia.estadoCumplido?'SI':'NO' }}</td>
                 <td style="text-align: center"><a href="{{ path('mto_transporte_guia_detalle', { 'codigoGuia': arGuia.codigoGuiaPk }) }}"><img src="{{ asset('build/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="btn-toolbar">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arGuias.getTotalItemCount }}</span></div>
+        </div>
+
+        <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+            {{ knp_pagination_render(arGuias) }}
+        </div>
+    </div>
 {% endblock %}
+

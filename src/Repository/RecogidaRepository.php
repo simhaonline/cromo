@@ -75,54 +75,42 @@ class RecogidaRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function cuentaPendientes($fechaDesde, $fechaHasta): int
+    public function cuentaPendientes($fechaDesde, $fechaHasta): array
     {
         $em = $this->getEntityManager();
-        $cantidad = 0;
         $query = $em->createQuery(
-            'SELECT COUNT(r.codigoRecogidaPk) as cantidad
+            'SELECT COUNT(r.codigoRecogidaPk) as cantidad, SUM(r.unidades) as unidades, SUM(r.pesoReal) as pesoReal
         FROM App\Entity\Recogida r
         WHERE r.estadoProgramado = 0 AND r.fecha >= :fechaDesde AND  r.fecha <= :fechaHasta')
             ->setParameter('fechaDesde', $fechaDesde . " 00:00")
             ->setParameter('fechaHasta', $fechaHasta . " 23:59");
         $arrRecogidas = $query->getSingleResult();
-        if($arrRecogidas) {
-            $cantidad = $arrRecogidas['cantidad'];
-        }
-        return $cantidad;
+        return $arrRecogidas;
     }
 
-    public function cuentaSinDescargar($fechaDesde, $fechaHasta): int
+    public function cuentaSinDescargar($fechaDesde, $fechaHasta): array
     {
         $em = $this->getEntityManager();
-        $cantidad = 0;
         $query = $em->createQuery(
-            'SELECT COUNT(r.codigoRecogidaPk) as cantidad
+            'SELECT COUNT(r.codigoRecogidaPk) as cantidad, SUM(r.unidades) as unidades, SUM(r.pesoReal) as pesoReal
         FROM App\Entity\Recogida r
         WHERE r.estadoProgramado = 1 AND r.estadoRecogido = 0 AND r.fecha >= :fechaDesde AND  r.fecha <= :fechaHasta')
             ->setParameter('fechaDesde', $fechaDesde . " 00:00")
             ->setParameter('fechaHasta', $fechaHasta . " 23:59");
         $arrRecogidas = $query->getSingleResult();
-        if($arrRecogidas) {
-            $cantidad = $arrRecogidas['cantidad'];
-        }
-        return $cantidad;
+        return $arrRecogidas;
     }
-    public function cuentaDescargadas($fechaDesde, $fechaHasta): int
+    public function cuentaDescargadas($fechaDesde, $fechaHasta): array
     {
         $em = $this->getEntityManager();
-        $cantidad = 0;
         $query = $em->createQuery(
-            'SELECT COUNT(r.codigoRecogidaPk) as cantidad
+            'SELECT COUNT(r.codigoRecogidaPk) as cantidad, SUM(r.unidades) as unidades, SUM(r.pesoReal) as pesoReal
         FROM App\Entity\Recogida r
         WHERE r.estadoRecogido = 1 AND r.fecha >= :fechaDesde AND  r.fecha <= :fechaHasta')
             ->setParameter('fechaDesde', $fechaDesde . " 00:00")
             ->setParameter('fechaHasta', $fechaHasta . " 23:59");
         $arrRecogidas = $query->getSingleResult();
-        if($arrRecogidas) {
-            $cantidad = $arrRecogidas['cantidad'];
-        }
-        return $cantidad;
+        return $arrRecogidas;
     }
 
     public function resumenCuenta($fechaDesde, $fechaHasta): array

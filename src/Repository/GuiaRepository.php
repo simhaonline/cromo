@@ -45,6 +45,11 @@ class GuiaRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT g.codigoGuiaPk, 
         g.numero, 
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk,     
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,             
         c.nombreCorto AS clienteNombreCorto, 
         cd.nombre AS ciudadDestino
         FROM App\Entity\Guia g 
@@ -73,7 +78,8 @@ class GuiaRepository extends ServiceEntityRepository
         FROM App\Entity\Guia g 
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.estadoDespachado = 0'
+        WHERE g.estadoDespachado = 0
+        ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk'
         );
         return $query->execute();
 

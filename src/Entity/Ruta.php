@@ -35,5 +35,87 @@ class Ruta
      * @ORM\OneToMany(targetEntity="Despacho", mappedBy="rutaRel")
      */
     protected $despachosRutaRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRutaPk()
+    {
+        return $this->codigoRutaPk;
+    }
+
+    /**
+     * @param mixed $codigoRutaPk
+     */
+    public function setCodigoRutaPk($codigoRutaPk): void
+    {
+        $this->codigoRutaPk = $codigoRutaPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadesRutaRel()
+    {
+        return $this->ciudadesRutaRel;
+    }
+
+    /**
+     * @param mixed $ciudadesRutaRel
+     */
+    public function setCiudadesRutaRel($ciudadesRutaRel): void
+    {
+        $this->ciudadesRutaRel = $ciudadesRutaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasRutaRel()
+    {
+        return $this->guiasRutaRel;
+    }
+
+    /**
+     * @param mixed $guiasRutaRel
+     */
+    public function setGuiasRutaRel($guiasRutaRel): void
+    {
+        $this->guiasRutaRel = $guiasRutaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosRutaRel()
+    {
+        return $this->despachosRutaRel;
+    }
+
+    /**
+     * @param mixed $despachosRutaRel
+     */
+    public function setDespachosRutaRel($despachosRutaRel): void
+    {
+        $this->despachosRutaRel = $despachosRutaRel;
+    }
+
+
 }
 

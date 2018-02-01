@@ -39,7 +39,7 @@ class DespachoRepository extends ServiceEntityRepository
 
     }
 
-    public function retirarGuia($arrGuias): array
+    public function retirarGuia($arrGuias): bool
     {
         $em = $this->getEntityManager();
         if($arrGuias) {
@@ -53,5 +53,6 @@ class DespachoRepository extends ServiceEntityRepository
                 $em->flush();
             }
         }
+        return true;
     }
 }

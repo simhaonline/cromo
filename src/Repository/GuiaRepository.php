@@ -45,6 +45,7 @@ class GuiaRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT g.codigoGuiaPk, 
         g.numero, 
+        g.fechaIngreso,        
         g.codigoOperacionIngresoFk,
         g.codigoOperacionCargoFk,     
         g.unidades,
@@ -107,6 +108,51 @@ class GuiaRepository extends ServiceEntityRepository
         ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk'
         );
         return $query->execute();
+    }
+
+    public function pendientesDespachoCuenta(): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT COUNT(g.codigoGuiaPk) as cantidad
+        FROM App\Entity\Guia g
+        WHERE g.estadoDespachado = 0');
+        $arrGuias = $query->getSingleResult();
+        return $arrGuias;
+    }
+
+    public function pendientesEntregaCuenta(): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT COUNT(g.codigoGuiaPk) as cantidad
+        FROM App\Entity\Guia g
+        WHERE g.estadoDespachado = 1 AND g.estadoEntregado = 0');
+        $arrGuias = $query->getSingleResult();
+        return $arrGuias;
+    }
+
+    public function pendientesCumplidoCuenta(): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT COUNT(g.codigoGuiaPk) as cantidad
+        FROM App\Entity\Guia g
+        WHERE g.estadoDespachado = 1 AND g.estadoEntregado = 1 AND g.estadoCumplido = 0');
+        $arrGuias = $query->getSingleResult();
+        return $arrGuias;
+    }
+
+    public function resumenPendientesCuenta(): array
+    {
+        $arrResumen = array();
+        $despacho = $this->pendientesDespachoCuenta();
+        $entregar = $this->pendientesEntregaCuenta();
+        $cumplir = $this->pendientesCumplidoCuenta();
+        $arrResumen['despachar'] = $despacho;
+        $arrResumen['entregar'] = $entregar;
+        $arrResumen['cumplir'] = $cumplir;
+        return $arrResumen;
     }
 
 }

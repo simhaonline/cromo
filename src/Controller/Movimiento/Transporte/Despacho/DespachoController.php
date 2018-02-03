@@ -31,11 +31,12 @@ class DespachoController extends Controller
         $arDespacho = $em->getRepository(Despacho::class)->find($codigoDespacho);
         $form = $this->createFormBuilder()
             ->add('btnRetirarGuia', SubmitType::class, array('label' => 'Retirar'))
-            ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
+            ->add('btnImprimirDespacho', SubmitType::class, array('label' => 'Imprimir orden'))
+            ->add('btnImprimirManifiesto', SubmitType::class, array('label' => 'Imprimir manifiesto'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnImprimir')->isClicked()) {
+            if ($form->get('btnImprimirDespacho')->isClicked()) {
                 $formato = new \App\Formato\Despacho();
                 $formato->Generar($em, $codigoDespacho);
             }

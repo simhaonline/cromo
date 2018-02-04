@@ -39,6 +39,45 @@ class DespachoRepository extends ServiceEntityRepository
 
     }
 
+    public function liquidar($codigoDespacho): bool
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT COUNT(g.codigoGuiaPk) as cantidad, SUM(g.unidades+0) as unidades, SUM(g.pesoReal+0) as pesoReal, SUM(g.pesoVolumen+0) as pesoVolumen
+        FROM App\Entity\Guia g
+        WHERE g.codigoDespachoFk = :codigoDespacho')
+            ->setParameter('codigoDespacho', $codigoDespacho);
+        $arrGuias = $query->getSingleResult();
+        $arDespacho = $em->getRepository(Despacho::class)->find($codigoDespacho);
+        $arDespacho->setUnidades(intval($arrGuias['unidades']));
+        $arDespacho->setPesoReal(intval($arrGuias['pesoReal']));
+        $arDespacho->setPesoVolumen(intval($arrGuias['pesoVolumen']));
+        $arDespacho->setCantidad(intval($arrGuias['cantidad']));
+        $em->persist($arDespacho);
+        $em->flush();
+        return true;
+    }
+
+    public function imprimirManifiesto($codigoDespacho): bool
+    {
+        $em = $this->getEntityManager();
+        $arDespacho = $em->getRepository(Despacho::class)->find($codigoDespacho);
+        if(!$arDespacho->getEstadoGenerado()) {
+            $fechaActual = new \DateTime('now');
+            $query = $em->createQuery('UPDATE App\Entity\Guia g set g.estadoDespachado = 1, g.fechaDespacho=:fecha 
+                      WHERE g.codigoDespachoFk = :codigoDespacho')
+                ->setParameter('codigoDespacho', $codigoDespacho)
+                ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
+            $query->execute();
+            $arDespacho->setFechaSalida($fechaActual);
+            $arDespacho->setEstadoGenerado(1);
+            $em->persist($arDespacho);
+            $em->flush();
+        }
+
+        return true;
+    }
+
     public function retirarGuia($arrGuias): bool
     {
         $em = $this->getEntityManager();
@@ -47,7 +86,7 @@ class DespachoRepository extends ServiceEntityRepository
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(Guia::class)->find($codigoGuia);
                     $arGuia->setDespachoRel(null);
-                    $arGuia->setEstadoDespachado(0);
+                    $arGuia->setEstadoEmbarcado(0);
                     $em->persist($arGuia);
                 }
                 $em->flush();

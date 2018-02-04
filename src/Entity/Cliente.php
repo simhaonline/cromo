@@ -68,6 +68,11 @@ class Cliente
     protected $recogidasClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Cumplido", mappedBy="clienteRel")
+     */
+    protected $cumplidosClienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoClientePk()

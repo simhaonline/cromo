@@ -10,10 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class EntregarController extends Controller
+class EntregaController extends Controller
 {
    /**
-    * @Route("/pro/transporte/guia/entregar", name="mto_transporte_guia_entregar")
+    * @Route("/pro/transporte/guia/entrega", name="mto_transporte_guia_entrega")
     */    
     public function lista(Request $request)
     {
@@ -22,22 +22,24 @@ class EntregarController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtNumero', TextType::class)
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->add('btnEntregar', SubmitType::class, array('label' => 'Entregar'))
+            ->add('btnEntrega', SubmitType::class, array('label' => 'Entregar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $codigoDespacho = $form->get('txtNumero')->getData();
-                $query = $this->getDoctrine()->getRepository(Guia::class)->listaEntregar($codigoDespacho);
+                $query = $this->getDoctrine()->getRepository(Guia::class)->listaEntrega($codigoDespacho);
             }
-            if ($form->get('btnEntregar')->isClicked()) {
-                $arrGuias = $request->request->get('ChkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(Guia::class)->entregar($arrGuias);
-
+            if ($form->get('btnEntrega')->isClicked()) {
+                $arrGuias = $request->request->get('chkSeleccionar');
+                $arrControles = $request->request->All();
+                $respuesta = $this->getDoctrine()->getRepository(Guia::class)->entrega($arrGuias, $arrControles);
+                $codigoDespacho = $form->get('txtNumero')->getData();
+                $query = $this->getDoctrine()->getRepository(Guia::class)->listaEntrega($codigoDespacho);
             }
         }
         $arGuias = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('proceso/transporte/guia/entregar.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        return $this->render('proceso/transporte/guia/entrega.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
 }
 

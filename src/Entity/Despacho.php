@@ -33,7 +33,7 @@ class Despacho
     private $fechaRegistro;
 
     /**
-     * @ORM\Column(name="fecha_salida", type="date", nullable=true)
+     * @ORM\Column(name="fecha_salida", type="datetime", nullable=true)
      */
     private $fechaSalida;
 
@@ -61,6 +61,11 @@ class Despacho
      * @ORM\Column(name="codigo_ruta_fk", type="string", length=20, nullable=true)
      */
     private $codigoRutaFk;
+
+    /**
+     * @ORM\Column(name="cantidad", type="float")
+     */
+    private $cantidad = 0;
 
     /**
      * @ORM\Column(name="unidades", type="float")
@@ -106,6 +111,11 @@ class Despacho
      * @ORM\Column(name="vr_anticipo", type="float")
      */
     private $vrAnticipo = 0;
+
+    /**
+     * @ORM\Column(name="estado_generado", type="boolean", nullable=true)
+     */
+    private $estadoGenerado = false;
 
     /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
@@ -561,6 +571,38 @@ class Despacho
     public function setRutaRel($rutaRel): void
     {
         $this->rutaRel = $rutaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
+    }
+
+    /**
+     * @param mixed $cantidad
+     */
+    public function setCantidad($cantidad): void
+    {
+        $this->cantidad = $cantidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoGenerado()
+    {
+        return $this->estadoGenerado;
+    }
+
+    /**
+     * @param mixed $estadoGenerado
+     */
+    public function setEstadoGenerado($estadoGenerado): void
+    {
+        $this->estadoGenerado = $estadoGenerado;
     }
 
 

@@ -26,9 +26,10 @@ class GuiaRepository extends ServiceEntityRepository
         cd.nombre AS ciudadDestino,
         g.unidades,
         g.pesoReal,
-        g.pesoVolumen,
+        g.pesoVolumen,         
+        g.estadoImpreso,
+        g.estadoEmbarcado,
         g.estadoDespachado, 
-        g.estadoImpreso, 
         g.estadoEntregado, 
         g.estadoSoporte, 
         g.estadoCumplido
@@ -39,7 +40,7 @@ class GuiaRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function listaEntregar($codigoDespacho): array
+    public function listaEntrega($codigoDespacho): array
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
@@ -55,7 +56,28 @@ class GuiaRepository extends ServiceEntityRepository
         FROM App\Entity\Guia g 
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.codigoDespachoFk = :codigoDespacho'
+        WHERE g.estadoEntregado = 0 AND g.codigoDespachoFk = :codigoDespacho'
+        )->setParameter('codigoDespacho', $codigoDespacho);
+        return $query->execute();
+    }
+
+    public function listaSoporte($codigoDespacho): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, 
+        g.numero, 
+        g.fechaIngreso,
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk, 
+        c.nombreCorto AS clienteNombreCorto,  
+        cd.nombre AS ciudadDestino,
+        g.unidades,
+        g.pesoReal
+        FROM App\Entity\Guia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd
+        WHERE g.estadoEntregado = 1 AND g.estadoSoporte = 0 AND g.codigoDespachoFk = :codigoDespacho'
         )->setParameter('codigoDespacho', $codigoDespacho);
         return $query->execute();
     }
@@ -84,14 +106,33 @@ class GuiaRepository extends ServiceEntityRepository
 
     }
 
-    public function entregar($arrGuias): bool
+    public function entrega($arrGuias, $arrControles): bool
     {
         $em = $this->getEntityManager();
         if($arrGuias) {
             if (count($arrGuias) > 0) {
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(Guia::class)->find($codigoGuia);
-                    $arGuia->setEstadoEntegado(1);
+                    $fechaHora = date_create($arrControles['txtFechaEntrega'.$codigoGuia] . " " . $arrControles['txtHoraEntrega'.$codigoGuia]);
+                    $arGuia->setFechaEntrega($fechaHora);
+                    $arGuia->setEstadoEntregado(1);
+                    $em->persist($arGuia);
+                }
+                $em->flush();
+            }
+        }
+        return true;
+    }
+
+    public function soporte($arrGuias): bool
+    {
+        $em = $this->getEntityManager();
+        if($arrGuias) {
+            if (count($arrGuias) > 0) {
+                foreach ($arrGuias AS $codigoGuia) {
+                    $arGuia = $em->getRepository(Guia::class)->find($codigoGuia);
+                    $arGuia->setFechaSoporte(new \DateTime("now"));
+                    $arGuia->setEstadoSoporte(1);
                     $em->persist($arGuia);
                 }
                 $em->flush();

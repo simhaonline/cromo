@@ -143,6 +143,11 @@ class Guia
     private $estadoImpreso = false;
 
     /**
+     * @ORM\Column(name="estado_embarcado", type="boolean", nullable=true)
+     */
+    private $estadoEmbarcado = false;
+
+    /**
      * @ORM\Column(name="estado_despachado", type="boolean", nullable=true)
      */
     private $estadoDespachado = false;
@@ -858,6 +863,54 @@ class Guia
     public function setOperacionCargoRel($operacionCargoRel): void
     {
         $this->operacionCargoRel = $operacionCargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoEmbarcado()
+    {
+        return $this->estadoEmbarcado;
+    }
+
+    /**
+     * @param mixed $estadoEmbarcado
+     */
+    public function setEstadoEmbarcado($estadoEmbarcado): void
+    {
+        $this->estadoEmbarcado = $estadoEmbarcado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRutaFk()
+    {
+        return $this->codigoRutaFk;
+    }
+
+    /**
+     * @param mixed $codigoRutaFk
+     */
+    public function setCodigoRutaFk($codigoRutaFk): void
+    {
+        $this->codigoRutaFk = $codigoRutaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRutaRel()
+    {
+        return $this->rutaRel;
+    }
+
+    /**
+     * @param mixed $rutaRel
+     */
+    public function setRutaRel($rutaRel): void
+    {
+        $this->rutaRel = $rutaRel;
     }
 
 

@@ -45,7 +45,11 @@ class DespachoController extends Controller
                 $respuesta = $this->getDoctrine()->getRepository(Despacho::class)->retirarGuia($arrGuias);
                 if($respuesta) {
                     $em->flush();
+                    $this->getDoctrine()->getRepository(Despacho::class)->liquidar($codigoDespacho);
                 }
+            }
+            if ($form->get('btnImprimirManifiesto')->isClicked()) {
+                $respuesta = $this->getDoctrine()->getRepository(Despacho::class)->imprimirManifiesto($codigoDespacho);
             }
         }
 
@@ -73,10 +77,11 @@ class DespachoController extends Controller
                 foreach ($arrSeleccionados AS $codigo) {
                     $arGuia = $em->getRepository(Guia::class)->find($codigo);
                     $arGuia->setDespachoRel($arDespacho);
-                    $arGuia->setEstadoDespachado(1);
+                    $arGuia->setEstadoEmbarcado(1);
                     $em->persist($arGuia);
                 }
                 $em->flush();
+                $this->getDoctrine()->getRepository(Despacho::class)->liquidar($codigoDespacho);
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }

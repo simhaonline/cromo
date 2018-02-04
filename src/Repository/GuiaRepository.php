@@ -39,6 +39,27 @@ class GuiaRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function listaEntregar($codigoDespacho): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, 
+        g.numero, 
+        g.fechaIngreso,
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk, 
+        c.nombreCorto AS clienteNombreCorto,  
+        cd.nombre AS ciudadDestino,
+        g.unidades,
+        g.pesoReal
+        FROM App\Entity\Guia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd
+        WHERE g.codigoDespachoFk = :codigoDespacho'
+        )->setParameter('codigoDespacho', $codigoDespacho);
+        return $query->execute();
+    }
+
     public function despacho($codigoDespacho): array
     {
         $em = $this->getEntityManager();
@@ -61,6 +82,22 @@ class GuiaRepository extends ServiceEntityRepository
 
         return $query->execute();
 
+    }
+
+    public function entregar($arrGuias): bool
+    {
+        $em = $this->getEntityManager();
+        if($arrGuias) {
+            if (count($arrGuias) > 0) {
+                foreach ($arrGuias AS $codigoGuia) {
+                    $arGuia = $em->getRepository(Guia::class)->find($codigoGuia);
+                    $arGuia->setEstadoEntegado(1);
+                    $em->persist($arGuia);
+                }
+                $em->flush();
+            }
+        }
+        return true;
     }
 
     public function despachoPendiente(): array

@@ -73,6 +73,11 @@ class Cliente
     protected $cumplidosClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Factura", mappedBy="clienteRel")
+     */
+    protected $facturasClienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoClientePk()
@@ -135,6 +140,152 @@ class Cliente
     {
         $this->recogidasClienteRel = $recogidasClienteRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNit()
+    {
+        return $this->nit;
+    }
+
+    /**
+     * @param mixed $nit
+     */
+    public function setNit($nit): void
+    {
+        $this->nit = $nit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre1()
+    {
+        return $this->nombre1;
+    }
+
+    /**
+     * @param mixed $nombre1
+     */
+    public function setNombre1($nombre1): void
+    {
+        $this->nombre1 = $nombre1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre2()
+    {
+        return $this->nombre2;
+    }
+
+    /**
+     * @param mixed $nombre2
+     */
+    public function setNombre2($nombre2): void
+    {
+        $this->nombre2 = $nombre2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApellido1()
+    {
+        return $this->apellido1;
+    }
+
+    /**
+     * @param mixed $apellido1
+     */
+    public function setApellido1($apellido1): void
+    {
+        $this->apellido1 = $apellido1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApellido2()
+    {
+        return $this->apellido2;
+    }
+
+    /**
+     * @param mixed $apellido2
+     */
+    public function setApellido2($apellido2): void
+    {
+        $this->apellido2 = $apellido2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDireccion()
+    {
+        return $this->direccion;
+    }
+
+    /**
+     * @param mixed $direccion
+     */
+    public function setDireccion($direccion): void
+    {
+        $this->direccion = $direccion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTelefono()
+    {
+        return $this->telefono;
+    }
+
+    /**
+     * @param mixed $telefono
+     */
+    public function setTelefono($telefono): void
+    {
+        $this->telefono = $telefono;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCumplidosClienteRel()
+    {
+        return $this->cumplidosClienteRel;
+    }
+
+    /**
+     * @param mixed $cumplidosClienteRel
+     */
+    public function setCumplidosClienteRel($cumplidosClienteRel): void
+    {
+        $this->cumplidosClienteRel = $cumplidosClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasClienteRel()
+    {
+        return $this->facturasClienteRel;
+    }
+
+    /**
+     * @param mixed $facturasClienteRel
+     */
+    public function setFacturasClienteRel($facturasClienteRel): void
+    {
+        $this->facturasClienteRel = $facturasClienteRel;
+    }
+
+
 
 }
 

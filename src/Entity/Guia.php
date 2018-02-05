@@ -173,6 +173,16 @@ class Guia
     private $codigoDespachoFk;
 
     /**
+     * @ORM\Column(name="codigo_cumplido_fk", type="integer", nullable=true)
+     */
+    private $codigoCumplidoFk;
+
+    /**
+     * @ORM\Column(name="codigo_factura_fk", type="integer", nullable=true)
+     */
+    private $codigoFacturaFk;
+
+    /**
      * @ORM\Column(name="codigo_ruta_fk", type="string", length=20, nullable=true)
      */
     private $codigoRutaFk;
@@ -217,6 +227,18 @@ class Guia
      * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
      */
     private $despachoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cumplido", inversedBy="guiasCumplidoRel")
+     * @ORM\JoinColumn(name="codigo_cumplido_fk", referencedColumnName="codigo_cumplido_pk")
+     */
+    private $cumplidoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Factura", inversedBy="guiasFacturaRel")
+     * @ORM\JoinColumn(name="codigo_factura_fk", referencedColumnName="codigo_factura_pk")
+     */
+    private $facturaRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="Ruta", inversedBy="guiasRutaRel")
@@ -911,6 +933,70 @@ class Guia
     public function setRutaRel($rutaRel): void
     {
         $this->rutaRel = $rutaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCumplidoFk()
+    {
+        return $this->codigoCumplidoFk;
+    }
+
+    /**
+     * @param mixed $codigoCumplidoFk
+     */
+    public function setCodigoCumplidoFk($codigoCumplidoFk): void
+    {
+        $this->codigoCumplidoFk = $codigoCumplidoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCumplidoRel()
+    {
+        return $this->cumplidoRel;
+    }
+
+    /**
+     * @param mixed $cumplidoRel
+     */
+    public function setCumplidoRel($cumplidoRel): void
+    {
+        $this->cumplidoRel = $cumplidoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaFk()
+    {
+        return $this->codigoFacturaFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaFk
+     */
+    public function setCodigoFacturaFk($codigoFacturaFk): void
+    {
+        $this->codigoFacturaFk = $codigoFacturaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaRel()
+    {
+        return $this->facturaRel;
+    }
+
+    /**
+     * @param mixed $facturaRel
+     */
+    public function setFacturaRel($facturaRel): void
+    {
+        $this->facturaRel = $facturaRel;
     }
 
 

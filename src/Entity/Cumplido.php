@@ -49,6 +49,11 @@ class Cumplido
     private $clienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Guia", mappedBy="cumplidoRel")
+     */
+    protected $guiasCumplidoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCumplidoPk()
@@ -126,6 +131,54 @@ class Cumplido
     public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoClienteFk()
+    {
+        return $this->codigoClienteFk;
+    }
+
+    /**
+     * @param mixed $codigoClienteFk
+     */
+    public function setCodigoClienteFk($codigoClienteFk): void
+    {
+        $this->codigoClienteFk = $codigoClienteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasCumplidoRel()
+    {
+        return $this->guiasCumplidoRel;
+    }
+
+    /**
+     * @param mixed $guiasCumplidoRel
+     */
+    public function setGuiasCumplidoRel($guiasCumplidoRel): void
+    {
+        $this->guiasCumplidoRel = $guiasCumplidoRel;
     }
 
 

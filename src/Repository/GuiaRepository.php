@@ -106,6 +106,54 @@ class GuiaRepository extends ServiceEntityRepository
 
     }
 
+    public function cumplido($codigoCumplido): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, 
+        g.numero, 
+        g.fechaIngreso,        
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk,     
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,             
+        c.nombreCorto AS clienteNombreCorto, 
+        cd.nombre AS ciudadDestino
+        FROM App\Entity\Guia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd
+        WHERE g.codigoCumplidoFk = :codigoCumplido'
+        )->setParameter('codigoCumplido', $codigoCumplido);
+
+        return $query->execute();
+
+    }
+
+    public function factura($codigoFactura): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, 
+        g.numero, 
+        g.fechaIngreso,        
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk,     
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,             
+        c.nombreCorto AS clienteNombreCorto, 
+        cd.nombre AS ciudadDestino
+        FROM App\Entity\Guia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd
+        WHERE g.codigoFacturaFk = :codigoFactura'
+        )->setParameter('codigoFactura', $codigoFactura);
+
+        return $query->execute();
+
+    }
+
     public function entrega($arrGuias, $arrControles): bool
     {
         $em = $this->getEntityManager();
@@ -161,7 +209,28 @@ class GuiaRepository extends ServiceEntityRepository
         ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk'
         );
         return $query->execute();
+    }
 
+    public function cumplidoPendiente($codigoCliente): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, 
+        g.numero,
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk, 
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,        
+        c.nombreCorto AS clienteNombreCorto, 
+        cd.nombre AS ciudadDestino
+        FROM App\Entity\Guia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd
+        WHERE g.estadoCumplido = 0 AND g.estadoSoporte = 1 AND g.codigoClienteFk = :codigoCliente
+        ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk'
+        )->setParameter('codigoCliente', $codigoCliente);
+        return $query->execute();
     }
 
     public function informeDespachoPendienteRuta(): array

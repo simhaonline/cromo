@@ -37,6 +37,11 @@ class Operacion
     protected $recogidasOperacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RecogidaProgramada", mappedBy="operacionRel")
+     */
+    protected $recogidasProgramadasOperacionRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="DespachoRecogida", mappedBy="operacionRel")
      */
     protected $despachosRecogidasOperacionRel;
@@ -177,6 +182,22 @@ class Operacion
     public function setDespachosOperacionRel($despachosOperacionRel): void
     {
         $this->despachosOperacionRel = $despachosOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasProgramadasOperacionRel()
+    {
+        return $this->recogidasProgramadasOperacionRel;
+    }
+
+    /**
+     * @param mixed $recogidasProgramadasOperacionRel
+     */
+    public function setRecogidasProgramadasOperacionRel($recogidasProgramadasOperacionRel): void
+    {
+        $this->recogidasProgramadasOperacionRel = $recogidasProgramadasOperacionRel;
     }
 
 

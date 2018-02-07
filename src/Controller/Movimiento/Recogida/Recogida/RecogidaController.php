@@ -13,10 +13,11 @@ class RecogidaController extends Controller
    /**
     * @Route("/mto/recogida/recogida/lista", name="mto_recogida_recogida_lista")
     */    
-    public function lista()
+    public function lista(Request $request)
     {
-        $arRecogidas = $this->getDoctrine()
-            ->getRepository(Recogida::class)->lista();
+        $paginator  = $this->get('knp_paginator');
+        $query = $this->getDoctrine()->getRepository(Recogida::class)->lista();
+        $arRecogidas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
         return $this->render('movimiento/recogida/recogida/lista.html.twig', ['arRecogidas' => $arRecogidas]);
     }
 
@@ -33,8 +34,8 @@ class RecogidaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-                //$formato = new \App\Formato\Despacho();
-                //$formato->Generar($em, $codigoRecogida);
+                $formato = new \App\Formato\Recogida();
+                $formato->Generar($em, $codigoRecogida);
             }
         }
 

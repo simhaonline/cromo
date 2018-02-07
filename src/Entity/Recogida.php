@@ -53,11 +53,6 @@ class Recogida
     private $codigoCiudadFk;
 
     /**
-     * @ORM\Column(name="codigo_ciudad_destino_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCiudadDestinoFk;
-
-    /**
      * @ORM\Column(name="direccion", type="string", length=200, nullable=true)
      */
     private $direccion;
@@ -68,32 +63,37 @@ class Recogida
     private $telefono;
 
     /**
-     * @ORM\Column(name="unidades", type="float")
+     * @ORM\Column(name="unidades", type="float", options={"default" : 0})
      */
     private $unidades = 0;
 
     /**
-     * @ORM\Column(name="peso_real", type="float")
+     * @ORM\Column(name="peso_real", type="float", options={"default" : 0})
      */
     private $pesoReal = 0;
 
     /**
-     * @ORM\Column(name="peso_volumen", type="float")
+     * @ORM\Column(name="peso_volumen", type="float", options={"default" : 0})
      */
     private $pesoVolumen = 0;
 
     /**
-     * @ORM\Column(name="vr_declara", type="float")
+     * @ORM\Column(name="vr_declara", type="float", options={"default" : 0})
      */
     private $vrDeclara = 0;
 
     /**
-     * @ORM\Column(name="estado_programado", type="boolean", nullable=true)
+         * @ORM\Column(name="estado_planificado", type="boolean", options={"default" : 0})
+     */
+    private $estadoPlanificado = false;
+
+    /**
+     * @ORM\Column(name="estado_programado", type="boolean", options={"default" : 0})
      */
     private $estadoProgramado = false;
 
     /**
-     * @ORM\Column(name="estado_recogido", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_recogido", type="boolean", options={"default" : 0})
      */
     private $estadoRecogido = false;
 
@@ -118,12 +118,6 @@ class Recogida
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     private $ciudadRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ciudad", inversedBy="recogidasCiudadDestinoRel")
-     * @ORM\JoinColumn(name="codigo_ciudad_destino_fk", referencedColumnName="codigo_ciudad_pk")
-     */
-    private $ciudadDestinoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cliente", inversedBy="recogidasClienteRel")
@@ -268,22 +262,6 @@ class Recogida
     /**
      * @return mixed
      */
-    public function getCodigoCiudadDestinoFk()
-    {
-        return $this->codigoCiudadDestinoFk;
-    }
-
-    /**
-     * @param mixed $codigoCiudadDestinoFk
-     */
-    public function setCodigoCiudadDestinoFk($codigoCiudadDestinoFk): void
-    {
-        $this->codigoCiudadDestinoFk = $codigoCiudadDestinoFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getDireccion()
     {
         return $this->direccion;
@@ -412,6 +390,22 @@ class Recogida
     /**
      * @return mixed
      */
+    public function getCodigoDespachoRecogidaFk()
+    {
+        return $this->codigoDespachoRecogidaFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoRecogidaFk
+     */
+    public function setCodigoDespachoRecogidaFk($codigoDespachoRecogidaFk): void
+    {
+        $this->codigoDespachoRecogidaFk = $codigoDespachoRecogidaFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -460,22 +454,6 @@ class Recogida
     /**
      * @return mixed
      */
-    public function getCiudadDestinoRel()
-    {
-        return $this->ciudadDestinoRel;
-    }
-
-    /**
-     * @param mixed $ciudadDestinoRel
-     */
-    public function setCiudadDestinoRel($ciudadDestinoRel): void
-    {
-        $this->ciudadDestinoRel = $ciudadDestinoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getClienteRel()
     {
         return $this->clienteRel;
@@ -487,22 +465,6 @@ class Recogida
     public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoDespachoRecogidaFk()
-    {
-        return $this->codigoDespachoRecogidaFk;
-    }
-
-    /**
-     * @param mixed $codigoDespachoRecogidaFk
-     */
-    public function setCodigoDespachoRecogidaFk($codigoDespachoRecogidaFk): void
-    {
-        $this->codigoDespachoRecogidaFk = $codigoDespachoRecogidaFk;
     }
 
     /**
@@ -520,6 +482,23 @@ class Recogida
     {
         $this->despachoRecogidaRel = $despachoRecogidaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoPlanificado()
+    {
+        return $this->estadoPlanificado;
+    }
+
+    /**
+     * @param mixed $estadoPlanificado
+     */
+    public function setEstadoPlanificado($estadoPlanificado): void
+    {
+        $this->estadoPlanificado = $estadoPlanificado;
+    }
+
 
 
 

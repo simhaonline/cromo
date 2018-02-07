@@ -68,6 +68,11 @@ class Cliente
     protected $recogidasClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RecogidaProgramada", mappedBy="clienteRel")
+     */
+    protected $recogidasProgramadasClienteRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="Cumplido", mappedBy="clienteRel")
      */
     protected $cumplidosClienteRel;
@@ -283,6 +288,22 @@ class Cliente
     public function setFacturasClienteRel($facturasClienteRel): void
     {
         $this->facturasClienteRel = $facturasClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasProgramadasClienteRel()
+    {
+        return $this->recogidasProgramadasClienteRel;
+    }
+
+    /**
+     * @param mixed $recogidasProgramadasClienteRel
+     */
+    public function setRecogidasProgramadasClienteRel($recogidasProgramadasClienteRel): void
+    {
+        $this->recogidasProgramadasClienteRel = $recogidasProgramadasClienteRel;
     }
 
 

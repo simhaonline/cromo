@@ -4,6 +4,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>OP</th>
             <th>REG</th>
             <th>FECHA</th>
             <th>HORA</th>
@@ -24,6 +25,7 @@
         {% for arRecogida in arRecogidas %}
             <tr>
                 <td>{{ arRecogida.codigoRecogidaPk }}</td>
+                <td>{{ arRecogida.codigoOperacionFk }}</td>
                 <td>{{ arRecogida.fechaRegistro | date('Y-m-d') }}</td>
                 <td>{{ arRecogida.fecha | date('Y-m-d') }}</td>
                 <td>{{ arRecogida.fecha | date('H:i') }}</td>
@@ -42,13 +44,18 @@
         {% endfor %}
         </tbody>
     </table>
-    <div class="btn-toolbar">
+    <div class="btn-group" style="float: left">
         <div class="btn-group" style="float: left">
             <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRecogidas.getTotalItemCount }}</span></div>
         </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arRecogidas) }}
+    </div>
 
-        <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-            {{ knp_pagination_render(arRecogidas) }}
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('mto_recogida_recogida_nuevo', {'codigoRecogida': 0}) }}">Nuevo</a>
         </div>
     </div>
 {% endblock %}

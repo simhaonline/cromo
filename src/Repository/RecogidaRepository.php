@@ -18,7 +18,8 @@ class RecogidaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'SELECT r.codigoRecogidaPk, r.fechaRegistro, r.fecha, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad, 
-        r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen, r.anunciante, r.direccion, r.telefono
+        r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen, r.anunciante, r.direccion, r.telefono,
+        r.codigoOperacionFk
         FROM App\Entity\Recogida r 
         LEFT JOIN r.clienteRel c
         LEFT JOIN r.ciudadRel co'

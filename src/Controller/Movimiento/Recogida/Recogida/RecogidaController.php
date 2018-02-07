@@ -3,6 +3,7 @@
 namespace App\Controller\Movimiento\Recogida\Recogida;
 
 use App\Entity\Recogida;
+use App\Form\Type\RecogidaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -43,5 +44,23 @@ class RecogidaController extends Controller
             'arRecogida' => $arRecogida,
             'form' => $form->createView()]);
     }
+
+    /**
+     * @Route("/mto/recogida/recogida/nuevo/{codigoRecogida}", name="mto_recogida_recogida_nuevo")
+     */
+    public function nuevo(Request $request, $codigoRecogida)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arRecogida = new Recogida();
+        $form = $this->createForm(RecogidaType::class, $arRecogida);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arRecogida = $form->getData();
+            $em->persist($arRecogida);
+            $em->flush();
+        }
+        return $this->render('movimiento/recogida/recogida/nuevo.html.twig', ['form' => $form->createView()]);
+    }
+
 }
 

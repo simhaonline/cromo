@@ -20,7 +20,13 @@ class RecogidaType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('anunciante',TextType::class, array('required' => true))
                 ->add('fecha', DateTimeType::class)
-                ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
+            ->add('direccion', TextType::class)
+            ->add('telefono', TextType::class)
+            ->add('unidades', NumberType::class)
+            ->add('pesoReal', NumberType::class)
+            ->add('pesoVolumen', NumberType::class)
+            ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
+                ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));
     }
 
     /**

@@ -58,8 +58,14 @@ class RecogidaController extends Controller
             $arRecogida = $form->getData();
             $em->persist($arRecogida);
             $em->flush();
+            if ($form->get('guardarnuevo')->isClicked()) {
+                return $this->redirect($this->generateUrl('mto_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
+            } else {
+                return $this->redirect($this->generateUrl('mto_recogida_recogida_lista'));
+            }
+
         }
-        return $this->render('movimiento/recogida/recogida/nuevo.html.twig', ['form' => $form->createView()]);
+        return $this->render('movimiento/recogida/recogida/nuevo.html.twig', ['arRecogida' => $arRecogida,'form' => $form->createView()]);
     }
 
 }

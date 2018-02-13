@@ -2,6 +2,7 @@
 
 namespace App\Controller\Movimiento\Recogida\Recogida;
 
+use App\Entity\Cliente;
 use App\Entity\Recogida;
 use App\Form\Type\RecogidaType;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,19 +52,33 @@ class RecogidaController extends Controller
     public function nuevo(Request $request, $codigoRecogida)
     {
         $em = $this->getDoctrine()->getManager();
-        $arRecogida = new Recogida();
+        if($codigoRecogida == 0) {
+            $arRecogida = new Recogida();
+            $arRecogida->setFechaRegistro(new \DateTime('now'));
+            $arRecogida->setFecha(new \DateTime('now'));
+        }
+
         $form = $this->createForm(RecogidaType::class, $arRecogida);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arRecogida = $form->getData();
-            $em->persist($arRecogida);
-            $em->flush();
-            if ($form->get('guardarnuevo')->isClicked()) {
-                return $this->redirect($this->generateUrl('mto_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
-            } else {
-                return $this->redirect($this->generateUrl('mto_recogida_recogida_lista'));
-            }
+            $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+            if($txtCodigoCliente != '') {
+                $arCliente = $em->getRepository(Cliente::class)->find($txtCodigoCliente);
+                if($arCliente) {
+                    $prueba = $this->getUser();
 
+                    $arRecogida->setClienteRel($arCliente);
+                    $arRecogida->setCodigoOperacionFk('MED');
+                    $em->persist($arRecogida);
+                    $em->flush();
+                    if ($form->get('guardarnuevo')->isClicked()) {
+                        return $this->redirect($this->generateUrl('mto_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
+                    } else {
+                        return $this->redirect($this->generateUrl('mto_recogida_recogida_lista'));
+                    }
+                }
+            }
         }
         return $this->render('movimiento/recogida/recogida/nuevo.html.twig', ['arRecogida' => $arRecogida,'form' => $form->createView()]);
     }

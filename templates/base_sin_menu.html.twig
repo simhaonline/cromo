@@ -5,12 +5,12 @@
         <title>{% block title %}Cromo{% endblock %}</title>
     {% block stylesheets %}
         <!-- Bootstrap Core CSS -->
-        <link rel="stylesheet" href="{{ asset('build/vendor/bootstrap/css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('build/vendor/metisMenu/metisMenu.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('build/dist/css/sb-admin-2.css') }}">
-        <link rel="stylesheet" href="{{ asset('build/vendor/morrisjs/morris.css') }}">
-        <link rel="stylesheet" href="{{ asset('build/vendor/font-awesome/css/font-awesome.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('build/css/general.css') }}">
+        <link rel="stylesheet" href="{{ asset('../assets/vendor/bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('../assets/vendor/metisMenu/metisMenu.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('../assets/dist/css/sb-admin-2.css') }}">
+        <link rel="stylesheet" href="{{ asset('../assets/vendor/morrisjs/morris.css') }}">
+        <link rel="stylesheet" href="{{ asset('../assets/vendor/font-awesome/css/font-awesome.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('../assets/css/general.css') }}">
     {% endblock %}
 </head>
 <body>
@@ -30,13 +30,13 @@
     {% endblock %}
     </div>
 {% block javascripts %}
-    <script src="{{ asset('build/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('build/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('build/vendor/metisMenu/metisMenu.min.js') }}"></script>
-    <script src="{{ asset('build/vendor/raphael/raphael.min.js') }}"></script>
-    <script src="{{ asset('build/vendor/morrisjs/morris.min.js') }}"></script>
-    <script src="{{ asset('build/data/morris-data.js') }}"></script>
-    <script src="{{ asset('build/dist/js/sb-admin-2.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/metisMenu/metisMenu.min.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/raphael/raphael.min.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/morrisjs/morris.min.js') }}"></script>
+    <script src="{{ asset('../assets/data/morris-data.js') }}"></script>
+    <script src="{{ asset('../assets/dist/js/sb-admin-2.js') }}"></script>
 {% endblock %}
 </body>
 </html>

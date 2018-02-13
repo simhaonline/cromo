@@ -66,10 +66,8 @@ class RecogidaController extends Controller
             if($txtCodigoCliente != '') {
                 $arCliente = $em->getRepository(Cliente::class)->find($txtCodigoCliente);
                 if($arCliente) {
-                    $prueba = $this->getUser();
-
                     $arRecogida->setClienteRel($arCliente);
-                    $arRecogida->setCodigoOperacionFk('MED');
+                    $arRecogida->setOperacionRel($this->getUser()->getOperacionRel());
                     $em->persist($arRecogida);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {

@@ -44,6 +44,12 @@ class Usuario implements UserInterface, \Serializable
      */
     private $isActive;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Operacion", inversedBy="usuariosOperacionRel")
+     * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
+     */
+    private $operacionRel;
+
     public function __construct()
     {
         $this->isActive = true;
@@ -100,5 +106,40 @@ class Usuario implements UserInterface, \Serializable
             // $this->salt
             ) = unserialize($serialized);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperacionFk()
+    {
+        return $this->codigoOperacionFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionFk
+     */
+    public function setCodigoOperacionFk($codigoOperacionFk): void
+    {
+        $this->codigoOperacionFk = $codigoOperacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionRel()
+    {
+        return $this->operacionRel;
+    }
+
+    /**
+     * @param mixed $operacionRel
+     */
+    public function setOperacionRel($operacionRel): void
+    {
+        $this->operacionRel = $operacionRel;
+    }
+
+
+
 }
 

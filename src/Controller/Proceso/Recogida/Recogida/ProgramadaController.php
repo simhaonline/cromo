@@ -3,7 +3,9 @@
 namespace App\Controller\Proceso\Recogida\Recogida;
 
 use App\Entity\Recogida;
+use App\Entity\Cliente;
 use App\Entity\RecogidaProgramada;
+use App\Form\Type\RecogidaProgramadaType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,7 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class ProgramadaController extends Controller
 {
    /**
-    * @Route("/pro/recogida/recogida/programada", name="mto_recogida_recogida_programada")
+    * @Route("/pro/recogida/recogida/programada", name="pro_recogida_recogida_programada")
     */    
     public function lista(Request $request)
     {
@@ -49,6 +51,40 @@ class ProgramadaController extends Controller
         $query = $this->getDoctrine()->getRepository(RecogidaProgramada::class)->lista();
         $arRecogidasProgramadas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
         return $this->render('proceso/recogida/recogida/programada.html.twig', ['arRecogidasProgramadas' => $arRecogidasProgramadas, 'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/pro/recogida/recogida/nuevo/{codigoRecogidaProgramada}", name="pro_recogida_recogida_nuevo")
+     */
+    public function nuevo(Request $request, $codigoRecogidaProgramada)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if($codigoRecogidaProgramada == 0) {
+            $arRecogidaProgramada = new RecogidaProgramada();
+            $arRecogidaProgramada->setHora(new \DateTime('now'));
+        }
+
+        $form = $this->createForm(RecogidaProgramadaType::class, $arRecogidaProgramada);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arRecogidaProgramada = $form->getData();
+            $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+            if($txtCodigoCliente != '') {
+                $arCliente = $em->getRepository(Cliente::class)->find($txtCodigoCliente);
+                if($arCliente) {
+                    $arRecogidaProgramada->setClienteRel($arCliente);
+                    $arRecogidaProgramada->setOperacionRel($this->getUser()->getOperacionRel());
+                    $em->persist($arRecogidaProgramada);
+                    $em->flush();
+                    if ($form->get('guardarnuevo')->isClicked()) {
+                        return $this->redirect($this->generateUrl('pro_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
+                    } else {
+                        return $this->redirect($this->generateUrl('pro_recogida_recogida_programada'));
+                    }
+                }
+            }
+        }
+        return $this->render('proceso/recogida/recogida/nuevo.html.twig', ['arRecogidaProgramada' => $arRecogidaProgramada,'form' => $form->createView()]);
     }
 }
 

@@ -57,6 +57,11 @@ class Operacion
     protected $despachosOperacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Usuario", mappedBy="operacionRel")
+     */
+    protected $usuariosOperacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoOperacionPk()

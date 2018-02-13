@@ -3,6 +3,7 @@
 namespace App\Controller\Movimiento\Recogida\Despacho;
 
 use App\Entity\DespachoRecogida;
+use App\Form\Type\DespachoRecogidaType;
 use App\Entity\DespachoRecogidaAuxiliar;
 use App\Entity\Recogida;
 use App\Entity\Auxiliar;
@@ -14,6 +15,41 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class DespachoRecogidaController extends Controller
 {
+
+
+    /**
+     * @Route("/mto/recogida/despacho/nuevo/{codigoDespachoRecogida}", name="mto_recogida_despacho_nuevo")
+     */
+    public function nuevo(Request $request, $codigoDespachoRecogida)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if($codigoDespachoRecogida == 0) {
+            $arDespachoRecogida = new DespachoRecogida();
+        }
+
+        $form = $this->createForm(DespachoRecogidaType::class, $arDespachoRecogida);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arRecogida = $form->getData();
+            $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+            if($txtCodigoCliente != '') {
+                $arCliente = $em->getRepository(Cliente::class)->find($txtCodigoCliente);
+                if($arCliente) {
+                    $arRecogida->setClienteRel($arCliente);
+                    $arRecogida->setOperacionRel($this->getUser()->getOperacionRel());
+                    $em->persist($arRecogida);
+                    $em->flush();
+                    if ($form->get('guardarnuevo')->isClicked()) {
+                        return $this->redirect($this->generateUrl('mto_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
+                    } else {
+                        return $this->redirect($this->generateUrl('mto_recogida_recogida_lista'));
+                    }
+                }
+            }
+        }
+        return $this->render('movimiento/recogida/despacho/nuevo.html.twig', ['arDespachoRecogida' => $arDespachoRecogida,'form' => $form->createView()]);
+    }
+
    /**
     * @Route("/mto/recogida/despacho/lista", name="mto_recogida_despacho_lista")
     */    

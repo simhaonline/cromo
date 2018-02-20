@@ -47,15 +47,19 @@ class DespachoRecogidaController extends Controller
                 }
             }
         }
-        return $this->render('movimiento/recogida/despacho/nuevo.html.twig', ['arDespachoRecogida' => $arDespachoRecogida,'form' => $form->createView()]);
+        return $this->render('movimiento/recogida/despacho/nuevo.html.twig', [
+            'arDespachoRecogida' => $arDespachoRecogida,
+            'form' => $form->createView()]);
     }
 
    /**
     * @Route("/mto/recogida/despacho/lista", name="mto_recogida_despacho_lista")
     */    
-    public function lista()
+    public function lista(Request $request)
     {
-        $arDespachosRecogida = $this->getDoctrine()->getRepository(DespachoRecogida::class)->lista();
+        $paginator  = $this->get('knp_paginator');
+        $query = $this->getDoctrine()->getRepository(DespachoRecogida::class)->lista();
+        $arDespachosRecogida = $paginator->paginate($query, $request->query->getInt('page', 1),10);
         return $this->render('movimiento/recogida/despacho/lista.html.twig', ['arDespachosRecogida' => $arDespachosRecogida]);
     }
 

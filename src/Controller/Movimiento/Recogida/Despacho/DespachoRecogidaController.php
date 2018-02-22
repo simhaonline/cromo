@@ -3,6 +3,7 @@
 namespace App\Controller\Movimiento\Recogida\Despacho;
 
 use App\Entity\DespachoRecogida;
+use App\Entity\Vehiculo;
 use App\Form\Type\DespachoRecogidaType;
 use App\Entity\DespachoRecogidaAuxiliar;
 use App\Entity\Recogida;
@@ -30,19 +31,19 @@ class DespachoRecogidaController extends Controller
         $form = $this->createForm(DespachoRecogidaType::class, $arDespachoRecogida);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arRecogida = $form->getData();
-            $txtCodigoCliente = $request->request->get('txtCodigoCliente');
-            if($txtCodigoCliente != '') {
-                $arCliente = $em->getRepository(Cliente::class)->find($txtCodigoCliente);
-                if($arCliente) {
-                    $arRecogida->setClienteRel($arCliente);
-                    $arRecogida->setOperacionRel($this->getUser()->getOperacionRel());
-                    $em->persist($arRecogida);
+            $arDespachoRecogida = $form->getData();
+            $txtCodigoVehiculo = $request->request->get('txtCodigoVehiculo');
+            if($txtCodigoVehiculo != '') {
+                $arVehiculo = $em->getRepository(Vehiculo::class)->find($txtCodigoVehiculo);
+                if($arVehiculo) {
+                    $arDespachoRecogida->setVehiculoRel($arVehiculo);
+                    $arDespachoRecogida->setOperacionRel($this->getUser()->getOperacionRel());
+                    $em->persist($arDespachoRecogida);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {
-                        return $this->redirect($this->generateUrl('mto_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
+                        return $this->redirect($this->generateUrl('mto_recogida_despacho_nuevo', array('codigoDespachoRecogida' => 0)));
                     } else {
-                        return $this->redirect($this->generateUrl('mto_recogida_recogida_lista'));
+                        return $this->redirect($this->generateUrl('mto_recogida_despacho_lista'));
                     }
                 }
             }

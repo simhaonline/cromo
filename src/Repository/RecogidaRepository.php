@@ -33,11 +33,11 @@ class RecogidaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'SELECT r.codigoRecogidaPk, r.fechaRegistro, r.fecha, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad, 
-        cd.nombre AS ciudadDestino, r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen
+        r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen
         FROM App\Entity\Recogida r 
         LEFT JOIN r.clienteRel c
         LEFT JOIN r.ciudadRel co
-        LEFT JOIN r.ciudadDestinoRel cd
+        
         WHERE r.codigoDespachoRecogidaFk = :codigoDespachoRecogida'
         )->setParameter('codigoDespachoRecogida', $codigoRecogidaDespacho);
 
@@ -49,11 +49,10 @@ class RecogidaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT r.codigoRecogidaPk, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad, cd.nombre AS ciudadDestino
+            'SELECT r.codigoRecogidaPk, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad
         FROM App\Entity\Recogida r 
         LEFT JOIN r.clienteRel c
         LEFT JOIN r.ciudadRel co
-        LEFT JOIN r.ciudadDestinoRel cd
         WHERE r.estadoProgramado = 0'
         );
         return $query->execute();

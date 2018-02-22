@@ -7,7 +7,6 @@
             <th>ID</th>
             <th>CLIENTE</th>
             <th>ORIGEN</th>
-            <th>DESTINO</th>
             <th></th>
         </tr>
         </thead>
@@ -17,7 +16,6 @@
                 <td>{{ arRecogida.codigoRecogidaPk }}</td>
                 <td>{{ arRecogida.clienteNombreCorto }}</td>
                 <td>{{ arRecogida.ciudad }}</td>
-                <td>{{ arRecogida.ciudadDestino }}</td>
                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecogida.codigoRecogidaPk }}" /></td>
             </tr>
         {% endfor %}

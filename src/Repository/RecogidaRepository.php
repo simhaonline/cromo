@@ -58,6 +58,22 @@ class RecogidaRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function listaDescarga($codigoRecogidaDespacho): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT r.codigoRecogidaPk, r.fechaRegistro, r.fecha, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad, 
+        r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen
+        FROM App\Entity\Recogida r 
+        LEFT JOIN r.clienteRel c
+        LEFT JOIN r.ciudadRel co        
+        WHERE r.codigoDespachoRecogidaFk = :codigoDespachoRecogida AND r.estadoDescargado = 0'
+        )->setParameter('codigoDespachoRecogida', $codigoRecogidaDespacho);
+
+        return $query->execute();
+
+    }
+
     public function despachoSinDescargar($codigoRecogidaDespacho): array
     {
         $em = $this->getEntityManager();
@@ -123,4 +139,24 @@ class RecogidaRepository extends ServiceEntityRepository
         $arrResumen['descargadas'] = $descagadas;
         return $arrResumen;
     }
+
+    public function descarga($arrRecogidas, $arrControles): bool
+    {
+        $em = $this->getEntityManager();
+        if($arrRecogidas) {
+            if (count($arrRecogidas) > 0) {
+                foreach ($arrRecogidas AS $codigo) {
+                    $arRecogida = $em->getRepository(Recogida::class)->find($codigo);
+                    $arRecogida->setUnidades($arrControles['txtUnidades'.$codigo]);
+                    $arRecogida->setPesoReal($arrControles['txtPesoReal'.$codigo]);
+                    $arRecogida->setPesoVolumen($arrControles['txtPesoVolumen'.$codigo]);
+                    $arRecogida->setEstadoDescargado(1);
+                    $em->persist($arRecogida);
+                }
+                $em->flush();
+            }
+        }
+        return true;
+    }
+
 }

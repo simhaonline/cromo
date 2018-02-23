@@ -28,49 +28,43 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>OI</th>
-            <th>OC</th>
-            <th>NUMERO</th>
+            <th>REG</th>
             <th>FECHA</th>
             <th>CLIENTE</th>
-            <th>DESTINO</th>
+            <th>CIUDAD</th>
             <th>UND</th>
             <th>PES</th>
-            <th>FECHA</th>
-            <th>HORA</th>
+            <th>VOL</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
-        {% for arGuia in arGuias %}
+        {% for arRecogida in arRecogidas %}
             <tr>
-                <td>{{ arGuia.codigoGuiaPk }}</td>
-                <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
-                <td>{{ arGuia.codigoOperacionCargoFk }}</td>
-                <td>{{ arGuia.numero }}</td>
-                <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
-                <td>{{ arGuia.clienteNombreCorto }}</td>
-                <td>{{ arGuia.ciudadDestino }}</td>
-                <td class="numero">{{ arGuia.unidades }}</td>
-                <td class="numero">{{ arGuia.pesoReal }}</td>
-                <td style="text-align: right"><input class="input-grid" type="text" name="txtFechaEntrega{{ arGuia.codigoGuiaPk }}" value="{{ "now"|date("Y/m/d") }}" size="20" style="text-align: right; width:80px" onclick="this.select()"/></td>
-                <td style="text-align: right"><input class="input-grid" type="text" name="txtHoraEntrega{{ arGuia.codigoGuiaPk }}"  value="{{ "now"|date("H:i") }}" size="10" style="text-align: right; width:40px" onclick="this.select()"/></td>
-                <td class="seleccion"><input type="checkbox" name="chkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
+                <td>{{ arRecogida.codigoRecogidaPk }}<input type="hidden" name="LblCodigo[]" value="{{ arRecogida.codigoRecogidaPk }}"></td>
+                <td>{{ arRecogida.fechaRegistro | date('Y-m-d') }}</td>
+                <td>{{ arRecogida.fecha | date('Y-m-d') }}</td>
+                <td>{{ arRecogida.clienteNombreCorto }}</td>
+                <td>{{ arRecogida.ciudad }}</td>
+                <td style="text-align: right"><input class="input-grid" type="text" name="txtUnidades{{ arRecogida.codigoRecogidaPk }}" value="{{ arRecogida.unidades  }}" size="10" style="text-align: right; width:40px" onclick="this.select()"/></td>
+                <td style="text-align: right"><input class="input-grid" type="text" name="txtPesoReal{{ arRecogida.codigoRecogidaPk }}" value="{{ arRecogida.pesoReal  }}" size="10" style="text-align: right; width:40px" onclick="this.select()"/></td>
+                <td style="text-align: right"><input class="input-grid" type="text" name="txtPesoVolumen{{ arRecogida.codigoRecogidaPk }}" value="{{ arRecogida.pesoVolumen  }}" size="10" style="text-align: right; width:40px" onclick="this.select()"/></td>
+                <td style="text-align: center"><input type="checkbox" name="chkSeleccionar[]" value="{{ arRecogida.codigoRecogidaPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
     <div class="btn-group" style="float: left">
-        <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arGuias.getTotalItemCount }}</span></div>
+        <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRecogidas.getTotalItemCount }}</span></div>
     </div>
 
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-        {{ knp_pagination_render(arGuias) }}
+        {{ knp_pagination_render(arRecogidas) }}
     </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
-            {{ form_widget(form.btnEntrega, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnDescarga, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
     </div>
     {{ form_rest(form) }}

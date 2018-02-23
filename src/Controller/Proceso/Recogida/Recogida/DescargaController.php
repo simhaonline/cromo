@@ -2,7 +2,7 @@
 
 namespace App\Controller\Proceso\Recogida\Recogida;
 
-use App\Entity\Guia;
+use App\Entity\Recogida;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,28 +18,30 @@ class DescargaController extends Controller
     public function lista(Request $request)
     {
         $paginator  = $this->get('knp_paginator');
-        $query = $this->getDoctrine()->getRepository(Guia::class)->findBy(array('codigoGuiaPk' => NULL));
+        $query = $this->getDoctrine()->getRepository(Recogida::class)->findBy(array('codigoRecogidaPk' => NULL));
         $form = $this->createFormBuilder()
             ->add('txtNumero', TextType::class)
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->add('btnEntrega', SubmitType::class, array('label' => 'Entregar'))
+            ->add('btnDescarga', SubmitType::class, array('label' => 'Descarga'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $codigoDespacho = $form->get('txtNumero')->getData();
-                $query = $this->getDoctrine()->getRepository(Guia::class)->listaEntrega($codigoDespacho);
+                $codigoDespachoRecogida = $form->get('txtNumero')->getData();
+                $query = $this->getDoctrine()->getRepository(Recogida::class)->listaDescarga($codigoDespachoRecogida);
             }
-            if ($form->get('btnEntrega')->isClicked()) {
-                $arrGuias = $request->request->get('chkSeleccionar');
+            if ($form->get('btnDescarga')->isClicked()) {
+                $arrRecogidas = $request->request->get('chkSeleccionar');
                 $arrControles = $request->request->All();
-                $respuesta = $this->getDoctrine()->getRepository(Guia::class)->entrega($arrGuias, $arrControles);
-                $codigoDespacho = $form->get('txtNumero')->getData();
-                $query = $this->getDoctrine()->getRepository(Guia::class)->listaEntrega($codigoDespacho);
+                $respuesta = $this->getDoctrine()->getRepository(Recogida::class)->descarga($arrRecogidas, $arrControles);
+                $codigoDespachoRecogida = $form->get('txtNumero')->getData();
+                $query = $this->getDoctrine()->getRepository(Recogida::class)->listaDescarga($codigoDespachoRecogida);
             }
         }
-        $arGuias = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('proceso/transporte/guia/entrega.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        $arRecogidas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        return $this->render('proceso/recogida/recogida/descarga.html.twig', [
+            'arRecogidas' => $arRecogidas,
+            'form' => $form->createView()]);
     }
 }
 

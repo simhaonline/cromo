@@ -98,6 +98,11 @@ class Recogida
     private $estadoRecogido = false;
 
     /**
+     * @ORM\Column(name="estado_descargado", type="boolean", options={"default" : 0})
+     */
+    private $estadoDescargado = false;
+
+    /**
      * @ORM\Column(name="codigo_despacho_recogida_fk", type="integer", nullable=true)
      */
     private $codigoDespachoRecogidaFk;
@@ -497,6 +502,22 @@ class Recogida
     public function setEstadoPlanificado($estadoPlanificado): void
     {
         $this->estadoPlanificado = $estadoPlanificado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoDescargado()
+    {
+        return $this->estadoDescargado;
+    }
+
+    /**
+     * @param mixed $estadoDescargado
+     */
+    public function setEstadoDescargado($estadoDescargado): void
+    {
+        $this->estadoDescargado = $estadoDescargado;
     }
 
 

@@ -56,7 +56,7 @@ class FacturaController extends Controller
     }
 
     /**
-     * @Route("/mto/trasnporte/factura/detalle/adicionar/guia/{codigoFactura}", name="mto_comercial_factura_detalle_adicionar_guia")
+     * @Route("/mto/comercial/factura/detalle/adicionar/guia/{codigoFactura}", name="mto_comercial_factura_detalle_adicionar_guia")
      */
     public function detalleAdicionarGuia(Request $request, $codigoFactura)
     {
@@ -82,6 +82,40 @@ class FacturaController extends Controller
         }
         $arGuias = $this->getDoctrine()->getRepository(Guia::class)->facturaPendiente($arFactura->getCodigoClienteFk());
         return $this->render('movimiento/comercial/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/mto/comercial/factura/nuevo/{codigoFactura}", name="mto_comercial_factura_nuevo")
+     */
+    public function nuevo(Request $request, $codigoFactura)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if($codigoFactura == 0) {
+            $aFactura = new Factura();
+            $aFactura->setFechaRegistro(new \DateTime('now'));
+        }
+
+        $form = $this->createForm(FacturaType::class, $aFactura);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arRecogida = $form->getData();
+            $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+            if($txtCodigoCliente != '') {
+                $arCliente = $em->getRepository(Cliente::class)->find($txtCodigoCliente);
+                if($arCliente) {
+                    $arRecogida->setClienteRel($arCliente);
+                    $arRecogida->setOperacionRel($this->getUser()->getOperacionRel());
+                    $em->persist($arRecogida);
+                    $em->flush();
+                    if ($form->get('guardarnuevo')->isClicked()) {
+                        return $this->redirect($this->generateUrl('mto_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
+                    } else {
+                        return $this->redirect($this->generateUrl('mto_recogida_recogida_lista'));
+                    }
+                }
+            }
+        }
+        return $this->render('movimiento/comercial/factura/nuevo.html.twig', ['$aFactura' => $aFactura,'form' => $form->createView()]);
     }
 
 }

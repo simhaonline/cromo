@@ -58,6 +58,22 @@ class RecogidaRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function listaRecoge($codigoRecogidaDespacho): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT r.codigoRecogidaPk, r.fechaRegistro, r.fecha, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad, 
+        r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen
+        FROM App\Entity\Recogida r 
+        LEFT JOIN r.clienteRel c
+        LEFT JOIN r.ciudadRel co        
+        WHERE r.codigoDespachoRecogidaFk = :codigoDespachoRecogida AND r.estadoRecogido = 0'
+        )->setParameter('codigoDespachoRecogida', $codigoRecogidaDespacho);
+
+        return $query->execute();
+
+    }
+
     public function listaDescarga($codigoRecogidaDespacho): array
     {
         $em = $this->getEntityManager();
@@ -67,7 +83,7 @@ class RecogidaRepository extends ServiceEntityRepository
         FROM App\Entity\Recogida r 
         LEFT JOIN r.clienteRel c
         LEFT JOIN r.ciudadRel co        
-        WHERE r.codigoDespachoRecogidaFk = :codigoDespachoRecogida AND r.estadoDescargado = 0'
+        WHERE r.codigoDespachoRecogidaFk = :codigoDespachoRecogida AND r.estadoRecogido = 1 AND r.estadoDescargado = 0'
         )->setParameter('codigoDespachoRecogida', $codigoRecogidaDespacho);
 
         return $query->execute();
@@ -151,6 +167,24 @@ class RecogidaRepository extends ServiceEntityRepository
                     $arRecogida->setPesoReal($arrControles['txtPesoReal'.$codigo]);
                     $arRecogida->setPesoVolumen($arrControles['txtPesoVolumen'.$codigo]);
                     $arRecogida->setEstadoDescargado(1);
+                    $em->persist($arRecogida);
+                }
+                $em->flush();
+            }
+        }
+        return true;
+    }
+
+    public function recoge($arrRecogidas, $arrControles): bool
+    {
+        $em = $this->getEntityManager();
+        if($arrRecogidas) {
+            if (count($arrRecogidas) > 0) {
+                foreach ($arrRecogidas AS $codigo) {
+                    $arRecogida = $em->getRepository(Recogida::class)->find($codigo);
+                    $fechaHora = date_create($arrControles['txtFecha'.$codigo] . " " . $arrControles['txtHora'.$codigo]);
+                    $arRecogida->setFechaEfectiva($fechaHora);
+                    $arRecogida->setEstadoRecogido(1);
                     $em->persist($arRecogida);
                 }
                 $em->flush();

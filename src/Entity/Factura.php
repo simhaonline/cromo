@@ -28,6 +28,11 @@ class Factura
     private $codigoClienteFk;
 
     /**
+     * @ORM\Column(name="soporte", type="string", length=50, nullable=true)
+     */
+    private $soporte;
+
+    /**
      * @ORM\Column(name="vr_flete", type="float")
      */
     private $vrFlete = 0;
@@ -179,6 +184,22 @@ class Factura
     public function setVrManejo($vrManejo): void
     {
         $this->vrManejo = $vrManejo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoporte()
+    {
+        return $this->soporte;
+    }
+
+    /**
+     * @param mixed $soporte
+     */
+    public function setSoporte($soporte): void
+    {
+        $this->soporte = $soporte;
     }
 
 

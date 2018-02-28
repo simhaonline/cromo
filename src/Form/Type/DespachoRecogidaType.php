@@ -31,6 +31,7 @@ class DespachoRecogidaType extends AbstractType {
                 },
                 'choice_label' => 'nombre',
             ))
+            ->add('fecha',DateType::class, array('required' => true))
             ->add('vrPago',NumberType::class, array('required' => true))
             ->add('comentario',TextareaType::class)
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'))

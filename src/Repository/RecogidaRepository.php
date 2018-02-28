@@ -45,16 +45,21 @@ class RecogidaRepository extends ServiceEntityRepository
 
     }
 
-    public function despachoPendiente(): array
+    public function despachoPendiente($fecha = null): array
     {
         $em = $this->getEntityManager();
+        $fechaDesde = $fecha . " 00:00";
+        $fechaHasta = $fecha . " 23:59";
         $query = $em->createQuery(
-            'SELECT r.codigoRecogidaPk, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad
+            'SELECT r.codigoRecogidaPk, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad,
+              r.fecha, r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen,
+              r.codigoOperacionFk, r.anunciante, r.direccion, r.telefono
         FROM App\Entity\Recogida r 
         LEFT JOIN r.clienteRel c
         LEFT JOIN r.ciudadRel co
-        WHERE r.estadoProgramado = 0'
-        );
+        WHERE r.estadoProgramado = 0 AND r.fecha BETWEEN :fechaDesde AND :fechaHasta'
+        )->setParameter('fechaDesde', $fechaDesde)
+            ->setParameter('fechaHasta', $fechaHasta);
         return $query->execute();
     }
 
@@ -131,6 +136,7 @@ class RecogidaRepository extends ServiceEntityRepository
         $arrRecogidas = $query->getSingleResult();
         return $arrRecogidas;
     }
+
     public function cuentaDescargadas($fechaDesde, $fechaHasta): array
     {
         $em = $this->getEntityManager();
@@ -155,6 +161,20 @@ class RecogidaRepository extends ServiceEntityRepository
         $arrResumen['descargadas'] = $descagadas;
         return $arrResumen;
     }
+
+    public function resumenOperacion($fechaDesde, $fechaHasta): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT r.codigoOperacionFk, COUNT(r.codigoRecogidaPk) as cantidad, SUM(r.unidades) as unidades, SUM(r.pesoReal) as pesoReal
+        FROM App\Entity\Recogida r
+        WHERE r.fecha >= :fechaDesde AND  r.fecha <= :fechaHasta GROUP BY r.codigoOperacionFk')
+            ->setParameter('fechaDesde', $fechaDesde . " 00:00")
+            ->setParameter('fechaHasta', $fechaHasta . " 23:59");
+        $arrRecogidas = $query->getResult();
+        return $arrRecogidas;
+    }
+
 
     public function descarga($arrRecogidas, $arrControles): bool
     {

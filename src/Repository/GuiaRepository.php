@@ -141,7 +141,9 @@ class GuiaRepository extends ServiceEntityRepository
         g.codigoOperacionCargoFk,     
         g.unidades,
         g.pesoReal,
-        g.pesoVolumen,             
+        g.pesoVolumen,
+        g.vrFlete,
+        g.vrManejo,             
         c.nombreCorto AS clienteNombreCorto, 
         cd.nombre AS ciudadDestino
         FROM App\Entity\Guia g 
@@ -152,6 +154,30 @@ class GuiaRepository extends ServiceEntityRepository
 
         return $query->execute();
 
+    }
+
+    public function facturaPendiente($codigoCliente = null): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, 
+        g.numero,
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk, 
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,
+        g.vrFlete,
+        g.vrManejo,        
+        c.nombreCorto AS clienteNombreCorto, 
+        cd.nombre AS ciudadDestino
+        FROM App\Entity\Guia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd
+        WHERE g.estadoFacturado = 0 AND g.codigoClienteFk = :codigoCliente
+        ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk'
+        )->setParameter('codigoCliente', $codigoCliente);
+        return $query->execute();
     }
 
     public function entrega($arrGuias, $arrControles): bool

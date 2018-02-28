@@ -26,6 +26,7 @@ class DespachoRecogidaController extends Controller
         $em = $this->getDoctrine()->getManager();
         if($codigoDespachoRecogida == 0) {
             $arDespachoRecogida = new DespachoRecogida();
+            $arDespachoRecogida->setFecha(new \DateTime('now'));
         }
 
         $form = $this->createForm(DespachoRecogidaType::class, $arDespachoRecogida);
@@ -137,7 +138,7 @@ class DespachoRecogidaController extends Controller
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
-        $arRecogidas = $this->getDoctrine()->getRepository(Recogida::class)->despachoPendiente();
+        $arRecogidas = $this->getDoctrine()->getRepository(Recogida::class)->despachoPendiente($arDespachoRecogida->getFecha()->format('Y-m-d'));
         return $this->render('movimiento/recogida/despacho/detalleAdicionarRecogida.html.twig', ['arRecogidas' => $arRecogidas, 'form' => $form->createView()]);
     }
 

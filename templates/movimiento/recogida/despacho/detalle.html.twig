@@ -7,6 +7,9 @@
             {{ form_widget(form.btnMonitoreo, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
     </div>
+    <div style="float:right">
+        {% if arDespachoRecogida.estadoMonitoreo == 1 %}<span class="label label-default">Monitoreo</span>{% endif %}
+    </div>
     <br /><br />
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
@@ -72,8 +75,9 @@
                             <th>ID</th>
                             <th>REG</th>
                             <th>FECHA</th>
+                            <th>HORA</th>
                             <th>CLIENTE</th>
-                            <th>ORIGEN</th>
+                            <th>CIUDAD</th>
                             <th>UND</th>
                             <th>PES</th>
                             <th>VOL</th>
@@ -87,6 +91,7 @@
                                 <td>{{ arRecogida.codigoRecogidaPk }}</td>
                                 <td>{{ arRecogida.fechaRegistro | date('Y-m-d') }}</td>
                                 <td>{{ arRecogida.fecha | date('Y-m-d') }}</td>
+                                <td>{{ arRecogida.fecha | date('H:i') }}</td>
                                 <td>{{ arRecogida.clienteNombreCorto }}</td>
                                 <td>{{ arRecogida.ciudad }}</td>
                                 <td style="text-align: right">{{ arRecogida.unidades }}</td>

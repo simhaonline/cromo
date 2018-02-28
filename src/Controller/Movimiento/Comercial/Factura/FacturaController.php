@@ -4,6 +4,8 @@ namespace App\Controller\Movimiento\Comercial\Factura;
 
 use App\Entity\Factura;
 use App\Entity\Guia;
+use App\Entity\Cliente;
+use App\Form\Type\FacturaType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,7 +39,8 @@ class FacturaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-
+                $formato = new \App\Formato\Factura();
+                $formato->Generar($em, $codigoFactura);
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
@@ -72,7 +75,7 @@ class FacturaController extends Controller
                 foreach ($arrSeleccionados AS $codigo) {
                     $arGuia = $em->getRepository(Guia::class)->find($codigo);
                     $arGuia->setFacturaRel($arFactura);
-                    $arGuia->setEstadoFactura(1);
+                    $arGuia->setEstadoFacturado(1);
                     $em->persist($arGuia);
                 }
                 $em->flush();
@@ -81,7 +84,7 @@ class FacturaController extends Controller
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         $arGuias = $this->getDoctrine()->getRepository(Guia::class)->facturaPendiente($arFactura->getCodigoClienteFk());
-        return $this->render('movimiento/comercial/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        return $this->render('movimiento/comercial/factura/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
 
     /**
@@ -92,25 +95,24 @@ class FacturaController extends Controller
         $em = $this->getDoctrine()->getManager();
         if($codigoFactura == 0) {
             $aFactura = new Factura();
-            $aFactura->setFechaRegistro(new \DateTime('now'));
+            //$aFactura->setFechaRegistro(new \DateTime('now'));
         }
 
         $form = $this->createForm(FacturaType::class, $aFactura);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arRecogida = $form->getData();
+            $aFactura = $form->getData();
             $txtCodigoCliente = $request->request->get('txtCodigoCliente');
             if($txtCodigoCliente != '') {
                 $arCliente = $em->getRepository(Cliente::class)->find($txtCodigoCliente);
                 if($arCliente) {
-                    $arRecogida->setClienteRel($arCliente);
-                    $arRecogida->setOperacionRel($this->getUser()->getOperacionRel());
-                    $em->persist($arRecogida);
+                    $aFactura->setClienteRel($arCliente);
+                    $em->persist($aFactura);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {
-                        return $this->redirect($this->generateUrl('mto_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
+                        return $this->redirect($this->generateUrl('mto_comercial_factura_nuevo', array('codigoRecogida' => 0)));
                     } else {
-                        return $this->redirect($this->generateUrl('mto_recogida_recogida_lista'));
+                        return $this->redirect($this->generateUrl('mto_comercial_factura_lista'));
                     }
                 }
             }

@@ -18,6 +18,11 @@ class Factura
     private $codigoFacturaPk;
 
     /**
+     * @ORM\Column(name="numero", type="float")
+     */
+    private $numero = 0;
+
+    /**
      * @ORM\Column(name="fecha", type="datetime", nullable=true)
      */
     private $fecha;
@@ -41,6 +46,21 @@ class Factura
      * @ORM\Column(name="vr_manejo", type="float")
      */
     private $vrManejo = 0;
+
+    /**
+     * @ORM\Column(name="vr_subtotal", type="float")
+     */
+    private $vrSubtotal = 0;
+
+    /**
+     * @ORM\Column(name="vr_total", type="float")
+     */
+    private $vrTotal = 0;
+
+    /**
+     * @ORM\Column(name="guias", type="integer", nullable=true)
+     */
+    private $guias;
 
     /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
@@ -200,6 +220,70 @@ class Factura
     public function setSoporte($soporte): void
     {
         $this->soporte = $soporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero($numero): void
+    {
+        $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSubtotal()
+    {
+        return $this->vrSubtotal;
+    }
+
+    /**
+     * @param mixed $vrSubtotal
+     */
+    public function setVrSubtotal($vrSubtotal): void
+    {
+        $this->vrSubtotal = $vrSubtotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotal()
+    {
+        return $this->vrTotal;
+    }
+
+    /**
+     * @param mixed $vrTotal
+     */
+    public function setVrTotal($vrTotal): void
+    {
+        $this->vrTotal = $vrTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuias()
+    {
+        return $this->guias;
+    }
+
+    /**
+     * @param mixed $guias
+     */
+    public function setGuias($guias): void
+    {
+        $this->guias = $guias;
     }
 
 

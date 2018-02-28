@@ -4,6 +4,13 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>NUMERO</th>
+            <th>FECHA</th>
+            <th>CLIENTE</th>
+            <th>FLETE</th>
+            <th>MANEJO</th>
+            <th>SUBTOTAL</th>
+            <th>TOTAL</th>
             <th></th>
         </tr>
         </thead>
@@ -11,6 +18,13 @@
         {% for arFactura in arFacturas %}
             <tr>
                 <td>{{ arFactura.codigoFacturaPk }}</td>
+                <td>{{ arFactura.numero }}</td>
+                <td>{{ arFactura.fecha | date('Y-m-d') }}</td>
+                <td>{{ arFactura.clienteNombre }}</td>
+                <td class="numero">{{ arFactura.vrFlete }}</td>
+                <td class="numero">{{ arFactura.vrManejo }}</td>
+                <td class="numero">{{ arFactura.vrSubtotal }}</td>
+                <td class="numero">{{ arFactura.vrTotal }}</td>
                 <td style="text-align: center"><a href="{{ path('mto_comercial_factura_detalle', { 'codigoFactura': arFactura.codigoFacturaPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}

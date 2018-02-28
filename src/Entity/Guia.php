@@ -168,6 +168,11 @@ class Guia
     private $estadoCumplido = false;
 
     /**
+     * @ORM\Column(name="estado_facturado", type="boolean", nullable=true)
+     */
+    private $estadoFacturado = false;
+
+    /**
      * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
      */
     private $codigoDespachoFk;
@@ -997,6 +1002,22 @@ class Guia
     public function setFacturaRel($facturaRel): void
     {
         $this->facturaRel = $facturaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoFacturado()
+    {
+        return $this->estadoFacturado;
+    }
+
+    /**
+     * @param mixed $estadoFacturado
+     */
+    public function setEstadoFacturado($estadoFacturado): void
+    {
+        $this->estadoFacturado = $estadoFacturado;
     }
 
 

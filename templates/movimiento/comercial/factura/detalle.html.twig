@@ -19,6 +19,30 @@
             <td class="titulo" >FLETE:</td>
             <td align="right">{{ arFactura.vrFlete | number_format(0, '.', ',')}}</td>
         </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">GUIAS:</td>
+            <td class="td-in-well">{{ arFactura.guias }}</td>
+            <td class="titulo" >MANEJO:</td>
+            <td align="right">{{ arFactura.vrManejo | number_format(0, '.', ',')}}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >SUBTOTAL:</td>
+            <td align="right">{{ arFactura.vrSubtotal | number_format(0, '.', ',')}}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >TOTAL:</td>
+            <td align="right">{{ arFactura.vrTotal | number_format(0, '.', ',')}}</td>
+        </tr>
 
         <tr>
             <td class="titulo" >COMENTARIO: </td>
@@ -44,6 +68,8 @@
                             <th>UND</th>
                             <th>PES</th>
                             <th>VOL</th>
+                            <th>FLETE</th>
+                            <th>MANEJO</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -59,6 +85,8 @@
                                 <td style="text-align: right">{{ arGuia.unidades }}</td>
                                 <td style="text-align: right">{{ arGuia.pesoReal }}</td>
                                 <td style="text-align: right">{{ arGuia.pesoVolumen }}</td>
+                                <td style="text-align: right">{{ arGuia.vrFlete }}</td>
+                                <td style="text-align: right">{{ arGuia.vrManejo }}</td>
                                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
                             </tr>
                         {% endfor %}

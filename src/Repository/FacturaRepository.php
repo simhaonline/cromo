@@ -18,9 +18,16 @@ class FacturaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT c.codigoFacturaPk, 
-        c.fecha        
-        FROM App\Entity\Factura c'
+            'SELECT f.codigoFacturaPk, 
+        f.numero,
+        f.fecha,
+        f.vrFlete,
+        f.vrManejo,
+        f.vrSubtotal,
+        f.vrTotal,        
+        c.nombreCorto clienteNombre       
+        FROM App\Entity\Factura f
+        LEFT JOIN f.clienteRel c'
         );
         return $query->execute();
     }
@@ -29,13 +36,19 @@ class FacturaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT COUNT(g.codigoGuiaPk) as cantidad, SUM(g.unidades+0) as unidades, SUM(g.pesoReal+0) as pesoReal, SUM(g.pesoVolumen+0) as pesoVolumen
+            'SELECT COUNT(g.codigoGuiaPk) as cantidad, SUM(g.unidades+0) as unidades, SUM(g.pesoReal+0) as pesoReal,
+            SUM(g.pesoVolumen+0) as pesoVolumen, SUM(g.vrFlete+0) as vrFlete, SUM(g.vrManejo+0) as vrManejo
         FROM App\Entity\Guia g
         WHERE g.codigoFacturaFk = :codigoFactura')
             ->setParameter('codigoFactura', $codigoFactura);
         $arrGuias = $query->getSingleResult();
+        $vrSubtotal = intval($arrGuias['vrFlete']) + intval($arrGuias['vrManejo']);
         $arFactura = $em->getRepository(Factura::class)->find($codigoFactura);
-        $arFactura->setCantidad(intval($arrGuias['cantidad']));
+        $arFactura->setGuias(intval($arrGuias['cantidad']));
+        $arFactura->setVrFlete(intval($arrGuias['vrFlete']));
+        $arFactura->setVrManejo(intval($arrGuias['vrManejo']));
+        $arFactura->setVrSubtotal($vrSubtotal);
+        $arFactura->setVrTotal($vrSubtotal);
         $em->persist($arFactura);
         $em->flush();
         return true;
@@ -49,7 +62,7 @@ class FacturaRepository extends ServiceEntityRepository
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(Guia::class)->find($codigoGuia);
                     $arGuia->setFacturaRel(null);
-                    $arGuia->setEstadoFactura(0);
+                    $arGuia->setEstadoFacturado(0);
                     $em->persist($arGuia);
                 }
                 $em->flush();

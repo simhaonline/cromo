@@ -5,8 +5,16 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>OP</th>
+            <th>HORA</th>
             <th>CLIENTE</th>
-            <th>ORIGEN</th>
+            <th>ANUNCIANTE</th>
+            <th>DIRECCION</th>
+            <th>CIUDAD</th>
+            <th>TELEFONO</th>
+            <th>UND</th>
+            <th>PES</th>
+            <th>VOL</th>
             <th></th>
         </tr>
         </thead>
@@ -14,8 +22,16 @@
         {% for arRecogida in arRecogidas %}
             <tr>
                 <td>{{ arRecogida.codigoRecogidaPk }}</td>
+                <td>{{ arRecogida.codigoOperacionFk }}</td>
+                <td>{{ arRecogida.fecha | date('H:i') }}</td>
                 <td>{{ arRecogida.clienteNombreCorto }}</td>
+                <td>{{ arRecogida.anunciante }}</td>
+                <td>{{ arRecogida.direccion }}</td>
                 <td>{{ arRecogida.ciudad }}</td>
+                <td>{{ arRecogida.telefono }}</td>
+                <td style="text-align: right">{{ arRecogida.unidades }}</td>
+                <td style="text-align: right">{{ arRecogida.pesoReal }}</td>
+                <td style="text-align: right">{{ arRecogida.pesoVolumen }}</td>
                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecogida.codigoRecogidaPk }}" /></td>
             </tr>
         {% endfor %}

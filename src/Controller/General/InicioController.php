@@ -3,7 +3,7 @@
 namespace App\Controller\General;
 
 use App\Formato\Despacho;
-use App\Entity\Recogida;
+use App\Entity\TteRecogida;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

@@ -131,7 +131,7 @@ browser, but needs to redraw with canvas text when exporting as an image.
 		//     }],
 		//     font: {
 		//         definition: Canvas font property string.
-		//         color: Color of the text.
+		//         color: TteColor of the text.
 		//     },
 		// }
 		//

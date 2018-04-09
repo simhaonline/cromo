@@ -1,13 +1,13 @@
 security:
     encoders:
-        App\Entity\Usuario:
+        App\Entity\Seguridad\Usuario:
             algorithm: bcrypt
 
     # https://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
         our_db_provider:
             entity:
-                class: App\Entity\Usuario
+                class: App\Entity\Seguridad\Usuario
                 property: username
                 # if you're using multiple entity managers
                 # manager_name: customer

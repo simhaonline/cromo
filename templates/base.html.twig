@@ -35,7 +35,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-alerts">
                         <li>
-                            <a href="{{ path('tab_recogida') }}">
+                            <a href="{{ path('tte_tab_recogida') }}">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> Recogidas
                                     <span class="pull-right text-muted small">4 minutes ago</span>
@@ -44,7 +44,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="{{ path('tab_guia') }}">
+                            <a href="{{ path('tte_tab_guia') }}">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> Guias
                                     <span class="pull-right text-muted small">4 minutes ago</span>
@@ -102,31 +102,31 @@
                                 <li>
                                     <a href="#">Recogida <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('mto_recogida_recogida_lista') }}">Recogida</a></li>
-                                        <li><a href="{{ path('mto_recogida_despacho_lista') }}">Despacho</a></li>
+                                        <li><a href="{{ path('tte_mto_recogida_recogida_lista') }}">Recogida</a></li>
+                                        <li><a href="{{ path('tte_mto_recogida_despacho_lista') }}">Despacho</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
                                 <li>
                                     <a href="#">Transporte <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('mto_transporte_guia_lista') }}">Guia</a></li>
-                                        <li><a href="{{ path('mto_transporte_despacho_lista') }}">Despacho</a></li>
-                                        <li><a href="{{ path('mto_transporte_cumplido_lista') }}">Cumplido</a></li>
+                                        <li><a href="{{ path('tte_mto_transporte_guia_lista') }}">Guia</a></li>
+                                        <li><a href="{{ path('tte_mto_transporte_despacho_lista') }}">Despacho</a></li>
+                                        <li><a href="{{ path('tte_mto_transporte_cumplido_lista') }}">Cumplido</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
                                 <li>
                                     <a href="#">Monitoreo <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('mon_monitoreo_monitoreo_lista') }}">Monitoreo</a></li>
+                                        <li><a href="{{ path('tte_mon_monitoreo_monitoreo_lista') }}">Monitoreo</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
                                 <li>
                                     <a href="#">Comercial <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('mto_comercial_factura_lista') }}">Factura</a></li>
+                                        <li><a href="{{ path('tte_mto_comercial_factura_lista') }}">Factura</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
@@ -139,16 +139,16 @@
                                 <li>
                                     <a href="#">Recogida <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('pro_recogida_recogida_programada') }}">Programada</a></li>
-                                        <li><a href="{{ path('pro_recogida_recogida_recoge') }}">Recoge</a></li>
-                                        <li><a href="{{ path('pro_recogida_recogida_descarga') }}">Descarga</a></li>
+                                        <li><a href="{{ path('tte_pro_recogida_recogida_programada') }}">Programada</a></li>
+                                        <li><a href="{{ path('tte_pro_recogida_recogida_recoge') }}">Recoge</a></li>
+                                        <li><a href="{{ path('tte_pro_recogida_recogida_descarga') }}">Descarga</a></li>
                                     </ul>
                                 </li>
                                 <li>
                                     <a href="#">Transporte <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('mto_transporte_guia_entrega') }}">Entrega guia</a></li>
-                                        <li><a href="{{ path('mto_transporte_guia_soporte') }}">Soporte guia</a></li>
+                                        <li><a href="{{ path('tte_mto_transporte_guia_entrega') }}">Entrega guia</a></li>
+                                        <li><a href="{{ path('tte_mto_transporte_guia_soporte') }}">Soporte guia</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
@@ -161,7 +161,7 @@
                                 <li>
                                     <a href="#">Transporte <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente (ruta)</a></li>
+                                        <li><a href="{{ path('tte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente (ruta)</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>

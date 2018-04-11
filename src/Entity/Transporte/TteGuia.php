@@ -23,6 +23,11 @@ class TteGuia
     private $numero;
 
     /**
+     * @ORM\Column(name="codigo_guia_tipo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoGuiaTipoFk;
+
+    /**
      * @ORM\Column(name="codigo_operacion_ingreso_fk", type="string", length=20, nullable=true)
      */
     private $codigoOperacionIngresoFk;
@@ -138,6 +143,11 @@ class TteGuia
     private $vrRecaudo = 0;
 
     /**
+     * @ORM\Column(name="vr_abono", type="float")
+     */
+    private $vrAbono = 0;
+
+    /**
      * @ORM\Column(name="estado_impreso", type="boolean", nullable=true)
      */
     private $estadoImpreso = false;
@@ -173,6 +183,11 @@ class TteGuia
     private $estadoFacturado = false;
 
     /**
+     * @ORM\Column(name="estado_factura_generada", type="boolean", nullable=true)
+     */
+    private $estadoFacturaGenerada = false;
+
+    /**
      * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
      */
     private $codigoDespachoFk;
@@ -198,9 +213,20 @@ class TteGuia
     private $ordenRuta = 0;
 
     /**
+     * @ORM\Column(name="factura", type="boolean", nullable=true)
+     */
+    private $factura = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteGuiaTipo", inversedBy="guiasGuiaTipoRel")
+     * @ORM\JoinColumn(name="codigo_guia_tipo_fk", referencedColumnName="codigo_guia_tipo_pk")
+     */
+    private $guiaTipoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteOperacion", inversedBy="guiasOperacionIngresoRel")
@@ -1006,6 +1032,86 @@ class TteGuia
     public function setOrdenRuta($ordenRuta): void
     {
         $this->ordenRuta = $ordenRuta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGuiaTipoFk()
+    {
+        return $this->codigoGuiaTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoGuiaTipoFk
+     */
+    public function setCodigoGuiaTipoFk($codigoGuiaTipoFk): void
+    {
+        $this->codigoGuiaTipoFk = $codigoGuiaTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaTipoRel()
+    {
+        return $this->guiaTipoRel;
+    }
+
+    /**
+     * @param mixed $guiaTipoRel
+     */
+    public function setGuiaTipoRel($guiaTipoRel): void
+    {
+        $this->guiaTipoRel = $guiaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFactura()
+    {
+        return $this->factura;
+    }
+
+    /**
+     * @param mixed $factura
+     */
+    public function setFactura($factura): void
+    {
+        $this->factura = $factura;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoFacturaGenerada()
+    {
+        return $this->estadoFacturaGenerada;
+    }
+
+    /**
+     * @param mixed $estadoFacturaGenerada
+     */
+    public function setEstadoFacturaGenerada($estadoFacturaGenerada): void
+    {
+        $this->estadoFacturaGenerada = $estadoFacturaGenerada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAbono()
+    {
+        return $this->vrAbono;
+    }
+
+    /**
+     * @param mixed $vrAbono
+     */
+    public function setVrAbono($vrAbono): void
+    {
+        $this->vrAbono = $vrAbono;
     }
 
 

@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class SoporteController extends Controller
 {
    /**
-    * @Route("/tte/pro/transporte/guia/soporte", name="tte_mto_transporte_guia_soporte")
+    * @Route("/tte/pro/transporte/guia/soporte", name="tte_pro_transporte_guia_soporte")
     */    
     public function lista(Request $request)
     {
@@ -38,7 +38,7 @@ class SoporteController extends Controller
             }
         }
         $arGuias = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('proceso/transporte/guia/soporte.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        return $this->render('transporte/proceso/transporte/guia/soporte.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
 }
 

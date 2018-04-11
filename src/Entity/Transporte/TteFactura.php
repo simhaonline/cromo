@@ -18,12 +18,17 @@ class TteFactura
     private $codigoFacturaPk;
 
     /**
+     * @ORM\Column(name="codigo_factura_tipo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoFacturaTipoFk;
+
+    /**
      * @ORM\Column(name="numero", type="float")
      */
     private $numero = 0;
 
     /**
-     * @ORM\Column(name="fecha", type="datetime", nullable=true)
+     * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
 
@@ -68,6 +73,12 @@ class TteFactura
     private $comentario;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TteFacturaTipo", inversedBy="facturasFacturaTipoRel")
+     * @ORM\JoinColumn(name="codigo_factura_tipo_fk", referencedColumnName="codigo_factura_tipo_pk")
+     */
+    private $facturaTipoRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteCliente", inversedBy="facturasClienteRel")
      * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
      */
@@ -92,6 +103,22 @@ class TteFactura
     public function setCodigoFacturaPk($codigoFacturaPk): void
     {
         $this->codigoFacturaPk = $codigoFacturaPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaTipoFk()
+    {
+        return $this->codigoFacturaTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaTipoFk
+     */
+    public function setCodigoFacturaTipoFk($codigoFacturaTipoFk): void
+    {
+        $this->codigoFacturaTipoFk = $codigoFacturaTipoFk;
     }
 
     /**
@@ -257,6 +284,22 @@ class TteFactura
     /**
      * @return mixed
      */
+    public function getFacturaTipoRel()
+    {
+        return $this->facturaTipoRel;
+    }
+
+    /**
+     * @param mixed $facturaTipoRel
+     */
+    public function setFacturaTipoRel($facturaTipoRel): void
+    {
+        $this->facturaTipoRel = $facturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getClienteRel()
     {
         return $this->clienteRel;
@@ -285,7 +328,6 @@ class TteFactura
     {
         $this->guiasFacturaRel = $guiasFacturaRel;
     }
-
 
 
 }

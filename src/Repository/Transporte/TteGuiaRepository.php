@@ -2,6 +2,7 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -228,14 +229,39 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function pendienteGenerarFactura($codigoCliente = null): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, 
+        g.numero,
+        g.fechaIngreso,
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk, 
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,
+        g.vrFlete,
+        g.vrManejo,        
+        c.nombreCorto AS clienteNombreCorto, 
+        cd.nombre AS ciudadDestino
+        FROM App\Entity\Transporte\TteGuia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd    
+        WHERE g.estadoImpreso = 1 AND g.estadoFacturaGenerada = 0 AND g.factura = 1   
+        ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk'
+        );
+        return $query->execute();
+    }
+
     public function entrega($arrGuias, $arrControles): bool
     {
         $em = $this->getEntityManager();
-        if($arrGuias) {
+        if ($arrGuias) {
             if (count($arrGuias) > 0) {
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-                    $fechaHora = date_create($arrControles['txtFechaEntrega'.$codigoGuia] . " " . $arrControles['txtHoraEntrega'.$codigoGuia]);
+                    $fechaHora = date_create($arrControles['txtFechaEntrega' . $codigoGuia] . " " . $arrControles['txtHoraEntrega' . $codigoGuia]);
                     $arGuia->setFechaEntrega($fechaHora);
                     $arGuia->setEstadoEntregado(1);
                     $em->persist($arGuia);
@@ -249,13 +275,40 @@ class TteGuiaRepository extends ServiceEntityRepository
     public function soporte($arrGuias): bool
     {
         $em = $this->getEntityManager();
-        if($arrGuias) {
+        if ($arrGuias) {
             if (count($arrGuias) > 0) {
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
                     $arGuia->setFechaSoporte(new \DateTime("now"));
                     $arGuia->setEstadoSoporte(1);
                     $em->persist($arGuia);
+                }
+                $em->flush();
+            }
+        }
+        return true;
+    }
+
+    public function generarFactura($arrGuias): bool
+    {
+        $em = $this->getEntityManager();
+        if($arrGuias) {
+            if (count($arrGuias) > 0) {
+                foreach ($arrGuias AS $codigoGuia) {
+                    $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+                    $arGuia->setEstadoFacturaGenerada(1);
+                    $em->persist($arGuia);
+                    $arFactura = new TteFactura();
+                    $arFactura->setFacturaTipoRel($arGuia->getGuiaTipoRel()->getFacturaTipoRel());
+                    $arFactura->setNumero($arGuia->getNumero());
+                    $arFactura->setFecha($arGuia->getFechaIngreso());
+                    $total = $arGuia->getVrFlete() + $arGuia->getVrManejo();
+                    $arFactura->setVrFlete($arGuia->getVrFlete());
+                    $arFactura->setVrManejo($arGuia->getVrManejo());
+                    $arFactura->setVrTotal($total);
+                    $arFactura->setGuias(1);
+                    $arFactura->setClienteRel($arGuia->getClienteRel());
+                    $em->persist($arFactura);
                 }
                 $em->flush();
             }

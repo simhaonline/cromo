@@ -69,6 +69,24 @@ class TteRecibo
     private $relacionCajaRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TteOperacion", inversedBy="recibosOperacionRel")
+     * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
+     */
+    private $operacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteCliente", inversedBy="recibosClienteRel")
+     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+     */
+    private $clienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteGuia", inversedBy="recibosGuiaRel")
+     * @ORM\JoinColumn(name="codigo_guia_fk", referencedColumnName="codigo_guia_pk")
+     */
+    private $guiaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoReciboPk()
@@ -151,6 +169,22 @@ class TteRecibo
     /**
      * @return mixed
      */
+    public function getCodigoRelacionCajaFk()
+    {
+        return $this->codigoRelacionCajaFk;
+    }
+
+    /**
+     * @param mixed $codigoRelacionCajaFk
+     */
+    public function setCodigoRelacionCajaFk($codigoRelacionCajaFk): void
+    {
+        $this->codigoRelacionCajaFk = $codigoRelacionCajaFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFecha()
     {
         return $this->fecha;
@@ -215,22 +249,6 @@ class TteRecibo
     /**
      * @return mixed
      */
-    public function getCodigoRelacionCajaFk()
-    {
-        return $this->codigoRelacionCajaFk;
-    }
-
-    /**
-     * @param mixed $codigoRelacionCajaFk
-     */
-    public function setCodigoRelacionCajaFk($codigoRelacionCajaFk): void
-    {
-        $this->codigoRelacionCajaFk = $codigoRelacionCajaFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getRelacionCajaRel()
     {
         return $this->relacionCajaRel;
@@ -244,6 +262,53 @@ class TteRecibo
         $this->relacionCajaRel = $relacionCajaRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getOperacionRel()
+    {
+        return $this->operacionRel;
+    }
+
+    /**
+     * @param mixed $operacionRel
+     */
+    public function setOperacionRel($operacionRel): void
+    {
+        $this->operacionRel = $operacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaRel()
+    {
+        return $this->guiaRel;
+    }
+
+    /**
+     * @param mixed $guiaRel
+     */
+    public function setGuiaRel($guiaRel): void
+    {
+        $this->guiaRel = $guiaRel;
+    }
 
 
 }

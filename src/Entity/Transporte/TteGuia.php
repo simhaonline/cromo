@@ -283,6 +283,11 @@ class TteGuia
     private $rutaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteRecibo", mappedBy="guiaRel")
+     */
+    protected $recibosGuiaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoGuiaPk()
@@ -1112,6 +1117,22 @@ class TteGuia
     public function setVrAbono($vrAbono): void
     {
         $this->vrAbono = $vrAbono;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecibosGuiaRel()
+    {
+        return $this->recibosGuiaRel;
+    }
+
+    /**
+     * @param mixed $recibosGuiaRel
+     */
+    public function setRecibosGuiaRel($recibosGuiaRel): void
+    {
+        $this->recibosGuiaRel = $recibosGuiaRel;
     }
 
 

@@ -83,6 +83,11 @@ class TteCliente
     protected $facturasClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteRecibo", mappedBy="clienteRel")
+     */
+    protected $recibosClienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoClientePk()
@@ -304,6 +309,22 @@ class TteCliente
     public function setFacturasClienteRel($facturasClienteRel): void
     {
         $this->facturasClienteRel = $facturasClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecibosClienteRel()
+    {
+        return $this->recibosClienteRel;
+    }
+
+    /**
+     * @param mixed $recibosClienteRel
+     */
+    public function setRecibosClienteRel($recibosClienteRel): void
+    {
+        $this->recibosClienteRel = $recibosClienteRel;
     }
 
 

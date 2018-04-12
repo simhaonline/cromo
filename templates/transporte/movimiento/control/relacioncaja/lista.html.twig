@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>FECHA</th>
+            <th>TOTAL</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arRelacionCaja in arRelacionesCaja %}
+            <tr>
+                <td>{{ arRelacionCaja.codigoRelacionCajaPk }}</td>
+                <td>{{ arRelacionCaja.fecha | date('Y-m-d') }}</td>
+                <td class="numero">{{ arRelacionCaja.vrTotal }}</td>
+                <td style="text-align: center"><a href="{{ path('tte_mto_control_relacioncaja_detalle', { 'codigoRelacionCaja': arRelacionCaja.codigoRelacionCajaPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRelacionesCaja.getTotalItemCount }}</span></div>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arRelacionesCaja) }}
+    </div>
+
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('tte_mto_control_relacioncaja_nuevo', {'codigoRelacionCaja': 0}) }}">Nuevo</a>
+        </div>
+    </div>
+{% endblock %}

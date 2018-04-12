@@ -38,6 +38,11 @@ class TteRecibo
     private $codigoClienteFk;
 
     /**
+     * @ORM\Column(name="codigo_relacion_caja_fk", type="integer", nullable=true)
+     */
+    private $codigoRelacionCajaFk;
+
+    /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
@@ -56,6 +61,12 @@ class TteRecibo
      * @ORM\Column(name="vr_total", type="float")
      */
     private $vrTotal = 0;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteRelacionCaja", inversedBy="recibosRelacionCajaRel")
+     * @ORM\JoinColumn(name="codigo_relacion_caja_fk", referencedColumnName="codigo_relacion_caja_pk")
+     */
+    private $relacionCajaRel;
 
     /**
      * @return mixed
@@ -199,6 +210,38 @@ class TteRecibo
     public function setVrTotal($vrTotal): void
     {
         $this->vrTotal = $vrTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRelacionCajaFk()
+    {
+        return $this->codigoRelacionCajaFk;
+    }
+
+    /**
+     * @param mixed $codigoRelacionCajaFk
+     */
+    public function setCodigoRelacionCajaFk($codigoRelacionCajaFk): void
+    {
+        $this->codigoRelacionCajaFk = $codigoRelacionCajaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRelacionCajaRel()
+    {
+        return $this->relacionCajaRel;
+    }
+
+    /**
+     * @param mixed $relacionCajaRel
+     */
+    public function setRelacionCajaRel($relacionCajaRel): void
+    {
+        $this->relacionCajaRel = $relacionCajaRel;
     }
 
 

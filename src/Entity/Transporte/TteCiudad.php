@@ -103,6 +103,11 @@ class TteCiudad
     protected $recogidasProgramadasCiudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteOperacion", mappedBy="ciudadRel")
+     */
+    protected $operacionesCiudadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -388,6 +393,22 @@ class TteCiudad
     public function setOrdenRuta($ordenRuta): void
     {
         $this->ordenRuta = $ordenRuta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionesCiudadRel()
+    {
+        return $this->operacionesCiudadRel;
+    }
+
+    /**
+     * @param mixed $operacionesCiudadRel
+     */
+    public function setOperacionesCiudadRel($operacionesCiudadRel): void
+    {
+        $this->operacionesCiudadRel = $operacionesCiudadRel;
     }
 
 

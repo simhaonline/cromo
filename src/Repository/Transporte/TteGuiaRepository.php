@@ -4,6 +4,7 @@ namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteGuiaTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -40,7 +41,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.estadoCumplido
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd'
+        LEFT JOIN g.ciudadDestinoRel cd
+        ORDER BY g.codigoGuiaPk DESC '
         );
         return $query->execute();
     }
@@ -409,6 +411,25 @@ class TteGuiaRepository extends ServiceEntityRepository
         $arrResumen['entregar'] = $entregar;
         $arrResumen['cumplir'] = $cumplir;
         return $arrResumen;
+    }
+
+    public function imprimir($codigoGuia): bool
+    {
+        $em = $this->getEntityManager();
+        $respuesta = false;
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        if($arGuia->getEstadoImpreso() == 0) {
+            if($arGuia->getNumero() == 0 || $arGuia->getNumero() == NULL) {
+                $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($arGuia->getCodigoGuiaTipoFk());
+                $arGuia->setNumero($arGuiaTipo->getConsecutivo());
+                $arGuia->setEstadoImpreso(1);
+                $arGuiaTipo->setConsecutivo($arGuiaTipo->getConsecutivo() + 1);
+                $em->persist($arGuiaTipo);
+                $em->persist($arGuia);
+                $respuesta = true;
+            }
+        }
+        return $respuesta;
     }
 
 }

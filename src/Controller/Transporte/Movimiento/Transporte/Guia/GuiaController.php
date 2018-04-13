@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte\Guia;
 
+use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
 use App\Form\Type\Transporte\GuiaType;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,22 +32,32 @@ class GuiaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arGuia = new TteGuia();
         if($codigoGuia == 0) {
-
+            $arGuia->setFechaIngreso(new \DateTime('now'));
         }
 
         $form = $this->createForm(GuiaType::class, $arGuia);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arGuia = $form->getData();
-            $arGuia->setOperacionIngresoRel($this->getUser()->getOperacionRel());
-            $arGuia->setOperacionCargoRel($this->getUser()->getOperacionRel());
-            $em->persist($arGuia);
-            $em->flush();
-            if ($form->get('guardarnuevo')->isClicked()) {
-                return $this->redirect($this->generateUrl('tte_mto_transporte_guia_nuevo', array('codigoGuia' => 0)));
-            } else {
-                return $this->redirect($this->generateUrl('tte_mto_transporte_guia_lista'));
+            $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+            if($txtCodigoCliente != '') {
+                $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
+                if ($arCliente) {
+                    $arGuia->setClienteRel($arCliente);
+                    $arGuia->setOperacionIngresoRel($this->getUser()->getOperacionRel());
+                    $arGuia->setOperacionCargoRel($this->getUser()->getOperacionRel());
+                    $arGuia->setFactura($arGuia->getGuiaTipoRel()->getFactura());
+                    $arGuia->setCiudadOrigenRel($this->getUser()->getOperacionRel()->getCiudadRel());
+                    $em->persist($arGuia);
+                    $em->flush();
+                    if ($form->get('guardarnuevo')->isClicked()) {
+                        return $this->redirect($this->generateUrl('tte_mto_transporte_guia_nuevo', array('codigoGuia' => 0)));
+                    } else {
+                        return $this->redirect($this->generateUrl('tte_mto_transporte_guia_lista'));
+                    }
+                }
             }
+
 
         }
         return $this->render('transporte/movimiento/transporte/guia/nuevo.html.twig', ['arGuia' => $arGuia,'form' => $form->createView()]);
@@ -65,8 +76,14 @@ class GuiaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-                //$formato = new \App\Formato\TteDespacho();
-                //$formato->Generar($em, $codigoGuia);
+                $respuesta = $em->getRepository(TteGuia::class)->imprimir($codigoGuia);
+                if($respuesta) {
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('tte_mto_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
+                    //$formato = new \App\Formato\TteDespacho();
+                    //$formato->Generar($em, $codigoGuia);
+                }
+
             }
         }
 

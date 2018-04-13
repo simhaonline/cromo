@@ -22,6 +22,17 @@ class TteOperacion
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCiudadFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="operacionesCiudadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    private $ciudadRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="operacionIngresoRel")
      */
     protected $guiasOperacionIngresoRel;
@@ -96,6 +107,38 @@ class TteOperacion
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadFk()
+    {
+        return $this->codigoCiudadFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadFk
+     */
+    public function setCodigoCiudadFk($codigoCiudadFk): void
+    {
+        $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
     }
 
     /**

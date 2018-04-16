@@ -14,6 +14,7 @@
             <th>UND</th>
             <th>PES</th>
             <th>VOL</th>
+            <th>A</th>
             <th></th>
         </tr>
         </thead>
@@ -31,6 +32,7 @@
                 <td class="numero">{{ arDespacho.unidades }}</td>
                 <td class="numero">{{ arDespacho.pesoReal }}</td>
                 <td class="numero">{{ arDespacho.pesoVolumen }}</td>
+                <td class="estado">{{ arDespacho.estadoAnulado?'SI':'NO' }}</td>
                 <td style="text-align: center"><a href="{{ path('tte_mto_transporte_despacho_detalle', { 'codigoDespacho': arDespacho.codigoDespachoPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}

@@ -37,6 +37,11 @@ class TteGuiaTipo
     private $codigoFacturaTipoFk;
 
     /**
+     * @ORM\Column(name="exige_numero", type="boolean", nullable=true)
+     */
+    private $exigeNumero = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteFacturaTipo", inversedBy="guiasTiposFacturaTipoRel")
      * @ORM\JoinColumn(name="codigo_factura_tipo_fk", referencedColumnName="codigo_factura_tipo_pk")
      */
@@ -157,6 +162,22 @@ class TteGuiaTipo
     public function setFacturaTipoRel($facturaTipoRel): void
     {
         $this->facturaTipoRel = $facturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExigeNumero()
+    {
+        return $this->exigeNumero;
+    }
+
+    /**
+     * @param mixed $exigeNumero
+     */
+    public function setExigeNumero($exigeNumero): void
+    {
+        $this->exigeNumero = $exigeNumero;
     }
 
 

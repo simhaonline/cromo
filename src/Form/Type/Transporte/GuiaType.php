@@ -40,6 +40,7 @@ class GuiaType extends AbstractType {
                 },
                 'choice_label' => 'nombre',
             ))
+            ->add('numero', NumberType::class, array('required' => false))
             ->add('documentoCliente', TextType::class)
             ->add('remitente', TextType::class)
             ->add('nombreDestinatario', TextType::class)

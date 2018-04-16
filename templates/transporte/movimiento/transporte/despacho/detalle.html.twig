@@ -3,42 +3,70 @@
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
+            {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnAnular, { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular?")'} }) }}
             {{ form_widget(form.btnImprimirDespacho, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnImprimirManifiesto, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
     </div>
     <div style="float:right">
         {% if arDespacho.estadoGenerado == 1 %}<span class="label label-default">Generado</span>{% endif %}
+        {% if arDespacho.estadoAnulado == 1 %}<span class="label label-default">Anulado</span>{% endif %}
     </div>
     <br /><br />
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">CODIGO:</td>
             <td class="td-in-well">{{ arDespacho.codigoDespachoPk }}</td>
-            <td class="titulo">FECHA:</td>
-            <td class="td-in-well">{{ arDespacho.fechaSalida |date("Y/m/d") }}</td>
+            <td class="titulo">TIPO:</td>
+            <td class="td-in-well">{{ arDespacho.despachoTipoRel.nombre }}</td>
             <td class="titulo" >FLETE:</td>
             <td align="right">{{ arDespacho.vrFletePago }}</td>
         </tr>
         <tr>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arDespacho.numero }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo" >:</td>
-            <td align="right"></td>
+            <td class="titulo">FECHA SALIDA:</td>
+            <td class="td-in-well">{{ arDespacho.fechaSalida |date("Y/m/d") }}</td>
+            <td class="titulo" >(-)ANTICIPO:</td>
+            <td align="right">{{ arDespacho.vrAnticipo }}</td>
         </tr>
         <tr>
             <td class="titulo">RNDC:</td>
             <td class="td-in-well">{{ arDespacho.numeroRndc }}</td>
-            <td class="titulo">UNIDADES:</td>
-            <td class="td-in-well">{{ arDespacho.unidades }}</td>
-            <td class="titulo" >ANTICIPO:</td>
-            <td align="right">{{ arDespacho.vrAnticipo }}</td>
+            <td class="titulo">FECHA LLEGADA</td>
+            <td class="td-in-well">{{ arDespacho.fechaLlegada |date("Y/m/d") }}</td>
+            <td class="titulo" >(-)INDUSTRIA COMERCIO</td>
+            <td align="right">{{ arDespacho.vrIndustriaComercio }}</td>
         </tr>
+        <tr>
+            <td class="titulo">CONDUCTOR:</td>
+            <td class="td-in-well">{{ arDespacho.conductorRel.nombreCorto }}</td>
+            <td class="titulo">VEHICULO:</td>
+            <td class="td-in-well">{{ arDespacho.codigoVehiculoFk }}</td>
+            <td class="titulo" >(-)RETENCION FUENTE</td>
+            <td align="right">{{ arDespacho.vrRetencionFuente }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">ORIGEN:</td>
+            <td class="td-in-well">{{ arDespacho.ciudadOrigenRel.nombre }}</td>
+            <td class="titulo">DESTINO:</td>
+            <td class="td-in-well">{{ arDespacho.ciudadDestinoRel.nombre }}</td>
+            <td class="titulo" >TOTAL</td>
+            <td align="right">{{ arDespacho.vrTotal }}</td>
+        </tr>
+
         <tr>
             <td class="titulo">RUTA:</td>
             <td class="td-in-well">{{ arDespacho.rutaRel.nombre }}</td>
+            <td class="titulo">UNIDADES:</td>
+            <td class="td-in-well">{{ arDespacho.unidades }}</td>
+            <td class="titulo" ></td>
+            <td align="right"></td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
             <td class="titulo">PESO:</td>
             <td class="td-in-well">{{ arDespacho.pesoReal }}</td>
             <td class="titulo" ></td>
@@ -52,7 +80,6 @@
             <td class="titulo" ></td>
             <td align="right"></td>
         </tr>
-
         <tr>
             <td class="titulo" >COMENTARIO: </td>
             <td class="td-in-well" colspan="5">{{ arDespacho.comentario }}</td>
@@ -83,18 +110,18 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for arGuia in arGuias %}
+                        {% for arDespachoDetalle in arDespachoDetalles %}
                             <tr>
-                                <td>{{ arGuia.codigoGuiaPk }}</td>
-                                <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
-                                <td>{{ arGuia.codigoOperacionCargoFk }}</td>
-                                <td>{{ arGuia.numero }}</td>
-                                <td>{{ arGuia.clienteNombreCorto }}</td>
-                                <td>{{ arGuia.ciudadDestino }}</td>
-                                <td style="text-align: right">{{ arGuia.unidades }}</td>
-                                <td style="text-align: right">{{ arGuia.pesoReal }}</td>
-                                <td style="text-align: right">{{ arGuia.pesoVolumen }}</td>
-                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
+                                <td>{{ arDespachoDetalle.codigoDespachoDetallePk }}</td>
+                                <td>{{ arDespachoDetalle.codigoOperacionIngresoFk }}</td>
+                                <td>{{ arDespachoDetalle.codigoOperacionCargoFk }}</td>
+                                <td>{{ arDespachoDetalle.numero }}</td>
+                                <td>{{ arDespachoDetalle.clienteNombreCorto }}</td>
+                                <td>{{ arDespachoDetalle.ciudadDestino }}</td>
+                                <td style="text-align: right">{{ arDespachoDetalle.unidades }}</td>
+                                <td style="text-align: right">{{ arDespachoDetalle.pesoReal }}</td>
+                                <td style="text-align: right">{{ arDespachoDetalle.pesoVolumen }}</td>
+                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDespachoDetalle.codigoDespachoDetallePk }}" /></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -103,7 +130,9 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('tte_mto_transporte_despacho_detalle_adicionar_guia', {'codigoDespacho': arDespacho.codigoDespachoPk }) }}', 'DespachoAdicionarGuia', 600, 900)">Adicionar</a>
+                        {% if arDespacho.estadoGenerado == 0 %}
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('tte_mto_transporte_despacho_detalle_adicionar_guia', {'codigoDespacho': arDespacho.codigoDespachoPk }) }}', 'DespachoAdicionarGuia', 600, 900)">Adicionar</a>
+                        {% endif %}
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}

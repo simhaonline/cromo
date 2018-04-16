@@ -4,6 +4,7 @@ namespace App\Controller\Transporte\Movimiento\Transporte\Despacho;
 
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteDespacho;
+use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoType;
@@ -36,8 +37,8 @@ class DespachoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $arDespacho = new TteDespacho();
-        if($codigoDespacho == 0) {
-
+        if($codigoDespacho != 0) {
+            $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         }
 
         $form = $this->createForm(DespachoType::class, $arDespacho);
@@ -55,12 +56,15 @@ class DespachoController extends Controller
                             $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
                             $arDespacho->setVehiculoRel($arVehiculo);
                             $arDespacho->setConductorRel($arConductor);
+                            if($codigoDespacho == 0) {
+                                $arDespacho->setFechaRegistro(new \DateTime('now'));
+                            }
                             $em->persist($arDespacho);
                             $em->flush();
                             if ($form->get('guardarnuevo')->isClicked()) {
                                 return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_nuevo', array('codigoDespacho' => 0)));
                             } else {
-                                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_lista'));
+                                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $arDespacho->getCodigoDespachoPk())));
                             }
                         }
                     }
@@ -77,39 +81,39 @@ class DespachoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
-        $form = $this->createFormBuilder()
-            ->add('btnRetirarGuia', SubmitType::class, array('label' => 'Retirar'))
-            ->add('btnImprimirDespacho', SubmitType::class, array('label' => 'Imprimir orden'))
-            ->add('btnImprimirManifiesto', SubmitType::class, array('label' => 'Imprimir manifiesto'))
-            ->getForm();
+        $form = $form = $this->formularioDetalle($arDespacho);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGenerar')->isClicked()) {
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->imprimirManifiesto($codigoDespacho);
+                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+            }
+            if ($form->get('btnAnular')->isClicked()) {
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->anular($codigoDespacho);
+                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+            }
+            if ($form->get('btnRetirarGuia')->isClicked()) {
+                $arrDespachoDetalles = $request->request->get('ChkSeleccionar');
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->retirarDetalle($arrDespachoDetalles);
+                if($respuesta) {
+                    $em->flush();
+                }
+                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+            }
             if ($form->get('btnImprimirDespacho')->isClicked()) {
                 $formato = new Despacho();
                 $formato->Generar($em, $codigoDespacho);
             }
-            if ($form->get('btnRetirarGuia')->isClicked()) {
-                $arrGuias = $request->request->get('ChkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->retirarGuia($arrGuias);
-                if($respuesta) {
-                    $em->flush();
-                    $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($codigoDespacho);
-                }
-                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
-            }
             if ($form->get('btnImprimirManifiesto')->isClicked()) {
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->imprimirManifiesto($codigoDespacho);
-                if($respuesta) {
-                    $formato = new Manifiesto();
-                    $formato->Generar($em, $codigoDespacho);
-                }
+                $formato = new Manifiesto();
+                $formato->Generar($em, $codigoDespacho);
             }
         }
 
-        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->despacho($codigoDespacho);
+        $arDespachoDetalles = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->despacho($codigoDespacho);
         return $this->render('transporte/movimiento/transporte/despacho/detalle.html.twig', [
             'arDespacho' => $arDespacho,
-            'arGuias' => $arGuias,
+            'arDespachoDetalles' => $arDespachoDetalles,
             'form' => $form->createView()]);
     }
 
@@ -132,6 +136,17 @@ class DespachoController extends Controller
                     $arGuia->setDespachoRel($arDespacho);
                     $arGuia->setEstadoEmbarcado(1);
                     $em->persist($arGuia);
+                    $arDespachoDetalle = new TteDespachoDetalle();
+                    $arDespachoDetalle->setDespachoRel($arDespacho);
+                    $arDespachoDetalle->setGuiaRel($arGuia);
+                    $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
+                    $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
+                    $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
+                    $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
+                    $arDespachoDetalle->setUnidades($arGuia->getUnidades());
+                    $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
+                    $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                    $em->persist($arDespachoDetalle);
                 }
                 $em->flush();
                 $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($codigoDespacho);
@@ -141,5 +156,32 @@ class DespachoController extends Controller
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->despachoPendiente();
         return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
+
+    private function formularioDetalle($ar)
+    {
+        $arrBotonRetirarGuia = array('label' => 'Retirar', 'disabled' => false);
+        $arrBotonGenerar = array('label' => 'Generar', 'disabled' => false);
+        $arrBotonAnular = array('label' => 'Anular', 'disabled' => true);
+        $arrBotonImprimirManifiesto = array('label' => 'manifiesto', 'disabled' => false);
+        if ($ar->getEstadoGenerado() == 1) {
+            $arrBotonRetirarGuia['disabled'] = true;
+            $arrBotonGenerar['disabled'] = true;
+            if($ar->getEstadoAnulado() == 0) {
+                $arrBotonAnular['disabled'] = false;
+            }
+        } else {
+            $arrBotonImprimirManifiesto['disabled'] = true;
+        }
+        $form = $this->createFormBuilder()
+            ->add('btnRetirarGuia', SubmitType::class, $arrBotonRetirarGuia)
+            ->add('btnGenerar', SubmitType::class, $arrBotonGenerar)
+            ->add('btnAnular', SubmitType::class, $arrBotonAnular)
+            ->add('btnImprimirDespacho', SubmitType::class, array('label' => 'Imprimir orden'))
+            ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto)
+            ->getForm();
+        return $form;
+
+    }
+
 }
 

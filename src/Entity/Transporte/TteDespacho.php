@@ -38,6 +38,11 @@ class TteDespacho
     private $fechaSalida;
 
     /**
+     * @ORM\Column(name="fecha_llegada", type="datetime", nullable=true)
+     */
+    private $fechaLlegada;
+
+    /**
      * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoOperacionFk;
@@ -118,14 +123,45 @@ class TteDespacho
     private $vrAnticipo = 0;
 
     /**
+     * @ORM\Column(name="vr_industria_comercio", type="float")
+     */
+    private $vrIndustriaComercio = 0;
+
+    /**
+     * @ORM\Column(name="vr_retencion_fuente", type="float")
+     */
+    private $vrRetencionFuente = 0;
+
+    /**
+     * @ORM\Column(name="vr_total", type="float")
+     */
+    private $vrTotal = 0;
+
+    /**
      * @ORM\Column(name="estado_generado", type="boolean", nullable=true)
      */
     private $estadoGenerado = false;
 
     /**
+     * @ORM\Column(name="estado_anulado", type="boolean", nullable=true)
+     */
+    private $estadoAnulado = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
+
+    /**
+     * @ORM\Column(name="codigo_despacho_tipo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoDespachoTipoFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDespachoTipo", inversedBy="despachosDespachoTipoRel")
+     * @ORM\JoinColumn(name="codigo_despacho_tipo_fk", referencedColumnName="codigo_despacho_tipo_pk")
+     */
+    private $despachoTipoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="despachosCiudadOrigenRel")
@@ -167,6 +203,17 @@ class TteDespacho
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="despachoRel")
      */
     protected $guiasDespachoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoDetalle", mappedBy="despachoRel")
+     */
+    protected $despachosDetallesDespachoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoAdicional", mappedBy="despachoRel")
+     */
+    protected $despachosAdicionalesDespachoRel;
+
 
     /**
      * @return mixed
@@ -646,6 +693,150 @@ class TteDespacho
     public function setGuiasDespachoRel($guiasDespachoRel): void
     {
         $this->guiasDespachoRel = $guiasDespachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoTipoFk()
+    {
+        return $this->codigoDespachoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoTipoFk
+     */
+    public function setCodigoDespachoTipoFk($codigoDespachoTipoFk): void
+    {
+        $this->codigoDespachoTipoFk = $codigoDespachoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoTipoRel()
+    {
+        return $this->despachoTipoRel;
+    }
+
+    /**
+     * @param mixed $despachoTipoRel
+     */
+    public function setDespachoTipoRel($despachoTipoRel): void
+    {
+        $this->despachoTipoRel = $despachoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaLlegada()
+    {
+        return $this->fechaLlegada;
+    }
+
+    /**
+     * @param mixed $fechaLlegada
+     */
+    public function setFechaLlegada($fechaLlegada): void
+    {
+        $this->fechaLlegada = $fechaLlegada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIndustriaComercio()
+    {
+        return $this->vrIndustriaComercio;
+    }
+
+    /**
+     * @param mixed $vrIndustriaComercio
+     */
+    public function setVrIndustriaComercio($vrIndustriaComercio): void
+    {
+        $this->vrIndustriaComercio = $vrIndustriaComercio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRetencionFuente()
+    {
+        return $this->vrRetencionFuente;
+    }
+
+    /**
+     * @param mixed $vrRetencionFuente
+     */
+    public function setVrRetencionFuente($vrRetencionFuente): void
+    {
+        $this->vrRetencionFuente = $vrRetencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotal()
+    {
+        return $this->vrTotal;
+    }
+
+    /**
+     * @param mixed $vrTotal
+     */
+    public function setVrTotal($vrTotal): void
+    {
+        $this->vrTotal = $vrTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosAdicionalesDespachoRel()
+    {
+        return $this->despachosAdicionalesDespachoRel;
+    }
+
+    /**
+     * @param mixed $despachosAdicionalesDespachoRel
+     */
+    public function setDespachosAdicionalesDespachoRel($despachosAdicionalesDespachoRel): void
+    {
+        $this->despachosAdicionalesDespachoRel = $despachosAdicionalesDespachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosDetallesDespachoRel()
+    {
+        return $this->despachosDetallesDespachoRel;
+    }
+
+    /**
+     * @param mixed $despachosDetallesDespachoRel
+     */
+    public function setDespachosDetallesDespachoRel($despachosDetallesDespachoRel): void
+    {
+        $this->despachosDetallesDespachoRel = $despachosDetallesDespachoRel;
     }
 
 

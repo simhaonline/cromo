@@ -288,6 +288,11 @@ class TteGuia
     protected $recibosGuiaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoDetalle", mappedBy="despachoRel")
+     */
+    protected $despachosDetallesGuiaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoGuiaPk()
@@ -1133,6 +1138,22 @@ class TteGuia
     public function setRecibosGuiaRel($recibosGuiaRel): void
     {
         $this->recibosGuiaRel = $recibosGuiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosDetallesGuiaRel()
+    {
+        return $this->despachosDetallesGuiaRel;
+    }
+
+    /**
+     * @param mixed $despachosDetallesGuiaRel
+     */
+    public function setDespachosDetallesGuiaRel($despachosDetallesGuiaRel): void
+    {
+        $this->despachosDetallesGuiaRel = $despachosDetallesGuiaRel;
     }
 
 

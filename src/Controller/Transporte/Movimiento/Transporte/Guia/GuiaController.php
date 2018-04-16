@@ -43,17 +43,27 @@ class GuiaController extends Controller
             if($txtCodigoCliente != '') {
                 $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
                 if ($arCliente) {
-                    $arGuia->setClienteRel($arCliente);
-                    $arGuia->setOperacionIngresoRel($this->getUser()->getOperacionRel());
-                    $arGuia->setOperacionCargoRel($this->getUser()->getOperacionRel());
-                    $arGuia->setFactura($arGuia->getGuiaTipoRel()->getFactura());
-                    $arGuia->setCiudadOrigenRel($this->getUser()->getOperacionRel()->getCiudadRel());
-                    $em->persist($arGuia);
-                    $em->flush();
-                    if ($form->get('guardarnuevo')->isClicked()) {
-                        return $this->redirect($this->generateUrl('tte_mto_transporte_guia_nuevo', array('codigoGuia' => 0)));
+                    $error = "";
+                    if($arGuia->getGuiaTipoRel()->getExigeNumero()) {
+                        if($arGuia->getNumero() == "") {
+                            $error = "Debe diligenciar el numero de la guia";
+                        }
                     } else {
-                        return $this->redirect($this->generateUrl('tte_mto_transporte_guia_lista'));
+                        $arGuia->setNumero(NULL);
+                    }
+                    if($error == "") {
+                        $arGuia->setClienteRel($arCliente);
+                        $arGuia->setOperacionIngresoRel($this->getUser()->getOperacionRel());
+                        $arGuia->setOperacionCargoRel($this->getUser()->getOperacionRel());
+                        $arGuia->setFactura($arGuia->getGuiaTipoRel()->getFactura());
+                        $arGuia->setCiudadOrigenRel($this->getUser()->getOperacionRel()->getCiudadRel());
+                        $em->persist($arGuia);
+                        $em->flush();
+                        if ($form->get('guardarnuevo')->isClicked()) {
+                            return $this->redirect($this->generateUrl('tte_mto_transporte_guia_nuevo', array('codigoGuia' => 0)));
+                        } else {
+                            return $this->redirect($this->generateUrl('tte_mto_transporte_guia_lista'));
+                        }
                     }
                 }
             }

@@ -4,6 +4,8 @@ namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteConsecutivo;
 use App\Entity\Transporte\TteDespacho;
+use App\Entity\Transporte\TteDespachoDetalle;
+use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -32,7 +34,8 @@ class TteDespachoRepository extends ServiceEntityRepository
         d.vrFlete,
         d.vrManejo,
         d.vrDeclara,
-        c.nombreCorto AS conductorNombre
+        c.nombreCorto AS conductorNombre,
+        d.estadoAnulado
         FROM App\Entity\Transporte\TteDespacho d         
         LEFT JOIN d.ciudadOrigenRel co
         LEFT JOIN d.ciudadDestinoRel cd
@@ -62,38 +65,72 @@ class TteDespachoRepository extends ServiceEntityRepository
         return true;
     }
 
-    public function imprimirManifiesto($codigoDespacho): bool
+    public function imprimirManifiesto($codigoDespacho): string
     {
+        $respuesta = "";
         $em = $this->getEntityManager();
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         if(!$arDespacho->getEstadoGenerado()) {
-            $fechaActual = new \DateTime('now');
-            $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 1, g.fechaDespacho=:fecha 
+            if($arDespacho->getCantidad() > 0) {
+                $fechaActual = new \DateTime('now');
+                $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 1, g.fechaDespacho=:fecha 
                       WHERE g.codigoDespachoFk = :codigoDespacho')
-                ->setParameter('codigoDespacho', $codigoDespacho)
-                ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
-            $query->execute();
-            $arDespacho->setFechaSalida($fechaActual);
-            $arDespacho->setEstadoGenerado(1);
-            $numero = $em->getRepository(TteConsecutivo::class)->consecutivo(1);
-            $arDespacho->setNumero($numero);
-            $em->persist($arDespacho);
-            $em->flush();
+                    ->setParameter('codigoDespacho', $codigoDespacho)
+                    ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
+                $query->execute();
+                $arDespacho->setFechaSalida($fechaActual);
+                $arDespacho->setEstadoGenerado(1);
+                if($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
+                    $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
+                    $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
+                    $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
+                    $em->persist($arDespachoTipo);
+                }
+                $em->persist($arDespacho);
+                $em->flush();
+            } else {
+                $respuesta = "El despacho debe tener guias asignadas";
+            }
+        } else {
+            $respuesta = "El despacho debe estar generado";
         }
 
-        return true;
+        return $respuesta;
     }
 
-    public function retirarGuia($arrGuias): bool
+    public function anular($codigoDespacho): string
+    {
+        $respuesta = "";
+        $em = $this->getEntityManager();
+        $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+        if(!$arDespacho->getEstadoAnulado()) {
+            $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 0, 
+                  g.estadoEmbarcado = 0, g.codigoDespachoFk = NULL
+                  WHERE g.codigoDespachoFk = :codigoDespacho')
+                ->setParameter('codigoDespacho', $codigoDespacho);
+            $query->execute();
+            $arDespacho->setEstadoAnulado(1);
+            $em->persist($arDespacho);
+            $em->flush();
+        } else {
+            $respuesta = "El despacho ya esta anulado";
+        }
+
+        return $respuesta;
+    }
+
+    public function retirarDetalle($arrDetalles): bool
     {
         $em = $this->getEntityManager();
-        if($arrGuias) {
-            if (count($arrGuias) > 0) {
-                foreach ($arrGuias AS $codigoGuia) {
-                    $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        if($arrDetalles) {
+            if (count($arrDetalles) > 0) {
+                foreach ($arrDetalles AS $codigo) {
+                    $arDespachoDetalle = $em->getRepository(TteDespachoDetalle::class)->find($codigo);
+                    $arGuia = $em->getRepository(TteGuia::class)->find($arDespachoDetalle->getCodigoGuiaFk());
                     $arGuia->setDespachoRel(null);
                     $arGuia->setEstadoEmbarcado(0);
                     $em->persist($arGuia);
+                    $em->remove($arDespachoDetalle);
                 }
                 $em->flush();
             }

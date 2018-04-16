@@ -155,7 +155,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.estadoDespachado = 0 AND g.estadoEmbarcado = 0 
+        WHERE g.estadoDespachado = 0 AND g.estadoEmbarcado = 0 AND g.estadoImpreso = 1 
         ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk'
         );
         return $query->execute();
@@ -422,12 +422,12 @@ class TteGuiaRepository extends ServiceEntityRepository
             if($arGuia->getNumero() == 0 || $arGuia->getNumero() == NULL) {
                 $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($arGuia->getCodigoGuiaTipoFk());
                 $arGuia->setNumero($arGuiaTipo->getConsecutivo());
-                $arGuia->setEstadoImpreso(1);
                 $arGuiaTipo->setConsecutivo($arGuiaTipo->getConsecutivo() + 1);
                 $em->persist($arGuiaTipo);
-                $em->persist($arGuia);
-                $respuesta = true;
             }
+            $arGuia->setEstadoImpreso(1);
+            $em->persist($arGuia);
+            $respuesta = true;
         }
         return $respuesta;
     }

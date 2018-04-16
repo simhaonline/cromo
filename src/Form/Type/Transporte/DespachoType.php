@@ -2,7 +2,9 @@
 
 namespace App\Form\Type\Transporte;
 
+use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteRuta;
+use App\Entity\Transporte\TteCiudad;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,7 +24,30 @@ class DespachoType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-
+            ->add('despachoTipoRel', EntityType::class, array(
+                'class' => TteDespachoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('dt')
+                        ->orderBy('dt.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+            ))
+            ->add('ciudadOrigenRel', EntityType::class, array(
+                'class' => TteCiudad::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+            ))
+            ->add('ciudadDestinoRel', EntityType::class, array(
+                'class' => TteCiudad::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+            ))
             ->add('rutaRel', EntityType::class, array(
                 'class' => TteRuta::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -31,6 +56,8 @@ class DespachoType extends AbstractType {
                 },
                 'choice_label' => 'nombre',
             ))
+            ->add('vrFletePago', NumberType::class)
+            ->add('vrAnticipo', NumberType::class)
             ->add('comentario',TextareaType::class, array('required' => false))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
                 ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));

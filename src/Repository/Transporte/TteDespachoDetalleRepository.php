@@ -38,4 +38,25 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
 
     }
 
+    public function guiaCosto($codigoGuia): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT dd.codigoDespachoDetallePk,  
+        dd.unidades,
+        dd.pesoReal,
+        dd.pesoVolumen,
+        d.cantidad,
+        d.unidades AS tCantidad,
+        d.pesoReal AS tPesoReal,
+        d.pesoVolumen AS tPesoVolumen,
+        d.vrFletePago      
+        FROM App\Entity\Transporte\TteDespachoDetalle dd
+        LEFT JOIN dd.despachoRel d
+        WHERE d.estadoAnulado = 0 AND dd.codigoGuiaFk = :guia  
+        ORDER BY dd.codigoGuiaFk DESC '
+        )->setParameter('guia', $codigoGuia);
+        return $query->execute();
+    }
+
 }

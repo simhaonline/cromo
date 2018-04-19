@@ -65,7 +65,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         return true;
     }
 
-    public function imprimirManifiesto($codigoDespacho): string
+    public function generar($codigoDespacho): string
     {
         $respuesta = "";
         $em = $this->getEntityManager();
@@ -95,6 +95,43 @@ class TteDespachoRepository extends ServiceEntityRepository
             $respuesta = "El despacho debe estar generado";
         }
 
+        return $respuesta;
+    }
+
+    public function cerrar($codigoDespacho): string
+    {
+        $respuesta = "";
+        $em = $this->getEntityManager();
+        $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+        //Actualizar los costos de transporte
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT dd.codigoDespachoDetallePk,
+                  dd.unidades,
+                  dd.pesoReal,
+                  dd.pesoVolumen      
+                FROM App\Entity\Transporte\TteDespachoDetalle dd
+                WHERE dd.codigoDespachoFk = :despacho  
+                ORDER BY dd.codigoDespachoFk DESC '
+        )->setParameter('despacho', $codigoDespacho);
+        $arDespachoDetalles = $query->execute();
+        foreach ($arDespachoDetalles as $arDespachoDetalle) {
+            $arDespachoDetalleActualizar = $em->getRepository(TteDespachoDetalle::class)->find($arDespachoDetalle['codigoDespachoDetallePk']);
+            $costoUnidadTotal = $arDespacho->getVrFletePago() / $arDespacho->getUnidades();
+            $costoPesoTotal = $arDespacho->getVrFletePago() / $arDespacho->getPesoReal();
+            $costoVolumenTotal = $arDespacho->getVrFletePago() / $arDespacho->getPesoVolumen();
+            $costoUnidad = $costoUnidadTotal * $arDespachoDetalle['unidades'];
+            $costoPeso = $costoPesoTotal * $arDespachoDetalle['pesoReal'];
+            $costoVolumen = $costoVolumenTotal * $arDespachoDetalle['pesoVolumen'];
+            $costo = ($costoPeso + $costoVolumen) / 2;
+            $arDespachoDetalleActualizar->setVrCostoUnidad($costoUnidad);
+            $arDespachoDetalleActualizar->setVrCostoPeso($costoPeso);
+            $arDespachoDetalleActualizar->setVrCostoVolumen($costoVolumen);
+            $arDespachoDetalleActualizar->setVrCosto($costo);
+            $em->persist($arDespachoDetalleActualizar);
+        }
+        $arDespacho->setEstadoCerrado(1);
+        $em->flush();
         return $respuesta;
     }
 

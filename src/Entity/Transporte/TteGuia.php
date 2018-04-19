@@ -288,9 +288,14 @@ class TteGuia
     protected $recibosGuiaRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoDetalle", mappedBy="despachoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoDetalle", mappedBy="guiaRel")
      */
     protected $despachosDetallesGuiaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteCosto", mappedBy="guiaRel")
+     */
+    protected $costosGuiaRel;
 
     /**
      * @return mixed
@@ -322,6 +327,22 @@ class TteGuia
     public function setNumero($numero): void
     {
         $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGuiaTipoFk()
+    {
+        return $this->codigoGuiaTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoGuiaTipoFk
+     */
+    public function setCodigoGuiaTipoFk($codigoGuiaTipoFk): void
+    {
+        $this->codigoGuiaTipoFk = $codigoGuiaTipoFk;
     }
 
     /**
@@ -695,6 +716,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getVrAbono()
+    {
+        return $this->vrAbono;
+    }
+
+    /**
+     * @param mixed $vrAbono
+     */
+    public function setVrAbono($vrAbono): void
+    {
+        $this->vrAbono = $vrAbono;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoImpreso()
     {
         return $this->estadoImpreso;
@@ -807,6 +844,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getEstadoFacturaGenerada()
+    {
+        return $this->estadoFacturaGenerada;
+    }
+
+    /**
+     * @param mixed $estadoFacturaGenerada
+     */
+    public function setEstadoFacturaGenerada($estadoFacturaGenerada): void
+    {
+        $this->estadoFacturaGenerada = $estadoFacturaGenerada;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoDespachoFk()
     {
         return $this->codigoDespachoFk;
@@ -871,6 +924,38 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getOrdenRuta()
+    {
+        return $this->ordenRuta;
+    }
+
+    /**
+     * @param mixed $ordenRuta
+     */
+    public function setOrdenRuta($ordenRuta): void
+    {
+        $this->ordenRuta = $ordenRuta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFactura()
+    {
+        return $this->factura;
+    }
+
+    /**
+     * @param mixed $factura
+     */
+    public function setFactura($factura): void
+    {
+        $this->factura = $factura;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -882,6 +967,22 @@ class TteGuia
     public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaTipoRel()
+    {
+        return $this->guiaTipoRel;
+    }
+
+    /**
+     * @param mixed $guiaTipoRel
+     */
+    public function setGuiaTipoRel($guiaTipoRel): void
+    {
+        $this->guiaTipoRel = $guiaTipoRel;
     }
 
     /**
@@ -1031,102 +1132,6 @@ class TteGuia
     /**
      * @return mixed
      */
-    public function getOrdenRuta()
-    {
-        return $this->ordenRuta;
-    }
-
-    /**
-     * @param mixed $ordenRuta
-     */
-    public function setOrdenRuta($ordenRuta): void
-    {
-        $this->ordenRuta = $ordenRuta;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoGuiaTipoFk()
-    {
-        return $this->codigoGuiaTipoFk;
-    }
-
-    /**
-     * @param mixed $codigoGuiaTipoFk
-     */
-    public function setCodigoGuiaTipoFk($codigoGuiaTipoFk): void
-    {
-        $this->codigoGuiaTipoFk = $codigoGuiaTipoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiaTipoRel()
-    {
-        return $this->guiaTipoRel;
-    }
-
-    /**
-     * @param mixed $guiaTipoRel
-     */
-    public function setGuiaTipoRel($guiaTipoRel): void
-    {
-        $this->guiaTipoRel = $guiaTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFactura()
-    {
-        return $this->factura;
-    }
-
-    /**
-     * @param mixed $factura
-     */
-    public function setFactura($factura): void
-    {
-        $this->factura = $factura;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoFacturaGenerada()
-    {
-        return $this->estadoFacturaGenerada;
-    }
-
-    /**
-     * @param mixed $estadoFacturaGenerada
-     */
-    public function setEstadoFacturaGenerada($estadoFacturaGenerada): void
-    {
-        $this->estadoFacturaGenerada = $estadoFacturaGenerada;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrAbono()
-    {
-        return $this->vrAbono;
-    }
-
-    /**
-     * @param mixed $vrAbono
-     */
-    public function setVrAbono($vrAbono): void
-    {
-        $this->vrAbono = $vrAbono;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getRecibosGuiaRel()
     {
         return $this->recibosGuiaRel;
@@ -1154,6 +1159,22 @@ class TteGuia
     public function setDespachosDetallesGuiaRel($despachosDetallesGuiaRel): void
     {
         $this->despachosDetallesGuiaRel = $despachosDetallesGuiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosGuiaRel()
+    {
+        return $this->costosGuiaRel;
+    }
+
+    /**
+     * @param mixed $costosGuiaRel
+     */
+    public function setCostosGuiaRel($costosGuiaRel): void
+    {
+        $this->costosGuiaRel = $costosGuiaRel;
     }
 
 

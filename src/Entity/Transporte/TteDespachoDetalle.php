@@ -63,6 +63,26 @@ class TteDespachoDetalle
     private $vrRecaudo = 0;
 
     /**
+     * @ORM\Column(name="vr_costo_unidad", type="float", nullable=true)
+     */
+    private $vrCostoUnidad = 0;
+
+    /**
+     * @ORM\Column(name="vr_costo_peso", type="float", nullable=true)
+     */
+    private $vrCostoPeso = 0;
+
+    /**
+     * @ORM\Column(name="vr_costo_volumen", type="float", nullable=true)
+     */
+    private $vrCostoVolumen = 0;
+
+    /**
+     * @ORM\Column(name="vr_costo", type="float", nullable=true)
+     */
+    private $vrCosto = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDespacho", inversedBy="despachosDetallesDespachoRel")
      * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
      */
@@ -264,6 +284,70 @@ class TteDespachoDetalle
     public function setGuiaRel($guiaRel): void
     {
         $this->guiaRel = $guiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoUnidad()
+    {
+        return $this->vrCostoUnidad;
+    }
+
+    /**
+     * @param mixed $vrCostoUnidad
+     */
+    public function setVrCostoUnidad($vrCostoUnidad): void
+    {
+        $this->vrCostoUnidad = $vrCostoUnidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoPeso()
+    {
+        return $this->vrCostoPeso;
+    }
+
+    /**
+     * @param mixed $vrCostoPeso
+     */
+    public function setVrCostoPeso($vrCostoPeso): void
+    {
+        $this->vrCostoPeso = $vrCostoPeso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoVolumen()
+    {
+        return $this->vrCostoVolumen;
+    }
+
+    /**
+     * @param mixed $vrCostoVolumen
+     */
+    public function setVrCostoVolumen($vrCostoVolumen): void
+    {
+        $this->vrCostoVolumen = $vrCostoVolumen;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCosto()
+    {
+        return $this->vrCosto;
+    }
+
+    /**
+     * @param mixed $vrCosto
+     */
+    public function setVrCosto($vrCosto): void
+    {
+        $this->vrCosto = $vrCosto;
     }
 
 

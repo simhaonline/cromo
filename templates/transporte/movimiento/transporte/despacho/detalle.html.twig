@@ -4,6 +4,7 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnCerrar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnAnular, { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular?")'} }) }}
             {{ form_widget(form.btnImprimirDespacho, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnImprimirManifiesto, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
@@ -11,6 +12,7 @@
     </div>
     <div style="float:right">
         {% if arDespacho.estadoGenerado == 1 %}<span class="label label-default">Generado</span>{% endif %}
+        {% if arDespacho.estadoGenerado == 1 %}<span class="label label-default">Cerrado</span>{% endif %}
         {% if arDespacho.estadoAnulado == 1 %}<span class="label label-default">Anulado</span>{% endif %}
     </div>
     <br /><br />

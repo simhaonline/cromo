@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_errors(form) }}
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>AÑO</th>
+            <th>MES</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arCierre in arCierres %}
+            <tr>
+                <td>{{ arCierre.codigoCierrePk }}</td>
+                <td>{{ arCierre.anio }}</td>
+                <td>{{ arCierre.mes }}</td>
+                <td>
+                    {% if arCierre.estadoGenerado == 0 %}
+                    <button class="btn btn-default btn-xs" type="submit" name="OpGenerar"
+                            value="{{ arCierre.codigoCierrePk }}">Generar
+                    </button>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCierres.getTotalItemCount }}</span></div>
+    </div>
+
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arCierres) }}
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}
+

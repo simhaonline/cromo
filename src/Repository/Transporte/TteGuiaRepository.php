@@ -432,4 +432,32 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $respuesta;
     }
 
+    public function periodoCierre($anio, $mes): array
+    {
+        $em = $this->getEntityManager();
+        $ultimoDia = date("d", (mktime(0, 0, 0, $mes + 1, 1, $anio) - 1));
+        $fechaDesde = $anio."-".$mes."-"."01 00:00";
+        $fechaHasta = $anio."-".$mes."-".$ultimoDia." 23:59";
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk,  
+        g.vrFlete
+        FROM App\Entity\Transporte\TteGuia g
+        WHERE g.fechaIngreso >= :fechaDesde AND g.fechaIngreso <= :fechaHasta  
+        ORDER BY g.codigoGuiaPk DESC '
+        )->setParameter('fechaDesde', $fechaDesde)
+        ->setParameter('fechaHasta', $fechaHasta);
+        return $query->execute();
+    }
+
+    public function procesoCosto($codigoGuia): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.vrFlete        
+        FROM App\Entity\Transporte\TteGuia g
+        WHERE g.codigoGuiaPk >= :guia'
+        )->setParameter('guia', $codigoGuia);
+        return $query->execute();
+    }
+
 }

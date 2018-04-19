@@ -85,7 +85,11 @@ class DespachoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGenerar')->isClicked()) {
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->imprimirManifiesto($codigoDespacho);
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->generar($codigoDespacho);
+                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+            }
+            if ($form->get('btnCerrar')->isClicked()) {
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->cerrar($codigoDespacho);
                 return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
             }
             if ($form->get('btnAnular')->isClicked()) {
@@ -161,13 +165,19 @@ class DespachoController extends Controller
     {
         $arrBotonRetirarGuia = array('label' => 'Retirar', 'disabled' => false);
         $arrBotonGenerar = array('label' => 'Generar', 'disabled' => false);
+        $arrBotonCerrar = array('label' => 'Cerrar', 'disabled' => true);
         $arrBotonAnular = array('label' => 'Anular', 'disabled' => true);
         $arrBotonImprimirManifiesto = array('label' => 'manifiesto', 'disabled' => false);
         if ($ar->getEstadoGenerado() == 1) {
             $arrBotonRetirarGuia['disabled'] = true;
             $arrBotonGenerar['disabled'] = true;
             if($ar->getEstadoAnulado() == 0) {
+                $arrBotonCerrar['disabled'] = false;
                 $arrBotonAnular['disabled'] = false;
+                if($ar->getEstadoCerrado()) {
+                    $arrBotonAnular['disabled'] = true;
+                    $arrBotonCerrar['disabled'] = true;
+                }
             }
         } else {
             $arrBotonImprimirManifiesto['disabled'] = true;
@@ -175,6 +185,7 @@ class DespachoController extends Controller
         $form = $this->createFormBuilder()
             ->add('btnRetirarGuia', SubmitType::class, $arrBotonRetirarGuia)
             ->add('btnGenerar', SubmitType::class, $arrBotonGenerar)
+            ->add('btnCerrar', SubmitType::class, $arrBotonCerrar)
             ->add('btnAnular', SubmitType::class, $arrBotonAnular)
             ->add('btnImprimirDespacho', SubmitType::class, array('label' => 'Imprimir orden'))
             ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto)

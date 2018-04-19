@@ -143,6 +143,11 @@ class TteDespacho
     private $estadoGenerado = false;
 
     /**
+     * @ORM\Column(name="estado_cerrado", type="boolean", nullable=true)
+     */
+    private $estadoCerrado = false;
+
+    /**
      * @ORM\Column(name="estado_anulado", type="boolean", nullable=true)
      */
     private $estadoAnulado = false;
@@ -837,6 +842,22 @@ class TteDespacho
     public function setDespachosDetallesDespachoRel($despachosDetallesDespachoRel): void
     {
         $this->despachosDetallesDespachoRel = $despachosDetallesDespachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoCerrado()
+    {
+        return $this->estadoCerrado;
+    }
+
+    /**
+     * @param mixed $estadoCerrado
+     */
+    public function setEstadoCerrado($estadoCerrado): void
+    {
+        $this->estadoCerrado = $estadoCerrado;
     }
 
 

@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_transporte.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     {{ form_errors(form) }}
@@ -19,10 +19,15 @@
                 <td>{{ arCierre.mes }}</td>
                 <td>
                     {% if arCierre.estadoGenerado == 0 %}
-                    <button class="btn btn-default btn-xs" type="submit" name="OpGenerar"
-                            value="{{ arCierre.codigoCierrePk }}">Generar
-                    </button>
+                        <button class="btn btn-default btn-xs" type="submit" name="OpGenerar"
+                                value="{{ arCierre.codigoCierrePk }}">Generar
+                        </button>
+                    {% else %}
+                        <button class="btn btn-default btn-xs" type="submit" name="OpDeshacer"
+                                value="{{ arCierre.codigoCierrePk }}">Deshacer
+                        </button>
                     {% endif %}
+
                 </td>
             </tr>
         {% endfor %}

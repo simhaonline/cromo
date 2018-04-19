@@ -18,6 +18,16 @@ class TteCosto
     private $codigoCostoPk;
 
     /**
+     * @ORM\Column(name="anio", type="integer", nullable=true)
+     */
+    private $anio;
+
+    /**
+     * @ORM\Column(name="mes", type="integer", nullable=true)
+     */
+    private $mes;
+
+    /**
      * @ORM\Column(name="codigo_cierre_fk", type="integer", nullable=true)
      */
     private $codigoCierreFk;
@@ -51,6 +61,11 @@ class TteCosto
      * @ORM\Column(name="vr_precio", type="float", nullable=true)
      */
     private $vrPrecio = 0;
+
+    /**
+     * @ORM\Column(name="vr_rentabilidad", type="float", nullable=true)
+     */
+    private $vrRentabilidad = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteCierre", inversedBy="costosCierreRel")
@@ -222,6 +237,54 @@ class TteCosto
     public function setCierreRel($cierreRel): void
     {
         $this->cierreRel = $cierreRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnio()
+    {
+        return $this->anio;
+    }
+
+    /**
+     * @param mixed $anio
+     */
+    public function setAnio($anio): void
+    {
+        $this->anio = $anio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMes()
+    {
+        return $this->mes;
+    }
+
+    /**
+     * @param mixed $mes
+     */
+    public function setMes($mes): void
+    {
+        $this->mes = $mes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRentabilidad()
+    {
+        return $this->vrRentabilidad;
+    }
+
+    /**
+     * @param mixed $vrRentabilidad
+     */
+    public function setVrRentabilidad($vrRentabilidad): void
+    {
+        $this->vrRentabilidad = $vrRentabilidad;
     }
 
 

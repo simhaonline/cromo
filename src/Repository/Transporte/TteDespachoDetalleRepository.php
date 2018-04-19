@@ -43,14 +43,10 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'SELECT dd.codigoDespachoDetallePk,  
-        dd.unidades,
-        dd.pesoReal,
-        dd.pesoVolumen,
-        d.cantidad,
-        d.unidades AS tCantidad,
-        d.pesoReal AS tPesoReal,
-        d.pesoVolumen AS tPesoVolumen,
-        d.vrFletePago      
+        dd.vrCostoUnidad,
+        dd.vrCostoPeso,
+        dd.vrCostoVolumen,
+        dd.vrCosto    
         FROM App\Entity\Transporte\TteDespachoDetalle dd
         LEFT JOIN dd.despachoRel d
         WHERE d.estadoAnulado = 0 AND dd.codigoGuiaFk = :guia  

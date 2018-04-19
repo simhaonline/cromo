@@ -27,6 +27,9 @@ class CierreController extends Controller
             if ($request->request->get('OpGenerar')) {
                 $respuesta = $em->getRepository(TteCierre::class)->generar($request->request->get('OpGenerar'));
             }
+            if ($request->request->get('OpDeshacer')) {
+                $respuesta = $em->getRepository(TteCierre::class)->deshacer($request->request->get('OpDeshacer'));
+            }
         }
         $query = $this->getDoctrine()->getRepository(TteCierre::class)->lista();
         $arCierres = $paginator->paginate($query, $request->query->getInt('page', 1),10);

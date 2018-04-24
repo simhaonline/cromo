@@ -167,7 +167,7 @@ class DespachoController extends Controller
         $arrBotonGenerar = array('label' => 'Generar', 'disabled' => false);
         $arrBotonCerrar = array('label' => 'Cerrar', 'disabled' => true);
         $arrBotonAnular = array('label' => 'Anular', 'disabled' => true);
-        $arrBotonImprimirManifiesto = array('label' => 'manifiesto', 'disabled' => false);
+        $arrBotonImprimirManifiesto = array('label' => 'Manifiesto', 'disabled' => false);
         if ($ar->getEstadoGenerado() == 1) {
             $arrBotonRetirarGuia['disabled'] = true;
             $arrBotonGenerar['disabled'] = true;

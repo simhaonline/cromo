@@ -174,4 +174,35 @@ class TteDespachoRepository extends ServiceEntityRepository
         }
         return true;
     }
+
+    public function dqlImprimirManifiesto($codigoDespacho): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT d.codigoDespachoPk, 
+        d.numero,
+        d.codigoOperacionFk,
+        d.codigoVehiculoFk,
+        d.codigoRutaFk, 
+        co.nombre AS ciudadOrigen, 
+        cd.nombre AS ciudadDestino,
+        d.unidades,
+        d.pesoReal,
+        d.pesoVolumen,
+        d.vrFlete,
+        d.vrManejo,
+        d.vrDeclara,
+        c.nombreCorto AS conductorNombre,
+        d.estadoAnulado
+        FROM App\Entity\Transporte\TteDespacho d         
+        LEFT JOIN d.ciudadOrigenRel co
+        LEFT JOIN d.ciudadDestinoRel cd
+        LEFT JOIN d.conductorRel c
+        WHERE d.codigoDespachoPk = :codigoDespacho
+        ORDER BY d.codigoDespachoPk DESC'
+        )->setParameter('codigoDespacho', $codigoDespacho);
+        $arDespacho = $query->getSingleResult();
+        return $arDespacho;
+
+    }
 }

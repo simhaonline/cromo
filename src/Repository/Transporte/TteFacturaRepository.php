@@ -26,7 +26,7 @@ class TteFacturaRepository extends ServiceEntityRepository
         f.vrSubtotal,
         f.vrTotal,        
         c.nombreCorto clienteNombre       
-        FROM App\Entity\Factura f
+        FROM App\Entity\Transporte\TteFactura f
         LEFT JOIN f.clienteRel c'
         );
         return $query->execute();

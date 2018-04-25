@@ -2,10 +2,10 @@
 
 namespace App\Controller\Transporte\Movimiento\Comercial\Factura;
 
-use App\Entity\TteFactura;
-use App\Entity\TteGuia;
+use App\Entity\Transporte\TteFactura;
+use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
-use App\Form\Type\FacturaType;
+use App\Form\Type\Transporte\FacturaType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,7 +26,7 @@ class FacturaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/comercial/factura/detalle/{codigoFactura}", name="mto_comercial_factura_detalle")
+     * @Route("/tte/mto/comercial/factura/detalle/{codigoFactura}", name="tte_mto_comercial_factura_detalle")
      */
     public function detalle(Request $request, $codigoFactura)
     {
@@ -59,7 +59,7 @@ class FacturaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/comercial/factura/detalle/adicionar/guia/{codigoFactura}", name="mto_comercial_factura_detalle_adicionar_guia")
+     * @Route("/tte/mto/comercial/factura/detalle/adicionar/guia/{codigoFactura}", name="tte_mto_comercial_factura_detalle_adicionar_guia")
      */
     public function detalleAdicionarGuia(Request $request, $codigoFactura)
     {
@@ -88,7 +88,7 @@ class FacturaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/comercial/factura/nuevo/{codigoFactura}", name="mto_comercial_factura_nuevo")
+     * @Route("/tte/mto/comercial/factura/nuevo/{codigoFactura}", name="tte_mto_comercial_factura_nuevo")
      */
     public function nuevo(Request $request, $codigoFactura)
     {

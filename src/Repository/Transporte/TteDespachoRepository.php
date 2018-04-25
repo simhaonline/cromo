@@ -9,7 +9,7 @@ use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-
+use SoapClient;
 class TteDespachoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)

@@ -12,14 +12,25 @@ class TteAseguradora
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="string", length=20, nullable=false, unique=true)
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
      */
     private $codigoAseguradoraPk;
+
+    /**
+     * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=true)
+     */
+    private $numeroIdentificacion;
 
     /**
      * @ORM\Column(name="nombre", type="string", length=100, nullable=true)
      */
     private $nombre;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteVehiculo", mappedBy="aseguradoraRel")
+     */
+    protected $vehiculosAseguradoraRel;
 
     /**
      * @return mixed
@@ -40,6 +51,22 @@ class TteAseguradora
     /**
      * @return mixed
      */
+    public function getNumeroIdentificacion()
+    {
+        return $this->numeroIdentificacion;
+    }
+
+    /**
+     * @param mixed $numeroIdentificacion
+     */
+    public function setNumeroIdentificacion($numeroIdentificacion): void
+    {
+        $this->numeroIdentificacion = $numeroIdentificacion;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getNombre()
     {
         return $this->nombre;
@@ -51,6 +78,22 @@ class TteAseguradora
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVehiculosAseguradoraRel()
+    {
+        return $this->vehiculosAseguradoraRel;
+    }
+
+    /**
+     * @param mixed $vehiculosAseguradoraRel
+     */
+    public function setVehiculosAseguradoraRel($vehiculosAseguradoraRel): void
+    {
+        $this->vehiculosAseguradoraRel = $vehiculosAseguradoraRel;
     }
 
 

@@ -22,6 +22,11 @@ class TteMarca
     private $nombre;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteVehiculo", mappedBy="marcaRel")
+     */
+    protected $vehiculosMarcaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoMarcaPk()
@@ -52,8 +57,23 @@ class TteMarca
     {
         $this->nombre = $nombre;
     }
-    
-    
+
+    /**
+     * @return mixed
+     */
+    public function getVehiculosMarcaRel()
+    {
+        return $this->vehiculosMarcaRel;
+    }
+
+    /**
+     * @param mixed $vehiculosMarcaRel
+     */
+    public function setVehiculosMarcaRel($vehiculosMarcaRel): void
+    {
+        $this->vehiculosMarcaRel = $vehiculosMarcaRel;
+    }
+
 
 }
 

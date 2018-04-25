@@ -82,12 +82,27 @@ class TteVehiculo
     private $configuracion;
 
     /**
+     * @ORM\Column(name="numero_poliza", type="string", length=30, nullable=true)
+     */
+    private $numeroPoliza;
+
+    /**
+     * @ORM\Column(name="fecha_vence_poliza", type="date", nullable=true)
+     */
+    private $fechaVencePoliza;
+
+    /**
      * @ORM\Column(name="fecha_vence_tecnicomecanica", type="date", nullable=true)
      */
     private $fechaVenceTecnicomecanica;
 
     /**
-     * @ORM\Column(name="codigo_aseguradora_fk", type="string", length=20, nullable=true)
+     * @ORM\Column(name="codigo_poseedor_fk", type="integer", nullable=true)
+     */
+    private $codigoPoseedorFk;
+
+    /**
+     * @ORM\Column(name="codigo_aseguradora_fk", type="integer", nullable=true)
      */
     private $codigoAseguradoraFk;
 
@@ -110,6 +125,24 @@ class TteVehiculo
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteMarca", inversedBy="vehiculosMarcaRel")
+     * @ORM\JoinColumn(name="codigo_marca_fk", referencedColumnName="codigo_marca_pk")
+     */
+    private $marcaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TtePoseedor", inversedBy="vehiculosPoseedorRel")
+     * @ORM\JoinColumn(name="codigo_poseedor_fk", referencedColumnName="codigo_poseedor_pk")
+     */
+    private $poseedorRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteAseguradora", inversedBy="vehiculosAseguradoraRel")
+     * @ORM\JoinColumn(name="codigo_aseguradora_fk", referencedColumnName="codigo_aseguradora_pk")
+     */
+    private $aseguradoraRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteDespacho", mappedBy="vehiculoRel")
@@ -353,6 +386,38 @@ class TteVehiculo
     /**
      * @return mixed
      */
+    public function getNumeroPoliza()
+    {
+        return $this->numeroPoliza;
+    }
+
+    /**
+     * @param mixed $numeroPoliza
+     */
+    public function setNumeroPoliza($numeroPoliza): void
+    {
+        $this->numeroPoliza = $numeroPoliza;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaVencePoliza()
+    {
+        return $this->fechaVencePoliza;
+    }
+
+    /**
+     * @param mixed $fechaVencePoliza
+     */
+    public function setFechaVencePoliza($fechaVencePoliza): void
+    {
+        $this->fechaVencePoliza = $fechaVencePoliza;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFechaVenceTecnicomecanica()
     {
         return $this->fechaVenceTecnicomecanica;
@@ -364,6 +429,22 @@ class TteVehiculo
     public function setFechaVenceTecnicomecanica($fechaVenceTecnicomecanica): void
     {
         $this->fechaVenceTecnicomecanica = $fechaVenceTecnicomecanica;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPoseedorFk()
+    {
+        return $this->codigoPoseedorFk;
+    }
+
+    /**
+     * @param mixed $codigoPoseedorFk
+     */
+    public function setCodigoPoseedorFk($codigoPoseedorFk): void
+    {
+        $this->codigoPoseedorFk = $codigoPoseedorFk;
     }
 
     /**
@@ -449,6 +530,54 @@ class TteVehiculo
     /**
      * @return mixed
      */
+    public function getMarcaRel()
+    {
+        return $this->marcaRel;
+    }
+
+    /**
+     * @param mixed $marcaRel
+     */
+    public function setMarcaRel($marcaRel): void
+    {
+        $this->marcaRel = $marcaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPoseedorRel()
+    {
+        return $this->poseedorRel;
+    }
+
+    /**
+     * @param mixed $poseedorRel
+     */
+    public function setPoseedorRel($poseedorRel): void
+    {
+        $this->poseedorRel = $poseedorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAseguradoraRel()
+    {
+        return $this->aseguradoraRel;
+    }
+
+    /**
+     * @param mixed $aseguradoraRel
+     */
+    public function setAseguradoraRel($aseguradoraRel): void
+    {
+        $this->aseguradoraRel = $aseguradoraRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDespachosVehiculoRel()
     {
         return $this->despachosVehiculoRel;
@@ -493,6 +622,7 @@ class TteVehiculo
     {
         $this->monitoreosVehiculoRel = $monitoreosVehiculoRel;
     }
+
 
 
 }

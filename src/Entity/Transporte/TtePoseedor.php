@@ -6,16 +6,16 @@ namespace App\Entity\Transporte;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Transporte\TteConductorRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Transporte\TtePoseedorRepository")
  */
-class TteConductor
+class TtePoseedor
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $codigoConductorPk;
+    private $codigoPoseedorPk;
 
     /**
      * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=true)
@@ -63,40 +63,30 @@ class TteConductor
     private $telefono;
 
     /**
-     * @ORM\Column(name="numero_licencia", type="string", length=100, nullable=true)
-     */
-    private $numeroLicencia;
-
-    /**
-     * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
-     */
-    private $comentario;
-
-    /**
-     * @ORM\OneToMany(targetEntity="TteDespacho", mappedBy="conductorRel")
-     */
-    protected $despachosConductorRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="conductoresCiudadRel")
+     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="poseedoresCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     private $ciudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteVehiculo", mappedBy="poseedorRel")
+     */
+    protected $vehiculosPoseedorRel;
+
+    /**
      * @return mixed
      */
-    public function getCodigoConductorPk()
+    public function getCodigoPoseedorPk()
     {
-        return $this->codigoConductorPk;
+        return $this->codigoPoseedorPk;
     }
 
     /**
-     * @param mixed $codigoConductorPk
+     * @param mixed $codigoPoseedorPk
      */
-    public function setCodigoConductorPk($codigoConductorPk): void
+    public function setCodigoPoseedorPk($codigoPoseedorPk): void
     {
-        $this->codigoConductorPk = $codigoConductorPk;
+        $this->codigoPoseedorPk = $codigoPoseedorPk;
     }
 
     /**
@@ -214,38 +204,6 @@ class TteConductor
     /**
      * @return mixed
      */
-    public function getTelefono()
-    {
-        return $this->telefono;
-    }
-
-    /**
-     * @param mixed $telefono
-     */
-    public function setTelefono($telefono): void
-    {
-        $this->telefono = $telefono;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDespachosConductorRel()
-    {
-        return $this->despachosConductorRel;
-    }
-
-    /**
-     * @param mixed $despachosConductorRel
-     */
-    public function setDespachosConductorRel($despachosConductorRel): void
-    {
-        $this->despachosConductorRel = $despachosConductorRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCodigoCiudadFk()
     {
         return $this->codigoCiudadFk;
@@ -257,6 +215,22 @@ class TteConductor
     public function setCodigoCiudadFk($codigoCiudadFk): void
     {
         $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTelefono()
+    {
+        return $this->telefono;
+    }
+
+    /**
+     * @param mixed $telefono
+     */
+    public function setTelefono($telefono): void
+    {
+        $this->telefono = $telefono;
     }
 
     /**
@@ -278,33 +252,17 @@ class TteConductor
     /**
      * @return mixed
      */
-    public function getNumeroLicencia()
+    public function getVehiculosPoseedorRel()
     {
-        return $this->numeroLicencia;
+        return $this->vehiculosPoseedorRel;
     }
 
     /**
-     * @param mixed $numeroLicencia
+     * @param mixed $vehiculosPoseedorRel
      */
-    public function setNumeroLicencia($numeroLicencia): void
+    public function setVehiculosPoseedorRel($vehiculosPoseedorRel): void
     {
-        $this->numeroLicencia = $numeroLicencia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComentario()
-    {
-        return $this->comentario;
-    }
-
-    /**
-     * @param mixed $comentario
-     */
-    public function setComentario($comentario): void
-    {
-        $this->comentario = $comentario;
+        $this->vehiculosPoseedorRel = $vehiculosPoseedorRel;
     }
 
 

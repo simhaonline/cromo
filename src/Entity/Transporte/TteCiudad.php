@@ -118,6 +118,16 @@ class TteCiudad
     protected $preciosDetallesCiudadDestinoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteConductor", mappedBy="ciudadRel")
+     */
+    protected $conductoresCiudadRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TtePoseedor", mappedBy="ciudadRel")
+     */
+    protected $poseedoresCiudadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -451,6 +461,38 @@ class TteCiudad
     public function setPreciosDetallesCiudadDestinoRel($preciosDetallesCiudadDestinoRel): void
     {
         $this->preciosDetallesCiudadDestinoRel = $preciosDetallesCiudadDestinoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConductoresCiudadRel()
+    {
+        return $this->conductoresCiudadRel;
+    }
+
+    /**
+     * @param mixed $conductoresCiudadRel
+     */
+    public function setConductoresCiudadRel($conductoresCiudadRel): void
+    {
+        $this->conductoresCiudadRel = $conductoresCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPoseedoresCiudadRel()
+    {
+        return $this->poseedoresCiudadRel;
+    }
+
+    /**
+     * @param mixed $poseedoresCiudadRel
+     */
+    public function setPoseedoresCiudadRel($poseedoresCiudadRel): void
+    {
+        $this->poseedoresCiudadRel = $poseedoresCiudadRel;
     }
 
 

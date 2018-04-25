@@ -92,6 +92,10 @@ class DespachoController extends Controller
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->cerrar($codigoDespacho);
                 return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
             }
+            if ($form->get('btnRndc')->isClicked()) {
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($codigoDespacho);
+                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+            }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->anular($codigoDespacho);
                 return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
@@ -166,6 +170,7 @@ class DespachoController extends Controller
         $arrBotonRetirarGuia = array('label' => 'Retirar', 'disabled' => false);
         $arrBotonGenerar = array('label' => 'Generar', 'disabled' => false);
         $arrBotonCerrar = array('label' => 'Cerrar', 'disabled' => true);
+        $arrBotonRndc = array('label' => 'RNDC', 'disabled' => false);
         $arrBotonAnular = array('label' => 'Anular', 'disabled' => true);
         $arrBotonImprimirManifiesto = array('label' => 'Manifiesto', 'disabled' => false);
         if ($ar->getEstadoGenerado() == 1) {
@@ -186,6 +191,7 @@ class DespachoController extends Controller
             ->add('btnRetirarGuia', SubmitType::class, $arrBotonRetirarGuia)
             ->add('btnGenerar', SubmitType::class, $arrBotonGenerar)
             ->add('btnCerrar', SubmitType::class, $arrBotonCerrar)
+            ->add('btnRndc', SubmitType::class, $arrBotonRndc)
             ->add('btnAnular', SubmitType::class, $arrBotonAnular)
             ->add('btnImprimirDespacho', SubmitType::class, array('label' => 'Imprimir orden'))
             ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto)

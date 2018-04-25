@@ -181,6 +181,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT d.codigoDespachoPk, 
         d.numero,
+        d.fechaSalida, 
         d.codigoOperacionFk,
         d.codigoVehiculoFk,
         d.codigoRutaFk, 
@@ -192,17 +193,61 @@ class TteDespachoRepository extends ServiceEntityRepository
         d.vrFlete,
         d.vrManejo,
         d.vrDeclara,
+        d.vrFletePago,
+        d.vrRetencionFuente,
+        d.vrRetencionIca,
+        d.vrAnticipo,
+        c.numeroIdentificacion AS conductorIdentificacion,
         c.nombreCorto AS conductorNombre,
-        d.estadoAnulado
+        c.direccion AS conductorDireccion,
+        c.telefono AS conductorTelefono,
+        c.numeroLicencia AS conductorNumeroLicencia,
+        cc.nombre AS conductorCiudad,
+        d.estadoAnulado,
+        m.nombre as vehiculoMarca,
+        v.placaRemolque as vehiculoPlacaRemolque,
+        v.configuracion as vehiculoConfiguracion,
+        v.pesoVacio as vehiculoPesoVacio, 
+        v.numeroPoliza as vehiculoNumeroPoliza,
+        v.fechaVencePoliza as vehiculoFechaVencePoliza,
+        a.nombre as aseguradoraNombre,
+        p.nombreCorto as poseedorNombre,
+        p.numeroIdentificacion as poseedorNumeroIdentificacion,
+        p.direccion as poseedorDireccion,
+        p.telefono as poseedorTelefono,
+        pc.nombre AS poseedorCiudad
         FROM App\Entity\Transporte\TteDespacho d         
         LEFT JOIN d.ciudadOrigenRel co
         LEFT JOIN d.ciudadDestinoRel cd
         LEFT JOIN d.conductorRel c
+        LEFT JOIN c.ciudadRel cc
+        LEFT JOIN d.vehiculoRel v
+        LEFT JOIN v.marcaRel m
+        LEFT JOIN v.aseguradoraRel a
+        LEFT JOIN v.poseedorRel p
+        LEFT JOIN p.ciudadRel pc
         WHERE d.codigoDespachoPk = :codigoDespacho
         ORDER BY d.codigoDespachoPk DESC'
         )->setParameter('codigoDespacho', $codigoDespacho);
         $arDespacho = $query->getSingleResult();
         return $arDespacho;
+
+    }
+
+    public function reportarRndc($codigoDespacho): string
+    {
+        $em = $this->getEntityManager();
+        $cliente = "";
+        try {
+            $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
+
+        } catch (Exception $e) {
+            return "Error al conectar el servicio: " . $e;
+        }
+        $respuesta = "";
+
+
+        return $respuesta;
 
     }
 }

@@ -133,6 +133,11 @@ class TteDespacho
     private $vrRetencionFuente = 0;
 
     /**
+     * @ORM\Column(name="vr_retencion_ica", type="float")
+     */
+    private $vrRetencionIca = 0;
+
+    /**
      * @ORM\Column(name="vr_total", type="float")
      */
     private $vrTotal = 0;
@@ -858,6 +863,22 @@ class TteDespacho
     public function setEstadoCerrado($estadoCerrado): void
     {
         $this->estadoCerrado = $estadoCerrado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRetencionIca()
+    {
+        return $this->vrRetencionIca;
+    }
+
+    /**
+     * @param mixed $vrRetencionIca
+     */
+    public function setVrRetencionIca($vrRetencionIca): void
+    {
+        $this->vrRetencionIca = $vrRetencionIca;
     }
 
 

@@ -2,6 +2,8 @@
 
 namespace App\Formato\Transporte;
 
+use App\Entity\General\GenConfiguracion;
+use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteGuia;
 
 class Factura extends \FPDF {
@@ -22,28 +24,83 @@ class Factura extends \FPDF {
     }
 
     public function Header() {
+        $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->impresionFormato();
+        $this->Image('../assets/img/empresa/logo.jpeg', 12, 13, 35, 17);
+        $this->SetFont('Arial', 'b', 9);
+        $this->SetFillColor(272, 272, 272);
+        $this->Text(15, 25, $arConfiguracion['nit']);
 
+        $this->SetFont('Arial', 'b', 14);
+        $this->SetXY(60, 15);
+        $this->Cell(30, 6, $arConfiguracion['nombre'], 0, 0, 'l', 1);
+        $this->SetFont('Arial', '', 12);
+        $this->SetXY(60, 20);
+        $this->Cell(30, 6, $arConfiguracion['direccion'], 0, 0, 'l', 1);
+        $this->SetXY(60, 25);
+        $this->Cell(30, 6, $arConfiguracion['telefono'], 0, 0, 'l', 1);
+
+        $y = 20;
+        $this->SetFont('Arial', 'B', 10);
         $this->SetFillColor(200, 200, 200);
-        $this->SetFont('Arial','B',10);
+        $this->SetXY(160, $y);
+        $this->Cell(39, 6, "FACTURA DE VENTA", 1, 0, 'l', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetXY(160, $y+5);
+        $this->Cell(39, 6, "No", 1, 0, 'l', 1);
 
+        $this->SetFont('Arial', 'B', 10);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetXY(160, $y+15);
+        $this->Cell(39, 6, "FECHA", 1, 0, 'C', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetXY(160, $y+20);
+        $this->Cell(13, 6, "25", 1, 0, 'C', 1);
+        $this->Cell(13, 6, "04", 1, 0, 'C', 1);
+        $this->Cell(13, 6, "2018", 1, 0, 'C', 1);
+        $this->SetFont('Arial', 'B', 10);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetXY(160, $y+25);
+        $this->Cell(39, 6, "VENCE", 1, 0, 'C', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetXY(160, $y+30);
+        $this->Cell(13, 6, "25", 1, 0, 'C', 1);
+        $this->Cell(13, 6, "04", 1, 0, 'C', 1);
+        $this->Cell(13, 6, "2018", 1, 0, 'C', 1);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetXY(160, $y+35);
+        $this->Cell(13, 6, "DIA", 1, 0, 'C', 1);
+        $this->Cell(13, 6, "MES", 1, 0, 'C', 1);
+        $this->Cell(13, 6, utf8_decode("AÑO"), 1, 0, 'C', 1);
 
-        $this->SetXY(50, 10);
-        $this->Cell(238, 7, utf8_decode("TteFactura"), 0, 0, 'C', 1);
-
+        $arFactura = new TteFactura();
+        $arFactura = self::$em->getRepository(TteFactura::class)->find(self::$codigoFactura);
+        $this->SetFont('Arial', '', 10);
+        $y = 40;
+        $this->Rect(10, 35, 140, 30);
+        $this->Text(15, $y, utf8_decode("SEÑOR(ES):"));
+        $this->Text(50, $y, "EL CLIENTE SAS");
+        $this->Text(15, $y+5, utf8_decode("NIT:"));
+        $this->Text(50, $y+5, "800145742-4");
+        $this->Text(15, $y+10, utf8_decode("DIRECCION:"));
+        $this->Text(50, $y+10, "CRA 25 NRO 35-58");
+        $this->Text(15, $y+15, utf8_decode("CIUDAD:"));
+        $this->Text(50, $y+15, "MEDELLIN");
+        $this->Text(15, $y+20, utf8_decode("TELEFONO:"));
+        $this->Text(50, $y+20, "4587478");
         $this->EncabezadoDetalles();
 
     }
 
     public function EncabezadoDetalles() {
-        $this->Ln(12);
-        $header = array(utf8_decode('GUIA'), 'FECHA', 'DESTINO', 'UND', 'PES', 'VOL');
+        $this->Ln(20);
+        $header = array('GUIA', 'DOCUMENTO','DESTINATARIO', 'DESTINO', 'UND', 'KF', 'DECLARA', 'FLETE', 'MANEJO', 'TOTAL');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(15, 15, 70, 20, 20, 20);
+        $w = array(20, 20, 50, 20, 10, 10, 15, 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -57,27 +114,39 @@ class Factura extends \FPDF {
     }
 
     public function Body($pdf) {
-        $arGuias = self::$em->getRepository(TteGuia::class)->factura(self::$codigoFactura);
+        $arGuias = self::$em->getRepository(TteGuia::class)->formatoFactura(self::$codigoFactura);
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
-        foreach ($arGuias as $arGuia) {
-            $pdf->Cell(15, 4, $arGuia['numero'], 1, 0, 'L');
-            //$pdf->Cell(15, 4, $arGuia['fechaIngreso'], 1, 0, 'L');
-            $pdf->Cell(70, 4, $arGuia['ciudadDestino'], 1, 0, 'L');
-            $pdf->Cell(20, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(20, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(20, 4, number_format($arGuia['pesoVolumen'], 0, '.', ','), 1, 0, 'R');
-            $pdf->Ln();
-            $pdf->SetAutoPageBreak(true, 15);
+        if($arGuias) {
+            foreach ($arGuias as $arGuia) {
+                $pdf->Cell(20, 4, $arGuia['numero'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arGuia['documentoCliente'], 1, 0, 'L');
+                $pdf->Cell(50, 4, $arGuia['nombreDestinatario'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arGuia['ciudadDestino'], 1, 0, 'L');
+                $pdf->Cell(10, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(10, 4, number_format($arGuia['pesoFacturado'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, number_format($arGuia['vrDeclara'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, number_format($arGuia['vrFlete'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, number_format($arGuia['vrManejo'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, number_format($arGuia['vrTotal'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Ln();
+                $pdf->SetAutoPageBreak(true, 15);
+            }
         }
-        $pdf->SetFont('Arial', 'B', 7);
-        $pdf->Cell(178, 5, "TOTAL: ", 1, 0, 'R');
-        $pdf->SetFont('Arial', '', 7);
-        $pdf->Cell(15, 5, number_format(0, 0, '.', ','), 1, 0, 'R');
     }
 
     public function Footer() {
         $this->SetFont('Arial','', 8);
+        $this->SetFont('Arial', 'B', 9);
+        $this->SetXY(10, 200);
+
+        $this->Text(10, 260, "CONDUCTOR: _____________________________________________");
+        $this->Text(10, 267, "");
+        $this->Text(10, 274, "C.C.:     ______________________ de ____________________");
+
+        $this->Text(105, 260, "EMPRESA: _____________________________________________");
+
+        $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }
 }

@@ -38,7 +38,7 @@ class TteFacturaRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT COUNT(g.codigoGuiaPk) as cantidad, SUM(g.unidades+0) as unidades, SUM(g.pesoReal+0) as pesoReal,
             SUM(g.pesoVolumen+0) as pesoVolumen, SUM(g.vrFlete+0) as vrFlete, SUM(g.vrManejo+0) as vrManejo
-        FROM App\Entity\Guia g
+        FROM App\Entity\Transporte\TteGuia g
         WHERE g.codigoFacturaFk = :codigoFactura')
             ->setParameter('codigoFactura', $codigoFactura);
         $arrGuias = $query->getSingleResult();

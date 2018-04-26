@@ -3,9 +3,12 @@
 namespace App\Controller\Transporte\Movimiento\Comercial\Factura;
 
 use App\Entity\Transporte\TteFactura;
+use App\Entity\Transporte\TteFacturaOtro;
+use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
 use App\Form\Type\Transporte\FacturaType;
+use App\Formato\Transporte\Factura;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +33,7 @@ class FacturaController extends Controller
      */
     public function detalle(Request $request, $codigoFactura)
     {
+        $paginator  = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $form = $this->createFormBuilder()
@@ -39,7 +43,7 @@ class FacturaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-                $formato = new \App\Formato\Factura();
+                $formato = new Factura();
                 $formato->Generar($em, $codigoFactura);
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
@@ -51,10 +55,19 @@ class FacturaController extends Controller
                 }
             }
         }
+
+        $query = $this->getDoctrine()->getRepository(TteFacturaPlanilla::class)->listaFacturaDetalle($codigoFactura);
+        $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+
+        $query = $this->getDoctrine()->getRepository(TteFacturaOtro::class)->listaFacturaDetalle($codigoFactura);
+        $arFacturaOtros = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->factura($codigoFactura);
         return $this->render('transporte/movimiento/comercial/factura/detalle.html.twig', [
             'arFactura' => $arFactura,
             'arGuias' => $arGuias,
+            'arFacturaPlanillas' => $arFacturaPlanillas,
+            'arFacturaOtros' => $arFacturaOtros,
             'form' => $form->createView()]);
     }
 

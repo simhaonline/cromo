@@ -4,7 +4,7 @@
 namespace App\Entity\Inventario;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvItemRepository")
  */
@@ -37,7 +37,7 @@ class InvOrdenCompra
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fechaEntrega", type="date", , nullable=true)
+     * @ORM\Column(name="fechaEntrega", type="date", nullable=true)
      */
     private $fechaEntrega;
 
@@ -72,12 +72,12 @@ class InvOrdenCompra
     private $estadoImpreso = 0;
 
     /**
-     * @ORM\Column(name="estado_aprobado", type="boolean",nullable=true)
+     * @ORM\Column(name="estado_aprobado", type="boolean", nullable=true)
      */
     private $estadoAprobado = 0;
 
     /**
-     * @ORM\Column(name="estado_rechazado", type="boolean",nullable=true)
+     * @ORM\Column(name="estado_rechazado", type="boolean", nullable=true)
      */
     private $estadoRechazado = 0;
 
@@ -94,6 +94,8 @@ class InvOrdenCompra
      * )
      */
     private $comentarios;
+
+
 
 }
 

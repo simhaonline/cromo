@@ -90,6 +90,16 @@ class TteFactura
     protected $guiasFacturaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaPlanilla", mappedBy="facturaRel")
+     */
+    protected $facturasPlanillasFacturaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaOtro", mappedBy="facturaRel")
+     */
+    protected $facturasOtrosFacturaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoFacturaPk()
@@ -328,6 +338,39 @@ class TteFactura
     {
         $this->guiasFacturaRel = $guiasFacturaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasPlanillasFacturaRel()
+    {
+        return $this->facturasPlanillasFacturaRel;
+    }
+
+    /**
+     * @param mixed $facturasPlanillasFacturaRel
+     */
+    public function setFacturasPlanillasFacturaRel($facturasPlanillasFacturaRel): void
+    {
+        $this->facturasPlanillasFacturaRel = $facturasPlanillasFacturaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasOtrosFacturaRel()
+    {
+        return $this->facturasOtrosFacturaRel;
+    }
+
+    /**
+     * @param mixed $facturasOtrosFacturaRel
+     */
+    public function setFacturasOtrosFacturaRel($facturasOtrosFacturaRel): void
+    {
+        $this->facturasOtrosFacturaRel = $facturasOtrosFacturaRel;
+    }
+
 
 
 }

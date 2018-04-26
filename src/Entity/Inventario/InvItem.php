@@ -4,6 +4,7 @@
 namespace App\Entity\Inventario;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvItemRepository")
@@ -21,11 +22,6 @@ class InvItem
      * @ORM\Column(name="nombre", type="string", length=150, nullable=true)
      */
     private $nombre;
-
-    /**
-     * @ORM\Column(name="codigo_lote_fk,  type="integer", nullable=true)
-     */
-    private $codigoLoteFk;
 
     /**
      * @ORM\Column(name="vr_costo_predeterminado", type="float", nullable=true)
@@ -83,12 +79,12 @@ class InvItem
     private $cantidadDisponible = 0;
 
     /**
-     * @ORM\Column(name="cantidad_orden_compra, type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_orden_compra", type="integer", nullable=true)
      */
     private $cantidadOrdenCompra = 0;
 
     /**
-     * @ORM\Column(name="codigo_unidad_medida_fk,  type="integer", nullable=true)
+     * @ORM\Column(name="codigo_unidad_medida_fk",  type="integer", nullable=true)
      */
     private $codigoUnidadMedidaFk;
 

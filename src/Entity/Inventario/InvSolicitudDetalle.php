@@ -6,7 +6,7 @@ namespace App\Entity\Inventario;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvItemRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvSolicitudDetalleRepository")
  */
 class InvSolicitudDetalle
 {

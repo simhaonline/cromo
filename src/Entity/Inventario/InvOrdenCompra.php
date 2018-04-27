@@ -6,7 +6,7 @@ namespace App\Entity\Inventario;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvItemRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvOrdenCompraRepository")
  */
 class InvOrdenCompra
 {

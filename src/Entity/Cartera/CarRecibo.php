@@ -1,0 +1,500 @@
+<?php
+
+namespace App\Entity\Cartera;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\Cartera\CarReciboRepository")
+ */
+class CarRecibo
+{
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(name="codigo_recibo_pk", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */        
+    private $codigoReciboPk;
+
+    /**
+     * @ORM\Column(name="fecha", type="date", nullable=true)
+     */
+    private $fecha;
+
+    /**
+     * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
+     */
+    private $codigoClienteFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_fk", type="integer", nullable=true)
+     */
+    private $codigoCuentaFk;
+
+    /**
+     * @ORM\Column(name="codigo_asesor_fk", type="integer", nullable=true)
+     */
+    private $codigoAsesorFk;
+
+    /**
+     * @ORM\Column(name="numero", type="string", length=30, nullable=true)
+     */
+    private $numero;
+
+    /**
+     * @ORM\Column(name="fecha_pago", type="date", nullable=true)
+     */
+    private $fechaPago;
+
+    /**
+     * @ORM\Column(name="vr_total_descueto", type="float")
+     */
+    private $vrTotalDescuento = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_ajuste_peso", type="float")
+     */
+    private $vrTotalAjustePeso = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_rete_ica", type="float")
+     */
+    private $vrTotalRetencionIca = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_rete_iva", type="float")
+     */
+    private $vrTotalRetencionIva = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_rete_fuente", type="float")
+     */
+    private $vrTotalRetencionFuente = 0;
+
+    /**
+     * @ORM\Column(name="vr_pago", type="float")
+     */
+    private $vrPago = 0;
+
+    /**
+     * @ORM\Column(name="vr_pago_total", type="float")
+     */
+    private $vrPagoTotal = 0;
+
+    /**
+     * @ORM\Column(name="estado_impreso", type="boolean")
+     */
+    private $estadoImpreso = 0;
+
+    /**
+     * @ORM\Column(name="estado_anulado", type="boolean")
+     */
+    private $estadoAnulado = 0;
+
+    /**
+     * @ORM\Column(name="estado_exportado", type="boolean")
+     */
+    private $estadoExportado = 0;
+
+    /**
+     * @ORM\Column(name="estado_autorizado", type="boolean")
+     */
+    private $estadoAutorizado = 0;
+
+    /**
+     * @ORM\Column(name="estado_contabilizado", type="boolean")
+     */
+    private $estadoContabilizado = 0;
+
+    /**
+     * @ORM\Column(name="comentarios", type="string", length=200, nullable=true)
+     */
+    private $comentarios;
+
+    /**
+     * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
+     */
+    private $usuario;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CarCliente", inversedBy="recibosClienteRel")
+     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+     */
+    protected $clienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CarReciboTipo", inversedBy="recibosReciboTipoRel")
+     * @ORM\JoinColumn(name="codigo_recibo_tipo_fk", referencedColumnName="codigo_recibo_tipo_pk")
+     */
+    protected $reciboTipoRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoReciboPk()
+    {
+        return $this->codigoReciboPk;
+    }
+
+    /**
+     * @param mixed $codigoReciboPk
+     */
+    public function setCodigoReciboPk($codigoReciboPk): void
+    {
+        $this->codigoReciboPk = $codigoReciboPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoClienteFk()
+    {
+        return $this->codigoClienteFk;
+    }
+
+    /**
+     * @param mixed $codigoClienteFk
+     */
+    public function setCodigoClienteFk($codigoClienteFk): void
+    {
+        $this->codigoClienteFk = $codigoClienteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaFk()
+    {
+        return $this->codigoCuentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaFk
+     */
+    public function setCodigoCuentaFk($codigoCuentaFk): void
+    {
+        $this->codigoCuentaFk = $codigoCuentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAsesorFk()
+    {
+        return $this->codigoAsesorFk;
+    }
+
+    /**
+     * @param mixed $codigoAsesorFk
+     */
+    public function setCodigoAsesorFk($codigoAsesorFk): void
+    {
+        $this->codigoAsesorFk = $codigoAsesorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero($numero): void
+    {
+        $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaPago()
+    {
+        return $this->fechaPago;
+    }
+
+    /**
+     * @param mixed $fechaPago
+     */
+    public function setFechaPago($fechaPago): void
+    {
+        $this->fechaPago = $fechaPago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalDescuento()
+    {
+        return $this->vrTotalDescuento;
+    }
+
+    /**
+     * @param mixed $vrTotalDescuento
+     */
+    public function setVrTotalDescuento($vrTotalDescuento): void
+    {
+        $this->vrTotalDescuento = $vrTotalDescuento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalAjustePeso()
+    {
+        return $this->vrTotalAjustePeso;
+    }
+
+    /**
+     * @param mixed $vrTotalAjustePeso
+     */
+    public function setVrTotalAjustePeso($vrTotalAjustePeso): void
+    {
+        $this->vrTotalAjustePeso = $vrTotalAjustePeso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalRetencionIca()
+    {
+        return $this->vrTotalRetencionIca;
+    }
+
+    /**
+     * @param mixed $vrTotalRetencionIca
+     */
+    public function setVrTotalRetencionIca($vrTotalRetencionIca): void
+    {
+        $this->vrTotalRetencionIca = $vrTotalRetencionIca;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalRetencionIva()
+    {
+        return $this->vrTotalRetencionIva;
+    }
+
+    /**
+     * @param mixed $vrTotalRetencionIva
+     */
+    public function setVrTotalRetencionIva($vrTotalRetencionIva): void
+    {
+        $this->vrTotalRetencionIva = $vrTotalRetencionIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalRetencionFuente()
+    {
+        return $this->vrTotalRetencionFuente;
+    }
+
+    /**
+     * @param mixed $vrTotalRetencionFuente
+     */
+    public function setVrTotalRetencionFuente($vrTotalRetencionFuente): void
+    {
+        $this->vrTotalRetencionFuente = $vrTotalRetencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPago()
+    {
+        return $this->vrPago;
+    }
+
+    /**
+     * @param mixed $vrPago
+     */
+    public function setVrPago($vrPago): void
+    {
+        $this->vrPago = $vrPago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPagoTotal()
+    {
+        return $this->vrPagoTotal;
+    }
+
+    /**
+     * @param mixed $vrPagoTotal
+     */
+    public function setVrPagoTotal($vrPagoTotal): void
+    {
+        $this->vrPagoTotal = $vrPagoTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoImpreso()
+    {
+        return $this->estadoImpreso;
+    }
+
+    /**
+     * @param mixed $estadoImpreso
+     */
+    public function setEstadoImpreso($estadoImpreso): void
+    {
+        $this->estadoImpreso = $estadoImpreso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoExportado()
+    {
+        return $this->estadoExportado;
+    }
+
+    /**
+     * @param mixed $estadoExportado
+     */
+    public function setEstadoExportado($estadoExportado): void
+    {
+        $this->estadoExportado = $estadoExportado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarios()
+    {
+        return $this->comentarios;
+    }
+
+    /**
+     * @param mixed $comentarios
+     */
+    public function setComentarios($comentarios): void
+    {
+        $this->comentarios = $comentarios;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReciboTipoRel()
+    {
+        return $this->reciboTipoRel;
+    }
+
+    /**
+     * @param mixed $reciboTipoRel
+     */
+    public function setReciboTipoRel($reciboTipoRel): void
+    {
+        $this->reciboTipoRel = $reciboTipoRel;
+    }
+
+}

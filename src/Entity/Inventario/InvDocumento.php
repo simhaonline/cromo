@@ -1,12 +1,12 @@
 <?php
 
-namespace Brasa\InventarioBundle\Entity;
+namespace App\Entity\Inventario;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="inv_documento")
- * @ORM\Entity(repositoryClass="Brasa\InventarioBundle\Repository\InvDocumentoRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvDocumentoRepository")
  */
 class InvDocumento
 {

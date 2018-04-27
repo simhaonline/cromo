@@ -1,0 +1,101 @@
+<?php
+
+
+namespace App\Entity\General;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\General\GenIdentificacionRepository")
+ */
+class GenIdentificacion
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string", length=3, nullable=false, unique=true)
+     */
+    private $codigoIdentificacionPk;
+
+    /**
+     * @ORM\Column(name="nombre", type="string", length=30, nullable=true)
+     */
+    private $nombre;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TtePoseedor", mappedBy="identificacionRel")
+     */
+    protected $ttePoseedoresIdentificacionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteConductor", mappedBy="identificacionRel")
+     */
+    protected $tteConductoresIdentificacionRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoIdentificacionPk()
+    {
+        return $this->codigoIdentificacionPk;
+    }
+
+    /**
+     * @param mixed $codigoIdentificacionPk
+     */
+    public function setCodigoIdentificacionPk($codigoIdentificacionPk): void
+    {
+        $this->codigoIdentificacionPk = $codigoIdentificacionPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTtePoseedoresIdentificacionRel()
+    {
+        return $this->ttePoseedoresIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $ttePoseedoresIdentificacionRel
+     */
+    public function setTtePoseedoresIdentificacionRel($ttePoseedoresIdentificacionRel): void
+    {
+        $this->ttePoseedoresIdentificacionRel = $ttePoseedoresIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTteConductoresIdentificacionRel()
+    {
+        return $this->tteConductoresIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $tteConductoresIdentificacionRel
+     */
+    public function setTteConductoresIdentificacionRel($tteConductoresIdentificacionRel): void
+    {
+        $this->tteConductoresIdentificacionRel = $tteConductoresIdentificacionRel;
+    }
+
+
+
+}
+

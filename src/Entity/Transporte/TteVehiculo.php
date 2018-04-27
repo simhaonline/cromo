@@ -102,6 +102,11 @@ class TteVehiculo
     private $codigoPoseedorFk;
 
     /**
+     * @ORM\Column(name="codigo_propietario_fk", type="integer", nullable=true)
+     */
+    private $codigoPropietarioFk;
+
+    /**
      * @ORM\Column(name="codigo_aseguradora_fk", type="integer", nullable=true)
      */
     private $codigoAseguradoraFk;
@@ -137,6 +142,12 @@ class TteVehiculo
      * @ORM\JoinColumn(name="codigo_poseedor_fk", referencedColumnName="codigo_poseedor_pk")
      */
     private $poseedorRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TtePoseedor", inversedBy="vehiculosPropietarioRel")
+     * @ORM\JoinColumn(name="codigo_propietario_fk", referencedColumnName="codigo_poseedor_pk")
+     */
+    private $propietarioRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteAseguradora", inversedBy="vehiculosAseguradoraRel")
@@ -450,6 +461,22 @@ class TteVehiculo
     /**
      * @return mixed
      */
+    public function getCodigoPropietarioFk()
+    {
+        return $this->codigoPropietarioFk;
+    }
+
+    /**
+     * @param mixed $codigoPropietarioFk
+     */
+    public function setCodigoPropietarioFk($codigoPropietarioFk): void
+    {
+        $this->codigoPropietarioFk = $codigoPropietarioFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoAseguradoraFk()
     {
         return $this->codigoAseguradoraFk;
@@ -562,6 +589,22 @@ class TteVehiculo
     /**
      * @return mixed
      */
+    public function getPropietarioRel()
+    {
+        return $this->propietarioRel;
+    }
+
+    /**
+     * @param mixed $propietarioRel
+     */
+    public function setPropietarioRel($propietarioRel): void
+    {
+        $this->propietarioRel = $propietarioRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getAseguradoraRel()
     {
         return $this->aseguradoraRel;
@@ -622,7 +665,6 @@ class TteVehiculo
     {
         $this->monitoreosVehiculoRel = $monitoreosVehiculoRel;
     }
-
 
 
 }

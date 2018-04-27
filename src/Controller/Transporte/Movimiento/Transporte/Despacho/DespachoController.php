@@ -94,8 +94,7 @@ class DespachoController extends Controller
                 return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
             }
             if ($form->get('btnRndc')->isClicked()) {
-                $cliente = new SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
-                //$respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($codigoDespacho);
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($codigoDespacho);
                 return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
             }
             if ($form->get('btnAnular')->isClicked()) {

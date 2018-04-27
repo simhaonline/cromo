@@ -17,6 +17,12 @@ class TtePoseedor
      */
     private $codigoPoseedorPk;
 
+
+    /**
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=1, nullable=true)
+     */
+    private $codigoIdentificacionFk;
+
     /**
      * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=true)
      */
@@ -69,9 +75,20 @@ class TtePoseedor
     private $ciudadRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="ttePoseedoresIdentificacionRel")
+     * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
+     */
+    private $identificacionRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteVehiculo", mappedBy="poseedorRel")
      */
     protected $vehiculosPoseedorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteVehiculo", mappedBy="propietarioRel")
+     */
+    protected $vehiculosPropietarioRel;
 
     /**
      * @return mixed
@@ -87,6 +104,22 @@ class TtePoseedor
     public function setCodigoPoseedorPk($codigoPoseedorPk): void
     {
         $this->codigoPoseedorPk = $codigoPoseedorPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoIdentificacionFk()
+    {
+        return $this->codigoIdentificacionFk;
+    }
+
+    /**
+     * @param mixed $codigoIdentificacionFk
+     */
+    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
+    {
+        $this->codigoIdentificacionFk = $codigoIdentificacionFk;
     }
 
     /**
@@ -252,6 +285,22 @@ class TtePoseedor
     /**
      * @return mixed
      */
+    public function getIdentificacionRel()
+    {
+        return $this->identificacionRel;
+    }
+
+    /**
+     * @param mixed $identificacionRel
+     */
+    public function setIdentificacionRel($identificacionRel): void
+    {
+        $this->identificacionRel = $identificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVehiculosPoseedorRel()
     {
         return $this->vehiculosPoseedorRel;
@@ -264,6 +313,23 @@ class TtePoseedor
     {
         $this->vehiculosPoseedorRel = $vehiculosPoseedorRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVehiculosPropietarioRel()
+    {
+        return $this->vehiculosPropietarioRel;
+    }
+
+    /**
+     * @param mixed $vehiculosPropietarioRel
+     */
+    public function setVehiculosPropietarioRel($vehiculosPropietarioRel): void
+    {
+        $this->vehiculosPropietarioRel = $vehiculosPropietarioRel;
+    }
+
 
 
 

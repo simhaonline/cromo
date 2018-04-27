@@ -236,10 +236,10 @@ class TteDespachoRepository extends ServiceEntityRepository
 
     public function reportarRndc($codigoDespacho): string
     {
-        $em = $this->getEntityManager();
-        $cliente = "";
         try {
             $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
+            $respuesta = $this->reportarRndcTerceros($cliente, $codigoDespacho);
+
 
         } catch (Exception $e) {
             return "Error al conectar el servicio: " . $e;
@@ -248,6 +248,26 @@ class TteDespachoRepository extends ServiceEntityRepository
 
 
         return $respuesta;
+
+    }
+    public function reportarRndcTerceros($codigoDespacho): string
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT d.codigoDespachoPk,
+        c.codigoIdentificacionFk as conductorIdentificacionTipo,
+        c.numeroIdentificacion as conductorNumeroIdentificacion
+        FROM App\Entity\Transporte\TteDespacho d         
+        LEFT JOIN d.conductorRel c 
+        LEFT JOIN d.vehiculoRel v     
+        LEFT JOIN v.poseedorRel p
+        LEFT JOIN v.propietarioRel pr
+        WHERE d.codigoDespachoPk = :codigoDespacho
+        ORDER BY d.codigoDespachoPk DESC '
+        )->setParameter('codigoDespacho', $codigoDespacho);
+        $arDespacho =  $query->getResult();
+
+        return 1;
 
     }
 }

@@ -18,6 +18,11 @@ class TteConductor
     private $codigoConductorPk;
 
     /**
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=1, nullable=true)
+     */
+    private $codigoIdentificacionFk;
+
+    /**
      * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=true)
      */
     private $numeroIdentificacion;
@@ -82,6 +87,12 @@ class TteConductor
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     private $ciudadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="tteConductoresIdentificacionRel")
+     * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
+     */
+    private $identificacionRel;
 
     /**
      * @return mixed

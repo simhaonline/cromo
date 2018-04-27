@@ -65,10 +65,24 @@
                             <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
                         </li>
                         <li>
-                            <a href="{{ path('tte_general_inicio') }}"><i class="glyphicon glyphicon-road"></i> Transporte</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('car_general_inicio') }}"><i class="glyphicon glyphicon-credit-card"></i> Cartera</a>
+                            <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{{ path('car_adm_cliente_lista') }}">Cliente</a>
+                                    <!-- /.nav-third-level -->
+                                </li>
+                                <li>
+                                    <a href="#">General <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="{{ path('tte_pro_transporte_guia_entrega') }}">Tipo recibo</a></li>
+                                        <li><a href="{{ path('tte_pro_transporte_guia_soporte') }}">Tipo cuenta cobro</a></li>
+                                        <li><a href="{{ path('tte_pro_transporte_guia_factura') }}">Concepto nota credito</a></li>
+                                        <li><a href="{{ path('tte_pro_transporte_general_cierre') }}">Concepto nota debito</a></li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
                         </li>
                     </ul>
                 </div>

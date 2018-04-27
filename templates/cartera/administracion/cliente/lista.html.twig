@@ -1,0 +1,41 @@
+{% extends 'base_cartera.html.twig' %}
+{% block content %}
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>DIGITO</th>
+            <th>NIT</th>
+            <th>NOMBRE</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arCliente in arCliente %}
+            <tr>
+                <td>{{ arCliente.codigoClientePk }}</td>
+                <td>{{ arCliente.digitoVerificacion }}</td>
+                <td>{{ arCliente.nit }}</td>
+                <td>{{ arCliente.nombreCorto }}</td>
+                {#<td style="text-align: center"><a href="{{ path('tte_adm_comercial_precio_detalle', { 'codigoPrecio': arPrecio.codigoPrecioPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>#}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCliente.getTotalItemCount }}</span></div>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arCliente) }}
+    </div>
+
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('tte_adm_comercial_precio_nuevo', {'codigoPrecio': 0}) }}">Nuevo</a>
+        </div>
+    </div>
+{% endblock %}
+

@@ -24,71 +24,35 @@ class InvSolicitud
     private $codigoSolicitudTipoFk;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="fecha", type="date")
      */
     private $fecha;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="fecha_entrega", type="date")
-     */
-    private $fechaEntrega;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="soporte", type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *     max = 255,
+     *     maxMessage="El campo no puede contener mas de 255 caracteres"
+     * )
      */
     private $soporte;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="vr_subtotal", type="float", nullable=true)
-     */
-    private $vrSubtotal = 0;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="vr_iva", type="float", nullable=true)
-     */
-    private $vrIva = 0;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="vr_neto", type="float", nullable=true)
-     */
-    private $vrNeto = 0;
-
-    /**
-     * @var bool
-     *
      * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true)
      */
     private $estadoAutorizado = 0;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="estado_impreso", type="boolean", nullable=true)
      */
     private $estadoImpreso = 0;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="estado_anulado", type="boolean", nullable=true)
      */
     private $estadoAnulado = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="numero", type="integer", nullable=true)
      */
     private $numero = 0;
@@ -97,11 +61,196 @@ class InvSolicitud
      * @ORM\Column(name="comentarios", type="string", length=500, nullable=true)
      * @Assert\Length(
      *     max=500,
-     *     maxMessage="El comentario no puede contener mas de 300 caracteres"
+     *     maxMessage="El campo no puede contener mas de 500 caracteres"
      * )
      */
     private $comentarios;
 
+    /**
+     * @ORM\Column(name="usuario", type="string", length=80, nullable=true)
+     */
+    private $usuario;
+
+    /**
+     * @ORM\OneToMany(targetEntity="InvSolicitudDetalle", mappedBy="solicitudRel")
+     */
+    protected $solicitudSolicitudDetallesRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSolicitudPk()
+    {
+        return $this->codigoSolicitudPk;
+    }
+
+    /**
+     * @param mixed $codigoSolicitudPk
+     */
+    public function setCodigoSolicitudPk($codigoSolicitudPk): void
+    {
+        $this->codigoSolicitudPk = $codigoSolicitudPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSolicitudTipoFk()
+    {
+        return $this->codigoSolicitudTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoSolicitudTipoFk
+     */
+    public function setCodigoSolicitudTipoFk($codigoSolicitudTipoFk): void
+    {
+        $this->codigoSolicitudTipoFk = $codigoSolicitudTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoporte()
+    {
+        return $this->soporte;
+    }
+
+    /**
+     * @param mixed $soporte
+     */
+    public function setSoporte($soporte): void
+    {
+        $this->soporte = $soporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoImpreso()
+    {
+        return $this->estadoImpreso;
+    }
+
+    /**
+     * @param mixed $estadoImpreso
+     */
+    public function setEstadoImpreso($estadoImpreso): void
+    {
+        $this->estadoImpreso = $estadoImpreso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero($numero): void
+    {
+        $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarios()
+    {
+        return $this->comentarios;
+    }
+
+    /**
+     * @param mixed $comentarios
+     */
+    public function setComentarios($comentarios): void
+    {
+        $this->comentarios = $comentarios;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudSolicitudDetallesRel()
+    {
+        return $this->solicitudSolicitudDetallesRel;
+    }
+
+    /**
+     * @param mixed $solicitudSolicitudDetallesRel
+     */
+    public function setSolicitudSolicitudDetallesRel($solicitudSolicitudDetallesRel): void
+    {
+        $this->solicitudSolicitudDetallesRel = $solicitudSolicitudDetallesRel;
+    }
 
 }
 

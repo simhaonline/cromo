@@ -1,0 +1,47 @@
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Solicitud</h4>
+        </div>
+        <div class="panel-body ">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NUMERO</th>
+                    <th>FECHA</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for arSolicitud in arSolicitud %}
+                    <tr>
+                        <td style="text-align: center">{{ arSolicitud.codigoSolicitudPk }}</td>
+                        <td style="text-align: center">{{ arSolicitud.numero }}</td>
+                        <td style="text-align: center">{{ arSolicitud.fecha | date('Y-m-d') }}</td>
+                        <td style="text-align: center"><a href="{{ path('inv_mto_solicitud_detalle', { 'codigoSolicitud': arSolicitud.codigoSolicitudPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}" width="20px" height="20px"></a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arSolicitud.getTotalItemCount }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arSolicitud) }}
+    </div>
+
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('inv_mto_solicitud_nuevo', {'codigoSolicitud': 0}) }}">Nuevo</a>
+        </div>
+    </div>
+{% endblock %}
+

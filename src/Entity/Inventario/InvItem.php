@@ -108,5 +108,330 @@ class InvItem
      */
     private $stockMaximo;
 
+    /**
+     * @ORM\OneToMany(targetEntity="InvSolicitudDetalle", mappedBy="itemRel")
+     */
+    private $itemsolicitudDetalleRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoItemPk()
+    {
+        return $this->codigoItemPk;
+    }
+
+    /**
+     * @param mixed $codigoItemPk
+     */
+    public function setCodigoItemPk($codigoItemPk): void
+    {
+        $this->codigoItemPk = $codigoItemPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoPredeterminado()
+    {
+        return $this->vrCostoPredeterminado;
+    }
+
+    /**
+     * @param mixed $vrCostoPredeterminado
+     */
+    public function setVrCostoPredeterminado($vrCostoPredeterminado): void
+    {
+        $this->vrCostoPredeterminado = $vrCostoPredeterminado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoPromedio()
+    {
+        return $this->vrCostoPromedio;
+    }
+
+    /**
+     * @param mixed $vrCostoPromedio
+     */
+    public function setVrCostoPromedio($vrCostoPromedio): void
+    {
+        $this->vrCostoPromedio = $vrCostoPromedio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPrecioPredeterminado()
+    {
+        return $this->vrPrecioPredeterminado;
+    }
+
+    /**
+     * @param mixed $vrPrecioPredeterminado
+     */
+    public function setVrPrecioPredeterminado($vrPrecioPredeterminado): void
+    {
+        $this->vrPrecioPredeterminado = $vrPrecioPredeterminado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPrecioPromedio()
+    {
+        return $this->vrPrecioPromedio;
+    }
+
+    /**
+     * @param mixed $vrPrecioPromedio
+     */
+    public function setVrPrecioPromedio($vrPrecioPromedio): void
+    {
+        $this->vrPrecioPromedio = $vrPrecioPromedio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEAN()
+    {
+        return $this->codigoEAN;
+    }
+
+    /**
+     * @param mixed $codigoEAN
+     */
+    public function setCodigoEAN($codigoEAN): void
+    {
+        $this->codigoEAN = $codigoEAN;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoBarras()
+    {
+        return $this->codigoBarras;
+    }
+
+    /**
+     * @param mixed $codigoBarras
+     */
+    public function setCodigoBarras($codigoBarras): void
+    {
+        $this->codigoBarras = $codigoBarras;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeIva()
+    {
+        return $this->porcentajeIva;
+    }
+
+    /**
+     * @param mixed $porcentajeIva
+     */
+    public function setPorcentajeIva($porcentajeIva): void
+    {
+        $this->porcentajeIva = $porcentajeIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadExistencia()
+    {
+        return $this->cantidadExistencia;
+    }
+
+    /**
+     * @param mixed $cantidadExistencia
+     */
+    public function setCantidadExistencia($cantidadExistencia): void
+    {
+        $this->cantidadExistencia = $cantidadExistencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadRemisionada()
+    {
+        return $this->cantidadRemisionada;
+    }
+
+    /**
+     * @param mixed $cantidadRemisionada
+     */
+    public function setCantidadRemisionada($cantidadRemisionada): void
+    {
+        $this->cantidadRemisionada = $cantidadRemisionada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadReservada()
+    {
+        return $this->cantidadReservada;
+    }
+
+    /**
+     * @param mixed $cantidadReservada
+     */
+    public function setCantidadReservada($cantidadReservada): void
+    {
+        $this->cantidadReservada = $cantidadReservada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadDisponible()
+    {
+        return $this->cantidadDisponible;
+    }
+
+    /**
+     * @param mixed $cantidadDisponible
+     */
+    public function setCantidadDisponible($cantidadDisponible): void
+    {
+        $this->cantidadDisponible = $cantidadDisponible;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadOrdenCompra()
+    {
+        return $this->cantidadOrdenCompra;
+    }
+
+    /**
+     * @param mixed $cantidadOrdenCompra
+     */
+    public function setCantidadOrdenCompra($cantidadOrdenCompra): void
+    {
+        $this->cantidadOrdenCompra = $cantidadOrdenCompra;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoUnidadMedidaFk()
+    {
+        return $this->codigoUnidadMedidaFk;
+    }
+
+    /**
+     * @param mixed $codigoUnidadMedidaFk
+     */
+    public function setCodigoUnidadMedidaFk($codigoUnidadMedidaFk): void
+    {
+        $this->codigoUnidadMedidaFk = $codigoUnidadMedidaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAfectaInventario()
+    {
+        return $this->afectaInventario;
+    }
+
+    /**
+     * @param mixed $afectaInventario
+     */
+    public function setAfectaInventario($afectaInventario): void
+    {
+        $this->afectaInventario = $afectaInventario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * @param mixed $descripcion
+     */
+    public function setDescripcion($descripcion): void
+    {
+        $this->descripcion = $descripcion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStockMinimo()
+    {
+        return $this->stockMinimo;
+    }
+
+    /**
+     * @param mixed $stockMinimo
+     */
+    public function setStockMinimo($stockMinimo): void
+    {
+        $this->stockMinimo = $stockMinimo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStockMaximo()
+    {
+        return $this->stockMaximo;
+    }
+
+    /**
+     * @param mixed $stockMaximo
+     */
+    public function setStockMaximo($stockMaximo): void
+    {
+        $this->stockMaximo = $stockMaximo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemsolicitudDetalleRel()
+    {
+        return $this->itemsolicitudDetalleRel;
+    }
+
+    /**
+     * @param mixed $itemsolicitudDetalleRel
+     */
+    public function setItemsolicitudDetalleRel($itemsolicitudDetalleRel): void
+    {
+        $this->itemsolicitudDetalleRel = $itemsolicitudDetalleRel;
+    }
+
 }
 

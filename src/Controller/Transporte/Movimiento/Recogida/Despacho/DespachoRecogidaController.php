@@ -4,7 +4,7 @@ namespace App\Controller\Transporte\Movimiento\Recogida\Despacho;
 
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteVehiculo;
-use App\Form\Type\Transporte\DespachoRecogidaType;
+use App\Form\Type\Transporte\SolicitudType;
 use App\Entity\Transporte\TteDespachoRecogidaAuxiliar;
 use App\Entity\Transporte\TteRecogida;
 use App\Entity\Transporte\TteAuxiliar;
@@ -29,7 +29,7 @@ class DespachoRecogidaController extends Controller
             $arDespachoRecogida->setFecha(new \DateTime('now'));
         }
 
-        $form = $this->createForm(DespachoRecogidaType::class, $arDespachoRecogida);
+        $form = $this->createForm(SolicitudType::class, $arDespachoRecogida);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arDespachoRecogida = $form->getData();

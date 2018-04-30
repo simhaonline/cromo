@@ -2,7 +2,7 @@
 
 namespace App\Formato\Transporte;
 
-use App\Entity\General\GenConfiguracion;
+use App\Entity\General\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteGuia;
 
@@ -24,7 +24,7 @@ class Manifiesto extends \FPDF {
 
     public function Header() {
         $arDespacho = self::$em->getRepository(TteDespacho::class)->find(self::$codigoDespacho);
-        $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->find(1);
+        $arConfiguracion = self::$em->getRepository(TteConfiguracion::class)->find(1);
         $this->SetFont('Arial', 'b', 14);
         $this->Text(90, 15, "MANIFIESTO ELECTRONICO DE CARGA");
         $this->Text(90, 20, $arConfiguracion->getNombre());

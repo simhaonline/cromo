@@ -2,7 +2,7 @@
 
 namespace App\Formato\Transporte;
 
-use App\Entity\General\GenConfiguracion;
+use App\Entity\General\TteConfiguracion;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteGuia;
 
@@ -24,7 +24,7 @@ class Factura extends \FPDF {
     }
 
     public function Header() {
-        $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->impresionFormato();
+        $arConfiguracion = self::$em->getRepository(TteConfiguracion::class)->impresionFormato();
         $this->Image('../assets/img/empresa/logo.jpeg', 12, 13, 35, 17);
         $this->SetFont('Arial', 'b', 9);
         $this->SetFillColor(272, 272, 272);

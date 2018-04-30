@@ -69,6 +69,11 @@ class TtePoseedor
     private $telefono;
 
     /**
+     * @ORM\Column(name="movil", type="string", length=30, nullable=true)
+     */
+    private $movil;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="poseedoresCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -328,6 +333,22 @@ class TtePoseedor
     public function setVehiculosPropietarioRel($vehiculosPropietarioRel): void
     {
         $this->vehiculosPropietarioRel = $vehiculosPropietarioRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovil()
+    {
+        return $this->movil;
+    }
+
+    /**
+     * @param mixed $movil
+     */
+    public function setMovil($movil): void
+    {
+        $this->movil = $movil;
     }
 
 

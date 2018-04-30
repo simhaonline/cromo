@@ -2,11 +2,14 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Transporte\TteConductor;
+use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteConsecutivo;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TtePoseedor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use SoapClient;
@@ -236,9 +239,11 @@ class TteDespachoRepository extends ServiceEntityRepository
 
     public function reportarRndc($codigoDespacho): string
     {
+        $em = $this->getEntityManager();
         try {
             $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
-            $respuesta = $this->reportarRndcTerceros($cliente, $codigoDespacho);
+            $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
+            $respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $codigoDespacho);
 
 
         } catch (Exception $e) {
@@ -250,22 +255,61 @@ class TteDespachoRepository extends ServiceEntityRepository
         return $respuesta;
 
     }
-    public function reportarRndcTerceros($codigoDespacho): string
+    public function reportarRndcTerceros($cliente, $arConfiguracionTransporte, $codigoDespacho): string
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'SELECT d.codigoDespachoPk,
-        c.codigoIdentificacionFk as conductorIdentificacionTipo,
-        c.numeroIdentificacion as conductorNumeroIdentificacion
-        FROM App\Entity\Transporte\TteDespacho d         
-        LEFT JOIN d.conductorRel c 
+        d.codigoConductorFk,
+        v.codigoPoseedorFk,
+        v.codigoPropietarioFk
+        FROM App\Entity\Transporte\TteDespacho d          
         LEFT JOIN d.vehiculoRel v     
-        LEFT JOIN v.poseedorRel p
-        LEFT JOIN v.propietarioRel pr
         WHERE d.codigoDespachoPk = :codigoDespacho
         ORDER BY d.codigoDespachoPk DESC '
         )->setParameter('codigoDespacho', $codigoDespacho);
-        $arDespacho =  $query->getResult();
+        $arTerceros =  $query->getSingleResult();
+
+        $arPoseedor = $em->getRepository(TtePoseedor::class)->find($arTerceros['codigoPoseedorFk']);
+        $strPoseedorXML = "";
+        $strPoseedorXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+                            <root>
+                                <acceso>
+                                    <username>" . $arConfiguracionTransporte->getUsuarioRndc() . "</username>
+                                    <password>" . $arConfiguracionTransporte->getClaveRndc() . "</password>
+                                </acceso>
+                                <solicitud>
+                                    <tipo>1</tipo>
+                                    <procesoid>11</procesoid>
+                                </solicitud>
+                                <variables>
+                                    <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
+                                    <CODTIPOIDTERCERO>". $arPoseedor->getCodigoIdentificacionFk() ."</CODTIPOIDTERCERO>
+                                    <NUMIDTERCERO>" . $arPoseedor->getNumeroIdentificacion() . "</NUMIDTERCERO>
+                                    <NOMIDTERCERO>" . utf8_decode($arPoseedor->getNombre1()) . "</NOMIDTERCERO>";
+                                    if($arPoseedor->getCodigoIdentificacionFk() == "C") {
+                                        $strPoseedorXML .= "<PRIMERAPELLIDOIDTERCERO>" . utf8_decode($arPoseedor->getApellido1()) . "</PRIMERAPELLIDOIDTERCERO>
+                                                            <SEGUNDOAPELLIDOIDTERCERO>" . utf8_decode($arPoseedor->getApellido2()) . "</SEGUNDOAPELLIDOIDTERCERO>";
+                                    }
+                                    $strPoseedorXML .= "<CODSEDETERCERO>1</CODSEDETERCERO>";
+                                    $strPoseedorXML .= "<NOMSEDETERCERO>PRINCIPAL</NOMSEDETERCERO>";
+                                    if($arPoseedor->getTelefono() != "") {
+                                        $strPoseedorXML .= "<NUMTELEFONOCONTACTO>" . $arPoseedor->getTelefono() . "</NUMTELEFONOCONTACTO>";
+                                    }
+                                    if($arPoseedor->getMovil() != "" && $arPoseedor->getCodigoIdentificacionFk() == "C") {
+                                        $strPoseedorXML .= "<NUMCELULARPERSONA>" . $arPoseedor->getMovil() . "</NUMCELULARPERSONA>";
+                                    }
+                                    $strPoseedorXML .= "
+                                                        <NOMENCLATURADIRECCION>" . utf8_decode($arPoseedor->getDireccion()) . "</NOMENCLATURADIRECCION>
+                                                        <CODMUNICIPIORNDC>" . $arPoseedor->getCodigoCiudadFk() . "</CODMUNICIPIORNDC>";
+                                    $strPoseedorXML .= "</variables>
+                                                        </root>";
+
+        $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strPoseedorXML));
+        $cadena_xml = simplexml_load_string($respuesta);
+
+        $arPropietario = $em->getRepository(TtePoseedor::class)->find($arTerceros['codigoPropietarioFk']);
+        $arConductor = $em->getRepository(TteConductor::class)->find($arTerceros['codigoConductorFk']);
 
         return 1;
 

@@ -2,7 +2,7 @@
 
 namespace App\Formato\Transporte;
 
-use App\Entity\General\GenConfiguracion;
+use App\Entity\General\TteConfiguracion;
 use App\Entity\Transporte\TteRelacionCaja;
 use App\Entity\Transporte\TteRecibo;
 
@@ -29,7 +29,7 @@ class RelacionCaja extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->impresionFormato();
+        $arConfiguracion = self::$em->getRepository(TteConfiguracion::class)->impresionFormato();
         //{{ asset('../assets/css/general.css') }}
         $this->Image('../assets/img/empresa/logo.jpeg', 12, 13, 35, 17);
         //INFORMACIÓN EMPRESA

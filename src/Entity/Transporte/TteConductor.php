@@ -68,6 +68,11 @@ class TteConductor
     private $telefono;
 
     /**
+     * @ORM\Column(name="movil", type="string", length=30, nullable=true)
+     */
+    private $movil;
+
+    /**
      * @ORM\Column(name="numero_licencia", type="string", length=100, nullable=true)
      */
     private $numeroLicencia;
@@ -316,6 +321,54 @@ class TteConductor
     public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoIdentificacionFk()
+    {
+        return $this->codigoIdentificacionFk;
+    }
+
+    /**
+     * @param mixed $codigoIdentificacionFk
+     */
+    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
+    {
+        $this->codigoIdentificacionFk = $codigoIdentificacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovil()
+    {
+        return $this->movil;
+    }
+
+    /**
+     * @param mixed $movil
+     */
+    public function setMovil($movil): void
+    {
+        $this->movil = $movil;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdentificacionRel()
+    {
+        return $this->identificacionRel;
+    }
+
+    /**
+     * @param mixed $identificacionRel
+     */
+    public function setIdentificacionRel($identificacionRel): void
+    {
+        $this->identificacionRel = $identificacionRel;
     }
 
 

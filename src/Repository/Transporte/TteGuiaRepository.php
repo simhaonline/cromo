@@ -20,6 +20,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'SELECT g.codigoGuiaPk, 
+        g.codigoServicioFk,
         g.codigoGuiaTipoFk, 
         g.numero, 
         g.fechaIngreso,

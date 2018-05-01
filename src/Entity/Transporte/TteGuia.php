@@ -223,6 +223,11 @@ class TteGuia
     private $factura = false;
 
     /**
+     * @ORM\Column(name="codigo_servicio_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoServicioFk;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -292,6 +297,12 @@ class TteGuia
      * @ORM\JoinColumn(name="codigo_factura_planilla_fk", referencedColumnName="codigo_factura_planilla_pk")
      */
     private $facturaPlanillaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteServicio", inversedBy="guiasServicioRel")
+     * @ORM\JoinColumn(name="codigo_servicio_fk", referencedColumnName="codigo_servicio_pk")
+     */
+    private $servicioRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteRecibo", mappedBy="guiaRel")
@@ -1218,6 +1229,38 @@ class TteGuia
     public function setFacturaPlanillaRel($facturaPlanillaRel): void
     {
         $this->facturaPlanillaRel = $facturaPlanillaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoServicioFk()
+    {
+        return $this->codigoServicioFk;
+    }
+
+    /**
+     * @param mixed $codigoServicioFk
+     */
+    public function setCodigoServicioFk($codigoServicioFk): void
+    {
+        $this->codigoServicioFk = $codigoServicioFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServicioRel()
+    {
+        return $this->servicioRel;
+    }
+
+    /**
+     * @param mixed $servicioRel
+     */
+    public function setServicioRel($servicioRel): void
+    {
+        $this->servicioRel = $servicioRel;
     }
 
 

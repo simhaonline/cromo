@@ -77,6 +77,15 @@ class InvSolicitud
     protected $solicitudSolicitudDetallesRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="InvSolicitudTipo", inversedBy="solicitudTipoSolicitudRel")
+     * @ORM\JoinColumn(name="codigo_solicitud_tipo_fk", referencedColumnName="codigo_solicitud_tipo_pk")
+     * @Assert\NotBlank(
+     *     message="Debe de seleccionar una opción"
+     * )
+     */
+    protected $solicitudTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoSolicitudPk()
@@ -250,6 +259,22 @@ class InvSolicitud
     public function setSolicitudSolicitudDetallesRel($solicitudSolicitudDetallesRel): void
     {
         $this->solicitudSolicitudDetallesRel = $solicitudSolicitudDetallesRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudTipoRel()
+    {
+        return $this->solicitudTipoRel;
+    }
+
+    /**
+     * @param mixed $solicitudTipoRel
+     */
+    public function setSolicitudTipoRel($solicitudTipoRel): void
+    {
+        $this->solicitudTipoRel = $solicitudTipoRel;
     }
 
 }

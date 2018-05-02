@@ -4,6 +4,7 @@ namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvSolicitud;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class InvSolicitudRepository extends ServiceEntityRepository
@@ -13,15 +14,61 @@ class InvSolicitudRepository extends ServiceEntityRepository
         parent::__construct($registry, InvSolicitud::class);
     }
 
-    public function lista(){
+    /**
+     * @param EntityManager $em
+     */
+    public function setEm(EntityManager $em): void
+    {
+        $this->_em = $em;
+    }
+
+    public function lista()
+    {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb ->select('s.codigoSolicitudPk')
+        $qb->select('s.codigoSolicitudPk')
             ->addSelect('s.numero')
             ->addSelect('s.fecha')
-            ->from('App:Inventario\InvSolicitud','s')
+            ->from('App:Inventario\InvSolicitud', 's')
             ->where('s.codigoSolicitudPk <> 0')
-            ->orderBy('s.codigoSolicitudPk','DESC');
+            ->orderBy('s.codigoSolicitudPk', 'DESC');
         $dql = $this->getEntityManager()->createQuery($qb->getDQL());
         return $dql->execute();
+    }
+
+    /**
+     * @param $arrSeleccionados array
+     * @return string
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        /**
+         * @var $arSolicitud InvSolicitud
+         */
+        $respuesta = '';
+        if (count($arrSeleccionados) > 0) {
+            foreach ($arrSeleccionados as $codigoSolicitud) {
+                $arSolicitud = $this->_em->getRepository($this->_entityName)->find($codigoSolicitud);
+                if ($arSolicitud) {
+                    if ($arSolicitud->getEstadoImpreso() == 0) {
+                        if ($arSolicitud->getEstadoAutorizado() == 0) {
+                            if (count($this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()])) <= 0) {
+                                try {
+                                    $this->_em->remove($arSolicitud);
+                                } catch (\Exception $exception) {
+                                    $respuesta = 'No se puede eliminar, el registro esta siendo utilizado en el sistema';
+                                }
+                            } else {
+                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                            }
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra impreso';
+                    }
+                }
+            }
+        }
+        return $respuesta;
     }
 }

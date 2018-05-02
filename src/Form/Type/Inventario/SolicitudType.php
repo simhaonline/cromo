@@ -2,6 +2,9 @@
 
 namespace App\Form\Type\Inventario;
 
+use App\Entity\Inventario\InvSolicitudTipo;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,10 +18,19 @@ class SolicitudType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('comentarios',TextareaType::class, array('required' => false))
-            ->add('soporte',TextareaType::class, array('required' => false))
-            ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
-            ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));
+            ->add('solicitudTipoRel',EntityType::class,[
+                'required' => true,
+                'class' => InvSolicitudTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('st')
+                        ->orderBy('st.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre'
+            ])
+            ->add('comentarios',TextareaType::class, ['required' => false])
+            ->add('soporte',TextareaType::class, ['required' => false])
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar'])
+            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo']);
     }
 
     /**

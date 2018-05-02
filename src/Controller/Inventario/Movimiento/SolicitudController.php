@@ -2,7 +2,9 @@
 
 namespace App\Controller\Inventario\Movimiento;
 
+use App\Controller\General\Mensajes;
 use App\Entity\Inventario\InvSolicitud;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,10 +18,25 @@ class SolicitudController extends Controller
      */
     public function lista(Request $request)
     {
+        $respuesta = '';
+        $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $query = $this->getDoctrine()->getManager()->getRepository(InvSolicitud::class)->lista();
+        $form = $this->formularioLista();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            if ($form->get('btnEliminar')->isClicked()) {
+                $respuesta = $em->getRepository('App:Inventario\InvSolicitud')->eliminar($arrSeleccionados);
+                $objMensaje = $this->validarRespuesta($respuesta);
+                return $this->redirect($this->generateUrl('inv_mto_solicitud_lista'));
+            }
+        }
+        $query = $em->getRepository(InvSolicitud::class)->lista();
         $arSolicitud = $paginator->paginate($query, $request->query->getInt('page', 1), 10);
-        return $this->render('inventario/movimiento/solicitud/lista.html.twig', ['arSolicitud' => $arSolicitud]);
+        return $this->render('inventario/movimiento/solicitud/lista.html.twig', [
+            'arSolicitudes' => $arSolicitud,
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -30,20 +47,21 @@ class SolicitudController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arSolicitud = new \App\Entity\Inventario\InvSolicitud();
         if ($codigoSolicitud != 0) {
-            $arSolicitud = $em->getRepository(InvSolicitud::class, $arSolicitud)->find($codigoSolicitud);
+            $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($codigoSolicitud);
             if (!$arSolicitud) {
                 return $this->redirect($this->generateUrl('inv_mto_solicitud_lista'));
             }
         }
         $arSolicitud->setFecha(new \DateTime('now'));
         $arSolicitud->setUsuario($this->getUser()->getUserName());
-        $form = $this->createForm(SolicitudType::class);
+        $form = $this->createForm(SolicitudType::class, $arSolicitud);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arSolicitud->setFecha(new \DateTime('now'));
                 $em->persist($arSolicitud);
                 $em->flush($arSolicitud);
+                return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $arSolicitud->getCodigoSolicitudPk()]));
             }
             if ($form->get('guardarnuevo')->isClicked()) {
                 $em->persist($arSolicitud);
@@ -51,19 +69,17 @@ class SolicitudController extends Controller
                 return $this->redirect($this->generateUrl('inv_mto_solicitud_nuevo', ['codigoSolicitud' => 0]));
             }
         }
-
         return $this->render('inventario/movimiento/solicitud/nuevo.html.twig', [
             'form' => $form->createView(), 'arSolicitud' => $arSolicitud
         ]);
     }
 
     /**
-     * @param Request $request
-     * @param $codigoSolicitud
      * @Route("/inv/movimiento/solicitud/detalle/{codigoSolicitud}", name="inv_mto_solicitud_detalle")
      */
     public function detalle(Request $request, $codigoSolicitud)
     {
+        $objMensaje = new Mensajes();
         $em = $this->getDoctrine()->getManager();
         $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($codigoSolicitud);
         if (!$arSolicitud) {
@@ -72,48 +88,29 @@ class SolicitudController extends Controller
         $form = $this->formularioDetalle($arSolicitud);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-            $arrControles = $request->request->get('ChkSeleccionar');
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnEliminar')->isClicked()) {
-                if ($arrControles) {
-                    foreach ($arrControles as $codigoSolicitudDetalle) {
-                        $arSolicitudDetalle = $em->getRepository('App:Inventario\InvSolicitudDetalle')->find($codigoSolicitudDetalle);
-                        if ($arSolicitudDetalle) {
-                            $em->remove($arSolicitudDetalle);
-                        }
-                    }
-                }
-                $em->flush();
+                $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->eliminar($arSolicitud, $arrSeleccionados);
+                $objMensaje = $objMensaje->validarRespuesta($respuesta);
                 return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
             }
             if ($form->get('btnAutorizar')->isClicked()) {
-                if ($arSolicitud) {
-                    $arSolicitud->setEstadoAutorizado(1);
-                    $em->persist($arSolicitud);
-                }
-                $em->flush();
+                $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->autorizar($arSolicitud);
+                $objMensaje = $objMensaje->validarRespuesta($respuesta);
                 return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                if ($arSolicitud) {
-                    if ($arSolicitud->getEstadoAutorizado() == 1 && $arSolicitud->getEstadoImpreso() == 0) {
-                        $arSolicitud->setEstadoAutorizado(0);
-                        $em->persist($arSolicitud);
-                    }
-                }
-                $em->flush();
+                $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->desautorizar($arSolicitud);
+                $objMensaje = $objMensaje->validarRespuesta($respuesta);
                 return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
-
+                $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->imprimir($arSolicitud);
+                $objMensaje = $objMensaje->validarRespuesta($respuesta);
+                return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
             }
             if ($form->get('btnAnular')->isClicked()) {
-                if ($arSolicitud) {
-                    if ($arSolicitud->getEstadoImpreso()) {
-                        $arSolicitud->setEstadoAnulado(1);
-                        $em->persist($arSolicitud);
-                    }
-                }
-                $em->flush();
+                $em->getRepository('App:Inventario\InvSolicitudDetalle')->anular($arSolicitud);
                 return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
             }
         }
@@ -126,8 +123,6 @@ class SolicitudController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param $codigoSolicitud
      * @Route("/inv/movimiento/solicitud/detalle/nuevo/{codigoDetalle}/{codigoSolicitud}", name="inv_mto_solicitud_detalle_nuevo")
      */
     public function nuevoDetalle(Request $request, $codigoDetalle, $codigoSolicitud)
@@ -158,12 +153,12 @@ class SolicitudController extends Controller
             $arrBotonDesautorizar['disabled'] = true;
             $arrBotonEliminar['disabled'] = true;
             $arrBotonAnular['disabled'] = false;
-        } elseif ($arSolicitud->getEstadoAutorizado() == 1){
+        } elseif ($arSolicitud->getEstadoAutorizado() == 1) {
             $arrBotonAutorizar['disabled'] = true;
             $arrBotonDesautorizar['disabled'] = false;
             $arrBotonImprimir['disabled'] = false;
             $arrBotonEliminar['disabled'] = true;
-        } else{
+        } else {
             $arrBotonAutorizar['disabled'] = false;
             $arrBotonDesautorizar['disabled'] = true;
             $arrBotonEliminar['disabled'] = false;
@@ -176,6 +171,14 @@ class SolicitudController extends Controller
             ->add('btnDesautorizar', SubmitType::class, $arrBotonDesautorizar)
             ->add('btnAnular', SubmitType::class, $arrBotonAnular)
             ->add('btnEliminar', SubmitType::class, $arrBotonEliminar)
+            ->getForm();
+    }
+
+    public function formularioLista()
+    {
+        return $this->createFormBuilder()
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
     }
 }

@@ -298,11 +298,11 @@ class TteGuia
      */
     private $facturaPlanillaRel;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteServicio", inversedBy="guiasServicioRel")
-     * @ORM\JoinColumn(name="codigo_servicio_fk", referencedColumnName="codigo_servicio_pk")
-     */
-    private $servicioRel;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteServicio", inversedBy="guiasServicioRel")
+//     * @ORM\JoinColumn(name="codigo_servicio_fk", referencedColumnName="codigo_servicio_pk")
+//     */
+//    private $servicioRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteRecibo", mappedBy="guiaRel")

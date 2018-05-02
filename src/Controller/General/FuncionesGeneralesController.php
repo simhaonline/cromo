@@ -3,7 +3,7 @@
 namespace App\Controller\General;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class Mensajes {
+class FuncionesGeneralesController {
     const TP_ERROR = "error";
     const TP_OK = "ok";
     const TP_INFO = "info";
@@ -20,7 +20,7 @@ class Mensajes {
 
     /**
      * @param $respuesta string
-     * @param $objMensaje Mensajes
+     * @param $objMensaje FuncionesGeneralesController
      */
     public function validarRespuesta($respuesta)
     {

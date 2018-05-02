@@ -2,9 +2,8 @@
 
 namespace App\Controller\Inventario\Movimiento;
 
-use App\Controller\General\Mensajes;
+use App\Controller\General\FuncionesGeneralesController;
 use App\Entity\Inventario\InvSolicitud;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,7 +26,7 @@ class SolicitudController extends Controller
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnEliminar')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\InvSolicitud')->eliminar($arrSeleccionados);
-                $objMensaje = $this->validarRespuesta($respuesta);
+                $objFunciones = $this->validarRespuesta($respuesta);
                 return $this->redirect($this->generateUrl('inv_mto_solicitud_lista'));
             }
         }
@@ -79,7 +78,7 @@ class SolicitudController extends Controller
      */
     public function detalle(Request $request, $codigoSolicitud)
     {
-        $objMensaje = new Mensajes();
+        $objFunciones = new FuncionesGeneralesController();
         $em = $this->getDoctrine()->getManager();
         $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($codigoSolicitud);
         if (!$arSolicitud) {
@@ -91,22 +90,22 @@ class SolicitudController extends Controller
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnEliminar')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->eliminar($arSolicitud, $arrSeleccionados);
-                $objMensaje = $objMensaje->validarRespuesta($respuesta);
+                $objFunciones = $objFunciones->validarRespuesta($respuesta);
                 return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->autorizar($arSolicitud);
-                $objMensaje = $objMensaje->validarRespuesta($respuesta);
+                $objFunciones = $objFunciones->validarRespuesta($respuesta);
                 return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->desautorizar($arSolicitud);
-                $objMensaje = $objMensaje->validarRespuesta($respuesta);
+                $objFunciones = $objFunciones->validarRespuesta($respuesta);
                 return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->imprimir($arSolicitud);
-                $objMensaje = $objMensaje->validarRespuesta($respuesta);
+                $objFunciones = $objFunciones->validarRespuesta($respuesta);
                 return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
             }
             if ($form->get('btnAnular')->isClicked()) {

@@ -5,7 +5,7 @@ namespace App\Entity\Cartera;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Cartera\CarCuentaTipoRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Cartera\CarCuentaCobrarTipoRepository")
  */
 class CarCuentaCobrarTipo
 {

@@ -20,6 +20,10 @@ class InvItem
 
     /**
      * @ORM\Column(name="nombre", type="string", length=150, nullable=true)
+     * @Assert\Length(
+     *     max = 150,
+     *     maxMessage = "El campo no puede contener mas de 150 caracteres"
+     * )
      */
     private $nombre;
 
@@ -95,18 +99,22 @@ class InvItem
 
     /**
      * @ORM\Column(name="descripcion", type="string", length=200, nullable=true)
+     * @Assert\Length(
+     *     max="200",
+     *     maxMessage="El campo no puede tener mas de 200 caracteres"
+     * )
      */
     private $descripcion;
 
     /**
      * @ORM\Column(name="stockMinimo", type="integer", nullable=true)
      */
-    private $stockMinimo;
+    private $stockMinimo = 0;
 
     /**
      * @ORM\Column(name="stockMaximo", type="integer", nullable=true)
      */
-    private $stockMaximo;
+    private $stockMaximo = 0;
 
     /**
      * @ORM\OneToMany(targetEntity="InvSolicitudDetalle", mappedBy="itemRel")
@@ -432,6 +440,5 @@ class InvItem
     {
         $this->itemsolicitudDetalleRel = $itemsolicitudDetalleRel;
     }
-
 }
 

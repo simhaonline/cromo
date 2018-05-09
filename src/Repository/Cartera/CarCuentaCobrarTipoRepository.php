@@ -2,32 +2,30 @@
 
 namespace App\Repository\Cartera;
 
-use App\Entity\Cartera\CarCliente;
+use App\Entity\Cartera\CarCuentaCobrarTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class CarClienteRepository extends ServiceEntityRepository
+class CarCuentaCobrarTipoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, CarCliente::class);
+        parent::__construct($registry, CarCuentaCobrarTipo::class);
     }
 
     public function lista(): array
     {
         $em = $this->getEntityManager();
-        $qb = $em->createQueryBuilder()->from(CarCliente::class, 'cc');
-        $qb->select('cc.codigoClientePk AS ID')
-            ->join("cc.formaPagoRel", "fp")
-            ->join('cc.ciudadRel', 'c')
-            ->addSelect('cc.digitoVerificacion AS DIGITO')
-            ->addSelect('cc.nit AS NIT')
-            ->addSelect('c.nombre AS CIUDAD')
-            ->addSelect('cc.nombreCorto AS NOMBRE')
-            ->addSelect('fp.nombre AS FORMA_PAGO')
-            ->addSelect('cc.plazoPago AS PLAZO')
-            ->where('cc.codigoClientePk <> 0')
-            ->orderBy('cc.codigoClientePk', 'DESC');
+        $qb = $em->createQueryBuilder()->from(CarCuentaCobrarTipo::class, 'cct');
+        $qb->select('cct.codigoCuentaCobrarTipoPk')
+            ->addSelect('cct.nombre')
+            ->addSelect('cct.codigoCuentaClienteFk')
+            ->addSelect('cct.codigoCuentaRetencionFuenteFk')
+            ->addSelect('cct.codigoCuentaRetencionIcaFk')
+            ->addSelect('cct.codigoCuentaRetencionIvaFk')
+            ->addSelect('cct.tipoCuentaCliente')
+            ->where('cct.codigoCuentaCobrarTipoPk <> 0')
+            ->orderBy('cct.codigoCuentaCobrarTipoPk', 'DESC');
         $query = $qb->getDQL();
         $query = $em->createQuery($query);
 
@@ -40,7 +38,7 @@ class CarClienteRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arrSeleccionados) {
             foreach ($arrSeleccionados AS $codigo) {
-                $ar = $em->getRepository(CarCliente::class)->find($codigo);
+                $ar = $em->getRepository(CarCuentaCobrarTipo::class)->find($codigo);
                 if ($ar) {
                     $em->remove($ar);
                 }
@@ -53,5 +51,4 @@ class CarClienteRepository extends ServiceEntityRepository
         }
         return $respuesta;
     }
-
 }

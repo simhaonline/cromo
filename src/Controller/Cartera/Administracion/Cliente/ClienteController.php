@@ -6,6 +6,7 @@ use App\Controller\General\FuncionesGeneralesController;
 use App\Controller\General\Mensajes;
 use App\Entity\Cartera\CarCliente;
 use App\Form\Type\Cartera\ClienteType;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,6 +15,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ClienteController extends Controller
 {
+    var $query = '';
+
     /**
      * @Route("/car/adm/cliente/lista", name="car_adm_cliente_lista")
      */
@@ -24,34 +27,34 @@ class ClienteController extends Controller
         $paginator = $this->get('knp_paginator');
         $form = $this->formularioFiltro();
         $form->handleRequest($request);
+        $this->listado($em);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
-            if ($form->get('BtnEliminar')->isClicked()) {
+            if ($form->get('btnEliminar')->isClicked()) {
                 $respuesta = $em->getRepository('App:Cartera\CarCliente')->eliminar($arrSeleccionados);
                 if ($respuesta != '') {
                     $objFunciones->Mensaje('error', $respuesta);
                 }
                 return $this->redirect($this->generateUrl('car_adm_cliente_lista'));
             }
-//            if($form->get('BtnExcel')->isClicked()){
-//                $objFunciones->generarExcel();
-//            }
+            if($form->get('btnExcel')->isClicked()){
+                $objFunciones->generarExcel($this->query,'Clientes');
+            }
         }
-        $query = $em->getRepository(CarCliente::class)->lista();
-        $arCliente = $paginator->paginate($query, $request->query->getInt('page', 1), 10);
+        $arCliente = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
         return $this->render('cartera/administracion/cliente/lista.html.twig', ['arCliente' => $arCliente,
             'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/car/adm/cliente/nuevo/{codigoCliente}", name="car_adm_cliente_nuevo")
+     * @Route("/car/adm/cliente/nuevo/{id}", name="car_adm_cliente_nuevo")
      */
-    public function nuevo(Request $request, $codigoCliente)
+    public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arCliente = new CarCliente();
-        if ($codigoCliente != 0) {
-            $arCliente = $em->getRepository('App:Cartera\CarCliente')->find($codigoCliente);
+        if ($id != 0) {
+            $arCliente = $em->getRepository('App:Cartera\CarCliente')->find($id);
             if (!$arCliente) {
                 return $this->redirect($this->generateUrl('car_adm_cliente_lista'));
             }
@@ -76,11 +79,18 @@ class ClienteController extends Controller
             ['arCliente' => $arCliente, 'form' => $form->createView()]);
     }
 
+    /**
+     * @param $em EntityManager
+     */
+    public function listado($em){
+        $this->query= $em->getRepository('App:Cartera\CarCliente')->lista();
+    }
+
     private function formularioFiltro()
     {
         return $this->createFormBuilder()
-            ->add('BtnEliminar', SubmitType::class, array('label' => 'Eliminar',))
-            ->add('BtnExcel', SubmitType::class, array('label' => 'Excel',))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar', 'attr'=> ['class'=>'btn btn-sm btn-danger']))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel','attr'=> ['class'=>'btn btn-sm btn-default']))
             ->getForm();
     }
 

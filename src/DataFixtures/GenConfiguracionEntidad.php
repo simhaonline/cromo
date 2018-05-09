@@ -40,6 +40,22 @@ class GenConfiguracionEntidad extends Fixture
             $em->persist($arConfiguracionEntidad);
         }
         $em->flush();
+
+        $arConfiguracionEntidad = $em->getRepository("App:General\GenConfiguracionEntidad")->find("CarCliente");
+        if (!$arConfiguracionEntidad) {
+            $arConfiguracionEntidad = new \App\Entity\General\GenConfiguracionEntidad();
+            $arConfiguracionEntidad->setCodigoConfiguracionEntidadPk("CarCliente");
+            $arConfiguracionEntidad->setBase("base_cartera.html.twig");
+            $arConfiguracionEntidad->setModulo("Cartera");
+            $arConfiguracionEntidad->setActivo(true);
+            $arConfiguracionEntidad->setRutaEntidad("App:Cartera\CarCliente");
+            $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
+            $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
+            $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
+            $arConfiguracionEntidad->setRutaGeneral("car_adm_cliente");
+            $em->persist($arConfiguracionEntidad);
+        }
+        $em->flush();
     }
 
     /**

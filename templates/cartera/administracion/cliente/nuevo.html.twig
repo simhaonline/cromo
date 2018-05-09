@@ -75,7 +75,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('car_adm_cliente_lista') }}">Cancelar</a>
+        <a class="btn btn-default btn-sm" href="{{ path('listado',{'entidad':'CarCliente'}) }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
         {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>

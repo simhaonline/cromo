@@ -5,6 +5,17 @@ function abrirVentana3(url, Nombre, Alto, Ancho) {
     windowObjectReference2.focus();
 }
 
+var validarCaracteres = function (event) {
+    var tecla = event.keyCode;
+    var valorIngresado = String.fromCharCode(tecla);
+    var regEx = new RegExp("((?![a-zA-Z\\-\\_\\s]).)+", "g");
+    var match = valorIngresado.match(regEx);
+    if (match && match.length > 0) {
+        event.preventDefault();
+        return false;
+    }
+}
+
 function ChequearTodosTabla(source, nombre) {
     checkboxes = document.getElementsByTagName('input'); //obtenemos todos los controles del tipo Input
     for (i = 0; i < checkboxes.length; i++) { //recoremos todos los controles

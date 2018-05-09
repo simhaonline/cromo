@@ -4,7 +4,10 @@ namespace App\Controller\Estructura;
 
 use App\Entity\General\GenConfiguracionEntidad;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -113,18 +116,13 @@ class AdministracionController extends Controller
         //Se crea el formulario estandar
         $form = $this->formularioLista();
         $form->handleRequest($request);
-
-//        $this->configuracionEntidad($arConfiguracionEntidad);
-        $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad,0);
-
-
+        $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 0);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnExcel')->isClicked()) {
-                $arRegistrosExcel = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad,1);
+                $arRegistrosExcel = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 1);
                 $this->generarExcel($arRegistrosExcel, 'Excel');
             }
         }
-
         $ruta = $arConfiguracionEntidad->getRutaGeneral();
         $rutaNuevo = $ruta . '_nuevo';
         $rutaDetalle = $ruta . '_detalle';
@@ -141,9 +139,72 @@ class AdministracionController extends Controller
             'rutaNuevo' => $rutaNuevo,
             'rutaDetalle' => $rutaDetalle,
             'arConfiguracionEntidad' => $arConfiguracionEntidad,
-            'extiende' => 0,
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $entidad
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("configuracion/{entidad}", name="configuracion_entidad")
+     */
+    public function configuracionEntidad(Request $request, $entidad)
+    {
+        /**
+         * @var $arConfiguracionEntidad GenConfiguracionEntidad
+         */
+        $em = $this->getDoctrine()->getManager();
+        $arConfiguracionEntidad = $em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad);
+        $arrColumnasLista = json_decode($arConfiguracionEntidad->getJsonLista());
+        $arrColumnasExcel = json_decode($arConfiguracionEntidad->getJsonExcel());
+        $arrColumnasFiltro = json_decode($arConfiguracionEntidad->getJsonFiltro());
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->getForm();
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            if($form->get('btnGuardar')->isClicked()){
+                $arrAlias = $request->request->get('aliasLista');
+                $arrMostrar = $request->request->get('mostrarLista');
+                foreach($arrColumnasLista as $columna){
+                    if($arrAlias[$columna->campo]){
+                        if($arrAlias[$columna->campo] != ''){
+                            $columna->alias = $arrAlias[$columna->campo];
+                        } else {
+                            $columna->alias = $columna->campo;
+                        }
+                    }
+                    if (isset($arrMostrar[$columna->campo])){
+                        if($arrMostrar[$columna->campo] == 'on'){
+                            $columna->mostrar = true;
+                        } else {
+                            $columna->mostrar = false;
+                        }
+                    } else {
+                        $columna->mostrar = false;
+                    }
+                }
+                $arConfiguracionEntidad->setJsonLista(json_encode($arrColumnasLista));
+                $em->persist($arConfiguracionEntidad);
+                $em->flush();
+            }
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        return $this->render('estructura/configuracionEntidad.html.twig', [
+            'form' => $form->createView(),
+            'arrColumnasLista' => $arrColumnasLista,
+            'arrColumnasExcel,' => $arrColumnasExcel,
+            'arrColumnasFiltro' => $arrColumnasFiltro
+        ]);
+    }
+
+    /**
+     * @param $form Form
+     * @param $columna
+     */
+    private function crearCampoFormulario($form, $columna)
+    {
     }
 
     /**

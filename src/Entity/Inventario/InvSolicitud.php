@@ -277,5 +277,6 @@ class InvSolicitud
         $this->solicitudTipoRel = $solicitudTipoRel;
     }
 
+
 }
 

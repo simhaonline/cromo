@@ -2,9 +2,11 @@
 
 namespace App\Controller\Inventario\Movimiento;
 
-use App\Controller\General\FuncionesGeneralesController;
 use App\Entity\Inventario\InvSolicitud;
+use App\Estructura\AdministracionController;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -12,41 +14,65 @@ use App\Form\Type\Inventario\SolicitudType;
 
 class SolicitudController extends Controller
 {
+    var $query = '';
+
     /**
-     * @Route("/inv/movimiento/solicitud/lista", name="inv_mto_solicitud_lista")
+     * @Route("/inv/movimiento/solicitud/detalle/{id}", name="inv_mto_solicitud_detalle")
      */
-    public function lista(Request $request)
+    public function detalle(Request $request, $id)
     {
-        $respuesta = '';
+        $objFunciones = new AdministracionController();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
-        $form = $this->formularioLista();
+        $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
+        if (!$arSolicitud) {
+            return $this->redirect($this->generateUrl('inv_mto_solicitud_lista'));
+        }
+        $form = $this->formularioDetalle($arSolicitud);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnEliminar')->isClicked()) {
-                $respuesta = $em->getRepository('App:Inventario\InvSolicitud')->eliminar($arrSeleccionados);
-                $objFunciones = $this->validarRespuesta($respuesta);
-                return $this->redirect($this->generateUrl('inv_mto_solicitud_lista'));
+                $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->eliminar($arSolicitud, $arrSeleccionados);
+                $objFunciones->validarRespuesta($respuesta, $em);
+                return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->autorizar($arSolicitud);
+                $objFunciones->validarRespuesta($respuesta, $em);
+                return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->desautorizar($arSolicitud);
+                $objFunciones->validarRespuesta($respuesta, $em);
+                return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->imprimir($arSolicitud);
+                $objFunciones->validarRespuesta($respuesta, $em);
+                return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnAnular')->isClicked()) {
+                $em->getRepository('App:Inventario\InvSolicitudDetalle')->anular($arSolicitud);
+                return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['id' => $id]));
             }
         }
-        $query = $em->getRepository(InvSolicitud::class)->lista();
-        $arSolicitud = $paginator->paginate($query, $request->query->getInt('page', 1), 10);
-        return $this->render('inventario/movimiento/solicitud/lista.html.twig', [
-            'arSolicitudes' => $arSolicitud,
+        $arSolicitudDetalles = $em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $id]);
+        return $this->render('inventario/movimiento/solicitud/detalle.html.twig', [
+            'arSolicitud' => $arSolicitud,
+            'arSolicitudDetalles' => $arSolicitudDetalles,
             'form' => $form->createView()
         ]);
     }
 
     /**
-     * @Route("/inv/movimiento/solicitud/nuevo/{codigoSolicitud}", name="inv_mto_solicitud_nuevo")
+     * @Route("/inv/movimiento/solicitud/nuevo/{id}", name="inv_mto_solicitud_nuevo")
      */
-    public function nuevo(Request $request, $codigoSolicitud)
+    public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arSolicitud = new \App\Entity\Inventario\InvSolicitud();
-        if ($codigoSolicitud != 0) {
-            $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($codigoSolicitud);
+        $arSolicitud = new InvSolicitud();
+        if ($id != 0) {
+            $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
             if (!$arSolicitud) {
                 return $this->redirect($this->generateUrl('inv_mto_solicitud_lista'));
             }
@@ -74,59 +100,11 @@ class SolicitudController extends Controller
     }
 
     /**
-     * @Route("/inv/movimiento/solicitud/detalle/{codigoSolicitud}", name="inv_mto_solicitud_detalle")
+     * @Route("/inv/movimiento/solicitud/detalle/nuevo/{id}", name="inv_mto_solicitud_detalle_nuevo")
      */
-    public function detalle(Request $request, $codigoSolicitud)
-    {
-        $objFunciones = new FuncionesGeneralesController();
+    public function detalleNuevo(Request $request, $id){
         $em = $this->getDoctrine()->getManager();
-        $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($codigoSolicitud);
-        if (!$arSolicitud) {
-            return $this->redirect($this->generateUrl('inv_mto_solicitud_lista'));
-        }
-        $form = $this->formularioDetalle($arSolicitud);
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-            if ($form->get('btnEliminar')->isClicked()) {
-                $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->eliminar($arSolicitud, $arrSeleccionados);
-                $objFunciones = $objFunciones->validarRespuesta($respuesta);
-                return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
-            }
-            if ($form->get('btnAutorizar')->isClicked()) {
-                $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->autorizar($arSolicitud);
-                $objFunciones = $objFunciones->validarRespuesta($respuesta);
-                return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
-            }
-            if ($form->get('btnDesautorizar')->isClicked()) {
-                $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->desautorizar($arSolicitud);
-                $objFunciones = $objFunciones->validarRespuesta($respuesta);
-                return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
-            }
-            if ($form->get('btnImprimir')->isClicked()) {
-                $respuesta = $em->getRepository('App:Inventario\InvSolicitudDetalle')->imprimir($arSolicitud);
-                $objFunciones = $objFunciones->validarRespuesta($respuesta);
-                return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
-            }
-            if ($form->get('btnAnular')->isClicked()) {
-                $em->getRepository('App:Inventario\InvSolicitudDetalle')->anular($arSolicitud);
-                return $this->redirect($this->generateUrl('inv_mto_solicitud_detalle', ['codigoSolicitud' => $codigoSolicitud]));
-            }
-        }
-        $arSolicitudDetalles = $em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $codigoSolicitud]);
-        return $this->render('inventario/movimiento/solicitud/detalle.html.twig', [
-            'arSolicitud' => $arSolicitud,
-            'arSolicitudDetalles' => $arSolicitudDetalles,
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/inv/movimiento/solicitud/detalle/nuevo/{codigoDetalle}/{codigoSolicitud}", name="inv_mto_solicitud_detalle_nuevo")
-     */
-    public function nuevoDetalle(Request $request, $codigoDetalle, $codigoSolicitud)
-    {
-        $em = $this->getDoctrine()->getManager();
+        $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
 
     }
 
@@ -173,11 +151,17 @@ class SolicitudController extends Controller
             ->getForm();
     }
 
-    public function formularioLista()
+    /**
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function formularioNuevoDetalle()
     {
         return $this->createFormBuilder()
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('nombreItem', TextType::class, ['required' => false])
+            ->add('codigoItem', TextType::class, ['required' => false])
+            ->add('codigoBarras', TextType::class, ['required' => false])
+            ->add('filtrar', SubmitType::class, ['label' => 'Filtrar'])
             ->getForm();
     }
+
 }

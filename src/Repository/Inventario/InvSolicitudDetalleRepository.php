@@ -11,14 +11,6 @@ use Doctrine\ORM\EntityManager;
 
 class InvSolicitudDetalleRepository extends ServiceEntityRepository
 {
-    /**
-     * Se declara la variable $em de manera global para el repositorio
-     * @param EntityManager $em
-     */
-    public function setEm(EntityManager $em): void
-    {
-        $this->_em = $em;
-    }
 
     public function __construct(RegistryInterface $registry)
     {
@@ -86,11 +78,6 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
                         $this->_em->remove($arSolicitudDetalle);
                     }
                 }
-            }
-            try {
-                $this->_em->flush();
-            } catch (ForeignKeyConstraintViolationException $exception) {
-                $respuesta = 'No se puede eliminar, el registro esta siendo utilizado en el sistema';
             }
         } else {
             $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';

@@ -14,21 +14,16 @@ class InvSolicitudRepository extends ServiceEntityRepository
         parent::__construct($registry, InvSolicitud::class);
     }
 
-    /**
-     * @param EntityManager $em
-     */
-    public function setEm(EntityManager $em): void
-    {
-        $this->_em = $em;
-    }
 
     public function lista()
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('s.codigoSolicitudPk')
-            ->addSelect('s.numero')
-            ->addSelect('s.fecha')
+        $qb->select('s.codigoSolicitudPk AS ID')
+            ->addSelect('s.numero AS NUMERO')
+            ->addSelect('st.nombre AS TIPO')
+            ->addSelect('s.fecha AS FECHA')
             ->from('App:Inventario\InvSolicitud', 's')
+            ->join('s.solicitudTipoRel','st')
             ->where('s.codigoSolicitudPk <> 0')
             ->orderBy('s.codigoSolicitudPk', 'DESC');
         $dql = $this->getEntityManager()->createQuery($qb->getDQL());
@@ -52,11 +47,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
                     if ($arSolicitud->getEstadoImpreso() == 0) {
                         if ($arSolicitud->getEstadoAutorizado() == 0) {
                             if (count($this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()])) <= 0) {
-                                try {
                                     $this->_em->remove($arSolicitud);
-                                } catch (\Exception $exception) {
-                                    $respuesta = 'No se puede eliminar, el registro esta siendo utilizado en el sistema';
-                                }
                             } else {
                                 $respuesta = 'No se puede eliminar, el registro tiene detalles';
                             }
@@ -71,4 +62,5 @@ class InvSolicitudRepository extends ServiceEntityRepository
         }
         return $respuesta;
     }
+
 }

@@ -9,14 +9,6 @@ use Doctrine\ORM\EntityManager;
 
 class InvItemRepository extends ServiceEntityRepository
 {
-    /**
-     * Se declara la variable $em de manera global para el repositorio
-     * @param EntityManager $em
-     */
-    public function setEm(EntityManager $em): void
-    {
-        $this->_em = $em;
-    }
 
     public function __construct(RegistryInterface $registry)
     {

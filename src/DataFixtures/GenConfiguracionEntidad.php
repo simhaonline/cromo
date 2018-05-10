@@ -13,14 +13,16 @@ class GenConfiguracionEntidad extends Fixture
         if (!$arConfiguracionEntidad) {
             $arConfiguracionEntidad = new \App\Entity\General\GenConfiguracionEntidad();
             $arConfiguracionEntidad->setCodigoConfiguracionEntidadPk("InvSolicitud");
-            $arConfiguracionEntidad->setBase("base_inventario.html.twig");
-            $arConfiguracionEntidad->setModulo("Inventario");
+            $arrParametros = $this->obtenerParametrosEntidad($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk());
+            $arConfiguracionEntidad->setBase($arrParametros['rutaBase']);
+            $arConfiguracionEntidad->setModulo($arrParametros['modulo']);
             $arConfiguracionEntidad->setActivo(true);
-            $arConfiguracionEntidad->setRutaEntidad("App:Inventario\InvSolicitud");
+            $arConfiguracionEntidad->setRutaEntidad($arrParametros['rutaEntidad']);
+            $arConfiguracionEntidad->setRutaFormulario($arrParametros['rutaFormulario']);
             $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
             $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
             $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
-            $arConfiguracionEntidad->setRutaGeneral("inv_mto_solicitud");
+
             $em->persist($arConfiguracionEntidad);
         }
         $em->flush();
@@ -29,14 +31,15 @@ class GenConfiguracionEntidad extends Fixture
         if (!$arConfiguracionEntidad) {
             $arConfiguracionEntidad = new \App\Entity\General\GenConfiguracionEntidad();
             $arConfiguracionEntidad->setCodigoConfiguracionEntidadPk("InvItem");
-            $arConfiguracionEntidad->setBase("base_inventario.html.twig");
-            $arConfiguracionEntidad->setModulo("Inventario");
+            $arrParametros = $this->obtenerParametrosEntidad($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk());
+            $arConfiguracionEntidad->setBase($arrParametros['rutaBase']);
+            $arConfiguracionEntidad->setModulo($arrParametros['modulo']);
             $arConfiguracionEntidad->setActivo(true);
-            $arConfiguracionEntidad->setRutaEntidad("App:Inventario\InvItem");
+            $arConfiguracionEntidad->setRutaEntidad($arrParametros['rutaEntidad']);
+            $arConfiguracionEntidad->setRutaFormulario($arrParametros['rutaFormulario']);
             $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
             $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
             $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
-            $arConfiguracionEntidad->setRutaGeneral("inv_adm_item");
             $em->persist($arConfiguracionEntidad);
         }
         $em->flush();
@@ -45,14 +48,15 @@ class GenConfiguracionEntidad extends Fixture
         if (!$arConfiguracionEntidad) {
             $arConfiguracionEntidad = new \App\Entity\General\GenConfiguracionEntidad();
             $arConfiguracionEntidad->setCodigoConfiguracionEntidadPk("CarCliente");
-            $arConfiguracionEntidad->setBase("base_cartera.html.twig");
-            $arConfiguracionEntidad->setModulo("Cartera");
+            $arrParametros = $this->obtenerParametrosEntidad($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk());
+            $arConfiguracionEntidad->setBase($arrParametros['rutaBase']);
+            $arConfiguracionEntidad->setModulo($arrParametros['modulo']);
             $arConfiguracionEntidad->setActivo(true);
-            $arConfiguracionEntidad->setRutaEntidad("App:Cartera\CarCliente");
+            $arConfiguracionEntidad->setRutaEntidad($arrParametros['rutaEntidad']);
+            $arConfiguracionEntidad->setRutaFormulario($arrParametros['rutaFormulario']);
             $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
             $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
             $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
-            $arConfiguracionEntidad->setRutaGeneral("car_adm_cliente");
             $em->persist($arConfiguracionEntidad);
         }
         $em->flush();
@@ -78,5 +82,35 @@ class GenConfiguracionEntidad extends Fixture
         }
         $jsonLista = json_encode($arrInfoCampos);
         return $jsonLista;
+    }
+
+    /**
+     * @param $entidad
+     * @return mixed
+     */
+    public function obtenerParametrosEntidad($entidad){
+        $modulo = substr($entidad, 0,3);
+        $entidadSinModulo = substr($entidad, 3);
+        switch ($modulo){
+            case 'Inv':
+                $arrParametros['modulo'] = 'Inventario';
+                break;
+            case 'Car':
+                $arrParametros['modulo'] = 'Cartera';
+                break;
+            case 'Tte':
+                $arrParametros['modulo'] = 'Transporte';
+                break;
+            case 'Ctb':
+                $arrParametros['modulo'] = 'Contabilidad';
+                break;
+        }
+        $rutaEntidad = "App:".$arrParametros['modulo']."\\".$entidad;
+        $rutaFormulario = "App\Form\Type\\".$arrParametros['modulo']."\\".$entidadSinModulo."Type";
+        $rutaBase = 'base_'.strtolower($arrParametros['modulo']).".html.twig";
+        $arrParametros['rutaBase'] = $rutaBase;
+        $arrParametros['rutaFormulario'] = $rutaFormulario;
+        $arrParametros['rutaEntidad'] = $rutaEntidad;
+        return $arrParametros;
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Form\Type\Transporte;
 
 use App\Entity\Transporte\TteCiudad;
+use App\Entity\Transporte\TteEmpaque;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteRuta;
+use App\Entity\Transporte\TteServicio;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -29,6 +31,22 @@ class GuiaType extends AbstractType {
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('gt')
                         ->orderBy('gt.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+            ))
+            ->add('servicioRel', EntityType::class, array(
+                'class' => TteServicio::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('s')
+                        ->orderBy('s.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+            ))
+            ->add('empaqueRel', EntityType::class, array(
+                'class' => TteEmpaque::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('e')
+                        ->orderBy('e.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
             ))

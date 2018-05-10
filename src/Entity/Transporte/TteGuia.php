@@ -228,6 +228,11 @@ class TteGuia
     private $codigoServicioFk;
 
     /**
+     * @ORM\Column(name="codigo_empaque_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoEmpaqueFk;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -298,11 +303,17 @@ class TteGuia
      */
     private $facturaPlanillaRel;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteServicio", inversedBy="guiasServicioRel")
-//     * @ORM\JoinColumn(name="codigo_servicio_fk", referencedColumnName="codigo_servicio_pk")
-//     */
-//    private $servicioRel;
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteServicio", inversedBy="guiasServicioRel")
+     * @ORM\JoinColumn(name="codigo_servicio_fk", referencedColumnName="codigo_servicio_pk")
+     */
+    private $servicioRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteEmpaque", inversedBy="guiasEmpaqueRel")
+     * @ORM\JoinColumn(name="codigo_empaque_fk", referencedColumnName="codigo_empaque_pk")
+     */
+    private $empaqueRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteRecibo", mappedBy="guiaRel")
@@ -1263,7 +1274,37 @@ class TteGuia
         $this->servicioRel = $servicioRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpaqueFk()
+    {
+        return $this->codigoEmpaqueFk;
+    }
 
+    /**
+     * @param mixed $codigoEmpaqueFk
+     */
+    public function setCodigoEmpaqueFk($codigoEmpaqueFk): void
+    {
+        $this->codigoEmpaqueFk = $codigoEmpaqueFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpaqueRel()
+    {
+        return $this->empaqueRel;
+    }
+
+    /**
+     * @param mixed $empaqueRel
+     */
+    public function setEmpaqueRel($empaqueRel): void
+    {
+        $this->empaqueRel = $empaqueRel;
+    }
 
 }
 

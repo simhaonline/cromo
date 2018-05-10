@@ -28,20 +28,20 @@
                     {{ form_start(form) }}
                     {% for arColumna in arrColumnasLista %}
                         <tr>
-                            {% if isPk(arColumna.campo) %}
-                                <td style="text-align: center">{{ splitByUnderscore(arColumna.campo) }}</td>
+                            {% if esId(arColumna.campo) %}
+                                <td style="text-align: center">{{ separarPorGuionbajo(arColumna.campo) }}</td>
                                 <td style="text-align: center"><input type="text" name="aliasLista[{{ arColumna.campo }}]"
                                                                       value="ID" readonly></td>
                                 <td style="text-align: center"><input type="checkbox"
                                                                       name="mostrarLista[{{ arColumna.campo }}]" checked>
                                 </td>
                             {% else %}
-                                <td style="text-align: center">{{ splitByUnderscore(arColumna.campo) }}</td>
+                                <td style="text-align: center">{{ separarPorGuionbajo(arColumna.campo) }}</td>
                                 <td style="text-align: center"><input type="text" name="aliasLista[{{ arColumna.campo }}]"
                                                                       onkeypress="return validarCaracteres(event)"
                                                                       value="{{ arColumna.alias }}"></td>
                                 <td style="text-align: center"><input type="checkbox"
-                                                                      name="mostrarLista[{{ arColumna.campo }}]" {{ isSelected(arColumna.mostrar) }}>
+                                                                      name="mostrarLista[{{ arColumna.campo }}]" {{ validarSeleccionado(arColumna.mostrar) }}>
                                 </td>
                             {% endif %}
                         </tr>

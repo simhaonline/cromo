@@ -21,9 +21,8 @@ class AdministracionController extends Controller
     const TP_INFO = "info";
 
     /**
-     * Construye los parámetros requeridos para generar un mensaje
-     * @param string $strTipo El tipo de mensaje a generar  se debe enviar en minuscula <br> error, informacion
-     * @param string $strMensaje El mensaje que se mostrara
+     * @param $strTipo
+     * @param $strMensaje
      */
     public function Mensaje($strTipo, $strMensaje)
     {
@@ -32,19 +31,24 @@ class AdministracionController extends Controller
     }
 
     /**
-     * @author Andres Acevedo Cartagena
-     * @param $respuesta string
+     * @param $respuesta mixed
      * @param $em EntityManager
      */
     public function validarRespuesta($respuesta, $em)
     {
-        if ($respuesta != '') {
-            $this->Mensaje('error', $respuesta);
+        if (is_array($respuesta)) {
+            if (count($respuesta) > 0) {
+                foreach ($respuesta as $respuesta) {
+                    $this->Mensaje(AdministracionController::TP_ERROR, $respuesta);
+                }
+            }
+        } elseif ($respuesta != '') {
+            $this->Mensaje(AdministracionController::TP_ERROR, $respuesta);
         } else {
             try {
                 $em->flush();
             } catch (\Exception $exception) {
-                $this->Mensaje('error', 'No se puede eliminar, el registro esta siendo utilizado en el sistema');
+                $this->Mensaje(AdministracionController::TP_ERROR, 'No se puede eliminar, el registro esta siendo utilizado en el sistema');
             }
         }
     }
@@ -118,32 +122,54 @@ class AdministracionController extends Controller
         $form->handleRequest($request);
         $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 0);
         if ($form->isSubmitted() && $form->isValid()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnExcel')->isClicked()) {
                 $arRegistrosExcel = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 1);
                 $this->generarExcel($arRegistrosExcel, 'Excel');
             }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $respuesta = $em->getRepository('App:General\GenConfiguracionEntidad')->eliminar($arConfiguracionEntidad, $arrSeleccionados);
+                $this->validarRespuesta($respuesta, $em);
+            }
         }
         $ruta = $arConfiguracionEntidad->getRutaGeneral();
         $rutaNuevo = $ruta . '_nuevo';
-        $rutaDetalle = $ruta . '_detalle';
 
         //Se valida si existe la ruta nuevo
         $rutaNuevo = ($router->getRouteCollection()->get($rutaNuevo)) ? $rutaNuevo : null;
-
-        //Se valida si existe la ruta detalles
-        $rutaDetalle = ($router->getRouteCollection()->get($rutaDetalle)) ? $rutaDetalle : null;
 
         $arRegistros = $paginator->paginate($arRegistros, $request->query->getInt('page', 1), 10);
         return $this->render('estructura/lista.html.twig', [
             'arRegistros' => $arRegistros,
             'rutaNuevo' => $rutaNuevo,
-            'rutaDetalle' => $rutaDetalle,
+//            'rutaDetalle' => $rutaDetalle,
             'arConfiguracionEntidad' => $arConfiguracionEntidad,
             'form' => $form->createView()
         ]);
     }
 
     /**
+     * @author Andres Acevedo Cartagena
+     * @param Request $request
+     * @param $entidad
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("detalle/{entidad}/{id}",name="detalle")
+     */
+    public function generarDetalles(Request $request, $entidad, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arConfiguracionEntidad = $em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad);
+        $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->listaDetalles($arConfiguracionEntidad, $id);
+        $arrCampos = json_decode($em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad)->getJsonLista());
+        return $this->render('estructura/detalles.html.twig', [
+            'arConfiguracionEntidad' => $arConfiguracionEntidad,
+            'arRegistros' => $arRegistros,
+            'arrCampos' => $arrCampos
+        ]);
+    }
+
+    /**
+     * @author Andres Acevedo Cartagena
      * @param Request $request
      * @param $entidad
      * @return \Symfony\Component\HttpFoundation\Response
@@ -160,23 +186,23 @@ class AdministracionController extends Controller
         $arrColumnasExcel = json_decode($arConfiguracionEntidad->getJsonExcel());
         $arrColumnasFiltro = json_decode($arConfiguracionEntidad->getJsonFiltro());
         $form = $this->createFormBuilder()
-            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            if($form->get('btnGuardar')->isClicked()){
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
                 $arrAlias = $request->request->get('aliasLista');
                 $arrMostrar = $request->request->get('mostrarLista');
-                foreach($arrColumnasLista as $columna){
-                    if($arrAlias[$columna->campo]){
-                        if($arrAlias[$columna->campo] != ''){
+                foreach ($arrColumnasLista as $columna) {
+                    if ($arrAlias[$columna->campo]) {
+                        if ($arrAlias[$columna->campo] != '') {
                             $columna->alias = $arrAlias[$columna->campo];
                         } else {
                             $columna->alias = $columna->campo;
                         }
                     }
-                    if (isset($arrMostrar[$columna->campo])){
-                        if($arrMostrar[$columna->campo] == 'on'){
+                    if (isset($arrMostrar[$columna->campo])) {
+                        if ($arrMostrar[$columna->campo] == 'on') {
                             $columna->mostrar = true;
                         } else {
                             $columna->mostrar = false;
@@ -197,14 +223,6 @@ class AdministracionController extends Controller
             'arrColumnasExcel,' => $arrColumnasExcel,
             'arrColumnasFiltro' => $arrColumnasFiltro
         ]);
-    }
-
-    /**
-     * @param $form Form
-     * @param $columna
-     */
-    private function crearCampoFormulario($form, $columna)
-    {
     }
 
     /**

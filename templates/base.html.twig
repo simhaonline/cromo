@@ -62,57 +62,57 @@
         <!-- /.navbar-top-links -->
 
         <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-                    <li class="sidebar-search">
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                        <!-- /input-group -->
-                    </li>
-                    <li>
-                        <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Entrada</a>
-                            </li>
-                            <li>
-                                <a href="#">Salida</a>
-                            </li>
-                            <li>
-                                <a href="{{ path('listado',{'entidad' : 'InvSolicitud'}) }}">Solicitud</a>
-                            </li>
-                            <li>
-                                <a href="#">Orden de compra</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="{{ path('listado',{'entidad' : 'InvItem'}) }}">Item</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-retweet fa-fw"></i> Proceso<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level"></ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-file-text-o fa-fw"></i> Informe<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level"></ul>
-                    </li>
-                </ul>
-            </div>
+            {#<div class="sidebar-nav navbar-collapse">#}
+                {#<ul class="nav" id="side-menu">#}
+                    {#<li class="sidebar-search">#}
+                        {#<div class="input-group custom-search-form">#}
+                            {#<input type="text" class="form-control" placeholder="Search...">#}
+                            {#<span class="input-group-btn">#}
+                                {#<button class="btn btn-default" type="button">#}
+                                    {#<i class="fa fa-search"></i>#}
+                                {#</button>#}
+                            {#</span>#}
+                        {#</div>#}
+                        {#<!-- /input-group -->#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>#}
+                        {#<ul class="nav nav-second-level">#}
+                            {#<li>#}
+                                {#<a href="#">Entrada</a>#}
+                            {#</li>#}
+                            {#<li>#}
+                                {#<a href="#">Salida</a>#}
+                            {#</li>#}
+                            {#<li>#}
+                                {#<a href="{{ path('listado',{'entidad' : 'InvSolicitud'}) }}">Solicitud</a>#}
+                            {#</li>#}
+                            {#<li>#}
+                                {#<a href="#">Orden de compra</a>#}
+                            {#</li>#}
+                        {#</ul>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>#}
+                        {#<ul class="nav nav-second-level">#}
+                            {#<li>#}
+                                {#<a href="{{ path('listado',{'entidad' : 'InvItem'}) }}">Item</a>#}
+                            {#</li>#}
+                        {#</ul>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="#"><i class="fa fa-retweet fa-fw"></i> Proceso<span class="fa arrow"></span></a>#}
+                        {#<ul class="nav nav-second-level"></ul>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="#"><i class="fa fa-file-text-o fa-fw"></i> Informe<span class="fa arrow"></span></a>#}
+                        {#<ul class="nav nav-second-level"></ul>#}
+                    {#</li>#}
+                {#</ul>#}
+            {#</div>#}
             <!-- /.sidebar-collapse -->
         </div>
         <!-- /.navbar-static-side -->

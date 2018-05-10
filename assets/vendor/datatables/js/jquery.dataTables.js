@@ -3182,11 +3182,11 @@
 		var i, ien, cell, row, column;
 		var thead = oSettings.nTHead;
 		var tfoot = oSettings.nTFoot;
-		var createHeader = $('th, td', thead).length === 0;
+		var crearTitulo = $('th, td', thead).length === 0;
 		var classes = oSettings.oClasses;
 		var columns = oSettings.aoColumns;
 	
-		if ( createHeader ) {
+		if ( crearTitulo ) {
 			row = $('<tr/>').appendTo( thead );
 		}
 	
@@ -3194,7 +3194,7 @@
 			column = columns[i];
 			cell = $( column.nTh ).addClass( column.sClass );
 	
-			if ( createHeader ) {
+			if ( crearTitulo ) {
 				cell.appendTo( row );
 			}
 	
@@ -3220,7 +3220,7 @@
 			);
 		}
 	
-		if ( createHeader ) {
+		if ( crearTitulo ) {
 			_fnDetectHeader( oSettings.aoHeader, thead );
 		}
 		

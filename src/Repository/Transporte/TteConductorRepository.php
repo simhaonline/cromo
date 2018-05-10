@@ -39,5 +39,20 @@ class TteConductorRepository extends ServiceEntityRepository
 
     }
 
+    public function dqlRndcManifiesto($codigoConductor): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT 
+        c.codigoIdentificacionFk,
+        c.numeroIdentificacion
+        FROM App\Entity\Transporte\TteConductor c          
+        WHERE c.codigoConductorPk = :codigoConductor'
+        )->setParameter('codigoConductor', $codigoConductor);
+        $arConductor =  $query->getSingleResult();
+        return $arConductor;
+
+    }
+
 
 }

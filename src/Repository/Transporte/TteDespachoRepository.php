@@ -10,6 +10,7 @@ use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TtePoseedor;
+use App\Entity\Transporte\TteVehiculo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use SoapClient;
@@ -242,11 +243,20 @@ class TteDespachoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'SELECT d.codigoDespachoPk,
+        d.fechaSalida,
         d.codigoConductorFk,
         v.codigoPoseedorFk,
-        v.codigoPropietarioFk
+        v.codigoPropietarioFk,
+        d.codigoVehiculoFk,
+        d.pesoReal,
+        d.numero,
+        d.vrFletePago,
+        d.vrAnticipo,
+        d.vrRetencionFuente,
+        d.codigoCiudadOrigenFk as codigoCiudadOrigen,
+        d.codigoCiudadDestinoFk as codigoCiudadDestino
         FROM App\Entity\Transporte\TteDespacho d          
-        LEFT JOIN d.vehiculoRel v     
+        LEFT JOIN d.vehiculoRel v             
         WHERE d.codigoDespachoPk = :codigoDespacho
         ORDER BY d.codigoDespachoPk DESC '
         )->setParameter('codigoDespacho', $codigoDespacho);
@@ -262,19 +272,21 @@ class TteDespachoRepository extends ServiceEntityRepository
             $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
             $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
             $arrDespacho = $em->getRepository(TteDespacho::class)->dqlRndc($codigoDespacho);
-            $respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
-            if($respuesta) {
-                //$respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
-            }
+            //$respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
+            //if($respuesta) {
+                //$respuesta = $this->reportarRndcVehiculo($cliente, $arConfiguracionTransporte, $arrDespacho);
+                //if($respuesta) {
+                    //$respuesta = $this->reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho);
+                    //if($respuesta) {
+                        $respuesta = $this->reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho);
+                    //}
+                //}
+            //}
 
         } catch (Exception $e) {
             return "Error al conectar el servicio: " . $e;
         }
-        $respuesta = "";
-
-
-        return $respuesta;
-
+        return true;
     }
 
     public function reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho): string
@@ -365,4 +377,172 @@ class TteDespachoRepository extends ServiceEntityRepository
         return $respuesta;
 
     }
+
+    public function reportarRndcVehiculo($cliente, $arConfiguracionTransporte, $arrDespacho): string
+    {
+        $em = $this->getEntityManager();
+        $respuesta = true;
+        $arVehiculo = $em->getRepository(TteVehiculo::class)->dqlRndc($arrDespacho['codigoVehiculoFk']);
+        $strVehiculoXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+                        <root>
+                            <acceso>
+                                <username>" . $arConfiguracionTransporte->getUsuarioRndc() . "</username>
+                                <password>" . $arConfiguracionTransporte->getClaveRndc() . "</password>
+                            </acceso>
+                            <solicitud>
+                                <tipo>1</tipo>
+                                <procesoid>12</procesoid>
+                            </solicitud>
+                            <variables>
+                                <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
+                                <NUMPLACA>" . $arVehiculo['codigoVehiculoPk']  . "</NUMPLACA>
+                                <CODCONFIGURACIONUNIDADCARGA>" . $arVehiculo['configuracion'] . "</CODCONFIGURACIONUNIDADCARGA>
+                                <NUMEJES>" . $arVehiculo['numeroEjes'] . "</NUMEJES>
+                                <CODMARCAVEHICULOCARGA>". $arVehiculo['codigoMarca'] ."</CODMARCAVEHICULOCARGA>
+                                <CODLINEAVEHICULOCARGA>". $arVehiculo['codigoLinea'] ."</CODLINEAVEHICULOCARGA>
+                                <ANOFABRICACIONVEHICULOCARGA>" . $arVehiculo['modelo'] . "</ANOFABRICACIONVEHICULOCARGA>
+                                <CODTIPOCOMBUSTIBLE>" . $arVehiculo['tipoCombustible'] . "</CODTIPOCOMBUSTIBLE>
+                                <PESOVEHICULOVACIO>" . $arVehiculo['pesoVacio'] . "</PESOVEHICULOVACIO>
+                                <CODCOLORVEHICULOCARGA>" . $arVehiculo['codigoColor'] . "</CODCOLORVEHICULOCARGA>
+                                <CODTIPOCARROCERIA>" . $arVehiculo['tipoCarroceria'] . "</CODTIPOCARROCERIA>
+                                <CODTIPOIDPROPIETARIO>" . $arVehiculo['tipoIdentificacionPropietario'] . "</CODTIPOIDPROPIETARIO>
+                                <NUMIDPROPIETARIO>" . $arVehiculo['numeroIdentificacionPropietario'] . "</NUMIDPROPIETARIO>
+                                <CODTIPOIDTENEDOR>" . $arVehiculo['tipoIdentificacionPoseedor'] . "</CODTIPOIDTENEDOR>
+                                <NUMIDTENEDOR>" . $arVehiculo['numeroIdentificacionPoseedor'] . "</NUMIDTENEDOR> 
+                                <NUMSEGUROSOAT>" . $arVehiculo['numeroPoliza'] . "</NUMSEGUROSOAT> 
+                                <FECHAVENCIMIENTOSOAT>" . $arVehiculo['fechaVencePoliza']->format('Y/m/d') . "</FECHAVENCIMIENTOSOAT>
+                                <NUMNITASEGURADORASOAT>" . $arVehiculo['numeroIdentificacionAseguradora'] . $arVehiculo['digitoVerificacionAseguradora'] . "</NUMNITASEGURADORASOAT>
+                                <CAPACIDADUNIDADCARGA>" . $arVehiculo['capacidad'] . "</CAPACIDADUNIDADCARGA>
+                                <UNIDADMEDIDACAPACIDAD>1</UNIDADMEDIDACAPACIDAD>
+                            </variables>
+                        </root>";
+
+        $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strVehiculoXML));
+        $cadena_xml = simplexml_load_string($respuesta);
+        if($cadena_xml->ErrorMSG != "") {
+            $respuesta = false;
+            echo $cadena_xml->ErrorMSG;
+        }
+
+
+        return $respuesta;
+
+    }
+
+    public function reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho): string
+    {
+        $em = $this->getEntityManager();
+        $respuesta = true;
+        $destinatario = "100000".$arrDespacho['numero'];
+        $propietario = "500000".$arrDespacho['numero'];
+        $strGuiaXML ="<?xml version='1.0' encoding='ISO-8859-1' ?>
+                        <root>
+                            <acceso>
+                                <username>" . $arConfiguracionTransporte->getUsuarioRndc() . "</username>
+                                <password>" . $arConfiguracionTransporte->getClaveRndc() . "</password>
+                            </acceso>
+                            <solicitud>
+                                <tipo>1</tipo>
+                                <procesoid>3</procesoid>
+                            </solicitud>
+                            <variables>
+                                <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
+                                <CONSECUTIVOREMESA>" . $arrDespacho['numero'] . "</CONSECUTIVOREMESA>
+                                <CODOPERACIONTRANSPORTE>P</CODOPERACIONTRANSPORTE>
+                                <CODTIPOEMPAQUE>0</CODTIPOEMPAQUE>
+                                <CODNATURALEZACARGA>1</CODNATURALEZACARGA>                                                  
+                                <DESCRIPCIONCORTAPRODUCTO>PAQUETES VARIOS</DESCRIPCIONCORTAPRODUCTO>
+                                <MERCANCIAREMESA>009880</MERCANCIAREMESA>
+                                <CANTIDADCARGADA>" . $arrDespacho['pesoReal'] . "</CANTIDADCARGADA>
+                                <UNIDADMEDIDACAPACIDAD>1</UNIDADMEDIDACAPACIDAD>
+                                <CODTIPOIDREMITENTE>C</CODTIPOIDREMITENTE>
+                                <NUMIDREMITENTE>$propietario</NUMIDREMITENTE>
+                                <CODSEDEREMITENTE>1</CODSEDEREMITENTE>
+                                <CODTIPOIDDESTINATARIO>C</CODTIPOIDDESTINATARIO>
+                                <NUMIDDESTINATARIO>$destinatario</NUMIDDESTINATARIO>
+                                <CODSEDEDESTINATARIO>1</CODSEDEDESTINATARIO>
+                                <CODTIPOIDPROPIETARIO>C</CODTIPOIDPROPIETARIO>
+                                <NUMIDPROPIETARIO>$propietario</NUMIDPROPIETARIO>
+                                <CODSEDEPROPIETARIO>1</CODSEDEPROPIETARIO>
+                                <DUENOPOLIZA>E</DUENOPOLIZA>
+                                <NUMPOLIZATRANSPORTE>" . $arConfiguracionTransporte->getNumeroPoliza() . "</NUMPOLIZATRANSPORTE>
+                                <FECHAVENCIMIENTOPOLIZACARGA>" . $arConfiguracionTransporte->getFechaVencePoliza()->format('Y/m/d') . "</FECHAVENCIMIENTOPOLIZACARGA>
+                                <COMPANIASEGURO>" . $arConfiguracionTransporte->getNumeroIdentificacionAseguradora() . "</COMPANIASEGURO>
+                                <HORASPACTOCARGA>24</HORASPACTOCARGA>
+                                <MINUTOSPACTOCARGA>00</MINUTOSPACTOCARGA>
+                                <FECHACITAPACTADACARGUE>21/08/2013</FECHACITAPACTADACARGUE>
+                                <HORACITAPACTADACARGUE>22:00</HORACITAPACTADACARGUE>
+                                <HORASPACTODESCARGUE>72</HORASPACTODESCARGUE>
+                                <MINUTOSPACTODESCARGUE>00</MINUTOSPACTODESCARGUE>
+                                <FECHACITAPACTADADESCARGUE>25/08/2013</FECHACITAPACTADADESCARGUE>
+                                <HORACITAPACTADADESCARGUEREMESA>08:00</HORACITAPACTADADESCARGUEREMESA>
+                            </variables>
+		  		</root>";
+
+        $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strGuiaXML));
+        $cadena_xml = simplexml_load_string($respuesta);
+        if($cadena_xml->ErrorMSG != "") {
+            $respuesta = false;
+            echo $cadena_xml->ErrorMSG;
+        }
+
+
+        return $respuesta;
+
+    }
+
+    public function reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho): string
+    {
+        $em = $this->getEntityManager();
+        $respuesta = true;
+        $guia = $arrDespacho['numero'];
+        $arrPoseedor = $em->getRepository(TtePoseedor::class)->dqlRndcManifiesto($arrDespacho['codigoPoseedorFk']);
+        $arrConductor = $em->getRepository(TteConductor::class)->dqlRndcManifiesto($arrDespacho['codigoConductorFk']);
+        $strManifiestoXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+                                            <root>
+                                             <acceso>
+                                                <username>" . $arConfiguracionTransporte->getUsuarioRndc() . "</username>
+                                                <password>" . $arConfiguracionTransporte->getClaveRndc() . "</password>
+                                             </acceso>
+                                             <solicitud>
+                                              <tipo>1</tipo>
+                                              <procesoid>4</procesoid>
+                                             </solicitud>
+                                             <variables>
+                                                <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
+                                                <NUMMANIFIESTOCARGA>" . $arrDespacho['numero'] . "</NUMMANIFIESTOCARGA>
+                                                <CODOPERACIONTRANSPORTE>P</CODOPERACIONTRANSPORTE>
+                                                <FECHAEXPEDICIONMANIFIESTO>" . $arrDespacho['fechaSalida']->format('Y/m/d') . "</FECHAEXPEDICIONMANIFIESTO>
+                                                <CODMUNICIPIOORIGENMANIFIESTO>" . $arrDespacho['codigoCiudadOrigen'] . "</CODMUNICIPIOORIGENMANIFIESTO>
+                                                <CODMUNICIPIODESTINOMANIFIESTO>" . $arrDespacho['codigoCiudadDestino'] . "</CODMUNICIPIODESTINOMANIFIESTO>
+                                                <CODIDTITULARMANIFIESTO>" . $arrPoseedor['codigoIdentificacionFk'] . "</CODIDTITULARMANIFIESTO>
+                                                <NUMIDTITULARMANIFIESTO>" . $arrPoseedor['numeroIdentificacion'] . "</NUMIDTITULARMANIFIESTO>
+                                                <NUMPLACA>" . $arrDespacho['codigoVehiculoFk'] . "</NUMPLACA>
+                                                <CODIDCONDUCTOR>" . $arrConductor['codigoIdentificacionFk'] . "</CODIDCONDUCTOR>
+                                                <NUMIDCONDUCTOR>" . $arrConductor['numeroIdentificacion'] . "</NUMIDCONDUCTOR>
+                                                <VALORFLETEPACTADOVIAJE>" . $arrDespacho['vrFletePago'] . "</VALORFLETEPACTADOVIAJE>
+                                                <RETENCIONFUENTEMANIFIESTO>" . $arrDespacho['vrRetencionFuente'] . "</RETENCIONFUENTEMANIFIESTO>
+                                                <RETENCIONICAMANIFIESTOCARGA>0</RETENCIONICAMANIFIESTOCARGA>
+                                                <VALORANTICIPOMANIFIESTO>" . $arrDespacho['vrAnticipo'] . "</VALORANTICIPOMANIFIESTO>
+                                                <FECHAPAGOSALDOMANIFIESTO>" . $arrDespacho['fechaSalida']->format('Y/m/d') . "</FECHAPAGOSALDOMANIFIESTO>                                                
+                                                <CODRESPONSABLEPAGOCARGUE>E</CODRESPONSABLEPAGOCARGUE>
+                                                <CODRESPONSABLEPAGODESCARGUE>E</CODRESPONSABLEPAGODESCARGUE>
+                                                <OBSERVACIONES>NADA</OBSERVACIONES>
+                                                <CODMUNICIPIOPAGOSALDO>05001000</CODMUNICIPIOPAGOSALDO>
+						<REMESASMAN procesoid='43'><REMESA><CONSECUTIVOREMESA>$guia</CONSECUTIVOREMESA></REMESA></REMESASMAN>
+                                    </variables>
+                    </root>";
+
+        $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strManifiestoXML));
+        $cadena_xml = simplexml_load_string($respuesta);
+        if($cadena_xml->ErrorMSG != "") {
+            $respuesta = false;
+            echo $cadena_xml->ErrorMSG;
+        }
+
+
+        return $respuesta;
+
+    }
+
 }

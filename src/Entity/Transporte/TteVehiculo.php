@@ -127,6 +127,16 @@ class TteVehiculo
     private $codigoLineaFk;
 
     /**
+     * @ORM\Column(name="codigo_tipo_combustible_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoTipoCombustibleFk;
+
+    /**
+     * @ORM\Column(name="codigo_tipo_carroceria_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoTipoCarroceriaFk;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -154,6 +164,18 @@ class TteVehiculo
      * @ORM\JoinColumn(name="codigo_aseguradora_fk", referencedColumnName="codigo_aseguradora_pk")
      */
     private $aseguradoraRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteTipoCombustible", inversedBy="vehiculosTipoCombustibleRel")
+     * @ORM\JoinColumn(name="codigo_tipo_combustible_fk", referencedColumnName="codigo_tipo_combustible_pk")
+     */
+    private $tipoCombustibleRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteTipoCarroceria", inversedBy="vehiculosTipoCarroceriaRel")
+     * @ORM\JoinColumn(name="codigo_tipo_carroceria_fk", referencedColumnName="codigo_tipo_carroceria_pk")
+     */
+    private $tipoCarroceriaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteDespacho", mappedBy="vehiculoRel")
@@ -665,6 +687,71 @@ class TteVehiculo
     {
         $this->monitoreosVehiculoRel = $monitoreosVehiculoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTipoCombustibleFk()
+    {
+        return $this->codigoTipoCombustibleFk;
+    }
+
+    /**
+     * @param mixed $codigoTipoCombustibleFk
+     */
+    public function setCodigoTipoCombustibleFk($codigoTipoCombustibleFk): void
+    {
+        $this->codigoTipoCombustibleFk = $codigoTipoCombustibleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTipoCombustibleRel()
+    {
+        return $this->tipoCombustibleRel;
+    }
+
+    /**
+     * @param mixed $tipoCombustibleRel
+     */
+    public function setTipoCombustibleRel($tipoCombustibleRel): void
+    {
+        $this->tipoCombustibleRel = $tipoCombustibleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTipoCarroceriaFk()
+    {
+        return $this->codigoTipoCarroceriaFk;
+    }
+
+    /**
+     * @param mixed $codigoTipoCarroceriaFk
+     */
+    public function setCodigoTipoCarroceriaFk($codigoTipoCarroceriaFk): void
+    {
+        $this->codigoTipoCarroceriaFk = $codigoTipoCarroceriaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTipoCarroceriaRel()
+    {
+        return $this->tipoCarroceriaRel;
+    }
+
+    /**
+     * @param mixed $tipoCarroceriaRel
+     */
+    public function setTipoCarroceriaRel($tipoCarroceriaRel): void
+    {
+        $this->tipoCarroceriaRel = $tipoCarroceriaRel;
+    }
+
 
 
 }

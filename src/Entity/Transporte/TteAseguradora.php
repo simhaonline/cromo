@@ -23,6 +23,11 @@ class TteAseguradora
     private $numeroIdentificacion;
 
     /**
+     * @ORM\Column(name="digito_verificacion", type="string", length=2, nullable=true)
+     */
+    private $digitoVerificacion;
+
+    /**
      * @ORM\Column(name="nombre", type="string", length=100, nullable=true)
      */
     private $nombre;
@@ -95,6 +100,23 @@ class TteAseguradora
     {
         $this->vehiculosAseguradoraRel = $vehiculosAseguradoraRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDigitoVerificacion()
+    {
+        return $this->digitoVerificacion;
+    }
+
+    /**
+     * @param mixed $digitoVerificacion
+     */
+    public function setDigitoVerificacion($digitoVerificacion): void
+    {
+        $this->digitoVerificacion = $digitoVerificacion;
+    }
+
 
 
 }

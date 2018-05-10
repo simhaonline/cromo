@@ -33,6 +33,21 @@ class TteConfiguracion
     private $empresaRndc;
 
     /**
+     * @ORM\Column(name="numero_poliza", type="string", length=50, nullable=true)
+     */
+    private $numeroPoliza;
+
+    /**
+     * @ORM\Column(name="fecha_vence_poliza", type="date", nullable=true)
+     */
+    private $fechaVencePoliza;
+
+    /**
+     * @ORM\Column(name="numero_identificacion_aseguradora", type="string", length=50, nullable=true)
+     */
+    private $numeroIdentificacionAseguradora;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -95,6 +110,55 @@ class TteConfiguracion
     {
         $this->empresaRndc = $empresaRndc;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroPoliza()
+    {
+        return $this->numeroPoliza;
+    }
+
+    /**
+     * @param mixed $numeroPoliza
+     */
+    public function setNumeroPoliza($numeroPoliza): void
+    {
+        $this->numeroPoliza = $numeroPoliza;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaVencePoliza()
+    {
+        return $this->fechaVencePoliza;
+    }
+
+    /**
+     * @param mixed $fechaVencePoliza
+     */
+    public function setFechaVencePoliza($fechaVencePoliza): void
+    {
+        $this->fechaVencePoliza = $fechaVencePoliza;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroIdentificacionAseguradora()
+    {
+        return $this->numeroIdentificacionAseguradora;
+    }
+
+    /**
+     * @param mixed $numeroIdentificacionAseguradora
+     */
+    public function setNumeroIdentificacionAseguradora($numeroIdentificacionAseguradora): void
+    {
+        $this->numeroIdentificacionAseguradora = $numeroIdentificacionAseguradora;
+    }
+
 
 
 

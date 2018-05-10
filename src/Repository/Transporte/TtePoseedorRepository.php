@@ -37,4 +37,18 @@ class TtePoseedorRepository extends ServiceEntityRepository
 
     }
 
+    public function dqlRndcManifiesto($codigoPoseedor): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT 
+        p.codigoIdentificacionFk,
+        p.numeroIdentificacion
+        FROM App\Entity\Transporte\TtePoseedor p              
+        WHERE p.codigoPoseedorPk = :codigoPoseedor'
+        )->setParameter('codigoPoseedor', $codigoPoseedor);
+        $arPoseedor =  $query->getSingleResult();
+        return $arPoseedor;
+
+    }
 }

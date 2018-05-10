@@ -22,7 +22,7 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
      */
     public function lista($arConfiguracionEntidad, $opcion)
     {
-        $qb = $this->_em->createQueryBuilder()->from($arConfiguracionEntidad->getRutaEntidad(), 'tbl');
+        $qb = $this->_em->createQueryBuilder()->from($arConfiguracionEntidad->getRutaRepositorio(), 'tbl');
         switch ($opcion) {
             case 0:
                 $arrLista = json_decode($arConfiguracionEntidad->getJsonLista());
@@ -53,7 +53,7 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
      */
     public function listaDetalles($arConfiguracionEntidad, $id)
     {
-        $qb = $this->_em->createQueryBuilder()->from($arConfiguracionEntidad->getRutaEntidad(), 'tbl');
+        $qb = $this->_em->createQueryBuilder()->from($arConfiguracionEntidad->getRutaRepositorio(), 'tbl');
         $arrLista = json_decode($arConfiguracionEntidad->getJsonLista());
         foreach ($arrLista as $lista) {
             $qb->addSelect("tbl.{$lista->campo} AS {$lista->alias}");
@@ -79,7 +79,7 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
         $getCodigoPk = "getC" . substr($arrCampos[0]->campo, 1);
         if (count($arrSeleccionados) > 0) {
             foreach ($arrSeleccionados as $codigo) {
-                $arRegistro = $this->_em->getRepository($arConfiguracionEntidad->getRutaEntidad())->find($codigo);
+                $arRegistro = $this->_em->getRepository($arConfiguracionEntidad->getRutaRepositorio())->find($codigo);
                 if ($arRegistro) {
                     if (property_exists($arRegistro, 'estadoAutorizado')) {
                         if (!$arRegistro->getEstadoAutorizado()) {

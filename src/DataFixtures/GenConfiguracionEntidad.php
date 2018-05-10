@@ -17,11 +17,12 @@ class GenConfiguracionEntidad extends Fixture
             $arConfiguracionEntidad->setBase($arrParametros['rutaBase']);
             $arConfiguracionEntidad->setModulo($arrParametros['modulo']);
             $arConfiguracionEntidad->setActivo(true);
+            $arConfiguracionEntidad->setRutaRepositorio($arrParametros['rutaRepositorio']);
             $arConfiguracionEntidad->setRutaEntidad($arrParametros['rutaEntidad']);
             $arConfiguracionEntidad->setRutaFormulario($arrParametros['rutaFormulario']);
-            $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
-            $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
-            $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
+            $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
+            $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
+            $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
 
             $em->persist($arConfiguracionEntidad);
         }
@@ -35,11 +36,12 @@ class GenConfiguracionEntidad extends Fixture
             $arConfiguracionEntidad->setBase($arrParametros['rutaBase']);
             $arConfiguracionEntidad->setModulo($arrParametros['modulo']);
             $arConfiguracionEntidad->setActivo(true);
+            $arConfiguracionEntidad->setRutaRepositorio($arrParametros['rutaRepositorio']);
             $arConfiguracionEntidad->setRutaEntidad($arrParametros['rutaEntidad']);
             $arConfiguracionEntidad->setRutaFormulario($arrParametros['rutaFormulario']);
-            $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
-            $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
-            $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
+            $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
+            $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
+            $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
             $em->persist($arConfiguracionEntidad);
         }
         $em->flush();
@@ -52,11 +54,12 @@ class GenConfiguracionEntidad extends Fixture
             $arConfiguracionEntidad->setBase($arrParametros['rutaBase']);
             $arConfiguracionEntidad->setModulo($arrParametros['modulo']);
             $arConfiguracionEntidad->setActivo(true);
+            $arConfiguracionEntidad->setRutaRepositorio($arrParametros['rutaRepositorio']);
             $arConfiguracionEntidad->setRutaEntidad($arrParametros['rutaEntidad']);
             $arConfiguracionEntidad->setRutaFormulario($arrParametros['rutaFormulario']);
-            $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
-            $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
-            $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaEntidad(),$em));
+            $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
+            $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
+            $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
             $em->persist($arConfiguracionEntidad);
         }
         $em->flush();
@@ -105,12 +108,14 @@ class GenConfiguracionEntidad extends Fixture
                 $arrParametros['modulo'] = 'Contabilidad';
                 break;
         }
-        $rutaEntidad = "App:".$arrParametros['modulo']."\\".$entidad;
+        $rutaRepository = "App:".$arrParametros['modulo']."\\".$entidad;
         $rutaFormulario = "App\Form\Type\\".$arrParametros['modulo']."\\".$entidadSinModulo."Type";
         $rutaBase = 'base_'.strtolower($arrParametros['modulo']).".html.twig";
+        $rutaEntidad = '\App\Entity\\'.$arrParametros['modulo']."\\".$entidad;
         $arrParametros['rutaBase'] = $rutaBase;
-        $arrParametros['rutaFormulario'] = $rutaFormulario;
         $arrParametros['rutaEntidad'] = $rutaEntidad;
+        $arrParametros['rutaFormulario'] = $rutaFormulario;
+        $arrParametros['rutaRepositorio'] = $rutaRepository;
         return $arrParametros;
     }
 }

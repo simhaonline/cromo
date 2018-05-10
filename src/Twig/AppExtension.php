@@ -2,7 +2,6 @@
 
 namespace App\Twig;
 
-use App\datoFixtures\GenConfiguracionEntidad;
 use Twig\Extension\AbstractExtension;
 
 //Funciones personalizadas para twig
@@ -105,7 +104,7 @@ class AppExtension extends AbstractExtension
     }
 
     /**
-     * @param $dato GenConfiguracionEntidad
+     * @param $dato \App\Entity\General\GenConfiguracionEntidad
      * @return string
      */
     public function crearTitulo($dato,$tipo)
@@ -119,8 +118,11 @@ class AppExtension extends AbstractExtension
             case 2:
                 $accion = 'detalles';
                 break;
+            case 3:
+                $accion = 'nuevo';
+                break;
         }
-        echo "<h3 class='page-header'>" . $modulo . "<small style='font-size: 20px'>" . $submodulo." ". $accion . "</small>" . "</h3>";
+        echo "<h3 class='page-header'>" . $modulo . "<small style='font-size: 20px'>" . $submodulo.": ". $accion . "</small>" . "</h3>";
     }
 
     public function mod($dato,$numero){

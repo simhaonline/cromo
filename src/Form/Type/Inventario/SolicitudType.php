@@ -25,12 +25,13 @@ class SolicitudType extends AbstractType {
                     return $er->createQueryBuilder('st')
                         ->orderBy('st.nombre', 'ASC');
                 },
-                'choice_label' => 'nombre'
+                'choice_label' => 'nombre',
+                'label' => 'Solicitud tipo:'
             ])
-            ->add('comentarios',TextareaType::class, ['required' => false])
-            ->add('soporte',TextareaType::class, ['required' => false])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar'])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo']);
+            ->add('comentarios',TextareaType::class, ['required' => false,'label' => 'Comentarios:'])
+            ->add('soporte',TextareaType::class, ['required' => false,'label' => 'Soporte:'])
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     /**

@@ -4,10 +4,7 @@ namespace App\Controller\Estructura;
 
 use App\Entity\General\GenConfiguracionEntidad;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -117,6 +114,7 @@ class AdministracionController extends Controller
         $paginator = $this->get('knp_paginator');
         $router = $this->container->get('router');
         $arConfiguracionEntidad = $em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad);
+
         //Se crea el formulario estandar
         $form = $this->formularioLista();
         $form->handleRequest($request);
@@ -132,17 +130,10 @@ class AdministracionController extends Controller
                 $this->validarRespuesta($respuesta, $em);
             }
         }
-        $ruta = $arConfiguracionEntidad->getRutaGeneral();
-        $rutaNuevo = $ruta . '_nuevo';
-
-        //Se valida si existe la ruta nuevo
-        $rutaNuevo = ($router->getRouteCollection()->get($rutaNuevo)) ? $rutaNuevo : null;
 
         $arRegistros = $paginator->paginate($arRegistros, $request->query->getInt('page', 1), 10);
         return $this->render('estructura/lista.html.twig', [
             'arRegistros' => $arRegistros,
-            'rutaNuevo' => $rutaNuevo,
-//            'rutaDetalle' => $rutaDetalle,
             'arConfiguracionEntidad' => $arConfiguracionEntidad,
             'form' => $form->createView()
         ]);
@@ -222,6 +213,51 @@ class AdministracionController extends Controller
             'arrColumnasLista' => $arrColumnasLista,
             'arrColumnasExcel,' => $arrColumnasExcel,
             'arrColumnasFiltro' => $arrColumnasFiltro
+        ]);
+    }
+
+    /**
+     * @author Andres Acevedo Cartagena
+     * @param Request $request
+     * @param $entidad
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("nuevo/{entidad}/{id}", name="nuevo")
+     */
+    public function generarNuevo(Request $request, $entidad, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arConfiguracionEntidad = $em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad);
+        $rutaEntidad = $arConfiguracionEntidad->getRutaEntidad();
+        $arRegistro = new  $rutaEntidad();
+        $getPk = 'getCodigo'.substr($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(),3).'Pk';
+        if ($id != 0) {
+            $arRegistro = $em->getRepository($arConfiguracionEntidad->getRutaRepositorio())->find($id);
+            if(!$arRegistro){
+                return $this->redirect($this->generateUrl('listado',['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk()]));
+            }
+        } else {
+            if (property_exists($arRegistro, 'fecha')) {
+                $arRegistro->setFecha(new \DateTime('now'));
+            }
+        }
+        $form = $this->createForm($arConfiguracionEntidad->getRutaFormulario(), $arRegistro);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            if($form->get('guardar')->isClicked()){
+                $em->persist($arRegistro);
+                $em->flush();
+                return $this->redirect($this->generateUrl('detalle',['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(),'id' => $arRegistro->$getPk()]));
+            }
+            if($form->get('guardarnuevo')->isClicked()){
+                $em->persist($arRegistro);
+                $em->flush();
+                return $this->redirect($this->generateUrl('detalle',['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(),'id' => 0]));
+            }
+        }
+        return $this->render('estructura/nuevo.html.twig', [
+            'arConfiguracionEntidad' => $arConfiguracionEntidad,
+            'form' => $form->createView()
         ]);
     }
 

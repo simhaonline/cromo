@@ -22,6 +22,11 @@ class GenConfiguracionEntidad
     private $base;
 
     /**
+     * @ORM\Column(name="ruta_repositorio",type="string",length=100)
+     */
+    private $rutaRepositorio;
+
+    /**
      * @ORM\Column(name="ruta_entidad",type="string",length=100)
      */
     private $rutaEntidad;
@@ -32,14 +37,14 @@ class GenConfiguracionEntidad
     private $activo = true;
 
     /**
-     * @ORM\Column(name="ruta_general",type="string",length=20)
-     */
-    private $rutaGeneral;
-
-    /**
      * @ORM\Column(name="modulo",type="string",length=20)
      */
     private $modulo;
+
+    /**
+     * @ORM\Column(name="ruta_formulario",type="string",length=50)
+     */
+    private $rutaFormulario;
 
     /**
      * @ORM\Column(name="json_lista", type="text", nullable=true)
@@ -91,6 +96,22 @@ class GenConfiguracionEntidad
     /**
      * @return mixed
      */
+    public function getRutaRepositorio()
+    {
+        return $this->rutaRepositorio;
+    }
+
+    /**
+     * @param mixed $rutaRepositorio
+     */
+    public function setRutaRepositorio($rutaRepositorio): void
+    {
+        $this->rutaRepositorio = $rutaRepositorio;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getRutaEntidad()
     {
         return $this->rutaEntidad;
@@ -123,22 +144,6 @@ class GenConfiguracionEntidad
     /**
      * @return mixed
      */
-    public function getRutaGeneral()
-    {
-        return $this->rutaGeneral;
-    }
-
-    /**
-     * @param mixed $rutaGeneral
-     */
-    public function setRutaGeneral($rutaGeneral): void
-    {
-        $this->rutaGeneral = $rutaGeneral;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getModulo()
     {
         return $this->modulo;
@@ -150,6 +155,22 @@ class GenConfiguracionEntidad
     public function setModulo($modulo): void
     {
         $this->modulo = $modulo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRutaFormulario()
+    {
+        return $this->rutaFormulario;
+    }
+
+    /**
+     * @param mixed $rutaFormulario
+     */
+    public function setRutaFormulario($rutaFormulario): void
+    {
+        $this->rutaFormulario = $rutaFormulario;
     }
 
     /**
@@ -199,6 +220,5 @@ class GenConfiguracionEntidad
     {
         $this->jsonFiltro = $jsonFiltro;
     }
-
 }
 

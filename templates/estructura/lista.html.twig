@@ -2,7 +2,7 @@
 {% block content %}
     <div class="row">
         <div class="col-lg-12">
-            {{ crearTitulo(arConfiguracionEntidad,1)}}
+            {{ crearTitulo(arConfiguracionEntidad,1) }}
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -31,11 +31,9 @@
                     {{ validarTipo(dato) }}
                 {% endfor %}
                 <td style="text-align: center">
-                    {% if rutaNuevo != null %}
-                        <a href="{{ path(rutaNuevo, { 'id': datos.ID}) }}"><i
-                                    class="fa fa-edit" style="font-size: large"></i>
-                        </a>
-                    {% endif %}
+                    <a href="{{ path('nuevo', {'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': datos.ID }) }}"><i
+                                class="fa fa-edit" style="font-size: large"></i>
+                    </a>
                 <td style="text-align: center">
                     <a href="{{ path('detalle', { 'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': datos.ID }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large">
@@ -62,13 +60,11 @@
         <div class="btn-group">
             {{ form_widget(form.btnExcel) }}
         </div>
-        {% if rutaNuevo != null %}
-            <div class="btn-group">
-                <a class="btn btn-default btn-sm"
-                   href="{{ path( rutaNuevo,{'id':0}) }}">Nuevo
-                </a>
-            </div>
-        {% endif %}
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('nuevo',{'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': 0}) }}">Nuevo
+            </a>
+        </div>
         <div class="btn-group">
             {{ form_widget(form.btnEliminar) }}
         </div>

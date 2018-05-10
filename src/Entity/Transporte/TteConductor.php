@@ -78,6 +78,16 @@ class TteConductor
     private $numeroLicencia;
 
     /**
+     * @ORM\Column(name="categoria_licencia", type="string", length=10, nullable=true)
+     */
+    private $categoriaLicencia;
+
+    /**
+     * @ORM\Column(name="fecha_vence_licencia", type="date", nullable=true)
+     */
+    private $fechaVenceLicencia;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -369,6 +379,38 @@ class TteConductor
     public function setIdentificacionRel($identificacionRel): void
     {
         $this->identificacionRel = $identificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaVenceLicencia()
+    {
+        return $this->fechaVenceLicencia;
+    }
+
+    /**
+     * @param mixed $fechaVenceLicencia
+     */
+    public function setFechaVenceLicencia($fechaVenceLicencia): void
+    {
+        $this->fechaVenceLicencia = $fechaVenceLicencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCategoriaLicencia()
+    {
+        return $this->categoriaLicencia;
+    }
+
+    /**
+     * @param mixed $categoriaLicencia
+     */
+    public function setCategoriaLicencia($categoriaLicencia): void
+    {
+        $this->categoriaLicencia = $categoriaLicencia;
     }
 
 

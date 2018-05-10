@@ -67,6 +67,11 @@ class TteCiudad
     private $ordenRuta = 0;
 
     /**
+     * @ORM\Column(name="codigo_interface", type="string", length=10, nullable=true)
+     */
+    private $codigoInterface;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteRuta", inversedBy="ciudadesRutaRel")
      * @ORM\JoinColumn(name="codigo_ruta_fk", referencedColumnName="codigo_ruta_pk")
      */
@@ -493,6 +498,22 @@ class TteCiudad
     public function setPoseedoresCiudadRel($poseedoresCiudadRel): void
     {
         $this->poseedoresCiudadRel = $poseedoresCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoInterface()
+    {
+        return $this->codigoInterface;
+    }
+
+    /**
+     * @param mixed $codigoInterface
+     */
+    public function setCodigoInterface($codigoInterface): void
+    {
+        $this->codigoInterface = $codigoInterface;
     }
 
 

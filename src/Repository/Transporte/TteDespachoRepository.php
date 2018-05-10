@@ -237,25 +237,7 @@ class TteDespachoRepository extends ServiceEntityRepository
 
     }
 
-    public function reportarRndc($codigoDespacho): string
-    {
-        $em = $this->getEntityManager();
-        try {
-            $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
-            $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
-            $respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $codigoDespacho);
-
-
-        } catch (Exception $e) {
-            return "Error al conectar el servicio: " . $e;
-        }
-        $respuesta = "";
-
-
-        return $respuesta;
-
-    }
-    public function reportarRndcTerceros($cliente, $arConfiguracionTransporte, $codigoDespacho): string
+    public function dqlRndc($codigoDespacho): array
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
@@ -268,11 +250,70 @@ class TteDespachoRepository extends ServiceEntityRepository
         WHERE d.codigoDespachoPk = :codigoDespacho
         ORDER BY d.codigoDespachoPk DESC '
         )->setParameter('codigoDespacho', $codigoDespacho);
-        $arTerceros =  $query->getSingleResult();
+        $arDespacho =  $query->getSingleResult();
+        return $arDespacho;
 
-        $arPoseedor = $em->getRepository(TtePoseedor::class)->find($arTerceros['codigoPoseedorFk']);
-        $strPoseedorXML = "";
-        $strPoseedorXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+    }
+
+    public function reportarRndc($codigoDespacho): string
+    {
+        $em = $this->getEntityManager();
+        try {
+            $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
+            $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
+            $arrDespacho = $em->getRepository(TteDespacho::class)->dqlRndc($codigoDespacho);
+            $respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
+            if($respuesta) {
+                //$respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
+            }
+
+        } catch (Exception $e) {
+            return "Error al conectar el servicio: " . $e;
+        }
+        $respuesta = "";
+
+
+        return $respuesta;
+
+    }
+
+    public function reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho): string
+    {
+        $em = $this->getEntityManager();
+        $respuesta = true;
+        $arrTerceros = array();
+
+        $arrTercerosPoseedores = $em->getRepository(TtePoseedor::class)->dqlRndc($arrDespacho['codigoPoseedorFk'], $arrDespacho['codigoPropietarioFk']);
+        foreach ($arrTercerosPoseedores as $arTerceroPoseedor) {
+            $arrTerceros[] = array('identificacionTipo' => $arTerceroPoseedor['codigoIdentificacionFk'],
+                'identificacion' => $arTerceroPoseedor['numeroIdentificacion'],
+                'nombre1' => utf8_decode($arTerceroPoseedor['nombre1']),
+                'apellido1' => utf8_decode($arTerceroPoseedor['apellido1']),
+                'apellido2' => utf8_decode($arTerceroPoseedor['apellido2']),
+                'telefono' => utf8_decode($arTerceroPoseedor['telefono']),
+                'movil' => $arTerceroPoseedor['movil'],
+                'direccion' => utf8_decode($arTerceroPoseedor['direccion']),
+                'codigoCiudad' => $arTerceroPoseedor['codigoCiudad'],
+                'conductor' => 0);
+        }
+
+        $arrConductor = $em->getRepository(TteConductor::class)->dqlRndc($arrDespacho['codigoConductorFk']);
+        $arrTerceros[] = array('identificacionTipo' => $arrConductor['codigoIdentificacionFk'],
+            'identificacion' => $arrConductor['numeroIdentificacion'],
+            'nombre1' => utf8_decode($arrConductor['nombre1']),
+            'apellido1' => utf8_decode($arrConductor['apellido1']),
+            'apellido2' => utf8_decode($arrConductor['apellido2']),
+            'telefono' => utf8_decode($arrConductor['telefono']),
+            'movil' => $arrConductor['movil'],
+            'direccion' => utf8_decode($arrConductor['direccion']),
+            'codigoCiudad' => $arrConductor['codigoCiudad'],
+            'conductor' => 1,
+            'fechaVenceLicencia' => $arrConductor['fechaVenceLicencia'],
+            'numeroLicencia' => $arrConductor['numeroLicencia'],
+            'categoriaLicencia' => $arrConductor['categoriaLicencia']);
+
+        foreach ($arrTerceros as $arrTercero) {
+            $strPoseedorXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
                             <root>
                                 <acceso>
                                     <username>" . $arConfiguracionTransporte->getUsuarioRndc() . "</username>
@@ -284,34 +325,44 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 </solicitud>
                                 <variables>
                                     <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
-                                    <CODTIPOIDTERCERO>". $arPoseedor->getCodigoIdentificacionFk() ."</CODTIPOIDTERCERO>
-                                    <NUMIDTERCERO>" . $arPoseedor->getNumeroIdentificacion() . "</NUMIDTERCERO>
-                                    <NOMIDTERCERO>" . utf8_decode($arPoseedor->getNombre1()) . "</NOMIDTERCERO>";
-                                    if($arPoseedor->getCodigoIdentificacionFk() == "C") {
-                                        $strPoseedorXML .= "<PRIMERAPELLIDOIDTERCERO>" . utf8_decode($arPoseedor->getApellido1()) . "</PRIMERAPELLIDOIDTERCERO>
-                                                            <SEGUNDOAPELLIDOIDTERCERO>" . utf8_decode($arPoseedor->getApellido2()) . "</SEGUNDOAPELLIDOIDTERCERO>";
-                                    }
-                                    $strPoseedorXML .= "<CODSEDETERCERO>1</CODSEDETERCERO>";
-                                    $strPoseedorXML .= "<NOMSEDETERCERO>PRINCIPAL</NOMSEDETERCERO>";
-                                    if($arPoseedor->getTelefono() != "") {
-                                        $strPoseedorXML .= "<NUMTELEFONOCONTACTO>" . $arPoseedor->getTelefono() . "</NUMTELEFONOCONTACTO>";
-                                    }
-                                    if($arPoseedor->getMovil() != "" && $arPoseedor->getCodigoIdentificacionFk() == "C") {
-                                        $strPoseedorXML .= "<NUMCELULARPERSONA>" . $arPoseedor->getMovil() . "</NUMCELULARPERSONA>";
-                                    }
-                                    $strPoseedorXML .= "
-                                                        <NOMENCLATURADIRECCION>" . utf8_decode($arPoseedor->getDireccion()) . "</NOMENCLATURADIRECCION>
-                                                        <CODMUNICIPIORNDC>" . $arPoseedor->getCodigoCiudadFk() . "</CODMUNICIPIORNDC>";
-                                    $strPoseedorXML .= "</variables>
+                                    <CODTIPOIDTERCERO>". $arrTercero['identificacionTipo'] ."</CODTIPOIDTERCERO>
+                                    <NUMIDTERCERO>" . $arrTercero['identificacion'] . "</NUMIDTERCERO>
+                                    <NOMIDTERCERO>" . $arrTercero['nombre1'] . "</NOMIDTERCERO>";
+            if($arrTercero['identificacionTipo'] == "C") {
+                $strPoseedorXML .= "<PRIMERAPELLIDOIDTERCERO>" . $arrTercero['apellido1'] . "</PRIMERAPELLIDOIDTERCERO>
+                                                            <SEGUNDOAPELLIDOIDTERCERO>" . $arrTercero['apellido2'] . "</SEGUNDOAPELLIDOIDTERCERO>";
+            }
+            $strPoseedorXML .= "<CODSEDETERCERO>1</CODSEDETERCERO>";
+            $strPoseedorXML .= "<NOMSEDETERCERO>PRINCIPAL</NOMSEDETERCERO>";
+            if($arrTercero['telefono'] != "") {
+                $strPoseedorXML .= "<NUMTELEFONOCONTACTO>" . $arrTercero['telefono'] . "</NUMTELEFONOCONTACTO>";
+            }
+            if($arrTercero['movil'] != "" && $arrTercero['identificacionTipo'] == "C") {
+                $strPoseedorXML .= "<NUMCELULARPERSONA>" . $arrTercero['movil'] . "</NUMCELULARPERSONA>";
+            }
+            $strPoseedorXML .= "
+                                                        <NOMENCLATURADIRECCION>" . $arrTercero['direccion'] . "</NOMENCLATURADIRECCION>
+                                                        <CODMUNICIPIORNDC>" . $arrTercero['codigoCiudad'] . "</CODMUNICIPIORNDC>";
+            if($arrTercero['conductor'] == 1) {
+                $strPoseedorXML .= "
+                                        <CODCATEGORIALICENCIACONDUCCION>" . $arrTercero['categoriaLicencia'] . "</CODCATEGORIALICENCIACONDUCCION>
+                                        <NUMLICENCIACONDUCCION>" . $arrTercero['numeroLicencia'] . "</NUMLICENCIACONDUCCION>
+                                        <FECHAVENCIMIENTOLICENCIA>" . $arrTercero['fechaVenceLicencia']->format('Y/m/d') . "</FECHAVENCIMIENTOLICENCIA>";
+            }
+
+            $strPoseedorXML .= "</variables>
                                                         </root>";
 
-        $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strPoseedorXML));
-        $cadena_xml = simplexml_load_string($respuesta);
+            $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strPoseedorXML));
+            $cadena_xml = simplexml_load_string($respuesta);
+            if($cadena_xml->ErrorMSG != "") {
+                $respuesta = false;
+                echo $cadena_xml->ErrorMSG;
+                break;
+            }
+        }
 
-        $arPropietario = $em->getRepository(TtePoseedor::class)->find($arTerceros['codigoPropietarioFk']);
-        $arConductor = $em->getRepository(TteConductor::class)->find($arTerceros['codigoConductorFk']);
-
-        return 1;
+        return $respuesta;
 
     }
 }

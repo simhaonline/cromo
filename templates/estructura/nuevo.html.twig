@@ -16,6 +16,7 @@
         </div>
     </div>
     <div style="float: left;">
-        <a class="btn btn-sm btn-default" href="{{ path('listado',{'entidad':arConfiguracionEntidad.codigoConfiguracionEntidadPk }) }}">Volver</a>
+        <a class="btn btn-sm btn-default"
+           href="{{ path('listado',{'entidad':arConfiguracionEntidad.codigoConfiguracionEntidadPk,'entidadCubo':entidadCubo }) }}">Volver</a>
     </div>
 {% endblock %}

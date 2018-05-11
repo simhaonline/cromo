@@ -20,9 +20,14 @@ class GenConfiguracionEntidad extends Fixture
         /////////////////                 FIN ESTRACTURA MODULO DE CARTERA                             ////////////////
 
         /////////////////              INICIO ESTRACTURA MODULO DE CONTABILIDAD                        ////////////////
-        $arrModuloContabilidad = ['CtbRegistro', 'CtbCuenta', 'CtbComprobante', 'CtbCentroCosto','CtbTercero'];
+        $arrModuloContabilidad = ['CtbRegistro', 'CtbCuenta', 'CtbComprobante', 'CtbCentroCosto', 'CtbTercero'];
         $this->setConfiguracionEntidades($arrModuloContabilidad, $em);
         /////////////////                 FIN ESTRACTURA MODULO DE CONTABILIDAD                        ////////////////
+        ///
+        /////////////////              INICIO ESTRACTURA MODULO DE GENERAL SISTEMA                     ////////////////
+        $arrModuloGeneral = ['GenCubo'];
+        $this->setConfiguracionEntidades($arrModuloGeneral, $em);
+        /////////////////                 FIN ESTRACTURA MODULO DE GENERAL SISTEMA                     ////////////////
         //Guardar los registros
         ///
         $em->flush();
@@ -101,6 +106,9 @@ class GenConfiguracionEntidad extends Fixture
                 break;
             case 'Ctb':
                 $arrParametros['modulo'] = 'Contabilidad';
+                break;
+            case 'Gen':
+                $arrParametros['modulo'] = 'General';
                 break;
         }
         $rutaRepository = "App:" . $arrParametros['modulo'] . "\\" . $entidad;

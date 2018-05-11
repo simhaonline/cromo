@@ -31,11 +31,11 @@
                     {{ validarTipo(dato) }}
                 {% endfor %}
                 <td style="text-align: center">
-                    <a href="{{ path('nuevo', {'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': datos.ID }) }}"><i
+                    <a href="{{ path('nuevo', {'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': datos.ID,'entidadCubo':entidadCubo }) }}"><i
                                 class="fa fa-edit" style="font-size: large"></i>
                     </a>
                 <td style="text-align: center">
-                    <a href="{{ path('detalle', { 'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': datos.ID }) }}">
+                    <a href="{{ path('detalle', { 'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': datos.ID,'entidadCubo':entidadCubo }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large">
                         </i>
                     </a>
@@ -56,13 +56,26 @@
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
         {{ knp_pagination_render(arRegistros) }}
     </div>
+    <div class="btn-toolbar" style="float: left">
+        {% if(arConfiguracionEntidad.codigoConfiguracionEntidadPk != "GenCubo") %}
+            <div class="btn-group">
+                <a class="btn btn-default btn-sm"
+                   href="{{ path('listado',{'entidad': 'GenCubo','entidadCubo':arConfiguracionEntidad.codigoConfiguracionEntidadPk}) }}"><i
+                            class="fa fa-cube"></i>
+                </a>
+            </div>
+        {% else %}
+            <a href="{{ path('listado',{'entidad': entidadCubo }) }}"
+               class="btn btn-sm btn-default">Volver</a>
+        {% endif %}
+    </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
             {{ form_widget(form.btnExcel) }}
         </div>
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('nuevo',{'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': 0}) }}">Nuevo
+               href="{{ path('nuevo',{'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': 0,'entidadCubo': entidadCubo}) }}">Nuevo
             </a>
         </div>
         <div class="btn-group">

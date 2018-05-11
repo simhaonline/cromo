@@ -3,12 +3,15 @@
 namespace App\Repository\General;
 
 use App\Entity\General\GenConfiguracionEntidad;
+use App\Entity\Seguridad\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Zend\Json\Json;
 
 class GenConfiguracionEntidadRepository extends ServiceEntityRepository
 {
+    private $excepcionCamposCubo = ['jsonCubo', 'sqlCubo'];
+
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, GenConfiguracionEntidad::class);
@@ -17,11 +20,15 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
     /**
      * @author Andres Acevedo
      * @param $arConfiguracionEntidad GenConfiguracionEntidad
-     * @param $opcion integer
+     * @param $opcion
+     * @param string $entidadCubo
      * @return mixed
      */
-    public function lista($arConfiguracionEntidad, $opcion)
+    public function lista($arConfiguracionEntidad, $opcion, $entidadCubo = "")
     {
+        global $kernel;
+        /** @var  $arUsuario Usuario */
+        $arUsuario = $kernel->getContainer()->get("security.token_storage")->getToken()->getUser();
         $qb = $this->_em->createQueryBuilder()->from($arConfiguracionEntidad->getRutaRepositorio(), 'tbl');
         switch ($opcion) {
             case 0:
@@ -35,11 +42,15 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
         $i = 0;
         foreach ($arrLista as $lista) {
             if ($lista->mostrar) {
-                if (!strpos($lista->campo, 'Pk')) {
+                if (!strpos($lista->campo, 'Pk') && !in_array($lista->campo, $this->excepcionCamposCubo)) {
                     $qb->addSelect("tbl.{$lista->campo} AS {$lista->alias}");
                 }
             }
             $i++;
+        }
+        if ($entidadCubo) {
+            $qb->andWhere("tbl.codigoEntidadFk = '{$entidadCubo}'")
+                ->andWhere("tbl.codigoUsuarioFk = '{$arUsuario->getUsername()}'");
         }
         $qb->orderBy('tbl.' . $arrLista[0]->campo);
         $arrRegistros = $this->_em->createQuery($qb->getDQL());

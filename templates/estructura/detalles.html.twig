@@ -10,11 +10,11 @@
         <tr>
             {% set ar = [] %}
             {% for arrCampo in arrCampos %}
-            <tr>
-                <td class="titulo">{{ arrCampo.alias }}</td>
-                {{ validarTipoDetalle(arRegistros[0][arrCampo.alias]) }}
-            </tr>
-            </td>
+        <tr>
+            <td class="titulo">{{ arrCampo.alias }}</td>
+            {{ validarTipoDetalle(arRegistros[0][arrCampo.alias]) }}
+        </tr>
+        </td>
         </tr>
         <tr>
             {% endfor %}
@@ -28,7 +28,7 @@
     </table>
     <hr>
     <div style="float: left">
-        <a href="{{ path('listado',{'entidad':arConfiguracionEntidad.codigoConfiguracionEntidadPk }) }}"
+        <a href="{{ path('listado',{'entidad':arConfiguracionEntidad.codigoConfiguracionEntidadPk,'entidadCubo':entidadCubo }) }}"
            class="btn btn-sm btn-default">Volver</a>
     </div>
 {% endblock %}

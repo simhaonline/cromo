@@ -5,6 +5,7 @@ namespace App\Controller\Estructura;
 use App\Entity\General\GenConfiguracionEntidad;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -103,10 +104,11 @@ class AdministracionController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("listado/{entidad}",name="listado")
+     * @Route("listado/{entidad}/{entidadCubo}",name="listado")
      */
-    public function generarLista(Request $request, $entidad)
+    public function generarLista(Request $request, $entidad, $entidadCubo = "")
     {
+
         /**
          * @var $arConfiguracionEntidad GenConfiguracionEntidad
          */
@@ -118,7 +120,7 @@ class AdministracionController extends Controller
         //Se crea el formulario estandar
         $form = $this->formularioLista();
         $form->handleRequest($request);
-        $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 0);
+        $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 0, $entidadCubo);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnExcel')->isClicked()) {
@@ -134,6 +136,7 @@ class AdministracionController extends Controller
         $arRegistros = $paginator->paginate($arRegistros, $request->query->getInt('page', 1), 10);
         return $this->render('estructura/lista.html.twig', [
             'arRegistros' => $arRegistros,
+            'entidadCubo' => $entidadCubo,
             'arConfiguracionEntidad' => $arConfiguracionEntidad,
             'form' => $form->createView()
         ]);
@@ -144,9 +147,9 @@ class AdministracionController extends Controller
      * @param Request $request
      * @param $entidad
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("detalle/{entidad}/{id}",name="detalle")
+     * @Route("detalle/{entidad}/{id}/{entidadCubo}",name="detalle")
      */
-    public function generarDetalles(Request $request, $entidad, $id)
+    public function generarDetalles(Request $request, $entidad, $id, $entidadCubo = "")
     {
         $em = $this->getDoctrine()->getManager();
         $arConfiguracionEntidad = $em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad);
@@ -155,7 +158,8 @@ class AdministracionController extends Controller
         return $this->render('estructura/detalles.html.twig', [
             'arConfiguracionEntidad' => $arConfiguracionEntidad,
             'arRegistros' => $arRegistros,
-            'arrCampos' => $arrCampos
+            'arrCampos' => $arrCampos,
+            'entidadCubo' => $entidadCubo
         ]);
     }
 
@@ -222,40 +226,41 @@ class AdministracionController extends Controller
      * @param $entidad
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("nuevo/{entidad}/{id}", name="nuevo")
+     * @Route("nuevo/{entidad}/{id}/{entidadCubo}", name="nuevo")
      */
-    public function generarNuevo(Request $request, $entidad, $id)
+    public function generarNuevo(Request $request, $entidad, $id, $entidadCubo = "")
     {
         $em = $this->getDoctrine()->getManager();
         $arConfiguracionEntidad = $em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad);
         $rutaEntidad = $arConfiguracionEntidad->getRutaEntidad();
-        $arRegistro = new  $rutaEntidad();
-        $getPk = 'getCodigo'.substr($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(),3).'Pk';
+        $arRegistro = new $rutaEntidad();
+        $getPk = 'getCodigo' . substr($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 3) . 'Pk';
+        //Validar si la entidad contiene un registro de fecha automatico generado por el sistema.
+        if (property_exists($arRegistro, 'fecha')) {
+            $arRegistro->setFecha(new \DateTime('now'));
+        }
         if ($id != 0) {
             $arRegistro = $em->getRepository($arConfiguracionEntidad->getRutaRepositorio())->find($id);
-            if(!$arRegistro){
-                return $this->redirect($this->generateUrl('listado',['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk()]));
-            }
-        } else {
-            if (property_exists($arRegistro, 'fecha')) {
-                $arRegistro->setFecha(new \DateTime('now'));
+            if (!$arRegistro) {
+                return $this->redirect($this->generateUrl('listado', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'entidadCubo' => $entidadCubo]));
             }
         }
-        $form = $this->createForm($arConfiguracionEntidad->getRutaFormulario(), $arRegistro);
+        $form = $entidadCubo == "" ? $this->createForm($arConfiguracionEntidad->getRutaFormulario(), $arRegistro) : $this->formularioCubo($arConfiguracionEntidad, $entidadCubo);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            if($form->get('guardar')->isClicked()){
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('detalle',['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(),'id' => $arRegistro->$getPk()]));
+                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'id' => $arRegistro->$getPk()]));
             }
-            if($form->get('guardarnuevo')->isClicked()){
+            if ($form->get('guardarnuevo')->isClicked()) {
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('detalle',['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(),'id' => 0]));
+                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'id' => 0]));
             }
         }
         return $this->render('estructura/nuevo.html.twig', [
+            'entidadCubo' => $entidadCubo,
             'arConfiguracionEntidad' => $arConfiguracionEntidad,
             'form' => $form->createView()
         ]);
@@ -269,6 +274,15 @@ class AdministracionController extends Controller
         return $this->createFormBuilder()
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+    }
+
+    public function formularioCubo($arConfiguracionEntidad, $entidadCubo)
+    {
+        return $this->createFormBuilder()
+            ->add('nombre', TextType::class, ['label' => 'Nombre'])
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
     }
 }

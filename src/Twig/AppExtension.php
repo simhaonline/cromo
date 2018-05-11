@@ -45,35 +45,35 @@ class AppExtension extends AbstractExtension
 
     public function validarTipo($dato)
     {
-        if($this->esFecha($dato)){
-            echo "<td style='text-align: left;'>". $dato->format('Y-m-d')."</td>";
-        } elseif($this->esBooleano($dato)){
+        if ($this->esFecha($dato)) {
+            echo "<td style='text-align: left;'>" . $dato->format('Y-m-d') . "</td>";
+        } elseif ($this->esBooleano($dato)) {
             if ($dato) {
-                echo "<td style='text-align: left;'>". 'SI'."</td>";
+                echo "<td style='text-align: left;'>" . 'SI' . "</td>";
             } else {
-                echo "<td style='text-align: left;'>". 'NO'."</td>";
+                echo "<td style='text-align: left;'>" . 'NO' . "</td>";
             }
-        } elseif(is_numeric($dato)) {
-            echo "<td style='text-align: right;'>".$dato."</td>";
+        } elseif (is_numeric($dato)) {
+            echo "<td style='text-align: right;'>" . $dato . "</td>";
         } else {
-            echo "<td style='text-align: left;'>".$dato."</td>";
+            echo "<td style='text-align: left;'>" . $dato . "</td>";
         }
     }
 
     public function validarTipoDetalle($dato)
     {
-        if($this->esFecha($dato)){
-            echo "<td style='text-align: left;'>". $dato->format('Y-m-d')."</td>";
-        } elseif($this->esBooleano($dato)){
+        if ($this->esFecha($dato)) {
+            echo "<td style='text-align: left;'>" . $dato->format('Y-m-d') . "</td>";
+        } elseif ($this->esBooleano($dato)) {
             if ($dato) {
-                echo "<td style='text-align: left;'>". 'SI'."</td>";
+                echo "<td style='text-align: left;'>" . 'SI' . "</td>";
             } else {
-                echo "<td style='text-align: left;'>". 'NO'."</td>";
+                echo "<td style='text-align: left;'>" . 'NO' . "</td>";
             }
-        } elseif(is_numeric($dato)) {
-            echo "<td style='text-align: left;'>".$dato."</td>";
+        } elseif (is_numeric($dato)) {
+            echo "<td style='text-align: left;'>" . $dato . "</td>";
         } else {
-            echo "<td style='text-align: left;'>".$dato."</td>";
+            echo "<td style='text-align: left;'>" . $dato . "</td>";
         }
     }
 
@@ -107,39 +107,57 @@ class AppExtension extends AbstractExtension
      * @param $dato \App\Entity\General\GenConfiguracionEntidad
      * @return string
      */
-    public function crearTitulo($dato,$tipo)
+    public function crearTitulo($dato, $tipo)
     {
         $modulo = $dato->getModulo();
-        $submodulo = ' ' . substr($dato->getCodigoConfiguracionEntidadPk(), 3);
-        switch ($tipo){
+        $submodulo = substr($dato->getCodigoConfiguracionEntidadPk(), 3).' ';
+        $arrSubmodulo = preg_split('/(?=[A-Z])/', str_replace(' ', '', $submodulo));
+        $flag = false;
+        if (count($arrSubmodulo) > 2) {
+            $submodulo = '';
+            foreach ($arrSubmodulo as $nombre) {
+                if ($nombre != '') {
+                    if(!$flag){
+                        $submodulo .= $nombre.' ';
+                        $flag = true;
+                    } else {
+                        $submodulo .= strtolower($nombre).' ';
+                    }
+                }
+            }
+        }
+        switch ($tipo) {
             case 1:
                 $accion = 'lista';
                 break;
             case 2:
-                $accion = 'detalles';
+                $accion = 'detalle';
                 break;
             case 3:
                 $accion = 'nuevo';
                 break;
         }
-        echo "<h3 class='page-header'>" . $modulo . "<small style='font-size: 20px'>" . $submodulo.": ". $accion . "</small>" . "</h3>";
+        echo "<h3 class='page-header'>" . $modulo . "<small style='font-size: 20px'> " . rtrim($submodulo) . ": " . $accion . "</small>" . "</h3>";
     }
 
-    public function mod($dato,$numero){
-        if(($dato % $numero) == 0){
+    public function mod($dato, $numero)
+    {
+        if (($dato % $numero) == 0) {
             return true;
         }
     }
 
-    public function validarLongitudTexto($dato){
-        if(!$dato instanceof \DateTime){
-            if(strlen($dato) > 8){
+    public function validarLongitudTexto($dato)
+    {
+        if (!$dato instanceof \DateTime) {
+            if (strlen($dato) > 8) {
                 return true;
             }
         }
     }
 
-    public function llenarArray($array, $alias, $dato){
+    public function llenarArray($array, $alias, $dato)
+    {
         $array[$alias] = $dato;
         return $array;
     }

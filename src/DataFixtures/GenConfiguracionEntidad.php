@@ -4,65 +4,59 @@ namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 
 class GenConfiguracionEntidad extends Fixture
 {
     public function load(ObjectManager $em)
     {
-        $arConfiguracionEntidad = $em->getRepository("App:General\GenConfiguracionEntidad")->find("InvSolicitud");
-        if (!$arConfiguracionEntidad) {
-            $arConfiguracionEntidad = new \App\Entity\General\GenConfiguracionEntidad();
-            $arConfiguracionEntidad->setCodigoConfiguracionEntidadPk("InvSolicitud");
-            $arrParametros = $this->obtenerParametrosEntidad($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk());
-            $arConfiguracionEntidad->setBase($arrParametros['rutaBase']);
-            $arConfiguracionEntidad->setModulo($arrParametros['modulo']);
-            $arConfiguracionEntidad->setActivo(true);
-            $arConfiguracionEntidad->setRutaRepositorio($arrParametros['rutaRepositorio']);
-            $arConfiguracionEntidad->setRutaEntidad($arrParametros['rutaEntidad']);
-            $arConfiguracionEntidad->setRutaFormulario($arrParametros['rutaFormulario']);
-            $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
-            $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
-            $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
+        /////////////////              INICIO ESTRACTURA MODULO DE INVENTARIO                          ////////////////
+        $arrModuloInventario = ['InvSolicitud', 'InvItem'];
+        $this->setConfiguracionEntidades($arrModuloInventario, $em);
+        /////////////////              FIN ESTRACTURA MODULO DE INVENTARIO                             ////////////////
 
-            $em->persist($arConfiguracionEntidad);
-        }
-        $em->flush();
+        /////////////////              INICIO ESTRACTURA MODULO DE CARTERA                             ////////////////
+        $arrModuloCartera = ['CarCliente'];
+        $this->setConfiguracionEntidades($arrModuloCartera, $em);
+        /////////////////                 FIN ESTRACTURA MODULO DE CARTERA                             ////////////////
 
-        $arConfiguracionEntidad = $em->getRepository("App:General\GenConfiguracionEntidad")->find("InvItem");
-        if (!$arConfiguracionEntidad) {
-            $arConfiguracionEntidad = new \App\Entity\General\GenConfiguracionEntidad();
-            $arConfiguracionEntidad->setCodigoConfiguracionEntidadPk("InvItem");
-            $arrParametros = $this->obtenerParametrosEntidad($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk());
-            $arConfiguracionEntidad->setBase($arrParametros['rutaBase']);
-            $arConfiguracionEntidad->setModulo($arrParametros['modulo']);
-            $arConfiguracionEntidad->setActivo(true);
-            $arConfiguracionEntidad->setRutaRepositorio($arrParametros['rutaRepositorio']);
-            $arConfiguracionEntidad->setRutaEntidad($arrParametros['rutaEntidad']);
-            $arConfiguracionEntidad->setRutaFormulario($arrParametros['rutaFormulario']);
-            $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
-            $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
-            $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
-            $em->persist($arConfiguracionEntidad);
-        }
+        /////////////////              INICIO ESTRACTURA MODULO DE CONTABILIDAD                        ////////////////
+        $arrModuloContabilidad = ['CtbRegistro', 'CtbCuenta', 'CtbComprobante', 'CtbCentroCosto'];
+//        $this->setConfiguracionEntidades($arrModuloContabilidad, $em);
+        /////////////////                 FIN ESTRACTURA MODULO DE CONTABILIDAD                        ////////////////
+        //Guardar los registros
+        ///
         $em->flush();
+    }
 
-        $arConfiguracionEntidad = $em->getRepository("App:General\GenConfiguracionEntidad")->find("CarCliente");
-        if (!$arConfiguracionEntidad) {
-            $arConfiguracionEntidad = new \App\Entity\General\GenConfiguracionEntidad();
-            $arConfiguracionEntidad->setCodigoConfiguracionEntidadPk("CarCliente");
-            $arrParametros = $this->obtenerParametrosEntidad($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk());
-            $arConfiguracionEntidad->setBase($arrParametros['rutaBase']);
-            $arConfiguracionEntidad->setModulo($arrParametros['modulo']);
-            $arConfiguracionEntidad->setActivo(true);
-            $arConfiguracionEntidad->setRutaRepositorio($arrParametros['rutaRepositorio']);
-            $arConfiguracionEntidad->setRutaEntidad($arrParametros['rutaEntidad']);
-            $arConfiguracionEntidad->setRutaFormulario($arrParametros['rutaFormulario']);
-            $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
-            $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
-            $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(),$em));
-            $em->persist($arConfiguracionEntidad);
+
+    /**
+     * @author Juan Felipe Mesa Ocampo
+     * @param $arrModulos
+     * @param $em EntityManager
+     * Funcion que recorre el array de los modulos a insertar
+     */
+    public function setConfiguracionEntidades($arrModulos, $em)
+    {
+        foreach ($arrModulos as $codigoEntidad) {
+            $arConfiguracionEntidad = $em->getRepository("App:General\GenConfiguracionEntidad")->find($codigoEntidad);
+            if (!$arConfiguracionEntidad) {
+                $arConfiguracionEntidad = new \App\Entity\General\GenConfiguracionEntidad();
+                $arConfiguracionEntidad->setCodigoConfiguracionEntidadPk($codigoEntidad);
+                $arrParametros = $this->obtenerParametrosEntidad($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk());
+                $arConfiguracionEntidad->setBase($arrParametros['rutaBase']);
+                $arConfiguracionEntidad->setModulo($arrParametros['modulo']);
+                $arConfiguracionEntidad->setActivo(true);
+                $arConfiguracionEntidad->setRutaRepositorio($arrParametros['rutaRepositorio']);
+                $arConfiguracionEntidad->setRutaEntidad($arrParametros['rutaEntidad']);
+                $arConfiguracionEntidad->setRutaFormulario($arrParametros['rutaFormulario']);
+                $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(), $em));
+                $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(), $em));
+                $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(), $em));
+                $em->persist($arConfiguracionEntidad);
+            }
         }
-        $em->flush();
+
     }
 
     /**
@@ -70,11 +64,12 @@ class GenConfiguracionEntidad extends Fixture
      * @param $em
      * @return string
      */
-    public function generarConfiguracionEntidad($ruta,$em){
+    public function generarConfiguracionEntidad($ruta, $em)
+    {
         $metadata = $em->getClassMetadata($ruta);
         $arrCampos = $metadata->getFieldNames();
         $i = 0;
-        foreach($arrCampos as $campo){
+        foreach ($arrCampos as $campo) {
             $arInfo = $metadata->fieldMappings[$campo];
             $arrInfoCampos[$i]['campo'] = $arInfo['fieldName'];
             $arrInfoCampos[$i]['tipo'] = $arInfo['type'];
@@ -91,10 +86,11 @@ class GenConfiguracionEntidad extends Fixture
      * @param $entidad
      * @return mixed
      */
-    public function obtenerParametrosEntidad($entidad){
-        $modulo = substr($entidad, 0,3);
+    public function obtenerParametrosEntidad($entidad)
+    {
+        $modulo = substr($entidad, 0, 3);
         $entidadSinModulo = substr($entidad, 3);
-        switch ($modulo){
+        switch ($modulo) {
             case 'Inv':
                 $arrParametros['modulo'] = 'Inventario';
                 break;
@@ -108,10 +104,10 @@ class GenConfiguracionEntidad extends Fixture
                 $arrParametros['modulo'] = 'Contabilidad';
                 break;
         }
-        $rutaRepository = "App:".$arrParametros['modulo']."\\".$entidad;
-        $rutaFormulario = "App\Form\Type\\".$arrParametros['modulo']."\\".$entidadSinModulo."Type";
-        $rutaBase = 'base_'.strtolower($arrParametros['modulo']).".html.twig";
-        $rutaEntidad = '\App\Entity\\'.$arrParametros['modulo']."\\".$entidad;
+        $rutaRepository = "App:" . $arrParametros['modulo'] . "\\" . $entidad;
+        $rutaFormulario = "App\Form\Type\\" . $arrParametros['modulo'] . "\\" . $entidadSinModulo . "Type";
+        $rutaBase = 'base_' . strtolower($arrParametros['modulo']) . ".html.twig";
+        $rutaEntidad = '\App\Entity\\' . $arrParametros['modulo'] . "\\" . $entidad;
         $arrParametros['rutaBase'] = $rutaBase;
         $arrParametros['rutaEntidad'] = $rutaEntidad;
         $arrParametros['rutaFormulario'] = $rutaFormulario;

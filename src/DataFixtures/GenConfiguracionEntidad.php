@@ -4,7 +4,6 @@ namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
 
 class GenConfiguracionEntidad extends Fixture
 {
@@ -21,8 +20,8 @@ class GenConfiguracionEntidad extends Fixture
         /////////////////                 FIN ESTRACTURA MODULO DE CARTERA                             ////////////////
 
         /////////////////              INICIO ESTRACTURA MODULO DE CONTABILIDAD                        ////////////////
-        $arrModuloContabilidad = ['CtbRegistro', 'CtbCuenta', 'CtbComprobante', 'CtbCentroCosto'];
-//        $this->setConfiguracionEntidades($arrModuloContabilidad, $em);
+        $arrModuloContabilidad = ['CtbRegistro', 'CtbCuenta', 'CtbComprobante', 'CtbCentroCosto','CtbTercero'];
+        $this->setConfiguracionEntidades($arrModuloContabilidad, $em);
         /////////////////                 FIN ESTRACTURA MODULO DE CONTABILIDAD                        ////////////////
         //Guardar los registros
         ///
@@ -33,10 +32,10 @@ class GenConfiguracionEntidad extends Fixture
     /**
      * @author Juan Felipe Mesa Ocampo
      * @param $arrModulos
-     * @param $em EntityManager
+     * @param $em
      * Funcion que recorre el array de los modulos a insertar
      */
-    public function setConfiguracionEntidades($arrModulos, $em)
+    public function setConfiguracionEntidades($arrModulos, ObjectManager $em)
     {
         foreach ($arrModulos as $codigoEntidad) {
             $arConfiguracionEntidad = $em->getRepository("App:General\GenConfiguracionEntidad")->find($codigoEntidad);
@@ -64,7 +63,7 @@ class GenConfiguracionEntidad extends Fixture
      * @param $em
      * @return string
      */
-    public function generarConfiguracionEntidad($ruta, $em)
+    public function generarConfiguracionEntidad($ruta, ObjectManager $em)
     {
         $metadata = $em->getClassMetadata($ruta);
         $arrCampos = $metadata->getFieldNames();

@@ -44,6 +44,11 @@ class GenCiudad
     protected $carClientesCiudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Contabilidad\CtbTercero", mappedBy="ciudadRel")
+     */
+    protected $ctbTercerosCiudadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -139,6 +144,21 @@ class GenCiudad
         $this->carClientesCiudadRel = $carClientesCiudadRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCtbTercerosCiudadRel()
+    {
+        return $this->ctbTercerosCiudadRel;
+    }
+
+    /**
+     * @param mixed $ctbTercerosCiudadRel
+     */
+    public function setCtbTercerosCiudadRel($ctbTercerosCiudadRel): void
+    {
+        $this->ctbTercerosCiudadRel = $ctbTercerosCiudadRel;
+    }
 
 }
 

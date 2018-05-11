@@ -27,5 +27,58 @@ class GenIdentificacionTipo
      */
     private $nombre;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Contabilidad\CtbTercero",mappedBy="identificacionTipoRel")
+     */
+    protected $ctbTercerosIdentificacionTipoRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoIdentificacionTipoPk()
+    {
+        return $this->codigoIdentificacionTipoPk;
+    }
+
+    /**
+     * @param mixed $codigoIdentificacionTipoPk
+     */
+    public function setCodigoIdentificacionTipoPk($codigoIdentificacionTipoPk): void
+    {
+        $this->codigoIdentificacionTipoPk = $codigoIdentificacionTipoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCtbTercerosIdentificacionTipoRel()
+    {
+        return $this->ctbTercerosIdentificacionTipoRel;
+    }
+
+    /**
+     * @param mixed $ctbTercerosIdentificacionTipoRel
+     */
+    public function setCtbTercerosIdentificacionTipoRel($ctbTercerosIdentificacionTipoRel): void
+    {
+        $this->ctbTercerosIdentificacionTipoRel = $ctbTercerosIdentificacionTipoRel;
+    }
+
 }
 

@@ -4,6 +4,7 @@ namespace App\Controller\Estructura;
 
 use App\Entity\General\GenConfiguracionEntidad;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,19 +30,15 @@ class AdministracionController extends Controller
     }
 
     /**
-     * @param $respuesta mixed
+     * @param $arrRespuestas
      * @param $em EntityManager
      */
-    public function validarRespuesta($respuesta, $em)
+    public function validarRespuesta($arrRespuestas, $em)
     {
-        if (is_array($respuesta)) {
-            if (count($respuesta) > 0) {
-                foreach ($respuesta as $respuesta) {
-                    $this->Mensaje(AdministracionController::TP_ERROR, $respuesta);
-                }
+        if (count($arrRespuestas) > 0) {
+            foreach ($arrRespuestas as $strRespuesta) {
+                $this->Mensaje(AdministracionController::TP_ERROR, $strRespuesta);
             }
-        } elseif ($respuesta != '') {
-            $this->Mensaje(AdministracionController::TP_ERROR, $respuesta);
         } else {
             try {
                 $em->flush();
@@ -98,9 +95,50 @@ class AdministracionController extends Controller
     }
 
     /**
+     * @author Juan Felipe Mesa Ocampo
+     * @param $arrDatos
+     * @param $nombre
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function generarCsv($arrDatos, $nombre)
+    {
+        $delimiter = ";";
+        $f = fopen('php://memory', 'w');//crea objeto tipo csv escribible
+        $arrColumnas = array_keys($arrDatos[0]);
+        fputcsv($f, $arrColumnas, $delimiter);//insrta cabeceras
+        foreach ($arrDatos as $datos) {
+            for ($col = 0; $col <= sizeof($arrColumnas) - 1; $col++) {
+                $dato = $datos[$arrColumnas[$col]];
+                if ($dato instanceof \DateTime) {
+                    $datos['fecha'] = $dato->format('Y-m-d');
+                }
+            }
+            fputcsv($f, $datos, $delimiter);//inserta fila en el archivo
+        }
+
+        fseek($f, 0);
+        header('Content-Type: application/csv');
+        header('Content-Disposition: attachment; filename="' . $nombre . '";');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+        // If you're serving to IE over SSL, then the following may be needed
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header('Pragma: public'); // HTTP/1.0
+
+        fpassthru($f);
+        fclose($f);
+        exit();
+    }
+
+    /**
      * @author Andres Acevedo Cartagena
      * @param Request $request
      * @param $entidad
+     * @param $entidadCubo
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
@@ -108,15 +146,9 @@ class AdministracionController extends Controller
      */
     public function generarLista(Request $request, $entidad, $entidadCubo = "")
     {
-
-        /**
-         * @var $arConfiguracionEntidad GenConfiguracionEntidad
-         */
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $router = $this->container->get('router');
         $arConfiguracionEntidad = $em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad);
-
         //Se crea el formulario estandar
         $form = $this->formularioLista();
         $form->handleRequest($request);
@@ -130,6 +162,7 @@ class AdministracionController extends Controller
             if ($form->get('btnEliminar')->isClicked()) {
                 $respuesta = $em->getRepository('App:General\GenConfiguracionEntidad')->eliminar($arConfiguracionEntidad, $arrSeleccionados);
                 $this->validarRespuesta($respuesta, $em);
+                return $this->redirectToRoute("listado", ['entidad' => $entidad, 'entidadCubo' => $entidadCubo]);
             }
         }
 
@@ -146,6 +179,7 @@ class AdministracionController extends Controller
      * @author Andres Acevedo Cartagena
      * @param Request $request
      * @param $entidad
+     * @param $entidadCubo
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("detalle/{entidad}/{id}/{entidadCubo}",name="detalle")
      */
@@ -210,7 +244,7 @@ class AdministracionController extends Controller
                 $em->persist($arConfiguracionEntidad);
                 $em->flush();
             }
-            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            echo "<script type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         return $this->render('estructura/configuracionEntidad.html.twig', [
             'form' => $form->createView(),
@@ -225,6 +259,7 @@ class AdministracionController extends Controller
      * @param Request $request
      * @param $entidad
      * @param $id
+     * @param $entidadCubo
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("nuevo/{entidad}/{id}/{entidadCubo}", name="nuevo")
      */
@@ -235,28 +270,21 @@ class AdministracionController extends Controller
         $rutaEntidad = $arConfiguracionEntidad->getRutaEntidad();
         $arRegistro = new $rutaEntidad();
         $getPk = 'getCodigo' . substr($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 3) . 'Pk';
-        //Validar si la entidad contiene un registro de fecha automatico generado por el sistema.
-        if (property_exists($arRegistro, 'fecha')) {
-            $arRegistro->setFecha(new \DateTime('now'));
-        }
-        if ($id != 0) {
-            $arRegistro = $em->getRepository($arConfiguracionEntidad->getRutaRepositorio())->find($id);
-            if (!$arRegistro) {
-                return $this->redirect($this->generateUrl('listado', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'entidadCubo' => $entidadCubo]));
-            }
-        }
-        $form = $entidadCubo == "" ? $this->createForm($arConfiguracionEntidad->getRutaFormulario(), $arRegistro) : $this->formularioCubo($arConfiguracionEntidad, $entidadCubo);
+        //Validaciones adicionales.
+        $validacionAdicional = $this->validacionAdicional($arRegistro, $arConfiguracionEntidad, $id, $entidadCubo);
+        $arRegistro = $validacionAdicional != null ? $validacionAdicional : $arRegistro;
+        $form = $entidadCubo == "" ? $this->createForm($arConfiguracionEntidad->getRutaFormulario(), $arRegistro) : $this->formularioCubo($entidadCubo);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'id' => $arRegistro->$getPk()]));
+                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'id' => $arRegistro->$getPk(), 'entidadCubo' => $entidadCubo]));
             }
             if ($form->get('guardarnuevo')->isClicked()) {
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'id' => 0]));
+                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'id' => 0, 'entidadCubo' => $entidadCubo]));
             }
         }
         return $this->render('estructura/nuevo.html.twig', [
@@ -264,6 +292,38 @@ class AdministracionController extends Controller
             'arConfiguracionEntidad' => $arConfiguracionEntidad,
             'form' => $form->createView()
         ]);
+    }
+
+
+    /**
+     * @param $entidadCubo
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function formularioCubo($entidadCubo)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arConfiguracionEntidad = $em->getRepository("App:General\GenConfiguracionEntidad")->find($entidadCubo);
+        $metadata = $em->getClassMetadata($arConfiguracionEntidad->getRutaEntidad());
+        $arrCampos = $metadata->getFieldNames();
+        return $this->createFormBuilder()
+            ->add('nombre', TextType::class, ['label' => 'Nombre:'])
+            ->add("columnas", ChoiceType::class, [
+                'label' => 'Columnas:',
+                'multiple' => true,
+                'placeholder' => '',
+                'choices' => $arrCampos,])
+            ->add("ordenar", ChoiceType::class, [
+                'label' => 'Ordenar por:',
+                'multiple' => true,
+                'placeholder' => '',
+                'choices' => $arrCampos,])
+            ->add("ordenTipo", ChoiceType::class, [
+                'label' => 'Tipo de orden:',
+                'placeholder' => '',
+                'choices' => array('ASC' => 'ASC', 'DESC' => 'DESC'),])
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->getForm();
     }
 
     /**
@@ -277,12 +337,32 @@ class AdministracionController extends Controller
             ->getForm();
     }
 
-    public function formularioCubo($arConfiguracionEntidad, $entidadCubo)
+    /**
+     * @param $arRegistro
+     * @param $arConfiguracionEntidad GenConfiguracionEntidad
+     * @param $id
+     * @param $entidadCubo
+     * @return mixed
+     */
+    public function validacionAdicional($arRegistro, $arConfiguracionEntidad, $id, $entidadCubo)
     {
-        return $this->createFormBuilder()
-            ->add('nombre', TextType::class, ['label' => 'Nombre'])
-            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->getForm();
+        $em = $this->getDoctrine()->getManager();
+        if (property_exists($arRegistro, 'fecha')) {
+            $arRegistro->setFecha(new \DateTime('now'));
+        }
+        if (property_exists($arRegistro, 'codigoUsuarioFk')) {
+            $arRegistro->setCodigoUsuarioFk($this->getUser()->getUsername());
+        }
+        if (property_exists($arRegistro, 'codigoEntidadFk')) {
+            $arRegistro->setCodigoEntidadFk($entidadCubo);
+        }
+        if ($id != 0) {//Validar si se va a editar un registro
+            $arRegistro = $em->getRepository($arConfiguracionEntidad->getRutaRepositorio())->find($id);
+            if (!$arRegistro) {//Validación si realmente el registro existe.
+                return $this->redirect($this->generateUrl('listado', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'entidadCubo' => $entidadCubo]));
+            }
+            return $arRegistro;
+        }
+        return null;
     }
 }

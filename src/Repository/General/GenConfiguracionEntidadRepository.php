@@ -54,6 +54,7 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
         }
         $qb->orderBy('tbl.' . $arrLista[0]->campo);
         $arrRegistros = $this->_em->createQuery($qb->getDQL());
+
         return $arrRegistros->execute();
     }
 
@@ -80,7 +81,7 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
     /**
      * @param $arConfiguracionEntidad GenConfiguracionEntidad
      * @param $arrSeleccionados
-     * @return string
+     * @return array
      */
     public function eliminar($arConfiguracionEntidad, $arrSeleccionados)
     {
@@ -93,25 +94,28 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
                 $arRegistro = $this->_em->getRepository($arConfiguracionEntidad->getRutaRepositorio())->find($codigo);
                 if ($arRegistro) {
                     if (property_exists($arRegistro, 'estadoAutorizado')) {
-                        if (!$arRegistro->getEstadoAutorizado()) {
+                        if ($arRegistro->getEstadoAutorizado()) {
                             $respuesta = "No se puede eliminar, el registro con ID {$arRegistro->$getCodigoPk()} se encuentra autorizado.";
                         }
                     }
                     if (property_exists($arRegistro, 'estadoImpreso')) {
-                        if (!$arRegistro->getEstadoImpreso()) {
+                        if ($arRegistro->getEstadoImpreso()) {
                             $respuesta = "No se puede eliminar, el registro con ID {$arRegistro->$getCodigoPk()} se encuentra impreso.";
                         }
                     }
                     if (property_exists($arRegistro, 'estadoAnulado')) {
-                        if (!$arRegistro->getEstadoAnulado()) {
+                        if ($arRegistro->getEstadoAnulado()) {
                             $respuesta = "No se puede eliminar, el registro con ID {$arRegistro->$getCodigoPk()} se encuentra anulado.";
                         }
                     }
                     $this->_em->remove($arRegistro);
                 }
-                $arrRespuestas[] = $respuesta;
+                if ($respuesta != "") {
+                    $arrRespuestas[] = $respuesta;
+                }
             }
         }
+
         return $arrRespuestas;
     }
 }

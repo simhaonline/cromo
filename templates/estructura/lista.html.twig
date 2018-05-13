@@ -18,6 +18,9 @@
                 {% for llave,dato in arRegistros[0] %}
                     <th>{{ llave }}</th>
                 {% endfor %}
+                {% if entidadCubo != "" %}
+                    <th></th>
+                {% endif %}
                 <th></th>
                 <th></th>
                 <th></th>
@@ -30,16 +33,40 @@
                 {% for key,dato in datos %}
                     {{ validarTipo(dato) }}
                 {% endfor %}
+                {% if entidadCubo != "" %}
+                    <td style="text-align: center"><!-- Example single danger button -->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                Ejecutar
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="btn btn-xs dropdown-item"
+                                       href="javascript:abrirVentana3('{{ path('lista_cubo_entidad',{'entidadCubo':entidadCubo,'id': datos.ID,'opcion':'lista'}) }}', 'Lista', 600, 1200)">Lista</a>
+                                </li>
+                                <li><a class="btn btn-xs dropdown-item"
+                                       href="{{ path('lista_cubo_entidad',{'entidadCubo':entidadCubo,'id': datos.ID,'opcion':'excel'}) }}">Excel</a>
+                                </li>
+                                <li><a class="btn btn-xs dropdown-item"
+                                       href="{{ path('lista_cubo_entidad',{'entidadCubo':entidadCubo,'id': datos.ID,'opcion':'csv'}) }}">Csv</a>
+                                </li>
+                                <li><a class="btn btn-xs dropdown-item"
+                                       href="javascript:abrirVentana3('{{ path('lista_cubo_entidad',{'entidadCubo':entidadCubo,'id': datos.ID,'opcion':'chart'}) }}', 'Lista', 600, 1200)">Gráfico</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                {% endif %}
                 <td style="text-align: center">
                     <a href="{{ path('nuevo', {'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': datos.ID,'entidadCubo':entidadCubo }) }}"><i
                                 class="fa fa-edit" style="font-size: large"></i>
                     </a>
                 <td style="text-align: center">
+
                     <a href="{{ path('detalle', { 'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': datos.ID,'entidadCubo':entidadCubo }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large">
                         </i>
                     </a>
-                </td>
                 </td>
                 <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]"
                                                       value="{{ datos.ID }}"/></td>

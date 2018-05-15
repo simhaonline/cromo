@@ -3,6 +3,7 @@
 namespace App\Controller\Estructura;
 
 use App\Entity\General\GenConfiguracionEntidad;
+use App\Entity\General\GenCubo;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -271,17 +272,24 @@ class AdministracionController extends Controller
         $arRegistro = new $rutaEntidad();
         $getPk = 'getCodigo' . substr($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 3) . 'Pk';
         //Validaciones adicionales.
-        $validacionAdicional = $this->validacionAdicional($arRegistro, $arConfiguracionEntidad, $id, $entidadCubo);
-        $arRegistro = $validacionAdicional != null ? $validacionAdicional : $arRegistro;
-        $form = $entidadCubo == "" ? $this->createForm($arConfiguracionEntidad->getRutaFormulario(), $arRegistro) : $this->formularioCubo($entidadCubo);
+        $arRegistro = $this->validacionAdicional($arRegistro, $arConfiguracionEntidad, $id, $entidadCubo);
+        $form = $entidadCubo == "" ? $this->createForm($arConfiguracionEntidad->getRutaFormulario(), $arRegistro) : $this->formularioCubo($entidadCubo, $arRegistro);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            //Validar funciones adicionales para guardar un registro según la entidad.
+            $classEntidad = new \App\Controller\General\CuboController(); // Esta clase debería estar también almacenada en el sistema.
             if ($form->get('guardar')->isClicked()) {
+                if ($entidadCubo) {
+                    $arRegistro = $classEntidad->guardar($form, $arRegistro, $entidadCubo, $em);
+                }
                 $em->persist($arRegistro);
                 $em->flush();
                 return $this->redirect($this->generateUrl('detalle', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'id' => $arRegistro->$getPk(), 'entidadCubo' => $entidadCubo]));
             }
             if ($form->get('guardarnuevo')->isClicked()) {
+                if ($entidadCubo) {
+                    $arRegistro = $classEntidad->guardar($form, $arRegistro, $entidadCubo, $em);
+                }
                 $em->persist($arRegistro);
                 $em->flush();
                 return $this->redirect($this->generateUrl('detalle', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'id' => 0, 'entidadCubo' => $entidadCubo]));
@@ -296,31 +304,35 @@ class AdministracionController extends Controller
 
 
     /**
+     * @author Juan Felipe Mesa Ocampo
      * @param $entidadCubo
+     * @param $arRegistro GenCubo
      * @return \Symfony\Component\Form\FormInterface
      */
-    public function formularioCubo($entidadCubo)
+    public function formularioCubo($entidadCubo, $arRegistro)
     {
-        $em = $this->getDoctrine()->getManager();
-        $arConfiguracionEntidad = $em->getRepository("App:General\GenConfiguracionEntidad")->find($entidadCubo);
-        $metadata = $em->getClassMetadata($arConfiguracionEntidad->getRutaEntidad());
-        $arrCampos = $metadata->getFieldNames();
+        $arrPropiedades = $this->generarPropiedadesFormCubo($arRegistro, $entidadCubo);
         return $this->createFormBuilder()
-            ->add('nombre', TextType::class, ['label' => 'Nombre:'])
+            ->add('nombre', TextType::class, [
+                'label' => 'Nombre:',
+                'data' => $arRegistro->getNombre()])
             ->add("columnas", ChoiceType::class, [
                 'label' => 'Columnas:',
                 'multiple' => true,
                 'placeholder' => '',
-                'choices' => $arrCampos,])
+                'choices' => $arrPropiedades['arrCamposSelect'],
+                'data' => $arrPropiedades['arrCamposSelected']])
             ->add("ordenar", ChoiceType::class, [
                 'label' => 'Ordenar por:',
                 'multiple' => true,
                 'placeholder' => '',
-                'choices' => $arrCampos,])
+                'choices' => $arrPropiedades['arrCamposSelect'],
+                'data' => $arrPropiedades['arrOrdenSelected']])
             ->add("ordenTipo", ChoiceType::class, [
                 'label' => 'Tipo de orden:',
                 'placeholder' => '',
-                'choices' => array('ASC' => 'ASC', 'DESC' => 'DESC'),])
+                'choices' => array('ASC' => 'ASC', 'DESC' => 'DESC'),
+                'data' => $arrPropiedades['ordenTipo']])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
@@ -361,8 +373,43 @@ class AdministracionController extends Controller
             if (!$arRegistro) {//Validación si realmente el registro existe.
                 return $this->redirect($this->generateUrl('listado', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'entidadCubo' => $entidadCubo]));
             }
-            return $arRegistro;
         }
-        return null;
+        return $arRegistro;
     }
+
+    /**
+     * @param $arRegistro GenCubo
+     * @param $entidadCubo
+     * @return mixed
+     */
+    public function generarPropiedadesFormCubo($arRegistro, $entidadCubo)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arConfiguracionEntidad = $em->getRepository("App:General\GenConfiguracionEntidad")->find($entidadCubo);
+        $arrCampos = json_decode($arRegistro->getJsonCubo());
+        $arrCamposEntidad = json_decode($arConfiguracionEntidad->getJsonLista());
+        $arrCamposSelected = [];
+        $arrOrdenSelected = [];
+        $ordenTipo = $arrCampos != null ? $arrCampos->tipoOrden : null;
+        $arrCamposSelect = [];
+        if ($arrCampos) {
+            foreach ($arrCampos->columnas as $campo) {
+                $arrCamposSelected[$campo] = $campo;
+            }
+            foreach ($arrCampos->orden as $orden) {
+                $arrOrdenSelected[$orden] = $orden;
+            }
+        }
+        foreach ($arrCamposEntidad as $lista) {
+            if (strpos($lista->campo, 'Fk')) {
+                $strCampo = preg_replace("/(codigo|Fk)/", '', $lista->campo);
+                $arrCamposSelect[$strCampo . "Rel"] = [$lista->campo => $lista->campo, "Nombre" . $strCampo => $strCampo . "Rel"];
+            } else {
+                $arrCamposSelect[$lista->campo] = $lista->campo;
+            }
+        }
+
+        return ['arrCamposSelect' => $arrCamposSelect, 'arrCamposSelected' => $arrCamposSelected, 'arrOrdenSelected' => $arrOrdenSelected, 'ordenTipo' => $ordenTipo];
+    }
+
 }

@@ -3,6 +3,9 @@
 namespace App\Controller\General;
 
 use App\Controller\Estructura\AdministracionController;
+use App\Entity\General\GenConfiguracionEntidad;
+use App\Entity\General\GenCubo;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -50,6 +53,27 @@ class CuboController extends Controller
                 return $this->redirectToRoute('listado', ['entidad' => 'GenCubo', 'entidadCubo' => $entidadCubo]);
             }
         }
+    }
+
+    /**
+     * @param $form
+     * @param $arRegistro GenCubo
+     * @param $entidadCubo
+     * @param $em
+     * @return mixed
+     */
+    public function guardar($form, $arRegistro, $entidadCubo, $em)
+    {
+        $arRegistro->setNombre($form->get('nombre')->getData());
+        $arrRegistros = [
+            "columnas" => $form->get('columnas')->getData(),
+            'orden' => $form->get('ordenar')->getData(),
+            'tipoOrden' => $form->get('ordenTipo')->getData()
+        ];
+        $arRegistro->setJsonCubo(json_encode($arrRegistros));
+        $sqlCubo = $em->getRepository("App:General\GenCubo")->sqlCubo($arrRegistros, $entidadCubo);
+        $arRegistro->setSqlCubo($sqlCubo);
+        return $arRegistro;
     }
 }
 

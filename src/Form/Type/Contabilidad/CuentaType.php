@@ -15,7 +15,7 @@ class CuentaType extends AbstractType
     {
         $builder
             ->add('codigoCuentaPk', TextType::class, ['label' => 'Codigo cuenta:'])
-            ->add('nombreCuenta', TextType::class, ['label' => 'Nombre:'])
+            ->add('nombre', TextType::class, ['label' => 'Nombre:'])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

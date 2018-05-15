@@ -26,4 +26,8 @@ function ChequearTodosTabla(source, nombre) {
         }
     }
 }
-;
+
+$(document).ready(function() {
+    $( "select" ).addClass("js-example-basic-multiple");
+    $('.js-example-basic-multiple').select2();
+});

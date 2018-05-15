@@ -28,7 +28,7 @@ class CtbCuenta
     private $codigoCuentaPk;
 
     /**
-     * @ORM\Column(name="nombre_cuenta", type="string", length=120, nullable=false)
+     * @ORM\Column(name="nombre", type="string", length=120, nullable=false)
      * @Assert\NotBlank(message="Este campo no puede estar vacio")
      * @Assert\Length(
      *     min = "1",
@@ -37,7 +37,7 @@ class CtbCuenta
      *     maxMessage = "El campo no puede contener mas de {{ limit }} caracteres"
      * )
      */
-    private $nombreCuenta;
+    private $nombre;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Contabilidad\CtbRegistro", mappedBy="cuentaRel")
@@ -63,17 +63,17 @@ class CtbCuenta
     /**
      * @return mixed
      */
-    public function getNombreCuenta()
+    public function getNombre()
     {
-        return $this->nombreCuenta;
+        return $this->nombre;
     }
 
     /**
-     * @param mixed $nombreCuenta
+     * @param mixed $nombre
      */
-    public function setNombreCuenta($nombreCuenta): void
+    public function setNombre($nombre): void
     {
-        $this->nombreCuenta = $nombreCuenta;
+        $this->nombre = $nombre;
     }
 
     /**

@@ -2,9 +2,11 @@
 
 namespace App\Repository\General;
 
+use App\Entity\General\GenConfiguracionEntidad;
 use App\Entity\General\GenCubo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Form\Form;
 
 class GenCuboRepository extends ServiceEntityRepository
 {
@@ -14,13 +16,24 @@ class GenCuboRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arrRegistros
+     * @param $form
+     * @param $arRegistro
      * @param $entidadCubo
-     * @throws \Doctrine\ORM\ORMException
+     * @return mixed
      */
-    public function sqlCubo($arrRegistros, $entidadCubo)
+    public function guardar($form, $arRegistro, $entidadCubo)
     {
         $em = $this->getEntityManager();
+        $arRegistro->setNombre($form->get('nombre')->getData());
+        $arrRegistros = [
+            "columnas" => $form->get('columnas')->getData(),
+            'orden' => $form->get('ordenar')->getData(),
+            'tipoOrden' => $form->get('ordenTipo')->getData(),
+            'condicion' => $form->get('condicion')->getData(),
+            'operadorCondicion' => $form->get('operadorCondicion')->getData(),
+            'valorCondicion' => $form->get('valorCondicion')->getData()
+        ];
+        $arRegistro->setJsonCubo(json_encode($arrRegistros));
         $arConfiguracionEntidadCubo = $em->getRepository("App:General\GenConfiguracionEntidad")->find($entidadCubo);
         $qb = $em->createQueryBuilder()->from($arConfiguracionEntidadCubo->getRutaEntidad(), "tbl");
         foreach ($arrRegistros['columnas'] as $columna) {
@@ -35,8 +48,15 @@ class GenCuboRepository extends ServiceEntityRepository
         foreach ($arrRegistros['orden'] as $orden) {
             $qb->addOrderBy("tbl.$orden", $arrRegistros['tipoOrden']);
         }
+        if ($arrRegistros['condicion']) {
+            $qb->andWhere("tbl.{$arrRegistros['condicion']} {$arrRegistros['operadorCondicion']} '{$arrRegistros['valorCondicion']}'");
+        }
 
-        return $qb->getDQL();
+        $sqlCubo = $qb->getDQL();
+
+        $arRegistro->setSqlCubo($sqlCubo);
+
+        return $arRegistro;
     }
 
 }

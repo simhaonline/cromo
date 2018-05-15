@@ -276,11 +276,10 @@ class AdministracionController extends Controller
         $form = $entidadCubo == "" ? $this->createForm($arConfiguracionEntidad->getRutaFormulario(), $arRegistro) : $this->formularioCubo($entidadCubo, $arRegistro);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            //Validar funciones adicionales para guardar un registro según la entidad.
-            $classEntidad = new \App\Controller\General\CuboController(); // Esta clase debería estar también almacenada en el sistema.
             if ($form->get('guardar')->isClicked()) {
                 if ($entidadCubo) {
-                    $arRegistro = $classEntidad->guardar($form, $arRegistro, $entidadCubo, $em);
+                    //Validar funciones adicionales para guardar un registro según la entidad.
+                    $arRegistro = $em->getRepository($arConfiguracionEntidad->getRutaEntidad())->guardar($form, $arRegistro, $entidadCubo);
                 }
                 $em->persist($arRegistro);
                 $em->flush();
@@ -288,7 +287,7 @@ class AdministracionController extends Controller
             }
             if ($form->get('guardarnuevo')->isClicked()) {
                 if ($entidadCubo) {
-                    $arRegistro = $classEntidad->guardar($form, $arRegistro, $entidadCubo, $em);
+                    $arRegistro = $em->getRepository($arConfiguracionEntidad->getRutaEntidad())->guardar($form, $arRegistro, $entidadCubo);
                 }
                 $em->persist($arRegistro);
                 $em->flush();
@@ -322,6 +321,19 @@ class AdministracionController extends Controller
                 'placeholder' => '',
                 'choices' => $arrPropiedades['arrCamposSelect'],
                 'data' => $arrPropiedades['arrCamposSelected']])
+            ->add("condicion", ChoiceType::class, [
+                'label' => 'Condición:',
+                'placeholder' => '',
+                'choices' => $arrPropiedades['arrCamposSelect'],
+                'data' => $arrPropiedades['condicionSelected']])
+            ->add('operadorCondicion', ChoiceType::class, [
+                'label' => ' ',
+                'placeholder' => '',
+                'choices' => $arrPropiedades['arrOperadores'],
+                'data' => $arrPropiedades['operadorCondicionSelected']])
+            ->add('valorCondicion', TextType::class, [
+                'label' => ' ',
+                'data' => $arrPropiedades['valorCondicionSelected']])
             ->add("ordenar", ChoiceType::class, [
                 'label' => 'Ordenar por:',
                 'multiple' => true,
@@ -388,10 +400,14 @@ class AdministracionController extends Controller
         $arConfiguracionEntidad = $em->getRepository("App:General\GenConfiguracionEntidad")->find($entidadCubo);
         $arrCampos = json_decode($arRegistro->getJsonCubo());
         $arrCamposEntidad = json_decode($arConfiguracionEntidad->getJsonLista());
+        $arrCamposSelect = [];
         $arrCamposSelected = [];
         $arrOrdenSelected = [];
+        $arrOperadores = ['Igual' => '=', 'Mayor igual' => '>=', 'Menor igual' => '<=', 'Diferente' => '<>'];
+        $condicionSelected = $arrCampos != null ? $arrCampos->condicion : null;
+        $operadorCondicionSelected = $arrCampos != null ? $arrCampos->operadorCondicion : null;
+        $valorCondicionSelected = $arrCampos != null ? $arrCampos->valorCondicion : null;
         $ordenTipo = $arrCampos != null ? $arrCampos->tipoOrden : null;
-        $arrCamposSelect = [];
         if ($arrCampos) {
             foreach ($arrCampos->columnas as $campo) {
                 $arrCamposSelected[$campo] = $campo;
@@ -409,7 +425,14 @@ class AdministracionController extends Controller
             }
         }
 
-        return ['arrCamposSelect' => $arrCamposSelect, 'arrCamposSelected' => $arrCamposSelected, 'arrOrdenSelected' => $arrOrdenSelected, 'ordenTipo' => $ordenTipo];
+        return ['arrCamposSelect' => $arrCamposSelect,
+            'arrCamposSelected' => $arrCamposSelected,
+            'arrOrdenSelected' => $arrOrdenSelected,
+            'condicionSelected' => $condicionSelected,
+            'arrOperadores' => $arrOperadores,
+            'operadorCondicionSelected' => $operadorCondicionSelected,
+            'valorCondicionSelected' => $valorCondicionSelected,
+            'ordenTipo' => $ordenTipo];
     }
 
 }

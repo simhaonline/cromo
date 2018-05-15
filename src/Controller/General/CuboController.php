@@ -54,26 +54,5 @@ class CuboController extends Controller
             }
         }
     }
-
-    /**
-     * @param $form
-     * @param $arRegistro GenCubo
-     * @param $entidadCubo
-     * @param $em
-     * @return mixed
-     */
-    public function guardar($form, $arRegistro, $entidadCubo, $em)
-    {
-        $arRegistro->setNombre($form->get('nombre')->getData());
-        $arrRegistros = [
-            "columnas" => $form->get('columnas')->getData(),
-            'orden' => $form->get('ordenar')->getData(),
-            'tipoOrden' => $form->get('ordenTipo')->getData()
-        ];
-        $arRegistro->setJsonCubo(json_encode($arrRegistros));
-        $sqlCubo = $em->getRepository("App:General\GenCubo")->sqlCubo($arrRegistros, $entidadCubo);
-        $arRegistro->setSqlCubo($sqlCubo);
-        return $arRegistro;
-    }
 }
 

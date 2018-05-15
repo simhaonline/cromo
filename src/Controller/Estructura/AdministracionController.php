@@ -99,8 +99,6 @@ class AdministracionController extends Controller
      * @author Juan Felipe Mesa Ocampo
      * @param $arrDatos
      * @param $nombre
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function generarCsv($arrDatos, $nombre)
     {
@@ -242,6 +240,8 @@ class AdministracionController extends Controller
                     }
                 }
                 $arConfiguracionEntidad->setJsonLista(json_encode($arrColumnasLista));
+                $dqlLista = $em->getRepository('App:General\GenConfiguracionEntidad')->generarDql($arConfiguracionEntidad, 0);
+                $arConfiguracionEntidad->setDqlLista($dqlLista);
                 $em->persist($arConfiguracionEntidad);
                 $em->flush();
             }
@@ -371,19 +371,20 @@ class AdministracionController extends Controller
     public function validacionAdicional($arRegistro, $arConfiguracionEntidad, $id, $entidadCubo)
     {
         $em = $this->getDoctrine()->getManager();
-        if (property_exists($arRegistro, 'fecha')) {
-            $arRegistro->setFecha(new \DateTime('now'));
-        }
-        if (property_exists($arRegistro, 'codigoUsuarioFk')) {
-            $arRegistro->setCodigoUsuarioFk($this->getUser()->getUsername());
-        }
-        if (property_exists($arRegistro, 'codigoEntidadFk')) {
-            $arRegistro->setCodigoEntidadFk($entidadCubo);
-        }
         if ($id != 0) {//Validar si se va a editar un registro
             $arRegistro = $em->getRepository($arConfiguracionEntidad->getRutaRepositorio())->find($id);
             if (!$arRegistro) {//Validación si realmente el registro existe.
                 return $this->redirect($this->generateUrl('listado', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'entidadCubo' => $entidadCubo]));
+            }
+        } else {
+            if (property_exists($arRegistro, 'fecha')) {
+                $arRegistro->setFecha(new \DateTime('now'));
+            }
+            if (property_exists($arRegistro, 'usuario')) {
+                $arRegistro->setUsuario($this->getUser()->getUsername());
+            }
+            if (property_exists($arRegistro, 'codigoEntidadFk')) {
+                $arRegistro->setCodigoEntidadFk($entidadCubo);
             }
         }
         return $arRegistro;
@@ -434,5 +435,4 @@ class AdministracionController extends Controller
             'valorCondicionSelected' => $valorCondicionSelected,
             'ordenTipo' => $ordenTipo];
     }
-
 }

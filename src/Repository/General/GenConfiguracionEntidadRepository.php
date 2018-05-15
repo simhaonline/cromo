@@ -24,7 +24,7 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
      * @param string $entidadCubo
      * @return mixed
      */
-    public function lista($arConfiguracionEntidad, $opcion, $entidadCubo = "")
+    public function generarDql($arConfiguracionEntidad, $opcion, $entidadCubo = "")
     {
         global $kernel;
         /** @var  $arUsuario Usuario */
@@ -50,11 +50,46 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
         }
         if ($entidadCubo) {
             $qb->andWhere("tbl.codigoEntidadFk = '{$entidadCubo}'")
-                ->andWhere("tbl.codigoUsuarioFk = '{$arUsuario->getUsername()}'");
+                ->andWhere("tbl.usuario = '{$arUsuario->getUsername()}'");
         }
         $qb->orderBy('tbl.' . $arrLista[0]->campo);
-        $arrRegistros = $this->_em->createQuery($qb->getDQL());
+        $query = $qb->getDQL();
+        return $query;
+    }
 
+    public function generarDqlFixtures($arConfiguracionEntidad){
+        $arrLista = json_decode($arConfiguracionEntidad->getJsonLista());
+        $qb = $this->_em->createQueryBuilder()->from($arConfiguracionEntidad->getRutaRepositorio(), 'tbl');
+        $qb->select('tbl.' . $arrLista[0]->campo . ' AS ID');
+        $i = 0;
+        foreach ($arrLista as $lista) {
+            if ($lista->mostrar) {
+                if (!strpos($lista->campo, 'Pk') && !in_array($lista->campo, $this->excepcionCamposCubo)) {
+                    $qb->addSelect("tbl.{$lista->campo} AS {$lista->alias} ");
+                }
+            }
+            $i++;
+        }
+        $qb->orderBy('tbl.' . $arrLista[0]->campo);
+        $query = $qb->getDQL();
+        return $query;
+    }
+
+    /**
+     * @param $arConfiguracionEntidad GenConfiguracionEntidad
+     * @return mixed
+     */
+    public function lista($arConfiguracionEntidad,$opcion)
+    {
+        switch ($opcion){
+            case 0:
+                $query = $arConfiguracionEntidad->getDqlLista();
+                break;
+            case 1:
+                $query = $this->generarDql($arConfiguracionEntidad,1);
+                break;
+        }
+        $arrRegistros = $this->_em->createQuery($query);
         return $arrRegistros->execute();
     }
 
@@ -76,7 +111,6 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
         $arrRegistros = $this->_em->createQuery($qb->getDQL());
         return $arrRegistros->execute();
     }
-
 
     /**
      * @param $arConfiguracionEntidad GenConfiguracionEntidad

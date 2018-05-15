@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 
 class GenConfiguracionEntidad extends Fixture
 {
@@ -47,7 +48,7 @@ class GenConfiguracionEntidad extends Fixture
             if (!$arConfiguracionEntidad) {
                 $arConfiguracionEntidad = new \App\Entity\General\GenConfiguracionEntidad();
                 $arConfiguracionEntidad->setCodigoConfiguracionEntidadPk($codigoEntidad);
-                $arrParametros = $this->obtenerParametrosEntidad($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk());
+                $arrParametros = $this->obtenerParametrosEntidad($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), $em);
                 $arConfiguracionEntidad->setBase($arrParametros['rutaBase']);
                 $arConfiguracionEntidad->setModulo($arrParametros['modulo']);
                 $arConfiguracionEntidad->setActivo(true);
@@ -55,6 +56,7 @@ class GenConfiguracionEntidad extends Fixture
                 $arConfiguracionEntidad->setRutaEntidad($arrParametros['rutaEntidad']);
                 $arConfiguracionEntidad->setRutaFormulario($arrParametros['rutaFormulario']);
                 $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(), $em));
+                $arConfiguracionEntidad->setDqlLista($this->generarDql($arConfiguracionEntidad,$em));
                 $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(), $em));
                 $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(), $em));
                 $em->persist($arConfiguracionEntidad);
@@ -64,6 +66,7 @@ class GenConfiguracionEntidad extends Fixture
     }
 
     /**
+     * @author Andres Acevedo
      * @param $ruta
      * @param $em
      * @return string
@@ -87,10 +90,12 @@ class GenConfiguracionEntidad extends Fixture
     }
 
     /**
+     * @author Andres Acevedo
      * @param $entidad
+     * @param $em EntityManager
      * @return mixed
      */
-    public function obtenerParametrosEntidad($entidad)
+    public function obtenerParametrosEntidad($entidad, $em)
     {
         $modulo = substr($entidad, 0, 3);
         $entidadSinModulo = substr($entidad, 3);
@@ -111,14 +116,21 @@ class GenConfiguracionEntidad extends Fixture
                 $arrParametros['modulo'] = 'General';
                 break;
         }
-        $rutaRepository = "App:" . $arrParametros['modulo'] . "\\" . $entidad;
-        $rutaFormulario = "App\Form\Type\\" . $arrParametros['modulo'] . "\\" . $entidadSinModulo . "Type";
-        $rutaBase = 'base_' . strtolower($arrParametros['modulo']) . ".html.twig";
-        $rutaEntidad = '\App\Entity\\' . $arrParametros['modulo'] . "\\" . $entidad;
-        $arrParametros['rutaBase'] = $rutaBase;
-        $arrParametros['rutaEntidad'] = $rutaEntidad;
-        $arrParametros['rutaFormulario'] = $rutaFormulario;
-        $arrParametros['rutaRepositorio'] = $rutaRepository;
+        $arrParametros['rutaBase'] = 'base_' . strtolower($arrParametros['modulo']) . ".html.twig";
+        $arrParametros['rutaEntidad'] = '\App\Entity\\' . $arrParametros['modulo'] . "\\" . $entidad;
+        $arrParametros['rutaFormulario'] = "App\Form\Type\\" . $arrParametros['modulo'] . "\\" . $entidadSinModulo . "Type";
+        $arrParametros['rutaRepositorio'] = "App:" . $arrParametros['modulo'] . "\\" . $entidad;
         return $arrParametros;
+    }
+
+    /**
+     * @author Andres Acevedo
+     * @param $arConfiguracionEntidad
+     * @param $em EntityManager
+     * @return mixed
+     */
+    public function generarDql($arConfiguracionEntidad, $em)
+    {
+        return $em->getRepository('App:General\GenConfiguracionEntidad')->generarDqlFixtures($arConfiguracionEntidad);
     }
 }

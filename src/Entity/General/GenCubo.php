@@ -23,9 +23,9 @@ class GenCubo
     private $codigoEntidadFk;
 
     /**
-     * @ORM\Column(name="codigo_usuario_fk",type="string",length=25)
+     * @ORM\Column(name="usuario",type="string",length=25)
      */
-    private $codigoUsuarioFk;
+    private $usuario;
 
     /**
      * @ORM\Column(name="nombre", type="string", length=50, nullable=true)
@@ -77,17 +77,17 @@ class GenCubo
     /**
      * @return mixed
      */
-    public function getCodigoUsuarioFk()
+    public function getUsuario()
     {
-        return $this->codigoUsuarioFk;
+        return $this->usuario;
     }
 
     /**
-     * @param mixed $codigoUsuarioFk
+     * @param mixed $usuario
      */
-    public function setCodigoUsuarioFk($codigoUsuarioFk): void
+    public function setUsuario($usuario): void
     {
-        $this->codigoUsuarioFk = $codigoUsuarioFk;
+        $this->usuario = $usuario;
     }
 
     /**
@@ -137,6 +137,5 @@ class GenCubo
     {
         $this->sqlCubo = $sqlCubo;
     }
-
 }
 

@@ -62,6 +62,11 @@ class GenConfiguracionEntidad
     private $jsonFiltro;
 
     /**
+     * @ORM\Column(name="dql_lista", type="text", nullable=true)
+     */
+    private $dqlLista;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionEntidadPk()
@@ -219,6 +224,22 @@ class GenConfiguracionEntidad
     public function setJsonFiltro($jsonFiltro): void
     {
         $this->jsonFiltro = $jsonFiltro;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDqlLista()
+    {
+        return $this->dqlLista;
+    }
+
+    /**
+     * @param mixed $dqlLista
+     */
+    public function setDqlLista($dqlLista): void
+    {
+        $this->dqlLista = $dqlLista;
     }
 }
 

@@ -16,7 +16,7 @@ class GenConfiguracionEntidad extends Fixture
         /////////////////              FIN ESTRACTURA MODULO DE INVENTARIO                             ////////////////
 
         /////////////////              INICIO ESTRACTURA MODULO DE CARTERA                             ////////////////
-        $arrModuloCartera = ['CarCliente'];
+        $arrModuloCartera = ['CarCliente','CarReciboTipo','CarCuentaCobrarTipo','CarNotaCreditoConcepto','CarNotaDebitoConcepto'];
         $this->setConfiguracionEntidades($arrModuloCartera, $em);
         /////////////////                 FIN ESTRACTURA MODULO DE CARTERA                             ////////////////
 

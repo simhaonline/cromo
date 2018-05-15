@@ -96,11 +96,6 @@
                             </li>
                             <li>
                                 <a href="{{ path('listado',{'entidad':'InvSolicitud'}) }}">Solicitud</a>
-                                {#<ul class="nav nav-third-level">#}
-                                {#<li><a href="{{ path('tte_mto_recogida_recogida_lista') }}">Recogida</a></li>#}
-                                {#<li><a href="{{ path('tte_mto_recogida_despacho_lista') }}">Despacho</a></li>#}
-                                {#</ul>#}
-                                <!-- /.nav-third-level -->
                             </li>
                             <li>
                                 <a href="#">Orden de compra</a>
@@ -115,6 +110,15 @@
                             </li>
                             <li>
                                 <a href="{{ path('listado',{'entidad' : 'InvSolicitudTipo'}) }}">Solicitud tipo</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('listado',{'entidad':'InvTercero'}) }}">Tercero</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('listado',{'entidad':'InvDocumento'}) }}">Documento</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('listado',{'entidad':'InvDocumento'}) }}">Documento</a>
                             </li>
                         </ul>
 
@@ -136,23 +140,6 @@
     {% block body %}
         <div id="page-wrapper">
             {% block content %}
-            <div class="row">
-                <div class="col-lg-12">
-                    {% set route = app.request.attributes.get('_route') %}
-                    {% set parametros = app.request.attributes.get('_route_params') %}
-                    {% set ruta = route | split('_') %}
-                    {#<h3 class="page-header">{{ route }}</h3>#}
-                    <h3 class="page-header">Inventario
-                        {#{% if ruta[2] is defined %}#}
-                            {#<small style="font-size: 20px">{{ ruta[2] }}</small>#}
-                        {#{% endif %}#}
-                        {#{% if ruta[3] is defined %}#}
-                            {#<small style="font-size: 20px">{{ ruta[3] }}</small>#}
-                        {#{% endif %}#}
-                    </h3>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
 
 
             {% endblock %}

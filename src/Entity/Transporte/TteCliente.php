@@ -18,9 +18,19 @@ class TteCliente
     private $codigoClientePk;
 
     /**
-     * @ORM\Column(name="nit", type="string", length=20, nullable=true)
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=1, nullable=true)
      */
-    private $nit;
+    private $codigoIdentificacionFk;
+
+    /**
+     * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=true)
+     */
+    private $numero_identificacion;
+
+    /**
+     * @ORM\Column(name="digito_verificacion", type="string", length=1, nullable=true)
+     */
+    private $digitoVerificacion;
 
     /**
      * @ORM\Column(name="nombre_corto", type="string", length=150, nullable=true)
@@ -56,6 +66,37 @@ class TteCliente
      * @ORM\Column(name="telefono", type="string", length=30, nullable=true)
      */
     private $telefono;
+
+    /**
+     * @ORM\Column(name="movil", type="string", length=30, nullable=true)
+     */
+    private $movil;
+
+    /**
+     * @ORM\Column(name="plazo_pago", type="integer")
+     */
+    private $plazoPago = 0;
+
+    /**
+     * @ORM\Column(name="correo", type="string", length=200, nullable=true)
+     */
+    private $correo;
+
+    /**
+     * @ORM\Column(name="estado_inactivo", type="boolean", nullable=true)
+     */
+    private $estadoInactivo = false;
+
+    /**
+     * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
+     */
+    private $comentario;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="tteClientesIdentificacionRel")
+     * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
+     */
+    private $identificacionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="clienteRel")
@@ -106,17 +147,49 @@ class TteCliente
     /**
      * @return mixed
      */
-    public function getNit()
+    public function getCodigoIdentificacionFk()
     {
-        return $this->nit;
+        return $this->codigoIdentificacionFk;
     }
 
     /**
-     * @param mixed $nit
+     * @param mixed $codigoIdentificacionFk
      */
-    public function setNit($nit): void
+    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
     {
-        $this->nit = $nit;
+        $this->codigoIdentificacionFk = $codigoIdentificacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroIdentificacion()
+    {
+        return $this->numero_identificacion;
+    }
+
+    /**
+     * @param mixed $numero_identificacion
+     */
+    public function setNumeroIdentificacion($numero_identificacion): void
+    {
+        $this->numero_identificacion = $numero_identificacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDigitoVerificacion()
+    {
+        return $this->digitoVerificacion;
+    }
+
+    /**
+     * @param mixed $digitoVerificacion
+     */
+    public function setDigitoVerificacion($digitoVerificacion): void
+    {
+        $this->digitoVerificacion = $digitoVerificacion;
     }
 
     /**
@@ -234,6 +307,102 @@ class TteCliente
     /**
      * @return mixed
      */
+    public function getMovil()
+    {
+        return $this->movil;
+    }
+
+    /**
+     * @param mixed $movil
+     */
+    public function setMovil($movil): void
+    {
+        $this->movil = $movil;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlazoPago()
+    {
+        return $this->plazoPago;
+    }
+
+    /**
+     * @param mixed $plazoPago
+     */
+    public function setPlazoPago($plazoPago): void
+    {
+        $this->plazoPago = $plazoPago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCorreo()
+    {
+        return $this->correo;
+    }
+
+    /**
+     * @param mixed $correo
+     */
+    public function setCorreo($correo): void
+    {
+        $this->correo = $correo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoInactivo()
+    {
+        return $this->estadoInactivo;
+    }
+
+    /**
+     * @param mixed $estadoInactivo
+     */
+    public function setEstadoInactivo($estadoInactivo): void
+    {
+        $this->estadoInactivo = $estadoInactivo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param mixed $comentario
+     */
+    public function setComentario($comentario): void
+    {
+        $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdentificacionRel()
+    {
+        return $this->identificacionRel;
+    }
+
+    /**
+     * @param mixed $identificacionRel
+     */
+    public function setIdentificacionRel($identificacionRel): void
+    {
+        $this->identificacionRel = $identificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getGuiasClienteRel()
     {
         return $this->guiasClienteRel;
@@ -293,38 +462,6 @@ class TteCliente
     public function setCumplidosClienteRel($cumplidosClienteRel): void
     {
         $this->cumplidosClienteRel = $cumplidosClienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturasClienteRel()
-    {
-        return $this->facturasClienteRel;
-    }
-
-    /**
-     * @param mixed $facturasClienteRel
-     */
-    public function setFacturasClienteRel($facturasClienteRel): void
-    {
-        $this->facturasClienteRel = $facturasClienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRecibosClienteRel()
-    {
-        return $this->recibosClienteRel;
-    }
-
-    /**
-     * @param mixed $recibosClienteRel
-     */
-    public function setRecibosClienteRel($recibosClienteRel): void
-    {
-        $this->recibosClienteRel = $recibosClienteRel;
     }
 
 

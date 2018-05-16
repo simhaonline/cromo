@@ -32,6 +32,11 @@ class GenIdentificacion
     protected $tteConductoresIdentificacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteCliente", mappedBy="identificacionRel")
+     */
+    protected $tteClientesIdentificacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoIdentificacionPk()
@@ -93,6 +98,22 @@ class GenIdentificacion
     public function setTteConductoresIdentificacionRel($tteConductoresIdentificacionRel): void
     {
         $this->tteConductoresIdentificacionRel = $tteConductoresIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTteClientesIdentificacionRel()
+    {
+        return $this->tteClientesIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $tteClientesIdentificacionRel
+     */
+    public function setTteClientesIdentificacionRel($tteClientesIdentificacionRel): void
+    {
+        $this->tteClientesIdentificacionRel = $tteClientesIdentificacionRel;
     }
 
 

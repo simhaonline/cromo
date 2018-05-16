@@ -6,6 +6,7 @@ use App\Entity\General\GenConfiguracionEntidad;
 use App\Entity\General\GenCubo;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -432,8 +433,7 @@ final class AdministracionController extends Controller
      */
     public function formularioFiltro($jsonFiltro)
     {
-        $form = $this->get('form.factory')->createNamedBuilder('formFiltro')
-            ->getForm();
+        $form = $this->get('form.factory')->createNamedBuilder('formFiltro', FormType::class,null,['allow_extra_fields' => true])->getForm();
         $arrFiltros = json_decode($jsonFiltro);
         $boolFiltrar = false;
         foreach ($arrFiltros as $arrFiltro) {

@@ -107,7 +107,7 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
                 } elseif (is_numeric($value)) {
                     $qb->andWhere('tbl.' . $key . " = {$value}");
                 } else {
-                    $qb->andWhere('tbl.' . $key . " = '{$value}'");
+                    $qb->andWhere('tbl.' . $key . " LIKE '%{$value}%'");
                 }
             }
         }

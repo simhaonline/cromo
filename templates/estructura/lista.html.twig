@@ -7,22 +7,22 @@
         <!-- /.col-lg-12 -->
     </div>
     {% if filtrar %}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            Filtros de búsqueda
-        </div>
-        <div class="panel-body">
-            {{ form_start(formFiltro) }}
-            {{ form_widget(formFiltro) }}
-            {{ form_rest(formFiltro) }}
-        </div>
-        <div class="panel-footer" style="padding-bottom: 35px;">
-            <div style="float: right;">
-                {{ form_widget(formFiltro.btnFiltrar) }}
-                {{ form_end(formFiltro) }}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Filtros de búsqueda
+            </div>
+            <div class="panel-body">
+                {{ form_start(formFiltro) }}
+                {{ form_widget(formFiltro) }}
+                {{ form_rest(formFiltro) }}
+            </div>
+            <div class="panel-footer" style="padding-bottom: 35px;">
+                <div style="float: right;">
+                    {{ form_widget(formFiltro.btnFiltrar) }}
+                    {{ form_end(formFiltro) }}
+                </div>
             </div>
         </div>
-    </div>
     {% endif %}
     <div style="float: right;padding-right: 5px;">
         <a href="javascript:abrirVentana3('{{ path('configuracion_entidad',{'entidad':arConfiguracionEntidad.codigoConfiguracionEntidadPk}) }}', 'ConfiguracionEntidad', 700, 900)"><i
@@ -53,26 +53,8 @@
                 {% endfor %}
                 {% if entidadCubo != "" %}
                     <td style="text-align: center"><!-- Example single danger button -->
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">
-                                Ejecutar
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="btn btn-xs dropdown-item"
-                                       href="javascript:abrirVentana3('{{ path('lista_cubo_entidad',{'entidadCubo':entidadCubo,'id': datos.ID,'opcion':'lista'}) }}', 'Lista', 600, 1200)">Lista</a>
-                                </li>
-                                <li><a class="btn btn-xs dropdown-item"
-                                       href="{{ path('lista_cubo_entidad',{'entidadCubo':entidadCubo,'id': datos.ID,'opcion':'excel'}) }}">Excel</a>
-                                </li>
-                                <li><a class="btn btn-xs dropdown-item"
-                                       href="{{ path('lista_cubo_entidad',{'entidadCubo':entidadCubo,'id': datos.ID,'opcion':'csv'}) }}">Csv</a>
-                                </li>
-                                <li><a class="btn btn-xs dropdown-item"
-                                       href="javascript:abrirVentana3('{{ path('lista_cubo_entidad',{'entidadCubo':entidadCubo,'id': datos.ID,'opcion':'chart'}) }}', 'Lista', 600, 1200)">Gráfico</a>
-                                </li>
-                            </ul>
-                        </div>
+                        <a class="btn btn-xs btn-primary"
+                           href="javascript:abrirVentana3('{{ path('lista_cubo_entidad',{'entidadCubo':entidadCubo,'id': datos.ID,'opcion':'lista'}) }}', 'Lista', 600, 1200)">Ejecutar</a>
                     </td>
                 {% endif %}
                 <td style="text-align: center">

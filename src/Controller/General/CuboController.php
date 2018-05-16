@@ -5,6 +5,7 @@ namespace App\Controller\General;
 use App\Controller\Estructura\AdministracionController;
 use App\Entity\General\GenConfiguracionEntidad;
 use App\Entity\General\GenCubo;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,36 +24,43 @@ class CuboController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/listado/cubo/{entidadCubo}/{id}/{opcion}", name="lista_cubo_entidad")
      */
-    public function inicio(Request $request, $entidadCubo, $id, $opcion)
+    public function listaCuboAction(Request $request, $entidadCubo, $id, $opcion)
     {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
+        $FuncionAdministracion = new AdministracionController();
         $arConfiguracionEntidad = $em->getRepository("App:General\GenConfiguracionEntidad")->find($entidadCubo);
         $strSql = $em->getRepository('App:General\GenCubo')->find($id)->getSqlCubo();
-        if ($strSql != null) {
-            $arrRegistros = $em->createQuery($strSql)->execute();
-            if ($opcion === 'lista' || $opcion === 'chart') {
-                $arRegistros = $paginator->paginate($arrRegistros, $request->query->getInt('page', 1), 50);
-                return $this->render("general/{$opcion}Cubo.html.twig", [
-                    'arConfiguracionEntidad' => $arConfiguracionEntidad,
-                    'arRegistros' => $arRegistros
-                ]);
-            } elseif ($opcion === 'excel' || $opcion === 'csv') {
-                $FuncionAdministracion = new AdministracionController();
-                if ($opcion == "excel") {
-                    $FuncionAdministracion->generarExcel($arrRegistros, 'Excel');
-                } else {
-                    $FuncionAdministracion->generarCsv($arrRegistros, 'Csv');
-                }
-                return $this->redirectToRoute('listado', ['entidad' => 'GenCubo', 'entidadCubo' => $entidadCubo]);
+        $arrRegistros = $em->createQuery($strSql)->execute();
+        $form = $this->formularioLista();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnExcel')->isClicked()) {
+                $FuncionAdministracion->generarExcel($arrRegistros, 'Excel');
             }
-        } else {
-            if ($opcion === 'lista' || $opcion === 'chart') {
-                echo "<script type='text/javascript'>window.close();window.opener.location.reload();</script>";
-            } elseif ($opcion === 'excel' || $opcion === 'csv') {
-                return $this->redirectToRoute('listado', ['entidad' => 'GenCubo', 'entidadCubo' => $entidadCubo]);
+            if ($form->get('btnCsv')->isClicked()) {
+                $FuncionAdministracion->generarCsv($arrRegistros, 'Csv');
             }
         }
+        $arRegistros = $paginator->paginate($arrRegistros, $request->query->getInt('page', 1), 50);
+        return $this->render("general/listaCubo.html.twig", [
+            'arConfiguracionEntidad' => $arConfiguracionEntidad,
+            'arRegistros' => $arRegistros,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function formularioLista()
+    {
+        return $this->createFormBuilder()
+            ->add('btnCsv', SubmitType::class, ['label' => 'Csv', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnPdf', SubmitType::class, ['label' => 'Pdf', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnGrafico', SubmitType::class, ['label' => 'Grafico', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
     }
 }
 

@@ -8,7 +8,7 @@ function abrirVentana3(url, Nombre, Alto, Ancho) {
 var validarCaracteres = function (event) {
     var tecla = event.keyCode;
     var valorIngresado = String.fromCharCode(tecla);
-    var regEx = new RegExp("((?![a-zA-Z\\-\\_\\s]).)+", "g");
+    var regEx = new RegExp("((?![a-zA-Z\\-\\_]).)+", "g");
     var match = valorIngresado.match(regEx);
     if (match && match.length > 0) {
         event.preventDefault();

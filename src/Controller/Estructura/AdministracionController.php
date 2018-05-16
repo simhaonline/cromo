@@ -7,14 +7,19 @@ use App\Entity\General\GenCubo;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
+use Zend\Json\Json;
 
-class AdministracionController extends Controller
+final class AdministracionController extends Controller
 {
     const TP_ERROR = "error";
     const TP_OK = "ok";
@@ -148,29 +153,56 @@ class AdministracionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $arConfiguracionEntidad = $em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad);
-        //Se crea el formulario estandar
+        $jsonFiltro = $arConfiguracionEntidad->getJsonFiltro();
+        $arrCamposFiltro = json_decode($jsonFiltro);
+        $arrNombreCamposFiltro = [];
+        foreach ($arrCamposFiltro as $arrCampo) {
+            if ($arrCampo->mostrar) {
+                $arrNombreCamposFiltro[] = $arrCampo->campo;
+            }
+        }
+        $arrFiltrar = $this->formularioFiltro($jsonFiltro);
+        if ($arrFiltrar['filtrar']) {
+            $formFiltro = $arrFiltrar['form'];
+            $formFiltro->handleRequest($request);
+        } else {
+            $formFiltro = '';
+        }
         $form = $this->formularioLista();
         $form->handleRequest($request);
         $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 0, $entidadCubo);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-            if ($form->get('btnExcel')->isClicked()) {
-                $arRegistrosExcel = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 1);
-                $this->generarExcel($arRegistrosExcel, 'Excel');
+        if ($request->getMethod() == 'POST') {
+            if ($request->request->has('form')) {
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                    if ($form->get('btnExcel')->isClicked()) {
+                        $arRegistrosExcel = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 1);
+                        $this->generarExcel($arRegistrosExcel, 'Excel');
+                    }
+                    if ($form->get('btnEliminar')->isClicked()) {
+                        $respuesta = $em->getRepository('App:General\GenConfiguracionEntidad')->eliminar($arConfiguracionEntidad, $arrSeleccionados);
+                        $this->validarRespuesta($respuesta, $em);
+                        return $this->redirectToRoute("listado", ['entidad' => $entidad, 'entidadCubo' => $entidadCubo]);
+                    }
+                }
             }
-            if ($form->get('btnEliminar')->isClicked()) {
-                $respuesta = $em->getRepository('App:General\GenConfiguracionEntidad')->eliminar($arConfiguracionEntidad, $arrSeleccionados);
-                $this->validarRespuesta($respuesta, $em);
-                return $this->redirectToRoute("listado", ['entidad' => $entidad, 'entidadCubo' => $entidadCubo]);
+            if ($request->request->has('formFiltro')) {
+                if ($formFiltro instanceof Form) {
+                    if ($formFiltro->get('btnFiltrar')->isClicked()) {
+                        $arrFiltros = $formFiltro->getData();
+                        $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->listaFiltro($arConfiguracionEntidad, $arrFiltros);
+                    }
+                }
             }
         }
-
         $arRegistros = $paginator->paginate($arRegistros, $request->query->getInt('page', 1), 10);
         return $this->render('estructura/lista.html.twig', [
             'arRegistros' => $arRegistros,
             'entidadCubo' => $entidadCubo,
             'arConfiguracionEntidad' => $arConfiguracionEntidad,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'formFiltro' => $formFiltro instanceof Form ? $formFiltro->createView() : '',
+            'filtrar' => $arrFiltrar['filtrar']
         ]);
     }
 
@@ -219,40 +251,73 @@ class AdministracionController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
-                $arrAlias = $request->request->get('aliasLista');
-                $arrMostrar = $request->request->get('mostrarLista');
-                foreach ($arrColumnasLista as $columna) {
-                    if ($arrAlias[$columna->campo]) {
-                        if ($arrAlias[$columna->campo] != '') {
-                            $columna->alias = $arrAlias[$columna->campo];
-                        } else {
-                            $columna->alias = $columna->campo;
-                        }
-                    }
-                    if (isset($arrMostrar[$columna->campo])) {
-                        if ($arrMostrar[$columna->campo] == 'on') {
-                            $columna->mostrar = true;
-                        } else {
-                            $columna->mostrar = false;
-                        }
-                    } else {
-                        $columna->mostrar = false;
-                    }
-                }
-                $arConfiguracionEntidad->setJsonLista(json_encode($arrColumnasLista));
-                $dqlLista = $em->getRepository('App:General\GenConfiguracionEntidad')->generarDql($arConfiguracionEntidad, 0);
-                $arConfiguracionEntidad->setDqlLista($dqlLista);
-                $em->persist($arConfiguracionEntidad);
-                $em->flush();
+
+                $arrAliasLista = $request->request->get('aliasLista');
+                $arrMostrarLista = $request->request->get('mostrarLista');
+                $this->generarJson($arConfiguracionEntidad, $arrColumnasLista, $em, $arrAliasLista, $arrMostrarLista, 'lista');
+
+                $arrAliasFiltros = $request->request->get('aliasFiltro');
+                $arrMostrarFiltros = $request->request->get('mostrarFiltro');
+                $this->generarJson($arConfiguracionEntidad, $arrColumnasLista, $em, $arrAliasFiltros, $arrMostrarFiltros, 'filtro');
+
+                $arrAliasExcel = $request->request->get('aliasExcel');
+                $arrMostrarExcel = $request->request->get('mostrarExcel');
+                $this->generarJson($arConfiguracionEntidad, $arrColumnasLista, $em, $arrAliasExcel, $arrMostrarExcel, 'excel');
+
             }
+            $em->flush();
             echo "<script type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         return $this->render('estructura/configuracionEntidad.html.twig', [
             'form' => $form->createView(),
             'arrColumnasLista' => $arrColumnasLista,
-            'arrColumnasExcel,' => $arrColumnasExcel,
+            'arrColumnasExcel' => $arrColumnasExcel,
             'arrColumnasFiltro' => $arrColumnasFiltro
         ]);
+    }
+
+    /**
+     * @param $arConfiguracionEntidad GenConfiguracionEntidad
+     * @param $arrColumnas
+     * @param $em
+     * @param $arrAlias
+     * @param $arrMostrar
+     */
+    public function generarJson($arConfiguracionEntidad, $arrColumnas, $em, $arrAlias, $arrMostrar, $json)
+    {
+
+        foreach ($arrColumnas as $columna) {
+            if ($arrAlias[$columna->campo]) {
+                if ($arrAlias[$columna->campo] != '') {
+                    $columna->alias = $arrAlias[$columna->campo];
+                } else {
+                    $columna->alias = $columna->campo;
+                }
+            }
+            if (isset($arrMostrar[$columna->campo])) {
+                if ($arrMostrar[$columna->campo] == 'on') {
+                    $columna->mostrar = true;
+                } else {
+                    $columna->mostrar = false;
+                }
+            } else {
+                $columna->mostrar = false;
+            }
+        }
+        switch ($json) {
+            case 'lista':
+                $arConfiguracionEntidad->setJsonLista(json_encode($arrColumnas));
+                $dqlLista = $em->getRepository('App:General\GenConfiguracionEntidad')->generarDql($arConfiguracionEntidad, 0);
+                $arConfiguracionEntidad->setDqlLista($dqlLista);
+                break;
+            case 'excel':
+                $arConfiguracionEntidad->setJsonExcel(json_encode($arrColumnas));
+                break;
+            case 'filtro':
+                $arConfiguracionEntidad->setJsonFiltro(json_encode($arrColumnas));
+                break;
+        }
+        $em->persist($arConfiguracionEntidad);
     }
 
     /**
@@ -300,7 +365,6 @@ class AdministracionController extends Controller
             'form' => $form->createView()
         ]);
     }
-
 
     /**
      * @author Juan Felipe Mesa Ocampo
@@ -355,10 +419,52 @@ class AdministracionController extends Controller
      */
     public function formularioLista()
     {
-        return $this->createFormBuilder()
+        return $this->get('form.factory')->createNamedBuilder('form')
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
+    }
+
+    /**
+     * @author Andres Acevedo
+     * @param $jsonFiltro
+     * @return array
+     */
+    public function formularioFiltro($jsonFiltro)
+    {
+        $form = $this->get('form.factory')->createNamedBuilder('formFiltro')
+            ->getForm();
+        $arrFiltros = json_decode($jsonFiltro);
+        $boolFiltrar = false;
+        foreach ($arrFiltros as $arrFiltro) {
+            if ($arrFiltro->mostrar) {
+                switch ($arrFiltro->tipo) {
+                    case 'integer':
+                        $tipo = IntegerType::class;
+                        $propiedades = ['label' => $arrFiltro->alias, 'required' => false];
+                        $boolFiltrar = true;
+                        break;
+                    case 'date':
+                        $tipo = DateType::class;
+                        $propiedades = ['label' => $arrFiltro->alias, 'data' => new \DateTime('now')];
+                        $boolFiltrar = true;
+                        break;
+                    case 'boolean':
+                        $tipo = CheckboxType::class;
+                        $propiedades = ['label' => $arrFiltro->alias, 'required' => false];
+                        $boolFiltrar = true;
+                        break;
+                    case 'string':
+                        $tipo = TextType::class;
+                        $propiedades = ['label' => $arrFiltro->alias, 'required' => false];
+                        $boolFiltrar = true;
+                        break;
+                }
+                $form->add($arrFiltro->campo, $tipo, $propiedades);
+            }
+        }
+        $form->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']]);
+        return ['form' => $form, 'filtrar' => $boolFiltrar];
     }
 
     /**
@@ -391,6 +497,7 @@ class AdministracionController extends Controller
     }
 
     /**
+     * @author Juan Felipe Mesa Ocampo
      * @param $arRegistro GenCubo
      * @param $entidadCubo
      * @return mixed

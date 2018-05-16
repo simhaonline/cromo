@@ -16,6 +16,7 @@
         <div class="tab-pane active" id="lista">
             <!-- Menu Encabezado Movimiento -->
             <div id="lista" style="width: 100%"><br>
+                <h3>Campos a listar</h3>
                 <table class="table table-striped table-bordered table-hover">
                     <thead>
                     <tr>
@@ -30,14 +31,17 @@
                         <tr>
                             {% if esId(arColumna.campo) %}
                                 <td style="text-align: center">{{ separarPorGuionbajo(arColumna.campo) }}</td>
-                                <td style="text-align: center"><input type="text" name="aliasLista[{{ arColumna.campo }}]"
+                                <td style="text-align: center"><input type="text"
+                                                                      name="aliasLista[{{ arColumna.campo }}]"
                                                                       value="ID" readonly></td>
                                 <td style="text-align: center"><input type="checkbox"
-                                                                      name="mostrarLista[{{ arColumna.campo }}]" checked>
+                                                                      name="mostrarLista[{{ arColumna.campo }}]"
+                                                                      checked>
                                 </td>
                             {% else %}
                                 <td style="text-align: center">{{ separarPorGuionbajo(arColumna.campo) }}</td>
-                                <td style="text-align: center"><input type="text" name="aliasLista[{{ arColumna.campo }}]"
+                                <td style="text-align: center"><input type="text"
+                                                                      name="aliasLista[{{ arColumna.campo }}]"
                                                                       onkeypress="return validarCaracteres(event)"
                                                                       value="{{ arColumna.alias }}"></td>
                                 <td style="text-align: center"><input type="checkbox"
@@ -50,8 +54,70 @@
                 </table>
             </div>
         </div>
-        <div class="tab-pane active" id="excel">
-            <div id="excel" style="width: 100%"><br>
+        <div class="tab-pane" id="filtros">
+            <div id="filtros" style="width: 100%"><br>
+                <h3>Campos a filtrar</h3>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>CAMPO</th>
+                        <th>ALIAS</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for arColumna in arrColumnasFiltro %}
+                        <tr>
+                            <td style="text-align: center">{{ separarPorGuionbajo(arColumna.campo) }}</td>
+                            <td style="text-align: center"><input type="text" name="aliasFiltro[{{ arColumna.campo }}]"
+                                                                  onkeypress="return validarCaracteres(event)"
+                                                                  value="{{ arColumna.alias }}"></td>
+                            <td style="text-align: center"><input type="checkbox"
+                                                                  name="mostrarFiltro[{{ arColumna.campo }}]" {{ validarSeleccionado(arColumna.mostrar) }}>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="excel">
+            <div id="filtros" style="width: 100%"><br>
+                <h3>Campos a exportar</h3>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>CAMPO</th>
+                        <th>ALIAS</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for arColumna in arrColumnasExcel %}
+                        <tr>
+                            {% if esId(arColumna.campo) %}
+                                <td style="text-align: center">{{ separarPorGuionbajo(arColumna.campo) }}</td>
+                                <td style="text-align: center"><input type="text"
+                                                                      name="aliasExcel[{{ arColumna.campo }}]"
+                                                                      value="ID" readonly></td>
+                                <td style="text-align: center"><input type="checkbox"
+                                                                      name="mostrarExcel[{{ arColumna.campo }}]"
+                                                                      checked>
+                                </td>
+                            {% else %}
+                                <td style="text-align: center">{{ separarPorGuionbajo(arColumna.campo) }}</td>
+                                <td style="text-align: center"><input type="text"
+                                                                      name="aliasExcel[{{ arColumna.campo }}]"
+                                                                      onkeypress="return validarCaracteres(event)"
+                                                                      value="{{ arColumna.alias }}"></td>
+                                <td style="text-align: center"><input type="checkbox"
+                                                                      name="mostrarExcel[{{ arColumna.campo }}]" {{ validarSeleccionado(arColumna.mostrar) }}>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

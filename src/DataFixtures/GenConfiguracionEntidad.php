@@ -58,7 +58,7 @@ class GenConfiguracionEntidad extends Fixture
                 $arConfiguracionEntidad->setJsonLista($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(), $em));
                 $arConfiguracionEntidad->setDqlLista($this->generarDql($arConfiguracionEntidad,$em));
                 $arConfiguracionEntidad->setJsonExcel($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(), $em));
-                $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(), $em));
+                $arConfiguracionEntidad->setJsonFiltro($this->generarConfiguracionEntidad($arConfiguracionEntidad->getRutaRepositorio(), $em,true));
                 $em->persist($arConfiguracionEntidad);
             }
         }
@@ -71,7 +71,7 @@ class GenConfiguracionEntidad extends Fixture
      * @param $em
      * @return string
      */
-    public function generarConfiguracionEntidad($ruta, ObjectManager $em)
+    public function generarConfiguracionEntidad($ruta, ObjectManager $em, $filtro = false)
     {
         $metadata = $em->getClassMetadata($ruta);
         $arrCampos = $metadata->getFieldNames();
@@ -80,7 +80,11 @@ class GenConfiguracionEntidad extends Fixture
             $arInfo = $metadata->fieldMappings[$campo];
             $arrInfoCampos[$i]['campo'] = $arInfo['fieldName'];
             $arrInfoCampos[$i]['tipo'] = $arInfo['type'];
-            $arrInfoCampos[$i]['mostrar'] = true;
+            if($filtro){
+                $arrInfoCampos[$i]['mostrar'] = false;
+            } else {
+                $arrInfoCampos[$i]['mostrar'] = true;
+            }
             $arrInfoCampos[$i]['alias'] = $arInfo['fieldName'];
             $arrInfoCampos[$i]['orden'] = $i;
             $i++;

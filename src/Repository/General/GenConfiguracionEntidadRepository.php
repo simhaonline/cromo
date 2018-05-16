@@ -57,7 +57,8 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
         return $query;
     }
 
-    public function generarDqlFixtures($arConfiguracionEntidad){
+    public function generarDqlFixtures($arConfiguracionEntidad)
+    {
         $arrLista = json_decode($arConfiguracionEntidad->getJsonLista());
         $qb = $this->_em->createQueryBuilder()->from($arConfiguracionEntidad->getRutaRepositorio(), 'tbl');
         $qb->select('tbl.' . $arrLista[0]->campo . ' AS ID');
@@ -75,18 +76,58 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
         return $query;
     }
 
+
+    /**
+     * @param $arConfiguracionEntidad GenConfiguracionEntidad
+     * @param $arrFiltros
+     * @return mixed
+     */
+    public function listaFiltro($arConfiguracionEntidad, $arrFiltros)
+    {
+        $qb = $this->_em->createQueryBuilder()->from($arConfiguracionEntidad->getRutaRepositorio(), 'tbl');
+        $arrLista = json_decode($arConfiguracionEntidad->getJsonLista());
+        $i = 0;
+        $boolPrimerFiltro = true;
+        foreach ($arrLista as $lista) {
+            if ($lista->mostrar) {
+                if ($boolPrimerFiltro) {
+                    $qb->Select("tbl.{$lista->campo} AS {$lista->alias}");
+                    $boolPrimerFiltro = false;
+                } else {
+                    $qb->addSelect("tbl.{$lista->campo} AS {$lista->alias}");
+                }
+            }
+            $i++;
+        }
+        $qb->where('tbl.' . $arrLista[0]->campo . " <> 0");
+        foreach ($arrFiltros as $key => $value) {
+            if ($value != '') {
+                if ($value instanceof \DateTime) {
+                    $qb->andWhere('tbl.' . $key . " = '{$value->format('Y-m-d')}'");
+                } elseif (is_numeric($value)) {
+                    $qb->andWhere('tbl.' . $key . " = {$value}");
+                } else {
+                    $qb->andWhere('tbl.' . $key . " = '{$value}'");
+                }
+            }
+        }
+        $qb->orderBy('tbl.' . $arrLista[0]->campo);
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
+
     /**
      * @param $arConfiguracionEntidad GenConfiguracionEntidad
      * @return mixed
      */
-    public function lista($arConfiguracionEntidad,$opcion)
+    public function lista($arConfiguracionEntidad, $opcion)
     {
-        switch ($opcion){
+        switch ($opcion) {
             case 0:
                 $query = $arConfiguracionEntidad->getDqlLista();
                 break;
             case 1:
-                $query = $this->generarDql($arConfiguracionEntidad,1);
+                $query = $this->generarDql($arConfiguracionEntidad, 1);
                 break;
         }
         $arrRegistros = $this->_em->createQuery($query);

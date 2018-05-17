@@ -23,6 +23,11 @@ class TtePrecio
     private $nombre;
 
     /**
+     * @ORM\Column(name="fecha_vence", type="date", nullable=true)
+     */
+    private $fechaVence;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -94,6 +99,22 @@ class TtePrecio
     public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaVence()
+    {
+        return $this->fechaVence;
+    }
+
+    /**
+     * @param mixed $fechaVence
+     */
+    public function setFechaVence($fechaVence): void
+    {
+        $this->fechaVence = $fechaVence;
     }
 
 

@@ -22,6 +22,11 @@ class TteProducto
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_transporte", type="string", length=50, nullable=true)
+     */
+    private $codigoTransporte;
+
+    /**
      * @ORM\OneToMany(targetEntity="TtePrecioDetalle", mappedBy="productoRel")
      */
     protected $preciosDetallesProductoRel;
@@ -72,6 +77,22 @@ class TteProducto
     public function setPreciosDetallesProductoRel($preciosDetallesProductoRel): void
     {
         $this->preciosDetallesProductoRel = $preciosDetallesProductoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTransporte()
+    {
+        return $this->codigoTransporte;
+    }
+
+    /**
+     * @param mixed $codigoTransporte
+     */
+    public function setCodigoTransporte($codigoTransporte): void
+    {
+        $this->codigoTransporte = $codigoTransporte;
     }
 
 

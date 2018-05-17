@@ -188,6 +188,11 @@ class TteGuia
     private $estadoFacturaGenerada = false;
 
     /**
+     * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $estadoAnulado = false;
+
+    /**
      * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
      */
     private $codigoDespachoFk;
@@ -1305,6 +1310,23 @@ class TteGuia
     {
         $this->costosGuiaRel = $costosGuiaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
 
 
 }

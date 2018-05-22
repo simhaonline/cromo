@@ -1,8 +1,8 @@
-{% extends arConfiguracionEntidad.base %}
+{% extends 'base_'~modulo~'.html.twig' %}
 {% block content %}
     <div class="row">
         <div class="col-lg-12">
-            {{ crearTitulo(arConfiguracionEntidad,1) }}
+            <h3 class='page-header'>{{ arEntidad.modulo }}<small style='font-size: 20px'> {{ arEntidad.funcion }}: {{ arEntidad.grupo }}: {{ arEntidad.entidad }}</small></h3>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -25,7 +25,7 @@
         </div>
     {% endif %}
     <div style="float: right;padding-right: 5px;">
-        <a href="javascript:abrirVentana3('{{ path('configuracion_entidad',{'entidad':arConfiguracionEntidad.codigoConfiguracionEntidadPk}) }}', 'ConfiguracionEntidad', 700, 900)"><i
+        <a href="javascript:abrirVentana3('{{ path('configuracion_entidad',{'entidad':arEntidad.codigoEntidadPk}) }}', 'ConfiguracionEntidad', 700, 900)"><i
                     class="fa fa-gear"></i></a>
     </div>
     {{ form_start(form) }}
@@ -58,12 +58,12 @@
                     </td>
                 {% endif %}
                 <td style="text-align: center">
-                    <a href="{{ path('nuevo', {'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': datos.ID,'entidadCubo':entidadCubo }) }}"><i
+                    <a href="{{ path('nuevo', {'entidad': arEntidad.codigoEntidadPk,'id': datos.ID,'entidadCubo':entidadCubo }) }}"><i
                                 class="fa fa-edit" style="font-size: large"></i>
                     </a>
                 <td style="text-align: center">
 
-                    <a href="{{ path('detalle', { 'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': datos.ID,'entidadCubo':entidadCubo }) }}">
+                    <a href="{{ path('detalle', { 'entidad': arEntidad.codigoEntidadPk,'id': datos.ID,'entidadCubo':entidadCubo }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large">
                         </i>
                     </a>
@@ -84,10 +84,10 @@
         {{ knp_pagination_render(arRegistros) }}
     </div>
     <div class="btn-toolbar" style="float: left">
-        {% if(arConfiguracionEntidad.codigoConfiguracionEntidadPk != "GenCubo") %}
+        {% if(arEntidad.codigoEntidadPk != "GenCubo") %}
             <div class="btn-group">
                 <a class="btn btn-default btn-sm"
-                   href="{{ path('lista',{'entidad': 'GenCubo','entidadCubo':arConfiguracionEntidad.codigoConfiguracionEntidadPk}) }}"><i
+                   href="{{ path('lista',{'entidad': 'GenCubo','entidadCubo':arEntidad.codigoEntidadPk}) }}"><i
                             class="fa fa-cube"></i>
                 </a>
             </div>
@@ -102,7 +102,7 @@
         </div>
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('nuevo',{'entidad': arConfiguracionEntidad.codigoConfiguracionEntidadPk,'id': 0,'entidadCubo': entidadCubo}) }}">Nuevo
+               href="{{ path('nuevo',{'entidad': arEntidad.codigoEntidadPk,'id': 0,'entidadCubo': entidadCubo}) }}">Nuevo
             </a>
         </div>
         <div class="btn-group">

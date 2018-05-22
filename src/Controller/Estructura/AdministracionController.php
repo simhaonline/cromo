@@ -213,6 +213,76 @@ final class AdministracionController extends Controller
      * @param $entidad
      * @param $entidadCubo
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("admin/{modulo}/{entidad}",name="admin")
+     */
+    public function generarAdmin(Request $request, $modulo, $entidad)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $codigo = $modulo . "_" . $entidad;
+        $arEntidad = $em->getRepository('App:General\GenEntidad')->find($codigo);
+        $jsonFiltro = $arEntidad->getJsonFiltro();
+        $arrCamposFiltro = json_decode($jsonFiltro);
+        $arrNombreCamposFiltro = [];
+        foreach ($arrCamposFiltro as $arrCampo) {
+            if ($arrCampo->mostrar) {
+                $arrNombreCamposFiltro[] = $arrCampo->campo;
+            }
+        }
+        $arrFiltrar = $this->formularioFiltro($jsonFiltro);
+        if ($arrFiltrar['filtrar']) {
+            $formFiltro = $arrFiltrar['form'];
+            $formFiltro->handleRequest($request);
+        } else {
+            $formFiltro = '';
+        }
+        $form = $this->formularioLista();
+        $form->handleRequest($request);
+        $arRegistros = $em->getRepository('App:General\GenEntidad')->lista($arEntidad, 0);
+        if ($request->getMethod() == 'POST') {
+            if ($request->request->has('form')) {
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                    if ($form->get('btnExcel')->isClicked()) {
+                        $arRegistrosExcel = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arEntidad, 1);
+                        $this->generarExcel($arRegistrosExcel, 'Excel');
+                    }
+                    if ($form->get('btnEliminar')->isClicked()) {
+                        $respuesta = $em->getRepository('App:General\GenConfiguracionEntidad')->eliminar($arEntidad, $arrSeleccionados);
+                        $this->validarRespuesta($respuesta, $em);
+                        //return $this->redirectToRoute("lista", ['entidad' => $entidad, 'entidadCubo' => $entidadCubo]);
+                    }
+                }
+            }
+            if ($request->request->has('formFiltro')) {
+                if ($formFiltro instanceof Form) {
+                    if ($formFiltro->get('btnFiltrar')->isClicked()) {
+                        $arrFiltros = $formFiltro->getData();
+                        $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->listaFiltro($arEntidad, $arrFiltros);
+                    }
+                }
+            }
+        }
+        $arRegistros = $paginator->paginate($arRegistros, $request->query->getInt('page', 1), 10);
+        return $this->render('estructura/lista.html.twig', [
+            'modulo' => $modulo,
+            'arRegistros' => $arRegistros,
+            'entidadCubo' => "",
+            'arEntidad' => $arEntidad,
+            'form' => $form->createView(),
+            'formFiltro' => $formFiltro instanceof Form ? $formFiltro->createView() : '',
+            'filtrar' => $arrFiltrar['filtrar']
+        ]);
+    }
+
+    /**
+     * @author Andres Acevedo Cartagena
+     * @param Request $request
+     * @param $entidad
+     * @param $entidadCubo
+     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("detalle/{entidad}/{id}/{entidadCubo}",name="detalle")
      */
     public function generarDetalles(Request $request, $entidad, $id, $entidadCubo = "")

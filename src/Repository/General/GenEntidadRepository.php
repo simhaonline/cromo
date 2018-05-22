@@ -14,7 +14,7 @@ class GenEntidadRepository extends ServiceEntityRepository
 
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, GenConfiguracionEntidad::class);
+        parent::__construct($registry, GenEntidad::class);
     }
 
     /**
@@ -122,14 +122,14 @@ class GenEntidadRepository extends ServiceEntityRepository
      * @param $entidadCubo
      * @return mixed
      */
-    public function lista($arConfiguracionEntidad, $opcion, $entidadCubo)
+    public function lista($arEntidad, $opcion)
     {
         switch ($opcion) {
             case 0:
-                $query = $arConfiguracionEntidad->getDqlLista();
+                $query = $arEntidad->getDqlLista();
                 break;
             case 1:
-                $query = $this->generarDql($arConfiguracionEntidad, 1, $entidadCubo );
+                $query = $this->generarDql($arEntidad, 1);
                 break;
         }
         $arrRegistros = $this->_em->createQuery($query);

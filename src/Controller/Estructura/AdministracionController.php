@@ -147,7 +147,7 @@ final class AdministracionController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("listado/{entidad}/{entidadCubo}",name="listado")
+     * @Route("lista/{entidad}/{entidadCubo}",name="lista")
      */
     public function generarLista(Request $request, $entidad, $entidadCubo = "")
     {
@@ -177,13 +177,13 @@ final class AdministracionController extends Controller
                 if ($form->isSubmitted() && $form->isValid()) {
                     $arrSeleccionados = $request->request->get('ChkSeleccionar');
                     if ($form->get('btnExcel')->isClicked()) {
-                        $arRegistrosExcel = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 1);
+                        $arRegistrosExcel = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 1, $entidadCubo);
                         $this->generarExcel($arRegistrosExcel, 'Excel');
                     }
                     if ($form->get('btnEliminar')->isClicked()) {
                         $respuesta = $em->getRepository('App:General\GenConfiguracionEntidad')->eliminar($arConfiguracionEntidad, $arrSeleccionados);
                         $this->validarRespuesta($respuesta, $em);
-                        return $this->redirectToRoute("listado", ['entidad' => $entidad, 'entidadCubo' => $entidadCubo]);
+                        return $this->redirectToRoute("lista", ['entidad' => $entidad, 'entidadCubo' => $entidadCubo]);
                     }
                 }
             }

@@ -95,7 +95,7 @@
                                 <a href="#">Salida</a>
                             </li>
                             <li>
-                                <a href="{{ path('listado',{'entidad':'InvSolicitud'}) }}">Solicitud</a>
+                                <a href="{{ path('lista',{'entidad':'InvSolicitud'}) }}">Solicitud</a>
                             </li>
                             <li>
                                 <a href="#">Orden de compra</a>
@@ -106,19 +106,25 @@
                         <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="{{ path('listado',{'entidad' : 'InvItem'}) }}">Item</a>
+                                <a href="{{ path('lista',{'entidad' : 'InvItem'}) }}">Item</a>
                             </li>
                             <li>
-                                <a href="{{ path('listado',{'entidad' : 'InvSolicitudTipo'}) }}">Solicitud tipo</a>
+                                <a href="{{ path('lista',{'entidad' : 'InvSolicitudTipo'}) }}">Solicitud tipo</a>
                             </li>
                             <li>
-                                <a href="{{ path('listado',{'entidad':'InvTercero'}) }}">Tercero</a>
+                                <a href="{{ path('lista',{'entidad':'InvTercero'}) }}">Tercero</a>
                             </li>
                             <li>
-                                <a href="{{ path('listado',{'entidad':'InvDocumento'}) }}">Documento</a>
+                                <a href="{{ path('lista',{'entidad' : 'InvSolicitudTipo'}) }}">Solicitud tipo</a>
                             </li>
                             <li>
-                                <a href="{{ path('listado',{'entidad':'InvDocumento'}) }}">Documento</a>
+                                <a href="{{ path('lista',{'entidad':'InvTercero'}) }}">Tercero</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('lista',{'entidad':'InvDocumento'}) }}">Documento</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('lista',{'entidad':'InvDocumento'}) }}">Documento</a>
                             </li>
                         </ul>
 

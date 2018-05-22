@@ -68,18 +68,18 @@
                         <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="{{ path('car_adm_cliente_lista') }}">Cliente</a>
+                                <a href="{{ path('listado',{'entidad':'CarCliente'} )}}">Cliente</a>
                                 <!-- /.nav-third-level -->
                             </li>
                             <li>
                                 <a href="#">General <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('car_adm_general_recibo_tipo_lista') }}">Tipo recibo</a></li>
-                                    <li><a href="{{ path('car_adm_general_cuenta_cobrar_tipo_lista') }}">Tipo cuenta cobro</a>
+                                    <li><a href="{{ path('listado',{'entidad':'CarReciboTipo'}) }}">Tipo recibo</a></li>
+                                    <li><a href="{{ path('listado',{'entidad':'CarCuentaCobrarTipo'}) }}">Tipo cuenta cobro</a>
                                     </li>
-                                    <li><a href="{{ path('car_adm_general_nota_credito_concepto_lista') }}">Concepto nota
+                                    <li><a href="{{ path('listado',{'entidad':'CarNotaCreditoConcepto'}) }}">Concepto nota
                                             credito</a></li>
-                                    <li><a href="{{ path('car_adm_general_nota_debito_concepto_lista') }}">Concepto nota
+                                    <li><a href="{{ path('listado',{'entidad':'CarNotaCreditoConcepto'}) }}">Concepto nota
                                             debito</a></li>
                                 </ul>
                                 <!-- /.nav-third-level -->

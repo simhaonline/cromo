@@ -20,6 +20,11 @@ class GenConfiguracionEntidad extends Fixture
         $this->setConfiguracionEntidades($arrModuloCartera, $em);
         /////////////////                 FIN ESTRACTURA MODULO DE CARTERA                             ////////////////
 
+        /////////////////              INICIO ESTRACTURA MODULO DE RECURSO HUMANO                            ////////////////
+        $arrModuloRecursoHumano = ['RhuAspirante','RhuSolicitud','RhuSeleccion'];
+        $this->setConfiguracionEntidades($arrModuloRecursoHumano, $em);
+        /////////////////                 FIN ESTRACTURA MODULO DE RECURSO HUMANO
+
         /////////////////              INICIO ESTRACTURA MODULO DE CONTABILIDAD                        ////////////////
         $arrModuloContabilidad = ['CtbRegistro', 'CtbCuenta', 'CtbComprobante', 'CtbCentroCosto', 'CtbTercero'];
         $this->setConfiguracionEntidades($arrModuloContabilidad, $em);
@@ -106,6 +111,9 @@ class GenConfiguracionEntidad extends Fixture
         switch ($modulo) {
             case 'Inv':
                 $arrParametros['modulo'] = 'Inventario';
+                break;
+            case 'Rhu':
+                $arrParametros['modulo'] = 'RecursoHumano';
                 break;
             case 'Car':
                 $arrParametros['modulo'] = 'Cartera';

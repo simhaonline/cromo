@@ -49,6 +49,41 @@ class GenCiudad
     protected $ctbTercerosCiudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genCiudadRel")
+     */
+    protected $rhuAspirantesCiudadRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genCiudadExpedicionRel")
+     */
+    protected $rhuAspirantesCiudadExpedicionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genCiudadNacimientoRel")
+     */
+    protected $rhuAspirantesCiudadNacimientoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="genCiudadRel")
+     */
+    protected $rhuSolicitudesCiudadRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genCiudadRel")
+     */
+    protected $rhuSeleccionCiudadRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genCiudadExpedicionRel")
+     */
+    protected $rhuSeleccionCiudadExpedicionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genCiudadNacimientoRel")
+     */
+    protected $rhuSeleccionCiudadNacimientoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()

@@ -161,11 +161,11 @@ class CtbTercero
     protected $ciudadRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacionTipo", inversedBy="ctbTercerosIdentificacionTipoRel")
-     * @ORM\JoinColumn(name="codigo_identificacion_tipo_fk", referencedColumnName="codigo_identificacion_tipo_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="ctbTercerosIdentificacionTipoRel")
+     * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
      * @Assert\NotNull(message="Este campo no puede estar vacio")
      */
-    protected $identificacionTipoRel;
+    protected $identificacionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Contabilidad\CtbRegistro", mappedBy="terceroRel")

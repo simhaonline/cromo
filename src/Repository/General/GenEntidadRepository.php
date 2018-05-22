@@ -2,13 +2,13 @@
 
 namespace App\Repository\General;
 
-use App\Entity\General\GenConfiguracionEntidad;
+use App\Entity\General\GenEntidad;
 use App\Entity\Seguridad\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Zend\Json\Json;
 
-class GenConfiguracionEntidadRepository extends ServiceEntityRepository
+class GenEntidadRepository extends ServiceEntityRepository
 {
     private $excepcionCamposCubo = ['jsonCubo', 'sqlCubo'];
 
@@ -19,7 +19,7 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
 
     /**
      * @author Andres Acevedo
-     * @param $arConfiguracionEntidad GenConfiguracionEntidad
+     * @param $arConfiguracionEntidad GenEntidad
      * @param $opcion
      * @param string $entidadCubo
      * @return mixed
@@ -78,7 +78,7 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
 
 
     /**
-     * @param $arConfiguracionEntidad GenConfiguracionEntidad
+     * @param $arConfiguracionEntidad GenEntidad
      * @param $arrFiltros
      * @return mixed
      */
@@ -138,7 +138,7 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
 
     /**
      * @author Andres Acevedo
-     * @param $arConfiguracionEntidad GenConfiguracionEntidad
+     * @param $arConfiguracionEntidad GenEntidad
      * @return mixed
      */
     public function listaDetalles($arConfiguracionEntidad, $id)
@@ -156,7 +156,7 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arConfiguracionEntidad GenConfiguracionEntidad
+     * @param $arConfiguracionEntidad GenEntidad
      * @param $arrSeleccionados
      * @return array
      */

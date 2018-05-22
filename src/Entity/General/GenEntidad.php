@@ -6,15 +6,15 @@ namespace App\Entity\General;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\General\GenConfiguracionEntidadRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\General\GenEntidadRepository")
  */
-class GenConfiguracionEntidad
+class GenEntidad
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=80)
      */
-    private $codigoConfiguracionEntidadPk;
+    private $codigoEntidadPk;
 
     /**
      * @ORM\Column(name="base",type="string", length=50)
@@ -69,17 +69,17 @@ class GenConfiguracionEntidad
     /**
      * @return mixed
      */
-    public function getCodigoConfiguracionEntidadPk()
+    public function getCodigoEntidadPk()
     {
-        return $this->codigoConfiguracionEntidadPk;
+        return $this->codigoEntidadPk;
     }
 
     /**
-     * @param mixed $codigoConfiguracionEntidadPk
+     * @param mixed $codigoEntidadPk
      */
-    public function setCodigoConfiguracionEntidadPk($codigoConfiguracionEntidadPk): void
+    public function setCodigoEntidadPk($codigoEntidadPk): void
     {
-        $this->codigoConfiguracionEntidadPk = $codigoConfiguracionEntidadPk;
+        $this->codigoEntidadPk = $codigoEntidadPk;
     }
 
     /**

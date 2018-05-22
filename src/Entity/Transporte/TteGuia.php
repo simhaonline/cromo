@@ -103,89 +103,94 @@ class TteGuia
     private $fechaSoporte;
 
     /**
-     * @ORM\Column(name="unidades", type="float")
+     * @ORM\Column(name="unidades", type="float", options={"default" : 0})
      */
     private $unidades = 0;
 
     /**
-     * @ORM\Column(name="peso_real", type="float")
+     * @ORM\Column(name="peso_real", type="float", options={"default" : 0})
      */
     private $pesoReal = 0;
 
     /**
-     * @ORM\Column(name="peso_volumen", type="float")
+     * @ORM\Column(name="peso_volumen", type="float", options={"default" : 0})
      */
     private $pesoVolumen = 0;
 
     /**
-     * @ORM\Column(name="peso_facturado", type="float")
+     * @ORM\Column(name="peso_facturado", type="float", options={"default" : 0})
      */
     private $pesoFacturado = 0;
 
     /**
-     * @ORM\Column(name="vr_declara", type="float")
+     * @ORM\Column(name="vr_declara", type="float", options={"default" : 0})
      */
     private $vrDeclara = 0;
 
     /**
-     * @ORM\Column(name="vr_flete", type="float")
+     * @ORM\Column(name="vr_flete", type="float", options={"default" : 0})
      */
     private $vrFlete = 0;
 
     /**
-     * @ORM\Column(name="vr_manejo", type="float")
+     * @ORM\Column(name="vr_manejo", type="float", options={"default" : 0})
      */
     private $vrManejo = 0;
 
     /**
-     * @ORM\Column(name="vr_recaudo", type="float")
+     * @ORM\Column(name="vr_recaudo", type="float", options={"default" : 0})
      */
     private $vrRecaudo = 0;
 
     /**
-     * @ORM\Column(name="vr_abono", type="float")
+     * @ORM\Column(name="vr_abono", type="float", options={"default" : 0})
      */
     private $vrAbono = 0;
 
     /**
-     * @ORM\Column(name="estado_impreso", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_impreso", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoImpreso = false;
 
     /**
-     * @ORM\Column(name="estado_embarcado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_embarcado", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoEmbarcado = false;
 
     /**
-     * @ORM\Column(name="estado_despachado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_despachado", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoDespachado = false;
 
     /**
-     * @ORM\Column(name="estado_entregado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_entregado", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoEntregado = false;
 
     /**
-     * @ORM\Column(name="estado_soporte", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_soporte", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoSoporte = false;
 
     /**
-     * @ORM\Column(name="estado_cumplido", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_cumplido", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoCumplido = false;
 
     /**
-     * @ORM\Column(name="estado_facturado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_facturado", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoFacturado = false;
 
     /**
-     * @ORM\Column(name="estado_factura_generada", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_factura_generada", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoFacturaGenerada = false;
+
+    /**
+     * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $estadoAnulado = false;
 
     /**
      * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
@@ -213,7 +218,7 @@ class TteGuia
     private $codigoRutaFk;
 
     /**
-     * @ORM\Column(name="orden_ruta", type="integer", nullable=true)
+     * @ORM\Column(name="orden_ruta", type="integer", nullable=true, options={"default" : 0})
      */
     private $ordenRuta = 0;
 
@@ -941,6 +946,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getCodigoFacturaPlanillaFk()
+    {
+        return $this->codigoFacturaPlanillaFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaPlanillaFk
+     */
+    public function setCodigoFacturaPlanillaFk($codigoFacturaPlanillaFk): void
+    {
+        $this->codigoFacturaPlanillaFk = $codigoFacturaPlanillaFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoRutaFk()
     {
         return $this->codigoRutaFk;
@@ -984,6 +1005,38 @@ class TteGuia
     public function setFactura($factura): void
     {
         $this->factura = $factura;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoServicioFk()
+    {
+        return $this->codigoServicioFk;
+    }
+
+    /**
+     * @param mixed $codigoServicioFk
+     */
+    public function setCodigoServicioFk($codigoServicioFk): void
+    {
+        $this->codigoServicioFk = $codigoServicioFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpaqueFk()
+    {
+        return $this->codigoEmpaqueFk;
+    }
+
+    /**
+     * @param mixed $codigoEmpaqueFk
+     */
+    public function setCodigoEmpaqueFk($codigoEmpaqueFk): void
+    {
+        $this->codigoEmpaqueFk = $codigoEmpaqueFk;
     }
 
     /**
@@ -1165,6 +1218,54 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getFacturaPlanillaRel()
+    {
+        return $this->facturaPlanillaRel;
+    }
+
+    /**
+     * @param mixed $facturaPlanillaRel
+     */
+    public function setFacturaPlanillaRel($facturaPlanillaRel): void
+    {
+        $this->facturaPlanillaRel = $facturaPlanillaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServicioRel()
+    {
+        return $this->servicioRel;
+    }
+
+    /**
+     * @param mixed $servicioRel
+     */
+    public function setServicioRel($servicioRel): void
+    {
+        $this->servicioRel = $servicioRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpaqueRel()
+    {
+        return $this->empaqueRel;
+    }
+
+    /**
+     * @param mixed $empaqueRel
+     */
+    public function setEmpaqueRel($empaqueRel): void
+    {
+        $this->empaqueRel = $empaqueRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getRecibosGuiaRel()
     {
         return $this->recibosGuiaRel;
@@ -1213,98 +1314,20 @@ class TteGuia
     /**
      * @return mixed
      */
-    public function getCodigoFacturaPlanillaFk()
+    public function getEstadoAnulado()
     {
-        return $this->codigoFacturaPlanillaFk;
+        return $this->estadoAnulado;
     }
 
     /**
-     * @param mixed $codigoFacturaPlanillaFk
+     * @param mixed $estadoAnulado
      */
-    public function setCodigoFacturaPlanillaFk($codigoFacturaPlanillaFk): void
+    public function setEstadoAnulado($estadoAnulado): void
     {
-        $this->codigoFacturaPlanillaFk = $codigoFacturaPlanillaFk;
+        $this->estadoAnulado = $estadoAnulado;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFacturaPlanillaRel()
-    {
-        return $this->facturaPlanillaRel;
-    }
 
-    /**
-     * @param mixed $facturaPlanillaRel
-     */
-    public function setFacturaPlanillaRel($facturaPlanillaRel): void
-    {
-        $this->facturaPlanillaRel = $facturaPlanillaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoServicioFk()
-    {
-        return $this->codigoServicioFk;
-    }
-
-    /**
-     * @param mixed $codigoServicioFk
-     */
-    public function setCodigoServicioFk($codigoServicioFk): void
-    {
-        $this->codigoServicioFk = $codigoServicioFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getServicioRel()
-    {
-        return $this->servicioRel;
-    }
-
-    /**
-     * @param mixed $servicioRel
-     */
-    public function setServicioRel($servicioRel): void
-    {
-        $this->servicioRel = $servicioRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoEmpaqueFk()
-    {
-        return $this->codigoEmpaqueFk;
-    }
-
-    /**
-     * @param mixed $codigoEmpaqueFk
-     */
-    public function setCodigoEmpaqueFk($codigoEmpaqueFk): void
-    {
-        $this->codigoEmpaqueFk = $codigoEmpaqueFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEmpaqueRel()
-    {
-        return $this->empaqueRel;
-    }
-
-    /**
-     * @param mixed $empaqueRel
-     */
-    public function setEmpaqueRel($empaqueRel): void
-    {
-        $this->empaqueRel = $empaqueRel;
-    }
 
 }
 

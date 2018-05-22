@@ -14,6 +14,8 @@
             <th>FECHA</th>
             <th>CLIENTE</th>
             <th>DESTINO</th>
+            <th>DECLARA</th>
+            <th>FLETE</th>
             <th>UND</th>
             <th>PES</th>
             <th>VOL</th>
@@ -25,11 +27,15 @@
         {% set totalUnidades = 0 %}
         {% set totalPeso = 0 %}
         {% set totalVolumen = 0 %}
+        {% set totalDeclara = 0 %}
+        {% set totalFlete = 0 %}
         {% for arGuia in arGuias %}
             {% if codigoRuta != arGuia.codigoRutaFk %}
                 {% if contador > 0 %}
                     <tr>
                         <td id="suptipo" colspan="7"></td>
+                        <td class="numero">{{ totalDeclara }}</td>
+                        <td class="numero">{{ totalFlete }}</td>
                         <td class="numero">{{ totalUnidades }}</td>
                         <td class="numero">{{ totalPeso }}</td>
                         <td class="numero">{{ totalVolumen }}</td>
@@ -39,7 +45,7 @@
                     {% set totalVolumen = 0 %}
                 {% endif %}
                 <tr>
-                    <td id="suptipo" colspan="10">{{ arGuia.codigoRutaFk }}</td>
+                    <td id="suptipo" colspan="10">{{ arGuia.codigoRutaFk }} {{ arGuia.nombreRuta }}</td>
                 </tr>
                 {% set codigoRuta = arGuia.codigoRutaFk %}
             {% endif %}
@@ -52,6 +58,8 @@
                 <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
                 <td>{{ arGuia.clienteNombreCorto }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
+                <td class="numero">{{ arGuia.vrDeclara }}</td>
+                <td class="numero">{{ arGuia.vrFlete }}</td>
                 <td class="numero">{{ arGuia.unidades }}</td>
                 <td class="numero">{{ arGuia.pesoReal }}</td>
                 <td class="numero">{{ arGuia.pesoVolumen }}</td>
@@ -59,6 +67,8 @@
             {% set totalUnidades = totalUnidades + arGuia.unidades %}
             {% set totalPeso = totalPeso + arGuia.pesoReal %}
             {% set totalVolumen = totalVolumen + arGuia.pesoVolumen %}
+            {% set totalDeclara = totalDeclara + arGuia.vrDeclara %}
+            {% set totalFlete = totalFlete + arGuia.vrFlete %}
             {% set contador = contador + 1 %}
         {% endfor %}
         </tbody>

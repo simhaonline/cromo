@@ -103,43 +103,6 @@ class AppExtension extends AbstractExtension
 
     }
 
-    /**
-     * @param $dato \App\Entity\General\GenConfiguracionEntidad
-     * @return string
-     */
-    public function crearTitulo($dato, $tipo)
-    {
-        $modulo = $dato->getModulo();
-        $submodulo = substr($dato->getCodigoConfiguracionEntidadPk(), 3).' ';
-        $arrSubmodulo = preg_split('/(?=[A-Z])/', str_replace(' ', '', $submodulo));
-        $flag = false;
-        if (count($arrSubmodulo) > 2) {
-            $submodulo = '';
-            foreach ($arrSubmodulo as $nombre) {
-                if ($nombre != '') {
-                    if(!$flag){
-                        $submodulo .= $nombre.' ';
-                        $flag = true;
-                    } else {
-                        $submodulo .= strtolower($nombre).' ';
-                    }
-                }
-            }
-        }
-        switch ($tipo) {
-            case 1:
-                $accion = 'lista';
-                break;
-            case 2:
-                $accion = 'detalle';
-                break;
-            case 3:
-                $accion = 'nuevo';
-                break;
-        }
-        echo "<h3 class='page-header'>" . $modulo . "<small style='font-size: 20px'> " . rtrim($submodulo) . ": " . $accion . "</small>" . "</h3>";
-    }
-
     public function mod($dato, $numero)
     {
         if (($dato % $numero) == 0) {

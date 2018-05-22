@@ -22,5 +22,20 @@ class GenEstadoCivil
      */
     private $nombre;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genEstadoCivilRel")
+     */
+    protected $rhuAspirantesEstadoCivilRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="genEstadoCivilRel")
+     */
+    protected $rhuSolicitudesEstadoCivilRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genEstadoCivilRel")
+     */
+    protected $rhuSeleccionEstadoCivilRel;
+
 }
 

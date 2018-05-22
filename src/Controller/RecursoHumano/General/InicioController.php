@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Controller\RecursoHumano\General;
+
+
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+
+class InicioController extends Controller
+{
+   /**
+    * @Route("/rhu/general/inicio", name="rhu_general_inicio")
+    */    
+    public function inicio(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        return $this->render('recursoHumano/inicio.html.twig');
+    }
+}
+

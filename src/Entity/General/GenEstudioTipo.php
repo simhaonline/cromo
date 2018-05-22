@@ -22,5 +22,10 @@ class GenEstudioTipo
      */
     private $nombre;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="genEstudioTipoRel")
+     */
+    protected $rhuSolicitudesEstudioTiposlRel;
+
 }
 

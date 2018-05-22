@@ -21,6 +21,9 @@ class RhuSolicitudMotivo
      * @ORM\Column(name="nombre", type="string", length=80)
      */
     private $nombre;
-    
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="solicitudMotivoRel")
+     */
+    protected $solicitudesMotivosRel;
 }

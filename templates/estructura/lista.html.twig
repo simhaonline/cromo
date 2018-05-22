@@ -87,12 +87,12 @@
         {% if(arConfiguracionEntidad.codigoConfiguracionEntidadPk != "GenCubo") %}
             <div class="btn-group">
                 <a class="btn btn-default btn-sm"
-                   href="{{ path('listado',{'entidad': 'GenCubo','entidadCubo':arConfiguracionEntidad.codigoConfiguracionEntidadPk}) }}"><i
+                   href="{{ path('lista',{'entidad': 'GenCubo','entidadCubo':arConfiguracionEntidad.codigoConfiguracionEntidadPk}) }}"><i
                             class="fa fa-cube"></i>
                 </a>
             </div>
         {% else %}
-            <a href="{{ path('listado',{'entidad': entidadCubo }) }}"
+            <a href="{{ path('lista',{'entidad': entidadCubo }) }}"
                class="btn btn-sm btn-default">Volver</a>
         {% endif %}
     </div>

@@ -117,17 +117,19 @@ class GenConfiguracionEntidadRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arConfiguracionEntidad GenConfiguracionEntidad
+     * @param $arConfiguracionEntidad
+     * @param $opcion
+     * @param $entidadCubo
      * @return mixed
      */
-    public function lista($arConfiguracionEntidad, $opcion)
+    public function lista($arConfiguracionEntidad, $opcion, $entidadCubo)
     {
         switch ($opcion) {
             case 0:
                 $query = $arConfiguracionEntidad->getDqlLista();
                 break;
             case 1:
-                $query = $this->generarDql($arConfiguracionEntidad, 1);
+                $query = $this->generarDql($arConfiguracionEntidad, 1, $entidadCubo );
                 break;
         }
         $arrRegistros = $this->_em->createQuery($query);

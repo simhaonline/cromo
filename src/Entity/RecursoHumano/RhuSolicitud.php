@@ -39,7 +39,7 @@ class RhuSolicitud
     private $codigoExperienciaSolicitudFk;
 
     /**
-     * @ORM\Column(name="codigo_estado_civil_fk", type="string", length=1, nullable=true)
+     * @ORM\Column(name="codigo_estado_civil_fk", type="integer", nullable=true)
      */
     private $codigoEstadoCivilFk;
 
@@ -179,5 +179,58 @@ class RhuSolicitud
      * @ORM\Column(name="codigo_usuario", type="string", length=50, nullable=true)
      */
     private $codigoUsuario;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuGrupoPago", inversedBy="solicitudesGrupoPagoRel")
+     * @ORM\JoinColumn(name="codigo_grupo_pago_fk",referencedColumnName="codigo_grupo_pago_pk")
+     */
+    protected $grupoPagoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCargo", inversedBy="solicitudesCargoRel")
+     * @ORM\JoinColumn(name="codigo_cargo_fk",referencedColumnName="codigo_cargo_pk")
+     */
+    protected $cargoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuSolicitudMotivo", inversedBy="solicitudesMotivosRel")
+     * @ORM\JoinColumn(name="codigo_solicitud_motivo_fk",referencedColumnName="codigo_solicitud_motivo_pk")
+     */
+    protected $solicitudMotivoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuSolicitudExperiencia", inversedBy="solicitudesExperienciasRel")
+     * @ORM\JoinColumn(name="codigo_solicitud_experiencia_fk",referencedColumnName="codigo_solicitud_experiencia_pk")
+     */
+    protected $solicitudExperienciaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenEstadoCivil", inversedBy="rhuSolicitudesEstadoCivilRel")
+     * @ORM\JoinColumn(name="codigo_estado_civil_fk", referencedColumnName="codigo_estado_civil_pk")
+     */
+    protected $genEstadoCivilRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuSolicitudesCiudadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $genCiudadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenEstudioTipo", inversedBy="rhuSolicitudesEstudioTiposRel")
+     * @ORM\JoinColumn(name="codigo_estudio_tipo_fk", referencedColumnName="codigo_estudio_tipo_pk")
+     */
+    protected $genEstudioTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuClasificacionRiesgo", inversedBy="solicitudesClasificacionRiesgoRel")
+     * @ORM\JoinColumn(name="codigo_clasificacion_riesgo_fk",referencedColumnName="codigo_clasificacion_riesgo_pk")
+     */
+    protected $clasificacionRiesgoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="solicitudRel")
+     */
+    protected $rhuSeleccionSolicitudRel;
 
 }

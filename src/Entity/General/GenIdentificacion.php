@@ -37,6 +37,16 @@ class GenIdentificacion
     protected $tteClientesIdentificacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genIdentificacionRel")
+     */
+    protected $rhuAspirantesIdentificacionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genIdentificacionRel")
+     */
+    protected $rhuSeleccionIdentificacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoIdentificacionPk()
@@ -116,7 +126,21 @@ class GenIdentificacion
         $this->tteClientesIdentificacionRel = $tteClientesIdentificacionRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRhuAspirantesIdentificacionRel()
+    {
+        return $this->rhuAspirantesIdentificacionRel;
+    }
 
+    /**
+     * @param mixed $rhuAspirantesIdentificacionRel
+     */
+    public function setRhuAspirantesIdentificacionRel($rhuAspirantesIdentificacionRel): void
+    {
+        $this->rhuAspirantesIdentificacionRel = $rhuAspirantesIdentificacionRel;
+    }
 
 }
 

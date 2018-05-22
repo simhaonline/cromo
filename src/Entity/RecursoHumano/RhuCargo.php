@@ -22,5 +22,14 @@ class RhuCargo
      */
     private $nombre;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="cargoRel")
+     */
+    protected $solicitudesCargoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="cargoRel")
+     */
+    protected $seleccionCargoRel;
 
 }

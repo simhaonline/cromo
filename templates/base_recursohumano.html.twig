@@ -15,6 +15,7 @@
 </head>
 <body>
 <div id="wrapper">
+    <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -25,6 +26,8 @@
             </button>
             <a class="navbar-brand" href="{{ path('inicio') }}">Cromo v2.0</a>
         </div>
+        <!-- /.navbar-header -->
+
         <ul class="nav navbar-top-links navbar-right">
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -39,73 +42,52 @@
                     <li><a href="{{ path('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Salir</a>
                     </li>
                 </ul>
+                <!-- /.dropdown-user -->
             </li>
         </ul>
-    </nav>
-    <div class="navbar-default sidebar" role="navigation">
-        <div class="sidebar-nav navbar-collapse">
-            <ul class="nav" id="side-menu">
-                <li class="sidebar-search">
-                    <div class="input-group custom-search-form">
-                        <input type="text" class="form-control" placeholder="Search...">
-                        <span class="input-group-btn">
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="sidebar-search">
+                        <div class="input-group custom-search-form">
+                            <input type="text" class="form-control" placeholder="Search...">
+                            <span class="input-group-btn">
                                 <button class="btn btn-default" type="button">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
-                    </div>
-                </li>
-                <li>
-                    <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-money fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="{{ path('lista',{'entidad':'CtbRegistro'}) }}">Registro</a></li>
-                        <li><a href="#">Asiento</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="{{ path('lista',{'entidad':'CtbTercero'}) }}">Tercero</a></li>
-                        <li><a href="{{ path('lista',{'entidad':'CtbComprobante'}) }}">Comprobante</a></li>
-                        <li><a href="{{ path('lista',{'entidad':'CtbCuenta'}) }}">Cuenta</a></li>
-                        <li><a href="{{ path('lista',{'entidad':'CtbCentroCosto'}) }}">Centro costo</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-retweet fa-fw"></i> Proceso<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level"></ul>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-file-text-o fa-fw"></i> Informe<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level"></ul>
-                </li>
-            </ul>
+                        </div>
+                        <!-- /input-group -->
+                    </li>
+                    <li>
+                        <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="#">Seleccion <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li><a href="{{ path('lista',{'entidad':'RhuAspirante'}) }}">Aspirante</a></li>
+                                    <li><a href="{{ path('lista',{'entidad':'RhuSolicitud'}) }}">Solicitud</a></li>
+                                    <li><a href="{{ path('lista',{'entidad':'RhuSeleccion'}) }}">Seleccion</a></li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                </ul>
+            </div>
+            <!-- /.sidebar-collapse -->
         </div>
-    </div>
+        <!-- /.navbar-static-side -->
+    </nav>
     {% block body %}
         <div id="page-wrapper">
             {% block content %}
-                <div class="row">
-                    <div class="col-lg-12">
-                        {% set route = app.request.attributes.get('_route') %}
-                        {% set parametros = app.request.attributes.get('_route_params') %}
-                        {% set ruta = route | split('_') %}
-                        {#<h3 class="page-header">{{ route }}</h3>#}
-                        <h3 class="page-header">Contabilidad
-                            {#{% if ruta[2] is defined %}#}
-                            {#<small style="font-size: 20px">{{ ruta[2] }}</small>#}
-                            {#{% endif %}#}
-                            {#{% if ruta[3] is defined %}#}
-                            {#<small style="font-size: 20px">{{ ruta[3] }}</small>#}
-                            {#{% endif %}#}
-                        </h3>
-                    </div>
-                    <!-- /.col-lg-12 -->
-                </div>
-
 
             {% endblock %}
         </div>

@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Entity\RecursoHumano;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\Cartera\RhuSeleccionPruebaTipoRepository")
+ */
+class RhuSeleccionPruebaTipo
+{
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(name="codigo_seleccion_prueba_tipo_pk", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */        
+    private $codigoSeleccionPruebaTipoPk;
+
+    /**
+     * @ORM\Column(name="nombre", type="string", length=80)
+     * * @Assert\NotBlank(message="El campo no puede estar vacio")
+     */
+    private $nombre;
+
+}

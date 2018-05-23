@@ -88,6 +88,41 @@ class TteCliente
     private $estadoInactivo = false;
 
     /**
+     * @ORM\Column(name="codigo_precio_fk", type="integer", nullable=true)
+     */
+    private $codigoPrecioFk;
+
+    /**
+     * @ORM\Column(name="porcentaje_manejo", type="float", options={"default" : 0})
+     */
+    private $porcentajeManejo = 0;
+
+    /**
+     * @ORM\Column(name="manejo_minimo_unidad", type="float", options={"default" : 0})
+     */
+    private $manejoMinimoUnidad = 0;
+
+    /**
+     * @ORM\Column(name="manejo_minimo_despacho", type="float", options={"default" : 0})
+     */
+    private $manejoMinimoDespacho = 0;
+
+    /**
+     * @ORM\Column(name="peso_minimo", type="integer", options={"default" : 0})
+     */
+    private $pesoMinimo = 0;
+
+    /**
+     * @ORM\Column(name="descuento_peso", type="float", options={"default" : 0})
+     */
+    private $descuentoPeso = 0;
+
+    /**
+     * @ORM\Column(name="limitar_descuento_reexpedicion", type="boolean", nullable=true)
+     */
+    private $limitarDescuentoReexpedicion = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -97,6 +132,12 @@ class TteCliente
      * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
      */
     private $identificacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TtePrecio", inversedBy="clientesPrecioRel")
+     * @ORM\JoinColumn(name="codigo_precio_fk", referencedColumnName="codigo_precio_pk")
+     */
+    private $precioRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="clienteRel")
@@ -462,6 +503,166 @@ class TteCliente
     public function setCumplidosClienteRel($cumplidosClienteRel): void
     {
         $this->cumplidosClienteRel = $cumplidosClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPrecioFk()
+    {
+        return $this->codigoPrecioFk;
+    }
+
+    /**
+     * @param mixed $codigoPrecioFk
+     */
+    public function setCodigoPrecioFk($codigoPrecioFk): void
+    {
+        $this->codigoPrecioFk = $codigoPrecioFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeManejo()
+    {
+        return $this->porcentajeManejo;
+    }
+
+    /**
+     * @param mixed $porcentajeManejo
+     */
+    public function setPorcentajeManejo($porcentajeManejo): void
+    {
+        $this->porcentajeManejo = $porcentajeManejo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getManejoMinimoUnidad()
+    {
+        return $this->manejoMinimoUnidad;
+    }
+
+    /**
+     * @param mixed $manejoMinimoUnidad
+     */
+    public function setManejoMinimoUnidad($manejoMinimoUnidad): void
+    {
+        $this->manejoMinimoUnidad = $manejoMinimoUnidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getManejoMinimoDespacho()
+    {
+        return $this->manejoMinimoDespacho;
+    }
+
+    /**
+     * @param mixed $manejoMinimoDespacho
+     */
+    public function setManejoMinimoDespacho($manejoMinimoDespacho): void
+    {
+        $this->manejoMinimoDespacho = $manejoMinimoDespacho;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPesoMinimo()
+    {
+        return $this->pesoMinimo;
+    }
+
+    /**
+     * @param mixed $pesoMinimo
+     */
+    public function setPesoMinimo($pesoMinimo): void
+    {
+        $this->pesoMinimo = $pesoMinimo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescuentoPeso()
+    {
+        return $this->descuentoPeso;
+    }
+
+    /**
+     * @param mixed $descuentoPeso
+     */
+    public function setDescuentoPeso($descuentoPeso): void
+    {
+        $this->descuentoPeso = $descuentoPeso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLimitarDescuentoReexpedicion()
+    {
+        return $this->limitarDescuentoReexpedicion;
+    }
+
+    /**
+     * @param mixed $limitarDescuentoReexpedicion
+     */
+    public function setLimitarDescuentoReexpedicion($limitarDescuentoReexpedicion): void
+    {
+        $this->limitarDescuentoReexpedicion = $limitarDescuentoReexpedicion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrecioRel()
+    {
+        return $this->precioRel;
+    }
+
+    /**
+     * @param mixed $precioRel
+     */
+    public function setPrecioRel($precioRel): void
+    {
+        $this->precioRel = $precioRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasClienteRel()
+    {
+        return $this->facturasClienteRel;
+    }
+
+    /**
+     * @param mixed $facturasClienteRel
+     */
+    public function setFacturasClienteRel($facturasClienteRel): void
+    {
+        $this->facturasClienteRel = $facturasClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecibosClienteRel()
+    {
+        return $this->recibosClienteRel;
+    }
+
+    /**
+     * @param mixed $recibosClienteRel
+     */
+    public function setRecibosClienteRel($recibosClienteRel): void
+    {
+        $this->recibosClienteRel = $recibosClienteRel;
     }
 
 

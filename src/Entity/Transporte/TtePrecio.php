@@ -38,6 +38,11 @@ class TtePrecio
     protected $preciosDetallesPrecioRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteCliente", mappedBy="precioRel")
+     */
+    protected $clientesPrecioRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPrecioPk()
@@ -115,6 +120,22 @@ class TtePrecio
     public function setFechaVence($fechaVence): void
     {
         $this->fechaVence = $fechaVence;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClientesPrecioRel()
+    {
+        return $this->clientesPrecioRel;
+    }
+
+    /**
+     * @param mixed $clientesPrecioRel
+     */
+    public function setClientesPrecioRel($clientesPrecioRel): void
+    {
+        $this->clientesPrecioRel = $clientesPrecioRel;
     }
 
 

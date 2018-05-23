@@ -20,19 +20,19 @@ class GenEntidadRepository extends ServiceEntityRepository
 
     /**
      * @author Andres Acevedo
-     * @param $arConfiguracionEntidad GenEntidad
+     * @param $arEntidad GenEntidad
      * @param $opcion
      * @return mixed
      */
-    public function generarDql($arConfiguracionEntidad, $opcion)
+    public function generarDql($arEntidad, $opcion)
     {
-        $qb = $this->_em->createQueryBuilder()->from($arConfiguracionEntidad->getRutaRepositorio(), 'tbl');
+        $qb = $this->_em->createQueryBuilder()->from('App:'.ucfirst($arEntidad->getModulo())."\\".ucfirst($arEntidad->getPrefijo()).ucfirst($arEntidad->getEntidad()), 'tbl');
         switch ($opcion) {
             case 0:
-                $arrLista = json_decode($arConfiguracionEntidad->getJsonLista());
+                $arrLista = json_decode($arEntidad->getJsonLista());
                 break;
             case 1:
-                $arrLista = json_decode($arConfiguracionEntidad->getJsonExcel());
+                $arrLista = json_decode($arEntidad->getJsonExcel());
                 break;
         }
         $qb->select('tbl.' . $arrLista[0]->campo . ' AS ID');
@@ -52,13 +52,13 @@ class GenEntidadRepository extends ServiceEntityRepository
 
     /**
      * @author Andres Acevedo
-     * @param $arConfiguracionEntidad
+     * @param $arEntidad
      * @return string
      */
-    public function generarDqlFixtures($arConfiguracionEntidad)
+    public function generarDqlFixtures($arEntidad)
     {
-        $arrLista = json_decode($arConfiguracionEntidad->getJsonLista());
-        $qb = $this->_em->createQueryBuilder()->from($arConfiguracionEntidad->getRutaRepositorio(), 'tbl');
+        $arrLista = json_decode($arEntidad->getJsonLista());
+        $qb = $this->_em->createQueryBuilder()->from('App:'.ucfirst($arEntidad->getModulo())."\\".ucfirst($arEntidad->getPrefijo()).ucfirst($arEntidad->getEntidad()), 'tbl');
         $qb->select('tbl.' . $arrLista[0]->campo . ' AS ID');
         $i = 0;
         foreach ($arrLista as $lista) {
@@ -141,7 +141,7 @@ class GenEntidadRepository extends ServiceEntityRepository
      */
     public function listaDetalles($arEntidad, $id)
     {
-        $qb = $this->_em->createQueryBuilder()->from($arEntidad->getRutaRepositorio(), 'tbl');
+        $qb = $this->_em->createQueryBuilder()->from('App:'.ucfirst($arEntidad->getModulo())."\\".ucfirst($arEntidad->getPrefijo()).ucfirst($arEntidad->getEntidad()), 'tbl');
         $arrLista = json_decode($arEntidad->getJsonLista());
         foreach ($arrLista as $lista) {
             $qb->addSelect("tbl.{$lista->campo} AS {$lista->alias}");

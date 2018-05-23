@@ -22,6 +22,11 @@ class GenEntidad
     private $modulo;
 
     /**
+     * @ORM\Column(name="prefijo",type="string",length=20)
+     */
+    private $prefijo;
+
+    /**
      * @ORM\Column(name="funcion",type="string",length=100)
      */
     private $funcion;
@@ -37,24 +42,9 @@ class GenEntidad
     private $entidad;
 
     /**
-     * @ORM\Column(name="ruta_repositorio",type="string",length=100)
-     */
-    private $rutaRepositorio;
-
-    /**
-     * @ORM\Column(name="ruta_entidad",type="string",length=100)
-     */
-    private $rutaEntidad;
-
-    /**
      * @ORM\Column(name="activo",type="boolean")
      */
     private $activo = true;
-
-    /**
-     * @ORM\Column(name="ruta_formulario",type="string",length=50)
-     */
-    private $rutaFormulario;
 
     /**
      * @ORM\Column(name="json_lista", type="text", nullable=true)
@@ -100,54 +90,6 @@ class GenEntidad
     /**
      * @return mixed
      */
-    public function getRutaRepositorio()
-    {
-        return $this->rutaRepositorio;
-    }
-
-    /**
-     * @param mixed $rutaRepositorio
-     */
-    public function setRutaRepositorio($rutaRepositorio): void
-    {
-        $this->rutaRepositorio = $rutaRepositorio;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRutaEntidad()
-    {
-        return $this->rutaEntidad;
-    }
-
-    /**
-     * @param mixed $rutaEntidad
-     */
-    public function setRutaEntidad($rutaEntidad): void
-    {
-        $this->rutaEntidad = $rutaEntidad;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getActivo()
-    {
-        return $this->activo;
-    }
-
-    /**
-     * @param mixed $activo
-     */
-    public function setActivo($activo): void
-    {
-        $this->activo = $activo;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getModulo()
     {
         return $this->modulo;
@@ -164,17 +106,81 @@ class GenEntidad
     /**
      * @return mixed
      */
-    public function getRutaFormulario()
+    public function getPrefijo()
     {
-        return $this->rutaFormulario;
+        return $this->prefijo;
     }
 
     /**
-     * @param mixed $rutaFormulario
+     * @param mixed $prefijo
      */
-    public function setRutaFormulario($rutaFormulario): void
+    public function setPrefijo($prefijo): void
     {
-        $this->rutaFormulario = $rutaFormulario;
+        $this->prefijo = $prefijo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFuncion()
+    {
+        return $this->funcion;
+    }
+
+    /**
+     * @param mixed $funcion
+     */
+    public function setFuncion($funcion): void
+    {
+        $this->funcion = $funcion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupo()
+    {
+        return $this->grupo;
+    }
+
+    /**
+     * @param mixed $grupo
+     */
+    public function setGrupo($grupo): void
+    {
+        $this->grupo = $grupo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidad()
+    {
+        return $this->entidad;
+    }
+
+    /**
+     * @param mixed $entidad
+     */
+    public function setEntidad($entidad): void
+    {
+        $this->entidad = $entidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActivo()
+    {
+        return $this->activo;
+    }
+
+    /**
+     * @param mixed $activo
+     */
+    public function setActivo($activo): void
+    {
+        $this->activo = $activo;
     }
 
     /**
@@ -244,22 +250,6 @@ class GenEntidad
     /**
      * @return mixed
      */
-    public function getEntidad()
-    {
-        return $this->entidad;
-    }
-
-    /**
-     * @param mixed $entidad
-     */
-    public function setEntidad($entidad): void
-    {
-        $this->entidad = $entidad;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getPersonalizado()
     {
         return $this->personalizado;
@@ -272,40 +262,5 @@ class GenEntidad
     {
         $this->personalizado = $personalizado;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getFuncion()
-    {
-        return $this->funcion;
-    }
-
-    /**
-     * @param mixed $funcion
-     */
-    public function setFuncion($funcion): void
-    {
-        $this->funcion = $funcion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGrupo()
-    {
-        return $this->grupo;
-    }
-
-    /**
-     * @param mixed $grupo
-     */
-    public function setGrupo($grupo): void
-    {
-        $this->grupo = $grupo;
-    }
-
-
-
 }
 

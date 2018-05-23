@@ -5,6 +5,7 @@ namespace App\Controller\Estructura;
 use App\Entity\General\GenEntidad;
 use App\Entity\General\GenCubo;
 use Doctrine\ORM\EntityManager;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -241,7 +242,7 @@ final class AdministracionController extends Controller
         if ($arEntidad->getPersonalizado()) {
             $arRegistros = $em->getRepository('App:General\GenEntidad')->lista($arEntidad, 0);
         } else {
-            $arRegistros = $em->getRepository($arEntidad->getRutaRepositorio())->camposPredeterminados();
+            $arRegistros = $em->getRepository('App:' . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad()))->camposPredeterminados();
         }
         if ($request->getMethod() == 'POST') {
             if ($request->request->has('form')) {
@@ -419,21 +420,23 @@ final class AdministracionController extends Controller
      * @author Andres Acevedo Cartagena
      * @param Request $request
      * @param $entidad
+     * @param $modulo
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("admin/{entidad}/{id}/nuevo", name="admin_nuevo")
+     * @Route("admin/{modulo}/{entidad}/nuevo/{id}", name="admin_nuevo")
      */
-    public function generarAdminNuevo(Request $request, $entidad, $id)
+    public function generarAdminNuevo(Request $request, $entidad, $modulo, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arEntidad = $em->getRepository('App:General\GenEntidad')->find($entidad);
-        $rutaEntidad = $arEntidad->getRutaEntidad();
+        $codigo = $modulo . '_' . $entidad;
+        $arEntidad = $em->getRepository('App:General\GenEntidad')->find($codigo);
+        $rutaEntidad = "\App\Entity\\" . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad());
         $arRegistro = new $rutaEntidad();
-        $getPk = 'getCodigo'.ucfirst($arEntidad->getEntidad()). 'Pk';
-        //Validaciones adicionales.
-//        $arRegistro = $this->validacionAdicional($arRegistro, $arEntidad, $id);
-//        $form = $this->createForm($arEntidad->getRutaFormulario(), $arRegistro) : $this->formularioCubo($entidadCubo, $arRegistro);
-        $form = $this->createForm($arEntidad->getRutaFormulario(), $arRegistro);
+        $getPk = 'getCodigo' . ucfirst($arEntidad->getEntidad()) . 'Pk';
+        if ($id != 0) {
+            $arRegistro = $em->getRepository('App:' . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad()))->find($id);
+        }
+        $form = $this->createForm("\App\Form\Type\\" . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getEntidad() . 'Type'), $arRegistro);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
@@ -443,7 +446,7 @@ final class AdministracionController extends Controller
 //                }
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arEntidad->getCodigoConfiguracionEntidadPk(), 'id' => $arRegistro->$getPk(), 'entidadCubo' => $entidadCubo]));
+                return $this->redirect($this->generateUrl('admin_detalle', ['modulo' => $arEntidad->getModulo(), 'entidad' => $arEntidad->getEntidad(), 'id' => $arRegistro->$getPk()]));
             }
             if ($form->get('guardarnuevo')->isClicked()) {
 //                if ($entidadCubo) {
@@ -452,7 +455,7 @@ final class AdministracionController extends Controller
                 $em->persist($arRegistro);
                 $em->flush();
 //                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arEntidad->getCodigoConfiguracionEntidadPk(), 'id' => 0, 'entidadCubo' => $entidadCubo]));
-                return $this->redirect($this->generateUrl('admin_detalle', []));
+                return $this->redirect($this->generateUrl('admin_nuevo', ['modulo' => $arEntidad->getModulo(), 'entidad' => $arEntidad->getEntidad(), 'id' => 0]));
             }
         }
         return $this->render('estructura/nuevo.html.twig', [

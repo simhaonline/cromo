@@ -73,11 +73,6 @@ class TteCondicion
     private $pesoMinimo = 0;
 
     /**
-     * @ORM\Column(name="lista_general", type="boolean", nullable=true)
-     */
-    private $listaGeneral = false;
-
-    /**
      * @ORM\Column(name="permite_recaudo", type="boolean", nullable=true)
      */
     private $permiteRecaudo = false;
@@ -308,22 +303,6 @@ class TteCondicion
     public function setPesoMinimo($pesoMinimo): void
     {
         $this->pesoMinimo = $pesoMinimo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getListaGeneral()
-    {
-        return $this->listaGeneral;
-    }
-
-    /**
-     * @param mixed $listaGeneral
-     */
-    public function setListaGeneral($listaGeneral): void
-    {
-        $this->listaGeneral = $listaGeneral;
     }
 
     /**

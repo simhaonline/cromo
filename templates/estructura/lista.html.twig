@@ -1,8 +1,26 @@
-{% extends 'base_'~modulo~'.html.twig' %}
+{% extends 'base_'~arEntidad.modulo~'.html.twig' %}
 {% block content %}
     <div class="row">
         <div class="col-lg-12">
-            <h3 class='page-header'>{{ arEntidad.modulo }}<small style='font-size: 20px'> {{ arEntidad.funcion }}: {{ arEntidad.grupo }}: {{ arEntidad.entidad }}</small></h3>
+            <h3 class='page-header'>
+                <a href="{{ path('admin_navigator',{'modulo':arEntidad.modulo}) }}" class="link-black">
+                    {{ arEntidad.modulo | capitalize }}
+                </a>
+                <a href="{{ path('admin_navigator',{'modulo':arEntidad.modulo,'funcion':arEntidad.funcion}) }}"
+                   class="link-black">
+                    {{ arEntidad.funcion }}
+                </a>
+                <small style='font-size: 20px'>
+                    <a href="{{ path('admin_navigator',{'modulo':arEntidad.modulo,'funcion':arEntidad.funcion,'grupo': arEntidad.grupo}) }}"
+                       class="link-grey">
+                        {{ arEntidad.grupo|capitalize }}:
+                    </a>
+                    <a href="{{ path('admin_navigator',{'modulo':arEntidad.modulo,'funcion':arEntidad.funcion,'grupo': arEntidad.grupo, 'entidad': arEntidad.entidad}) }}"
+                       class="link-grey">
+                        {{ arEntidad.entidad }} lista
+                    </a>
+                </small>
+            </h3>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -58,12 +76,11 @@
                     </td>
                 {% endif %}
                 <td style="text-align: center">
-                    <a href="{{ path('nuevo', {'entidad': arEntidad.codigoEntidadPk,'id': datos.ID,'entidadCubo':entidadCubo }) }}"><i
+                    <a href="{{ path('admin_nuevo', {'entidad': arEntidad.codigoEntidadPk,'id': datos.ID,'entidadCubo':entidadCubo }) }}"><i
                                 class="fa fa-edit" style="font-size: large"></i>
                     </a>
                 <td style="text-align: center">
-
-                    <a href="{{ path('detalle', { 'entidad': arEntidad.codigoEntidadPk,'id': datos.ID,'entidadCubo':entidadCubo }) }}">
+                    <a href="{{ path('admin_detalle', { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
                         <i class="fa fa-share-square-o" style="font-size: large">
                         </i>
                     </a>
@@ -102,7 +119,7 @@
         </div>
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('nuevo',{'entidad': arEntidad.codigoEntidadPk,'id': 0,'entidadCubo': entidadCubo}) }}">Nuevo
+               href="{{ path('admin_nuevo',{'entidad': arEntidad.codigoEntidadPk,'id': 0,'entidadCubo': entidadCubo}) }}">Nuevo
             </a>
         </div>
         <div class="btn-group">

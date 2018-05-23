@@ -15,29 +15,6 @@ class InvItemRepository extends ServiceEntityRepository
         parent::__construct($registry, InvItem::class);
     }
 
-    public function lista($nombre = '', $codigoBarras = '')
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('ii.codigoItemPk AS ID')
-            ->addSelect("ii.nombre AS NOMBRE")
-            ->addSelect("ii.cantidadExistencia AS EXISTENCIAS")
-            ->addSelect("ii.afectaInventario AS A_I")
-            ->addSelect("ii.stockMinimo AS STOCK_MINIMO")
-            ->addSelect("ii.stockMaximo AS STOCK_MAXIMO")
-            ->addSelect("ii.vrPrecioPredeterminado AS PRECIO_PREDETERMINADO")
-            ->from("App:Inventario\InvItem", "ii")
-            ->where('ii.codigoItemPk <> 0');
-        if ($nombre != '') {
-            $qb->andWhere("ii.nombre LIKE '%{$nombre}%'");
-        }
-        if ($codigoBarras != '') {
-            $qb->andWhere("ii.codigoBarras = {$codigoBarras}");
-        }
-        $qb->orderBy('ii.codigoItemPk', 'ASC');
-        $dql = $this->getEntityManager()->createQuery($qb->getDQL());
-        return $dql->execute();
-    }
-
     /**
      * @param $arrSeleccionados array
      * @return string
@@ -54,5 +31,28 @@ class InvItemRepository extends ServiceEntityRepository
             }
         }
         return $respuesta;
+    }
+
+    public function camposPredeterminados()
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('ii.codigoItemPk AS ID')
+            ->addSelect("ii.nombre AS NOMBRE")
+            ->addSelect("ii.cantidadExistencia AS EXISTENCIAS")
+            ->addSelect("ii.afectaInventario AS A_I")
+            ->addSelect("ii.stockMinimo AS STOCK_MINIMO")
+            ->addSelect("ii.stockMaximo AS STOCK_MAXIMO")
+            ->addSelect("ii.vrPrecioPredeterminado AS PRECIO_PREDETERMINADO")
+            ->from("App:Inventario\InvItem", "ii")
+            ->where('ii.codigoItemPk <> 0');
+//        if ($nombre != '') {
+//            $qb->andWhere("ii.nombre LIKE '%{$nombre}%'");
+//        }
+//        if ($codigoBarras != '') {
+//            $qb->andWhere("ii.codigoBarras = {$codigoBarras}");
+//        }
+        $qb->orderBy('ii.codigoItemPk', 'ASC');
+        $dql = $this->getEntityManager()->createQuery($qb->getDQL());
+        return $dql->execute();
     }
 }

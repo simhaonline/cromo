@@ -37,11 +37,6 @@ class GenEntidad
     private $entidad;
 
     /**
-     * @ORM\Column(name="base",type="string", length=50)
-     */
-    private $base;
-
-    /**
      * @ORM\Column(name="ruta_repositorio",type="string",length=100)
      */
     private $rutaRepositorio;
@@ -100,22 +95,6 @@ class GenEntidad
     public function setCodigoEntidadPk($codigoEntidadPk): void
     {
         $this->codigoEntidadPk = $codigoEntidadPk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBase()
-    {
-        return $this->base;
-    }
-
-    /**
-     * @param mixed $base
-     */
-    public function setBase($base): void
-    {
-        $this->base = $base;
     }
 
     /**

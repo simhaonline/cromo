@@ -1,0 +1,29 @@
+{#{% extends 'base_'~arEntidad.modulo~'.html.twig' %}#}
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    <h3>Navigator</h3>
+    <ul class="list-group list-group-flush" style="width: 40%;">
+        <li class="list-group-item active">{{ arRutas[0].modulo |capitalize }}</li>
+            <ul>
+                <li>{{ arRutas[0].funcion|capitalize }}</li>
+                    <ul>
+                        <li>{{ arRutas[0].grupo|capitalize }}
+                            <ul>
+                                <li>
+                                    {{ arRutas[0].entidad | capitalize }}
+                                </li>
+        {% for arRuta in arRutas %}
+            {% set moduloActivo = arRuta.modulo %}
+            {% set funcionActiva = arRuta.funcion %}
+            {% set grupoActivo = arRuta.grupo %}
+            {% if moduloActivo != arRuta.modulo %}
+            {% else %}
+                {% if funcionActiva != arRuta.funcion %}
+                {% else %}
+                    {% if grupoActivo != arRuta.grupo %}
+                    {% else %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+{% endblock %}

@@ -5,6 +5,7 @@ namespace App\Repository\General;
 use App\Entity\General\GenEntidad;
 use App\Entity\Seguridad\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Zend\Json\Json;
 
@@ -21,14 +22,10 @@ class GenEntidadRepository extends ServiceEntityRepository
      * @author Andres Acevedo
      * @param $arConfiguracionEntidad GenEntidad
      * @param $opcion
-     * @param string $entidadCubo
      * @return mixed
      */
-    public function generarDql($arConfiguracionEntidad, $opcion, $entidadCubo = "")
+    public function generarDql($arConfiguracionEntidad, $opcion)
     {
-        global $kernel;
-        /** @var  $arUsuario Usuario */
-        $arUsuario = $kernel->getContainer()->get("security.token_storage")->getToken()->getUser();
         $qb = $this->_em->createQueryBuilder()->from($arConfiguracionEntidad->getRutaRepositorio(), 'tbl');
         switch ($opcion) {
             case 0:
@@ -48,15 +45,16 @@ class GenEntidadRepository extends ServiceEntityRepository
             }
             $i++;
         }
-        if ($entidadCubo) {
-            $qb->andWhere("tbl.codigoEntidadFk = '{$entidadCubo}'")
-                ->andWhere("tbl.usuario = '{$arUsuario->getUsername()}'");
-        }
         $qb->orderBy('tbl.' . $arrLista[0]->campo);
         $query = $qb->getDQL();
         return $query;
     }
 
+    /**
+     * @author Andres Acevedo
+     * @param $arConfiguracionEntidad
+     * @return string
+     */
     public function generarDqlFixtures($arConfiguracionEntidad)
     {
         $arrLista = json_decode($arConfiguracionEntidad->getJsonLista());
@@ -76,8 +74,8 @@ class GenEntidadRepository extends ServiceEntityRepository
         return $query;
     }
 
-
     /**
+     * @author Andres Acevedo
      * @param $arConfiguracionEntidad GenEntidad
      * @param $arrFiltros
      * @return mixed
@@ -117,9 +115,9 @@ class GenEntidadRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arConfiguracionEntidad
+     * @author Andres Acevedo
+     * @param $arEntidad GenEntidad
      * @param $opcion
-     * @param $entidadCubo
      * @return mixed
      */
     public function lista($arEntidad, $opcion)
@@ -138,13 +136,13 @@ class GenEntidadRepository extends ServiceEntityRepository
 
     /**
      * @author Andres Acevedo
-     * @param $arConfiguracionEntidad GenEntidad
+     * @param $arEntidad GenEntidad
      * @return mixed
      */
-    public function listaDetalles($arConfiguracionEntidad, $id)
+    public function listaDetalles($arEntidad, $id)
     {
-        $qb = $this->_em->createQueryBuilder()->from($arConfiguracionEntidad->getRutaRepositorio(), 'tbl');
-        $arrLista = json_decode($arConfiguracionEntidad->getJsonLista());
+        $qb = $this->_em->createQueryBuilder()->from($arEntidad->getRutaRepositorio(), 'tbl');
+        $arrLista = json_decode($arEntidad->getJsonLista());
         foreach ($arrLista as $lista) {
             $qb->addSelect("tbl.{$lista->campo} AS {$lista->alias}");
 
@@ -156,6 +154,7 @@ class GenEntidadRepository extends ServiceEntityRepository
     }
 
     /**
+     * @author Andres Acevedo
      * @param $arConfiguracionEntidad GenEntidad
      * @param $arrSeleccionados
      * @return array
@@ -194,5 +193,31 @@ class GenEntidadRepository extends ServiceEntityRepository
         }
 
         return $arrRespuestas;
+    }
+
+
+    public function generarNavigator($modulo,$funcion, $grupo, $entidad )
+    {
+        $qb = $this->_em->createQueryBuilder()->from('App:General\GenEntidad', 'ge')
+            ->select('ge.modulo')
+            ->addSelect('ge.funcion')
+            ->addSelect('ge.grupo')
+            ->addSelect('ge.entidad')
+            ->where('ge.codigoEntidadPk IS NOT NULL');
+        if ($modulo != '') {
+            $qb->andWhere("ge.modulo = '{$modulo}'");
+        }
+        if ($grupo != '') {
+            $qb->andWhere("ge.grupo = '{$grupo}'");
+        }
+        if ($entidad != '') {
+            $qb->andWhere("ge.entidad = '{$entidad}'");
+        }
+        if ($funcion != '') {
+            $qb->andWhere("ge.funcion = '{$funcion}'");
+        }
+        $qb->orderBy("ge.modulo",'ASC');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
     }
 }

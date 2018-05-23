@@ -2,7 +2,7 @@
 
 namespace App\Controller\Estructura;
 
-use App\Entity\General\GenConfiguracionEntidad;
+use App\Entity\General\GenEntidad;
 use App\Entity\General\GenCubo;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
-use Zend\Json\Json;
 
 final class AdministracionController extends Controller
 {
@@ -153,7 +152,7 @@ final class AdministracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $arConfiguracionEntidad = $em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad);
+        $arConfiguracionEntidad = $em->getRepository('App:General\GenEntidad')->find($entidad);
         $jsonFiltro = $arConfiguracionEntidad->getJsonFiltro();
         $arrCamposFiltro = json_decode($jsonFiltro);
         $arrNombreCamposFiltro = [];
@@ -171,17 +170,17 @@ final class AdministracionController extends Controller
         }
         $form = $this->formularioLista();
         $form->handleRequest($request);
-        $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 0, $entidadCubo);
+        $arRegistros = $em->getRepository('App:General\GenEntidad')->lista($arConfiguracionEntidad, 0, $entidadCubo);
         if ($request->getMethod() == 'POST') {
             if ($request->request->has('form')) {
                 if ($form->isSubmitted() && $form->isValid()) {
                     $arrSeleccionados = $request->request->get('ChkSeleccionar');
                     if ($form->get('btnExcel')->isClicked()) {
-                        $arRegistrosExcel = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arConfiguracionEntidad, 1, $entidadCubo);
+                        $arRegistrosExcel = $em->getRepository('App:General\GenEntidad')->lista($arConfiguracionEntidad, 1, $entidadCubo);
                         $this->generarExcel($arRegistrosExcel, 'Excel');
                     }
                     if ($form->get('btnEliminar')->isClicked()) {
-                        $respuesta = $em->getRepository('App:General\GenConfiguracionEntidad')->eliminar($arConfiguracionEntidad, $arrSeleccionados);
+                        $respuesta = $em->getRepository('App:General\GenEntidad')->eliminar($arConfiguracionEntidad, $arrSeleccionados);
                         $this->validarRespuesta($respuesta, $em);
                         return $this->redirectToRoute("lista", ['entidad' => $entidad, 'entidadCubo' => $entidadCubo]);
                     }
@@ -191,7 +190,7 @@ final class AdministracionController extends Controller
                 if ($formFiltro instanceof Form) {
                     if ($formFiltro->get('btnFiltrar')->isClicked()) {
                         $arrFiltros = $formFiltro->getData();
-                        $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->listaFiltro($arConfiguracionEntidad, $arrFiltros);
+                        $arRegistros = $em->getRepository('App:General\GenEntidad')->listaFiltro($arConfiguracionEntidad, $arrFiltros);
                     }
                 }
             }
@@ -211,13 +210,12 @@ final class AdministracionController extends Controller
      * @author Andres Acevedo Cartagena
      * @param Request $request
      * @param $entidad
-     * @param $entidadCubo
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("admin/{modulo}/{entidad}",name="admin")
+     * @Route("admin/{modulo}/{entidad}/lista",name="admin_lista")
      */
-    public function generarAdmin(Request $request, $modulo, $entidad)
+    public function generarAdminLista(Request $request, $modulo, $entidad)
     {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
@@ -240,17 +238,21 @@ final class AdministracionController extends Controller
         }
         $form = $this->formularioLista();
         $form->handleRequest($request);
-        $arRegistros = $em->getRepository('App:General\GenEntidad')->lista($arEntidad, 0);
+        if ($arEntidad->getPersonalizado()) {
+            $arRegistros = $em->getRepository('App:General\GenEntidad')->lista($arEntidad, 0);
+        } else {
+            $arRegistros = $em->getRepository($arEntidad->getRutaRepositorio())->camposPredeterminados();
+        }
         if ($request->getMethod() == 'POST') {
             if ($request->request->has('form')) {
                 if ($form->isSubmitted() && $form->isValid()) {
                     $arrSeleccionados = $request->request->get('ChkSeleccionar');
                     if ($form->get('btnExcel')->isClicked()) {
-                        $arRegistrosExcel = $em->getRepository('App:General\GenConfiguracionEntidad')->lista($arEntidad, 1);
+                        $arRegistrosExcel = $em->getRepository('App:General\GenEntidad')->lista($arEntidad, 1);
                         $this->generarExcel($arRegistrosExcel, 'Excel');
                     }
                     if ($form->get('btnEliminar')->isClicked()) {
-                        $respuesta = $em->getRepository('App:General\GenConfiguracionEntidad')->eliminar($arEntidad, $arrSeleccionados);
+                        $respuesta = $em->getRepository('App:General\GenEntidad')->eliminar($arEntidad, $arrSeleccionados);
                         $this->validarRespuesta($respuesta, $em);
                         //return $this->redirectToRoute("lista", ['entidad' => $entidad, 'entidadCubo' => $entidadCubo]);
                     }
@@ -260,14 +262,13 @@ final class AdministracionController extends Controller
                 if ($formFiltro instanceof Form) {
                     if ($formFiltro->get('btnFiltrar')->isClicked()) {
                         $arrFiltros = $formFiltro->getData();
-                        $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->listaFiltro($arEntidad, $arrFiltros);
+                        $arRegistros = $em->getRepository('App:General\GenEntidad')->listaFiltro($arEntidad, $arrFiltros);
                     }
                 }
             }
         }
         $arRegistros = $paginator->paginate($arRegistros, $request->query->getInt('page', 1), 10);
         return $this->render('estructura/lista.html.twig', [
-            'modulo' => $modulo,
             'arRegistros' => $arRegistros,
             'entidadCubo' => "",
             'arEntidad' => $arEntidad,
@@ -281,21 +282,43 @@ final class AdministracionController extends Controller
      * @author Andres Acevedo Cartagena
      * @param Request $request
      * @param $entidad
-     * @param $entidadCubo
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("detalle/{entidad}/{id}/{entidadCubo}",name="detalle")
+     * @Route("admin/{modulo}/{entidad}/detalles/{id}",name="admin_detalle")
      */
-    public function generarDetalles(Request $request, $entidad, $id, $entidadCubo = "")
+    public function generarAdminDetalles(Request $request, $modulo, $entidad, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arConfiguracionEntidad = $em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad);
-        $arRegistros = $em->getRepository('App:General\GenConfiguracionEntidad')->listaDetalles($arConfiguracionEntidad, $id);
-        $arrCampos = json_decode($em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad)->getJsonLista());
+        $codigo = $modulo . "_" . $entidad;
+        $arEntidad = $em->getRepository('App:General\GenEntidad')->find($codigo);
+        $arRegistros = $em->getRepository('App:General\GenEntidad')->listaDetalles($arEntidad, $id);
+        $arrCampos = json_decode($em->getRepository('App:General\GenEntidad')->find($codigo)->getJsonLista());
         return $this->render('estructura/detalles.html.twig', [
-            'arConfiguracionEntidad' => $arConfiguracionEntidad,
+            'arEntidad' => $arEntidad,
             'arRegistros' => $arRegistros,
-            'arrCampos' => $arrCampos,
-            'entidadCubo' => $entidadCubo
+            'arrCampos' => $arrCampos
+        ]);
+    }
+
+    /**
+     * @author Andres Acevedo Cartagena
+     * @param Request $request
+     * @param string $modulo
+     * @param string $grupo
+     * @param string $entidad
+     * @param string $funcion
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("admin/navigator/{modulo}/{funcion}/{grupo}/{entidad}",name="admin_navigator")
+     */
+    public function generarAdminNavigator(Request $request, $modulo = '', $grupo = '', $entidad = '', $funcion = '')
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arRutas = $em->getRepository('App:General\GenEntidad')->generarNavigator($modulo, $funcion, $grupo, $entidad);
+        $codigo = $modulo . "_" . $entidad;
+        $arEntidad = $em->getRepository('App:General\GenEntidad')->find($codigo);
+        $arEntidad = $arEntidad != null ?: '';
+        return $this->render('estructura/navigator.html.twig', [
+            'arEntidad' => $arEntidad,
+            'arRutas' => $arRutas
         ]);
     }
 
@@ -309,31 +332,32 @@ final class AdministracionController extends Controller
     public function configuracionEntidad(Request $request, $entidad)
     {
         /**
-         * @var $arConfiguracionEntidad GenConfiguracionEntidad
+         * @var $arConfiguracionEntidad GenEntidad
          */
         $em = $this->getDoctrine()->getManager();
-        $arConfiguracionEntidad = $em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad);
-        $arrColumnasLista = json_decode($arConfiguracionEntidad->getJsonLista());
-        $arrColumnasExcel = json_decode($arConfiguracionEntidad->getJsonExcel());
-        $arrColumnasFiltro = json_decode($arConfiguracionEntidad->getJsonFiltro());
+        $arEntidad = $em->getRepository('App:General\GenEntidad')->find($entidad);
+        $arrColumnasLista = json_decode($arEntidad->getJsonLista());
+        $arrColumnasExcel = json_decode($arEntidad->getJsonExcel());
+        $arrColumnasFiltro = json_decode($arEntidad->getJsonFiltro());
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
-
+                $arEntidad->setPersonalizado($request->request->get('personalizada') != null ? true : false);
                 $arrAliasLista = $request->request->get('aliasLista');
                 $arrMostrarLista = $request->request->get('mostrarLista');
-                $this->generarJson($arConfiguracionEntidad, $arrColumnasLista, $em, $arrAliasLista, $arrMostrarLista, 'lista');
+                $this->generarJson($arEntidad, $arrColumnasLista, $em, $arrAliasLista, $arrMostrarLista, 'lista');
 
                 $arrAliasFiltros = $request->request->get('aliasFiltro');
                 $arrMostrarFiltros = $request->request->get('mostrarFiltro');
-                $this->generarJson($arConfiguracionEntidad, $arrColumnasLista, $em, $arrAliasFiltros, $arrMostrarFiltros, 'filtro');
+                $this->generarJson($arEntidad, $arrColumnasLista, $em, $arrAliasFiltros, $arrMostrarFiltros, 'filtro');
 
                 $arrAliasExcel = $request->request->get('aliasExcel');
                 $arrMostrarExcel = $request->request->get('mostrarExcel');
-                $this->generarJson($arConfiguracionEntidad, $arrColumnasLista, $em, $arrAliasExcel, $arrMostrarExcel, 'excel');
+                $this->generarJson($arEntidad, $arrColumnasLista, $em, $arrAliasExcel, $arrMostrarExcel, 'excel');
+
 
             }
             $em->flush();
@@ -342,13 +366,14 @@ final class AdministracionController extends Controller
         return $this->render('estructura/configuracionEntidad.html.twig', [
             'form' => $form->createView(),
             'arrColumnasLista' => $arrColumnasLista,
+            'arEntidad' => $arEntidad,
             'arrColumnasExcel' => $arrColumnasExcel,
             'arrColumnasFiltro' => $arrColumnasFiltro
         ]);
     }
 
     /**
-     * @param $arConfiguracionEntidad GenConfiguracionEntidad
+     * @param $arConfiguracionEntidad GenEntidad
      * @param $arrColumnas
      * @param $em
      * @param $arrAlias
@@ -356,7 +381,6 @@ final class AdministracionController extends Controller
      */
     public function generarJson($arConfiguracionEntidad, $arrColumnas, $em, $arrAlias, $arrMostrar, $json)
     {
-
         foreach ($arrColumnas as $columna) {
             if ($arrAlias[$columna->campo]) {
                 if ($arrAlias[$columna->campo] != '') {
@@ -378,7 +402,7 @@ final class AdministracionController extends Controller
         switch ($json) {
             case 'lista':
                 $arConfiguracionEntidad->setJsonLista(json_encode($arrColumnas));
-                $dqlLista = $em->getRepository('App:General\GenConfiguracionEntidad')->generarDql($arConfiguracionEntidad, 0);
+                $dqlLista = $em->getRepository('App:General\GenEntidad')->generarDql($arConfiguracionEntidad, 0);
                 $arConfiguracionEntidad->setDqlLista($dqlLista);
                 break;
             case 'excel':
@@ -396,43 +420,44 @@ final class AdministracionController extends Controller
      * @param Request $request
      * @param $entidad
      * @param $id
-     * @param $entidadCubo
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("nuevo/{entidad}/{id}/{entidadCubo}", name="nuevo")
+     * @Route("admin/{entidad}/{id}/nuevo", name="admin_nuevo")
      */
-    public function generarNuevo(Request $request, $entidad, $id, $entidadCubo = "")
+    public function generarAdminNuevo(Request $request, $entidad, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arConfiguracionEntidad = $em->getRepository('App:General\GenConfiguracionEntidad')->find($entidad);
-        $rutaEntidad = $arConfiguracionEntidad->getRutaEntidad();
+        $arEntidad = $em->getRepository('App:General\GenEntidad')->find($entidad);
+        $rutaEntidad = $arEntidad->getRutaEntidad();
         $arRegistro = new $rutaEntidad();
-        $getPk = 'getCodigo' . substr($arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 3) . 'Pk';
+        $getPk = 'getCodigo'.ucfirst($arEntidad->getEntidad()). 'Pk';
         //Validaciones adicionales.
-        $arRegistro = $this->validacionAdicional($arRegistro, $arConfiguracionEntidad, $id, $entidadCubo);
-        $form = $entidadCubo == "" ? $this->createForm($arConfiguracionEntidad->getRutaFormulario(), $arRegistro) : $this->formularioCubo($entidadCubo, $arRegistro);
+//        $arRegistro = $this->validacionAdicional($arRegistro, $arEntidad, $id);
+//        $form = $this->createForm($arEntidad->getRutaFormulario(), $arRegistro) : $this->formularioCubo($entidadCubo, $arRegistro);
+        $form = $this->createForm($arEntidad->getRutaFormulario(), $arRegistro);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if ($entidadCubo) {
-                    //Validar funciones adicionales para guardar un registro según la entidad.
-                    $arRegistro = $em->getRepository($arConfiguracionEntidad->getRutaEntidad())->guardar($form, $arRegistro, $entidadCubo);
-                }
+//                if ($entidadCubo) {
+//                    //Validar funciones adicionales para guardar un registro según la entidad.
+//                    $arRegistro = $em->getRepository($arEntidad->getRutaEntidad())->guardar($form, $arRegistro, $entidadCubo);
+//                }
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'id' => $arRegistro->$getPk(), 'entidadCubo' => $entidadCubo]));
+                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arEntidad->getCodigoConfiguracionEntidadPk(), 'id' => $arRegistro->$getPk(), 'entidadCubo' => $entidadCubo]));
             }
             if ($form->get('guardarnuevo')->isClicked()) {
-                if ($entidadCubo) {
-                    $arRegistro = $em->getRepository($arConfiguracionEntidad->getRutaEntidad())->guardar($form, $arRegistro, $entidadCubo);
-                }
+//                if ($entidadCubo) {
+//                    $arRegistro = $em->getRepository($arEntidad->getRutaEntidad())->guardar($form, $arRegistro, $entidadCubo);
+//                }
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'id' => 0, 'entidadCubo' => $entidadCubo]));
+//                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arEntidad->getCodigoConfiguracionEntidadPk(), 'id' => 0, 'entidadCubo' => $entidadCubo]));
+                return $this->redirect($this->generateUrl('admin_detalle', []));
             }
         }
         return $this->render('estructura/nuevo.html.twig', [
-            'entidadCubo' => $entidadCubo,
-            'arConfiguracionEntidad' => $arConfiguracionEntidad,
+//            'entidadCubo' => $entidadCubo,
+            'arEntidad' => $arEntidad,
             'form' => $form->createView()
         ]);
     }
@@ -503,7 +528,7 @@ final class AdministracionController extends Controller
      */
     public function formularioFiltro($jsonFiltro)
     {
-        $form = $this->get('form.factory')->createNamedBuilder('formFiltro', FormType::class,null,['allow_extra_fields' => true])->getForm();
+        $form = $this->get('form.factory')->createNamedBuilder('formFiltro', FormType::class, null, ['allow_extra_fields' => true])->getForm();
         $arrFiltros = json_decode($jsonFiltro);
         $boolFiltrar = false;
         foreach ($arrFiltros as $arrFiltro) {
@@ -539,7 +564,7 @@ final class AdministracionController extends Controller
 
     /**
      * @param $arRegistro
-     * @param $arConfiguracionEntidad GenConfiguracionEntidad
+     * @param $arConfiguracionEntidad GenEntidad
      * @param $id
      * @param $entidadCubo
      * @return mixed
@@ -575,7 +600,7 @@ final class AdministracionController extends Controller
     public function generarPropiedadesFormCubo($arRegistro, $entidadCubo)
     {
         $em = $this->getDoctrine()->getManager();
-        $arConfiguracionEntidad = $em->getRepository("App:General\GenConfiguracionEntidad")->find($entidadCubo);
+        $arConfiguracionEntidad = $em->getRepository("App:General\GenEntidad")->find($entidadCubo);
         $arrCampos = json_decode($arRegistro->getJsonCubo());
         $arrCamposEntidad = json_decode($arConfiguracionEntidad->getJsonLista());
         $arrCamposSelect = [];

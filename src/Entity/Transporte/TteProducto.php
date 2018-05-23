@@ -27,6 +27,11 @@ class TteProducto
     private $codigoTransporte;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="productoRel")
+     */
+    protected $guiasProductoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TtePrecioDetalle", mappedBy="productoRel")
      */
     protected $preciosDetallesProductoRel;
@@ -93,6 +98,22 @@ class TteProducto
     public function setCodigoTransporte($codigoTransporte): void
     {
         $this->codigoTransporte = $codigoTransporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasProductoRel()
+    {
+        return $this->guiasProductoRel;
+    }
+
+    /**
+     * @param mixed $guiasProductoRel
+     */
+    public function setGuiasProductoRel($guiasProductoRel): void
+    {
+        $this->guiasProductoRel = $guiasProductoRel;
     }
 
 

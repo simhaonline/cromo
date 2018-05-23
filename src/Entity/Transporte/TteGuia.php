@@ -233,6 +233,11 @@ class TteGuia
     private $codigoServicioFk;
 
     /**
+     * @ORM\Column(name="codigo_producto_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoProductoFk;
+
+    /**
      * @ORM\Column(name="codigo_empaque_fk", type="string", length=20, nullable=true)
      */
     private $codigoEmpaqueFk;
@@ -313,6 +318,12 @@ class TteGuia
      * @ORM\JoinColumn(name="codigo_servicio_fk", referencedColumnName="codigo_servicio_pk")
      */
     private $servicioRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteProducto", inversedBy="guiasProductoRel")
+     * @ORM\JoinColumn(name="codigo_producto_fk", referencedColumnName="codigo_producto_pk")
+     */
+    private $productoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteEmpaque", inversedBy="guiasEmpaqueRel")
@@ -1325,6 +1336,38 @@ class TteGuia
     public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoProductoFk()
+    {
+        return $this->codigoProductoFk;
+    }
+
+    /**
+     * @param mixed $codigoProductoFk
+     */
+    public function setCodigoProductoFk($codigoProductoFk): void
+    {
+        $this->codigoProductoFk = $codigoProductoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProductoRel()
+    {
+        return $this->productoRel;
+    }
+
+    /**
+     * @param mixed $productoRel
+     */
+    public function setProductoRel($productoRel): void
+    {
+        $this->productoRel = $productoRel;
     }
 
 

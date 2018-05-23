@@ -72,6 +72,11 @@ class TteCiudad
     private $codigoInterface;
 
     /**
+     * @ORM\Column(name="reexpedicion", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $reexpedicion = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteRuta", inversedBy="ciudadesRutaRel")
      * @ORM\JoinColumn(name="codigo_ruta_fk", referencedColumnName="codigo_ruta_pk")
      */
@@ -514,6 +519,22 @@ class TteCiudad
     public function setCodigoInterface($codigoInterface): void
     {
         $this->codigoInterface = $codigoInterface;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReexpedicion()
+    {
+        return $this->reexpedicion;
+    }
+
+    /**
+     * @param mixed $reexpedicion
+     */
+    public function setReexpedicion($reexpedicion): void
+    {
+        $this->reexpedicion = $reexpedicion;
     }
 
 

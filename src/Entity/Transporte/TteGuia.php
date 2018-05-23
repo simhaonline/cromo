@@ -223,7 +223,7 @@ class TteGuia
     private $ordenRuta = 0;
 
     /**
-     * @ORM\Column(name="factura", type="boolean", nullable=true)
+     * @ORM\Column(name="factura", type="boolean", nullable=true, options={"default" : 0})
      */
     private $factura = false;
 
@@ -241,6 +241,11 @@ class TteGuia
      * @ORM\Column(name="codigo_empaque_fk", type="string", length=20, nullable=true)
      */
     private $codigoEmpaqueFk;
+
+    /**
+     * @ORM\Column(name="reexpedicion", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $reexpedicion = false;
 
     /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
@@ -909,6 +914,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoDespachoFk()
     {
         return $this->codigoDespachoFk;
@@ -1037,6 +1058,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getCodigoProductoFk()
+    {
+        return $this->codigoProductoFk;
+    }
+
+    /**
+     * @param mixed $codigoProductoFk
+     */
+    public function setCodigoProductoFk($codigoProductoFk): void
+    {
+        $this->codigoProductoFk = $codigoProductoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoEmpaqueFk()
     {
         return $this->codigoEmpaqueFk;
@@ -1048,6 +1085,22 @@ class TteGuia
     public function setCodigoEmpaqueFk($codigoEmpaqueFk): void
     {
         $this->codigoEmpaqueFk = $codigoEmpaqueFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReexpedicion()
+    {
+        return $this->reexpedicion;
+    }
+
+    /**
+     * @param mixed $reexpedicion
+     */
+    public function setReexpedicion($reexpedicion): void
+    {
+        $this->reexpedicion = $reexpedicion;
     }
 
     /**
@@ -1261,6 +1314,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getProductoRel()
+    {
+        return $this->productoRel;
+    }
+
+    /**
+     * @param mixed $productoRel
+     */
+    public function setProductoRel($productoRel): void
+    {
+        $this->productoRel = $productoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEmpaqueRel()
     {
         return $this->empaqueRel;
@@ -1320,54 +1389,6 @@ class TteGuia
     public function setCostosGuiaRel($costosGuiaRel): void
     {
         $this->costosGuiaRel = $costosGuiaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAnulado()
-    {
-        return $this->estadoAnulado;
-    }
-
-    /**
-     * @param mixed $estadoAnulado
-     */
-    public function setEstadoAnulado($estadoAnulado): void
-    {
-        $this->estadoAnulado = $estadoAnulado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoProductoFk()
-    {
-        return $this->codigoProductoFk;
-    }
-
-    /**
-     * @param mixed $codigoProductoFk
-     */
-    public function setCodigoProductoFk($codigoProductoFk): void
-    {
-        $this->codigoProductoFk = $codigoProductoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProductoRel()
-    {
-        return $this->productoRel;
-    }
-
-    /**
-     * @param mixed $productoRel
-     */
-    public function setProductoRel($productoRel): void
-    {
-        $this->productoRel = $productoRel;
     }
 
 

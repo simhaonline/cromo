@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Entity\Inventario;
+
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Table(name="inv_bodega")
+ * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvBodegaRepository")
+ * @DoctrineAssert\UniqueEntity(fields={"codigoBodegaPk"},message="Ya existe el código de la bodega")
+ */
+class InvBodega
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(name="codigo_bodega_pk", type="string", length=10)     
+     */
+    private $codigoBodegaPk;
+
+    /**
+     * @ORM\Column(name="nombre", type="string", length=50)
+     */
+    private $nombre;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoBodegaPk()
+    {
+        return $this->codigoBodegaPk;
+    }
+
+    /**
+     * @param mixed $codigoBodegaPk
+     */
+    public function setCodigoBodegaPk($codigoBodegaPk): void
+    {
+        $this->codigoBodegaPk = $codigoBodegaPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+}

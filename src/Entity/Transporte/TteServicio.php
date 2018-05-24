@@ -22,6 +22,11 @@ class TteServicio
     private $nombre;
 
     /**
+     * @ORM\Column(name="orden", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $orden = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="servicioRel")
      */
     protected $guiasServicioRel;
@@ -72,6 +77,22 @@ class TteServicio
     public function setGuiasServicioRel($guiasServicioRel): void
     {
         $this->guiasServicioRel = $guiasServicioRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
     }
 
 

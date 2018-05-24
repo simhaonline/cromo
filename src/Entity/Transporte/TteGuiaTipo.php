@@ -42,6 +42,11 @@ class TteGuiaTipo
     private $exigeNumero = false;
 
     /**
+     * @ORM\Column(name="orden", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $orden = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteFacturaTipo", inversedBy="guiasTiposFacturaTipoRel")
      * @ORM\JoinColumn(name="codigo_factura_tipo_fk", referencedColumnName="codigo_factura_tipo_pk")
      */
@@ -178,6 +183,22 @@ class TteGuiaTipo
     public function setExigeNumero($exigeNumero): void
     {
         $this->exigeNumero = $exigeNumero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
     }
 
 

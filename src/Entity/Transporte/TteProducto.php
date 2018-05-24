@@ -27,6 +27,11 @@ class TteProducto
     private $codigoTransporte;
 
     /**
+     * @ORM\Column(name="orden", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $orden = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="productoRel")
      */
     protected $guiasProductoRel;
@@ -114,6 +119,22 @@ class TteProducto
     public function setGuiasProductoRel($guiasProductoRel): void
     {
         $this->guiasProductoRel = $guiasProductoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
     }
 
 

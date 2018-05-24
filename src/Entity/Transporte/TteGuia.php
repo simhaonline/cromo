@@ -243,6 +243,11 @@ class TteGuia
     private $codigoEmpaqueFk;
 
     /**
+     * @ORM\Column(name="codigo_condicion_fk", type="integer", nullable=true)
+     */
+    private $codigoCondicionFk;
+
+    /**
      * @ORM\Column(name="reexpedicion", type="boolean", nullable=true, options={"default" : 0})
      */
     private $reexpedicion = false;
@@ -335,6 +340,12 @@ class TteGuia
      * @ORM\JoinColumn(name="codigo_empaque_fk", referencedColumnName="codigo_empaque_pk")
      */
     private $empaqueRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteCondicion", inversedBy="guiasCondicionRel")
+     * @ORM\JoinColumn(name="codigo_condicion_fk", referencedColumnName="codigo_condicion_pk")
+     */
+    private $condicionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteRecibo", mappedBy="guiaRel")
@@ -1389,6 +1400,38 @@ class TteGuia
     public function setCostosGuiaRel($costosGuiaRel): void
     {
         $this->costosGuiaRel = $costosGuiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCondicionFk()
+    {
+        return $this->codigoCondicionFk;
+    }
+
+    /**
+     * @param mixed $codigoCondicionFk
+     */
+    public function setCodigoCondicionFk($codigoCondicionFk): void
+    {
+        $this->codigoCondicionFk = $codigoCondicionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCondicionRel()
+    {
+        return $this->condicionRel;
+    }
+
+    /**
+     * @param mixed $condicionRel
+     */
+    public function setCondicionRel($condicionRel): void
+    {
+        $this->condicionRel = $condicionRel;
     }
 
 

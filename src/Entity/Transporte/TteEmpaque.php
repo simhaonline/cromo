@@ -22,6 +22,11 @@ class TteEmpaque
     private $nombre;
 
     /**
+     * @ORM\Column(name="orden", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $orden = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="empaqueRel")
      */
     protected $guiasEmpaqueRel;
@@ -72,6 +77,22 @@ class TteEmpaque
     public function setGuiasEmpaqueRel($guiasEmpaqueRel): void
     {
         $this->guiasEmpaqueRel = $guiasEmpaqueRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
     }
 
 

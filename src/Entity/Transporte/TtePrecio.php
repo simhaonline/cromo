@@ -38,9 +38,9 @@ class TtePrecio
     protected $preciosDetallesPrecioRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TteCliente", mappedBy="precioRel")
+     * @ORM\OneToMany(targetEntity="TteCondicion", mappedBy="precioRel")
      */
-    protected $clientesPrecioRel;
+    protected $condicionesPrecioRel;
 
     /**
      * @return mixed
@@ -77,17 +77,17 @@ class TtePrecio
     /**
      * @return mixed
      */
-    public function getPreciosDetallesPrecioRel()
+    public function getFechaVence()
     {
-        return $this->preciosDetallesPrecioRel;
+        return $this->fechaVence;
     }
 
     /**
-     * @param mixed $preciosDetallesPrecioRel
+     * @param mixed $fechaVence
      */
-    public function setPreciosDetallesPrecioRel($preciosDetallesPrecioRel): void
+    public function setFechaVence($fechaVence): void
     {
-        $this->preciosDetallesPrecioRel = $preciosDetallesPrecioRel;
+        $this->fechaVence = $fechaVence;
     }
 
     /**
@@ -109,33 +109,33 @@ class TtePrecio
     /**
      * @return mixed
      */
-    public function getFechaVence()
+    public function getPreciosDetallesPrecioRel()
     {
-        return $this->fechaVence;
+        return $this->preciosDetallesPrecioRel;
     }
 
     /**
-     * @param mixed $fechaVence
+     * @param mixed $preciosDetallesPrecioRel
      */
-    public function setFechaVence($fechaVence): void
+    public function setPreciosDetallesPrecioRel($preciosDetallesPrecioRel): void
     {
-        $this->fechaVence = $fechaVence;
+        $this->preciosDetallesPrecioRel = $preciosDetallesPrecioRel;
     }
 
     /**
      * @return mixed
      */
-    public function getClientesPrecioRel()
+    public function getCondicionesPrecioRel()
     {
-        return $this->clientesPrecioRel;
+        return $this->condicionesPrecioRel;
     }
 
     /**
-     * @param mixed $clientesPrecioRel
+     * @param mixed $condicionesPrecioRel
      */
-    public function setClientesPrecioRel($clientesPrecioRel): void
+    public function setCondicionesPrecioRel($condicionesPrecioRel): void
     {
-        $this->clientesPrecioRel = $clientesPrecioRel;
+        $this->condicionesPrecioRel = $condicionesPrecioRel;
     }
 
 

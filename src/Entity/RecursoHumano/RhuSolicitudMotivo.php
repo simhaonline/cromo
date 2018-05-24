@@ -5,7 +5,7 @@ namespace App\Entity\RecursoHumano;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Cartera\RhuSolicitudRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuSolicitudMotivoRepository")
  */
 class RhuSolicitudMotivo
 {
@@ -26,4 +26,54 @@ class RhuSolicitudMotivo
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="solicitudMotivoRel")
      */
     protected $solicitudesMotivosRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSolicitudMotivoPk()
+    {
+        return $this->codigoSolicitudMotivoPk;
+    }
+
+    /**
+     * @param mixed $codigoSolicitudMotivoPk
+     */
+    public function setCodigoSolicitudMotivoPk($codigoSolicitudMotivoPk): void
+    {
+        $this->codigoSolicitudMotivoPk = $codigoSolicitudMotivoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudesMotivosRel()
+    {
+        return $this->solicitudesMotivosRel;
+    }
+
+    /**
+     * @param mixed $solicitudesMotivosRel
+     */
+    public function setSolicitudesMotivosRel($solicitudesMotivosRel): void
+    {
+        $this->solicitudesMotivosRel = $solicitudesMotivosRel;
+    }
+
+
 }

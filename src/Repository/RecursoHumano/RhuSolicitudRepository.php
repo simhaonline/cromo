@@ -2,23 +2,22 @@
 
 namespace App\Repository\RecursoHumano;
 
-use App\Entity\RecursoHumano\RhuEmpleado;
-use App\Entity\RecursoHumano\RhuSeleccion;
+use App\Entity\RecursoHumano\RhuSolicitud;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class RhuSeleccionRepository extends ServiceEntityRepository
+class RhuSolicitudRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, RhuSeleccion::class);
+        parent::__construct($registry, RhuSolicitud::class);
     }
+
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
-            ->from('App:RecursoHumano\RhuSeleccion','s')
+            ->from('App:RecursoHumano\RhuSolicitud','s')
             ->select('s');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }
-
 }

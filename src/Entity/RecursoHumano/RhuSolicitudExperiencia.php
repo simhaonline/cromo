@@ -5,7 +5,7 @@ namespace App\Entity\RecursoHumano;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Cartera\RhuSolicitudExperienciaRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuSolicitudExperienciaRepository")
  */
 class RhuSolicitudExperiencia
 {
@@ -25,5 +25,55 @@ class RhuSolicitudExperiencia
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="solicitudExperienciaRel")
      */
-    protected $solicitudesMotivosRel;
+    protected $solicitudesExperienciasRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSolicitudExperienciaPk()
+    {
+        return $this->codigoSolicitudExperienciaPk;
+    }
+
+    /**
+     * @param mixed $codigoSolicitudExperienciaPk
+     */
+    public function setCodigoSolicitudExperienciaPk($codigoSolicitudExperienciaPk): void
+    {
+        $this->codigoSolicitudExperienciaPk = $codigoSolicitudExperienciaPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudesExperienciasRel()
+    {
+        return $this->solicitudesExperienciasRel;
+    }
+
+    /**
+     * @param mixed $solicitudesExperienciasRel
+     */
+    public function setSolicitudesExperienciasRel($solicitudesExperienciasRel): void
+    {
+        $this->solicitudesExperienciasRel = $solicitudesExperienciasRel;
+    }
+
+
 }

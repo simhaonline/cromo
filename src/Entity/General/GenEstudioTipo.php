@@ -25,7 +25,7 @@ class GenEstudioTipo
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="genEstudioTipoRel")
      */
-    protected $rhuSolicitudesEstudioTiposlRel;
+    protected $rhuSolicitudesEstudioTiposRel;
 
 }
 

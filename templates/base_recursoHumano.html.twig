@@ -65,16 +65,27 @@
                         <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="#">Seleccion <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('lista',{'entidad':'RhuAspirante'}) }}">Aspirante</a></li>
-                                    <li><a href="{{ path('lista',{'entidad':'RhuSolicitud'}) }}">Solicitud</a></li>
-                                    <li><a href="{{ path('lista',{'entidad':'RhuSeleccion'}) }}">Seleccion</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'aspirante'}) }}">Aspirante</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'solicitud'}) }}">Solicitud</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'seleccion'}) }}">Seleccion</a></li>
                                 </ul>
-                                <!-- /.nav-third-level -->
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="#">Solicitud <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'solicitudMotivo'}) }}">Motivo</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'solicitudExperiencia'}) }}">Experiencia</a></li>
+                                </ul>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->

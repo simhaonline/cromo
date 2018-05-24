@@ -233,4 +233,660 @@ class RhuSolicitud
      */
     protected $rhuSeleccionSolicitudRel;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoSolicitudPk()
+    {
+        return $this->codigoSolicitudPk;
+    }
+
+    /**
+     * @param mixed $codigoSolicitudPk
+     */
+    public function setCodigoSolicitudPk($codigoSolicitudPk): void
+    {
+        $this->codigoSolicitudPk = $codigoSolicitudPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoPagoFk()
+    {
+        return $this->codigoGrupoPagoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoPagoFk
+     */
+    public function setCodigoGrupoPagoFk($codigoGrupoPagoFk): void
+    {
+        $this->codigoGrupoPagoFk = $codigoGrupoPagoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCodigoCargoFk()
+    {
+        return $this->codigoCodigoCargoFk;
+    }
+
+    /**
+     * @param mixed $codigoCodigoCargoFk
+     */
+    public function setCodigoCodigoCargoFk($codigoCodigoCargoFk): void
+    {
+        $this->codigoCodigoCargoFk = $codigoCodigoCargoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSolicitudMotivoFk()
+    {
+        return $this->codigoSolicitudMotivoFk;
+    }
+
+    /**
+     * @param mixed $codigoSolicitudMotivoFk
+     */
+    public function setCodigoSolicitudMotivoFk($codigoSolicitudMotivoFk): void
+    {
+        $this->codigoSolicitudMotivoFk = $codigoSolicitudMotivoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoExperienciaSolicitudFk()
+    {
+        return $this->codigoExperienciaSolicitudFk;
+    }
+
+    /**
+     * @param mixed $codigoExperienciaSolicitudFk
+     */
+    public function setCodigoExperienciaSolicitudFk($codigoExperienciaSolicitudFk): void
+    {
+        $this->codigoExperienciaSolicitudFk = $codigoExperienciaSolicitudFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEstadoCivilFk()
+    {
+        return $this->codigoEstadoCivilFk;
+    }
+
+    /**
+     * @param mixed $codigoEstadoCivilFk
+     */
+    public function setCodigoEstadoCivilFk($codigoEstadoCivilFk): void
+    {
+        $this->codigoEstadoCivilFk = $codigoEstadoCivilFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadFk()
+    {
+        return $this->codigoCiudadFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadFk
+     */
+    public function setCodigoCiudadFk($codigoCiudadFk): void
+    {
+        $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEstudioTipoFk()
+    {
+        return $this->codigoEstudioTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoEstudioTipoFk
+     */
+    public function setCodigoEstudioTipoFk($codigoEstudioTipoFk): void
+    {
+        $this->codigoEstudioTipoFk = $codigoEstudioTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoClasificacionRiesgoFk()
+    {
+        return $this->codigoClasificacionRiesgoFk;
+    }
+
+    /**
+     * @param mixed $codigoClasificacionRiesgoFk
+     */
+    public function setCodigoClasificacionRiesgoFk($codigoClasificacionRiesgoFk): void
+    {
+        $this->codigoClasificacionRiesgoFk = $codigoClasificacionRiesgoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisponbilidad()
+    {
+        return $this->disponbilidad;
+    }
+
+    /**
+     * @param mixed $disponbilidad
+     */
+    public function setDisponbilidad($disponbilidad): void
+    {
+        $this->disponbilidad = $disponbilidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaContratacion()
+    {
+        return $this->fechaContratacion;
+    }
+
+    /**
+     * @param mixed $fechaContratacion
+     */
+    public function setFechaContratacion($fechaContratacion): void
+    {
+        $this->fechaContratacion = $fechaContratacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaVencimiento()
+    {
+        return $this->fechaVencimiento;
+    }
+
+    /**
+     * @param mixed $fechaVencimiento
+     */
+    public function setFechaVencimiento($fechaVencimiento): void
+    {
+        $this->fechaVencimiento = $fechaVencimiento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadSolicitada()
+    {
+        return $this->cantidadSolicitada;
+    }
+
+    /**
+     * @param mixed $cantidadSolicitada
+     */
+    public function setCantidadSolicitada($cantidadSolicitada): void
+    {
+        $this->cantidadSolicitada = $cantidadSolicitada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSalario()
+    {
+        return $this->VrSalario;
+    }
+
+    /**
+     * @param mixed $VrSalario
+     */
+    public function setVrSalario($VrSalario): void
+    {
+        $this->VrSalario = $VrSalario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrNoSalarial()
+    {
+        return $this->VrNoSalarial;
+    }
+
+    /**
+     * @param mixed $VrNoSalarial
+     */
+    public function setVrNoSalarial($VrNoSalarial): void
+    {
+        $this->VrNoSalarial = $VrNoSalarial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSalarioFijo()
+    {
+        return $this->salarioFijo;
+    }
+
+    /**
+     * @param mixed $salarioFijo
+     */
+    public function setSalarioFijo($salarioFijo): void
+    {
+        $this->salarioFijo = $salarioFijo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSalarioVariable()
+    {
+        return $this->salarioVariable;
+    }
+
+    /**
+     * @param mixed $salarioVariable
+     */
+    public function setSalarioVariable($salarioVariable): void
+    {
+        $this->salarioVariable = $salarioVariable;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaPruebas()
+    {
+        return $this->fechaPruebas;
+    }
+
+    /**
+     * @param mixed $fechaPruebas
+     */
+    public function setFechaPruebas($fechaPruebas): void
+    {
+        $this->fechaPruebas = $fechaPruebas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEdadMinima()
+    {
+        return $this->edadMinima;
+    }
+
+    /**
+     * @param mixed $edadMinima
+     */
+    public function setEdadMinima($edadMinima): void
+    {
+        $this->edadMinima = $edadMinima;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEdadMaxima()
+    {
+        return $this->edadMaxima;
+    }
+
+    /**
+     * @param mixed $edadMaxima
+     */
+    public function setEdadMaxima($edadMaxima): void
+    {
+        $this->edadMaxima = $edadMaxima;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroHijos()
+    {
+        return $this->numeroHijos;
+    }
+
+    /**
+     * @param mixed $numeroHijos
+     */
+    public function setNumeroHijos($numeroHijos): void
+    {
+        $this->numeroHijos = $numeroHijos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoLicenciaCarroFk()
+    {
+        return $this->codigoLicenciaCarroFk;
+    }
+
+    /**
+     * @param mixed $codigoLicenciaCarroFk
+     */
+    public function setCodigoLicenciaCarroFk($codigoLicenciaCarroFk): void
+    {
+        $this->codigoLicenciaCarroFk = $codigoLicenciaCarroFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoLicenciaMotoFk()
+    {
+        return $this->codigoLicenciaMotoFk;
+    }
+
+    /**
+     * @param mixed $codigoLicenciaMotoFk
+     */
+    public function setCodigoLicenciaMotoFk($codigoLicenciaMotoFk): void
+    {
+        $this->codigoLicenciaMotoFk = $codigoLicenciaMotoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExperienciaSolicitud()
+    {
+        return $this->experienciaSolicitud;
+    }
+
+    /**
+     * @param mixed $experienciaSolicitud
+     */
+    public function setExperienciaSolicitud($experienciaSolicitud): void
+    {
+        $this->experienciaSolicitud = $experienciaSolicitud;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVehiculo()
+    {
+        return $this->vehiculo;
+    }
+
+    /**
+     * @param mixed $vehiculo
+     */
+    public function setVehiculo($vehiculo): void
+    {
+        $this->vehiculo = $vehiculo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarios()
+    {
+        return $this->comentarios;
+    }
+
+    /**
+     * @param mixed $comentarios
+     */
+    public function setComentarios($comentarios): void
+    {
+        $this->comentarios = $comentarios;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoCerrado()
+    {
+        return $this->estadoCerrado;
+    }
+
+    /**
+     * @param mixed $estadoCerrado
+     */
+    public function setEstadoCerrado($estadoCerrado): void
+    {
+        $this->estadoCerrado = $estadoCerrado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoUsuario()
+    {
+        return $this->codigoUsuario;
+    }
+
+    /**
+     * @param mixed $codigoUsuario
+     */
+    public function setCodigoUsuario($codigoUsuario): void
+    {
+        $this->codigoUsuario = $codigoUsuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoPagoRel()
+    {
+        return $this->grupoPagoRel;
+    }
+
+    /**
+     * @param mixed $grupoPagoRel
+     */
+    public function setGrupoPagoRel($grupoPagoRel): void
+    {
+        $this->grupoPagoRel = $grupoPagoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargoRel()
+    {
+        return $this->cargoRel;
+    }
+
+    /**
+     * @param mixed $cargoRel
+     */
+    public function setCargoRel($cargoRel): void
+    {
+        $this->cargoRel = $cargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudMotivoRel()
+    {
+        return $this->solicitudMotivoRel;
+    }
+
+    /**
+     * @param mixed $solicitudMotivoRel
+     */
+    public function setSolicitudMotivoRel($solicitudMotivoRel): void
+    {
+        $this->solicitudMotivoRel = $solicitudMotivoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudExperienciaRel()
+    {
+        return $this->solicitudExperienciaRel;
+    }
+
+    /**
+     * @param mixed $solicitudExperienciaRel
+     */
+    public function setSolicitudExperienciaRel($solicitudExperienciaRel): void
+    {
+        $this->solicitudExperienciaRel = $solicitudExperienciaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenEstadoCivilRel()
+    {
+        return $this->genEstadoCivilRel;
+    }
+
+    /**
+     * @param mixed $genEstadoCivilRel
+     */
+    public function setGenEstadoCivilRel($genEstadoCivilRel): void
+    {
+        $this->genEstadoCivilRel = $genEstadoCivilRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenCiudadRel()
+    {
+        return $this->genCiudadRel;
+    }
+
+    /**
+     * @param mixed $genCiudadRel
+     */
+    public function setGenCiudadRel($genCiudadRel): void
+    {
+        $this->genCiudadRel = $genCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenEstudioTipoRel()
+    {
+        return $this->genEstudioTipoRel;
+    }
+
+    /**
+     * @param mixed $genEstudioTipoRel
+     */
+    public function setGenEstudioTipoRel($genEstudioTipoRel): void
+    {
+        $this->genEstudioTipoRel = $genEstudioTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClasificacionRiesgoRel()
+    {
+        return $this->clasificacionRiesgoRel;
+    }
+
+    /**
+     * @param mixed $clasificacionRiesgoRel
+     */
+    public function setClasificacionRiesgoRel($clasificacionRiesgoRel): void
+    {
+        $this->clasificacionRiesgoRel = $clasificacionRiesgoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuSeleccionSolicitudRel()
+    {
+        return $this->rhuSeleccionSolicitudRel;
+    }
+
+    /**
+     * @param mixed $rhuSeleccionSolicitudRel
+     */
+    public function setRhuSeleccionSolicitudRel($rhuSeleccionSolicitudRel): void
+    {
+        $this->rhuSeleccionSolicitudRel = $rhuSeleccionSolicitudRel;
+    }
+
 }

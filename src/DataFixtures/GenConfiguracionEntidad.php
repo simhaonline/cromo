@@ -22,10 +22,10 @@ class GenConfiguracionEntidad extends Fixture
 //        $this->setConfiguracionEntidades($arrModuloCartera, $em, 'cartera');
 //        /////////////////                 FIN ESTRACTURA MODULO DE CARTERA                             ////////////////
 //
-//        /////////////////              INICIO ESTRACTURA MODULO DE RECURSO HUMANO                            ////////////////
-//        $arrModuloRecursoHumano = ['aspirante', 'solicitud', 'seleccion'];
-//        $this->setConfiguracionEntidades($arrModuloRecursoHumano, $em, 'recursoHumano');
-//        /////////////////                 FIN ESTRACTURA MODULO DE RECURSO HUMANO
+        /////////////////              INICIO ESTRACTURA MODULO DE RECURSO HUMANO                            ////////////////
+        $arrModuloRecursoHumano = ['aspirante,movimiento,seleccion','solicitud,movimiento,seleccion','seleccion,movimiento,seleccion','solicitudMotivo,admin,solicitud','solicitudExperiencia,admin,solicitud'];
+        $this->setConfiguracionEntidades($arrModuloRecursoHumano, $em, 'recursoHumano');
+        /////////////////                 FIN ESTRACTURA MODULO DE RECURSO HUMANO
 //
 //        /////////////////              INICIO ESTRACTURA MODULO DE CONTABILIDAD                        ////////////////
 //        $arrModuloContabilidad = ['registro', 'cuenta', 'comprobante', 'centroCosto', 'tercero'];

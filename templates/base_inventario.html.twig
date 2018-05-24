@@ -95,7 +95,7 @@
                                 <a href="#">Salida</a>
                             </li>
                             <li>
-                                {#<a href="{{ path('lista',{'entidad':'InvSolicitud'}) }}">Solicitud</a>#}
+                                <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'solicitud'}) }}">Solicitud</a>
                             </li>
                             <li>
                                 <a href="#">Orden de compra</a>
@@ -109,22 +109,19 @@
                                 <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'item'}) }}">Item</a>
                             </li>
                             <li>
-                                {#<a href="{{ path('lista',{'entidad' : 'InvSolicitudTipo'}) }}">Solicitud tipo</a>#}
+                                <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'bodega'}) }}">Bodega</a>
                             </li>
                             <li>
-                                {#<a href="{{ path('lista',{'entidad':'InvTercero'}) }}">Tercero</a>#}
+                                <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad':'tercero'}) }}">Tercero</a>
                             </li>
                             <li>
-                                {#<a href="{{ path('lista',{'entidad' : 'InvSolicitudTipo'}) }}">Solicitud tipo</a>#}
+                                <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad' : 'solicitudTipo'}) }}">Solicitud tipo</a>
                             </li>
                             <li>
-                                {#<a href="{{ path('lista',{'entidad':'InvTercero'}) }}">Tercero</a>#}
+                                <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad':'documento'}) }}">Documento</a>
                             </li>
                             <li>
-                                {#<a href="{{ path('lista',{'entidad':'InvDocumento'}) }}">Documento</a>#}
-                            </li>
-                            <li>
-                                {#<a href="{{ path('lista',{'entidad':'InvDocumento'}) }}">Documento</a>#}
+                                <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad':'documentoTipo'}) }}">Documento tipo</a>
                             </li>
                         </ul>
 

@@ -11,9 +11,7 @@ class GenConfiguracionEntidad extends Fixture
     public function load(ObjectManager $em)
     {
         /////////////////              INICIO ESTRACTURA MODULO DE INVENTARIO                          ////////////////
-        $arrModuloInventario = ['solicitud, movimiento, inventario',
-            'item, admin, general', 'itemGrupo,admin,general', 'bodega,admin,general', 'configuracion,admin,general', 'documento,admin,general', 'solicitudTipo,admin,general', 'facturaTipo,admin,general', 'ordenCompraTipo,admin,general',
-            'documentoTipo,admin,general'];
+        $arrModuloInventario = $arrModuloInventario = ['solicitud, movimiento, inventario', 'item, admin, general', 'itemGrupo,admin,general', 'bodega,admin,general', 'configuracion,admin,general', 'documento,admin,general', 'solicitudTipo,admin,general', 'facturaTipo,admin,general', 'ordenCompraTipo,admin,general', 'documentoTipo,admin,general', 'tercero,admin,general'];
         $this->setConfiguracionEntidades($arrModuloInventario, $em, 'inventario');
         /////////////////              FIN ESTRACTURA MODULO DE INVENTARIO                             ////////////////
 //

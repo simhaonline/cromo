@@ -440,26 +440,17 @@ final class AdministracionController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-//                if ($entidadCubo) {
-//                    //Validar funciones adicionales para guardar un registro según la entidad.
-//                    $arRegistro = $em->getRepository($arEntidad->getRutaEntidad())->guardar($form, $arRegistro, $entidadCubo);
-//                }
                 $em->persist($arRegistro);
                 $em->flush();
                 return $this->redirect($this->generateUrl('admin_detalle', ['modulo' => $arEntidad->getModulo(), 'entidad' => $arEntidad->getEntidad(), 'id' => $arRegistro->$getPk()]));
             }
             if ($form->get('guardarnuevo')->isClicked()) {
-//                if ($entidadCubo) {
-//                    $arRegistro = $em->getRepository($arEntidad->getRutaEntidad())->guardar($form, $arRegistro, $entidadCubo);
-//                }
                 $em->persist($arRegistro);
                 $em->flush();
-//                return $this->redirect($this->generateUrl('detalle', ['entidad' => $arEntidad->getCodigoConfiguracionEntidadPk(), 'id' => 0, 'entidadCubo' => $entidadCubo]));
                 return $this->redirect($this->generateUrl('admin_nuevo', ['modulo' => $arEntidad->getModulo(), 'entidad' => $arEntidad->getEntidad(), 'id' => 0]));
             }
         }
         return $this->render('estructura/nuevo.html.twig', [
-//            'entidadCubo' => $entidadCubo,
             'arEntidad' => $arEntidad,
             'form' => $form->createView()
         ]);

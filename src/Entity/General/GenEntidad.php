@@ -42,6 +42,16 @@ class GenEntidad
     private $entidad;
 
     /**
+     * @ORM\Column(name="nuevo_interno",type="boolean")
+     */
+    private $nuevoInterno = false;
+
+    /**
+     * @ORM\Column(name="detalle_interno",type="boolean")
+     */
+    private $detalleInterno = false;
+
+    /**
      * @ORM\Column(name="activo",type="boolean")
      */
     private $activo = true;
@@ -117,6 +127,38 @@ class GenEntidad
     public function setPrefijo($prefijo): void
     {
         $this->prefijo = $prefijo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNuevoInterno()
+    {
+        return $this->nuevoInterno;
+    }
+
+    /**
+     * @param mixed $nuevoInterno
+     */
+    public function setNuevoInterno($nuevoInterno): void
+    {
+        $this->nuevoInterno = $nuevoInterno;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDetalleInterno()
+    {
+        return $this->detalleInterno;
+    }
+
+    /**
+     * @param mixed $detalleInterno
+     */
+    public function setDetalleInterno($detalleInterno): void
+    {
+        $this->detalleInterno = $detalleInterno;
     }
 
     /**

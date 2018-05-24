@@ -15,7 +15,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
     }
 
 
-    public function lista()
+    public function camposPredeterminados()
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('s.codigoSolicitudPk AS ID')

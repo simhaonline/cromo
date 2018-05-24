@@ -13,4 +13,16 @@ class InvDocumentoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, InvDocumento::class);
     }
+
+    public function camposPredeterminados(){
+        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvDocumento','id')
+            ->select('id.codigoDocumentoPk as ID')
+            ->addSelect('id.abreviatura')
+            ->addSelect('id.nombre')
+            ->addSelect('id.asignarConsecutivoCreacion')
+            ->addSelect('id.asignarConsecutivoImpresion')
+            ->addSelect('id.consecutivo');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 }

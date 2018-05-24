@@ -12,5 +12,4 @@ class InvDocumentoTipoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, InvDocumentoTipo::class);
     }
-
 }

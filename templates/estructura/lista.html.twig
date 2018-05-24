@@ -69,21 +69,29 @@
                 {% for key,dato in datos %}
                     {{ validarTipo(dato) }}
                 {% endfor %}
-                {% if entidadCubo != "" %}
-                    <td style="text-align: center"><!-- Example single danger button -->
-                        <a class="btn btn-xs btn-primary"
-                           href="javascript:abrirVentana3('{{ path('lista_cubo_entidad',{'entidadCubo':entidadCubo,'id': datos.ID,'opcion':'lista'}) }}', 'Lista', 600, 1200)">Ejecutar</a>
-                    </td>
-                {% endif %}
+                {% if arEntidad.nuevoInterno %}
+                <a href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
+                    <i class="fa fa-share-square-o" style="font-size: large">
+                    </i>
+                </a>
+                {% else %}
                 <td style="text-align: center">
                     <a href="{{ path('admin_nuevo', {'entidad': arEntidad.entidad,'modulo':arEntidad.modulo,'id': datos.ID }) }}"><i
                                 class="fa fa-edit" style="font-size: large"></i>
                     </a>
                 <td style="text-align: center">
-                    <a href="{{ path('admin_detalle', { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
-                        <i class="fa fa-share-square-o" style="font-size: large">
-                        </i>
-                    </a>
+                    {% endif %}
+                    {% if arEntidad.detalleInterno %}
+                        <a href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_detalle' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
+                            <i class="fa fa-share-square-o" style="font-size: large">
+                            </i>
+                        </a>
+                    {% else %}
+                        <a href="{{ path('admin_detalle', { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
+                            <i class="fa fa-share-square-o" style="font-size: large">
+                            </i>
+                        </a>
+                    {% endif %}
                 </td>
                 <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]"
                                                       value="{{ datos.ID }}"/></td>

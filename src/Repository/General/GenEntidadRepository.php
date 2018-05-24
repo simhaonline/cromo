@@ -147,7 +147,11 @@ class GenEntidadRepository extends ServiceEntityRepository
             $qb->addSelect("tbl.{$lista->campo} AS {$lista->alias}");
 
         }
-        $qb->where("tbl.{$arrLista[0]->campo} = {$id}");
+        if(is_numeric($id)){
+            $qb->where("tbl.{$arrLista[0]->campo} = {$id}");
+        } else {
+            $qb->where("tbl.{$arrLista[0]->campo} = '{$id}'");
+        }
         $qb->orderBy("tbl.{$arrLista[0]->campo}");
         $arrRegistros = $this->_em->createQuery($qb->getDQL());
         return $arrRegistros->execute();

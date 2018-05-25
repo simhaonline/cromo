@@ -77,5 +77,182 @@ class InvOrdenCompraDetalle
      */
     private $cantidadPendiente;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoOrdenCompraDetallePk()
+    {
+        return $this->codigoOrdenCompraDetallePk;
+    }
+
+    /**
+     * @param mixed $codigoOrdenCompraDetallePk
+     */
+    public function setCodigoOrdenCompraDetallePk($codigoOrdenCompraDetallePk): void
+    {
+        $this->codigoOrdenCompraDetallePk = $codigoOrdenCompraDetallePk;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCodigoSolicitudDetalleFk(): int
+    {
+        return $this->codigoSolicitudDetalleFk;
+    }
+
+    /**
+     * @param int $codigoSolicitudDetalleFk
+     */
+    public function setCodigoSolicitudDetalleFk(int $codigoSolicitudDetalleFk): void
+    {
+        $this->codigoSolicitudDetalleFk = $codigoSolicitudDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOrdenCompraFk()
+    {
+        return $this->codigoOrdenCompraFk;
+    }
+
+    /**
+     * @param mixed $codigoOrdenCompraFk
+     */
+    public function setCodigoOrdenCompraFk($codigoOrdenCompraFk): void
+    {
+        $this->codigoOrdenCompraFk = $codigoOrdenCompraFk;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCodigoItemFk(): int
+    {
+        return $this->codigoItemFk;
+    }
+
+    /**
+     * @param int $codigoItemFk
+     */
+    public function setCodigoItemFk(int $codigoItemFk): void
+    {
+        $this->codigoItemFk = $codigoItemFk;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCantidad(): int
+    {
+        return $this->cantidad;
+    }
+
+    /**
+     * @param int $cantidad
+     */
+    public function setCantidad(int $cantidad): void
+    {
+        $this->cantidad = $cantidad;
+    }
+
+    /**
+     * @return float
+     */
+    public function getValor(): float
+    {
+        return $this->valor;
+    }
+
+    /**
+     * @param float $valor
+     */
+    public function setValor(float $valor): void
+    {
+        $this->valor = $valor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSubtotal()
+    {
+        return $this->vrSubtotal;
+    }
+
+    /**
+     * @param mixed $vrSubtotal
+     */
+    public function setVrSubtotal($vrSubtotal): void
+    {
+        $this->vrSubtotal = $vrSubtotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeIva()
+    {
+        return $this->porcentajeIva;
+    }
+
+    /**
+     * @param mixed $porcentajeIva
+     */
+    public function setPorcentajeIva($porcentajeIva): void
+    {
+        $this->porcentajeIva = $porcentajeIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIva()
+    {
+        return $this->vrIva;
+    }
+
+    /**
+     * @param mixed $vrIva
+     */
+    public function setVrIva($vrIva): void
+    {
+        $this->vrIva = $vrIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotal()
+    {
+        return $this->vrTotal;
+    }
+
+    /**
+     * @param mixed $vrTotal
+     */
+    public function setVrTotal($vrTotal): void
+    {
+        $this->vrTotal = $vrTotal;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCantidadPendiente(): int
+    {
+        return $this->cantidadPendiente;
+    }
+
+    /**
+     * @param int $cantidadPendiente
+     */
+    public function setCantidadPendiente(int $cantidadPendiente): void
+    {
+        $this->cantidadPendiente = $cantidadPendiente;
+    }
+
+
 }
 

@@ -31,5 +31,54 @@ class InvOrdenCompraDocumento
      */
     private $consecutivo;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoOrdenCompraDocumentoPk()
+    {
+        return $this->codigoOrdenCompraDocumentoPk;
+    }
+
+    /**
+     * @param mixed $codigoOrdenCompraDocumentoPk
+     */
+    public function setCodigoOrdenCompraDocumentoPk($codigoOrdenCompraDocumentoPk): void
+    {
+        $this->codigoOrdenCompraDocumentoPk = $codigoOrdenCompraDocumentoPk;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNombre(): string
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param string $nombre
+     */
+    public function setNombre(string $nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return int
+     */
+    public function getConsecutivo(): int
+    {
+        return $this->consecutivo;
+    }
+
+    /**
+     * @param int $consecutivo
+     */
+    public function setConsecutivo(int $consecutivo): void
+    {
+        $this->consecutivo = $consecutivo;
+    }
+
+
 }
 

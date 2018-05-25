@@ -126,9 +126,15 @@
             {{ form_widget(form.btnExcel) }}
         </div>
         <div class="btn-group">
+            {% if arEntidad.nuevoInterno == true %}
             <a class="btn btn-default btn-sm"
-               href="{{ path('admin_nuevo',{'entidad': arEntidad.entidad,'modulo':arEntidad.modulo,'id': 0}) }}">Nuevo
+               href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">Nuevo
             </a>
+            {% else %}
+                <a class="btn btn-default btn-sm"
+                   href="{{ path('admin_nuevo',{'entidad': arEntidad.entidad,'modulo':arEntidad.modulo,'id': 0}) }}">Nuevo
+                </a>
+            {% endif %}
         </div>
         <div class="btn-group">
             {{ form_widget(form.btnEliminar) }}

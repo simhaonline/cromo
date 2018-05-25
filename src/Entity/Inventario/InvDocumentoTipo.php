@@ -18,11 +18,42 @@ class InvDocumentoTipo
     private $codigoDocumentoTipoPk;
 
     /**
-     * @var string
      *
      * @ORM\Column(name="nombre", type="string", length=255)
      */
     private $nombre;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDocumentoTipoPk()
+    {
+        return $this->codigoDocumentoTipoPk;
+    }
+
+    /**
+     * @param mixed $codigoDocumentoTipoPk
+     */
+    public function setCodigoDocumentoTipoPk($codigoDocumentoTipoPk): void
+    {
+        $this->codigoDocumentoTipoPk = $codigoDocumentoTipoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
 
 
 }

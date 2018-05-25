@@ -14,15 +14,14 @@ class InvSolicitudTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, InvSolicitudTipo::class);
     }
 
-//    public function lista(){
-//        $qb = $this->getEntityManager()->createQueryBuilder();
-//        $qb ->select('s.codigoSolicitudPk')
-//            ->addSelect('s.numero')
-//            ->addSelect('s.fecha')
-//            ->from('App:Inventario\InvSolicitud','s')
-//            ->where('s.codigoSolicitudPk <> 0')
-//            ->orderBy('s.codigoSolicitudPk','DESC');
-//        $dql = $this->getEntityManager()->createQuery($qb->getDQL());
-//        return $dql->execute();
-//    }
+    public function camposPredeterminados(){
+        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvSolicitudTipo','ist')
+            ->select('ist.codigoSolicitudTipoPk as ID')
+            ->addSelect('ist.nombre AS NOMBRE')
+            ->addSelect('ist.consecutivo AS CONSECUTIVO')
+            ->where('ist.codigoSolicitudTipoPk <> 0')
+            ->orderBy('ist.codigoSolicitudTipoPk','DESC');
+        $dql = $this->getEntityManager()->createQuery($qb->getDQL());
+        return $dql->execute();
+    }
 }

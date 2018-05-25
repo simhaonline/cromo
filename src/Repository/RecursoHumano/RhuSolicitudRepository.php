@@ -18,7 +18,10 @@ class RhuSolicitudRepository extends ServiceEntityRepository
             ->from('App:RecursoHumano\RhuSolicitud','s')
             ->select('s.codigoSolicitudPk AS ID')
             ->addSelect('s.fecha AS FECHA')
-            ->addSelect('s.nombre AS NOMBRE');
+            ->addSelect('s.nombre AS NOMBRE')
+            ->addSelect('s.cantidadSolicitada AS CANTIDAD')
+            ->addSelect('s.estadoAutorizado AS AUTORIZADO')
+            ->addSelect('s.estadoCerrado AS CERRADO');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }

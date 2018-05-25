@@ -2,14 +2,14 @@
 
 namespace App\Form\Type\RecursoHumano;
 
-use App\Entity\RecursoHumano\RhuSolicitudExperiencia;
+use App\Entity\RecursoHumano\RhuGrupoPago;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class SolicitudExperienciaType extends AbstractType
+class GrupoPagoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -23,7 +23,7 @@ class SolicitudExperienciaType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => RhuSolicitudExperiencia::class,
+            'data_class' => RhuGrupoPago::class,
         ]);
     }
 }

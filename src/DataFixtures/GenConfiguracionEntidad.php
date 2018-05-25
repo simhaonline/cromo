@@ -33,7 +33,14 @@ class GenConfiguracionEntidad extends Fixture
 //        /////////////////                 FIN ESTRACTURA MODULO DE CARTERA                             ////////////////
 //
         /////////////////              INICIO ESTRACTURA MODULO DE RECURSO HUMANO                            ////////////////
-        $arrModuloRecursoHumano = ['aspirante,movimiento,seleccion', 'solicitud,movimiento,seleccion', 'seleccion,movimiento,seleccion', 'solicitudMotivo,admin,solicitud', 'solicitudExperiencia,admin,solicitud'];
+        $arrModuloRecursoHumano = ['aspirante,movimiento,seleccion,1,1',
+            'solicitud,movimiento,seleccion,1,1',
+            'seleccion,movimiento,seleccion,1,1',
+            'solicitudMotivo,admin,solicitud,0,0',
+            'solicitudExperiencia,admin,solicitud,0,0',
+            'clasificacionRiesgo,admin,seguridadSocial,0,0',
+            'grupoPago,admin,nomina,0,0',
+            'cargo,admin,contratacion,0,0'];
         $this->setConfiguracionEntidades($arrModuloRecursoHumano, $em, 'recursoHumano');
         /////////////////                 FIN ESTRACTURA MODULO DE RECURSO HUMANO
 //
@@ -48,7 +55,7 @@ class GenConfiguracionEntidad extends Fixture
 //        /////////////////                 FIN ESTRACTURA MODULO DE GENERAL SISTEMA                     ////////////////
 
 
-        $arrModuloTransporte = $arrModuloTransporte = ['relacionCaja,movimiento,control'];
+        $arrModuloTransporte = $arrModuloTransporte = ['relacionCaja,movimiento,control,0,1'];
         $this->setConfiguracionEntidades($arrModuloTransporte, $em, 'transporte');
 
         $em->flush();

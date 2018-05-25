@@ -12,5 +12,12 @@ class RhuCargoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuCargo::class);
     }
-
+    public function camposPredeterminados(){
+        $qb = $this-> _em->createQueryBuilder()
+            ->from('App:RecursoHumano\RhuCargo','c')
+            ->select('c.codigoCargoPk AS ID')
+            ->addSelect('c.nombre AS NOMBRE');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 }

@@ -81,10 +81,28 @@
                         <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="#">Solicitud <span class="fa arrow"></span></a>
+                                <a href="#">Seleccion <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'solicitudMotivo'}) }}">Motivo</a></li>
                                     <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'solicitudExperiencia'}) }}">Experiencia</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Seguridad social <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'clasificacionRiesgo'}) }}">Clasificacion del riesgo</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Contratacion <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'cargo'}) }}">Cargo</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Nomina <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'grupoPago'}) }}">Grupo pago</a></li>
                                 </ul>
                             </li>
                         </ul>

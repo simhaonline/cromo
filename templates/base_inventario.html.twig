@@ -142,8 +142,8 @@
     </nav>
     {% block body %}
         <div id="page-wrapper">
+            {{ notificar()|raw }}
             {% block content %}
-
 
             {% endblock %}
         </div>

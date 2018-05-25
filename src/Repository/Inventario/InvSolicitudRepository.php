@@ -2,6 +2,7 @@
 
 namespace App\Repository\Inventario;
 
+use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvSolicitud;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
@@ -32,7 +33,6 @@ class InvSolicitudRepository extends ServiceEntityRepository
 
     /**
      * @param $arrSeleccionados array
-     * @return string
      */
     public function eliminar($arrSeleccionados)
     {
@@ -58,9 +58,56 @@ class InvSolicitudRepository extends ServiceEntityRepository
                         $respuesta = 'No se puede eliminar, el registro se encuentra impreso';
                     }
                 }
+                MensajesController::error($respuesta);
             }
         }
-        return $respuesta;
+    }
+
+    /**
+     * @param $arSolicitud InvSolicitud
+     */
+    public function imprimir($arSolicitud)
+    {
+
+    }
+
+    /**
+     * @param $arSolicitud
+     */
+    public function anular($arSolicitud)
+    {
+        if ($arSolicitud->getEstadoImpreso() == 1) {
+            $arSolicitud->setEstadoAnulado(1);
+            $this->_em->persist($arSolicitud);
+            $this->_em->flush();
+        }
+    }
+
+    /**
+     * @param $arSolicitud InvSolicitud
+     */
+    public function desautorizar($arSolicitud)
+    {
+        if ($arSolicitud->getEstadoAutorizado() == 1 && $arSolicitud->getEstadoImpreso() == 0) {
+            $arSolicitud->setEstadoAutorizado(0);
+            $this->_em->persist($arSolicitud);
+        } else {
+            MensajesController::error('El registro esta impreso y no se puede desautorizar');
+        }
+    }
+
+    /**
+     * @param $arSolicitud InvSolicitud
+     */
+    public function autorizar($arSolicitud)
+    {
+        if (count($this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()])) > 0) {
+            $arSolicitud->setEstadoAutorizado(1);
+            $this->_em->persist($arSolicitud);
+            $this->_em->flush();
+        } else {
+            MensajesController::error('No se puede autorizar, el registro no tiene detalles');
+        }
     }
 
 }

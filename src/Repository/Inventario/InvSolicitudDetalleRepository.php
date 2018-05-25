@@ -2,6 +2,7 @@
 
 namespace App\Repository\Inventario;
 
+use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -30,75 +31,30 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arSolicitud InvSolicitud
-     * @return string
+     * @param $arSolicitud
+     * @param $arrDetallesSeleccionados
      */
-    public function autorizar($arSolicitud)
+    public function eliminar($arSolicitud, $arrDetallesSeleccionados)
     {
-        $respuesta = '';
-        if (count($this->_em->getRepository($this->_entityName)->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()])) > 0) {
-            $arSolicitud->setEstadoAutorizado(1);
-            $this->_em->persist($arSolicitud);
-            $this->_em->flush();
-        } else {
-            $respuesta = 'No se puede autorizar, el registro no tiene detalles';
-        }
-        return $respuesta;
-    }
-
-    /**
-     * @param $arSolicitud InvSolicitud
-     * @return string
-     */
-    public function desautorizar($arSolicitud)
-    {
-        $respuesta = '';
-        if ($arSolicitud->getEstadoAutorizado() == 1 && $arSolicitud->getEstadoImpreso() == 0) {
-            $arSolicitud->setEstadoAutorizado(0);
-            $this->_em->persist($arSolicitud);
-        } else {
-            $respuesta = 'El registro esta impreso y no se puede desautorizar';
-        }
-        return $respuesta;
-    }
-
-    /**
-     * @param $arSolicitud InvSolicitud
-     * @param $arrControles array
-     * @return string
-     */
-    public function eliminar($arSolicitud, $arrControles)
-    {
-        $respuesta = '';
         if ($arSolicitud->getEstadoAutorizado() == 0) {
-            if ($arrControles) {
-                foreach ($arrControles as $codigoSolicitudDetalle) {
-                    $arSolicitudDetalle = $this->_em->getRepository($this->_entityName)->find($codigoSolicitudDetalle);
+            if (count($arrDetallesSeleccionados)) {
+                foreach ($arrDetallesSeleccionados as $codigoSolicitudDetalle) {
+                    $arSolicitudDetalle = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->find($codigoSolicitudDetalle);
                     if ($arSolicitudDetalle) {
                         $this->_em->remove($arSolicitudDetalle);
                     }
                 }
+                try{
+                    $this->_em->flush();
+                } catch (\Exception $e){
+                    MensajesController::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                }
             }
         } else {
-            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
-        }
-        return $respuesta;
-    }
-
-    /**
-     * @param $arSolicitud InvSolicitud
-     */
-    public function imprimir($arSolicitud)
-    {
-
-    }
-
-    public function anular($arSolicitud)
-    {
-        if ($arSolicitud->getEstadoImpreso() == 1) {
-            $arSolicitud->setEstadoAnulado(1);
-            $this->_em->persist($arSolicitud);
-            $this->_em->flush();
+            MensajesController::error('No se puede eliminar, el registro se encuentra autorizado');
         }
     }
+
+
+
 }

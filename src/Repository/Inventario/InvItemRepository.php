@@ -55,4 +55,25 @@ class InvItemRepository extends ServiceEntityRepository
         $dql = $this->getEntityManager()->createQuery($qb->getDQL());
         return $dql->execute();
     }
+
+
+    public function listarItems($nombreItem = '', $codigoItem = '')
+    {
+        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvItem', 'ii')
+            ->select('ii.codigoItemPk')
+            ->addSelect('ii.nombre')
+            ->addSelect('ii.cantidadExistencia')
+            ->addSelect('ii.stockMinimo')
+            ->addSelect('ii.stockMaximo')
+            ->where('ii.codigoItemPk <> 0');
+        if ($codigoItem != '') {
+            $qb->andWhere("ii.codigoItemPk = {$codigoItem}");
+        }
+        if ($nombreItem != '') {
+            $qb->andWhere("ii.nombre LIKE '%{$nombreItem}%' ");
+        }
+        $qb->orderBy('ii.codigoItemPk', 'ASC');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 }

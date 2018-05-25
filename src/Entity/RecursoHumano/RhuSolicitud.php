@@ -59,6 +59,16 @@ class RhuSolicitud
     private $codigoClasificacionRiesgoFk;
 
     /**
+     * @ORM\Column(name="codigo_sexo_fk", type="integer", nullable=true)
+     */
+    private $codigoSexoFk;
+
+    /**
+     * @ORM\Column(name="codigo_religion_fk", type="integer", nullable=true)
+     */
+    private $codigoReligionFk;
+
+    /**
      * @ORM\Column(name="disponibilidad", type="string", length=20, nullable=true)
      */
     private $disponbilidad;
@@ -129,6 +139,11 @@ class RhuSolicitud
      * @ORM\Column(name="numero_hijos", type="integer", nullable=true)
      */
     private $numeroHijos;
+
+    /**
+     * @ORM\Column(name="codigo_tipo_vehiculo_fk", type="string", length=30, nullable=true)
+     */
+    private $codigoTipoVehiculoFk;
 
     /**
      * @ORM\Column(name="codigo_licencia_carro_fk", type="string", length=30, nullable=true)
@@ -232,6 +247,18 @@ class RhuSolicitud
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="solicitudRel")
      */
     protected $rhuSeleccionSolicitudRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuSolicitudSexoRel")
+     * @ORM\JoinColumn(name="codigo_sexo_fk", referencedColumnName="codigo_sexo_pk")
+     */
+    protected $genSexoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenReligion", inversedBy="rhuSolicitudReligicionRel")
+     * @ORM\JoinColumn(name="codigo_religion_fk", referencedColumnName="codigo_religion_pk")
+     */
+    protected $genReligionRel;
 
     /**
      * @return mixed
@@ -375,6 +402,38 @@ class RhuSolicitud
     public function setCodigoClasificacionRiesgoFk($codigoClasificacionRiesgoFk): void
     {
         $this->codigoClasificacionRiesgoFk = $codigoClasificacionRiesgoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSexoFk()
+    {
+        return $this->codigoSexoFk;
+    }
+
+    /**
+     * @param mixed $codigoSexoFk
+     */
+    public function setCodigoSexoFk($codigoSexoFk): void
+    {
+        $this->codigoSexoFk = $codigoSexoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoReligionFk()
+    {
+        return $this->codigoReligionFk;
+    }
+
+    /**
+     * @param mixed $codigoReligionFk
+     */
+    public function setCodigoReligionFk($codigoReligionFk): void
+    {
+        $this->codigoReligionFk = $codigoReligionFk;
     }
 
     /**
@@ -599,6 +658,22 @@ class RhuSolicitud
     public function setNumeroHijos($numeroHijos): void
     {
         $this->numeroHijos = $numeroHijos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTipoVehiculoFk()
+    {
+        return $this->codigoTipoVehiculoFk;
+    }
+
+    /**
+     * @param mixed $codigoTipoVehiculoFk
+     */
+    public function setCodigoTipoVehiculoFk($codigoTipoVehiculoFk): void
+    {
+        $this->codigoTipoVehiculoFk = $codigoTipoVehiculoFk;
     }
 
     /**
@@ -888,5 +963,38 @@ class RhuSolicitud
     {
         $this->rhuSeleccionSolicitudRel = $rhuSeleccionSolicitudRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getGenSexoRel()
+    {
+        return $this->genSexoRel;
+    }
+
+    /**
+     * @param mixed $genSexoRel
+     */
+    public function setGenSexoRel($genSexoRel): void
+    {
+        $this->genSexoRel = $genSexoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenReligionRel()
+    {
+        return $this->genReligionRel;
+    }
+
+    /**
+     * @param mixed $genReligionRel
+     */
+    public function setGenReligionRel($genReligionRel): void
+    {
+        $this->genReligionRel = $genReligionRel;
+    }
+
 
 }

@@ -31,4 +31,70 @@ class RhuGrupoPago
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="grupoPagoRel")
      */
     protected $seleccionGrupoPagoRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoPagoPk()
+    {
+        return $this->codigoGrupoPagoPk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoPagoPk
+     */
+    public function setCodigoGrupoPagoPk($codigoGrupoPagoPk): void
+    {
+        $this->codigoGrupoPagoPk = $codigoGrupoPagoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudesGrupoPagoRel()
+    {
+        return $this->solicitudesGrupoPagoRel;
+    }
+
+    /**
+     * @param mixed $solicitudesGrupoPagoRel
+     */
+    public function setSolicitudesGrupoPagoRel($solicitudesGrupoPagoRel): void
+    {
+        $this->solicitudesGrupoPagoRel = $solicitudesGrupoPagoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeleccionGrupoPagoRel()
+    {
+        return $this->seleccionGrupoPagoRel;
+    }
+
+    /**
+     * @param mixed $seleccionGrupoPagoRel
+     */
+    public function setSeleccionGrupoPagoRel($seleccionGrupoPagoRel): void
+    {
+        $this->seleccionGrupoPagoRel = $seleccionGrupoPagoRel;
+    }
+
+
 }

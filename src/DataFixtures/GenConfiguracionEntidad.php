@@ -8,10 +8,22 @@ use Doctrine\ORM\EntityManager;
 
 class GenConfiguracionEntidad extends Fixture
 {
+    /* ESTRUCTURA ARRAY [ ENTIDAD, FUNCION, GRUPO, NUEVOINTERNO, DETALLEINTERNO] */
     public function load(ObjectManager $em)
     {
         /////////////////              INICIO ESTRACTURA MODULO DE INVENTARIO                          ////////////////
-        $arrModuloInventario = $arrModuloInventario = ['solicitud, movimiento, inventario', 'item, admin, general', 'itemGrupo,admin,general', 'bodega,admin,general', 'configuracion,admin,general', 'documento,admin,general', 'solicitudTipo,admin,general', 'facturaTipo,admin,general', 'ordenCompraTipo,admin,general', 'documentoTipo,admin,general', 'tercero,admin,general'];
+        $arrModuloInventario = $arrModuloInventario = [
+            'solicitud,movimiento,inventario,0,1',
+            'item,admin,general,0,0',
+            'itemGrupo,admin,general,0,0',
+            'bodega,admin,general,0,0',
+            'configuracion,admin,general,0,0',
+            'documento,admin,general,0,0',
+            'solicitudTipo,admin,general,0,0',
+            'facturaTipo,admin,general,0,0',
+            'ordenCompraTipo,admin,general,0,0',
+            'documentoTipo,admin,general,0,0',
+            'tercero,admin,general,0,0'];
         $this->setConfiguracionEntidades($arrModuloInventario, $em, 'inventario');
         /////////////////              FIN ESTRACTURA MODULO DE INVENTARIO                             ////////////////
 //
@@ -21,7 +33,7 @@ class GenConfiguracionEntidad extends Fixture
 //        /////////////////                 FIN ESTRACTURA MODULO DE CARTERA                             ////////////////
 //
         /////////////////              INICIO ESTRACTURA MODULO DE RECURSO HUMANO                            ////////////////
-        $arrModuloRecursoHumano = ['aspirante,movimiento,seleccion','solicitud,movimiento,seleccion','seleccion,movimiento,seleccion','solicitudMotivo,admin,solicitud','solicitudExperiencia,admin,solicitud'];
+        $arrModuloRecursoHumano = ['aspirante,movimiento,seleccion', 'solicitud,movimiento,seleccion', 'seleccion,movimiento,seleccion', 'solicitudMotivo,admin,solicitud', 'solicitudExperiencia,admin,solicitud'];
         $this->setConfiguracionEntidades($arrModuloRecursoHumano, $em, 'recursoHumano');
         /////////////////                 FIN ESTRACTURA MODULO DE RECURSO HUMANO
 //
@@ -73,7 +85,6 @@ class GenConfiguracionEntidad extends Fixture
         }
         foreach ($arrModulos as $arrEntidad) {
             $arrEntidad = explode(',', $arrEntidad);
-//            dump($arrEntidad);die();
             $codigo = $modulo . "_" . trim($arrEntidad[0]);
             $arEntidad = $em->getRepository("App:General\GenEntidad")->find($codigo);
             if (!$arEntidad) {
@@ -83,6 +94,8 @@ class GenConfiguracionEntidad extends Fixture
                 $arEntidad->setEntidad(trim($arrEntidad[0]));
                 $arEntidad->setFuncion(trim($arrEntidad[1]));
                 $arEntidad->setGrupo(trim($arrEntidad[2]));
+                $arEntidad->setNuevoInterno(trim($arrEntidad[3]));
+                $arEntidad->setDetalleInterno(trim($arrEntidad[4]));
                 $arEntidad->setPrefijo($prefijo);
                 $arEntidad->setActivo(true);
                 $arEntidad->setJsonLista($this->generarConfiguracionEntidad('App:' . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad()), $em));

@@ -37,5 +37,86 @@ class GenEstadoCivil
      */
     protected $rhuSeleccionEstadoCivilRel;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoEstadoCivilPk()
+    {
+        return $this->codigoEstadoCivilPk;
+    }
+
+    /**
+     * @param mixed $codigoEstadoCivilPk
+     */
+    public function setCodigoEstadoCivilPk($codigoEstadoCivilPk): void
+    {
+        $this->codigoEstadoCivilPk = $codigoEstadoCivilPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuAspirantesEstadoCivilRel()
+    {
+        return $this->rhuAspirantesEstadoCivilRel;
+    }
+
+    /**
+     * @param mixed $rhuAspirantesEstadoCivilRel
+     */
+    public function setRhuAspirantesEstadoCivilRel($rhuAspirantesEstadoCivilRel): void
+    {
+        $this->rhuAspirantesEstadoCivilRel = $rhuAspirantesEstadoCivilRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuSolicitudesEstadoCivilRel()
+    {
+        return $this->rhuSolicitudesEstadoCivilRel;
+    }
+
+    /**
+     * @param mixed $rhuSolicitudesEstadoCivilRel
+     */
+    public function setRhuSolicitudesEstadoCivilRel($rhuSolicitudesEstadoCivilRel): void
+    {
+        $this->rhuSolicitudesEstadoCivilRel = $rhuSolicitudesEstadoCivilRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuSeleccionEstadoCivilRel()
+    {
+        return $this->rhuSeleccionEstadoCivilRel;
+    }
+
+    /**
+     * @param mixed $rhuSeleccionEstadoCivilRel
+     */
+    public function setRhuSeleccionEstadoCivilRel($rhuSeleccionEstadoCivilRel): void
+    {
+        $this->rhuSeleccionEstadoCivilRel = $rhuSeleccionEstadoCivilRel;
+    }
+
+
 }
 

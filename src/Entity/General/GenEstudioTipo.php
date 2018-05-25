@@ -27,5 +27,54 @@ class GenEstudioTipo
      */
     protected $rhuSolicitudesEstudioTiposRel;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoEstudioTipoPk()
+    {
+        return $this->codigoEstudioTipoPk;
+    }
+
+    /**
+     * @param mixed $codigoEstudioTipoPk
+     */
+    public function setCodigoEstudioTipoPk($codigoEstudioTipoPk): void
+    {
+        $this->codigoEstudioTipoPk = $codigoEstudioTipoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuSolicitudesEstudioTiposRel()
+    {
+        return $this->rhuSolicitudesEstudioTiposRel;
+    }
+
+    /**
+     * @param mixed $rhuSolicitudesEstudioTiposRel
+     */
+    public function setRhuSolicitudesEstudioTiposRel($rhuSolicitudesEstudioTiposRel): void
+    {
+        $this->rhuSolicitudesEstudioTiposRel = $rhuSolicitudesEstudioTiposRel;
+    }
+
+
 }
 

@@ -13,4 +13,12 @@ class GenEstudioTipoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, GenEstudioTipo::class);
     }
+    public function camposPredeterminados(){
+        $qb = $this-> _em->createQueryBuilder()
+            ->from('App:General\GenEstudioTipo','et')
+            ->select('et.codigoEstudioTipoPk AS ID')
+            ->addSelect('et.nombre');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 }

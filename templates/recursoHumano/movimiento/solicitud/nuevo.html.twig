@@ -59,20 +59,24 @@
                 <label for="form_fechaContratacion" class="col-sm-2 control-label">Fecha contratacion:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaContratacion) }}
+                    {{ form_errors(form.fechaContratacion) }}
                 </div>
                 <label for="form_fechaContratacion" class="col-sm-2 control-label">Fecha vencimiento:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaVencimiento) }}
+                    {{ form_errors(form.fechaVencimiento) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_edadMinima" class="col-sm-2 control-label">Edad min:</label>
                 <div class="col-sm-1">
                     {{ form_widget(form.edadMinima, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.edadMinima) }}
                 </div>
                 <label for="form_edadMaxima" class="col-sm-2 control-label">Edad maxima:</label>
                 <div class="col-sm-1">
                     {{ form_widget(form.edadMaxima, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.edadMaxima) }}
                 </div>
                 <label for="form_salarioFijo" class="col-sm-2 control-label"></label>
                 <div class="sol-sm-10">
@@ -84,10 +88,12 @@
                 <label for="form_ciudadRel" class="col-sm-2 control-label">Ciudad residencia:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.genCiudadRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.genCiudadRel) }}
                 </div>
                 <label for="form_estudioTipoRel" class="col-sm-2 control-label">Nivel de estudio:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.genEstudioTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.genEstudioTipoRel) }}
                 </div>
             </div>
 
@@ -95,46 +101,55 @@
                 <label for="form_estadoCivilRel" class="col-sm-2 control-label">Estado civil:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.genEstadoCivilRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.genEstadoCivilRel) }}
                 </div>
                 <label for="form_numeroHijos" class="col-sm-2 control-label">Nro hijos:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.numeroHijos, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.numeroHijos) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_codigoSexoFk" class="col-sm-2 control-label">Sexo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.genSexoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.genSexoRel) }}
                 </div>
                 <label for="form_codigoReligionFk" class="col-sm-2 control-label">Religion:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.genReligionRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.genReligionRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_codigoTipoVehiculoFk" class="col-sm-2 control-label">Vehiculo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoTipoVehiculoFk, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.codigoTipoVehiculoFk) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_codigoLicenciaCarroFk" class="col-sm-2 control-label">Licencia carro:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoLicenciaCarroFk, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.codigoLicenciaCarroFk) }}
                 </div>
                 <label for="form_codigoLicenciaMotoFk" class="col-sm-2 control-label">Licencia moto:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoLicenciaMotoFk, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.codigoLicenciaMotoFk) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_disponibilidad" class="col-sm-2 control-label">Disponibilidad:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.disponbilidad, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.disponbilidad) }}
                 </div>
                 <label for="form_solicitudExperienciaRel" class="col-sm-2 control-label">Experiencia:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.solicitudExperienciaRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.solicitudExperienciaRel) }}
                 </div>
             </div>
             <div class="form-group">

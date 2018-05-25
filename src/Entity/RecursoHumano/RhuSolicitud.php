@@ -161,12 +161,6 @@ class RhuSolicitud
     private $experienciaSolicitud;
 
     /**
-     * @ORM\Column(name="vehiculo", type="string", nullable=true)
-     * @Assert\NotBlank(message="Este campo no puede estar vacio")
-     */
-    private $vehiculo;
-
-    /**
      * @ORM\Column(name="comentarios", type="string", length=300, nullable=true)
      * @Assert\Length(
      *     max=300,
@@ -727,22 +721,6 @@ class RhuSolicitud
     /**
      * @return mixed
      */
-    public function getVehiculo()
-    {
-        return $this->vehiculo;
-    }
-
-    /**
-     * @param mixed $vehiculo
-     */
-    public function setVehiculo($vehiculo): void
-    {
-        $this->vehiculo = $vehiculo;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getComentarios()
     {
         return $this->comentarios;
@@ -995,6 +973,4 @@ class RhuSolicitud
     {
         $this->genReligionRel = $genReligionRel;
     }
-
-
 }

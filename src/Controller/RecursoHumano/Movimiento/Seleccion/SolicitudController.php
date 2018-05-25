@@ -12,27 +12,29 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SolicitudController extends Controller
 {
-   /**
-    * @Route("rhu/mov/seleccion/solicitud/nuevo/{id}", name="rhu_mov_seleccion_solicitud_nuevo")
-    */    
+    /**
+     * @Route("rhu/mov/seleccion/solicitud/nuevo/{id}", name="rhu_mov_seleccion_solicitud_nuevo")
+     */
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arSolicitud = new RhuSolicitud();
-        if($id != 0){
+        if ($id != 0) {
             $arSolicitud = $em->getRepository('App:RecursoHumano\RhuSolicitud')->find($id);
             if (!$arSolicitud) {
-                return $this->redirect($this->generateUrl('admin_lista',['modulo'=>'recursoHumano','entidad'=>'solicitud']));
+                return $this->redirect($this->generateUrl('admin_lista', ['modulo' => 'recursoHumano', 'entidad' => 'solicitud']));
             }
         }
         $form = $this->createForm(SolicitudType::class, $arSolicitud);
         $form->handleRequest($request);
-        if($form->isSubmitted()&& $form->isValid()){
+//        dump($arSolicitud);
+//        die();
+        if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arSolicitud->setFecha(new \DateTime('now'));
                 $em->persist($arSolicitud);
-                $em->flush($arSolicitud);
-                return $this->redirect($this->generateUrl('listado', ['entidad' => 'rhuSolicitud']));
+                $em->flush();
+                return $this->redirect($this->generateUrl('admin_lista', ['modulo' => 'recursoHumano','entidad' => 'solicitud']));
             }
             if ($form->get('guardarnuevo')->isClicked()) {
                 $em->persist($arSolicitud);

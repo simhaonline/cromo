@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\General;
+namespace App\Controller\Principal;
 
 use App\Controller\Estructura\AdministracionController;
 use App\Entity\General\GenConfiguracionEntidad;

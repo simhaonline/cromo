@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Controller\General;
+namespace App\Controller\Principal;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,12 +9,12 @@ use Symfony\Component\HttpFoundation\Request;
 class InicioController extends Controller
 {
    /**
-    * @Route("/gen/general/inicio", name="gen_general_inicio")
+    * @Route("/", name="inicio")
     */    
     public function inicio(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        return $this->render('general/inicio.html.twig');
+        return $this->render('principal/inicio.html.twig');
     }
 }
 

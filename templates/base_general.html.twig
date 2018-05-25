@@ -10,7 +10,6 @@
         <link rel="stylesheet" href="{{ asset('../assets/dist/css/sb-admin-2.css') }}">
         <link rel="stylesheet" href="{{ asset('../assets/vendor/morrisjs/morris.css') }}">
         <link rel="stylesheet" href="{{ asset('../assets/vendor/font-awesome/css/font-awesome.min.css') }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="{{ asset('../assets/css/general.css') }}">
     {% endblock %}
 </head>
@@ -66,22 +65,17 @@
                         <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
                     </li>
                     <li>
-                        <a href="{{ path('tte_general_inicio') }}"><i class="fa fa-road"></i> Transporte</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('rhu_general_inicio') }}"><i class="fa fa-users"></i> Recurso humano</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('car_general_inicio') }}"><i class="fa fa-credit-card-alt"></i> Cartera</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('inv_general_inicio') }}"><i class="fa fa-cube fa-fw"></i> Inventario</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('ctb_general_inicio') }}"><i class="fa fa-calculator fa-fw"></i>Contablidad</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('gen_general_inicio') }}"><i class="fa fa-support fa-fw"></i>General</a>
+                        <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="#">General <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li><a href="{{ path('admin_lista',{'modulo':'general','entidad':'sexo'}) }}">Sexo</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'general','entidad':'religion'}) }}">Religion</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'general','entidad':'ciudad'}) }}">Ciudad</a></li>
+                                </ul>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -92,17 +86,6 @@
     {% block body %}
         <div id="page-wrapper">
             {% block content %}
-                <div class="row">
-                    <div class="col-lg-12">
-                        {% set route = app.request.attributes.get('_route') %}
-                        {% set parametros = app.request.attributes.get('_route_params') %}
-                        {% set ruta = route | split('_') %}
-                        <h3 class="page-header">General
-
-                        </h3>
-                    </div>
-                </div>
-
 
             {% endblock %}
         </div>
@@ -116,7 +99,6 @@
     <script src="{{ asset('../assets/vendor/morrisjs/morris.min.js') }}"></script>
     <script src="{{ asset('../assets/data/morris-data.js') }}"></script>
     <script src="{{ asset('../assets/dist/js/sb-admin-2.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="{{ asset('../assets/js/general.js') }}"></script>
 {% endblock %}
 </body>

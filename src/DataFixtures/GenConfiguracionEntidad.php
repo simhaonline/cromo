@@ -50,9 +50,11 @@ class GenConfiguracionEntidad extends Fixture
 //        /////////////////                 FIN ESTRACTURA MODULO DE CONTABILIDAD                        ////////////////
 //        ///
 //        /////////////////              INICIO ESTRACTURA MODULO DE GENERAL SISTEMA                     ////////////////
-//        $arrModuloGeneral = ['cubo'];
-//        $this->setConfiguracionEntidades($arrModuloGeneral, $em, 'general');
-//        /////////////////                 FIN ESTRACTURA MODULO DE GENERAL SISTEMA                     ////////////////
+        $arrModuloGeneral = ['sexo,admin,general,0,0',
+            'religion,admin,general,0,0',
+            'ciudad,admin,general,0,0',];
+        $this->setConfiguracionEntidades($arrModuloGeneral, $em, 'general');
+        /////////////                 FIN ESTRACTURA MODULO DE GENERAL SISTEMA                     ////////////////
 
 
         $arrModuloTransporte = $arrModuloTransporte = ['relacionCaja,movimiento,control,0,1'];

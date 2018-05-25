@@ -15,7 +15,8 @@ class RhuSolicitudExperienciaRepository extends ServiceEntityRepository
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
             ->from('App:RecursoHumano\RhuSolicitudExperiencia','se')
-            ->select('se');
+            ->select('se.codigoSolicitudExperienciaPk AS ID')
+            ->addSelect('se.nombre');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }

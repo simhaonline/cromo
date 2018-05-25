@@ -13,6 +13,7 @@ class GenReligion
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_religion_pk", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $codigoReligionPk;
 
@@ -73,6 +74,7 @@ class GenReligion
     {
         $this->rhuSolicitudReligicionRel = $rhuSolicitudReligicionRel;
     }
+
 
 
 }

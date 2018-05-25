@@ -13,8 +13,12 @@ class GenCiudadRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, GenCiudad::class);
     }
-
-
-
-
+    public function camposPredeterminados(){
+        $qb = $this-> _em->createQueryBuilder()
+            ->from('App:General\GenCiudad','c')
+            ->select('c.codigoCiudadPk AS ID')
+            ->addSelect('c.nombre');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 }

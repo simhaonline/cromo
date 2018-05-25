@@ -12,4 +12,12 @@ class GenReligionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, GenReligion::class);
     }
+    public function camposPredeterminados(){
+        $qb = $this-> _em->createQueryBuilder()
+            ->from('App:General\GenReligion','r')
+            ->select('r.codigoReligionPk AS ID')
+            ->addSelect('r.nombre');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 }

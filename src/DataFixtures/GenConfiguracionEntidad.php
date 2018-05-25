@@ -34,8 +34,11 @@ class GenConfiguracionEntidad extends Fixture
 //        $arrModuloGeneral = ['cubo'];
 //        $this->setConfiguracionEntidades($arrModuloGeneral, $em, 'general');
 //        /////////////////                 FIN ESTRACTURA MODULO DE GENERAL SISTEMA                     ////////////////
-        //Guardar los registros
-        ///
+
+
+        $arrModuloTransporte = $arrModuloTransporte = ['relacionCaja,movimiento,control'];
+        $this->setConfiguracionEntidades($arrModuloTransporte, $em, 'transporte');
+
         $em->flush();
     }
 
@@ -62,7 +65,7 @@ class GenConfiguracionEntidad extends Fixture
                 $prefijo = 'ctb';
                 break;
             case 'transporte':
-                $prefijo = 'ttr';
+                $prefijo = 'tte';
                 break;
             case 'general':
                 $prefijo = 'gen';

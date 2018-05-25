@@ -128,7 +128,7 @@
         <div class="btn-group">
             {% if arEntidad.nuevoInterno == true %}
             <a class="btn btn-default btn-sm"
-               href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">Nuevo
+               href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': 0}) }}">Nuevo
             </a>
             {% else %}
                 <a class="btn btn-default btn-sm"

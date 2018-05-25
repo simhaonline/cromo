@@ -145,9 +145,8 @@ class GenEntidadRepository extends ServiceEntityRepository
         $arrLista = json_decode($arEntidad->getJsonLista());
         foreach ($arrLista as $lista) {
             $qb->addSelect("tbl.{$lista->campo} AS {$lista->alias}");
-
         }
-        if(is_numeric($id)){
+        if($arrLista[0]->tipo == 'integer'){
             $qb->where("tbl.{$arrLista[0]->campo} = {$id}");
         } else {
             $qb->where("tbl.{$arrLista[0]->campo} = '{$id}'");

@@ -69,7 +69,7 @@
                 {% for key,dato in datos %}
                     {{ validarTipo(dato) }}
                 {% endfor %}
-                {% if arEntidad.nuevoInterno %}
+                {% if arEntidad.nuevoInterno == true %}
                 <a href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
                     <i class="fa fa-share-square-o" style="font-size: large">
                     </i>
@@ -81,7 +81,7 @@
                     </a>
                 <td style="text-align: center">
                     {% endif %}
-                    {% if arEntidad.detalleInterno %}
+                    {% if arEntidad.detalleInterno == true %}
                         <a href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_detalle' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
                             <i class="fa fa-share-square-o" style="font-size: large">
                             </i>

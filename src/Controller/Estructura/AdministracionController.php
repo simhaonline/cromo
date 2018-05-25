@@ -291,11 +291,11 @@ final class AdministracionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $codigo = $modulo . "_" . $entidad;
         $arEntidad = $em->getRepository('App:General\GenEntidad')->find($codigo);
-        $arRegistros = $em->getRepository('App:General\GenEntidad')->listaDetalles($arEntidad, $id);
+        $arRegistro = $em->getRepository('App:General\GenEntidad')->listaDetalles($arEntidad, $id);
         $arrCampos = json_decode($em->getRepository('App:General\GenEntidad')->find($codigo)->getJsonLista());
         return $this->render('estructura/detalles.html.twig', [
             'arEntidad' => $arEntidad,
-            'arRegistros' => $arRegistros,
+            'arRegistro' => $arRegistro,
             'arrCampos' => $arrCampos
         ]);
     }

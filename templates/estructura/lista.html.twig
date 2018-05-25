@@ -70,17 +70,20 @@
                     {{ validarTipo(dato) }}
                 {% endfor %}
                 {% if arEntidad.nuevoInterno == true %}
-                <a href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
-                    <i class="fa fa-share-square-o" style="font-size: large">
-                    </i>
-                </a>
+                <td style="text-align: center">
+                    <a href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
+                        <i class="fa fa-edit" style="font-size: large">
+                        </i>
+                    </a>
+                </td>
                 {% else %}
                 <td style="text-align: center">
                     <a href="{{ path('admin_nuevo', {'entidad': arEntidad.entidad,'modulo':arEntidad.modulo,'id': datos.ID }) }}"><i
                                 class="fa fa-edit" style="font-size: large"></i>
                     </a>
+                </td>
+                {% endif %}
                 <td style="text-align: center">
-                    {% endif %}
                     {% if arEntidad.detalleInterno == true %}
                         <a href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_detalle' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
                             <i class="fa fa-share-square-o" style="font-size: large">
@@ -127,9 +130,9 @@
         </div>
         <div class="btn-group">
             {% if arEntidad.nuevoInterno == true %}
-            <a class="btn btn-default btn-sm"
-               href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': 0}) }}">Nuevo
-            </a>
+                <a class="btn btn-default btn-sm"
+                   href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': 0}) }}">Nuevo
+                </a>
             {% else %}
                 <a class="btn btn-default btn-sm"
                    href="{{ path('admin_nuevo',{'entidad': arEntidad.entidad,'modulo':arEntidad.modulo,'id': 0}) }}">Nuevo

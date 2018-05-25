@@ -75,13 +75,13 @@ class RelacionCajaController extends Controller
                 $formato->Generar($em, $codigoRelacionCaja);
             }
             if ($form->get('btnRetirarRecibo')->isClicked()) {
-                /*$arrGuias = $request->request->get('ChkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->retirarGuia($arrGuias);
+                $arr = $request->request->get('ChkSeleccionar');
+                $respuesta = $this->getDoctrine()->getRepository(TteRelacionCaja::class)->retirarRecibo($arr);
                 if($respuesta) {
                     $em->flush();
-                    $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($codigoDespacho);
-                }*/
-                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+                    $this->getDoctrine()->getRepository(TteRelacionCaja::class)->liquidar($codigoRelacionCaja);
+                }
+                return $this->redirect($this->generateUrl('tte_mto_control_relacioncaja_detalle', array('codigoRelacionCaja' => $codigoRelacionCaja)));
             }
         }
 
@@ -98,7 +98,7 @@ class RelacionCajaController extends Controller
     public function detalleAdicionarGuia(Request $request, $codigoRelacionCaja)
     {
         $em = $this->getDoctrine()->getManager();
-        $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+        $arRelacionCaja = $em->getRepository(TteRelacionCaja::class)->find($codigoRelacionCaja);
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();
@@ -107,18 +107,18 @@ class RelacionCajaController extends Controller
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if (count($arrSeleccionados) > 0) {
                 foreach ($arrSeleccionados AS $codigo) {
-                    $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
-                    $arGuia->setDespachoRel($arDespacho);
-                    $arGuia->setEstadoEmbarcado(1);
-                    $em->persist($arGuia);
+                    $ar = $em->getRepository(TteRecibo::class)->find($codigo);
+                    $ar->setRelacionCajaRel($arRelacionCaja);
+                    $ar->setEstadoRelacion(1);
+                    $em->persist($ar);
                 }
                 $em->flush();
-                $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($codigoDespacho);
+                $this->getDoctrine()->getRepository(TteRelacionCaja::class)->liquidar($codigoRelacionCaja);
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
-        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->despachoPendiente();
-        return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        $arRecibos = $this->getDoctrine()->getRepository(TteRecibo::class)->relacionPendiente();
+        return $this->render('transporte/movimiento/control/relacioncaja/detalleAdicionarRecibo.html.twig', ['arRecibos' => $arRecibos, 'form' => $form->createView()]);
     }
 
 }

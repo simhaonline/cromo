@@ -16,6 +16,30 @@
             <td class="td-in-well">{{ arRelacionCaja.codigoRelacionCajaPk }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arRelacionCaja.fecha |date("Y/m/d") }}</td>
+            <td class="titulo" >CANTIDAD:</td>
+            <td align="right">{{ arRelacionCaja.cantidad }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >FLETE:</td>
+            <td align="right">{{ arRelacionCaja.vrFlete }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >MANEJO:</td>
+            <td align="right">{{ arRelacionCaja.vrManejo }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
             <td class="titulo" >TOTAL:</td>
             <td align="right">{{ arRelacionCaja.vrTotal }}</td>
         </tr>

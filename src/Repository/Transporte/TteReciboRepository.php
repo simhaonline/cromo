@@ -30,4 +30,20 @@ class TteReciboRepository extends ServiceEntityRepository
 
     }
 
+    public function relacionPendiente(): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT r.codigoReciboPk,
+            r.fecha,
+            r.vrFlete,
+            r.vrManejo,
+            r.vrTotal
+        FROM App\Entity\Transporte\TteRecibo r 
+        WHERE r.estadoRelacion = 0  
+        ORDER BY r.codigoReciboPk'
+        );
+        return $query->execute();
+    }
+
 }

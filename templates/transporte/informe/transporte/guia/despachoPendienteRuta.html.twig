@@ -3,7 +3,28 @@
     {% set codigoRuta = '' %}
     {% set contador = 0 %}
     {% set numeroGuias = arGuias|length %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros de busqueda</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_TxtCodigo" class="col-sm-2 control-label">Ruta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.rutaRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_estadoAutorizado" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
 
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form_widget(form.BtnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
@@ -71,7 +92,20 @@
             {% set totalFlete = totalFlete + arGuia.vrFlete %}
             {% set contador = contador + 1 %}
         {% endfor %}
+        <tr>
+            <td id="suptipo" colspan="7"></td>
+            <td class="numero">{{ totalDeclara }}</td>
+            <td class="numero">{{ totalFlete }}</td>
+            <td class="numero">{{ totalUnidades }}</td>
+            <td class="numero">{{ totalPeso }}</td>
+            <td class="numero">{{ totalVolumen }}</td>
+        </tr>
+        {% set totalUnidades = 0 %}
+        {% set totalPeso = 0 %}
+        {% set totalVolumen = 0 %}
         </tbody>
     </table>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
 {% endblock %}
 

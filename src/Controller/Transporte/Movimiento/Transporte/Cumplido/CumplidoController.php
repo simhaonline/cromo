@@ -81,7 +81,7 @@ class CumplidoController extends Controller
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->cumplidoPendiente($arCumplido->getCodigoClienteFk());
-        return $this->render('movimiento/transporte/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        return $this->render('movimiento/transporte/despacho/detalleAdicionarRecibo.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
 
 }

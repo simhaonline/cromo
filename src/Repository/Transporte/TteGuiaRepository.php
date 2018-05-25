@@ -7,7 +7,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-
+use Symfony\Component\HttpFoundation\Session\Session;
 class TteGuiaRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -347,9 +347,9 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     public function informeDespachoPendienteRuta(): array
     {
+        $session = new Session();
         $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
+        $dql = "SELECT g.codigoGuiaPk, 
         g.numero, 
         g.fechaIngreso,
         g.codigoOperacionIngresoFk,
@@ -359,13 +359,23 @@ class TteGuiaRepository extends ServiceEntityRepository
         cd.nombre AS ciudadDestino,
         g.unidades,
         g.pesoReal,
-        g.pesoVolumen
+        g.pesoVolumen,
+        g.vrDeclara,
+        g.vrFlete,
+        r.nombre AS nombreRuta
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.estadoDespachado = 0 
-        ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk'
-        );
+        LEFT JOIN g.rutaRel r
+        WHERE g.estadoDespachado = 0 AND g.estadoAnulado = 0 ";
+        if($session->get('filtroTteCodigoRuta')) {
+            $dql .= " AND g.codigoRutaFk = " . $session->get('filtroTteCodigoRuta');
+        }
+        $dql .= "ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk";
+
+        $query = $em->createQuery($dql);
+
+
         return $query->execute();
     }
 

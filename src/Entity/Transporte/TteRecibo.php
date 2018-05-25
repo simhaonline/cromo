@@ -63,6 +63,11 @@ class TteRecibo
     private $vrTotal = 0;
 
     /**
+     * @ORM\Column(name="estado_relacion", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $estadoRelacion = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteRelacionCaja", inversedBy="recibosRelacionCajaRel")
      * @ORM\JoinColumn(name="codigo_relacion_caja_fk", referencedColumnName="codigo_relacion_caja_pk")
      */
@@ -309,6 +314,23 @@ class TteRecibo
     {
         $this->guiaRel = $guiaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoRelacion()
+    {
+        return $this->estadoRelacion;
+    }
+
+    /**
+     * @param mixed $estadoRelacion
+     */
+    public function setEstadoRelacion($estadoRelacion): void
+    {
+        $this->estadoRelacion = $estadoRelacion;
+    }
+
 
 
 }

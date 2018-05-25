@@ -1,0 +1,32 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>FECHA</th>
+            <th>FLETE</th>
+            <th>MANEJO</th>
+            <th>TOTAL</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arRecibo in arRecibos %}
+            <tr>
+                <td>{{ arRecibo.codigoReciboPk }}</td>
+                <td>{{ arRecibo.fecha | date('Y-m-d') }}</td>
+                <td>{{ arRecibo.vrFlete }}</td>
+                <td>{{ arRecibo.vrManejo }}</td>
+                <td>{{ arRecibo.vrTotal }}</td>
+                <td  style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecibo.codigoReciboPk }}" /></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-toolbar" style="float: right">
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

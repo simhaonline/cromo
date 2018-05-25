@@ -2,7 +2,8 @@
 
 namespace App\Formato\Transporte;
 
-use App\Entity\General\TteConfiguracion;
+use App\Entity\General\GenConfiguracion;
+use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteRelacionCaja;
 use App\Entity\Transporte\TteRecibo;
 
@@ -29,7 +30,7 @@ class RelacionCaja extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        $arConfiguracion = self::$em->getRepository(TteConfiguracion::class)->impresionFormato();
+        $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->impresionFormato();
         //{{ asset('../assets/css/general.css') }}
         $this->Image('../assets/img/empresa/logo.jpeg', 12, 13, 35, 17);
         //INFORMACIÓN EMPRESA
@@ -111,13 +112,11 @@ class RelacionCaja extends \FPDF {
     }
 
     public function Body($pdf) {
+        $arRelacionCaja = self::$em->getRepository(TteRelacionCaja::class)->find(self::$codigoRelacionCaja);
         $arRecibos = self::$em->getRepository(TteRecibo::class)->relacionCaja(self::$codigoRelacionCaja);
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         if($arRecibos) {
-            $flete = 0;
-            $manejo = 0;
-            $total = 0;
             foreach ($arRecibos as $arRecibo) {
                 $pdf->Cell(15, 4, $arRecibo['codigoReciboPk'], 1, 0, 'L');
                 $pdf->Cell(15, 4, $arRecibo['fecha']->format('Y-m-d'), 1, 0, 'L');
@@ -128,9 +127,9 @@ class RelacionCaja extends \FPDF {
                 $pdf->SetAutoPageBreak(true, 15);
             }
             $pdf->Cell(30, 4, 'TOTAL', 1, 0, 'L');
-            $pdf->Cell(15, 4, $flete, 1, 0, 'R');
-            $pdf->Cell(15, 4, $manejo, 1, 0, 'R');
-            $pdf->Cell(15, 4, $total, 1, 0, 'R');
+            $pdf->Cell(15, 4, $arRelacionCaja->getVrFlete(), 1, 0, 'R');
+            $pdf->Cell(15, 4, $arRelacionCaja->getVrManejo(), 1, 0, 'R');
+            $pdf->Cell(15, 4, $arRelacionCaja->getVrTotal(), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

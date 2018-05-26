@@ -43,6 +43,11 @@ class GenConfiguracion
     private $direccion;
 
     /**
+     * @ORM\Column(name="logo", type="blob")
+     */
+    private $logo;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -136,6 +141,22 @@ class GenConfiguracion
     public function setDireccion($direccion): void
     {
         $this->direccion = $direccion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * @param mixed $logo
+     */
+    public function setLogo($logo): void
+    {
+        $this->logo = $logo;
     }
 
 

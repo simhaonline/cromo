@@ -13,12 +13,24 @@
                                     {{ arRutas[0].entidad | capitalize }}
                                 </li>
         {% for arRuta in arRutas %}
-            {% set moduloActivo = arRuta.modulo %}
-            {% set funcionActiva = arRuta.funcion %}
+
             {% set grupoActivo = arRuta.grupo %}
-            {% if moduloActivo != arRuta.modulo %}
+            {% set funcionActiva = arRuta.funcion %}
+            {% set moduloActivo = arRuta.modulo %}
+
+            {% if grupoActivo == arRuta.grupo %}
+                                <li>
+                                    {{ arRuta.entidad|capitalize }}
+                                </li>
             {% else %}
-                {% if funcionActiva != arRuta.funcion %}
+                            </ul>
+                        </li>
+                        <li>{{ arRuta.grupo }}
+                            <ul>
+                                <li>
+                                    {{ arRuta.entidad }}
+                                </li>
+                {% if funcionActiva == arRuta.funcion %}
                 {% else %}
                     {% if grupoActivo != arRuta.grupo %}
                     {% else %}

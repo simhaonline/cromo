@@ -24,6 +24,11 @@ class InvDocumentoTipo
     private $nombre;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvDocumento", mappedBy="documentoTipoRel")
+     */
+    protected $documentoTipoDocumentoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoDocumentoTipoPk()
@@ -55,6 +60,20 @@ class InvDocumentoTipo
         $this->nombre = $nombre;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDocumentoTipoDocumentoRel()
+    {
+        return $this->documentoTipoDocumentoRel;
+    }
 
+    /**
+     * @param mixed $documentoTipoDocumentoRel
+     */
+    public function setDocumentoTipoDocumentoRel($documentoTipoDocumentoRel): void
+    {
+        $this->documentoTipoDocumentoRel = $documentoTipoDocumentoRel;
+    }
 }
 

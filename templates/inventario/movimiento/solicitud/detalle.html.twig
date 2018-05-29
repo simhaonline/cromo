@@ -17,11 +17,12 @@
             {{ form_widget(form.btnDesautorizar) }}
             {{ form_widget(form.btnImprimir) }}
             {{ form_widget(form.btnAnular) }}
-            {{ form_widget(form.btnAprobar) }}
         </div>
     </div>
     <div style="float:right">
-        {#{% if 1 == 1 %}<span class="label label-default">Generado</span>{% endif %}#}
+        {% if arSolicitud.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arSolicitud.estadoImpreso == true %}<span class="label label-primary">Impreso</span>{% endif %}
+        {% if arSolicitud.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br /><br />
     <table width="100%" class="table table-condensed table-bordered">

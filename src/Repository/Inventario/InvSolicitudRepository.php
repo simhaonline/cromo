@@ -68,7 +68,14 @@ class InvSolicitudRepository extends ServiceEntityRepository
      */
     public function imprimir($arSolicitud)
     {
-
+        $arSolicitudTipo = $this->_em->getRepository('App:Inventario\InvSolicitudTipo')->findOneBy(['codigoSolicitudTipoPk' => $arSolicitud->getCodigoSolicitudTipoFk()]);
+        if(!$arSolicitud->getEstadoImpreso()){
+            $arSolicitudTipo->setConsecutivo($arSolicitudTipo->getConsecutivo()+1);
+            $arSolicitud->setEstadoImpreso(1);
+            $this->_em->persist($arSolicitudTipo);
+            $this->_em->persist($arSolicitud);
+            $this->_em->flush();
+        }
     }
 
     /**
@@ -91,6 +98,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
         if ($arSolicitud->getEstadoAutorizado() == 1 && $arSolicitud->getEstadoImpreso() == 0) {
             $arSolicitud->setEstadoAutorizado(0);
             $this->_em->persist($arSolicitud);
+            $this->_em->flush();
         } else {
             MensajesController::error('El registro esta impreso y no se puede desautorizar');
         }

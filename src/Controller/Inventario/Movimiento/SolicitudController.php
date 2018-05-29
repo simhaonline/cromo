@@ -95,8 +95,6 @@ class SolicitudController extends Controller
                 $em->getRepository('App:Inventario\InvSolicitudDetalle')->eliminar($arSolicitud, $arrDetallesSeleccionados);
                 return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
             }
-            dump('here');
-            die();
         }
         return $this->render('inventario/movimiento/solicitud/detalle.html.twig', [
             'form' => $form->createView(),

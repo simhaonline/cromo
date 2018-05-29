@@ -182,6 +182,12 @@ class InvDocumento
     private $generaCostoPromedio = false;
 
     /**
+     * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentoTipoDocumentoRel")
+     * @ORM\JoinColumn(name="codigo_documento_tipo_fk", referencedColumnName="codigo_documento_tipo_pk")
+     */
+    protected $documentoTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoDocumentoPk()
@@ -645,6 +651,19 @@ class InvDocumento
         $this->generaCostoPromedio = $generaCostoPromedio;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDocumentoTipoRel()
+    {
+        return $this->documentoTipoRel;
+    }
 
-
+    /**
+     * @param mixed $documentoTipoRel
+     */
+    public function setDocumentoTipoRel($documentoTipoRel): void
+    {
+        $this->documentoTipoRel = $documentoTipoRel;
+    }
 }

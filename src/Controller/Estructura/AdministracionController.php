@@ -440,6 +440,7 @@ final class AdministracionController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
+                $this->validacionAdicional($arRegistro);
                 $em->persist($arRegistro);
                 $em->flush();
                 return $this->redirect($this->generateUrl('admin_detalle', ['modulo' => $arEntidad->getModulo(), 'entidad' => $arEntidad->getEntidad(), 'id' => $arRegistro->$getPk()]));
@@ -558,30 +559,20 @@ final class AdministracionController extends Controller
 
     /**
      * @param $arRegistro
-     * @param $arConfiguracionEntidad GenEntidad
-     * @param $id
-     * @param $entidadCubo
      * @return mixed
      */
-    public function validacionAdicional($arRegistro, $arConfiguracionEntidad, $id, $entidadCubo)
+    public function validacionAdicional($arRegistro)
     {
-        $em = $this->getDoctrine()->getManager();
-        if ($id != 0) {//Validar si se va a editar un registro
-            $arRegistro = $em->getRepository($arConfiguracionEntidad->getRutaRepositorio())->find($id);
-            if (!$arRegistro) {//Validación si realmente el registro existe.
-                return $this->redirect($this->generateUrl('listado', ['entidad' => $arConfiguracionEntidad->getCodigoConfiguracionEntidadPk(), 'entidadCubo' => $entidadCubo]));
-            }
-        } else {
-            if (property_exists($arRegistro, 'fecha')) {
-                $arRegistro->setFecha(new \DateTime('now'));
-            }
-            if (property_exists($arRegistro, 'usuario')) {
-                $arRegistro->setUsuario($this->getUser()->getUsername());
-            }
-            if (property_exists($arRegistro, 'codigoEntidadFk')) {
-                $arRegistro->setCodigoEntidadFk($entidadCubo);
-            }
+        if (property_exists($arRegistro, 'fecha')) {
+            $arRegistro->setFecha(new \DateTime('now'));
         }
+        if (property_exists($arRegistro, 'usuario')) {
+            $arRegistro->setUsuario($this->getUser()->getUsername());
+        }
+//        if (property_exists($arRegistro, 'codigoEntidadFk')) {
+//            $arRegistro->setCodigoEntidadFk($entidadCubo);
+//        }
+
         return $arRegistro;
     }
 

@@ -33,6 +33,11 @@ class RhuCargo
     protected $seleccionCargoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="cargoRel")
+     */
+    protected $rhuAspirantesCargoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCargoPk()
@@ -94,6 +99,22 @@ class RhuCargo
     public function setSeleccionCargoRel($seleccionCargoRel): void
     {
         $this->seleccionCargoRel = $seleccionCargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuAspirantesCargoRel()
+    {
+        return $this->rhuAspirantesCargoRel;
+    }
+
+    /**
+     * @param mixed $rhuAspirantesCargoRel
+     */
+    public function setRhuAspirantesCargoRel($rhuAspirantesCargoRel): void
+    {
+        $this->rhuAspirantesCargoRel = $rhuAspirantesCargoRel;
     }
 
 

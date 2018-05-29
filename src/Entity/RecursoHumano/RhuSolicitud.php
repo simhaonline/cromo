@@ -59,7 +59,7 @@ class RhuSolicitud
     private $codigoClasificacionRiesgoFk;
 
     /**
-     * @ORM\Column(name="codigo_sexo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_sexo_fk", type="string", length=1, nullable=true)
      */
     private $codigoSexoFk;
 
@@ -973,4 +973,6 @@ class RhuSolicitud
     {
         $this->genReligionRel = $genReligionRel;
     }
+
+
 }

@@ -39,6 +39,11 @@ class RhuAspirante
     private $codigoCiudadExpedicionFk;
 
     /**
+     * @ORM\Column(name="codigo_sexo_fk", type="string", length=1, nullable=true)
+     */
+    private $codigoSexoFk;
+
+    /**
      * @ORM\Column(name="codigo_rh_fk", type="integer", nullable=true)
      */
     private $codigoRhFk;
@@ -245,10 +250,22 @@ class RhuAspirante
     protected $genCiudadNacimientoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuAspirantesSexoRel")
+     * @ORM\JoinColumn(name="codigo_sexo_fk", referencedColumnName="codigo_sexo_pk")
+     */
+    protected $genSexoRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuRh", inversedBy="rhuAspirantesRhRel")
      * @ORM\JoinColumn(name="codigo_rh_fk", referencedColumnName="codigo_rh_pk")
      */
     protected $rhRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCargo", inversedBy="rhuAspirantesCargoRel")
+     * @ORM\JoinColumn(name="codigo_cargo_fk", referencedColumnName="codigo_cargo_pk")
+     */
+    protected $cargoRel;
 
     /**
      * @return mixed
@@ -328,6 +345,22 @@ class RhuAspirante
     public function setCodigoCiudadExpedicionFk($codigoCiudadExpedicionFk): void
     {
         $this->codigoCiudadExpedicionFk = $codigoCiudadExpedicionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSexoFk()
+    {
+        return $this->codigoSexoFk;
+    }
+
+    /**
+     * @param mixed $codigoSexoFk
+     */
+    public function setCodigoSexoFk($codigoSexoFk): void
+    {
+        $this->codigoSexoFk = $codigoSexoFk;
     }
 
     /**
@@ -829,6 +862,22 @@ class RhuAspirante
     /**
      * @return mixed
      */
+    public function getGenSexoRel()
+    {
+        return $this->genSexoRel;
+    }
+
+    /**
+     * @param mixed $genSexoRel
+     */
+    public function setGenSexoRel($genSexoRel): void
+    {
+        $this->genSexoRel = $genSexoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getRhRel()
     {
         return $this->rhRel;
@@ -840,6 +889,22 @@ class RhuAspirante
     public function setRhRel($rhRel): void
     {
         $this->rhRel = $rhRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargoRel()
+    {
+        return $this->cargoRel;
+    }
+
+    /**
+     * @param mixed $cargoRel
+     */
+    public function setCargoRel($cargoRel): void
+    {
+        $this->cargoRel = $cargoRel;
     }
 
 }

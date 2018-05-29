@@ -27,8 +27,6 @@ class SolicitudController extends Controller
         }
         $form = $this->createForm(SolicitudType::class, $arSolicitud);
         $form->handleRequest($request);
-//        dump($arSolicitud);
-//        die();
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arSolicitud->setFecha(new \DateTime('now'));

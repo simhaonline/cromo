@@ -12,8 +12,7 @@ class GenSexo
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_sexo_pk", type="string", length=1, nullable=true)
      */
     private $codigoSexoPk;
 
@@ -26,6 +25,11 @@ class GenSexo
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="genSexoRel")
      */
     protected $rhuSolicitudSexoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genSexoRel")
+     */
+    protected $rhuAspirantesSexoRel;
 
     /**
      * @return mixed
@@ -75,6 +79,21 @@ class GenSexo
         $this->rhuSolicitudSexoRel = $rhuSolicitudSexoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRhuAspirantesSexoRel()
+    {
+        return $this->rhuAspirantesSexoRel;
+    }
+
+    /**
+     * @param mixed $rhuAspirantesSexoRel
+     */
+    public function setRhuAspirantesSexoRel($rhuAspirantesSexoRel): void
+    {
+        $this->rhuAspirantesSexoRel = $rhuAspirantesSexoRel;
+    }
 
 
 }

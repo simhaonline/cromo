@@ -14,6 +14,8 @@ class SexoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('codigoSexoPk',TextType::class,['required' => true,'label' => 'Id:'])
+            ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);

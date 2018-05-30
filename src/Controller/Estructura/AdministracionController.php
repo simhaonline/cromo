@@ -433,7 +433,7 @@ final class AdministracionController extends Controller
         $rutaEntidad = "\App\Entity\\" . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad());
         $arRegistro = new $rutaEntidad();
         $getPk = 'getCodigo' . ucfirst($arEntidad->getEntidad()) . 'Pk';
-        if ($id != 0) {
+        if ($id != '0') {
             $arRegistro = $em->getRepository('App:' . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad()))->find($id);
         }
         $form = $this->createForm("\App\Form\Type\\" . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getEntidad() . 'Type'), $arRegistro);

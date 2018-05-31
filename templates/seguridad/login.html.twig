@@ -1,24 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
 
-{# templates/security/login.html.twig #}
-{# ... you will probably extend your base template, like base_transporte.html.twig #}
+<head>
 
-{% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-{% endif %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<form action="{{ path('login') }}" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" />
+    <title>SB Admin 2 - Bootstrap Admin Theme</title>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="_password" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/metisMenu/metisMenu.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('../assets/dist/css/sb-admin-2.css') }}">
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/font-awesome/css/font-awesome.min.css') }}">
 
-    {#
-        If you want to control the URL the user
-        is redirected to on success (more details below)
-        <input type="hidden" name="_target_path" value="/account" />
-    #}
 
-    <button type="submit">login</button>
-</form>
+    {#<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>#}
+    {#<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>#}
 
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Inicio de sesion</h3>
+                </div>
+                <div class="panel-body">
+                    {% if error %}
+                        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+
+                    <form action="{{ path('login') }}" method="post">
+                        <div class="form-group">
+                            {#<label class="form-group" for="username">Username:</label>#}
+                            <input class="form-control" type="text" id="username" placeholder="Usuario" name="_username" value="{{ last_username }}"/>
+                        </div>
+                        <div class="form-group">
+                            {#<label for="password">Password:</label>#}
+                            <input class="form-control" type="password" id="password" placeholder="Contraseña" name="_password"/>
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-success btn-block">login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="{{ asset('../assets/vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('../assets/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('../assets/vendor/metisMenu/metisMenu.min.js') }}"></script>
+<script src="{{ asset('../assets/dist/js/sb-admin-2.js') }}"></script>
+
+
+</body>
+
+</html>

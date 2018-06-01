@@ -24,7 +24,7 @@ class RhuAspirante
     private $codigoIdentificacionFk;
 
     /**
-     * @ORM\Column(name="codigo_estado_civil_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_estado_civil_fk", type="string", length=10, nullable=true)
      */
     private $codigoEstadoCivilFk;
 

@@ -39,7 +39,7 @@ class RhuSolicitud
     private $codigoExperienciaSolicitudFk;
 
     /**
-     * @ORM\Column(name="codigo_estado_civil_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_estado_civil_fk", type="string", length=10, nullable=true)
      */
     private $codigoEstadoCivilFk;
 
@@ -49,7 +49,7 @@ class RhuSolicitud
     private $codigoCiudadFk;
 
     /**
-     * @ORM\Column(name="codigo_estudio_tipo_fk", type="integer", length=4, nullable=true)
+     * @ORM\Column(name="codigo_estudio_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoEstudioTipoFk;
 
@@ -64,7 +64,7 @@ class RhuSolicitud
     private $codigoSexoFk;
 
     /**
-     * @ORM\Column(name="codigo_religion_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_religion_fk", type="string", length=10, nullable=true)
      */
     private $codigoReligionFk;
 
@@ -973,6 +973,5 @@ class RhuSolicitud
     {
         $this->genReligionRel = $genReligionRel;
     }
-
 
 }

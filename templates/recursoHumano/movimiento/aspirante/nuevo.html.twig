@@ -1,0 +1,167 @@
+{% extends 'base_recursoHumano.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_genIdentificacionRel" class="col-sm-2 control-label">Tipo identificación:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.genIdentificacionRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.genIdentificacionRel) }}
+                </div>
+                <label for="form_numeroIdentificacion" class="col-sm-2 control-label">Identificación:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroIdentificacion, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.numeroIdentificacion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_genCiudadExpedicionRel" class="col-sm-2 control-label">Ciudad residencia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.genCiudadExpedicionRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.genCiudadExpedicionRel) }}
+                </div>
+                {#<label for="form_cantidad" class="col-sm-2 control-label">Cantidad:</label>#}
+                {#<div class="col-sm-4">#}
+                    {#{{ form_widget(form.cantidadSolicitada, { 'attr': {'class': 'form-control'} }) }}#}
+                    {#{{ form_errors(form.cantidadSolicitada) }}#}
+                {#</div>#}
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_nombre1" class="col-sm-2 control-label">Primer nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre1, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.nombre1) }}
+                </div>
+                <label for="form_nombre2" class="col-sm-2 control-label">Segundo nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre2, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.nombre2) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_apellido1" class="col-sm-2 control-label">Primer apellido:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.apellido1) }}
+                    {{ form_errors(form.apellido1) }}
+                </div>
+                <label for="form_apellido2" class="col-sm-2 control-label">Segundo apellido:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.apellido2) }}
+                    {{ form_errors(form.apellido2) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_sexo" class="col-sm-2 control-label">Sexo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.genSexoRel) }}
+                    {{ form_errors(form.genSexoRel) }}
+                </div>
+                <label for="form_rh" class="col-sm-2 control-label">Rh:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.rhRel) }}
+                    {{ form_errors(form.rhRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_estatura" class="col-sm-2 control-label">Estatura:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.estatura) }}
+                    {{ form_errors(form.estatura) }}
+                </div>
+                <label for="form_rh" class="col-sm-2 control-label">Peso:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.peso) }}
+                    {{ form_errors(form.peso) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaNacimiento" class="col-sm-2 control-label">Fecha nacimiento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaNacimiento) }}
+                    {{ form_errors(form.fechaNacimiento) }}
+                </div>
+                <label for="form_ciudadNacimiento" class="col-sm-2 control-label">Ciudad nacimiento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.genCiudadNacimientoRel) }}
+                    {{ form_errors(form.genCiudadNacimientoRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_cargoAspira" class="col-sm-2 control-label">Cargo aspira:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cargoAspira) }}
+                    {{ form_errors(form.cargoAspira) }}
+                </div>
+                <label for="form_cargoRel" class="col-sm-2 control-label">Cargo interno:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cargoRel) }}
+                    {{ form_errors(form.cargoRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_libretaMilitar" class="col-sm-2 control-label">Libreta militar:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.libretaMilitar) }}
+                    {{ form_errors(form.libretaMilitar) }}
+                </div>
+                <label for="form_estadoCivilRel" class="col-sm-2 control-label">Estado civil:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.genEstadoCivilRel) }}
+                    {{ form_errors(form.genEstadoCivilRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_correo" class="col-sm-2 control-label">Correo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.correo) }}
+                    {{ form_errors(form.correo) }}
+                </div>
+                <label for="form_direccion" class="col-sm-2 control-label">Direccion:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.direccion) }}
+                    {{ form_errors(form.direccion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_telefono" class="col-sm-2 control-label">Telfono:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.telefono) }}
+                    {{ form_errors(form.telefono) }}
+                </div>
+                <label for="form_celular" class="col-sm-2 control-label">Direccion:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.celular) }}
+                    {{ form_errors(form.celular) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_barrio" class="col-sm-2 control-label">Barrio:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.barrio) }}
+                    {{ form_errors(form.barrio) }}
+                </div>
+                <label for="form_recomendado" class="col-sm-2 control-label">Recomendado por:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.recomendado) }}
+                    {{ form_errors(form.recomendado) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_reintegro" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.reintegro) }}
+                    {{ form_errors(form.reintegro) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'solicitud'}) }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

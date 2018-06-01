@@ -54,7 +54,9 @@ class GenConfiguracionEntidad extends Fixture
             'religion,admin,general,0,0',
             'ciudad,admin,general,0,0',
             'estudioTipo,admin,general,0,0',
-            'estadoCivil,admin,general,0,0'];
+            'estadoCivil,admin,general,0,0',
+            'departamento,admin,general,0,0',
+            'pais,admin,general,0,0'];
         $this->setConfiguracionEntidades($arrModuloGeneral, $em, 'general');
         /////////////                 FIN ESTRACTURA MODULO DE GENERAL SISTEMA                     ////////////////
 

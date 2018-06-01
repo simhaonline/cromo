@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Transporte\Movimiento\Transporte\Cumplido;
+namespace App\Controller\Transporte\Movimiento\Transporte;
 
 use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteGuia;

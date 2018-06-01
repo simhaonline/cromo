@@ -61,7 +61,9 @@ class GenConfiguracionEntidad extends Fixture
         /////////////                 FIN ESTRACTURA MODULO DE GENERAL SISTEMA                     ////////////////
 
 
-        $arrModuloTransporte = $arrModuloTransporte = ['relacionCaja,movimiento,control,0,1'];
+        $arrModuloTransporte = $arrModuloTransporte = [
+            'relacionCaja,movimiento,control,1,1',
+            'novedadTipo,administracion,transporte,0,0'];
         $this->setConfiguracionEntidades($arrModuloTransporte, $em, 'transporte');
 
         $em->flush();

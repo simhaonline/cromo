@@ -33,6 +33,16 @@ class TteNovedad
     private $solucion;
 
     /**
+     * @ORM\Column(name="fecha", type="datetime", nullable=true)
+     */
+    private $fecha;
+
+    /**
+     * @ORM\Column(name="fecha_registro", type="datetime", nullable=true)
+     */
+    private $fechaRegistro;
+
+    /**
      * @ORM\Column(name="fecha_reporte", type="datetime", nullable=true)
      */
     private $fechaReporte;
@@ -63,7 +73,7 @@ class TteNovedad
     private $codigoGuiaFk;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TteNovedadTipo", inversedBy="guiasNovedadTipoRel")
+     * @ORM\ManyToOne(targetEntity="TteNovedadTipo", inversedBy="novedadesNovedadTipoRel")
      * @ORM\JoinColumn(name="codigo_novedad_tipo_fk", referencedColumnName="codigo_novedad_tipo_pk")
      */
     private $novedadTipoRel;
@@ -264,6 +274,38 @@ class TteNovedad
     public function setGuiaRel($guiaRel): void
     {
         $this->guiaRel = $guiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * @param mixed $fechaRegistro
+     */
+    public function setFechaRegistro($fechaRegistro): void
+    {
+        $this->fechaRegistro = $fechaRegistro;
     }
 
 

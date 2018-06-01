@@ -24,7 +24,7 @@ class TteNovedadTipo
     /**
      * @ORM\OneToMany(targetEntity="TteNovedad", mappedBy="novedadTipoRel")
      */
-    protected $novedadsNovedadTipoRel;
+    protected $novedadesNovedadTipoRel;
 
     /**
      * @return mixed
@@ -61,18 +61,19 @@ class TteNovedadTipo
     /**
      * @return mixed
      */
-    public function getNovedadsNovedadTipoRel()
+    public function getNovedadesNovedadTipoRel()
     {
-        return $this->novedadsNovedadTipoRel;
+        return $this->novedadesNovedadTipoRel;
     }
 
     /**
-     * @param mixed $novedadsNovedadTipoRel
+     * @param mixed $novedadesNovedadTipoRel
      */
-    public function setNovedadsNovedadTipoRel($novedadsNovedadTipoRel): void
+    public function setNovedadesNovedadTipoRel($novedadesNovedadTipoRel): void
     {
-        $this->novedadsNovedadTipoRel = $novedadsNovedadTipoRel;
+        $this->novedadesNovedadTipoRel = $novedadesNovedadTipoRel;
     }
+
 
 }
 

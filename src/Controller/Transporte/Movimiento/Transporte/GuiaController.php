@@ -6,6 +6,7 @@ use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteNovedad;
 use App\Form\Type\Transporte\GuiaType;
+use App\Form\Type\Transporte\NovedadType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -69,7 +70,6 @@ class GuiaController extends Controller
                 }
             }
 
-
         }
         return $this->render('transporte/movimiento/transporte/guia/nuevo.html.twig', ['arGuia' => $arGuia,'form' => $form->createView()]);
     }
@@ -108,41 +108,29 @@ class GuiaController extends Controller
     /**
      * @Route("/tte/mto/trasnporte/guia/detalle/adicionar/novedad/{codigoGuia}", name="tte_mto_transporte_guia_detalle_adicionar_novedad")
      */
-    public function detalleAdicionarGuia(Request $request, $codigoDespacho)
+    public function detalleAdicionarNovedad(Request $request, $codigoGuia)
     {
         $em = $this->getDoctrine()->getManager();
-        $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
-        $form = $this->createFormBuilder()
-            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
-            ->getForm();
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        $arNovedad = new TteNovedad();
+        $arNovedad->setFechaReporte(new \DateTime('now'));
+        $arNovedad->setFecha(new \DateTime('now'));
+        $form = $this->createForm(NovedadType::class, $arNovedad);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-            if (count($arrSeleccionados) > 0) {
-                foreach ($arrSeleccionados AS $codigo) {
-                    $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
-                    $arGuia->setDespachoRel($arDespacho);
-                    $arGuia->setEstadoEmbarcado(1);
-                    $em->persist($arGuia);
-                    $arDespachoDetalle = new TteDespachoDetalle();
-                    $arDespachoDetalle->setDespachoRel($arDespacho);
-                    $arDespachoDetalle->setGuiaRel($arGuia);
-                    $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
-                    $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
-                    $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
-                    $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
-                    $arDespachoDetalle->setUnidades($arGuia->getUnidades());
-                    $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
-                    $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                    $em->persist($arDespachoDetalle);
-                }
-                $em->flush();
-                $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($codigoDespacho);
-            }
+            $arNovedad = $form->getData();
+            $arNovedad->setGuiaRel($arGuia);
+            $arNovedad->setFechaRegistro(new \DateTime('new'));
+            $em->persist($arNovedad);
+            $em->flush();
+
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+
         }
-        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->despachoPendiente();
-        return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+
+        return $this->render('transporte/movimiento/transporte/guia/detalleAdicionarNovedad.html.twig', [
+            'arGuia' => $arGuia,
+            'form' => $form->createView()]);
     }
 
 }

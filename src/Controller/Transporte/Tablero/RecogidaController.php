@@ -13,7 +13,7 @@ use Ob\HighchartsBundle\Highcharts\Highchart;
 class RecogidaController extends Controller
 {
    /**
-    * @Route("/tte/tab/recogida", name="tte_tab_recogida")
+    * @Route("/tte/tab/recogida/recogida", name="tte_tab_recogida_recogida")
     */    
     public function principal(Request $request)
     {
@@ -35,7 +35,7 @@ class RecogidaController extends Controller
         $ob->yAxis->title(array('text'  => "Vertical axis title"));
         $ob->series($series);
 
-        return $this->render('tablero/recogida.html.twig', [
+        return $this->render('transporte/tablero/recogida/recogida.html.twig', [
             'arrResumenRecogidas' => $arrResumenRecogidas,
             'arrResumenRecogidasOperacion' => $arrResumenRecogidasOperacion,
             'chart' => $ob

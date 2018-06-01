@@ -156,6 +156,10 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>FECHA</th>
+                            <th>REPORTE</th>
+                            <th>TIPO</th>
+                            <th>DESCRIPCION</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -163,6 +167,10 @@
                         {% for arNovedad in arNovedades %}
                             <tr>
                                 <td>{{ arNovedad.codigoNovedadPk }}</td>
+                                <td>{{ arNovedad.fecha |date('Y-m-d H:i') }}</td>
+                                <td>{{ arNovedad.fechaReporte |date('Y-m-d H:i') }}</td>
+                                <td>{{ arNovedad.nombreTipo }}</td>
+                                <td>{{ arNovedad.descripcion }}</td>
                                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arNovedad.codigoNovedadPk }}" /></td>
                             </tr>
                         {% endfor %}

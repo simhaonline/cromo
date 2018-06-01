@@ -120,7 +120,7 @@ class GuiaController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $arNovedad = $form->getData();
             $arNovedad->setGuiaRel($arGuia);
-            $arNovedad->setFechaRegistro(new \DateTime('new'));
+            $arNovedad->setFechaRegistro(new \DateTime('now'));
             $em->persist($arNovedad);
             $em->flush();
 

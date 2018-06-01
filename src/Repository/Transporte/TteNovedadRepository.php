@@ -17,8 +17,13 @@ class TteNovedadRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT n.codigoNovedadPk
+            'SELECT n.codigoNovedadPk,
+                  n.fecha,
+                  n.fechaReporte,
+                  n.descripcion,
+                  nt.nombre as nombreTipo
         FROM App\Entity\Transporte\TteNovedad n 
+        LEFT JOIN n.novedadTipoRel nt
         WHERE n.codigoGuiaFk = :codigoGuia'
         )->setParameter('codigoGuia', $codigoGuia);
 

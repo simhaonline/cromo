@@ -14,5 +14,12 @@ class RhuSeleccionTipoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuSeleccionTipo::class);
     }
-
+    public function camposPredeterminados(){
+        $qb = $this-> _em->createQueryBuilder()
+            ->from('App:RecursoHumano\RhuSeleccionTipo','st')
+            ->select('st.codigoSeleccionTipoPk AS ID')
+            ->addSelect('st.nombre');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 }

@@ -32,6 +32,11 @@ class GenSexo
     protected $rhuAspirantesSexoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genSexoRel")
+     */
+    protected $rhuSeleccionSexoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoSexoPk()
@@ -94,6 +99,23 @@ class GenSexo
     {
         $this->rhuAspirantesSexoRel = $rhuAspirantesSexoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuSeleccionSexoRel()
+    {
+        return $this->rhuSeleccionSexoRel;
+    }
+
+    /**
+     * @param mixed $rhuSeleccionSexoRel
+     */
+    public function setRhuSeleccionSexoRel($rhuSeleccionSexoRel): void
+    {
+        $this->rhuSeleccionSexoRel = $rhuSeleccionSexoRel;
+    }
+
 
 
 }

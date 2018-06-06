@@ -79,6 +79,11 @@ class RhuSeleccion
     private $fecha;
 
     /**
+     * @ORM\Column(name="fecha_expedicion", type="date", nullable=true)
+     */
+    private $fechaExpedicion;
+
+    /**
      * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=false, unique=true)
      * @Assert\NotBlank(message="El campo no puede estar vacio")
      */
@@ -276,6 +281,12 @@ class RhuSeleccion
      * @ORM\JoinColumn(name="codigo_cierre_seleccion_motivo_fk", referencedColumnName="codigo_cierre_seleccion_motivo_pk")
      */
     protected $cierreSeleccionMotivoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuSeleccionSexoRel")
+     * @ORM\JoinColumn(name="codigo_sexo_fk", referencedColumnName="codigo_sexo_pk")
+     */
+    protected $genSexoRel;
 
     /**
      * @return mixed
@@ -483,6 +494,22 @@ class RhuSeleccion
     public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaExpedicion()
+    {
+        return $this->fechaExpedicion;
+    }
+
+    /**
+     * @param mixed $fechaExpedicion
+     */
+    public function setFechaExpedicion($fechaExpedicion): void
+    {
+        $this->fechaExpedicion = $fechaExpedicion;
     }
 
     /**
@@ -979,6 +1006,22 @@ class RhuSeleccion
     public function setCierreSeleccionMotivoRel($cierreSeleccionMotivoRel): void
     {
         $this->cierreSeleccionMotivoRel = $cierreSeleccionMotivoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenSexoRel()
+    {
+        return $this->genSexoRel;
+    }
+
+    /**
+     * @param mixed $genSexoRel
+     */
+    public function setGenSexoRel($genSexoRel): void
+    {
+        $this->genSexoRel = $genSexoRel;
     }
 
 

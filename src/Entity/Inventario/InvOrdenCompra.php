@@ -5,6 +5,7 @@ namespace App\Entity\Inventario;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvOrdenCompraRepository")
  */
@@ -18,7 +19,6 @@ class InvOrdenCompra
     private $codigoOrdenCompraPk;
 
     /**
-     * @var \DateTime
      *
      * @ORM\Column(name="fecha", type="date")
      */
@@ -30,12 +30,11 @@ class InvOrdenCompra
     private $codigoTerceroFk;
 
     /**
-     * @ORM\Column(name="codigo_orden_compra_documento_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_orden_compra_tipo_fk", type="integer", nullable=true)
      */
-    private $codigoOrdenCompraDocumentoFk;
+    private $codigoOrdenCompraTipoFk;
 
     /**
-     * @var \DateTime
      *
      * @ORM\Column(name="fechaEntrega", type="date", nullable=true)
      */
@@ -62,29 +61,29 @@ class InvOrdenCompra
     private $vrNeto = 0;
 
     /**
-     * @ORM\Column(name="estado_autorizado", type="boolean")
+     * @ORM\Column(name="estado_autorizado",options={"default" : false}, type="boolean")
      */
-    private $estadoAutorizado = 0;
+    private $estadoAutorizado = false;
 
     /**
-     * @ORM\Column(name="estado_impreso", type="boolean")
+     * @ORM\Column(name="estado_aprobado", type="boolean",options={"default" : false}, nullable=true)
      */
-    private $estadoImpreso = 0;
+    private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="estado_aprobado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_anulado", type="boolean",options={"default" : false}, nullable=true)
      */
-    private $estadoAprobado = 0;
-
-    /**
-     * @ORM\Column(name="estado_rechazado", type="boolean", nullable=true)
-     */
-    private $estadoRechazado = 0;
+    private $estadoAnulado = false;
 
     /**
      * @ORM\Column(name="numero", type="integer", nullable=true)
      */
     private $numero = 0;
+
+    /**
+     * @ORM\Column(name="usuario", type="text", nullable=true)
+     */
+    private $usuario;
 
     /**
      * @ORM\Column(name="comentarios", type="string", length=500, nullable=true)
@@ -94,6 +93,29 @@ class InvOrdenCompra
      * )
      */
     private $comentarios;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="terceroOrdenCompraRel")
+     * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
+     * @Assert\NotNull(
+     *     message="Debe seleccionar un tercero"
+     * )
+     */
+    protected $terceroRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvOrdenCompraTipo", inversedBy="ordenCompraTipoOrdenesCompraRel")
+     * @ORM\JoinColumn(name="codigo_orden_compra_tipo_fk", referencedColumnName="codigo_orden_compra_tipo_pk")
+     * @Assert\NotNull(
+     *     message="Debe seleccionar un tipo"
+     * )
+     */
+    protected $ordenCompraTipoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="InvOrdenCompraDetalle", mappedBy="ordenCompraRel")
+     */
+    protected $ordenCompraOrdenCompraDetallesRel;
 
     /**
      * @return mixed
@@ -112,17 +134,17 @@ class InvOrdenCompra
     }
 
     /**
-     * @return \DateTime
+     * @return mixed
      */
-    public function getFecha(): \DateTime
+    public function getFecha()
     {
         return $this->fecha;
     }
 
     /**
-     * @param \DateTime $fecha
+     * @param mixed $fecha
      */
-    public function setFecha(\DateTime $fecha): void
+    public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
     }
@@ -146,31 +168,31 @@ class InvOrdenCompra
     /**
      * @return mixed
      */
-    public function getCodigoOrdenCompraDocumentoFk()
+    public function getCodigoOrdenCompraTipoFk()
     {
-        return $this->codigoOrdenCompraDocumentoFk;
+        return $this->codigoOrdenCompraTipoFk;
     }
 
     /**
-     * @param mixed $codigoOrdenCompraDocumentoFk
+     * @param mixed $codigoOrdenCompraTipoFk
      */
-    public function setCodigoOrdenCompraDocumentoFk($codigoOrdenCompraDocumentoFk): void
+    public function setCodigoOrdenCompraTipoFk($codigoOrdenCompraTipoFk): void
     {
-        $this->codigoOrdenCompraDocumentoFk = $codigoOrdenCompraDocumentoFk;
+        $this->codigoOrdenCompraTipoFk = $codigoOrdenCompraTipoFk;
     }
 
     /**
-     * @return \DateTime
+     * @return mixed
      */
-    public function getFechaEntrega(): \DateTime
+    public function getFechaEntrega()
     {
         return $this->fechaEntrega;
     }
 
     /**
-     * @param \DateTime $fechaEntrega
+     * @param mixed $fechaEntrega
      */
-    public function setFechaEntrega(\DateTime $fechaEntrega): void
+    public function setFechaEntrega($fechaEntrega): void
     {
         $this->fechaEntrega = $fechaEntrega;
     }
@@ -258,22 +280,6 @@ class InvOrdenCompra
     /**
      * @return mixed
      */
-    public function getEstadoImpreso()
-    {
-        return $this->estadoImpreso;
-    }
-
-    /**
-     * @param mixed $estadoImpreso
-     */
-    public function setEstadoImpreso($estadoImpreso): void
-    {
-        $this->estadoImpreso = $estadoImpreso;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getEstadoAprobado()
     {
         return $this->estadoAprobado;
@@ -290,17 +296,17 @@ class InvOrdenCompra
     /**
      * @return mixed
      */
-    public function getEstadoRechazado()
+    public function getEstadoAnulado()
     {
-        return $this->estadoRechazado;
+        return $this->estadoAnulado;
     }
 
     /**
-     * @param mixed $estadoRechazado
+     * @param mixed $estadoAnulado
      */
-    public function setEstadoRechazado($estadoRechazado): void
+    public function setEstadoAnulado($estadoAnulado): void
     {
-        $this->estadoRechazado = $estadoRechazado;
+        $this->estadoAnulado = $estadoAnulado;
     }
 
     /**
@@ -322,6 +328,22 @@ class InvOrdenCompra
     /**
      * @return mixed
      */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentarios()
     {
         return $this->comentarios;
@@ -335,7 +357,52 @@ class InvOrdenCompra
         $this->comentarios = $comentarios;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTerceroRel()
+    {
+        return $this->terceroRel;
+    }
 
+    /**
+     * @param mixed $terceroRel
+     */
+    public function setTerceroRel($terceroRel): void
+    {
+        $this->terceroRel = $terceroRel;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getOrdenCompraTipoRel()
+    {
+        return $this->ordenCompraTipoRel;
+    }
+
+    /**
+     * @param mixed $ordenCompraTipoRel
+     */
+    public function setOrdenCompraTipoRel($ordenCompraTipoRel): void
+    {
+        $this->ordenCompraTipoRel = $ordenCompraTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrdenCompraOrdenCompraDetallesRel()
+    {
+        return $this->ordenCompraOrdenCompraDetallesRel;
+    }
+
+    /**
+     * @param mixed $ordenCompraOrdenCompraDetallesRel
+     */
+    public function setOrdenCompraOrdenCompraDetallesRel($ordenCompraOrdenCompraDetallesRel): void
+    {
+        $this->ordenCompraOrdenCompraDetallesRel = $ordenCompraOrdenCompraDetallesRel;
+    }
 }
 

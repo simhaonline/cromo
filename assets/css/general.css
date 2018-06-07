@@ -7,16 +7,13 @@ table tr {
     padding: 2px;
 }
 
-table th {
-    text-align: center;
-}
-
 .table tr {
     padding: 2px;
 }
 
 .table > thead > tr > td, .table > thead > tr > th {
     padding: 2px;
+    text-align: center;
 }
 
 .table > tbody > tr > td, .table > tbody > tr > th {
@@ -43,4 +40,9 @@ td.seleccion {
 .link-grey {
     color: grey;
     text-decoration: none;
+}
+
+.input-valor{
+    text-align: right;
+
 }

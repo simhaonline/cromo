@@ -4,33 +4,32 @@ namespace App\Formato\Inventario;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
-class Solicitud extends \FPDF
+class OrdenCompra extends \FPDF
 {
 
     public static $em;
-    public static $codigoSolicitud;
-    public static $strLetras;
+    public static $codigoOrdenCompra;
 
     /**
      * @param $em ObjectManager
-     * @param $codigoSolicitud integer
+     * @param $codigoOrdenCompra integer
      */
-    public function Generar($em, $codigoSolicitud)
+    public function Generar($em, $codigoOrdenCompra)
     {
         self::$em = $em;
-        self::$codigoSolicitud = $codigoSolicitud;
+        self::$codigoOrdenCompra = $codigoOrdenCompra;
         ob_clean();
-        $pdf = new Solicitud('P', 'mm', 'letter');
+        $pdf = new OrdenCompra('P', 'mm', 'letter');
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Movimiento$codigoSolicitud.pdf", 'D');
+        $pdf->Output("OrdenCompra$codigoOrdenCompra.pdf", 'D');
     }
 
     public function Header()
     {
-        $arSolicitud = self::$em->getRepository('App:Inventario\InvSolicitud')->find(self::$codigoSolicitud);
+        $arOrdenCompra = self::$em->getRepository('App:Inventario\InvOrdenCompra')->find(self::$codigoOrdenCompra);
         $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
@@ -38,7 +37,7 @@ class Solicitud extends \FPDF
         $this->SetXY(53, 10);
         $this->Image('../assets/img/empresa/logo.jpeg', 12, 13, 40, 25);
         //INFORMACIÓN EMPRESA
-        $this->Cell(147, 7, utf8_decode("SOLICITUD"), 0, 0, 'C', 1);
+        $this->Cell(147, 7, utf8_decode("ORDEN DE COMPRA"), 0, 0, 'C', 1);
         $this->SetXY(53, 18);
         $this->SetFont('Arial', 'B', 9);
         $this->Cell(20, 4, "EMPRESA:", 0, 0, 'L', 1);
@@ -58,48 +57,48 @@ class Solicitud extends \FPDF
 //        $this->SetFillColor(272, 272, 272);
         $this->SetXY(10, $intY);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 4, "NUMERO:", 1, 0, 'L', 1);
+        $this->Cell(40, 4, "NUMERO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arSolicitud->getNumero(), 1, 0, 'L', 1);
+        $this->Cell(55, 4, $arOrdenCompra->getNumero(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, "FECHA:", 1, 0, 'L', 1);
+        $this->Cell(40, 4, "FECHA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
+        $this->Cell(55, 4, $arOrdenCompra->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
 
         $this->SetXY(10, $intY + 4);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, "TIPO SOLICITUD:", 1, 0, 'L', 1);
+        $this->Cell(40, 4, "TIPO ORDEN COMPRA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, utf8_decode($arSolicitud->getSolicitudTipoRel()->getNombre()), 1, 0, 'L', 1);
+        $this->Cell(55, 4, utf8_decode($arOrdenCompra->getOrdenCompraTipoRel()->getNombre()), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, 'SOPORTE:', 1, 0, 'L', 1);
+        $this->Cell(40, 4, 'SOPORTE:', 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arSolicitud->getSoporte(), 1, 0, 'L', 1);
+        $this->Cell(55  , 4, $arOrdenCompra->getSoporte(), 1, 0, 'L', 1);
 
         $this->SetXY(10, $intY + 8);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, "FECHA ENTREGA", 1, 0, 'L', 1);
+        $this->Cell(40, 4, "FECHA ENTREGA", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(160, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
+        $this->Cell(150, 4, $arOrdenCompra->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
 
 
         $this->SetXY(10, $intY + 12);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, "COMENTARIO", 1, 0, 'L', 1);
+        $this->Cell(40, 4, "COMENTARIO", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-//        $this->Cell(160, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
-        $this->MultiCell(160,4,$arSolicitud->getComentarios(),1,'L');
+//        $this->Cell(160, 4, $arOrdenCompra->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
+        $this->MultiCell(150,4,$arOrdenCompra->getComentarios(),1,'L');
 
 
 
@@ -137,34 +136,33 @@ class Solicitud extends \FPDF
 
     public function Body($pdf)
     {
-        $arSolicitud = self::$em->getRepository('App:Inventario\InvSolicitud')->find(self::$codigoSolicitud);
-        $arSolicitudDetalles = self::$em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(array('codigoSolicitudFk' => self::$codigoSolicitud));
+        $arOrdenCompraDetalles = self::$em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(array('codigoOrdenCompraFk' => self::$codigoOrdenCompra));
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
-        foreach ($arSolicitudDetalles as $arSolicitudDetalle) {
-            $pdf->Cell(15, 4, $arSolicitudDetalle->getCodigoSolicitudDetallePk(), 1, 0, 'L');
-            $pdf->Cell(160, 4, utf8_decode($arSolicitudDetalle->getItemRel()->getNombre()), 1, 0, 'L');
-            $pdf->Cell(15, 4, $arSolicitudDetalle->getCantidad(), 1, 0, 'C');
+        foreach ($arOrdenCompraDetalles as $arOrdenCompraDetalle) {
+            $pdf->Cell(15, 4, $arOrdenCompraDetalle->getCodigoOrdenCompraDetallePk(), 1, 0, 'L');
+            $pdf->Cell(160, 4, utf8_decode($arOrdenCompraDetalle->getItemRel()->getNombre()), 1, 0, 'L');
+            $pdf->Cell(15, 4, $arOrdenCompraDetalle->getCantidad(), 1, 0, 'C');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }
-//        //TOTALES
-//        $pdf->Ln(2);
-//        $pdf->Cell(145, 4, "", 0, 0, 'R');
-//        $pdf->SetFont('Arial', 'B', 7);
-//        $pdf->SetFillColor(236, 236, 236);
-//        $pdf->Cell(20, 4, "SUBTOTAL:", 1, 0, 'R', true);
-//        $pdf->Cell(25, 4, '', 1, 0, 'R');
-//        $pdf->Ln();
-//        $pdf->Cell(145, 4, "", 0, 0, 'R');
-//        $pdf->Cell(20, 4, "IVA:", 1, 0, 'R', true);
-//        $pdf->Cell(25, 4, '', 1, 0, 'R');
-//        $pdf->Ln();
-//        $pdf->Cell(145, 4, "", 0, 0, 'R');
-//        $pdf->Cell(20, 4, "NETO PAGAR", 1, 0, 'R', true);
-//        $pdf->Cell(25, 4, '', 1, 0, 'R');
-//        $pdf->Ln(-8);
 
+        //TOTALES
+        $pdf->Ln(2);
+        $pdf->Cell(145, 4, "", 0, 0, 'R');
+        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->SetFillColor(236, 236, 236);
+        $pdf->Cell(20, 4, "SUBTOTAL:", 1, 0, 'R', true);
+        $pdf->Cell(25, 4, '', 1, 0, 'R');
+        $pdf->Ln();
+        $pdf->Cell(145, 4, "", 0, 0, 'R');
+        $pdf->Cell(20, 4, "IVA:", 1, 0, 'R', true);
+        $pdf->Cell(25, 4, '', 1, 0, 'R');
+        $pdf->Ln();
+        $pdf->Cell(145, 4, "", 0, 0, 'R');
+        $pdf->Cell(20, 4, "NETO PAGAR", 1, 0, 'R', true);
+        $pdf->Cell(25, 4, '', 1, 0, 'R');
+        $pdf->Ln(-8);
     }
 
     public function Footer()

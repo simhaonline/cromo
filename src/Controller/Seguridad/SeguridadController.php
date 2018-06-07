@@ -32,7 +32,7 @@ class SeguridadController extends Controller
      */
     public function logoutAction()
     {
-        return $this->redirect($this->generateUrl('/login'));
+        return $this->redirect($this->generateUrl('login'));
     } 
 }
 

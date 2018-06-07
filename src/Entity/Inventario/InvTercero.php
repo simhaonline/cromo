@@ -86,6 +86,11 @@ class InvTercero
     private $autoretenedor = false;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvOrdenCompra",mappedBy="terceroRel")
+     */
+    protected $terceroOrdenCompraRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoTerceroPk()
@@ -323,6 +328,22 @@ class InvTercero
     public function setAutoretenedor($autoretenedor): void
     {
         $this->autoretenedor = $autoretenedor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTerceroOrdenCompraRel()
+    {
+        return $this->terceroOrdenCompraRel;
+    }
+
+    /**
+     * @param mixed $terceroOrdenCompraRel
+     */
+    public function setTerceroOrdenCompraRel($terceroOrdenCompraRel): void
+    {
+        $this->terceroOrdenCompraRel = $terceroOrdenCompraRel;
     }
 }
 

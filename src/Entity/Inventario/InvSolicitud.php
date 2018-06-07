@@ -38,19 +38,19 @@ class InvSolicitud
     private $soporte;
 
     /**
-     * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_autorizado", type="boolean",options={"default" : false}, nullable=true)
      */
-    private $estadoAutorizado = 0;
+    private $estadoAutorizado = false;
 
     /**
-     * @ORM\Column(name="estado_impreso", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_aprobado", type="boolean",options={"default" : false}, nullable=true)
      */
-    private $estadoImpreso = 0;
+    private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="estado_anulado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_anulado", type="boolean",options={"default" : false}, nullable=true)
      */
-    private $estadoAnulado = 0;
+    private $estadoAnulado = false;
 
     /**
      * @ORM\Column(name="numero", type="integer", nullable=true)
@@ -168,17 +168,17 @@ class InvSolicitud
     /**
      * @return mixed
      */
-    public function getEstadoImpreso()
+    public function getEstadoAprobado()
     {
-        return $this->estadoImpreso;
+        return $this->estadoAprobado;
     }
 
     /**
-     * @param mixed $estadoImpreso
+     * @param mixed $estadoAprobado
      */
-    public function setEstadoImpreso($estadoImpreso): void
+    public function setEstadoAprobado($estadoAprobado): void
     {
-        $this->estadoImpreso = $estadoImpreso;
+        $this->estadoAprobado = $estadoAprobado;
     }
 
     /**
@@ -276,7 +276,5 @@ class InvSolicitud
     {
         $this->solicitudTipoRel = $solicitudTipoRel;
     }
-
-
 }
 

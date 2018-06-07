@@ -158,19 +158,19 @@ class GenEntidadRepository extends ServiceEntityRepository
 
     /**
      * @author Andres Acevedo
-     * @param $arConfiguracionEntidad GenEntidad
+     * @param $arEntidad GenEntidad
      * @param $arrSeleccionados
      * @return array
      */
-    public function eliminar($arConfiguracionEntidad, $arrSeleccionados)
+    public function eliminar($arEntidad, $arrSeleccionados)
     {
         $arrRespuestas = [];
         $respuesta = '';
-        $arrCampos = json_decode($arConfiguracionEntidad->getJsonLista());
+        $arrCampos = json_decode($arEntidad->getJsonLista());
         $getCodigoPk = "getC" . substr($arrCampos[0]->campo, 1);
         if (count($arrSeleccionados) > 0) {
             foreach ($arrSeleccionados as $codigo) {
-                $arRegistro = $this->_em->getRepository($arConfiguracionEntidad->getRutaRepositorio())->find($codigo);
+                $arRegistro = $this->_em->getRepository('App:' . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad()))->find($codigo);
                 if ($arRegistro) {
                     if (property_exists($arRegistro, 'estadoAutorizado')) {
                         if ($arRegistro->getEstadoAutorizado()) {

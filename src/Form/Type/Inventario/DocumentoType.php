@@ -3,6 +3,9 @@
 namespace App\Form\Type\Inventario;
 
 use App\Entity\Inventario\InvDocumento;
+use App\Entity\Inventario\InvDocumentoTipo;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,15 +20,15 @@ class DocumentoType extends AbstractType
             ->add('nombre',TextType::class,['label' => 'Nombre: '])
             ->add('documentoTipoRel',EntityType::class,[
                 'required' => true,
-                'class' => InvSolicitudTipo::class,
+                'class' => InvDocumentoTipo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('st')
                         ->orderBy('st.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Solicitud tipo:'
+                'label' => 'Documento tipo:'
             ])
-            ->add('abreviatura')
+            ->add('abreviatura',TextType::class,['label' => 'Abreviatura: '])
             ->add('operacionInventario')
             ->add('operacionComercial')
             ->add('generaCartera')

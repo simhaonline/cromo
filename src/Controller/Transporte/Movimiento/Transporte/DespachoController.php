@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Transporte\Movimiento\Transporte\Despacho;
+namespace App\Controller\Transporte\Movimiento\Transporte;
 
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteDespacho;

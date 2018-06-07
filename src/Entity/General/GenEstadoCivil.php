@@ -12,8 +12,7 @@ class GenEstadoCivil
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_estado_civil_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_estado_civil_pk", type="string", length=10, nullable=true)
      */
     private $codigoEstadoCivilPk;
 
@@ -116,6 +115,7 @@ class GenEstadoCivil
     {
         $this->rhuSeleccionEstadoCivilRel = $rhuSeleccionEstadoCivilRel;
     }
+
 
 
 }

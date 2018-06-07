@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Controller\Transporte\Movimiento\Transporte\Guia;
+namespace App\Controller\Transporte\Movimiento\Transporte;
 
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteNovedad;
 use App\Form\Type\Transporte\GuiaType;
+use App\Form\Type\Transporte\NovedadType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -68,7 +70,6 @@ class GuiaController extends Controller
                 }
             }
 
-
         }
         return $this->render('transporte/movimiento/transporte/guia/nuevo.html.twig', ['arGuia' => $arGuia,'form' => $form->createView()]);
     }
@@ -81,6 +82,7 @@ class GuiaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
         $form = $this->createFormBuilder()
+            ->add('btnRetirarNovedad', SubmitType::class, array('label' => 'Retirar'))
             ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
             ->getForm();
         $form->handleRequest($request);
@@ -96,10 +98,40 @@ class GuiaController extends Controller
 
             }
         }
-
+        $arNovedades = $this->getDoctrine()->getRepository(TteNovedad::class)->guia($codigoGuia);
         return $this->render('transporte/movimiento/transporte/guia/detalle.html.twig', [
+            'arGuia' => $arGuia,
+            'arNovedades' => $arNovedades,
+            'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/tte/mto/trasnporte/guia/detalle/adicionar/novedad/{codigoGuia}", name="tte_mto_transporte_guia_detalle_adicionar_novedad")
+     */
+    public function detalleAdicionarNovedad(Request $request, $codigoGuia)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        $arNovedad = new TteNovedad();
+        $arNovedad->setFechaReporte(new \DateTime('now'));
+        $arNovedad->setFecha(new \DateTime('now'));
+        $form = $this->createForm(NovedadType::class, $arNovedad);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arNovedad = $form->getData();
+            $arNovedad->setGuiaRel($arGuia);
+            $arNovedad->setFechaRegistro(new \DateTime('now'));
+            $em->persist($arNovedad);
+            $em->flush();
+
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+
+        }
+
+        return $this->render('transporte/movimiento/transporte/guia/detalleAdicionarNovedad.html.twig', [
             'arGuia' => $arGuia,
             'form' => $form->createView()]);
     }
+
 }
 

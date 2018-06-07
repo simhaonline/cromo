@@ -29,7 +29,7 @@ class RhuSeleccion
     private $codigoIdentificacionFk;
 
     /**
-     * @ORM\Column(name="codigo_estado_civil_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_estado_civil_fk", type="string", length=10, nullable=true)
      */
     private $codigoEstadoCivilFk;
 
@@ -77,6 +77,11 @@ class RhuSeleccion
      * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
+
+    /**
+     * @ORM\Column(name="fecha_expedicion", type="date", nullable=true)
+     */
+    private $fechaExpedicion;
 
     /**
      * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=false, unique=true)
@@ -276,4 +281,748 @@ class RhuSeleccion
      * @ORM\JoinColumn(name="codigo_cierre_seleccion_motivo_fk", referencedColumnName="codigo_cierre_seleccion_motivo_pk")
      */
     protected $cierreSeleccionMotivoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuSeleccionSexoRel")
+     * @ORM\JoinColumn(name="codigo_sexo_fk", referencedColumnName="codigo_sexo_pk")
+     */
+    protected $genSexoRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSeleccionPk()
+    {
+        return $this->codigoSeleccionPk;
+    }
+
+    /**
+     * @param mixed $codigoSeleccionPk
+     */
+    public function setCodigoSeleccionPk($codigoSeleccionPk): void
+    {
+        $this->codigoSeleccionPk = $codigoSeleccionPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSeleccionTipoFk()
+    {
+        return $this->codigoSeleccionTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoSeleccionTipoFk
+     */
+    public function setCodigoSeleccionTipoFk($codigoSeleccionTipoFk): void
+    {
+        $this->codigoSeleccionTipoFk = $codigoSeleccionTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoIdentificacionFk()
+    {
+        return $this->codigoIdentificacionFk;
+    }
+
+    /**
+     * @param mixed $codigoIdentificacionFk
+     */
+    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
+    {
+        $this->codigoIdentificacionFk = $codigoIdentificacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEstadoCivilFk()
+    {
+        return $this->codigoEstadoCivilFk;
+    }
+
+    /**
+     * @param mixed $codigoEstadoCivilFk
+     */
+    public function setCodigoEstadoCivilFk($codigoEstadoCivilFk): void
+    {
+        $this->codigoEstadoCivilFk = $codigoEstadoCivilFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoPagoFk()
+    {
+        return $this->codigoGrupoPagoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoPagoFk
+     */
+    public function setCodigoGrupoPagoFk($codigoGrupoPagoFk): void
+    {
+        $this->codigoGrupoPagoFk = $codigoGrupoPagoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadFk()
+    {
+        return $this->codigoCiudadFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadFk
+     */
+    public function setCodigoCiudadFk($codigoCiudadFk): void
+    {
+        $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadNacimientoFk()
+    {
+        return $this->codigoCiudadNacimientoFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadNacimientoFk
+     */
+    public function setCodigoCiudadNacimientoFk($codigoCiudadNacimientoFk): void
+    {
+        $this->codigoCiudadNacimientoFk = $codigoCiudadNacimientoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadExpedicionFk()
+    {
+        return $this->codigoCiudadExpedicionFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadExpedicionFk
+     */
+    public function setCodigoCiudadExpedicionFk($codigoCiudadExpedicionFk): void
+    {
+        $this->codigoCiudadExpedicionFk = $codigoCiudadExpedicionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRhFk()
+    {
+        return $this->codigoRhFk;
+    }
+
+    /**
+     * @param mixed $codigoRhFk
+     */
+    public function setCodigoRhFk($codigoRhFk): void
+    {
+        $this->codigoRhFk = $codigoRhFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSolicitudFk()
+    {
+        return $this->codigoSolicitudFk;
+    }
+
+    /**
+     * @param mixed $codigoSolicitudFk
+     */
+    public function setCodigoSolicitudFk($codigoSolicitudFk): void
+    {
+        $this->codigoSolicitudFk = $codigoSolicitudFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCargoFk()
+    {
+        return $this->codigoCargoFk;
+    }
+
+    /**
+     * @param mixed $codigoCargoFk
+     */
+    public function setCodigoCargoFk($codigoCargoFk): void
+    {
+        $this->codigoCargoFk = $codigoCargoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCierreSeleccionMotivoFk()
+    {
+        return $this->codigoCierreSeleccionMotivoFk;
+    }
+
+    /**
+     * @param mixed $codigoCierreSeleccionMotivoFk
+     */
+    public function setCodigoCierreSeleccionMotivoFk($codigoCierreSeleccionMotivoFk): void
+    {
+        $this->codigoCierreSeleccionMotivoFk = $codigoCierreSeleccionMotivoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaExpedicion()
+    {
+        return $this->fechaExpedicion;
+    }
+
+    /**
+     * @param mixed $fechaExpedicion
+     */
+    public function setFechaExpedicion($fechaExpedicion): void
+    {
+        $this->fechaExpedicion = $fechaExpedicion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroIdentificacion()
+    {
+        return $this->numeroIdentificacion;
+    }
+
+    /**
+     * @param mixed $numeroIdentificacion
+     */
+    public function setNumeroIdentificacion($numeroIdentificacion): void
+    {
+        $this->numeroIdentificacion = $numeroIdentificacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreCorto()
+    {
+        return $this->nombreCorto;
+    }
+
+    /**
+     * @param mixed $nombreCorto
+     */
+    public function setNombreCorto($nombreCorto): void
+    {
+        $this->nombreCorto = $nombreCorto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre1()
+    {
+        return $this->nombre1;
+    }
+
+    /**
+     * @param mixed $nombre1
+     */
+    public function setNombre1($nombre1): void
+    {
+        $this->nombre1 = $nombre1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre2()
+    {
+        return $this->nombre2;
+    }
+
+    /**
+     * @param mixed $nombre2
+     */
+    public function setNombre2($nombre2): void
+    {
+        $this->nombre2 = $nombre2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApellido1()
+    {
+        return $this->apellido1;
+    }
+
+    /**
+     * @param mixed $apellido1
+     */
+    public function setApellido1($apellido1): void
+    {
+        $this->apellido1 = $apellido1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApellido2()
+    {
+        return $this->apellido2;
+    }
+
+    /**
+     * @param mixed $apellido2
+     */
+    public function setApellido2($apellido2): void
+    {
+        $this->apellido2 = $apellido2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTelefono()
+    {
+        return $this->telefono;
+    }
+
+    /**
+     * @param mixed $telefono
+     */
+    public function setTelefono($telefono): void
+    {
+        $this->telefono = $telefono;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCelular()
+    {
+        return $this->celular;
+    }
+
+    /**
+     * @param mixed $celular
+     */
+    public function setCelular($celular): void
+    {
+        $this->celular = $celular;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDireccion()
+    {
+        return $this->direccion;
+    }
+
+    /**
+     * @param mixed $direccion
+     */
+    public function setDireccion($direccion): void
+    {
+        $this->direccion = $direccion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBarrio()
+    {
+        return $this->barrio;
+    }
+
+    /**
+     * @param mixed $barrio
+     */
+    public function setBarrio($barrio): void
+    {
+        $this->barrio = $barrio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCorreo()
+    {
+        return $this->correo;
+    }
+
+    /**
+     * @param mixed $correo
+     */
+    public function setCorreo($correo): void
+    {
+        $this->correo = $correo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaNacimiento()
+    {
+        return $this->fechaNacimiento;
+    }
+
+    /**
+     * @param mixed $fechaNacimiento
+     */
+    public function setFechaNacimiento($fechaNacimiento): void
+    {
+        $this->fechaNacimiento = $fechaNacimiento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarios()
+    {
+        return $this->comentarios;
+    }
+
+    /**
+     * @param mixed $comentarios
+     */
+    public function setComentarios($comentarios): void
+    {
+        $this->comentarios = $comentarios;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPresentaPruebas()
+    {
+        return $this->presentaPruebas;
+    }
+
+    /**
+     * @param mixed $presentaPruebas
+     */
+    public function setPresentaPruebas($presentaPruebas): void
+    {
+        $this->presentaPruebas = $presentaPruebas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferenciasVerificadas()
+    {
+        return $this->referenciasVerificadas;
+    }
+
+    /**
+     * @param mixed $referenciasVerificadas
+     */
+    public function setReferenciasVerificadas($referenciasVerificadas): void
+    {
+        $this->referenciasVerificadas = $referenciasVerificadas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaEntrevista()
+    {
+        return $this->fechaEntrevista;
+    }
+
+    /**
+     * @param mixed $fechaEntrevista
+     */
+    public function setFechaEntrevista($fechaEntrevista): void
+    {
+        $this->fechaEntrevista = $fechaEntrevista;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaPrueba()
+    {
+        return $this->fechaPrueba;
+    }
+
+    /**
+     * @param mixed $fechaPrueba
+     */
+    public function setFechaPrueba($fechaPrueba): void
+    {
+        $this->fechaPrueba = $fechaPrueba;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaCierre()
+    {
+        return $this->fechaCierre;
+    }
+
+    /**
+     * @param mixed $fechaCierre
+     */
+    public function setFechaCierre($fechaCierre): void
+    {
+        $this->fechaCierre = $fechaCierre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeleccionTipoRel()
+    {
+        return $this->seleccionTipoRel;
+    }
+
+    /**
+     * @param mixed $seleccionTipoRel
+     */
+    public function setSeleccionTipoRel($seleccionTipoRel): void
+    {
+        $this->seleccionTipoRel = $seleccionTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenIdentificacionRel()
+    {
+        return $this->genIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $genIdentificacionRel
+     */
+    public function setGenIdentificacionRel($genIdentificacionRel): void
+    {
+        $this->genIdentificacionRel = $genIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenEstadoCivilRel()
+    {
+        return $this->genEstadoCivilRel;
+    }
+
+    /**
+     * @param mixed $genEstadoCivilRel
+     */
+    public function setGenEstadoCivilRel($genEstadoCivilRel): void
+    {
+        $this->genEstadoCivilRel = $genEstadoCivilRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoPagoRel()
+    {
+        return $this->grupoPagoRel;
+    }
+
+    /**
+     * @param mixed $grupoPagoRel
+     */
+    public function setGrupoPagoRel($grupoPagoRel): void
+    {
+        $this->grupoPagoRel = $grupoPagoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenCiudadRel()
+    {
+        return $this->genCiudadRel;
+    }
+
+    /**
+     * @param mixed $genCiudadRel
+     */
+    public function setGenCiudadRel($genCiudadRel): void
+    {
+        $this->genCiudadRel = $genCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenCiudadExpedicionRel()
+    {
+        return $this->genCiudadExpedicionRel;
+    }
+
+    /**
+     * @param mixed $genCiudadExpedicionRel
+     */
+    public function setGenCiudadExpedicionRel($genCiudadExpedicionRel): void
+    {
+        $this->genCiudadExpedicionRel = $genCiudadExpedicionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenCiudadNacimientoRel()
+    {
+        return $this->genCiudadNacimientoRel;
+    }
+
+    /**
+     * @param mixed $genCiudadNacimientoRel
+     */
+    public function setGenCiudadNacimientoRel($genCiudadNacimientoRel): void
+    {
+        $this->genCiudadNacimientoRel = $genCiudadNacimientoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhRel()
+    {
+        return $this->rhRel;
+    }
+
+    /**
+     * @param mixed $rhRel
+     */
+    public function setRhRel($rhRel): void
+    {
+        $this->rhRel = $rhRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudRel()
+    {
+        return $this->solicitudRel;
+    }
+
+    /**
+     * @param mixed $solicitudRel
+     */
+    public function setSolicitudRel($solicitudRel): void
+    {
+        $this->solicitudRel = $solicitudRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargoRel()
+    {
+        return $this->cargoRel;
+    }
+
+    /**
+     * @param mixed $cargoRel
+     */
+    public function setCargoRel($cargoRel): void
+    {
+        $this->cargoRel = $cargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCierreSeleccionMotivoRel()
+    {
+        return $this->cierreSeleccionMotivoRel;
+    }
+
+    /**
+     * @param mixed $cierreSeleccionMotivoRel
+     */
+    public function setCierreSeleccionMotivoRel($cierreSeleccionMotivoRel): void
+    {
+        $this->cierreSeleccionMotivoRel = $cierreSeleccionMotivoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenSexoRel()
+    {
+        return $this->genSexoRel;
+    }
+
+    /**
+     * @param mixed $genSexoRel
+     */
+    public function setGenSexoRel($genSexoRel): void
+    {
+        $this->genSexoRel = $genSexoRel;
+    }
+
+
 }

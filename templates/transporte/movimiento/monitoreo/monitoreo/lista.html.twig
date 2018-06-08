@@ -4,12 +4,24 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>INICIO</th>
+            <th>FIN</th>
+            <th>VEHICULO</th>
+            <th>SOPORTE</th>
+            <th>DESPACHO</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         {% for arMonitoreo in arMonitoreos %}
             <tr>
                 <td>{{ arMonitoreo.codigoMonitoreoPk }}</td>
+                <td>{{ arMonitoreo.fechaInicio |date('Y-m-d H:i') }}</td>
+                <td>{{ arMonitoreo.fechaFin |date('Y-m-d H:i') }}</td>
+                <td>{{ arMonitoreo.codigoVehiculoFk }}</td>
+                <td>{{ arMonitoreo.soporte }}</td>
+                <td>{{ arMonitoreo.codigoDespachoFk }}</td>
+                <td style="text-align: center"><a href="{{ path('tte_mto_monitoreo_monitoreo_detalle', { 'codigoMonitoreo': arMonitoreo.codigoMonitoreoPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>

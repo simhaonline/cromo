@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="{{ asset('../assets/dist/css/sb-admin-2.css') }}">
         <link rel="stylesheet" href="{{ asset('../assets/vendor/morrisjs/morris.css') }}">
         <link rel="stylesheet" href="{{ asset('../assets/vendor/font-awesome/css/font-awesome.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('../assets/plugins/select2/css/select2.css') }}">
         <link rel="stylesheet" href="{{ asset('../assets/css/general.css') }}">
     {% endblock %}
 </head>
@@ -126,7 +127,7 @@
                                 <li>
                                     <a href="#">Monitoreo <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_mon_monitoreo_monitoreo_lista') }}">Monitoreo</a></li>
+                                        <li><a href="{{ path('tte_mto_monitoreo_monitoreo_lista') }}">Monitoreo</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
@@ -213,7 +214,9 @@
                                 <li>
                                     <a href="#">Transporte <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente (ruta)</a></li>
+                                        <li><a href="{{ path('tte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente ruta</a></li>
+                                        <li><a href="{{ path('tte_inf_transporte_guia_pendiente_conductor') }}">Pendiente conductor</a></li>
+                                        <li><a href="{{ path('tte_inf_transporte_guia_pendiente') }}">Pendiente</a></li>
                                         <li><a href="{{ path('tte_inf_transporte_costo_general') }}">Costos</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
@@ -265,6 +268,8 @@
     <script src="{{ asset('../assets/vendor/morrisjs/morris.min.js') }}"></script>
     <script src="{{ asset('../assets/data/morris-data.js') }}"></script>
     <script src="{{ asset('../assets/dist/js/sb-admin-2.js') }}"></script>
+    <script src="{{ asset('../assets/plugins/select2/js/i18n/es.js') }}"></script>
+    <script src="{{ asset('../assets/plugins/select2/js/select2.full.js') }}"></script>
     <script src="{{ asset('../assets/js/general.js') }}"></script>
 {% endblock %}
 </body>

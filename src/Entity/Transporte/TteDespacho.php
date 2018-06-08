@@ -143,17 +143,17 @@ class TteDespacho
     private $vrTotal = 0;
 
     /**
-     * @ORM\Column(name="estado_generado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_generado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoGenerado = false;
 
     /**
-     * @ORM\Column(name="estado_cerrado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_cerrado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoCerrado = false;
 
     /**
-     * @ORM\Column(name="estado_anulado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoAnulado = false;
 
@@ -224,6 +224,10 @@ class TteDespacho
      */
     protected $despachosAdicionalesDespachoRel;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteMonitoreo", mappedBy="despachoRel")
+     */
+    protected $monitoreosDespachoRel;
 
     /**
      * @return mixed
@@ -879,6 +883,22 @@ class TteDespacho
     public function setVrRetencionIca($vrRetencionIca): void
     {
         $this->vrRetencionIca = $vrRetencionIca;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMonitoreosDespachoRel()
+    {
+        return $this->monitoreosDespachoRel;
+    }
+
+    /**
+     * @param mixed $monitoreosDespachoRel
+     */
+    public function setMonitoreosDespachoRel($monitoreosDespachoRel): void
+    {
+        $this->monitoreosDespachoRel = $monitoreosDespachoRel;
     }
 
 

@@ -33,7 +33,7 @@
 
             <div class="form-group form-group-sm">
                 <div class="col-sm-offset-2 col-sm-10">
-                    {{ form_widget(form.BtnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
                 </div>
             </div>
         </div>
@@ -108,7 +108,7 @@
 
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
-
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
         </div>
     </div>
     {{ form_rest(form) }}

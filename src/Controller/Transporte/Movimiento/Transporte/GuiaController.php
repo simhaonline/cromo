@@ -2,11 +2,14 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
+use App\Controller\Estructura\AdministracionController;
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteNovedad;
 use App\Form\Type\Transporte\GuiaType;
 use App\Form\Type\Transporte\NovedadType;
+use App\General\General;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,9 +31,14 @@ class GuiaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                if ($form->get('BtnFiltrar')->isClicked()) {
+                if ($form->get('btnFiltrar')->isClicked()) {
                     $this->filtrar($form);
                     $form = $this->formularioFiltro();
+                }
+                if ($form->get('btnExcel')->isClicked()) {
+                    $this->filtrar($form);
+                    $query = $this->getDoctrine()->getRepository(TteGuia::class)->lista();
+                    General::get()->setExportar($query, "Guias");
                 }
             }
         }
@@ -114,9 +122,11 @@ class GuiaController extends Controller
             }
         }
         $arNovedades = $this->getDoctrine()->getRepository(TteNovedad::class)->guia($codigoGuia);
+        $arDespachoDetalles = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->guia($codigoGuia);
         return $this->render('transporte/movimiento/transporte/guia/detalle.html.twig', [
             'arGuia' => $arGuia,
             'arNovedades' => $arNovedades,
+            'arDespachoDetalles' => $arDespachoDetalles,
             'form' => $form->createView()]);
     }
 
@@ -216,7 +226,8 @@ class GuiaController extends Controller
             ->add('servicioRel', EntityType::class, $arrayPropiedadesServicio)
             ->add('documento', TextType::class, array('data' => $session->get('filtroTteDocumento')))
             ->add('numero', TextType::class, array('data' => $session->get('filtroTteNumeroGuia')))
-            ->add('BtnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         return $form;
     }

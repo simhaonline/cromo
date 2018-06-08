@@ -32,6 +32,11 @@ class TteDespachoTipo
     private $exigeNumero = false;
 
     /**
+     * @ORM\Column(name="genera_monitoreo", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $generaMonitoreo = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespacho", mappedBy="despachoTipoRel")
      */
     protected $despachosDespachoTipoRel;
@@ -115,6 +120,23 @@ class TteDespachoTipo
     {
         $this->despachosDespachoTipoRel = $despachosDespachoTipoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraMonitoreo()
+    {
+        return $this->generaMonitoreo;
+    }
+
+    /**
+     * @param mixed $generaMonitoreo
+     */
+    public function setGeneraMonitoreo($generaMonitoreo): void
+    {
+        $this->generaMonitoreo = $generaMonitoreo;
+    }
+
 
 
 }

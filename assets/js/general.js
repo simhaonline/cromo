@@ -27,7 +27,18 @@ function ChequearTodosTabla(source, nombre) {
     }
 }
 
-$(document).ready(function() {
-    $( "select" ).addClass("js-example-basic-multiple");
-    $('.js-example-basic-multiple').select2();
+/**
+ * Función para convertir los combobox en select2.
+ */
+$(function () {
+    $(".to-select-2").select2({
+        width: '100%',
+        language: 'es'
+    });
+    /**
+     * Solucionar el problema del tab index que tiene el select 2.
+     */
+    $(".to-select-2").on("select2:close", function (e) {
+        e.target.focus();
+    });
 });

@@ -18,9 +18,19 @@ class TteMonitoreo
     private $codigoMonitoreoPk;
 
     /**
-     * @ORM\Column(name="fecha", type="datetime", nullable=true)
+     * @ORM\Column(name="fecha_registro", type="datetime", nullable=true)
      */
-    private $fecha;
+    private $fechaRegistro;
+
+    /**
+     * @ORM\Column(name="fecha_inicio", type="datetime", nullable=true)
+     */
+    private $fechaInicio;
+
+    /**
+     * @ORM\Column(name="fecha_fin", type="datetime", nullable=true)
+     */
+    private $fechaFin;
 
     /**
      * @ORM\Column(name="soporte", type="string", length=50, nullable=true)
@@ -33,10 +43,36 @@ class TteMonitoreo
     private $codigoVehiculoFk;
 
     /**
+     * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
+     */
+    private $codigoDespachoFk;
+
+    /**
+     * @ORM\Column(name="estado_cerrado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoCerrado = false;
+
+    /**
+     * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
+     */
+    private $comentario;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteVehiculo", inversedBy="monitoreosVehiculoRel")
      * @ORM\JoinColumn(name="codigo_vehiculo_fk", referencedColumnName="codigo_vehiculo_pk")
      */
     private $vehiculoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDespacho", inversedBy="monitoreosDespachoRel")
+     * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
+     */
+    private $despachoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteMonitoreoDetalle", mappedBy="monitoreoRel")
+     */
+    protected $monitoreosDetallesMonitoreoRel;
 
     /**
      * @return mixed
@@ -57,17 +93,49 @@ class TteMonitoreo
     /**
      * @return mixed
      */
-    public function getFecha()
+    public function getFechaRegistro()
     {
-        return $this->fecha;
+        return $this->fechaRegistro;
     }
 
     /**
-     * @param mixed $fecha
+     * @param mixed $fechaRegistro
      */
-    public function setFecha($fecha): void
+    public function setFechaRegistro($fechaRegistro): void
     {
-        $this->fecha = $fecha;
+        $this->fechaRegistro = $fechaRegistro;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaInicio()
+    {
+        return $this->fechaInicio;
+    }
+
+    /**
+     * @param mixed $fechaInicio
+     */
+    public function setFechaInicio($fechaInicio): void
+    {
+        $this->fechaInicio = $fechaInicio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaFin()
+    {
+        return $this->fechaFin;
+    }
+
+    /**
+     * @param mixed $fechaFin
+     */
+    public function setFechaFin($fechaFin): void
+    {
+        $this->fechaFin = $fechaFin;
     }
 
     /**
@@ -105,6 +173,22 @@ class TteMonitoreo
     /**
      * @return mixed
      */
+    public function getCodigoDespachoFk()
+    {
+        return $this->codigoDespachoFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoFk
+     */
+    public function setCodigoDespachoFk($codigoDespachoFk): void
+    {
+        $this->codigoDespachoFk = $codigoDespachoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVehiculoRel()
     {
         return $this->vehiculoRel;
@@ -116,6 +200,70 @@ class TteMonitoreo
     public function setVehiculoRel($vehiculoRel): void
     {
         $this->vehiculoRel = $vehiculoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoRel()
+    {
+        return $this->despachoRel;
+    }
+
+    /**
+     * @param mixed $despachoRel
+     */
+    public function setDespachoRel($despachoRel): void
+    {
+        $this->despachoRel = $despachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMonitoreosDetallesMonitoreoRel()
+    {
+        return $this->monitoreosDetallesMonitoreoRel;
+    }
+
+    /**
+     * @param mixed $monitoreosDetallesMonitoreoRel
+     */
+    public function setMonitoreosDetallesMonitoreoRel($monitoreosDetallesMonitoreoRel): void
+    {
+        $this->monitoreosDetallesMonitoreoRel = $monitoreosDetallesMonitoreoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoCerrado()
+    {
+        return $this->estadoCerrado;
+    }
+
+    /**
+     * @param mixed $estadoCerrado
+     */
+    public function setEstadoCerrado($estadoCerrado): void
+    {
+        $this->estadoCerrado = $estadoCerrado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param mixed $comentario
+     */
+    public function setComentario($comentario): void
+    {
+        $this->comentario = $comentario;
     }
 
 

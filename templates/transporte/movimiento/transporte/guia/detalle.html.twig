@@ -199,7 +199,30 @@
         <div class="tab-pane" id="despachos">
             <div id="despachos" style="width: 100%"><br>
                 <div class="table-responsive">
-
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>COD</th>
+                            <th>TIPO</th>
+                            <th>NUMERO</th>
+                            <th>FECHA</th>
+                            <th>GEN</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arDespachoDetalle in arDespachoDetalles %}
+                            <tr>
+                                <td>{{ arDespachoDetalle.codigoDespachoDetallePk }}</td>
+                                <td>{{ arDespachoDetalle.codigoDespachoFk }}</td>
+                                <td>{{ arDespachoDetalle.tipoDespacho }}</td>
+                                <td>{{ arDespachoDetalle.numero }}</td>
+                                <td>{{ arDespachoDetalle.fechaSalida | date('Y-m-d H:i') }}</td>
+                                <td>{% if arDespachoDetalle.estadoGenerado == 1 %} SI {% else %} NO {% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
                 <div class="separador-1"></div>
 

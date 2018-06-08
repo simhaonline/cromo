@@ -2,7 +2,7 @@
 
 namespace App\Controller\Transporte\Proceso\Transporte\Guia;
 
-use App\Entity\TteGuia;
+use App\Entity\Transporte\TteGuia;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

@@ -392,6 +392,78 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function pendienteConductor(): array
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $dql = "SELECT g.codigoGuiaPk, 
+        g.numero, 
+        g.fechaIngreso,
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk, 
+        g.codigoRutaFk,
+        c.nombreCorto AS clienteNombreCorto,  
+        cd.nombre AS ciudadDestino,
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,
+        g.vrDeclara,
+        g.vrFlete,
+        con.nombreCorto as nombreConductor,
+        d.codigoConductorFk
+        FROM App\Entity\Transporte\TteGuia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd
+        LEFT JOIN g.despachoRel d
+        LEFT JOIN d.conductorRel con     
+        WHERE g.estadoDespachado = 1 AND g.estadoAnulado = 0 AND g.estadoSoporte = 0 AND g.codigoDespachoFk IS NOT NULL ";
+        if($session->get('filtroTteCodigoConductor')) {
+            $dql .= " AND d.codigoConductorFk = " . $session->get('filtroTteCodigoConductor');
+        }
+        $dql .= "ORDER BY d.codigoConductorFk, g.codigoCiudadDestinoFk";
+
+        $query = $em->createQuery($dql);
+
+
+        return $query->execute();
+    }
+
+    public function pendiente(): array
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $dql = "SELECT g.codigoGuiaPk, 
+        g.numero, 
+        g.fechaIngreso,
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk, 
+        g.codigoRutaFk,
+        c.nombreCorto AS clienteNombreCorto,  
+        cd.nombre AS ciudadDestino,
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,
+        g.vrDeclara,
+        g.vrFlete,
+        con.nombreCorto as nombreConductor,
+        d.codigoConductorFk
+        FROM App\Entity\Transporte\TteGuia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd
+        LEFT JOIN g.despachoRel d
+        LEFT JOIN d.conductorRel con     
+        WHERE g.estadoDespachado = 1 AND g.estadoAnulado = 0 AND g.estadoSoporte = 0 AND g.codigoDespachoFk IS NOT NULL ";
+        /*if($session->get('filtroTteCodigoConductor')) {
+            $dql .= " AND d.codigoConductorFk = " . $session->get('filtroTteCodigoConductor');
+        }*/
+        $dql .= "ORDER BY d.codigoConductorFk, g.codigoCiudadDestinoFk";
+
+        $query = $em->createQuery($dql);
+
+
+        return $query->execute();
+    }
+
     public function pendientesDespachoCuenta(): array
     {
         $em = $this->getEntityManager();

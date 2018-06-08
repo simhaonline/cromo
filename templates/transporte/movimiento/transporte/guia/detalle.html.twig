@@ -158,8 +158,12 @@
                             <th>ID</th>
                             <th>FECHA</th>
                             <th>REPORTE</th>
+                            <th>SOLUCION</th>
                             <th>TIPO</th>
                             <th>DESCRIPCION</th>
+                            <th>ATE</th>
+                            <th>REP</th>
+                            <th>SOL</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -169,8 +173,12 @@
                                 <td>{{ arNovedad.codigoNovedadPk }}</td>
                                 <td>{{ arNovedad.fecha |date('Y-m-d H:i') }}</td>
                                 <td>{{ arNovedad.fechaReporte |date('Y-m-d H:i') }}</td>
+                                <td>{{ arNovedad.fechaSolucion |date('Y-m-d H:i') }}</td>
                                 <td>{{ arNovedad.nombreTipo }}</td>
                                 <td>{{ arNovedad.descripcion }}</td>
+                                <td>{% if arNovedad.estadoAtendido == 1 %} SI {% else %} NO {% endif %}</td>
+                                <td>{% if arNovedad.estadoReporte == 1 %} SI {% else %} NO {% endif %}</td>
+                                <td>{% if arNovedad.estadoSolucion == 1 %} SI {% else %} NO {% endif %}</td>
                                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arNovedad.codigoNovedadPk }}" /></td>
                             </tr>
                         {% endfor %}
@@ -180,7 +188,7 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('tte_mto_transporte_guia_detalle_adicionar_novedad', {'codigoGuia': arGuia.codigoGuiaPk }) }}', 'GuiaAdicionarNovedad', 600, 900)">Adicionar</a>
+                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('tte_mto_transporte_guia_detalle_adicionar_novedad', {'codigoGuia': arGuia.codigoGuiaPk, 'codigoNovedad': 0 }) }}', 'GuiaAdicionarNovedad', 600, 900)">Adicionar</a>
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnRetirarNovedad, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}

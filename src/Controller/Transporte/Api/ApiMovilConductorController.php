@@ -2,19 +2,33 @@
 
 namespace App\Controller\Transporte\Api;
 
-use App\Controller\ApiBaseController;
+use App\Entity\Transporte\TteGuia;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 
-class ApiMovilConductorController extends ApiBaseController
+class ApiMovilConductorController extends FOSRestController
 {
-
-    public function lista(Request $request)
+    /**
+     * @Rest\Get("/tte/api/movil/conductor/despacho/guia/{codigoDespacho}", name="tte_api_movil_conductor_despacho_guia")
+     */
+    public function guia(Request $request, $codigoDespacho)
     {
-        $parametros=$this->getParameters($request);
-        $em=$this->getDoctrine();
-        $region=$em->getRepository('App:Configuracion\Region')->listaRegion($parametros);
-        $encabezados=['id','name','descripcion','estado'];
-        return $this->generateListResponse($encabezados,$region);
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, 
+        WHERE g.codigoDespachoFk = :codigoDespacho'
+        )->setParameter('codigoDespacho', 1);
+
+        $qb = $em->createQueryBuilder();
+        $qb->from(TteGuia::class, "g")
+            ->select("g.codigoGuiaPk")
+            ->where("g.codigoDespachoFk = 1");
+        return $qb->getQuery()->getResult();
+
+        //return $query->execute();
     }
 
 

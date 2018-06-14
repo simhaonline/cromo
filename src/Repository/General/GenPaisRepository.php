@@ -4,21 +4,21 @@ namespace App\Repository\General;
 
 
 use App\Entity\General\GenDepartamento;
+use App\Entity\General\GenPais;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class GenDepartamentoRepository extends ServiceEntityRepository
+class GenPaisRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, GenDepartamento::class);
+        parent::__construct($registry, GenPais::class);
     }
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
-            ->from('App:General\GenDepartamento','d')
-            ->select('d.codigoDepartamentoPk AS ID')
-            ->addSelect('d.nombre AS NOMBRE')
-            ->addSelect('d.codigoDane AS CODIGO_DANE');
+            ->from('App:General\GenPais','p')
+            ->select('p.codigoPaisPk AS ID')
+            ->addSelect('p.nombre AS NOMBRE');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }

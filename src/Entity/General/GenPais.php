@@ -15,7 +15,7 @@ class GenPais
      * @ORM\Column(name="codigo_pais_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $codigoPaesId;
+    private $codigoPaisPk;
 
     /**
      * @ORM\Column(name="nombre", type="string", length=50, nullable=true)
@@ -30,17 +30,17 @@ class GenPais
     /**
      * @return mixed
      */
-    public function getCodigoPaesId()
+    public function getCodigoPaisPk()
     {
-        return $this->codigoPaesId;
+        return $this->codigoPaisPk;
     }
 
     /**
-     * @param mixed $codigoPaesId
+     * @param mixed $codigoPaisPk
      */
-    public function setCodigoPaesId($codigoPaesId): void
+    public function setCodigoPaisPk($codigoPaisPk): void
     {
-        $this->codigoPaesId = $codigoPaesId;
+        $this->codigoPaisPk = $codigoPaisPk;
     }
 
     /**
@@ -74,6 +74,7 @@ class GenPais
     {
         $this->departamentosRel = $departamentosRel;
     }
+
 
 }
 

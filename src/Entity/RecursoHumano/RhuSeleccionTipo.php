@@ -26,4 +26,54 @@ class RhuSeleccionTipo
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="seleccionTipoRel")
      */
     protected $seleccionTipoRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSeleccionTipoPk()
+    {
+        return $this->codigoSeleccionTipoPk;
+    }
+
+    /**
+     * @param mixed $codigoSeleccionTipoPk
+     */
+    public function setCodigoSeleccionTipoPk($codigoSeleccionTipoPk): void
+    {
+        $this->codigoSeleccionTipoPk = $codigoSeleccionTipoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeleccionTipoRel()
+    {
+        return $this->seleccionTipoRel;
+    }
+
+    /**
+     * @param mixed $seleccionTipoRel
+     */
+    public function setSeleccionTipoRel($seleccionTipoRel): void
+    {
+        $this->seleccionTipoRel = $seleccionTipoRel;
+    }
+
+
 }

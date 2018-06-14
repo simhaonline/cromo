@@ -35,7 +35,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-alerts">
                         <li>
-                            <a href="{{ path('tte_tab_recogida') }}">
+                            <a href="#">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> Recogidas
                                     <span class="pull-right text-muted small">4 minutes ago</span>
@@ -146,6 +146,7 @@
                                 <li>
                                     <a href="#">Transporte <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'novedadTipo'}) }}">Tipo novedad</a></li>
                                         <li><a href="{{ path('tte_adm_comercial_precio_lista') }}">Precio</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
@@ -185,6 +186,19 @@
                                     <ul class="nav nav-third-level">
                                         <li><a href="{{ path('tte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente (ruta)</a></li>
                                         <li><a href="{{ path('tte_inf_transporte_costo_general') }}">Costos</a></li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-file-text-o fa-fw"></i> Tablero<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#">Recogida <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="{{ path('tte_tab_recogida_recogida') }}">Recogida</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>

@@ -88,6 +88,11 @@ class InvItem
     private $cantidadOrdenCompra = 0;
 
     /**
+     * @ORM\Column(name="cantidad_solicitud", type="integer", nullable=true)
+     */
+    private $cantidadSolicitud = 0;
+
+    /**
      * @ORM\Column(name="codigo_unidad_medida_fk",  type="integer", nullable=true)
      */
     private $codigoUnidadMedidaFk;
@@ -348,6 +353,22 @@ class InvItem
     public function setCantidadOrdenCompra($cantidadOrdenCompra): void
     {
         $this->cantidadOrdenCompra = $cantidadOrdenCompra;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadSolicitud()
+    {
+        return $this->cantidadSolicitud;
+    }
+
+    /**
+     * @param mixed $cantidadSolicitud
+     */
+    public function setCantidadSolicitud($cantidadSolicitud): void
+    {
+        $this->cantidadSolicitud = $cantidadSolicitud;
     }
 
     /**

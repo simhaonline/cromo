@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento;
 
+use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvOrdenCompra;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
 use App\Formato\Inventario\OrdenCompra;
@@ -30,8 +31,10 @@ class OrdenCompraController extends Controller
         $form = $this->formularioDetalles($arOrdenCompra);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $arrVrItems = $request->request->get('ArrValores');
+            $arrVrIva = $request->request->get('ArrIva');
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvOrdenCompra')->autorizar($arOrdenCompra);
+                $em->getRepository('App:Inventario\InvOrdenCompra')->autorizar($arOrdenCompra, $arrVrItems, $arrVrIva);
                 return $this->redirect($this->generateUrl('inv_mov_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
@@ -112,6 +115,41 @@ class OrdenCompraController extends Controller
         $form = $this->formularioFiltroDetalleSolicitud();
         $form->handleRequest($request);
         $this->listaDetallesSolicitud($em, $form);
+        $respuesta = '';
+        $arOrdenCompra = $em->getRepository('App:Inventario\InvOrdenCompra')->findOneBy(['codigoOrdenCompraPk' => $id]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSolicitudDetalles = $request->request->get('itemCantidad');
+                if ($arrSolicitudDetalles) {
+                    if (count($arrSolicitudDetalles) > 0) {
+                        foreach ($arrSolicitudDetalles as $codigoSolicitudDetalle => $cantidad) {
+                            if ($cantidad != '' && $cantidad != 0) {
+                                $arSolicitudDetalle = $em->getRepository('App:Inventario\InvSolicitudDetalle')->find($codigoSolicitudDetalle);
+                                if ($cantidad <= $arSolicitudDetalle->getCantidadRestante()) {
+                                    $arItem = $em->getRepository('App:Inventario\InvItem')->find($arSolicitudDetalle->getCodigoItemFk());
+                                    $arOrdenCompraDetalle = new InvOrdenCompraDetalle();
+                                    $arOrdenCompraDetalle->setOrdenCompraRel($arOrdenCompra);
+                                    $arOrdenCompraDetalle->setItemRel($arItem);
+                                    $arOrdenCompraDetalle->setCantidad($cantidad);
+                                    $arOrdenCompraDetalle->setCodigoSolicitudDetalleFk($arSolicitudDetalle->getCodigoSolicitudDetallePk());
+                                    $arSolicitudDetalle->setCantidadRestante($arSolicitudDetalle->getCantidadRestante() - $cantidad);
+                                    $em->persist($arSolicitudDetalle);
+                                    $em->persist($arOrdenCompraDetalle);
+                                } else {
+                                    $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada.";
+                                }
+                            }
+                        }
+                        if ($respuesta != '') {
+                            MensajesController::error($respuesta);
+                        } else {
+                            $em->flush();
+                            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                        }
+                    }
+                }
+            }
+        }
         $arSolicitudesDetalles = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/ordenCompra/detalleNuevoSolicitud.html.twig', [
             'form' => $form->createView(),
@@ -148,7 +186,7 @@ class OrdenCompraController extends Controller
         } elseif ($arOrdenCompra->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
-            $arrBtnImprimir['disabled'] = false;
+            $arrBtnImprimir['disabled'] = true;
             $arrBtnAnular['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = false;
@@ -208,7 +246,8 @@ class OrdenCompraController extends Controller
      * @param $em ObjectManager
      * @param $form
      */
-    private function listaDetallesSolicitud($em, $form){
+    private function listaDetallesSolicitud($em, $form)
+    {
         $session = new Session();
         $session->set('filtroCodigoItem', $form->get('txtCodigoItem')->getData());
         $session->set('filtroNombreItem', $form->get('txtNombreItem')->getData());

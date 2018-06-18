@@ -70,16 +70,18 @@
                     {{ validarTipo(dato) }}
                 {% endfor %}
                 {% if arEntidad.nuevoInterno == true %}
+                    {#{% if llave == 'estadoAprobado' and datos == true  %}#}
+                        {#{% else %}#}
                 <td style="text-align: center">
                     <a href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion|slice(0,3) ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
-                        <i class="fa fa-edit" style="font-size: large">
+                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large">
                         </i>
                     </a>
                 </td>
                 {% else %}
                 <td style="text-align: center">
-                    <a href="{{ path('admin_nuevo', {'entidad': arEntidad.entidad,'modulo':arEntidad.modulo,'id': datos.ID }) }}"><i
-                                class="fa fa-edit" style="font-size: large"></i>
+                    <a href="{{ path('admin_nuevo', {'entidad': arEntidad.entidad,'modulo':arEntidad.modulo,'id': datos.ID }) }}">
+                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large"></i>
                     </a>
                 </td>
                 {% endif %}
@@ -111,19 +113,19 @@
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
         {{ knp_pagination_render(arRegistros) }}
     </div>
-    <div class="btn-toolbar" style="float: left">
-        {% if(arEntidad.codigoEntidadPk != "GenCubo") %}
-            <div class="btn-group">
-                <a class="btn btn-default btn-sm"
-                   href="{{ path('lista',{'entidad': 'GenCubo','entidadCubo':arEntidad.codigoEntidadPk}) }}"><i
-                            class="fa fa-cube"></i>
-                </a>
-            </div>
-        {% else %}
-            <a href="{{ path('lista',{'entidad': entidadCubo }) }}"
-               class="btn btn-sm btn-default">Volver</a>
-        {% endif %}
-    </div>
+    {#<div class="btn-toolbar" style="float: left">#}
+        {#{% if(arEntidad.codigoEntidadPk != "GenCubo") %}#}
+            {#<div class="btn-group">#}
+                {#<a class="btn btn-default btn-sm"#}
+                   {#href="{{ path('lista',{'entidad': 'GenCubo','entidadCubo':arEntidad.codigoEntidadPk}) }}"><i#}
+                            {#class="fa fa-cube"></i>#}
+                {#</a>#}
+            {#</div>#}
+        {#{% else %}#}
+            {#<a href="{{ path('lista',{'entidad': entidadCubo }) }}"#}
+               {#class="btn btn-sm btn-default">Volver</a>#}
+        {#{% endif %}#}
+    {#</div>#}
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
             {{ form_widget(form.btnExcel) }}

@@ -34,7 +34,7 @@ class SolicitudController extends Controller
         if ($id != 0) {
             $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
             if (!$arSolicitud) {
-                return $this->redirect($this->generateUrl('inv_mto_solicitud_lista'));
+                return $this->redirect($this->generateUrl('admin_lista',['modulo' =>'inventario','entidad' => 'solicitud']));
             }
         }
         $arSolicitud->setFecha(new \DateTime('now'));

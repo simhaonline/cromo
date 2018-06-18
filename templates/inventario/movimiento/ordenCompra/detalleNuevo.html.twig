@@ -30,6 +30,8 @@
             <tr>
                 <th>ID</th>
                 <th>NOMBRE</th>
+                <th title="Cantidad de unidades en solicitud para el item">CANTIDAD SOL</th>
+                <th title="Cantidad de unidades en orden compra para el item">CANTIDAD ORD_COM</th>
                 <th>EXISTENCIAS</th>
                 <th>STOCK_MIN</th>
                 <th>STOCK_MAX</th>
@@ -41,6 +43,8 @@
                 <tr>
                     <td style="text-align: right;">{{ arItem.codigoItemPk }}</td>
                     <td style="text-align: left;">{{ arItem.nombre }}</td>
+                    <td style="text-align: right;">{{ arItem.cantidadSolicitud }}</td>
+                    <td style="text-align: right;">{{ arItem.cantidadOrdenCompra }}</td>
                     <td style="text-align: right;">{{ arItem.cantidadExistencia }}</td>
                     <td style="text-align: right;">{{ arItem.stockMinimo }}</td>
                     <td style="text-align: right;">{{ arItem.stockMaximo }}</td>

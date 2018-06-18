@@ -20,6 +20,8 @@
                     {{ form_start(form) }}
                     Utilizar configuración personalizada:
                     <input type="checkbox" name="personalizada" {{ validarSeleccionado(arEntidad.personalizado) }}>
+                    <br>
+                    <span style="color: red;font-size: 15px;text-align: center;">* <cite  style="font-size: 10px;color: black !important;">-- Campos obligatorios --</cite></span>
                 </div>
                 <h3>Campos a listar</h3>
                 <table class="table table-striped table-bordered table-hover">
@@ -38,19 +40,20 @@
                                 <td style="text-align: center"><input type="text"
                                                                       name="aliasLista[{{ arColumna.campo }}]"
                                                                       value="ID" readonly></td>
-                                <td style="text-align: center"><input type="checkbox"
-                                                                      name="mostrarLista[{{ arColumna.campo }}]"
-                                                                      checked>
-                                </td>
+                                <td style="color: red;font-size: 15px;text-align: center;">*</td>
                             {% else %}
                                 <td style="text-align: center">{{ separarPorGuionbajo(arColumna.campo) }}</td>
                                 <td style="text-align: center"><input type="text"
                                                                       name="aliasLista[{{ arColumna.campo }}]"
                                                                       onkeypress="return validarCaracteres(event)"
                                                                       value="{{ arColumna.alias }}"></td>
-                                <td style="text-align: center"><input type="checkbox"
-                                                                      name="mostrarLista[{{ arColumna.campo }}]" {{ validarSeleccionado(arColumna.mostrar) }}>
-                                </td>
+                                {% if esEstado(arColumna.campo) %}
+                                    <td style="color: red;font-size: 15px;text-align: center;">*</td>
+                                {% else %}
+                                    <td style="text-align: center"><input type="checkbox"
+                                                                          name="mostrarLista[{{ arColumna.campo }}]" {{ validarSeleccionado(arColumna.mostrar) }}>
+                                    </td>
+                                {% endif %}
                             {% endif %}
                         </tr>
                     {% endfor %}

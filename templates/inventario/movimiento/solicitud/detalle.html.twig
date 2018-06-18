@@ -16,12 +16,13 @@
             {{ form_widget(form.btnAutorizar) }}
             {{ form_widget(form.btnDesautorizar) }}
             {{ form_widget(form.btnImprimir) }}
+            {{ form_widget(form.btnAprobar) }}
             {{ form_widget(form.btnAnular) }}
         </div>
     </div>
     <div style="float:right">
         {% if arSolicitud.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
-        {% if arSolicitud.estadoImpreso == true %}<span class="label label-primary">Impreso</span>{% endif %}
+        {% if arSolicitud.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arSolicitud.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br /><br />
@@ -67,19 +68,23 @@
                         <tbody>
                         {% for arSolicitudDetalle in arSolicitudDetalles %}
                             <tr>
-                                <td>{{ arSolicitudDetalle.codigoSolitudDetallePk }}</td>
+                                <td>{{ arSolicitudDetalle.codigoSolicitudDetallePk }}</td>
                                 <td>{{ arSolicitudDetalle.itemRel.nombre | default('') }}</td>
-                                <td>{{ arSolicitudDetalle.cantidad }}</td>
-                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arSolicitudDetalle.codigoSolitudDetallePk }}" /></td>
+                                <td>{{ arSolicitudDetalle.cantidadSolicitada }}</td>
+                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arSolicitudDetalle.codigoSolicitudDetallePk }}" /></td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                <div class="separador-1"></div>
+                {#<div class="separador-1"></div>#}
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inv_mov_inventario_solicitud_detalle_nuevo', {'codigoDetalle': 0,'id':arSolicitud.codigoSolicitudPk }) }}', 'SolicitudAdicionarDetalle', 600, 900)">Nuevo</a>
+                        {% if arSolicitud.estadoAutorizado == true %}
+                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled" value="Nuevo"/>
+                        {% else %}
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inv_mov_inventario_solicitud_detalle_nuevo', {'codigoDetalle': 0,'id':arSolicitud.codigoSolicitudPk }) }}', 'SolicitudAdicionarDetalle', 600, 900)">Nuevo</a>
+                        {% endif %}
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnEliminar) }}

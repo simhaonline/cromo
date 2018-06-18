@@ -44,9 +44,9 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
                         $this->_em->remove($arSolicitudDetalle);
                     }
                 }
-                try{
+                try {
                     $this->_em->flush();
-                } catch (\Exception $e){
+                } catch (\Exception $e) {
                     MensajesController::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
                 }
             }
@@ -55,6 +55,33 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
         }
     }
 
-
-
+    public function listarDetallesPendientes($nombreItem = '', $codigoItem = '', $codigoSolicitud = '')
+    {
+        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvSolicitudDetalle', 'isd');
+        $qb
+            ->select('isd.codigoSolicitudDetallePk')
+            ->join('isd.itemRel', 'it')
+            ->join('isd.solicitudRel','s')
+            ->addSelect('it.nombre')
+            ->addSelect('it.cantidadExistencia')
+            ->addSelect('isd.cantidadSolicitada')
+            ->addSelect('isd.cantidadRestante')
+            ->addSelect('it.stockMinimo')
+            ->addSelect('it.stockMaximo')
+            ->where('s.estadoAprobado = true')
+            ->where('s.estadoAnulado = false')
+            ->andWhere('isd.cantidadRestante > 0');
+        if ($nombreItem != '') {
+            $qb->andWhere("it.nombre LIKE '%{$nombreItem}%'");
+        }
+        if ($codigoItem != '') {
+            $qb->andWhere("isd.codigoItemFk = {$codigoItem}");
+        }
+        if ($codigoSolicitud != '') {
+            $qb->andWhere("isd.codigoSolicitudFk = {$codigoSolicitud} ");
+        }
+        $qb->orderBy('isd.codigoSolicitudDetallePk', 'ASC');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 }

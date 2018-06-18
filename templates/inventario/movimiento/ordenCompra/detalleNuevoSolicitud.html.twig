@@ -1,0 +1,62 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br/>
+    {{ notificar()|raw }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4> Filtros de búsqueda</h4>
+        </div>
+        <div class="panel-body">
+            {{ form_label(form.txtCodigoItem) }}
+            <div class="col-sm-4">
+                {{ form_widget(form.txtCodigoItem) }}
+            </div>
+            {{ form_label(form.txtNombreItem) }}
+            <div class="col-sm-4">
+                {{ form_widget(form.txtNombreItem) }}
+            </div>
+            {{ form_label(form.txtCodigoSolicitud) }}
+            <div class="col-sm-4">
+                {{ form_widget(form.txtCodigoSolicitud) }}
+            </div>
+        </div>
+        <div class="panel-footer">
+            {{ form_widget(form.btnFiltrar,{'attr':{'style':'float: right;'}}) }}
+            <br/>
+            <br/>
+        </div>
+    </div>
+    <div>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>NOMBRE</th>
+                <th>EXISTENCIAS</th>
+                <th>STOCK_MIN</th>
+                <th>STOCK_MAX</th>
+                <th>CANTIDAD SOLICITADA</th>
+                <th>CANTIDAD PENDIENTE</th>
+                <th>CANTIDAD A ORDENAR</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arSolicitudDetalle in arSolicitudesDetalles %}
+                <tr>
+                    <td style="text-align: right;">{{ arSolicitudDetalle.codigoSolicitudDetallePk }}</td>
+                    <td style="text-align: left;">{{ arSolicitudDetalle.nombre }}</td>
+                    <td style="text-align: right;">{{ arSolicitudDetalle.cantidadExistencia }}</td>
+                    <td style="text-align: right;">{{ arSolicitudDetalle.stockMinimo }}</td>
+                    <td style="text-align: right;">{{ arSolicitudDetalle.stockMaximo }}</td>
+                    <td style="text-align: right;">{{ arSolicitudDetalle.cantidadSolicitada }}</td>
+                    <td style="text-align: right;">{{ arSolicitudDetalle.cantidadRestante }}</td>
+                    <td style="text-align: center;"><input type="number" name="itemCantidad[{{ arSolicitudDetalle.codigoSolicitudDetallePk }}]" style="text-align: right;" value="{{ arSolicitudDetalle.cantidadRestante }}"></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+    {{ form_end(form) }}
+{% endblock %}

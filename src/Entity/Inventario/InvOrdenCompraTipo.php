@@ -23,9 +23,14 @@ class InvOrdenCompraTipo
     private $nombre;
 
     /**
-     * @ORM\Column(name="consecutivo", type="integer",nullable=true)
+     * @ORM\Column(name="consecutivo", type="integer",options={"default" : 0},nullable=true)
      */
-    private $consecutivo;
+    private $consecutivo = 0;
+
+    /**
+     * @ORM\OneToMany(targetEntity="InvOrdenCompra", mappedBy="ordenCompraTipoRel")
+     */
+    protected $ordenCompraTipoOrdenesCompraRel;
 
     /**
      * @return mixed
@@ -74,5 +79,23 @@ class InvOrdenCompraTipo
     {
         $this->consecutivo = $consecutivo;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOrdenCompraTipoOrdenesCompraRel()
+    {
+        return $this->ordenCompraTipoOrdenesCompraRel;
+    }
+
+    /**
+     * @param mixed $ordenCompraTipoOrdenesCompraRel
+     */
+    public function setOrdenCompraTipoOrdenesCompraRel($ordenCompraTipoOrdenesCompraRel): void
+    {
+        $this->ordenCompraTipoOrdenesCompraRel = $ordenCompraTipoOrdenesCompraRel;
+    }
+
+
 }
 

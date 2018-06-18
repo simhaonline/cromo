@@ -56,13 +56,14 @@ class InvItemRepository extends ServiceEntityRepository
         return $dql->execute();
     }
 
-
     public function listarItems($nombreItem = '', $codigoItem = '')
     {
         $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvItem', 'ii')
             ->select('ii.codigoItemPk')
             ->addSelect('ii.nombre')
             ->addSelect('ii.cantidadExistencia')
+            ->addSelect('ii.cantidadOrdenCompra')
+            ->addSelect('ii.cantidadSolicitud')
             ->addSelect('ii.stockMinimo')
             ->addSelect('ii.stockMaximo')
             ->where('ii.codigoItemPk <> 0');

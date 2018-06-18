@@ -14,4 +14,13 @@ class InvOrdenCompraTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, InvOrdenCompraTipo::class);
     }
 
+    public function camposPredeterminados(){
+        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvOrdenCompraTipo','ioct');
+        $qb
+            ->select('ioct.codigoOrdenCompraTipoPk AS ID')
+            ->addSelect('ioct.nombre AS NOMBRE')
+            ->addSelect('ioct.consecutivo AS CONSECUTIVO');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 }

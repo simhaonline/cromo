@@ -34,7 +34,7 @@ class SolicitudController extends Controller
         if ($id != 0) {
             $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
             if (!$arSolicitud) {
-                return $this->redirect($this->generateUrl('inv_mto_solicitud_lista'));
+                return $this->redirect($this->generateUrl('admin_lista',['modulo' =>'inventario','entidad' => 'solicitud']));
             }
         }
         $arSolicitud->setFecha(new \DateTime('now'));
@@ -79,17 +79,17 @@ class SolicitudController extends Controller
                 $em->getRepository('App:Inventario\InvSolicitud')->desautorizar($arSolicitud);
                 return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
             }
-
             if ($form->get('btnImprimir')->isClicked()) {
-                $em->getRepository('App:Inventario\InvSolicitud')->imprimir($arSolicitud);
-                $objFormatoSolicitud->Generar($em,$id);
+                $objFormatoSolicitud->Generar($em, $id);
             }
-
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository('App:Inventario\InvSolicitud')->aprobar($arSolicitud);
+                return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
+            }
             if ($form->get('btnAnular')->isClicked()) {
                 $em->getRepository('App:Inventario\InvSolicitud')->anular($arSolicitud);
                 return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
             }
-
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository('App:Inventario\InvSolicitudDetalle')->eliminar($arSolicitud, $arrDetallesSeleccionados);
@@ -120,19 +120,21 @@ class SolicitudController extends Controller
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
-                foreach ($arrItems as $codigoItem => $cantidad) {
-                    if ($cantidad != '' && $cantidad != 0) {
-                        $arItem = $em->getRepository('App:Inventario\InvItem')->find($codigoItem);
-                        $arSolicitudDetalle = new InvSolicitudDetalle();
-                        $arSolicitudDetalle->setSolicitudRel($arSolicitud);
-                        $arSolicitudDetalle->setItemRel($arItem);
-                        $arSolicitudDetalle->setCantidad($cantidad);
-                        $arSolicitudDetalle->setCantidadRestante($cantidad);
-                        $em->persist($arSolicitudDetalle);
+                if (count($arrItems) > 0) {
+                    foreach ($arrItems as $codigoItem => $cantidad) {
+                        if ($cantidad != '' && $cantidad != 0) {
+                            $arItem = $em->getRepository('App:Inventario\InvItem')->find($codigoItem);
+                            $arSolicitudDetalle = new InvSolicitudDetalle();
+                            $arSolicitudDetalle->setSolicitudRel($arSolicitud);
+                            $arSolicitudDetalle->setItemRel($arItem);
+                            $arSolicitudDetalle->setCantidadSolicitada($cantidad);
+                            $arSolicitudDetalle->setCantidadRestante($cantidad);
+                            $em->persist($arSolicitudDetalle);
+                        }
                     }
+                    $em->flush();
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
-                $em->flush();
-                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
         $arItems = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
@@ -149,6 +151,7 @@ class SolicitudController extends Controller
     private function formularioDetalles($arSolicitud)
     {
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnAprobar = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
@@ -159,28 +162,33 @@ class SolicitudController extends Controller
             $arrBtnImprimir['disabled'] = true;
             $arrBtnAnular['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
-        } elseif ($arSolicitud->getEstadoImpreso()) {
+            $arrBtnAprobar['disabled'] = true;
+        } elseif ($arSolicitud->getEstadoAprobado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnImprimir['disabled'] = false;
             $arrBtnAnular['disabled'] = false;
             $arrBtnEliminar['disabled'] = true;
+            $arrBtnAprobar['disabled'] = true;
         } elseif ($arSolicitud->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
             $arrBtnImprimir['disabled'] = false;
             $arrBtnAnular['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
+            $arrBtnAprobar['disabled'] = false;
         } else {
             $arrBtnAutorizar['disabled'] = false;
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnImprimir['disabled'] = true;
             $arrBtnAnular['disabled'] = true;
             $arrBtnEliminar['disabled'] = false;
+            $arrBtnAprobar['disabled'] = true;
         }
         return $this
             ->createFormBuilder()
             ->add('btnAutorizar', SubmitType::class, $arrBtnAutorizar)
+            ->add('btnAprobar', SubmitType::class, $arrBtnAprobar)
             ->add('btnDesautorizar', SubmitType::class, $arrBtnDesautorizar)
             ->add('btnImprimir', SubmitType::class, $arrBtnImprimir)
             ->add('btnAnular', SubmitType::class, $arrBtnAnular)

@@ -15,12 +15,7 @@ class InvSolicitudDetalle
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $codigoSolitudDetallePk;
-
-    /**
-     * @ORM\Column(name="codigo_item_fk", type="integer")
-     */
-    private $codigoItemFk;
+    private $codigoSolicitudDetallePk;
 
     /**
      * @ORM\Column(name="codigo_solicitud_fk", type="integer", nullable=true)
@@ -28,14 +23,19 @@ class InvSolicitudDetalle
     private $codigoSolicitudFk;
 
     /**
-     * @ORM\Column(name="cantidad", type="integer")
+     * @ORM\Column(name="codigo_item_fk", type="integer")
      */
-    private $cantidad = 0;
+    private $codigoItemFk;
 
     /**
-     * @ORM\Column(name="cantidad_restante", type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_solicitada",options={"default" : 0}, type="integer")
      */
-    private $cantidadRestante;
+    private $cantidadSolicitada = 0;
+
+    /**
+     * @ORM\Column(name="cantidad_restante",options={"default" : 0}, type="integer", nullable=true)
+     */
+    private $cantidadRestante = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvSolicitud", inversedBy="solicitudSolicitudDetallesRel")
@@ -44,7 +44,7 @@ class InvSolicitudDetalle
     private $solicitudRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="itemsolicitudDetalleRel")
+     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="itemsolicitudDetallesRel")
      * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
     private $itemRel;
@@ -52,33 +52,17 @@ class InvSolicitudDetalle
     /**
      * @return mixed
      */
-    public function getCodigoSolitudDetallePk()
+    public function getCodigoSolicitudDetallePk()
     {
-        return $this->codigoSolitudDetallePk;
+        return $this->codigoSolicitudDetallePk;
     }
 
     /**
-     * @param mixed $codigoSolitudDetallePk
+     * @param mixed $codigoSolicitudDetallePk
      */
-    public function setCodigoSolitudDetallePk($codigoSolitudDetallePk): void
+    public function setCodigoSolicitudDetallePk($codigoSolicitudDetallePk): void
     {
-        $this->codigoSolitudDetallePk = $codigoSolitudDetallePk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoItemFk()
-    {
-        return $this->codigoItemFk;
-    }
-
-    /**
-     * @param mixed $codigoItemFk
-     */
-    public function setCodigoItemFk($codigoItemFk): void
-    {
-        $this->codigoItemFk = $codigoItemFk;
+        $this->codigoSolicitudDetallePk = $codigoSolicitudDetallePk;
     }
 
     /**
@@ -100,17 +84,33 @@ class InvSolicitudDetalle
     /**
      * @return mixed
      */
-    public function getCantidad()
+    public function getCodigoItemFk()
     {
-        return $this->cantidad;
+        return $this->codigoItemFk;
     }
 
     /**
-     * @param mixed $cantidad
+     * @param mixed $codigoItemFk
      */
-    public function setCantidad($cantidad): void
+    public function setCodigoItemFk($codigoItemFk): void
     {
-        $this->cantidad = $cantidad;
+        $this->codigoItemFk = $codigoItemFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadSolicitada()
+    {
+        return $this->cantidadSolicitada;
+    }
+
+    /**
+     * @param mixed $cantidadSolicitada
+     */
+    public function setCantidadSolicitada($cantidadSolicitada): void
+    {
+        $this->cantidadSolicitada = $cantidadSolicitada;
     }
 
     /**
@@ -160,7 +160,5 @@ class InvSolicitudDetalle
     {
         $this->itemRel = $itemRel;
     }
-
-
 }
 

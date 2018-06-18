@@ -1,0 +1,143 @@
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ notificar()|raw }}
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class='page-header'>
+                Inventario movimiento
+                <small style="font-size: 20px">Inventario: Orden compra detalle</small>
+            </h3>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            {{ form_widget(form.btnAutorizar) }}
+            {{ form_widget(form.btnDesautorizar) }}
+            {{ form_widget(form.btnImprimir) }}
+            {{ form_widget(form.btnAprobar) }}
+            {{ form_widget(form.btnAnular) }}
+        </div>
+    </div>
+    <div style="float:right">
+        {% if arOrdenCompra.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arOrdenCompra.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arOrdenCompra.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td class="titulo">ORDEN COMPRA:</td>
+            <td class="td-in-well">{{ arOrdenCompra.codigoOrdenCompraPk }}</td>
+            <td class="titulo">USUARIO:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arOrdenCompra.usuario }}</td>
+            <td class="titulo">SUBTOTAL:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arOrdenCompra.vrSubtotal }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NUMERO:</td>
+            <td class="td-in-well">{{ arOrdenCompra.numero }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arOrdenCompra.fecha | date('Y-m-d') }}</td>
+            <td class="titulo">TOTAL:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arOrdenCompra.vrNeto }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">SOPORTE:</td>
+            <td class="td-in-well" colspan="5">{{ arOrdenCompra.soporte }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIO:</td>
+            <td class="td-in-well" colspan="5">{{ arOrdenCompra.comentarios }}</td>
+        </tr>
+    </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ITEM</th>
+                            <th>CANTIDAD</th>
+                            <th title="Valor unitario" style="width: 20%;">VALOR U</th>
+                            <th title="Porcentaje IVA" style="width: 20%;">%IVA</th>
+                            <th title="Valor IVA" style="width: 20%;">VALOR IVA</th>
+                            <th style="width: 20%;">TOTAL</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arOrdenCompraDetalle in arOrdenCompraDetalles %}
+                            <tr>
+                                <td>{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}</td>
+                                <td>{{ arOrdenCompraDetalle.itemRel.nombre | default('') }}</td>
+                                <td>{{ arOrdenCompraDetalle.cantidad }}</td>
+                                {% if arOrdenCompra.estadoAutorizado == false %}
+                                    <td style="text-align: center">
+                                        <input class="input-valor" type="number" placeholder="Valor unitario"
+                                               name="ArrValores[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]" value="{{ arOrdenCompraDetalle.valor }}"/>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <input class="input-valor" type="number" placeholder="Porcentaje IVA"
+                                               name="ArrIva[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]" value="{{ arOrdenCompraDetalle.porcentajeIva }}"/>
+                                    </td>
+                                {% else %}
+                                    <td style="text-align: right">
+                                        {{ arOrdenCompraDetalle.valor |number_format(0, '.', ',') }}
+                                    </td>
+                                    <td style="text-align: right">
+                                        {{ arOrdenCompraDetalle.porcentajeIva }}
+                                    </td>
+                                {% endif %}
+                                <td style="text-align: right">
+                                    {{ arOrdenCompraDetalle.vrIva | number_format(0, '.', ',')}}
+                                </td>
+                                <td style="text-align: right">
+                                    {{ arOrdenCompraDetalle.vrTotal | number_format(0, '.', ',') }}
+                                </td>
+                                <td><input type="checkbox" name="ChkSeleccionar[]"
+                                           value="{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}"/></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {#<div class="separador-1"></div>#}
+                <div class="btn-toolbar" style="float: right">
+                    {% if arOrdenCompra.estadoAutorizado == true %}
+                        <div class="btn-group">
+                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
+                                   value="Nuevo"/>
+                        </div>
+                        <div class="btn-group">
+                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
+                                   value="Nuevo desde solicitud"/>
+
+                        </div>
+                    {% else %}
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('inv_mov_inventario_ordenCompra_solicitud_detalle_nuevo', {'codigoDetalle': 0,'id':arOrdenCompra.codigoOrdenCompraPk }) }}', 'OrdenCompraNuevoDetalle', 600, 900)">Nuevo
+                                desde solicitud</a>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('inv_mov_inventario_ordenCompra_detalle_nuevo', {'codigoDetalle': 0,'id':arOrdenCompra.codigoOrdenCompraPk }) }}', 'OrdenCompraNuevoDetalle', 600, 900)">Nuevo</a>
+                        </div>
+                    {% endif %}
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminar) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+    <a class="btn btn-default btn-sm" href="{{ path('admin_lista',{'modulo':'inventario','entidad':'ordenCompra'}) }}">Volver</a>
+{% endblock %}

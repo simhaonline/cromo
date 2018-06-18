@@ -18,8 +18,6 @@ class InvOrdenCompraDetalle
     private $codigoOrdenCompraDetallePk;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="codigo_solicitud_detalle_fk", type="integer", nullable=true)
      */
     private $codigoSolicitudDetalleFk;
@@ -30,22 +28,16 @@ class InvOrdenCompraDetalle
     private $codigoOrdenCompraFk;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="codigo_item_fk", type="integer", nullable=true)
      */
     private $codigoItemFk;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="cantidad", type="integer", nullable=true)
      */
     private $cantidad = 0;
 
     /**
-     * @var float
-     *
      * @ORM\Column(name="valor", type="float", nullable=true)
      */
     private $valor = 0;
@@ -71,11 +63,21 @@ class InvOrdenCompraDetalle
     private $vrTotal = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="cantidad_pendiente", type="integer", nullable=true)
      */
     private $cantidadPendiente;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="itemOrdenCompraDetallesRel")
+     * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
+     */
+    protected $itemRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvOrdenCompra", inversedBy="ordenCompraOrdenCompraDetallesRel")
+     * @ORM\JoinColumn(name="codigo_orden_compra_fk", referencedColumnName="codigo_orden_compra_pk")
+     */
+    protected $ordenCompraRel;
 
     /**
      * @return mixed
@@ -94,17 +96,17 @@ class InvOrdenCompraDetalle
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getCodigoSolicitudDetalleFk(): int
+    public function getCodigoSolicitudDetalleFk()
     {
         return $this->codigoSolicitudDetalleFk;
     }
 
     /**
-     * @param int $codigoSolicitudDetalleFk
+     * @param mixed $codigoSolicitudDetalleFk
      */
-    public function setCodigoSolicitudDetalleFk(int $codigoSolicitudDetalleFk): void
+    public function setCodigoSolicitudDetalleFk($codigoSolicitudDetalleFk): void
     {
         $this->codigoSolicitudDetalleFk = $codigoSolicitudDetalleFk;
     }
@@ -126,49 +128,49 @@ class InvOrdenCompraDetalle
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getCodigoItemFk(): int
+    public function getCodigoItemFk()
     {
         return $this->codigoItemFk;
     }
 
     /**
-     * @param int $codigoItemFk
+     * @param mixed $codigoItemFk
      */
-    public function setCodigoItemFk(int $codigoItemFk): void
+    public function setCodigoItemFk($codigoItemFk): void
     {
         $this->codigoItemFk = $codigoItemFk;
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getCantidad(): int
+    public function getCantidad()
     {
         return $this->cantidad;
     }
 
     /**
-     * @param int $cantidad
+     * @param mixed $cantidad
      */
-    public function setCantidad(int $cantidad): void
+    public function setCantidad($cantidad): void
     {
         $this->cantidad = $cantidad;
     }
 
     /**
-     * @return float
+     * @return mixed
      */
-    public function getValor(): float
+    public function getValor()
     {
         return $this->valor;
     }
 
     /**
-     * @param float $valor
+     * @param mixed $valor
      */
-    public function setValor(float $valor): void
+    public function setValor($valor): void
     {
         $this->valor = $valor;
     }
@@ -238,21 +240,51 @@ class InvOrdenCompraDetalle
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getCantidadPendiente(): int
+    public function getCantidadPendiente()
     {
         return $this->cantidadPendiente;
     }
 
     /**
-     * @param int $cantidadPendiente
+     * @param mixed $cantidadPendiente
      */
-    public function setCantidadPendiente(int $cantidadPendiente): void
+    public function setCantidadPendiente($cantidadPendiente): void
     {
         $this->cantidadPendiente = $cantidadPendiente;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getItemRel()
+    {
+        return $this->itemRel;
+    }
 
+    /**
+     * @param mixed $itemRel
+     */
+    public function setItemRel($itemRel): void
+    {
+        $this->itemRel = $itemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrdenCompraRel()
+    {
+        return $this->ordenCompraRel;
+    }
+
+    /**
+     * @param mixed $ordenCompraRel
+     */
+    public function setOrdenCompraRel($ordenCompraRel): void
+    {
+        $this->ordenCompraRel = $ordenCompraRel;
+    }
 }
 

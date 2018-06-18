@@ -25,8 +25,8 @@ class TerceroType extends AbstractType
             ->add('telefono',TextType::class,['label' => 'Telefono'])
             ->add('celular',TextType::class,['label' => 'Celular'])
             ->add('email',TextType::class,['label' => 'Email:'])
-            ->add('guardar',SubmitType::class,['label' => 'Guardar'])
-            ->add('guardarnuevo',SubmitType::class,['label' => 'Guardar y nuevo'])
+            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('guardarnuevo',SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 

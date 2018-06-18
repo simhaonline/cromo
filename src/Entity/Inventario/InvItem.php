@@ -88,6 +88,11 @@ class InvItem
     private $cantidadOrdenCompra = 0;
 
     /**
+     * @ORM\Column(name="cantidad_solicitud", type="integer", nullable=true)
+     */
+    private $cantidadSolicitud = 0;
+
+    /**
      * @ORM\Column(name="codigo_unidad_medida_fk",  type="integer", nullable=true)
      */
     private $codigoUnidadMedidaFk;
@@ -119,7 +124,12 @@ class InvItem
     /**
      * @ORM\OneToMany(targetEntity="InvSolicitudDetalle", mappedBy="itemRel")
      */
-    private $itemsolicitudDetalleRel;
+    private $itemsolicitudDetallesRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="InvOrdenCompraDetalle", mappedBy="itemRel")
+     */
+    protected $itemOrdenCompraDetallesRel;
 
     /**
      * @return mixed
@@ -348,6 +358,22 @@ class InvItem
     /**
      * @return mixed
      */
+    public function getCantidadSolicitud()
+    {
+        return $this->cantidadSolicitud;
+    }
+
+    /**
+     * @param mixed $cantidadSolicitud
+     */
+    public function setCantidadSolicitud($cantidadSolicitud): void
+    {
+        $this->cantidadSolicitud = $cantidadSolicitud;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoUnidadMedidaFk()
     {
         return $this->codigoUnidadMedidaFk;
@@ -428,17 +454,33 @@ class InvItem
     /**
      * @return mixed
      */
-    public function getItemsolicitudDetalleRel()
+    public function getItemsolicitudDetallesRel()
     {
-        return $this->itemsolicitudDetalleRel;
+        return $this->itemsolicitudDetallesRel;
     }
 
     /**
-     * @param mixed $itemsolicitudDetalleRel
+     * @param mixed $itemsolicitudDetallesRel
      */
-    public function setItemsolicitudDetalleRel($itemsolicitudDetalleRel): void
+    public function setItemsolicitudDetallesRel($itemsolicitudDetallesRel): void
     {
-        $this->itemsolicitudDetalleRel = $itemsolicitudDetalleRel;
+        $this->itemsolicitudDetallesRel = $itemsolicitudDetallesRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemOrdenCompraDetallesRel()
+    {
+        return $this->itemOrdenCompraDetallesRel;
+    }
+
+    /**
+     * @param mixed $itemOrdenCompraDetallesRel
+     */
+    public function setItemOrdenCompraDetallesRel($itemOrdenCompraDetallesRel): void
+    {
+        $this->itemOrdenCompraDetallesRel = $itemOrdenCompraDetallesRel;
     }
 }
 

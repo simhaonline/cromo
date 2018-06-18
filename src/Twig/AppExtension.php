@@ -12,13 +12,12 @@ class AppExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new \Twig_Function('esBooleano', [$this, 'esBooleano']),
-            new \Twig_Function('esFecha', [$this, 'esFecha']),
             new \Twig_Function('validarTipo', [$this, 'validarTipo']),
             new \Twig_Function('validarTipoDetalle', [$this, 'validarTipoDetalle']),
             new \Twig_Function('separarPorGuionbajo', [$this, 'separarPorGuionbajo']),
             new \Twig_Function('validarSeleccionado', [$this, 'validarSeleccionado']),
             new \Twig_Function('esId', [$this, 'esId']),
+            new \Twig_Function('esEstado', [$this, 'esEstado']),
             new \Twig_Function('mod', [$this, 'mod']),
             new \Twig_Function('validarLongitudTexto', [$this, 'validarLongitudTexto']),
             new \Twig_Function('crearTitulo', [$this, 'crearTitulo']),
@@ -27,24 +26,10 @@ class AppExtension extends AbstractExtension
         ];
     }
 
-    public function esBooleano($dato)
-    {
-        if (is_bool($dato)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function esFecha($dato)
-    {
-        if ($dato instanceof \DateTime) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+    /**
+     * @author Andres Acevedo
+     * @param $dato
+     */
     public function validarTipo($dato)
     {
         if ($this->esFecha($dato)) {
@@ -62,6 +47,10 @@ class AppExtension extends AbstractExtension
         }
     }
 
+    /**
+     * @author Andres Acevedo
+     * @param $dato
+     */
     public function validarTipoDetalle($dato)
     {
         if ($this->esFecha($dato)) {
@@ -79,6 +68,11 @@ class AppExtension extends AbstractExtension
         }
     }
 
+    /**
+     * @author Andres Acevedo
+     * @param $dato
+     * @return string
+     */
     public function separarPorGuionbajo($dato)
     {
         $dato = preg_split('/(?=[A-Z])/', $dato);
@@ -86,6 +80,11 @@ class AppExtension extends AbstractExtension
         return strtoupper($dato);
     }
 
+    /**
+     * @author Andres Acevedo
+     * @param $dato
+     * @return string
+     */
     public function validarSeleccionado($dato)
     {
         if ($dato) {
@@ -95,6 +94,11 @@ class AppExtension extends AbstractExtension
         }
     }
 
+    /**
+     * @author Andres Acevedo
+     * @param $dato
+     * @return bool
+     */
     public function esId($dato)
     {
         if (preg_match('/Pk/', $dato)) {
@@ -103,6 +107,20 @@ class AppExtension extends AbstractExtension
             return false;
         }
 
+    }
+
+    public function esEstado($dato){
+        if(preg_match('/estado/',$dato)){
+            if(preg_match('/Anulado/',$dato)){
+                return true;
+            } elseif(preg_match('/Aprobado/',$dato)){
+                return true;
+            } elseif(preg_match('/Autorizado/',$dato)) {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 
     public function mod($dato, $numero)
@@ -158,5 +176,23 @@ class AppExtension extends AbstractExtension
     {
         $attrs = implode(" ", array_map(function($attr, $value){ return "{$attr}=\"{$value}\""; }, array_keys($attrs), $attrs));
         return "<{$tag}" . ($attrs? " {$attrs}" : "") . ">{$content}</{$tag}>";
+    }
+
+    private function esFecha($dato)
+    {
+        if ($dato instanceof \DateTime) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function esBooleano($dato)
+    {
+        if (is_bool($dato)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

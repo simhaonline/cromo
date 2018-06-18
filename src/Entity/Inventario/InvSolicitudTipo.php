@@ -23,9 +23,9 @@ class InvSolicitudTipo
     private $nombre;
 
     /**
-     * @ORM\Column(name="consecutivo", type="integer",nullable=true)
+     * @ORM\Column(name="consecutivo", type="integer",options={"default" : 0},nullable=true)
      */
-    private $consecutivo;
+    private $consecutivo = 0;
 
     /**
      * @ORM\OneToMany(targetEntity="InvSolicitud", mappedBy="solicitudTipoRel")

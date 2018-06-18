@@ -2,6 +2,7 @@
 
 namespace App\Repository\General;
 
+use App\Controller\Estructura\MensajesController;
 use App\Entity\General\GenEntidad;
 use App\Entity\Seguridad\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -158,28 +159,27 @@ class GenEntidadRepository extends ServiceEntityRepository
 
     /**
      * @author Andres Acevedo
-     * @param $arConfiguracionEntidad GenEntidad
+     * @param $arEntidad GenEntidad
      * @param $arrSeleccionados
-     * @return array
      */
-    public function eliminar($arConfiguracionEntidad, $arrSeleccionados)
+    public function eliminar($arEntidad, $arrSeleccionados)
     {
         $arrRespuestas = [];
         $respuesta = '';
-        $arrCampos = json_decode($arConfiguracionEntidad->getJsonLista());
+        $arrCampos = json_decode($arEntidad->getJsonLista());
         $getCodigoPk = "getC" . substr($arrCampos[0]->campo, 1);
         if (count($arrSeleccionados) > 0) {
             foreach ($arrSeleccionados as $codigo) {
-                $arRegistro = $this->_em->getRepository($arConfiguracionEntidad->getRutaRepositorio())->find($codigo);
+                $arRegistro = $this->_em->getRepository('App:' . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad()))->find($codigo);
                 if ($arRegistro) {
                     if (property_exists($arRegistro, 'estadoAutorizado')) {
                         if ($arRegistro->getEstadoAutorizado()) {
                             $respuesta = "No se puede eliminar, el registro con ID {$arRegistro->$getCodigoPk()} se encuentra autorizado.";
                         }
                     }
-                    if (property_exists($arRegistro, 'estadoImpreso')) {
-                        if ($arRegistro->getEstadoImpreso()) {
-                            $respuesta = "No se puede eliminar, el registro con ID {$arRegistro->$getCodigoPk()} se encuentra impreso.";
+                    if (property_exists($arRegistro, 'estadoAprobado')) {
+                        if ($arRegistro->getEstadoAprobado()) {
+                            $respuesta = "No se puede eliminar, el registro con ID {$arRegistro->$getCodigoPk()} se encuentra aprobado.";
                         }
                     }
                     if (property_exists($arRegistro, 'estadoAnulado')) {
@@ -194,8 +194,11 @@ class GenEntidadRepository extends ServiceEntityRepository
                 }
             }
         }
-
-        return $arrRespuestas;
+        if(count($arrRespuestas) > 0){
+            foreach ($arrRespuestas as $arrRespuesta){
+                MensajesController::error($arrRespuesta);
+            }
+        }
     }
 
 

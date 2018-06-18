@@ -28,8 +28,8 @@ class ItemType extends AbstractType
             ->add('stockMinimo', IntegerType::class, ['required' => false])
             ->add('stockMaximo', IntegerType::class, ['required' => false])
             ->add('vrPrecioPredeterminado', IntegerType::class, ['required' => false])
-            ->add('guardar', SubmitType::class, ['label' => 'Guardar'])
-            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo']);
+            ->add('guardar', SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('guardarnuevo', SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     /**

@@ -18,12 +18,14 @@ class InvSolicitudRepository extends ServiceEntityRepository
 
     public function camposPredeterminados()
     {
-        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvSolicitud', 's');
         $qb->select('s.codigoSolicitudPk AS ID')
             ->addSelect('s.numero AS NUMERO')
             ->addSelect('st.nombre AS TIPO')
             ->addSelect('s.fecha AS FECHA')
-            ->from('App:Inventario\InvSolicitud', 's')
+            ->addSelect('s.estadoAutorizado AS AUTORIZADO')
+            ->addSelect('s.estadoAprobado AS APROBADO')
+            ->addSelect('s.estadoAnulado AS ANULADO')
             ->join('s.solicitudTipoRel','st')
             ->where('s.codigoSolicitudPk <> 0')
             ->orderBy('s.codigoSolicitudPk', 'DESC');
@@ -44,7 +46,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
             foreach ($arrSeleccionados as $codigoSolicitud) {
                 $arSolicitud = $this->_em->getRepository($this->_entityName)->find($codigoSolicitud);
                 if ($arSolicitud) {
-                    if ($arSolicitud->getEstadoImpreso() == 0) {
+                    if ($arSolicitud->getEstadoAprobado() == 0) {
                         if ($arSolicitud->getEstadoAutorizado() == 0) {
                             if (count($this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()])) <= 0) {
                                     $this->_em->remove($arSolicitud);
@@ -66,16 +68,23 @@ class InvSolicitudRepository extends ServiceEntityRepository
     /**
      * @param $arSolicitud InvSolicitud
      */
-    public function imprimir($arSolicitud)
+    public function aprobar($arSolicitud)
     {
         $arSolicitudTipo = $this->_em->getRepository('App:Inventario\InvSolicitudTipo')->findOneBy(['codigoSolicitudTipoPk' => $arSolicitud->getCodigoSolicitudTipoFk()]);
-        if(!$arSolicitud->getEstadoImpreso()){
+        if(!$arSolicitud->getEstadoAprobado()){
             $arSolicitudTipo->setConsecutivo($arSolicitudTipo->getConsecutivo()+1);
-            $arSolicitud->setEstadoImpreso(1);
+            $arSolicitud->setEstadoAprobado(1);
+            $arSolicitud->setNumero($arSolicitudTipo->getConsecutivo());
             $this->_em->persist($arSolicitudTipo);
             $this->_em->persist($arSolicitud);
-            $this->_em->flush();
         }
+        $arSolicitudDetalles = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
+        foreach ($arSolicitudDetalles as $arSolicitudDetalle){
+            $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arSolicitudDetalle->getCodigoItemFk()]);
+            $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() + $arSolicitudDetalle->getCantidadSolicitada());
+            $this->_em->persist($arItem);
+        }
+        $this->_em->flush();
     }
 
     /**
@@ -83,11 +92,17 @@ class InvSolicitudRepository extends ServiceEntityRepository
      */
     public function anular($arSolicitud)
     {
-        if ($arSolicitud->getEstadoImpreso() == 1) {
+        if ($arSolicitud->getEstadoAprobado() == 1) {
             $arSolicitud->setEstadoAnulado(1);
             $this->_em->persist($arSolicitud);
-            $this->_em->flush();
         }
+        $arSolicitudDetalles = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
+        foreach ($arSolicitudDetalles as $arSolicitudDetalle){
+            $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arSolicitudDetalle->getCodigoItemFk()]);
+            $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() - $arSolicitudDetalle->getCantidadSolicitada());
+            $this->_em->persist($arItem);
+        }
+        $this->_em->flush();
     }
 
     /**
@@ -95,7 +110,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
      */
     public function desautorizar($arSolicitud)
     {
-        if ($arSolicitud->getEstadoAutorizado() == 1 && $arSolicitud->getEstadoImpreso() == 0) {
+        if ($arSolicitud->getEstadoAutorizado() == 1 && $arSolicitud->getEstadoAprobado() == 0) {
             $arSolicitud->setEstadoAutorizado(0);
             $this->_em->persist($arSolicitud);
             $this->_em->flush();

@@ -1,0 +1,55 @@
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class='page-header'>
+                Inventario movimiento
+                <small style="font-size: 20px">Inventario: movimiento lista</small>
+            </h3>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>NUMERO</th>
+                <th>TERCERO</th>
+                <th>FECHA</th>
+                <th>VR_SUBTOTAL</th>
+                <th>VR_IVA</th>
+                <th>VR_DESCUENTO</th>
+                <th>VR_NETO</th>
+                <th>VR_TOTAL</th>
+                <th>AUTORIZADO</th>
+                <th>APROBADO</th>
+                <th>ANULADO</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arMovimiento in arMovimientos %}
+                <tr>
+                    <td>{{ arMovimiento.codigoMovimientoPk }}</td>
+                    <td>{{ arMovimiento.numero | default('') }}</td>
+                    <td>{{ arMovimiento.terceroRel.nombreCorto }}</td>
+                    {{ validarTipo(arMovimiento.fecha) }}
+                    <td>{{ arMovimiento.vrSubtotal }}</td>
+                    <td>{{ arMovimiento.vrIva }}</td>
+                    <td>{{ arMovimiento.vrDescuento }}</td>
+                    <td>{{ arMovimiento.vrNeto }}</td>
+                    <td>{{ arMovimiento.vrTotal }}</td>
+                    {{ validarTipo(arMovimiento.estadoAutorizado) }}
+                    {{ validarTipo(arMovimiento.estadoAprobado) }}
+                    {{ validarTipo(arMovimiento.estadoAnulado) }}
+                    <td></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-group" style="float: right;">
+        <a class="btn btn-sm btn-default" href="{{ path('inv_mov_inventario_movimiento_nuevo',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+    </div>
+{% endblock %}

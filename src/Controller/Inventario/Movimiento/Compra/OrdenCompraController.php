@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Controller\Inventario\Movimiento;
+namespace App\Controller\Inventario\Movimiento\Compra;
 
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvOrdenCompra;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
 use App\Formato\Inventario\OrdenCompra;
-use App\Formato\Inventario\Solicitud;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

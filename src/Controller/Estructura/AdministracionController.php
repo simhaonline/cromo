@@ -98,7 +98,7 @@ final class AdministracionController extends Controller
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
             $writer->save('php://output');
         } else {
-            $this->Mensaje('error', 'El listado esta vacío, no hay nada que exportar');
+            MensajesController::error('El listado esta vacío, no hay nada que exportar');
         }
     }
 
@@ -139,74 +139,6 @@ final class AdministracionController extends Controller
         fclose($f);
         exit();
     }
-
-//    /**
-//     * @author Andres Acevedo Cartagena
-//     * @param Request $request
-//     * @param $entidad
-//     * @param $entidadCubo
-//     * @return \Symfony\Component\HttpFoundation\Response
-//     * @throws \PhpOffice\PhpSpreadsheet\Exception
-//     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-//     * @Route("lista/{entidad}/{entidadCubo}",name="lista")
-//     */
-//    public function generarLista(Request $request, $entidad, $entidadCubo = "")
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//        $paginator = $this->get('knp_paginator');
-//        $arConfiguracionEntidad = $em->getRepository('App:General\GenEntidad')->find($entidad);
-//        $jsonFiltro = $arConfiguracionEntidad->getJsonFiltro();
-//        $arrCamposFiltro = json_decode($jsonFiltro);
-//        $arrNombreCamposFiltro = [];
-//        foreach ($arrCamposFiltro as $arrCampo) {
-//            if ($arrCampo->mostrar) {
-//                $arrNombreCamposFiltro[] = $arrCampo->campo;
-//            }
-//        }
-//        $arrFiltrar = $this->formularioFiltro($jsonFiltro);
-//        if ($arrFiltrar['filtrar']) {
-//            $formFiltro = $arrFiltrar['form'];
-//            $formFiltro->handleRequest($request);
-//        } else {
-//            $formFiltro = '';
-//        }
-//        $form = $this->formularioLista();
-//        $form->handleRequest($request);
-//        $arRegistros = $em->getRepository('App:General\GenEntidad')->lista($arConfiguracionEntidad, 0, $entidadCubo);
-//        if ($request->getMethod() == 'POST') {
-//            if ($request->request->has('form')) {
-//                if ($form->isSubmitted() && $form->isValid()) {
-//                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                    if ($form->get('btnExcel')->isClicked()) {
-//                        $arRegistrosExcel = $em->getRepository('App:General\GenEntidad')->lista($arConfiguracionEntidad, 1, $entidadCubo);
-//                        $this->generarExcel($arRegistrosExcel, 'Excel');
-//                    }
-//                    if ($form->get('btnEliminar')->isClicked()) {
-//                        $respuesta = $em->getRepository('App:General\GenEntidad')->eliminar($arConfiguracionEntidad, $arrSeleccionados);
-//                        $this->validarRespuesta($respuesta, $em);
-//                        return $this->redirectToRoute("lista", ['entidad' => $entidad, 'entidadCubo' => $entidadCubo]);
-//                    }
-//                }
-//            }
-//            if ($request->request->has('formFiltro')) {
-//                if ($formFiltro instanceof Form) {
-//                    if ($formFiltro->get('btnFiltrar')->isClicked()) {
-//                        $arrFiltros = $formFiltro->getData();
-//                        $arRegistros = $em->getRepository('App:General\GenEntidad')->listaFiltro($arConfiguracionEntidad, $arrFiltros);
-//                    }
-//                }
-//            }
-//        }
-//        $arRegistros = $paginator->paginate($arRegistros, $request->query->getInt('page', 1), 10);
-//        return $this->render('estructura/lista.html.twig', [
-//            'arRegistros' => $arRegistros,
-//            'entidadCubo' => $entidadCubo,
-//            'arConfiguracionEntidad' => $arConfiguracionEntidad,
-//            'form' => $form->createView(),
-//            'formFiltro' => $formFiltro instanceof Form ? $formFiltro->createView() : '',
-//            'filtrar' => $arrFiltrar['filtrar']
-//        ]);
-//    }
 
     /**
      * @author Andres Acevedo Cartagena

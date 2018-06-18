@@ -168,7 +168,7 @@ class GenEntidadRepository extends ServiceEntityRepository
         $respuesta = '';
         $arrCampos = json_decode($arEntidad->getJsonLista());
         $getCodigoPk = "getC" . substr($arrCampos[0]->campo, 1);
-        if (count($arrSeleccionados) > 0) {
+        if (is_array($arrSeleccionados) && count($arrSeleccionados) > 0) {
             foreach ($arrSeleccionados as $codigo) {
                 $arRegistro = $this->_em->getRepository('App:' . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad()))->find($codigo);
                 if ($arRegistro) {

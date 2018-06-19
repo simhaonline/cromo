@@ -144,7 +144,7 @@ class Solicitud extends \FPDF
         foreach ($arSolicitudDetalles as $arSolicitudDetalle) {
             $pdf->Cell(15, 4, $arSolicitudDetalle->getCodigoSolicitudDetallePk(), 1, 0, 'L');
             $pdf->Cell(160, 4, utf8_decode($arSolicitudDetalle->getItemRel()->getNombre()), 1, 0, 'L');
-            $pdf->Cell(15, 4, $arSolicitudDetalle->getCantidad(), 1, 0, 'C');
+            $pdf->Cell(15, 4, $arSolicitudDetalle->getCantidadSolicitada(), 1, 0, 'C');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

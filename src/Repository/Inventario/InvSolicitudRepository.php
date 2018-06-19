@@ -24,6 +24,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
             ->addSelect('st.nombre AS TIPO')
             ->addSelect('s.fecha AS FECHA')
             ->addSelect('s.estadoAutorizado AS AUTORIZADO')
+            ->addSelect('s.estadoAprobado AS APROBADO')
             ->addSelect('s.estadoAnulado AS ANULADO')
             ->join('s.solicitudTipoRel','st')
             ->where('s.codigoSolicitudPk <> 0')
@@ -76,8 +77,14 @@ class InvSolicitudRepository extends ServiceEntityRepository
             $arSolicitud->setNumero($arSolicitudTipo->getConsecutivo());
             $this->_em->persist($arSolicitudTipo);
             $this->_em->persist($arSolicitud);
-            $this->_em->flush();
         }
+        $arSolicitudDetalles = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
+        foreach ($arSolicitudDetalles as $arSolicitudDetalle){
+            $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arSolicitudDetalle->getCodigoItemFk()]);
+            $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() + $arSolicitudDetalle->getCantidadSolicitada());
+            $this->_em->persist($arItem);
+        }
+        $this->_em->flush();
     }
 
     /**
@@ -88,8 +95,14 @@ class InvSolicitudRepository extends ServiceEntityRepository
         if ($arSolicitud->getEstadoAprobado() == 1) {
             $arSolicitud->setEstadoAnulado(1);
             $this->_em->persist($arSolicitud);
-            $this->_em->flush();
         }
+        $arSolicitudDetalles = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
+        foreach ($arSolicitudDetalles as $arSolicitudDetalle){
+            $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arSolicitudDetalle->getCodigoItemFk()]);
+            $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() - $arSolicitudDetalle->getCantidadSolicitada());
+            $this->_em->persist($arItem);
+        }
+        $this->_em->flush();
     }
 
     /**

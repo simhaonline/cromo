@@ -81,6 +81,18 @@
                         <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
+                                <a href="#">Empleado <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'empleado'}) }}">Empleado</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Contrato <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'solicitudMotivo'}) }}">Contrato</a></li>
+                                </ul>
+                            </li>
+                            <li>
                                 <a href="#">Seleccion <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li><a href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'solicitudMotivo'}) }}">Solicitud motivo</a></li>

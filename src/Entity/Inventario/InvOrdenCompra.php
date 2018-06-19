@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Entity\Inventario;
 
 use Doctrine\ORM\Mapping as ORM;

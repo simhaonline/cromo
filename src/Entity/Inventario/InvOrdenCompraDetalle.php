@@ -13,7 +13,7 @@ class InvOrdenCompraDetalle
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="codigo_orden_compra_detalle_pk",type="integer")
      */
     private $codigoOrdenCompraDetallePk;
 
@@ -78,6 +78,11 @@ class InvOrdenCompraDetalle
      * @ORM\JoinColumn(name="codigo_orden_compra_fk", referencedColumnName="codigo_orden_compra_pk")
      */
     protected $ordenCompraRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="ordenCompraDetalleRel")
+     */
+    protected $ordenCompraDetallesMovimientoDetallesRel;
 
     /**
      * @return mixed
@@ -285,6 +290,22 @@ class InvOrdenCompraDetalle
     public function setOrdenCompraRel($ordenCompraRel): void
     {
         $this->ordenCompraRel = $ordenCompraRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrdenCompraDetallesMovimientoDetallesRel()
+    {
+        return $this->ordenCompraDetallesMovimientoDetallesRel;
+    }
+
+    /**
+     * @param mixed $ordenCompraDetallesMovimientoDetallesRel
+     */
+    public function setOrdenCompraDetallesMovimientoDetallesRel($ordenCompraDetallesMovimientoDetallesRel): void
+    {
+        $this->ordenCompraDetallesMovimientoDetallesRel = $ordenCompraDetallesMovimientoDetallesRel;
     }
 }
 

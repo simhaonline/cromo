@@ -24,7 +24,8 @@ class GenConfiguracionEntidad extends Fixture
             'ordenCompraTipo,admin,general,0,0',
             'documentoTipo,admin,general,0,0',
             'tercero,admin,general,0,0',
-            'ordenCompra,movimiento,inventario,0,1'];
+            'ordenCompra,movimiento,inventario,0,1',
+            'movimiento,movimiento,inventario,0,1'];
         $this->setConfiguracionEntidades($arrModuloInventario, $em, 'inventario');
         /////////////////              FIN ESTRACTURA MODULO DE INVENTARIO                             ////////////////
 //
@@ -42,7 +43,8 @@ class GenConfiguracionEntidad extends Fixture
             'clasificacionRiesgo,admin,seguridadSocial,0,0',
             'grupoPago,admin,nomina,0,0',
             'cargo,admin,contratacion,0,0',
-            'seleccionTipo,admin,seleccion,0,0'];
+            'seleccionTipo,admin,seleccion,0,0',
+            'empleado,admin,empleado,0,0',];
         $this->setConfiguracionEntidades($arrModuloRecursoHumano, $em, 'recursoHumano');
         /////////////////                 FIN ESTRACTURA MODULO DE RECURSO HUMANO
 //

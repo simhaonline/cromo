@@ -32,13 +32,16 @@
             <td class="td-in-well">{{ arOrdenCompra.codigoOrdenCompraPk }}</td>
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arOrdenCompra.usuario }}</td>
-
+            <td class="titulo">SUBTOTAL:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arOrdenCompra.vrSubtotal }}</td>
         </tr>
         <tr>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arOrdenCompra.numero }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arOrdenCompra.fecha | date('Y-m-d') }}</td>
+            <td class="titulo">TOTAL:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arOrdenCompra.vrNeto }}</td>
         </tr>
         <tr>
             <td class="titulo">SOPORTE:</td>
@@ -63,6 +66,9 @@
                             <th>ITEM</th>
                             <th>CANTIDAD</th>
                             <th title="Valor unitario" style="width: 20%;">VALOR U</th>
+                            <th title="Porcentaje IVA" style="width: 20%;">%IVA</th>
+                            <th title="Valor IVA" style="width: 20%;">VALOR IVA</th>
+                            <th style="width: 20%;">TOTAL</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -75,14 +81,26 @@
                                 {% if arOrdenCompra.estadoAutorizado == false %}
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="Valor unitario"
-                                               name="ArrValores[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]"/>
+                                               name="ArrValores[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]" value="{{ arOrdenCompraDetalle.valor }}"/>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <input class="input-valor" type="number" placeholder="Porcentaje IVA"
+                                               name="ArrIva[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]" value="{{ arOrdenCompraDetalle.porcentajeIva }}"/>
                                     </td>
                                 {% else %}
                                     <td style="text-align: right">
-                                        {{ arOrdenCompraDetalle.valor }}
+                                        {{ arOrdenCompraDetalle.valor |number_format(0, '.', ',') }}
+                                    </td>
+                                    <td style="text-align: right">
+                                        {{ arOrdenCompraDetalle.porcentajeIva }}
                                     </td>
                                 {% endif %}
-
+                                <td style="text-align: right">
+                                    {{ arOrdenCompraDetalle.vrIva | number_format(0, '.', ',')}}
+                                </td>
+                                <td style="text-align: right">
+                                    {{ arOrdenCompraDetalle.vrTotal | number_format(0, '.', ',') }}
+                                </td>
                                 <td><input type="checkbox" name="ChkSeleccionar[]"
                                            value="{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}"/></td>
                             </tr>

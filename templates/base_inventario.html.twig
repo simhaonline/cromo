@@ -91,9 +91,9 @@
                             <li>
                                 <a href="#">Inventario <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li><a href="#">Entrada</a></li>
-                                    <li><a href="#">Salida</a></li>
-                                    <li><a href="#">Factura</a></li>
+                                    <li><a href="{{ path('inv_mov_inventario_movimiento_documentos_lista',{'tipo':1}) }}">Entrada</a></li>
+                                    <li><a href="{{ path('inv_mov_inventario_movimiento_documentos_lista',{'tipo':2}) }}">Salida</a></li>
+                                    <li><a href="{{ path('inv_mov_inventario_movimiento_documentos_lista',{'tipo':3}) }}">Factura</a></li>
                                 </ul>
                             </li>
                             <li>
@@ -134,10 +134,6 @@
                                     <li>
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad':'documento'}) }}">
                                             Documento</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad':'documentoTipo'}) }}">
-                                            Documento tipo</a>
                                     </li>
                                     <li>
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad':'ordenCompraTipo'}) }}">

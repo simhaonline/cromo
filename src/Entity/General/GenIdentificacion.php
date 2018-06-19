@@ -47,6 +47,11 @@ class GenIdentificacion
     protected $rhuSeleccionIdentificacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="genIdentificacionRel")
+     */
+    protected $rhuEmpleadoIdentificacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoIdentificacionPk()

@@ -23,11 +23,6 @@ class InvSolicitudDetalle
     private $codigoSolicitudFk;
 
     /**
-     * @ORM\Column(name="codigo_orden_compra_detalle_fk", type="integer", nullable=true)
-     */
-    private $codigoOrdenCompraDetalleFk;
-
-    /**
      * @ORM\Column(name="codigo_item_fk", type="integer")
      */
     private $codigoItemFk;
@@ -84,22 +79,6 @@ class InvSolicitudDetalle
     public function setCodigoSolicitudFk($codigoSolicitudFk): void
     {
         $this->codigoSolicitudFk = $codigoSolicitudFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoOrdenCompraDetalleFk()
-    {
-        return $this->codigoOrdenCompraDetalleFk;
-    }
-
-    /**
-     * @param mixed $codigoOrdenCompraDetalleFk
-     */
-    public function setCodigoOrdenCompraDetalleFk($codigoOrdenCompraDetalleFk): void
-    {
-        $this->codigoOrdenCompraDetalleFk = $codigoOrdenCompraDetalleFk;
     }
 
     /**

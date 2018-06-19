@@ -1,75 +1,116 @@
 <?php
 
-namespace App\Controller\Inventario\Movimiento;
+namespace App\Controller\Inventario\Movimiento\Compra;
 
-use App\Entity\Inventario\InvOrdenCompra;
-use App\Entity\Inventario\InvOrdenCompraDetalle;
-use App\Formato\Inventario\OrdenCompra;
+use App\Entity\Inventario\InvSolicitud;
+use App\Entity\Inventario\InvSolicitudDetalle;
+use App\Estructura\AdministracionController;
 use App\Formato\Inventario\Solicitud;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
+use http\Env\Response;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Form\Type\Inventario\SolicitudType;
 
-class OrdenCompraController extends Controller
+class SolicitudController extends Controller
 {
     var $query = '';
 
     /**
-     * @Route("/inv/mov/inventario/ordencompra/detalle/{id}", name="inv_mov_inventario_ordenCompra_detalle")
+     * @Route("/inv/mov/inventario/solicitud/nuevo/{id}", name="inv_mov_inventario_solicitud_nuevo")
      */
-    public function detalle(Request $request, $id)
+    public function nuevo(Request $request, $id)
     {
-        $objFormatoOrdenCompra = new OrdenCompra();
         $em = $this->getDoctrine()->getManager();
-        $arOrdenCompra = $em->getRepository('App:Inventario\InvOrdenCompra')->find($id);
-        $arOrdenCompraDetalles = $em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(['codigoOrdenCompraFk' => $id]);
-        $form = $this->formularioDetalles($arOrdenCompra);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvOrdenCompra')->autorizar($arOrdenCompra);
-                return $this->redirect($this->generateUrl('inv_mov_inventario_ordenCompra_detalle', ['id' => $id]));
-            }
-            if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvOrdenCompra')->desautorizar($arOrdenCompra);
-                return $this->redirect($this->generateUrl('inv_mov_inventario_ordenCompra_detalle', ['id' => $id]));
-            }
-            if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvOrdenCompra')->aprobar($arOrdenCompra);
-                return $this->redirect($this->generateUrl('inv_mov_inventario_ordenCompra_detalle', ['id' => $id]));
-            }
-            if ($form->get('btnImprimir')->isClicked()) {
-                $objFormatoOrdenCompra->Generar($em, $id);
-            }
-            if ($form->get('btnAnular')->isClicked()) {
-                $em->getRepository('App:Inventario\InvOrdenCompra')->anular($arOrdenCompra);
-                return $this->redirect($this->generateUrl('inv_mov_inventario_ordenCompra_detalle', ['id' => $id]));
-            }
-            if ($form->get('btnEliminar')->isClicked()) {
-                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository('App:Inventario\InvOrdenCompraDetalle')->eliminar($arOrdenCompra, $arrDetallesSeleccionados);
-                return $this->redirect($this->generateUrl('inv_mov_inventario_ordenCompra_detalle', ['id' => $id]));
+        $arSolicitud = new InvSolicitud();
+        if ($id != 0) {
+            $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
+            if (!$arSolicitud) {
+                return $this->redirect($this->generateUrl('admin_lista',['modulo' =>'inventario','entidad' => 'solicitud']));
             }
         }
-        return $this->render('inventario/movimiento/ordenCompra/detalle.html.twig', [
-            'form' => $form->createView(),
-            'arOrdenCompraDetalles' => $arOrdenCompraDetalles,
-            'arOrdenCompra' => $arOrdenCompra
+        $arSolicitud->setFecha(new \DateTime('now'));
+        $arSolicitud->setUsuario($this->getUser()->getUserName());
+        $form = $this->createForm(SolicitudType::class, $arSolicitud);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arSolicitud->setFecha(new \DateTime('now'));
+                $em->persist($arSolicitud);
+                $em->flush($arSolicitud);
+                return $this->redirect($this->generateUrl('listado', ['entidad' => 'InvSolicitud']));
+            }
+            if ($form->get('guardarnuevo')->isClicked()) {
+                $em->persist($arSolicitud);
+                $em->flush($arSolicitud);
+                return $this->redirect($this->generateUrl('inv_mto_solicitud_nuevo', ['codigoSolicitud' => 0]));
+            }
+        }
+        return $this->render('inventario/movimiento/solicitud/nuevo.html.twig', [
+            'form' => $form->createView(), 'arSolicitud' => $arSolicitud
         ]);
     }
 
     /**
-     * @Route("/inv/mov/inventario/ordencompra/detalle/nuevo/{id}", name="inv_mov_inventario_ordenCompra_detalle_nuevo")
+     * @Route("/inv/mov/inventario/solicitud/detalle/{id}", name="inv_mov_inventario_solicitud_detalle")
+     */
+    public function detalle(Request $request, $id)
+    {
+        $objFormatoSolicitud = new Solicitud();
+        $em = $this->getDoctrine()->getManager();
+        $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
+        $arSolicitudDetalles = $em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $id]);
+        $form = $this->formularioDetalles($arSolicitud);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository('App:Inventario\InvSolicitud')->autorizar($arSolicitud);
+                return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository('App:Inventario\InvSolicitud')->desautorizar($arSolicitud);
+                return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $objFormatoSolicitud->Generar($em, $id);
+            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository('App:Inventario\InvSolicitud')->aprobar($arSolicitud);
+                return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnAnular')->isClicked()) {
+                $em->getRepository('App:Inventario\InvSolicitud')->anular($arSolicitud);
+                return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository('App:Inventario\InvSolicitudDetalle')->eliminar($arSolicitud, $arrDetallesSeleccionados);
+                return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
+            }
+        }
+        return $this->render('inventario/movimiento/solicitud/detalle.html.twig', [
+            'form' => $form->createView(),
+            'arSolicitudDetalles' => $arSolicitudDetalles,
+            'arSolicitud' => $arSolicitud
+        ]);
+    }
+
+    /**
+     * @Route("/inv/mov/inventario/solicitud/detalle/nuevo/{id}", name="inv_mov_inventario_solicitud_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $arOrdenCompra = $em->getRepository('App:Inventario\InvOrdenCompra')->find($id);
+        $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
         $form = $this->formularioFiltroItems();
         $form->handleRequest($request);
         $this->listaItems($em, $form);
@@ -83,11 +124,12 @@ class OrdenCompraController extends Controller
                     foreach ($arrItems as $codigoItem => $cantidad) {
                         if ($cantidad != '' && $cantidad != 0) {
                             $arItem = $em->getRepository('App:Inventario\InvItem')->find($codigoItem);
-                            $arOrdenCompraDetalle = new InvOrdenCompraDetalle();
-                            $arOrdenCompraDetalle->setOrdenCompraRel($arOrdenCompra);
-                            $arOrdenCompraDetalle->setItemRel($arItem);
-                            $arOrdenCompraDetalle->setCantidad($cantidad);
-                            $em->persist($arOrdenCompraDetalle);
+                            $arSolicitudDetalle = new InvSolicitudDetalle();
+                            $arSolicitudDetalle->setSolicitudRel($arSolicitud);
+                            $arSolicitudDetalle->setItemRel($arItem);
+                            $arSolicitudDetalle->setCantidadSolicitada($cantidad);
+                            $arSolicitudDetalle->setCantidadRestante($cantidad);
+                            $em->persist($arSolicitudDetalle);
                         }
                     }
                     $em->flush();
@@ -96,34 +138,17 @@ class OrdenCompraController extends Controller
             }
         }
         $arItems = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
-        return $this->render('inventario/movimiento/ordenCompra/detalleNuevo.html.twig', [
+        return $this->render('inventario/movimiento/solicitud/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems
         ]);
     }
 
     /**
-     * @Route("/inv/mov/inventario/ordencompra/solicitud/detalle/nuevo/{id}", name="inv_mov_inventario_ordenCompra_solicitud_detalle_nuevo")
-     */
-    public function detalleNuevoSolicitud(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
-        $form = $this->formularioFiltroDetalleSolicitud();
-        $form->handleRequest($request);
-        $this->listaDetallesSolicitud($em, $form);
-        $arSolicitudesDetalles = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
-        return $this->render('inventario/movimiento/ordenCompra/detalleNuevoSolicitud.html.twig', [
-            'form' => $form->createView(),
-            'arSolicitudesDetalles' => $arSolicitudesDetalles
-        ]);
-    }
-
-    /**
-     * @param $arOrdenCompra InvOrdenCompra
+     * @param $arSolicitud InvSolicitud
      * @return \Symfony\Component\Form\FormInterface
      */
-    private function formularioDetalles($arOrdenCompra)
+    private function formularioDetalles($arSolicitud)
     {
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobar = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
@@ -131,21 +156,21 @@ class OrdenCompraController extends Controller
         $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-        if ($arOrdenCompra->getEstadoAnulado()) {
+        if ($arSolicitud->getEstadoAnulado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnImprimir['disabled'] = true;
             $arrBtnAnular['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = true;
-        } elseif ($arOrdenCompra->getEstadoAprobado()) {
+        } elseif ($arSolicitud->getEstadoAprobado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnImprimir['disabled'] = false;
             $arrBtnAnular['disabled'] = false;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = true;
-        } elseif ($arOrdenCompra->getEstadoAutorizado()) {
+        } elseif ($arSolicitud->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
             $arrBtnImprimir['disabled'] = false;
@@ -181,17 +206,6 @@ class OrdenCompraController extends Controller
             ->getForm();
     }
 
-    private function formularioFiltroDetalleSolicitud()
-    {
-        return $this->createFormBuilder()
-            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
-            ->add('txtCodigoSolicitud', TextType::class, ['label' => 'Codigo solicitud: ', 'required' => false])
-            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->getForm();
-    }
-
     /**
      * @param $em ObjectManager
      * @param $form \Symfony\Component\Form\FormInterface
@@ -202,20 +216,5 @@ class OrdenCompraController extends Controller
         $session->set('filtroCodigoItem', $form->get('txtCodigoItem')->getData());
         $session->set('filtroNombreItem', $form->get('txtNombreItem')->getData());
         $this->query = $em->getRepository('App:Inventario\InvItem')->listarItems($session->get('filtroNombreItem'), $session->get('filtroCodigoItem'));
-    }
-
-    /**
-     * @param $em ObjectManager
-     * @param $form
-     */
-    private function listaDetallesSolicitud($em, $form){
-        $session = new Session();
-        $session->set('filtroCodigoItem', $form->get('txtCodigoItem')->getData());
-        $session->set('filtroNombreItem', $form->get('txtNombreItem')->getData());
-        $session->set('filtroCodigoSolicitud', $form->get('txtCodigoSolicitud')->getData());
-        $this->query = $em->getRepository('App:Inventario\InvSolicitudDetalle')->listarDetallesPendientes(
-            $session->get('filtroNombreItem'),
-            $session->get('filtroCodigoItem'),
-            $session->get('filtroCodigoSolicitud'));
     }
 }

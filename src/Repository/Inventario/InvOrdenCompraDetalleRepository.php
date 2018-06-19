@@ -15,8 +15,9 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, InvOrdenCompraDetalle::class);
     }
 
-    public function camposPredeterminados(){
-        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvOrdenCompra','ioc');
+    public function camposPredeterminados()
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvOrdenCompra', 'ioc');
         $qb
             ->select('ioc.codigoOrdenCompraPk as ID')
             ->addSelect('ioc.numero as NUMERO')
@@ -40,12 +41,19 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
                 foreach ($arrDetallesSeleccionados as $codigoOrdenCompraDetalle) {
                     $arOrdenCompraDetalle = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->find($codigoOrdenCompraDetalle);
                     if ($arOrdenCompraDetalle) {
+                        if ($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk() != '') {
+                            $arSolicitudDetalle = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->find($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk());
+                            if ($arSolicitudDetalle) {
+                                $arSolicitudDetalle->setCantidadRestante($arSolicitudDetalle->getCantidadRestante() + $arOrdenCompraDetalle->getCantidad());
+                                $this->_em->persist($arSolicitudDetalle);
+                            }
+                        }
                         $this->_em->remove($arOrdenCompraDetalle);
                     }
                 }
-                try{
+                try {
                     $this->_em->flush();
-                } catch (\Exception $e){
+                } catch (\Exception $e) {
                     MensajesController::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
                 }
             }

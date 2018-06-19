@@ -15,9 +15,8 @@ class FacturaTipoType extends AbstractType
         $builder
             ->add('nombre')
             ->add('consecutivo')
-            ->add('guardar',SubmitType::class)
-            ->add('guardarnuevo', SubmitType::class)
-        ;
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

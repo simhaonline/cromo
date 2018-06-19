@@ -14,8 +14,9 @@ class InvOrdenCompraRepository extends ServiceEntityRepository
         parent::__construct($registry, InvOrdenCompra::class);
     }
 
-    public function camposPredeterminados(){
-        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvOrdenCompra','ioc');
+    public function camposPredeterminados()
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvOrdenCompra', 'ioc');
         $qb
             ->select('ioc.codigoOrdenCompraPk as ID')
             ->addSelect('ioc.numero as NUMERO')
@@ -34,12 +35,23 @@ class InvOrdenCompraRepository extends ServiceEntityRepository
     public function aprobar($arOrdenCompra)
     {
         $arOrdenCompraTipo = $this->_em->getRepository('App:Inventario\InvOrdenCompraTipo')->find($arOrdenCompra->getCodigoOrdenCompraTipoFk());
-        if(!$arOrdenCompra->getEstadoAprobado()){
-            $arOrdenCompraTipo->setConsecutivo($arOrdenCompraTipo->getConsecutivo()+1);
+        if (!$arOrdenCompra->getEstadoAprobado()) {
+            $arOrdenCompraTipo->setConsecutivo($arOrdenCompraTipo->getConsecutivo() + 1);
             $arOrdenCompra->setEstadoAprobado(1);
             $arOrdenCompra->setNumero($arOrdenCompraTipo->getConsecutivo());
             $this->_em->persist($arOrdenCompraTipo);
             $this->_em->persist($arOrdenCompra);
+            $this->_em->flush();
+
+            $arOrdenCompraDetalles = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(['codigoOrdenCompraFk' => $arOrdenCompra->getCodigoOrdenCompraPk()]);
+            foreach ($arOrdenCompraDetalles as $arOrdenCompraDetalle) {
+                $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arOrdenCompraDetalle->getCodigoItemFk()]);
+                if ($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk()) {
+                    $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() - $arOrdenCompraDetalle->getCantidad());
+                }
+                $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() + $arOrdenCompraDetalle->getCantidad());
+                $this->_em->persist($arItem);
+            }
             $this->_em->flush();
         }
     }
@@ -52,6 +64,17 @@ class InvOrdenCompraRepository extends ServiceEntityRepository
         if ($arOrdenCompra->getEstadoAprobado() == 1) {
             $arOrdenCompra->setEstadoAnulado(1);
             $this->_em->persist($arOrdenCompra);
+            $this->_em->flush();
+
+            $arOrdenCompraDetalles = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(['codigoOrdenCompraFk' => $arOrdenCompra->getCodigoOrdenCompraPk()]);
+            foreach ($arOrdenCompraDetalles as $arOrdenCompraDetalle) {
+                $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arOrdenCompraDetalle->getCodigoItemFk()]);
+                if ($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk()) {
+                    $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() + $arOrdenCompraDetalle->getCantidad());
+                }
+                $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() - $arOrdenCompraDetalle->getCantidad());
+                $this->_em->persist($arItem);
+            }
             $this->_em->flush();
         }
     }
@@ -72,11 +95,32 @@ class InvOrdenCompraRepository extends ServiceEntityRepository
 
     /**
      * @param $arOrdenCompra InvOrdenCompra
+     * @param $arrIva
+     * @param $arrValores
      */
-    public function autorizar($arOrdenCompra)
+    public function autorizar($arOrdenCompra, $arrValores, $arrIva)
     {
-        if (count($this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(['codigoOrdenCompraFk' => $arOrdenCompra->getCodigoOrdenCompraPk()])) > 0) {
+        $vrSubtotal = 0;
+        $vrIva = 0;
+        $arOrdenCompraDetalles = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(['codigoOrdenCompraFk' => $arOrdenCompra->getCodigoOrdenCompraPk()]);
+        if (count($arOrdenCompraDetalles) > 0) {
             $arOrdenCompra->setEstadoAutorizado(1);
+            $this->_em->persist($arOrdenCompra);
+            foreach ($arOrdenCompraDetalles as $arOrdenCompraDetalle) {
+                $valor = $arrValores[$arOrdenCompraDetalle->getCodigoOrdenCompraDetallePk()];
+                $porIva = $arrIva[$arOrdenCompraDetalle->getCodigoOrdenCompraDetallePk()];
+                $arOrdenCompraDetalle->setValor($valor);
+                $arOrdenCompraDetalle->setVrSubtotal($valor);
+                $arOrdenCompraDetalle->setPorcentajeIva($porIva);
+                $arOrdenCompraDetalle->setVrIva($valor * (($porIva / 100)));
+                $arOrdenCompraDetalle->setVrTotal($arOrdenCompraDetalle->getVrSubtotal() + $arOrdenCompraDetalle->getVrIva());
+                $this->_em->persist($arOrdenCompraDetalle);
+                $vrIva += $arrValores[$arOrdenCompraDetalle->getCodigoOrdenCompraDetallePk()] * ($arrIva[$arOrdenCompraDetalle->getCodigoOrdenCompraDetallePk()] / 100);
+                $vrSubtotal += $arrValores[$arOrdenCompraDetalle->getCodigoOrdenCompraDetallePk()];
+            }
+            $arOrdenCompra->setVrSubtotal($vrSubtotal);
+            $arOrdenCompra->setVrIva($vrIva);
+            $arOrdenCompra->setVrNeto($vrSubtotal + $vrIva);
             $this->_em->persist($arOrdenCompra);
             $this->_em->flush();
         } else {

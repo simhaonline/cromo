@@ -3,16 +3,17 @@
 namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvItem;
+use App\Entity\Inventario\InvMovimientoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\EntityManager;
 
-class InvItemRepository extends ServiceEntityRepository
+class InvMovimientoDetalleRepository extends ServiceEntityRepository
 {
 
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, InvItem::class);
+        parent::__construct($registry, InvMovimientoDetalle::class);
     }
 
     /**

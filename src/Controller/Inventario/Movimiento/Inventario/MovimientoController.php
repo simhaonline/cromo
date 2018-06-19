@@ -1,105 +1,125 @@
 <?php
 
-namespace App\Controller\Inventario\Movimiento;
+namespace App\Controller\Inventario\Movimiento\Inventario;
 
-use App\Entity\Inventario\InvSolicitud;
-use App\Entity\Inventario\InvSolicitudDetalle;
-use App\Estructura\AdministracionController;
-use App\Formato\Inventario\Solicitud;
+use App\Entity\Inventario\InvMovimiento;
+use App\Form\Type\Inventario\MovimientoType;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
-use http\Env\Response;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Form\Type\Inventario\SolicitudType;
 
-class SolicitudController extends Controller
+class MovimientoController extends Controller
 {
     var $query = '';
 
     /**
-     * @Route("/inv/mov/inventario/solicitud/nuevo/{id}", name="inv_mov_inventario_solicitud_nuevo")
+     * @Route("/inv/mov/inventario/movimiento/lista/documentos/{tipo}", name="inv_mov_inventario_movimiento_documentos_lista")
      */
-    public function nuevo(Request $request, $id)
+    public function listaDocumentos(Request $request, $tipo)
     {
         $em = $this->getDoctrine()->getManager();
-        $arSolicitud = new InvSolicitud();
-        if ($id != 0) {
-            $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
-            if (!$arSolicitud) {
-                return $this->redirect($this->generateUrl('inv_mto_solicitud_lista'));
-            }
-        }
-        $arSolicitud->setFecha(new \DateTime('now'));
-        $arSolicitud->setUsuario($this->getUser()->getUserName());
-        $form = $this->createForm(SolicitudType::class, $arSolicitud);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
-                $arSolicitud->setFecha(new \DateTime('now'));
-                $em->persist($arSolicitud);
-                $em->flush($arSolicitud);
-                return $this->redirect($this->generateUrl('listado', ['entidad' => 'InvSolicitud']));
-            }
-            if ($form->get('guardarnuevo')->isClicked()) {
-                $em->persist($arSolicitud);
-                $em->flush($arSolicitud);
-                return $this->redirect($this->generateUrl('inv_mto_solicitud_nuevo', ['codigoSolicitud' => 0]));
-            }
-        }
-        return $this->render('inventario/movimiento/solicitud/nuevo.html.twig', [
-            'form' => $form->createView(), 'arSolicitud' => $arSolicitud
+        $arDocumentos = $em->getRepository('App:Inventario\InvDocumento')->findBy(['codigoDocumentoTipoFk' => $tipo]);
+        return $this->render('inventario/movimiento/inventario/listaDocumentos.html.twig', [
+            'arDocumentos' => $arDocumentos
         ]);
     }
 
     /**
-     * @Route("/inv/mov/inventario/solicitud/detalle/{id}", name="inv_mov_inventario_solicitud_detalle")
+     * @Route("/inv/mov/inventario/movimiento/lista/movimientos/{codigoDocumento}", name="inv_mov_inventario_movimiento_lista")
+     */
+    public function listaMovimientos(Request $request, $codigoDocumento)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arMovimientos = $em->getRepository('App:Inventario\InvMovimiento')->findBy(['codigoDocumentoFk' => $codigoDocumento]);
+        return $this->render('inventario/movimiento/inventario/listaMovimientos.html.twig', [
+            'arMovimientos' => $arMovimientos,
+            'codigoDocumento' => $codigoDocumento
+        ]);
+    }
+
+    /**
+     * @Route("/inv/mov/inventario/movimiento/nuevo/{codigoDocumento}/{id}", name="inv_mov_inventario_movimiento_nuevo")
+     */
+    public function nuevo(Request $request, $codigoDocumento, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arMovimiento = new InvMovimiento();
+        if ($id != 0) {
+            $arMovimiento = $em->getRepository('App:Inventario\InvMovimiento')->find($id);
+            if (!$arMovimiento) {
+                return $this->redirect($this->generateUrl('inv_mov_inventario_movimiento_lista', ['codigoDocumento' => $codigoDocumento]));
+            }
+        }
+        $arMovimiento->setFecha(new \DateTime('now'));
+        $arMovimiento->setUsuario($this->getUser()->getUserName());
+        $arDocumento = $em->getRepository('App:Inventario\InvDocumento')->find($codigoDocumento);
+        $arMovimiento->setDocumentoRel($arDocumento);
+        $form = $this->createForm(MovimientoType::class, $arMovimiento);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arMovimiento->setFecha(new \DateTime('now'));
+                $em->persist($arMovimiento);
+                $em->flush();
+                return $this->redirect($this->generateUrl('inv_mov_inventario_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));
+            }
+            if ($form->get('guardarnuevo')->isClicked()) {
+                $em->persist($arMovimiento);
+                $em->flush();
+                return $this->redirect($this->generateUrl('inv_mov_inventario_movimiento_nuevo', ['id' => 0]));
+            }
+        }
+        return $this->render('inventario/movimiento/inventario/nuevo.html.twig', [
+            'form' => $form->createView(),
+            'arMovimiento' => $arMovimiento
+        ]);
+    }
+
+    /**
+     * @Route("/inv/mov/inventario/movimiento/detalle/{id}", name="inv_mov_inventario_movimiento_detalle")
      */
     public function detalle(Request $request, $id)
     {
-        $objFormatoSolicitud = new Solicitud();
         $em = $this->getDoctrine()->getManager();
-        $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
-        $arSolicitudDetalles = $em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $id]);
-        $form = $this->formularioDetalles($arSolicitud);
+        $arMovimiento = $em->getRepository('App:Inventario\InvMovimiento')->find($id);
+        $arMovimientoDetalles = $em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $id]);
+        $form = $this->formularioDetalles($arMovimiento);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvSolicitud')->autorizar($arSolicitud);
+                $em->getRepository('App:Inventario\InvSolicitud')->autorizar($arMovimiento);
                 return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvSolicitud')->desautorizar($arSolicitud);
+                $em->getRepository('App:Inventario\InvSolicitud')->desautorizar($arMovimiento);
                 return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                $objFormatoSolicitud->Generar($em, $id);
+//                $objFormatoSolicitud->Generar($em, $id);
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvSolicitud')->aprobar($arSolicitud);
+                $em->getRepository('App:Inventario\InvSolicitud')->aprobar($arMovimiento);
                 return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
             }
             if ($form->get('btnAnular')->isClicked()) {
-                $em->getRepository('App:Inventario\InvSolicitud')->anular($arSolicitud);
+                $em->getRepository('App:Inventario\InvSolicitud')->anular($arMovimiento);
                 return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository('App:Inventario\InvSolicitudDetalle')->eliminar($arSolicitud, $arrDetallesSeleccionados);
+                $em->getRepository('App:Inventario\InvSolicitudDetalle')->eliminar($arMovimiento, $arrDetallesSeleccionados);
                 return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
             }
         }
-        return $this->render('inventario/movimiento/solicitud/detalle.html.twig', [
+        return $this->render('inventario/movimiento/inventario/detalle.html.twig', [
             'form' => $form->createView(),
-            'arSolicitudDetalles' => $arSolicitudDetalles,
-            'arSolicitud' => $arSolicitud
+            'arMovimientoDetalles' => $arMovimientoDetalles,
+            'arMovimiento' => $arMovimiento
         ]);
     }
 
@@ -110,7 +130,7 @@ class SolicitudController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
+        $arMovimiento = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
         $form = $this->formularioFiltroItems();
         $form->handleRequest($request);
         $this->listaItems($em, $form);
@@ -124,12 +144,12 @@ class SolicitudController extends Controller
                     foreach ($arrItems as $codigoItem => $cantidad) {
                         if ($cantidad != '' && $cantidad != 0) {
                             $arItem = $em->getRepository('App:Inventario\InvItem')->find($codigoItem);
-                            $arSolicitudDetalle = new InvSolicitudDetalle();
-                            $arSolicitudDetalle->setSolicitudRel($arSolicitud);
-                            $arSolicitudDetalle->setItemRel($arItem);
-                            $arSolicitudDetalle->setCantidadSolicitada($cantidad);
-                            $arSolicitudDetalle->setCantidadRestante($cantidad);
-                            $em->persist($arSolicitudDetalle);
+                            $arMovimientoDetalle = new InvSolicitudDetalle();
+                            $arMovimientoDetalle->setSolicitudRel($arMovimiento);
+                            $arMovimientoDetalle->setItemRel($arItem);
+                            $arMovimientoDetalle->setCantidadSolicitada($cantidad);
+                            $arMovimientoDetalle->setCantidadRestante($cantidad);
+                            $em->persist($arMovimientoDetalle);
                         }
                     }
                     $em->flush();
@@ -145,10 +165,10 @@ class SolicitudController extends Controller
     }
 
     /**
-     * @param $arSolicitud InvSolicitud
+     * @param $arMovimiento InvSolicitud
      * @return \Symfony\Component\Form\FormInterface
      */
-    private function formularioDetalles($arSolicitud)
+    private function formularioDetalles($arMovimiento)
     {
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobar = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
@@ -156,21 +176,21 @@ class SolicitudController extends Controller
         $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-        if ($arSolicitud->getEstadoAnulado()) {
+        if ($arMovimiento->getEstadoAnulado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnImprimir['disabled'] = true;
             $arrBtnAnular['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = true;
-        } elseif ($arSolicitud->getEstadoAprobado()) {
+        } elseif ($arMovimiento->getEstadoAprobado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnImprimir['disabled'] = false;
             $arrBtnAnular['disabled'] = false;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = true;
-        } elseif ($arSolicitud->getEstadoAutorizado()) {
+        } elseif ($arMovimiento->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
             $arrBtnImprimir['disabled'] = false;

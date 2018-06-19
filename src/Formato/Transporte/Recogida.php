@@ -2,35 +2,215 @@
 
 namespace App\Formato\Transporte;
 
-use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteRecogida;
 
 class Recogida extends \FPDF {
+
     public static $em;
     public static $codigoRecogida;
+    public static $strLetras;
 
-    public function Generar($em, $codigoRecogida) {
-        ob_clean();
-        //$em = $miThis->getDoctrine()->getManager();
+    /**
+     * @param $em ObjectManager
+     * @param $codigoRecogida integer
+     */
+    public function Generar($em, $codigoRecogida)
+    {
         self::$em = $em;
         self::$codigoRecogida = $codigoRecogida;
-        $pdf = new Recogida();
+        ob_clean();
+        $pdf = new Recogida('P', 'mm', 'letter');
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("TteRecogida$codigoRecogida.pdf", 'D');
+        $pdf->Output("Movimiento$codigoRecogida.pdf", 'D');
     }
 
     public function Header() {
 
+        $arRecogida = self::$em->getRepository('App:Transporte\TteRecogida')->find(self::$codigoRecogida);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial','B',10);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 10);
+        //Logo
+        $this->SetXY(53, 10);
+        $this->Image('../assets/img/empresa/logo.jpeg', 12, 13, 40, 25);
+        $this->Cell(147, 7, utf8_decode("RECOGIDA"), 0, 0, 'C', 1);
+        $this->SetXY(53, 18);
+        $this->SetFont('Arial', 'B', 9);
+        $this->Cell(20, 4, "EMPRESA:", 0, 0, 'L', 1);
+        $this->Cell(100, 4, utf8_decode(''), 0, 0, 'L', 0);
+        $this->SetXY(53, 22);
+        $this->Cell(20, 4, "NIT:", 0, 0, 'L', 1);
+        $this->Cell(100, 4, '', 0, 0, 'L', 0);
+        $this->SetXY(53, 26);
+        $this->Cell(20, 4, utf8_decode("DIRECCIÓN:"), 0, 0, 'L', 1);
+        $this->Cell(100, 4, utf8_decode(''), 0, 0, 'L', 0);
+        $this->SetXY(53, 30);
+        $this->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
+        $this->Cell(100, 4, '', 0, 0, 'L', 0);
+
+        //ENCABEZADO ORDEN DE COMPRA
+        $intY = 40;
+        $this->SetXY(10, $intY);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 4, "NIT:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, $arRecogida->getClienteRel()->getNumeroIdentificacion(), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "FECHA:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, $arRecogida->getFecha()->format('Y/m/d/ H:i:s'), 1, 0, 'L', 1);
+        //BLOQUE 2
+        $this->SetXY(10, $intY + 4);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "CLIENTE:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, utf8_decode($arRecogida->getClienteRel()->getNombreCorto()), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, 'UNIDAD:', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, $arRecogida->getUnidades(), 1, 0, 'L', 1);
+        //BLOQUE 3
+        $this->SetXY(10, $intY + 8);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "ANUNCIANTE:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, utf8_decode($arRecogida->getAnunciante()), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, 'PESO', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, $arRecogida->getPesoReal(), 1, 0, 'L', 1);
+        //BLOQUE 4
+        $this->SetXY(10, $intY + 12);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "DIRECCION:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, utf8_decode($arRecogida->getDireccion()), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, 'VOLUMEN', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, $arRecogida->getPesoVolumen(), 1, 0, 'L', 1);
+        //BLOQUE 5
+        $this->SetXY(10, $intY + 16);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "TELEFONO:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, utf8_decode($arRecogida->getTelefono()), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, '', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, '', 1, 0, 'L', 1);
+        //BLOQUE 6
+        $this->SetXY(10, $intY + 20);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "RUTA:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, '', 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, '', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, '', 1, 0, 'L', 1);
+        //BLOQUE 7 informacion conductor y vehiculo
+        $intY2 = 68;
+        $this->SetXY(10, $intY2);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "CONDUCTOR:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, '', 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, 'IDENTIFICACION', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, '', 1, 0, 'L', 1);
+        //BLOQUE 8
+        $this->SetXY(10, $intY2 + 4);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "LICENCIA:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, '', 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, 'PLACA', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, '', 1, 0, 'L', 1);
+        //BLOQUE 9
+        $this->SetXY(10, $intY2 + 4);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "MARCA:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, '', 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, 'COLOR', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, '', 1, 0, 'L', 1);
+        //BLOQUE 10
+        $this->SetXY(10, $intY2 + 8);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "MODELO:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, '', 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, '', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, '', 1, 0, 'L', 1);
+        //BLOQUE 11
+        $this->SetXY(10, $intY2 + 12);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "COMENTARIO", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->MultiCell(160,4,'',1,'L');
+        //BLOQUE FIRMAS
+        $this->SetFont('Arial', 'B', 9);
+        $this->Text(10, $intY2 + 30, "_________________________________");
+        $this->Text(75, $intY2 + 30, "_________________________________");
+        $this->Text(140, $intY2 + 30, "_________________________________");
+        $this->Text(25, $intY2 + 34, "FIRMA EMPRESA");
+        $this->Text(90, $intY2 + 34, "FIRMA CONDUCTOR");
+        $this->Text(158, $intY2 + 34, "FIRMA CLIENTE");
 
 
-        $this->SetXY(50, 10);
-        $this->Cell(238, 7, utf8_decode("TteRecogida"), 0, 0, 'C', 1);
-
-        $this->EncabezadoDetalles();
 
     }
 

@@ -58,6 +58,11 @@ class InvMovimientoDetalle
     private $porIva;
 
     /**
+     * @ORM\Column(name="por_descuento", type="float", nullable=true)
+     */
+    private $porDescuento;
+
+    /**
      * @ORM\Column(name="vr_iva", type="float", nullable=true)
      */
     private $vrIva;
@@ -83,7 +88,7 @@ class InvMovimientoDetalle
     private $vrTotal = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvMovimiento", inversedBy="movimientoMovimientoDetallesRel")
+     * @ORM\ManyToOne(targetEntity="InvMovimiento", inversedBy="movimientoMovimientoDetalleRel")
      * @ORM\JoinColumn(name="codigo_movimiento_fk", referencedColumnName="codigo_movimiento_pk")
      */
     protected $movimientoRel;
@@ -258,6 +263,22 @@ class InvMovimientoDetalle
     public function setVrIva($vrIva): void
     {
         $this->vrIva = $vrIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorDescuento()
+    {
+        return $this->porDescuento;
+    }
+
+    /**
+     * @param mixed $porDescuento
+     */
+    public function setPorDescuento($porDescuento): void
+    {
+        $this->porDescuento = $porDescuento;
     }
 
     /**

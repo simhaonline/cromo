@@ -23,6 +23,7 @@ class AppExtension extends AbstractExtension
             new \Twig_Function('crearTitulo', [$this, 'crearTitulo']),
             new \Twig_Function('llenarArray', [$this, 'llenarArray']),
             new \Twig_Function('notificar', [$this, 'getNotifies']),
+            new \Twig_Function('encriptar', [$this, 'encriptar']),
         ];
     }
 
@@ -107,6 +108,10 @@ class AppExtension extends AbstractExtension
             return false;
         }
 
+    }
+
+    public function encriptar($dato){
+        return str_replace('/','&',password_hash($dato,PASSWORD_BCRYPT));
     }
 
     public function esEstado($dato){

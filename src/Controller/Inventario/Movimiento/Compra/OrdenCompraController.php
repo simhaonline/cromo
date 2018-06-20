@@ -57,7 +57,7 @@ class OrdenCompraController extends Controller
                 return $this->redirect($this->generateUrl('inv_mov_inventario_ordenCompra_detalle', ['id' => $id]));
             }
         }
-        return $this->render('inventario/movimiento/ordenCompra/detalle.html.twig', [
+        return $this->render('inventario/movimiento/compra/ordenCompra/detalle.html.twig', [
             'form' => $form->createView(),
             'arOrdenCompraDetalles' => $arOrdenCompraDetalles,
             'arOrdenCompra' => $arOrdenCompra
@@ -98,7 +98,7 @@ class OrdenCompraController extends Controller
             }
         }
         $arItems = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
-        return $this->render('inventario/movimiento/ordenCompra/detalleNuevo.html.twig', [
+        return $this->render('inventario/movimiento/compra/ordenCompra/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems
         ]);
@@ -150,7 +150,7 @@ class OrdenCompraController extends Controller
             }
         }
         $arSolicitudesDetalles = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
-        return $this->render('inventario/movimiento/ordenCompra/detalleNuevoSolicitud.html.twig', [
+        return $this->render('inventario/movimiento/compra/ordenCompra/detalleNuevoSolicitud.html.twig', [
             'form' => $form->createView(),
             'arSolicitudesDetalles' => $arSolicitudesDetalles
         ]);

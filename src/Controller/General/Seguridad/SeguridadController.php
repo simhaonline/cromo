@@ -44,7 +44,7 @@ class SeguridadController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtUser', TextType::class, ['data' => $arUsuario->getUsername()])
             ->add('txtEmail', TextType::class, ['data' => $arUsuario->getEmail()])
-            ->add('boolActivo', CheckboxType::class, ['data' => $arUsuario->getisActive(), 'label' => ' '])
+            ->add('boolActivo', CheckboxType::class, ['data' => $arUsuario->getisActive(), 'label' => ' ','required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-smbtn-primary']])
             ->getForm();
         $form->handleRequest($request);
@@ -54,9 +54,13 @@ class SeguridadController extends Controller
                 $arUsuario->setUsername($form->get('txtUser')->getData());
                 $arUsuario->setEmail($form->get('txtEmail')->getData());
                 $arUsuario->setIsActive($form->get('boolActivo')->getData());
+                if($id == 0){
+                    $arUsuario->setPassword(password_hash('123', PASSWORD_BCRYPT));
+                }
                 $em->persist($arUsuario);
+                $em->flush();
+                return $this->redirect( $this->generateUrl('gen_seguridad_usuario_lista'));
             }
-            $em->flush();
         }
         return $this->render('general/seguridad/nuevo.html.twig', [
             'arUsuario' => $arUsuario,
@@ -118,12 +122,14 @@ class SeguridadController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $id = 0;
-        $arUsuarios = $em->getRepository('App:Seguridad\Usuario')->findBy(['isActive' => true]);
-        if (count($arUsuarios) > 0) {
-            $hash = str_replace('&', '/', $hash);
-            foreach ($arUsuarios as $arUsuario) {
-                if (password_verify($arUsuario->getId(), $hash)) {
-                    $id = $arUsuario->getId();
+        if ($hash != '0') {
+            $arUsuarios = $em->getRepository('App:Seguridad\Usuario')->findAll();
+            if (count($arUsuarios) > 0) {
+                $hash = str_replace('&', '/', $hash);
+                foreach ($arUsuarios as $arUsuario) {
+                    if (password_verify($arUsuario->getId(), $hash)) {
+                        $id = $arUsuario->getId();
+                    }
                 }
             }
         }

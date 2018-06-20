@@ -36,6 +36,9 @@
     <div style="float: right;">
         {{ form_widget(form.btnGuardar) }}
     </div>
+    <div>
+        <a class="btn btn-sm btn-default" href="{{ path('gen_seguridad_usuario_lista') }}">Cancelar</a>
+    </div>
     {{ form_end(form) }}
 {% endblock %}
 

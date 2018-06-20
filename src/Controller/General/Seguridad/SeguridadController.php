@@ -2,6 +2,7 @@
 
 namespace App\Controller\General\Seguridad;
 
+use App\Controller\Estructura\MensajesController;
 use App\Entity\Seguridad\Usuario;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -70,6 +71,7 @@ class SeguridadController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $id = $this->verificarUsuario($hash);
+        $respuesta = '';
         if ($id != 0) {
             $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
             if (!$arUsuario) {
@@ -77,9 +79,9 @@ class SeguridadController extends Controller
             }
         }
         $form = $this->createFormBuilder()
-            ->add('txtClaveActual', PasswordType::class)
-            ->add('txtNuevaClave', PasswordType::class)
-            ->add('txtConfirmacionClave', PasswordType::class)
+            ->add('txtClaveActual', PasswordType::class, ['required' => true])
+            ->add('txtNuevaClave', PasswordType::class, ['required' => true])
+            ->add('txtConfirmacionClave', PasswordType::class, ['required' => true])
             ->add('btnActualizar', SubmitType::class, ['label' => 'Actualizar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
@@ -89,11 +91,22 @@ class SeguridadController extends Controller
                 $claveActual = $form->get('txtClaveActual')->getData();
                 $claveNueva = $form->get('txtNuevaClave')->getData();
                 $claveConfirmacion = $form->get('txtConfirmacionClave')->getData();
-                if(password_verify($claveActual,$arUsuario->getPassword())){
-                    if($claveNueva != '' && $claveConfirmacion != '' && $claveNueva == $claveConfirmacion){
-//                        $arUsuario->
+                if (password_verify($claveActual, $arUsuario->getPassword())) {
+                    if ($claveNueva == $claveConfirmacion) {
+                        $arUsuario->setPassword(password_hash($claveNueva, PASSWORD_BCRYPT));
+                        $em->persist($arUsuario);
+                    } else {
+                        $respuesta = "Las claves ingresadas no coindicen";
                     }
+                } else {
+                    $respuesta = "La contraseña ingresada es incorrecta";
                 }
+            }
+            if ($respuesta != '') {
+                MensajesController::error($respuesta);
+            } else {
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
         return $this->render('general/seguridad/cambioClave.html.twig', [

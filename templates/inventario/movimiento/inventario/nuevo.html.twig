@@ -36,10 +36,17 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer">
-        {#<a class="btn btn-default btn-sm" href="{{ path('lista',{'entidad':'InvSolicitud'}) }}">Cancelar</a>#}
-        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
-        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    <div style="float: right;">
+        <div class="btn-group">
+            {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        </div>
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-sm btn-default"
+           href="{{ path('inv_mov_inventario_movimiento_lista',{'tipoDocumento': tipoDocumento,'codigoDocumento': arMovimiento.documentoRel.codigoDocumentoPk }) }}">Cancelar</a>
     </div>
     {{ form_end(form) }}
 {% endblock %}

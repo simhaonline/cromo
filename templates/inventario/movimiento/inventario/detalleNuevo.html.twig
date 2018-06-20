@@ -1,0 +1,55 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br/>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4> Filtros de búsqueda</h4>
+        </div>
+        <div class="panel-body">
+            {{ form_label(form.txtCodigoItem) }}
+            <div class="col-sm-4">
+                {{ form_widget(form.txtCodigoItem) }}
+
+            </div>
+            {{ form_label(form.txtNombreItem) }}
+            <div class="col-sm-4">
+
+                {{ form_widget(form.txtNombreItem) }}
+            </div>
+        </div>
+        <div class="panel-footer">
+            {{ form_widget(form.btnFiltrar,{'attr':{'style':'float: right;'}}) }}
+            <br/>
+            <br/>
+        </div>
+    </div>
+    <div>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>NOMBRE</th>
+                <th>EXISTENCIAS</th>
+                <th>STOCK_MIN</th>
+                <th>STOCK_MAX</th>
+                <th>CANTIDAD</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arItem in arItems %}
+                <tr>
+                    <td style="text-align: right;">{{ arItem.codigoItemPk }}</td>
+                    <td style="text-align: left;">{{ arItem.nombre }}</td>
+                    <td style="text-align: right;">{{ arItem.cantidadExistencia }}</td>
+                    <td style="text-align: right;">{{ arItem.stockMinimo }}</td>
+                    <td style="text-align: right;">{{ arItem.stockMaximo }}</td>
+                    <td style="text-align: center;"><input type="number" name="itemCantidad[{{ arItem.codigoItemPk }}]"></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+    {{ form_end(form) }}
+{% endblock %}

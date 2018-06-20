@@ -62,6 +62,13 @@ class Usuario implements UserInterface, \Serializable
         return $this->username;
     }
 
+    /**
+     * @param mixed $username
+     */
+    public function setUsername($username): void{
+        $this->username = $username;
+    }
+
     public function getSalt()
     {
         // you *may* need a real salt depending on your encoder
@@ -72,6 +79,14 @@ class Usuario implements UserInterface, \Serializable
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * @param mixed $password
+     */
+    public function setPassword($password): void
+    {
+        $this->password = $password;
     }
 
     public function getRoles()
@@ -139,7 +154,52 @@ class Usuario implements UserInterface, \Serializable
         $this->operacionRel = $operacionRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email): void
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getisActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param mixed $isActive
+     */
+    public function setIsActive($isActive): void
+    {
+        $this->isActive = $isActive;
+    }
 }
 

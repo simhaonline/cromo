@@ -29,7 +29,7 @@ class InvDocumentoTipo
     protected $documentoTipoDocumentoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="InvDocumentoTipo", mappedBy="documentoTipoRel")
+     * @ORM\OneToMany(targetEntity="InvMovimiento", mappedBy="documentoTipoRel")
      */
     protected $documentoTipoMovimientoRel;
 

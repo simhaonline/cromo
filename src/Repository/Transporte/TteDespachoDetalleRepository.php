@@ -55,4 +55,23 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function guia($codigoGuia): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT dd.codigoDespachoDetallePk,
+                  dd.codigoDespachoFk,
+                  d.numero,
+                  dt.nombre AS tipoDespacho,
+                  d.fechaSalida,
+                  d.estadoGenerado            
+        FROM App\Entity\Transporte\TteDespachoDetalle dd 
+        LEFT JOIN dd.despachoRel d
+        LEFT JOIN d.despachoTipoRel dt
+        WHERE dd.codigoGuiaFk = :codigoGuia'
+        )->setParameter('codigoGuia', $codigoGuia);
+
+        return $query->execute();
+    }
+
 }

@@ -18,8 +18,13 @@ class TteMonitoreoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT m.codigoMonitoreoPk
-        FROM App\Entity\Monitoreo m'
+            'SELECT m.codigoMonitoreoPk,
+                  m.fechaInicio,
+                  m.fechaFin,
+                  m.codigoVehiculoFk,
+                  m.soporte,
+                  m.codigoDespachoFk
+        FROM App\Entity\Transporte\TteMonitoreo m'
         );
 
         return $query->execute();

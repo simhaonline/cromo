@@ -5,12 +5,13 @@
         <title>{% block title %}Cromo{% endblock %}</title>
     {% block stylesheets %}
         <!-- Bootstrap Core CSS -->
-        <link rel="stylesheet" href="{{ asset('../assets/vendor/bootstrap/css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('../assets/vendor/metisMenu/metisMenu.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('../assets/dist/css/sb-admin-2.css') }}">
-        <link rel="stylesheet" href="{{ asset('../assets/vendor/morrisjs/morris.css') }}">
-        <link rel="stylesheet" href="{{ asset('../assets/vendor/font-awesome/css/font-awesome.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('../assets/css/general.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/metisMenu/metisMenu.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('dist/css/sb-admin-2.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/morrisjs/morris.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/general.css') }}">
     {% endblock %}
 </head>
 <body>
@@ -126,7 +127,7 @@
                                 <li>
                                     <a href="#">Monitoreo <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_mon_monitoreo_monitoreo_lista') }}">Monitoreo</a></li>
+                                        <li><a href="{{ path('tte_mto_monitoreo_monitoreo_lista') }}">Monitoreo</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
@@ -146,6 +147,7 @@
                                 <li>
                                     <a href="#">Transporte <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'cliente'}) }}">Cliente</a></li>
                                         <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'novedadTipo'}) }}">Tipo novedad</a></li>
                                         <li><a href="{{ path('tte_adm_comercial_precio_lista') }}">Precio</a></li>
                                     </ul>
@@ -179,12 +181,43 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-file-text-o fa-fw"></i> Informe<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-file-text-o fa-fw"></i> Utilidad<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#">Servicio <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="{{ path('tte_uti_servicio_novedad_notificar') }}">Notificar novedad</a></li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
                                 <li>
                                     <a href="#">Transporte <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li><a href="{{ path('tte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente (ruta)</a></li>
+                                        <li><a href="{{ path('tte_inf_transporte_costo_general') }}">Costos</a></li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-file-text-o fa-fw"></i> Informe<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#">Servicio <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="{{ path('tte_inf_servicio_novedad_pendiente_atender') }}">Pendiente atender</a></li>
+                                        <li><a href="{{ path('tte_inf_servicio_novedad_pendiente_solucionar') }}">Pendiente solucionar</a></li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
+                                <li>
+                                    <a href="#">Transporte <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="{{ path('tte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente ruta</a></li>
+                                        <li><a href="{{ path('tte_inf_transporte_guia_pendiente_conductor') }}">Pendiente conductor</a></li>
+                                        <li><a href="{{ path('tte_inf_transporte_guia_pendiente') }}">Pendiente</a></li>
                                         <li><a href="{{ path('tte_inf_transporte_costo_general') }}">Costos</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
@@ -224,18 +257,21 @@
         {% block content %}
 
         {% endblock %}
+            <br/><br/>
         </div>
     {% endblock %}
     </div>
 {% block javascripts %}
-    <script src="{{ asset('../assets/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('../assets/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('../assets/vendor/metisMenu/metisMenu.min.js') }}"></script>
-    <script src="{{ asset('../assets/vendor/raphael/raphael.min.js') }}"></script>
-    <script src="{{ asset('../assets/vendor/morrisjs/morris.min.js') }}"></script>
-    <script src="{{ asset('../assets/data/morris-data.js') }}"></script>
-    <script src="{{ asset('../assets/dist/js/sb-admin-2.js') }}"></script>
-    <script src="{{ asset('../assets/js/general.js') }}"></script>
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('vendor/metisMenu/metisMenu.min.js') }}"></script>
+    <script src="{{ asset('vendor/raphael/raphael.min.js') }}"></script>
+    <script src="{{ asset('vendor/morrisjs/morris.min.js') }}"></script>
+    <script src="{{ asset('data/morris-data.js') }}"></script>
+    <script src="{{ asset('dist/js/sb-admin-2.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/i18n/es.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.full.js') }}"></script>
+    <script src="{{ asset('js/general.js') }}"></script>
 {% endblock %}
 </body>
 </html>

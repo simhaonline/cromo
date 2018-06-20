@@ -58,14 +58,19 @@ class TteNovedad
     private $fechaSolucion;
 
     /**
-     * @ORM\Column(name="estado_reporte", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_reporte", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoReporte = false;
 
     /**
-     * @ORM\Column(name="estado_atendido", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_atendido", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoAtendido = false;
+
+    /**
+     * @ORM\Column(name="estado_solucion", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoSolucion = false;
 
     /**
      * @ORM\Column(name="codigo_guia_fk", type="integer", nullable=true)
@@ -151,6 +156,38 @@ class TteNovedad
     /**
      * @return mixed
      */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * @param mixed $fechaRegistro
+     */
+    public function setFechaRegistro($fechaRegistro): void
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFechaReporte()
     {
         return $this->fechaReporte;
@@ -231,6 +268,22 @@ class TteNovedad
     /**
      * @return mixed
      */
+    public function getEstadoSolucion()
+    {
+        return $this->estadoSolucion;
+    }
+
+    /**
+     * @param mixed $estadoSolucion
+     */
+    public function setEstadoSolucion($estadoSolucion): void
+    {
+        $this->estadoSolucion = $estadoSolucion;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoGuiaFk()
     {
         return $this->codigoGuiaFk;
@@ -276,37 +329,6 @@ class TteNovedad
         $this->guiaRel = $guiaRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFecha()
-    {
-        return $this->fecha;
-    }
-
-    /**
-     * @param mixed $fecha
-     */
-    public function setFecha($fecha): void
-    {
-        $this->fecha = $fecha;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaRegistro()
-    {
-        return $this->fechaRegistro;
-    }
-
-    /**
-     * @param mixed $fechaRegistro
-     */
-    public function setFechaRegistro($fechaRegistro): void
-    {
-        $this->fechaRegistro = $fechaRegistro;
-    }
 
 
 

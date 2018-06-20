@@ -12,5 +12,11 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuEmpleado::class);
     }
-
+    public function camposPredeterminados(){
+        $qb = $this-> _em->createQueryBuilder()
+            ->from('App:RecursoHumano\RHuEmpleado','e')
+            ->select('e.codigoEmpleadoPk AS ID');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 }

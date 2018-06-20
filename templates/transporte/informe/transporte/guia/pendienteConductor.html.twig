@@ -1,0 +1,94 @@
+{% extends 'base_transporte.html.twig' %}
+{% block content %}
+    {% set codigoRuta = '' %}
+    {% set contador = 0 %}
+    {% set numeroGuias = arGuias|length %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros de busqueda</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtNit" class="col-sm-2 control-label">Conductor:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtCodigoConductor, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="" readOnly="ReadOnly" />
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('tte_bus_conductor', { 'campoCodigo': 'form_txtCodigoConductor', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_TxtCodigo" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+                <label for="form_estadoAutorizado" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form_widget(form.BtnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>OI</th>
+            <th>OC</th>
+            <th>NUMERO</th>
+            <th>FECHA</th>
+            <th>CLIENTE</th>
+            <th>DESTINO</th>
+            <th>DECLARA</th>
+            <th>FLETE</th>
+            <th>UND</th>
+            <th>PES</th>
+            <th>VOL</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% set codigoConductor = '' %}
+        {% for arGuia in arGuias %}
+            {% if codigoConductor != arGuia.codigoConductorFk %}
+                <tr>
+                    <td id="suptipo" colspan="10">{{ arGuia.codigoConductorFk }} {{ arGuia.nombreConductor }}</td>
+                </tr>
+                {% set codigoConductor = arGuia.codigoConductorFk %}
+            {% endif %}
+            <tr>
+                <td>{{ arGuia.codigoGuiaPk }}</td>
+                <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
+                <td>{{ arGuia.codigoOperacionCargoFk }}</td>
+                <td>{{ arGuia.numero }}</td>
+                <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
+                <td>{{ arGuia.clienteNombreCorto }}</td>
+                <td>{{ arGuia.ciudadDestino }}</td>
+                <td class="numero">{{ arGuia.vrDeclara }}</td>
+                <td class="numero">{{ arGuia.vrFlete }}</td>
+                <td class="numero">{{ arGuia.unidades }}</td>
+                <td class="numero">{{ arGuia.pesoReal }}</td>
+                <td class="numero">{{ arGuia.pesoVolumen }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}
+

@@ -43,7 +43,8 @@ class GenConfiguracionEntidad extends Fixture
             'clasificacionRiesgo,admin,seguridadSocial,0,0',
             'grupoPago,admin,nomina,0,0',
             'cargo,admin,contratacion,0,0',
-            'seleccionTipo,admin,seleccion,0,0'];
+            'seleccionTipo,admin,seleccion,0,0',
+            'empleado,admin,empleado,0,0',];
         $this->setConfiguracionEntidades($arrModuloRecursoHumano, $em, 'recursoHumano');
         /////////////////                 FIN ESTRACTURA MODULO DE RECURSO HUMANO
 //
@@ -66,7 +67,8 @@ class GenConfiguracionEntidad extends Fixture
 
         $arrModuloTransporte = $arrModuloTransporte = [
             'relacionCaja,movimiento,control,1,1',
-            'novedadTipo,administracion,transporte,0,0'];
+            'novedadTipo,administracion,transporte,0,0',
+            'cliente,administracion,transporte,0,0'];
         $this->setConfiguracionEntidades($arrModuloTransporte, $em, 'transporte');
 
         $em->flush();

@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Movimiento\Recogida\Recogida;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteRecogida;
 use App\Form\Type\Transporte\RecogidaType;
+use App\Formato\Transporte\Recogida;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -36,7 +37,7 @@ class RecogidaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-                $formato = new \App\Formato\Recogida();
+                $formato = new Recogida();
                 $formato->Generar($em, $codigoRecogida);
             }
         }

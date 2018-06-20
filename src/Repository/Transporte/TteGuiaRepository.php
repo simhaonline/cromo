@@ -17,12 +17,13 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     public function lista(): array
     {
+        $session = new Session();
         $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
+        $dql = 'SELECT g.codigoGuiaPk, 
         g.codigoServicioFk,
         g.codigoGuiaTipoFk, 
-        g.numero, 
+        g.numero,
+        g.documentoCliente, 
         g.fechaIngreso,
         g.codigoOperacionIngresoFk,
         g.codigoOperacionCargoFk, 
@@ -42,9 +43,21 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.estadoCumplido
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd
-        ORDER BY g.codigoGuiaPk DESC '
-        );
+        LEFT JOIN g.ciudadDestinoRel cd WHERE g.codigoGuiaPk <> 0 ';
+        if($session->get('filtroTteCodigoGuiaTipo')) {
+            $dql .= " AND g.codigoGuiaTipoFk = '" . $session->get('filtroTteCodigoGuiaTipo') . "'";
+        }
+        if($session->get('filtroTteCodigoServicio')) {
+            $dql .= " AND g.codigoServicioFk = '" . $session->get('filtroTteCodigoServicio') . "'";
+        }
+        if($session->get('filtroTteDocumento') != "") {
+            $dql .= " AND g.documentoCliente LIKE '%" . $session->get('filtroTteDocumento') . "%'";
+        }
+        if($session->get('filtroTteNumeroGuia') != "") {
+            $dql .= " AND g.numero =" . $session->get('filtroTteNumeroGuia');
+        }
+        $dql .= " ORDER BY g.codigoGuiaPk";
+        $query = $em->createQuery($dql);
         return $query->execute();
     }
 
@@ -372,6 +385,78 @@ class TteGuiaRepository extends ServiceEntityRepository
             $dql .= " AND g.codigoRutaFk = " . $session->get('filtroTteCodigoRuta');
         }
         $dql .= "ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk";
+
+        $query = $em->createQuery($dql);
+
+
+        return $query->execute();
+    }
+
+    public function pendienteConductor(): array
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $dql = "SELECT g.codigoGuiaPk, 
+        g.numero, 
+        g.fechaIngreso,
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk, 
+        g.codigoRutaFk,
+        c.nombreCorto AS clienteNombreCorto,  
+        cd.nombre AS ciudadDestino,
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,
+        g.vrDeclara,
+        g.vrFlete,
+        con.nombreCorto as nombreConductor,
+        d.codigoConductorFk
+        FROM App\Entity\Transporte\TteGuia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd
+        LEFT JOIN g.despachoRel d
+        LEFT JOIN d.conductorRel con     
+        WHERE g.estadoDespachado = 1 AND g.estadoAnulado = 0 AND g.estadoSoporte = 0 AND g.codigoDespachoFk IS NOT NULL ";
+        if($session->get('filtroTteCodigoConductor')) {
+            $dql .= " AND d.codigoConductorFk = " . $session->get('filtroTteCodigoConductor');
+        }
+        $dql .= "ORDER BY d.codigoConductorFk, g.codigoCiudadDestinoFk";
+
+        $query = $em->createQuery($dql);
+
+
+        return $query->execute();
+    }
+
+    public function pendiente(): array
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $dql = "SELECT g.codigoGuiaPk, 
+        g.numero, 
+        g.fechaIngreso,
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk, 
+        g.codigoRutaFk,
+        c.nombreCorto AS clienteNombreCorto,  
+        cd.nombre AS ciudadDestino,
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,
+        g.vrDeclara,
+        g.vrFlete,
+        con.nombreCorto as nombreConductor,
+        d.codigoConductorFk
+        FROM App\Entity\Transporte\TteGuia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd
+        LEFT JOIN g.despachoRel d
+        LEFT JOIN d.conductorRel con     
+        WHERE g.estadoDespachado = 1 AND g.estadoAnulado = 0 AND g.estadoSoporte = 0 AND g.codigoDespachoFk IS NOT NULL ";
+        /*if($session->get('filtroTteCodigoConductor')) {
+            $dql .= " AND d.codigoConductorFk = " . $session->get('filtroTteCodigoConductor');
+        }*/
+        $dql .= "ORDER BY d.codigoConductorFk, g.codigoCiudadDestinoFk";
 
         $query = $em->createQuery($dql);
 

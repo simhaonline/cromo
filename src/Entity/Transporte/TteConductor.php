@@ -58,6 +58,16 @@ class TteConductor
     private $direccion;
 
     /**
+     * @ORM\Column(name="fecha_registro", type="datetime", nullable=true)
+     */
+    private $fechaRegistro;
+
+    /**
+     * @ORM\Column(name="fecha_nacimiento", type="date", nullable=true)
+     */
+    private $fechaNacimiento;
+
+    /**
      * @ORM\Column(name="codigo_ciudad_fk", type="string", length=20, nullable=true)
      */
     private $codigoCiudadFk;
@@ -86,6 +96,21 @@ class TteConductor
      * @ORM\Column(name="fecha_vence_licencia", type="date", nullable=true)
      */
     private $fechaVenceLicencia;
+
+    /**
+     * @ORM\Column(name="barrio", type="string", length=150, nullable=true)
+     */
+    private $barrio;
+
+    /**
+     * @ORM\Column(name="alias", type="string", length=100, nullable=true)
+     */
+    private $alias;
+
+    /**
+     * @ORM\Column(name="codigo_vehiculo", type="string", length=6, nullable=true)
+     */
+    private $codigoVehiculo;
 
     /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
@@ -411,6 +436,86 @@ class TteConductor
     public function setCategoriaLicencia($categoriaLicencia): void
     {
         $this->categoriaLicencia = $categoriaLicencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBarrio()
+    {
+        return $this->barrio;
+    }
+
+    /**
+     * @param mixed $barrio
+     */
+    public function setBarrio($barrio): void
+    {
+        $this->barrio = $barrio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * @param mixed $fechaRegistro
+     */
+    public function setFechaRegistro($fechaRegistro): void
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
+    /**
+     * @param mixed $alias
+     */
+    public function setAlias($alias): void
+    {
+        $this->alias = $alias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoVehiculo()
+    {
+        return $this->codigoVehiculo;
+    }
+
+    /**
+     * @param mixed $codigoVehiculo
+     */
+    public function setCodigoVehiculo($codigoVehiculo): void
+    {
+        $this->codigoVehiculo = $codigoVehiculo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaNacimiento()
+    {
+        return $this->fechaNacimiento;
+    }
+
+    /**
+     * @param mixed $fechaNacimiento
+     */
+    public function setFechaNacimiento($fechaNacimiento): void
+    {
+        $this->fechaNacimiento = $fechaNacimiento;
     }
 
 

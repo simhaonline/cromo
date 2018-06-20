@@ -9,6 +9,7 @@ use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TtePoseedor;
 use App\Entity\Transporte\TteVehiculo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -84,11 +85,20 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $query->execute();
                 $arDespacho->setFechaSalida($fechaActual);
                 $arDespacho->setEstadoGenerado(1);
+                $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
                 if($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
-                    $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
                     $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
                     $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
                     $em->persist($arDespachoTipo);
+                }
+                if($arDespachoTipo->getGeneraMonitoreo()) {
+                    $arMonitoreo = new TteMonitoreo();
+                    $arMonitoreo->setVehiculoRel($arDespacho->getVehiculoRel());
+                    $arMonitoreo->setDespachoRel($arDespacho);
+                    $arMonitoreo->setFechaRegistro(new \DateTime('now'));
+                    $arMonitoreo->setFechaInicio(new \DateTime('now'));
+                    $arMonitoreo->setFechaFin(new \DateTime('now'));
+                    $em->persist($arMonitoreo);
                 }
                 $em->persist($arDespacho);
                 $em->flush();

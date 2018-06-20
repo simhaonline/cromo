@@ -1,0 +1,44 @@
+{% extends 'base_general.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ notificar()|raw }}
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class='page-header'>
+                General seguridad
+                <small style="font-size: 20px">Usuario: nuevo</small>
+                <a class="btn btn-xs btn-danger" style="float: right;" href="javascript:abrirVentana3('{{ path('gen_seguridad_usuario_nuevo_clave',{'hash' : encriptar(arUsuario.id)}) }}','cambiarContrasena',600,900)">Cambiar contraseña</a>
+            </h3>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Nombre de usuario:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtUser, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Email:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtEmail, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Activo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.boolActivo) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="float: right;">
+        {{ form_widget(form.btnGuardar) }}
+    </div>
+    <div>
+        <a class="btn btn-sm btn-default" href="{{ path('gen_seguridad_usuario_lista') }}">Cancelar</a>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+

@@ -188,6 +188,11 @@ class InvDocumento
     protected $documentoTipoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvMovimiento", mappedBy="documentoRel")
+     */
+    protected $documentoMovimientoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoDocumentoPk()
@@ -666,4 +671,21 @@ class InvDocumento
     {
         $this->documentoTipoRel = $documentoTipoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentoMovimientoRel()
+    {
+        return $this->documentoMovimientoRel;
+    }
+
+    /**
+     * @param mixed $documentoMovimientoRel
+     */
+    public function setDocumentoMovimientoRel($documentoMovimientoRel): void
+    {
+        $this->documentoMovimientoRel = $documentoMovimientoRel;
+    }
+
 }

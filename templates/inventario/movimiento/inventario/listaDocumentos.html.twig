@@ -28,7 +28,7 @@
                     <td>{{ arDocumento.abreviatura | default('') }}</td>
                     {{ validarTipo(arDocumento.asignarConsecutivoImpresion) }}
                     <td style="text-align: center;">
-                        <a href="{{ path('inv_mov_inventario_movimiento_lista', {'codigoDocumento' : arDocumento.codigoDocumentoPk }) }}">
+                        <a href="{{ path('inv_mov_inventario_movimiento_lista', {'tipoDocumento': tipoDocumento,'codigoDocumento' : arDocumento.codigoDocumentoPk }) }}">
                             <i class="fa fa-share-square-o" style="font-size: large">
                             </i>
                         </a>

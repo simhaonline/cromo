@@ -96,7 +96,7 @@ class SolicitudController extends Controller
                 return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
             }
         }
-        return $this->render('inventario/movimiento/solicitud/detalle.html.twig', [
+        return $this->render('inventario/movimiento/compra/solicitud/detalle.html.twig', [
             'form' => $form->createView(),
             'arSolicitudDetalles' => $arSolicitudDetalles,
             'arSolicitud' => $arSolicitud
@@ -138,7 +138,7 @@ class SolicitudController extends Controller
             }
         }
         $arItems = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
-        return $this->render('inventario/movimiento/solicitud/detalleNuevo.html.twig', [
+        return $this->render('inventario/movimiento/compra/solicitud/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems
         ]);

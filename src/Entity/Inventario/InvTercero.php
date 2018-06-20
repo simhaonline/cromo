@@ -89,6 +89,10 @@ class InvTercero
      * @ORM\OneToMany(targetEntity="InvOrdenCompra",mappedBy="terceroRel")
      */
     protected $terceroOrdenCompraRel;
+    /**
+     * @ORM\OneToMany(targetEntity="InvMovimiento",mappedBy="terceroRel")
+     */
+    protected $terceroMovimientoRel;
 
     /**
      * @return mixed
@@ -344,6 +348,22 @@ class InvTercero
     public function setTerceroOrdenCompraRel($terceroOrdenCompraRel): void
     {
         $this->terceroOrdenCompraRel = $terceroOrdenCompraRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTerceroMovimientoRel()
+    {
+        return $this->terceroMovimientoRel;
+    }
+
+    /**
+     * @param mixed $terceroMovimientoRel
+     */
+    public function setTerceroMovimientoRel($terceroMovimientoRel): void
+    {
+        $this->terceroMovimientoRel = $terceroMovimientoRel;
     }
 }
 

@@ -26,24 +26,36 @@
                 <th>APROBADO</th>
                 <th>ANULADO</th>
                 <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
             {% for arMovimiento in arMovimientos %}
                 <tr>
-                    <td>{{ arMovimiento.codigoMovimientoPk }}</td>
-                    <td>{{ arMovimiento.numero | default('') }}</td>
-                    <td>{{ arMovimiento.terceroRel.nombreCorto }}</td>
+                    {{ validarTipo(arMovimiento.codigoMovimientoPk ) }}
+                    {{ validarTipo(arMovimiento.numero) }}
+                    {{ validarTipo(arMovimiento.terceroRel.nombreCorto ) }}
                     {{ validarTipo(arMovimiento.fecha) }}
-                    <td>{{ arMovimiento.vrSubtotal }}</td>
-                    <td>{{ arMovimiento.vrIva }}</td>
-                    <td>{{ arMovimiento.vrDescuento }}</td>
-                    <td>{{ arMovimiento.vrNeto }}</td>
-                    <td>{{ arMovimiento.vrTotal }}</td>
+                    {{ validarTipo(arMovimiento.vrSubtotal) }}
+                    {{ validarTipo(arMovimiento.vrIva) }}
+                    {{ validarTipo(arMovimiento.vrDescuento) }}
+                    {{ validarTipo(arMovimiento.vrNeto) }}
+                    {{ validarTipo(arMovimiento.vrTotal) }}
                     {{ validarTipo(arMovimiento.estadoAutorizado) }}
                     {{ validarTipo(arMovimiento.estadoAprobado) }}
                     {{ validarTipo(arMovimiento.estadoAnulado) }}
-                    <td></td>
+                    <td style="text-align: center;">
+                        <a href="{{ path('inv_mov_inventario_movimiento_nuevo', {'codigoDocumento':arMovimiento.codigoDocumentoFk,'id': arMovimiento.codigoMovimientoPk}) }}">
+                            <i class="fa fa-edit" style="font-size: large">
+                            </i>
+                        </a>
+                    </td>
+                    <td style="text-align: center;">
+                        <a href="{{ path('inv_mov_inventario_movimiento_detalle', {'id' : arMovimiento.codigoMovimientoPk }) }}">
+                            <i class="fa fa-share-square-o" style="font-size: large">
+                            </i>
+                        </a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -51,5 +63,8 @@
     </div>
     <div class="btn-group" style="float: right;">
         <a class="btn btn-sm btn-default" href="{{ path('inv_mov_inventario_movimiento_nuevo',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-sm btn-default" href="{{ path('inv_mov_inventario_movimiento_documentos_lista',{'tipoDocumento': tipoDocumento}) }}">volver</a>
     </div>
 {% endblock %}

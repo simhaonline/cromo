@@ -25,7 +25,7 @@ class TteCliente
     /**
      * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=true)
      */
-    private $numero_identificacion;
+    private $numeroIdentificacion;
 
     /**
      * @ORM\Column(name="digito_verificacion", type="string", length=1, nullable=true)
@@ -176,15 +176,15 @@ class TteCliente
      */
     public function getNumeroIdentificacion()
     {
-        return $this->numero_identificacion;
+        return $this->numeroIdentificacion;
     }
 
     /**
-     * @param mixed $numero_identificacion
+     * @param mixed $numeroIdentificacion
      */
-    public function setNumeroIdentificacion($numero_identificacion): void
+    public function setNumeroIdentificacion($numeroIdentificacion): void
     {
-        $this->numero_identificacion = $numero_identificacion;
+        $this->numeroIdentificacion = $numeroIdentificacion;
     }
 
     /**
@@ -382,6 +382,22 @@ class TteCliente
     /**
      * @return mixed
      */
+    public function getCodigoCondicionFk()
+    {
+        return $this->codigoCondicionFk;
+    }
+
+    /**
+     * @param mixed $codigoCondicionFk
+     */
+    public function setCodigoCondicionFk($codigoCondicionFk): void
+    {
+        $this->codigoCondicionFk = $codigoCondicionFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -409,6 +425,22 @@ class TteCliente
     public function setIdentificacionRel($identificacionRel): void
     {
         $this->identificacionRel = $identificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCondicionRel()
+    {
+        return $this->condicionRel;
+    }
+
+    /**
+     * @param mixed $condicionRel
+     */
+    public function setCondicionRel($condicionRel): void
+    {
+        $this->condicionRel = $condicionRel;
     }
 
     /**
@@ -507,37 +539,7 @@ class TteCliente
         $this->recibosClienteRel = $recibosClienteRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCodigoCondicionFk()
-    {
-        return $this->codigoCondicionFk;
-    }
 
-    /**
-     * @param mixed $codigoCondicionFk
-     */
-    public function setCodigoCondicionFk($codigoCondicionFk): void
-    {
-        $this->codigoCondicionFk = $codigoCondicionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCondicionRel()
-    {
-        return $this->condicionRel;
-    }
-
-    /**
-     * @param mixed $condicionRel
-     */
-    public function setCondicionRel($condicionRel): void
-    {
-        $this->condicionRel = $condicionRel;
-    }
 
 }
 

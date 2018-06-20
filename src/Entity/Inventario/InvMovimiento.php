@@ -138,7 +138,7 @@ class InvMovimiento
     private $estadoContabilizado = false;
     
     /**
-     * @ORM\ManyToOne(targetEntity="InvDocumento", inversedBy="movimientosDocumentoRel")
+     * @ORM\ManyToOne(targetEntity="InvDocumento", inversedBy="documentoMovimientoRel")
      * @ORM\JoinColumn(name="codigo_documento_fk", referencedColumnName="codigo_documento_pk")
      */
     protected $documentoRel;
@@ -150,15 +150,15 @@ class InvMovimiento
     protected $documentoTipoRel;
     
     /**
-     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="movimientosTerceroRel")
+     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="terceroMovimientoRel")
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
      */
     protected $terceroRel;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="movimientoRel")
      */
-    protected $movimientoMovimientoDetallesRel;
+    protected $movimientoMovimientoDetalleRel;
 
     /**
      * @return mixed
@@ -355,22 +355,6 @@ class InvMovimiento
     /**
      * @return mixed
      */
-    public function getUsuario()
-    {
-        return $this->usuario;
-    }
-
-    /**
-     * @param mixed $usuario
-     */
-    public function setUsuario($usuario): void
-    {
-        $this->usuario = $usuario;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVrSubtotal()
     {
         return $this->vrSubtotal;
@@ -499,6 +483,22 @@ class InvMovimiento
     /**
      * @return mixed
      */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoAutorizado()
     {
         return $this->estadoAutorizado;
@@ -611,16 +611,16 @@ class InvMovimiento
     /**
      * @return mixed
      */
-    public function getMovimientoMovimientoDetallesRel()
+    public function getMovimientoMovimientoDetalleRel()
     {
-        return $this->movimientoMovimientoDetallesRel;
+        return $this->movimientoMovimientoDetalleRel;
     }
 
     /**
-     * @param mixed $movimientoMovimientoDetallesRel
+     * @param mixed $movimientoMovimientoDetalleRel
      */
-    public function setMovimientoMovimientoDetallesRel($movimientoMovimientoDetallesRel): void
+    public function setMovimientoMovimientoDetalleRel($movimientoMovimientoDetalleRel): void
     {
-        $this->movimientoMovimientoDetallesRel = $movimientoMovimientoDetallesRel;
+        $this->movimientoMovimientoDetalleRel = $movimientoMovimientoDetalleRel;
     }
 }

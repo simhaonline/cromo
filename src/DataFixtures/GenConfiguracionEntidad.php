@@ -81,7 +81,12 @@ class GenConfiguracionEntidad extends Fixture
             'marca,administracion,transporte,0,0',
             'tipoCombustible,administracion,general,0,0',
             'tipoCarroceria,administracion,transporte,0,0',
-            'poseedor,administracion,transporte,0,0'];
+            'poseedor,administracion,transporte,0,0',
+            'auxiliar,administracion,transporte,0,0',
+            'consecutivo,administracion,general,0,0',
+            'facturaTipo,administracion,comercial,0,0',
+            'guiaTipo,administracion,transporte,0,0',
+            'operacion,administracion,general,0,0'];
         $this->setConfiguracionEntidades($arrModuloTransporte, $em, 'transporte');
 
         $em->flush();

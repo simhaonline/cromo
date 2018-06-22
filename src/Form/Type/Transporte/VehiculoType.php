@@ -92,7 +92,6 @@ class VehiculoType extends AbstractType
             ->add('capacidad',TextType::class,['required' => true,'label' => 'Capacidad:'])
             ->add('celular',NumberType::class,['required' => true,'label' => 'Celular:'])
             ->add('registroNacionalCarga',NumberType::class,['required' => true,'label' => 'RNDC:'])
-            ->add('configuracion')
             ->add('numeroPoliza',NumberType::class,['required' => true,'label' => 'Numero poliza:'])
             ->add('fechaVencePoliza', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('fechaVenceTecnicomecanica', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))

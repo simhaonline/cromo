@@ -12,7 +12,15 @@ class TteConductorRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TteConductor::class);
     }
-
+    public function camposPredeterminados(){
+        $qb = $this-> _em->createQueryBuilder()
+            ->from('App:Transporte\TteConductor','c')
+            ->select('c.codigoConductorPk AS ID')
+            ->addSelect('c.numeroIdentificacion AS NUMERO_IDENTIFICACION')
+            ->addSelect('c.nombreCorto AS NOMBRE');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
     public function dqlRndc($codigoConductor): array
     {
         $em = $this->getEntityManager();

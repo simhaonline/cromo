@@ -68,7 +68,15 @@ class GenConfiguracionEntidad extends Fixture
         $arrModuloTransporte = $arrModuloTransporte = [
             'relacionCaja,movimiento,control,1,1',
             'novedadTipo,administracion,transporte,0,0',
-            'cliente,administracion,transporte,0,0'];
+            'cliente,administracion,transporte,0,0',
+            'aseguradora,administracion,transporte,0,0',
+            'ciudad,administracion,general,0,0',
+            'departamento,administracion,general,0,0',
+            'ruta,administracion,transporte,0,0',
+            'precio,administracion,comercial,0,0',
+            'conductor,administracion,transporte,0,0',
+            'condicion,administracion,comercial,0,0',
+            'color,administracion,transporte,0,0'];
         $this->setConfiguracionEntidades($arrModuloTransporte, $em, 'transporte');
 
         $em->flush();

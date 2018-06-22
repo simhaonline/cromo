@@ -34,6 +34,7 @@ class SeguridadController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $arUsuario = new Usuario();
+        $respuesta = '';
         $id = $this->verificarUsuario($hash);
         if ($id != 0) {
             $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
@@ -44,19 +45,37 @@ class SeguridadController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtUser', TextType::class, ['data' => $arUsuario->getUsername()])
             ->add('txtEmail', TextType::class, ['data' => $arUsuario->getEmail()])
-            ->add('boolActivo', CheckboxType::class, ['data' => $arUsuario->getisActive(), 'label' => ' '])
-            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-smbtn-primary']])
+            ->add('boolActivo', CheckboxType::class, ['data' => $arUsuario->getisActive(), 'label' => ' ','required' => false])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
-                $arUsuario->setUsername($form->get('txtUser')->getData());
-                $arUsuario->setEmail($form->get('txtEmail')->getData());
-                $arUsuario->setIsActive($form->get('boolActivo')->getData());
-                $em->persist($arUsuario);
+                $userName = $form->get('txtUser')->getData();
+                if(!$em->getRepository('App:Seguridad\Usuario')->findBy(['username' => $userName])){
+                    $arUsuario->setUsername($userName);
+                } else {
+                    $respuesta = 'El usuario ingresado ya se encuentra registrado';
+                }
+                $email = $form->get('txtEmail')->getData();
+                if(!$em->getRepository('App:Seguridad\Usuario')->findBy(['email' => $email])){
+                    $arUsuario->setEmail($form->get('txtEmail')->getData());
+                } else {
+                    $respuesta = 'El email ingresado ya se encuentra registrado';
+                }
+                if($respuesta == ''){
+                    $arUsuario->setIsActive($form->get('boolActivo')->getData());
+                    if($id == 0){
+                        $arUsuario->setPassword(password_hash('123', PASSWORD_BCRYPT));
+                    }
+                    $em->persist($arUsuario);
+                    $em->flush();
+                    return $this->redirect( $this->generateUrl('gen_seguridad_usuario_lista'));
+                } else{
+                    MensajesController::error($respuesta);
+                }
             }
-            $em->flush();
         }
         return $this->render('general/seguridad/nuevo.html.twig', [
             'arUsuario' => $arUsuario,
@@ -118,12 +137,14 @@ class SeguridadController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $id = 0;
-        $arUsuarios = $em->getRepository('App:Seguridad\Usuario')->findBy(['isActive' => true]);
-        if (count($arUsuarios) > 0) {
-            $hash = str_replace('&', '/', $hash);
-            foreach ($arUsuarios as $arUsuario) {
-                if (password_verify($arUsuario->getId(), $hash)) {
-                    $id = $arUsuario->getId();
+        if ($hash != '0') {
+            $arUsuarios = $em->getRepository('App:Seguridad\Usuario')->findAll();
+            if (count($arUsuarios) > 0) {
+                $hash = str_replace('&', '/', $hash);
+                foreach ($arUsuarios as $arUsuario) {
+                    if (password_verify($arUsuario->getId(), $hash)) {
+                        $id = $arUsuario->getId();
+                    }
                 }
             }
         }

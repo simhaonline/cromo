@@ -15,6 +15,16 @@ class TteConsecutivoRepository extends ServiceEntityRepository
         parent::__construct($registry, TteConsecutivo::class);
     }
 
+    public function camposPredeterminados(){
+        $qb = $this-> _em->createQueryBuilder()
+            ->from('App:Transporte\TteConsecutivo','c')
+            ->select('c.codigoConsecutivoPk AS ID')
+            ->addSelect('c.nombre AS NOMBRE_COMPLETO')
+            ->addSelect('c.consecutivo AS CONSECUTIVO');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
+
     public function consecutivo($codigoConsecutivo) {
         $em = $this->getEntityManager();
         $intNumero = 0;

@@ -2,22 +2,21 @@
 
 namespace App\Repository\Transporte;
 
-use App\Entity\Transporte\TteCiudad;
+use App\Entity\Transporte\TteMarca;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class TteCiudadRepository extends ServiceEntityRepository
+class TteMarcaRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, TteCiudad::class);
+        parent::__construct($registry, TteMarca::class);
     }
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
-            ->from('App:Transporte\TteCiudad','c')
-            ->select('c.codigoCiudadPk AS ID')
-            ->addSelect('c.nombre AS NOMBRE')
-            ->addSelect('c.codigoDivision AS DIVISION');
+            ->from('App:Transporte\TteMarca','m')
+            ->select('m.codigoMarcaPk AS ID')
+            ->addSelect('m.nombre AS NOMBRE');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }

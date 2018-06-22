@@ -12,6 +12,14 @@ class TteVehiculoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TteVehiculo::class);
     }
+    public function camposPredeterminados(){
+        $qb = $this-> _em->createQueryBuilder()
+            ->from('App:Transporte\TteVehiculo','v')
+            ->select('v.codigoVehiculoPk AS ID')
+            ->addSelect('v.placa AS PLACA');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 
     public function dqlRndc($codigoVehiculo): array
     {

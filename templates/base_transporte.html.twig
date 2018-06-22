@@ -147,9 +147,39 @@
                                 <li>
                                     <a href="#">Transporte <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'aseguradora'}) }}">Aseguradora</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'poseedor'}) }}">Poseedor</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'conductor'}) }}">Conductor</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'vehiculo'}) }}">Vehículo</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'tipoCombustible'}) }}">Tipo combustible</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'marca'}) }}">Marca</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'color'}) }}">Color</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Ruta</a></li>
                                         <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'cliente'}) }}">Cliente</a></li>
-                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'novedadTipo'}) }}">Tipo novedad</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'tipoCarroceria'}) }}">Carrocería tipo </a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'novedadTipo'}) }}">Novedad tipo</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'auxiliar'}) }}">Auxiliar</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'guiaTipo'}) }}">Guía tipo</a></li>
                                         <li><a href="{{ path('tte_adm_comercial_precio_lista') }}">Precio</a></li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
+                                <li>
+                                    <a href="#">General <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'operacion'}) }}">Operacion</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'consecutivo'}) }}">Consecutivo</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'departamento'}) }}">Departamento</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ciudad'}) }}">Ciudad</a></li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
+                                <li>
+                                    <a href="#">Comercial <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'precio'}) }}">Precio</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'condicion'}) }}">Condicion comercial</a></li>
+                                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'facturaTipo'}) }}">Factura tipo</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>

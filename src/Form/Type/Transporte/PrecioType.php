@@ -27,7 +27,7 @@ class PrecioType extends AbstractType {
             ->add('nombre', TextType::class)
             ->add('comentario',TextareaType::class, array('required' => false))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
-                ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));
+            ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));
     }
 
     /**

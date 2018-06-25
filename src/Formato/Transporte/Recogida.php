@@ -36,7 +36,7 @@ class Recogida extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
         $this->SetXY(53, 10);
-        $this->Image('../assets/img/empresa/logo.jpeg', 12, 13, 40, 25);
+        $this->Image('../public/img/empresa/logo.jpeg', 12, 13, 40, 25);
         $this->Cell(147, 7, utf8_decode("RECOGIDA"), 0, 0, 'C', 1);
         $this->SetXY(53, 18);
         $this->SetFont('Arial', 'B', 9);

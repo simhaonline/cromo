@@ -27,6 +27,17 @@ class CiudadType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Ruta:'
             ])
+            ->add('departamentoRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TteDepartamento',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('d')
+                        ->orderBy('d.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Departamento:'
+            ])
+            ->add('codigoCiudadPk',TextType::class,['required' => true,'label' => 'Codigo ciudad:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('codigoDivision',TextType::class,['required' => true,'label' => 'Codigo division:'])
             ->add('nombreDivision',TextType::class,['required' => true,'label' => 'Nombre division:'])

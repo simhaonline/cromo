@@ -29,7 +29,7 @@ class VehiculoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Aseguradora:'
             ])
-            ->add('codigoPoseedorFk',EntityType::class,[
+            ->add('poseedorRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\Transporte\TtePoseedor',
                 'query_builder' => function (EntityRepository $er) {
@@ -39,7 +39,7 @@ class VehiculoType extends AbstractType
                 'choice_label' => 'nombreCorto',
                 'label' => 'Poseedor:'
             ])
-            ->add('codigoPropietarioFk',EntityType::class,[
+            ->add('propietarioRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\Transporte\TtePoseedor',
                 'query_builder' => function (EntityRepository $er) {
@@ -49,7 +49,7 @@ class VehiculoType extends AbstractType
                 'choice_label' => 'nombreCorto',
                 'label' => 'Propietario:'
             ])
-            ->add('codigoMarcaFk',EntityType::class,[
+            ->add('marcaRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\Transporte\TteMarca',
                 'query_builder' => function (EntityRepository $er) {
@@ -59,7 +59,7 @@ class VehiculoType extends AbstractType
                 'choice_label' => 'codigoMarcaPk',
                 'label' => 'Marca:'
             ])
-            ->add('codigoTipoCombustibleFk',EntityType::class,[
+            ->add('tipoCombustibleRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\Transporte\TteTipoCombustible',
                 'query_builder' => function (EntityRepository $er) {
@@ -69,7 +69,7 @@ class VehiculoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Tipo combustile:'
             ])
-            ->add('codigoTipoCarroceriaFk',EntityType::class,[
+            ->add('tipoCarroceriaRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\Transporte\TteTipoCarroceria',
                 'query_builder' => function (EntityRepository $er) {
@@ -79,11 +79,21 @@ class VehiculoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Tipo carroceria:'
             ])
+            ->add('colorRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TteColor',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('cl')
+                        ->orderBy('cl.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Color:'
+            ])
             ->add('codigoVehiculoPk',TextType::class,['required' => true,'label' => 'Codigo Vehiculo:'])
             ->add('placa',TextType::class,['required' => true,'label' => 'Placa:'])
             ->add('placaRemolque',TextType::class,['required' => true,'label' => 'Placa remolque:'])
             ->add('modelo',NumberType::class,['required' => true,'label' => 'Modelo:'])
-            ->add('modeloRepotenciado',NumberType::class,['required' => true,'label' => 'Modelo repotenciado:'])
+            ->add('modeloRepotenciado',NumberType::class,['required' => false,'label' => 'Modelo repotenciado:'])
             ->add('motor',NumberType::class,['required' => true,'label' => 'Motor:'])
             ->add('numeroEjes',NumberType::class,['required' => true,'label' => 'Numero ejes:'])
             ->add('chasis',TextType::class,['required' => true,'label' => 'Chasis:'])
@@ -95,7 +105,7 @@ class VehiculoType extends AbstractType
             ->add('numeroPoliza',NumberType::class,['required' => true,'label' => 'Numero poliza:'])
             ->add('fechaVencePoliza', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('fechaVenceTecnicomecanica', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
-            ->add('comentario',TextareaType::class,['required' => true,'label' => 'Capacidad:'])
+            ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
         ;

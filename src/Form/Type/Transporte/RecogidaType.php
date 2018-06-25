@@ -2,6 +2,8 @@
 
 namespace App\Form\Type\Transporte;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,8 +20,29 @@ class RecogidaType extends AbstractType {
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('anunciante',TextType::class, array('required' => true))
-                ->add('fecha', DateTimeType::class)
+        $builder
+            ->add('conductorRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TteConductor',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombreCorto', 'ASC');
+                },
+                'choice_label' => 'nombreCorto',
+                'label' => 'Conductor:'
+            ])
+            ->add('vehiculoRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TteVehiculo',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('v')
+                        ->orderBy('v.placa', 'ASC');
+                },
+                'choice_label' => 'placa',
+                'label' => 'Vehiculo:'
+            ])
+            ->add('anunciante',TextType::class, array('required' => true))
+            ->add('fecha', DateTimeType::class)
             ->add('direccion', TextType::class)
             ->add('telefono', TextType::class)
             ->add('unidades', NumberType::class)

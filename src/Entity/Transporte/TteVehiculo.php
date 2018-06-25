@@ -172,6 +172,12 @@ class TteVehiculo
     private $tipoCombustibleRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteColor", inversedBy="vehiculosColorRel")
+     * @ORM\JoinColumn(name="codigo_color_fk", referencedColumnName="codigo_color_pk")
+     */
+    private $colorRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteTipoCarroceria", inversedBy="vehiculosTipoCarroceriaRel")
      * @ORM\JoinColumn(name="codigo_tipo_carroceria_fk", referencedColumnName="codigo_tipo_carroceria_pk")
      */
@@ -181,6 +187,11 @@ class TteVehiculo
      * @ORM\OneToMany(targetEntity="TteDespacho", mappedBy="vehiculoRel")
      */
     protected $despachosVehiculoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteRecogida", mappedBy="vehiculoRel")
+     */
+    protected $recogidasVechiculoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteDespachoRecogida", mappedBy="vehiculoRel")
@@ -750,6 +761,38 @@ class TteVehiculo
     public function setTipoCarroceriaRel($tipoCarroceriaRel): void
     {
         $this->tipoCarroceriaRel = $tipoCarroceriaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasVechiculoRel()
+    {
+        return $this->recogidasVechiculoRel;
+    }
+
+    /**
+     * @param mixed $recogidasVechiculoRel
+     */
+    public function setRecogidasVechiculoRel($recogidasVechiculoRel): void
+    {
+        $this->recogidasVechiculoRel = $recogidasVechiculoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getColorRel()
+    {
+        return $this->colorRel;
+    }
+
+    /**
+     * @param mixed $colorRel
+     */
+    public function setColorRel($colorRel): void
+    {
+        $this->colorRel = $colorRel;
     }
 
 

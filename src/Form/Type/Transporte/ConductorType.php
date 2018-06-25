@@ -20,9 +20,9 @@ class ConductorType extends AbstractType
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
             ->add('nombreCorto',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('nombre1',TextType::class,['required' => true,'label' => 'Primer nombre:'])
-            ->add('nombre2',TextType::class,['required' => true,'label' => 'Segundo nombre:'])
+            ->add('nombre2',TextType::class,['required' => false,'label' => 'Segundo nombre:'])
             ->add('apellido1',TextType::class,['required' => true,'label' => 'Primer apellido:'])
-            ->add('apellido2',TextType::class,['required' => true,'label' => 'Segundo apellido:'])
+            ->add('apellido2',TextType::class,['required' => false,'label' => 'Segundo apellido:'])
             ->add('direccion',TextType::class,['required' => true,'label' => 'Direccion:'])
             ->add('fechaNacimiento', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('telefono',NumberType::class,['required' => true,'label' => 'Telefono:'])
@@ -33,7 +33,7 @@ class ConductorType extends AbstractType
             ->add('barrio',TextType::class,['required' => true,'label' => 'Barrio:'])
             ->add('alias',TextType::class,['required' => true,'label' => 'Alias:'])
             ->add('codigoVehiculo',TextType::class,['required' => true,'label' => 'Codigo vehiculo:'])
-            ->add('comentario',TextareaType::class,['required' => true,'label' => 'Comentarios:'])
+            ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
         ;

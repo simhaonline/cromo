@@ -22,6 +22,11 @@ class TteDepartamento
     private $nombre;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteCiudad", mappedBy="departamentoRel")
+     */
+    protected $ciudadesRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoDepartamentoPk()
@@ -51,6 +56,22 @@ class TteDepartamento
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadesRel()
+    {
+        return $this->ciudadesRel;
+    }
+
+    /**
+     * @param mixed $ciudadesRel
+     */
+    public function setCiudadesRel($ciudadesRel): void
+    {
+        $this->ciudadesRel = $ciudadesRel;
     }
 
 

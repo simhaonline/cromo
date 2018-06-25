@@ -123,6 +123,11 @@ class TteConductor
     protected $despachosConductorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteRecogida", mappedBy="conductorRel")
+     */
+    protected $recogidasConductorRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="conductoresCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -516,6 +521,22 @@ class TteConductor
     public function setFechaNacimiento($fechaNacimiento): void
     {
         $this->fechaNacimiento = $fechaNacimiento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasConductorRel()
+    {
+        return $this->recogidasConductorRel;
+    }
+
+    /**
+     * @param mixed $recogidasConductorRel
+     */
+    public function setRecogidasConductorRel($recogidasConductorRel): void
+    {
+        $this->recogidasConductorRel = $recogidasConductorRel;
     }
 
 

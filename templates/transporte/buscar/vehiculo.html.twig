@@ -35,7 +35,7 @@
         {% for arVehiculos in arVehiculos %}
             <tr>
                 <td><input type="hidden" name="LblCodigo[]" value="{{ arVehiculos.codigoVehiculoPk }}">{{ arVehiculos.codigoVehiculoPk }} </td>
-                <td style="text-align: center"><a href="javascript:selTercero('{{ arVehiculos.codigoVehiculoPk }}','{{ campoCodigo }}')" ><img src="{{ asset('../assets/img/bootstrap/glyphicons_198_ok.png') }}" width=20 height=20></a></td>
+                <td style="text-align: center"><a href="javascript:selTercero('{{ arVehiculos.codigoVehiculoPk }}','{{ campoCodigo }}')" ><img src="{{ asset('../public/img/bootstrap/glyphicons_198_ok.png') }}" width=20 height=20></a></td>
             </tr>
         {% endfor %}
     </table>

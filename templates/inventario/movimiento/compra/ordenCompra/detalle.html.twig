@@ -33,23 +33,27 @@
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arOrdenCompra.usuario }}</td>
             <td class="titulo">SUBTOTAL:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arOrdenCompra.vrSubtotal }}</td>
+            <td class="td-in-well" style="text-align: right;">{{ arOrdenCompra.vrSubtotal |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arOrdenCompra.numero }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arOrdenCompra.fecha | date('Y-m-d') }}</td>
-            <td class="titulo">TOTAL:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arOrdenCompra.vrNeto }}</td>
+            <td class="titulo">IVA:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arOrdenCompra.vrIva |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">SOPORTE:</td>
-            <td class="td-in-well" colspan="5">{{ arOrdenCompra.soporte }}</td>
+            <td class="td-in-well" colspan="3">{{ arOrdenCompra.soporte }}</td>
+            <td class="titulo">TOTAL:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arOrdenCompra.vrTotal |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
-            <td class="td-in-well" colspan="5">{{ arOrdenCompra.comentarios }}</td>
+            <td class="td-in-well" colspan="3">{{ arOrdenCompra.comentarios }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well" ></td>
         </tr>
     </table>
     <ul class="nav nav-tabs">
@@ -77,22 +81,28 @@
                             <tr>
                                 <td>{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}</td>
                                 <td>{{ arOrdenCompraDetalle.itemRel.nombre | default('') }}</td>
-                                <td>{{ arOrdenCompraDetalle.cantidad }}</td>
                                 {% if arOrdenCompra.estadoAutorizado == false %}
+
+
+                                    <td style="text-align: center">
+                                        <input class="input-valor" type="number" placeholder="Cantidad"
+                                               name="arrCantidad[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]" value="{{ arOrdenCompraDetalle.cantidadSolicitada }}"/>
+                                    </td>
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="Valor unitario"
-                                               name="ArrValores[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]" value="{{ arOrdenCompraDetalle.valor }}"/>
+                                               name="arrValor[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]" value="{{ arOrdenCompraDetalle.vrUnitario }}"/>
                                     </td>
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="Porcentaje IVA"
-                                               name="ArrIva[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]" value="{{ arOrdenCompraDetalle.porcentajeIva }}"/>
+                                               name="arrIva[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]" value="{{ arOrdenCompraDetalle.porIva }}"/>
                                     </td>
                                 {% else %}
+                                    <td style="text-align: right;">{{ arOrdenCompraDetalle.cantidadSolicitada }}</td>
                                     <td style="text-align: right">
-                                        {{ arOrdenCompraDetalle.valor |number_format(0, '.', ',') }}
+                                        {{ arOrdenCompraDetalle.vrUnitario |number_format(0, '.', ',') }}
                                     </td>
                                     <td style="text-align: right">
-                                        {{ arOrdenCompraDetalle.porcentajeIva }}
+                                        {{ arOrdenCompraDetalle.porIva }}
                                     </td>
                                 {% endif %}
                                 <td style="text-align: right">
@@ -131,6 +141,9 @@
                                href="javascript:abrirVentana3('{{ path('inv_mov_inventario_ordenCompra_detalle_nuevo', {'codigoDetalle': 0,'id':arOrdenCompra.codigoOrdenCompraPk }) }}', 'OrdenCompraNuevoDetalle', 600, 900)">Nuevo</a>
                         </div>
                     {% endif %}
+                    <div class="btn-group">
+                        {{ form_widget(form.btnActualizar) }}
+                    </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnEliminar) }}
                     </div>

@@ -128,7 +128,7 @@ class SolicitudController extends Controller
                             $arSolicitudDetalle->setSolicitudRel($arSolicitud);
                             $arSolicitudDetalle->setItemRel($arItem);
                             $arSolicitudDetalle->setCantidadSolicitada($cantidad);
-                            $arSolicitudDetalle->setCantidadRestante($cantidad);
+                            $arSolicitudDetalle->setCantidadPendiente($cantidad);
                             $em->persist($arSolicitudDetalle);
                         }
                     }

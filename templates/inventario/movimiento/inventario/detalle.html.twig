@@ -32,21 +32,31 @@
             <td class="td-in-well">{{ arMovimiento.codigoMovimientoPk }}</td>
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arMovimiento.usuario }}</td>
-
+            <td class="titulo">SUBTOTAL:</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arMovimiento.vrSubtotal |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arMovimiento.numero }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arMovimiento.fecha | date('Y-m-d') }}</td>
+            <td class="titulo">IVA:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrIva | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">SOPORTE:</td>
-            <td class="td-in-well" colspan="5">{{ arMovimiento.soporte }}</td>
+            <td class="td-in-well" colspan="3">{{ arMovimiento.soporte }}</td>
+            <td class="titulo">DESCUENTO:</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arMovimiento.vrDescuento | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
-            <td class="td-in-well" colspan="5">{{ arMovimiento.comentarios }}</td>
+            <td class="td-in-well" colspan="3">{{ arMovimiento.comentarios }}</td>
+            <td class="titulo">TOTAL:</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arMovimiento.vrTotal | number_format(0, '.', ',') }}</td>
         </tr>
     </table>
     <ul class="nav nav-tabs">
@@ -62,6 +72,7 @@
                             <th>ID</th>
                             <th>ITEM</th>
                             <th>CANTIDAD</th>
+                            <th title="Precio por unidad">PRECIO U</th>
                             <th>SUBTOTAL</th>
                             <th>% DECUENTO</th>
                             <th>DESCUENTO</th>
@@ -85,22 +96,43 @@
                                                                            value="{{ arMovimientoDetalle.cantidad }}">
                                     </td>
                                 {% endif %}
-                                {{ validarTipo(arMovimientoDetalle.vrSubtotal) }}
-                                <td style="text-align: center;"><input type="number" style="text-align: right;"
-                                                                       name="arrDescuento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                                                       value="{{ arMovimientoDetalle.porDescuento }}">
-                                </td>
-                                {{ validarTipo(arMovimientoDetalle.vrDescuento) }}
-                                <td style="text-align: center;"><input type="number" style="text-align: right;"
-                                                                       name="arrIva[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                                                       value="{{ arMovimientoDetalle.porIva }}"></td>
-                                {{ validarTipo(arMovimientoDetalle.vrIva) }}
-                                {{ validarTipo(arMovimientoDetalle.vrNeto) }}
-                                {{ validarTipo(arMovimientoDetalle.vrTotal) }}
-                                <td style="text-align: center;"><input type="checkbox" style="text-align: right;"
-                                                                       name="ChkSeleccionar[]"
-                                                                       value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/>
-                                </td>
+                                {% if arMovimiento.estadoAutorizado %}
+                                    <td style="text-align: right;">{{ arMovimientoDetalle.vrUnitario | number_format(0,'.',',') }}</td>
+                                {% else %}
+                                    <td style="text-align: center;"><input type="number" style="text-align: right;"
+                                                                           name="arrValor[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                                           value="{{ arMovimientoDetalle.vrUnitario }}">
+                                    </td>
+                                {% endif %}
+                                <td style="text-align: right;">{{ arMovimientoDetalle.vrSubtotal | number_format(0,'.',',') }}</td>
+                                {% if arMovimiento.estadoAutorizado %}
+                                    <td style="text-align: right;">{{ arMovimientoDetalle.porDescuento | number_format(0,'.',',') }}</td>
+                                {% else %}
+                                    <td style="text-align: center;"><input type="number" style="text-align: right;"
+                                                                           name="arrDescuento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                                           value="{{ arMovimientoDetalle.porDescuento }}">
+                                    </td>
+                                {% endif %}
+                                <td style="text-align: right;">{{ arMovimientoDetalle.vrDescuento | number_format(0,'.',',') }}</td>
+                                {% if arMovimiento.estadoAutorizado %}
+                                    <td style="text-align: right;">{{ arMovimientoDetalle.porIva | number_format(0,'.',',') }}</td>
+                                {% else %}
+                                    <td style="text-align: center;"><input type="number" style="text-align: right;"
+                                                                           name="arrIva[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                                           value="{{ arMovimientoDetalle.porIva }}">
+                                    </td>
+                                {% endif %}
+                                <td style="text-align: right;">{{ arMovimientoDetalle.vrIva | number_format(0,'.',',') }}</td>
+                                <td style="text-align: right;">{{ arMovimientoDetalle.vrNeto| number_format(0,'.',',') }}</td>
+                                <td style="text-align: right;">{{ arMovimientoDetalle.vrTotal| number_format(0,'.',',') }}</td>
+                                {% if arMovimiento.estadoAutorizado %}
+                                    <td></td>
+                                {% else %}
+                                    <td style="text-align: center;"><input type="checkbox" style="text-align: right;"
+                                                                           name="ChkSeleccionar[]"
+                                                                           value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/>
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -108,15 +140,30 @@
                 </div>
                 {#<div class="separador-1"></div>#}
                 <div class="btn-toolbar" style="float: right">
-                    <div class="btn-group">
-                        {% if arMovimiento.estadoAutorizado == true %}
+                    {% if arMovimiento.estadoAutorizado == true %}
+                        <div class="btn-group">
                             <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
                                    value="Nuevo"/>
-                        {% else %}
+                        </div>
+                        {% if arMovimiento.documentoRel.operacionInventario == 1 %}
+                            <div class="btn-group">
+                                <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
+                                       value="Nuevo desde orden compra"/>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="btn-group">
                             <a class="btn btn-default btn-sm"
                                href="javascript:abrirVentana3('{{ path('inv_mov_inventario_movimiento_detalle_nuevo', {'codigoDetalle': 0,'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 900)">Nuevo</a>
+                        </div>
+                        {% if arMovimiento.documentoRel.operacionInventario == 1 %}
+                            <div class="btn-group">
+                                <a class="btn btn-default btn-sm"
+                                   href="javascript:abrirVentana3('{{ path('inv_mov_inventario_movimiento_ordencompra_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 900)">Nuevo
+                                    desde orden compra</a>
+                            </div>
                         {% endif %}
-                    </div>
+                    {% endif %}
                     <div class="btn-group">
                         {{ form_widget(form.btnActualizar) }}
                     </div>

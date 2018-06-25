@@ -30,10 +30,13 @@ class OrdenCompraController extends Controller
         $form = $this->formularioDetalles($arOrdenCompra);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arrVrItems = $request->request->get('ArrValores');
-            $arrVrIva = $request->request->get('ArrIva');
+            $arrIva = $request->request->get('arrIva');
+            $arrValor = $request->request->get('arrValor');
+            $arrCantidad = $request->request->get('arrCantidad');
+            $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvOrdenCompra')->autorizar($arOrdenCompra, $arrVrItems, $arrVrIva);
+                $em->getRepository('App:Inventario\InvOrdenCompra')->actualizar($arOrdenCompra, $arrValor, $arrCantidad, $arrIva);
+                $em->getRepository('App:Inventario\InvOrdenCompra')->autorizar($arOrdenCompra);
                 return $this->redirect($this->generateUrl('inv_mov_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
@@ -42,6 +45,10 @@ class OrdenCompraController extends Controller
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository('App:Inventario\InvOrdenCompra')->aprobar($arOrdenCompra);
+                return $this->redirect($this->generateUrl('inv_mov_inventario_ordenCompra_detalle', ['id' => $id]));
+            }
+            if  ($form->get('btnActualizar')->isClicked()){
+                $em->getRepository('App:Inventario\InvOrdenCompra')->actualizar($arOrdenCompra, $arrValor, $arrCantidad, $arrIva);
                 return $this->redirect($this->generateUrl('inv_mov_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
@@ -88,7 +95,8 @@ class OrdenCompraController extends Controller
                             $arOrdenCompraDetalle = new InvOrdenCompraDetalle();
                             $arOrdenCompraDetalle->setOrdenCompraRel($arOrdenCompra);
                             $arOrdenCompraDetalle->setItemRel($arItem);
-                            $arOrdenCompraDetalle->setCantidad($cantidad);
+                            $arOrdenCompraDetalle->setCantidadSolicitada($cantidad);
+                            $arOrdenCompraDetalle->setCantidadPendiente($cantidad);
                             $em->persist($arOrdenCompraDetalle);
                         }
                     }
@@ -102,6 +110,17 @@ class OrdenCompraController extends Controller
             'form' => $form->createView(),
             'arItems' => $arItems
         ]);
+    }
+
+    private function formularioFiltroDetalleSolicitud()
+    {
+        return $this->createFormBuilder()
+            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
+            ->add('txtCodigoSolicitud', TextType::class, ['label' => 'Codigo solicitud: ', 'required' => false])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
     }
 
     /**
@@ -124,14 +143,15 @@ class OrdenCompraController extends Controller
                         foreach ($arrSolicitudDetalles as $codigoSolicitudDetalle => $cantidad) {
                             if ($cantidad != '' && $cantidad != 0) {
                                 $arSolicitudDetalle = $em->getRepository('App:Inventario\InvSolicitudDetalle')->find($codigoSolicitudDetalle);
-                                if ($cantidad <= $arSolicitudDetalle->getCantidadRestante()) {
+                                if ($cantidad <= $arSolicitudDetalle->getCantidadPendiente()) {
                                     $arItem = $em->getRepository('App:Inventario\InvItem')->find($arSolicitudDetalle->getCodigoItemFk());
                                     $arOrdenCompraDetalle = new InvOrdenCompraDetalle();
                                     $arOrdenCompraDetalle->setOrdenCompraRel($arOrdenCompra);
                                     $arOrdenCompraDetalle->setItemRel($arItem);
-                                    $arOrdenCompraDetalle->setCantidad($cantidad);
-                                    $arOrdenCompraDetalle->setCodigoSolicitudDetalleFk($arSolicitudDetalle->getCodigoSolicitudDetallePk());
-                                    $arSolicitudDetalle->setCantidadRestante($arSolicitudDetalle->getCantidadRestante() - $cantidad);
+                                    $arOrdenCompraDetalle->setCantidadPendiente($cantidad);
+                                    $arOrdenCompraDetalle->setCantidadSolicitada($cantidad);
+                                    $arOrdenCompraDetalle->setSolicitudDetalleRel($arSolicitudDetalle);
+                                    $arSolicitudDetalle->setCantidadPendiente($arSolicitudDetalle->getCantidadPendiente() - $cantidad);
                                     $em->persist($arSolicitudDetalle);
                                     $em->persist($arOrdenCompraDetalle);
                                 } else {
@@ -168,6 +188,7 @@ class OrdenCompraController extends Controller
         $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         if ($arOrdenCompra->getEstadoAnulado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
@@ -175,6 +196,7 @@ class OrdenCompraController extends Controller
             $arrBtnAnular['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = true;
+            $arrBtnActualizar['disabled'] = true;
         } elseif ($arOrdenCompra->getEstadoAprobado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
@@ -182,13 +204,15 @@ class OrdenCompraController extends Controller
             $arrBtnAnular['disabled'] = false;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = true;
+            $arrBtnActualizar['disabled'] = true;
         } elseif ($arOrdenCompra->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
-            $arrBtnImprimir['disabled'] = true;
+            $arrBtnImprimir['disabled'] = false;
             $arrBtnAnular['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = false;
+            $arrBtnActualizar['disabled'] = true;
         } else {
             $arrBtnAutorizar['disabled'] = false;
             $arrBtnDesautorizar['disabled'] = true;
@@ -196,10 +220,12 @@ class OrdenCompraController extends Controller
             $arrBtnAnular['disabled'] = true;
             $arrBtnEliminar['disabled'] = false;
             $arrBtnAprobar['disabled'] = true;
+            $arrBtnActualizar['disabled'] = false;
         }
         return $this
             ->createFormBuilder()
             ->add('btnAutorizar', SubmitType::class, $arrBtnAutorizar)
+            ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
             ->add('btnAprobar', SubmitType::class, $arrBtnAprobar)
             ->add('btnDesautorizar', SubmitType::class, $arrBtnDesautorizar)
             ->add('btnImprimir', SubmitType::class, $arrBtnImprimir)
@@ -215,17 +241,6 @@ class OrdenCompraController extends Controller
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->getForm();
-    }
-
-    private function formularioFiltroDetalleSolicitud()
-    {
-        return $this->createFormBuilder()
-            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
-            ->add('txtCodigoSolicitud', TextType::class, ['label' => 'Codigo solicitud: ', 'required' => false])
-            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
     }
 

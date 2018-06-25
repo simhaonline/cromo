@@ -2,11 +2,11 @@
 
 namespace App\Repository\Inventario;
 
-use App\Entity\Inventario\InvItem;
+use App\Controller\Estructura\MensajesController;
+use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Doctrine\ORM\EntityManager;
 
 class InvMovimientoDetalleRepository extends ServiceEntityRepository
 {
@@ -17,44 +17,27 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $arMovimiento InvMovimiento
      * @param $arrSeleccionados array
-     * @return string
      */
-    public function eliminar($arrSeleccionados)
+    public function eliminar($arMovimiento, $arrSeleccionados)
     {
-        $respuesta = '';
         if (count($arrSeleccionados) > 0) {
-            foreach ($arrSeleccionados as $codigoItem) {
-                $arItem = $this->_em->getRepository($this->_entityName)->find($codigoItem);
-                if ($arItem) {
-                    $this->_em->remove($arItem);
+            foreach ($arrSeleccionados as $codigoMovimientoDetalle) {
+                $arMovimientoDetalle = $this->_em->getRepository('App:Inventario\InvMovimientoDetalle')->find($codigoMovimientoDetalle);
+                if ($arMovimientoDetalle) {
+                    if($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk()){
+                        $arOrdenCompraDetalle = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findOneBy(['codigoOrdenCompraDetallePk' => $arMovimientoDetalle->getCodigoOrdenCompraDetalleFk()]);
+                        if($arOrdenCompraDetalle){
+                            $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() + $arMovimientoDetalle->getCantidad());
+                            $this->_em->persist($arOrdenCompraDetalle);
+                        }
+                    }
+                    $this->_em->remove($arMovimientoDetalle);
                 }
             }
+            $this->_em->flush();
         }
-        return $respuesta;
-    }
-
-    public function camposPredeterminados()
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('ii.codigoItemPk AS ID')
-            ->addSelect("ii.nombre AS NOMBRE")
-            ->addSelect("ii.cantidadExistencia AS EXISTENCIAS")
-            ->addSelect("ii.afectaInventario AS A_I")
-            ->addSelect("ii.stockMinimo AS STOCK_MINIMO")
-            ->addSelect("ii.stockMaximo AS STOCK_MAXIMO")
-            ->addSelect("ii.vrPrecioPredeterminado AS PRECIO_PREDETERMINADO")
-            ->from("App:Inventario\InvItem", "ii")
-            ->where('ii.codigoItemPk <> 0');
-//        if ($nombre != '') {
-//            $qb->andWhere("ii.nombre LIKE '%{$nombre}%'");
-//        }
-//        if ($codigoBarras != '') {
-//            $qb->andWhere("ii.codigoBarras = {$codigoBarras}");
-//        }
-        $qb->orderBy('ii.codigoItemPk', 'ASC');
-        $dql = $this->getEntityManager()->createQuery($qb->getDQL());
-        return $dql->execute();
     }
 
     public function listarItems($nombreItem = '', $codigoItem = '')

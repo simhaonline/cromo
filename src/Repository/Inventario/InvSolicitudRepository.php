@@ -5,7 +5,6 @@ namespace App\Repository\Inventario;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvSolicitud;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class InvSolicitudRepository extends ServiceEntityRepository

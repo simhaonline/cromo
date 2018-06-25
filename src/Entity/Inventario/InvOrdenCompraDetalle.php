@@ -33,14 +33,14 @@ class InvOrdenCompraDetalle
     private $codigoItemFk;
 
     /**
-     * @ORM\Column(name="cantidad", type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_solicitada", type="integer", nullable=true)
      */
-    private $cantidad = 0;
+    private $cantidadSolicitada = 0;
 
     /**
-     * @ORM\Column(name="valor", type="float", nullable=true)
+     * @ORM\Column(name="vr_unitario", type="float", nullable=true)
      */
-    private $valor = 0;
+    private $vrUnitario = 0;
 
     /**
      * @ORM\Column(name="vr_subtotal", type="float", nullable=true)
@@ -48,14 +48,19 @@ class InvOrdenCompraDetalle
     private $vrSubtotal = 0;
 
     /**
-     * @ORM\Column(name="porcentaje_iva", type="integer", nullable=true)
+     * @ORM\Column(name="por_iva", type="integer", nullable=true)
      */
-    private $porcentajeIva = 0;
+    private $porIva = 0;
 
     /**
      * @ORM\Column(name="vr_iva", type="float", nullable=true)
      */
     private $vrIva = 0;
+
+    /**
+     * @ORM\Column(name="vr_neto", type="float")
+     */
+    private $vrNeto = 0;
 
     /**
      * @ORM\Column(name="vr_total", type="float", nullable=true)
@@ -65,7 +70,7 @@ class InvOrdenCompraDetalle
     /**
      * @ORM\Column(name="cantidad_pendiente", type="integer", nullable=true)
      */
-    private $cantidadPendiente;
+    private $cantidadPendiente = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="itemOrdenCompraDetallesRel")
@@ -78,6 +83,12 @@ class InvOrdenCompraDetalle
      * @ORM\JoinColumn(name="codigo_orden_compra_fk", referencedColumnName="codigo_orden_compra_pk")
      */
     protected $ordenCompraRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvSolicitudDetalle", inversedBy="solicitudDetalleOrdenCompraDetalleRel")
+     * @ORM\JoinColumn(name="codigo_solicitud_detalle_fk", referencedColumnName="codigo_solicitud_detalle_pk")
+     */
+    protected $solicitudDetalleRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="ordenCompraDetalleRel")
@@ -151,33 +162,33 @@ class InvOrdenCompraDetalle
     /**
      * @return mixed
      */
-    public function getCantidad()
+    public function getCantidadSolicitada()
     {
-        return $this->cantidad;
+        return $this->cantidadSolicitada;
     }
 
     /**
-     * @param mixed $cantidad
+     * @param mixed $cantidadSolicitada
      */
-    public function setCantidad($cantidad): void
+    public function setCantidadSolicitada($cantidadSolicitada): void
     {
-        $this->cantidad = $cantidad;
+        $this->cantidadSolicitada = $cantidadSolicitada;
     }
 
     /**
      * @return mixed
      */
-    public function getValor()
+    public function getVrUnitario()
     {
-        return $this->valor;
+        return $this->vrUnitario;
     }
 
     /**
-     * @param mixed $valor
+     * @param mixed $vrUnitario
      */
-    public function setValor($valor): void
+    public function setVrUnitario($vrUnitario): void
     {
-        $this->valor = $valor;
+        $this->vrUnitario = $vrUnitario;
     }
 
     /**
@@ -199,17 +210,17 @@ class InvOrdenCompraDetalle
     /**
      * @return mixed
      */
-    public function getPorcentajeIva()
+    public function getPorIva()
     {
-        return $this->porcentajeIva;
+        return $this->porIva;
     }
 
     /**
-     * @param mixed $porcentajeIva
+     * @param mixed $porIva
      */
-    public function setPorcentajeIva($porcentajeIva): void
+    public function setPorIva($porIva): void
     {
-        $this->porcentajeIva = $porcentajeIva;
+        $this->porIva = $porIva;
     }
 
     /**
@@ -226,6 +237,22 @@ class InvOrdenCompraDetalle
     public function setVrIva($vrIva): void
     {
         $this->vrIva = $vrIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrNeto()
+    {
+        return $this->vrNeto;
+    }
+
+    /**
+     * @param mixed $vrNeto
+     */
+    public function setVrNeto($vrNeto): void
+    {
+        $this->vrNeto = $vrNeto;
     }
 
     /**
@@ -290,6 +317,22 @@ class InvOrdenCompraDetalle
     public function setOrdenCompraRel($ordenCompraRel): void
     {
         $this->ordenCompraRel = $ordenCompraRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudDetalleRel()
+    {
+        return $this->solicitudDetalleRel;
+    }
+
+    /**
+     * @param mixed $solicitudDetalleRel
+     */
+    public function setSolicitudDetalleRel($solicitudDetalleRel): void
+    {
+        $this->solicitudDetalleRel = $solicitudDetalleRel;
     }
 
     /**

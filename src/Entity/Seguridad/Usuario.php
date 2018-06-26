@@ -28,7 +28,7 @@ class Usuario implements UserInterface, \Serializable
     private $username;
 
     /**
-     * @ORM\Column(name="nombre_corto",type="string",length=255,nullable=true)
+     * @ORM\Column(name="nombre_corto",type="string",length=255, nullable=true)
      */
     private $nombreCorto;
 

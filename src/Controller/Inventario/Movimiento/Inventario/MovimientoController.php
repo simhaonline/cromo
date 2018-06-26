@@ -6,6 +6,7 @@ use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Form\Type\Inventario\MovimientoType;
+use App\Formato\Inventario\Factura1;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -125,8 +126,15 @@ class MovimientoController extends Controller
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository('App:Inventario\InvMovimiento')->desautorizar($arMovimiento);
             }
-//            if ($form->get('btnImprimir')->isClicked()) {
-//            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $arDocumento = $em->getRepository('App:Inventario\InvDocumento')->findOneBy(['codigoDocumentoPk' => $arMovimiento->getCodigoDocumentoFk()]);
+                if($arDocumento->getCodigoDocumentoTipoFk() == 1){
+                } elseif($arDocumento->getCodigoDocumentoTipoFk() == 2){
+                } elseif($arDocumento->getCodigoDocumentoTipoFk() == 3){
+                    $objFormato = new Factura1();
+                    $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
+                }
+            }
             if ($form->get('btnAprobar')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->aprobar($arMovimiento);
                 if ($respuesta != '') {

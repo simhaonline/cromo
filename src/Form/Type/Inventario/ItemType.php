@@ -2,6 +2,8 @@
 
 namespace App\Form\Type\Inventario;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -22,6 +24,19 @@ class ItemType extends AbstractType
         $builder
             ->add('nombre', TextType::class, ['required' => false])
             ->add('codigoBarras', TextType::class, ['required' => false])
+            ->add('linea', TextType::class, ['required' => false])
+            ->add('grupo', TextType::class, ['required' => false])
+            ->add('subgrupo', TextType::class, ['required' => false])
+            ->add('modelo', TextType::class, ['required' => false])
+            ->add('marcaRel',EntityType::class,[
+                'class' => 'App\Entity\Inventario\InvMarca',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('e')
+                        ->orderBy('e.nombre','DESC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Marca:'
+            ])
             ->add('porcentajeIva', IntegerType::class, ['required' => false])
             ->add('afectaInventario', CheckboxType::class, ['required' => false,'label' => 'Afecta inventario'])
             ->add('descripcion', TextareaType::class, ['required' => false])

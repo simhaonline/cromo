@@ -63,6 +63,31 @@ class InvItem
     private $porcentajeIva = 0;
 
     /**
+     * @ORM\Column(name="linea", type="string",length=50, nullable=true)
+     */
+    private $linea;
+
+    /**
+     * @ORM\Column(name="grupo", type="string",length=50, nullable=true)
+     */
+    private $grupo;
+
+    /**
+     * @ORM\Column(name="subgrupo", type="string",length=50, nullable=true)
+     */
+    private $subgrupo;
+
+    /**
+     * @ORM\Column(name="codigo_marca_fk", type="string",length=50, nullable=true)
+     */
+    private $codigoMarcaFk;
+
+    /**
+     * @ORM\Column(name="modelo", type="string",length=50, nullable=true)
+     */
+    private $modelo;
+
+    /**
      * @ORM\Column(name="cantidad_existencia", type="integer", nullable=true)
      */
     private $cantidadExistencia = 0;
@@ -140,6 +165,12 @@ class InvItem
      * @ORM\OneToMany(targetEntity="InvLote", mappedBy="itemRel")
      */
     protected $itemLotesRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvMarca", inversedBy="marcaItemRel")
+     * @ORM\JoinColumn(name="codigo_marca_fk",referencedColumnName="codigo_marca_pk")
+     */
+    protected $marcaRel;
 
     /**
      * @return mixed
@@ -283,6 +314,86 @@ class InvItem
     public function setPorcentajeIva($porcentajeIva): void
     {
         $this->porcentajeIva = $porcentajeIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLinea()
+    {
+        return $this->linea;
+    }
+
+    /**
+     * @param mixed $linea
+     */
+    public function setLinea($linea): void
+    {
+        $this->linea = $linea;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupo()
+    {
+        return $this->grupo;
+    }
+
+    /**
+     * @param mixed $grupo
+     */
+    public function setGrupo($grupo): void
+    {
+        $this->grupo = $grupo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubgrupo()
+    {
+        return $this->subgrupo;
+    }
+
+    /**
+     * @param mixed $subgrupo
+     */
+    public function setSubgrupo($subgrupo): void
+    {
+        $this->subgrupo = $subgrupo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoMarcaFk()
+    {
+        return $this->codigoMarcaFk;
+    }
+
+    /**
+     * @param mixed $codigoMarcaFk
+     */
+    public function setCodigoMarcaFk($codigoMarcaFk): void
+    {
+        $this->codigoMarcaFk = $codigoMarcaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModelo()
+    {
+        return $this->modelo;
+    }
+
+    /**
+     * @param mixed $modelo
+     */
+    public function setModelo($modelo): void
+    {
+        $this->modelo = $modelo;
     }
 
     /**
@@ -523,6 +634,22 @@ class InvItem
     public function setItemLotesRel($itemLotesRel): void
     {
         $this->itemLotesRel = $itemLotesRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMarcaRel()
+    {
+        return $this->marcaRel;
+    }
+
+    /**
+     * @param mixed $marcaRel
+     */
+    public function setMarcaRel($marcaRel): void
+    {
+        $this->marcaRel = $marcaRel;
     }
 }
 

@@ -55,17 +55,17 @@ class InvMovimientoDetalle
     /**
      * @ORM\Column(name="por_iva", type="float", nullable=true)
      */
-    private $porIva;
+    private $porIva = 0;
 
     /**
      * @ORM\Column(name="por_descuento", type="float", nullable=true)
      */
-    private $porDescuento;
+    private $porDescuento = 0;
 
     /**
      * @ORM\Column(name="vr_iva", type="float", nullable=true)
      */
-    private $vrIva;
+    private $vrIva = 0;
 
     /**
      * @ORM\Column(name="vr_unitario", type="float")

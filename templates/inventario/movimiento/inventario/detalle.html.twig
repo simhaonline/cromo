@@ -71,6 +71,8 @@
                         <tr>
                             <th>ID</th>
                             <th>ITEM</th>
+                            <th>BODEGA</th>
+                            <th>LOTE</th>
                             <th>CANTIDAD</th>
                             <th title="Precio por unidad">PRECIO U</th>
                             <th>SUBTOTAL</th>
@@ -88,9 +90,22 @@
                             <tr>
                                 {{ validarTipo(arMovimientoDetalle.codigoMovimientoDetallePk) }}
                                 {{ validarTipo(arMovimientoDetalle.itemRel.nombre) }}
+
                                 {% if arMovimiento.estadoAutorizado %}
+                                    {{ validarTipo(arMovimientoDetalle.codigoBodegaFk) }}
+                                    {{ validarTipo(arMovimientoDetalle.loteFk) }}
                                     {{ validarTipo(arMovimientoDetalle.cantidad) }}
                                 {% else %}
+                                    <td style="text-align: center;">
+                                        <input type="text" style="text-align: right;"
+                                               name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.codigoBodegaFk }}">
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <input type="text" style="text-align: right;"
+                                               name="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.loteFk }}">
+                                    </td>
                                     <td style="text-align: center;"><input type="number" style="text-align: right;"
                                                                            name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.cantidad }}">

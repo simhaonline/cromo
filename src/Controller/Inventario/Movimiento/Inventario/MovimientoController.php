@@ -107,39 +107,48 @@ class MovimientoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrIva = $request->request->get('arrIva');
+            $arrLote = $request->request->get('arrLote');
             $arrValor = $request->request->get('arrValor');
+            $arrBodega = $request->request->get('arrBodega');
             $arrCantidad = $request->request->get('arrCantidad');
             $arrDescuento = $request->request->get('arrDescuento');
             $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
 
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva);
-                $em->getRepository('App:Inventario\InvMovimiento')->autorizar($arMovimiento);
-                return $this->redirect($this->generateUrl('inv_mov_inventario_movimiento_detalle', ['id' => $id]));
+                $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva, $arrBodega, $arrLote);
+                if ($respuesta == '') {
+                    $em->getRepository('App:Inventario\InvMovimiento')->autorizar($arMovimiento);
+                } else {
+                    MensajesController::error($respuesta);
+                }
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository('App:Inventario\InvMovimiento')->desautorizar($arMovimiento);
-                return $this->redirect($this->generateUrl('inv_mov_inventario_movimiento_detalle', ['id' => $id]));
             }
-            if ($form->get('btnImprimir')->isClicked()) {
-//                $objFormatoSolicitud->Generar($em, $id);
-            }
+//            if ($form->get('btnImprimir')->isClicked()) {
+//            }
             if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvMovimiento')->aprobar($arMovimiento);
-                return $this->redirect($this->generateUrl('inv_mov_inventario_movimiento_detalle', ['id' => $id]));
+                $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->aprobar($arMovimiento);
+                if ($respuesta != '') {
+                    foreach ($respuesta as $respuesta){
+                        MensajesController::error($respuesta);
+                    }
+                }
             }
             if ($form->get('btnActualizar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva);
+                $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva, $arrBodega, $arrLote);
+                if ($respuesta != '') {
+                    MensajesController::error($respuesta);
+                }
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $em->getRepository('App:Inventario\InvMovimiento')->anular($arMovimiento);
-                return $this->redirect($this->generateUrl('inv_mov_inventario_movimiento_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository('App:Inventario\InvMovimientoDetalle')->eliminar($arMovimiento, $arrDetallesSeleccionados);
-                $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva);
-                return $this->redirect($this->generateUrl('inv_mov_inventario_movimiento_detalle', ['id' => $id]));
+                $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva, $arrBodega, $arrLote);
             }
+            return $this->redirect($this->generateUrl('inv_mov_inventario_movimiento_detalle', ['id' => $id]));
         }
         return $this->render('inventario/movimiento/inventario/detalle.html.twig', [
             'form' => $form->createView(),
@@ -252,7 +261,8 @@ class MovimientoController extends Controller
             ->getForm();
     }
 
-    private function listaDetallesOrdenCompra(){
+    private function listaDetallesOrdenCompra()
+    {
         $this->query = $this->getDoctrine()->getManager()->getRepository('App:Inventario\InvOrdenCompraDetalle')->listarDetallesPendientes();
     }
 
@@ -288,7 +298,7 @@ class MovimientoController extends Controller
         } elseif ($arMovimiento->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
-            $arrBtnImprimir['disabled'] = false;
+            $arrBtnImprimir['disabled'] = true;
             $arrBtnAnular['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = false;

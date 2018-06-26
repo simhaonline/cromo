@@ -63,13 +63,15 @@ class InvOrdenCompraRepository extends ServiceEntityRepository
         if ($arOrdenCompra->getEstadoAprobado() == 1) {
             $arOrdenCompra->setEstadoAnulado(1);
             $this->_em->persist($arOrdenCompra);
-            $this->_em->flush();
 
             $arOrdenCompraDetalles = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(['codigoOrdenCompraFk' => $arOrdenCompra->getCodigoOrdenCompraPk()]);
             foreach ($arOrdenCompraDetalles as $arOrdenCompraDetalle) {
                 $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arOrdenCompraDetalle->getCodigoItemFk()]);
                 if ($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk()) {
-                    $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() + $arOrdenCompraDetalle->getCantidad());
+                    $arSolicitudDetalle = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->find($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk());
+                    $arSolicitudDetalle->setCantidadPendiente($arSolicitudDetalle->getCantidadPendiente() + $arOrdenCompraDetalle->getCantidadSolicitada());
+                    $this->_em->persist($arSolicitudDetalle);
+                    $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() + $arOrdenCompraDetalle->getCantidadSolicitada());
                 }
                 $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() - $arOrdenCompraDetalle->getCantidadSolicitada());
                 $this->_em->persist($arItem);

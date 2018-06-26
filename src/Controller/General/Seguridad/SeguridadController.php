@@ -25,11 +25,11 @@ class SeguridadController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arUsuarios = $em->getRepository('App:Seguridad\Usuario')->findAll();
         $form = $this->createFormBuilder()
-            ->add('btnExcel',SubmitType::class,['label' => 'Excel','attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            if($form->get('btnExcel')->isClicked()){
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnExcel')->isClicked()) {
                 $this->generarExcel();
             }
         }
@@ -179,9 +179,11 @@ class SeguridadController extends Controller
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-//        for ($i = 'A';$i <= 'K',$i++;){
-//            $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
-//        }
+        $i = 'A';
+        do {
+            $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
+            $i++;
+        } while ($i !== 'Z');
         $sheet->setCellValue('A1', 'USUARIO');
         $sheet->setCellValue('B1', 'NOMBRE');
         $sheet->setCellValue('C1', 'IDENTIFICACION');
@@ -191,19 +193,17 @@ class SeguridadController extends Controller
         $sheet->setCellValue('G1', 'EXT.');
         $sheet->setCellValue('H1', 'ACTIVO');
 
-
         $j = 2;
-        $i = 'A';
         $arUsuarios = $this->getDoctrine()->getManager()->getRepository('App:Seguridad\Usuario')->findAll();
         foreach ($arUsuarios as $arUsuario) {
-            $sheet->setCellValue('A'.$j, $arUsuario->getUsername());
-            $sheet->setCellValue('B'.$j, $arUsuario->getNombreCorto());
-            $sheet->setCellValue('C'.$j, $arUsuario->getNumeroIdentificacion());
-            $sheet->setCellValue('D'.$j, $arUsuario->getCargo());
-            $sheet->setCellValue('E'.$j, $arUsuario->getEmail());
-            $sheet->setCellValue('F'.$j, $arUsuario->getTelefono());
-            $sheet->setCellValue('G'.$j, $arUsuario->getExtension());
-            $sheet->setCellValue('H'.$j, $arUsuario->getisActive() == 1 ? 'SI' : 'NO');
+            $sheet->setCellValue('A' . $j, $arUsuario->getUsername());
+            $sheet->setCellValue('B' . $j, $arUsuario->getNombreCorto());
+            $sheet->setCellValue('C' . $j, $arUsuario->getNumeroIdentificacion());
+            $sheet->setCellValue('D' . $j, $arUsuario->getCargo());
+            $sheet->setCellValue('E' . $j, $arUsuario->getEmail());
+            $sheet->setCellValue('F' . $j, $arUsuario->getTelefono());
+            $sheet->setCellValue('G' . $j, $arUsuario->getExtension());
+            $sheet->setCellValue('H' . $j, $arUsuario->getisActive() == 1 ? 'SI' : 'NO');
             $j++;
         }
         header('Content-Type: application/vnd.ms-excel');

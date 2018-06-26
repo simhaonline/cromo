@@ -91,7 +91,7 @@
                 <td class="estado">{{ arGuia.estadoEntregado?'SI':'NO' }}</td>
                 <td class="estado">{{ arGuia.estadoSoporte?'SI':'NO' }}</td>
                 <td class="estado">{{ arGuia.estadoCumplido?'SI':'NO' }}</td>
-                <td style="text-align: center"><a href="{{ path('tte_mto_transporte_guia_detalle', { 'codigoGuia': arGuia.codigoGuiaPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a href="{{ path('tte_mto_transporte_guia_detalle', { 'codigoGuia': arGuia.codigoGuiaPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>

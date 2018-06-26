@@ -20,9 +20,9 @@ class FacturaType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
             ->add('soporte', TextType::class)
-            ->add('comentario',TextareaType::class)
+            ->add('comentario',TextareaType::class ,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
-                ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));
+            ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));
     }
 
     /**

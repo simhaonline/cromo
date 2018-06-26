@@ -5,7 +5,6 @@ namespace App\Repository\Inventario;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvSolicitud;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class InvSolicitudRepository extends ServiceEntityRepository
@@ -88,21 +87,29 @@ class InvSolicitudRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arSolicitud
+     * @param $arSolicitud InvSolicitud
+     * @return string
      */
     public function anular($arSolicitud)
     {
+        $respuesta = '';
         if ($arSolicitud->getEstadoAprobado() == 1) {
             $arSolicitud->setEstadoAnulado(1);
             $this->_em->persist($arSolicitud);
         }
         $arSolicitudDetalles = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
         foreach ($arSolicitudDetalles as $arSolicitudDetalle){
+            if($this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findOneBy(['codigoSolicitudDetalleFk' => $arSolicitudDetalle->getCodigoSolicitudDetallePk()])){
+                $respuesta = 'No se puede anular el registro, esta siendo utilizado en una orden de compra';
+            }
             $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arSolicitudDetalle->getCodigoItemFk()]);
             $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() - $arSolicitudDetalle->getCantidadSolicitada());
             $this->_em->persist($arItem);
         }
-        $this->_em->flush();
+        if($respuesta == ''){
+            $this->_em->flush();
+        }
+        return $respuesta;
     }
 
     /**

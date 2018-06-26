@@ -22,6 +22,11 @@ class TteColor
     private $nombre;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteVehiculo", mappedBy="colorRel")
+     */
+    protected $vehiculosColorRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoColorPk()
@@ -51,6 +56,22 @@ class TteColor
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVehiculosColorRel()
+    {
+        return $this->vehiculosColorRel;
+    }
+
+    /**
+     * @param mixed $vehiculosColorRel
+     */
+    public function setVehiculosColorRel($vehiculosColorRel): void
+    {
+        $this->vehiculosColorRel = $vehiculosColorRel;
     }
 
 

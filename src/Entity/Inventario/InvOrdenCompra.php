@@ -60,6 +60,11 @@ class InvOrdenCompra
     private $vrNeto = 0;
 
     /**
+     * @ORM\Column(name="vr_total", type="float")
+     */
+    private $vrTotal = 0;
+
+    /**
      * @ORM\Column(name="estado_autorizado",options={"default" : false}, type="boolean")
      */
     private $estadoAutorizado = false;
@@ -258,6 +263,22 @@ class InvOrdenCompra
     public function setVrNeto($vrNeto): void
     {
         $this->vrNeto = $vrNeto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotal()
+    {
+        return $this->vrTotal;
+    }
+
+    /**
+     * @param mixed $vrTotal
+     */
+    public function setVrTotal($vrTotal): void
+    {
+        $this->vrTotal = $vrTotal;
     }
 
     /**

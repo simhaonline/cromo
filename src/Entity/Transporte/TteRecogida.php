@@ -28,6 +28,16 @@ class TteRecogida
     private $codigoClienteFk;
 
     /**
+     * @ORM\Column(name="codigo_conductor_fk", type="integer", nullable=true)
+     */
+    private $codigoConductorFk;
+
+    /**
+     * @ORM\Column(name="codigo_vehiculo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoVehiculoFk;
+
+    /**
      * @ORM\Column(name="fecha_registro", type="datetime", nullable=true)
      */
     private $fechaRegistro;
@@ -135,6 +145,18 @@ class TteRecogida
      * @ORM\JoinColumn(name="codigo_despacho_recogida_fk", referencedColumnName="codigo_despacho_recogida_pk")
      */
     private $despachoRecogidaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteConductor", inversedBy="recogidasConductorRel")
+     * @ORM\JoinColumn(name="codigo_conductor_fk", referencedColumnName="codigo_conductor_pk")
+     */
+    private $conductorRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteVehiculo", inversedBy="recogidasVechiculoRel")
+     * @ORM\JoinColumn(name="codigo_vehiculo_fk", referencedColumnName="codigo_vehiculo_pk")
+     */
+    private $vehiculoRel;
 
     /**
      * @return mixed
@@ -518,6 +540,70 @@ class TteRecogida
     public function setDespachoRecogidaRel($despachoRecogidaRel): void
     {
         $this->despachoRecogidaRel = $despachoRecogidaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConductorFk()
+    {
+        return $this->codigoConductorFk;
+    }
+
+    /**
+     * @param mixed $codigoConductorFk
+     */
+    public function setCodigoConductorFk($codigoConductorFk): void
+    {
+        $this->codigoConductorFk = $codigoConductorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConductorRel()
+    {
+        return $this->conductorRel;
+    }
+
+    /**
+     * @param mixed $conductorRel
+     */
+    public function setConductorRel($conductorRel): void
+    {
+        $this->conductorRel = $conductorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoVehiculoFk()
+    {
+        return $this->codigoVehiculoFk;
+    }
+
+    /**
+     * @param mixed $codigoVehiculoFk
+     */
+    public function setCodigoVehiculoFk($codigoVehiculoFk): void
+    {
+        $this->codigoVehiculoFk = $codigoVehiculoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVehiculoRel()
+    {
+        return $this->vehiculoRel;
+    }
+
+    /**
+     * @param mixed $vehiculoRel
+     */
+    public function setVehiculoRel($vehiculoRel): void
+    {
+        $this->vehiculoRel = $vehiculoRel;
     }
 
 

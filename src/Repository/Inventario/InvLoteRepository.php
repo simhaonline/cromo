@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Repository\Inventario;
+
+use App\Entity\Inventario\InvLote;
+use App\Entity\Inventario\InvMovimientoDetalle;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\ORM\EntityManager;
+
+class InvLoteRepository extends ServiceEntityRepository
+{
+
+    public function __construct(RegistryInterface $registry)
+    {
+        parent::__construct($registry, InvLote::class);
+    }
+
+    /**
+     * @param $arLote InvLote
+     * @param $arMovimientoDetalle InvMovimientoDetalle
+     * @param $codigoLote integer
+     * @return string
+     */
+    public function validarLote($arMovimientoDetalle, $codigoLote, $codigoBodega)
+    {
+        $respuesta = '';
+        $operacionInv = $arMovimientoDetalle->getMovimientoRel()->getDocumentoRel()->getOperacionInventario();
+        $arBodega = $this->_em->getRepository('App:Inventario\InvBodega')->find($codigoBodega);
+        if ($codigoLote == '') {
+            $respuesta = 'Debe ingresar un numero de lote para el detalle '.$arMovimientoDetalle->getCodigoMovimientoDetallePk();
+        } else {
+            $arLote = $this->_em->getRepository('App:Inventario\InvLote')->findOneBy(['codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $codigoBodega,'loteFk' => $codigoLote]);
+            if (!$arLote && $operacionInv == 1) {
+                $arLote = new InvLote();
+                $arLote->setCodigoBodegaFk($arBodega->getCodigoBodegaPk());
+                $arLote->setCodigoItemFk($arMovimientoDetalle->getCodigoItemFk());
+                $arLote->setBodegaRel($arBodega);
+                $arLote->setItemRel($arMovimientoDetalle->getItemRel());
+                $arLote->setCantidadDisponible($arMovimientoDetalle->getCantidad());
+                $arLote->setLoteFk($codigoLote);
+                $this->_em->persist($arLote);
+                $this->_em->flush();
+                $arMovimientoDetalle->setLoteFk($codigoLote);
+                $this->_em->persist($arMovimientoDetalle);
+            } elseif (!$arLote && $operacionInv == 2) {
+                $respuesta = 'El lote '.$codigoLote.', no existe en la bodega '.$arBodega->getCodigoBodegaPk();
+            } elseif ($arLote) {
+                if ($operacionInv == 1) {
+                    $arLote->setCantidadDisponible($arLote->getCantidadDisponible() + $arMovimientoDetalle->getCantidad());
+                    $this->_em->persist($arLote);
+                } else {
+                    if ($arLote->getCantidadDisponible() - $arMovimientoDetalle->getCantidad() <= 0) {
+                        $respuesta = 'El lote ' . $arLote->getLoteFk() . ' de la bodega ' . $arBodega->getCodigoBodegaPk() . ', no tiene suficientes existencias para el item seleccionado.';
+                    } else {
+                        $arLote->setCantidadDisponible($arLote->getCantidadDisponible() - $arMovimientoDetalle->getCantidad());
+                        $this->_em->persist($arLote);
+                    }
+                }
+            }
+        }
+        return $respuesta;
+    }
+}

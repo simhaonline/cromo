@@ -12,6 +12,15 @@ class TtePoseedorRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TtePoseedor::class);
     }
+    public function camposPredeterminados(){
+        $qb = $this-> _em->createQueryBuilder()
+            ->from('App:Transporte\TtePoseedor','p')
+            ->select('p.codigoPoseedorPk AS ID')
+            ->addSelect('p.nombreCorto AS NOMBRE')
+            ->addSelect('p.numeroIdentificacion AS IDENTIFICACION');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 
     public function dqlRndc($codigoPoseedor, $codigoPropietario): array
     {

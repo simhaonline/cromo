@@ -25,6 +25,11 @@ class InvBodega
     private $nombre;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvLote", mappedBy="bodegaRel")
+     */
+    protected $bodegaLotesRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoBodegaPk()
@@ -54,5 +59,21 @@ class InvBodega
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBodegaLotesRel()
+    {
+        return $this->bodegaLotesRel;
+    }
+
+    /**
+     * @param mixed $bodegaLotesRel
+     */
+    public function setBodegaLotesRel($bodegaLotesRel): void
+    {
+        $this->bodegaLotesRel = $bodegaLotesRel;
     }
 }

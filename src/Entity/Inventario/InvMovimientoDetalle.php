@@ -55,17 +55,22 @@ class InvMovimientoDetalle
     /**
      * @ORM\Column(name="por_iva", type="float", nullable=true)
      */
-    private $porIva;
+    private $porIva = 0;
 
     /**
      * @ORM\Column(name="por_descuento", type="float", nullable=true)
      */
-    private $porDescuento;
+    private $porDescuento = 0;
 
     /**
      * @ORM\Column(name="vr_iva", type="float", nullable=true)
      */
-    private $vrIva;
+    private $vrIva = 0;
+
+    /**
+     * @ORM\Column(name="vr_unitario", type="float")
+     */
+    private $vrUnitario = 0;
 
     /**
      * @ORM\Column(name="vr_subtotal", type="float")
@@ -199,6 +204,22 @@ class InvMovimientoDetalle
     public function setCodigoBodegaFk($codigoBodegaFk): void
     {
         $this->codigoBodegaFk = $codigoBodegaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrUnitario()
+    {
+        return $this->vrUnitario;
+    }
+
+    /**
+     * @param mixed $vrUnitario
+     */
+    public function setVrUnitario($vrUnitario): void
+    {
+        $this->vrUnitario = $vrUnitario;
     }
 
     /**

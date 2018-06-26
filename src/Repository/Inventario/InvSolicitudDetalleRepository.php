@@ -65,12 +65,12 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
             ->addSelect('it.nombre')
             ->addSelect('it.cantidadExistencia')
             ->addSelect('isd.cantidadSolicitada')
-            ->addSelect('isd.cantidadRestante')
+            ->addSelect('isd.cantidadPendiente')
             ->addSelect('it.stockMinimo')
             ->addSelect('it.stockMaximo')
             ->where('s.estadoAprobado = true')
             ->where('s.estadoAnulado = false')
-            ->andWhere('isd.cantidadRestante > 0');
+            ->andWhere('isd.cantidadPendiente > 0');
         if ($nombreItem != '') {
             $qb->andWhere("it.nombre LIKE '%{$nombreItem}%'");
         }

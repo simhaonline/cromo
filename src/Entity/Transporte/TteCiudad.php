@@ -138,6 +138,12 @@ class TteCiudad
     protected $poseedoresCiudadRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDepartamento", inversedBy="ciudadesRel")
+     * @ORM\JoinColumn(name="codigo_departamento_fk", referencedColumnName="codigo_departamento_pk")
+     */
+    protected $departamentoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -537,6 +543,21 @@ class TteCiudad
         $this->reexpedicion = $reexpedicion;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDepartamentoRel()
+    {
+        return $this->departamentoRel;
+    }
+
+    /**
+     * @param mixed $departamentoRel
+     */
+    public function setDepartamentoRel($departamentoRel): void
+    {
+        $this->departamentoRel = $departamentoRel;
+    }
 
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Compra;
 
+use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Estructura\AdministracionController;
@@ -87,7 +88,10 @@ class SolicitudController extends Controller
                 return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
             }
             if ($form->get('btnAnular')->isClicked()) {
-                $em->getRepository('App:Inventario\InvSolicitud')->anular($arSolicitud);
+                $respuesta = $em->getRepository('App:Inventario\InvSolicitud')->anular($arSolicitud);
+                if($respuesta != ''){
+                    MensajesController::error($respuesta);
+                }
                 return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
@@ -128,7 +132,7 @@ class SolicitudController extends Controller
                             $arSolicitudDetalle->setSolicitudRel($arSolicitud);
                             $arSolicitudDetalle->setItemRel($arItem);
                             $arSolicitudDetalle->setCantidadSolicitada($cantidad);
-                            $arSolicitudDetalle->setCantidadRestante($cantidad);
+                            $arSolicitudDetalle->setCantidadPendiente($cantidad);
                             $em->persist($arSolicitudDetalle);
                         }
                     }
@@ -173,7 +177,7 @@ class SolicitudController extends Controller
         } elseif ($arSolicitud->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
-            $arrBtnImprimir['disabled'] = false;
+            $arrBtnImprimir['disabled'] = true;
             $arrBtnAnular['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = false;

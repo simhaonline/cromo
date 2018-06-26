@@ -31,7 +31,7 @@
                 <td style="text-align: right">{{ arDespachoRecogida.pesoVolumen }}</td>
                 <td style="text-align: right">{{ arDespachoRecogida.vrPago }}</td>
                 <td style="text-align: center">{{ arDespachoRecogida.estadoDescargado?'SI':'NO' }}</td>
-                <td style="text-align: center"><a href="{{ path('tte_mto_recogida_despacho_detalle', { 'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a href="{{ path('tte_mto_recogida_despacho_detalle', { 'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>

@@ -123,7 +123,7 @@ class InvMovimiento
     private $estadoAutorizado = false;    
 
     /**
-     * @ORM\Column(name="estado_impreso", type="boolean")
+     * @ORM\Column(name="estado_aprobado", type="boolean")
      */    
     private $estadoAprobado = false;
     

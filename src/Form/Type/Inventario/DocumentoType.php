@@ -7,6 +7,7 @@ use App\Entity\Inventario\InvDocumentoTipo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -29,7 +30,7 @@ class DocumentoType extends AbstractType
                 'label' => 'Documento tipo:'
             ])
             ->add('abreviatura',TextType::class,['label' => 'Abreviatura: '])
-            ->add('operacionInventario')
+            ->add('operacionInventario',ChoiceType::class,['choices' => ['SUMA' => '1','RESTA' => '2']])
             ->add('operacionComercial')
             ->add('generaCartera')
             ->add('tipoAsientoCartera')

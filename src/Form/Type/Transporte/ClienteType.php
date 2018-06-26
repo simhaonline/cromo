@@ -17,8 +17,10 @@ class ClienteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
             ->add('digitoVerificacion',NumberType::class,['required' => true,'label' => 'Digito:'])
+            ->add('nombreCorto',TextType::class,['required' => true,'label' => 'Razon social:'])
             ->add('nombre1',TextType::class,['required' => true,'label' => 'Primer nombre:'])
             ->add('nombre2',TextType::class,['required' => true,'label' => 'Segundo nombre:'])
             ->add('apellido1',TextType::class,['required' => true,'label' => 'Primer apellido:'])
@@ -29,7 +31,7 @@ class ClienteType extends AbstractType
             ->add('plazoPago',NumberType::class,['required' => true,'label' => 'Plazo pago:'])
             ->add('correo',TextType::class,['required' => true,'label' => 'Correo:'])
             ->add('estadoInactivo', CheckboxType::class, array('required'  => false))
-            ->add('comentario',TextareaType::class,['required' => true,'label' => 'Comentarios:'])
+            ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
         ;

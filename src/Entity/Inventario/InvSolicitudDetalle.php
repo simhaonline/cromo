@@ -33,21 +33,26 @@ class InvSolicitudDetalle
     private $cantidadSolicitada = 0;
 
     /**
-     * @ORM\Column(name="cantidad_restante",options={"default" : 0}, type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_pendiente",options={"default" : 0}, type="integer", nullable=true)
      */
-    private $cantidadRestante = 0;
+    private $cantidadPendiente = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvSolicitud", inversedBy="solicitudSolicitudDetallesRel")
      * @ORM\JoinColumn(name="codigo_solicitud_fk", referencedColumnName="codigo_solicitud_pk")
      */
-    private $solicitudRel;
+    protected $solicitudRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="itemsolicitudDetallesRel")
      * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
-    private $itemRel;
+    protected $itemRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="InvOrdenCompraDetalle", mappedBy="solicitudDetalleRel")
+     */
+    protected $solicitudDetalleOrdenCompraDetalleRel;
 
     /**
      * @return mixed
@@ -116,17 +121,17 @@ class InvSolicitudDetalle
     /**
      * @return mixed
      */
-    public function getCantidadRestante()
+    public function getCantidadPendiente()
     {
-        return $this->cantidadRestante;
+        return $this->cantidadPendiente;
     }
 
     /**
-     * @param mixed $cantidadRestante
+     * @param mixed $cantidadPendiente
      */
-    public function setCantidadRestante($cantidadRestante): void
+    public function setCantidadPendiente($cantidadPendiente): void
     {
-        $this->cantidadRestante = $cantidadRestante;
+        $this->cantidadPendiente = $cantidadPendiente;
     }
 
     /**
@@ -159,6 +164,22 @@ class InvSolicitudDetalle
     public function setItemRel($itemRel): void
     {
         $this->itemRel = $itemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudDetalleOrdenCompraDetalleRel()
+    {
+        return $this->solicitudDetalleOrdenCompraDetalleRel;
+    }
+
+    /**
+     * @param mixed $solicitudDetalleOrdenCompraDetalleRel
+     */
+    public function setSolicitudDetalleOrdenCompraDetalleRel($solicitudDetalleOrdenCompraDetalleRel): void
+    {
+        $this->solicitudDetalleOrdenCompraDetalleRel = $solicitudDetalleOrdenCompraDetalleRel;
     }
 }
 

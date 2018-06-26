@@ -5,10 +5,13 @@ namespace App\Entity\Seguridad;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Table(name="usuario")
  * @ORM\Entity(repositoryClass="App\Repository\Seguridad\UsuarioRepository")
+ * @DoctrineAssert\UniqueEntity(fields={"username"},message="Ya existe el usuario")
  */
 class Usuario implements UserInterface, \Serializable
 {
@@ -20,9 +23,34 @@ class Usuario implements UserInterface, \Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(name="username",type="string", length=25, unique=true)
      */
     private $username;
+
+    /**
+     * @ORM\Column(name="nombre_corto",type="string",length=255,nullable=true)
+     */
+    private $nombreCorto;
+
+    /**
+     * @ORM\Column(name="numero_identificacion", type="string", length=80 ,nullable=true)
+     */
+    private $numeroIdentificacion;
+
+    /**
+     * @ORM\Column(name="cargo", type="string", length=255,nullable=true)
+     */
+    private $cargo;
+
+    /**
+     * @ORM\Column(name="telefono", type="string", length=30,nullable=true)
+     */
+    private $telefono;
+
+    /**
+     * @ORM\Column(name="extension", type="string", length=10,nullable=true)
+     */
+    private $extension;
 
     /**
      * @ORM\Column(type="string", length=64)
@@ -30,7 +58,7 @@ class Usuario implements UserInterface, \Serializable
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=60, unique=true)
+     * @ORM\Column(type="string", length=60)
      */
     private $email;
 
@@ -65,7 +93,8 @@ class Usuario implements UserInterface, \Serializable
     /**
      * @param mixed $username
      */
-    public function setUsername($username): void{
+    public function setUsername($username): void
+    {
         $this->username = $username;
     }
 
@@ -200,6 +229,86 @@ class Usuario implements UserInterface, \Serializable
     public function setIsActive($isActive): void
     {
         $this->isActive = $isActive;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreCorto()
+    {
+        return $this->nombreCorto;
+    }
+
+    /**
+     * @param mixed $nombreCorto
+     */
+    public function setNombreCorto($nombreCorto): void
+    {
+        $this->nombreCorto = $nombreCorto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroIdentificacion()
+    {
+        return $this->numeroIdentificacion;
+    }
+
+    /**
+     * @param mixed $numeroIdentificacion
+     */
+    public function setNumeroIdentificacion($numeroIdentificacion): void
+    {
+        $this->numeroIdentificacion = $numeroIdentificacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargo()
+    {
+        return $this->cargo;
+    }
+
+    /**
+     * @param mixed $cargo
+     */
+    public function setCargo($cargo): void
+    {
+        $this->cargo = $cargo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTelefono()
+    {
+        return $this->telefono;
+    }
+
+    /**
+     * @param mixed $telefono
+     */
+    public function setTelefono($telefono): void
+    {
+        $this->telefono = $telefono;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExtension()
+    {
+        return $this->extension;
+    }
+
+    /**
+     * @param mixed $extension
+     */
+    public function setExtension($extension): void
+    {
+        $this->extension = $extension;
     }
 }
 

@@ -44,7 +44,7 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
                         if ($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk() != '') {
                             $arSolicitudDetalle = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->find($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk());
                             if ($arSolicitudDetalle) {
-                                $arSolicitudDetalle->setCantidadRestante($arSolicitudDetalle->getCantidadRestante() + $arOrdenCompraDetalle->getCantidad());
+                                $arSolicitudDetalle->setCantidadPendiente($arSolicitudDetalle->getCantidadPendiente() + $arOrdenCompraDetalle->getCantidadSolicitada());
                                 $this->_em->persist($arSolicitudDetalle);
                             }
                         }
@@ -60,5 +60,35 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
         } else {
             MensajesController::error('No se puede eliminar, el registro se encuentra autorizado');
         }
+    }
+
+    public function listarDetallesPendientes($nombreItem = '', $codigoItem = '', $codigoOrdenCompra = '')
+    {
+        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvOrdenCompraDetalle', 'iocd');
+        $qb
+            ->select('iocd.codigoOrdenCompraDetallePk')
+            ->join('iocd.itemRel', 'it')
+            ->join('iocd.ordenCompraRel', 'oc')
+            ->addSelect('it.nombre')
+            ->addSelect('it.cantidadExistencia')
+            ->addSelect('iocd.cantidadSolicitada')
+            ->addSelect('iocd.cantidadPendiente')
+            ->addSelect('it.stockMinimo')
+            ->addSelect('it.stockMaximo')
+            ->where('oc.estadoAprobado = true')
+            ->where('oc.estadoAnulado = false')
+            ->andWhere('iocd.cantidadPendiente > 0');
+        if ($nombreItem != '') {
+            $qb->andWhere("it.nombre LIKE '%{$nombreItem}%'");
+        }
+        if ($codigoItem != '') {
+            $qb->andWhere("iocd.codigoItemFk = {$codigoItem}");
+        }
+        if ($codigoOrdenCompra != '') {
+            $qb->andWhere("iocd.codigoOrdenCompraFk = {$codigoOrdenCompra} ");
+        }
+        $qb->orderBy('iocd.codigoOrdenCompraDetallePk', 'ASC');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
     }
 }

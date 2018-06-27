@@ -38,6 +38,26 @@ class InvPedido
     private $soporte;
 
     /**
+     * @ORM\Column(name="vr_subtotal", type="float")
+     */
+    private $vrSubtotal = 0;
+
+    /**
+     * @ORM\Column(name="vr_iva", type="float")
+     */
+    private $vrIva = 0;
+
+    /**
+     * @ORM\Column(name="vr_neto", type="float")
+     */
+    private $vrNeto = 0;
+
+    /**
+     * @ORM\Column(name="vr_total", type="float")
+     */
+    private $vrTotal = 0;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean",options={"default" : false}, nullable=true)
      */
     private $estadoAutorizado = false;
@@ -58,13 +78,13 @@ class InvPedido
     private $numero = 0;
 
     /**
-     * @ORM\Column(name="comentarios", type="string", length=500, nullable=true)
+     * @ORM\Column(name="comentario", type="string", length=500, nullable=true)
      * @Assert\Length(
      *     max=500,
      *     maxMessage="El campo no puede contener mas de 500 caracteres"
      * )
      */
-    private $comentarios;
+    private $comentario;
 
     /**
      * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
@@ -152,6 +172,70 @@ class InvPedido
     /**
      * @return mixed
      */
+    public function getVrSubtotal()
+    {
+        return $this->vrSubtotal;
+    }
+
+    /**
+     * @param mixed $vrSubtotal
+     */
+    public function setVrSubtotal($vrSubtotal): void
+    {
+        $this->vrSubtotal = $vrSubtotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIva()
+    {
+        return $this->vrIva;
+    }
+
+    /**
+     * @param mixed $vrIva
+     */
+    public function setVrIva($vrIva): void
+    {
+        $this->vrIva = $vrIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrNeto()
+    {
+        return $this->vrNeto;
+    }
+
+    /**
+     * @param mixed $vrNeto
+     */
+    public function setVrNeto($vrNeto): void
+    {
+        $this->vrNeto = $vrNeto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotal()
+    {
+        return $this->vrTotal;
+    }
+
+    /**
+     * @param mixed $vrTotal
+     */
+    public function setVrTotal($vrTotal): void
+    {
+        $this->vrTotal = $vrTotal;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoAutorizado()
     {
         return $this->estadoAutorizado;
@@ -216,17 +300,17 @@ class InvPedido
     /**
      * @return mixed
      */
-    public function getComentarios()
+    public function getComentario()
     {
-        return $this->comentarios;
+        return $this->comentario;
     }
 
     /**
-     * @param mixed $comentarios
+     * @param mixed $comentario
      */
-    public function setComentarios($comentarios): void
+    public function setComentario($comentario): void
     {
-        $this->comentarios = $comentarios;
+        $this->comentario = $comentario;
     }
 
     /**

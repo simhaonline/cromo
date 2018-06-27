@@ -3,9 +3,9 @@
 namespace App\Controller\Inventario\Movimiento\Comercial;
 
 use App\Controller\Estructura\MensajesController;
-use App\Entity\Inventario\Invpedido;
-use App\Entity\Inventario\InvpedidoDetalle;
-use App\Formato\Inventario\pedido;
+use App\Entity\Inventario\InvPedido;
+use App\Entity\Inventario\InvPedidoDetalle;
+use App\Formato\Inventario\Pedido;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use http\Env\Response;
@@ -30,9 +30,26 @@ class PedidoController extends Controller
     public function lista(Request $request)
     {
         $paginator  = $this->get('knp_paginator');
-        $query = $this->getDoctrine()->getRepository()->lista();
-        $arDespachos = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('transporte/movimiento/transporte/despacho/lista.html.twig', ['arDespachos' => $arDespachos]);
+        $form = $this->formularioFiltro();
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                if ($form->get('btnFiltrar')->isClicked()) {
+                    $this->filtrar($form);
+                    $form = $this->formularioFiltro();
+                }
+                if ($form->get('btnExcel')->isClicked()) {
+                    $this->filtrar($form);
+                    $query = $this->getDoctrine()->getRepository(TteGuia::class)->lista();
+                    General::get()->setExportar($query, "Guias");
+                }
+            }
+        }
+        $query = $this->getDoctrine()->getRepository(InvPedido::class)->lista();
+        $arPedidos = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        return $this->render('inventario/movimiento/comercial/pedido/lista.html.twig', [
+            'arPedidos' => $arPedidos,
+            'form' => $form->createView()]);
     }
 
     /**
@@ -41,32 +58,27 @@ class PedidoController extends Controller
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arpedido = new Invpedido();
+        $arPedido = new InvPedido();
         if ($id != 0) {
-            $arpedido = $em->getRepository('App:Inventario\Invpedido')->find($id);
-            if (!$arpedido) {
-                return $this->redirect($this->generateUrl('admin_lista',['modulo' =>'inventario','entidad' => 'pedido']));
-            }
+            $arPedido = $em->getRepository('App:Inventario\Invpedido')->find($id);
         }
-        $arpedido->setFecha(new \DateTime('now'));
-        $arpedido->setUsuario($this->getUser()->getUserName());
-        $form = $this->createForm(pedidoType::class, $arpedido);
+        $form = $this->createForm(PedidoType::class, $arPedido);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arpedido->setFecha(new \DateTime('now'));
-                $em->persist($arpedido);
-                $em->flush($arpedido);
-                return $this->redirect($this->generateUrl('listado', ['entidad' => 'Invpedido']));
-            }
-            if ($form->get('guardarnuevo')->isClicked()) {
-                $em->persist($arpedido);
-                $em->flush($arpedido);
-                return $this->redirect($this->generateUrl('inv_mto_pedido_nuevo', ['codigopedido' => 0]));
+                $arPedido->setFecha(new \DateTime('now'));
+                if($id == 0) {
+                    $arPedido->setFecha(new \DateTime('now'));
+                    $arPedido->setUsuario($this->getUser()->getUserName());
+                }
+                $em->persist($arPedido);
+                $em->flush($arPedido);
+                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $arPedido->getCodigoPedidoPk()]));
             }
         }
-        return $this->render('inventario/movimiento/pedido/nuevo.html.twig', [
-            'form' => $form->createView(), 'arpedido' => $arpedido
+        return $this->render('inventario/movimiento/comercial/pedido/nuevo.html.twig', [
+            'form' => $form->createView(),
+            'arPedido' => $arPedido
         ]);
     }
 
@@ -158,67 +170,37 @@ class PedidoController extends Controller
         ]);
     }
 
-    /**
-     * @param $arpedido Invpedido
-     * @return \Symfony\Component\Form\FormInterface
-     */
-    private function formularioDetalles($arpedido)
+
+    private function filtrar($form)
     {
-        $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnAprobar = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-        if ($arpedido->getEstadoAnulado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnAprobar['disabled'] = true;
-        } elseif ($arpedido->getEstadoAprobado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = false;
-            $arrBtnAnular['disabled'] = false;
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnAprobar['disabled'] = true;
-        } elseif ($arpedido->getEstadoAutorizado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = false;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnAprobar['disabled'] = false;
+        /*$session = new session;
+        $arRuta = $form->get('guiaTipoRel')->getData();
+        if ($arRuta) {
+            $session->set('filtroTteCodigoGuiaTipo', $arRuta->getCodigoGuiaTipoPk());
         } else {
-            $arrBtnAutorizar['disabled'] = false;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnEliminar['disabled'] = false;
-            $arrBtnAprobar['disabled'] = true;
+            $session->set('filtroTteCodigoGuiaTipo', null);
         }
-        return $this
-            ->createFormBuilder()
-            ->add('btnAutorizar', SubmitType::class, $arrBtnAutorizar)
-            ->add('btnAprobar', SubmitType::class, $arrBtnAprobar)
-            ->add('btnDesautorizar', SubmitType::class, $arrBtnDesautorizar)
-            ->add('btnImprimir', SubmitType::class, $arrBtnImprimir)
-            ->add('btnAnular', SubmitType::class, $arrBtnAnular)
-            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
-            ->getForm();
+        $arServicio = $form->get('servicioRel')->getData();
+        if ($arServicio) {
+            $session->set('filtroTteCodigoServicio', $arServicio->getCodigoServicioPk());
+        } else {
+            $session->set('filtroTteCodigoServicio', null);
+        }
+        $session->set('filtroTteDocumento', $form->get('documento')->getData());
+        $session->set('filtroTteNumeroGuia', $form->get('numero')->getData());*/
     }
 
-    private function formularioFiltroItems()
+    private function formularioFiltro()
     {
-        return $this->createFormBuilder()
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
-            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->getForm();
-    }
+        $em = $this->getDoctrine()->getManager();
+        $session = new session;
 
+        $form = $this->createFormBuilder()
+            ->add('numero', TextType::class, array('data' => $session->get('filtroInvNumeroPedido')))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->getForm();
+        return $form;
+    }
 
 }

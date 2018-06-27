@@ -63,22 +63,27 @@ class InvItem
     private $porcentajeIva = 0;
 
     /**
-     * @ORM\Column(name="linea", type="string",length=50, nullable=true)
+     * @ORM\Column(name="codigo_linea_fk", type="string",length=10)
      */
-    private $linea;
+    private $codigoLineaFk;
 
     /**
-     * @ORM\Column(name="grupo", type="string",length=50, nullable=true)
+     * @ORM\Column(name="codigo_grupo_fk", type="string",length=10)
      */
-    private $grupo;
+    private $codigoGrupoFk;
 
     /**
-     * @ORM\Column(name="subgrupo", type="string",length=50, nullable=true)
+     * @ORM\Column(name="codigo_subgrupo_fk", type="string",length=10)
      */
-    private $subgrupo;
+    private $codigoSubgrupoFk;
 
     /**
-     * @ORM\Column(name="codigo_marca_fk", type="string",length=50, nullable=true)
+     * @ORM\Column(name="codigo_unidad_medida_fk",  type="string",length=10, nullable=true)
+     */
+    private $codigoUnidadMedidaFk;
+
+    /**
+     * @ORM\Column(name="codigo_marca_fk", type="string",length=10)
      */
     private $codigoMarcaFk;
 
@@ -118,11 +123,6 @@ class InvItem
     private $cantidadSolicitud = 0;
 
     /**
-     * @ORM\Column(name="codigo_unidad_medida_fk",  type="integer", nullable=true)
-     */
-    private $codigoUnidadMedidaFk;
-
-    /**
      * @ORM\Column(name="afecta_inventario", type="boolean", nullable=true)
      */
     private $afectaInventario = true;
@@ -147,6 +147,42 @@ class InvItem
     private $stockMaximo = 0;
 
     /**
+     * @ORM\ManyToOne(targetEntity="InvMarca", inversedBy="marcaItemsRel")
+     * @ORM\JoinColumn(name="codigo_marca_fk",referencedColumnName="codigo_marca_pk")
+     * @Assert\NotBlank(
+     *     message="El campo no puede estar vacio"
+     * )
+     */
+    protected $marcaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvGrupo", inversedBy="grupoItemsRel")
+     * @ORM\JoinColumn(name="codigo_grupo_fk",referencedColumnName="codigo_grupo_pk")
+     * @Assert\NotBlank(
+     *     message="El campo no puede estar vacio"
+     * )
+     */
+    protected $grupoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvSubgrupo", inversedBy="subgrupoItemsRel")
+     * @ORM\JoinColumn(name="codigo_subgrupo_fk",referencedColumnName="codigo_subgrupo_pk")
+     * @Assert\NotBlank(
+     *     message="El campo no puede estar vacio"
+     * )
+     */
+    protected $subgrupoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvLinea", inversedBy="lineaItemsRel")
+     * @ORM\JoinColumn(name="codigo_linea_fk",referencedColumnName="codigo_linea_pk")
+     * @Assert\NotBlank(
+     *     message="El campo no puede estar vacio"
+     * )
+     */
+    protected $lineaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvSolicitudDetalle", mappedBy="itemRel")
      */
     private $itemsolicitudDetallesRel;
@@ -159,18 +195,12 @@ class InvItem
     /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="itemRel")
      */
-    protected $itemMovimientosDetallesRel;
+    protected $itemMovimientoDetallesRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvLote", mappedBy="itemRel")
      */
     protected $itemLotesRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="InvMarca", inversedBy="marcaItemRel")
-     * @ORM\JoinColumn(name="codigo_marca_fk",referencedColumnName="codigo_marca_pk")
-     */
-    protected $marcaRel;
 
     /**
      * @return mixed
@@ -319,49 +349,65 @@ class InvItem
     /**
      * @return mixed
      */
-    public function getLinea()
+    public function getCodigoLineaFk()
     {
-        return $this->linea;
+        return $this->codigoLineaFk;
     }
 
     /**
-     * @param mixed $linea
+     * @param mixed $codigoLineaFk
      */
-    public function setLinea($linea): void
+    public function setCodigoLineaFk($codigoLineaFk): void
     {
-        $this->linea = $linea;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGrupo()
-    {
-        return $this->grupo;
-    }
-
-    /**
-     * @param mixed $grupo
-     */
-    public function setGrupo($grupo): void
-    {
-        $this->grupo = $grupo;
+        $this->codigoLineaFk = $codigoLineaFk;
     }
 
     /**
      * @return mixed
      */
-    public function getSubgrupo()
+    public function getCodigoGrupoFk()
     {
-        return $this->subgrupo;
+        return $this->codigoGrupoFk;
     }
 
     /**
-     * @param mixed $subgrupo
+     * @param mixed $codigoGrupoFk
      */
-    public function setSubgrupo($subgrupo): void
+    public function setCodigoGrupoFk($codigoGrupoFk): void
     {
-        $this->subgrupo = $subgrupo;
+        $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSubgrupoFk()
+    {
+        return $this->codigoSubgrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoSubgrupoFk
+     */
+    public function setCodigoSubgrupoFk($codigoSubgrupoFk): void
+    {
+        $this->codigoSubgrupoFk = $codigoSubgrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoUnidadMedidaFk()
+    {
+        return $this->codigoUnidadMedidaFk;
+    }
+
+    /**
+     * @param mixed $codigoUnidadMedidaFk
+     */
+    public function setCodigoUnidadMedidaFk($codigoUnidadMedidaFk): void
+    {
+        $this->codigoUnidadMedidaFk = $codigoUnidadMedidaFk;
     }
 
     /**
@@ -495,22 +541,6 @@ class InvItem
     /**
      * @return mixed
      */
-    public function getCodigoUnidadMedidaFk()
-    {
-        return $this->codigoUnidadMedidaFk;
-    }
-
-    /**
-     * @param mixed $codigoUnidadMedidaFk
-     */
-    public function setCodigoUnidadMedidaFk($codigoUnidadMedidaFk): void
-    {
-        $this->codigoUnidadMedidaFk = $codigoUnidadMedidaFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getAfectaInventario()
     {
         return $this->afectaInventario;
@@ -575,6 +605,70 @@ class InvItem
     /**
      * @return mixed
      */
+    public function getMarcaRel()
+    {
+        return $this->marcaRel;
+    }
+
+    /**
+     * @param mixed $marcaRel
+     */
+    public function setMarcaRel($marcaRel): void
+    {
+        $this->marcaRel = $marcaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubgrupoRel()
+    {
+        return $this->subgrupoRel;
+    }
+
+    /**
+     * @param mixed $subgrupoRel
+     */
+    public function setSubgrupoRel($subgrupoRel): void
+    {
+        $this->subgrupoRel = $subgrupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLineaRel()
+    {
+        return $this->lineaRel;
+    }
+
+    /**
+     * @param mixed $lineaRel
+     */
+    public function setLineaRel($lineaRel): void
+    {
+        $this->lineaRel = $lineaRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getItemsolicitudDetallesRel()
     {
         return $this->itemsolicitudDetallesRel;
@@ -607,17 +701,17 @@ class InvItem
     /**
      * @return mixed
      */
-    public function getItemMovimientosDetallesRel()
+    public function getItemMovimientoDetallesRel()
     {
-        return $this->itemMovimientosDetallesRel;
+        return $this->itemMovimientoDetallesRel;
     }
 
     /**
-     * @param mixed $itemMovimientosDetallesRel
+     * @param mixed $itemMovimientoDetallesRel
      */
-    public function setItemMovimientosDetallesRel($itemMovimientosDetallesRel): void
+    public function setItemMovimientoDetallesRel($itemMovimientoDetallesRel): void
     {
-        $this->itemMovimientosDetallesRel = $itemMovimientosDetallesRel;
+        $this->itemMovimientoDetallesRel = $itemMovimientoDetallesRel;
     }
 
     /**
@@ -634,22 +728,6 @@ class InvItem
     public function setItemLotesRel($itemLotesRel): void
     {
         $this->itemLotesRel = $itemLotesRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMarcaRel()
-    {
-        return $this->marcaRel;
-    }
-
-    /**
-     * @param mixed $marcaRel
-     */
-    public function setMarcaRel($marcaRel): void
-    {
-        $this->marcaRel = $marcaRel;
     }
 }
 

@@ -14,18 +14,21 @@ class CargaInicial extends Fixture
         $arDocumentoTipo = $manager->getRepository('App:Inventario\InvDocumentoTipo')->find(1);
         if(!$arDocumentoTipo){
             $arDocumentoTipo = new InvDocumentoTipo();
+            $arDocumentoTipo->setCodigoDocumentoTipoPk('ENT');
             $arDocumentoTipo->setNombre('ENTRADA DE ALMACEN');
             $manager->persist($arDocumentoTipo);
         }
         $arDocumentoTipo = $manager->getRepository('App:Inventario\InvDocumentoTipo')->find(2);
         if(!$arDocumentoTipo){
             $arDocumentoTipo = new InvDocumentoTipo();
+            $arDocumentoTipo->setCodigoDocumentoTipoPk('SAL');
             $arDocumentoTipo->setNombre('SALIDA DE ALMACEN');
             $manager->persist($arDocumentoTipo);
         }
         $arDocumentoTipo = $manager->getRepository('App:Inventario\InvDocumentoTipo')->find(3);
         if(!$arDocumentoTipo){
             $arDocumentoTipo = new InvDocumentoTipo();
+            $arDocumentoTipo->setCodigoDocumentoTipoPk('FAC');
             $arDocumentoTipo->setNombre('FACTURA');
             $manager->persist($arDocumentoTipo);
         }

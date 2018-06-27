@@ -5,7 +5,6 @@ namespace App\Controller\Inventario\Movimiento\Compra;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
-use App\Estructura\AdministracionController;
 use App\Formato\Inventario\Solicitud;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;

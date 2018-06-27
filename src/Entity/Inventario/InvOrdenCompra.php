@@ -29,7 +29,7 @@ class InvOrdenCompra
     private $codigoTerceroFk;
 
     /**
-     * @ORM\Column(name="codigo_orden_compra_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_orden_compra_tipo_fk", type="string",length=10, nullable=true)
      */
     private $codigoOrdenCompraTipoFk;
 
@@ -85,7 +85,7 @@ class InvOrdenCompra
     private $numero = 0;
 
     /**
-     * @ORM\Column(name="usuario", type="text", nullable=true)
+     * @ORM\Column(name="usuario", type="string",length=25, nullable=true)
      */
     private $usuario;
 
@@ -99,7 +99,7 @@ class InvOrdenCompra
     private $comentarios;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="terceroOrdenCompraRel")
+     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="terceroOrdenesCompraRel")
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
      * @Assert\NotNull(
      *     message="Debe seleccionar un tercero"

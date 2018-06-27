@@ -85,7 +85,7 @@ class InvOrdenCompraDetalle
     protected $ordenCompraRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvSolicitudDetalle", inversedBy="solicitudDetalleOrdenCompraDetalleRel")
+     * @ORM\ManyToOne(targetEntity="InvSolicitudDetalle", inversedBy="solicitudDetalleOrdenCompraDetallesRel")
      * @ORM\JoinColumn(name="codigo_solicitud_detalle_fk", referencedColumnName="codigo_solicitud_detalle_pk")
      */
     protected $solicitudDetalleRel;
@@ -350,5 +350,8 @@ class InvOrdenCompraDetalle
     {
         $this->ordenCompraDetallesMovimientoDetallesRel = $ordenCompraDetallesMovimientoDetallesRel;
     }
+
+
+
 }
 

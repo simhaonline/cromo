@@ -98,10 +98,13 @@ class InvSolicitudRepository extends ServiceEntityRepository
             $this->_em->persist($arSolicitud);
         }
         $arSolicitudDetalles = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
+
         foreach ($arSolicitudDetalles as $arSolicitudDetalle){
-            if($this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findOneBy(['codigoSolicitudDetalleFk' => $arSolicitudDetalle->getCodigoSolicitudDetallePk()])){
+            $this->validarDetalleEnuso($arSolicitudDetalle->getCodigoSolicitudDetallePk());
+
+//            if(){
                 $respuesta = 'No se puede anular el registro, esta siendo utilizado en una orden de compra';
-            }
+//            }
             $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arSolicitudDetalle->getCodigoItemFk()]);
             $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() - $arSolicitudDetalle->getCantidadSolicitada());
             $this->_em->persist($arItem);
@@ -138,6 +141,18 @@ class InvSolicitudRepository extends ServiceEntityRepository
         } else {
             MensajesController::error('No se puede autorizar, el registro no tiene detalles');
         }
+    }
+
+    private function validarDetalleEnuso($codigoSolicitud){
+        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvOrdenCompraDetalle','ocd')
+            ->select('ocd.codigoOrdenCompraDetallePk')
+            ->join('ocd.ordenCompraRel','oc')
+            ->where("ocd.codigoSolicitudDetalleFk = {$codigoSolicitud}")
+            ->andWhere('oc.estadoAnulado = 0');
+        $query = $this->_em->createQuery($qb->getDQL());
+        $resultado = $query->execute();
+        dump($resultado);
+        die();
     }
 
 }

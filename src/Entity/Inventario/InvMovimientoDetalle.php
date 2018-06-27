@@ -93,13 +93,13 @@ class InvMovimientoDetalle
     private $vrTotal = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvMovimiento", inversedBy="movimientoMovimientoDetalleRel")
+     * @ORM\ManyToOne(targetEntity="InvMovimiento", inversedBy="movimientoMovimientoDetallesRel")
      * @ORM\JoinColumn(name="codigo_movimiento_fk", referencedColumnName="codigo_movimiento_pk")
      */
     protected $movimientoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="itemMovimientosDetallesRel")
+     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="itemMovimientoDetallesRel")
      * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
     protected $itemRel;
@@ -209,22 +209,6 @@ class InvMovimientoDetalle
     /**
      * @return mixed
      */
-    public function getVrUnitario()
-    {
-        return $this->vrUnitario;
-    }
-
-    /**
-     * @param mixed $vrUnitario
-     */
-    public function setVrUnitario($vrUnitario): void
-    {
-        $this->vrUnitario = $vrUnitario;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getLoteFk()
     {
         return $this->loteFk;
@@ -273,6 +257,22 @@ class InvMovimientoDetalle
     /**
      * @return mixed
      */
+    public function getPorDescuento()
+    {
+        return $this->porDescuento;
+    }
+
+    /**
+     * @param mixed $porDescuento
+     */
+    public function setPorDescuento($porDescuento): void
+    {
+        $this->porDescuento = $porDescuento;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrIva()
     {
         return $this->vrIva;
@@ -289,17 +289,17 @@ class InvMovimientoDetalle
     /**
      * @return mixed
      */
-    public function getPorDescuento()
+    public function getVrUnitario()
     {
-        return $this->porDescuento;
+        return $this->vrUnitario;
     }
 
     /**
-     * @param mixed $porDescuento
+     * @param mixed $vrUnitario
      */
-    public function setPorDescuento($porDescuento): void
+    public function setVrUnitario($vrUnitario): void
     {
-        $this->porDescuento = $porDescuento;
+        $this->vrUnitario = $vrUnitario;
     }
 
     /**
@@ -413,4 +413,6 @@ class InvMovimientoDetalle
     {
         $this->ordenCompraDetalleRel = $ordenCompraDetalleRel;
     }
+
+
 }

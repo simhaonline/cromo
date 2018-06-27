@@ -22,29 +22,53 @@ class ItemType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nombre', TextType::class, ['required' => false])
+            ->add('nombre', TextType::class, ['required' => true])
             ->add('codigoBarras', TextType::class, ['required' => false])
-            ->add('linea', TextType::class, ['required' => false])
-            ->add('grupo', TextType::class, ['required' => false])
-            ->add('subgrupo', TextType::class, ['required' => false])
             ->add('modelo', TextType::class, ['required' => false])
-            ->add('marcaRel',EntityType::class,[
+            ->add('lineaRel', EntityType::class, [
+                'class' => 'App\Entity\Inventario\InvLinea',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('e')
+                        ->orderBy('e.nombre', 'DESC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Linea:',
+                'required' => true])
+            ->add('grupoRel', EntityType::class, [
+                'class' => 'App\Entity\Inventario\InvGrupo',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('e')
+                        ->orderBy('e.nombre', 'DESC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Grupo:'
+                , 'required' => true])
+            ->add('subgrupoRel', EntityType::class, [
+                'class' => 'App\Entity\Inventario\InvSubgrupo',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('e')
+                        ->orderBy('e.nombre', 'DESC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Subgrupo:'
+                , 'required' => true])
+            ->add('marcaRel', EntityType::class, [
                 'class' => 'App\Entity\Inventario\InvMarca',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('e')
-                        ->orderBy('e.nombre','DESC');
+                        ->orderBy('e.nombre', 'DESC');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Marca:'
-            ])
+                , 'required' => true])
             ->add('porcentajeIva', IntegerType::class, ['required' => false])
-            ->add('afectaInventario', CheckboxType::class, ['required' => false,'label' => 'Afecta inventario'])
+            ->add('afectaInventario', CheckboxType::class, ['required' => false, 'label' => 'Afecta inventario'])
             ->add('descripcion', TextareaType::class, ['required' => false])
             ->add('stockMinimo', IntegerType::class, ['required' => false])
             ->add('stockMaximo', IntegerType::class, ['required' => false])
             ->add('vrPrecioPredeterminado', IntegerType::class, ['required' => false])
-            ->add('guardar', SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     /**

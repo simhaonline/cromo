@@ -23,12 +23,12 @@ class InvMovimiento
     private $codigoDocumentoFk;
     
     /**
-     * @ORM\Column(name="codigo_factura_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_factura_tipo_fk", type="string",length=10, nullable=true)
      */
     private $codigoFacturaTipoFk;
 
     /**
-     * @ORM\Column(name="codigo_documento_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_documento_tipo_fk", type="string",length=10, nullable=true)
      */
     private $codigoDocumentoTipoFk;
     
@@ -53,7 +53,7 @@ class InvMovimiento
     private $plazoPago = 0;    
     
     /**
-     * @ORM\Column(name="codigo_tercero_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_tercero_fk", type="integer")
      */    
     private $codigoTerceroFk;
     
@@ -113,7 +113,7 @@ class InvMovimiento
     private $comentarios;
 
     /**
-     * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
+     * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
      */
     private $usuario;
     
@@ -138,27 +138,30 @@ class InvMovimiento
     private $estadoContabilizado = false;
     
     /**
-     * @ORM\ManyToOne(targetEntity="InvDocumento", inversedBy="documentoMovimientoRel")
+     * @ORM\ManyToOne(targetEntity="InvDocumento", inversedBy="documentoMovimientosRel")
      * @ORM\JoinColumn(name="codigo_documento_fk", referencedColumnName="codigo_documento_pk")
      */
     protected $documentoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentoTipoMovimientoRel")
+     * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentoTipoMovimientosRel")
      * @ORM\JoinColumn(name="codigo_documento_tipo_fk", referencedColumnName="codigo_documento_tipo_pk")
      */
     protected $documentoTipoRel;
     
     /**
-     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="terceroMovimientoRel")
+     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="terceroMovimientosRel")
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
+     * @Assert\NotBlank(
+     *     message="El campo no puede estar vacio"
+     * )
      */
     protected $terceroRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="movimientoRel")
      */
-    protected $movimientoMovimientoDetalleRel;
+    protected $movimientoMovimientoDetallesRel;
 
     /**
      * @return mixed
@@ -611,16 +614,18 @@ class InvMovimiento
     /**
      * @return mixed
      */
-    public function getMovimientoMovimientoDetalleRel()
+    public function getMovimientoMovimientoDetallesRel()
     {
-        return $this->movimientoMovimientoDetalleRel;
+        return $this->movimientoMovimientoDetallesRel;
     }
 
     /**
-     * @param mixed $movimientoMovimientoDetalleRel
+     * @param mixed $movimientoMovimientoDetallesRel
      */
-    public function setMovimientoMovimientoDetalleRel($movimientoMovimientoDetalleRel): void
+    public function setMovimientoMovimientoDetallesRel($movimientoMovimientoDetallesRel): void
     {
-        $this->movimientoMovimientoDetalleRel = $movimientoMovimientoDetalleRel;
+        $this->movimientoMovimientoDetallesRel = $movimientoMovimientoDetallesRel;
     }
+
+
 }

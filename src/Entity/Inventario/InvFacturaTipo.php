@@ -12,8 +12,7 @@ class InvFacturaTipo
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="codigo_factura_tipo_pk",type="string",length=10)
      */
     private $codigoFacturaTipoPk;
 
@@ -74,5 +73,6 @@ class InvFacturaTipo
     {
         $this->consecutivo = $consecutivo;
     }
+
 }
 

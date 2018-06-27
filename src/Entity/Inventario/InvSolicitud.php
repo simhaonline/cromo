@@ -19,7 +19,7 @@ class InvSolicitud
     private $codigoSolicitudPk;
 
     /**
-     * @ORM\Column(name="codigo_solicitud_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_solicitud_tipo_fk", type="string",length=10, nullable=true)
      */
     private $codigoSolicitudTipoFk;
 
@@ -67,23 +67,23 @@ class InvSolicitud
     private $comentarios;
 
     /**
-     * @ORM\Column(name="usuario", type="string", length=80, nullable=true)
+     * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
      */
     private $usuario;
 
     /**
-     * @ORM\OneToMany(targetEntity="InvSolicitudDetalle", mappedBy="solicitudRel")
-     */
-    protected $solicitudSolicitudDetallesRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="InvSolicitudTipo", inversedBy="solicitudTipoSolicitudRel")
+     * @ORM\ManyToOne(targetEntity="InvSolicitudTipo", inversedBy="solicitudTipoSolicitudesRel")
      * @ORM\JoinColumn(name="codigo_solicitud_tipo_fk", referencedColumnName="codigo_solicitud_tipo_pk")
      * @Assert\NotBlank(
      *     message="Debe de seleccionar una opción"
      * )
      */
     protected $solicitudTipoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="InvSolicitudDetalle", mappedBy="solicitudRel")
+     */
+    protected $solicitudSolicitudDetallesRel;
 
     /**
      * @return mixed
@@ -248,6 +248,22 @@ class InvSolicitud
     /**
      * @return mixed
      */
+    public function getSolicitudTipoRel()
+    {
+        return $this->solicitudTipoRel;
+    }
+
+    /**
+     * @param mixed $solicitudTipoRel
+     */
+    public function setSolicitudTipoRel($solicitudTipoRel): void
+    {
+        $this->solicitudTipoRel = $solicitudTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSolicitudSolicitudDetallesRel()
     {
         return $this->solicitudSolicitudDetallesRel;
@@ -261,20 +277,6 @@ class InvSolicitud
         $this->solicitudSolicitudDetallesRel = $solicitudSolicitudDetallesRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSolicitudTipoRel()
-    {
-        return $this->solicitudTipoRel;
-    }
 
-    /**
-     * @param mixed $solicitudTipoRel
-     */
-    public function setSolicitudTipoRel($solicitudTipoRel): void
-    {
-        $this->solicitudTipoRel = $solicitudTipoRel;
-    }
 }
 

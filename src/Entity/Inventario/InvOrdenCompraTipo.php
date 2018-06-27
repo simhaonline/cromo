@@ -12,8 +12,7 @@ class InvOrdenCompraTipo
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="codigo_orden_compra_tipo_pk",type="string",length=10)
      */
     private $codigoOrdenCompraTipoPk;
 

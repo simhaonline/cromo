@@ -63,7 +63,7 @@ class SolicitudType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Clasificacion riesgo:'
             ])
-            ->add('genCiudadRel',EntityType::class,[
+            ->add('ciudadRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\General\GenCiudad',
                 'query_builder' => function (EntityRepository $er) {
@@ -73,7 +73,7 @@ class SolicitudType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Ciudad residencia:'
             ])
-            ->add('genEstudioTipoRel',EntityType::class,[
+            ->add('estudioTipoRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\General\GenEstudioTipo',
                 'query_builder' => function (EntityRepository $er) {
@@ -83,7 +83,7 @@ class SolicitudType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Nivel de estudio:'
             ])
-            ->add('genEstadoCivilRel',EntityType::class,[
+            ->add('estadoCivilRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\General\GenEstadoCivil',
                 'query_builder' => function (EntityRepository $er) {
@@ -93,7 +93,7 @@ class SolicitudType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Estado civil:'
             ])
-            ->add('genSexoRel',EntityType::class,[
+            ->add('sexoRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\General\GenSexo',
                 'query_builder' => function (EntityRepository $er) {
@@ -103,7 +103,7 @@ class SolicitudType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Sexo:'
             ])
-            ->add('genReligionRel',EntityType::class,[
+            ->add('religionRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\General\GenReligion',
                 'query_builder' => function (EntityRepository $er) {

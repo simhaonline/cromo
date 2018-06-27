@@ -865,49 +865,49 @@ class RhuSolicitud
     /**
      * @return mixed
      */
-    public function getGenEstadoCivilRel()
+    public function getEstadoCivilRel()
     {
-        return $this->genEstadoCivilRel;
+        return $this->estadoCivilRel;
     }
 
     /**
-     * @param mixed $genEstadoCivilRel
+     * @param mixed $estadoCivilRel
      */
-    public function setGenEstadoCivilRel($genEstadoCivilRel): void
+    public function setEstadoCivilRel($estadoCivilRel): void
     {
-        $this->genEstadoCivilRel = $genEstadoCivilRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGenCiudadRel()
-    {
-        return $this->genCiudadRel;
-    }
-
-    /**
-     * @param mixed $genCiudadRel
-     */
-    public function setGenCiudadRel($genCiudadRel): void
-    {
-        $this->genCiudadRel = $genCiudadRel;
+        $this->estadoCivilRel = $estadoCivilRel;
     }
 
     /**
      * @return mixed
      */
-    public function getGenEstudioTipoRel()
+    public function getCiudadRel()
     {
-        return $this->genEstudioTipoRel;
+        return $this->ciudadRel;
     }
 
     /**
-     * @param mixed $genEstudioTipoRel
+     * @param mixed $ciudadRel
      */
-    public function setGenEstudioTipoRel($genEstudioTipoRel): void
+    public function setCiudadRel($ciudadRel): void
     {
-        $this->genEstudioTipoRel = $genEstudioTipoRel;
+        $this->ciudadRel = $ciudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstudioTipoRel()
+    {
+        return $this->estudioTipoRel;
+    }
+
+    /**
+     * @param mixed $estudioTipoRel
+     */
+    public function setEstudioTipoRel($estudioTipoRel): void
+    {
+        $this->estudioTipoRel = $estudioTipoRel;
     }
 
     /**
@@ -945,33 +945,34 @@ class RhuSolicitud
     /**
      * @return mixed
      */
-    public function getGenSexoRel()
+    public function getSexoRel()
     {
-        return $this->genSexoRel;
+        return $this->sexoRel;
     }
 
     /**
-     * @param mixed $genSexoRel
+     * @param mixed $sexoRel
      */
-    public function setGenSexoRel($genSexoRel): void
+    public function setSexoRel($sexoRel): void
     {
-        $this->genSexoRel = $genSexoRel;
+        $this->sexoRel = $sexoRel;
     }
 
     /**
      * @return mixed
      */
-    public function getGenReligionRel()
+    public function getReligionRel()
     {
-        return $this->genReligionRel;
+        return $this->religionRel;
     }
 
     /**
-     * @param mixed $genReligionRel
+     * @param mixed $religionRel
      */
-    public function setGenReligionRel($genReligionRel): void
+    public function setReligionRel($religionRel): void
     {
-        $this->genReligionRel = $genReligionRel;
+        $this->religionRel = $religionRel;
     }
+
 
 }

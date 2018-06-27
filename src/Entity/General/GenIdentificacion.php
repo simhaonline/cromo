@@ -44,12 +44,12 @@ class GenIdentificacion
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="identificacionRel")
      */
-    protected $rhuSeleccionIdentificacionRel;
+    protected $rhuSeleccionesIdentificacionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="identificacionRel")
      */
-    protected $rhuEmpleadoIdentificacionRel;
+    protected $rhuEmpleadosIdentificacionRel;
 
     /**
      * @return mixed
@@ -146,6 +146,39 @@ class GenIdentificacion
     {
         $this->rhuAspirantesIdentificacionRel = $rhuAspirantesIdentificacionRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuSeleccionesIdentificacionRel()
+    {
+        return $this->rhuSeleccionesIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $rhuSeleccionesIdentificacionRel
+     */
+    public function setRhuSeleccionesIdentificacionRel($rhuSeleccionesIdentificacionRel): void
+    {
+        $this->rhuSeleccionesIdentificacionRel = $rhuSeleccionesIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuEmpleadosIdentificacionRel()
+    {
+        return $this->rhuEmpleadosIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $rhuEmpleadosIdentificacionRel
+     */
+    public function setRhuEmpleadosIdentificacionRel($rhuEmpleadosIdentificacionRel): void
+    {
+        $this->rhuEmpleadosIdentificacionRel = $rhuEmpleadosIdentificacionRel;
+    }
+
 
 }
 

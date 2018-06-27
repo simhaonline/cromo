@@ -851,33 +851,33 @@ class RhuSeleccion
     /**
      * @return mixed
      */
-    public function getGenIdentificacionRel()
+    public function getIdentificacionRel()
     {
-        return $this->genIdentificacionRel;
+        return $this->identificacionRel;
     }
 
     /**
-     * @param mixed $genIdentificacionRel
+     * @param mixed $identificacionRel
      */
-    public function setGenIdentificacionRel($genIdentificacionRel): void
+    public function setIdentificacionRel($identificacionRel): void
     {
-        $this->genIdentificacionRel = $genIdentificacionRel;
+        $this->identificacionRel = $identificacionRel;
     }
 
     /**
      * @return mixed
      */
-    public function getGenEstadoCivilRel()
+    public function getEstadoCivilRel()
     {
-        return $this->genEstadoCivilRel;
+        return $this->estadoCivilRel;
     }
 
     /**
-     * @param mixed $genEstadoCivilRel
+     * @param mixed $estadoCivilRel
      */
-    public function setGenEstadoCivilRel($genEstadoCivilRel): void
+    public function setEstadoCivilRel($estadoCivilRel): void
     {
-        $this->genEstadoCivilRel = $genEstadoCivilRel;
+        $this->estadoCivilRel = $estadoCivilRel;
     }
 
     /**
@@ -899,49 +899,49 @@ class RhuSeleccion
     /**
      * @return mixed
      */
-    public function getGenCiudadRel()
+    public function getCiudadRel()
     {
-        return $this->genCiudadRel;
+        return $this->ciudadRel;
     }
 
     /**
-     * @param mixed $genCiudadRel
+     * @param mixed $ciudadRel
      */
-    public function setGenCiudadRel($genCiudadRel): void
+    public function setCiudadRel($ciudadRel): void
     {
-        $this->genCiudadRel = $genCiudadRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGenCiudadExpedicionRel()
-    {
-        return $this->genCiudadExpedicionRel;
-    }
-
-    /**
-     * @param mixed $genCiudadExpedicionRel
-     */
-    public function setGenCiudadExpedicionRel($genCiudadExpedicionRel): void
-    {
-        $this->genCiudadExpedicionRel = $genCiudadExpedicionRel;
+        $this->ciudadRel = $ciudadRel;
     }
 
     /**
      * @return mixed
      */
-    public function getGenCiudadNacimientoRel()
+    public function getCiudadExpedicionRel()
     {
-        return $this->genCiudadNacimientoRel;
+        return $this->ciudadExpedicionRel;
     }
 
     /**
-     * @param mixed $genCiudadNacimientoRel
+     * @param mixed $ciudadExpedicionRel
      */
-    public function setGenCiudadNacimientoRel($genCiudadNacimientoRel): void
+    public function setCiudadExpedicionRel($ciudadExpedicionRel): void
     {
-        $this->genCiudadNacimientoRel = $genCiudadNacimientoRel;
+        $this->ciudadExpedicionRel = $ciudadExpedicionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadNacimientoRel()
+    {
+        return $this->ciudadNacimientoRel;
+    }
+
+    /**
+     * @param mixed $ciudadNacimientoRel
+     */
+    public function setCiudadNacimientoRel($ciudadNacimientoRel): void
+    {
+        $this->ciudadNacimientoRel = $ciudadNacimientoRel;
     }
 
     /**
@@ -1011,17 +1011,17 @@ class RhuSeleccion
     /**
      * @return mixed
      */
-    public function getGenSexoRel()
+    public function getSexoRel()
     {
-        return $this->genSexoRel;
+        return $this->sexoRel;
     }
 
     /**
-     * @param mixed $genSexoRel
+     * @param mixed $sexoRel
      */
-    public function setGenSexoRel($genSexoRel): void
+    public function setSexoRel($sexoRel): void
     {
-        $this->genSexoRel = $genSexoRel;
+        $this->sexoRel = $sexoRel;
     }
 
 

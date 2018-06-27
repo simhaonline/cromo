@@ -6,7 +6,7 @@
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Tipo de solicitud:</label>
+                <label for="form_solicitudMotivoRel" class="col-sm-2 control-label">Tipo de solicitud:</label>
                 <div class="col-sm-10">
                     {{ form_widget(form.solicitudMotivoRel, { 'attr': {'class': 'form-control'} }) }}
                     <div style="color:red;">{{ form_errors(form.solicitudMotivoRel) }}</div>
@@ -87,21 +87,21 @@
             <div class="form-group form-group-sm">
                 <label for="form_ciudadRel" class="col-sm-2 control-label">Ciudad residencia:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.genCiudadRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.genCiudadRel) }}
+                    {{ form_widget(form.ciudadRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.ciudadRel) }}
                 </div>
                 <label for="form_estudioTipoRel" class="col-sm-2 control-label">Nivel de estudio:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.genEstudioTipoRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.genEstudioTipoRel) }}
+                    {{ form_widget(form.estudioTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.estudioTipoRel) }}
                 </div>
             </div>
 
             <div class="form-group form-group-sm">
                 <label for="form_estadoCivilRel" class="col-sm-2 control-label">Estado civil:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.genEstadoCivilRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.genEstadoCivilRel) }}
+                    {{ form_widget(form.estadoCivilRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.estadoCivilRel) }}
                 </div>
                 <label for="form_numeroHijos" class="col-sm-2 control-label">Nro hijos:</label>
                 <div class="col-sm-4">
@@ -110,15 +110,15 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_codigoSexoFk" class="col-sm-2 control-label">Sexo:</label>
+                <label for="form_sexoRel" class="col-sm-2 control-label">Sexo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.genSexoRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.genSexoRel) }}
+                    {{ form_widget(form.sexoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.sexoRel) }}
                 </div>
-                <label for="form_codigoReligionFk" class="col-sm-2 control-label">Religion:</label>
+                <label for="form_religionRel" class="col-sm-2 control-label">Religion:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.genReligionRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.genReligionRel) }}
+                    {{ form_widget(form.religionRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.religionRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

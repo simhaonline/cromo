@@ -87,30 +87,29 @@ class PedidoController extends Controller
      */
     public function detalle(Request $request, $id)
     {
-        $objFormatopedido = new pedido();
+        //$objFormatopedido = new pedido();
         $em = $this->getDoctrine()->getManager();
-        $arpedido = $em->getRepository('App:Inventario\Invpedido')->find($id);
-        $arpedidoDetalles = $em->getRepository('App:Inventario\InvpedidoDetalle')->findBy(['codigopedidoFk' => $id]);
-        $form = $this->formularioDetalles($arpedido);
+        $arPedido = $em->getRepository(InvPedido::class)->find($id);
+        $form = $this->formularioDetalles($arPedido);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository('App:Inventario\Invpedido')->autorizar($arpedido);
+                $em->getRepository('App:Inventario\Invpedido')->autorizar($arPedido);
                 return $this->redirect($this->generateUrl('inv_mov_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository('App:Inventario\Invpedido')->desautorizar($arpedido);
+                $em->getRepository('App:Inventario\Invpedido')->desautorizar($arPedido);
                 return $this->redirect($this->generateUrl('inv_mov_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                $objFormatopedido->Generar($em, $id);
+                //$objFormatopedido->Generar($em, $id);
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository('App:Inventario\Invpedido')->aprobar($arpedido);
+                $em->getRepository('App:Inventario\Invpedido')->aprobar($arPedido);
                 return $this->redirect($this->generateUrl('inv_mov_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnAnular')->isClicked()) {
-                $respuesta = $em->getRepository('App:Inventario\Invpedido')->anular($arpedido);
+                $respuesta = $em->getRepository('App:Inventario\Invpedido')->anular($arPedido);
                 if($respuesta != ''){
                     MensajesController::error($respuesta);
                 }
@@ -118,14 +117,15 @@ class PedidoController extends Controller
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository('App:Inventario\InvpedidoDetalle')->eliminar($arpedido, $arrDetallesSeleccionados);
+                $em->getRepository('App:Inventario\InvpedidoDetalle')->eliminar($arPedido, $arrDetallesSeleccionados);
                 return $this->redirect($this->generateUrl('inv_mov_comercial_pedido_detalle', ['id' => $id]));
             }
         }
-        return $this->render('inventario/movimiento/compra/pedido/detalle.html.twig', [
+        $arPedidoDetalles = $em->getRepository('App:Inventario\InvpedidoDetalle')->findBy(['codigoPedidoFk' => $id]);
+        return $this->render('inventario/movimiento/comercial/pedido/detalle.html.twig', [
             'form' => $form->createView(),
-            'arpedidoDetalles' => $arpedidoDetalles,
-            'arpedido' => $arpedido
+            'arPedidoDetalles' => $arPedidoDetalles,
+            'arPedido' => $arPedido
         ]);
     }
 
@@ -136,7 +136,7 @@ class PedidoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $arpedido = $em->getRepository('App:Inventario\Invpedido')->find($id);
+        $arPedido = $em->getRepository(InvPedido::class)->find($id);
         $form = $this->formularioFiltroItems();
         $form->handleRequest($request);
         $this->listaItems($em, $form);
@@ -151,7 +151,7 @@ class PedidoController extends Controller
                         if ($cantidad != '' && $cantidad != 0) {
                             $arItem = $em->getRepository('App:Inventario\InvItem')->find($codigoItem);
                             $arpedidoDetalle = new InvpedidoDetalle();
-                            $arpedidoDetalle->setpedidoRel($arpedido);
+                            $arpedidoDetalle->setpedidoRel($arPedido);
                             $arpedidoDetalle->setItemRel($arItem);
                             $arpedidoDetalle->setCantidadSolicitada($cantidad);
                             $arpedidoDetalle->setCantidadPendiente($cantidad);
@@ -164,7 +164,7 @@ class PedidoController extends Controller
             }
         }
         $arItems = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
-        return $this->render('inventario/movimiento/compra/pedido/detalleNuevo.html.twig', [
+        return $this->render('inventario/movimiento/comercial/pedido/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems
         ]);
@@ -201,6 +201,80 @@ class PedidoController extends Controller
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         return $form;
+    }
+
+    private function formularioFiltroItems()
+    {
+        return $this->createFormBuilder()
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->getForm();
+    }
+
+    /**
+     * @param $em ObjectManager
+     * @param $form \Symfony\Component\Form\FormInterface
+     */
+    private function listaItems($em, $form)
+    {
+        $session = new Session();
+        $session->set('filtroCodigoItem', $form->get('txtCodigoItem')->getData());
+        $session->set('filtroNombreItem', $form->get('txtNombreItem')->getData());
+        $this->query = $em->getRepository('App:Inventario\InvItem')->listarItems($session->get('filtroNombreItem'), $session->get('filtroCodigoItem'));
+    }
+
+    /**
+     * @param $arSolicitud InvSolicitud
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    private function formularioDetalles($ar)
+    {
+        $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnAprobar = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        if ($ar->getEstadoAnulado()) {
+            $arrBtnAutorizar['disabled'] = true;
+            $arrBtnDesautorizar['disabled'] = true;
+            $arrBtnImprimir['disabled'] = true;
+            $arrBtnAnular['disabled'] = true;
+            $arrBtnEliminar['disabled'] = true;
+            $arrBtnAprobar['disabled'] = true;
+        } elseif ($ar->getEstadoAprobado()) {
+            $arrBtnAutorizar['disabled'] = true;
+            $arrBtnDesautorizar['disabled'] = true;
+            $arrBtnImprimir['disabled'] = false;
+            $arrBtnAnular['disabled'] = false;
+            $arrBtnEliminar['disabled'] = true;
+            $arrBtnAprobar['disabled'] = true;
+        } elseif ($ar->getEstadoAutorizado()) {
+            $arrBtnAutorizar['disabled'] = true;
+            $arrBtnDesautorizar['disabled'] = false;
+            $arrBtnImprimir['disabled'] = true;
+            $arrBtnAnular['disabled'] = true;
+            $arrBtnEliminar['disabled'] = true;
+            $arrBtnAprobar['disabled'] = false;
+        } else {
+            $arrBtnAutorizar['disabled'] = false;
+            $arrBtnDesautorizar['disabled'] = true;
+            $arrBtnImprimir['disabled'] = true;
+            $arrBtnAnular['disabled'] = true;
+            $arrBtnEliminar['disabled'] = false;
+            $arrBtnAprobar['disabled'] = true;
+        }
+        return $this
+            ->createFormBuilder()
+            ->add('btnAutorizar', SubmitType::class, $arrBtnAutorizar)
+            ->add('btnAprobar', SubmitType::class, $arrBtnAprobar)
+            ->add('btnDesautorizar', SubmitType::class, $arrBtnDesautorizar)
+            ->add('btnImprimir', SubmitType::class, $arrBtnImprimir)
+            ->add('btnAnular', SubmitType::class, $arrBtnAnular)
+            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
+            ->getForm();
     }
 
 }

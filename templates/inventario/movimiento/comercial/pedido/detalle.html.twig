@@ -6,7 +6,7 @@
         <div class="col-lg-12">
             <h3 class='page-header'>
                 Inventario movimiento
-                <small style="font-size: 20px">Inventario: solicitud detalle</small>
+                <small style="font-size: 20px">Inventario: pedido detalle</small>
             </h3>
         </div>
         <!-- /.col-lg-12 -->
@@ -21,32 +21,32 @@
         </div>
     </div>
     <div style="float:right">
-        {% if arSolicitud.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
-        {% if arSolicitud.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
-        {% if arSolicitud.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arPedido.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arPedido.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arPedido.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br /><br />
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arSolicitud.codigoSolicitudPk }}</td>
+            <td class="td-in-well">{{ arPedido.codigoPedidoPk }}</td>
             <td class="titulo">USUARIO:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arSolicitud.usuario }}</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arPedido.usuario }}</td>
 
         </tr>
         <tr>
             <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arSolicitud.numero }}</td>
+            <td class="td-in-well">{{ arPedido.numero }}</td>
             <td class="titulo">FECHA:</td>
-            <td class="td-in-well">{{ arSolicitud.fecha | date('Y-m-d') }}</td>
+            <td class="td-in-well">{{ arPedido.fecha | date('Y-m-d') }}</td>
         </tr>
         <tr>
             <td class="titulo" >SOPORTE:</td>
-            <td class="td-in-well" colspan="5">{{ arSolicitud.soporte }}</td>
+            <td class="td-in-well" colspan="5">{{ arPedido.soporte }}</td>
         </tr>
         <tr>
             <td class="titulo" >COMENTARIO: </td>
-            <td class="td-in-well" colspan="5">{{ arSolicitud.comentarios }}</td>
+            <td class="td-in-well" colspan="5">{{ arPedido.comentario }}</td>
         </tr>
     </table>
     <ul class="nav nav-tabs">
@@ -66,12 +66,12 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for arSolicitudDetalle in arSolicitudDetalles %}
+                        {% for arPedidoDetalle in arPedidoDetalles %}
                             <tr>
-                                <td>{{ arSolicitudDetalle.codigoSolicitudDetallePk }}</td>
-                                <td>{{ arSolicitudDetalle.itemRel.nombre | default('') }}</td>
-                                <td>{{ arSolicitudDetalle.cantidadSolicitada }}</td>
-                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arSolicitudDetalle.codigoSolicitudDetallePk }}" /></td>
+                                <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
+                                <td>{{ arPedidoDetalle.itemRel.nombre | default('') }}</td>
+                                <td>{{ arPedidoDetalle.cantidadSolicitada }}</td>
+                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk }}" /></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -80,10 +80,10 @@
                 {#<div class="separador-1"></div>#}
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        {% if arSolicitud.estadoAutorizado == true %}
+                        {% if arPedido.estadoAutorizado == true %}
                             <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled" value="Nuevo"/>
                         {% else %}
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inv_mov_inventario_solicitud_detalle_nuevo', {'codigoDetalle': 0,'id':arSolicitud.codigoSolicitudPk }) }}', 'SolicitudAdicionarDetalle', 600, 900)">Nuevo</a>
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inv_mto_comercial_pedido_detalle_nuevo', {'codigoDetalle': 0,'id':arPedido.codigoPedidoPk }) }}', 'PedidoAdicionarDetalle', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">
@@ -94,5 +94,5 @@
         </div>
     </div>
     {{ form_end(form) }}
-    <a  class="btn btn-default btn-sm" href="{{ path('admin_lista',{'modulo':'inventario','entidad':'solicitud'}) }}">Volver</a>
+    <a  class="btn btn-default btn-sm" href="{{ path('inv_mto_comercial_pedido_lista') }}">Volver</a>
 {% endblock %}

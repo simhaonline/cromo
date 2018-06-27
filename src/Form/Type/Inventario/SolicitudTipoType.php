@@ -14,6 +14,7 @@ class SolicitudTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('codigoSolicitudTipoPk',TextType::class,['label' => 'Codigo solicitud tipo:','required' => true])
             ->add('nombre',TextType::class,['label' => 'Nombre:'])
             ->add('guardar', SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])

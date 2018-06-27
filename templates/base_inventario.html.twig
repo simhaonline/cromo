@@ -131,6 +131,14 @@
                                 <a href="#">General <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li>
+                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad':'tercero'}) }}">
+                                            Tercero</a>
+                                    </li>
+                                </ul>
+                            <li>
+                                <a href="#">Inventario <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'item'}) }}">
                                             Item</a>
                                     </li>
@@ -155,22 +163,33 @@
                                             Bodega</a>
                                     </li>
                                     <li>
-                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad':'tercero'}) }}">
-                                            Tercero</a>
+                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad':'documento'}) }}">
+                                            Documento</a>
                                     </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Compras <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
                                     <li>
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad' : 'solicitudTipo'}) }}">
                                             Solicitud tipo</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad':'documento'}) }}">
-                                            Documento</a>
                                     </li>
                                     <li>
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad':'ordenCompraTipo'}) }}">
                                             Orden compra tipo</a>
                                     </li>
                                 </ul>
+                            </li>
+                            <li>
+                                <a href="#">Comercial <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad' : 'pedidoTipo'}) }}">
+                                            Pedido tipo</a>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
 
                     </li>

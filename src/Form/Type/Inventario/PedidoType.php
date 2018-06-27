@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class PedidoType extends AbstractType {
@@ -29,8 +30,8 @@ class PedidoType extends AbstractType {
                 'choice_label' => 'nombre',
                 'label' => 'Pedido tipo:'
             ])
+            ->add('soporte',TextType::class, ['required' => false,'label' => 'Soporte:'])
             ->add('comentario',TextareaType::class, ['required' => false,'label' => 'Comentario:'])
-            ->add('soporte',TextareaType::class, ['required' => false,'label' => 'Soporte:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

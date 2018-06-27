@@ -27,6 +27,11 @@ class TteFacturaTipo
     private $consecutivo = 0;
 
     /**
+     * @ORM\Column(name="resolucion_facturacion", type="text", nullable=true)
+     */
+    private $resolucionFacturacion;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="facturaTipoRel")
      */
     protected $facturasFacturaTipoRel;
@@ -114,6 +119,22 @@ class TteFacturaTipo
     public function setGuiasTiposFacturaTipoRel($guiasTiposFacturaTipoRel): void
     {
         $this->guiasTiposFacturaTipoRel = $guiasTiposFacturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResolucionFacturacion()
+    {
+        return $this->resolucionFacturacion;
+    }
+
+    /**
+     * @param mixed $resolucionFacturacion
+     */
+    public function setResolucionFacturacion($resolucionFacturacion): void
+    {
+        $this->resolucionFacturacion = $resolucionFacturacion;
     }
 
 

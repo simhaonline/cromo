@@ -22,19 +22,19 @@ class GenEstadoCivil
     private $nombre;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genEstadoCivilRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="estadoCivilRel")
      */
     protected $rhuAspirantesEstadoCivilRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="genEstadoCivilRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="estadoCivilRel")
      */
     protected $rhuSolicitudesEstadoCivilRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genEstadoCivilRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="estadoCivilRel")
      */
-    protected $rhuSeleccionEstadoCivilRel;
+    protected $rhuSeleccionesEstadoCivilRel;
 
     /**
      * @return mixed

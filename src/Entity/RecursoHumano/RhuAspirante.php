@@ -223,37 +223,37 @@ class RhuAspirante
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuAspirantesIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk",referencedColumnName="codigo_identificacion_pk")
      */
-    protected $genIdentificacionRel;
+    protected $identificacionRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenEstadoCivil", inversedBy="rhuAspirantesEstadoCivilRel")
      * @ORM\JoinColumn(name="codigo_estado_civil_fk", referencedColumnName="codigo_estado_civil_pk")
      */
-    protected $genEstadoCivilRel;
+    protected $estadoCivilRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuAspirantesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
-    protected $genCiudadRel;
+    protected $ciudadRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuAspirantesCiudadExpedicionRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
-    protected $genCiudadExpedicionRel;
+    protected $ciudadExpedicionRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuAspirantesCiudadNacimientoRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
-    protected $genCiudadNacimientoRel;
+    protected $ciudadNacimientoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuAspirantesSexoRel")
      * @ORM\JoinColumn(name="codigo_sexo_fk", referencedColumnName="codigo_sexo_pk")
      */
-    protected $genSexoRel;
+    protected $sexoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuRh", inversedBy="rhuAspirantesRhRel")

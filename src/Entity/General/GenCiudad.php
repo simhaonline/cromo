@@ -49,47 +49,47 @@ class GenCiudad
     protected $ctbTercerosCiudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genCiudadRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="ciudadRel")
      */
     protected $rhuAspirantesCiudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genCiudadExpedicionRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="ciudadExpedicionRel")
      */
     protected $rhuAspirantesCiudadExpedicionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genCiudadNacimientoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="ciudadNacimientoRel")
      */
     protected $rhuAspirantesCiudadNacimientoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="genCiudadRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="ciudadRel")
      */
     protected $rhuSolicitudesCiudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genCiudadRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="ciudadRel")
      */
     protected $rhuSeleccionCiudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genCiudadExpedicionRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="ciudadExpedicionRel")
      */
     protected $rhuSeleccionCiudadExpedicionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genCiudadNacimientoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="ciudadNacimientoRel")
      */
     protected $rhuSeleccionCiudadNacimientoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="genCiudadRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="ciudadRel")
      */
     protected $rhuEmpleadoCiudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="genCiudadExpedicionRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="ciudadExpedicionRel")
      */
     protected $rhuEmpleadoCiudadExpedicionRel;
 

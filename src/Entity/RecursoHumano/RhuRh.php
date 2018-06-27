@@ -32,4 +32,70 @@ class RhuRh
      */
     protected $rhuSeleccionRhRel;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoRhPk()
+    {
+        return $this->codigoRhPk;
+    }
+
+    /**
+     * @param mixed $codigoRhPk
+     */
+    public function setCodigoRhPk($codigoRhPk): void
+    {
+        $this->codigoRhPk = $codigoRhPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuAspirantesRhRel()
+    {
+        return $this->rhuAspirantesRhRel;
+    }
+
+    /**
+     * @param mixed $rhuAspirantesRhRel
+     */
+    public function setRhuAspirantesRhRel($rhuAspirantesRhRel): void
+    {
+        $this->rhuAspirantesRhRel = $rhuAspirantesRhRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuSeleccionRhRel()
+    {
+        return $this->rhuSeleccionRhRel;
+    }
+
+    /**
+     * @param mixed $rhuSeleccionRhRel
+     */
+    public function setRhuSeleccionRhRel($rhuSeleccionRhRel): void
+    {
+        $this->rhuSeleccionRhRel = $rhuSeleccionRhRel;
+    }
+
+
+
 }

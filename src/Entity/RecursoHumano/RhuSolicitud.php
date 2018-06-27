@@ -217,19 +217,19 @@ class RhuSolicitud
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenEstadoCivil", inversedBy="rhuSolicitudesEstadoCivilRel")
      * @ORM\JoinColumn(name="codigo_estado_civil_fk", referencedColumnName="codigo_estado_civil_pk")
      */
-    protected $genEstadoCivilRel;
+    protected $estadoCivilRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuSolicitudesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
-    protected $genCiudadRel;
+    protected $ciudadRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenEstudioTipo", inversedBy="rhuSolicitudesEstudioTiposRel")
      * @ORM\JoinColumn(name="codigo_estudio_tipo_fk", referencedColumnName="codigo_estudio_tipo_pk")
      */
-    protected $genEstudioTipoRel;
+    protected $estudioTipoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuClasificacionRiesgo", inversedBy="solicitudesClasificacionRiesgoRel")
@@ -246,13 +246,13 @@ class RhuSolicitud
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuSolicitudSexoRel")
      * @ORM\JoinColumn(name="codigo_sexo_fk", referencedColumnName="codigo_sexo_pk")
      */
-    protected $genSexoRel;
+    protected $sexoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenReligion", inversedBy="rhuSolicitudReligicionRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenReligion", inversedBy="rhuSolicitudesReligicionRel")
      * @ORM\JoinColumn(name="codigo_religion_fk", referencedColumnName="codigo_religion_pk")
      */
-    protected $genReligionRel;
+    protected $religionRel;
 
     /**
      * @return mixed

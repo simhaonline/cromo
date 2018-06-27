@@ -25,7 +25,7 @@ class GenPais
     /**
      * @ORM\OneToMany(targetEntity="GenDepartamento", mappedBy="paisRel")
      */
-    protected $departamentosRel;
+    protected $departamentosPaisRel;
 
     /**
      * @return mixed

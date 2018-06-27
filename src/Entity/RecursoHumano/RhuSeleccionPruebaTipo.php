@@ -24,4 +24,38 @@ class RhuSeleccionPruebaTipo
      */
     private $nombre;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoSeleccionPruebaTipoPk()
+    {
+        return $this->codigoSeleccionPruebaTipoPk;
+    }
+
+    /**
+     * @param mixed $codigoSeleccionPruebaTipoPk
+     */
+    public function setCodigoSeleccionPruebaTipoPk($codigoSeleccionPruebaTipoPk): void
+    {
+        $this->codigoSeleccionPruebaTipoPk = $codigoSeleccionPruebaTipoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+
+
 }

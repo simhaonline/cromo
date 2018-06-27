@@ -25,7 +25,7 @@
                 <td class="numero">{{ arFactura.vrManejo }}</td>
                 <td class="numero">{{ arFactura.vrSubtotal }}</td>
                 <td class="numero">{{ arFactura.vrTotal }}</td>
-                <td style="text-align: center"><a href="{{ path('tte_mto_comercial_factura_detalle', { 'codigoFactura': arFactura.codigoFacturaPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a href="{{ path('tte_mto_comercial_factura_detalle', { 'id': arFactura.codigoFacturaPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -42,7 +42,7 @@
 
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('tte_mto_comercial_factura_nuevo', {'codigoFactura': 0}) }}">Nuevo</a>
+            <a class="btn btn-default btn-sm" href="{{ path('tte_mto_comercial_factura_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>
     </div>
 {% endblock %}

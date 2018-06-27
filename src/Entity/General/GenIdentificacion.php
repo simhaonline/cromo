@@ -37,17 +37,17 @@ class GenIdentificacion
     protected $tteClientesIdentificacionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genIdentificacionRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="identificacionRel")
      */
     protected $rhuAspirantesIdentificacionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genIdentificacionRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="identificacionRel")
      */
     protected $rhuSeleccionIdentificacionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="genIdentificacionRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="identificacionRel")
      */
     protected $rhuEmpleadoIdentificacionRel;
 

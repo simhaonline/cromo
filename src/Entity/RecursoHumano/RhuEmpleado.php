@@ -207,28 +207,28 @@ class RhuEmpleado
     private $VrSalario = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuEmpleadoIdentificacionRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuEmpleadosIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk",referencedColumnName="codigo_identificacion_pk")
      */
-    protected $genIdentificacionRel;
+    protected $identificacionRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuEmpleadoCiudadRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuEmpleadosCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk",referencedColumnName="codigo_ciudad_pk")
      */
-    protected $genCiudadRel;
+    protected $ciudadRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuEmpleadoCiudadExpedicionRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuEmpleadosCiudadExpedicionRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk",referencedColumnName="codigo_ciudad_pk")
      */
-    protected $genCiudadExpedicionRel;
+    protected $ciudadExpedicionRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuEmpleadoSexoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuEmpleadosSexoRel")
      * @ORM\JoinColumn(name="codigo_sexo_fk",referencedColumnName="codigo_sexo_pk")
      */
-    protected $genSexoRel;
+    protected $sexoRel;
 
     /**
      * @return mixed

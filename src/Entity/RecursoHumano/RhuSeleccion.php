@@ -217,76 +217,76 @@ class RhuSeleccion
     private $fechaCierre;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuSeleccionTipo", inversedBy="seleccionTipoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuSeleccionTipo", inversedBy="seleccionesTipoRel")
      * @ORM\JoinColumn(name="codigo_seleccion_tipo_fk",referencedColumnName="codigo_seleccion_tipo_pk")
      */
     protected $seleccionTipoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuSeleccionIdentificacionRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuSeleccionesIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk",referencedColumnName="codigo_identificacion_pk")
      */
-    protected $genIdentificacionRel;
+    protected $identificacionRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenEstadoCivil", inversedBy="rhuSeleccionEstadoCivilRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenEstadoCivil", inversedBy="rhuSeleccionesEstadoCivilRel")
      * @ORM\JoinColumn(name="codigo_estado_civil_fk", referencedColumnName="codigo_estado_civil_pk")
      */
-    protected $genEstadoCivilRel;
+    protected $estadoCivilRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuGrupoPago", inversedBy="seleccionGrupoPagoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuGrupoPago", inversedBy="seleccionesGrupoPagoRel")
      * @ORM\JoinColumn(name="codigo_grupo_pago_fk",referencedColumnName="codigo_grupo_pago_pk")
      */
     protected $grupoPagoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuSeleccionCiudadRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuSeleccionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
-    protected $genCiudadRel;
+    protected $ciudadRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuSeleccionCiudadExpedicionRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuSeleccionesCiudadExpedicionRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
-    protected $genCiudadExpedicionRel;
+    protected $ciudadExpedicionRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuSeleccionCiudadNacimientoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuSeleccionesCiudadNacimientoRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
-    protected $genCiudadNacimientoRel;
+    protected $ciudadNacimientoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuRh", inversedBy="rhuSeleccionRhRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuRh", inversedBy="rhuSeleccionesRhRel")
      * @ORM\JoinColumn(name="codigo_rh_fk", referencedColumnName="codigo_rh_pk")
      */
     protected $rhRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", inversedBy="rhuSeleccionSolicitudRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", inversedBy="rhuSeleccionesSolicitudRel")
      * @ORM\JoinColumn(name="codigo_solicitud_fk", referencedColumnName="codigo_solicitud_pk")
      */
     protected $solicitudRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCargo", inversedBy="seleccionCargoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCargo", inversedBy="seleccionesCargoRel")
      * @ORM\JoinColumn(name="codigo_cargo_fk",referencedColumnName="codigo_cargo_pk")
      */
     protected $cargoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCierreSeleccionMotivo", inversedBy="rhuSeleccionMotivoCierreRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCierreSeleccionMotivo", inversedBy="rhuSeleccionesMotivoCierreRel")
      * @ORM\JoinColumn(name="codigo_cierre_seleccion_motivo_fk", referencedColumnName="codigo_cierre_seleccion_motivo_pk")
      */
     protected $cierreSeleccionMotivoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuSeleccionSexoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuSeleccionesSexoRel")
      * @ORM\JoinColumn(name="codigo_sexo_fk", referencedColumnName="codigo_sexo_pk")
      */
-    protected $genSexoRel;
+    protected $sexoRel;
 
     /**
      * @return mixed

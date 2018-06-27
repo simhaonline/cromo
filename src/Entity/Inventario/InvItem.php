@@ -63,17 +63,17 @@ class InvItem
     private $porcentajeIva = 0;
 
     /**
-     * @ORM\Column(name="codigo_linea_fk", type="string",length=10)
+     * @ORM\Column(name="codigo_linea_fk", type="string",length=10, nullable=true)
      */
     private $codigoLineaFk;
 
     /**
-     * @ORM\Column(name="codigo_grupo_fk", type="string",length=10)
+     * @ORM\Column(name="codigo_grupo_fk", type="string",length=10, nullable=true)
      */
     private $codigoGrupoFk;
 
     /**
-     * @ORM\Column(name="codigo_subgrupo_fk", type="string",length=10)
+     * @ORM\Column(name="codigo_subgrupo_fk", type="string",length=10, nullable=true)
      */
     private $codigoSubgrupoFk;
 
@@ -83,7 +83,7 @@ class InvItem
     private $codigoUnidadMedidaFk;
 
     /**
-     * @ORM\Column(name="codigo_marca_fk", type="string",length=10)
+     * @ORM\Column(name="codigo_marca_fk", type="string",length=10, nullable=true)
      */
     private $codigoMarcaFk;
 
@@ -147,7 +147,7 @@ class InvItem
     private $stockMaximo = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvMarca", inversedBy="marcaItemsRel")
+     * @ORM\ManyToOne(targetEntity="InvMarca", inversedBy="itemsMarcaRel")
      * @ORM\JoinColumn(name="codigo_marca_fk",referencedColumnName="codigo_marca_pk")
      * @Assert\NotBlank(
      *     message="El campo no puede estar vacio"
@@ -156,7 +156,7 @@ class InvItem
     protected $marcaRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvGrupo", inversedBy="grupoItemsRel")
+     * @ORM\ManyToOne(targetEntity="InvGrupo", inversedBy="itemsGrupoRel")
      * @ORM\JoinColumn(name="codigo_grupo_fk",referencedColumnName="codigo_grupo_pk")
      * @Assert\NotBlank(
      *     message="El campo no puede estar vacio"
@@ -174,7 +174,7 @@ class InvItem
     protected $subgrupoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvLinea", inversedBy="lineaItemsRel")
+     * @ORM\ManyToOne(targetEntity="InvLinea", inversedBy="itemsLineaRel")
      * @ORM\JoinColumn(name="codigo_linea_fk",referencedColumnName="codigo_linea_pk")
      * @Assert\NotBlank(
      *     message="El campo no puede estar vacio"
@@ -185,22 +185,22 @@ class InvItem
     /**
      * @ORM\OneToMany(targetEntity="InvSolicitudDetalle", mappedBy="itemRel")
      */
-    private $itemsolicitudDetallesRel;
+    private $solicitudesDetallesItemRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvOrdenCompraDetalle", mappedBy="itemRel")
      */
-    protected $itemOrdenCompraDetallesRel;
+    protected $ordenesComprasDetallesItemRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="itemRel")
      */
-    protected $itemMovimientoDetallesRel;
+    protected $movimientosDetallesItemRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvLote", mappedBy="itemRel")
      */
-    protected $itemLotesRel;
+    protected $lotesItemRel;
 
     /**
      * @return mixed
@@ -669,65 +669,65 @@ class InvItem
     /**
      * @return mixed
      */
-    public function getItemsolicitudDetallesRel()
+    public function getSolicitudesDetallesItemRel()
     {
-        return $this->itemsolicitudDetallesRel;
+        return $this->solicitudesDetallesItemRel;
     }
 
     /**
-     * @param mixed $itemsolicitudDetallesRel
+     * @param mixed $solicitudesDetallesItemRel
      */
-    public function setItemsolicitudDetallesRel($itemsolicitudDetallesRel): void
+    public function setSolicitudesDetallesItemRel($solicitudesDetallesItemRel): void
     {
-        $this->itemsolicitudDetallesRel = $itemsolicitudDetallesRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getItemOrdenCompraDetallesRel()
-    {
-        return $this->itemOrdenCompraDetallesRel;
-    }
-
-    /**
-     * @param mixed $itemOrdenCompraDetallesRel
-     */
-    public function setItemOrdenCompraDetallesRel($itemOrdenCompraDetallesRel): void
-    {
-        $this->itemOrdenCompraDetallesRel = $itemOrdenCompraDetallesRel;
+        $this->solicitudesDetallesItemRel = $solicitudesDetallesItemRel;
     }
 
     /**
      * @return mixed
      */
-    public function getItemMovimientoDetallesRel()
+    public function getOrdenesComprasDetallesItemRel()
     {
-        return $this->itemMovimientoDetallesRel;
+        return $this->ordenesComprasDetallesItemRel;
     }
 
     /**
-     * @param mixed $itemMovimientoDetallesRel
+     * @param mixed $ordenesComprasDetallesItemRel
      */
-    public function setItemMovimientoDetallesRel($itemMovimientoDetallesRel): void
+    public function setOrdenesComprasDetallesItemRel($ordenesComprasDetallesItemRel): void
     {
-        $this->itemMovimientoDetallesRel = $itemMovimientoDetallesRel;
+        $this->ordenesComprasDetallesItemRel = $ordenesComprasDetallesItemRel;
     }
 
     /**
      * @return mixed
      */
-    public function getItemLotesRel()
+    public function getMovimientosDetallesItemRel()
     {
-        return $this->itemLotesRel;
+        return $this->movimientosDetallesItemRel;
     }
 
     /**
-     * @param mixed $itemLotesRel
+     * @param mixed $movimientosDetallesItemRel
      */
-    public function setItemLotesRel($itemLotesRel): void
+    public function setMovimientosDetallesItemRel($movimientosDetallesItemRel): void
     {
-        $this->itemLotesRel = $itemLotesRel;
+        $this->movimientosDetallesItemRel = $movimientosDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLotesItemRel()
+    {
+        return $this->lotesItemRel;
+    }
+
+    /**
+     * @param mixed $lotesItemRel
+     */
+    public function setLotesItemRel($lotesItemRel): void
+    {
+        $this->lotesItemRel = $lotesItemRel;
     }
 }
 

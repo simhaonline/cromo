@@ -38,13 +38,13 @@ class InvSolicitudDetalle
     private $cantidadPendiente = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvSolicitud", inversedBy="solicitudSolicitudDetallesRel")
+     * @ORM\ManyToOne(targetEntity="InvSolicitud", inversedBy="solicitudesDetallesSolicitudRel")
      * @ORM\JoinColumn(name="codigo_solicitud_fk", referencedColumnName="codigo_solicitud_pk")
      */
     protected $solicitudRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="itemsolicitudDetallesRel")
+     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="solicitudesDetallesItemRel")
      * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
     protected $itemRel;
@@ -52,7 +52,7 @@ class InvSolicitudDetalle
     /**
      * @ORM\OneToMany(targetEntity="InvOrdenCompraDetalle", mappedBy="solicitudDetalleRel")
      */
-    protected $solicitudDetalleOrdenCompraDetallesRel;
+    protected $ordenesComprasDetallesSolicitudDetalleRel;
 
     /**
      * @return mixed
@@ -169,19 +169,17 @@ class InvSolicitudDetalle
     /**
      * @return mixed
      */
-    public function getSolicitudDetalleOrdenCompraDetallesRel()
+    public function getOrdenesComprasDetallesSolicitudDetalleRel()
     {
-        return $this->solicitudDetalleOrdenCompraDetallesRel;
+        return $this->ordenesComprasDetallesSolicitudDetalleRel;
     }
 
     /**
-     * @param mixed $solicitudDetalleOrdenCompraDetallesRel
+     * @param mixed $ordenesComprasDetallesSolicitudDetalleRel
      */
-    public function setSolicitudDetalleOrdenCompraDetallesRel($solicitudDetalleOrdenCompraDetallesRel): void
+    public function setOrdenesComprasDetallesSolicitudDetalleRel($ordenesComprasDetallesSolicitudDetalleRel): void
     {
-        $this->solicitudDetalleOrdenCompraDetallesRel = $solicitudDetalleOrdenCompraDetallesRel;
+        $this->ordenesComprasDetallesSolicitudDetalleRel = $ordenesComprasDetallesSolicitudDetalleRel;
     }
-
-
 }
 

@@ -27,7 +27,7 @@ class InvBodega
     /**
      * @ORM\OneToMany(targetEntity="InvLote", mappedBy="bodegaRel")
      */
-    protected $bodegaLotesRel;
+    protected $lotesBodegaRel;
 
     /**
      * @return mixed
@@ -64,16 +64,16 @@ class InvBodega
     /**
      * @return mixed
      */
-    public function getBodegaLotesRel()
+    public function getLotesBodegaRel()
     {
-        return $this->bodegaLotesRel;
+        return $this->lotesBodegaRel;
     }
 
     /**
-     * @param mixed $bodegaLotesRel
+     * @param mixed $lotesBodegaRel
      */
-    public function setBodegaLotesRel($bodegaLotesRel): void
+    public function setLotesBodegaRel($lotesBodegaRel): void
     {
-        $this->bodegaLotesRel = $bodegaLotesRel;
+        $this->lotesBodegaRel = $lotesBodegaRel;
     }
 }

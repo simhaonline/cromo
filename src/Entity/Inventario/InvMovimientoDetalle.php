@@ -93,13 +93,13 @@ class InvMovimientoDetalle
     private $vrTotal = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvMovimiento", inversedBy="movimientoMovimientoDetallesRel")
+     * @ORM\ManyToOne(targetEntity="InvMovimiento", inversedBy="movimientosDetallesMovimientoRel")
      * @ORM\JoinColumn(name="codigo_movimiento_fk", referencedColumnName="codigo_movimiento_pk")
      */
     protected $movimientoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="itemMovimientoDetallesRel")
+     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="movimientosDetallesItemRel")
      * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
     protected $itemRel;
@@ -413,6 +413,4 @@ class InvMovimientoDetalle
     {
         $this->ordenCompraDetalleRel = $ordenCompraDetalleRel;
     }
-
-
 }

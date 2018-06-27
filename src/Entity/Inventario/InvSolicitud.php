@@ -72,7 +72,7 @@ class InvSolicitud
     private $usuario;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvSolicitudTipo", inversedBy="solicitudTipoSolicitudesRel")
+     * @ORM\ManyToOne(targetEntity="InvSolicitudTipo", inversedBy="solicitudesSolicitudTipoRel")
      * @ORM\JoinColumn(name="codigo_solicitud_tipo_fk", referencedColumnName="codigo_solicitud_tipo_pk")
      * @Assert\NotBlank(
      *     message="Debe de seleccionar una opción"
@@ -83,7 +83,7 @@ class InvSolicitud
     /**
      * @ORM\OneToMany(targetEntity="InvSolicitudDetalle", mappedBy="solicitudRel")
      */
-    protected $solicitudSolicitudDetallesRel;
+    protected $solicitudesDetallesSolicitudRel;
 
     /**
      * @return mixed
@@ -264,19 +264,17 @@ class InvSolicitud
     /**
      * @return mixed
      */
-    public function getSolicitudSolicitudDetallesRel()
+    public function getSolicitudesDetallesSolicitudRel()
     {
-        return $this->solicitudSolicitudDetallesRel;
+        return $this->solicitudesDetallesSolicitudRel;
     }
 
     /**
-     * @param mixed $solicitudSolicitudDetallesRel
+     * @param mixed $solicitudesDetallesSolicitudRel
      */
-    public function setSolicitudSolicitudDetallesRel($solicitudSolicitudDetallesRel): void
+    public function setSolicitudesDetallesSolicitudRel($solicitudesDetallesSolicitudRel): void
     {
-        $this->solicitudSolicitudDetallesRel = $solicitudSolicitudDetallesRel;
+        $this->solicitudesDetallesSolicitudRel = $solicitudesDetallesSolicitudRel;
     }
-
-
 }
 

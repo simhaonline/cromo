@@ -73,19 +73,19 @@ class InvOrdenCompraDetalle
     private $cantidadPendiente = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="itemOrdenCompraDetallesRel")
+     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="ordenesComprasDetallesItemRel")
      * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
     protected $itemRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvOrdenCompra", inversedBy="ordenCompraOrdenCompraDetallesRel")
+     * @ORM\ManyToOne(targetEntity="InvOrdenCompra", inversedBy="ordenesComprasDetallesOrdenCompraRel")
      * @ORM\JoinColumn(name="codigo_orden_compra_fk", referencedColumnName="codigo_orden_compra_pk")
      */
     protected $ordenCompraRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvSolicitudDetalle", inversedBy="solicitudDetalleOrdenCompraDetallesRel")
+     * @ORM\ManyToOne(targetEntity="InvSolicitudDetalle", inversedBy="ordenesComprasDetallesSolicitudDetalleRel")
      * @ORM\JoinColumn(name="codigo_solicitud_detalle_fk", referencedColumnName="codigo_solicitud_detalle_pk")
      */
     protected $solicitudDetalleRel;
@@ -93,7 +93,7 @@ class InvOrdenCompraDetalle
     /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="ordenCompraDetalleRel")
      */
-    protected $ordenCompraDetallesMovimientoDetallesRel;
+    protected $MovimientosDetallesOrdenCompraDetalleRel;
 
     /**
      * @return mixed
@@ -338,20 +338,17 @@ class InvOrdenCompraDetalle
     /**
      * @return mixed
      */
-    public function getOrdenCompraDetallesMovimientoDetallesRel()
+    public function getMovimientosDetallesOrdenCompraDetalleRel()
     {
-        return $this->ordenCompraDetallesMovimientoDetallesRel;
+        return $this->MovimientosDetallesOrdenCompraDetalleRel;
     }
 
     /**
-     * @param mixed $ordenCompraDetallesMovimientoDetallesRel
+     * @param mixed $MovimientosDetallesOrdenCompraDetalleRel
      */
-    public function setOrdenCompraDetallesMovimientoDetallesRel($ordenCompraDetallesMovimientoDetallesRel): void
+    public function setMovimientosDetallesOrdenCompraDetalleRel($MovimientosDetallesOrdenCompraDetalleRel): void
     {
-        $this->ordenCompraDetallesMovimientoDetallesRel = $ordenCompraDetallesMovimientoDetallesRel;
+        $this->MovimientosDetallesOrdenCompraDetalleRel = $MovimientosDetallesOrdenCompraDetalleRel;
     }
-
-
-
 }
 

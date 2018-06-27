@@ -24,12 +24,12 @@ class InvDocumentoTipo
     /**
      * @ORM\OneToMany(targetEntity="InvDocumento", mappedBy="documentoTipoRel")
      */
-    protected $documentoTipoDocumentosRel;
+    protected $documentosDocumentoTipoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvMovimiento", mappedBy="documentoTipoRel")
      */
-    protected $documentoTipoMovimientosRel;
+    protected $movimientosDocumentoTipoRel;
 
     /**
      * @return mixed
@@ -66,33 +66,33 @@ class InvDocumentoTipo
     /**
      * @return mixed
      */
-    public function getDocumentoTipoDocumentosRel()
+    public function getDocumentosDocumentoTipoRel()
     {
-        return $this->documentoTipoDocumentosRel;
+        return $this->documentosDocumentoTipoRel;
     }
 
     /**
-     * @param mixed $documentoTipoDocumentosRel
+     * @param mixed $documentosDocumentoTipoRel
      */
-    public function setDocumentoTipoDocumentosRel($documentoTipoDocumentosRel): void
+    public function setDocumentosDocumentoTipoRel($documentosDocumentoTipoRel): void
     {
-        $this->documentoTipoDocumentosRel = $documentoTipoDocumentosRel;
+        $this->documentosDocumentoTipoRel = $documentosDocumentoTipoRel;
     }
 
     /**
      * @return mixed
      */
-    public function getDocumentoTipoMovimientosRel()
+    public function getMovimientosDocumentoTipoRel()
     {
-        return $this->documentoTipoMovimientosRel;
+        return $this->movimientosDocumentoTipoRel;
     }
 
     /**
-     * @param mixed $documentoTipoMovimientosRel
+     * @param mixed $movimientosDocumentoTipoRel
      */
-    public function setDocumentoTipoMovimientosRel($documentoTipoMovimientosRel): void
+    public function setMovimientosDocumentoTipoRel($movimientosDocumentoTipoRel): void
     {
-        $this->documentoTipoMovimientosRel = $documentoTipoMovimientosRel;
+        $this->movimientosDocumentoTipoRel = $movimientosDocumentoTipoRel;
     }
 }
 

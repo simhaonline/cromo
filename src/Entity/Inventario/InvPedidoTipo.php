@@ -12,7 +12,6 @@ class InvPedidoTipo
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
      * @ORM\Column(type="string", length=10)
      */
     private $codigoPedidoTipoPk;
@@ -46,54 +45,6 @@ class InvPedidoTipo
     public function setCodigoPedidoTipoPk($codigoPedidoTipoPk): void
     {
         $this->codigoPedidoTipoPk = $codigoPedidoTipoPk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNombre()
-    {
-        return $this->nombre;
-    }
-
-    /**
-     * @param mixed $nombre
-     */
-    public function setNombre($nombre): void
-    {
-        $this->nombre = $nombre;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConsecutivo()
-    {
-        return $this->consecutivo;
-    }
-
-    /**
-     * @param mixed $consecutivo
-     */
-    public function setConsecutivo($consecutivo): void
-    {
-        $this->consecutivo = $consecutivo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPedidosPedidoTipoRel()
-    {
-        return $this->pedidosPedidoTipoRel;
-    }
-
-    /**
-     * @param mixed $pedidosPedidoTipoRel
-     */
-    public function setPedidosPedidoTipoRel($pedidosPedidoTipoRel): void
-    {
-        $this->pedidosPedidoTipoRel = $pedidosPedidoTipoRel;
     }
 
 

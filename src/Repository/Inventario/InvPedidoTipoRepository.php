@@ -38,4 +38,13 @@ class InvPedidoTipoRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function camposPredeterminados(){
+        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvPedidoTipo','ioct');
+        $qb
+            ->select('ioct.codigoPedidoTipoPk AS ID')
+            ->addSelect('ioct.nombre AS NOMBRE');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
+
 }

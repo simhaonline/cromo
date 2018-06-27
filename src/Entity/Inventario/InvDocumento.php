@@ -163,17 +163,7 @@ class InvDocumento
     /**
      * @ORM\Column(name="codigo_cuenta_cartera_fk", type="string", length=15, nullable=true)
      */    
-    private $codigoCuentaCarteraFk;    
-
-    /**
-     * @ORM\Column(name="asignar_consecutivo_creacion", type="boolean")
-     */          
-    private $asignarConsecutivoCreacion = false;    
-    
-    /**
-     * @ORM\Column(name="asignar_consecutivo_impresion", type="boolean")
-     */          
-    private $asignarConsecutivoImpresion = false;     
+    private $codigoCuentaCarteraFk;
 
     /**
      * @internal Para saber si el documento genera costo promedio
@@ -182,7 +172,7 @@ class InvDocumento
     private $generaCostoPromedio = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentoTipoDocumentosRel")
+     * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentosDocumentoTipoRel")
      * @ORM\JoinColumn(name="codigo_documento_tipo_fk", referencedColumnName="codigo_documento_tipo_pk")
      */
     protected $documentoTipoRel;
@@ -190,7 +180,7 @@ class InvDocumento
     /**
      * @ORM\OneToMany(targetEntity="InvMovimiento", mappedBy="documentoRel")
      */
-    protected $documentoMovimientosRel;
+    protected $movimientosDocumentoRel;
 
     /**
      * @return mixed
@@ -611,38 +601,6 @@ class InvDocumento
     /**
      * @return mixed
      */
-    public function getAsignarConsecutivoCreacion()
-    {
-        return $this->asignarConsecutivoCreacion;
-    }
-
-    /**
-     * @param mixed $asignarConsecutivoCreacion
-     */
-    public function setAsignarConsecutivoCreacion($asignarConsecutivoCreacion): void
-    {
-        $this->asignarConsecutivoCreacion = $asignarConsecutivoCreacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAsignarConsecutivoImpresion()
-    {
-        return $this->asignarConsecutivoImpresion;
-    }
-
-    /**
-     * @param mixed $asignarConsecutivoImpresion
-     */
-    public function setAsignarConsecutivoImpresion($asignarConsecutivoImpresion): void
-    {
-        $this->asignarConsecutivoImpresion = $asignarConsecutivoImpresion;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getGeneraCostoPromedio()
     {
         return $this->generaCostoPromedio;
@@ -675,18 +633,17 @@ class InvDocumento
     /**
      * @return mixed
      */
-    public function getDocumentoMovimientosRel()
+    public function getMovimientosDocumentoRel()
     {
-        return $this->documentoMovimientosRel;
+        return $this->movimientosDocumentoRel;
     }
 
     /**
-     * @param mixed $documentoMovimientosRel
+     * @param mixed $movimientosDocumentoRel
      */
-    public function setDocumentoMovimientosRel($documentoMovimientosRel): void
+    public function setMovimientosDocumentoRel($movimientosDocumentoRel): void
     {
-        $this->documentoMovimientosRel = $documentoMovimientosRel;
+        $this->movimientosDocumentoRel = $movimientosDocumentoRel;
     }
-
 
 }

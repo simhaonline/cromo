@@ -3,11 +3,17 @@
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
+            {{ form_widget(form.btnAutorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnDesautorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnAprobar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnAnular, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
     </div>
     <div style="float:right">
-        {% if 1 == 1 %}<span class="label label-default">Generado</span>{% endif %}
+        {% if arFactura.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arFactura.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arFactura.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br /><br />
     <table width="100%" class="table table-condensed table-bordered">

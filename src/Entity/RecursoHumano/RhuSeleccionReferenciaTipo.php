@@ -24,4 +24,37 @@ class RhuSeleccionReferenciaTipo
      */
     private $nombre;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoSeleccionReferenciaTipoPk()
+    {
+        return $this->codigoSeleccionReferenciaTipoPk;
+    }
+
+    /**
+     * @param mixed $codigoSeleccionReferenciaTipoPk
+     */
+    public function setCodigoSeleccionReferenciaTipoPk($codigoSeleccionReferenciaTipoPk): void
+    {
+        $this->codigoSeleccionReferenciaTipoPk = $codigoSeleccionReferenciaTipoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+
 }

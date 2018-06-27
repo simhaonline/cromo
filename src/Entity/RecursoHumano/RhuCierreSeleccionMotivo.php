@@ -26,6 +26,56 @@ class RhuCierreSeleccionMotivo
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="cierreSeleccionMotivoRel")
      */
     protected $rhuSeleccionMotivoCierreRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCierreSeleccionMotivoPk()
+    {
+        return $this->codigoCierreSeleccionMotivoPk;
+    }
+
+    /**
+     * @param mixed $codigoCierreSeleccionMotivoPk
+     */
+    public function setCodigoCierreSeleccionMotivoPk($codigoCierreSeleccionMotivoPk): void
+    {
+        $this->codigoCierreSeleccionMotivoPk = $codigoCierreSeleccionMotivoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuSeleccionMotivoCierreRel()
+    {
+        return $this->rhuSeleccionMotivoCierreRel;
+    }
+
+    /**
+     * @param mixed $rhuSeleccionMotivoCierreRel
+     */
+    public function setRhuSeleccionMotivoCierreRel($rhuSeleccionMotivoCierreRel): void
+    {
+        $this->rhuSeleccionMotivoCierreRel = $rhuSeleccionMotivoCierreRel;
+    }
+
+
     
 
 }

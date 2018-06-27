@@ -33,6 +33,11 @@ class TteFactura
     private $fecha;
 
     /**
+     * @ORM\Column(name="fecha_vence", type="date", nullable=true)
+     */
+    private $fechaVence;
+
+    /**
      * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
      */
     private $codigoClienteFk;
@@ -66,6 +71,21 @@ class TteFactura
      * @ORM\Column(name="guias", type="integer", nullable=true)
      */
     private $guias;
+
+    /**
+     * @ORM\Column(name="estado_autorizado",options={"default" : false}, type="boolean")
+     */
+    private $estadoAutorizado = false;
+
+    /**
+     * @ORM\Column(name="estado_aprobado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoAprobado = false;
+
+    /**
+     * @ORM\Column(name="estado_anulado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoAnulado = false;
 
     /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
@@ -369,6 +389,70 @@ class TteFactura
     public function setFacturasOtrosFacturaRel($facturasOtrosFacturaRel): void
     {
         $this->facturasOtrosFacturaRel = $facturasOtrosFacturaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaVence()
+    {
+        return $this->fechaVence;
+    }
+
+    /**
+     * @param mixed $fechaVence
+     */
+    public function setFechaVence($fechaVence): void
+    {
+        $this->fechaVence = $fechaVence;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
     }
 
 

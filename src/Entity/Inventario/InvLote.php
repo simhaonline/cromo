@@ -39,13 +39,13 @@ class InvLote
     private $fechaVencimiento;    
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="itemLotesRel")
+     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="lotesItemRel")
      * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
     protected $itemRel;        
     
     /**
-     * @ORM\ManyToOne(targetEntity="InvBodega", inversedBy="bodegaLotesRel")
+     * @ORM\ManyToOne(targetEntity="InvBodega", inversedBy="lotesBodegaRel")
      * @ORM\JoinColumn(name="codigo_bodega_fk", referencedColumnName="codigo_bodega_pk")
      */
     protected $bodegaRel;

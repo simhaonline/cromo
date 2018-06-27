@@ -24,4 +24,37 @@ class RhuSeleccionEntrevistaTipo
      */
     private $nombre;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoSeleccionEntrevistaTipoPk()
+    {
+        return $this->codigoSeleccionEntrevistaTipoPk;
+    }
+
+    /**
+     * @param mixed $codigoSeleccionEntrevistaTipoPk
+     */
+    public function setCodigoSeleccionEntrevistaTipoPk($codigoSeleccionEntrevistaTipoPk): void
+    {
+        $this->codigoSeleccionEntrevistaTipoPk = $codigoSeleccionEntrevistaTipoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+
 }

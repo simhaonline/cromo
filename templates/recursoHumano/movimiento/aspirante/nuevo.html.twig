@@ -6,10 +6,10 @@
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_genIdentificacionRel" class="col-sm-2 control-label">Tipo identificación:</label>
+                <label for="identificacionRel" class="col-sm-2 control-label">Tipo identificación:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.genIdentificacionRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.genIdentificacionRel) }}
+                    {{ form_widget(form.identificacionRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.identificacionRel) }}
                 </div>
                 <label for="form_numeroIdentificacion" class="col-sm-2 control-label">Identificación:</label>
                 <div class="col-sm-4">
@@ -18,16 +18,11 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_genCiudadExpedicionRel" class="col-sm-2 control-label">Ciudad residencia:</label>
+                <label for="ciudadExpedicionRel" class="col-sm-2 control-label">Ciudad residencia:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.genCiudadExpedicionRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.genCiudadExpedicionRel) }}
+                    {{ form_widget(form.ciudadExpedicionRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.ciudadExpedicionRel) }}
                 </div>
-                {#<label for="form_cantidad" class="col-sm-2 control-label">Cantidad:</label>#}
-                {#<div class="col-sm-4">#}
-                    {#{{ form_widget(form.cantidadSolicitada, { 'attr': {'class': 'form-control'} }) }}#}
-                    {#{{ form_errors(form.cantidadSolicitada) }}#}
-                {#</div>#}
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_nombre1" class="col-sm-2 control-label">Primer nombre:</label>
@@ -54,10 +49,10 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_sexo" class="col-sm-2 control-label">Sexo:</label>
+                <label for="sexoRel" class="col-sm-2 control-label">Sexo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.genSexoRel) }}
-                    {{ form_errors(form.genSexoRel) }}
+                    {{ form_widget(form.sexoRel) }}
+                    {{ form_errors(form.sexoRel) }}
                 </div>
                 <label for="form_rh" class="col-sm-2 control-label">Rh:</label>
                 <div class="col-sm-4">
@@ -83,10 +78,10 @@
                     {{ form_widget(form.fechaNacimiento) }}
                     {{ form_errors(form.fechaNacimiento) }}
                 </div>
-                <label for="form_ciudadNacimiento" class="col-sm-2 control-label">Ciudad nacimiento:</label>
+                <label for="ciudadNacimientoRel" class="col-sm-2 control-label">Ciudad nacimiento:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.genCiudadNacimientoRel) }}
-                    {{ form_errors(form.genCiudadNacimientoRel) }}
+                    {{ form_widget(form.ciudadNacimientoRel) }}
+                    {{ form_errors(form.ciudadNacimientoRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -107,10 +102,10 @@
                     {{ form_widget(form.libretaMilitar) }}
                     {{ form_errors(form.libretaMilitar) }}
                 </div>
-                <label for="form_estadoCivilRel" class="col-sm-2 control-label">Estado civil:</label>
+                <label for="estadoCivilRel" class="col-sm-2 control-label">Estado civil:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.genEstadoCivilRel) }}
-                    {{ form_errors(form.genEstadoCivilRel) }}
+                    {{ form_widget(form.estadoCivilRel) }}
+                    {{ form_errors(form.estadoCivilRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

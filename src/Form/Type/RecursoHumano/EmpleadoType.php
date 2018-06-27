@@ -18,7 +18,7 @@ class EmpleadoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('genIdentificacionRel',EntityType::class,[
+            ->add('identificacionRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\General\GenIdentificacion',
                 'query_builder' => function (EntityRepository $er) {
@@ -28,7 +28,7 @@ class EmpleadoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Identificacion tipo:'
             ])
-            ->add('genCiudadRel',EntityType::class,[
+            ->add('ciudadRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\General\GenCiudad',
                 'query_builder' => function (EntityRepository $er) {
@@ -38,7 +38,7 @@ class EmpleadoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Ciudad:'
             ])
-            ->add('genCiudadExpedicionRel',EntityType::class,[
+            ->add('ciudadExpedicionRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\General\GenCiudad',
                 'query_builder' => function (EntityRepository $er) {
@@ -48,7 +48,7 @@ class EmpleadoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Ciudad residencia:'
             ])
-            ->add('genSexoRel',EntityType::class,[
+            ->add('sexoRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\General\GenSexo',
                 'query_builder' => function (EntityRepository $er) {
@@ -58,7 +58,7 @@ class EmpleadoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Sexo:'
             ])
-            ->add('genCiudadNacimientoRel',EntityType::class,[
+            ->add('ciudadNacimientoRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\General\GenCiudad',
                 'query_builder' => function (EntityRepository $er) {
@@ -68,7 +68,7 @@ class EmpleadoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Ciudad residencia:'
             ])
-            ->add('genEstadoCivilRel',EntityType::class,[
+            ->add('estadoCivilRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\General\GenEstadoCivil',
                 'query_builder' => function (EntityRepository $er) {

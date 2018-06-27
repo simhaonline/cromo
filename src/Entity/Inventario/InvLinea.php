@@ -25,17 +25,17 @@ class InvLinea
     /**
      * @ORM\OneToMany(targetEntity="InvGrupo",mappedBy="lineaRel")
      */
-    protected $lineaGruposRel;
+    protected $gruposLineaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvSubgrupo",mappedBy="lineaRel")
      */
-    protected $lineaSubgruposRel;
+    protected $subgruposLineaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvItem",mappedBy="lineaRel")
      */
-    protected $lineaItemsRel;
+    protected $itemsLineaRel;
 
     /**
      * @return mixed
@@ -72,50 +72,48 @@ class InvLinea
     /**
      * @return mixed
      */
-    public function getLineaGruposRel()
+    public function getGruposLineaRel()
     {
-        return $this->lineaGruposRel;
+        return $this->gruposLineaRel;
     }
 
     /**
-     * @param mixed $lineaGruposRel
+     * @param mixed $gruposLineaRel
      */
-    public function setLineaGruposRel($lineaGruposRel): void
+    public function setGruposLineaRel($gruposLineaRel): void
     {
-        $this->lineaGruposRel = $lineaGruposRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLineaSubgruposRel()
-    {
-        return $this->lineaSubgruposRel;
-    }
-
-    /**
-     * @param mixed $lineaSubgruposRel
-     */
-    public function setLineaSubgruposRel($lineaSubgruposRel): void
-    {
-        $this->lineaSubgruposRel = $lineaSubgruposRel;
+        $this->gruposLineaRel = $gruposLineaRel;
     }
 
     /**
      * @return mixed
      */
-    public function getLineaItemsRel()
+    public function getSubgruposLineaRel()
     {
-        return $this->lineaItemsRel;
+        return $this->subgruposLineaRel;
     }
 
     /**
-     * @param mixed $lineaItemsRel
+     * @param mixed $subgruposLineaRel
      */
-    public function setLineaItemsRel($lineaItemsRel): void
+    public function setSubgruposLineaRel($subgruposLineaRel): void
     {
-        $this->lineaItemsRel = $lineaItemsRel;
+        $this->subgruposLineaRel = $subgruposLineaRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getItemsLineaRel()
+    {
+        return $this->itemsLineaRel;
+    }
 
+    /**
+     * @param mixed $itemsLineaRel
+     */
+    public function setItemsLineaRel($itemsLineaRel): void
+    {
+        $this->itemsLineaRel = $itemsLineaRel;
+    }
 }

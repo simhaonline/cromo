@@ -88,11 +88,12 @@ class InvTercero
     /**
      * @ORM\OneToMany(targetEntity="InvOrdenCompra",mappedBy="terceroRel")
      */
-    protected $terceroOrdenesCompraRel;
+    protected $ordenesComprasTerceroRel;
+
     /**
      * @ORM\OneToMany(targetEntity="InvMovimiento",mappedBy="terceroRel")
      */
-    protected $terceroMovimientosRel;
+    protected $movimientosTerceroRel;
 
     /**
      * @return mixed
@@ -337,33 +338,33 @@ class InvTercero
     /**
      * @return mixed
      */
-    public function getTerceroOrdenesCompraRel()
+    public function getOrdenesComprasTerceroRel()
     {
-        return $this->terceroOrdenesCompraRel;
+        return $this->ordenesComprasTerceroRel;
     }
 
     /**
-     * @param mixed $terceroOrdenesCompraRel
+     * @param mixed $ordenesComprasTerceroRel
      */
-    public function setTerceroOrdenesCompraRel($terceroOrdenesCompraRel): void
+    public function setOrdenesComprasTerceroRel($ordenesComprasTerceroRel): void
     {
-        $this->terceroOrdenesCompraRel = $terceroOrdenesCompraRel;
+        $this->ordenesComprasTerceroRel = $ordenesComprasTerceroRel;
     }
 
     /**
      * @return mixed
      */
-    public function getTerceroMovimientosRel()
+    public function getMovimientosTerceroRel()
     {
-        return $this->terceroMovimientosRel;
+        return $this->movimientosTerceroRel;
     }
 
     /**
-     * @param mixed $terceroMovimientosRel
+     * @param mixed $movimientosTerceroRel
      */
-    public function setTerceroMovimientosRel($terceroMovimientosRel): void
+    public function setMovimientosTerceroRel($movimientosTerceroRel): void
     {
-        $this->terceroMovimientosRel = $terceroMovimientosRel;
+        $this->movimientosTerceroRel = $movimientosTerceroRel;
     }
 }
 

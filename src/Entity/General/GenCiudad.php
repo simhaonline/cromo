@@ -49,49 +49,49 @@ class GenCiudad
     protected $ctbTercerosCiudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genCiudadRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="ciudadRel")
      */
     protected $rhuAspirantesCiudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genCiudadExpedicionRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="ciudadExpedicionRel")
      */
     protected $rhuAspirantesCiudadExpedicionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genCiudadNacimientoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="ciudadNacimientoRel")
      */
     protected $rhuAspirantesCiudadNacimientoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="genCiudadRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="ciudadRel")
      */
     protected $rhuSolicitudesCiudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genCiudadRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="ciudadRel")
      */
-    protected $rhuSeleccionCiudadRel;
+    protected $rhuSeleccionesCiudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genCiudadExpedicionRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="ciudadExpedicionRel")
      */
-    protected $rhuSeleccionCiudadExpedicionRel;
+    protected $rhuSeleccionesCiudadExpedicionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genCiudadNacimientoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="ciudadNacimientoRel")
      */
-    protected $rhuSeleccionCiudadNacimientoRel;
+    protected $rhuSeleccionesCiudadNacimientoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="genCiudadRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="ciudadRel")
      */
-    protected $rhuEmpleadoCiudadRel;
+    protected $rhuEmpleadosCiudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="genCiudadExpedicionRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="ciudadExpedicionRel")
      */
-    protected $rhuEmpleadoCiudadExpedicionRel;
+    protected $rhuEmpleadosCiudadExpedicionRel;
 
     /**
      * @return mixed
@@ -272,81 +272,81 @@ class GenCiudad
     /**
      * @return mixed
      */
-    public function getRhuSeleccionCiudadRel()
+    public function getRhuSeleccionesCiudadRel()
     {
-        return $this->rhuSeleccionCiudadRel;
+        return $this->rhuSeleccionesCiudadRel;
     }
 
     /**
-     * @param mixed $rhuSeleccionCiudadRel
+     * @param mixed $rhuSeleccionesCiudadRel
      */
-    public function setRhuSeleccionCiudadRel($rhuSeleccionCiudadRel): void
+    public function setRhuSeleccionesCiudadRel($rhuSeleccionesCiudadRel): void
     {
-        $this->rhuSeleccionCiudadRel = $rhuSeleccionCiudadRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRhuSeleccionCiudadExpedicionRel()
-    {
-        return $this->rhuSeleccionCiudadExpedicionRel;
-    }
-
-    /**
-     * @param mixed $rhuSeleccionCiudadExpedicionRel
-     */
-    public function setRhuSeleccionCiudadExpedicionRel($rhuSeleccionCiudadExpedicionRel): void
-    {
-        $this->rhuSeleccionCiudadExpedicionRel = $rhuSeleccionCiudadExpedicionRel;
+        $this->rhuSeleccionesCiudadRel = $rhuSeleccionesCiudadRel;
     }
 
     /**
      * @return mixed
      */
-    public function getRhuSeleccionCiudadNacimientoRel()
+    public function getRhuSeleccionesCiudadExpedicionRel()
     {
-        return $this->rhuSeleccionCiudadNacimientoRel;
+        return $this->rhuSeleccionesCiudadExpedicionRel;
     }
 
     /**
-     * @param mixed $rhuSeleccionCiudadNacimientoRel
+     * @param mixed $rhuSeleccionesCiudadExpedicionRel
      */
-    public function setRhuSeleccionCiudadNacimientoRel($rhuSeleccionCiudadNacimientoRel): void
+    public function setRhuSeleccionesCiudadExpedicionRel($rhuSeleccionesCiudadExpedicionRel): void
     {
-        $this->rhuSeleccionCiudadNacimientoRel = $rhuSeleccionCiudadNacimientoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRhuEmpleadoCiudadRel()
-    {
-        return $this->rhuEmpleadoCiudadRel;
-    }
-
-    /**
-     * @param mixed $rhuEmpleadoCiudadRel
-     */
-    public function setRhuEmpleadoCiudadRel($rhuEmpleadoCiudadRel): void
-    {
-        $this->rhuEmpleadoCiudadRel = $rhuEmpleadoCiudadRel;
+        $this->rhuSeleccionesCiudadExpedicionRel = $rhuSeleccionesCiudadExpedicionRel;
     }
 
     /**
      * @return mixed
      */
-    public function getRhuEmpleadoCiudadExpedicionRel()
+    public function getRhuSeleccionesCiudadNacimientoRel()
     {
-        return $this->rhuEmpleadoCiudadExpedicionRel;
+        return $this->rhuSeleccionesCiudadNacimientoRel;
     }
 
     /**
-     * @param mixed $rhuEmpleadoCiudadExpedicionRel
+     * @param mixed $rhuSeleccionesCiudadNacimientoRel
      */
-    public function setRhuEmpleadoCiudadExpedicionRel($rhuEmpleadoCiudadExpedicionRel): void
+    public function setRhuSeleccionesCiudadNacimientoRel($rhuSeleccionesCiudadNacimientoRel): void
     {
-        $this->rhuEmpleadoCiudadExpedicionRel = $rhuEmpleadoCiudadExpedicionRel;
+        $this->rhuSeleccionesCiudadNacimientoRel = $rhuSeleccionesCiudadNacimientoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuEmpleadosCiudadRel()
+    {
+        return $this->rhuEmpleadosCiudadRel;
+    }
+
+    /**
+     * @param mixed $rhuEmpleadosCiudadRel
+     */
+    public function setRhuEmpleadosCiudadRel($rhuEmpleadosCiudadRel): void
+    {
+        $this->rhuEmpleadosCiudadRel = $rhuEmpleadosCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuEmpleadosCiudadExpedicionRel()
+    {
+        return $this->rhuEmpleadosCiudadExpedicionRel;
+    }
+
+    /**
+     * @param mixed $rhuEmpleadosCiudadExpedicionRel
+     */
+    public function setRhuEmpleadosCiudadExpedicionRel($rhuEmpleadosCiudadExpedicionRel): void
+    {
+        $this->rhuEmpleadosCiudadExpedicionRel = $rhuEmpleadosCiudadExpedicionRel;
     }
 
 

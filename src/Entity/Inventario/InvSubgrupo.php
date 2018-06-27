@@ -33,7 +33,7 @@ class InvSubgrupo
     private $nombre;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvLinea",inversedBy="lineaSubgruposRel")
+     * @ORM\ManyToOne(targetEntity="InvLinea",inversedBy="subgruposLineaRel")
      * @ORM\JoinColumn(name="codigo_linea_fk",referencedColumnName="codigo_linea_pk")
      * @Assert\NotBlank(
      *     message="El campo no puede estar vacio"
@@ -42,7 +42,7 @@ class InvSubgrupo
     protected $lineaRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvGrupo",inversedBy="grupoSubgruposRel")
+     * @ORM\ManyToOne(targetEntity="InvGrupo",inversedBy="subgruposGrupoRel")
      * @ORM\JoinColumn(name="codigo_grupo_fk",referencedColumnName="codigo_grupo_pk")
      * @Assert\NotBlank(
      *     message="El campo no puede estar vacio"
@@ -166,6 +166,5 @@ class InvSubgrupo
     {
         $this->subgrupoItemsRel = $subgrupoItemsRel;
     }
-
 
 }

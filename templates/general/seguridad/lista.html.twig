@@ -44,7 +44,8 @@
                         </a>
                     </td>
                     <td style="text-align: center;">
-                        <a class="btn btn-xs btn-default" title="Cambiar contraseña" href="javascript:abrirVentana3('{{ path('gen_seguridad_usuario_nuevo_clave',{'hash' : encriptar(arUsuario.id)}) }}','cambiarContrasena',600,900)">
+                        <a class="btn btn-xs btn-default" title="Cambiar contraseña"
+                           href="javascript:abrirVentana3('{{ path('gen_seguridad_usuario_nuevo_clave',{'hash' : encriptar(arUsuario.id)}) }}','cambiarContrasena',600,900)">
                             <i class="fa fa-key" style="font-size: smaller;color: red;">
                             </i>
                         </a>
@@ -54,11 +55,13 @@
             </tbody>
         </table>
     </div>
-    <div style="float: right;" class="btn-group">
-        <a class="btn btn-sm btn-default" href="{{ path('gen_seguridad_usuario_nuevo',{'hash' : 0}) }}" >Nuevo</a>
-    </div>
-    <div style="float: right;" class="btn-group">
-         {{ form_widget(form.btnExcel) }}
+    <div class="btn-toolbar">
+        <div style="float: right;" class="btn-group">
+            <a class="btn btn-sm btn-default" href="{{ path('gen_seguridad_usuario_nuevo',{'hash' : 0}) }}">Nuevo</a>
+        </div>
+        <div style="float: right;" class="btn-group">
+            {{ form_widget(form.btnExcel) }}
+        </div>
     </div>
     {{ form_end(form) }}
 {% endblock %}

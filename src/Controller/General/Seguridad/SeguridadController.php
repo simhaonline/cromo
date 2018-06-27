@@ -60,11 +60,11 @@ class SeguridadController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtUser', TextType::class, ['data' => $arUsuario->getUsername()])
             ->add('txtEmail', TextType::class, ['data' => $arUsuario->getEmail()])
-            ->add('txtCargo', TextType::class, ['data' => $arUsuario->getCargo()])
-            ->add('txtNombreCorto', TextType::class, ['data' => $arUsuario->getNombreCorto()])
-            ->add('txtIdentificacion', NumberType::class, ['data' => $arUsuario->getNumeroIdentificacion()])
-            ->add('txtTelefono', TextType::class, ['data' => $arUsuario->getTelefono()])
-            ->add('txtExtension', TextType::class, ['data' => $arUsuario->getExtension()])
+            ->add('txtCargo', TextType::class, ['data' => $arUsuario->getCargo(),'required' => false])
+            ->add('txtNombreCorto', TextType::class, ['data' => $arUsuario->getNombreCorto(),'required' => false])
+            ->add('txtIdentificacion', NumberType::class, ['data' => $arUsuario->getNumeroIdentificacion(),'required' => false])
+            ->add('txtTelefono', TextType::class, ['data' => $arUsuario->getTelefono(),'required' => false])
+            ->add('txtExtension', TextType::class, ['data' => $arUsuario->getExtension(),'required' => false])
             ->add('txtNuevaClave', PasswordType::class, $arrPropiedadesClaves)
             ->add('txtConfirmacionClave', PasswordType::class, $arrPropiedadesClaves)
             ->add('boolActivo', CheckboxType::class, ['data' => $arUsuario->getisActive(), 'label' => ' ', 'required' => false])
@@ -122,7 +122,6 @@ class SeguridadController extends Controller
             }
         }
         $form = $this->createFormBuilder()
-            ->add('txtClaveActual', PasswordType::class, ['required' => true])
             ->add('txtNuevaClave', PasswordType::class, ['required' => true])
             ->add('txtConfirmacionClave', PasswordType::class, ['required' => true])
             ->add('btnActualizar', SubmitType::class, ['label' => 'Actualizar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
@@ -131,19 +130,14 @@ class SeguridadController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnActualizar')->isClicked()) {
-                $claveActual = $form->get('txtClaveActual')->getData();
                 $claveNueva = $form->get('txtNuevaClave')->getData();
                 $claveConfirmacion = $form->get('txtConfirmacionClave')->getData();
-                if (password_verify($claveActual, $arUsuario->getPassword())) {
                     if ($claveNueva == $claveConfirmacion) {
                         $arUsuario->setPassword(password_hash($claveNueva, PASSWORD_BCRYPT));
                         $em->persist($arUsuario);
                     } else {
                         $respuesta = "Las claves ingresadas no coindicen";
                     }
-                } else {
-                    $respuesta = "La contraseña ingresada es incorrecta";
-                }
             }
             if ($respuesta != '') {
                 MensajesController::error($respuesta);

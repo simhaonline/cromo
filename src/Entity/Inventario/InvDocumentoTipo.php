@@ -12,13 +12,11 @@ class InvDocumentoTipo
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="codigo_documento_tipo_pk",type="string",length=10)
      */
     private $codigoDocumentoTipoPk;
 
     /**
-     *
      * @ORM\Column(name="nombre", type="string", length=255)
      */
     private $nombre;
@@ -26,12 +24,12 @@ class InvDocumentoTipo
     /**
      * @ORM\OneToMany(targetEntity="InvDocumento", mappedBy="documentoTipoRel")
      */
-    protected $documentoTipoDocumentoRel;
+    protected $documentoTipoDocumentosRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvMovimiento", mappedBy="documentoTipoRel")
      */
-    protected $documentoTipoMovimientoRel;
+    protected $documentoTipoMovimientosRel;
 
     /**
      * @return mixed
@@ -68,33 +66,33 @@ class InvDocumentoTipo
     /**
      * @return mixed
      */
-    public function getDocumentoTipoDocumentoRel()
+    public function getDocumentoTipoDocumentosRel()
     {
-        return $this->documentoTipoDocumentoRel;
+        return $this->documentoTipoDocumentosRel;
     }
 
     /**
-     * @param mixed $documentoTipoDocumentoRel
+     * @param mixed $documentoTipoDocumentosRel
      */
-    public function setDocumentoTipoDocumentoRel($documentoTipoDocumentoRel): void
+    public function setDocumentoTipoDocumentosRel($documentoTipoDocumentosRel): void
     {
-        $this->documentoTipoDocumentoRel = $documentoTipoDocumentoRel;
+        $this->documentoTipoDocumentosRel = $documentoTipoDocumentosRel;
     }
 
     /**
      * @return mixed
      */
-    public function getDocumentoTipoMovimientoRel()
+    public function getDocumentoTipoMovimientosRel()
     {
-        return $this->documentoTipoMovimientoRel;
+        return $this->documentoTipoMovimientosRel;
     }
 
     /**
-     * @param mixed $documentoTipoMovimientoRel
+     * @param mixed $documentoTipoMovimientosRel
      */
-    public function setDocumentoTipoMovimientoRel($documentoTipoMovimientoRel): void
+    public function setDocumentoTipoMovimientosRel($documentoTipoMovimientosRel): void
     {
-        $this->documentoTipoMovimientoRel = $documentoTipoMovimientoRel;
+        $this->documentoTipoMovimientosRel = $documentoTipoMovimientosRel;
     }
 }
 

@@ -23,7 +23,7 @@ class InvDocumento
     private $nombre;
 
     /**
-     * @ORM\Column(name="codigo_documento_tipo_fk", type="integer")
+     * @ORM\Column(name="codigo_documento_tipo_fk", type="string",length=10)
      */
     private $codigoDocumentoTipoFk;    
 
@@ -182,7 +182,7 @@ class InvDocumento
     private $generaCostoPromedio = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentoTipoDocumentoRel")
+     * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentoTipoDocumentosRel")
      * @ORM\JoinColumn(name="codigo_documento_tipo_fk", referencedColumnName="codigo_documento_tipo_pk")
      */
     protected $documentoTipoRel;
@@ -190,7 +190,7 @@ class InvDocumento
     /**
      * @ORM\OneToMany(targetEntity="InvMovimiento", mappedBy="documentoRel")
      */
-    protected $documentoMovimientoRel;
+    protected $documentoMovimientosRel;
 
     /**
      * @return mixed
@@ -675,17 +675,18 @@ class InvDocumento
     /**
      * @return mixed
      */
-    public function getDocumentoMovimientoRel()
+    public function getDocumentoMovimientosRel()
     {
-        return $this->documentoMovimientoRel;
+        return $this->documentoMovimientosRel;
     }
 
     /**
-     * @param mixed $documentoMovimientoRel
+     * @param mixed $documentoMovimientosRel
      */
-    public function setDocumentoMovimientoRel($documentoMovimientoRel): void
+    public function setDocumentoMovimientosRel($documentoMovimientosRel): void
     {
-        $this->documentoMovimientoRel = $documentoMovimientoRel;
+        $this->documentoMovimientosRel = $documentoMovimientosRel;
     }
+
 
 }

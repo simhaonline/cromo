@@ -12,8 +12,7 @@ class InvSolicitudTipo
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="codigo_solicitud_tipo_pk", type="string", length=10)
      */
     private $codigoSolicitudTipoPk;
 
@@ -30,7 +29,7 @@ class InvSolicitudTipo
     /**
      * @ORM\OneToMany(targetEntity="InvSolicitud", mappedBy="solicitudTipoRel")
      */
-    protected $solicitudTipoSolicitudRel;
+    protected $solicitudTipoSolicitudesRel;
 
     /**
      * @return mixed
@@ -83,17 +82,17 @@ class InvSolicitudTipo
     /**
      * @return mixed
      */
-    public function getSolicitudTipoSolicitudRel()
+    public function getSolicitudTipoSolicitudesRel()
     {
-        return $this->solicitudTipoSolicitudRel;
+        return $this->solicitudTipoSolicitudesRel;
     }
 
     /**
-     * @param mixed $solicitudTipoSolicitudRel
+     * @param mixed $solicitudTipoSolicitudesRel
      */
-    public function setSolicitudTipoSolicitudRel($solicitudTipoSolicitudRel): void
+    public function setSolicitudTipoSolicitudesRel($solicitudTipoSolicitudesRel): void
     {
-        $this->solicitudTipoSolicitudRel = $solicitudTipoSolicitudRel;
+        $this->solicitudTipoSolicitudesRel = $solicitudTipoSolicitudesRel;
     }
 }
 

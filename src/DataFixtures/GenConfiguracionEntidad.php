@@ -15,7 +15,10 @@ class GenConfiguracionEntidad extends Fixture
         $arrModuloInventario = $arrModuloInventario = [
             'solicitud,movimiento,inventario,0,1',
             'item,admin,general,0,0',
-            'itemGrupo,admin,general,0,0',
+            'grupo,admin,general,0,0',
+            'linea,admin,general,0,0',
+            'subgrupo,admin,general,0,0',
+            'grupo,admin,general,0,0',
             'bodega,admin,general,0,0',
             'configuracion,admin,general,0,0',
             'documento,admin,general,0,0',

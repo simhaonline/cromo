@@ -91,9 +91,15 @@
                             <li>
                                 <a href="#">Inventario <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('inv_mov_inventario_movimiento_documentos_lista',{'tipoDocumento':1}) }}">Entrada</a></li>
-                                    <li><a href="{{ path('inv_mov_inventario_movimiento_documentos_lista',{'tipoDocumento':2}) }}">Salida</a></li>
-                                    <li><a href="{{ path('inv_mov_inventario_movimiento_documentos_lista',{'tipoDocumento':3}) }}">Factura</a></li>
+                                    <li>
+                                        <a href="{{ path('inv_mov_inventario_movimiento_documentos_lista',{'tipoDocumento':'ENT'}) }}">Entrada</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('inv_mov_inventario_movimiento_documentos_lista',{'tipoDocumento':'SAL'}) }}">Salida</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('inv_mov_inventario_movimiento_documentos_lista',{'tipoDocumento':'FAC'}) }}">Factura</a>
+                                    </li>
                                 </ul>
                             </li>
                             <li>
@@ -103,7 +109,8 @@
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'solicitud'}) }}">Solicitud</a>
                                     </li>
                                     <li>
-                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'ordenCompra'}) }}">Orden compra</a>
+                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'ordenCompra'}) }}">Orden
+                                            compra</a>
                                     </li>
                                 </ul>
                             </li>
@@ -126,6 +133,18 @@
                                     <li>
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'item'}) }}">
                                             Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'linea'}) }}">
+                                            Linea</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'grupo'}) }}">
+                                            Grupo</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'subgrupo'}) }}">
+                                            Subgrupo</a>
                                     </li>
                                     <li>
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'marca'}) }}">

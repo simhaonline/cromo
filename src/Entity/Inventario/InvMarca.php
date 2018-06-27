@@ -12,7 +12,7 @@ class InvMarca
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_marca_pk", type="string",length=20)
+     * @ORM\Column(name="codigo_marca_pk", type="string",length=10)
      */     
     private $codigoMarcaPk;
 
@@ -24,7 +24,7 @@ class InvMarca
     /**
      * @ORM\OneToMany(targetEntity="InvItem",mappedBy="marcaRel")
      */
-    protected $marcaItemRel;
+    protected $marcaItemsRel;
 
     /**
      * @return mixed
@@ -61,16 +61,18 @@ class InvMarca
     /**
      * @return mixed
      */
-    public function getMarcaItemRel()
+    public function getMarcaItemsRel()
     {
-        return $this->marcaItemRel;
+        return $this->marcaItemsRel;
     }
 
     /**
-     * @param mixed $marcaItemRel
+     * @param mixed $marcaItemsRel
      */
-    public function setMarcaItemRel($marcaItemRel): void
+    public function setMarcaItemsRel($marcaItemsRel): void
     {
-        $this->marcaItemRel = $marcaItemRel;
+        $this->marcaItemsRel = $marcaItemsRel;
     }
+
+
 }

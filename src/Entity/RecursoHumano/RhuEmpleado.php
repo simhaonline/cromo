@@ -207,28 +207,28 @@ class RhuEmpleado
     private $VrSalario = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuEmpleadoIdentificacionRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuEmpleadosIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk",referencedColumnName="codigo_identificacion_pk")
      */
-    protected $genIdentificacionRel;
+    protected $identificacionRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuEmpleadoCiudadRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuEmpleadosCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk",referencedColumnName="codigo_ciudad_pk")
      */
-    protected $genCiudadRel;
+    protected $ciudadRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuEmpleadoCiudadExpedicionRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuEmpleadosCiudadExpedicionRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk",referencedColumnName="codigo_ciudad_pk")
      */
-    protected $genCiudadExpedicionRel;
+    protected $ciudadExpedicionRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuEmpleadoSexoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuEmpleadosSexoRel")
      * @ORM\JoinColumn(name="codigo_sexo_fk",referencedColumnName="codigo_sexo_pk")
      */
-    protected $genSexoRel;
+    protected $sexoRel;
 
     /**
      * @return mixed
@@ -713,67 +713,66 @@ class RhuEmpleado
     /**
      * @return mixed
      */
-    public function getGenIdentificacionRel()
+    public function getIdentificacionRel()
     {
-        return $this->genIdentificacionRel;
+        return $this->identificacionRel;
     }
 
     /**
-     * @param mixed $genIdentificacionRel
+     * @param mixed $identificacionRel
      */
-    public function setGenIdentificacionRel($genIdentificacionRel): void
+    public function setIdentificacionRel($identificacionRel): void
     {
-        $this->genIdentificacionRel = $genIdentificacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGenCiudadRel()
-    {
-        return $this->genCiudadRel;
-    }
-
-    /**
-     * @param mixed $genCiudadRel
-     */
-    public function setGenCiudadRel($genCiudadRel): void
-    {
-        $this->genCiudadRel = $genCiudadRel;
+        $this->identificacionRel = $identificacionRel;
     }
 
     /**
      * @return mixed
      */
-    public function getGenCiudadExpedicionRel()
+    public function getCiudadRel()
     {
-        return $this->genCiudadExpedicionRel;
+        return $this->ciudadRel;
     }
 
     /**
-     * @param mixed $genCiudadExpedicionRel
+     * @param mixed $ciudadRel
      */
-    public function setGenCiudadExpedicionRel($genCiudadExpedicionRel): void
+    public function setCiudadRel($ciudadRel): void
     {
-        $this->genCiudadExpedicionRel = $genCiudadExpedicionRel;
+        $this->ciudadRel = $ciudadRel;
     }
 
     /**
      * @return mixed
      */
-    public function getGenSexoRel()
+    public function getCiudadExpedicionRel()
     {
-        return $this->genSexoRel;
+        return $this->ciudadExpedicionRel;
     }
 
     /**
-     * @param mixed $genSexoRel
+     * @param mixed $ciudadExpedicionRel
      */
-    public function setGenSexoRel($genSexoRel): void
+    public function setCiudadExpedicionRel($ciudadExpedicionRel): void
     {
-        $this->genSexoRel = $genSexoRel;
+        $this->ciudadExpedicionRel = $ciudadExpedicionRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSexoRel()
+    {
+        return $this->sexoRel;
+    }
+
+    /**
+     * @param mixed $sexoRel
+     */
+    public function setSexoRel($sexoRel): void
+    {
+        $this->sexoRel = $sexoRel;
+    }
 
 
 }

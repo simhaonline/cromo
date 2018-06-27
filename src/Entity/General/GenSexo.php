@@ -22,24 +22,24 @@ class GenSexo
     private $nombre;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="genSexoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="sexoRel")
      */
-    protected $rhuSolicitudSexoRel;
+    protected $rhuSolicitudesSexoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="genSexoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="sexoRel")
      */
     protected $rhuAspirantesSexoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="genSexoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="sexoRel")
      */
-    protected $rhuSeleccionSexoRel;
+    protected $rhuSeleccionesSexoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="genSexoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="sexoRel")
      */
-    protected $rhuEmpleadoSexoRel;
+    protected $rhuEmpleadosSexoRel;
 
     /**
      * @return mixed

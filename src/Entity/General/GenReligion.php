@@ -22,9 +22,9 @@ class GenReligion
     private $nombre;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="genReligionRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="religionRel")
      */
-    protected $rhuSolicitudReligicionRel;
+    protected $rhuSolicitudesReligicionRel;
 
     /**
      * @return mixed

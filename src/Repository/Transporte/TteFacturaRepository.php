@@ -2,6 +2,7 @@
 
 namespace App\Repository\Transporte;
 
+use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -69,6 +70,28 @@ class TteFacturaRepository extends ServiceEntityRepository
             }
         }
         return true;
+    }
+
+    public function autorizar($arFactura)
+    {
+        if (count($this->_em->getRepository('App:Transporte\TteFactura')->findBy(['codigoFacturaPk' => $arFactura->getCodigoFacturaPk()])) > 0) {
+            $arFactura->setEstadoAutorizado(1);
+            $this->_em->persist($arFactura);
+            $this->_em->flush();
+        } else {
+            MensajesController::error('No se puede autorizar, el registro no tiene detalles');
+        }
+    }
+
+    public function desAutorizar($arFactura)
+    {
+        if ($arFactura->getEstadoAutorizado() == 1 && $arFactura->getEstadoAprobado() == 0) {
+            $arFactura->setEstadoAutorizado(0);
+            $this->_em->persist($arFactura);
+            $this->_em->flush();
+        } else {
+            MensajesController::error('No se puede desautorizar, el registro ya se encuentra aprobado');
+        }
     }
 
 }

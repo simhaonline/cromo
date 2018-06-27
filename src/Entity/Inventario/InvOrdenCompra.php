@@ -99,7 +99,7 @@ class InvOrdenCompra
     private $comentarios;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="terceroOrdenesCompraRel")
+     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="ordenesComprasTerceroRel")
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
      * @Assert\NotNull(
      *     message="Debe seleccionar un tercero"
@@ -108,7 +108,7 @@ class InvOrdenCompra
     protected $terceroRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvOrdenCompraTipo", inversedBy="ordenCompraTipoOrdenesCompraRel")
+     * @ORM\ManyToOne(targetEntity="InvOrdenCompraTipo", inversedBy="ordenesComprasOrdenCompraTipoRel")
      * @ORM\JoinColumn(name="codigo_orden_compra_tipo_fk", referencedColumnName="codigo_orden_compra_tipo_pk")
      * @Assert\NotNull(
      *     message="Debe seleccionar un tipo"
@@ -119,7 +119,7 @@ class InvOrdenCompra
     /**
      * @ORM\OneToMany(targetEntity="InvOrdenCompraDetalle", mappedBy="ordenCompraRel")
      */
-    protected $ordenCompraOrdenCompraDetallesRel;
+    protected $ordenesComprasDetallesOrdenCompraRel;
 
     /**
      * @return mixed
@@ -412,17 +412,17 @@ class InvOrdenCompra
     /**
      * @return mixed
      */
-    public function getOrdenCompraOrdenCompraDetallesRel()
+    public function getOrdenesComprasDetallesOrdenCompraRel()
     {
-        return $this->ordenCompraOrdenCompraDetallesRel;
+        return $this->ordenesComprasDetallesOrdenCompraRel;
     }
 
     /**
-     * @param mixed $ordenCompraOrdenCompraDetallesRel
+     * @param mixed $ordenesComprasDetallesOrdenCompraRel
      */
-    public function setOrdenCompraOrdenCompraDetallesRel($ordenCompraOrdenCompraDetallesRel): void
+    public function setOrdenesComprasDetallesOrdenCompraRel($ordenesComprasDetallesOrdenCompraRel): void
     {
-        $this->ordenCompraOrdenCompraDetallesRel = $ordenCompraOrdenCompraDetallesRel;
+        $this->ordenesComprasDetallesOrdenCompraRel = $ordenesComprasDetallesOrdenCompraRel;
     }
 }
 

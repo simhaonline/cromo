@@ -24,7 +24,7 @@ class InvMarca
     /**
      * @ORM\OneToMany(targetEntity="InvItem",mappedBy="marcaRel")
      */
-    protected $marcaItemsRel;
+    protected $itemsMarcaRel;
 
     /**
      * @return mixed
@@ -61,18 +61,16 @@ class InvMarca
     /**
      * @return mixed
      */
-    public function getMarcaItemsRel()
+    public function getItemsMarcaRel()
     {
-        return $this->marcaItemsRel;
+        return $this->itemsMarcaRel;
     }
 
     /**
-     * @param mixed $marcaItemsRel
+     * @param mixed $itemsMarcaRel
      */
-    public function setMarcaItemsRel($marcaItemsRel): void
+    public function setItemsMarcaRel($itemsMarcaRel): void
     {
-        $this->marcaItemsRel = $marcaItemsRel;
+        $this->itemsMarcaRel = $itemsMarcaRel;
     }
-
-
 }

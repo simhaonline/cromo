@@ -138,19 +138,19 @@ class InvMovimiento
     private $estadoContabilizado = false;
     
     /**
-     * @ORM\ManyToOne(targetEntity="InvDocumento", inversedBy="documentoMovimientosRel")
+     * @ORM\ManyToOne(targetEntity="InvDocumento", inversedBy="movimientosDocumentoRel")
      * @ORM\JoinColumn(name="codigo_documento_fk", referencedColumnName="codigo_documento_pk")
      */
     protected $documentoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentoTipoMovimientosRel")
+     * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="movimientosDocumentoTipoRel")
      * @ORM\JoinColumn(name="codigo_documento_tipo_fk", referencedColumnName="codigo_documento_tipo_pk")
      */
     protected $documentoTipoRel;
     
     /**
-     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="terceroMovimientosRel")
+     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="movimientosTerceroRel")
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
      * @Assert\NotBlank(
      *     message="El campo no puede estar vacio"
@@ -161,7 +161,7 @@ class InvMovimiento
     /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="movimientoRel")
      */
-    protected $movimientoMovimientoDetallesRel;
+    protected $movimientosDetallesMovimientoRel;
 
     /**
      * @return mixed
@@ -614,18 +614,16 @@ class InvMovimiento
     /**
      * @return mixed
      */
-    public function getMovimientoMovimientoDetallesRel()
+    public function getMovimientosDetallesMovimientoRel()
     {
-        return $this->movimientoMovimientoDetallesRel;
+        return $this->movimientosDetallesMovimientoRel;
     }
 
     /**
-     * @param mixed $movimientoMovimientoDetallesRel
+     * @param mixed $movimientosDetallesMovimientoRel
      */
-    public function setMovimientoMovimientoDetallesRel($movimientoMovimientoDetallesRel): void
+    public function setMovimientosDetallesMovimientoRel($movimientosDetallesMovimientoRel): void
     {
-        $this->movimientoMovimientoDetallesRel = $movimientoMovimientoDetallesRel;
+        $this->movimientosDetallesMovimientoRel = $movimientosDetallesMovimientoRel;
     }
-
-
 }

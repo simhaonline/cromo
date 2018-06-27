@@ -29,7 +29,7 @@ class InvSolicitudTipo
     /**
      * @ORM\OneToMany(targetEntity="InvSolicitud", mappedBy="solicitudTipoRel")
      */
-    protected $solicitudTipoSolicitudesRel;
+    protected $solicitudesSolicitudTipoRel;
 
     /**
      * @return mixed
@@ -82,17 +82,17 @@ class InvSolicitudTipo
     /**
      * @return mixed
      */
-    public function getSolicitudTipoSolicitudesRel()
+    public function getSolicitudesSolicitudTipoRel()
     {
-        return $this->solicitudTipoSolicitudesRel;
+        return $this->solicitudesSolicitudTipoRel;
     }
 
     /**
-     * @param mixed $solicitudTipoSolicitudesRel
+     * @param mixed $solicitudesSolicitudTipoRel
      */
-    public function setSolicitudTipoSolicitudesRel($solicitudTipoSolicitudesRel): void
+    public function setSolicitudesSolicitudTipoRel($solicitudesSolicitudTipoRel): void
     {
-        $this->solicitudTipoSolicitudesRel = $solicitudTipoSolicitudesRel;
+        $this->solicitudesSolicitudTipoRel = $solicitudesSolicitudTipoRel;
     }
 }
 

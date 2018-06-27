@@ -28,7 +28,7 @@ class InvGrupo
     private $nombre;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvLinea",inversedBy="lineaGruposRel")
+     * @ORM\ManyToOne(targetEntity="InvLinea",inversedBy="gruposLineaRel")
      * @ORM\JoinColumn(name="codigo_linea_fk",referencedColumnName="codigo_linea_pk")
      * @Assert\NotBlank(
      *     message="El campo no puede estar vacio"
@@ -39,12 +39,12 @@ class InvGrupo
     /**
      * @ORM\OneToMany(targetEntity="InvSubgrupo",mappedBy="grupoRel")
      */
-    protected $grupoSubgruposRel;
+    protected $subgruposGrupoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvItem",mappedBy="grupoRel")
      */
-    protected $grupoItemsRel;
+    protected $itemsGrupoRel;
 
     /**
      * @return mixed
@@ -113,35 +113,32 @@ class InvGrupo
     /**
      * @return mixed
      */
-    public function getGrupoSubgruposRel()
+    public function getSubgruposGrupoRel()
     {
-        return $this->grupoSubgruposRel;
+        return $this->subgruposGrupoRel;
     }
 
     /**
-     * @param mixed $grupoSubgruposRel
+     * @param mixed $subgruposGrupoRel
      */
-    public function setGrupoSubgruposRel($grupoSubgruposRel): void
+    public function setSubgruposGrupoRel($subgruposGrupoRel): void
     {
-        $this->grupoSubgruposRel = $grupoSubgruposRel;
+        $this->subgruposGrupoRel = $subgruposGrupoRel;
     }
 
     /**
      * @return mixed
      */
-    public function getGrupoItemsRel()
+    public function getItemsGrupoRel()
     {
-        return $this->grupoItemsRel;
+        return $this->itemsGrupoRel;
     }
 
     /**
-     * @param mixed $grupoItemsRel
+     * @param mixed $itemsGrupoRel
      */
-    public function setGrupoItemsRel($grupoItemsRel): void
+    public function setItemsGrupoRel($itemsGrupoRel): void
     {
-        $this->grupoItemsRel = $grupoItemsRel;
+        $this->itemsGrupoRel = $itemsGrupoRel;
     }
-
-
-
 }

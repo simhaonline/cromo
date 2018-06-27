@@ -16,7 +16,6 @@
                 <th>ID</th>
                 <th>NOMBRE</th>
                 <th>ABREVIATURA</th>
-                <th title="Asigna consecutivo de impresión">C_I</th>
                 <th></th>
             </tr>
             </thead>
@@ -26,7 +25,6 @@
                     <td>{{ arDocumento.codigoDocumentoPk }}</td>
                     <td>{{ arDocumento.nombre | default('') }}</td>
                     <td>{{ arDocumento.abreviatura | default('') }}</td>
-                    {{ validarTipo(arDocumento.asignarConsecutivoImpresion) }}
                     <td style="text-align: center;">
                         <a href="{{ path('inv_mov_inventario_movimiento_lista', {'tipoDocumento': tipoDocumento,'codigoDocumento' : arDocumento.codigoDocumentoPk }) }}">
                             <i class="fa fa-share-square-o" style="font-size: large">

@@ -55,7 +55,12 @@ class OrdenCompraController extends Controller
                 $objFormatoOrdenCompra->Generar($em, $id);
             }
             if ($form->get('btnAnular')->isClicked()) {
-                $em->getRepository('App:Inventario\InvOrdenCompra')->anular($arOrdenCompra);
+                $respuesta = $em->getRepository('App:Inventario\InvOrdenCompra')->anular($arOrdenCompra);
+                if(count($respuesta) > 0){
+                    foreach ($respuesta as $error){
+                        MensajesController::error($error);
+                    }
+                }
                 return $this->redirect($this->generateUrl('inv_mov_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {

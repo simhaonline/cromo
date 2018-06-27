@@ -24,6 +24,11 @@ class InvPedido
     private $codigoPedidoTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_tercero_fk", type="integer", nullable=true)
+     */
+    private $codigoTerceroFk;
+
+    /**
      * @ORM\Column(name="fecha", type="date")
      */
     private $fecha;
@@ -101,10 +106,10 @@ class InvPedido
     protected $pedidoTipoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvCliente", inversedBy="pedidosClienteRel")
-     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="pedidosTerceroRel")
+     * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
      */
-    protected $clienteRel;
+    protected $terceroRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvPedidoDetalle", mappedBy="pedidoRel")
@@ -141,6 +146,22 @@ class InvPedido
     public function setCodigoPedidoTipoFk($codigoPedidoTipoFk): void
     {
         $this->codigoPedidoTipoFk = $codigoPedidoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTerceroFk()
+    {
+        return $this->codigoTerceroFk;
+    }
+
+    /**
+     * @param mixed $codigoTerceroFk
+     */
+    public function setCodigoTerceroFk($codigoTerceroFk): void
+    {
+        $this->codigoTerceroFk = $codigoTerceroFk;
     }
 
     /**
@@ -354,6 +375,22 @@ class InvPedido
     /**
      * @return mixed
      */
+    public function getTerceroRel()
+    {
+        return $this->terceroRel;
+    }
+
+    /**
+     * @param mixed $terceroRel
+     */
+    public function setTerceroRel($terceroRel): void
+    {
+        $this->terceroRel = $terceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPedidosDetallesPedidoRel()
     {
         return $this->pedidosDetallesPedidoRel;
@@ -367,21 +404,6 @@ class InvPedido
         $this->pedidosDetallesPedidoRel = $pedidosDetallesPedidoRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getClienteRel()
-    {
-        return $this->clienteRel;
-    }
-
-    /**
-     * @param mixed $clienteRel
-     */
-    public function setClienteRel($clienteRel): void
-    {
-        $this->clienteRel = $clienteRel;
-    }
 
 
 

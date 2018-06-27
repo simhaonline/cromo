@@ -96,6 +96,11 @@ class InvTercero
     protected $movimientosTerceroRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvPedido",mappedBy="terceroRel")
+     */
+    protected $pedidosTerceroRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoTerceroPk()
@@ -366,5 +371,23 @@ class InvTercero
     {
         $this->movimientosTerceroRel = $movimientosTerceroRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidosTerceroRel()
+    {
+        return $this->pedidosTerceroRel;
+    }
+
+    /**
+     * @param mixed $pedidosTerceroRel
+     */
+    public function setPedidosTerceroRel($pedidosTerceroRel): void
+    {
+        $this->pedidosTerceroRel = $pedidosTerceroRel;
+    }
+
+
 }
 

@@ -10,14 +10,14 @@
                     <div class="row">
                         <div class="col-lg-2">
                             <div class="input-group">
-                                <input id="txtCodigoCliente"  name="txtCodigoCliente"  type="text" class="form-control" value="{{ arPedido.codigoClienteFk |default('') }}"/>
+                                <input id="txtCodigoTercero"  name="txtCodigoTercero"  type="text" class="form-control" value="{{ arPedido.codigoTerceroFk |default('') }}"/>
                             </div>
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="{{ arPedido.clienteRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
+                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="{{ arPedido.terceroRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
                                 <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inv_bus_cliente', { 'campoCodigo': 'txtCodigoCliente', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inv_bus_tercero', { 'campoCodigo': 'txtCodigoTercero', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>

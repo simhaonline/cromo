@@ -6,6 +6,7 @@ use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
+use App\Entity\Inventario\InvTercero;
 use App\Formato\Inventario\Pedido;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
@@ -67,14 +68,22 @@ class PedidoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arPedido->setFecha(new \DateTime('now'));
-                if($id == 0) {
-                    $arPedido->setFecha(new \DateTime('now'));
-                    $arPedido->setUsuario($this->getUser()->getUserName());
+                $arPedido = $form->getData();
+                $txtCodigoTercero = $request->request->get('txtCodigoTercero');
+                if($txtCodigoTercero != '') {
+                    $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
+                    if($arTercero) {
+                        $arPedido->setTerceroRel($arTercero);
+                        $arPedido->setFecha(new \DateTime('now'));
+                        if($id == 0) {
+                            $arPedido->setFecha(new \DateTime('now'));
+                            $arPedido->setUsuario($this->getUser()->getUserName());
+                        }
+                        $em->persist($arPedido);
+                        $em->flush($arPedido);
+                        return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $arPedido->getCodigoPedidoPk()]));
+                    }
                 }
-                $em->persist($arPedido);
-                $em->flush($arPedido);
-                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $arPedido->getCodigoPedidoPk()]));
             }
         }
         return $this->render('inventario/movimiento/comercial/pedido/nuevo.html.twig', [

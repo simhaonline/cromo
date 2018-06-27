@@ -101,6 +101,12 @@ class InvPedido
     protected $pedidoTipoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="InvCliente", inversedBy="pedidosClienteRel")
+     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+     */
+    protected $clienteRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvPedidoDetalle", mappedBy="pedidoRel")
      */
     protected $pedidosDetallesPedidoRel;
@@ -359,6 +365,22 @@ class InvPedido
     public function setPedidosDetallesPedidoRel($pedidosDetallesPedidoRel): void
     {
         $this->pedidosDetallesPedidoRel = $pedidosDetallesPedidoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
     }
 
 

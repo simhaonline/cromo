@@ -32,17 +32,32 @@
             <td class="td-in-well">{{ arPedido.codigoPedidoPk }}</td>
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arPedido.usuario }}</td>
-
+            <td class="titulo" >SUBTOTAL:</td>
+            <td align="right">{{ arPedido.vrSubtotal | number_format(0, '.', ',')}}</td>
         </tr>
         <tr>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arPedido.numero }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arPedido.fecha | date('Y-m-d') }}</td>
+            <td class="titulo" >IVA:</td>
+            <td align="right">{{ arPedido.vrIva | number_format(0, '.', ',')}}</td>
         </tr>
         <tr>
             <td class="titulo" >SOPORTE:</td>
-            <td class="td-in-well" colspan="5">{{ arPedido.soporte }}</td>
+            <td class="td-in-well">{{ arPedido.soporte }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >NETO:</td>
+            <td align="right">{{ arPedido.vrNeto | number_format(0, '.', ',')}}</td>
+        </tr>
+        <tr>
+            <td class="titulo" ></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >TOTAL:</td>
+            <td align="right">{{ arPedido.vrTotal | number_format(0, '.', ',')}}</td>
         </tr>
         <tr>
             <td class="titulo" >COMENTARIO: </td>
@@ -61,7 +76,9 @@
                         <tr>
                             <th>ID</th>
                             <th>ITEM</th>
-                            <th>CANTIDAD</th>
+                            <th>MARCA</th>
+                            <th>CAN</th>
+                            <th>PEN</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -69,8 +86,10 @@
                         {% for arPedidoDetalle in arPedidoDetalles %}
                             <tr>
                                 <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
-                                <td>{{ arPedidoDetalle.itemRel.nombre | default('') }}</td>
-                                <td>{{ arPedidoDetalle.cantidadSolicitada }}</td>
+                                <td>{{ arPedidoDetalle.itemNombre | default('') }}</td>
+                                <td>{{ arPedidoDetalle.itemMarcaNombre | default('') }}</td>
+                                <td>{{ arPedidoDetalle.cantidad }}</td>
+                                <td>{{ arPedidoDetalle.cantidadPendiente }}</td>
                                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk }}" /></td>
                             </tr>
                         {% endfor %}

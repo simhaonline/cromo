@@ -14,28 +14,44 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, InvPedidoDetalle::class);
     }
 
-    public function lista(): array
+    public function pedido($codigoPedido): array
     {
-        $session = new Session();
         $em = $this->getEntityManager();
-        $dql = 'SELECT pd.codigoPedidoDetallePk
-        FROM App\Entity\Inventario\InvPedidoDetalle pd  
-        WHERE pd.codigoPedidoDetallePk <> 0 ';
-        /*if($session->get('filtroTteCodigoGuiaTipo')) {
-            $dql .= " AND g.codigoGuiaTipoFk = '" . $session->get('filtroTteCodigoGuiaTipo') . "'";
-        }
-        if($session->get('filtroTteCodigoServicio')) {
-            $dql .= " AND g.codigoServicioFk = '" . $session->get('filtroTteCodigoServicio') . "'";
-        }
-        if($session->get('filtroTteDocumento') != "") {
-            $dql .= " AND g.documentoCliente LIKE '%" . $session->get('filtroTteDocumento') . "%'";
-        }
-        if($session->get('filtroTteNumeroGuia') != "") {
-            $dql .= " AND g.numero =" . $session->get('filtroTteNumeroGuia');
-        }*/
-        $dql .= " ORDER BY pd.codigoPedidoDetallePk";
-        $query = $em->createQuery($dql);
+        $query = $em->createQuery(
+            'SELECT pd.codigoPedidoDetallePk,
+                  pd.codigoPedidoFk,
+                  pd.cantidad,
+                  pd.cantidadPendiente,
+                  i.nombre as itemNombre,
+                  m.nombre as itemMarcaNombre                         
+        FROM App\Entity\Inventario\InvPedidoDetalle pd
+        LEFT JOIN pd.itemRel i
+        LEFT JOIN i.marcaRel m
+        WHERE pd.codigoPedidoFk = :codigoPedido'
+        )->setParameter('codigoPedido', $codigoPedido);
+
         return $query->execute();
+    }
+    public function eliminar($arPedido, $arrDetallesSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arPedido->getEstadoAutorizado() == 0) {
+            if (count($arrDetallesSeleccionados)) {
+                foreach ($arrDetallesSeleccionados as $codigo) {
+                    $ar = $em->getRepository(InvPedidoDetalle::class)->find($codigo);
+                    if ($ar) {
+                        $em->remove($ar);
+                    }
+                }
+                try {
+                    $em->flush();
+                } catch (\Exception $e) {
+                    MensajesController::error('No se puede eliminar, el registro porque se encuentra en uso');
+                }
+            }
+        } else {
+            MensajesController::error('No se puede eliminar, el registro se encuentra autorizado');
+        }
     }
 
 }

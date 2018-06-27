@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Movimiento\Comercial;
 
 use App\Controller\Estructura\MensajesController;
+use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Formato\Inventario\Pedido;
@@ -18,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use App\Form\Type\Inventario\pedidoType;
+use App\Form\Type\Inventario\PedidoType;
 
 class PedidoController extends Controller
 {
@@ -87,6 +88,7 @@ class PedidoController extends Controller
      */
     public function detalle(Request $request, $id)
     {
+        $paginator  = $this->get('knp_paginator');
         //$objFormatopedido = new pedido();
         $em = $this->getDoctrine()->getManager();
         $arPedido = $em->getRepository(InvPedido::class)->find($id);
@@ -95,33 +97,34 @@ class PedidoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository('App:Inventario\Invpedido')->autorizar($arPedido);
-                return $this->redirect($this->generateUrl('inv_mov_comercial_pedido_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository('App:Inventario\Invpedido')->desautorizar($arPedido);
-                return $this->redirect($this->generateUrl('inv_mov_comercial_pedido_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 //$objFormatopedido->Generar($em, $id);
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository('App:Inventario\Invpedido')->aprobar($arPedido);
-                return $this->redirect($this->generateUrl('inv_mov_comercial_pedido_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\Invpedido')->anular($arPedido);
                 if($respuesta != ''){
                     MensajesController::error($respuesta);
                 }
-                return $this->redirect($this->generateUrl('inv_mov_comercial_pedido_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository('App:Inventario\InvpedidoDetalle')->eliminar($arPedido, $arrDetallesSeleccionados);
-                return $this->redirect($this->generateUrl('inv_mov_comercial_pedido_detalle', ['id' => $id]));
+                $em->getRepository(InvPedidoDetalle::class)->eliminar($arPedido, $arrDetallesSeleccionados);
+                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
             }
         }
-        $arPedidoDetalles = $em->getRepository('App:Inventario\InvpedidoDetalle')->findBy(['codigoPedidoFk' => $id]);
+        $query = $em->getRepository(InvPedidoDetalle::class)->pedido($id);
+        $arPedidoDetalles = $paginator->paginate($query, $request->query->getInt('page', 1),10);
         return $this->render('inventario/movimiento/comercial/pedido/detalle.html.twig', [
             'form' => $form->createView(),
             'arPedidoDetalles' => $arPedidoDetalles,
@@ -149,11 +152,11 @@ class PedidoController extends Controller
                 if (count($arrItems) > 0) {
                     foreach ($arrItems as $codigoItem => $cantidad) {
                         if ($cantidad != '' && $cantidad != 0) {
-                            $arItem = $em->getRepository('App:Inventario\InvItem')->find($codigoItem);
-                            $arpedidoDetalle = new InvpedidoDetalle();
-                            $arpedidoDetalle->setpedidoRel($arPedido);
+                            $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
+                            $arpedidoDetalle = new InvPedidoDetalle();
+                            $arpedidoDetalle->setPedidoRel($arPedido);
                             $arpedidoDetalle->setItemRel($arItem);
-                            $arpedidoDetalle->setCantidadSolicitada($cantidad);
+                            $arpedidoDetalle->setCantidad($cantidad);
                             $arpedidoDetalle->setCantidadPendiente($cantidad);
                             $em->persist($arpedidoDetalle);
                         }

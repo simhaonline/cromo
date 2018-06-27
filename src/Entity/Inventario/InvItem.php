@@ -63,17 +63,17 @@ class InvItem
     private $porcentajeIva = 0;
 
     /**
-     * @ORM\Column(name="codigo_linea_fk", type="string",length=10)
+     * @ORM\Column(name="codigo_linea_fk", type="string",length=10, nullable=true)
      */
     private $codigoLineaFk;
 
     /**
-     * @ORM\Column(name="codigo_grupo_fk", type="string",length=10)
+     * @ORM\Column(name="codigo_grupo_fk", type="string",length=10, nullable=true)
      */
     private $codigoGrupoFk;
 
     /**
-     * @ORM\Column(name="codigo_subgrupo_fk", type="string",length=10)
+     * @ORM\Column(name="codigo_subgrupo_fk", type="string",length=10, nullable=true)
      */
     private $codigoSubgrupoFk;
 
@@ -83,7 +83,7 @@ class InvItem
     private $codigoUnidadMedidaFk;
 
     /**
-     * @ORM\Column(name="codigo_marca_fk", type="string",length=10)
+     * @ORM\Column(name="codigo_marca_fk", type="string",length=10, nullable=true)
      */
     private $codigoMarcaFk;
 

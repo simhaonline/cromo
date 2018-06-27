@@ -4,9 +4,11 @@
 namespace App\Entity\Inventario;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvDocumentoTipoRepository")
+ * @DoctrineAssert\UniqueEntity(fields={"codigoDocumentoTipoPk"},message="Ya existe el código del tipo ya existe")
  */
 class InvDocumentoTipo
 {

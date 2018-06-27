@@ -3,10 +3,12 @@
 namespace App\Entity\Inventario;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Table(name="inv_marca")
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvMarcaRepository")
+ * @DoctrineAssert\UniqueEntity(fields={"codigoMarcaPk"},message="Ya existe el código de la marca")
  */
 class InvMarca
 {

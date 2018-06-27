@@ -4,10 +4,12 @@ namespace App\Entity\Inventario;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Table(name="inv_linea")
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvLineaRepository")
+ * @DoctrineAssert\UniqueEntity(fields={"codigoLineaPk"},message="Ya existe el código de la linea")
  */
 class InvLinea
 {

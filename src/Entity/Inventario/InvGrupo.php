@@ -4,10 +4,12 @@ namespace App\Entity\Inventario;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Table(name="inv_grupo")
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvGrupoRepository")
+ * @DoctrineAssert\UniqueEntity(fields={"codigoGrupoPk"},message="Ya existe el código del grupo")
  */
 class InvGrupo
 {

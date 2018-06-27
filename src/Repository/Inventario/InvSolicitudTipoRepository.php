@@ -19,7 +19,6 @@ class InvSolicitudTipoRepository extends ServiceEntityRepository
             ->select('ist.codigoSolicitudTipoPk as ID')
             ->addSelect('ist.nombre AS NOMBRE')
             ->addSelect('ist.consecutivo AS CONSECUTIVO')
-            ->where('ist.codigoSolicitudTipoPk <> 0')
             ->orderBy('ist.codigoSolicitudTipoPk','DESC');
         $dql = $this->getEntityManager()->createQuery($qb->getDQL());
         return $dql->execute();

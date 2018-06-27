@@ -30,7 +30,7 @@ class PedidoController extends Controller
     public function lista(Request $request)
     {
         $paginator  = $this->get('knp_paginator');
-        $query = $this->getDoctrine()->getRepository(TteDespacho::class)->lista();
+        $query = $this->getDoctrine()->getRepository()->lista();
         $arDespachos = $paginator->paginate($query, $request->query->getInt('page', 1),10);
         return $this->render('transporte/movimiento/transporte/despacho/lista.html.twig', ['arDespachos' => $arDespachos]);
     }

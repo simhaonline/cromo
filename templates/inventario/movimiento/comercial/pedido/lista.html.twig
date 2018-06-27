@@ -39,12 +39,13 @@
             <th>AUT</th>
             <th>APR</th>
             <th>ANU</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         {% for arPedido in arPedidos %}
             <tr>
-                <td>{{ arPedido.codigoGuiaPk }}</td>
+                <td>{{ arPedido.codigoPedidoPk }}</td>
                 <td>{{ arPedido.fecha | date('Y-m-d') }}</td>
                 <td class="numero">{{ arPedido.vrSubtotal }}</td>
                 <td class="numero">{{ arPedido.vrIva }}</td>
@@ -53,6 +54,7 @@
                 <td class="estado">{{ arPedido.estadoAutorizado?'SI':'NO' }}</td>
                 <td class="estado">{{ arPedido.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arPedido.estadoAnulado?'SI':'NO' }}</td>
+                <td style="text-align: center"><a href="{{ path('inv_mto_comercial_pedido_detalle', { 'id': arPedido.codigoPedidoPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>

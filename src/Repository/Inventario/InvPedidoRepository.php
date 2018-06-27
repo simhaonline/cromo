@@ -18,7 +18,15 @@ class InvPedidoRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $em = $this->getEntityManager();
-        $dql = 'SELECT p.codigoPedidoPk
+        $dql = 'SELECT p.codigoPedidoPk,
+        p.fecha,
+        p.vrSubtotal,
+        p.vrIva,
+        p.vrNeto,
+        p.vrTotal,
+        p.estadoAutorizado,
+        p.estadoAprobado,
+        p.estadoAnulado
         FROM App\Entity\Inventario\InvPedido p  
         WHERE p.codigoPedidoPk <> 0 ';
         /*if($session->get('filtroTteCodigoGuiaTipo')) {

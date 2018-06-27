@@ -57,15 +57,18 @@ class InvOrdenCompraRepository extends ServiceEntityRepository
 
     /**
      * @param $arOrdenCompra InvOrdenCompra
+     * @return array
      */
     public function anular($arOrdenCompra)
     {
+        $respuesta = [];
         if ($arOrdenCompra->getEstadoAprobado() == 1) {
             $arOrdenCompra->setEstadoAnulado(1);
             $this->_em->persist($arOrdenCompra);
 
             $arOrdenCompraDetalles = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(['codigoOrdenCompraFk' => $arOrdenCompra->getCodigoOrdenCompraPk()]);
             foreach ($arOrdenCompraDetalles as $arOrdenCompraDetalle) {
+                $respuesta = $this->validarDetalleEnuso($arOrdenCompraDetalle->getCodigoOrdenCompraDetallePk());
                 $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arOrdenCompraDetalle->getCodigoItemFk()]);
                 if ($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk()) {
                     $arSolicitudDetalle = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->find($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk());
@@ -76,7 +79,10 @@ class InvOrdenCompraRepository extends ServiceEntityRepository
                 $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() - $arOrdenCompraDetalle->getCantidadSolicitada());
                 $this->_em->persist($arItem);
             }
-            $this->_em->flush();
+            if(count($respuesta) == 0){
+                $this->_em->flush();
+            }
+            return $respuesta;
         }
     }
 
@@ -154,5 +160,24 @@ class InvOrdenCompraRepository extends ServiceEntityRepository
             $this->_em->persist($arOrdenCompra);
         }
         $this->_em->flush();
+    }
+
+    private function validarDetalleEnuso($codigoOrdenCompraDetalle)
+    {
+        $respuesta = [];
+        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvMovimientoDetalle', 'imd')
+            ->select('imd.codigoMovimientoDetallePk')
+            ->addSelect('imd.codigoMovimientoFk')
+            ->join('imd.movimientoRel', 'm')
+            ->where("imd.codigoOrdenCompraDetalleFk = {$codigoOrdenCompraDetalle}")
+            ->andWhere('m.estadoAnulado = 0');
+        $query = $this->_em->createQuery($qb->getDQL());
+        $resultado = $query->execute();
+        if(count($resultado) > 0){
+            foreach ($resultado as $result) {
+                $respuesta[] = 'No se puede anular, el detalle con ID '.$codigoOrdenCompraDetalle. ' esta siendo utilizado en el movimiento con ID '.$result['codigoMovimientoFk'];
+            }
+        }
+        return $respuesta;
     }
 }

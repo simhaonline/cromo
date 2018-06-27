@@ -88,8 +88,10 @@ class SolicitudController extends Controller
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\InvSolicitud')->anular($arSolicitud);
-                if($respuesta != ''){
-                    MensajesController::error($respuesta);
+                if(count($respuesta) > 0){
+                    foreach ($respuesta as $error){
+                        MensajesController::error($error);
+                    }
                 }
                 return $this->redirect($this->generateUrl('inv_mov_inventario_solicitud_detalle', ['id' => $id]));
             }

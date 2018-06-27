@@ -93,7 +93,7 @@ class InvOrdenCompraDetalle
     /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="ordenCompraDetalleRel")
      */
-    protected $MovimientosDetallesOrdenCompraDetalleRel;
+    protected $movimientosDetallesOrdenCompraDetalleRel;
 
     /**
      * @return mixed
@@ -340,15 +340,15 @@ class InvOrdenCompraDetalle
      */
     public function getMovimientosDetallesOrdenCompraDetalleRel()
     {
-        return $this->MovimientosDetallesOrdenCompraDetalleRel;
+        return $this->movimientosDetallesOrdenCompraDetalleRel;
     }
 
     /**
-     * @param mixed $MovimientosDetallesOrdenCompraDetalleRel
+     * @param mixed $movimientosDetallesOrdenCompraDetalleRel
      */
-    public function setMovimientosDetallesOrdenCompraDetalleRel($MovimientosDetallesOrdenCompraDetalleRel): void
+    public function setMovimientosDetallesOrdenCompraDetalleRel($movimientosDetallesOrdenCompraDetalleRel): void
     {
-        $this->MovimientosDetallesOrdenCompraDetalleRel = $MovimientosDetallesOrdenCompraDetalleRel;
+        $this->movimientosDetallesOrdenCompraDetalleRel = $movimientosDetallesOrdenCompraDetalleRel;
     }
 }
 

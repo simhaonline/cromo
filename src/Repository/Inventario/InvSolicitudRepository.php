@@ -25,7 +25,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
             ->addSelect('s.estadoAutorizado AS AUTORIZADO')
             ->addSelect('s.estadoAprobado AS APROBADO')
             ->addSelect('s.estadoAnulado AS ANULADO')
-            ->join('s.solicitudTipoRel','st')
+            ->join('s.solicitudTipoRel', 'st')
             ->where('s.codigoSolicitudPk <> 0')
             ->orderBy('s.codigoSolicitudPk', 'DESC');
         $dql = $this->getEntityManager()->createQuery($qb->getDQL());
@@ -48,7 +48,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
                     if ($arSolicitud->getEstadoAprobado() == 0) {
                         if ($arSolicitud->getEstadoAutorizado() == 0) {
                             if (count($this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()])) <= 0) {
-                                    $this->_em->remove($arSolicitud);
+                                $this->_em->remove($arSolicitud);
                             } else {
                                 $respuesta = 'No se puede eliminar, el registro tiene detalles';
                             }
@@ -70,15 +70,15 @@ class InvSolicitudRepository extends ServiceEntityRepository
     public function aprobar($arSolicitud)
     {
         $arSolicitudTipo = $this->_em->getRepository('App:Inventario\InvSolicitudTipo')->findOneBy(['codigoSolicitudTipoPk' => $arSolicitud->getCodigoSolicitudTipoFk()]);
-        if(!$arSolicitud->getEstadoAprobado()){
-            $arSolicitudTipo->setConsecutivo($arSolicitudTipo->getConsecutivo()+1);
+        if (!$arSolicitud->getEstadoAprobado()) {
+            $arSolicitudTipo->setConsecutivo($arSolicitudTipo->getConsecutivo() + 1);
             $arSolicitud->setEstadoAprobado(1);
             $arSolicitud->setNumero($arSolicitudTipo->getConsecutivo());
             $this->_em->persist($arSolicitudTipo);
             $this->_em->persist($arSolicitud);
         }
         $arSolicitudDetalles = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
-        foreach ($arSolicitudDetalles as $arSolicitudDetalle){
+        foreach ($arSolicitudDetalles as $arSolicitudDetalle) {
             $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arSolicitudDetalle->getCodigoItemFk()]);
             $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() + $arSolicitudDetalle->getCantidadSolicitada());
             $this->_em->persist($arItem);
@@ -88,28 +88,24 @@ class InvSolicitudRepository extends ServiceEntityRepository
 
     /**
      * @param $arSolicitud InvSolicitud
-     * @return string
+     * @return array
      */
     public function anular($arSolicitud)
     {
-        $respuesta = '';
+        $respuesta = [];
         if ($arSolicitud->getEstadoAprobado() == 1) {
             $arSolicitud->setEstadoAnulado(1);
             $this->_em->persist($arSolicitud);
         }
         $arSolicitudDetalles = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
 
-        foreach ($arSolicitudDetalles as $arSolicitudDetalle){
-            $this->validarDetalleEnuso($arSolicitudDetalle->getCodigoSolicitudDetallePk());
-
-//            if(){
-                $respuesta = 'No se puede anular el registro, esta siendo utilizado en una orden de compra';
-//            }
+        foreach ($arSolicitudDetalles as $arSolicitudDetalle) {
+            $respuesta = $this->validarDetalleEnuso($arSolicitudDetalle->getCodigoSolicitudDetallePk());
             $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arSolicitudDetalle->getCodigoItemFk()]);
             $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() - $arSolicitudDetalle->getCantidadSolicitada());
             $this->_em->persist($arItem);
         }
-        if($respuesta == ''){
+        if (count($respuesta) == 0) {
             $this->_em->flush();
         }
         return $respuesta;
@@ -143,16 +139,23 @@ class InvSolicitudRepository extends ServiceEntityRepository
         }
     }
 
-    private function validarDetalleEnuso($codigoSolicitud){
-        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvOrdenCompraDetalle','ocd')
+    private function validarDetalleEnuso($codigoSolicitudDetalle)
+    {
+        $respuesta = [];
+        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvOrdenCompraDetalle', 'ocd')
             ->select('ocd.codigoOrdenCompraDetallePk')
-            ->join('ocd.ordenCompraRel','oc')
-            ->where("ocd.codigoSolicitudDetalleFk = {$codigoSolicitud}")
+            ->addSelect('ocd.codigoOrdenCompraFk')
+            ->join('ocd.ordenCompraRel', 'oc')
+            ->where("ocd.codigoSolicitudDetalleFk = {$codigoSolicitudDetalle}")
             ->andWhere('oc.estadoAnulado = 0');
         $query = $this->_em->createQuery($qb->getDQL());
         $resultado = $query->execute();
-        dump($resultado);
-        die();
+        if(count($resultado) > 0){
+            foreach ($resultado as $result) {
+                $respuesta[] = 'No se puede anular, el detalle con ID '.$codigoSolicitudDetalle. ' esta siendo utilizado en la orden de compra con ID '.$result['codigoOrdenCompraFk'];
+            }
+        }
+        return $respuesta;
     }
 
 }

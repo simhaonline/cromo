@@ -19,8 +19,6 @@ class InvDocumentoRepository extends ServiceEntityRepository
             ->select('id.codigoDocumentoPk as ID')
             ->addSelect('id.abreviatura')
             ->addSelect('id.nombre')
-            ->addSelect('id.asignarConsecutivoCreacion')
-            ->addSelect('id.asignarConsecutivoImpresion')
             ->addSelect('id.consecutivo');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();

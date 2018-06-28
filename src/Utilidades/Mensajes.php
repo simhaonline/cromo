@@ -1,7 +1,6 @@
 <?php
 
-namespace App\Controller\Estructura;
-
+namespace App\Utilidades;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -10,7 +9,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * Esta clase permite escribir mensajes para el usuario utilizando el sistema de flashbags de symfony.
  * @package App\Util
  */
-final class MensajesController
+final class Mensajes
 {
     const TYPES = [
         'error' => 'danger',
@@ -28,13 +27,13 @@ final class MensajesController
 
     /**
      * Método para obtener la instancia única de mensajería.
-     * @return MensajesController|null
+     * @return Mensajes|null
      */
     private static function getInstance()
     {
         static $instance = null;
         if($instance === null) {
-            $instance = new MensajesController();
+            $instance = new Mensajes();
         }
         return $instance;
     }

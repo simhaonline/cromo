@@ -7,6 +7,7 @@ use App\Entity\Inventario\InvPedidoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use App\Utilidades\Mensajes;
 class InvPedidoDetalleRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -24,8 +25,10 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
                   pd.cantidadPendiente,
                   pd.vrPrecio,
                   pd.porcentajeIva,
+                  pd.vrIva,
                   pd.vrSubtotal,
                   pd.vrNeto,
+                  pd.vrTotal,
                   i.nombre as itemNombre,
                   m.nombre as itemMarcaNombre                         
         FROM App\Entity\Inventario\InvPedidoDetalle pd
@@ -50,11 +53,11 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
                 try {
                     $em->flush();
                 } catch (\Exception $e) {
-                    MensajesController::error('No se puede eliminar, el registro porque se encuentra en uso');
+                    Mensajes::error('No se puede eliminar, el registro porque se encuentra en uso');
                 }
             }
         } else {
-            MensajesController::error('No se puede eliminar, el registro se encuentra autorizado');
+            Mensajes::error('No se puede eliminar, el registro se encuentra autorizado');
         }
     }
 

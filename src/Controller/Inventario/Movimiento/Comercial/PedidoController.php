@@ -2,7 +2,6 @@
 
 namespace App\Controller\Inventario\Movimiento\Comercial;
 
-use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
@@ -106,7 +105,7 @@ class PedidoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository('App:Inventario\Invpedido')->autorizar($arPedido);
+                $em->getRepository(InvPedido::class)->autorizar($arPedido);
                 return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
@@ -130,6 +129,11 @@ class PedidoController extends Controller
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(InvPedidoDetalle::class)->eliminar($arPedido, $arrDetallesSeleccionados);
+                $em->getRepository(InvPedido::class)->liquidar($id);
+                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnActualizarDetalle')->isClicked()) {
+                $em->getRepository(InvPedido::class)->liquidar($id);
                 return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
             }
         }
@@ -259,35 +263,22 @@ class PedidoController extends Controller
         $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-        if ($ar->getEstadoAnulado()) {
+        $arrBtnActualizarDetalle = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        if($ar->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
+            $arrBtnActualizarDetalle['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
-            $arrBtnAprobar['disabled'] = true;
-        } elseif ($ar->getEstadoAprobado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = false;
-            $arrBtnAnular['disabled'] = false;
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnAprobar['disabled'] = true;
-        } elseif ($ar->getEstadoAutorizado()) {
-            $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnAprobar['disabled'] = false;
-        } else {
-            $arrBtnAutorizar['disabled'] = false;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnEliminar['disabled'] = false;
-            $arrBtnAprobar['disabled'] = true;
+            if($ar->getEstadoAprobado()) {
+                $arrBtnDesautorizar['disabled'] = true;
+                if(!$ar->getEstadoAnulado()) {
+                    $arrBtnAnular['disabled'] = false;
+                }
+            } else {
+                $arrBtnAprobar['disabled'] = false;
+            }
         }
+
         return $this
             ->createFormBuilder()
             ->add('btnAutorizar', SubmitType::class, $arrBtnAutorizar)
@@ -296,6 +287,7 @@ class PedidoController extends Controller
             ->add('btnImprimir', SubmitType::class, $arrBtnImprimir)
             ->add('btnAnular', SubmitType::class, $arrBtnAnular)
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
+            ->add('btnActualizarDetalle', SubmitType::class, $arrBtnActualizarDetalle)
             ->getForm();
     }
 

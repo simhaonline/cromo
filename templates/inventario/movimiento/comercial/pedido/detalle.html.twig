@@ -79,8 +79,10 @@
                             <th>MARCA</th>
                             <th>CAN</th>
                             <th>PRECIO</th>
+                            <th>%IVA</th>
                             <th>IVA</th>
                             <th>SUBOTAL</th>
+                            <th>TOTAL</th>
                             <th>PEN</th>
                             <th></th>
                         </tr>
@@ -94,7 +96,9 @@
                                 <td class="numero">{{ arPedidoDetalle.cantidad }}</td>
                                 <td class="numero">{{ arPedidoDetalle.vrPrecio }}</td>
                                 <td class="numero">{{ arPedidoDetalle.porcentajeIva }}</td>
+                                <td class="numero">{{ arPedidoDetalle.vrIva }}</td>
                                 <td class="numero">{{ arPedidoDetalle.vrSubtotal }}</td>
+                                <td class="numero">{{ arPedidoDetalle.vrTotal }}</td>
                                 <td class="numero">{{ arPedidoDetalle.cantidadPendiente }}</td>
                                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk }}" /></td>
                             </tr>
@@ -110,6 +114,9 @@
                         {% else %}
                             <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inv_mto_comercial_pedido_detalle_nuevo', {'codigoDetalle': 0,'id':arPedido.codigoPedidoPk }) }}', 'PedidoAdicionarDetalle', 600, 900)">Nuevo</a>
                         {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnActualizarDetalle) }}
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnEliminar) }}

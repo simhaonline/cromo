@@ -8,6 +8,7 @@ use App\Entity\Inventario\InvPedidoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use App\Utilidades\Mensajes;
 class InvPedidoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -39,15 +40,88 @@ class InvPedidoRepository extends ServiceEntityRepository
 
     public function liquidar($codigoPedido): bool
     {
+        $arPedido = $this->getEntityManager()->getRepository(InvPedido::class)->find($codigoPedido);
         $arPedidoDetalles = $this->getEntityManager()->getRepository(InvPedidoDetalle::class)->findBy(array('codigoPedidoFk' => $codigoPedido));
+        $subtotalGeneral = 0;
+        $ivaGeneral = 0;
+        $totalGeneral = 0;
         foreach ($arPedidoDetalles as $arPedidoDetalle) {
             $arPedidoDetalleAct = $this->getEntityManager()->getRepository(InvPedidoDetalle::class)->find($arPedidoDetalle->getCodigoPedidoDetallePk());
             $subtotal = $arPedidoDetalle->getCantidad() * $arPedidoDetalle->getVrPrecio();
+            $porcentajeIva = $arPedidoDetalle->getPorcentajeIva();
+            $iva = $subtotal * $porcentajeIva / 100;
+            $subtotalGeneral += $subtotal;
+            $ivaGeneral += $iva;
+            $total = $subtotal + $iva;
+            $totalGeneral += $total;
             $arPedidoDetalleAct->setVrSubtotal($subtotal);
+            $arPedidoDetalleAct->setVrIva($iva);
+            $arPedidoDetalleAct->setVrTotal($total);
             $this->getEntityManager()->persist($arPedidoDetalleAct);
         }
+        $arPedido->setVrSubtotal($subtotalGeneral);
+        $arPedido->setVrIva($ivaGeneral);
+        $arPedido->setVrTotal($totalGeneral);
+        $this->getEntityManager()->persist($arPedido);
         $this->getEntityManager()->flush();
         return true;
     }
 
+
+    public function autorizar($arPedido)
+    {
+        if(!$arPedido->getEstadoAutorizado()) {
+            $registros = $this->getEntityManager()->createQueryBuilder()->from(InvPedidoDetalle::class,'pd')
+                ->select('COUNT(pd.codigoPedidoDetallePk) AS registros')
+                ->where('pd.codigoPedidoFk = ' . $arPedido->getCodigoPedidoPk())
+                ->getQuery()->getSingleResult();
+            if($registros['registros'] > 0) {
+                $arPedido->setEstadoAutorizado(1);
+                $this->getEntityManager()->persist($arPedido);
+                $this->getEntityManager()->flush();
+            } else {
+                Mensajes::error("El registro no tiene detalles");
+            }
+        } else {
+            Mensajes::error('El documento ya esta autorizado');
+        }
+    }
+
+    public function desautorizar($arPedido)
+    {
+        if($arPedido->getEstadoAutorizado()) {
+                $arPedido->setEstadoAutorizado(0);
+                $this->getEntityManager()->persist($arPedido);
+                $this->getEntityManager()->flush();
+
+        } else {
+            Mensajes::error('El documento no esta autorizado');
+        }
+    }
+
+    public function aprobar($arPedido)
+    {
+        if($arPedido->getEstadoAutorizado() == 1 && $arPedido->getEstadoAprobado() == 0) {
+            $arPedido->setEstadoAprobado(1);
+            $this->getEntityManager()->persist($arPedido);
+            $this->getEntityManager()->flush();
+
+        } else {
+            Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
+        }
+    }
+    public function anular($arPedido)
+    {
+        if($arPedido->getEstadoAprobado() == 1 && $arPedido->getEstadoAnulado() == 0) {
+            $arPedido->setEstadoAnulado(1);
+            $arPedido->setVrSubtotal(0);
+            $arPedido->setVrIva(0);
+            $arPedido->setVrTotal(0);
+            $this->getEntityManager()->persist($arPedido);
+            $this->getEntityManager()->flush();
+
+        } else {
+            Mensajes::error('El documento debe estar aprobado y no puede estar previamente anulado');
+        }
+    }
 }

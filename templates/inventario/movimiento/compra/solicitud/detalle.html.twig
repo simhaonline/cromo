@@ -62,6 +62,7 @@
                             <th>ID</th>
                             <th>ITEM</th>
                             <th>CANTIDAD</th>
+                            <th>CANTIDAD PENDIENTE</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -70,8 +71,9 @@
                             <tr>
                                 <td>{{ arSolicitudDetalle.codigoSolicitudDetallePk }}</td>
                                 <td>{{ arSolicitudDetalle.itemRel.nombre | default('') }}</td>
-                                <td>{{ arSolicitudDetalle.cantidadSolicitada }}</td>
-                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arSolicitudDetalle.codigoSolicitudDetallePk }}" /></td>
+                                <td style="text-align: right;">{{ arSolicitudDetalle.cantidad }}</td>
+                                <td style="text-align: right;">{{ arSolicitudDetalle.cantidadPendiente}}</td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arSolicitudDetalle.codigoSolicitudDetallePk }}" /></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -83,7 +85,7 @@
                         {% if arSolicitud.estadoAutorizado == true %}
                             <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled" value="Nuevo"/>
                         {% else %}
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inv_mov_inventario_solicitud_detalle_nuevo', {'codigoDetalle': 0,'id':arSolicitud.codigoSolicitudPk }) }}', 'SolicitudAdicionarDetalle', 600, 900)">Nuevo</a>
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inv_mto_inventario_solicitud_detalle_nuevo', {'codigoDetalle': 0,'id':arSolicitud.codigoSolicitudPk }) }}', 'SolicitudAdicionarDetalle', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">
@@ -94,5 +96,5 @@
         </div>
     </div>
     {{ form_end(form) }}
-    <a  class="btn btn-default btn-sm" href="{{ path('admin_lista',{'modulo':'inventario','entidad':'solicitud'}) }}">Volver</a>
+    <a  class="btn btn-default btn-sm" href="{{ path('inv_mto_inventario_solicitud_lista') }}">Volver</a>
 {% endblock %}

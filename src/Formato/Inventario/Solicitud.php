@@ -36,7 +36,10 @@ class Solicitud extends \FPDF
         $this->SetFont('Arial', 'B', 10);
         //Logo
         $this->SetXY(53, 10);
-        $this->Image('../assets/img/empresa/logo.jpeg', 12, 13, 40, 25);
+        try{
+            $this->Image('../public/assets/img/empresa/logo.jpeg', 12, 13, 40, 25);
+        } catch (\Exception $exception){
+        }
         //INFORMACIÓN EMPRESA
         $this->Cell(147, 7, utf8_decode("SOLICITUD"), 0, 0, 'C', 1);
         $this->SetXY(53, 18);
@@ -144,7 +147,7 @@ class Solicitud extends \FPDF
         foreach ($arSolicitudDetalles as $arSolicitudDetalle) {
             $pdf->Cell(15, 4, $arSolicitudDetalle->getCodigoSolicitudDetallePk(), 1, 0, 'L');
             $pdf->Cell(160, 4, utf8_decode($arSolicitudDetalle->getItemRel()->getNombre()), 1, 0, 'L');
-            $pdf->Cell(15, 4, $arSolicitudDetalle->getCantidadSolicitada(), 1, 0, 'C');
+            $pdf->Cell(15, 4, $arSolicitudDetalle->getCantidad(), 1, 0, 'C');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

@@ -32,8 +32,30 @@ class InvSolicitudRepository extends ServiceEntityRepository
         return $dql->execute();
     }
 
+    public function listaSolicitud($numero = '', $estadoAprobado = ''){
+        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvSolicitud','i')
+            ->select('i.codigoSolicitudPk')
+            ->join('i.solicitudTipoRel','it')
+            ->addSelect('i.nombre')
+            ->addSelect('i.numero')
+            ->addSelect('it.nombre as nombreTipo')
+            ->addSelect('i.fecha')
+            ->addSelect('i.estadoAutorizado')
+            ->addSelect('i.estadoAprobado')
+            ->addSelect('i.estadoAnulado');
+        if($numero != ''){
+            $qb->addSelect("i.numero ={$numero}");
+        }
+        if($estadoAprobado != ''){
+            $qb->addSelect("i.estadoAprobado = 1");
+        }
+        $query = $this->getEntityManager()->createQuery($qb->getDQL());
+        return $query->execute();
+    }
+
     /**
-     * @param $arrSeleccionados array
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
      */
     public function eliminar($arrSeleccionados)
     {
@@ -43,12 +65,12 @@ class InvSolicitudRepository extends ServiceEntityRepository
         $respuesta = '';
         if (count($arrSeleccionados) > 0) {
             foreach ($arrSeleccionados as $codigoSolicitud) {
-                $arSolicitud = $this->_em->getRepository($this->_entityName)->find($codigoSolicitud);
+                $arSolicitud = $this->getEntityManager()->getRepository($this->_entityName)->find($codigoSolicitud);
                 if ($arSolicitud) {
                     if ($arSolicitud->getEstadoAprobado() == 0) {
                         if ($arSolicitud->getEstadoAutorizado() == 0) {
-                            if (count($this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()])) <= 0) {
-                                $this->_em->remove($arSolicitud);
+                            if (count($this->getEntityManager()->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()])) <= 0) {
+                                $this->getEntityManager()->remove($arSolicitud);
                             } else {
                                 $respuesta = 'No se puede eliminar, el registro tiene detalles';
                             }
@@ -69,21 +91,21 @@ class InvSolicitudRepository extends ServiceEntityRepository
      */
     public function aprobar($arSolicitud)
     {
-        $arSolicitudTipo = $this->_em->getRepository('App:Inventario\InvSolicitudTipo')->findOneBy(['codigoSolicitudTipoPk' => $arSolicitud->getCodigoSolicitudTipoFk()]);
+        $arSolicitudTipo = $this->getEntityManager()->getRepository('App:Inventario\InvSolicitudTipo')->findOneBy(['codigoSolicitudTipoPk' => $arSolicitud->getCodigoSolicitudTipoFk()]);
         if (!$arSolicitud->getEstadoAprobado()) {
             $arSolicitudTipo->setConsecutivo($arSolicitudTipo->getConsecutivo() + 1);
             $arSolicitud->setEstadoAprobado(1);
             $arSolicitud->setNumero($arSolicitudTipo->getConsecutivo());
-            $this->_em->persist($arSolicitudTipo);
-            $this->_em->persist($arSolicitud);
+            $this->getEntityManager()->persist($arSolicitudTipo);
+            $this->getEntityManager()->persist($arSolicitud);
         }
-        $arSolicitudDetalles = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
+        $arSolicitudDetalles = $this->getEntityManager()->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
         foreach ($arSolicitudDetalles as $arSolicitudDetalle) {
-            $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arSolicitudDetalle->getCodigoItemFk()]);
-            $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() + $arSolicitudDetalle->getCantidadSolicitada());
-            $this->_em->persist($arItem);
+            $arItem = $this->getEntityManager()->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arSolicitudDetalle->getCodigoItemFk()]);
+            $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() + $arSolicitudDetalle->getCantidad());
+            $this->getEntityManager()->persist($arItem);
         }
-        $this->_em->flush();
+        $this->getEntityManager()->flush();
     }
 
     /**
@@ -95,18 +117,18 @@ class InvSolicitudRepository extends ServiceEntityRepository
         $respuesta = [];
         if ($arSolicitud->getEstadoAprobado() == 1) {
             $arSolicitud->setEstadoAnulado(1);
-            $this->_em->persist($arSolicitud);
+            $this->getEntityManager()->persist($arSolicitud);
         }
-        $arSolicitudDetalles = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
+        $arSolicitudDetalles = $this->getEntityManager()->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
 
         foreach ($arSolicitudDetalles as $arSolicitudDetalle) {
             $respuesta = $this->validarDetalleEnuso($arSolicitudDetalle->getCodigoSolicitudDetallePk());
-            $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arSolicitudDetalle->getCodigoItemFk()]);
-            $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() - $arSolicitudDetalle->getCantidadSolicitada());
-            $this->_em->persist($arItem);
+            $arItem = $this->getEntityManager()->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arSolicitudDetalle->getCodigoItemFk()]);
+            $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() - $arSolicitudDetalle->getCantidad());
+            $this->getEntityManager()->persist($arItem);
         }
         if (count($respuesta) == 0) {
-            $this->_em->flush();
+            $this->getEntityManager()->flush();
         }
         return $respuesta;
     }
@@ -118,8 +140,8 @@ class InvSolicitudRepository extends ServiceEntityRepository
     {
         if ($arSolicitud->getEstadoAutorizado() == 1 && $arSolicitud->getEstadoAprobado() == 0) {
             $arSolicitud->setEstadoAutorizado(0);
-            $this->_em->persist($arSolicitud);
-            $this->_em->flush();
+            $this->getEntityManager()->persist($arSolicitud);
+            $this->getEntityManager()->flush();
         } else {
             MensajesController::error('El registro esta impreso y no se puede desautorizar');
         }
@@ -130,10 +152,10 @@ class InvSolicitudRepository extends ServiceEntityRepository
      */
     public function autorizar($arSolicitud)
     {
-        if (count($this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()])) > 0) {
+        if (count($this->getEntityManager()->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()])) > 0) {
             $arSolicitud->setEstadoAutorizado(1);
-            $this->_em->persist($arSolicitud);
-            $this->_em->flush();
+            $this->getEntityManager()->persist($arSolicitud);
+            $this->getEntityManager()->flush();
         } else {
             MensajesController::error('No se puede autorizar, el registro no tiene detalles');
         }
@@ -142,13 +164,13 @@ class InvSolicitudRepository extends ServiceEntityRepository
     private function validarDetalleEnuso($codigoSolicitudDetalle)
     {
         $respuesta = [];
-        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvOrdenCompraDetalle', 'ocd')
+        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvOrdenCompraDetalle', 'ocd')
             ->select('ocd.codigoOrdenCompraDetallePk')
             ->addSelect('ocd.codigoOrdenCompraFk')
             ->join('ocd.ordenCompraRel', 'oc')
             ->where("ocd.codigoSolicitudDetalleFk = {$codigoSolicitudDetalle}")
             ->andWhere('oc.estadoAnulado = 0');
-        $query = $this->_em->createQuery($qb->getDQL());
+        $query = $this->getEntityManager()->createQuery($qb->getDQL());
         $resultado = $query->execute();
         if(count($resultado) > 0){
             foreach ($resultado as $result) {

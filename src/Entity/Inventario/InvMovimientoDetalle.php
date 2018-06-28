@@ -53,14 +53,14 @@ class InvMovimientoDetalle
     private $cantidad = 0;
 
     /**
-     * @ORM\Column(name="por_iva", type="float", nullable=true)
+     * @ORM\Column(name="porcentaje_iva", type="float", nullable=true)
      */
-    private $porIva = 0;
+    private $porcentajeIva = 0;
 
     /**
-     * @ORM\Column(name="por_descuento", type="float", nullable=true)
+     * @ORM\Column(name="porcentaje_descuento", type="float", nullable=true)
      */
-    private $porDescuento = 0;
+    private $porcentajeDescuento = 0;
 
     /**
      * @ORM\Column(name="vr_iva", type="float", nullable=true)
@@ -68,9 +68,9 @@ class InvMovimientoDetalle
     private $vrIva = 0;
 
     /**
-     * @ORM\Column(name="vr_unitario", type="float")
+     * @ORM\Column(name="vr_precio", type="float")
      */
-    private $vrUnitario = 0;
+    private $vrPrecio = 0;
 
     /**
      * @ORM\Column(name="vr_subtotal", type="float")
@@ -241,33 +241,33 @@ class InvMovimientoDetalle
     /**
      * @return mixed
      */
-    public function getPorIva()
+    public function getPorcentajeIva()
     {
-        return $this->porIva;
+        return $this->porcentajeIva;
     }
 
     /**
-     * @param mixed $porIva
+     * @param mixed $porcentajeIva
      */
-    public function setPorIva($porIva): void
+    public function setPorcentajeIva($porcentajeIva): void
     {
-        $this->porIva = $porIva;
+        $this->porcentajeIva = $porcentajeIva;
     }
 
     /**
      * @return mixed
      */
-    public function getPorDescuento()
+    public function getPorcentajeDescuento()
     {
-        return $this->porDescuento;
+        return $this->porcentajeDescuento;
     }
 
     /**
-     * @param mixed $porDescuento
+     * @param mixed $porcentajeDescuento
      */
-    public function setPorDescuento($porDescuento): void
+    public function setPorcentajeDescuento($porcentajeDescuento): void
     {
-        $this->porDescuento = $porDescuento;
+        $this->porcentajeDescuento = $porcentajeDescuento;
     }
 
     /**
@@ -289,17 +289,17 @@ class InvMovimientoDetalle
     /**
      * @return mixed
      */
-    public function getVrUnitario()
+    public function getVrPrecio()
     {
-        return $this->vrUnitario;
+        return $this->vrPrecio;
     }
 
     /**
-     * @param mixed $vrUnitario
+     * @param mixed $vrPrecio
      */
-    public function setVrUnitario($vrUnitario): void
+    public function setVrPrecio($vrPrecio): void
     {
-        $this->vrUnitario = $vrUnitario;
+        $this->vrPrecio = $vrPrecio;
     }
 
     /**

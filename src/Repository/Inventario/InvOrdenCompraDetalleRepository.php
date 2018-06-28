@@ -71,7 +71,7 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
             ->join('iocd.ordenCompraRel', 'oc')
             ->addSelect('it.nombre')
             ->addSelect('it.cantidadExistencia')
-            ->addSelect('iocd.cantidadSolicitada')
+            ->addSelect('iocd.cantidad')
             ->addSelect('iocd.cantidadPendiente')
             ->addSelect('it.stockMinimo')
             ->addSelect('it.stockMaximo')

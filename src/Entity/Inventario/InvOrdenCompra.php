@@ -50,6 +50,11 @@ class InvOrdenCompra
     private $vrSubtotal = 0;
 
     /**
+     * @ORM\Column(name="vr_descuento", type="float")
+     */
+    private $vrDescuento = 0;
+
+    /**
      * @ORM\Column(name="vr_iva", type="float")
      */
     private $vrIva = 0;
@@ -231,6 +236,22 @@ class InvOrdenCompra
     public function setVrSubtotal($vrSubtotal): void
     {
         $this->vrSubtotal = $vrSubtotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuento()
+    {
+        return $this->vrDescuento;
+    }
+
+    /**
+     * @param mixed $vrDescuento
+     */
+    public function setVrDescuento($vrDescuento): void
+    {
+        $this->vrDescuento = $vrDescuento;
     }
 
     /**

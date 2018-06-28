@@ -68,7 +68,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $arMovimientoDetalle->setPorIva($porIva);
                 $arMovimientoDetalle->setCodigoBodegaFk($arBodega->getCodigoBodegaPk());
                 $arMovimientoDetalle->setCantidad($cantidad);
-                $arMovimientoDetalle->setVrUnitario($vrUnitario);
+                $arMovimientoDetalle->setVrPrecio($vrUnitario);
                 $arMovimientoDetalle->setVrSubtotal($vrSubtotal);
                 $arMovimientoDetalle->setVrDescuento($vrDescuento);
                 $arMovimientoDetalle->setVrIva($vrIva);

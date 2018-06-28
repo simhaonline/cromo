@@ -49,9 +49,9 @@
                     <td style="text-align: right;">{{ arOrdenCompraDetalle.cantidadExistencia }}</td>
                     <td style="text-align: right;">{{ arOrdenCompraDetalle.stockMinimo }}</td>
                     <td style="text-align: right;">{{ arOrdenCompraDetalle.stockMaximo }}</td>
-                    <td style="text-align: right;">{{ arOrdenCompraDetalle.cantidadSolicitada }}</td>
+                    <td style="text-align: right;">{{ arOrdenCompraDetalle.cantidad }}</td>
                     <td style="text-align: right;">{{ arOrdenCompraDetalle.cantidadPendiente }}</td>
-                    <td style="text-align: center;"><input type="number" name="itemCantidad[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]" style="text-align: right;" value="{{ arOrdenCompraDetalle.cantidadSolicitada }}"></td>
+                    <td style="text-align: center;"><input type="number" name="itemCantidad[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]" style="text-align: right;" value="{{ arOrdenCompraDetalle.cantidad }}"></td>
                 </tr>
             {% endfor %}
             </tbody>

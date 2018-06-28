@@ -28,9 +28,9 @@ class InvSolicitudDetalle
     private $codigoItemFk;
 
     /**
-     * @ORM\Column(name="cantidad_solicitada",options={"default" : 0}, type="integer")
+     * @ORM\Column(name="cantidad",options={"default" : 0}, type="integer")
      */
-    private $cantidadSolicitada = 0;
+    private $cantidad = 0;
 
     /**
      * @ORM\Column(name="cantidad_pendiente",options={"default" : 0}, type="integer", nullable=true)
@@ -105,17 +105,17 @@ class InvSolicitudDetalle
     /**
      * @return mixed
      */
-    public function getCantidadSolicitada()
+    public function getCantidad()
     {
-        return $this->cantidadSolicitada;
+        return $this->cantidad;
     }
 
     /**
-     * @param mixed $cantidadSolicitada
+     * @param mixed $cantidad
      */
-    public function setCantidadSolicitada($cantidadSolicitada): void
+    public function setCantidad($cantidad): void
     {
-        $this->cantidadSolicitada = $cantidadSolicitada;
+        $this->cantidad = $cantidad;
     }
 
     /**

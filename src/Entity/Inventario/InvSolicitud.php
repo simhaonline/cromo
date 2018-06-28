@@ -58,6 +58,15 @@ class InvSolicitud
     private $numero = 0;
 
     /**
+     * @ORM\Column(name="nombre", type="string",length=20, nullable=true)
+     * @Assert\Length(
+     *     max = 20,
+     *     maxMessage="El campo no puede contener mas de 20 caracteres"
+     * )
+     */
+    private $nombre;
+
+    /**
      * @ORM\Column(name="comentarios", type="string", length=500, nullable=true)
      * @Assert\Length(
      *     max=500,
@@ -147,6 +156,22 @@ class InvSolicitud
     public function setSoporte($soporte): void
     {
         $this->soporte = $soporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Compra;
 
-use App\Controller\Estructura\MensajesController;
+use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvOrdenCompra;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
 use App\Formato\Inventario\OrdenCompra;
@@ -19,7 +19,7 @@ class OrdenCompraController extends Controller
     var $query = '';
 
     /**
-     * @Route("/inv/mto/inventario/ordencompra/detalle/{id}", name="inv_mto_inventario_ordenCompra_detalle")
+     * @Route("/inv/mto/inventario/ordencompra/detalle/{id}", name="inventario_movimiento_inventario_ordenCompra_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -38,19 +38,19 @@ class OrdenCompraController extends Controller
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository('App:Inventario\InvOrdenCompra')->actualizar($arOrdenCompra, $arrValor, $arrCantidad, $arrIva, $arrDescuento);
                 $em->getRepository('App:Inventario\InvOrdenCompra')->autorizar($arOrdenCompra);
-                return $this->redirect($this->generateUrl('inv_mto_inventario_ordenCompra_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository('App:Inventario\InvOrdenCompra')->desautorizar($arOrdenCompra);
-                return $this->redirect($this->generateUrl('inv_mto_inventario_ordenCompra_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository('App:Inventario\InvOrdenCompra')->aprobar($arOrdenCompra);
-                return $this->redirect($this->generateUrl('inv_mto_inventario_ordenCompra_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if  ($form->get('btnActualizar')->isClicked()){
                 $em->getRepository('App:Inventario\InvOrdenCompra')->actualizar($arOrdenCompra, $arrValor, $arrCantidad, $arrIva, $arrDescuento);
-                return $this->redirect($this->generateUrl('inv_mto_inventario_ordenCompra_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 $objFormatoOrdenCompra->Generar($em, $id);
@@ -59,15 +59,15 @@ class OrdenCompraController extends Controller
                 $respuesta = $em->getRepository('App:Inventario\InvOrdenCompra')->anular($arOrdenCompra);
                 if(count($respuesta) > 0){
                     foreach ($respuesta as $error){
-                        MensajesController::error($error);
+                        Mensajeserror($error);
                     }
                 }
-                return $this->redirect($this->generateUrl('inv_mto_inventario_ordenCompra_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository('App:Inventario\InvOrdenCompraDetalle')->eliminar($arOrdenCompra, $arrDetallesSeleccionados);
-                return $this->redirect($this->generateUrl('inv_mto_inventario_ordenCompra_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $id]));
             }
         }
         return $this->render('inventario/movimiento/compra/ordenCompra/detalle.html.twig', [
@@ -78,7 +78,7 @@ class OrdenCompraController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/inventario/ordencompra/detalle/nuevo/{id}", name="inv_mto_inventario_ordenCompra_detalle_nuevo")
+     * @Route("/inv/mto/inventario/ordencompra/detalle/nuevo/{id}", name="inventario_movimiento_inventario_ordenCompra_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id)
     {
@@ -130,7 +130,7 @@ class OrdenCompraController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/inventario/ordencompra/solicitud/detalle/nuevo/{id}", name="inv_mto_inventario_ordenCompra_solicitud_detalle_nuevo")
+     * @Route("/inv/mto/inventario/ordencompra/solicitud/detalle/nuevo/{id}", name="inventario_movimiento_inventario_ordenCompra_solicitud_detalle_nuevo")
      */
     public function detalleNuevoSolicitud(Request $request, $id)
     {
@@ -166,7 +166,7 @@ class OrdenCompraController extends Controller
                             }
                         }
                         if ($respuesta != '') {
-                            MensajesController::error($respuesta);
+                            Mensajeserror($respuesta);
                         } else {
                             $em->flush();
                             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

@@ -2,7 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Inventario;
 
-use App\Controller\Estructura\MensajesController;
+use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Form\Type\Inventario\MovimientoType;
@@ -23,7 +23,7 @@ class MovimientoController extends Controller
      * @param Request $request
      * @param $tipoDocumento
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/inv/mto/inventario/movimiento/lista/documentos/{tipoDocumento}", name="inv_mto_inventario_movimiento_documentos_lista")
+     * @Route("/inv/mto/inventario/movimiento/lista/documentos/{tipoDocumento}", name="inventario_movimiento_inventario_movimiento_documentos_lista")
      */
     public function listaDocumentos(Request $request, $tipoDocumento)
     {
@@ -40,7 +40,7 @@ class MovimientoController extends Controller
      * @param $codigoDocumento
      * @param $tipoDocumento
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/inv/mto/inventario/movimiento/lista/movimientos/{tipoDocumento}/{codigoDocumento}", name="inv_mto_inventario_movimiento_lista")
+     * @Route("/inv/mto/inventario/movimiento/lista/movimientos/{tipoDocumento}/{codigoDocumento}", name="inventario_movimiento_inventario_movimiento_lista")
      */
     public function listaMovimientos(Request $request, $codigoDocumento, $tipoDocumento)
     {
@@ -58,7 +58,7 @@ class MovimientoController extends Controller
      * @param $codigoDocumento
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/inv/mto/inventario/movimiento/nuevo/{codigoDocumento}/{id}", name="inv_mto_inventario_movimiento_nuevo")
+     * @Route("/inv/mto/inventario/movimiento/nuevo/{codigoDocumento}/{id}", name="inventario_movimiento_inventario_movimiento_nuevo")
      */
     public function nuevo(Request $request, $codigoDocumento, $id)
     {
@@ -67,7 +67,7 @@ class MovimientoController extends Controller
         if ($id != 0) {
             $arMovimiento = $em->getRepository('App:Inventario\InvMovimiento')->find($id);
             if (!$arMovimiento) {
-                return $this->redirect($this->generateUrl('inv_mto_inventario_movimiento_lista', ['codigoDocumento' => $codigoDocumento]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_lista', ['codigoDocumento' => $codigoDocumento]));
             }
         }
         $arMovimiento->setFecha(new \DateTime('now'));
@@ -81,12 +81,12 @@ class MovimientoController extends Controller
                 $arMovimiento->setFecha(new \DateTime('now'));
                 $em->persist($arMovimiento);
                 $em->flush();
-                return $this->redirect($this->generateUrl('inv_mto_inventario_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));
             }
             if ($form->get('guardarnuevo')->isClicked()) {
                 $em->persist($arMovimiento);
                 $em->flush();
-                return $this->redirect($this->generateUrl('inv_mto_inventario_movimiento_nuevo', ['id' => 0]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_nuevo', ['id' => 0]));
             }
         }
         return $this->render('inventario/movimiento/inventario/nuevo.html.twig', [
@@ -97,7 +97,7 @@ class MovimientoController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/inventario/movimiento/detalle/{id}", name="inv_mto_inventario_movimiento_detalle")
+     * @Route("/inv/mto/inventario/movimiento/detalle/{id}", name="inventario_movimiento_inventario_movimiento_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -120,7 +120,7 @@ class MovimientoController extends Controller
                 if ($respuesta == '') {
                     $em->getRepository('App:Inventario\InvMovimiento')->autorizar($arMovimiento);
                 } else {
-                    MensajesController::error($respuesta);
+                    Mensajeserror($respuesta);
                 }
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
@@ -139,14 +139,14 @@ class MovimientoController extends Controller
                 $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->aprobar($arMovimiento);
                 if ($respuesta != '') {
                     foreach ($respuesta as $respuesta){
-                        MensajesController::error($respuesta);
+                        Mensajeserror($respuesta);
                     }
                 }
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva, $arrBodega, $arrLote);
                 if ($respuesta != '') {
-                    MensajesController::error($respuesta);
+                    Mensajeserror($respuesta);
                 }
             }
             if ($form->get('btnAnular')->isClicked()) {
@@ -156,7 +156,7 @@ class MovimientoController extends Controller
                 $em->getRepository('App:Inventario\InvMovimientoDetalle')->eliminar($arMovimiento, $arrDetallesSeleccionados);
                 $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva, $arrBodega, $arrLote);
             }
-            return $this->redirect($this->generateUrl('inv_mto_inventario_movimiento_detalle', ['id' => $id]));
+            return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $id]));
         }
         return $this->render('inventario/movimiento/inventario/detalle.html.twig', [
             'form' => $form->createView(),
@@ -166,7 +166,7 @@ class MovimientoController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/inventario/movimiento/detalle/nuevo/{id}", name="inv_mto_inventario_movimiento_detalle_nuevo")
+     * @Route("/inv/mto/inventario/movimiento/detalle/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id)
     {
@@ -206,7 +206,7 @@ class MovimientoController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/inventario/movimiento/detalle/ordencompra/nuevo/{id}", name="inv_mto_inventario_movimiento_ordencompra_detalle_nuevo")
+     * @Route("/inv/mto/inventario/movimiento/detalle/ordencompra/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_ordencompra_detalle_nuevo")
      */
     public function detalleNuevoOrdenCompra(Request $request, $id)
     {
@@ -245,7 +245,7 @@ class MovimientoController extends Controller
                             }
                         }
                         if ($respuesta != '') {
-                            MensajesController::error($respuesta);
+                            Mensajeserror($respuesta);
                         } else {
                             $em->flush();
                             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

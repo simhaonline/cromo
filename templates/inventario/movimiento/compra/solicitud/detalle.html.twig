@@ -85,7 +85,7 @@
                         {% if arSolicitud.estadoAutorizado == true %}
                             <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled" value="Nuevo"/>
                         {% else %}
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inv_mto_inventario_solicitud_detalle_nuevo', {'codigoDetalle': 0,'id':arSolicitud.codigoSolicitudPk }) }}', 'SolicitudAdicionarDetalle', 600, 900)">Nuevo</a>
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_solicitud_detalle_nuevo', {'codigoDetalle': 0,'id':arSolicitud.codigoSolicitudPk }) }}', 'SolicitudAdicionarDetalle', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">
@@ -96,5 +96,5 @@
         </div>
     </div>
     {{ form_end(form) }}
-    <a  class="btn btn-default btn-sm" href="{{ path('inv_mto_inventario_solicitud_lista') }}">Volver</a>
+    <a  class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_inventario_solicitud_lista') }}">Volver</a>
 {% endblock %}

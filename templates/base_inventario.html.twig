@@ -92,13 +92,13 @@
                                 <a href="#">Inventario <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li>
-                                        <a href="{{ path('inv_mto_inventario_movimiento_documentos_lista',{'tipoDocumento':'ENT'}) }}">Entrada</a>
+                                        <a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'ENT'}) }}">Entrada</a>
                                     </li>
                                     <li>
-                                        <a href="{{ path('inv_mto_inventario_movimiento_documentos_lista',{'tipoDocumento':'SAL'}) }}">Salida</a>
+                                        <a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'SAL'}) }}">Salida</a>
                                     </li>
                                     <li>
-                                        <a href="{{ path('inv_mto_inventario_movimiento_documentos_lista',{'tipoDocumento':'FAC'}) }}">Factura</a>
+                                        <a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'FAC'}) }}">Factura</a>
                                     </li>
                                 </ul>
                             </li>
@@ -106,7 +106,7 @@
                                 <a href="#">Compra <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li>
-                                        <a href="{{ path('inv_mto_inventario_solicitud_lista') }}">Solicitud</a>
+                                        <a href="{{ path('inventario_movimiento_inventario_solicitud_lista') }}">Solicitud</a>
                                     </li>
                                     <li>
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'ordenCompra'}) }}">Orden
@@ -118,7 +118,7 @@
                                 <a href="#">Comercial <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li>
-                                    <li><a href="{{ path('inv_mto_comercial_pedido_lista') }}">Pedido</a></li>
+                                    <li><a href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Pedido</a></li>
                                     </li>
                                 </ul>
                             </li>

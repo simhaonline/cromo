@@ -2,18 +2,17 @@
 
 namespace App\Controller\Inventario\Movimiento\Compra;
 
-use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Formato\Inventario\Solicitud;
+use App\Utilidades\Mensajes;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,16 +24,23 @@ class SolicitudController extends Controller
     var $query = '';
 
     /**
-     * @Route("/inv/mto/inventario/solicitud/lista", name="inv_mto_inventario_solicitud_lista")
+     * @Route("/inv/mto/inventario/solicitud/lista", name="inventario_movimiento_inventario_solicitud_lista")
      */
-    public function lista(Request $request){
+    public function lista(Request $request)
+    {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $form = $this->formularioLista($session);
         $form->handleRequest($request);
         $this->listarSolicitudes($session);
-        $arSolicitudes = $paginator->paginate($this->query, $request->query->getInt('page', 1),10);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $this->filtrarSolicitudes($session, $form);
+                $this->listarSolicitudes($session);
+            }
+        }
+        $arSolicitudes = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/compra/solicitud/lista.html.twig', [
             'form' => $form->createView(),
             'arSolicitudes' => $arSolicitudes
@@ -42,7 +48,7 @@ class SolicitudController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/inventario/solicitud/nuevo/{id}", name="inv_mto_inventario_solicitud_nuevo")
+     * @Route("/inv/mto/inventario/solicitud/nuevo/{id}", name="inventario_movimiento_inventario_solicitud_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -51,7 +57,7 @@ class SolicitudController extends Controller
         if ($id != 0) {
             $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
             if (!$arSolicitud) {
-                return $this->redirect($this->generateUrl('admin_lista',['modulo' =>'inventario','entidad' => 'solicitud']));
+                return $this->redirect($this->generateUrl('admin_lista', ['modulo' => 'inventario', 'entidad' => 'solicitud']));
             }
         }
         $arSolicitud->setFecha(new \DateTime('now'));
@@ -63,12 +69,12 @@ class SolicitudController extends Controller
                 $arSolicitud->setFecha(new \DateTime('now'));
                 $em->persist($arSolicitud);
                 $em->flush($arSolicitud);
-                return $this->redirect($this->generateUrl('inv_mto_inventario_solicitud_detalle', ['id' => $arSolicitud->getCodigoSolicitudPk()]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_solicitud_detalle', ['id' => $arSolicitud->getCodigoSolicitudPk()]));
             }
             if ($form->get('guardarnuevo')->isClicked()) {
                 $em->persist($arSolicitud);
                 $em->flush($arSolicitud);
-                return $this->redirect($this->generateUrl('inv_mto_inventario_solicitud_detalle', ['id' => 0]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_solicitud_detalle', ['id' => 0]));
             }
         }
         return $this->render('inventario/movimiento/compra/solicitud/nuevo.html.twig', [
@@ -77,7 +83,7 @@ class SolicitudController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/inventario/solicitud/detalle/{id}", name="inv_mto_inventario_solicitud_detalle")
+     * @Route("/inv/mto/inventario/solicitud/detalle/{id}", name="inventario_movimiento_inventario_solicitud_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -90,32 +96,32 @@ class SolicitudController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository('App:Inventario\InvSolicitud')->autorizar($arSolicitud);
-                return $this->redirect($this->generateUrl('inv_mto_inventario_solicitud_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_solicitud_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository('App:Inventario\InvSolicitud')->desautorizar($arSolicitud);
-                return $this->redirect($this->generateUrl('inv_mto_inventario_solicitud_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_solicitud_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 $objFormatoSolicitud->Generar($em, $id);
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository('App:Inventario\InvSolicitud')->aprobar($arSolicitud);
-                return $this->redirect($this->generateUrl('inv_mto_inventario_solicitud_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_solicitud_detalle', ['id' => $id]));
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\InvSolicitud')->anular($arSolicitud);
-                if(count($respuesta) > 0){
-                    foreach ($respuesta as $error){
-                        MensajesController::error($error);
+                if (count($respuesta) > 0) {
+                    foreach ($respuesta as $error) {
+                        Mensajes::error($error);
                     }
                 }
-                return $this->redirect($this->generateUrl('inv_mto_inventario_solicitud_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_solicitud_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository('App:Inventario\InvSolicitudDetalle')->eliminar($arSolicitud, $arrDetallesSeleccionados);
-                return $this->redirect($this->generateUrl('inv_mto_inventario_solicitud_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_solicitud_detalle', ['id' => $id]));
             }
         }
         return $this->render('inventario/movimiento/compra/solicitud/detalle.html.twig', [
@@ -126,7 +132,7 @@ class SolicitudController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/inventario/solicitud/detalle/nuevo/{id}", name="inv_mto_inventario_solicitud_detalle_nuevo")
+     * @Route("/inv/mto/inventario/solicitud/detalle/nuevo/{id}", name="inventario_movimiento_inventario_solicitud_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id)
     {
@@ -175,16 +181,16 @@ class SolicitudController extends Controller
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobar = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-        if($ar->getEstadoAutorizado()) {
+        if ($ar->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
-            if($ar->getEstadoAprobado()) {
+            if ($ar->getEstadoAprobado()) {
                 $arrBtnDesautorizar['disabled'] = true;
-                if(!$ar->getEstadoAnulado()) {
+                if (!$ar->getEstadoAnulado()) {
                     $arrBtnAnular['disabled'] = false;
                 }
             } else {
@@ -216,29 +222,56 @@ class SolicitudController extends Controller
     /**
      * @param $session
      */
-    private function listarSolicitudes($session){
-        $this->query = $this->getDoctrine()->getManager()->getRepository('App:Inventario\InvSolicitud')->listaSolicitud($session->get('filtroNumeroSolicitud'),$session->get('filtroEstadoAprobado'));
+    private function listarSolicitudes($session)
+    {
+        $this->query = $this->getDoctrine()->getManager()->getRepository('App:Inventario\InvSolicitud')->
+        listaSolicitud($session->get('filtroNumeroSolicitud'), $session->get('filtroEstadoAprobado'),$session->get('filtroSolicitudTipo'));
     }
 
     /**
      * @param $session
      * @param $form
      */
-    private function filtrarSolicitudes($session,$form){
-//        $session->set('filtroNumeroSolicitud',);
+    private function filtrarSolicitudes($session, $form)
+    {
+        $session->set('filtroNumeroSolicitud', $form->get('numero')->getData());
+        $session->set('filtroEstadoAprobado', $form->get('estadoAprobado')->getData());
+        $solicitudTipo = $form->get('solicitudTipoRel')->getData();
+        if($solicitudTipo != ''){
+            $session->set('filtroSolicitudTipo', $form->get('solicitudTipoRel')->getData());
+        } else {
+            $session->set('filtroSolicitudTipo', null);
+        }
     }
 
     /**
      * @param $session Session
      * @return \Symfony\Component\Form\FormInterface
      */
-    private function formularioLista($session){
+    private function formularioLista($session)
+    {
+        $arrayPropiedadesSolicitudTipo = [
+            'class' => 'App:Inventario\InvSolicitudTipo',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('st')
+                    ->orderBy('st.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""];
+        if($session->get('filtroSolicitudTipo')){
+            $arrayPropiedadesSolicitudTipo['data'] = $this->getDoctrine()->getManager()->getReference('App:Inventario\InvSolicitudTipo',$session->get('filtroSolicitudTipo')->getCodigoSolicitudTipoPk());
+        }
         return $this->createFormBuilder()
-            ->add('numero',NumberType::class,['required' => false,'data' => $session->get('filtroNumeroSolicitud')])
-            ->add('estadoAprobado',ChoiceType::class,['choices' => ['SI' => '1', 'NO' => '0'],'data' => $session->get('filtroEstadoAprobado')])
-            ->add('btnFiltrar',SubmitType::class,['label' => 'Filtrar','attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('numero', NumberType::class, ['required' => false, 'data' => $session->get('filtroNumeroSolicitud')])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroEstadoAprobado'), 'required' => false])
+            ->add('solicitudTipoRel', EntityType::class, $arrayPropiedadesSolicitudTipo)
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
     }
+
     /**
      * @param $em ObjectManager
      * @param $form \Symfony\Component\Form\FormInterface

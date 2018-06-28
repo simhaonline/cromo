@@ -1,5 +1,6 @@
 {% extends 'base_inventario.html.twig' %}
 {% block content %}
+    {% set foo = "one,two,three"|split(',') %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
     {{ form_errors(form) }}
     <div class="panel panel-default">

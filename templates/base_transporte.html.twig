@@ -279,9 +279,11 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    {% set route = app.request.attributes.get('_route') %}
-                    {% set parametros = app.request.attributes.get('_route_params') %}
-                    <h3 class="page-header">{{ route }}</h3>
+                    <h3 class='page-header'>
+                        {% set arrRuta = app.request.attributes.get('_route')|split('_') %}
+                        {{ arrRuta.0 | capitalize }} {{ arrRuta.1 | capitalize }}
+                        <small style="font-size: 20px">{{ arrRuta.2 | capitalize }}: {{ arrRuta.3 }} {{ arrRuta.4 }}</small>
+                    </h3>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>

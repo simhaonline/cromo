@@ -41,7 +41,7 @@
                 <td>{{ arPrecios.codigoPrecioPk }}</td>
                 <td>{{ arPrecios.nombre }}</td>
                 <td>{{ arPrecios.fechaVence | date('Y-m-d') }}</td>
-                <td style="text-align: center"><a href="{{ path('inv_mto_comercial_pedido_detalle', { 'id': arPrecios.codigoPrecioPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a href="{{ path('inventario_movimiento_comercial_pedido_detalle', { 'id': arPrecios.codigoPrecioPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>

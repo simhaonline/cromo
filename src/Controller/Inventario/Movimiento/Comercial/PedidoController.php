@@ -27,7 +27,7 @@ class PedidoController extends Controller
     var $query = '';
 
     /**
-     * @Route("/inv/mto/comercial/pedido/lista", name="inv_mto_comercial_pedido_lista")
+     * @Route("/inv/mto/comercial/pedido/lista", name="inventario_movimiento_comercial_pedido_lista")
      */
     public function lista(Request $request)
     {
@@ -55,7 +55,7 @@ class PedidoController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/comercial/pedido/nuevo/{id}", name="inv_mto_comercial_pedido_nuevo")
+     * @Route("/inv/mto/comercial/pedido/nuevo/{id}", name="inventario_movimiento_comercial_pedido_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -81,7 +81,7 @@ class PedidoController extends Controller
                         }
                         $em->persist($arPedido);
                         $em->flush($arPedido);
-                        return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $arPedido->getCodigoPedidoPk()]));
+                        return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $arPedido->getCodigoPedidoPk()]));
                     }
                 }
             }
@@ -93,7 +93,7 @@ class PedidoController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/comercial/pedido/detalle/{id}", name="inv_mto_comercial_pedido_detalle")
+     * @Route("/inv/mto/comercial/pedido/detalle/{id}", name="inventario_movimiento_comercial_pedido_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -106,35 +106,35 @@ class PedidoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(InvPedido::class)->autorizar($arPedido);
-                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository('App:Inventario\Invpedido')->desautorizar($arPedido);
-                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 //$objFormatopedido->Generar($em, $id);
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository('App:Inventario\Invpedido')->aprobar($arPedido);
-                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\Invpedido')->anular($arPedido);
                 if($respuesta != ''){
-                    MensajesController::error($respuesta);
+                    Mensajeserror($respuesta);
                 }
-                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(InvPedidoDetalle::class)->eliminar($arPedido, $arrDetallesSeleccionados);
                 $em->getRepository(InvPedido::class)->liquidar($id);
-                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnActualizarDetalle')->isClicked()) {
                 $em->getRepository(InvPedido::class)->liquidar($id);
-                return $this->redirect($this->generateUrl('inv_mto_comercial_pedido_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
             }
         }
         $query = $em->getRepository(InvPedidoDetalle::class)->pedido($id);
@@ -147,7 +147,7 @@ class PedidoController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/comercial/pedido/detalle/nuevo/{id}", name="inv_mto_comercial_pedido_detalle_nuevo")
+     * @Route("/inv/mto/comercial/pedido/detalle/nuevo/{id}", name="inventario_movimiento_comercial_pedido_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id)
     {

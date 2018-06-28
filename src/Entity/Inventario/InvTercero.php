@@ -86,6 +86,17 @@ class InvTercero
     private $autoretenedor = false;
 
     /**
+     * @ORM\Column(name="codigo_precio_venta_fk", type="integer", nullable=true)
+     */
+    private $codigoPrecioVentaFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvPrecio", inversedBy="tercerosPrecioVentaRel")
+     * @ORM\JoinColumn(name="codigo_precio_venta_fk", referencedColumnName="codigo_precio_pk")
+     */
+    protected $precioVentaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvOrdenCompra",mappedBy="terceroRel")
      */
     protected $ordenesComprasTerceroRel;
@@ -338,6 +349,38 @@ class InvTercero
     public function setAutoretenedor($autoretenedor): void
     {
         $this->autoretenedor = $autoretenedor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPrecioVentaFk()
+    {
+        return $this->codigoPrecioVentaFk;
+    }
+
+    /**
+     * @param mixed $codigoPrecioVentaFk
+     */
+    public function setCodigoPrecioVentaFk($codigoPrecioVentaFk): void
+    {
+        $this->codigoPrecioVentaFk = $codigoPrecioVentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrecioVentaRel()
+    {
+        return $this->precioVentaRel;
+    }
+
+    /**
+     * @param mixed $precioVentaRel
+     */
+    public function setPrecioVentaRel($precioVentaRel): void
+    {
+        $this->precioVentaRel = $precioVentaRel;
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
+use App\Entity\Inventario\InvPrecioDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Formato\Inventario\Pedido;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -157,10 +158,16 @@ class PedidoController extends Controller
                 $this->listaItems($em, $form);
             }
             if ($form->get('btnGuardar')->isClicked()) {
+                $codigoPrecioVenta = null;
+                if($arPedido->getTerceroRel()->getCodigoPrecioVentaFk()) {
+                    $codigoPrecioVenta = $arPedido->getTerceroRel()->getCodigoPrecioVentaFk();
+                }
+
                 $arrItems = $request->request->get('itemCantidad');
                 if (count($arrItems) > 0) {
                     foreach ($arrItems as $codigoItem => $cantidad) {
                         if ($cantidad != '' && $cantidad != 0) {
+                            $precio = $em->getRepository(InvPrecioDetalle::class)->precioVenta();
                             $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
                             $arpedidoDetalle = new InvPedidoDetalle();
                             $arpedidoDetalle->setPedidoRel($arPedido);

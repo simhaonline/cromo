@@ -33,6 +33,36 @@ class InvPedidoDetalle
     private $cantidad = 0;
 
     /**
+     * @ORM\Column(name="vr_precio",options={"default" : 0}, type="float")
+     */
+    private $vrPrecio = 0;
+
+    /**
+     * @ORM\Column(name="vr_subtotal", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $vrSubtotal = 0;
+
+    /**
+     * @ORM\Column(name="porcentaje_iva", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $porcentajeIva = 0;
+
+    /**
+     * @ORM\Column(name="vr_iva", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $vrIva = 0;
+
+    /**
+     * @ORM\Column(name="vr_neto", type="float", options={"default" : 0},)
+     */
+    private $vrNeto = 0;
+
+    /**
+     * @ORM\Column(name="vr_total", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $vrTotal = 0;
+
+    /**
      * @ORM\Column(name="cantidad_pendiente",options={"default" : 0}, type="integer", nullable=true)
      */
     private $cantidadPendiente = 0;
@@ -159,6 +189,102 @@ class InvPedidoDetalle
     public function setItemRel($itemRel): void
     {
         $this->itemRel = $itemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPrecio()
+    {
+        return $this->vrPrecio;
+    }
+
+    /**
+     * @param mixed $vrPrecio
+     */
+    public function setVrPrecio($vrPrecio): void
+    {
+        $this->vrPrecio = $vrPrecio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSubtotal()
+    {
+        return $this->vrSubtotal;
+    }
+
+    /**
+     * @param mixed $vrSubtotal
+     */
+    public function setVrSubtotal($vrSubtotal): void
+    {
+        $this->vrSubtotal = $vrSubtotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeIva()
+    {
+        return $this->porcentajeIva;
+    }
+
+    /**
+     * @param mixed $porcentajeIva
+     */
+    public function setPorcentajeIva($porcentajeIva): void
+    {
+        $this->porcentajeIva = $porcentajeIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIva()
+    {
+        return $this->vrIva;
+    }
+
+    /**
+     * @param mixed $vrIva
+     */
+    public function setVrIva($vrIva): void
+    {
+        $this->vrIva = $vrIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrNeto()
+    {
+        return $this->vrNeto;
+    }
+
+    /**
+     * @param mixed $vrNeto
+     */
+    public function setVrNeto($vrNeto): void
+    {
+        $this->vrNeto = $vrNeto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotal()
+    {
+        return $this->vrTotal;
+    }
+
+    /**
+     * @param mixed $vrTotal
+     */
+    public function setVrTotal($vrTotal): void
+    {
+        $this->vrTotal = $vrTotal;
     }
 
 

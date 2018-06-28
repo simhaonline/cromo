@@ -24,7 +24,7 @@ class InvPrecio
     private $fechaVence;
 
     /**
-     * @ORM\Column(name="soporte", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=true)
      * @Assert\Length( max = 255, maxMessage="El campo no puede contener mas de 255 caracteres")
      */
     private $snombre;
@@ -33,6 +33,11 @@ class InvPrecio
      * @ORM\OneToMany(targetEntity="InvPrecioDetalle", mappedBy="precioRel")
      */
     protected $preciosDetallesPrecioRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="InvTercero",mappedBy="precioVentaRel")
+     */
+    protected $tercerosPrecioVentaRel;
 
     /**
      * @return mixed
@@ -96,6 +101,22 @@ class InvPrecio
     public function setPreciosDetallesPrecioRel($preciosDetallesPrecioRel): void
     {
         $this->preciosDetallesPrecioRel = $preciosDetallesPrecioRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTercerosPrecioVentaRel()
+    {
+        return $this->tercerosPrecioVentaRel;
+    }
+
+    /**
+     * @param mixed $tercerosPrecioVentaRel
+     */
+    public function setTercerosPrecioVentaRel($tercerosPrecioVentaRel): void
+    {
+        $this->tercerosPrecioVentaRel = $tercerosPrecioVentaRel;
     }
 
 

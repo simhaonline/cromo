@@ -134,7 +134,7 @@
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
                         {% if arDespacho.estadoGenerado == 0 %}
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_mto_transporte_despacho_detalle_adicionar_guia', {'codigoDespacho': arDespacho.codigoDespachoPk }) }}', 'DespachoAdicionarGuia', 600, 900)">Adicionar</a>
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_detalle_adicionar_guia', {'codigoDespacho': arDespacho.codigoDespachoPk }) }}', 'DespachoAdicionarGuia', 600, 900)">Adicionar</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">
@@ -155,7 +155,7 @@
     </div>
     <div class="btn-toolbar" style="float: left">
         <div class="btn-group">
-            <a  class="btn btn-default btn-sm" href="{{ path('transporte_mto_transporte_despacho_lista') }}">Volver</a>
+            <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Volver</a>
         </div>
     </div>
 

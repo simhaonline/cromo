@@ -107,7 +107,7 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_mto_recogida_despacho_detalle_adicionar_recogida', {'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}', 'DespachoRecogidaAdicionarRecogida', 600, 900)">Adicionar</a>
+                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_recogida_despacho_detalle_adicionar_recogida', {'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}', 'DespachoRecogidaAdicionarRecogida', 600, 900)">Adicionar</a>
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnRetirarRecogida, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
@@ -142,7 +142,7 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_mto_recogida_despacho_detalle_adicionar_auxiliar', {'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}', 'DespachoRecogidaAdicionarAuxiliar', 600, 900)">Adicionar</a>
+                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_recogida_despacho_detalle_adicionar_auxiliar', {'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}', 'DespachoRecogidaAdicionarAuxiliar', 600, 900)">Adicionar</a>
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnRetirarAuxiliar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
@@ -154,7 +154,7 @@
 
     <div class="btn-toolbar" style="float: left">
         <div class="btn-group">
-            <a  class="btn btn-default btn-sm" href="{{ path('transporte_mto_recogida_despacho_lista') }}">Volver</a>
+            <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_recogida_despacho_lista') }}">Volver</a>
         </div>
     </div>
 

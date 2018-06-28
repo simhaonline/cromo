@@ -15,7 +15,7 @@
                 <td>{{ arRelacionCaja.codigoRelacionCajaPk }}</td>
                 <td>{{ arRelacionCaja.fecha | date('Y-m-d') }}</td>
                 <td class="numero">{{ arRelacionCaja.vrTotal }}</td>
-                <td style="text-align: center"><a href="{{ path('transporte_mto_control_relacioncaja_detalle', { 'codigoRelacionCaja': arRelacionCaja.codigoRelacionCajaPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a href="{{ path('transporte_movimiento_control_relacioncaja_detalle', { 'codigoRelacionCaja': arRelacionCaja.codigoRelacionCajaPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -31,7 +31,7 @@
 
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('transporte_mto_control_relacioncaja_nuevo', {'codigoRelacionCaja': 0}) }}">Nuevo</a>
+            <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_control_relacioncaja_nuevo', {'codigoRelacionCaja': 0}) }}">Nuevo</a>
         </div>
     </div>
 {% endblock %}

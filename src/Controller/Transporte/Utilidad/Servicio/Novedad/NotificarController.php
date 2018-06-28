@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityRepository;
 class NotificarController extends Controller
 {
    /**
-    * @Route("/tte/uti/servicio/novedad/notificar", name="transporte_uti_servicio_novedad_notificar")
+    * @Route("/transporte/uti/servicio/novedad/notificar", name="transporte_uti_servicio_novedad_notificar")
     */    
     public function lista(Request $request, \Swift_Mailer $mailer)
     {

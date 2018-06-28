@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 class EmpleadoController extends Controller
 {
     /**
-     * @Route("rhu/adm/empleado/empleado/nuevo/{id}", name="rhu_adm_empleado_empleado_nuevo")
+     * @Route("rhu/adm/empleado/empleado/nuevo/{id}", name="recursohumano_administracion_empleado_empleado_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -36,7 +36,7 @@ class EmpleadoController extends Controller
             if ($form->get('guardarnuevo')->isClicked()) {
                 $em->persist($arEmpleado);
                 $em->flush($arEmpleado);
-                return $this->redirect($this->generateUrl('rhu_adm_empleado_empleado_nuevo', ['codigoEmpleado' => 0]));
+                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_nuevo', ['codigoEmpleado' => 0]));
             }
         }
         return $this->render('recursoHumano/administracion/empleado/nuevo.html.twig', [

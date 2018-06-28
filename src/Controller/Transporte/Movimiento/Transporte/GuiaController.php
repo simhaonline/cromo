@@ -22,7 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class GuiaController extends Controller
 {
    /**
-    * @Route("/tte/mto/transporte/guia/lista", name="transporte_movimiento_transporte_guia_lista")
+    * @Route("/transporte/movimiento/transporte/guia/lista", name="transporte_movimiento_transporte_guia_lista")
     */    
     public function lista(Request $request)
     {
@@ -50,7 +50,7 @@ class GuiaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/transporte/guia/nuevo/{codigoGuia}", name="transporte_movimiento_transporte_guia_nuevo")
+     * @Route("/transporte/movimiento/transporte/guia/nuevo/{codigoGuia}", name="transporte_movimiento_transporte_guia_nuevo")
      */
     public function nuevo(Request $request, $codigoGuia)
     {
@@ -98,7 +98,7 @@ class GuiaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/transporte/guia/detalle/{codigoGuia}", name="transporte_movimiento_transporte_guia_detalle")
+     * @Route("/transporte/movimiento/transporte/guia/detalle/{codigoGuia}", name="transporte_movimiento_transporte_guia_detalle")
      */
     public function detalle(Request $request, $codigoGuia)
     {
@@ -131,7 +131,7 @@ class GuiaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/trasnporte/guia/detalle/adicionar/novedad/{codigoGuia}/{codigoNovedad}", name="transporte_movimiento_transporte_guia_detalle_adicionar_novedad")
+     * @Route("/transporte/movimiento/trasnporte/guia/detalle/adicionar/novedad/{codigoGuia}/{codigoNovedad}", name="transporte_movimiento_transporte_guia_detalle_adicionar_novedad")
      */
     public function detalleAdicionarNovedad(Request $request, $codigoGuia, $codigoNovedad)
     {

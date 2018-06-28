@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class CostoController extends Controller
 {
    /**
-    * @Route("/tte/inf/transporte/costo/general", name="transporte_inf_transporte_costo_general")
+    * @Route("/transporte/inf/transporte/costo/general", name="transporte_inf_transporte_costo_general")
     */    
     public function lista(Request $request)
     {

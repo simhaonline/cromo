@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ApiMovilConductorController extends FOSRestController
 {
     /**
-     * @Rest\Get("/tte/api/movil/conductor/despacho/guia/{codigoDespacho}", name="transporte_api_movil_conductor_despacho_guia")
+     * @Rest\Get("/transporte/api/movil/conductor/despacho/guia/{codigoDespacho}", name="transporte_api_movil_conductor_despacho_guia")
      */
     public function guia(Request $request, $codigoDespacho)
     {

@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class MonitoreoController extends Controller
 {
    /**
-    * @Route("/tte/mto/monitoreo/monitoreo/lista", name="transporte_movimiento_monitoreo_monitoreo_lista")
+    * @Route("/transporte/movimiento/monitoreo/monitoreo/lista", name="transporte_movimiento_monitoreo_monitoreo_lista")
     */    
     public function lista()
     {
@@ -23,7 +23,7 @@ class MonitoreoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/monitoreo/monitoreo/detalle/{codigoMonitoreo}", name="transporte_movimiento_monitoreo_monitoreo_detalle")
+     * @Route("/transporte/movimiento/monitoreo/monitoreo/detalle/{codigoMonitoreo}", name="transporte_movimiento_monitoreo_monitoreo_detalle")
      */
     public function detalle(Request $request, $codigoMonitoreo)
     {
@@ -54,7 +54,7 @@ class MonitoreoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/monitoreo/monitoreo/detalle/adicionar/reporte/{codigoMonitoreo}/{codigoMonitoreoDetalle}", name="transporte_movimiento_monitoreo_monitoreo_detalle_adicionar_reporte")
+     * @Route("/transporte/movimiento/monitoreo/monitoreo/detalle/adicionar/reporte/{codigoMonitoreo}/{codigoMonitoreoDetalle}", name="transporte_movimiento_monitoreo_monitoreo_detalle_adicionar_reporte")
      */
     public function detalleAdicionarNovedad(Request $request, $codigoMonitoreo, $codigoMonitoreoDetalle)
     {
@@ -92,7 +92,7 @@ class MonitoreoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/monitoreo/monitoreo/mapa/{codigoMonitoreo}", name="transporte_movimiento_monitoreo_monitoreo_mapa")
+     * @Route("/transporte/movimiento/monitoreo/monitoreo/mapa/{codigoMonitoreo}", name="transporte_movimiento_monitoreo_monitoreo_mapa")
      */
     public function verMapa(Request $request, $codigoMonitoreo)
     {

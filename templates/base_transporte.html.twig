@@ -45,7 +45,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="{{ path('tte_tab_guia') }}">
+                            <a href="{{ path('transporte_tablero_guia') }}">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> Guias
                                     <span class="pull-right text-muted small">4 minutes ago</span>
@@ -103,38 +103,38 @@
                                 <li>
                                     <a href="#">Recogida <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_mto_recogida_recogida_lista') }}">Recogida</a></li>
-                                        <li><a href="{{ path('tte_mto_recogida_despacho_lista') }}">Despacho</a></li>
+                                        <li><a href="{{ path('transporte_movimiento_recogida_recogida_lista') }}">Recogida</a></li>
+                                        <li><a href="{{ path('transporte_movimiento_recogida_despacho_lista') }}">Despacho</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
                                 <li>
                                     <a href="#">Transporte <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_mto_transporte_guia_lista') }}">Guia</a></li>
-                                        <li><a href="{{ path('tte_mto_transporte_despacho_lista') }}">Despacho</a></li>
-                                        <li><a href="{{ path('tte_mto_transporte_cumplido_lista') }}">Cumplido</a></li>
+                                        <li><a href="{{ path('transporte_movimiento_transporte_guia_lista') }}">Guia</a></li>
+                                        <li><a href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Despacho</a></li>
+                                        <li><a href="{{ path('transporte_movimiento_transporte_cumplido_lista') }}">Cumplido</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
                                 <li>
                                     <a href="#">Control <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_mto_control_relacioncaja_lista') }}">Relacion caja</a></li>
+                                        <li><a href="{{ path('transporte_movimiento_control_relacioncaja_lista') }}">Relacion caja</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
                                 <li>
                                     <a href="#">Monitoreo <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_mto_monitoreo_monitoreo_lista') }}">Monitoreo</a></li>
+                                        <li><a href="{{ path('transporte_movimiento_monitoreo_monitoreo_lista') }}">Monitoreo</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
                                 <li>
                                     <a href="#">Comercial <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_mto_comercial_factura_lista') }}">Factura</a></li>
+                                        <li><a href="{{ path('transporte_movimiento_comercial_factura_lista') }}">Factura</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
@@ -160,7 +160,7 @@
                                         <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'novedadTipo'}) }}">Novedad tipo</a></li>
                                         <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'auxiliar'}) }}">Auxiliar</a></li>
                                         <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'guiaTipo'}) }}">Guía tipo</a></li>
-                                        <li><a href="{{ path('tte_adm_comercial_precio_lista') }}">Precio</a></li>
+                                        <li><a href="{{ path('transporte_administracion_comercial_precio_lista') }}">Precio</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
@@ -193,18 +193,18 @@
                                 <li>
                                     <a href="#">Recogida <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_pro_recogida_recogida_programada') }}">Programada</a></li>
-                                        <li><a href="{{ path('tte_pro_recogida_recogida_recoge') }}">Recoge</a></li>
-                                        <li><a href="{{ path('tte_pro_recogida_recogida_descarga') }}">Descarga</a></li>
+                                        <li><a href="{{ path('transporte_pro_recogida_recogida_programada') }}">Programada</a></li>
+                                        <li><a href="{{ path('transporte_pro_recogida_recogida_recoge') }}">Recoge</a></li>
+                                        <li><a href="{{ path('transporte_pro_recogida_recogida_descarga') }}">Descarga</a></li>
                                     </ul>
                                 </li>
                                 <li>
                                     <a href="#">Transporte <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_pro_transporte_guia_entrega') }}">Entrega guia</a></li>
-                                        <li><a href="{{ path('tte_pro_transporte_guia_soporte') }}">Soporte guia</a></li>
-                                        <li><a href="{{ path('tte_pro_transporte_guia_factura') }}">Factura guia</a></li>
-                                        <li><a href="{{ path('tte_pro_transporte_general_cierre') }}">Cierre</a></li>
+                                        <li><a href="{{ path('transporte_pro_transporte_guia_entrega') }}">Entrega guia</a></li>
+                                        <li><a href="{{ path('transporte_pro_transporte_guia_soporte') }}">Soporte guia</a></li>
+                                        <li><a href="{{ path('transporte_pro_transporte_guia_factura') }}">Factura guia</a></li>
+                                        <li><a href="{{ path('transporte_pro_transporte_general_cierre') }}">Cierre</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
@@ -217,15 +217,15 @@
                                 <li>
                                     <a href="#">Servicio <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_uti_servicio_novedad_notificar') }}">Notificar novedad</a></li>
+                                        <li><a href="{{ path('transporte_uti_servicio_novedad_notificar') }}">Notificar novedad</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
                                 <li>
                                     <a href="#">Transporte <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente (ruta)</a></li>
-                                        <li><a href="{{ path('tte_inf_transporte_costo_general') }}">Costos</a></li>
+                                        <li><a href="{{ path('transporte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente (ruta)</a></li>
+                                        <li><a href="{{ path('transporte_inf_transporte_costo_general') }}">Costos</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
@@ -238,18 +238,18 @@
                                 <li>
                                     <a href="#">Servicio <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_inf_servicio_novedad_pendiente_atender') }}">Pendiente atender</a></li>
-                                        <li><a href="{{ path('tte_inf_servicio_novedad_pendiente_solucionar') }}">Pendiente solucionar</a></li>
+                                        <li><a href="{{ path('transporte_inf_servicio_novedad_pendiente_atender') }}">Pendiente atender</a></li>
+                                        <li><a href="{{ path('transporte_inf_servicio_novedad_pendiente_solucionar') }}">Pendiente solucionar</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
                                 <li>
                                     <a href="#">Transporte <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente ruta</a></li>
-                                        <li><a href="{{ path('tte_inf_transporte_guia_pendiente_conductor') }}">Pendiente conductor</a></li>
-                                        <li><a href="{{ path('tte_inf_transporte_guia_pendiente') }}">Pendiente</a></li>
-                                        <li><a href="{{ path('tte_inf_transporte_costo_general') }}">Costos</a></li>
+                                        <li><a href="{{ path('transporte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente ruta</a></li>
+                                        <li><a href="{{ path('transporte_inf_transporte_guia_pendiente_conductor') }}">Pendiente conductor</a></li>
+                                        <li><a href="{{ path('transporte_inf_transporte_guia_pendiente') }}">Pendiente</a></li>
+                                        <li><a href="{{ path('transporte_inf_transporte_costo_general') }}">Costos</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
@@ -262,7 +262,7 @@
                                 <li>
                                     <a href="#">Recogida <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
-                                        <li><a href="{{ path('tte_tab_recogida_recogida') }}">Recogida</a></li>
+                                        <li><a href="{{ path('transporte_tablero_recogida_recogida') }}">Recogida</a></li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>

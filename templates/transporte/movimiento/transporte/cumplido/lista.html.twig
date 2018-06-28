@@ -11,7 +11,7 @@
         {% for arCumplido in arCumplidos %}
             <tr>
                 <td>{{ arCumplido.codigoCumplidoPk }}</td>
-                <td style="text-align: center"><a href="{{ path('transporte_mto_transporte_cumplido_detalle', { 'codigoCumplido': arCumplido.codigoCumplidoPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a href="{{ path('transporte_movimiento_transporte_cumplido_detalle', { 'codigoCumplido': arCumplido.codigoCumplidoPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>

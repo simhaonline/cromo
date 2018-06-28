@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class RecogidaController extends Controller
 {
    /**
-    * @Route("/tte/mto/recogida/recogida/lista", name="transporte_movimiento_recogida_recogida_lista")
+    * @Route("/transporte/movimiento/recogida/recogida/lista", name="transporte_movimiento_recogida_recogida_lista")
     */    
     public function lista(Request $request)
     {
@@ -25,7 +25,7 @@ class RecogidaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/recogida/recogida/detalle/{codigoRecogida}", name="transporte_movimiento_recogida_recogida_detalle")
+     * @Route("/transporte/movimiento/recogida/recogida/detalle/{codigoRecogida}", name="transporte_movimiento_recogida_recogida_detalle")
      */
     public function detalle(Request $request, $codigoRecogida)
     {
@@ -48,7 +48,7 @@ class RecogidaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/recogida/recogida/nuevo/{codigoRecogida}", name="transporte_movimiento_recogida_recogida_nuevo")
+     * @Route("/transporte/movimiento/recogida/recogida/nuevo/{codigoRecogida}", name="transporte_movimiento_recogida_recogida_nuevo")
      */
     public function nuevo(Request $request, $codigoRecogida)
     {

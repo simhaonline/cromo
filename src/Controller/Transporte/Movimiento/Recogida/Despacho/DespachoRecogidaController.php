@@ -19,7 +19,7 @@ class DespachoRecogidaController extends Controller
 
 
     /**
-     * @Route("/tte/mto/recogida/despacho/nuevo/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_nuevo")
+     * @Route("/transporte/movimiento/recogida/despacho/nuevo/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_nuevo")
      */
     public function nuevo(Request $request, $codigoDespachoRecogida)
     {
@@ -55,7 +55,7 @@ class DespachoRecogidaController extends Controller
     }
 
    /**
-    * @Route("/tte/mto/recogida/despacho/lista", name="transporte_movimiento_recogida_despacho_lista")
+    * @Route("/transporte/movimiento/recogida/despacho/lista", name="transporte_movimiento_recogida_despacho_lista")
     */    
     public function lista(Request $request)
     {
@@ -66,7 +66,7 @@ class DespachoRecogidaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/recogida/despacho/detalle/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_detalle")
+     * @Route("/transporte/movimiento/recogida/despacho/detalle/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_detalle")
      */
     public function detalle(Request $request, $codigoDespachoRecogida)
     {
@@ -115,7 +115,7 @@ class DespachoRecogidaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/recogida/despacho/detalle/adicionar/recogida/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_detalle_adicionar_recogida")
+     * @Route("/transporte/movimiento/recogida/despacho/detalle/adicionar/recogida/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_detalle_adicionar_recogida")
      */
     public function detalleAdicionarRecogida(Request $request, $codigoDespachoRecogida)
     {
@@ -144,7 +144,7 @@ class DespachoRecogidaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/recogida/despacho/detalle/adicionar/auxiliar/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_detalle_adicionar_auxiliar")
+     * @Route("/transporte/movimiento/recogida/despacho/detalle/adicionar/auxiliar/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_detalle_adicionar_auxiliar")
      */
     public function detalleAdicionarAuxiliar(Request $request, $codigoDespachoRecogida)
     {

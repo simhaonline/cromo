@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityRepository;
 class NotificarController extends Controller
 {
    /**
-    * @Route("/tte/uti/servicio/novedad/notificar", name="tte_uti_servicio_novedad_notificar")
+    * @Route("/tte/uti/servicio/novedad/notificar", name="transporte_uti_servicio_novedad_notificar")
     */    
     public function lista(Request $request, \Swift_Mailer $mailer)
     {
@@ -39,7 +39,7 @@ class NotificarController extends Controller
                         );
                     $mailer->send($message);
 
-                    return $this->redirect($this->generateUrl('tte_uti_servicio_novedad_notificar'));
+                    return $this->redirect($this->generateUrl('transporte_uti_servicio_novedad_notificar'));
 
                 }
             }

@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class SoporteController extends Controller
 {
    /**
-    * @Route("/tte/pro/transporte/guia/soporte", name="tte_pro_transporte_guia_soporte")
+    * @Route("/tte/pro/transporte/guia/soporte", name="transporte_pro_transporte_guia_soporte")
     */    
     public function lista(Request $request)
     {

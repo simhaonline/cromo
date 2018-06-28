@@ -22,7 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class GuiaController extends Controller
 {
    /**
-    * @Route("/tte/mto/transporte/guia/lista", name="tte_mto_transporte_guia_lista")
+    * @Route("/tte/mto/transporte/guia/lista", name="transporte_movimiento_transporte_guia_lista")
     */    
     public function lista(Request $request)
     {
@@ -50,7 +50,7 @@ class GuiaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/transporte/guia/nuevo/{codigoGuia}", name="tte_mto_transporte_guia_nuevo")
+     * @Route("/tte/mto/transporte/guia/nuevo/{codigoGuia}", name="transporte_movimiento_transporte_guia_nuevo")
      */
     public function nuevo(Request $request, $codigoGuia)
     {
@@ -85,9 +85,9 @@ class GuiaController extends Controller
                         $em->persist($arGuia);
                         $em->flush();
                         if ($form->get('guardarnuevo')->isClicked()) {
-                            return $this->redirect($this->generateUrl('tte_mto_transporte_guia_nuevo', array('codigoGuia' => 0)));
+                            return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_nuevo', array('codigoGuia' => 0)));
                         } else {
-                            return $this->redirect($this->generateUrl('tte_mto_transporte_guia_lista'));
+                            return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_lista'));
                         }
                     }
                 }
@@ -98,7 +98,7 @@ class GuiaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/transporte/guia/detalle/{codigoGuia}", name="tte_mto_transporte_guia_detalle")
+     * @Route("/tte/mto/transporte/guia/detalle/{codigoGuia}", name="transporte_movimiento_transporte_guia_detalle")
      */
     public function detalle(Request $request, $codigoGuia)
     {
@@ -114,7 +114,7 @@ class GuiaController extends Controller
                 $respuesta = $em->getRepository(TteGuia::class)->imprimir($codigoGuia);
                 if($respuesta) {
                     $em->flush();
-                    return $this->redirect($this->generateUrl('tte_mto_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
+                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
                     //$formato = new \App\Formato\TteDespacho();
                     //$formato->Generar($em, $codigoGuia);
                 }
@@ -131,7 +131,7 @@ class GuiaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/trasnporte/guia/detalle/adicionar/novedad/{codigoGuia}/{codigoNovedad}", name="tte_mto_transporte_guia_detalle_adicionar_novedad")
+     * @Route("/tte/mto/trasnporte/guia/detalle/adicionar/novedad/{codigoGuia}/{codigoNovedad}", name="transporte_movimiento_transporte_guia_detalle_adicionar_novedad")
      */
     public function detalleAdicionarNovedad(Request $request, $codigoGuia, $codigoNovedad)
     {

@@ -13,7 +13,7 @@
             <tr>
                 <td>{{ arPrecio.codigoPrecioPk }}</td>
                 <td>{{ arPrecio.nombre }}</td>
-                <td style="text-align: center"><a href="{{ path('tte_adm_comercial_precio_detalle', { 'codigoPrecio': arPrecio.codigoPrecioPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a href="{{ path('transporte_adm_comercial_precio_detalle', { 'codigoPrecio': arPrecio.codigoPrecioPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -30,7 +30,7 @@
 
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('tte_adm_comercial_precio_nuevo', {'codigoPrecio': 0}) }}">Nuevo</a>
+            <a class="btn btn-default btn-sm" href="{{ path('transporte_adm_comercial_precio_nuevo', {'codigoPrecio': 0}) }}">Nuevo</a>
         </div>
     </div>
 {% endblock %}

@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 class InicioController extends Controller
 {
    /**
-    * @Route("/gen/general/inicio", name="gen_general_inicio")
+    * @Route("/gen/general/inicio", name="general_general_inicio")
     */    
     public function inicio(Request $request)
     {

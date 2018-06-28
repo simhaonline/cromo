@@ -17,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class RelacionCajaController extends Controller
 {
    /**
-    * @Route("/tte/mto/control/relacioncaja/lista", name="tte_mto_control_relacioncaja_lista")
+    * @Route("/tte/mto/control/relacioncaja/lista", name="transporte_movimiento_control_relacioncaja_lista")
     */    
     public function lista(Request $request)
     {
@@ -28,7 +28,7 @@ class RelacionCajaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/control/relacioncaja/nuevo/{codigoRelacionCaja}", name="tte_mto_control_relacioncaja_nuevo")
+     * @Route("/tte/mto/control/relacioncaja/nuevo/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_nuevo")
      */
     public function nuevo(Request $request, $codigoRelacionCaja)
     {
@@ -45,9 +45,9 @@ class RelacionCajaController extends Controller
             $em->persist($arRelacionCaja);
             $em->flush();
             if ($form->get('guardarnuevo')->isClicked()) {
-                return $this->redirect($this->generateUrl('tte_mto_control_relacioncaja_nuevo', array('codigoRelacionCaja' => 0)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_nuevo', array('codigoRelacionCaja' => 0)));
             } else {
-                return $this->redirect($this->generateUrl('tte_mto_control_relacioncaja_lista'));
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_lista'));
             }
 
 
@@ -58,7 +58,7 @@ class RelacionCajaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/control/relacioncaja/detalle/{codigoRelacionCaja}", name="tte_mto_control_relacioncaja_detalle")
+     * @Route("/tte/mto/control/relacioncaja/detalle/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_detalle")
      */
     public function detalle(Request $request, $codigoRelacionCaja)
     {
@@ -81,7 +81,7 @@ class RelacionCajaController extends Controller
                     $em->flush();
                     $this->getDoctrine()->getRepository(TteRelacionCaja::class)->liquidar($codigoRelacionCaja);
                 }
-                return $this->redirect($this->generateUrl('tte_mto_control_relacioncaja_detalle', array('codigoRelacionCaja' => $codigoRelacionCaja)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', array('codigoRelacionCaja' => $codigoRelacionCaja)));
             }
         }
 
@@ -93,7 +93,7 @@ class RelacionCajaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/control/relacioncaja/detalle/adicionar/recibo/{codigoRelacionCaja}", name="tte_mto_control_relacioncaja_detalle_adicionar_recibo")
+     * @Route("/tte/mto/control/relacioncaja/detalle/adicionar/recibo/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_detalle_adicionar_recibo")
      */
     public function detalleAdicionarGuia(Request $request, $codigoRelacionCaja)
     {

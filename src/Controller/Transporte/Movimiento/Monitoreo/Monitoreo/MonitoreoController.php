@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class MonitoreoController extends Controller
 {
    /**
-    * @Route("/tte/mto/monitoreo/monitoreo/lista", name="tte_mto_monitoreo_monitoreo_lista")
+    * @Route("/tte/mto/monitoreo/monitoreo/lista", name="transporte_movimiento_monitoreo_monitoreo_lista")
     */    
     public function lista()
     {
@@ -23,7 +23,7 @@ class MonitoreoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/monitoreo/monitoreo/detalle/{codigoMonitoreo}", name="tte_mto_monitoreo_monitoreo_detalle")
+     * @Route("/tte/mto/monitoreo/monitoreo/detalle/{codigoMonitoreo}", name="transporte_movimiento_monitoreo_monitoreo_detalle")
      */
     public function detalle(Request $request, $codigoMonitoreo)
     {
@@ -39,7 +39,7 @@ class MonitoreoController extends Controller
                 $respuesta = $em->getRepository(TteGuia::class)->imprimir($codigoGuia);
                 if($respuesta) {
                     $em->flush();
-                    return $this->redirect($this->generateUrl('tte_mto_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
+                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
                     //$formato = new \App\Formato\TteDespacho();
                     //$formato->Generar($em, $codigoGuia);
                 }
@@ -54,7 +54,7 @@ class MonitoreoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/monitoreo/monitoreo/detalle/adicionar/reporte/{codigoMonitoreo}/{codigoMonitoreoDetalle}", name="tte_mto_monitoreo_monitoreo_detalle_adicionar_reporte")
+     * @Route("/tte/mto/monitoreo/monitoreo/detalle/adicionar/reporte/{codigoMonitoreo}/{codigoMonitoreoDetalle}", name="transporte_movimiento_monitoreo_monitoreo_detalle_adicionar_reporte")
      */
     public function detalleAdicionarNovedad(Request $request, $codigoMonitoreo, $codigoMonitoreoDetalle)
     {
@@ -92,7 +92,7 @@ class MonitoreoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/monitoreo/monitoreo/mapa/{codigoMonitoreo}", name="tte_mto_monitoreo_monitoreo_mapa")
+     * @Route("/tte/mto/monitoreo/monitoreo/mapa/{codigoMonitoreo}", name="transporte_movimiento_monitoreo_monitoreo_mapa")
      */
     public function verMapa(Request $request, $codigoMonitoreo)
     {
@@ -106,7 +106,7 @@ class MonitoreoController extends Controller
                 $respuesta = $em->getRepository(TteGuia::class)->imprimir($codigoGuia);
                 if($respuesta) {
                     $em->flush();
-                    return $this->redirect($this->generateUrl('tte_mto_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
+                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
                     //$formato = new \App\Formato\TteDespacho();
                     //$formato->Generar($em, $codigoGuia);
                 }

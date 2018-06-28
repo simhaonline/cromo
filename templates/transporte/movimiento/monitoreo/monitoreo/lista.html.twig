@@ -21,7 +21,7 @@
                 <td>{{ arMonitoreo.codigoVehiculoFk }}</td>
                 <td>{{ arMonitoreo.soporte }}</td>
                 <td>{{ arMonitoreo.codigoDespachoFk }}</td>
-                <td style="text-align: center"><a href="{{ path('tte_mto_monitoreo_monitoreo_detalle', { 'codigoMonitoreo': arMonitoreo.codigoMonitoreoPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a href="{{ path('transporte_mto_monitoreo_monitoreo_detalle', { 'codigoMonitoreo': arMonitoreo.codigoMonitoreoPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>

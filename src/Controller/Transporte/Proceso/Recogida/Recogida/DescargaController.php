@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class DescargaController extends Controller
 {
    /**
-    * @Route("/tte/pro/recogida/recogida/descarga", name="tte_pro_recogida_recogida_descarga")
+    * @Route("/tte/pro/recogida/recogida/descarga", name="transporte_pro_recogida_recogida_descarga")
     */    
     public function lista(Request $request)
     {

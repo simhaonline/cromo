@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class ClienteController extends Controller
 {
    /**
-    * @Route("/tte/bus/cliente/{campoCodigo}/{campoNombre}", name="tte_bus_cliente")
+    * @Route("/tte/bus/cliente/{campoCodigo}/{campoNombre}", name="transporte_bus_cliente")
     */    
     public function lista(Request $request, $campoCodigo, $campoNombre)
     {

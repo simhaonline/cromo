@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class CumplidoController extends Controller
 {
    /**
-    * @Route("/tte/mto/transporte/cumplido/lista", name="tte_mto_transporte_cumplido_lista")
+    * @Route("/tte/mto/transporte/cumplido/lista", name="transporte_movimiento_transporte_cumplido_lista")
     */    
     public function lista(Request $request)
     {
@@ -24,7 +24,7 @@ class CumplidoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/transporte/cumplido/detalle/{codigoCumplido}", name="tte_mto_transporte_cumplido_detalle")
+     * @Route("/tte/mto/transporte/cumplido/detalle/{codigoCumplido}", name="transporte_movimiento_transporte_cumplido_detalle")
      */
     public function detalle(Request $request, $codigoCumplido)
     {
@@ -56,7 +56,7 @@ class CumplidoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/trasnporte/cumplido/detalle/adicionar/guia/{codigoCumplido}", name="tte_mto_transporte_cumplido_detalle_adicionar_guia")
+     * @Route("/tte/mto/trasnporte/cumplido/detalle/adicionar/guia/{codigoCumplido}", name="transporte_movimiento_transporte_cumplido_detalle_adicionar_guia")
      */
     public function detalleAdicionarGuia(Request $request, $codigoCumplido)
     {

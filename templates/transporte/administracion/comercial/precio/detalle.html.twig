@@ -96,7 +96,7 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('tte_mto_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Adicionar</a>
+                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_mto_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Adicionar</a>
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
@@ -106,5 +106,5 @@
         </div>
     </div>
     {{ form_end(form) }}
-    <a  class="btn btn-default btn-sm" href="{{ path('tte_mto_comercial_factura_lista') }}">Volver</a>
+    <a  class="btn btn-default btn-sm" href="{{ path('transporte_mto_comercial_factura_lista') }}">Volver</a>
 {% endblock %}

@@ -16,7 +16,7 @@
                             <div class="input-group">
                                 <input id="txtCodigoVehiculo"  name="txtCodigoVehiculo"  type="text" class="form-control" value="{{ arRecogida.codigoVehiculoFk |default('') }}"/>
                                 <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('tte_bus_vehiculo', { 'campoCodigo': 'txtCodigoVehiculo'}) }}', 'buscarVehiculo', 600, 900)">Buscar</a>
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_vehiculo', { 'campoCodigo': 'txtCodigoVehiculo'}) }}', 'buscarVehiculo', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('tte_mto_recogida_despacho_lista') }}">Cancelar</a>
+        <a class="btn btn-default btn-sm" href="{{ path('transporte_mto_recogida_despacho_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
         {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>

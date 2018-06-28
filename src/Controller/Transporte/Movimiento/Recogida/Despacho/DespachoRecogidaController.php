@@ -19,7 +19,7 @@ class DespachoRecogidaController extends Controller
 
 
     /**
-     * @Route("/tte/mto/recogida/despacho/nuevo/{codigoDespachoRecogida}", name="tte_mto_recogida_despacho_nuevo")
+     * @Route("/tte/mto/recogida/despacho/nuevo/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_nuevo")
      */
     public function nuevo(Request $request, $codigoDespachoRecogida)
     {
@@ -42,9 +42,9 @@ class DespachoRecogidaController extends Controller
                     $em->persist($arDespachoRecogida);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {
-                        return $this->redirect($this->generateUrl('tte_mto_recogida_despacho_nuevo', array('codigoDespachoRecogida' => 0)));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_nuevo', array('codigoDespachoRecogida' => 0)));
                     } else {
-                        return $this->redirect($this->generateUrl('tte_mto_recogida_despacho_lista'));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_lista'));
                     }
                 }
             }
@@ -55,7 +55,7 @@ class DespachoRecogidaController extends Controller
     }
 
    /**
-    * @Route("/tte/mto/recogida/despacho/lista", name="tte_mto_recogida_despacho_lista")
+    * @Route("/tte/mto/recogida/despacho/lista", name="transporte_movimiento_recogida_despacho_lista")
     */    
     public function lista(Request $request)
     {
@@ -66,7 +66,7 @@ class DespachoRecogidaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/recogida/despacho/detalle/{codigoDespachoRecogida}", name="tte_mto_recogida_despacho_detalle")
+     * @Route("/tte/mto/recogida/despacho/detalle/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_detalle")
      */
     public function detalle(Request $request, $codigoDespachoRecogida)
     {
@@ -102,7 +102,7 @@ class DespachoRecogidaController extends Controller
                     $em->flush();
                     $em->getRepository(TteDespachoRecogida::class)->liquidar($codigoDespachoRecogida);
                 }
-                return $this->redirect($this->generateUrl('tte_mto_recogida_despacho_detalle', array('codigoDespachoRecogida' => $codigoDespachoRecogida)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', array('codigoDespachoRecogida' => $codigoDespachoRecogida)));
             }
         }
         $arRecogidas = $this->getDoctrine()->getRepository(TteRecogida::class)->despacho($codigoDespachoRecogida);
@@ -115,7 +115,7 @@ class DespachoRecogidaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/recogida/despacho/detalle/adicionar/recogida/{codigoDespachoRecogida}", name="tte_mto_recogida_despacho_detalle_adicionar_recogida")
+     * @Route("/tte/mto/recogida/despacho/detalle/adicionar/recogida/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_detalle_adicionar_recogida")
      */
     public function detalleAdicionarRecogida(Request $request, $codigoDespachoRecogida)
     {
@@ -144,7 +144,7 @@ class DespachoRecogidaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/recogida/despacho/detalle/adicionar/auxiliar/{codigoDespachoRecogida}", name="tte_mto_recogida_despacho_detalle_adicionar_auxiliar")
+     * @Route("/tte/mto/recogida/despacho/detalle/adicionar/auxiliar/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_detalle_adicionar_auxiliar")
      */
     public function detalleAdicionarAuxiliar(Request $request, $codigoDespachoRecogida)
     {

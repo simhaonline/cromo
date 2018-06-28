@@ -21,7 +21,7 @@ use SoapClient;
 class DespachoController extends Controller
 {
    /**
-    * @Route("/tte/mto/transporte/despacho/lista", name="tte_mto_transporte_despacho_lista")
+    * @Route("/tte/mto/transporte/despacho/lista", name="transporte_movimiento_transporte_despacho_lista")
     */    
     public function lista(Request $request)
     {
@@ -32,7 +32,7 @@ class DespachoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/transporte/despacho/nuevo/{codigoDespacho}", name="tte_mto_transporte_despacho_nuevo")
+     * @Route("/tte/mto/transporte/despacho/nuevo/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_nuevo")
      */
     public function nuevo(Request $request, $codigoDespacho)
     {
@@ -63,9 +63,9 @@ class DespachoController extends Controller
                             $em->persist($arDespacho);
                             $em->flush();
                             if ($form->get('guardarnuevo')->isClicked()) {
-                                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_nuevo', array('codigoDespacho' => 0)));
+                                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_nuevo', array('codigoDespacho' => 0)));
                             } else {
-                                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $arDespacho->getCodigoDespachoPk())));
+                                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $arDespacho->getCodigoDespachoPk())));
                             }
                         }
                     }
@@ -76,7 +76,7 @@ class DespachoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/transporte/despacho/detalle/{codigoDespacho}", name="tte_mto_transporte_despacho_detalle")
+     * @Route("/tte/mto/transporte/despacho/detalle/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_detalle")
      */
     public function detalle(Request $request, $codigoDespacho)
     {
@@ -87,19 +87,19 @@ class DespachoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGenerar')->isClicked()) {
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->generar($codigoDespacho);
-                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
             }
             if ($form->get('btnCerrar')->isClicked()) {
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->cerrar($codigoDespacho);
-                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
             }
             if ($form->get('btnRndc')->isClicked()) {
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($codigoDespacho);
-                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->anular($codigoDespacho);
-                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrDespachoDetalles = $request->request->get('ChkSeleccionar');
@@ -107,7 +107,7 @@ class DespachoController extends Controller
                 if($respuesta) {
                     $em->flush();
                 }
-                return $this->redirect($this->generateUrl('tte_mto_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
             }
             if ($form->get('btnImprimirDespacho')->isClicked()) {
                 $formato = new Despacho();
@@ -127,7 +127,7 @@ class DespachoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/trasnporte/despacho/detalle/adicionar/guia/{codigoDespacho}", name="tte_mto_transporte_despacho_detalle_adicionar_guia")
+     * @Route("/tte/mto/trasnporte/despacho/detalle/adicionar/guia/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_detalle_adicionar_guia")
      */
     public function detalleAdicionarGuia(Request $request, $codigoDespacho)
     {

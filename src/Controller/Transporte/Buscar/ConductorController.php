@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class ConductorController extends Controller
 {
    /**
-    * @Route("/tte/bus/conductor/{campoCodigo}/{campoNombre}", name="tte_bus_conductor")
+    * @Route("/tte/bus/conductor/{campoCodigo}/{campoNombre}", name="transporte_bus_conductor")
     */    
     public function lista(Request $request, $campoCodigo, $campoNombre)
     {

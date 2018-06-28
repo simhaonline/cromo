@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class FacturaController extends Controller
 {
    /**
-    * @Route("/tte/pro/transporte/guia/factura", name="tte_pro_transporte_guia_factura")
+    * @Route("/tte/pro/transporte/guia/factura", name="transporte_pro_transporte_guia_factura")
     */    
     public function lista(Request $request)
     {

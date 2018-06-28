@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class PrecioController extends Controller
 {
    /**
-    * @Route("/tte/adm/comercial/precio/lista", name="tte_adm_comercial_precio_lista")
+    * @Route("/tte/adm/comercial/precio/lista", name="transporte_administracion_comercial_precio_lista")
     */    
     public function lista(Request $request)
     {
@@ -26,7 +26,7 @@ class PrecioController extends Controller
     }
 
     /**
-     * @Route("/tte/adm/comercial/precio/nuevo/{codigoPrecio}", name="tte_adm_comercial_precio_nuevo")
+     * @Route("/tte/adm/comercial/precio/nuevo/{codigoPrecio}", name="transporte_administracion_comercial_precio_nuevo")
      */
     public function nuevo(Request $request, $codigoPrecio)
     {
@@ -42,9 +42,9 @@ class PrecioController extends Controller
             $em->persist($arPrecio);
             $em->flush();
             if ($form->get('guardarnuevo')->isClicked()) {
-                return $this->redirect($this->generateUrl('tte_adm_comercial_precio_nuevo', array('codigoPrecio' => 0)));
+                return $this->redirect($this->generateUrl('transporte_administracion_comercial_precio_nuevo', array('codigoPrecio' => 0)));
             } else {
-                return $this->redirect($this->generateUrl('tte_adm_comercial_precio_lista'));
+                return $this->redirect($this->generateUrl('transporte_administracion_comercial_precio_lista'));
             }
 
         }
@@ -52,7 +52,7 @@ class PrecioController extends Controller
     }
 
     /**
-     * @Route("/tte/adm/comercial/precio/detalle/{codigoPrecio}", name="tte_adm_comercial_precio_detalle")
+     * @Route("/tte/adm/comercial/precio/detalle/{codigoPrecio}", name="transporte_administracion_comercial_precio_detalle")
      */
     public function detalle(Request $request, $codigoPrecio)
     {
@@ -67,7 +67,7 @@ class PrecioController extends Controller
                 $respuesta = $em->getRepository(TteGuia::class)->imprimir($codigoGuia);
                 if($respuesta) {
                     $em->flush();
-                    return $this->redirect($this->generateUrl('tte_mto_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
+                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
                     //$formato = new \App\Formato\TteDespacho();
                     //$formato->Generar($em, $codigoGuia);
                 }

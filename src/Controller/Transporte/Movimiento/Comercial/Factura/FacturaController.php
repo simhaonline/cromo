@@ -19,7 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class FacturaController extends Controller
 {
    /**
-    * @Route("/tte/mto/comercial/factura/lista", name="tte_mto_comercial_factura_lista")
+    * @Route("/tte/mto/comercial/factura/lista", name="transporte_movimiento_comercial_factura_lista")
     */    
     public function lista(Request $request)
     {
@@ -30,7 +30,7 @@ class FacturaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/comercial/factura/detalle/{id}", name="tte_mto_comercial_factura_detalle")
+     * @Route("/tte/mto/comercial/factura/detalle/{id}", name="transporte_movimiento_comercial_factura_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -58,7 +58,7 @@ class FacturaController extends Controller
                     $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($id);
                 }
             }
-            return $this->redirect($this->generateUrl('tte_mto_comercial_factura_detalle', ['id' => $id]));
+            return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
         }
         $query = $this->getDoctrine()->getRepository(TteFacturaPlanilla::class)->listaFacturaDetalle($id);
         $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
@@ -76,7 +76,7 @@ class FacturaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/comercial/factura/detalle/adicionar/guia/{codigoFactura}", name="tte_mto_comercial_factura_detalle_adicionar_guia")
+     * @Route("/tte/mto/comercial/factura/detalle/adicionar/guia/{codigoFactura}", name="transporte_movimiento_comercial_factura_detalle_adicionar_guia")
      */
     public function detalleAdicionarGuia(Request $request, $codigoFactura)
     {
@@ -105,7 +105,7 @@ class FacturaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/comercial/factura/nuevo/{id}", name="tte_mto_comercial_factura_nuevo")
+     * @Route("/tte/mto/comercial/factura/nuevo/{id}", name="transporte_movimiento_comercial_factura_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -127,9 +127,9 @@ class FacturaController extends Controller
                     $em->persist($aFactura);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {
-                        return $this->redirect($this->generateUrl('tte_mto_comercial_factura_nuevo', array('codigoRecogida' => 0)));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_nuevo', array('codigoRecogida' => 0)));
                     } else {
-                        return $this->redirect($this->generateUrl('tte_mto_comercial_factura_lista'));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_lista'));
                     }
                 }
             }

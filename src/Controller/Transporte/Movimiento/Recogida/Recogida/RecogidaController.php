@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class RecogidaController extends Controller
 {
    /**
-    * @Route("/tte/mto/recogida/recogida/lista", name="tte_mto_recogida_recogida_lista")
+    * @Route("/tte/mto/recogida/recogida/lista", name="transporte_movimiento_recogida_recogida_lista")
     */    
     public function lista(Request $request)
     {
@@ -25,7 +25,7 @@ class RecogidaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/recogida/recogida/detalle/{codigoRecogida}", name="tte_mto_recogida_recogida_detalle")
+     * @Route("/tte/mto/recogida/recogida/detalle/{codigoRecogida}", name="transporte_movimiento_recogida_recogida_detalle")
      */
     public function detalle(Request $request, $codigoRecogida)
     {
@@ -48,7 +48,7 @@ class RecogidaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/recogida/recogida/nuevo/{codigoRecogida}", name="tte_mto_recogida_recogida_nuevo")
+     * @Route("/tte/mto/recogida/recogida/nuevo/{codigoRecogida}", name="transporte_movimiento_recogida_recogida_nuevo")
      */
     public function nuevo(Request $request, $codigoRecogida)
     {
@@ -72,9 +72,9 @@ class RecogidaController extends Controller
                     $em->persist($arRecogida);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {
-                        return $this->redirect($this->generateUrl('tte_mto_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
                     } else {
-                        return $this->redirect($this->generateUrl('tte_mto_recogida_recogida_lista'));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_lista'));
                     }
                 }
             }

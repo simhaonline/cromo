@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class CierreController extends Controller
 {
    /**
-    * @Route("/tte/pro/transporte/general/cierre", name="tte_pro_transporte_general_cierre")
+    * @Route("/tte/pro/transporte/general/cierre", name="transporte_pro_transporte_general_cierre")
     */    
     public function lista(Request $request)
     {

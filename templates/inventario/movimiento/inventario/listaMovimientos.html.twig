@@ -45,13 +45,13 @@
                     {{ validarTipo(arMovimiento.estadoAprobado) }}
                     {{ validarTipo(arMovimiento.estadoAnulado) }}
                     <td style="text-align: center;">
-                        <a href="{{ path('inv_mov_inventario_movimiento_nuevo', {'codigoDocumento':arMovimiento.codigoDocumentoFk,'id': arMovimiento.codigoMovimientoPk}) }}">
+                        <a href="{{ path('inv_mto_inventario_movimiento_nuevo', {'codigoDocumento':arMovimiento.codigoDocumentoFk,'id': arMovimiento.codigoMovimientoPk}) }}">
                             <i class="fa fa-edit" style="font-size: large">
                             </i>
                         </a>
                     </td>
                     <td style="text-align: center;">
-                        <a href="{{ path('inv_mov_inventario_movimiento_detalle', {'id' : arMovimiento.codigoMovimientoPk }) }}">
+                        <a href="{{ path('inv_mto_inventario_movimiento_detalle', {'id' : arMovimiento.codigoMovimientoPk }) }}">
                             <i class="fa fa-share-square-o" style="font-size: large">
                             </i>
                         </a>
@@ -62,9 +62,9 @@
         </table>
     </div>
     <div class="btn-group" style="float: right;">
-        <a class="btn btn-sm btn-default" href="{{ path('inv_mov_inventario_movimiento_nuevo',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+        <a class="btn btn-sm btn-default" href="{{ path('inv_mto_inventario_movimiento_nuevo',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
     </div>
     <div class="btn-group">
-        <a class="btn btn-sm btn-default" href="{{ path('inv_mov_inventario_movimiento_documentos_lista',{'tipoDocumento': tipoDocumento}) }}">volver</a>
+        <a class="btn btn-sm btn-default" href="{{ path('inv_mto_inventario_movimiento_documentos_lista',{'tipoDocumento': tipoDocumento}) }}">volver</a>
     </div>
 {% endblock %}

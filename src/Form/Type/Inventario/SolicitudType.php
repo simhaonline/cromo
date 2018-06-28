@@ -6,6 +6,7 @@ use App\Entity\Inventario\InvSolicitudTipo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -29,7 +30,7 @@ class SolicitudType extends AbstractType {
                 'label' => 'Solicitud tipo:'
             ])
             ->add('comentarios',TextareaType::class, ['required' => false,'label' => 'Comentarios:'])
-            ->add('soporte',TextareaType::class, ['required' => false,'label' => 'Soporte:'])
+            ->add('soporte',TextType::class, ['required' => false,'label' => 'Soporte:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

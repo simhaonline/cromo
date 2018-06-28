@@ -26,7 +26,7 @@ class OrdenCompra extends \FPDF
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("OrdenCompra$codigoOrdenCompra.pdf", 'I');
+        $pdf->Output("OrdenCompra$codigoOrdenCompra.pdf", 'D');
     }
 
     public function Header()
@@ -37,7 +37,10 @@ class OrdenCompra extends \FPDF
         $this->SetFont('Arial', 'B', 10);
         //Logo
         $this->SetXY(53, 10);
-        $this->Image('../assets/img/empresa/logo.jpeg', 12, 13, 40, 25);
+        try{
+            $this->Image('../public/assets/img/empresa/logo.jpeg', 12, 13, 40, 25);
+        } catch (\Exception $exception){
+        }
         //INFORMACIÓN EMPRESA
         $this->Cell(147, 7, utf8_decode("ORDEN DE COMPRA"), 0, 0, 'C', 1);
         $this->SetXY(53, 18);
@@ -148,8 +151,8 @@ class OrdenCompra extends \FPDF
             $pdf->Cell(15, 4, $arOrdenCompraDetalle->getCodigoOrdenCompraDetallePk(), 1, 0, 'L');
             $pdf->Cell(80, 4, utf8_decode($arOrdenCompraDetalle->getItemRel()->getNombre()), 1, 0, 'L');
             $pdf->Cell(15, 4, $arOrdenCompraDetalle->getCantidad(), 1, 0, 'C');
-            $pdf->Cell(20, 4, $arOrdenCompraDetalle->getPorcentajeIva(), 1, 0, 'C');
-            $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getValor(), 0, '.', ','), 1, 0, 'C');
+            $pdf->Cell(20, 4, $arOrdenCompraDetalle->getPorIva(), 1, 0, 'C');
+            $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'C');
             $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrIva(), 0, '.', ','), 1, 0, 'C');
             $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'C');
             $pdf->Ln();

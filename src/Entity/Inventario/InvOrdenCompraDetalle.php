@@ -33,14 +33,24 @@ class InvOrdenCompraDetalle
     private $codigoItemFk;
 
     /**
-     * @ORM\Column(name="cantidad_solicitada", type="integer", nullable=true)
+     * @ORM\Column(name="cantidad", type="integer", nullable=true)
      */
-    private $cantidadSolicitada = 0;
+    private $cantidad = 0;
 
     /**
-     * @ORM\Column(name="vr_unitario", type="float", nullable=true)
+     * @ORM\Column(name="vr_precio", type="float", nullable=true)
      */
-    private $vrUnitario = 0;
+    private $vrPrecio = 0;
+
+    /**
+     * @ORM\Column(name="porcentaje_descuento", type="float", nullable=true)
+     */
+    private $porcentajeDescuento = 0;
+
+    /**
+     * @ORM\Column(name="vr_descuento", type="float", nullable=true)
+     */
+    private $vrDescuento = 0;
 
     /**
      * @ORM\Column(name="vr_subtotal", type="float", nullable=true)
@@ -48,9 +58,9 @@ class InvOrdenCompraDetalle
     private $vrSubtotal = 0;
 
     /**
-     * @ORM\Column(name="por_iva", type="integer", nullable=true)
+     * @ORM\Column(name="porcentaje_iva", type="integer", nullable=true)
      */
-    private $porIva = 0;
+    private $porcentajeIva = 0;
 
     /**
      * @ORM\Column(name="vr_iva", type="float", nullable=true)
@@ -162,33 +172,65 @@ class InvOrdenCompraDetalle
     /**
      * @return mixed
      */
-    public function getCantidadSolicitada()
+    public function getCantidad()
     {
-        return $this->cantidadSolicitada;
+        return $this->cantidad;
     }
 
     /**
-     * @param mixed $cantidadSolicitada
+     * @param mixed $cantidad
      */
-    public function setCantidadSolicitada($cantidadSolicitada): void
+    public function setCantidad($cantidad): void
     {
-        $this->cantidadSolicitada = $cantidadSolicitada;
+        $this->cantidad = $cantidad;
     }
 
     /**
      * @return mixed
      */
-    public function getVrUnitario()
+    public function getVrPrecio()
     {
-        return $this->vrUnitario;
+        return $this->vrPrecio;
     }
 
     /**
-     * @param mixed $vrUnitario
+     * @param mixed $vrPrecio
      */
-    public function setVrUnitario($vrUnitario): void
+    public function setVrPrecio($vrPrecio): void
     {
-        $this->vrUnitario = $vrUnitario;
+        $this->vrPrecio = $vrPrecio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeDescuento()
+    {
+        return $this->porcentajeDescuento;
+    }
+
+    /**
+     * @param mixed $porcentajeDescuento
+     */
+    public function setPorcentajeDescuento($porcentajeDescuento): void
+    {
+        $this->porcentajeDescuento = $porcentajeDescuento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuento()
+    {
+        return $this->vrDescuento;
+    }
+
+    /**
+     * @param mixed $vrDescuento
+     */
+    public function setVrDescuento($vrDescuento): void
+    {
+        $this->vrDescuento = $vrDescuento;
     }
 
     /**
@@ -210,17 +252,17 @@ class InvOrdenCompraDetalle
     /**
      * @return mixed
      */
-    public function getPorIva()
+    public function getPorcentajeIva()
     {
-        return $this->porIva;
+        return $this->porcentajeIva;
     }
 
     /**
-     * @param mixed $porIva
+     * @param mixed $porcentajeIva
      */
-    public function setPorIva($porIva): void
+    public function setPorcentajeIva($porcentajeIva): void
     {
-        $this->porIva = $porIva;
+        $this->porcentajeIva = $porcentajeIva;
     }
 
     /**

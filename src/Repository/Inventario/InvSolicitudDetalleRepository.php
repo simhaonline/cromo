@@ -64,7 +64,7 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
             ->join('isd.solicitudRel','s')
             ->addSelect('it.nombre')
             ->addSelect('it.cantidadExistencia')
-            ->addSelect('isd.cantidadSolicitada')
+            ->addSelect('isd.cantidad')
             ->addSelect('isd.cantidadPendiente')
             ->addSelect('it.stockMinimo')
             ->addSelect('it.stockMaximo')

@@ -50,6 +50,9 @@ class FacturaController extends Controller
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository('App:Transporte\TteFactura')->desAutorizar($arFactura);
             }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository('App:Transporte\TteFactura')->aprobar($arFactura);
+            }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarGuia($arrGuias);
@@ -76,12 +79,12 @@ class FacturaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/comercial/factura/detalle/adicionar/guia/{codigoFactura}", name="tte_mto_comercial_factura_detalle_adicionar_guia")
+     * @Route("/tte/mto/comercial/factura/detalle/adicionar/guia/{id}", name="tte_mto_comercial_factura_detalle_adicionar_guia")
      */
-    public function detalleAdicionarGuia(Request $request, $codigoFactura)
+    public function detalleAdicionarGuia(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+        $arFactura = $em->getRepository(TteFactura::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();
@@ -96,7 +99,7 @@ class FacturaController extends Controller
                     $em->persist($arGuia);
                 }
                 $em->flush();
-                $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($codigoFactura);
+                $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($id);
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
@@ -111,11 +114,10 @@ class FacturaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         if($id == 0) {
-            $aFactura = new TteFactura();
-            //$aFactura->setFechaRegistro(new \DateTime('now'));
+            $arFactura = new TteFactura();
         }
 
-        $form = $this->createForm(FacturaType::class, $aFactura);
+        $form = $this->createForm(FacturaType::class, $arFactura);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $aFactura = $form->getData();
@@ -124,6 +126,9 @@ class FacturaController extends Controller
                 $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
                 if($arCliente) {
                     $aFactura->setClienteRel($arCliente);
+                    if ($aFactura->getPlazoPago() <= 0) {
+                        $aFactura->setPlazoPago($arFactura->getClienteRel()->getPlazoPago());
+                    }
                     $em->persist($aFactura);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {
@@ -134,7 +139,7 @@ class FacturaController extends Controller
                 }
             }
         }
-        return $this->render('transporte/movimiento/comercial/factura/nuevo.html.twig', ['$aFactura' => $aFactura,'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/comercial/factura/nuevo.html.twig', ['$arFactura' => $arFactura,'form' => $form->createView()]);
     }
 
     private function formularioDetalles($arFactura)

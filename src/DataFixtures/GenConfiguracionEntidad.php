@@ -31,7 +31,8 @@ class GenConfiguracionEntidad extends Fixture
             'movimiento,movimiento,inventario,0,1',
             'marca,admin,general,0,0',
             'pedido,movimiento,comercial,0,1',
-            'pedidoTipo,admin,comercial,0,0'];
+            'pedidoTipo,admin,comercial,0,0',
+            'precio,admin,general,0,0'];
         $this->setConfiguracionEntidades($arrModuloInventario, $em, 'inventario');
         /////////////////              FIN ESTRACTURA MODULO DE INVENTARIO                             ////////////////
 //

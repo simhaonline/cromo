@@ -75,9 +75,9 @@ class Factura extends \FPDF {
         $this->Cell(39, 6, "VENCE", 1, 0, 'C', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetXY(160, $y+33);
-        $this->Cell(13, 7, "25", 1, 0, 'C', 1);
-        $this->Cell(13, 7, "04", 1, 0, 'C', 1);
-        $this->Cell(13, 7, "2018", 1, 0, 'C', 1);
+        $this->Cell(13, 7, $arFactura->getFechaVence()->format('d'), 1, 0, 'C', 1);
+        $this->Cell(13, 7, $arFactura->getFechaVence()->format('m'), 1, 0, 'C', 1);
+        $this->Cell(13, 7, $arFactura->getFechaVence()->format('Y'), 1, 0, 'C', 1);
         $this->SetFillColor(170, 170, 170);
         $this->SetXY(160, $y+40);
         $this->Cell(13, 6, "DIA", 1, 0, 'C', 1);
@@ -181,13 +181,6 @@ class Factura extends \FPDF {
         $this->SetXY(45, 240);
         $this->SetFont('Arial','', 9);
         $this->Cell(155, 10, $arFactura->getComentario(), 0, 2, 'L');
-
-
-
-
-
-
-
         $this->SetFont('Arial','', 8);
         $this->SetXY(10, 200);
         $this->Line(10, 260,60,260);

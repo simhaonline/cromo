@@ -2,6 +2,7 @@
 
 namespace App\Repository\Transporte;
 
+use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteGuia;
@@ -33,7 +34,7 @@ class TteFacturaRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function liquidar($codigoFactura): bool
+    public function liquidar($id): bool
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
@@ -41,10 +42,10 @@ class TteFacturaRepository extends ServiceEntityRepository
             SUM(g.pesoVolumen+0) as pesoVolumen, SUM(g.vrFlete+0) as vrFlete, SUM(g.vrManejo+0) as vrManejo
         FROM App\Entity\Transporte\TteGuia g
         WHERE g.codigoFacturaFk = :codigoFactura')
-            ->setParameter('codigoFactura', $codigoFactura);
+            ->setParameter('codigoFactura', $id);
         $arrGuias = $query->getSingleResult();
         $vrSubtotal = intval($arrGuias['vrFlete']) + intval($arrGuias['vrManejo']);
-        $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+        $arFactura = $em->getRepository(TteFactura::class)->find($id);
         $arFactura->setGuias(intval($arrGuias['cantidad']));
         $arFactura->setVrFlete(intval($arrGuias['vrFlete']));
         $arFactura->setVrManejo(intval($arrGuias['vrManejo']));
@@ -72,9 +73,12 @@ class TteFacturaRepository extends ServiceEntityRepository
         return true;
     }
 
+    /**
+     * @param $arFactura TteFactura
+     */
     public function autorizar($arFactura)
     {
-        if (count($this->_em->getRepository('App:Transporte\TteFactura')->findBy(['codigoFacturaPk' => $arFactura->getCodigoFacturaPk()])) > 0) {
+        if (count($this->_em->getRepository('App:Transporte\TteGuia')->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()])) > 0) {
             $arFactura->setEstadoAutorizado(1);
             $this->_em->persist($arFactura);
             $this->_em->flush();
@@ -83,10 +87,31 @@ class TteFacturaRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param $arFactura TteFactura
+     */
     public function desAutorizar($arFactura)
     {
         if ($arFactura->getEstadoAutorizado() == 1 && $arFactura->getEstadoAprobado() == 0) {
             $arFactura->setEstadoAutorizado(0);
+            $this->_em->persist($arFactura);
+            $this->_em->flush();
+        } else {
+            MensajesController::error('No se puede desautorizar, el registro ya se encuentra aprobado');
+        }
+    }
+
+    /**
+     * @param $arFactura TteFactura
+     */
+    public function aprobar($arFactura)
+    {
+        $objFunciones = new FuncionesController();
+        if ($arFactura->getEstadoAutorizado() == 1) {
+            $arFactura->setEstadoAprobado(1);
+            $fecha = new \DateTime('now');
+            $arFactura->setFecha($fecha);
+            $arFactura->setFechaVence($objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
             $this->_em->persist($arFactura);
             $this->_em->flush();
         } else {

@@ -27,7 +27,7 @@ class InvPrecio
      * @ORM\Column(name="nombre", type="string", length=255, nullable=true)
      * @Assert\Length( max = 255, maxMessage="El campo no puede contener mas de 255 caracteres")
      */
-    private $snombre;
+    private $nombre;
 
     /**
      * @ORM\OneToMany(targetEntity="InvPrecioDetalle", mappedBy="precioRel")
@@ -74,17 +74,17 @@ class InvPrecio
     /**
      * @return mixed
      */
-    public function getSnombre()
+    public function getNombre()
     {
-        return $this->snombre;
+        return $this->nombre;
     }
 
     /**
-     * @param mixed $snombre
+     * @param mixed $nombre
      */
-    public function setSnombre($snombre): void
+    public function setNombre($nombre): void
     {
-        $this->snombre = $snombre;
+        $this->nombre = $nombre;
     }
 
     /**

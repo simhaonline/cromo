@@ -25,13 +25,19 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_facturaTipoRel" class="col-sm-2 control-label">Factura tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.facturaTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Soporte:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.soporte, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label for="form_sectorRel" class="col-sm-2 control-label"></label>
+                <label for="form_plazoPago" class="col-sm-2 control-label">Plazo pago:</label>
                 <div class="col-sm-4">
-
+                    {{ form_widget(form.plazoPago, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group">

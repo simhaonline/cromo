@@ -73,6 +73,11 @@ class TteFactura
     private $guias;
 
     /**
+     * @ORM\Column(name="plazo_pago", type="float")
+     */
+    private $plazoPago = 0;
+
+    /**
      * @ORM\Column(name="estado_autorizado",options={"default" : false}, type="boolean")
      */
     private $estadoAutorizado = false;
@@ -453,6 +458,22 @@ class TteFactura
     public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlazoPago()
+    {
+        return $this->plazoPago;
+    }
+
+    /**
+     * @param mixed $plazoPago
+     */
+    public function setPlazoPago($plazoPago): void
+    {
+        $this->plazoPago = $plazoPago;
     }
 
 

@@ -1,0 +1,28 @@
+{% extends 'base_recursoHumano.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_genIdentificacionRel" class="col-sm-2 control-label">Tipo identificación:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.identificacionRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.identificacionRel) }}
+                </div>
+                <label for="form_numeroIdentificacion" class="col-sm-2 control-label">Identificación:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroIdentificacion, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.numeroIdentificacion) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'solicitud'}) }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

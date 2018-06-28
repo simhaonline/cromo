@@ -26,4 +26,8 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
         return $precio;
     }
 
+    public function listar(){
+
+    }
+
 }

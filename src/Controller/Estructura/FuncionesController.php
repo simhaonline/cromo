@@ -9,13 +9,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * Class Mensajes
  * @package App\Util
  */
-final class FuncionController
+final class FuncionesController
 {
     private static function getInstance()
     {
         static $instance = null;
         if($instance === null) {
-            $instance = new FuncionController();
+            $instance = new FuncionesController();
         }
         return $instance;
     }

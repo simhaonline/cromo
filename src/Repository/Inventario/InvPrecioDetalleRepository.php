@@ -13,4 +13,17 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, InvPrecioDetalle::class);
     }
 
+    public function precioVenta($codigoPrecioVenta, $codigoItem): float
+    {
+        $precio = 0;
+        if($codigoPrecioVenta && $codigoItem) {
+            $arPrecioDetalle = $this->getEntityManager()->getRepository(InvPrecioDetalle::class)->findOneBy(array('codigoPrecioDetallePk' => $codigoPrecioVenta, 'codigoItemFk' => $codigoItem));
+            if($arPrecioDetalle) {
+                $precio = $arPrecioDetalle->getVrPrecio();
+            }
+        }
+
+        return $precio;
+    }
+
 }

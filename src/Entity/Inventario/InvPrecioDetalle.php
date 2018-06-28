@@ -28,9 +28,9 @@ class InvPrecioDetalle
     private $codigoItemFk;
 
     /**
-     * @ORM\Column(name="precio",options={"default" : 0}, type="float")
+     * @ORM\Column(name="vr_precio",options={"default" : 0}, type="float")
      */
-    private $precio = 0;
+    private $vrPrecio = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvPrecio", inversedBy="preciosDetallesPrecioRel")
@@ -95,17 +95,17 @@ class InvPrecioDetalle
     /**
      * @return mixed
      */
-    public function getPrecio()
+    public function getVrPrecio()
     {
-        return $this->precio;
+        return $this->vrPrecio;
     }
 
     /**
-     * @param mixed $precio
+     * @param mixed $vrPrecio
      */
-    public function setPrecio($precio): void
+    public function setVrPrecio($vrPrecio): void
     {
-        $this->precio = $precio;
+        $this->vrPrecio = $vrPrecio;
     }
 
     /**

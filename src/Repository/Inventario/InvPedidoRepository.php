@@ -4,6 +4,7 @@ namespace App\Repository\Inventario;
 
 
 use App\Entity\Inventario\InvPedido;
+use App\Entity\Inventario\InvPedidoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -34,6 +35,19 @@ class InvPedidoRepository extends ServiceEntityRepository
         $dql = $this->getEntityManager()->createQuery($qb->getDQL());
         return $dql->execute();
 
+    }
+
+    public function liquidar($codigoPedido): bool
+    {
+        $arPedidoDetalles = $this->getEntityManager()->getRepository(InvPedidoDetalle::class)->findBy(array('codigoPedidoFk' => $codigoPedido));
+        foreach ($arPedidoDetalles as $arPedidoDetalle) {
+            $arPedidoDetalleAct = $this->getEntityManager()->getRepository(InvPedidoDetalle::class)->find($arPedidoDetalle->getCodigoPedidoDetallePk());
+            $subtotal = $arPedidoDetalle->getCantidad() * $arPedidoDetalle->getVrPrecio();
+            $arPedidoDetalleAct->setVrSubtotal($subtotal);
+            $this->getEntityManager()->persist($arPedidoDetalleAct);
+        }
+        $this->getEntityManager()->flush();
+        return true;
     }
 
 }

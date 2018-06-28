@@ -78,6 +78,9 @@
                             <th>ITEM</th>
                             <th>MARCA</th>
                             <th>CAN</th>
+                            <th>PRECIO</th>
+                            <th>IVA</th>
+                            <th>SUBOTAL</th>
                             <th>PEN</th>
                             <th></th>
                         </tr>
@@ -88,8 +91,11 @@
                                 <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
                                 <td>{{ arPedidoDetalle.itemNombre | default('') }}</td>
                                 <td>{{ arPedidoDetalle.itemMarcaNombre | default('') }}</td>
-                                <td>{{ arPedidoDetalle.cantidad }}</td>
-                                <td>{{ arPedidoDetalle.cantidadPendiente }}</td>
+                                <td class="numero">{{ arPedidoDetalle.cantidad }}</td>
+                                <td class="numero">{{ arPedidoDetalle.vrPrecio }}</td>
+                                <td class="numero">{{ arPedidoDetalle.porcentajeIva }}</td>
+                                <td class="numero">{{ arPedidoDetalle.vrSubtotal }}</td>
+                                <td class="numero">{{ arPedidoDetalle.cantidadPendiente }}</td>
                                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk }}" /></td>
                             </tr>
                         {% endfor %}

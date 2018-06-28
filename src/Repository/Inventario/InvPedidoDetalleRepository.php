@@ -22,6 +22,10 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
                   pd.codigoPedidoFk,
                   pd.cantidad,
                   pd.cantidadPendiente,
+                  pd.vrPrecio,
+                  pd.porcentajeIva,
+                  pd.vrSubtotal,
+                  pd.vrNeto,
                   i.nombre as itemNombre,
                   m.nombre as itemMarcaNombre                         
         FROM App\Entity\Inventario\InvPedidoDetalle pd

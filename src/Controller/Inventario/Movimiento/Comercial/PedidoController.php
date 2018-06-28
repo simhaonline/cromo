@@ -167,17 +167,20 @@ class PedidoController extends Controller
                 if (count($arrItems) > 0) {
                     foreach ($arrItems as $codigoItem => $cantidad) {
                         if ($cantidad != '' && $cantidad != 0) {
-                            $precio = $em->getRepository(InvPrecioDetalle::class)->precioVenta();
+                            $precio = $em->getRepository(InvPrecioDetalle::class)->precioVenta($codigoPrecioVenta, $codigoItem);
                             $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
-                            $arpedidoDetalle = new InvPedidoDetalle();
-                            $arpedidoDetalle->setPedidoRel($arPedido);
-                            $arpedidoDetalle->setItemRel($arItem);
-                            $arpedidoDetalle->setCantidad($cantidad);
-                            $arpedidoDetalle->setCantidadPendiente($cantidad);
-                            $em->persist($arpedidoDetalle);
+                            $arPedidoDetalle = new InvPedidoDetalle();
+                            $arPedidoDetalle->setPedidoRel($arPedido);
+                            $arPedidoDetalle->setItemRel($arItem);
+                            $arPedidoDetalle->setCantidad($cantidad);
+                            $arPedidoDetalle->setCantidadPendiente($cantidad);
+                            $arPedidoDetalle->setVrPrecio($precio);
+                            $arPedidoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
+                            $em->persist($arPedidoDetalle);
                         }
                     }
                     $em->flush();
+                    $em->getRepository(InvPedido::class)->liquidar($id);
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
             }

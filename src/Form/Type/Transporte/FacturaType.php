@@ -2,6 +2,8 @@
 
 namespace App\Form\Type\Transporte;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,7 +21,18 @@ class FacturaType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
+            ->add('facturaTipoRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TteFacturaTipo',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('ft')
+                        ->orderBy('ft.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Fecha tipo:'
+            ])
             ->add('soporte', TextType::class)
+            ->add('plazoPago', NumberType::class)
             ->add('comentario',TextareaType::class ,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
             ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));

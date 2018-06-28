@@ -208,6 +208,11 @@ class InvItem
     private $pedidosDetallesItemRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvPrecioDetalle", mappedBy="itemRel")
+     */
+    private $preciosDetallesItemRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoItemPk()
@@ -749,6 +754,22 @@ class InvItem
     public function setPedidosDetallesItemRel($pedidosDetallesItemRel): void
     {
         $this->pedidosDetallesItemRel = $pedidosDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPreciosDetallesItemRel()
+    {
+        return $this->preciosDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $preciosDetallesItemRel
+     */
+    public function setPreciosDetallesItemRel($preciosDetallesItemRel): void
+    {
+        $this->preciosDetallesItemRel = $preciosDetallesItemRel;
     }
 
 

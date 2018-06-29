@@ -246,15 +246,16 @@ class SolicitudController extends Controller
     }
 
     /**
-     * @param $session Session
+     * @param $session
      * @return \Symfony\Component\Form\FormInterface
+     * @throws \Doctrine\ORM\ORMException
      */
     private function formularioLista($session)
     {
         return $this->createFormBuilder()
             ->add('numero', NumberType::class, ['required' => false, 'data' => $session->get('filtroNumeroSolicitud')])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroEstadoAprobado'), 'required' => false])
-            ->add('solicitudTipoRel', EntityType::class, BaseDatos::llenarCombo($this->getDoctrine()->getManager(),1))
+            ->add('solicitudTipoRel', EntityType::class, BaseDatos::llenarCombo(1))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
     }

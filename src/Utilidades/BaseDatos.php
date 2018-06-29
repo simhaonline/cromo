@@ -10,6 +10,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 final class BaseDatos
 {
+    /**
+     * @var EntityManager|object
+     */
+    private $em;
+
     const TYPES = [
         'error' => 'danger',
         'ok' => 'success',
@@ -22,6 +27,8 @@ final class BaseDatos
     private function __construct()
     {
         $this->session = new Session();
+        global $kernel;
+        $this->em = $kernel->getContainer()->get("doctrine.orm.entity_manager");
     }
 
     /**
@@ -38,10 +45,19 @@ final class BaseDatos
     }
 
     /**
+     * @return EntityManager|object
+     */
+    public static function getEm() {
+        return self::getInstance()->em;
+    }
+
+    /**
+     * @param $em
      * @param $tipo
      * @return array|null
+     * @throws \Doctrine\ORM\ORMException
      */
-    public static function llenarCombo($em, $tipo)
+    public static function llenarCombo( $tipo)
     {
         $array = null;
         switch ($tipo) {
@@ -59,12 +75,10 @@ final class BaseDatos
                     'placeholder' => "TODOS",
                     'data' => ""];
                 if (self::getInstance()->session->get('filtroSolicitudTipo')) {
-                    $array['data'] = $em->getReference('App:Inventario\InvSolicitudTipo', self::getInstance()->session->get('filtroSolicitudTipo')->getCodigoSolicitudTipoPk());
+                    $array['data'] = self::getEm()->getReference('App:Inventario\InvSolicitudTipo', self::getInstance()->session->get('filtroSolicitudTipo')->getCodigoSolicitudTipoPk());
                 }
                 break;
         }
         return $array;
     }
-
-
 }

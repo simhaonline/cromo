@@ -4,6 +4,7 @@ namespace App\Form\Type\Inventario;
 
 use App\Entity\Inventario\InvPrecio;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -16,6 +17,8 @@ class PrecioType extends AbstractType
         $builder
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('fechaVence', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
         ;
     }
 

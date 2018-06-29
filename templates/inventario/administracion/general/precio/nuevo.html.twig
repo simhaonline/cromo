@@ -1,4 +1,4 @@
-{% extends 'base_recursoHumano.html.twig' %}
+{% extends 'base_inventario.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <br>
@@ -6,21 +6,21 @@
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_genIdentificacionRel" class="col-sm-2 control-label">Tipo identificación:</label>
+                <label for="form_nombre" class="col-sm-2 control-label">Nombre:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.identificacionRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.identificacionRel) }}
+                    {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.nombre) }}
                 </div>
-                <label for="form_numeroIdentificacion" class="col-sm-2 control-label">Identificación:</label>
+                <label for="form_fechaVence" class="col-sm-2 control-label">Fecha vence:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numeroIdentificacion, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.numeroIdentificacion) }}
+                    {{ form_widget(form.fechaVence, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.fechaVence) }}
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('admin_lista',{'modulo':'recursoHumano','entidad':'solicitud'}) }}">Cancelar</a>
+        <a class="btn btn-default btn-sm" href="{{ path('admin_lista',{'modulo':'inventario','entidad':'precio'}) }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
         {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>

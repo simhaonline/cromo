@@ -2,6 +2,7 @@
 
 namespace App\Formato\Inventario;
 
+use App\Entity\Inventario\InvSolicitud;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class Solicitud extends \FPDF
@@ -21,8 +22,17 @@ class Solicitud extends \FPDF
         self::$codigoSolicitud = $codigoSolicitud;
         ob_clean();
         $pdf = new Solicitud('P', 'mm', 'letter');
+        $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($codigoSolicitud);
         $pdf->AliasNbPages();
         $pdf->AddPage();
+        $pdf->SetFont('Arial', '', 40);
+        $pdf->SetTextColor(255,220,220);
+        if ($arSolicitud->getEstadoAnulado()) {
+            $pdf->RotatedText(90,150,'ANULADO',45);
+        } elseif(!$arSolicitud->getEstadoAprobado()) {
+            $pdf->RotatedText(90,150,'SIN APROBAR',45);
+        }
+        $pdf->SetTextColor(0,0,0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
         $pdf->Output("Movimiento$codigoSolicitud.pdf", 'D');
@@ -30,15 +40,16 @@ class Solicitud extends \FPDF
 
     public function Header()
     {
+        /** @var  $arSolicitud InvSolicitud */
         $arSolicitud = self::$em->getRepository('App:Inventario\InvSolicitud')->find(self::$codigoSolicitud);
         $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
         //Logo
         $this->SetXY(53, 10);
-        try{
+        try {
             $this->Image('../public/assets/img/empresa/logo.jpeg', 12, 13, 40, 25);
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
         }
         //INFORMACIÓN EMPRESA
         $this->Cell(147, 7, utf8_decode("SOLICITUD"), 0, 0, 'C', 1);
@@ -55,7 +66,6 @@ class Solicitud extends \FPDF
         $this->SetXY(53, 30);
         $this->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
         $this->Cell(100, 4, '', 0, 0, 'L', 0);
-
         //ENCABEZADO ORDEN DE COMPRA
         $intY = 40;
 //        $this->SetFillColor(272, 272, 272);
@@ -102,9 +112,7 @@ class Solicitud extends \FPDF
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
 //        $this->Cell(160, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
-        $this->MultiCell(160,4,$arSolicitud->getComentarios(),1,'L');
-
-
+        $this->MultiCell(160, 4, $arSolicitud->getComentarios(), 1, 'L');
 
 
         $this->EncabezadoDetalles();
@@ -175,7 +183,45 @@ class Solicitud extends \FPDF
         $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }
-}
 
+    var $angle = 0;
+
+    function Rotate($angle, $x = -1, $y = -1)
+    {
+        if ($x == -1)
+            $x = $this->x;
+        if ($y == -1)
+            $y = $this->y;
+        if ($this->angle != 0)
+            $this->_out('Q');
+        $this->angle = $angle;
+        if ($angle != 0) {
+            $angle *= M_PI / 180;
+            $c = cos($angle);
+            $s = sin($angle);
+            $cx = $x * $this->k;
+            $cy = ($this->h - $y) * $this->k;
+            $this->_out(sprintf('q %.5F %.5F %.5F %.5F %.2F %.2F cm 1 0 0 1 %.2F %.2F cm', $c, $s, -$s, $c, $cx, $cy, -$cx, -$cy));
+        }
+    }
+
+    function _endpage()
+    {
+        if ($this->angle != 0) {
+            $this->angle = 0;
+            $this->_out('Q');
+        }
+        parent::_endpage();
+    }
+
+    function RotatedText($x,$y,$txt,$angle)
+    {
+        //Text rotated around its origin
+        $this->Rotate($angle,$x,$y);
+        $this->Text($x,$y,$txt);
+        $this->Rotate(0);
+    }
+
+}
 
 ?>

@@ -73,38 +73,26 @@
                     {#{% if llave == 'estadoAprobado' and datos == true  %}#}
                         {#{% else %}#}
                 <td style="text-align: center">
-                    {% if arEntidad.funcion|slice(0,3) == 'mov' %}
-                        {% set funcion = 'mto' %}
-                    {% else %}
-                        {% set funcion = arEntidad.funcion|slice(0,3) %}
-                    {% endif %}
-                    <a href="{{ path(arEntidad.prefijo ~ '_' ~ funcion ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
-                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large">
-                        </i>
+                    <a href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
+                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i>
                     </a>
                 </td>
                 {% else %}
                 <td style="text-align: center">
                     <a href="{{ path('admin_nuevo', {'entidad': arEntidad.entidad,'modulo':arEntidad.modulo,'id': datos.ID }) }}">
-                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large"></i>
+                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i>
                     </a>
                 </td>
                 {% endif %}
                 <td style="text-align: center">
                     {% if arEntidad.detalleInterno == true %}
-
-                        {% if arEntidad.funcion|slice(0,3) == 'mov' %}
-                            {% set funcion = 'mto' %}
-                        {% else %}
-                            {% set funcion = arEntidad.funcion|slice(0,3) %}
-                        {% endif %}
-                        <a href="{{ path(arEntidad.prefijo ~ '_' ~ funcion ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_detalle' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
-                            <i class="fa fa-share-square-o" style="font-size: large">
+                        <a href="{{ path(arEntidad.modulo ~ '_' ~ arEntidad.funcion ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_detalle' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
+                            <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i>
                             </i>
                         </a>
                     {% else %}
                         <a href="{{ path('admin_detalle', { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
-                            <i class="fa fa-share-square-o" style="font-size: large">
+                            <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i>
                             </i>
                         </a>
                     {% endif %}
@@ -130,13 +118,8 @@
         </div>
         <div class="btn-group">
             {% if arEntidad.nuevoInterno == true %}
-                {% if arEntidad.funcion|slice(0,3) == 'mov' %}
-                    {% set funcion = 'mto' %}
-                {% else %}
-                    {% set funcion = arEntidad.funcion|slice(0,3) %}
-                {% endif %}
                 <a class="btn btn-default btn-sm"
-                   href="{{ path(arEntidad.prefijo ~ '_' ~funcion ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': 0}) }}">Nuevo
+                   href="{{ path(arEntidad.prefijo ~ '_' ~arEntidad.funcion ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': 0}) }}">Nuevo
                 </a>
             {% else %}
                 <a class="btn btn-default btn-sm"

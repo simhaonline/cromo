@@ -17,8 +17,7 @@ class OrdenCompraTipoType extends AbstractType
         $builder
             ->add('codigoOrdenCompraTipoPk',TextType::class,['label' => 'Codigo orden compra tipo:','required' => true])
             ->add('nombre',TextType::class,['label' => 'Nombre:','required' => true])
-            ->add('consecutivo',NumberType::class,['label' => 'Consecutivo:'])
-            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('consecutivo',NumberType::class,['label' => 'Consecutivo:'])->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo',SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }

@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class InicioController extends Controller
 {
     /**
-     * @Route("/inventario/general/inicio", name="inventario_general_inicio")
+     * @Route("/inventario/general/inicio", name="inventario_general_general_inicio_ver")
      */
     public function lista()
     {

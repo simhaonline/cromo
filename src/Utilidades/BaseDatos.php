@@ -56,10 +56,10 @@ final class BaseDatos
                     'empty_data' => "",
                     'placeholder' => "TODOS",
                     'data' => ""];
-                if($session->get('filtroSolicitudTipo')){
+                /*if($session->get('filtroSolicitudTipo')){
                     $array['data'] = $this->getDoctrine()->getManager()->getReference('App:Inventario\InvSolicitudTipo',$session->get('filtroSolicitudTipo')->getCodigoSolicitudTipoPk());
                 }
-                break;
+                break;*/
         }
         return $array;
     }

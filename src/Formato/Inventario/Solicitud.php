@@ -43,6 +43,9 @@ class Solicitud extends \FPDF
         /** @var  $arSolicitud InvSolicitud */
         $arSolicitud = self::$em->getRepository('App:Inventario\InvSolicitud')->find(self::$codigoSolicitud);
         $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
+        $this->SetFont('Arial', '', 5);
+        $date = new \DateTime('now');
+        $this->Text(168, 8, $date->format('Y-m-d H:i:s') . ' [Cromo | Inventario]');
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
         //Logo

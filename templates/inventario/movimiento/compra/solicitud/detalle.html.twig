@@ -2,15 +2,6 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     {{ notificar()|raw }}
-    <div class="row">
-        <div class="col-lg-12">
-            <h3 class='page-header'>
-                Inventario movimiento
-                <small style="font-size: 20px">Inventario: solicitud detalle</small>
-            </h3>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             {{ form_widget(form.btnAutorizar) }}
@@ -60,9 +51,10 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th title="Codigo de item">COD</th>
                             <th>ITEM</th>
-                            <th>CANTIDAD</th>
-                            <th>CANTIDAD PENDIENTE</th>
+                            <th title="Cantidad">CANT</th>
+                            <th title="Cantidad pendiente">PEND</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -70,6 +62,7 @@
                         {% for arSolicitudDetalle in arSolicitudDetalles %}
                             <tr>
                                 <td>{{ arSolicitudDetalle.codigoSolicitudDetallePk }}</td>
+                                <td>{{ arSolicitudDetalle.itemRel.codigoItemPk | default('') }}</td>
                                 <td>{{ arSolicitudDetalle.itemRel.nombre | default('') }}</td>
                                 <td style="text-align: right;">{{ arSolicitudDetalle.cantidad }}</td>
                                 <td style="text-align: right;">{{ arSolicitudDetalle.cantidadPendiente}}</td>
@@ -85,7 +78,7 @@
                         {% if arSolicitud.estadoAutorizado == true %}
                             <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled" value="Nuevo"/>
                         {% else %}
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_solicitud_detalle_nuevo', {'codigoDetalle': 0,'id':arSolicitud.codigoSolicitudPk }) }}', 'SolicitudAdicionarDetalle', 600, 900)">Nuevo</a>
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_solicitud_detalle_nuevo', {'id':arSolicitud.codigoSolicitudPk }) }}', 'SolicitudAdicionarDetalle', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">

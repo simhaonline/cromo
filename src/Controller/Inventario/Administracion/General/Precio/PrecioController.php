@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class PrecioController extends Controller
 {
     /**
-     * @Route("/inv/adm/gen/precio/lista", name="inv_adm_gen_precio_lista")
+     * @Route("/inv/adm/gen/precio/lista", name="inventario_administracion_general_precio_lista")
      */
     public function lista(Request $request)
     {
@@ -38,7 +38,7 @@ class PrecioController extends Controller
     }
 
     /**
-     * @Route("inv/adm/gen/precio/nuevo/{id}", name="inv_adm_general_precio_nuevo")
+     * @Route("inv/adm/gen/precio/nuevo/{id}", name="inventario_administracion_general_precio_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -71,7 +71,7 @@ class PrecioController extends Controller
     }
 
     /**
-     * @Route("/inv/adm/gen/precio/detalle/{id}", name="inv_adm_general_precio_detalle")
+     * @Route("/inv/adm/gen/precio/detalle/{id}", name="inv_administracion_general_precio_detalle")
      */
     public function detalle(Request $request, $id)
     {

@@ -22,8 +22,6 @@ use App\Form\Type\Inventario\SolicitudType;
 
 class SolicitudController extends Controller
 {
-    var $query = '';
-
     /**
      * @Route("/inv/mto/inventario/solicitud/lista", name="inventario_movimiento_inventario_solicitud_lista")
      */
@@ -32,16 +30,28 @@ class SolicitudController extends Controller
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $form = $this->formularioLista($session);
+        $form = $this->createFormBuilder()
+            ->add('numero', NumberType::class, ['required' => false, 'data' => $session->get('filtroNumeroSolicitud')])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroEstadoAprobado'), 'required' => false])
+            ->add('solicitudTipoRel', EntityType::class, BaseDatos::llenarCombo(1))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
         $form->handleRequest($request);
-        $this->listarSolicitudes($session);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $this->filtrarSolicitudes($session, $form);
-                $this->listarSolicitudes($session);
+                $session->set('filtroNumeroSolicitud', $form->get('numero')->getData());
+                $session->set('filtroEstadoAprobado', $form->get('estadoAprobado')->getData());
+                $solicitudTipo = $form->get('solicitudTipoRel')->getData();
+                if($solicitudTipo != ''){
+                    $session->set('filtroSolicitudTipo', $form->get('solicitudTipoRel')->getData()->getCodigoSolicitudTipoPk());
+                } else {
+                    $session->set('filtroSolicitudTipo', null);
+                }
             }
         }
-        $arSolicitudes = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
+        $query = $this->getDoctrine()->getManager()->getRepository('App:Inventario\InvSolicitud')->
+        listaSolicitud($session->get('filtroNumeroSolicitud'), $session->get('filtroEstadoAprobado'),$session->get('filtroSolicitudTipo'));
+        $arSolicitudes = $paginator->paginate($query, $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/compra/solicitud/lista.html.twig', [
             'form' => $form->createView(),
             'arSolicitudes' => $arSolicitudes
@@ -137,15 +147,21 @@ class SolicitudController extends Controller
      */
     public function detalleNuevo(Request $request, $id)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
-        $form = $this->formularioFiltroItems();
+        $form = $this->createFormBuilder()
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->getForm();
         $form->handleRequest($request);
-        $this->listaItems($em, $form);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $this->listaItems($em, $form);
+                $session->set('filtroInvCodigoItem', $form->get('txtCodigoItem')->getData());
+                $session->set('filtroInvNombreItem', $form->get('txtNombreItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -166,7 +182,8 @@ class SolicitudController extends Controller
                 }
             }
         }
-        $arItems = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
+        $query = $em->getRepository('App:Inventario\InvItem')->listarItems();
+        $arItems = $paginator->paginate($query, $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/compra/solicitud/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems
@@ -208,67 +225,5 @@ class SolicitudController extends Controller
             ->add('btnAnular', SubmitType::class, $arrBtnAnular)
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
             ->getForm();
-    }
-
-    private function formularioFiltroItems()
-    {
-        return $this->createFormBuilder()
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
-            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->getForm();
-    }
-
-    /**
-     * @param $session
-     */
-    private function listarSolicitudes($session)
-    {
-        $this->query = $this->getDoctrine()->getManager()->getRepository('App:Inventario\InvSolicitud')->
-        listaSolicitud($session->get('filtroNumeroSolicitud'), $session->get('filtroEstadoAprobado'),$session->get('filtroSolicitudTipo'));
-    }
-
-    /**
-     * @param $session
-     * @param $form
-     */
-    private function filtrarSolicitudes($session, $form)
-    {
-        $session->set('filtroNumeroSolicitud', $form->get('numero')->getData());
-        $session->set('filtroEstadoAprobado', $form->get('estadoAprobado')->getData());
-        $solicitudTipo = $form->get('solicitudTipoRel')->getData();
-        if($solicitudTipo != ''){
-            $session->set('filtroSolicitudTipo', $form->get('solicitudTipoRel')->getData());
-        } else {
-            $session->set('filtroSolicitudTipo', null);
-        }
-    }
-
-    /**
-     * @param $session
-     * @return \Symfony\Component\Form\FormInterface
-     * @throws \Doctrine\ORM\ORMException
-     */
-    private function formularioLista($session)
-    {
-        return $this->createFormBuilder()
-            ->add('numero', NumberType::class, ['required' => false, 'data' => $session->get('filtroNumeroSolicitud')])
-            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroEstadoAprobado'), 'required' => false])
-            ->add('solicitudTipoRel', EntityType::class, BaseDatos::llenarCombo(1))
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->getForm();
-    }
-
-    /**
-     * @param $em ObjectManager
-     * @param $form \Symfony\Component\Form\FormInterface
-     */
-    private function listaItems($em, $form)
-    {
-        $session = new Session();
-        $session->set('filtroCodigoItem', $form->get('txtCodigoItem')->getData());
-        $session->set('filtroNombreItem', $form->get('txtNombreItem')->getData());
-        $this->query = $em->getRepository('App:Inventario\InvItem')->listarItems($session->get('filtroNombreItem'), $session->get('filtroCodigoItem'));
     }
 }

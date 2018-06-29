@@ -6,6 +6,7 @@ use App\Entity\Inventario\InvItem;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvItemRepository extends ServiceEntityRepository
 {
@@ -56,8 +57,9 @@ class InvItemRepository extends ServiceEntityRepository
         return $dql->execute();
     }
 
-    public function listarItems($nombreItem = '', $codigoItem = '')
+    public function listarItems()
     {
+        $session = new Session();
         $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvItem', 'ii')
             ->select('ii.codigoItemPk')
             ->addSelect('ii.nombre')
@@ -67,11 +69,11 @@ class InvItemRepository extends ServiceEntityRepository
             ->addSelect('ii.stockMinimo')
             ->addSelect('ii.stockMaximo')
             ->where('ii.codigoItemPk <> 0');
-        if ($codigoItem != '') {
-            $qb->andWhere("ii.codigoItemPk = {$codigoItem}");
+        if ($session->get('filtroInvCodigoItem') != '') {
+            $qb->andWhere("ii.codigoItemPk = {$session->get('filtroInvCodigoItem')}");
         }
-        if ($nombreItem != '') {
-            $qb->andWhere("ii.nombre LIKE '%{$nombreItem}%' ");
+        if ($session->get('filtroInvNombreItem') != '') {
+            $qb->andWhere("ii.nombre LIKE '%{$session->get('filtroInvNombreItem')}%' ");
         }
         $qb->orderBy('ii.codigoItemPk', 'ASC');
         $query = $this->_em->createQuery($qb->getDQL());

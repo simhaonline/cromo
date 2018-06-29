@@ -50,6 +50,9 @@ class FacturaController extends Controller
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository('App:Transporte\TteFactura')->desAutorizar($arFactura);
             }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository('App:Transporte\TteFactura')->Aprobar($arFactura);
+            }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarGuia($arrGuias);
@@ -143,6 +146,7 @@ class FacturaController extends Controller
         $arrBtnAprobar = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         if ($arFactura->getEstadoAnulado()) {
             $arrBtnAutorizar['disabled'] = true;
@@ -150,28 +154,32 @@ class FacturaController extends Controller
             $arrBtnImprimir['disabled'] = true;
             $arrBtnAnular['disabled'] = true;
             $arrBtnAprobar['disabled'] = true;
+            $arrBtnRetirar['disabled'] = true;
         } elseif ($arFactura->getEstadoAprobado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnImprimir['disabled'] = false;
             $arrBtnAnular['disabled'] = false;
             $arrBtnAprobar['disabled'] = true;
+            $arrBtnRetirar['disabled'] = true;
         } elseif ($arFactura->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
             $arrBtnImprimir['disabled'] = true;
             $arrBtnAnular['disabled'] = true;
             $arrBtnAprobar['disabled'] = false;
+            $arrBtnRetirar['disabled'] = true;
         } else {
             $arrBtnAutorizar['disabled'] = false;
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnImprimir['disabled'] = true;
             $arrBtnAnular['disabled'] = true;
             $arrBtnAprobar['disabled'] = true;
+            $arrBtnRetirar['disabled'] = false;
         }
         return $this
             ->createFormBuilder()
-            ->add('btnRetirarGuia', SubmitType::class, array('label' => 'Retirar'))
+            ->add('btnRetirarGuia', SubmitType::class, $arrBtnRetirar)
             ->add('btnAutorizar', SubmitType::class, $arrBtnAutorizar)
             ->add('btnAprobar', SubmitType::class, $arrBtnAprobar)
             ->add('btnDesautorizar', SubmitType::class, $arrBtnDesautorizar)

@@ -2,7 +2,7 @@
 
 namespace App\Repository\Inventario;
 
-use App\Controller\Estructura\MensajesController;
+use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvOrdenCompra;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -96,7 +96,7 @@ class InvOrdenCompraRepository extends ServiceEntityRepository
             $this->_em->persist($arOrdenCompra);
             $this->_em->flush();
         } else {
-            MensajesController::error('El registro esta impreso y no se puede desautorizar');
+            Mensajes::error('El registro esta impreso y no se puede desautorizar');
         }
     }
 
@@ -110,7 +110,7 @@ class InvOrdenCompraRepository extends ServiceEntityRepository
             $this->_em->persist($arOrdenCompra);
             $this->_em->flush();
         } else {
-            MensajesController::error('No se puede autorizar, el registro no tiene detalles');
+            Mensajes::error('No se puede autorizar, el registro no tiene detalles');
         }
     }
 

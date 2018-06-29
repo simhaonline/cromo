@@ -74,8 +74,8 @@ final class BaseDatos
                     'empty_data' => "",
                     'placeholder' => "TODOS",
                     'data' => ""];
-                if (self::getInstance()->session->get('filtroSolicitudTipo')) {
-                    $array['data'] = self::getEm()->getReference('App:Inventario\InvSolicitudTipo', self::getInstance()->session->get('filtroSolicitudTipo')->getCodigoSolicitudTipoPk());
+                if (self::getInstance()->session->get('filtroInvCodigoSolicitudTipo')) {
+                    $array['data'] = self::getEm()->getReference('App:Inventario\InvSolicitudTipo', self::getInstance()->session->get('filtroInvCodigoSolicitudTipo'));
                 }
                 break;
         }

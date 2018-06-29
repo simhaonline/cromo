@@ -2,7 +2,7 @@
 
 namespace App\Repository\Inventario;
 
-use App\Controller\Estructura\MensajesController;
+use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

@@ -23,7 +23,10 @@ use App\Form\Type\Inventario\SolicitudType;
 class SolicitudController extends Controller
 {
     /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/inv/mto/inventario/solicitud/lista", name="inventario_movimiento_inventario_solicitud_lista")
+     * @throws \Doctrine\ORM\ORMException
      */
     public function lista(Request $request)
     {
@@ -31,26 +34,26 @@ class SolicitudController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('numero', NumberType::class, ['required' => false, 'data' => $session->get('filtroNumeroSolicitud')])
-            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroEstadoAprobado'), 'required' => false])
+            ->add('numero', NumberType::class, ['required' => false, 'data' => $session->get('filtroInvNumeroSolicitud')])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvEstadoAprobado'), 'required' => false])
             ->add('solicitudTipoRel', EntityType::class, BaseDatos::llenarCombo(1))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroNumeroSolicitud', $form->get('numero')->getData());
-                $session->set('filtroEstadoAprobado', $form->get('estadoAprobado')->getData());
+                $session->set('filtroInvNumeroSolicitud', $form->get('numero')->getData());
+                $session->set('filtroInvEstadoAprobado', $form->get('estadoAprobado')->getData());
                 $solicitudTipo = $form->get('solicitudTipoRel')->getData();
                 if($solicitudTipo != ''){
-                    $session->set('filtroSolicitudTipo', $form->get('solicitudTipoRel')->getData()->getCodigoSolicitudTipoPk());
+                    $session->set('filtroInvCodigoSolicitudTipo', $form->get('solicitudTipoRel')->getData()->getCodigoSolicitudTipoPk());
                 } else {
-                    $session->set('filtroSolicitudTipo', null);
+                    $session->set('filtroInvCodigoSolicitudTipo', null);
                 }
             }
         }
         $query = $this->getDoctrine()->getManager()->getRepository('App:Inventario\InvSolicitud')->
-        listaSolicitud($session->get('filtroNumeroSolicitud'), $session->get('filtroEstadoAprobado'),$session->get('filtroSolicitudTipo'));
+        listaSolicitud();
         $arSolicitudes = $paginator->paginate($query, $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/compra/solicitud/lista.html.twig', [
             'form' => $form->createView(),

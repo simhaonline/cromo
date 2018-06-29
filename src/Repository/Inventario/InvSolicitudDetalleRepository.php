@@ -2,7 +2,7 @@
 
 namespace App\Repository\Inventario;
 
-use App\Controller\Estructura\MensajesController;
+use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -47,11 +47,11 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
                 try {
                     $this->_em->flush();
                 } catch (\Exception $e) {
-                    MensajesController::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                    Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
                 }
             }
         } else {
-            MensajesController::error('No se puede eliminar, el registro se encuentra autorizado');
+            Mensajes::error('No se puede eliminar, el registro se encuentra autorizado');
         }
     }
 

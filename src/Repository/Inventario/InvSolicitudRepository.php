@@ -2,11 +2,11 @@
 
 namespace App\Repository\Inventario;
 
-use App\Controller\Estructura\MensajesController;
+use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvSolicitud;
-use App\Entity\Inventario\InvSolicitudTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvSolicitudRepository extends ServiceEntityRepository
 {
@@ -34,13 +34,11 @@ class InvSolicitudRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $numero
-     * @param string $estadoAprobado
-     * @param InvSolicitudTipo $arSolicitudTipo
      * @return mixed
      */
-    public function listaSolicitud($numero = '', $estadoAprobado = '', $arSolicitudTipo = null)
+    public function listaSolicitud()
     {
+        $session = new Session();
         $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvSolicitud', 'i')
             ->select('i.codigoSolicitudPk')
             ->join('i.solicitudTipoRel', 'it')
@@ -51,10 +49,10 @@ class InvSolicitudRepository extends ServiceEntityRepository
             ->addSelect('i.estadoAprobado')
             ->addSelect('i.estadoAnulado')
             ->where('i.codigoSolicitudPk <> 0');
-        if ($numero != '') {
-            $qb->andWhere("i.numero = {$numero}");
+        if ($session->get('filtroInvNumeroSolicitud') != '') {
+            $qb->andWhere("i.numero = {$session->get('filtroInvNumeroSolicitud')}");
         }
-        switch ($estadoAprobado) {
+        switch ($session->get('filtroInvEstadoAprobado')) {
             case '0':
                 $qb->andWhere("i.estadoAprobado = 0");
                 break;
@@ -62,8 +60,8 @@ class InvSolicitudRepository extends ServiceEntityRepository
                 $qb->andWhere("i.estadoAprobado = 1");
                 break;
         }
-        if($arSolicitudTipo){
-            $qb->andWhere("i.codigoSolicitudTipoFk = '{$arSolicitudTipo->getCodigoSolicitudTipoPk()}'");
+        if ($session->get('filtroInvCodigoSolicitudTipo')) {
+            $qb->andWhere("i.codigoSolicitudTipoFk = '{$session->get('filtroInvCodigoSolicitudTipo')}'");
         }
         $query = $this->getEntityManager()->createQuery($qb->getDQL());
         return $query->execute();
@@ -97,7 +95,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
                         $respuesta = 'No se puede eliminar, el registro se encuentra impreso';
                     }
                 }
-                MensajesController::error($respuesta);
+                Mensajes::error($respuesta);
             }
         }
     }
@@ -165,7 +163,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
             $this->getEntityManager()->persist($arSolicitud);
             $this->getEntityManager()->flush();
         } else {
-            MensajesController::error('El registro esta impreso y no se puede desautorizar');
+            Mensajes::error('El registro esta impreso y no se puede desautorizar');
         }
     }
 
@@ -181,7 +179,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
             $this->getEntityManager()->persist($arSolicitud);
             $this->getEntityManager()->flush();
         } else {
-            MensajesController::error('No se puede autorizar, el registro no tiene detalles');
+            Mensajes::error('No se puede autorizar, el registro no tiene detalles');
         }
     }
 

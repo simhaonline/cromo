@@ -2,7 +2,7 @@
 
 namespace App\Repository\Inventario;
 
-use App\Controller\Estructura\MensajesController;
+use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
@@ -103,7 +103,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $this->_em->persist($arMovimiento);
             $this->_em->flush();
         } else {
-            MensajesController::error('El registro esta impreso y no se puede desautorizar');
+            Mensajes::error('El registro esta impreso y no se puede desautorizar');
         }
     }
 
@@ -117,7 +117,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $this->_em->persist($arMovimiento);
             $this->_em->flush();
         } else {
-            MensajesController::error('No se puede autorizar, el registro no tiene detalles');
+            Mensajes::error('No se puede autorizar, el registro no tiene detalles');
         }
     }
 

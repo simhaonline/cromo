@@ -32,6 +32,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>NUMERO</th>
             <th>FECHA</th>
             <th>TERCERO</th>
             <th>SUBTOTAL</th>
@@ -48,6 +49,7 @@
         {% for arPedido in arPedidos %}
             <tr>
                 <td>{{ arPedido.codigoPedidoPk }}</td>
+                <td>{{ arPedido.numero }}</td>
                 <td>{{ arPedido.fecha | date('Y-m-d') }}</td>
                 <td>{{ arPedido.terceroNombreCorto }}</td>
                 <td class="numero">{{ arPedido.vrSubtotal }}</td>

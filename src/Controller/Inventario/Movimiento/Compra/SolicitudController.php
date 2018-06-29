@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Compra;
 use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Formato\Inventario\Solicitud;
+use App\Utilidades\BaseDatos;
 use App\Utilidades\Mensajes;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
@@ -267,7 +268,7 @@ class SolicitudController extends Controller
         return $this->createFormBuilder()
             ->add('numero', NumberType::class, ['required' => false, 'data' => $session->get('filtroNumeroSolicitud')])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroEstadoAprobado'), 'required' => false])
-            ->add('solicitudTipoRel', EntityType::class, $arrayPropiedadesSolicitudTipo)
+            ->add('solicitudTipoRel', EntityType::class, BaseDatos::llenarCombo(1))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
     }

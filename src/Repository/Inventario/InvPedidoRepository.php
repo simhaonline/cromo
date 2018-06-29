@@ -18,8 +18,9 @@ class InvPedidoRepository extends ServiceEntityRepository
 
     public function lista(): array
     {
+        $session = new Session();
         $qb = $this->getEntityManager()->createQueryBuilder()->from(InvPedido::class,'p')
-            ->join('p.terceroRel', 't')
+            ->leftJoin('p.terceroRel', 't')
             ->select('p.codigoPedidoPk')
             ->addSelect('p.numero')
             ->addSelect('p.fecha')
@@ -33,6 +34,9 @@ class InvPedidoRepository extends ServiceEntityRepository
             ->addSelect('t.nombreCorto AS terceroNombreCorto')
             ->where('p.codigoPedidoPk <> 0')
             ->orderBy('p.codigoPedidoPk','DESC');
+        if($session->get('filtroInvNumeroPedido')) {
+            $qb->andWhere("p.numero = {$session->get('filtroInvNumeroPedido')}");
+        }
         $dql = $this->getEntityManager()->createQuery($qb->getDQL());
         return $dql->execute();
 

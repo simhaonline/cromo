@@ -24,8 +24,6 @@ use App\Form\Type\Inventario\PedidoType;
 
 class PedidoController extends Controller
 {
-    var $query = '';
-
     /**
      * @Route("/inv/mto/comercial/pedido/lista", name="inventario_movimiento_comercial_pedido_lista")
      */
@@ -36,13 +34,12 @@ class PedidoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                if ($form->get('btnFiltrar')->isClicked()) {
-                    $this->filtrar($form);
-                    $form = $this->formularioFiltro();
+                if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+                    $session = new session;
+                    $session->set('filtroInvNumeroPedido', $form->get('numero')->getData());
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    $this->filtrar($form);
-                    $query = $this->getDoctrine()->getRepository(TteGuia::class)->lista();
+                    $query = $this->getDoctrine()->getRepository(InvPedido::class)->lista();
                     General::get()->setExportar($query, "Guias");
                 }
             }
@@ -196,25 +193,6 @@ class PedidoController extends Controller
         ]);
     }
 
-
-    private function filtrar($form)
-    {
-        /*$session = new session;
-        $arRuta = $form->get('guiaTipoRel')->getData();
-        if ($arRuta) {
-            $session->set('filtroTteCodigoGuiaTipo', $arRuta->getCodigoGuiaTipoPk());
-        } else {
-            $session->set('filtroTteCodigoGuiaTipo', null);
-        }
-        $arServicio = $form->get('servicioRel')->getData();
-        if ($arServicio) {
-            $session->set('filtroTteCodigoServicio', $arServicio->getCodigoServicioPk());
-        } else {
-            $session->set('filtroTteCodigoServicio', null);
-        }
-        $session->set('filtroTteDocumento', $form->get('documento')->getData());
-        $session->set('filtroTteNumeroGuia', $form->get('numero')->getData());*/
-    }
 
     private function formularioFiltro()
     {

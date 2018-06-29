@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class RecogeController extends Controller
 {
    /**
-    * @Route("/tte/pro/recogida/recogida/recoge", name="transporte_pro_recogida_recogida_recoge")
+    * @Route("/transporte/pro/recogida/recogida/recoge", name="transporte_pro_recogida_recogida_recoge")
     */    
     public function lista(Request $request)
     {

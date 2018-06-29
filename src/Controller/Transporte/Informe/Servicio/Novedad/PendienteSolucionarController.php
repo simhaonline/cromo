@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityRepository;
 class PendienteSolucionarController extends Controller
 {
    /**
-    * @Route("/tte/inf/servicio/novedad/pendiente/solucionar", name="transporte_inf_servicio_novedad_pendiente_solucionar")
+    * @Route("/transporte/inf/servicio/novedad/pendiente/solucionar", name="transporte_inf_servicio_novedad_pendiente_solucionar")
     */    
     public function lista(Request $request)
     {

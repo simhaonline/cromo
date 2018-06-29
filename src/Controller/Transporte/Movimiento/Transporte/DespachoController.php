@@ -21,7 +21,7 @@ use SoapClient;
 class DespachoController extends Controller
 {
    /**
-    * @Route("/tte/mto/transporte/despacho/lista", name="transporte_movimiento_transporte_despacho_lista")
+    * @Route("/transporte/movimiento/transporte/despacho/lista", name="transporte_movimiento_transporte_despacho_lista")
     */    
     public function lista(Request $request)
     {
@@ -32,7 +32,7 @@ class DespachoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/transporte/despacho/nuevo/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_nuevo")
+     * @Route("/transporte/movimiento/transporte/despacho/nuevo/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_nuevo")
      */
     public function nuevo(Request $request, $codigoDespacho)
     {
@@ -76,7 +76,7 @@ class DespachoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/transporte/despacho/detalle/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_detalle")
+     * @Route("/transporte/movimiento/transporte/despacho/detalle/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_detalle")
      */
     public function detalle(Request $request, $codigoDespacho)
     {
@@ -127,7 +127,7 @@ class DespachoController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/trasnporte/despacho/detalle/adicionar/guia/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_detalle_adicionar_guia")
+     * @Route("/transporte/movimiento/trasnporte/despacho/detalle/adicionar/guia/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_detalle_adicionar_guia")
      */
     public function detalleAdicionarGuia(Request $request, $codigoDespacho)
     {

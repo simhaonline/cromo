@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 class GuiaController extends Controller
 {
    /**
-    * @Route("/tte/tab/guia", name="transporte_tab_guia")
+    * @Route("/transporte/tab/guia", name="transporte_tablero_guia")
     */    
     public function principal(Request $request)
     {

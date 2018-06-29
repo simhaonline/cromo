@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class PrecioController extends Controller
 {
    /**
-    * @Route("/tte/adm/comercial/precio/lista", name="transporte_administracion_comercial_precio_lista")
+    * @Route("/transporte/adm/comercial/precio/lista", name="transporte_administracion_comercial_precio_lista")
     */    
     public function lista(Request $request)
     {
@@ -26,7 +26,7 @@ class PrecioController extends Controller
     }
 
     /**
-     * @Route("/tte/adm/comercial/precio/nuevo/{codigoPrecio}", name="transporte_administracion_comercial_precio_nuevo")
+     * @Route("/transporte/adm/comercial/precio/nuevo/{codigoPrecio}", name="transporte_administracion_comercial_precio_nuevo")
      */
     public function nuevo(Request $request, $codigoPrecio)
     {
@@ -52,7 +52,7 @@ class PrecioController extends Controller
     }
 
     /**
-     * @Route("/tte/adm/comercial/precio/detalle/{codigoPrecio}", name="transporte_administracion_comercial_precio_detalle")
+     * @Route("/transporte/adm/comercial/precio/detalle/{codigoPrecio}", name="transporte_administracion_comercial_precio_detalle")
      */
     public function detalle(Request $request, $codigoPrecio)
     {

@@ -17,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class RelacionCajaController extends Controller
 {
    /**
-    * @Route("/tte/mto/control/relacioncaja/lista", name="transporte_movimiento_control_relacioncaja_lista")
+    * @Route("/transporte/movimiento/control/relacioncaja/lista", name="transporte_movimiento_control_relacioncaja_lista")
     */    
     public function lista(Request $request)
     {
@@ -28,7 +28,7 @@ class RelacionCajaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/control/relacioncaja/nuevo/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_nuevo")
+     * @Route("/transporte/movimiento/control/relacioncaja/nuevo/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_nuevo")
      */
     public function nuevo(Request $request, $codigoRelacionCaja)
     {
@@ -58,7 +58,7 @@ class RelacionCajaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/control/relacioncaja/detalle/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_detalle")
+     * @Route("/transporte/movimiento/control/relacioncaja/detalle/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_detalle")
      */
     public function detalle(Request $request, $codigoRelacionCaja)
     {
@@ -93,7 +93,7 @@ class RelacionCajaController extends Controller
     }
 
     /**
-     * @Route("/tte/mto/control/relacioncaja/detalle/adicionar/recibo/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_detalle_adicionar_recibo")
+     * @Route("/transporte/movimiento/control/relacioncaja/detalle/adicionar/recibo/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_detalle_adicionar_recibo")
      */
     public function detalleAdicionarGuia(Request $request, $codigoRelacionCaja)
     {

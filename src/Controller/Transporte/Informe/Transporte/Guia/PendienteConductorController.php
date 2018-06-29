@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class PendienteConductorController extends Controller
 {
    /**
-    * @Route("/tte/inf/transporte/guia/pendiente/conductor", name="transporte_inf_transporte_guia_pendiente_conductor")
+    * @Route("/transporte/inf/transporte/guia/pendiente/conductor", name="transporte_inf_transporte_guia_pendiente_conductor")
     */    
     public function lista(Request $request)
     {

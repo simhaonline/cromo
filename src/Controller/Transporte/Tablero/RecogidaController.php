@@ -13,7 +13,7 @@ use Ob\HighchartsBundle\Highcharts\Highchart;
 class RecogidaController extends Controller
 {
    /**
-    * @Route("/tte/tab/recogida/recogida", name="transporte_tab_recogida_recogida")
+    * @Route("/transporte/tab/recogida/recogida", name="transporte_tablero_recogida_recogida")
     */    
     public function principal(Request $request)
     {

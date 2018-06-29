@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityRepository;
 class PendienteDespachoRutaController extends Controller
 {
    /**
-    * @Route("/tte/inf/transporte/guia/pendientedespachoruta", name="transporte_inf_transporte_guia_pendiente_despacho_ruta")
+    * @Route("/transporte/inf/transporte/guia/pendientedespachoruta", name="transporte_inf_transporte_guia_pendiente_despacho_ruta")
     */    
     public function lista(Request $request)
     {

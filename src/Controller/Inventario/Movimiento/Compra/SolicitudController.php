@@ -6,9 +6,8 @@ use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Formato\Inventario\Solicitud;
 use App\Utilidades\BaseDatos;
+use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -97,7 +96,12 @@ class SolicitudController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
      * @Route("/inv/mto/inventario/solicitud/detalle/{id}", name="inventario_movimiento_inventario_solicitud_detalle")
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function detalle(Request $request, $id)
     {
@@ -105,7 +109,12 @@ class SolicitudController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
         $arSolicitudDetalles = $em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $id]);
-        $form = $this->formularioDetalles($arSolicitud);
+
+        $arrSolicitud['estadoAprobado'] = $arSolicitud->getEstadoAprobado();
+        $arrSolicitud['estadoAutorizado'] = $arSolicitud->getEstadoAutorizado();
+        $arrSolicitud['estadoAnulado'] = $arSolicitud->getEstadoAnulado();
+
+        $form = Estandares::formularioDetalles($arrSolicitud);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
@@ -146,7 +155,10 @@ class SolicitudController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param $id
      * @Route("/inv/mto/inventario/solicitud/detalle/nuevo/{id}", name="inventario_movimiento_inventario_solicitud_detalle_nuevo")
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function detalleNuevo(Request $request, $id)
     {
@@ -191,42 +203,5 @@ class SolicitudController extends Controller
             'form' => $form->createView(),
             'arItems' => $arItems
         ]);
-    }
-
-    /**
-     * @param $ar InvSolicitud
-     * @return \Symfony\Component\Form\FormInterface
-     */
-    private function formularioDetalles($ar)
-    {
-        $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnAprobar = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-        if ($ar->getEstadoAutorizado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = false;
-            if ($ar->getEstadoAprobado()) {
-                $arrBtnDesautorizar['disabled'] = true;
-                if (!$ar->getEstadoAnulado()) {
-                    $arrBtnAnular['disabled'] = false;
-                }
-            } else {
-                $arrBtnAprobar['disabled'] = false;
-            }
-        }
-
-        return $this
-            ->createFormBuilder()
-            ->add('btnAutorizar', SubmitType::class, $arrBtnAutorizar)
-            ->add('btnAprobar', SubmitType::class, $arrBtnAprobar)
-            ->add('btnDesautorizar', SubmitType::class, $arrBtnDesautorizar)
-            ->add('btnImprimir', SubmitType::class, $arrBtnImprimir)
-            ->add('btnAnular', SubmitType::class, $arrBtnAnular)
-            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
-            ->getForm();
     }
 }

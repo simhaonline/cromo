@@ -23,19 +23,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class AdministracionController extends Controller
 {
-    const TP_ERROR = "error";
-    const TP_OK = "ok";
-    const TP_INFO = "info";
-
-    /**
-     * @param $strTipo
-     * @param $strMensaje
-     */
-    public function Mensaje($strTipo, $strMensaje)
-    {
-        $session = new Session();
-        $session->getFlashBag()->add($strTipo, $strMensaje);
-    }
 
     /**
      * @param $arrRespuestas

@@ -73,7 +73,7 @@
                     {#{% if llave == 'estadoAprobado' and datos == true  %}#}
                         {#{% else %}#}
                 <td style="text-align: center">
-                    <a href="{{ path(arEntidad.prefijo ~ '_' ~ arEntidad.funcion ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
+                    <a href="{{ path(arEntidad.modulo ~ '_' ~ arEntidad.funcion ~ '_' ~ arEntidad.grupo ~ '_' ~ arEntidad.entidad ~ '_nuevo' , { 'modulo':arEntidad.modulo,'entidad': arEntidad.entidad,'id': datos.ID}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i>
                     </a>
                 </td>

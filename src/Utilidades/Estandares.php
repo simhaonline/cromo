@@ -23,21 +23,24 @@ final class Estandares
     private static function getInstance()
     {
         static $instance = null;
-        if($instance === null) {
+        if ($instance === null) {
             $instance = new Estandares();
         }
         return $instance;
     }
 
-    public static function getForm() {
+    public static function getForm()
+    {
         return self::getInstance()->form;
     }
 
     /**
-     * @param $ar array
-     * @return mixed
+     * @param $estadoAutorizado
+     * @param $estadoAprobado
+     * @param $estadoAnulado
+     * @return \Symfony\Component\Form\FormInterface
      */
-    public static function formularioDetalles($ar)
+    public static function botonera($estadoAutorizado, $estadoAprobado, $estadoAnulado)
     {
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobar = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
@@ -45,13 +48,13 @@ final class Estandares
         $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-        if ($ar['estadoAutorizado']) {
+        if ($estadoAutorizado) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
-            if ($ar['estadoAprobado']) {
+            if ($estadoAprobado) {
                 $arrBtnDesautorizar['disabled'] = true;
-                if (!$ar['estadoAnulado']) {
+                if (!$estadoAnulado) {
                     $arrBtnAnular['disabled'] = false;
                 }
             } else {

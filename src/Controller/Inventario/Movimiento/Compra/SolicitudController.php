@@ -35,7 +35,7 @@ class SolicitudController extends Controller
         $form = $this->createFormBuilder()
             ->add('numero', NumberType::class, ['required' => false, 'data' => $session->get('filtroInvNumeroSolicitud')])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvEstadoAprobado'), 'required' => false])
-            ->add('solicitudTipoRel', EntityType::class, BaseDatos::llenarCombo(1))
+            ->add('solicitudTipoRel', EntityType::class, $em->getRepository('App:Inventario\InvSolicitudTipo')->llenarCombo())
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -109,12 +109,7 @@ class SolicitudController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($id);
         $arSolicitudDetalles = $em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $id]);
-
-        $arrSolicitud['estadoAprobado'] = $arSolicitud->getEstadoAprobado();
-        $arrSolicitud['estadoAutorizado'] = $arSolicitud->getEstadoAutorizado();
-        $arrSolicitud['estadoAnulado'] = $arSolicitud->getEstadoAnulado();
-
-        $form = Estandares::formularioDetalles($arrSolicitud);
+        $form = Estandares::botonera($arSolicitud->getEstadoAutorizado(),$arSolicitud->getEstadoAprobado(),$arSolicitud->getEstadoAnulado());
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {

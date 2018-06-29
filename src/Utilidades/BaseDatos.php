@@ -50,35 +50,4 @@ final class BaseDatos
     public static function getEm() {
         return self::getInstance()->em;
     }
-
-    /**
-     * @param $em
-     * @param $tipo
-     * @return array|null
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public static function llenarCombo( $tipo)
-    {
-        $array = null;
-        switch ($tipo) {
-
-            case 1:
-                $array = [
-                    'class' => 'App:Inventario\InvSolicitudTipo',
-                    'query_builder' => function (EntityRepository $er) {
-                        return $er->createQueryBuilder('st')
-                            ->orderBy('st.nombre', 'ASC');
-                    },
-                    'choice_label' => 'nombre',
-                    'required' => false,
-                    'empty_data' => "",
-                    'placeholder' => "TODOS",
-                    'data' => ""];
-                if (self::getInstance()->session->get('filtroInvCodigoSolicitudTipo')) {
-                    $array['data'] = self::getEm()->getReference('App:Inventario\InvSolicitudTipo', self::getInstance()->session->get('filtroInvCodigoSolicitudTipo'));
-                }
-                break;
-        }
-        return $array;
-    }
 }

@@ -251,24 +251,10 @@ class SolicitudController extends Controller
      */
     private function formularioLista($session)
     {
-        $arrayPropiedadesSolicitudTipo = [
-            'class' => 'App:Inventario\InvSolicitudTipo',
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('st')
-                    ->orderBy('st.nombre', 'ASC');
-            },
-            'choice_label' => 'nombre',
-            'required' => false,
-            'empty_data' => "",
-            'placeholder' => "TODOS",
-            'data' => ""];
-        if($session->get('filtroSolicitudTipo')){
-            $arrayPropiedadesSolicitudTipo['data'] = $this->getDoctrine()->getManager()->getReference('App:Inventario\InvSolicitudTipo',$session->get('filtroSolicitudTipo')->getCodigoSolicitudTipoPk());
-        }
         return $this->createFormBuilder()
             ->add('numero', NumberType::class, ['required' => false, 'data' => $session->get('filtroNumeroSolicitud')])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroEstadoAprobado'), 'required' => false])
-            ->add('solicitudTipoRel', EntityType::class, BaseDatos::llenarCombo(1))
+            ->add('solicitudTipoRel', EntityType::class, BaseDatos::llenarCombo($this->getDoctrine()->getManager(),1))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
     }

@@ -2,6 +2,9 @@
 
 namespace App\Utilidades;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 
@@ -28,18 +31,17 @@ final class BaseDatos
     private static function getInstance()
     {
         static $instance = null;
-        if($instance === null) {
+        if ($instance === null) {
             $instance = new BaseDatos();
         }
         return $instance;
     }
 
     /**
-     * Esta función permite enviar un flash personalizado.
-     * @param $message
-     * @param $type
+     * @param $tipo
+     * @return array|null
      */
-    public static function llenarCombo($tipo)
+    public static function llenarCombo($em, $tipo)
     {
         $array = null;
         switch ($tipo) {
@@ -56,10 +58,10 @@ final class BaseDatos
                     'empty_data' => "",
                     'placeholder' => "TODOS",
                     'data' => ""];
-                /*if($session->get('filtroSolicitudTipo')){
-                    $array['data'] = $this->getDoctrine()->getManager()->getReference('App:Inventario\InvSolicitudTipo',$session->get('filtroSolicitudTipo')->getCodigoSolicitudTipoPk());
+                if (self::getInstance()->session->get('filtroSolicitudTipo')) {
+                    $array['data'] = $em->getReference('App:Inventario\InvSolicitudTipo', self::getInstance()->session->get('filtroSolicitudTipo')->getCodigoSolicitudTipoPk());
                 }
-                break;*/
+                break;
         }
         return $array;
     }

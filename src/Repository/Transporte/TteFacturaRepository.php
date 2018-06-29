@@ -3,7 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Controller\Estructura\FuncionesController;
-use App\Controller\Estructura\MensajesController;
+use App\Utilidades\Mensajes;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -83,7 +83,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             $this->_em->persist($arFactura);
             $this->_em->flush();
         } else {
-            MensajesController::error('No se puede autorizar, el registro no tiene detalles');
+            Mensajes::error('No se puede autorizar, el registro no tiene detalles');
         }
     }
 
@@ -97,7 +97,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             $this->_em->persist($arFactura);
             $this->_em->flush();
         } else {
-            MensajesController::error('No se puede desautorizar, el registro ya se encuentra aprobado');
+            Mensajes::error('No se puede desautorizar, el registro ya se encuentra aprobado');
         }
     }
 
@@ -106,17 +106,20 @@ class TteFacturaRepository extends ServiceEntityRepository
      */
     public function aprobar($arFactura)
     {
+        $arFacturaTipo = $this->_em->getRepository('App:Transporte\TteFacturaTipo')->find($arFactura->getCodigoFacturaTipoFk());
         $objFunciones = new FuncionesController();
         if ($arFactura->getEstadoAutorizado() == 1) {
             $arFactura->setEstadoAprobado(1);
             $fecha = new \DateTime('now');
             $arFactura->setFecha($fecha);
             $arFactura->setFechaVence($objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
+            $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo() + 1);
+            $arFactura->setNumero($arFacturaTipo->getConsecutivo());
             $this->_em->persist($arFactura);
+            $this->_em->persist($arFacturaTipo);
             $this->_em->flush();
         } else {
-            MensajesController::error('No se puede desautorizar, el registro ya se encuentra aprobado');
+            Mensajes::error('No se puede desautorizar, el registro ya se encuentra aprobado');
         }
     }
-
 }

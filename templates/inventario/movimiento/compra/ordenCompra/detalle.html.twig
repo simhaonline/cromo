@@ -163,12 +163,12 @@
                     {% else %}
                         <div class="btn-group">
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('inv_mto_inventario_ordenCompra_solicitud_detalle_nuevo', {'codigoDetalle': 0,'id':arOrdenCompra.codigoOrdenCompraPk }) }}', 'OrdenCompraNuevoDetalle', 600, 900)">Nuevo
+                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_ordenCompra_solicitud_detalle_nuevo', {'codigoDetalle': 0,'id':arOrdenCompra.codigoOrdenCompraPk }) }}', 'OrdenCompraNuevoDetalle', 600, 900)">Nuevo
                                 desde solicitud</a>
                         </div>
                         <div class="btn-group">
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('inv_mto_inventario_ordenCompra_detalle_nuevo', {'codigoDetalle': 0,'id':arOrdenCompra.codigoOrdenCompraPk }) }}', 'OrdenCompraNuevoDetalle', 600, 900)">Nuevo</a>
+                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_ordenCompra_detalle_nuevo', {'codigoDetalle': 0,'id':arOrdenCompra.codigoOrdenCompraPk }) }}', 'OrdenCompraNuevoDetalle', 600, 900)">Nuevo</a>
                         </div>
                     {% endif %}
                     <div class="btn-group">

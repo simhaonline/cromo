@@ -4,6 +4,7 @@ namespace App\Repository\Inventario;
 
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Inventario\InvSolicitud;
+use App\Entity\Inventario\InvSolicitudTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -32,22 +33,37 @@ class InvSolicitudRepository extends ServiceEntityRepository
         return $dql->execute();
     }
 
-    public function listaSolicitud($numero = '', $estadoAprobado = ''){
-        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvSolicitud','i')
+    /**
+     * @param string $numero
+     * @param string $estadoAprobado
+     * @param InvSolicitudTipo $arSolicitudTipo
+     * @return mixed
+     */
+    public function listaSolicitud($numero = '', $estadoAprobado = '', $arSolicitudTipo = null)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvSolicitud', 'i')
             ->select('i.codigoSolicitudPk')
-            ->join('i.solicitudTipoRel','it')
-            ->addSelect('i.nombre')
+            ->join('i.solicitudTipoRel', 'it')
             ->addSelect('i.numero')
             ->addSelect('it.nombre as nombreTipo')
             ->addSelect('i.fecha')
             ->addSelect('i.estadoAutorizado')
             ->addSelect('i.estadoAprobado')
-            ->addSelect('i.estadoAnulado');
-        if($numero != ''){
-            $qb->addSelect("i.numero ={$numero}");
+            ->addSelect('i.estadoAnulado')
+            ->where('i.codigoSolicitudPk <> 0');
+        if ($numero != '') {
+            $qb->andWhere("i.numero = {$numero}");
         }
-        if($estadoAprobado != ''){
-            $qb->addSelect("i.estadoAprobado = 1");
+        switch ($estadoAprobado) {
+            case '0':
+                $qb->andWhere("i.estadoAprobado = 0");
+                break;
+            case '1':
+                $qb->andWhere("i.estadoAprobado = 1");
+                break;
+        }
+        if($arSolicitudTipo){
+            $qb->andWhere("i.codigoSolicitudTipoFk = '{$arSolicitudTipo->getCodigoSolicitudTipoPk()}'");
         }
         $query = $this->getEntityManager()->createQuery($qb->getDQL());
         return $query->execute();
@@ -87,7 +103,9 @@ class InvSolicitudRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arSolicitud InvSolicitud
+     * @param $arSolicitud
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function aprobar($arSolicitud)
     {
@@ -109,8 +127,10 @@ class InvSolicitudRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arSolicitud InvSolicitud
+     * @param $arSolicitud
      * @return array
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function anular($arSolicitud)
     {
@@ -134,7 +154,9 @@ class InvSolicitudRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arSolicitud InvSolicitud
+     * @param $arSolicitud
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function desautorizar($arSolicitud)
     {
@@ -148,7 +170,9 @@ class InvSolicitudRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arSolicitud InvSolicitud
+     * @param $arSolicitud
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function autorizar($arSolicitud)
     {
@@ -172,9 +196,9 @@ class InvSolicitudRepository extends ServiceEntityRepository
             ->andWhere('oc.estadoAnulado = 0');
         $query = $this->getEntityManager()->createQuery($qb->getDQL());
         $resultado = $query->execute();
-        if(count($resultado) > 0){
+        if (count($resultado) > 0) {
             foreach ($resultado as $result) {
-                $respuesta[] = 'No se puede anular, el detalle con ID '.$codigoSolicitudDetalle. ' esta siendo utilizado en la orden de compra con ID '.$result['codigoOrdenCompraFk'];
+                $respuesta[] = 'No se puede anular, el detalle con ID ' . $codigoSolicitudDetalle . ' esta siendo utilizado en la orden de compra con ID ' . $result['codigoOrdenCompraFk'];
             }
         }
         return $respuesta;

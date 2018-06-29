@@ -26,7 +26,7 @@
                     <td>{{ arDocumento.nombre | default('') }}</td>
                     <td>{{ arDocumento.abreviatura | default('') }}</td>
                     <td style="text-align: center;">
-                        <a href="{{ path('inv_mto_inventario_movimiento_lista', {'tipoDocumento': tipoDocumento,'codigoDocumento' : arDocumento.codigoDocumentoPk }) }}">
+                        <a href="{{ path('inventario_movimiento_inventario_movimiento_lista', {'tipoDocumento': tipoDocumento,'codigoDocumento' : arDocumento.codigoDocumentoPk }) }}">
                             <i class="fa fa-share-square-o" style="font-size: large">
                             </i>
                         </a>

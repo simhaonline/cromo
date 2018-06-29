@@ -57,7 +57,7 @@
                 <td class="estado">{{ arPedido.estadoAutorizado?'SI':'NO' }}</td>
                 <td class="estado">{{ arPedido.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arPedido.estadoAnulado?'SI':'NO' }}</td>
-                <td style="text-align: center"><a href="{{ path('inv_mto_comercial_pedido_detalle', { 'id': arPedido.codigoPedidoPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a href="{{ path('inventario_movimiento_comercial_pedido_detalle', { 'id': arPedido.codigoPedidoPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -77,7 +77,7 @@
             {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
         </div>
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('inv_mto_comercial_pedido_nuevo', {'id': 0}) }}">Nuevo</a>
+            <a class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_comercial_pedido_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>
     </div>
     {{ form_rest(form) }}

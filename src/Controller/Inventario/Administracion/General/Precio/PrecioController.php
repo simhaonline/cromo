@@ -47,22 +47,34 @@ class PrecioController extends Controller
         if ($id != 0) {
             $arPrecio = $em->getRepository('App:Inventario\InvPrecio')->find($id);
             if (!$arPrecio) {
-                return $this->redirect($this->generateUrl('admin_lista', ['modulo' => 'inventario', 'entidad' => 'precio']));
+                return $this->redirect($this->generateUrl('inventario_administracion_general_precio_lista'));
             }
+        }else{
+            $arPrecio->setFechaVence(new \DateTime('now'));
         }
         $form = $this->createForm(PrecioType::class, $arPrecio);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $arrControles = $request->request->All();
             if ($form->get('guardar')->isClicked()) {
-//                $arPrecio->setFecha(new \DateTime('now'));
+                if(isset($arrControles["tipo"])) {
+                    switch ($arrControles["tipo"]) {
+                        case 1:
+                            $arPrecio->setCompra(1);
+                            break;
+                        case 2:
+                            $arPrecio->setVenta(1);
+                            break;
+                    }
+                }
                 $em->persist($arPrecio);
                 $em->flush();
-                return $this->redirect($this->generateUrl('admin_lista', ['modulo' => 'inventario','entidad' => 'precio']));
+                return $this->redirect($this->generateUrl('inventario_administracion_general_precio_lista'));
             }
             if ($form->get('guardarnuevo')->isClicked()) {
                 $em->persist($arPrecio);
                 $em->flush($arPrecio);
-                return $this->redirect($this->generateUrl('inv_adm_general_precio_nuevo', ['codigoPrecio' => 0]));
+                return $this->redirect($this->generateUrl('inventario_administracion_general_precio_nuevo', ['codigoPrecio' => 0]));
             }
         }
         return $this->render('inventario/administracion/general/precio/nuevo.html.twig', [
@@ -71,7 +83,7 @@ class PrecioController extends Controller
     }
 
     /**
-     * @Route("/inv/adm/gen/precio/detalle/{id}", name="inv_administracion_general_precio_detalle")
+     * @Route("/inv/adm/gen/precio/detalle/{id}", name="inventario_administracion_general_precio_detalle")
      */
     public function detalle(Request $request, $id)
     {

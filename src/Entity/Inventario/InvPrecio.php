@@ -40,6 +40,16 @@ class InvPrecio
     protected $tercerosPrecioVentaRel;
 
     /**
+     * @ORM\Column(name="compra", type="boolean", nullable=true)
+     */
+    private $compra = false;
+
+    /**
+     * @ORM\Column(name="venta", type="boolean", nullable=true)
+     */
+    private $venta = false;
+
+    /**
      * @return mixed
      */
     public function getCodigoPrecioPk()
@@ -117,6 +127,38 @@ class InvPrecio
     public function setTercerosPrecioVentaRel($tercerosPrecioVentaRel): void
     {
         $this->tercerosPrecioVentaRel = $tercerosPrecioVentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompra()
+    {
+        return $this->compra;
+    }
+
+    /**
+     * @param mixed $compra
+     */
+    public function setCompra($compra): void
+    {
+        $this->compra = $compra;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVenta()
+    {
+        return $this->venta;
+    }
+
+    /**
+     * @param mixed $venta
+     */
+    public function setVenta($venta): void
+    {
+        $this->venta = $venta;
     }
 
 

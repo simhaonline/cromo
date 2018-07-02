@@ -25,9 +25,10 @@ class DespachoController extends Controller
     */    
     public function lista(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $query = $this->getDoctrine()->getRepository(TteDespacho::class)->lista();
-        $arDespachos = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        //$query = $this->getDoctrine()->getRepository(TteDespacho::class)->listaDql();
+        $arDespachos = $paginator->paginate($em->createQuery($this->getDoctrine()->getRepository(TteDespacho::class)->listaDql()), $request->query->getInt('page', 1),10);
         return $this->render('transporte/movimiento/transporte/despacho/lista.html.twig', ['arDespachos' => $arDespachos]);
     }
 

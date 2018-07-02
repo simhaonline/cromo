@@ -4,7 +4,9 @@ namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteConductor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use PhpParser\Node\Expr\Cast\String_;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteConductorRepository extends ServiceEntityRepository
 {
@@ -12,6 +14,22 @@ class TteConductorRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TteConductor::class);
     }
+
+    public function listaDql()
+    {
+        $session = new Session();
+        $qb = $this->getEntityManager()->createQueryBuilder()->from(TteConductor::class, 'c')
+            ->select('c.codigoConductorPk')
+            ->addSelect('c.numeroIdentificacion')
+            ->addSelect('c.nombreCorto')
+            ->where('c.codigoConductorPk <> 0')
+            ->orderBy('c.nombreCorto');
+        if ($session->get('filtroTteConductorNombre') != '') {
+            $qb->andWhere("c.nombreCorto LIKE '%{$session->get('filtroTteConductorNombre')}%'");
+        }
+        return $qb->getDQL();
+    }
+
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
             ->from('App:Transporte\TteConductor','c')

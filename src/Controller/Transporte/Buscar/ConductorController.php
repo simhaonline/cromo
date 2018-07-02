@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-
+use Symfony\Component\HttpFoundation\Session\Session;
 class ConductorController extends Controller
 {
    /**
@@ -16,10 +16,11 @@ class ConductorController extends Controller
     */    
     public function lista(Request $request, $campoCodigo, $campoNombre)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('TxtNombre', TextType::class, array('label'  => 'Nombre'))
+            ->add('TxtNombre', TextType::class, array('label'  => 'Nombre', 'data' => $session->get('filtroTteConductorNombre')))
             ->add('TxtCodigo', TextType::class, array('label'  => 'Codigo'))
             ->add('TxtNumeroIdentificacion', TextType::class, array('label'  => 'Numero identificacion'))
             ->add('BtnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))
@@ -27,12 +28,10 @@ class ConductorController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('BtnFiltrar')->isClicked()) {
-                $this->filtrarLista($form);
-                $this->lista();
+                $session->set('filtroTteConductorNombre', $form->get('TxtNombre')->getData());
             }
         }
-        $arConductores = $em->getRepository(TteConductor::class)->findAll();
-        $arConductores = $paginator->paginate($arConductores, $request->query->get('page', 1), 20);
+        $arConductores = $paginator->paginate($em->createQuery($em->getRepository(TteConductor::class)->listaDql()), $request->query->get('page', 1), 20);
         return $this->render('transporte/buscar/conductor.html.twig', array(
             'arConductores' => $arConductores,
             'campoCodigo' => $campoCodigo,

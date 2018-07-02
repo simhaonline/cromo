@@ -22,6 +22,35 @@ class TteDespachoRepository extends ServiceEntityRepository
         parent::__construct($registry, TteDespacho::class);
     }
 
+    public function listaDql(): string
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT d.codigoDespachoPk, 
+        d.numero,
+        d.codigoOperacionFk,
+        d.codigoVehiculoFk,
+        d.codigoRutaFk, 
+        co.nombre AS ciudadOrigen, 
+        cd.nombre AS ciudadDestino,
+        d.unidades,
+        d.pesoReal,
+        d.pesoVolumen,
+        d.vrFlete,
+        d.vrManejo,
+        d.vrDeclara,
+        c.nombreCorto AS conductorNombre,
+        d.estadoAnulado
+        FROM App\Entity\Transporte\TteDespacho d         
+        LEFT JOIN d.ciudadOrigenRel co
+        LEFT JOIN d.ciudadDestinoRel cd
+        LEFT JOIN d.conductorRel c
+        ORDER BY d.codigoDespachoPk DESC'
+        );
+        return $query->getDQL();
+
+    }
+
     public function lista(): array
     {
         $em = $this->getEntityManager();

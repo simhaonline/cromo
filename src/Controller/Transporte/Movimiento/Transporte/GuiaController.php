@@ -26,6 +26,7 @@ class GuiaController extends Controller
     */    
     public function lista(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->formularioFiltro();
         $form->handleRequest($request);
@@ -42,8 +43,7 @@ class GuiaController extends Controller
                 }
             }
         }
-        $query = $this->getDoctrine()->getRepository(TteGuia::class)->lista();
-        $arGuias = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        $arGuias = $paginator->paginate($em->createQuery( $this->getDoctrine()->getRepository(TteGuia::class)->listaDql()), $request->query->getInt('page', 1),50);
         return $this->render('transporte/movimiento/transporte/guia/lista.html.twig', [
             'arGuias' => $arGuias,
             'form' => $form->createView()]);

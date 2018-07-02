@@ -5,6 +5,7 @@ namespace App\Repository\Transporte;
 use App\Entity\Transporte\TteVehiculo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteVehiculoRepository extends ServiceEntityRepository
 {
@@ -12,6 +13,21 @@ class TteVehiculoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TteVehiculo::class);
     }
+
+    public function listaDql()
+    {
+        $session = new Session();
+        $qb = $this->getEntityManager()->createQueryBuilder()->from(TteVehiculo::class, 'v')
+            ->select('v.codigoVehiculoPk')
+            ->addSelect('v.placa')
+            ->where("v.codigoVehiculoPk <> ''")
+            ->orderBy('v.placa');
+        if ($session->get('filtroTteVehiculoPlaca') != '') {
+            $qb->andWhere("v.placa LIKE '%{$session->get('filtroTteVehiculoPlaca')}%'");
+        }
+        return $qb->getDQL();
+    }
+
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
             ->from('App:Transporte\TteVehiculo','v')

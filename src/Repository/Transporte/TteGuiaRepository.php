@@ -15,6 +15,51 @@ class TteGuiaRepository extends ServiceEntityRepository
         parent::__construct($registry, TteGuia::class);
     }
 
+    public function listaDql(): string
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $dql = 'SELECT g.codigoGuiaPk, 
+        g.codigoServicioFk,
+        g.codigoGuiaTipoFk, 
+        g.numero,
+        g.documentoCliente, 
+        g.fechaIngreso,
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk, 
+        c.nombreCorto AS clienteNombreCorto,  
+        cd.nombre AS ciudadDestino,
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,
+        g.vrFlete,
+        g.vrManejo,
+        g.vrRecaudo,         
+        g.estadoImpreso,
+        g.estadoEmbarcado,
+        g.estadoDespachado, 
+        g.estadoEntregado, 
+        g.estadoSoporte, 
+        g.estadoCumplido
+        FROM App\Entity\Transporte\TteGuia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd WHERE g.codigoGuiaPk <> 0 ';
+        if($session->get('filtroTteCodigoGuiaTipo')) {
+            $dql .= " AND g.codigoGuiaTipoFk = '" . $session->get('filtroTteCodigoGuiaTipo') . "'";
+        }
+        if($session->get('filtroTteCodigoServicio')) {
+            $dql .= " AND g.codigoServicioFk = '" . $session->get('filtroTteCodigoServicio') . "'";
+        }
+        if($session->get('filtroTteDocumento') != "") {
+            $dql .= " AND g.documentoCliente LIKE '%" . $session->get('filtroTteDocumento') . "%'";
+        }
+        if($session->get('filtroTteNumeroGuia') != "") {
+            $dql .= " AND g.numero =" . $session->get('filtroTteNumeroGuia');
+        }
+        $dql .= " ORDER BY g.fechaIngreso DESC";
+        return $dql;
+    }
+
     public function lista(): array
     {
         $session = new Session();

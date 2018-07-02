@@ -253,6 +253,11 @@ class TteGuia
     private $reexpedicion = false;
 
     /**
+     * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
+     */
+    private $usuario;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -1453,6 +1458,22 @@ class TteGuia
     public function setNovedadesGuiaRel($novedadesGuiaRel): void
     {
         $this->novedadesGuiaRel = $novedadesGuiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
     }
 
 

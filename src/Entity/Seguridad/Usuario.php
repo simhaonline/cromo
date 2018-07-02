@@ -58,6 +58,11 @@ class Usuario implements UserInterface, \Serializable
     private $password;
 
     /**
+     * @ORM\Column(name="clave_escritorio",type="string", length=50)
+     */
+    private $claveEscritorio;
+
+    /**
      * @ORM\Column(type="string", length=60)
      */
     private $email;
@@ -310,5 +315,23 @@ class Usuario implements UserInterface, \Serializable
     {
         $this->extension = $extension;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getClaveEscritorio()
+    {
+        return $this->claveEscritorio;
+    }
+
+    /**
+     * @param mixed $claveEscritorio
+     */
+    public function setClaveEscritorio($claveEscritorio): void
+    {
+        $this->claveEscritorio = $claveEscritorio;
+    }
+
+
 }
 

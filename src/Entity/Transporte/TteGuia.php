@@ -148,6 +148,11 @@ class TteGuia
     private $vrAbono = 0;
 
     /**
+     * @ORM\Column(name="vr_cobro_entrega", type="float", options={"default" : 0})
+     */
+    private $vrCobroEntrega = 0;
+
+    /**
      * @ORM\Column(name="estado_impreso", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoImpreso = false;
@@ -1474,6 +1479,22 @@ class TteGuia
     public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCobroEntrega()
+    {
+        return $this->vrCobroEntrega;
+    }
+
+    /**
+     * @param mixed $vrCobroEntrega
+     */
+    public function setVrCobroEntrega($vrCobroEntrega): void
+    {
+        $this->vrCobroEntrega = $vrCobroEntrega;
     }
 
 

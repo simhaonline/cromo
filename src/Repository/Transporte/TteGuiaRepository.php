@@ -214,7 +214,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.estadoDespachado = 0 AND g.estadoEmbarcado = 0 AND g.estadoImpreso = 1 
+        WHERE g.estadoDespachado = 0 AND g.estadoEmbarcado = 0 AND g.estadoImpreso = 1 AND g.estadoAnulado = 0
         ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk'
         );
         return $query->execute();
@@ -409,6 +409,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $dql = "SELECT g.codigoGuiaPk, 
         g.numero, 
+        g.codigoGuiaTipoFk,
         g.fechaIngreso,
         g.codigoOperacionIngresoFk,
         g.codigoOperacionCargoFk, 

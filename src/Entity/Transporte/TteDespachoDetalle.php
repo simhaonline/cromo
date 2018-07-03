@@ -28,57 +28,57 @@ class TteDespachoDetalle
     private $codigoGuiaFk;
 
     /**
-     * @ORM\Column(name="unidades", type="float")
+     * @ORM\Column(name="unidades", type="float", options={"default" : 0})
      */
     private $unidades = 0;
 
     /**
-     * @ORM\Column(name="peso_real", type="float")
+     * @ORM\Column(name="peso_real", type="float", options={"default" : 0})
      */
     private $pesoReal = 0;
 
     /**
-     * @ORM\Column(name="peso_volumen", type="float")
+     * @ORM\Column(name="peso_volumen", type="float", options={"default" : 0})
      */
     private $pesoVolumen = 0;
 
     /**
-     * @ORM\Column(name="vr_declara", type="float")
+     * @ORM\Column(name="vr_declara", type="float", options={"default" : 0})
      */
     private $vrDeclara = 0;
 
     /**
-     * @ORM\Column(name="vr_flete", type="float")
+     * @ORM\Column(name="vr_flete", type="float", options={"default" : 0})
      */
     private $vrFlete = 0;
 
     /**
-     * @ORM\Column(name="vr_manejo", type="float")
+     * @ORM\Column(name="vr_manejo", type="float", options={"default" : 0})
      */
     private $vrManejo = 0;
 
     /**
-     * @ORM\Column(name="vr_recaudo", type="float")
+     * @ORM\Column(name="vr_recaudo", type="float", options={"default" : 0})
      */
     private $vrRecaudo = 0;
 
     /**
-     * @ORM\Column(name="vr_costo_unidad", type="float", nullable=true)
+     * @ORM\Column(name="vr_costo_unidad", type="float", nullable=true, options={"default" : 0})
      */
     private $vrCostoUnidad = 0;
 
     /**
-     * @ORM\Column(name="vr_costo_peso", type="float", nullable=true)
+     * @ORM\Column(name="vr_costo_peso", type="float", nullable=true, options={"default" : 0})
      */
     private $vrCostoPeso = 0;
 
     /**
-     * @ORM\Column(name="vr_costo_volumen", type="float", nullable=true)
+     * @ORM\Column(name="vr_costo_volumen", type="float", nullable=true, options={"default" : 0})
      */
     private $vrCostoVolumen = 0;
 
     /**
-     * @ORM\Column(name="vr_costo", type="float", nullable=true)
+     * @ORM\Column(name="vr_costo", type="float", nullable=true, options={"default" : 0})
      */
     private $vrCosto = 0;
 
@@ -257,38 +257,6 @@ class TteDespachoDetalle
     /**
      * @return mixed
      */
-    public function getDespachoRel()
-    {
-        return $this->despachoRel;
-    }
-
-    /**
-     * @param mixed $despachoRel
-     */
-    public function setDespachoRel($despachoRel): void
-    {
-        $this->despachoRel = $despachoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiaRel()
-    {
-        return $this->guiaRel;
-    }
-
-    /**
-     * @param mixed $guiaRel
-     */
-    public function setGuiaRel($guiaRel): void
-    {
-        $this->guiaRel = $guiaRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVrCostoUnidad()
     {
         return $this->vrCostoUnidad;
@@ -348,6 +316,38 @@ class TteDespachoDetalle
     public function setVrCosto($vrCosto): void
     {
         $this->vrCosto = $vrCosto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoRel()
+    {
+        return $this->despachoRel;
+    }
+
+    /**
+     * @param mixed $despachoRel
+     */
+    public function setDespachoRel($despachoRel): void
+    {
+        $this->despachoRel = $despachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaRel()
+    {
+        return $this->guiaRel;
+    }
+
+    /**
+     * @param mixed $guiaRel
+     */
+    public function setGuiaRel($guiaRel): void
+    {
+        $this->guiaRel = $guiaRel;
     }
 
 

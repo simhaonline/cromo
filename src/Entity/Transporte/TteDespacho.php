@@ -73,74 +73,84 @@ class TteDespacho
     private $codigoRutaFk;
 
     /**
-     * @ORM\Column(name="cantidad", type="float")
+     * @ORM\Column(name="cantidad", type="float", options={"default" : 0})
      */
     private $cantidad = 0;
 
     /**
-     * @ORM\Column(name="unidades", type="float")
+     * @ORM\Column(name="unidades", type="float", options={"default" : 0})
      */
     private $unidades = 0;
 
     /**
-     * @ORM\Column(name="peso_real", type="float")
+     * @ORM\Column(name="peso_real", type="float", options={"default" : 0})
      */
     private $pesoReal = 0;
 
     /**
-     * @ORM\Column(name="peso_volumen", type="float")
+     * @ORM\Column(name="peso_volumen", type="float", options={"default" : 0})
      */
     private $pesoVolumen = 0;
 
     /**
-     * @ORM\Column(name="vr_declara", type="float")
+     * @ORM\Column(name="vr_declara", type="float", options={"default" : 0})
      */
     private $vrDeclara = 0;
 
     /**
-     * @ORM\Column(name="vr_flete", type="float")
+     * @ORM\Column(name="vr_flete", type="float", options={"default" : 0})
      */
     private $vrFlete = 0;
 
     /**
-     * @ORM\Column(name="vr_manejo", type="float")
+     * @ORM\Column(name="vr_manejo", type="float", options={"default" : 0})
      */
     private $vrManejo = 0;
 
     /**
-     * @ORM\Column(name="vr_recaudo", type="float")
+     * @ORM\Column(name="vr_recaudo", type="float", options={"default" : 0})
      */
     private $vrRecaudo = 0;
 
     /**
-     * @ORM\Column(name="vr_flete_pago", type="float")
+     * @ORM\Column(name="vr_flete_pago", type="float", options={"default" : 0})
      */
     private $vrFletePago = 0;
 
     /**
-     * @ORM\Column(name="vr_anticipo", type="float")
+     * @ORM\Column(name="vr_anticipo", type="float", options={"default" : 0})
      */
     private $vrAnticipo = 0;
 
     /**
-     * @ORM\Column(name="vr_industria_comercio", type="float")
+     * @ORM\Column(name="vr_industria_comercio", type="float", options={"default" : 0})
      */
     private $vrIndustriaComercio = 0;
 
     /**
-     * @ORM\Column(name="vr_retencion_fuente", type="float")
+     * @ORM\Column(name="vr_retencion_fuente", type="float", options={"default" : 0})
      */
     private $vrRetencionFuente = 0;
 
     /**
-     * @ORM\Column(name="vr_retencion_ica", type="float")
+     * @ORM\Column(name="vr_retencion_ica", type="float", options={"default" : 0})
      */
     private $vrRetencionIca = 0;
 
     /**
-     * @ORM\Column(name="vr_total", type="float")
+     * @ORM\Column(name="vr_total", type="float", options={"default" : 0})
      */
     private $vrTotal = 0;
+
+    /**
+     * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoAutorizado = false;
+
+    /**
+     * @ORM\Column(name="estado_aprobado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoAprobado = false;
 
     /**
      * @ORM\Column(name="estado_generado", type="boolean", nullable=true, options={"default" : false})
@@ -307,6 +317,22 @@ class TteDespacho
     public function setFechaSalida($fechaSalida): void
     {
         $this->fechaSalida = $fechaSalida;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaLlegada()
+    {
+        return $this->fechaLlegada;
+    }
+
+    /**
+     * @param mixed $fechaLlegada
+     */
+    public function setFechaLlegada($fechaLlegada): void
+    {
+        $this->fechaLlegada = $fechaLlegada;
     }
 
     /**
@@ -568,6 +594,70 @@ class TteDespacho
     /**
      * @return mixed
      */
+    public function getVrIndustriaComercio()
+    {
+        return $this->vrIndustriaComercio;
+    }
+
+    /**
+     * @param mixed $vrIndustriaComercio
+     */
+    public function setVrIndustriaComercio($vrIndustriaComercio): void
+    {
+        $this->vrIndustriaComercio = $vrIndustriaComercio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRetencionFuente()
+    {
+        return $this->vrRetencionFuente;
+    }
+
+    /**
+     * @param mixed $vrRetencionFuente
+     */
+    public function setVrRetencionFuente($vrRetencionFuente): void
+    {
+        $this->vrRetencionFuente = $vrRetencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRetencionIca()
+    {
+        return $this->vrRetencionIca;
+    }
+
+    /**
+     * @param mixed $vrRetencionIca
+     */
+    public function setVrRetencionIca($vrRetencionIca): void
+    {
+        $this->vrRetencionIca = $vrRetencionIca;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotal()
+    {
+        return $this->vrTotal;
+    }
+
+    /**
+     * @param mixed $vrTotal
+     */
+    public function setVrTotal($vrTotal): void
+    {
+        $this->vrTotal = $vrTotal;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoGenerado()
     {
         return $this->estadoGenerado;
@@ -584,6 +674,38 @@ class TteDespacho
     /**
      * @return mixed
      */
+    public function getEstadoCerrado()
+    {
+        return $this->estadoCerrado;
+    }
+
+    /**
+     * @param mixed $estadoCerrado
+     */
+    public function setEstadoCerrado($estadoCerrado): void
+    {
+        $this->estadoCerrado = $estadoCerrado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -595,6 +717,38 @@ class TteDespacho
     public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoTipoFk()
+    {
+        return $this->codigoDespachoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoTipoFk
+     */
+    public function setCodigoDespachoTipoFk($codigoDespachoTipoFk): void
+    {
+        $this->codigoDespachoTipoFk = $codigoDespachoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoTipoRel()
+    {
+        return $this->despachoTipoRel;
+    }
+
+    /**
+     * @param mixed $despachoTipoRel
+     */
+    public function setDespachoTipoRel($despachoTipoRel): void
+    {
+        $this->despachoTipoRel = $despachoTipoRel;
     }
 
     /**
@@ -712,97 +866,17 @@ class TteDespacho
     /**
      * @return mixed
      */
-    public function getCodigoDespachoTipoFk()
+    public function getDespachosDetallesDespachoRel()
     {
-        return $this->codigoDespachoTipoFk;
+        return $this->despachosDetallesDespachoRel;
     }
 
     /**
-     * @param mixed $codigoDespachoTipoFk
+     * @param mixed $despachosDetallesDespachoRel
      */
-    public function setCodigoDespachoTipoFk($codigoDespachoTipoFk): void
+    public function setDespachosDetallesDespachoRel($despachosDetallesDespachoRel): void
     {
-        $this->codigoDespachoTipoFk = $codigoDespachoTipoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDespachoTipoRel()
-    {
-        return $this->despachoTipoRel;
-    }
-
-    /**
-     * @param mixed $despachoTipoRel
-     */
-    public function setDespachoTipoRel($despachoTipoRel): void
-    {
-        $this->despachoTipoRel = $despachoTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaLlegada()
-    {
-        return $this->fechaLlegada;
-    }
-
-    /**
-     * @param mixed $fechaLlegada
-     */
-    public function setFechaLlegada($fechaLlegada): void
-    {
-        $this->fechaLlegada = $fechaLlegada;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrIndustriaComercio()
-    {
-        return $this->vrIndustriaComercio;
-    }
-
-    /**
-     * @param mixed $vrIndustriaComercio
-     */
-    public function setVrIndustriaComercio($vrIndustriaComercio): void
-    {
-        $this->vrIndustriaComercio = $vrIndustriaComercio;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrRetencionFuente()
-    {
-        return $this->vrRetencionFuente;
-    }
-
-    /**
-     * @param mixed $vrRetencionFuente
-     */
-    public function setVrRetencionFuente($vrRetencionFuente): void
-    {
-        $this->vrRetencionFuente = $vrRetencionFuente;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotal()
-    {
-        return $this->vrTotal;
-    }
-
-    /**
-     * @param mixed $vrTotal
-     */
-    public function setVrTotal($vrTotal): void
-    {
-        $this->vrTotal = $vrTotal;
+        $this->despachosDetallesDespachoRel = $despachosDetallesDespachoRel;
     }
 
     /**
@@ -824,70 +898,6 @@ class TteDespacho
     /**
      * @return mixed
      */
-    public function getEstadoAnulado()
-    {
-        return $this->estadoAnulado;
-    }
-
-    /**
-     * @param mixed $estadoAnulado
-     */
-    public function setEstadoAnulado($estadoAnulado): void
-    {
-        $this->estadoAnulado = $estadoAnulado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDespachosDetallesDespachoRel()
-    {
-        return $this->despachosDetallesDespachoRel;
-    }
-
-    /**
-     * @param mixed $despachosDetallesDespachoRel
-     */
-    public function setDespachosDetallesDespachoRel($despachosDetallesDespachoRel): void
-    {
-        $this->despachosDetallesDespachoRel = $despachosDetallesDespachoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoCerrado()
-    {
-        return $this->estadoCerrado;
-    }
-
-    /**
-     * @param mixed $estadoCerrado
-     */
-    public function setEstadoCerrado($estadoCerrado): void
-    {
-        $this->estadoCerrado = $estadoCerrado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrRetencionIca()
-    {
-        return $this->vrRetencionIca;
-    }
-
-    /**
-     * @param mixed $vrRetencionIca
-     */
-    public function setVrRetencionIca($vrRetencionIca): void
-    {
-        $this->vrRetencionIca = $vrRetencionIca;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getMonitoreosDespachoRel()
     {
         return $this->monitoreosDespachoRel;
@@ -899,6 +909,38 @@ class TteDespacho
     public function setMonitoreosDespachoRel($monitoreosDespachoRel): void
     {
         $this->monitoreosDespachoRel = $monitoreosDespachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
     }
 
 

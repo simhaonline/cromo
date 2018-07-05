@@ -1,4 +1,4 @@
-{% extends 'base_inventario.html.twig' %}
+{% extends 'base_documental.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
@@ -25,6 +25,7 @@
             <tr>
                 <th>ID</th>
                 <th>IDENTIFICADOR</th>
+                <th>ARCHIVO</th>
                 <th></th>
             </tr>
             </thead>
@@ -33,6 +34,7 @@
                 <tr>
                     <td>{{ arRegistroCarga.codigoRegistroCargaPk }}</td>
                     <td>{{ arRegistroCarga.identificador }}</td>
+                    <td>{{ arRegistroCarga.archivo }}</td>
                     <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{  arRegistroCarga.codigoRegistroCargaPk }}" /></td>
                 </tr>
             {% endfor %}

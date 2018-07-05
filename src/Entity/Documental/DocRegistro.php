@@ -33,9 +33,19 @@ class DocRegistro
     private $archivo;
 
     /**
+     * @ORM\Column(name="archivo_destino", type="string", length=200, nullable=true)
+     */
+    private $archivoDestino;
+
+    /**
      * @ORM\Column(name="directorio", type="string", length=200, nullable=true)
      */
     private $directorio;
+
+    /**
+     * @ORM\Column(name="extension", type="string", length=10, nullable=true)
+     */
+    private $extension;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Documental\DocMasivoTipo", inversedBy="registrosMasivoTipoRel")
@@ -137,6 +147,38 @@ class DocRegistro
     public function setDirectorio($directorio): void
     {
         $this->directorio = $directorio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getArchivoDestino()
+    {
+        return $this->archivoDestino;
+    }
+
+    /**
+     * @param mixed $archivoDestino
+     */
+    public function setArchivoDestino($archivoDestino): void
+    {
+        $this->archivoDestino = $archivoDestino;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExtension()
+    {
+        return $this->extension;
+    }
+
+    /**
+     * @param mixed $extension
+     */
+    public function setExtension($extension): void
+    {
+        $this->extension = $extension;
     }
 
 

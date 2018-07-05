@@ -57,7 +57,7 @@ class MasivoController extends Controller
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnEliminarDetalle', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnAnalizarBandeja', SubmitType::class, ['label' => 'Analizar bandeja', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnCargar', SubmitType::class, ['label' => 'Cargar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnCargar', SubmitType::class, ['label' => 'Cargar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -73,6 +73,7 @@ class MasivoController extends Controller
                         if(count($partes) == 2 ) {
                             $arRegistroCarga = new DocRegistroCarga();
                             $arRegistroCarga->setIdentificador($partes[0]);
+                            $arRegistroCarga->setExtension($partes[1]);
                             $arRegistroCarga->setArchivo($fichero);
                             $em->persist($arRegistroCarga);
                         }
@@ -105,7 +106,7 @@ class MasivoController extends Controller
                         $arDirectorio = $em->getRepository(DocDirectorio::class)->find($arDirectorio->getCodigoDirectorioPk());
                         $arRegistrosCargas = $em->getRepository(DocRegistroCarga::class)->findAll();
                         foreach ($arRegistrosCargas as $arRegistroCarga) {
-                            if($arDirectorio->getNumeroArchivos() >= 2) {
+                            if($arDirectorio->getNumeroArchivos() >= 50000) {
                                 $arDirectorio->setNumeroArchivos(0);
                                 $arDirectorio->setDirectorio($arDirectorio->getDirectorio()+1);
                                 $em->persist($arDirectorio);
@@ -123,33 +124,25 @@ class MasivoController extends Controller
                             $arRegistro->setIdentificador($arRegistroCarga->getIdentificador());
                             $arRegistro->setMasivoTipoRel($arMasivoTipo);
                             $arRegistro->setArchivo($arRegistroCarga->getArchivo());
+                            $arRegistro->setExtension($arRegistroCarga->getExtension());
                             $arRegistro->setDirectorio($arDirectorio->getDirectorio());
-
+                            $archivoDestino = rand(100000, 999999) . "_" . $arRegistroCarga->getIdentificador();
+                            $arRegistro->setArchivoDestino($archivoDestino);
                             $em->persist($arRegistro);
+
                             $arDirectorio->setNumeroArchivos($arDirectorio->getNumeroArchivos()+1);
                             $em->persist($arDirectorio);
-                            if($em->flush()) {
-                                echo "se guardo";
-                            }
+
+                            $em->remove($arRegistroCarga);
+
+                            $em->flush();
+
+
+                            $origen = $directorioBandeja . "/" . $arRegistroCarga->getArchivo();
+                            $destino = $directorio . $arRegistroCarga->getArchivo();
+                            copy($origen, $destino);
                         }
                     }
-
-                    /*$directorio = $em->getRepository(DocDirectorio::class)->devolverDirectorio("M", "guia");
-                    if($directorio != "") {
-                        $directorio = $directorioDestino . $directorio;
-                        $error = false;
-                        if(!file_exists($directorio)) {
-                            if(!mkdir($directorio, 0777, true)) {
-                                die('Fallo al crear las carpetas...' . $directorio);
-                                $error = true;
-                            }
-                        }
-                        if($error == false) {
-
-                        }
-                    }*/
-
-
                 } else {
                     Mensajes::error("No existe el directorio principal " . $directorioDestino);
                 }

@@ -17,6 +17,7 @@ class DocRegistroRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(DocRegistro::class, 'r')
             ->select('r.codigoRegistroPk')
+            ->addSelect('r.identificador')
             ->where('r.codigoRegistroPk <> 0');
         if ($session->get('filtroDocRegistroIdentificador') != '') {
             $queryBuilder->andWhere("r.identificador = {$session->get('filtroDocRegistroIdentificador')}");

@@ -26,8 +26,8 @@ class SolicitudController extends Controller
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/inventario/movimiento/compra/solicitud/lista", name="inventario_movimiento_compra_solicitud_lista")
      * @throws \Doctrine\ORM\ORMException
+     * @Route("/inventario/movimiento/compra/solicitud/lista", name="inventario_movimiento_compra_solicitud_lista")
      */
     public function lista(Request $request)
     {
@@ -61,6 +61,9 @@ class SolicitudController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @Route("/inventario/movimiento/compra/solicitud/nuevo/{id}", name="inventario_movimiento_compra_solicitud_nuevo")
      */
     public function nuevo(Request $request, $id)
@@ -97,8 +100,8 @@ class SolicitudController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
-     * @Route("/inventario/movimiento/compra/solicitud/detalle/{id}", name="inventario_movimiento_compra_solicitud_detalle")
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @Route("/inventario/movimiento/compra/solicitud/detalle/{id}", name="inventario_movimiento_compra_solicitud_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -106,6 +109,11 @@ class SolicitudController extends Controller
         $arSolicitud = $em->getRepository(InvSolicitud::class)->find($id);
         $paginator = $this->get('knp_paginator');
         $form = Estandares::botonera($arSolicitud->getEstadoAutorizado(),$arSolicitud->getEstadoAprobado(),$arSolicitud->getEstadoAnulado());
+        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        if($arSolicitud->getEstadoAutorizado()){
+            $arrBtnEliminar['disabled'] = true;
+        }
+        $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
@@ -136,11 +144,11 @@ class SolicitudController extends Controller
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(InvSolicitudDetalle::class)->eliminar($arSolicitud, $arrDetallesSeleccionados);
-                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_solicitud_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('inventario_movimiento_compra_solicitud_detalle', ['id' => $id]));
             }
         }
         $arSolicitudDetalles = $paginator->paginate($em->getRepository(InvSolicitudDetalle::class)->lista($arSolicitud->getCodigoSolicitudPk()), $request->query->getInt('page', 1), 40);
-        return $this->render('inventario/movimiento/compra/solicitud/detal  le.html.twig', [
+        return $this->render('inventario/movimiento/compra/solicitud/detalle.html.twig', [
             'arSolicitudDetalles' => $arSolicitudDetalles,
             'arSolicitud' => $arSolicitud,
             'form' => $form->createView()

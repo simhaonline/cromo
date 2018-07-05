@@ -31,8 +31,7 @@ class SolicitudType extends AbstractType {
             ])
             ->add('comentarios',TextareaType::class, ['required' => false,'label' => 'Comentarios:'])
             ->add('soporte',TextType::class, ['required' => false,'label' => 'Soporte:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     /**

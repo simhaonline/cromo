@@ -3,12 +3,9 @@
 namespace App\Repository\Inventario;
 
 use App\Utilidades\Mensajes;
-use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Doctrine\ORM\EntityManager;
 
 class InvSolicitudDetalleRepository extends ServiceEntityRepository
 {
@@ -18,32 +15,33 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, InvSolicitudDetalle::class);
     }
 
-    public function lista($solicitudCodigo)
+    public function lista($codigoRegistro)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->select('sd')
-            ->from('App:Inventario\InvSolicitudDetalle', 'sd')
-            ->where("sd.codigoSolicitudFk = {$solicitudCodigo}")
+            ->from(InvSolicitudDetalle::class, 'sd')
+            ->where("sd.codigoSolicitudFk = {$codigoRegistro}")
             ->orderBy('sd.codigoSolicitudDetallePk', 'DESC');
         return $queryBuilder;
     }
 
     /**
-     * @param $arSolicitud
+     * @param $arRegistro
      * @param $arrDetallesSeleccionados
+     * @throws \Doctrine\ORM\ORMException
      */
-    public function eliminar($arSolicitud, $arrDetallesSeleccionados)
+    public function eliminar($arRegistro, $arrDetallesSeleccionados)
     {
-        if ($arSolicitud->getEstadoAutorizado() == 0) {
+        if ($arRegistro->getEstadoAutorizado() == 0) {
             if (count($arrDetallesSeleccionados)) {
-                foreach ($arrDetallesSeleccionados as $codigoSolicitudDetalle) {
-                    $arSolicitudDetalle = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->find($codigoSolicitudDetalle);
-                    if ($arSolicitudDetalle) {
-                        $this->_em->remove($arSolicitudDetalle);
+                foreach ($arrDetallesSeleccionados as $codigo) {
+                    $ar = $this->getEntityManager()->getRepository(InvSolicitudDetalle::class)->find($codigo);
+                    if ($ar) {
+                        $this->getEntityManager()->remove($ar);
                     }
                 }
                 try {
-                    $this->_em->flush();
+                    $this->getEntityManager()->flush();
                 } catch (\Exception $e) {
                     Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
                 }
@@ -53,10 +51,10 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
         }
     }
 
-    public function listarDetallesPendientes($nombreItem = '', $codigoItem = '', $codigoSolicitud = '')
+    public function listarDetallesPendientes($nombreItem = '', $codigoItem = '', $codigoRegistro = '')
     {
-        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvSolicitudDetalle', 'isd');
-        $qb
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvSolicitudDetalle::class, 'isd');
+        $queryBuilder
             ->select('isd.codigoSolicitudDetallePk')
             ->join('isd.itemRel', 'it')
             ->join('isd.solicitudRel', 's')
@@ -70,16 +68,15 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
             ->where('s.estadoAnulado = false')
             ->andWhere('isd.cantidadPendiente > 0');
         if ($nombreItem != '') {
-            $qb->andWhere("it.nombre LIKE '%{$nombreItem}%'");
+            $queryBuilder->andWhere("it.nombre LIKE '%{$nombreItem}%'");
         }
         if ($codigoItem != '') {
-            $qb->andWhere("isd.codigoItemFk = {$codigoItem}");
+            $queryBuilder->andWhere("isd.codigoItemFk = {$codigoItem}");
         }
-        if ($codigoSolicitud != '') {
-            $qb->andWhere("isd.codigoSolicitudFk = {$codigoSolicitud} ");
+        if ($codigoRegistro != '') {
+            $queryBuilder->andWhere("isd.codigoSolicitudFk = {$codigoRegistro} ");
         }
-        $qb->orderBy('isd.codigoSolicitudDetallePk', 'ASC');
-        $query = $this->_em->createQuery($qb->getDQL());
-        return $query->execute();
+        $queryBuilder->orderBy('isd.codigoSolicitudDetallePk', 'ASC');
+        return $queryBuilder;
     }
 }

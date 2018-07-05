@@ -47,10 +47,8 @@ final class Estandares
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         if ($estadoAutorizado) {
             $arrBtnAutorizar['disabled'] = true;
-            $arrBtnEliminar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
             if ($estadoAprobado) {
                 $arrBtnDesautorizar['disabled'] = true;
@@ -69,9 +67,9 @@ final class Estandares
             ->add('btnDesautorizar', SubmitType::class, $arrBtnDesautorizar)
             ->add('btnImprimir', SubmitType::class, $arrBtnImprimir)
             ->add('btnAnular', SubmitType::class, $arrBtnAnular)
-            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
             ->getForm();
     }
+
 
 
 }

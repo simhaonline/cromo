@@ -174,7 +174,7 @@ final class AdministracionController extends Controller
                     }
                     if ($form->get('btnEliminar')->isClicked()) {
                         $em->getRepository('App:General\GenEntidad')->eliminar($arEntidad, $arrSeleccionados);
-                        return $this->redirect($this->generateUrl('admin_lista',['modulo' => $arEntidad->getModulo(),'entidad' => $arEntidad->getEntidad()]));
+                        return $this->redirect($this->generateUrl('admin_lista', ['modulo' => $arEntidad->getModulo(), 'entidad' => $arEntidad->getEntidad()]));
                     }
                 }
             }
@@ -363,7 +363,7 @@ final class AdministracionController extends Controller
                 $em->persist($arRegistro);
                 $em->flush();
                 if ($arEntidad->getDetalleInterno()) {
-                    return $this->redirect($this->generateUrl($arEntidad->getPrefijo().'_'.substr($arEntidad->getFuncion(), 0,3).'_'.$arEntidad->getModulo().'_'.$arEntidad->getEntidad().'_detalle',['id' => $arRegistro->$getPk()]));
+                    return $this->redirect($this->generateUrl($arEntidad->getModulo() . '_' . $arEntidad->getFuncion() . '_' . $arEntidad->getGrupo() . '_' . $arEntidad->getEntidad() . '_detalle', ['id' => $arRegistro->$getPk()]));
                 } else {
                     return $this->redirect($this->generateUrl('admin_detalle', ['modulo' => $arEntidad->getModulo(), 'entidad' => $arEntidad->getEntidad(), 'id' => $arRegistro->$getPk()]));
                 }

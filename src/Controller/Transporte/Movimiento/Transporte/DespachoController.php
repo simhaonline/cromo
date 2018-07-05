@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
+use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
@@ -10,7 +11,12 @@ use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoType;
 use App\Formato\Transporte\Despacho;
 use App\Formato\Transporte\Manifiesto;
+use App\Utilidades\Estandares;
+use App\Utilidades\Mensajes;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,107 +26,178 @@ use SoapClient;
 
 class DespachoController extends Controller
 {
-   /**
-    * @Route("/transporte/movimiento/transporte/despacho/lista", name="transporte_movimiento_transporte_despacho_lista")
-    */    
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @Route("/transporte/movimiento/transporte/despacho/lista", name="transporte_movimiento_transporte_despacho_lista")
+     */
     public function lista(Request $request)
     {
+        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
-        //$query = $this->getDoctrine()->getRepository(TteDespacho::class)->listaDql();
-        $arDespachos = $paginator->paginate($em->createQuery($this->getDoctrine()->getRepository(TteDespacho::class)->listaDql()), $request->query->getInt('page', 1),10);
-        return $this->render('transporte/movimiento/transporte/despacho/lista.html.twig', ['arDespachos' => $arDespachos]);
+        $session = new Session();
+        $form = $this->createFormBuilder()
+            ->add('txtVehiculo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigoVehiculo')])
+            ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoNumero')])
+            ->add('cboCiudadOrigenRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo('origen'))
+            ->add('cboCiudadDestinoRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo('destino'))
+            ->add('txtCodigoConductor', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigoVehiculo'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoNombreConductor'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroTteDespachoCodigoVehiculo', $form->get('txtVehiculo')->getData());
+            $session->set('filtroTteDespachoNumero', $form->get('txtNumero')->getData());
+            if ($form->get('cboCiudadOrigenRel')->getData() != '') {
+                $session->set('filtroTteDespachoCodigoCiudadOrigen', $form->get('cboCiudadOrigenRel')->getData()->getCodigoCiudadPk());
+            } else {
+                $session->set('filtroTteDespachoCodigoCiudadOrigen', null);
+            }
+            if ($form->get('cboCiudadDestinoRel')->getData() != '') {
+                $session->set('filtroTteDespachoCodigoCiudadDestino', $form->get('cboCiudadDestinoRel')->getData()->getCodigoCiudadPk());
+            } else {
+                $session->set('filtroTteDespachoCodigoCiudadDestino', null);
+            }
+            if ($form->get('txtCodigoConductor')->getData() != '') {
+                $session->set('filtroTteDespachoCodigoConductor', $form->get('txtCodigoConductor')->getData());
+                $session->set('filtroTteDespachoNombreConductor', $form->get('txtNombreCorto')->getData());
+            } else {
+                $session->set('filtroTteDespachoCodigoConductor', null);
+                $session->set('filtroTteDespachoNombreConductor', null);
+            }
+        }
+        $arDespachos = $paginator->paginate($this->getDoctrine()->getRepository(TteDespacho::class)->lista(), $request->query->getInt('page', 1), 30);
+        return $this->render('transporte/movimiento/transporte/despacho/lista.html.twig', ['arDespachos' => $arDespachos, 'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/despacho/nuevo/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_nuevo")
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * @Route("/transporte/movimiento/transporte/despacho/nuevo/{id}", name="transporte_movimiento_transporte_despacho_nuevo")
      */
-    public function nuevo(Request $request, $codigoDespacho)
+    public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arDespacho = new TteDespacho();
-        if($codigoDespacho != 0) {
-            $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+        if ($id != 0) {
+            $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
         }
-
         $form = $this->createForm(DespachoType::class, $arDespacho);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if($form->get('btn')){
+
+            }
             $arDespacho = $form->getData();
             $txtCodigoConductor = $request->request->get('txtCodigoConductor');
-            if($txtCodigoConductor != '') {
+            if ($txtCodigoConductor != '') {
                 $arConductor = $em->getRepository(TteConductor::class)->find($txtCodigoConductor);
-                if($arConductor) {
+                if ($arConductor) {
                     $txtCodigoVehiculo = $request->request->get('txtCodigoVehiculo');
-                    if($txtCodigoVehiculo != '') {
+                    if ($txtCodigoVehiculo != '') {
                         $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
                         if ($arVehiculo) {
                             $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
                             $arDespacho->setVehiculoRel($arVehiculo);
                             $arDespacho->setConductorRel($arConductor);
-                            if($codigoDespacho == 0) {
+                            if ($id == 0) {
                                 $arDespacho->setFechaRegistro(new \DateTime('now'));
                             }
                             $em->persist($arDespacho);
                             $em->flush();
                             if ($form->get('guardarnuevo')->isClicked()) {
-                                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_nuevo', array('codigoDespacho' => 0)));
+                                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_nuevo', array('id' => 0)));
                             } else {
-                                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $arDespacho->getCodigoDespachoPk())));
+                                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $arDespacho->getCodigoDespachoPk())));
                             }
+                        } else {
+                            Mensajes::error('No se ha encontrado un vehiculo con el codigo ingresado');
                         }
+                    } else {
+                        Mensajes::error('Debe de seleccionar un vehiculo');
                     }
+                } else {
+                    Mensajes::error('No se ha encontrado un conductor con el codigo ingresado');
                 }
+            } else {
+                Mensajes::error('Debe seleccionar un coductor');
             }
         }
-        return $this->render('transporte/movimiento/transporte/despacho/nuevo.html.twig', ['arDespacho' => $arDespacho,'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/transporte/despacho/nuevo.html.twig', ['arDespacho' => $arDespacho, 'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/despacho/detalle/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_detalle")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @Route("/transporte/movimiento/transporte/despacho/detalle/{id}", name="transporte_movimiento_transporte_despacho_detalle")
      */
-    public function detalle(Request $request, $codigoDespacho)
+    public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
-        $form = $form = $this->formularioDetalle($arDespacho);
+        $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
+        $arrBotonCerrar = array('label' => 'Cerrar', 'disabled' => true);
+        $arrBotonRetirarGuia = array('label' => 'Retirar', 'disabled' => false);
+        $arrBotonRndc = array('label' => 'RNDC', 'disabled' => false);
+        $arrBotonImprimirManifiesto = array('label' => 'Manifiesto', 'disabled' => false);
+        if ($arDespacho->getEstadoAprobado()) {
+            $arrBotonRetirarGuia['disabled'] = true;
+            if (!$arDespacho->getEstadoAnulado()) {
+                $arrBotonCerrar['disabled'] = false;
+                if ($arDespacho->getEstadoCerrado()) {
+                    $arrBotonCerrar['disabled'] = true;
+                }
+            }
+        } else {
+            $arrBotonImprimirManifiesto['disabled'] = true;
+        }
+
+        $form = Estandares::botonera($arDespacho->getEstadoAutorizado(), $arDespacho->getEstadoAprobado(), $arDespacho->getEstadoAnulado());
+        $form
+            ->add('btnCerrar', SubmitType::class, $arrBotonCerrar)
+            ->add('btnRndc', SubmitType::class, $arrBotonRndc)
+            ->add('btnRetirarGuia', SubmitType::class, $arrBotonRetirarGuia)
+            ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnGenerar')->isClicked()) {
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->generar($codigoDespacho);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+            if ($form->get('btnAprobar')->isClicked()) {
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->generar($id);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $id)));
             }
             if ($form->get('btnCerrar')->isClicked()) {
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->cerrar($codigoDespacho);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->cerrar($id);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $id)));
             }
             if ($form->get('btnRndc')->isClicked()) {
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($codigoDespacho);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($id);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $id)));
             }
             if ($form->get('btnAnular')->isClicked()) {
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->anular($codigoDespacho);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->anular($id);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $id)));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrDespachoDetalles = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->retirarDetalle($arrDespachoDetalles);
-                if($respuesta) {
+                if ($respuesta) {
                     $em->flush();
                 }
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $codigoDespacho)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $id)));
             }
-            if ($form->get('btnImprimirDespacho')->isClicked()) {
+            if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new Despacho();
-                $formato->Generar($em, $codigoDespacho);
+                $formato->Generar($em, $id);
             }
             if ($form->get('btnImprimirManifiesto')->isClicked()) {
                 $formato = new Manifiesto();
-                $formato->Generar($em, $codigoDespacho);
+                $formato->Generar($em, $id);
             }
         }
 
-        $arDespachoDetalles = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->despacho($codigoDespacho);
+        $arDespachoDetalles = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->despacho($id);
         return $this->render('transporte/movimiento/transporte/despacho/detalle.html.twig', [
             'arDespacho' => $arDespacho,
             'arDespachoDetalles' => $arDespachoDetalles,
@@ -128,12 +205,15 @@ class DespachoController extends Controller
     }
 
     /**
-     * @Route("/transporte/movimiento/trasnporte/despacho/detalle/adicionar/guia/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_detalle_adicionar_guia")
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * @Route("/transporte/movimiento/trasnporte/despacho/detalle/adicionar/guia/{id}", name="transporte_movimiento_transporte_despacho_detalle_adicionar_guia")
      */
-    public function detalleAdicionarGuia(Request $request, $codigoDespacho)
+    public function detalleAdicionarGuia(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+        $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();
@@ -159,48 +239,12 @@ class DespachoController extends Controller
                     $em->persist($arDespachoDetalle);
                 }
                 $em->flush();
-                $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($codigoDespacho);
+                $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($id);
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->despachoPendiente();
         return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
-
-    private function formularioDetalle($ar)
-    {
-        $arrBotonRetirarGuia = array('label' => 'Retirar', 'disabled' => false);
-        $arrBotonGenerar = array('label' => 'Generar', 'disabled' => false);
-        $arrBotonCerrar = array('label' => 'Cerrar', 'disabled' => true);
-        $arrBotonRndc = array('label' => 'RNDC', 'disabled' => false);
-        $arrBotonAnular = array('label' => 'Anular', 'disabled' => true);
-        $arrBotonImprimirManifiesto = array('label' => 'Manifiesto', 'disabled' => false);
-        if ($ar->getEstadoGenerado() == 1) {
-            $arrBotonRetirarGuia['disabled'] = true;
-            $arrBotonGenerar['disabled'] = true;
-            if($ar->getEstadoAnulado() == 0) {
-                $arrBotonCerrar['disabled'] = false;
-                $arrBotonAnular['disabled'] = false;
-                if($ar->getEstadoCerrado()) {
-                    $arrBotonAnular['disabled'] = true;
-                    $arrBotonCerrar['disabled'] = true;
-                }
-            }
-        } else {
-            $arrBotonImprimirManifiesto['disabled'] = true;
-        }
-        $form = $this->createFormBuilder()
-            ->add('btnRetirarGuia', SubmitType::class, $arrBotonRetirarGuia)
-            ->add('btnGenerar', SubmitType::class, $arrBotonGenerar)
-            ->add('btnCerrar', SubmitType::class, $arrBotonCerrar)
-            ->add('btnRndc', SubmitType::class, $arrBotonRndc)
-            ->add('btnAnular', SubmitType::class, $arrBotonAnular)
-            ->add('btnImprimirDespacho', SubmitType::class, array('label' => 'Imprimir orden'))
-            ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto)
-            ->getForm();
-        return $form;
-
-    }
-
 }
 

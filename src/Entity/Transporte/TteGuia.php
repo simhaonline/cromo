@@ -4,6 +4,7 @@
 namespace App\Entity\Transporte;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Transporte\TteGuiaRepository")
@@ -56,6 +57,11 @@ class TteGuia
      * @ORM\Column(name="documento_cliente", type="string", length=80, nullable=true)
      */
     private $documentoCliente;
+
+    /**
+     * @ORM\Column(name="relacion_cliente", type="string", length=50, nullable=true)
+     */
+    private $relacionCliente;
 
     /**
      * @ORM\Column(name="remitente", type="string", length=80, nullable=true)
@@ -173,6 +179,16 @@ class TteGuia
     private $estadoEntregado = false;
 
     /**
+     * @ORM\Column(name="estado_autorizado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoAutorizado = false;
+
+    /**
+     * @ORM\Column(name="estado_aprobado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoAprobado = false;
+
+    /**
      * @ORM\Column(name="estado_soporte", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoSoporte = false;
@@ -270,6 +286,9 @@ class TteGuia
     /**
      * @ORM\ManyToOne(targetEntity="TteGuiaTipo", inversedBy="guiasGuiaTipoRel")
      * @ORM\JoinColumn(name="codigo_guia_tipo_fk", referencedColumnName="codigo_guia_tipo_pk")
+     * @Assert\NotBlank(
+     *     message="Debe seleccionar un tipo"
+     * )
      */
     private $guiaTipoRel;
 
@@ -336,6 +355,9 @@ class TteGuia
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteServicio", inversedBy="guiasServicioRel")
      * @ORM\JoinColumn(name="codigo_servicio_fk", referencedColumnName="codigo_servicio_pk")
+     * @Assert\NotBlank(
+     *     message="Debe seleccionar un servicio"
+     * )
      */
     private $servicioRel;
 
@@ -348,6 +370,9 @@ class TteGuia
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteEmpaque", inversedBy="guiasEmpaqueRel")
      * @ORM\JoinColumn(name="codigo_empaque_fk", referencedColumnName="codigo_empaque_pk")
+     * @Assert\NotBlank(
+     *     message="Debe seleccionar un empaque"
+     * )
      */
     private $empaqueRel;
 
@@ -1468,6 +1493,12 @@ class TteGuia
     /**
      * @return mixed
      */
+
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
     public function getUsuario()
     {
         return $this->usuario;
@@ -1497,7 +1528,45 @@ class TteGuia
         $this->vrCobroEntrega = $vrCobroEntrega;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRelacionCliente()
+    {
+        return $this->relacionCliente;
+    }
+
+    /**
+     * @param mixed $relacionCliente
+     */
+    public function setRelacionCliente($relacionCliente): void
+    {
+        $this->relacionCliente = $relacionCliente;
+    }
 
 
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
 }
-

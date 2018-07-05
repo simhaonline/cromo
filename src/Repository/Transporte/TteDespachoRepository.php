@@ -15,6 +15,8 @@ use App\Entity\Transporte\TteVehiculo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use SoapClient;
+use Symfony\Component\HttpFoundation\Session\Session;
+
 class TteDespachoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -51,32 +53,49 @@ class TteDespachoRepository extends ServiceEntityRepository
 
     }
 
-    public function lista(): array
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function lista()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT d.codigoDespachoPk, 
-        d.numero,
-        d.codigoOperacionFk,
-        d.codigoVehiculoFk,
-        d.codigoRutaFk, 
-        co.nombre AS ciudadOrigen, 
-        cd.nombre AS ciudadDestino,
-        d.unidades,
-        d.pesoReal,
-        d.pesoVolumen,
-        d.vrFlete,
-        d.vrManejo,
-        d.vrDeclara,
-        c.nombreCorto AS conductorNombre,
-        d.estadoAnulado
-        FROM App\Entity\Transporte\TteDespacho d         
-        LEFT JOIN d.ciudadOrigenRel co
-        LEFT JOIN d.ciudadDestinoRel cd
-        LEFT JOIN d.conductorRel c
-        ORDER BY d.codigoDespachoPk DESC'
-        );
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'td')
+            ->select('td.codigoDespachoPk')
+            ->addSelect('td.numero')
+            ->addSelect('td.codigoOperacionFk')
+            ->addSelect('td.codigoVehiculoFk')
+            ->addSelect('td.codigoRutaFk')
+            ->addSelect('co.nombre AS ciudadOrigen')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('td.unidades')
+            ->addSelect('td.pesoReal')
+            ->addSelect('td.pesoVolumen')
+            ->addSelect('td.vrFlete')
+            ->addSelect('td.vrManejo')
+            ->addSelect('td.vrDeclara')
+            ->addSelect('c.nombreCorto AS conductorNombre')
+            ->addSelect('td.estadoAnulado')
+            ->leftJoin('td.ciudadOrigenRel', 'co')
+            ->leftJoin('td.ciudadDestinoRel ', 'cd')
+            ->leftJoin('td.conductorRel', 'c')
+            ->where('td.codigoDespachoPk <> 0');
+        if($session->get('filtroTteDespachoCodigoVehiculo') != ''){
+            $queryBuilder->andWhere("td.codigoVehiculoFk = '{$session->get('filtroTteDespachoCodigoVehiculo')}'");
+        }
+        if($session->get('filtroTteDespachoNumero') != ''){
+            $queryBuilder->andWhere("td.numero = {$session->get('filtroTteDespachoNumero')}");
+        }
+        if($session->get('filtroTteDespachoCodigoCiudadOrigen')){
+            $queryBuilder->andWhere("td.codigoCiudadOrigenFk = {$session->get('filtroTteDespachoCodigoCiudadOrigen')}");
+        }
+        if($session->get('filtroTteDespachoCodigoCiudadDestino')){
+            $queryBuilder->andWhere("td.codigoCiudadDestinoFk = {$session->get('filtroTteDespachoCodigoCiudadDestino')}");
+        }
+        if($session->get('filtroTteDespachoCodigoConductor')){
+            $queryBuilder->andWhere("td.codigoConductorFk = {$session->get('filtroTteDespachoCodigoConductor')}");
+        }
+        $queryBuilder->orderBy('td.codigoDespachoPk', 'ASC');
+        return $queryBuilder;
 
     }
 
@@ -104,8 +123,8 @@ class TteDespachoRepository extends ServiceEntityRepository
         $respuesta = "";
         $em = $this->getEntityManager();
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
-        if(!$arDespacho->getEstadoGenerado()) {
-            if($arDespacho->getCantidad() > 0) {
+        if (!$arDespacho->getEstadoGenerado()) {
+            if ($arDespacho->getCantidad() > 0) {
                 $fechaActual = new \DateTime('now');
                 $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 1, g.fechaDespacho=:fecha 
                       WHERE g.codigoDespachoFk = :codigoDespacho')
@@ -115,12 +134,12 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $arDespacho->setFechaSalida($fechaActual);
                 $arDespacho->setEstadoGenerado(1);
                 $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
-                if($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
+                if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
                     $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
                     $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
                     $em->persist($arDespachoTipo);
                 }
-                if($arDespachoTipo->getGeneraMonitoreo()) {
+                if ($arDespachoTipo->getGeneraMonitoreo()) {
                     $arMonitoreo = new TteMonitoreo();
                     $arMonitoreo->setVehiculoRel($arDespacho->getVehiculoRel());
                     $arMonitoreo->setDespachoRel($arDespacho);
@@ -183,7 +202,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $respuesta = "";
         $em = $this->getEntityManager();
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
-        if(!$arDespacho->getEstadoAnulado()) {
+        if (!$arDespacho->getEstadoAnulado()) {
             $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 0, 
                   g.estadoEmbarcado = 0, g.codigoDespachoFk = NULL
                   WHERE g.codigoDespachoFk = :codigoDespacho')
@@ -202,7 +221,7 @@ class TteDespachoRepository extends ServiceEntityRepository
     public function retirarDetalle($arrDetalles): bool
     {
         $em = $this->getEntityManager();
-        if($arrDetalles) {
+        if ($arrDetalles) {
             if (count($arrDetalles) > 0) {
                 foreach ($arrDetalles AS $codigo) {
                     $arDespachoDetalle = $em->getRepository(TteDespachoDetalle::class)->find($codigo);
@@ -299,7 +318,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         WHERE d.codigoDespachoPk = :codigoDespacho
         ORDER BY d.codigoDespachoPk DESC '
         )->setParameter('codigoDespacho', $codigoDespacho);
-        $arDespacho =  $query->getSingleResult();
+        $arDespacho = $query->getSingleResult();
         return $arDespacho;
 
     }
@@ -313,13 +332,13 @@ class TteDespachoRepository extends ServiceEntityRepository
             $arrDespacho = $em->getRepository(TteDespacho::class)->dqlRndc($codigoDespacho);
             //$respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
             //if($respuesta) {
-                //$respuesta = $this->reportarRndcVehiculo($cliente, $arConfiguracionTransporte, $arrDespacho);
-                //if($respuesta) {
-                    //$respuesta = $this->reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho);
-                    //if($respuesta) {
-                        $respuesta = $this->reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho);
-                    //}
-                //}
+            //$respuesta = $this->reportarRndcVehiculo($cliente, $arConfiguracionTransporte, $arrDespacho);
+            //if($respuesta) {
+            //$respuesta = $this->reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho);
+            //if($respuesta) {
+            $respuesta = $this->reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho);
+            //}
+            //}
             //}
 
         } catch (Exception $e) {
@@ -376,25 +395,25 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 </solicitud>
                                 <variables>
                                     <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
-                                    <CODTIPOIDTERCERO>". $arrTercero['identificacionTipo'] ."</CODTIPOIDTERCERO>
+                                    <CODTIPOIDTERCERO>" . $arrTercero['identificacionTipo'] . "</CODTIPOIDTERCERO>
                                     <NUMIDTERCERO>" . $arrTercero['identificacion'] . "</NUMIDTERCERO>
                                     <NOMIDTERCERO>" . $arrTercero['nombre1'] . "</NOMIDTERCERO>";
-            if($arrTercero['identificacionTipo'] == "C") {
+            if ($arrTercero['identificacionTipo'] == "C") {
                 $strPoseedorXML .= "<PRIMERAPELLIDOIDTERCERO>" . $arrTercero['apellido1'] . "</PRIMERAPELLIDOIDTERCERO>
                                                             <SEGUNDOAPELLIDOIDTERCERO>" . $arrTercero['apellido2'] . "</SEGUNDOAPELLIDOIDTERCERO>";
             }
             $strPoseedorXML .= "<CODSEDETERCERO>1</CODSEDETERCERO>";
             $strPoseedorXML .= "<NOMSEDETERCERO>PRINCIPAL</NOMSEDETERCERO>";
-            if($arrTercero['telefono'] != "") {
+            if ($arrTercero['telefono'] != "") {
                 $strPoseedorXML .= "<NUMTELEFONOCONTACTO>" . $arrTercero['telefono'] . "</NUMTELEFONOCONTACTO>";
             }
-            if($arrTercero['movil'] != "" && $arrTercero['identificacionTipo'] == "C") {
+            if ($arrTercero['movil'] != "" && $arrTercero['identificacionTipo'] == "C") {
                 $strPoseedorXML .= "<NUMCELULARPERSONA>" . $arrTercero['movil'] . "</NUMCELULARPERSONA>";
             }
             $strPoseedorXML .= "
                                                         <NOMENCLATURADIRECCION>" . $arrTercero['direccion'] . "</NOMENCLATURADIRECCION>
                                                         <CODMUNICIPIORNDC>" . $arrTercero['codigoCiudad'] . "</CODMUNICIPIORNDC>";
-            if($arrTercero['conductor'] == 1) {
+            if ($arrTercero['conductor'] == 1) {
                 $strPoseedorXML .= "
                                         <CODCATEGORIALICENCIACONDUCCION>" . $arrTercero['categoriaLicencia'] . "</CODCATEGORIALICENCIACONDUCCION>
                                         <NUMLICENCIACONDUCCION>" . $arrTercero['numeroLicencia'] . "</NUMLICENCIACONDUCCION>
@@ -406,7 +425,7 @@ class TteDespachoRepository extends ServiceEntityRepository
 
             $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strPoseedorXML));
             $cadena_xml = simplexml_load_string($respuesta);
-            if($cadena_xml->ErrorMSG != "") {
+            if ($cadena_xml->ErrorMSG != "") {
                 $respuesta = false;
                 echo $cadena_xml->ErrorMSG;
                 break;
@@ -434,11 +453,11 @@ class TteDespachoRepository extends ServiceEntityRepository
                             </solicitud>
                             <variables>
                                 <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
-                                <NUMPLACA>" . $arVehiculo['codigoVehiculoPk']  . "</NUMPLACA>
+                                <NUMPLACA>" . $arVehiculo['codigoVehiculoPk'] . "</NUMPLACA>
                                 <CODCONFIGURACIONUNIDADCARGA>" . $arVehiculo['configuracion'] . "</CODCONFIGURACIONUNIDADCARGA>
                                 <NUMEJES>" . $arVehiculo['numeroEjes'] . "</NUMEJES>
-                                <CODMARCAVEHICULOCARGA>". $arVehiculo['codigoMarca'] ."</CODMARCAVEHICULOCARGA>
-                                <CODLINEAVEHICULOCARGA>". $arVehiculo['codigoLinea'] ."</CODLINEAVEHICULOCARGA>
+                                <CODMARCAVEHICULOCARGA>" . $arVehiculo['codigoMarca'] . "</CODMARCAVEHICULOCARGA>
+                                <CODLINEAVEHICULOCARGA>" . $arVehiculo['codigoLinea'] . "</CODLINEAVEHICULOCARGA>
                                 <ANOFABRICACIONVEHICULOCARGA>" . $arVehiculo['modelo'] . "</ANOFABRICACIONVEHICULOCARGA>
                                 <CODTIPOCOMBUSTIBLE>" . $arVehiculo['tipoCombustible'] . "</CODTIPOCOMBUSTIBLE>
                                 <PESOVEHICULOVACIO>" . $arVehiculo['pesoVacio'] . "</PESOVEHICULOVACIO>
@@ -458,7 +477,7 @@ class TteDespachoRepository extends ServiceEntityRepository
 
         $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strVehiculoXML));
         $cadena_xml = simplexml_load_string($respuesta);
-        if($cadena_xml->ErrorMSG != "") {
+        if ($cadena_xml->ErrorMSG != "") {
             $respuesta = false;
             echo $cadena_xml->ErrorMSG;
         }
@@ -472,9 +491,9 @@ class TteDespachoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $respuesta = true;
-        $destinatario = "100000".$arrDespacho['numero'];
-        $propietario = "500000".$arrDespacho['numero'];
-        $strGuiaXML ="<?xml version='1.0' encoding='ISO-8859-1' ?>
+        $destinatario = "100000" . $arrDespacho['numero'];
+        $propietario = "500000" . $arrDespacho['numero'];
+        $strGuiaXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
                         <root>
                             <acceso>
                                 <username>" . $arConfiguracionTransporte->getUsuarioRndc() . "</username>
@@ -520,7 +539,7 @@ class TteDespachoRepository extends ServiceEntityRepository
 
         $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strGuiaXML));
         $cadena_xml = simplexml_load_string($respuesta);
-        if($cadena_xml->ErrorMSG != "") {
+        if ($cadena_xml->ErrorMSG != "") {
             $respuesta = false;
             echo $cadena_xml->ErrorMSG;
         }
@@ -574,7 +593,7 @@ class TteDespachoRepository extends ServiceEntityRepository
 
         $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strManifiestoXML));
         $cadena_xml = simplexml_load_string($respuesta);
-        if($cadena_xml->ErrorMSG != "") {
+        if ($cadena_xml->ErrorMSG != "") {
             $respuesta = false;
             echo $cadena_xml->ErrorMSG;
         }

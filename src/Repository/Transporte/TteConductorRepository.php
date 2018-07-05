@@ -4,6 +4,7 @@ namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteConductor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use PhpParser\Node\Expr\Cast\String_;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -14,6 +15,7 @@ class TteConductorRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TteConductor::class);
     }
+
 
     public function listaDql()
     {
@@ -30,6 +32,7 @@ class TteConductorRepository extends ServiceEntityRepository
         return $qb->getDQL();
     }
 
+
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
             ->from('App:Transporte\TteConductor','c')
@@ -39,6 +42,7 @@ class TteConductorRepository extends ServiceEntityRepository
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }
+
     public function dqlRndc($codigoConductor): array
     {
         $em = $this->getEntityManager();
@@ -80,5 +84,26 @@ class TteConductorRepository extends ServiceEntityRepository
 
     }
 
-
+    /**
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function llenarCombo(){
+        $session = new Session();
+        $array = [
+            'class' => TteConductor::class,
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('c')
+                    ->orderBy('c.nombreCorto', 'ASC');
+            },
+            'choice_label' => 'nombreCorto',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""];
+        if ($session->get('filtroTteDespachoCodigoConductor')) {
+            $array['data'] = $this->getEntityManager()->getReference(TteConductor::class, $session->get('filtroTteDespachoCodigoConductor'));
+        }
+        return $array;
+    }
 }

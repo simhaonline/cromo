@@ -2,14 +2,17 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
-use App\Controller\Estructura\AdministracionController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteNovedad;
+use App\Entity\Transporte\TteServicio;
 use App\Form\Type\Transporte\GuiaType;
 use App\Form\Type\Transporte\NovedadType;
 use App\General\General;
+use App\Utilidades\Estandares;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,112 +20,139 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+
 class GuiaController extends Controller
 {
-   /**
-    * @Route("/transporte/movimiento/transporte/guia/lista", name="transporte_movimiento_transporte_guia_lista")
-    */    
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @Route("/transporte/movimiento/transporte/guia/lista", name="transporte_movimiento_transporte_guia_lista")
+     */
     public function lista(Request $request)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
-        $form = $this->formularioFiltro();
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
+            ->add('cboServicioRel', EntityType::class, $em->getRepository(TteServicio::class)->llenarCombo())
+            ->add('txtDocumento', TextType::class, array('data' => $session->get('filtroTteGuiaDocumento')))
+            ->add('txtNumero', TextType::class, array('data' => $session->get('filtroTteGuiaNumero')))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                if ($form->get('btnFiltrar')->isClicked()) {
-                    $this->filtrar($form);
-                    $form = $this->formularioFiltro();
+                if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+                    $session = new session;
+                    $arRuta = $form->get('cboGuiaTipoRel')->getData();
+                    if ($arRuta) {
+                        $session->set('filtroTteGuiaCodigoGuiaTipo', $arRuta->getCodigoGuiaTipoPk());
+                    } else {
+                        $session->set('filtroTteGuiaCodigoGuiaTipo', null);
+                    }
+                    $arServicio = $form->get('cboServicioRel')->getData();
+                    if ($arServicio) {
+                        $session->set('filtroTteGuiaCodigoServicio', $arServicio->getCodigoServicioPk());
+                    } else {
+                        $session->set('filtroTteGuiaCodigoServicio', null);
+                    }
+                    $session->set('filtroTteGuiaDocumento', $form->get('txtDocumento')->getData());
+                    $session->set('filtroTteGuiaNumero', $form->get('txtNumero')->getData());
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    $this->filtrar($form);
-                    $query = $this->getDoctrine()->getRepository(TteGuia::class)->lista();
-                    General::get()->setExportar($query, "Guias");
+                    General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->lista())->execute(), "Guias");
                 }
             }
         }
-        $arGuias = $paginator->paginate($em->createQuery( $this->getDoctrine()->getRepository(TteGuia::class)->listaDql()), $request->query->getInt('page', 1),50);
+        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/movimiento/transporte/guia/lista.html.twig', [
             'arGuias' => $arGuias,
-            'form' => $form->createView()]);
+            'form' => $form->createView()
+        ]);
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/guia/nuevo/{codigoGuia}", name="transporte_movimiento_transporte_guia_nuevo")
+     * @param Request $request
+     * @param $id
+     * @Route("/transporte/movimiento/transporte/guia/nuevo/{id}", name="transporte_movimiento_transporte_guia_nuevo")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function nuevo(Request $request, $codigoGuia)
+    public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arGuia = new TteGuia();
-        if($codigoGuia == 0) {
-            $arGuia->setFechaIngreso(new \DateTime('now'));
+        if($id != 0){
+            $arGuia= $em->getRepository(TteGuia::class)->find($id);
         }
-
         $form = $this->createForm(GuiaType::class, $arGuia);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arGuia = $form->getData();
-            $txtCodigoCliente = $request->request->get('txtCodigoCliente');
-            if($txtCodigoCliente != '') {
-                $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
-                if ($arCliente) {
-                    $error = "";
-                    if($arGuia->getGuiaTipoRel()->getExigeNumero()) {
-                        if($arGuia->getNumero() == "") {
-                            $error = "Debe diligenciar el numero de la guia";
-                        }
-                    } else {
-                        $arGuia->setNumero(NULL);
-                    }
-                    if($error == "") {
-                        $arGuia->setClienteRel($arCliente);
-                        $arGuia->setOperacionIngresoRel($this->getUser()->getOperacionRel());
-                        $arGuia->setOperacionCargoRel($this->getUser()->getOperacionRel());
-                        $arGuia->setFactura($arGuia->getGuiaTipoRel()->getFactura());
-                        $arGuia->setCiudadOrigenRel($this->getUser()->getOperacionRel()->getCiudadRel());
-                        $em->persist($arGuia);
-                        $em->flush();
-                        if ($form->get('guardarnuevo')->isClicked()) {
-                            return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_nuevo', array('codigoGuia' => 0)));
+            if ($form->get('guardar')->isClicked()) {
+                $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+                if ($txtCodigoCliente != '') {
+                    $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
+                    if ($arCliente) {
+                        $error = "";
+                        if ($arGuia->getGuiaTipoRel()->getExigeNumero()) {
+                            if ($arGuia->getNumero() == "") {
+                                $error = "Debe diligenciar el numero de la guia";
+                            }
                         } else {
+                            $arGuia->setNumero(null);
+                        }
+                        if ($error == "") {
+                            if ($id == 0) {
+                                $arGuia->setFechaIngreso(new \DateTime('now'));
+                            }
+                            $arGuia->setClienteRel($arCliente);
+                            $arGuia->setOperacionIngresoRel($this->getUser()->getOperacionRel());
+                            $arGuia->setOperacionCargoRel($this->getUser()->getOperacionRel());
+                            $arGuia->setFactura($arGuia->getGuiaTipoRel()->getFactura());
+                            $arGuia->setCiudadOrigenRel($this->getUser()->getOperacionRel()->getCiudadRel());
+                            $em->persist($arGuia);
+                            $em->flush();
                             return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_lista'));
+                        } else {
+                            Mensajes::error($error);
                         }
                     }
+                } else {
+                    Mensajes::error('Debe de seleccionar un cliente');
                 }
             }
-
         }
-        return $this->render('transporte/movimiento/transporte/guia/nuevo.html.twig', ['arGuia' => $arGuia,'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/transporte/guia/nuevo.html.twig', ['arGuia' => $arGuia, 'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/guia/detalle/{codigoGuia}", name="transporte_movimiento_transporte_guia_detalle")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @Route("/transporte/movimiento/transporte/guia/detalle/{id}", name="transporte_movimiento_transporte_guia_detalle")
      */
-    public function detalle(Request $request, $codigoGuia)
+    public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-        $form = $this->createFormBuilder()
-            ->add('btnRetirarNovedad', SubmitType::class, array('label' => 'Retirar'))
-            ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
-            ->getForm();
+        $arGuia = $em->getRepository(TteGuia::class)->find($id);
+        $form = Estandares::botonera($arGuia->getEstadoAutorizado(),$arGuia->getEstadoAprobado(),$arGuia->getEstadoAnulado());
+        $form->add('btnRetirarNovedad', SubmitType::class, array('label' => 'Retirar'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-                $respuesta = $em->getRepository(TteGuia::class)->imprimir($codigoGuia);
-                if($respuesta) {
+                $respuesta = $em->getRepository(TteGuia::class)->imprimir($id);
+                if ($respuesta) {
                     $em->flush();
-                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
-                    //$formato = new \App\Formato\TteDespacho();
-                    //$formato->Generar($em, $codigoGuia);
+                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_detalle', array('id' => $id)));
                 }
 
             }
         }
-        $arNovedades = $this->getDoctrine()->getRepository(TteNovedad::class)->guia($codigoGuia);
-        $arDespachoDetalles = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->guia($codigoGuia);
+        $arNovedades = $this->getDoctrine()->getRepository(TteNovedad::class)->guia($id);
+        $arDespachoDetalles = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->guia($id);
         return $this->render('transporte/movimiento/transporte/guia/detalle.html.twig', [
             'arGuia' => $arGuia,
             'arNovedades' => $arNovedades,
@@ -130,7 +160,8 @@ class GuiaController extends Controller
             'form' => $form->createView()]);
     }
 
-    /**
+
+   /**
      * @Route("/transporte/movimiento/trasnporte/guia/detalle/adicionar/novedad/{codigoGuia}/{codigoNovedad}", name="transporte_movimiento_transporte_guia_detalle_adicionar_novedad")
      */
     public function detalleAdicionarNovedad(Request $request, $codigoGuia, $codigoNovedad)
@@ -138,7 +169,7 @@ class GuiaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
         $arNovedad = new TteNovedad();
-        if($codigoNovedad == 0) {
+        if ($codigoNovedad == 0) {
             $arNovedad->setEstadoAtendido(true);
             $arNovedad->setFechaReporte(new \DateTime('now'));
             $arNovedad->setFecha(new \DateTime('now'));
@@ -150,7 +181,7 @@ class GuiaController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $arNovedad = $form->getData();
             $arNovedad->setGuiaRel($arGuia);
-            if($codigoNovedad == 0) {
+            if ($codigoNovedad == 0) {
                 $arNovedad->setFechaRegistro(new \DateTime('now'));
                 $arNovedad->setFechaAtendido(new \DateTime('now'));
                 $arNovedad->setFechaSolucion(new \DateTime('now'));
@@ -167,71 +198,5 @@ class GuiaController extends Controller
             'arGuia' => $arGuia,
             'form' => $form->createView()]);
     }
-
-    private function filtrar($form)
-    {
-        $session = new session;
-        $arRuta = $form->get('guiaTipoRel')->getData();
-        if ($arRuta) {
-            $session->set('filtroTteCodigoGuiaTipo', $arRuta->getCodigoGuiaTipoPk());
-        } else {
-            $session->set('filtroTteCodigoGuiaTipo', null);
-        }
-        $arServicio = $form->get('servicioRel')->getData();
-        if ($arServicio) {
-            $session->set('filtroTteCodigoServicio', $arServicio->getCodigoServicioPk());
-        } else {
-            $session->set('filtroTteCodigoServicio', null);
-        }
-        $session->set('filtroTteDocumento', $form->get('documento')->getData());
-        $session->set('filtroTteNumeroGuia', $form->get('numero')->getData());
-    }
-
-    private function formularioFiltro()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $session = new session;
-        $arrayPropiedadesGuiaTipo = array(
-            'class' => 'App\Entity\Transporte\TteGuiaTipo',
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('gt')
-                    ->orderBy('gt.nombre', 'ASC');
-            },
-            'choice_label' => 'nombre',
-            'required' => false,
-            'empty_data' => "",
-            'placeholder' => "TODOS",
-            'data' => ""
-        );
-        if ($session->get('filtroTteCodigoGuiaTipo')) {
-            $arrayPropiedadesGuiaTipo['data'] = $em->getReference("App\Entity\Transporte\TteGuiaTipo", $session->get('filtroTteCodigoGuiaTipo'));
-        }
-        $arrayPropiedadesServicio = array(
-            'class' => 'App\Entity\Transporte\TteServicio',
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('s')
-                    ->orderBy('s.nombre', 'ASC');
-            },
-            'choice_label' => 'nombre',
-            'required' => false,
-            'empty_data' => "",
-            'placeholder' => "TODOS",
-            'data' => ""
-        );
-        if ($session->get('filtroTteCodigoServicio')) {
-            $arrayPropiedadesServicio['data'] = $em->getReference("App\Entity\Transporte\TteServicio", $session->get('filtroTteCodigoServicio'));
-        }
-        $form = $this->createFormBuilder()
-            ->add('guiaTipoRel', EntityType::class, $arrayPropiedadesGuiaTipo)
-            ->add('servicioRel', EntityType::class, $arrayPropiedadesServicio)
-            ->add('documento', TextType::class, array('data' => $session->get('filtroTteDocumento')))
-            ->add('numero', TextType::class, array('data' => $session->get('filtroTteNumeroGuia')))
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->getForm();
-        return $form;
-    }
-
-
 }
 

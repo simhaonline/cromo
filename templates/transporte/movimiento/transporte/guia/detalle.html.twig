@@ -93,7 +93,7 @@
         </tr>
         <tr>
             <td class="titulo">PRODUCTO:</td>
-            <td class="td-in-well">{{ arGuia.productoRel.nombre }}</td>
+            <td class="td-in-well">{{ arGuia.productoRel.nombre | default('')}}</td>
             <td class="titulo">FACTURA:</td>
             <td class="td-in-well">{%if arGuia.factura == 1 %}SI{% else %}NO{% endif %}</td>
             <td class="titulo" ></td>

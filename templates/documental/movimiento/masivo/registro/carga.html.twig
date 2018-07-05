@@ -25,6 +25,7 @@
             <tr>
                 <th>ID</th>
                 <th>IDENTIFICADOR</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -32,6 +33,7 @@
                 <tr>
                     <td>{{ arRegistroCarga.codigoRegistroCargaPk }}</td>
                     <td>{{ arRegistroCarga.identificador }}</td>
+                    <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{  arRegistroCarga.codigoRegistroCargaPk }}" /></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -45,6 +47,9 @@
         </div>
     </div>
     <div class="btn-toolbar">
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(form.btnEliminarDetalle) }}
+        </div>
         <div class="btn-group" style="float: right;">
             {{ form_widget(form.btnAnalizarBandeja) }}
         </div>

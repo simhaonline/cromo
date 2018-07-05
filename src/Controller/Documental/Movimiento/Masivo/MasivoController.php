@@ -52,6 +52,7 @@ class MasivoController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtIdentificador', TextType::class, ['required' => false, 'data' => $session->get('filtroDocRegistroIdentificador')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnEliminarDetalle', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnAnalizarBandeja', SubmitType::class, ['label' => 'Analizar bandeja', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -74,6 +75,11 @@ class MasivoController extends Controller
                     }
                 }
                 $em->flush();
+            }
+            if ($form->get('btnEliminarDetalle')->isClicked()) {
+                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(DocRegistroCarga::class)->eliminar($arrDetallesSeleccionados);
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_solicitud_detalle', ['id' => $id]));
             }
         }
         $arRegistrosCargas = $paginator->paginate($em->getRepository(DocRegistroCarga::class)->lista(), $request->query->getInt('page', 1), 10);

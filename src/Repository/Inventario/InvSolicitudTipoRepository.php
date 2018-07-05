@@ -27,8 +27,7 @@ class InvSolicitudTipoRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $tipo
-     * @return array|null
+     * @return array
      * @throws \Doctrine\ORM\ORMException
      */
     public function llenarCombo()

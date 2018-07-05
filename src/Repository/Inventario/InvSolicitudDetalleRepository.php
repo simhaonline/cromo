@@ -18,16 +18,14 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, InvSolicitudDetalle::class);
     }
 
-    public function lista()
+    public function lista($solicitudCodigo)
     {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('sd,ir.nombre')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder->select('sd')
             ->from('App:Inventario\InvSolicitudDetalle', 'sd')
-            ->join('sd.itemRel', 'ir')
-            ->where('sd.codigoSolicitudDetallePk <> 0')
-            ->orderBy('sd.codigoSolicitudPk', 'DESC');
-        $dql = $this->getEntityManager()->createQuery($qb->getDQL());
-        return $dql->execute();
+            ->where("sd.codigoSolicitudFk = {$solicitudCodigo}")
+            ->orderBy('sd.codigoSolicitudDetallePk', 'DESC');
+        return $queryBuilder;
     }
 
     /**
@@ -61,7 +59,7 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
         $qb
             ->select('isd.codigoSolicitudDetallePk')
             ->join('isd.itemRel', 'it')
-            ->join('isd.solicitudRel','s')
+            ->join('isd.solicitudRel', 's')
             ->addSelect('it.nombre')
             ->addSelect('it.cantidadExistencia')
             ->addSelect('isd.cantidad')

@@ -36,10 +36,10 @@ class InvSolicitudRepository extends ServiceEntityRepository
     /**
      * @return mixed
      */
-    public function listaSolicitud()
+    public function lista()
     {
         $session = new Session();
-        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvSolicitud', 'i')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvSolicitud', 'i')
             ->select('i.codigoSolicitudPk')
             ->join('i.solicitudTipoRel', 'it')
             ->addSelect('i.numero')
@@ -49,22 +49,21 @@ class InvSolicitudRepository extends ServiceEntityRepository
             ->addSelect('i.estadoAprobado')
             ->addSelect('i.estadoAnulado')
             ->where('i.codigoSolicitudPk <> 0');
-        if ($session->get('filtroInvNumeroSolicitud') != '') {
-            $qb->andWhere("i.numero = {$session->get('filtroInvNumeroSolicitud')}");
+        if ($session->get('filtroInvSolicitudNumero') != '') {
+            $queryBuilder->andWhere("i.numero = {$session->get('filtroInvSolicitudNumero')}");
         }
-        switch ($session->get('filtroInvEstadoAprobado')) {
+        switch ($session->get('filtroInvSolicitudEstadoAprobado')) {
             case '0':
-                $qb->andWhere("i.estadoAprobado = 0");
+                $queryBuilder->andWhere("i.estadoAprobado = 0");
                 break;
             case '1':
-                $qb->andWhere("i.estadoAprobado = 1");
+                $queryBuilder->andWhere("i.estadoAprobado = 1");
                 break;
         }
-        if ($session->get('filtroInvCodigoSolicitudTipo')) {
-            $qb->andWhere("i.codigoSolicitudTipoFk = '{$session->get('filtroInvCodigoSolicitudTipo')}'");
+        if ($session->get('filtroInvSolicitudCodigoSolicitudTipo')) {
+            $queryBuilder->andWhere("i.codigoSolicitudTipoFk = '{$session->get('filtroInvSolicitudCodigoSolicitudTipo')}'");
         }
-        $query = $this->getEntityManager()->createQuery($qb->getDQL());
-        return $query->execute();
+        return $queryBuilder;
     }
 
     /**

@@ -57,10 +57,10 @@ class InvItemRepository extends ServiceEntityRepository
         return $dql->execute();
     }
 
-    public function listarItems()
+    public function lista()
     {
         $session = new Session();
-        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvItem', 'ii')
+        $queryBuilder = $this->_em->createQueryBuilder()->from('App:Inventario\InvItem', 'ii')
             ->select('ii.codigoItemPk')
             ->addSelect('ii.nombre')
             ->addSelect('ii.cantidadExistencia')
@@ -69,14 +69,13 @@ class InvItemRepository extends ServiceEntityRepository
             ->addSelect('ii.stockMinimo')
             ->addSelect('ii.stockMaximo')
             ->where('ii.codigoItemPk <> 0');
-        if ($session->get('filtroInvCodigoItem') != '') {
-            $qb->andWhere("ii.codigoItemPk = {$session->get('filtroInvCodigoItem')}");
+        if ($session->get('filtroInvItemCodigo') != '') {
+            $queryBuilder->andWhere("ii.codigoItemPk = {$session->get('filtroInvItemCodigo')}");
         }
-        if ($session->get('filtroInvNombreItem') != '') {
-            $qb->andWhere("ii.nombre LIKE '%{$session->get('filtroInvNombreItem')}%' ");
+        if ($session->get('filtroInvItemNombre') != '') {
+            $queryBuilder->andWhere("ii.nombre LIKE '%{$session->get('filtroInvItemNombre')}%' ");
         }
-        $qb->orderBy('ii.codigoItemPk', 'ASC');
-        $query = $this->_em->createQuery($qb->getDQL());
-        return $query->execute();
+        $queryBuilder->orderBy('ii.codigoItemPk', 'ASC');
+        return $queryBuilder;
     }
 }

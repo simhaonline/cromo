@@ -1,7 +1,6 @@
 {% extends 'base_inventario.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    <br>
     <div class="panel panel-default">
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
@@ -29,9 +28,8 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_inventario_solicitud_lista') }}">Cancelar</a>
+        <a class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_compra_solicitud_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
-        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}
 {% endblock %}

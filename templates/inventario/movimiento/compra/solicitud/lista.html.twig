@@ -1,24 +1,23 @@
 {% extends 'base_inventario.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    <br>
     <div class="panel panel-default">
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Numero:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numero, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.txtNumero, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label class="col-sm-2 control-label">Aprobado:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.estadoAprobado, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.chkEstadoAprobado, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Tipo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.solicitudTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.cboSolicitudTipoRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label class="col-sm-2 control-label"></label>
                 <div class="col-sm-4">
@@ -56,14 +55,14 @@
                     {{ validarTipo(arSolicitud.estadoAnulado) }}
                     <td style="text-align: center;">
                         {% if not arSolicitud.estadoAutorizado %}
-                        <a href="{{ path('inventario_movimiento_inventario_solicitud_nuevo',{'id' : arSolicitud.codigoSolicitudPk}) }}">
-                            <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
-                            </i>
-                        </a>
+                            <a href="{{ path('inventario_movimiento_compra_solicitud_nuevo',{'id' : arSolicitud.codigoSolicitudPk}) }}">
+                                <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
+                                </i>
+                            </a>
                         {% endif %}
                     </td>
                     <td style="text-align: center;">
-                        <a href="{{ path('inventario_movimiento_inventario_solicitud_detalle',{'id' : arSolicitud.codigoSolicitudPk}) }}">
+                        <a href="{{ path('inventario_movimiento_compra_solicitud_detalle',{'id' : arSolicitud.codigoSolicitudPk}) }}">
                             <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                             </i>
                         </a>
@@ -72,11 +71,22 @@
             {% endfor %}
             </tbody>
         </table>
-        <div class="btn-toolbar">
-            <div class="btn-group" style="float: right;">
-                <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_inventario_solicitud_nuevo',{'id' : 0}) }}">Nuevo</a>
+    </div>
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span
+                        class="badge">{{ arSolicitudes.getTotalItemCount }}</span>
             </div>
         </div>
+    </div>
+    <div class="btn-toolbar">
+        <div class="btn-group" style="float: right;">
+            <a class="btn btn-sm btn-default"
+               href="{{ path('inventario_movimiento_compra_solicitud_nuevo',{'id' : 0}) }}">Nuevo</a>
+        </div>
+    </div>
+    <div class="btn-group btn-xs">
+        {{ knp_pagination_render(arSolicitudes) }}
     </div>
     {{ form_end(form) }}
 {% endblock %}

@@ -39,6 +39,7 @@ class SolicitudController extends Controller
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvSolicitudEstadoAprobado'), 'required' => false])
             ->add('cboSolicitudTipoRel', EntityType::class, $em->getRepository(InvSolicitudTipo::class)->llenarCombo())
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -52,8 +53,12 @@ class SolicitudController extends Controller
                     $session->set('filtroInvSolicitudCodigoSolicitudTipo', null);
                 }
             }
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(InvSolicitud::class)->eliminar($arrSeleccionados);
+            }
         }
-        $arSolicitudes = $paginator->paginate($em->getRepository(InvSolicitud::class)->lista(), $request->query->getInt('page', 1), 10);
+        $arSolicitudes = $paginator->paginate($em->getRepository(InvSolicitud::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('inventario/movimiento/compra/solicitud/lista.html.twig', [
             'arSolicitudes' => $arSolicitudes,
             'form' => $form->createView()
@@ -147,7 +152,7 @@ class SolicitudController extends Controller
                 return $this->redirect($this->generateUrl('inventario_movimiento_compra_solicitud_detalle', ['id' => $id]));
             }
         }
-        $arSolicitudDetalles = $paginator->paginate($em->getRepository(InvSolicitudDetalle::class)->lista($arSolicitud->getCodigoSolicitudPk()), $request->query->getInt('page', 1), 40);
+        $arSolicitudDetalles = $paginator->paginate($em->getRepository(InvSolicitudDetalle::class)->lista($arSolicitud->getCodigoSolicitudPk()), $request->query->getInt('page', 1), 30);
         return $this->render('inventario/movimiento/compra/solicitud/detalle.html.twig', [
             'arSolicitudDetalles' => $arSolicitudDetalles,
             'arSolicitud' => $arSolicitud,

@@ -2,6 +2,13 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     {{ notificar()|raw }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('inventario_movimiento_compra_solicitud_lista') }}">Volver</a>&nbsp;&nbsp;
+        </div>
+    </div>
+
     {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
@@ -10,7 +17,7 @@
         {% if arSolicitud.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arSolicitud.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
-    <br /><br />
+    <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">CODIGO:</td>
@@ -26,11 +33,11 @@
             <td class="td-in-well">{{ arSolicitud.fecha | date('Y-m-d') }}</td>
         </tr>
         <tr>
-            <td class="titulo" >SOPORTE:</td>
+            <td class="titulo">SOPORTE:</td>
             <td class="td-in-well" colspan="5">{{ arSolicitud.soporte }}</td>
         </tr>
         <tr>
-            <td class="titulo" >COMENTARIO: </td>
+            <td class="titulo">COMENTARIO:</td>
             <td class="td-in-well" colspan="5">{{ arSolicitud.comentarios }}</td>
         </tr>
     </table>
@@ -49,7 +56,7 @@
                             <th>ITEM</th>
                             <th title="Cantidad">CANT</th>
                             <th title="Cantidad pendiente">PEND</th>
-                            <th></th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -59,8 +66,10 @@
                                 <td>{{ arSolicitudDetalle.itemRel.codigoItemPk | default('') }}</td>
                                 <td>{{ arSolicitudDetalle.itemRel.nombre | default('') }}</td>
                                 <td style="text-align: right;">{{ arSolicitudDetalle.cantidad }}</td>
-                                <td style="text-align: right;">{{ arSolicitudDetalle.cantidadPendiente}}</td>
-                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arSolicitudDetalle.codigoSolicitudDetallePk }}" /></td>
+                                <td style="text-align: right;">{{ arSolicitudDetalle.cantidadPendiente }}</td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                                       value="{{ arSolicitudDetalle.codigoSolicitudDetallePk }}"/>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -70,9 +79,11 @@
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
                         {% if arSolicitud.estadoAutorizado == true %}
-                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled" value="Nuevo"/>
+                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
+                                   value="Nuevo"/>
                         {% else %}
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_compra_solicitud_detalle_nuevo', {'id':arSolicitud.codigoSolicitudPk }) }}', 'SolicitudAdicionarDetalle', 600, 900)">Nuevo</a>
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_compra_solicitud_detalle_nuevo', {'id':arSolicitud.codigoSolicitudPk }) }}', 'SolicitudAdicionarDetalle', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">
@@ -82,7 +93,13 @@
             </div>
         </div>
     </div>
-    <a  class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_compra_solicitud_lista') }}">Volver</a>
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span
+                        class="badge">{{ arSolicitudDetalles.getTotalItemCount }}</span>
+            </div>
+        </div>
+    </div>
     <div class="btn-group btn-xs">
         {{ knp_pagination_render(arSolicitudDetalles) }}
     </div>

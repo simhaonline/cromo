@@ -2,6 +2,7 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvSolicitud;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -15,11 +16,10 @@ class InvSolicitudRepository extends ServiceEntityRepository
         parent::__construct($registry, InvSolicitud::class);
     }
 
-
     public function camposPredeterminados()
     {
-        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvSolicitud', 's');
-        $qb->select('s.codigoSolicitudPk AS ID')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvSolicitud::class, 's');
+        $queryBuilder->select('s.codigoSolicitudPk AS ID')
             ->addSelect('s.numero AS NUMERO')
             ->addSelect('st.nombre AS TIPO')
             ->addSelect('s.fecha AS FECHA')
@@ -29,8 +29,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
             ->join('s.solicitudTipoRel', 'st')
             ->where('s.codigoSolicitudPk <> 0')
             ->orderBy('s.codigoSolicitudPk', 'DESC');
-        $dql = $this->getEntityManager()->createQuery($qb->getDQL());
-        return $dql->execute();
+        return $queryBuilder;
     }
 
     /**
@@ -39,7 +38,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
     public function lista()
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvSolicitud', 'i')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvSolicitud::class, 'i')
             ->select('i.codigoSolicitudPk')
             ->join('i.solicitudTipoRel', 'it')
             ->addSelect('i.numero')
@@ -77,13 +76,13 @@ class InvSolicitudRepository extends ServiceEntityRepository
          */
         $respuesta = '';
         if (count($arrSeleccionados) > 0) {
-            foreach ($arrSeleccionados as $codigoSolicitud) {
-                $arSolicitud = $this->getEntityManager()->getRepository($this->_entityName)->find($codigoSolicitud);
-                if ($arSolicitud) {
-                    if ($arSolicitud->getEstadoAprobado() == 0) {
-                        if ($arSolicitud->getEstadoAutorizado() == 0) {
-                            if (count($this->getEntityManager()->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()])) <= 0) {
-                                $this->getEntityManager()->remove($arSolicitud);
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(InvSolicitud::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            if (count($this->getEntityManager()->getRepository(InvSolicitudDetalle::class)->findBy(['codigoSolicitudFk' => $arRegistro->getCodigoSolicitudPk()])) <= 0) {
+                                $this->getEntityManager()->remove($arRegistro);
                             } else {
                                 $respuesta = 'No se puede eliminar, el registro tiene detalles';
                             }
@@ -91,10 +90,14 @@ class InvSolicitudRepository extends ServiceEntityRepository
                             $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
                         }
                     } else {
-                        $respuesta = 'No se puede eliminar, el registro se encuentra impreso';
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
                     }
                 }
-                Mensajes::error($respuesta);
+                if($respuesta != ''){
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
             }
         }
     }

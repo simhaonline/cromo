@@ -19,25 +19,21 @@ class DocRegistroCargaRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(DocRegistroCarga::class, 'rc')
             ->select('rc.codigoRegistroCargaPk')
             ->addSelect('rc.identificador')
+            ->addSelect('rc.archivo')
             ->where('rc.codigoRegistroCargaPk <> 0');
         return $queryBuilder;
     }
 
     public function eliminar($arrDetallesSeleccionados)
     {
-
-            if (count($arrDetallesSeleccionados)) {
-                foreach ($arrDetallesSeleccionados as $codigoSolicitudDetalle) {
-                    $arSolicitudDetalle = $this->getEntityManager()->getRepository('App:Inventario\InvSolicitudDetalle')->find($codigoSolicitudDetalle);
-                    if ($arSolicitudDetalle) {
-                        $this->_em->remove($arSolicitudDetalle);
-                    }
-                }
-                try {
-                    $this->_em->flush();
-                } catch (\Exception $e) {
-                    Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+        if (count($arrDetallesSeleccionados)) {
+            foreach ($arrDetallesSeleccionados as $codigo) {
+                $ar = $this->getEntityManager()->getRepository(DocRegistroCarga::class)->find($codigo);
+                if ($ar) {
+                    $this->getEntityManager()->remove($ar);
                 }
             }
+            $this->getEntityManager()->flush();
+        }
     }
 }

@@ -23,6 +23,16 @@ class DocRegistroCarga
     private $identificador;
 
     /**
+     * @ORM\Column(name="archivo", type="string", length=200, nullable=true)
+     */
+    private $archivo;
+
+    /**
+     * @ORM\Column(name="extension", type="string", length=10, nullable=true)
+     */
+    private $extension;
+
+    /**
      * @return mixed
      */
     public function getCodigoRegistroCargaPk()
@@ -53,6 +63,39 @@ class DocRegistroCarga
     {
         $this->identificador = $identificador;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getArchivo()
+    {
+        return $this->archivo;
+    }
+
+    /**
+     * @param mixed $archivo
+     */
+    public function setArchivo($archivo): void
+    {
+        $this->archivo = $archivo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExtension()
+    {
+        return $this->extension;
+    }
+
+    /**
+     * @param mixed $extension
+     */
+    public function setExtension($extension): void
+    {
+        $this->extension = $extension;
+    }
+
 
 
 }

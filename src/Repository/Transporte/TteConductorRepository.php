@@ -16,6 +16,19 @@ class TteConductorRepository extends ServiceEntityRepository
         parent::__construct($registry, TteConductor::class);
     }
 
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteConductor::class, 'c')
+            ->select('c.codigoConductorPk')
+            ->addSelect('c.numeroIdentificacion')
+            ->addSelect('c.nombreCorto')
+            ->addSelect('c.telefono')
+            ->addSelect('c.movil')
+            ->orderBy('c.codigoConductorPk')
+            ->where('c.codigoConductorPk IS NOT NULL');
+        return $queryBuilder;
+    }
 
     public function listaDql()
     {

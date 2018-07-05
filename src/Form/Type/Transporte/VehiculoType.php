@@ -56,7 +56,7 @@ class VehiculoType extends AbstractType
                     return $er->createQueryBuilder('m')
                         ->orderBy('m.codigoMarcaPk', 'ASC');
                 },
-                'choice_label' => 'codigoMarcaPk',
+                'choice_label' => 'nombre',
                 'label' => 'Marca:'
             ])
             ->add('tipoCombustibleRel',EntityType::class,[
@@ -91,6 +91,7 @@ class VehiculoType extends AbstractType
             ])
             ->add('codigoVehiculoPk',TextType::class,['required' => true,'label' => 'Codigo Vehiculo:'])
             ->add('placa',TextType::class,['required' => true,'label' => 'Placa:'])
+            ->add('configuracion',TextType::class,['required' => true,'label' => 'Configuracion:'])
             ->add('placaRemolque',TextType::class,['required' => true,'label' => 'Placa remolque:'])
             ->add('modelo',NumberType::class,['required' => true,'label' => 'Modelo:'])
             ->add('modeloRepotenciado',NumberType::class,['required' => false,'label' => 'Modelo repotenciado:'])

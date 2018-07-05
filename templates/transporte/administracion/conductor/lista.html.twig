@@ -1,0 +1,49 @@
+{% extends 'base_transporte.html.twig' %}
+{% block content %}
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>IDENTIFICACION</th>
+            <th>NOMBRE</th>
+            <th>TELEFONO</th>
+            <th>CELULAR</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arConductor in arConductor %}
+            <tr>
+                <td>{{ arConductor.codigoConductorPk }}</td>
+                <td style="text-align: center">{{ arConductor.numeroIdentificacion }}</td>
+                <td>{{ arConductor.nombreCorto }}</td>
+                <td>{{ arConductor.telefono }}</td>
+                <td>{{ arConductor.movil }}</td>
+                <td style="text-align: center;">
+                        <a href="{{ path('transporte_administracion_transporte_conductor_nuevo',{'id' : arConductor.codigoConductorPk}) }}">
+                            <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
+                            </i>
+                        </a>
+                </td>
+                <td style="text-align: center"><a href="{{ path('admin_detalle',{'modulo':'transporte','entidad':'conductor','id': arConductor.codigoConductorPk }) }}"><i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                </i></a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arConductor.getTotalItemCount }}</span></div>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arConductor) }}
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_transporte_conductor_nuevo', {'id': 0}) }}">Nuevo</a>
+        </div>
+    </div>
+{% endblock %}
+

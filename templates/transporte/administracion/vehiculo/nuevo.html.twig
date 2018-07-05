@@ -1,0 +1,143 @@
+{% extends 'base_transporte.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_codigoVehiculoPk" class="col-sm-2 control-label">Código vehículo:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.codigoVehiculoPk, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+                <label for="form_pĺaca" class="col-sm-2 control-label">Placa:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.placa, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+                <label for="form_placaRemolque" class="col-sm-2 control-label">Placa remolque:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.placaRemolque, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_modelo" class="col-sm-2 control-label">Modelo:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.modelo, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_modeloRepotenciado" class="col-sm-2 control-label">Modelo repotenciado:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.modeloRepotenciado, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_motor" class="col-sm-2 control-label">Motor:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.motor, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_marcaRel" class="col-sm-2 control-label">Marca:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.marcaRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_colorRel" class="col-sm-2 control-label">Color:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.colorRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_tipoCarroceriaRel" class="col-sm-2 control-label">Tipo carroceria:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.tipoCarroceriaRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_tipoCombustibleRel" class="col-sm-2 control-label">Combustible:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.tipoCombustibleRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_numeroEjes" class="col-sm-2 control-label">Numero ejes:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.numeroEjes, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_serie" class="col-sm-2 control-label">Numero serie:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.serie, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_chasis" class="col-sm-2 control-label">Numero chasis:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.chasis, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_configuracion" class="col-sm-2 control-label">Configuracion:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.configuracion, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_pesoVacion" class="col-sm-2 control-label">Peso vacío:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.pesoVacio, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_capacidad" class="col-sm-2 control-label">Capacidad:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.capacidad, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_poseedorRel" class="col-sm-2 control-label">Poseedor:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.poseedorRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_propietarioRel" class="col-sm-2 control-label">Propietario:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.propietarioRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_celular" class="col-sm-2 control-label">Celular:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.celular, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_rndc" class="col-sm-2 control-label">Registro nacional:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.registroNacionalCarga, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_fechaVenceTecnomecanica" class="col-sm-2 control-label">Fecha vence técnico mecánica:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaVenceTecnicomecanica, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Comentario:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentario, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información aseguradora</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_aesguradoraRel" class="col-sm-2 control-label">Aseguradora:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.aseguradoraRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.aseguradoraRel) }}
+                </div>
+                <label for="form_numeroPoliza" class="col-sm-2 control-label">Numero poliza:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.numeroPoliza, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.numeroPoliza) }}
+                </div>
+                <label for="form_fechaVencePoliza" class="col-sm-2 control-label">Fecha vencimiento:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaVencePoliza, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.fechaVencePoliza) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_transporte_vehiculo_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

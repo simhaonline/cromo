@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
 use App\Entity\Transporte\TteGuia;
+use App\Formato\Transporte\PendienteDespachoRuta;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,6 +19,7 @@ class PendienteDespachoRutaController extends Controller
     */    
     public function lista(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $form = $this->formularioFiltro();
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
@@ -25,6 +27,10 @@ class PendienteDespachoRutaController extends Controller
                 if ($form->get('BtnFiltrar')->isClicked()) {
                     $this->filtrar($form);
                     $form = $this->formularioFiltro();
+                }
+                if ($form->get('BtnPdf')->isClicked()) {
+                    $formato = new PendienteDespachoRuta();
+                    $formato->Generar($em);
                 }
             }
         }
@@ -66,6 +72,7 @@ class PendienteDespachoRutaController extends Controller
         }
         $form = $this->createFormBuilder()
             ->add('rutaRel', EntityType::class, $arrayPropiedadesRuta)
+            ->add('BtnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('BtnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         return $form;

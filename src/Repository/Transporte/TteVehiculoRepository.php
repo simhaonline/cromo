@@ -14,18 +14,35 @@ class TteVehiculoRepository extends ServiceEntityRepository
         parent::__construct($registry, TteVehiculo::class);
     }
 
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteVehiculo::class, 'v')
+            ->select('v.codigoVehiculoPk')
+            ->leftJoin('v.marcaRel','m')
+            ->addSelect('v.placa')
+            ->addSelect('v.modelo')
+            ->addSelect('v.placaRemolque')
+            ->addSelect('v.motor')
+            ->addSelect('v.numeroEjes')
+            ->addSelect('m.nombre')
+            ->orderBy('v.placa')
+            ->where('v.codigoVehiculoPk IS NOT NULL');
+        return $queryBuilder;
+    }
+
     public function listaDql()
     {
         $session = new Session();
-        $qb = $this->getEntityManager()->createQueryBuilder()->from(TteVehiculo::class, 'v')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteVehiculo::class, 'v')
             ->select('v.codigoVehiculoPk')
             ->addSelect('v.placa')
-            ->where("v.codigoVehiculoPk <> ''")
+            ->where("v.codigoVehiculoPk IS NOT NULL")
             ->orderBy('v.placa');
         if ($session->get('filtroTteVehiculoPlaca') != '') {
-            $qb->andWhere("v.placa LIKE '%{$session->get('filtroTteVehiculoPlaca')}%'");
+            $queryBuilder->andWhere("v.placa LIKE '%{$session->get('filtroTteVehiculoPlaca')}%'");
         }
-        return $qb->getDQL();
+        return $queryBuilder->getDQL();
     }
 
     public function camposPredeterminados(){

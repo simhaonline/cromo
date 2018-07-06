@@ -3,6 +3,8 @@
 namespace App\Form\Type\Transporte;
 
 use App\Entity\Transporte\TteConductor;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,8 +19,27 @@ class ConductorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('identificacionRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\General\GenIdentificacion',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->orderBy('i.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Tipo identificacion:'
+            ])
+            ->add('ciudadRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TteCiudad',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Ciudad:'
+            ])
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
-            ->add('nombreCorto',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('nombre1',TextType::class,['required' => true,'label' => 'Primer nombre:'])
             ->add('nombre2',TextType::class,['required' => false,'label' => 'Segundo nombre:'])
             ->add('apellido1',TextType::class,['required' => true,'label' => 'Primer apellido:'])

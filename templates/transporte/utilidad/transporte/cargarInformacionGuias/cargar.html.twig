@@ -1,0 +1,27 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Cargar archivo
+        </div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Tipo:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.attachment) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn-toolbar">
+            <div class="btn-group" style="float: right;">
+                {{ form_widget(form.btnCargar) }}
+            </div>
+        </div>
+    </div>
+    <br>
+    <img src="{{ asset('../public/img/guias/cargarInfoGuias.png') }}" width ="800">
+    {{ form_end(form) }}
+{% endblock %}

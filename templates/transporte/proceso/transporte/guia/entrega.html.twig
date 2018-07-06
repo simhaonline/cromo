@@ -10,9 +10,9 @@
                 <div class="col-sm-4">
 
                 </div>
-                <label class="col-sm-2 control-label">Numero:</label>
+                <label class="col-sm-2 control-label">Codigo despacho:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.txtNumero, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.txtDespachoCodigo, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
         </div>
@@ -49,7 +49,7 @@
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
                 <td>{{ arGuia.numero }}</td>
                 <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
-                <td>{{ arGuia.clienteNombreCorto }}</td>
+                <td>{{ arGuia.clienteNombre }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
                 <td class="numero">{{ arGuia.unidades }}</td>
                 <td class="numero">{{ arGuia.pesoReal }}</td>

@@ -9,37 +9,46 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class EntregaController extends Controller
 {
-   /**
-    * @Route("/transporte/pro/transporte/guia/entrega", name="transporte_pro_transporte_guia_entrega")
-    */    
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @Route("/transporte/proceso/transporte/guia/entrega", name="transporte_proceso_transporte_guia_entrega")
+     */
     public function lista(Request $request)
     {
-        $paginator  = $this->get('knp_paginator');
-        $query = $this->getDoctrine()->getRepository(TteGuia::class)->findBy(array('codigoGuiaPk' => NULL));
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $codigoDespacho = 0;
         $form = $this->createFormBuilder()
-            ->add('txtNumero', TextType::class)
-            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('txtDespachoCodigo', TextType::class, array('data' => $session->get('filtroTteDespachoCodigo')))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnEntrega', SubmitType::class, array('label' => 'Entregar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $codigoDespacho = $form->get('txtNumero')->getData();
-                $query = $this->getDoctrine()->getRepository(TteGuia::class)->listaEntrega($codigoDespacho);
+                $session = new session;
+                $session->set('filtroTteDespachoCodigo', $form->get('txtDespachoCodigo')->getData());
+                $codigoDespacho = $form->get('txtDespachoCodigo')->getData();
             }
             if ($form->get('btnEntrega')->isClicked()) {
                 $arrGuias = $request->request->get('chkSeleccionar');
                 $arrControles = $request->request->All();
                 $respuesta = $this->getDoctrine()->getRepository(TteGuia::class)->entrega($arrGuias, $arrControles);
-                $codigoDespacho = $form->get('txtNumero')->getData();
-                $query = $this->getDoctrine()->getRepository(TteGuia::class)->listaEntrega($codigoDespacho);
+                $codigoDespacho = $form->get('txtDespachoCodigo')->getData();
             }
         }
-        $arGuias = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('transporte/proceso/transporte/guia/entrega.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaEntrega($codigoDespacho), $request->query->getInt('page', 1), 30);
+        return $this->render('transporte/proceso/transporte/guia/entrega.html.twig', [
+            'arGuias' => $arGuias,
+            'form' => $form->createView()
+        ]);
     }
 }
 

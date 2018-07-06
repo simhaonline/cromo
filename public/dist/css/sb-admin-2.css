@@ -90,7 +90,8 @@ body {
   content: "\f107";
 }
 .sidebar .nav-second-level li,
-.sidebar .nav-third-level li {
+.sidebar .nav-third-level li,
+.sidebar .nav-four-level li {
   border-bottom: none !important;
 }
 .sidebar .nav-second-level li a {
@@ -98,6 +99,9 @@ body {
 }
 .sidebar .nav-third-level li a {
   padding-left: 52px;
+}
+.sidebar .nav-four-level li a {
+  padding-left: 67px;
 }
 @media (min-width: 768px) {
   .sidebar {

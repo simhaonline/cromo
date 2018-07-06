@@ -255,9 +255,9 @@
                             <li>
                                 <a href="#">Transporte <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_pro_transporte_guia_entrega') }}">Entrega guia</a>
+                                    <li><a href="{{ path('transporte_proceso_transporte_guia_entrega') }}">Entrega guia</a>
                                     </li>
-                                    <li><a href="{{ path('transporte_pro_transporte_guia_soporte') }}">Soporte guia</a>
+                                    <li><a href="{{ path('transporte_proceso_transporte_guia_soporte') }}">Soporte guia</a>
                                     </li>
                                     <li><a href="{{ path('transporte_pro_transporte_guia_factura') }}">Factura guia</a>
                                     </li>
@@ -307,13 +307,22 @@
                             <li>
                                 <a href="#">Transporte <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho
-                                            pendiente ruta</a></li>
-                                    <li><a href="{{ path('transporte_inf_transporte_guia_pendiente_conductor') }}">Pendiente
-                                            conductor</a></li>
-                                    <li><a href="{{ path('transporte_inf_transporte_guia_pendiente') }}">Pendiente</a>
+
+                                    <li>
+                                        <a href="#">Guia <span class="fa arrow"></span></a>
+                                        <ul class="nav nav-four-level">
+                                            <li><a href="{{ path('transporte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente ruta</a></li>
+                                            <li><a href="{{ path('transporte_inf_transporte_guia_pendiente_conductor') }}">Pendiente conductor</a></li>
+                                            <li><a href="{{ path('transporte_inf_transporte_guia_pendiente') }}">Pendiente</a></li>
+                                        </ul>
                                     </li>
-                                    <li><a href="{{ path('transporte_inf_transporte_costo_general') }}">Costos</a></li>
+                                    <li>
+                                        <a href="#">Costo <span class="fa arrow"></span></a>
+                                        <ul class="nav nav-four-level">
+                                            <li><a href="{{ path('transporte_inf_transporte_costo_general') }}">Costos</a></li>
+                                        </ul>
+                                        <!-- /.nav-third-level -->
+                                    </li>
                                 </ul>
                                 <!-- /.nav-third-level -->
                             </li>

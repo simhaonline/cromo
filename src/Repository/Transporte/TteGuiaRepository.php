@@ -65,7 +65,6 @@ class TteGuiaRepository extends ServiceEntityRepository
      * @return \Doctrine\ORM\QueryBuilder
      */
     public function lista()
-
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg');
@@ -114,46 +113,52 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function listaEntrega($codigoDespacho): array
+    public function listaEntrega($codigoDespacho)
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
-        g.numero, 
-        g.fechaIngreso,
-        g.codigoOperacionIngresoFk,
-        g.codigoOperacionCargoFk, 
-        c.nombreCorto AS clienteNombreCorto,  
-        cd.nombre AS ciudadDestino,
-        g.unidades,
-        g.pesoReal
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.estadoEntregado = 0 AND g.codigoDespachoFk = :codigoDespacho'
-        )->setParameter('codigoDespacho', $codigoDespacho);
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.codigoDespachoFk = ' . $codigoDespacho)
+            ->andWhere('g.estadoDespachado = 1')
+            ->andWhere('g.estadoEntregado = 0')
+            ->andWhere('g.estadoAnulado = 0');
+        $queryBuilder->orderBy('g.codigoGuiaPk', 'DESC');
+        return $queryBuilder;
     }
 
-    public function listaSoporte($codigoDespacho): array
+    public function listaSoporte($codigoDespacho)
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
-        g.numero, 
-        g.fechaIngreso,
-        g.codigoOperacionIngresoFk,
-        g.codigoOperacionCargoFk, 
-        c.nombreCorto AS clienteNombreCorto,  
-        cd.nombre AS ciudadDestino,
-        g.unidades,
-        g.pesoReal
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.estadoEntregado = 1 AND g.estadoSoporte = 0 AND g.codigoDespachoFk = :codigoDespacho'
-        )->setParameter('codigoDespacho', $codigoDespacho);
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.codigoDespachoFk = ' . $codigoDespacho)
+        ->andWhere('g.estadoEntregado = 1')
+        ->andWhere('g.estadoSoporte = 0')
+        ->andWhere('g.estadoAnulado = 0');
+        $queryBuilder->orderBy('g.codigoGuiaPk', 'DESC');
+        return $queryBuilder;
     }
 
     public function despacho($codigoDespacho): array

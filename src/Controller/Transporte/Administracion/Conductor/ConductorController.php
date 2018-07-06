@@ -19,9 +19,9 @@ class ConductorController extends Controller
      */
     public function lista(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $query = $this->getDoctrine()->getRepository(TteConductor::class)->lista();
-        $arConductor = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        $arConductor = $paginator->paginate($em->getRepository(TteConductor::class)->lista(), $request->query->getInt('page', 1),10);
         return $this->render('transporte/administracion/conductor/lista.html.twig', ['arConductor' => $arConductor]);
     }
 

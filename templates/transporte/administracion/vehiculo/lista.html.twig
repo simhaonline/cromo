@@ -30,8 +30,14 @@
                             </i>
                         </a>
                 </td>
-                <td style="text-align: center"><a href="{{ path('admin_detalle',{'modulo':'transporte','entidad':'vehiculo','id': arVehiculo.codigoVehiculoPk }) }}"><i class="fa fa-share-square-o" style="font-size: large;color: black;">
-                </i></a></td>
+                <td style="text-align: center;">
+                    <a href="{{ path('transporte_administracion_transporte_vehiculo_detalle',{'id' : arVehiculo.codigoVehiculoPk}) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                {#<td style="text-align: center"><a href="{{ path('admin_detalle',{'modulo':'transporte','entidad':'vehiculo','id': arVehiculo.codigoVehiculoPk }) }}"><i class="fa fa-share-square-o" style="font-size: large;color: black;">#}
+                {#</i></a></td>#}
             </tr>
         {% endfor %}
         </tbody>

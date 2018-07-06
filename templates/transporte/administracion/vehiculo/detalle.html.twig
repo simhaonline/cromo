@@ -1,0 +1,76 @@
+{% extends 'base_transporte.html.twig' %}
+{% block content %}
+    <div class="row">
+        <!-- /.col-lg-12 -->
+    </div>
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td class="titulo"><b>CODIGO VEHICULO:</b></td>
+            <td class="td-in-well">{{ arVehiculo.codigoVehiculoPk }}</td>
+            <td class="titulo"><b>PLACA:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.placa }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>PLACA REMOLQUE:</b></td>
+            <td class="td-in-well">{{ arVehiculo.placaRemolque }}</td>
+            <td class="titulo"><b>MODELO:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.modelo }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>MODELO REPOTENCIADO:</b></td>
+            <td class="td-in-well">{{ arVehiculo.modeloRepotenciado }}</td>
+            <td class="titulo"><b>MOTOR:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.motor }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>TIPO COMBUSTIBLE:</b></td>
+            <td class="td-in-well">{{ arVehiculo.tipoCombustibleRel.nombre }}</td>
+            <td class="titulo"><b>TIPO CARROCERIA:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.tipoCarroceriaRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>NUMERO EJES:</b></td>
+            <td class="td-in-well">{{ arVehiculo.numeroEjes }}</td>
+            <td class="titulo"><b>CHASIS:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.chasis }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>SERIE:</b></td>
+            <td class="td-in-well">{{ arVehiculo.serie }}</td>
+            <td class="titulo"><b>MARCA:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.marcaRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>PESO VACIO:</b></td>
+            <td class="td-in-well">{{ arVehiculo.pesoVacio }}</td>
+            <td class="titulo"><b>CAPACIDAD:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.capacidad }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>COLOR:</b></td>
+            <td class="td-in-well">{{ arVehiculo.colorRel.nombre }}</td>
+            <td class="titulo"><b>CONFIGURACION:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.configuracion }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>POSEEDOR:</b></td>
+            <td class="td-in-well">{{ arVehiculo.poseedorRel.nombreCorto }}</td>
+            <td class="titulo"><b>PROPIETARIO:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.propietarioRel.nombreCorto }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>CELULAR:</b></td>
+            <td class="td-in-well">{{ arVehiculo.celular }}</td>
+            <td class="titulo"><b>FECHA VENCIMIENTO TECNICO-MECANICA:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.fechaVenceTecnicomecanica | date('Y-m-d') }}</td>
+        </tr>
+    </table>
+    <a name="marcador"></a>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#contrato" data-toggle="tab">#</a></li>
+        <li><a href="#credito" data-toggle="tab">#</a></li>
+        <li><a href="#adicionales" data-toggle="tab">#</a></li>
+    </ul>
+    </br>
+    <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_transporte_vehiculo_lista') }}">Volver</a>
+{% endblock %}

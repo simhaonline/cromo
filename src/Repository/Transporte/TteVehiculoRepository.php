@@ -26,8 +26,9 @@ class TteVehiculoRepository extends ServiceEntityRepository
             ->addSelect('v.motor')
             ->addSelect('v.numeroEjes')
             ->addSelect('m.nombre')
-            ->orderBy('v.placa')
-            ->where('v.codigoVehiculoPk IS NOT NULL');
+            ->where('v.codigoVehiculoPk IS NOT NULL')
+            ->orderBy('v.placa', 'ASC');
+
         return $queryBuilder;
     }
 

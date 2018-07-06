@@ -19,9 +19,9 @@ class VehiculoController extends Controller
      */
     public function lista(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $query = $this->getDoctrine()->getRepository(TteVehiculo::class)->lista();
-        $arVehiculo = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        $arVehiculo = $paginator->paginate($em->getRepository(TteVehiculo::class)->lista(), $request->query->getInt('page', 1),10);
         return $this->render('transporte/administracion/vehiculo/lista.html.twig', ['arVehiculo' => $arVehiculo]);
     }
 
@@ -51,6 +51,19 @@ class VehiculoController extends Controller
             'arVehiculo' => $arVehiculo,
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/transporte/administracion/vehiculo/detalle/{id}", name="transporte_administracion_transporte_vehiculo_detalle")
+     */
+    public function detalle(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arVehiculo = $em->getRepository(TteVehiculo::class)->find($id);
+
+        return $this->render('transporte/administracion/vehiculo/detalle.html.twig', array(
+            'arVehiculo' => $arVehiculo,
+        ));
     }
 
 }

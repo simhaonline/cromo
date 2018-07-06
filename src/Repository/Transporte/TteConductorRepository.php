@@ -25,8 +25,8 @@ class TteConductorRepository extends ServiceEntityRepository
             ->addSelect('c.nombreCorto')
             ->addSelect('c.telefono')
             ->addSelect('c.movil')
-            ->orderBy('c.codigoConductorPk')
-            ->where('c.codigoConductorPk IS NOT NULL');
+            ->where('c.codigoConductorPk IS NOT NULL')
+            ->orderBy('c.codigoConductorPk');
         return $queryBuilder;
     }
 

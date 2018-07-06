@@ -18,10 +18,10 @@ class InvMovimiento
     private $codigoMovimientoPk;
 
     /**
-     * @ORM\Column(name="codigo_documento_fk", type="integer")
+     * @ORM\Column(name="codigo_documento_fk", type="string",length=10, nullable=true)
      */
     private $codigoDocumentoFk;
-    
+
     /**
      * @ORM\Column(name="codigo_factura_tipo_fk", type="string",length=10, nullable=true)
      */
@@ -31,57 +31,57 @@ class InvMovimiento
      * @ORM\Column(name="codigo_documento_tipo_fk", type="string",length=10, nullable=true)
      */
     private $codigoDocumentoTipoFk;
-    
+
     /**
      * @ORM\Column(name="numero", type="integer", nullable=true)
-     */    
+     */
     private $numero = 0;
-    
+
     /**
      * @ORM\Column(name="fecha", type="datetime", nullable=true)
-     */    
-    private $fecha;    
-    
+     */
+    private $fecha;
+
     /**
      * @ORM\Column(name="fecha_vence", type="date", nullable=true)
-     */    
+     */
     private $fechaVence;
-    
+
     /**
      * @ORM\Column(name="plazo_pago", type="integer", nullable=true)
-     */    
-    private $plazoPago = 0;    
-    
+     */
+    private $plazoPago = 0;
+
     /**
      * @ORM\Column(name="codigo_tercero_fk", type="integer")
-     */    
+     */
     private $codigoTerceroFk;
-    
+
     /**
      * @ORM\Column(name="soporte", type="string", length=50, nullable=true)
-     */    
-    private $soporte;     
-    
+     */
+    private $soporte;
+
     /**
      * @ORM\Column(name="por_iva", type="float", nullable=true)
-     */    
+     */
     private $porIva;
 
     /**
      * @ORM\Column(name="vr_iva", type="float", nullable=true)
      */
     private $vrIva;
-    
+
     /**
      * @ORM\Column(name="vr_subtotal", type="float")
      */
     private $vrSubtotal = 0;
-    
+
     /**
      * @ORM\Column(name="vr_descuento", type="float")
      */
     private $vrDescuento = 0;
-    
+
     /**
      * @ORM\Column(name="vr_neto", type="float")
      */
@@ -91,7 +91,7 @@ class InvMovimiento
      * @ORM\Column(name="vr_total", type="float")
      */
     private $vrTotal = 0;
-    
+
     /**
      * @ORM\Column(name="vr_rte_fte", type="float")
      */
@@ -101,7 +101,7 @@ class InvMovimiento
      * @ORM\Column(name="vr_rte_iva", type="float")
      */
     private $vrRteIva = 0;
-    
+
     /**
      * @ORM\Column(name="vr_rte_cree", type="float")
      */
@@ -109,34 +109,34 @@ class InvMovimiento
 
     /**
      * @ORM\Column(name="comentarios", type="string", length=500, nullable=true)
-     */    
+     */
     private $comentarios;
 
     /**
      * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
      */
     private $usuario;
-    
+
     /**
      * @ORM\Column(name="estado_autorizado", type="boolean")
-     */    
-    private $estadoAutorizado = false;    
+     */
+    private $estadoAutorizado = false;
 
     /**
      * @ORM\Column(name="estado_aprobado", type="boolean")
-     */    
+     */
     private $estadoAprobado = false;
-    
+
     /**
      * @ORM\Column(name="estado_anulado", type="boolean")
-     */    
-    private $estadoAnulado = false;    
+     */
+    private $estadoAnulado = false;
 
     /**
      * @ORM\Column(name="estado_contabilizado", type="boolean")
-     */    
+     */
     private $estadoContabilizado = false;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="InvDocumento", inversedBy="movimientosDocumentoRel")
      * @ORM\JoinColumn(name="codigo_documento_fk", referencedColumnName="codigo_documento_pk")
@@ -148,7 +148,7 @@ class InvMovimiento
      * @ORM\JoinColumn(name="codigo_documento_tipo_fk", referencedColumnName="codigo_documento_tipo_pk")
      */
     protected $documentoTipoRel;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="movimientosTerceroRel")
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
@@ -626,4 +626,6 @@ class InvMovimiento
     {
         $this->movimientosDetallesMovimientoRel = $movimientosDetallesMovimientoRel;
     }
+
+
 }

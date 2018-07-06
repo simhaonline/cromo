@@ -12,8 +12,7 @@ class InvDocumento
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_documento_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_documento_pk",type="string",length=10)
      */
     private $codigoDocumentoPk;
 
@@ -25,150 +24,150 @@ class InvDocumento
     /**
      * @ORM\Column(name="codigo_documento_tipo_fk", type="string",length=10)
      */
-    private $codigoDocumentoTipoFk;    
+    private $codigoDocumentoTipoFk;
 
     /**
      * @ORM\Column(name="abreviatura", type="string", length=10)
-     */     
+     */
     private $abreviatura;
 
     /**
      * @ORM\Column(name="operacion_inventario", type="smallint")
-     */          
+     */
     private $operacionInventario = 0;
-    
+
     /**
      * @ORM\Column(name="operacion_comercial", type="smallint")
-     */          
-    private $operacionComercial = 0;       
-    
+     */
+    private $operacionComercial = 0;
+
     /**
      * @ORM\Column(name="genera_cartera", type="boolean")
-     */          
+     */
     private $generaCartera = false;
 
     /**
      * @ORM\Column(name="tipo_asiento_cartera", type="smallint", nullable=true)
      * 1 - Debito
      * 2 - Credito
-     */          
-    private $tipoAsientoCartera;        
-    
+     */
+    private $tipoAsientoCartera;
+
     /**
      * @ORM\Column(name="genera_tesoreria", type="boolean")
-     */          
+     */
     private $generaTesoreria = false;
 
     /**
      * @ORM\Column(name="tipo_asiento_tesoreria", type="smallint", nullable=true)
      * 1 - Debito
      * 2 - Credito
-     */          
-    private $tipoAsientoTesoreria;    
-    
+     */
+    private $tipoAsientoTesoreria;
+
     /**
      * @ORM\Column(name="tipo_valor", type="smallint")
      * 0 - Ninguno
      * 1 - Compra
      * 2 - Venta
-     */          
-    private $tipoValor = 0;     
-    
+     */
+    private $tipoValor = 0;
+
     /**
      * @ORM\Column(name="consecutivo", type="integer")
-     */          
-    private $consecutivo = 0;      
-    
+     */
+    private $consecutivo = 0;
+
     /**
      * @ORM\Column(name="tipo_cuenta_ingreso", type="smallint", nullable=true)
      * 1 - Debito
      * 2 - Credito
-     */          
-    private $tipoCuentaIngreso = 0;     
+     */
+    private $tipoCuentaIngreso = 0;
 
     /**
      * @ORM\Column(name="tipo_cuenta_costo", type="smallint", nullable=true)
      * 1 - Debito
      * 2 - Credito
-     */          
-    private $tipoCuentaCosto = 0;     
-    
+     */
+    private $tipoCuentaCosto = 0;
+
     /**
      * @ORM\Column(name="tipo_cuenta_iva", type="smallint", nullable=true)
      * 1 - Debito
      * 2 - Credito
-     */          
-    private $tipoCuentaIva = 0;    
-    
+     */
+    private $tipoCuentaIva = 0;
+
     /**
      * @ORM\Column(name="codigo_cuenta_iva_fk", type="string", length=15, nullable=true)
-     */    
-    private $codigo_cuenta_iva_fk;     
+     */
+    private $codigo_cuenta_iva_fk;
 
     /**
      * @ORM\Column(name="tipo_cuenta_retencion_fuente", type="smallint", nullable=true)
      * 1 - Debito
      * 2 - Credito
-     */          
-    private $tipoCuentaRetencionFuente = 0;    
-    
+     */
+    private $tipoCuentaRetencionFuente = 0;
+
     /**
      * @ORM\Column(name="codigo_cuenta_retencion_fuente_fk", type="string", length=15, nullable=true)
-     */    
-    private $codigoCuentaRetencionFuenteFk;     
+     */
+    private $codigoCuentaRetencionFuenteFk;
 
     /**
      * @ORM\Column(name="tipo_cuenta_retencion_cree", type="smallint", nullable=true)
      * 1 - Debito
      * 2 - Credito
-     */          
-    private $tipoCuentaRetencionCREE = 0;    
-    
+     */
+    private $tipoCuentaRetencionCREE = 0;
+
     /**
      * @ORM\Column(name="codigo_cuenta_retencion_cree_fk", type="string", length=15, nullable=true)
-     */    
-    private $codigoCuentaRetencionCREEFk;    
-    
+     */
+    private $codigoCuentaRetencionCREEFk;
+
     /**
      * @ORM\Column(name="tipo_cuenta_retencion_iva", type="smallint", nullable=true)
      * 1 - Debito
      * 2 - Credito
-     */          
-    private $tipoCuentaRetencionIva = 0;    
-    
+     */
+    private $tipoCuentaRetencionIva = 0;
+
     /**
      * @ORM\Column(name="codigo_cuenta_retencion_iva_fk", type="string", length=15, nullable=true)
-     */    
-    private $codigoCuentaRetencionIvaFk;    
-    
+     */
+    private $codigoCuentaRetencionIvaFk;
+
     /**
      * @ORM\Column(name="tipo_cuenta_tesoreria", type="smallint", nullable=true)
      * 1 - Debito
      * 2 - Credito
-     */          
-    private $tipoCuentaTesoreria = 0;    
-    
+     */
+    private $tipoCuentaTesoreria = 0;
+
     /**
      * @ORM\Column(name="codigo_cuenta_tesoreria_fk", type="string", length=15, nullable=true)
-     */    
-    private $codigoCuentaTesoreriaFk;     
-    
+     */
+    private $codigoCuentaTesoreriaFk;
+
     /**
      * @ORM\Column(name="tipo_cuenta_cartera", type="smallint", nullable=true)
      * 1 - Debito
      * 2 - Credito
-     */          
-    private $tipoCuentaCartera = 0;    
-    
+     */
+    private $tipoCuentaCartera = 0;
+
     /**
      * @ORM\Column(name="codigo_cuenta_cartera_fk", type="string", length=15, nullable=true)
-     */    
+     */
     private $codigoCuentaCarteraFk;
 
     /**
      * @internal Para saber si el documento genera costo promedio
      * @ORM\Column(name="genera_costo_promedio", type="boolean")
-     */          
+     */
     private $generaCostoPromedio = false;
 
     /**
@@ -645,5 +644,6 @@ class InvDocumento
     {
         $this->movimientosDocumentoRel = $movimientosDocumentoRel;
     }
+
 
 }

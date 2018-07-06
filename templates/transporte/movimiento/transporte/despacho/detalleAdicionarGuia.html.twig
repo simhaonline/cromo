@@ -1,6 +1,24 @@
 {% extends 'base_sin_menu.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Numero:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtNumero, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cboGuiaTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.btnFiltrar,{'attr': { 'style':'float:right','class':'btn btn-sm btn-default' }}) }}
+        </div>
+    </div>
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
@@ -33,6 +51,15 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arGuias.getTotalItemCount }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arGuias) }}
+    </div>
     <div class="btn-toolbar" style="float: right">
         {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>

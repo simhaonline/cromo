@@ -112,13 +112,15 @@ class GuiaController extends Controller
                             $arGuia->setOperacionIngresoRel($this->getUser()->getOperacionRel());
                             $arGuia->setOperacionCargoRel($this->getUser()->getOperacionRel());
                             $arGuia->setFactura($arGuia->getGuiaTipoRel()->getFactura());
-                            $arGuia->setCiudadOrigenRel($this->getUser()->getOperacionRel()->getCiudadRel());
+                            $arGuia->setCiudadOrigenRel($this->getUser()->getOperacionRel() ? $this->getUser()->getOperacionRel()->getCiudadRel() : null);
                             $em->persist($arGuia);
                             $em->flush();
                             return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_lista'));
                         } else {
                             Mensajes::error($error);
                         }
+                    } else {
+                        Mensajes::error('No se encontro un cliente con el codigo ingresado');
                     }
                 } else {
                     Mensajes::error('Debe de seleccionar un cliente');

@@ -28,99 +28,115 @@
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Tipo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.guiaTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.guiaTipoRel) }}
                 </div>
                 <label class="col-sm-2 control-label">Numero:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.numero, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.numero) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Servicio:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.servicioRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.servicioRel) }}
                 </div>
                 <label class="col-sm-2 control-label">Empaque:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.empaqueRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.empaqueRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Remitente:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.remitente, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.remitente) }}
                 </div>
                 <label class="col-sm-2 control-label">Documento:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.documentoCliente, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.documentoCliente) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Destinatario:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.nombreDestinatario, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.nombreDestinatario) }}
                 </div>
                 <label class="col-sm-2 control-label">Direccion:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.direccionDestinatario, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.direccionDestinatario) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Telefono:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.telefonoDestinatario, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.telefonoDestinatario) }}
                 </div>
                 <label class="col-sm-2 control-label">Destino:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.ciudadDestinoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.ciudadDestinoRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Unidades:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.unidades, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.unidades) }}
                 </div>
                 <label class="col-sm-2 control-label">Peso:</label>
                 <div class="col-sm-1">
                     {{ form_widget(form.pesoReal, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.pesoReal) }}
                 </div>
                 <label class="col-sm-2 control-label">Vol:</label>
                 <div class="col-sm-1">
                     {{ form_widget(form.pesoVolumen, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.pesoVolumen) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Flete:</label>
                 <div class="col-sm-4">
-
                     {{ form_widget(form.vrFlete, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.vrFlete) }}
                 </div>
                 <label class="col-sm-2 control-label">Manejo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.vrManejo, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.vrManejo) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Declara:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.vrDeclara, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.vrDeclara) }}
                 </div>
                 <label class="col-sm-2 control-label">Recaudo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.vrRecaudo, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.vrRecaudo) }}
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">Comentario:</label>
                 <div class="col-sm-10">
                     {{ form_widget(form.comentario, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.comentario) }}
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_guia_lista') }}">Cancelar</a>
-        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
-        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        {{ form_widget(form.guardar) }}
     </div>
     {{ form_end(form) }}
 

@@ -1,13 +1,11 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    <div class="btn-toolbar" style="float:left">
-        <div class="btn-group">
-            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-        </div>
+    {% include 'estructura/botonera.html.twig' %}
+    </div>
     </div>
     <div style="float:right">
-        {% if arGuia.estadoImpreso == 1 %}<span class="label label-default">Impresion</span>{% endif %}
+        {% if arGuia.estadoImpreso == 1 %}<span class="label label-default">Impreso</span>{% endif %}
         {% if arGuia.estadoEmbarcado == 1 %}<span class="label label-default">Embarcado</span>{% endif %}
         {% if arGuia.estadoDespachado == 1 %}<span class="label label-default">Despacho</span>{% endif %}
         {% if arGuia.estadoEntregado == 1 %}<span class="label label-default">Entregado</span>{% endif %}
@@ -45,7 +43,7 @@
         </tr>
         <tr>
             <td class="titulo">OPERACION(ING)</td>
-            <td class="td-in-well">{{ arGuia.operacionIngresoRel.nombre }}</td>
+            <td class="td-in-well">{{ arGuia.operacionIngresoRel.nombre | default('') }}</td>
             <td class="titulo">CUMPLIDO:</td>
             <td class="td-in-well">{{ arGuia.fechaCumplido |date("Y/m/d") }}</td>
             <td class="titulo" >PESO(FAC):</td>
@@ -53,7 +51,7 @@
         </tr>
         <tr>
             <td class="titulo">OPERACION(CAR)</td>
-            <td class="td-in-well">{{ arGuia.operacionCargoRel.nombre }}</td>
+            <td class="td-in-well">{{ arGuia.operacionCargoRel.nombre | default('') }}</td>
             <td class="titulo">SOPORTE:</td>
             <td class="td-in-well">{{ arGuia.fechaSoporte |date("Y/m/d") }}</td>
             <td class="titulo" >FLETE:</td>
@@ -79,15 +77,15 @@
             <td class="titulo">SERVICIO:</td>
             <td class="td-in-well">{{ arGuia.servicioRel.nombre }}</td>
             <td class="titulo">ORIGEN:</td>
-            <td class="td-in-well">{{ arGuia.ciudadOrigenRel.nombre }}</td>
+            <td class="td-in-well">{{ arGuia.ciudadOrigenRel.nombre | default('') }}</td>
             <td class="titulo" >RECAUDO:</td>
             <td align="right">{{ arGuia.vrRecaudo | number_format(0, '.', ',')}}</td>
         </tr>
         <tr>
             <td class="titulo">RUTA:</td>
-            <td class="td-in-well">{{ arGuia.rutaRel.nombre }}</td>
+            <td class="td-in-well">{{ arGuia.rutaRel.nombre | default('') }}</td>
             <td class="titulo">DESTINO:</td>
-            <td class="td-in-well">{{ arGuia.ciudadDestinoRel.nombre }}</td>
+            <td class="td-in-well">{{ arGuia.ciudadDestinoRel.nombre | default('') }}</td>
             <td class="titulo" >ABONOS:</td>
             <td align="right">{{ arGuia.vrAbono | number_format(0, '.', ',')}}</td>
         </tr>
@@ -161,9 +159,9 @@
                             <th>SOLUCION</th>
                             <th>TIPO</th>
                             <th>DESCRIPCION</th>
-                            <th>ATE</th>
-                            <th>REP</th>
-                            <th>SOL</th>
+                            <th title="Atendido">ATE</th>
+                            <th title="Reportado">REP</th>
+                            <th title="Solucionado">SOL</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -188,7 +186,7 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_guia_detalle_adicionar_novedad', {'codigoGuia': arGuia.codigoGuiaPk, 'codigoNovedad': 0 }) }}', 'GuiaAdicionarNovedad', 600, 900)">Adicionar</a>
+                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_guia_detalle_adicionar_novedad', {'codigoGuia': arGuia.codigoGuiaPk, 'codigoNovedad': 0 }) }}', 'GuiaAdicionarNovedad', 600, 900)">Nuevo</a>
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnRetirarNovedad, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
@@ -207,7 +205,7 @@
                             <th>TIPO</th>
                             <th>NUMERO</th>
                             <th>FECHA</th>
-                            <th>GEN</th>
+                            <th title="Aprobado">APR</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -229,7 +227,6 @@
             </div>
         </div>
     </div>
-
     {{ form_end(form) }}
     <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_guia_lista') }}">Volver</a>
 {% endblock %}

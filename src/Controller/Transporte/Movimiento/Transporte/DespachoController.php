@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoType;
 use App\Formato\Transporte\Despacho;
@@ -88,42 +89,41 @@ class DespachoController extends Controller
         $form = $this->createForm(DespachoType::class, $arDespacho);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($form->get('btn')){
-
-            }
-            $arDespacho = $form->getData();
-            $txtCodigoConductor = $request->request->get('txtCodigoConductor');
-            if ($txtCodigoConductor != '') {
-                $arConductor = $em->getRepository(TteConductor::class)->find($txtCodigoConductor);
-                if ($arConductor) {
-                    $txtCodigoVehiculo = $request->request->get('txtCodigoVehiculo');
-                    if ($txtCodigoVehiculo != '') {
-                        $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
-                        if ($arVehiculo) {
-                            $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
-                            $arDespacho->setVehiculoRel($arVehiculo);
-                            $arDespacho->setConductorRel($arConductor);
-                            if ($id == 0) {
-                                $arDespacho->setFechaRegistro(new \DateTime('now'));
-                            }
-                            $em->persist($arDespacho);
-                            $em->flush();
-                            if ($form->get('guardarnuevo')->isClicked()) {
-                                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_nuevo', array('id' => 0)));
+            if ($form->get('guardar')->isClicked()) {
+                $arDespacho = $form->getData();
+                $txtCodigoConductor = $request->request->get('txtCodigoConductor');
+                if ($txtCodigoConductor != '') {
+                    $arConductor = $em->getRepository(TteConductor::class)->find($txtCodigoConductor);
+                    if ($arConductor) {
+                        $txtCodigoVehiculo = $request->request->get('txtCodigoVehiculo');
+                        if ($txtCodigoVehiculo != '') {
+                            $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
+                            if ($arVehiculo) {
+                                $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
+                                $arDespacho->setVehiculoRel($arVehiculo);
+                                $arDespacho->setConductorRel($arConductor);
+                                if ($id == 0) {
+                                    $arDespacho->setFechaRegistro(new \DateTime('now'));
+                                }
+                                $em->persist($arDespacho);
+                                $em->flush();
+                                if ($form->get('guardarnuevo')->isClicked()) {
+                                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_nuevo', array('id' => 0)));
+                                } else {
+                                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $arDespacho->getCodigoDespachoPk())));
+                                }
                             } else {
-                                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $arDespacho->getCodigoDespachoPk())));
+                                Mensajes::error('No se ha encontrado un vehiculo con el codigo ingresado');
                             }
                         } else {
-                            Mensajes::error('No se ha encontrado un vehiculo con el codigo ingresado');
+                            Mensajes::error('Debe de seleccionar un vehiculo');
                         }
                     } else {
-                        Mensajes::error('Debe de seleccionar un vehiculo');
+                        Mensajes::error('No se ha encontrado un conductor con el codigo ingresado');
                     }
                 } else {
-                    Mensajes::error('No se ha encontrado un conductor con el codigo ingresado');
+                    Mensajes::error('Debe seleccionar un coductor');
                 }
-            } else {
-                Mensajes::error('Debe seleccionar un coductor');
             }
         }
         return $this->render('transporte/movimiento/transporte/despacho/nuevo.html.twig', ['arDespacho' => $arDespacho, 'form' => $form->createView()]);
@@ -208,42 +208,60 @@ class DespachoController extends Controller
      * @param Request $request
      * @param $id
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
      * @Route("/transporte/movimiento/trasnporte/despacho/detalle/adicionar/guia/{id}", name="transporte_movimiento_transporte_despacho_detalle_adicionar_guia")
      */
     public function detalleAdicionarGuia(Request $request, $id)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
         $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
         $form = $this->createFormBuilder()
-            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar'])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
+            ->add('txtNumero', TextType::class, ['required' => false,'data' => $session->get('filtroTteDespachoGuiaNumero')])
+            ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-            if (count($arrSeleccionados) > 0) {
-                foreach ($arrSeleccionados AS $codigo) {
-                    $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
-                    $arGuia->setDespachoRel($arDespacho);
-                    $arGuia->setEstadoEmbarcado(1);
-                    $em->persist($arGuia);
-                    $arDespachoDetalle = new TteDespachoDetalle();
-                    $arDespachoDetalle->setDespachoRel($arDespacho);
-                    $arDespachoDetalle->setGuiaRel($arGuia);
-                    $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
-                    $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
-                    $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
-                    $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
-                    $arDespachoDetalle->setUnidades($arGuia->getUnidades());
-                    $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
-                    $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                    $em->persist($arDespachoDetalle);
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if (count($arrSeleccionados) > 0) {
+                    foreach ($arrSeleccionados AS $codigo) {
+                        $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
+                        $arGuia->setDespachoRel($arDespacho);
+                        $arGuia->setEstadoEmbarcado(1);
+                        $em->persist($arGuia);
+                        $arDespachoDetalle = new TteDespachoDetalle();
+                        $arDespachoDetalle->setDespachoRel($arDespacho);
+                        $arDespachoDetalle->setGuiaRel($arGuia);
+                        $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
+                        $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
+                        $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
+                        $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
+                        $arDespachoDetalle->setUnidades($arGuia->getUnidades());
+                        $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
+                        $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                        $em->persist($arDespachoDetalle);
+                    }
+                    $em->flush();
+                    $em->getRepository(TteDespacho::class)->liquidar($id);
                 }
-                $em->flush();
-                $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($id);
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
-            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTteDespachoGuiaNumero', $form->get('txtNumero')->getData());
+
+                if ($session->get('filtroTteDespachoGuiaCodigoGuiaTipo') != '') {
+                    $session->set('filtroTteDespachoGuiaCodigoGuiaTipo', $form->get('cboGuiaTipoRel')->getData());
+                } else {
+                    $session->set('filtroTteDespachoGuiaCodigoGuiaTipo', null);
+                }
+            }
         }
-        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->despachoPendiente();
+
+        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->despachoPendiente(), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
 }

@@ -8,6 +8,7 @@ use App\Entity\Transporte\TteGuiaTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+
 class TteGuiaRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -44,66 +45,73 @@ class TteGuiaRepository extends ServiceEntityRepository
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd WHERE g.codigoGuiaPk <> 0 ';
-        if($session->get('filtroTteCodigoGuiaTipo')) {
+        if ($session->get('filtroTteCodigoGuiaTipo')) {
             $dql .= " AND g.codigoGuiaTipoFk = '" . $session->get('filtroTteCodigoGuiaTipo') . "'";
         }
-        if($session->get('filtroTteCodigoServicio')) {
+        if ($session->get('filtroTteCodigoServicio')) {
             $dql .= " AND g.codigoServicioFk = '" . $session->get('filtroTteCodigoServicio') . "'";
         }
-        if($session->get('filtroTteDocumento') != "") {
+        if ($session->get('filtroTteDocumento') != "") {
             $dql .= " AND g.documentoCliente LIKE '%" . $session->get('filtroTteDocumento') . "%'";
         }
-        if($session->get('filtroTteNumeroGuia') != "") {
+        if ($session->get('filtroTteNumeroGuia') != "") {
             $dql .= " AND g.numero =" . $session->get('filtroTteNumeroGuia');
         }
         $dql .= " ORDER BY g.fechaIngreso DESC";
         return $dql;
     }
 
-    public function lista(): array
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function lista()
+
     {
         $session = new Session();
-        $em = $this->getEntityManager();
-        $dql = 'SELECT g.codigoGuiaPk, 
-        g.codigoServicioFk,
-        g.codigoGuiaTipoFk, 
-        g.numero,
-        g.documentoCliente, 
-        g.fechaIngreso,
-        g.codigoOperacionIngresoFk,
-        g.codigoOperacionCargoFk, 
-        c.nombreCorto AS clienteNombreCorto,  
-        cd.nombre AS ciudadDestino,
-        g.unidades,
-        g.pesoReal,
-        g.pesoVolumen,
-        g.vrFlete,
-        g.vrManejo,
-        g.vrRecaudo,         
-        g.estadoImpreso,
-        g.estadoEmbarcado,
-        g.estadoDespachado, 
-        g.estadoEntregado, 
-        g.estadoSoporte, 
-        g.estadoCumplido
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd WHERE g.codigoGuiaPk <> 0 ';
-        if($session->get('filtroTteCodigoGuiaTipo')) {
-            $dql .= " AND g.codigoGuiaTipoFk = '" . $session->get('filtroTteCodigoGuiaTipo') . "'";
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg');
+        $queryBuilder
+            ->select('tg.codigoGuiaPk')
+            ->addSelect('tg.codigoServicioFk')
+            ->addSelect('tg.codigoGuiaTipoFk')
+            ->addSelect('tg.numero')
+            ->addSelect('tg.documentoCliente')
+            ->addSelect('tg.fechaIngreso')
+            ->addSelect('tg.codigoOperacionIngresoFk')
+            ->addSelect('tg.codigoOperacionCargoFk')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('tg.unidades')
+            ->addSelect('tg.pesoReal')
+            ->addSelect('tg.pesoVolumen')
+            ->addSelect('tg.vrFlete')
+            ->addSelect('tg.vrManejo')
+            ->addSelect('tg.vrRecaudo')
+            ->addSelect('tg.estadoImpreso')
+            ->addSelect('tg.estadoAutorizado')
+            ->addSelect('tg.estadoAnulado')
+            ->addSelect('tg.estadoAprobado')
+            ->addSelect('tg.estadoEmbarcado')
+            ->addSelect('tg.estadoDespachado')
+            ->addSelect('tg.estadoEntregado')
+            ->addSelect('tg.estadoSoporte')
+            ->addSelect('tg.estadoCumplido')
+            ->leftJoin('tg.clienteRel', 'c')
+            ->leftJoin('tg.ciudadDestinoRel', 'cd')
+            ->where('tg.codigoGuiaPk <> 0');
+        if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
+            $queryBuilder->andWhere("tg.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");
         }
-        if($session->get('filtroTteCodigoServicio')) {
-            $dql .= " AND g.codigoServicioFk = '" . $session->get('filtroTteCodigoServicio') . "'";
+        if ($session->get('filtroTteGuiaCodigoServicio')) {
+            $queryBuilder->andWhere("tg.codigoServicioFk = '" . $session->get('filtroTteGuiaCodigoServicio') . "'");
         }
-        if($session->get('filtroTteDocumento') != "") {
-            $dql .= " AND g.documentoCliente LIKE '%" . $session->get('filtroTteDocumento') . "%'";
+        if ($session->get('filtroTteGuiaDocumento') != "") {
+            $queryBuilder->andWhere("tg.documentoCliente LIKE '%" . $session->get('filtroTteGuiaDocumento') . "%'");
         }
-        if($session->get('filtroTteNumeroGuia') != "") {
-            $dql .= " AND g.numero =" . $session->get('filtroTteNumeroGuia');
+        if ($session->get('filtroTteGuiaNumero') != "") {
+            $queryBuilder->andWhere("tg.numero = " . $session->get('filtroTteGuiaNumero'));
         }
-        $dql .= " ORDER BY g.codigoGuiaPk";
-        $query = $em->createQuery($dql);
-        return $query->execute();
+        $queryBuilder->orderBy('tg.codigoGuiaPk', 'DESC');
+        return $queryBuilder;
     }
 
     public function listaEntrega($codigoDespacho): array
@@ -198,26 +206,34 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     }
 
-    public function despachoPendiente(): array
+    public function despachoPendiente()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
-        g.numero,
-        g.codigoOperacionIngresoFk,
-        g.codigoOperacionCargoFk, 
-        g.unidades,
-        g.pesoReal,
-        g.pesoVolumen,        
-        c.nombreCorto AS clienteNombreCorto, 
-        cd.nombre AS ciudadDestino
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.estadoDespachado = 0 AND g.estadoEmbarcado = 0 AND g.estadoImpreso = 1 AND g.estadoAnulado = 0
-        ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk'
-        );
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
+            ->select('tg.codigoGuiaPk')
+            ->addSelect('tg.numero')
+            ->addSelect('tg.codigoOperacionIngresoFk')
+            ->addSelect('tg.codigoOperacionCargoFk')
+            ->addSelect('tg.unidades')
+            ->addSelect('tg.pesoReal')
+            ->addSelect('tg.pesoVolumen')
+            ->addSelect('tg.pesoVolumen')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->leftJoin('tg.clienteRel', 'c')
+            ->leftJoin('tg.ciudadDestinoRel', 'cd')
+            ->where('tg.estadoDespachado = 0')
+            ->andWhere('tg.estadoEmbarcado = 0')
+            ->andWhere('tg.estadoImpreso = 1')
+            ->andWhere('tg.estadoAnulado = 0');
+        if ($session->get('filtroTteDespachoGuiaNumero') != '') {
+            $queryBuilder->andWhere("tg.numero =  {$session->get('filtroTteDespachoGuiaNumero')}");
+        }
+        if ($session->get('filtroTteDespachoGuiaCodigoGuiaTipo') != '') {
+            $queryBuilder->andWhere("tg.codigoGuiaTipoFk =  {$session->get('filtroTteDespachoGuiaCodigoGuiaTipo')}");
+        }
+        $queryBuilder->orderBy('tg.codigoRutaFk, tg.codigoCiudadDestinoFk', 'ASC');
+        return $queryBuilder;
     }
 
     public function cumplido($codigoCumplido): array
@@ -357,7 +373,7 @@ class TteGuiaRepository extends ServiceEntityRepository
     public function generarFactura($arrGuias): bool
     {
         $em = $this->getEntityManager();
-        if($arrGuias) {
+        if ($arrGuias) {
             if (count($arrGuias) > 0) {
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
@@ -427,7 +443,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         LEFT JOIN g.ciudadDestinoRel cd
         LEFT JOIN g.rutaRel r
         WHERE g.estadoDespachado = 0 AND g.estadoAnulado = 0 ";
-        if($session->get('filtroTteCodigoRuta')) {
+        if ($session->get('filtroTteCodigoRuta')) {
             $dql .= " AND g.codigoRutaFk = " . $session->get('filtroTteCodigoRuta');
         }
         $dql .= "ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk";
@@ -463,7 +479,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         LEFT JOIN g.despachoRel d
         LEFT JOIN d.conductorRel con     
         WHERE g.estadoDespachado = 1 AND g.estadoAnulado = 0 AND g.estadoSoporte = 0 AND g.codigoDespachoFk IS NOT NULL ";
-        if($session->get('filtroTteCodigoConductor')) {
+        if ($session->get('filtroTteCodigoConductor')) {
             $dql .= " AND d.codigoConductorFk = " . $session->get('filtroTteCodigoConductor');
         }
         $dql .= "ORDER BY d.codigoConductorFk, g.codigoCiudadDestinoFk";
@@ -560,8 +576,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $respuesta = false;
         $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-        if($arGuia->getEstadoImpreso() == 0) {
-            if($arGuia->getNumero() == 0 || $arGuia->getNumero() == NULL) {
+        if ($arGuia->getEstadoImpreso() == 0) {
+            if ($arGuia->getNumero() == 0 || $arGuia->getNumero() == NULL) {
                 $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($arGuia->getCodigoGuiaTipoFk());
                 $arGuia->setNumero($arGuiaTipo->getConsecutivo());
                 $arGuiaTipo->setConsecutivo($arGuiaTipo->getConsecutivo() + 1);
@@ -578,8 +594,8 @@ class TteGuiaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $ultimoDia = date("d", (mktime(0, 0, 0, $mes + 1, 1, $anio) - 1));
-        $fechaDesde = $anio."-".$mes."-"."01 00:00";
-        $fechaHasta = $anio."-".$mes."-".$ultimoDia." 23:59";
+        $fechaDesde = $anio . "-" . $mes . "-" . "01 00:00";
+        $fechaHasta = $anio . "-" . $mes . "-" . $ultimoDia . " 23:59";
         $query = $em->createQuery(
             'SELECT g.codigoGuiaPk,  
         g.vrFlete
@@ -587,7 +603,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         WHERE g.fechaIngreso >= :fechaDesde AND g.fechaIngreso <= :fechaHasta  
         ORDER BY g.codigoGuiaPk DESC '
         )->setParameter('fechaDesde', $fechaDesde)
-        ->setParameter('fechaHasta', $fechaHasta);
+            ->setParameter('fechaHasta', $fechaHasta);
         return $query->execute();
     }
 

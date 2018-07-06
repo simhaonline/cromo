@@ -9,6 +9,7 @@ use App\Entity\Transporte\TteDespachoRecogidaAuxiliar;
 use App\Entity\Transporte\TteRecogida;
 use App\Entity\Transporte\TteAuxiliar;
 use App\Entity\Transporte\TteMonitoreo;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,12 +20,12 @@ class DespachoRecogidaController extends Controller
 
 
     /**
-     * @Route("/transporte/movimiento/recogida/despacho/nuevo/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_nuevo")
+     * @Route("/transporte/movimiento/recogida/despacho/nuevo/{id}", name="transporte_movimiento_recogida_despacho_nuevo")
      */
-    public function nuevo(Request $request, $codigoDespachoRecogida)
+    public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        if($codigoDespachoRecogida == 0) {
+        if ($id == 0) {
             $arDespachoRecogida = new TteDespachoRecogida();
             $arDespachoRecogida->setFecha(new \DateTime('now'));
         }
@@ -32,20 +33,22 @@ class DespachoRecogidaController extends Controller
         $form = $this->createForm(DespachoRecogidaType::class, $arDespachoRecogida);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arDespachoRecogida = $form->getData();
-            $txtCodigoVehiculo = $request->request->get('txtCodigoVehiculo');
-            if($txtCodigoVehiculo != '') {
-                $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
-                if($arVehiculo) {
-                    $arDespachoRecogida->setVehiculoRel($arVehiculo);
-                    $arDespachoRecogida->setOperacionRel($this->getUser()->getOperacionRel());
-                    $em->persist($arDespachoRecogida);
-                    $em->flush();
-                    if ($form->get('guardarnuevo')->isClicked()) {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_nuevo', array('codigoDespachoRecogida' => 0)));
+            if ($form->get('guardar')->isClicked()) {
+                $arDespachoRecogida = $form->getData();
+                $txtCodigoVehiculo = $request->request->get('txtCodigoVehiculo');
+                if ($txtCodigoVehiculo != '') {
+                    $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
+                    if ($arVehiculo) {
+                        $arDespachoRecogida->setVehiculoRel($arVehiculo);
+                        $arDespachoRecogida->setOperacionRel($this->getUser()->getOperacionRel());
+                        $em->persist($arDespachoRecogida);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', ['id' => 0]));
                     } else {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_lista'));
+                        Mensajes::error('No se ha encontrado un vehiculo con el codigo ingresado');
                     }
+                } else {
+                    Mensajes::error('Debe seleccionar un vehiculo');
                 }
             }
         }
@@ -54,24 +57,24 @@ class DespachoRecogidaController extends Controller
             'form' => $form->createView()]);
     }
 
-   /**
-    * @Route("/transporte/movimiento/recogida/despacho/lista", name="transporte_movimiento_recogida_despacho_lista")
-    */    
+    /**
+     * @Route("/transporte/movimiento/recogida/despacho/lista", name="transporte_movimiento_recogida_despacho_lista")
+     */
     public function lista(Request $request)
     {
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $query = $this->getDoctrine()->getRepository(TteDespachoRecogida::class)->lista();
-        $arDespachosRecogida = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        $arDespachosRecogida = $paginator->paginate($query, $request->query->getInt('page', 1), 10);
         return $this->render('transporte/movimiento/recogida/despacho/lista.html.twig', ['arDespachosRecogida' => $arDespachosRecogida]);
     }
 
     /**
-     * @Route("/transporte/movimiento/recogida/despacho/detalle/{codigoDespachoRecogida}", name="transporte_movimiento_recogida_despacho_detalle")
+     * @Route("/transporte/movimiento/recogida/despacho/detalle/{id}", name="transporte_movimiento_recogida_despacho_detalle")
      */
-    public function detalle(Request $request, $codigoDespachoRecogida)
+    public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arDespachoRecogida = $em->getRepository(TteDespachoRecogida::class)->find($codigoDespachoRecogida);
+        $arDespachoRecogida = $em->getRepository(TteDespachoRecogida::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnRetirarRecogida', SubmitType::class, array('label' => 'Retirar'))
             ->add('btnRetirarAuxiliar', SubmitType::class, array('label' => 'Retirar'))
@@ -82,14 +85,14 @@ class DespachoRecogidaController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new \App\Formato\Despacho();
-                $formato->Generar($em, $codigoDespachoRecogida);
+                $formato->Generar($em, $id);
             }
             if ($form->get('btnMonitoreo')->isClicked()) {
-                if(!$arDespachoRecogida->getEstadoMonitoreo()) {
+                if (!$arDespachoRecogida->getEstadoMonitoreo()) {
                     $respuesta = $this->getDoctrine()->getRepository(TteMonitoreo::class)->generar(
                         $arDespachoRecogida->getCodigoVehiculoFk());
                     $arDespachoRecogida->setEstadoMonitoreo(1);
-                    if($respuesta) {
+                    if ($respuesta) {
                         $em->persist($arDespachoRecogida);
                         $em->flush();
                     }
@@ -98,15 +101,15 @@ class DespachoRecogidaController extends Controller
             if ($form->get('btnRetirarRecogida')->isClicked()) {
                 $arrRecogidas = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteDespachoRecogida::class)->retirarRecogida($arrRecogidas);
-                if($respuesta) {
+                if ($respuesta) {
                     $em->flush();
-                    $em->getRepository(TteDespachoRecogida::class)->liquidar($codigoDespachoRecogida);
+                    $em->getRepository(TteDespachoRecogida::class)->liquidar($id);
                 }
-                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', array('codigoDespachoRecogida' => $codigoDespachoRecogida)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', array('codigoDespachoRecogida' => $id)));
             }
         }
-        $arRecogidas = $this->getDoctrine()->getRepository(TteRecogida::class)->despacho($codigoDespachoRecogida);
-        $arDespachoRecogidaAuxiliares = $this->getDoctrine()->getRepository(TteDespachoRecogidaAuxiliar::class)->despacho($codigoDespachoRecogida);
+        $arRecogidas = $this->getDoctrine()->getRepository(TteRecogida::class)->despacho($id);
+        $arDespachoRecogidaAuxiliares = $this->getDoctrine()->getRepository(TteDespachoRecogidaAuxiliar::class)->despacho($id);
         return $this->render('transporte/movimiento/recogida/despacho/detalle.html.twig', [
             'arDespachoRecogida' => $arDespachoRecogida,
             'arRecogidas' => $arRecogidas,

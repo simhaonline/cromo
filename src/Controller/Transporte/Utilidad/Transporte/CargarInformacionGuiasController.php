@@ -9,6 +9,7 @@ use App\Utilidades\Mensajes;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,14 +19,34 @@ class CargarInformacionGuiasController extends Controller
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
      * @Route("/transporte/utilidad/transporte/cargarinformacionguias/lista", name="transporte_utilidad_transporte_cargarinformacionguias_lista")
      */
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $arGuiasCargas = $em->getRepository(TteGuiaCarga::class)->findAll();
+        $form = $this->createFormBuilder()
+            ->add('txtCliente',TextType::class,['required' => false])
+            ->add('btnFiltrar',SubmitType::class,['label' => 'Filtrar','attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnEliminar',SubmitType::class,['label' => 'Eliminar','attr' => ['class' => 'btn btn-sm btn-default', 'style' => 'float:right']])
+            ->getForm();
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            if($form->get('btnFiltrar')->isClicked()){
+
+            }
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if(count($arrSeleccionados) > 0){
+                    $em->getRepository(TteGuiaCarga::class)->eliminar($arrSeleccionados);
+                }
+                return $this->redirect($this->generateUrl('transporte_utilidad_transporte_cargarinformacionguias_lista'));
+            }
+        }
         return $this->render('transporte/utilidad/transporte/cargarInformacionGuias/lista.html.twig', [
-            'arGuiasCargas' => $arGuiasCargas
+            'arGuiasCargas' => $arGuiasCargas,
+            'form' => $form->createView()
         ]);
     }
 
@@ -46,6 +67,7 @@ class CargarInformacionGuiasController extends Controller
         $form = $this->createFormBuilder()
             ->add('attachment', FileType::class, array('attr' => ['class' => 'btn btn-sm btn-default']))
             ->add('btnCargar', SubmitType::class, array('label' => 'Cargar','attr' => ['class' => 'btn btn-sm btn-primary']))
+            ->add('txtCliente', TextType::class,['required' => true])
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnCargar')->isClicked()) {
@@ -94,6 +116,7 @@ class CargarInformacionGuiasController extends Controller
                     $arGuiaCarga = new TteGuiaCarga();
                     $arGuiaCarga->setNumero($arrCarga['codigoGuia']);
                     $arGuiaCarga->setRemitente($arrCarga['remitente']);
+                    $arGuiaCarga->setCliente($form->get('txtCliente')->getData());
                     $arGuiaCarga->setRelacionCliente($arrCarga['relacion']);
                     $arGuiaCarga->setDocumentoCliente($arrCarga['documento']);
                     $arGuiaCarga->setNombreDestinatario($arrCarga['nombre']);
@@ -107,6 +130,7 @@ class CargarInformacionGuiasController extends Controller
                 }
             }
             $em->flush();
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
 
         return $this->render('transporte/utilidad/transporte/cargarInformacionGuias/cargar.html.twig', [

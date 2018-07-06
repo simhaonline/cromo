@@ -33,6 +33,11 @@ class TteGuiaCarga
     private $codigoClienteFk;
 
     /**
+     * @ORM\Column(name="cliente", type="text",length=30, nullable=true)
+     */
+    private $cliente;
+
+    /**
      * @ORM\Column(name="documento_cliente", type="string", length=80, nullable=true)
      */
     private $documentoCliente;
@@ -325,6 +330,22 @@ class TteGuiaCarga
     public function setVrDeclarado($vrDeclarado): void
     {
         $this->vrDeclarado = $vrDeclarado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCliente()
+    {
+        return $this->cliente;
+    }
+
+    /**
+     * @param mixed $cliente
+     */
+    public function setCliente($cliente): void
+    {
+        $this->cliente = $cliente;
     }
 }
 

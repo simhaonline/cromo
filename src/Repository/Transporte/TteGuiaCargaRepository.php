@@ -14,4 +14,19 @@ class TteGuiaCargaRepository extends ServiceEntityRepository
         parent::__construct($registry, TteGuiaCarga::class);
     }
 
+    /**
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        foreach ($arrSeleccionados as $arrSeleccionado) {
+            $ar = $this->getEntityManager()->getRepository(TteGuiaCarga::class)->find($arrSeleccionado);
+            if ($ar) {
+                $this->getEntityManager()->remove($ar);
+            }
+        }
+        $this->getEntityManager()->flush();
+
+    }
 }

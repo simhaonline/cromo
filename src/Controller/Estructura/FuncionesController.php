@@ -48,4 +48,48 @@ final class FuncionesController
         return $dateNuevaFecha;
     }
 
+    /**
+     * @param $index
+     * @return string
+     */
+    public static function indexAColumna($index){
+        $letra = '';
+        switch ($index){
+            case 1:
+                $letra = 'A';
+            break;
+            case 2:
+                $letra = 'B';
+            break;
+            case 3:
+                $letra = 'C';
+            break;
+            case 4:
+                $letra = 'D';
+            break;
+            case 5:
+                $letra = 'E';
+            break;
+            case 6:
+                $letra = 'F';
+            break;
+            case 7:
+                $letra = 'G';
+            break;
+            case 8:
+                $letra = 'H';
+            break;
+            case 9:
+                $letra = 'I';
+            break;
+            case 10:
+                $letra = 'J';
+            break;
+            case 11:
+                $letra = 'K';
+            break;
+        }
+        return $letra;
+    }
+
 }

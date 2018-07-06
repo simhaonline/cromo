@@ -33,6 +33,10 @@ class GenConfiguracion
     private $nombre;
 
     /**
+     * @ORM\Column(name="ruta_temporal", type="string", length=100, nullable=true)
+     */
+    private $rutaTemporal;
+    /**
      * @ORM\Column(name="telefono", type="string", length=25, nullable=true)
      */
     private $telefono;
@@ -159,7 +163,20 @@ class GenConfiguracion
         $this->logo = $logo;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRutaTemporal()
+    {
+        return $this->rutaTemporal;
+    }
 
-
+    /**
+     * @param mixed $rutaTemporal
+     */
+    public function setRutaTemporal($rutaTemporal): void
+    {
+        $this->rutaTemporal = $rutaTemporal;
+    }
 }
 

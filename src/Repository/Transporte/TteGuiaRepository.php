@@ -230,7 +230,10 @@ class TteGuiaRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("tg.numero =  {$session->get('filtroTteDespachoGuiaNumero')}");
         }
         if ($session->get('filtroTteDespachoGuiaCodigoGuiaTipo') != '') {
-            $queryBuilder->andWhere("tg.codigoGuiaTipoFk =  {$session->get('filtroTteDespachoGuiaCodigoGuiaTipo')}");
+            $queryBuilder->andWhere("tg.codigoGuiaTipoFk =  '{$session->get('filtroTteDespachoGuiaCodigoGuiaTipo')}'");
+        }
+        if ($session->get('filtroTteDespachoGuiaCodigoRuta') != '') {
+            $queryBuilder->andWhere("tg.codigoRutaFk =  '{$session->get('filtroTteDespachoGuiaCodigoRuta')}'");
         }
         $queryBuilder->orderBy('tg.codigoRutaFk, tg.codigoCiudadDestinoFk', 'ASC');
         return $queryBuilder;

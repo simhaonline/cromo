@@ -8,6 +8,7 @@ use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
+use App\Entity\Transporte\TteRuta;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoType;
 use App\Formato\Transporte\Despacho;
@@ -222,6 +223,7 @@ class DespachoController extends Controller
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->add('txtNumero', TextType::class, ['required' => false,'data' => $session->get('filtroTteDespachoGuiaNumero')])
             ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
+            ->add('cboRutaRel', EntityType::class, $em->getRepository(TteRuta::class)->llenarCombo())
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -253,8 +255,13 @@ class DespachoController extends Controller
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroTteDespachoGuiaNumero', $form->get('txtNumero')->getData());
 
-                if ($session->get('filtroTteDespachoGuiaCodigoGuiaTipo') != '') {
-                    $session->set('filtroTteDespachoGuiaCodigoGuiaTipo', $form->get('cboGuiaTipoRel')->getData());
+                if ($form->get('cboRutaRel')->getData() != '') {
+                    $session->set('filtroTteDespachoGuiaCodigoRuta', $form->get('cboRutaRel')->getData()->getCodigoRutaPk());
+                } else {
+                    $session->set('filtroTteDespachoGuiaCodigoRuta', null);
+                }
+                if ($form->get('cboGuiaTipoRel')->getData() != '') {
+                    $session->set('filtroTteDespachoGuiaCodigoGuiaTipo', $form->get('cboGuiaTipoRel')->getData()->getCodigoGuiaTipoPk());
                 } else {
                     $session->set('filtroTteDespachoGuiaCodigoGuiaTipo', null);
                 }

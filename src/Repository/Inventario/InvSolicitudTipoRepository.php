@@ -45,7 +45,7 @@ class InvSolicitudTipoRepository extends ServiceEntityRepository
             'placeholder' => "TODOS",
             'data' => ""];
         if ($session->get('filtroInvCodigoSolicitudTipo')) {
-            $array['data'] = $this->getEntityManager()->getReference('App:Inventario\InvSolicitudTipo', $session->get('filtroInvCodigoSolicitudTipo'));
+            $array['data'] = $this->getEntityManager()->getReference(InvSolicitudTipo::class, $session->get('filtroInvCodigoSolicitudTipo'));
         }
         return $array;
     }

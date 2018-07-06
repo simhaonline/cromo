@@ -46,7 +46,7 @@ class TteGuiaTipoRepository extends ServiceEntityRepository
             'data' => ""
         ];
         if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
-            $array['data'] = $this->getEntityManager()->getReference("App\Entity\Transporte\TteGuiaTipo", $session->get('filtroTteGuiaCodigoGuiaTipo'));
+            $array['data'] = $this->getEntityManager()->getReference(TteGuiaTipo::class, $session->get('filtroTteGuiaCodigoGuiaTipo'));
         }
         return $array;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Comercial\Factura;
 
+use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaOtro;
@@ -119,13 +120,14 @@ class FacturaController extends Controller
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        if($id == 0) {
-            $arFactura = new TteFactura();
+        $objFunciones = new FuncionesController();
+        $arFactura = new TteFactura();
+        if($id != 0) {
+            $arFactura = $em->getRepository(TteFactura::class)->find($id);
         }
         $form = $this->createForm(FacturaType::class, $arFactura);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arFactura = $form->getData();
             $txtCodigoCliente = $request->request->get('txtCodigoCliente');
             if($txtCodigoCliente != '') {
                 $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
@@ -134,6 +136,9 @@ class FacturaController extends Controller
                     if ($arFactura->getPlazoPago() <= 0) {
                         $arFactura->setPlazoPago($arFactura->getClienteRel()->getPlazoPago());
                     }
+                    $fecha = new \DateTime('now');
+                    $arFactura->setFecha($fecha);
+                    $arFactura->setFechaVence($arFactura->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
                     $em->persist($arFactura);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {

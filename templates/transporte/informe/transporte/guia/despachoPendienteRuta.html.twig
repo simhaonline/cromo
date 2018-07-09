@@ -105,6 +105,9 @@
         {% set totalVolumen = 0 %}
         </tbody>
     </table>
+    <div class="btn-group" style="float: right">
+        {{ form_widget(form.BtnPdf, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

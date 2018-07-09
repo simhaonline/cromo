@@ -6,11 +6,11 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteGuiaCarga;
 use App\Utilidades\Mensajes;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -24,17 +24,18 @@ class CargarInformacionGuiasController extends Controller
      */
     public function lista(Request $request)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $arGuiasCargas = $em->getRepository(TteGuiaCarga::class)->findAll();
+        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCliente',TextType::class,['required' => false])
             ->add('btnFiltrar',SubmitType::class,['label' => 'Filtrar','attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnEliminar',SubmitType::class,['label' => 'Eliminar','attr' => ['class' => 'btn btn-sm btn-default', 'style' => 'float:right']])
+            ->add('btnEliminar',SubmitType::class,['label' => 'Eliminar','attr' => ['class' => 'btn btn-sm btn-danger', 'style' => 'float:right']])
             ->getForm();
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             if($form->get('btnFiltrar')->isClicked()){
-
+                $session->set('filtroTteGuiaCargaCliente',$form->get('txtCliente')->getData());
             }
             if($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -44,6 +45,7 @@ class CargarInformacionGuiasController extends Controller
                 return $this->redirect($this->generateUrl('transporte_utilidad_transporte_cargarinformacionguias_lista'));
             }
         }
+        $arGuiasCargas = $paginator->paginate($arGuiasCargas = $em->getRepository(TteGuiaCarga::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/utilidad/transporte/cargarInformacionGuias/lista.html.twig', [
             'arGuiasCargas' => $arGuiasCargas,
             'form' => $form->createView()
@@ -85,7 +87,6 @@ class CargarInformacionGuiasController extends Controller
             $i = 0;
             foreach ($reader->getWorksheetIterator() as $worksheet) {
                 $highestRow = $worksheet->getHighestRow(); // e.g. 10
-                $highestColumn = $worksheet->getHighestColumn(); // e.g 'F'
                 for ($row = 2; $row <= $highestRow; ++$row) {
                     $cell = $worksheet->getCellByColumnAndRow(1, $row);
                     $arrCargas [$i]['codigoGuia'] = $cell->getValue();
@@ -109,6 +110,7 @@ class CargarInformacionGuiasController extends Controller
                     $arrCargas [$i]['comentario'] = $cell->getValue();
                     $cell = $worksheet->getCellByColumnAndRow(11, $row);
                     $arrCargas [$i]['vrDeclarado'] = $cell->getValue();
+                    $i++;
                 }
             }
             if (count($arrCargas) > 0) {
@@ -119,6 +121,7 @@ class CargarInformacionGuiasController extends Controller
                     $arGuiaCarga->setCliente($form->get('txtCliente')->getData());
                     $arGuiaCarga->setRelacionCliente($arrCarga['relacion']);
                     $arGuiaCarga->setDocumentoCliente($arrCarga['documento']);
+                    $arGuiaCarga->setFechaRegistro(new \DateTime('now'));
                     $arGuiaCarga->setNombreDestinatario($arrCarga['nombre']);
                     $arGuiaCarga->setDireccionDestinatario($arrCarga['direccion']);
                     $arGuiaCarga->setTelefonoDestinatario($arrCarga['telefono']);

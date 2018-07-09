@@ -70,6 +70,87 @@ final class Estandares
             ->getForm();
     }
 
+    /**
+     * @param $pdf
+     * @param $ar
+     * @param string $titulo
+     */
+    public static function generarEncabezado($pdf, $ar, $titulo = '')
+    {
+        $pdf->SetFont('Arial', '', 5);
+        $date = new \DateTime('now');
+        $pdf->Text(168, 8, $date->format('Y-m-d H:i:s') . ' [Cromo | Inventario]');
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->SetFont('Arial', 'B', 10);
+        //Logo
+        $pdf->SetXY(53, 10);
+        try {
+            $pdf->Image('../public/assets/img/empresa/logo.jpeg', 12, 13, 40, 25);
+        } catch (\Exception $exception) {
+        }
+        //INFORMACIÓN EMPRESA
+        $pdf->Cell(147, 7, utf8_decode($titulo), 0, 0, 'C', 1);
+        $pdf->SetXY(53, 18);
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(20, 4, "EMPRESA:", 0, 0, 'L', 1);
+        $pdf->Cell(100, 4, utf8_decode(''), 0, 0, 'L', 0);
+        $pdf->SetXY(53, 22);
+        $pdf->Cell(20, 4, "NIT:", 0, 0, 'L', 1);
+        $pdf->Cell(100, 4, '', 0, 0, 'L', 0);
+        $pdf->SetXY(53, 26);
+        $pdf->Cell(20, 4, utf8_decode("DIRECCIÓN:"), 0, 0, 'L', 1);
+        $pdf->Cell(100, 4, utf8_decode(''), 0, 0, 'L', 0);
+        $pdf->SetXY(53, 30);
+        $pdf->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
+        $pdf->Cell(100, 4, '', 0, 0, 'L', 0);
+        //ENCABEZADO ORDEN DE COMPRA
+        $intY = 40;
+//        $pdf->SetFillColor(272, 272, 272);
+        $pdf->SetXY(10, $intY);
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->Cell(30, 4, "NUMERO:", 1, 0, 'L', 1);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFillColor(272, 272, 272);
+        $pdf->Cell(65, 4, $ar->getNumero(), 1, 0, 'L', 1);
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->Cell(30, 4, "FECHA:", 1, 0, 'L', 1);
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFillColor(272, 272, 272);
+        $pdf->Cell(65, 4, $ar->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
 
+        $pdf->SetXY(10, $intY + 4);
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->Cell(30, 4, "TIPO SOLICITUD:", 1, 0, 'L', 1);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFillColor(272, 272, 272);
+        $pdf->Cell(65, 4, utf8_decode($ar->getSolicitudTipoRel()->getNombre()), 1, 0, 'L', 1);
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->Cell(30, 4, 'SOPORTE:', 1, 0, 'L', 1);
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFillColor(272, 272, 272);
+        $pdf->Cell(65, 4, $ar->getSoporte(), 1, 0, 'L', 1);
+
+        $pdf->SetXY(10, $intY + 8);
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->Cell(30, 4, "FECHA ENTREGA", 1, 0, 'L', 1);
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFillColor(272, 272, 272);
+        $pdf->Cell(160, 4, $ar->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
+
+
+        $pdf->SetXY(10, $intY + 12);
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->Cell(30, 4, "COMENTARIO", 1, 0, 'L', 1);
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFillColor(272, 272, 272);
+//        $pdf->Cell(160, 4, $ar->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
+        $pdf->MultiCell(160, 4, $ar->getComentarios(), 1, 'L');
+
+    }
 
 }

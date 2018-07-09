@@ -19,6 +19,8 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>NUMERO</th>
+            <th>FECHA</th>
             <th>CLIENTE</th>
             <th>REMITENTE</th>
             <th>RELACION</th>
@@ -38,6 +40,13 @@
         {% for arGuiaCarga in arGuiasCargas %}
             <tr>
                 <td>{{ arGuiaCarga.codigoGuiaCargaPk }}</td>
+                <td>{{ arGuiaCarga.numero }}</td>
+                <td>
+                    {% if arGuiaCarga.fechaRegistro != '' or arGuiaCarga.fechaRegistro != null %}
+                        {{ arGuiaCarga.fechaRegistro | date('Y-m-d') }}
+                    {% else %}
+                    {% endif %}
+                </td>
                 <td>{{ arGuiaCarga.cliente }}</td>
                 <td>{{ arGuiaCarga.remitente }}</td>
                 <td>{{ arGuiaCarga.relacionCliente }}</td>
@@ -57,14 +66,24 @@
         <tr></tr>
         </tbody>
     </table>
-    <div class="btn-toolbar">
-        <div class="btn-group" style="float: right;">
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span
+                        class="badge">{{ arGuiasCargas.getTotalItemCount }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="btn-toolbar" style="float: right;">
+        <div class="btn-group">
             <a href="javascript:abrirVentana3('{{ path('transporte_utilidad_transporte_cargarinformacionguias_cargar') }}','CargarArchivo',600,900)"
                class="btn-sm btn btn-default">Cargar</a>
         </div>
         <div class="btn-group">
             {{ form_widget(form.btnEliminar) }}
         </div>
+    </div>
+    <div class="btn-group btn-xs">
+        {{ knp_pagination_render(arGuiasCargas) }}
     </div>
     {{ form_end(form) }}
 {% endblock %}

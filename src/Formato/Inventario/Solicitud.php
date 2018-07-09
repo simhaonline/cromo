@@ -3,6 +3,7 @@
 namespace App\Formato\Inventario;
 
 use App\Entity\Inventario\InvSolicitud;
+use App\Utilidades\Estandares;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class Solicitud extends \FPDF
@@ -42,82 +43,7 @@ class Solicitud extends \FPDF
     {
         /** @var  $arSolicitud InvSolicitud */
         $arSolicitud = self::$em->getRepository('App:Inventario\InvSolicitud')->find(self::$codigoSolicitud);
-        $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
-        $this->SetFont('Arial', '', 5);
-        $date = new \DateTime('now');
-        $this->Text(168, 8, $date->format('Y-m-d H:i:s') . ' [Cromo | Inventario]');
-        $this->SetFillColor(200, 200, 200);
-        $this->SetFont('Arial', 'B', 10);
-        //Logo
-        $this->SetXY(53, 10);
-        try {
-            $this->Image('../public/assets/img/empresa/logo.jpeg', 12, 13, 40, 25);
-        } catch (\Exception $exception) {
-        }
-        //INFORMACIÓN EMPRESA
-        $this->Cell(147, 7, utf8_decode("SOLICITUD"), 0, 0, 'C', 1);
-        $this->SetXY(53, 18);
-        $this->SetFont('Arial', 'B', 9);
-        $this->Cell(20, 4, "EMPRESA:", 0, 0, 'L', 1);
-        $this->Cell(100, 4, utf8_decode(''), 0, 0, 'L', 0);
-        $this->SetXY(53, 22);
-        $this->Cell(20, 4, "NIT:", 0, 0, 'L', 1);
-        $this->Cell(100, 4, '', 0, 0, 'L', 0);
-        $this->SetXY(53, 26);
-        $this->Cell(20, 4, utf8_decode("DIRECCIÓN:"), 0, 0, 'L', 1);
-        $this->Cell(100, 4, utf8_decode(''), 0, 0, 'L', 0);
-        $this->SetXY(53, 30);
-        $this->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
-        $this->Cell(100, 4, '', 0, 0, 'L', 0);
-        //ENCABEZADO ORDEN DE COMPRA
-        $intY = 40;
-//        $this->SetFillColor(272, 272, 272);
-        $this->SetXY(10, $intY);
-        $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 4, "NUMERO:", 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 8);
-        $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arSolicitud->getNumero(), 1, 0, 'L', 1);
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, "FECHA:", 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 7);
-        $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
-
-        $this->SetXY(10, $intY + 4);
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, "TIPO SOLICITUD:", 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 8);
-        $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, utf8_decode($arSolicitud->getSolicitudTipoRel()->getNombre()), 1, 0, 'L', 1);
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, 'SOPORTE:', 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 7);
-        $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arSolicitud->getSoporte(), 1, 0, 'L', 1);
-
-        $this->SetXY(10, $intY + 8);
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, "FECHA ENTREGA", 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 7);
-        $this->SetFillColor(272, 272, 272);
-        $this->Cell(160, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
-
-
-        $this->SetXY(10, $intY + 12);
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, "COMENTARIO", 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 7);
-        $this->SetFillColor(272, 272, 272);
-//        $this->Cell(160, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
-        $this->MultiCell(160, 4, $arSolicitud->getComentarios(), 1, 'L');
-
-
+        Estandares::generarEncabezado($this,$arSolicitud,'SOLICITUD');
         $this->EncabezadoDetalles();
 
     }
@@ -224,7 +150,6 @@ class Solicitud extends \FPDF
         $this->Text($x,$y,$txt);
         $this->Rotate(0);
     }
-
 }
 
 ?>

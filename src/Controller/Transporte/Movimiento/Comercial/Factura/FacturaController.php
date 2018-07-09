@@ -10,6 +10,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
+use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,9 +24,9 @@ class FacturaController extends Controller
     */    
     public function lista(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $query = $this->getDoctrine()->getRepository(TteFactura::class)->lista();
-        $arFacturas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        $arFacturas = $paginator->paginate($em->getRepository(TteFactura::class)->lista(), $request->query->getInt('page', 1),10);
         return $this->render('transporte/movimiento/comercial/factura/lista.html.twig', ['arFacturas' => $arFacturas]);
     }
 
@@ -34,10 +35,15 @@ class FacturaController extends Controller
      */
     public function detalle(Request $request, $id)
     {
-        $paginator  = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arFactura = $em->getRepository(TteFactura::class)->find($id);
-        $form = $this->formularioDetalles($arFactura);
+        $paginator  = $this->get('knp_paginator');
+        $form = Estandares::botonera($arFactura->getEstadoAutorizado(),$arFactura->getEstadoAprobado(),$arFactura->getEstadoAnulado());
+        $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        if($arFactura->getEstadoAutorizado()){
+            $arrBtnRetirar['disabled'] = true;
+        }
+        $form->add('btnRetirarGuia', SubmitType::class, $arrBtnRetirar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
@@ -45,20 +51,20 @@ class FacturaController extends Controller
                 $formato->Generar($em, $id);
             }
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository('App:Transporte\TteFactura')->autorizar($arFactura);
+                $em->getRepository(TteFactura::class)->autorizar($arFactura);
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository('App:Transporte\TteFactura')->desAutorizar($arFactura);
+                $em->getRepository(TteFactura::class)->desAutorizar($arFactura);
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository('App:Transporte\TteFactura')->Aprobar($arFactura);
+                $em->getRepository(TteFactura::class)->Aprobar($arFactura);
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarGuia($arrGuias);
                 if($respuesta) {
                     $em->flush();
-                    $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($id);
+                    $em->getRepository(TteFactura::class)->liquidar($id);
                 }
             }
             return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
@@ -114,20 +120,21 @@ class FacturaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         if($id == 0) {
-            $aFactura = new TteFactura();
-            //$aFactura->setFechaRegistro(new \DateTime('now'));
+            $arFactura = new TteFactura();
         }
-
-        $form = $this->createForm(FacturaType::class, $aFactura);
+        $form = $this->createForm(FacturaType::class, $arFactura);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $aFactura = $form->getData();
+            $arFactura = $form->getData();
             $txtCodigoCliente = $request->request->get('txtCodigoCliente');
             if($txtCodigoCliente != '') {
                 $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
                 if($arCliente) {
-                    $aFactura->setClienteRel($arCliente);
-                    $em->persist($aFactura);
+                    $arFactura->setClienteRel($arCliente);
+                    if ($arFactura->getPlazoPago() <= 0) {
+                        $arFactura->setPlazoPago($arFactura->getClienteRel()->getPlazoPago());
+                    }
+                    $em->persist($arFactura);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {
                         return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_nuevo', array('codigoRecogida' => 0)));
@@ -137,56 +144,9 @@ class FacturaController extends Controller
                 }
             }
         }
-        return $this->render('transporte/movimiento/comercial/factura/nuevo.html.twig', ['$aFactura' => $aFactura,'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/comercial/factura/nuevo.html.twig', ['$arFactura' => $arFactura,'form' => $form->createView()]);
     }
 
-    private function formularioDetalles($arFactura)
-    {
-        $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnAprobar = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-        $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        if ($arFactura->getEstadoAnulado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnAprobar['disabled'] = true;
-            $arrBtnRetirar['disabled'] = true;
-        } elseif ($arFactura->getEstadoAprobado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = false;
-            $arrBtnAnular['disabled'] = false;
-            $arrBtnAprobar['disabled'] = true;
-            $arrBtnRetirar['disabled'] = true;
-        } elseif ($arFactura->getEstadoAutorizado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = false;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnAprobar['disabled'] = false;
-            $arrBtnRetirar['disabled'] = true;
-        } else {
-            $arrBtnAutorizar['disabled'] = false;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnAprobar['disabled'] = true;
-            $arrBtnRetirar['disabled'] = false;
-        }
-        return $this
-            ->createFormBuilder()
-            ->add('btnRetirarGuia', SubmitType::class, $arrBtnRetirar)
-            ->add('btnAutorizar', SubmitType::class, $arrBtnAutorizar)
-            ->add('btnAprobar', SubmitType::class, $arrBtnAprobar)
-            ->add('btnDesautorizar', SubmitType::class, $arrBtnDesautorizar)
-            ->add('btnImprimir', SubmitType::class, $arrBtnImprimir)
-            ->add('btnAnular', SubmitType::class, $arrBtnAnular)
-            ->getForm();
-    }
 
 }
 

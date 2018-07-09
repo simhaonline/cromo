@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Transporte\TteFacturaTipo;
 use App\Utilidades\Mensajes;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteGuia;
@@ -75,13 +76,15 @@ class TteFacturaRepository extends ServiceEntityRepository
 
     /**
      * @param $arFactura TteFactura
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function autorizar($arFactura)
     {
-        if (count($this->_em->getRepository('App:Transporte\TteGuia')->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()])) > 0) {
+        if (count($this->getEntityManager()->getRepository(TteGuia::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()])) > 0) {
             $arFactura->setEstadoAutorizado(1);
-            $this->_em->persist($arFactura);
-            $this->_em->flush();
+            $this->getEntityManager()->persist($arFactura);
+            $this->getEntityManager()->flush();
         } else {
             Mensajes::error('No se puede autorizar, el registro no tiene detalles');
         }
@@ -89,13 +92,15 @@ class TteFacturaRepository extends ServiceEntityRepository
 
     /**
      * @param $arFactura TteFactura
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function desAutorizar($arFactura)
     {
         if ($arFactura->getEstadoAutorizado() == 1 && $arFactura->getEstadoAprobado() == 0) {
             $arFactura->setEstadoAutorizado(0);
-            $this->_em->persist($arFactura);
-            $this->_em->flush();
+            $this->getEntityManager()->persist($arFactura);
+            $this->getEntityManager()->flush();
         } else {
             Mensajes::error('No se puede desautorizar, el registro ya se encuentra aprobado');
         }
@@ -103,10 +108,11 @@ class TteFacturaRepository extends ServiceEntityRepository
 
     /**
      * @param $arFactura TteFactura
+     * @throws \Doctrine\ORM\ORMException
      */
     public function aprobar($arFactura)
     {
-        $arFacturaTipo = $this->_em->getRepository('App:Transporte\TteFacturaTipo')->find($arFactura->getCodigoFacturaTipoFk());
+        $arFacturaTipo = $this->getEntityManager()->getRepository(TteFacturaTipo::class)->find($arFactura->getCodigoFacturaTipoFk());
         $objFunciones = new FuncionesController();
         if ($arFactura->getEstadoAutorizado() == 1) {
             $arFactura->setEstadoAprobado(1);
@@ -115,9 +121,9 @@ class TteFacturaRepository extends ServiceEntityRepository
             $arFactura->setFechaVence($objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
             $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo() + 1);
             $arFactura->setNumero($arFacturaTipo->getConsecutivo());
-            $this->_em->persist($arFactura);
-            $this->_em->persist($arFacturaTipo);
-            $this->_em->flush();
+            $this->getEntityManager()->persist($arFactura);
+            $this->getEntityManager()->persist($arFacturaTipo);
+            $this->getEntityManager()->flush();
         } else {
             Mensajes::error('No se puede desautorizar, el registro ya se encuentra aprobado');
         }

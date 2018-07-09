@@ -58,12 +58,12 @@ class TteGuiaCarga
     private $relacionCliente;
 
     /**
-     * @ORM\Column(name="nombre_destinatario", type="string", length=80, nullable=true)
+     * @ORM\Column(name="nombre_destinatario", type="string", length=150, nullable=true)
      */
     private $nombreDestinatario;
 
     /**
-     * @ORM\Column(name="direccion_destinatario", type="string", length=80, nullable=true)
+     * @ORM\Column(name="direccion_destinatario", type="string", length=150, nullable=true)
      */
     private $direccionDestinatario;
 
@@ -154,6 +154,22 @@ class TteGuiaCarga
     public function setCodigoClienteFk($codigoClienteFk): void
     {
         $this->codigoClienteFk = $codigoClienteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCliente()
+    {
+        return $this->cliente;
+    }
+
+    /**
+     * @param mixed $cliente
+     */
+    public function setCliente($cliente): void
+    {
+        $this->cliente = $cliente;
     }
 
     /**
@@ -332,20 +348,7 @@ class TteGuiaCarga
         $this->vrDeclarado = $vrDeclarado;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCliente()
-    {
-        return $this->cliente;
-    }
 
-    /**
-     * @param mixed $cliente
-     */
-    public function setCliente($cliente): void
-    {
-        $this->cliente = $cliente;
-    }
+
 }
 

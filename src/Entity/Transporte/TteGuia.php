@@ -69,12 +69,12 @@ class TteGuia
     private $remitente;
 
     /**
-     * @ORM\Column(name="nombre_destinatario", type="string", length=80, nullable=true)
+     * @ORM\Column(name="nombre_destinatario", type="string", length=150, nullable=true)
      */
     private $nombreDestinatario;
 
     /**
-     * @ORM\Column(name="direccion_destinatario", type="string", length=80, nullable=true)
+     * @ORM\Column(name="direccion_destinatario", type="string", length=150, nullable=true)
      */
     private $direccionDestinatario;
 
@@ -549,6 +549,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getRelacionCliente()
+    {
+        return $this->relacionCliente;
+    }
+
+    /**
+     * @param mixed $relacionCliente
+     */
+    public function setRelacionCliente($relacionCliente): void
+    {
+        $this->relacionCliente = $relacionCliente;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getRemitente()
     {
         return $this->remitente;
@@ -837,6 +853,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getVrCobroEntrega()
+    {
+        return $this->vrCobroEntrega;
+    }
+
+    /**
+     * @param mixed $vrCobroEntrega
+     */
+    public function setVrCobroEntrega($vrCobroEntrega): void
+    {
+        $this->vrCobroEntrega = $vrCobroEntrega;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoImpreso()
     {
         return $this->estadoImpreso;
@@ -896,6 +928,38 @@ class TteGuia
     public function setEstadoEntregado($estadoEntregado): void
     {
         $this->estadoEntregado = $estadoEntregado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
     }
 
     /**
@@ -1141,6 +1205,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getCodigoCondicionFk()
+    {
+        return $this->codigoCondicionFk;
+    }
+
+    /**
+     * @param mixed $codigoCondicionFk
+     */
+    public function setCodigoCondicionFk($codigoCondicionFk): void
+    {
+        $this->codigoCondicionFk = $codigoCondicionFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getReexpedicion()
     {
         return $this->reexpedicion;
@@ -1152,6 +1232,22 @@ class TteGuia
     public function setReexpedicion($reexpedicion): void
     {
         $this->reexpedicion = $reexpedicion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
     }
 
     /**
@@ -1397,6 +1493,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getCondicionRel()
+    {
+        return $this->condicionRel;
+    }
+
+    /**
+     * @param mixed $condicionRel
+     */
+    public function setCondicionRel($condicionRel): void
+    {
+        $this->condicionRel = $condicionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getRecibosGuiaRel()
     {
         return $this->recibosGuiaRel;
@@ -1445,38 +1557,6 @@ class TteGuia
     /**
      * @return mixed
      */
-    public function getCodigoCondicionFk()
-    {
-        return $this->codigoCondicionFk;
-    }
-
-    /**
-     * @param mixed $codigoCondicionFk
-     */
-    public function setCodigoCondicionFk($codigoCondicionFk): void
-    {
-        $this->codigoCondicionFk = $codigoCondicionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCondicionRel()
-    {
-        return $this->condicionRel;
-    }
-
-    /**
-     * @param mixed $condicionRel
-     */
-    public function setCondicionRel($condicionRel): void
-    {
-        $this->condicionRel = $condicionRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getNovedadesGuiaRel()
     {
         return $this->novedadesGuiaRel;
@@ -1490,83 +1570,6 @@ class TteGuia
         $this->novedadesGuiaRel = $novedadesGuiaRel;
     }
 
-    /**
-     * @return mixed
-     */
-
-    public function getEstadoAutorizado()
-    {
-        return $this->estadoAutorizado;
-    }
-
-    public function getUsuario()
-    {
-        return $this->usuario;
-    }
-
-    /**
-     * @param mixed $usuario
-     */
-    public function setUsuario($usuario): void
-    {
-        $this->usuario = $usuario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrCobroEntrega()
-    {
-        return $this->vrCobroEntrega;
-    }
-
-    /**
-     * @param mixed $vrCobroEntrega
-     */
-    public function setVrCobroEntrega($vrCobroEntrega): void
-    {
-        $this->vrCobroEntrega = $vrCobroEntrega;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRelacionCliente()
-    {
-        return $this->relacionCliente;
-    }
-
-    /**
-     * @param mixed $relacionCliente
-     */
-    public function setRelacionCliente($relacionCliente): void
-    {
-        $this->relacionCliente = $relacionCliente;
-    }
 
 
-
-    /**
-     * @param mixed $estadoAutorizado
-     */
-    public function setEstadoAutorizado($estadoAutorizado): void
-    {
-        $this->estadoAutorizado = $estadoAutorizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAprobado()
-    {
-        return $this->estadoAprobado;
-    }
-
-    /**
-     * @param mixed $estadoAprobado
-     */
-    public function setEstadoAprobado($estadoAprobado): void
-    {
-        $this->estadoAprobado = $estadoAprobado;
-    }
 }

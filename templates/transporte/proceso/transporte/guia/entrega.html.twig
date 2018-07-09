@@ -60,20 +60,61 @@
         {% endfor %}
         </tbody>
     </table>
+    <div>
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arGuias.getTotalItemCount }}</span></div>
+        </div>
 
-    <div class="btn-group" style="float: left">
-        <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arGuias.getTotalItemCount }}</span></div>
-    </div>
-
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-        {{ knp_pagination_render(arGuias) }}
-    </div>
-    <div class="btn-toolbar" style="float: right">
-        <div class="btn-group">
-            {{ form_widget(form.btnEntrega, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+        <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+            {{ knp_pagination_render(arGuias) }}
+        </div>
+        <div class="btn-toolbar" style="float: right">
+            <div class="btn-group">
+                {{ form_widget(form.btnEntrega, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            </div>
         </div>
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}
+    <br /><br />
+    <input type="text" id="txtGuiaCodigo"><button id="btnEntregaIndividual">Entregar</button>
+    <input type="date" id="txtFecha" name="fecha" value="{{ "now"|date("Y-m-d") }}"><input type="time" id="txtHora" name="hora" value="{{ "now"|date("H:i") }}">
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(function() {
+            var button = $("#btnEntregaIndividual");
+            var txtGuiaCodigo = $("#txtGuiaCodigo");
+            var txtFecha = $("#txtFecha");
+            var txtHora = $("#txtHora");
+            button.click(function() {
+                agregarGuia(txtGuiaCodigo.val(), txtFecha.val(), txtHora.val());
+            });
+            txtGuiaCodigo.keydown(function (event) {
+                if(event.keyCode === 13) {
+                    agregarGuia(txtGuiaCodigo.val(), txtFecha.val(), txtHora.val());
+                }
+            });
+        });
 
+        var agregarGuia = function(codigoGuia, fecha, hora) {
+            endpoint = "http://localhost/cromo/public/index.php/transporte/api/guia/entrega/" + codigoGuia;
+            $.ajax(endpoint, {
+                type: 'POST',
+                data: {
+                    arrParametros: JSON.stringify({
+                        codigoGuia: codigoGuia,
+                        fecha: fecha,
+                        hora: hora
+                    }),
+                }
+            }).done(function(respuesta) {
+                if(respuesta && respuesta.error === true) {
+                    alert(respuesta.mensaje);
+                }
+                $("#txtGuiaCodigo").val("").focus();
+            });
+        };
+    </script>
+{% endblock %}

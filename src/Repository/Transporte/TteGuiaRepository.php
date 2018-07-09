@@ -350,10 +350,12 @@ class TteGuiaRepository extends ServiceEntityRepository
             if (count($arrGuias) > 0) {
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-                    $fechaHora = date_create($arrControles['txtFechaEntrega' . $codigoGuia] . " " . $arrControles['txtHoraEntrega' . $codigoGuia]);
-                    $arGuia->setFechaEntrega($fechaHora);
-                    $arGuia->setEstadoEntregado(1);
-                    $em->persist($arGuia);
+                    if($arGuia->getEstadoDespachado() == 1 && $arGuia->getEstadoEntregado() == 0) {
+                        $fechaHora = date_create($arrControles['txtFechaEntrega' . $codigoGuia] . " " . $arrControles['txtHoraEntrega' . $codigoGuia]);
+                        $arGuia->setFechaEntrega($fechaHora);
+                        $arGuia->setEstadoEntregado(1);
+                        $em->persist($arGuia);
+                    }
                 }
                 $em->flush();
             }
@@ -655,5 +657,78 @@ class TteGuiaRepository extends ServiceEntityRepository
 
         return $query->execute();
 
+    }
+
+
+    /**
+     * @param $codigoGuia
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function apiEntrega($codigoGuia, $fecha, $hora) {
+        $em = $this->getEntityManager();
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        if($arGuia) {
+            if($arGuia->getEstadoDespachado() == 1) {
+                if($arGuia->getEstadoEntregado() == 0) {
+                    $fechaHora = date_create($fecha . " " . $hora);
+                    $arGuia->setFechaEntrega($fechaHora);
+                    $arGuia->setEstadoEntregado(1);
+                    $em->persist($arGuia);
+                    $em->flush();
+                    return [
+                        'error' => false,
+                        'mensaje' => '',
+                    ];
+                } else {
+                    return [
+                        'error' => true,
+                        'mensaje' => 'La guia no puede estar entregada previamente',
+                    ];
+                }
+            } else {
+                return [
+                    'error' => true,
+                    'mensaje' => 'La guia no esta despachada',
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'mensaje' => "La guia " . $codigoGuia . " no existe " . $fecha . " " . $hora,
+            ];
+        }
+    }
+
+    /**
+     * @param $codigoGuia
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function apiSoporte($codigoGuia) {
+        $em = $this->getEntityManager();
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        if($arGuia) {
+            if($arGuia->getEstadoEntregado() == 1) {
+                $arGuia->setEstadoSoporte(1);
+                $arGuia->setFechaSoporte(new \DateTime('now'));
+                $em->persist($arGuia);
+                $em->flush();
+                return [
+                    'error' => false,
+                    'mensaje' => '',
+                ];
+            } else {
+                return [
+                    'error' => true,
+                    'mensaje' => 'La guia debe estar entregada',
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'mensaje' => "La guia " . $codigoGuia . " no existe ",
+            ];
+        }
     }
 }

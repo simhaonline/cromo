@@ -28,7 +28,7 @@ class SoporteController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtDespachoCodigo', TextType::class, array('data' => $session->get('filtroTteDespachoCodigo')))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnSoporte', SubmitType::class, array('label' => 'Cumplir'))
+            ->add('btnSoporte', SubmitType::class, array('label' => 'Soporte'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

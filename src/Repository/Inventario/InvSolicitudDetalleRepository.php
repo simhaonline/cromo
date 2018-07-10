@@ -6,6 +6,7 @@ use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvSolicitudDetalleRepository extends ServiceEntityRepository
 {
@@ -33,17 +34,19 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
     public function eliminar($arRegistro, $arrDetallesSeleccionados)
     {
         if ($arRegistro->getEstadoAutorizado() == 0) {
-            if (count($arrDetallesSeleccionados)) {
-                foreach ($arrDetallesSeleccionados as $codigo) {
-                    $ar = $this->getEntityManager()->getRepository(InvSolicitudDetalle::class)->find($codigo);
-                    if ($ar) {
-                        $this->getEntityManager()->remove($ar);
+            if ($arrDetallesSeleccionados) {
+                if (count($arrDetallesSeleccionados)) {
+                    foreach ($arrDetallesSeleccionados as $codigo) {
+                        $ar = $this->getEntityManager()->getRepository(InvSolicitudDetalle::class)->find($codigo);
+                        if ($ar) {
+                            $this->getEntityManager()->remove($ar);
+                        }
                     }
-                }
-                try {
-                    $this->getEntityManager()->flush();
-                } catch (\Exception $e) {
-                    Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                    try {
+                        $this->getEntityManager()->flush();
+                    } catch (\Exception $e) {
+                        Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                    }
                 }
             }
         } else {
@@ -51,8 +54,9 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
         }
     }
 
-    public function listarDetallesPendientes($nombreItem = '', $codigoItem = '', $codigoRegistro = '')
+    public function listarDetallesPendientes()
     {
+        $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvSolicitudDetalle::class, 'isd');
         $queryBuilder
             ->select('isd.codigoSolicitudDetallePk')
@@ -67,14 +71,14 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
             ->where('s.estadoAprobado = true')
             ->where('s.estadoAnulado = false')
             ->andWhere('isd.cantidadPendiente > 0');
-        if ($nombreItem != '') {
-            $queryBuilder->andWhere("it.nombre LIKE '%{$nombreItem}%'");
+        if ($session->get('filtroInvItemNombre') != '') {
+            $queryBuilder->andWhere("it.nombre LIKE '%{$session->get('filtroInvItemNombre')}%'");
         }
-        if ($codigoItem != '') {
-            $queryBuilder->andWhere("isd.codigoItemFk = {$codigoItem}");
+        if ($session->get('filtroInvItemCodigo') != '') {
+            $queryBuilder->andWhere("isd.codigoItemFk = {$session->get('filtroInvItemCodigo')}");
         }
-        if ($codigoRegistro != '') {
-            $queryBuilder->andWhere("isd.codigoSolicitudFk = {$codigoRegistro} ");
+        if ($session->get('filtroInvSolicitudCodigo') != '') {
+            $queryBuilder->andWhere("isd.codigoSolicitudFk = {$session->get('filtroInvSolicitudCodigo')} ");
         }
         $queryBuilder->orderBy('isd.codigoSolicitudDetallePk', 'ASC');
         return $queryBuilder;

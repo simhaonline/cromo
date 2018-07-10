@@ -3,6 +3,7 @@
 namespace App\Formato\Inventario;
 
 use App\Entity\Inventario\InvSolicitud;
+use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Utilidades\Estandares;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -23,7 +24,7 @@ class Solicitud extends \FPDF
         self::$codigoSolicitud = $codigoSolicitud;
         ob_clean();
         $pdf = new Solicitud('P', 'mm', 'letter');
-        $arSolicitud = $em->getRepository('App:Inventario\InvSolicitud')->find($codigoSolicitud);
+        $arSolicitud = $em->getRepository(InvSolicitud::class)->find($codigoSolicitud);
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Arial', '', 40);
@@ -36,14 +37,60 @@ class Solicitud extends \FPDF
         $pdf->SetTextColor(0,0,0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Movimiento$codigoSolicitud.pdf", 'D');
+        $pdf->Output("Solicitud_$codigoSolicitud.pdf", 'D');
     }
 
     public function Header()
     {
         /** @var  $arSolicitud InvSolicitud */
-        $arSolicitud = self::$em->getRepository('App:Inventario\InvSolicitud')->find(self::$codigoSolicitud);
-        Estandares::generarEncabezado($this,$arSolicitud,'SOLICITUD');
+        $arSolicitud = self::$em->getRepository(InvSolicitud::class)->find(self::$codigoSolicitud);
+        Estandares::generarEncabezado($this, 'SOLICITUD');
+        $intY = 40;
+        $this->SetXY(10, $intY);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 4, "NUMERO:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, $arSolicitud->getNumero(), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "FECHA:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
+
+        $this->SetXY(10, $intY + 4);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "TIPO SOLICITUD:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, utf8_decode($arSolicitud->getSolicitudTipoRel()->getNombre()), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, 'SOPORTE:', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, $arSolicitud->getSoporte(), 1, 0, 'L', 1);
+
+        $this->SetXY(10, $intY + 8);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "FECHA ENTREGA", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(160, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
+
+
+        $this->SetXY(10, $intY + 12);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "COMENTARIO", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+//        $this->Cell(160, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
+        $this->MultiCell(160, 4, $arSolicitud->getComentarios(), 1, 'L');
+
         $this->EncabezadoDetalles();
 
     }
@@ -77,8 +124,8 @@ class Solicitud extends \FPDF
 
     public function Body($pdf)
     {
-        $arSolicitud = self::$em->getRepository('App:Inventario\InvSolicitud')->find(self::$codigoSolicitud);
-        $arSolicitudDetalles = self::$em->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(array('codigoSolicitudFk' => self::$codigoSolicitud));
+        $arSolicitud = self::$em->getRepository(InvSolicitud::class)->find(self::$codigoSolicitud);
+        $arSolicitudDetalles = self::$em->getRepository(InvSolicitudDetalle::class)->findBy(array('codigoSolicitudFk' => self::$codigoSolicitud));
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         foreach ($arSolicitudDetalles as $arSolicitudDetalle) {
@@ -134,20 +181,11 @@ class Solicitud extends \FPDF
         }
     }
 
-    function _endpage()
-    {
-        if ($this->angle != 0) {
-            $this->angle = 0;
-            $this->_out('Q');
-        }
-        parent::_endpage();
-    }
-
     function RotatedText($x,$y,$txt,$angle)
     {
         //Text rotated around its origin
-        $this->Rotate($angle,$x,$y);
-        $this->Text($x,$y,$txt);
+        $this->Rotate($angle, $x, $y);
+        $this->Text($x, $y, $txt);
         $this->Rotate(0);
     }
 }

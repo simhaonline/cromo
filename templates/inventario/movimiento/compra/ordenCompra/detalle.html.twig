@@ -2,22 +2,13 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     {{ notificar()|raw }}
-    <div class="row">
-        <div class="col-lg-12">
-            <h3 class='page-header'>
-                Inventario movimiento
-                <small style="font-size: 20px">Inventario: Orden compra detalle</small>
-            </h3>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            {{ form_widget(form.btnAutorizar) }}
-            {{ form_widget(form.btnDesautorizar) }}
-            {{ form_widget(form.btnImprimir) }}
-            {{ form_widget(form.btnAprobar) }}
-            {{ form_widget(form.btnAnular) }}
+            <a class="btn btn-default btn-sm"
+               href="{{ path('admin_lista',{'modulo':'inventario','entidad':'ordenCompra'}) }}">Volver</a>&nbsp;&nbsp;
+        </div>
+    </div>
+    {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
     <div style="float:right">
@@ -104,7 +95,7 @@
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="% DESCUENTO"
                                                name="arrDescuento[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]"
-                                               value="{{ arOrdenCompraDetalle.porDescuento }}"/>
+                                               value="{{ arOrdenCompraDetalle.porcentajeDescuento }}"/>
                                     </td>
                                     <td style="text-align: right">
                                         {{ arOrdenCompraDetalle.vrDescuento | number_format(0, '.', ',') }}
@@ -112,7 +103,7 @@
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="% IVA"
                                                name="arrIva[{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}]"
-                                               value="{{ arOrdenCompraDetalle.porIva }}"/>
+                                               value="{{ arOrdenCompraDetalle.porcentajeIva }}"/>
                                     </td>
                                     <td style="text-align: right">
                                         {{ arOrdenCompraDetalle.vrIva | number_format(0, '.', ',') }}
@@ -142,45 +133,56 @@
                                     {{ arOrdenCompraDetalle.vrTotal | number_format(0, '.', ',') }}
                                 </td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
-                                           value="{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}"/></td>
+                                                                       value="{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}"/>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                {#<div class="separador-1"></div>#}
-                <div class="btn-toolbar" style="float: right">
-                    {% if arOrdenCompra.estadoAutorizado == true %}
-                        <div class="btn-group">
-                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
-                                   value="Nuevo"/>
-                        </div>
-                        <div class="btn-group">
-                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
-                                   value="Nuevo desde solicitud"/>
-
-                        </div>
-                    {% else %}
-                        <div class="btn-group">
-                            <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_ordenCompra_solicitud_detalle_nuevo', {'codigoDetalle': 0,'id':arOrdenCompra.codigoOrdenCompraPk }) }}', 'OrdenCompraNuevoDetalle', 600, 900)">Nuevo
-                                desde solicitud</a>
-                        </div>
-                        <div class="btn-group">
-                            <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_ordenCompra_detalle_nuevo', {'codigoDetalle': 0,'id':arOrdenCompra.codigoOrdenCompraPk }) }}', 'OrdenCompraNuevoDetalle', 600, 900)">Nuevo</a>
-                        </div>
-                    {% endif %}
-                    <div class="btn-group">
-                        {{ form_widget(form.btnActualizar) }}
-                    </div>
-                    <div class="btn-group">
-                        {{ form_widget(form.btnEliminar) }}
-                    </div>
-                </div>
             </div>
         </div>
     </div>
+    {#<div class="separador-1"></div>#}
+    <div class="btn-toolbar" style="float: right">
+        {% if arOrdenCompra.estadoAutorizado == true %}
+            <div class="btn-group">
+                <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
+                       value="Nuevo"/>
+            </div>
+            <div class="btn-group">
+                <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
+                       value="Nuevo desde solicitud"/>
+
+            </div>
+        {% else %}
+            <div class="btn-group">
+                <a class="btn btn-default btn-sm"
+                   href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_ordenCompra_solicitud_detalle_nuevo', {'id':arOrdenCompra.codigoOrdenCompraPk }) }}', 'OrdenCompraNuevoDetalle', 600, 900)">Nuevo
+                    desde solicitud</a>
+            </div>
+            <div class="btn-group">
+                <a class="btn btn-default btn-sm"
+                   href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_ordenCompra_detalle_nuevo', {'id':arOrdenCompra.codigoOrdenCompraPk }) }}', 'OrdenCompraNuevoDetalle', 600, 900)">Nuevo</a>
+            </div>
+        {% endif %}
+        <div class="btn-group">
+            {{ form_widget(form.btnActualizar) }}
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnEliminar) }}
+        </div>
+    </div>
+
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span
+                        class="badge">{{ arOrdenCompraDetalles.getTotalItemCount }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group btn-xs">
+        {{ knp_pagination_render(arOrdenCompraDetalles) }}
+    </div>
     {{ form_end(form) }}
-    <a class="btn btn-default btn-sm" href="{{ path('admin_lista',{'modulo':'inventario','entidad':'ordenCompra'}) }}">Volver</a>
 {% endblock %}

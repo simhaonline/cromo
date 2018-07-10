@@ -2,6 +2,7 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvOrdenCompra;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
@@ -17,7 +18,7 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
 
     public function camposPredeterminados()
     {
-        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvOrdenCompra', 'ioc');
+        $qb = $this->getEntityManager()->createQueryBuilder()->from(InvOrdenCompra::class, 'ioc');
         $qb
             ->select('ioc.codigoOrdenCompraPk as ID')
             ->addSelect('ioc.numero as NUMERO')
@@ -39,12 +40,12 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
         if ($arOrdenCompra->getEstadoAutorizado() == 0) {
             if (count($arrDetallesSeleccionados)) {
                 foreach ($arrDetallesSeleccionados as $codigoOrdenCompraDetalle) {
-                    $arOrdenCompraDetalle = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->find($codigoOrdenCompraDetalle);
+                    $arOrdenCompraDetalle = $this->_em->getRepository(InvOrdenCompraDetalle::class)->find($codigoOrdenCompraDetalle);
                     if ($arOrdenCompraDetalle) {
                         if ($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk() != '') {
-                            $arSolicitudDetalle = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->find($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk());
+                            $arSolicitudDetalle = $this->_em->getRepository(InvSolicitudDetalle::class)->find($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk());
                             if ($arSolicitudDetalle) {
-                                $arSolicitudDetalle->setCantidadPendiente($arSolicitudDetalle->getCantidadPendiente() + $arOrdenCompraDetalle->getCantidadSolicitada());
+                                $arSolicitudDetalle->setCantidadPendiente($arSolicitudDetalle->getCantidadPendiente() + $arOrdenCompraDetalle->getCantidad());
                                 $this->_em->persist($arSolicitudDetalle);
                             }
                         }
@@ -90,5 +91,26 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
         $qb->orderBy('iocd.codigoOrdenCompraDetallePk', 'ASC');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
+    }
+
+    /**
+     * @param $codigoOrdenCompra
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function lista($codigoOrdenCompra){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvOrdenCompraDetalle::class,'iocd')
+            ->select('iocd.codigoOrdenCompraDetallePk')
+            ->addSelect('i.nombre')
+            ->join('iocd.itemRel','i')
+            ->addSelect('iocd.cantidad')
+            ->addSelect('iocd.vrPrecio')
+            ->addSelect('iocd.vrSubtotal')
+            ->addSelect('iocd.porcentajeDescuento')
+            ->addSelect('iocd.vrDescuento')
+            ->addSelect('iocd.porcentajeIva')
+            ->addSelect('iocd.vrIva')
+            ->addSelect('iocd.vrTotal')
+            ->where("iocd.codigoOrdenCompraFk = {$codigoOrdenCompra}");
+        return $queryBuilder;
     }
 }

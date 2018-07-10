@@ -19,10 +19,10 @@ class InvItem
     private $codigoItemPk;
 
     /**
-     * @ORM\Column(name="nombre", type="string", length=150, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=400, nullable=true)
      * @Assert\Length(
-     *     max = 150,
-     *     maxMessage = "El campo no puede contener mas de 150 caracteres"
+     *     max = 400,
+     *     maxMessage = "El campo no puede contener mas de 400 caracteres"
      * )
      */
     private $nombre;

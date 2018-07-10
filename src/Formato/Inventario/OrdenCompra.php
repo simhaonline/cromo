@@ -4,6 +4,7 @@ namespace App\Formato\Inventario;
 
 use App\Entity\Inventario\InvOrdenCompra;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
+use App\Utilidades\Estandares;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class OrdenCompra extends \FPDF
@@ -22,7 +23,7 @@ class OrdenCompra extends \FPDF
         self::$codigoOrdenCompra = $codigoOrdenCompra;
         ob_clean();
         $pdf = new OrdenCompra('P', 'mm', 'letter');
-        $arOrdenCompra = $em->getRepository('App:Inventario\InvOrdenCompra')->find($codigoOrdenCompra);
+        $arOrdenCompra = $em->getRepository(InvOrdenCompra::class)->find($codigoOrdenCompra);
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Arial', '', 40);
@@ -34,20 +35,21 @@ class OrdenCompra extends \FPDF
         }
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("OrdenCompra$codigoOrdenCompra.pdf", 'D');
+        $pdf->Output("OrdenCompra_$codigoOrdenCompra.pdf", 'D');
     }
 
     public function Header()
     {
-        $arOrdenCompra = self::$em->getRepository('App:Inventario\InvOrdenCompra')->find(self::$codigoOrdenCompra);
-        $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
+        /** @var  $arOrdenCompra InvOrdenCompra */
+        $arOrdenCompra = self::$em->getRepository(InvOrdenCompra::class)->find(self::$codigoOrdenCompra);
+        Estandares::generarEncabezado($this, 'ORDEN DE COMPRA');
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
         //Logo
         $this->SetXY(53, 10);
-        try{
+        try {
             $this->Image('../public/assets/img/empresa/logo.jpeg', 12, 13, 40, 25);
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
         }
         //INFORMACIÓN EMPRESA
         $this->Cell(147, 7, utf8_decode("ORDEN DE COMPRA"), 0, 0, 'C', 1);
@@ -122,7 +124,7 @@ class OrdenCompra extends \FPDF
     {
 
         $this->Ln(14);
-        $header = array('COD', 'ITEM', 'CANT', '% IVA', 'VALOR', 'IVA', 'TOTAL');
+        $header = ['COD', 'ITEM', 'CANT', '% IVA', 'VALOR', 'IVA', 'TOTAL'];
         $this->SetFillColor(200, 200, 200);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
@@ -130,7 +132,7 @@ class OrdenCompra extends \FPDF
         $this->SetFont('', 'B', 7);
 
         //creamos la cabecera de la tabla.
-        $w = array(15, 80, 15, 20, 20, 20,20);
+        $w = array(15, 80, 15, 20, 20, 20, 20);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -151,15 +153,16 @@ class OrdenCompra extends \FPDF
          * @var $arOrdenCompra InvOrdenCompra
          * @var $arOrdenCompraDetalle InvOrdenCompraDetalle
          */
-        $arOrdenCompra = self::$em->getRepository('App:Inventario\InvOrdenCompra')->find(self::$codigoOrdenCompra);
-        $arOrdenCompraDetalles = self::$em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(array('codigoOrdenCompraFk' => self::$codigoOrdenCompra));
+        $arOrdenCompra = self::$em->getRepository(InvOrdenCompra::class)->find(self::$codigoOrdenCompra);
+        $arOrdenCompraDetalles = self::$em->getRepository(InvOrdenCompraDetalle::class)->findBy(['codigoOrdenCompraFk' => self::$codigoOrdenCompra]);
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
+        $pdf->SetTextColor(0);
         foreach ($arOrdenCompraDetalles as $arOrdenCompraDetalle) {
             $pdf->Cell(15, 4, $arOrdenCompraDetalle->getCodigoOrdenCompraDetallePk(), 1, 0, 'L');
             $pdf->Cell(80, 4, utf8_decode($arOrdenCompraDetalle->getItemRel()->getNombre()), 1, 0, 'L');
             $pdf->Cell(15, 4, $arOrdenCompraDetalle->getCantidad(), 1, 0, 'C');
-            $pdf->Cell(20, 4, $arOrdenCompraDetalle->getPorIva(), 1, 0, 'C');
+            $pdf->Cell(20, 4, $arOrdenCompraDetalle->getPorcentajeIva(), 1, 0, 'C');
             $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'C');
             $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrIva(), 0, '.', ','), 1, 0, 'C');
             $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'C');
@@ -167,6 +170,7 @@ class OrdenCompra extends \FPDF
             $pdf->SetAutoPageBreak(true, 15);
         }
 
+        $pdf->SetFont('Arial', '', 7);
         //TOTALES
         $pdf->Ln(2);
         $pdf->Cell(145, 4, "", 0, 0, 'R');
@@ -210,15 +214,6 @@ class OrdenCompra extends \FPDF
             $cy = ($this->h - $y) * $this->k;
             $this->_out(sprintf('q %.5F %.5F %.5F %.5F %.2F %.2F cm 1 0 0 1 %.2F %.2F cm', $c, $s, -$s, $c, $cx, $cy, -$cx, -$cy));
         }
-    }
-
-    function _endpage()
-    {
-        if ($this->angle != 0) {
-            $this->angle = 0;
-            $this->_out('Q');
-        }
-        parent::_endpage();
     }
 
     function RotatedText($x,$y,$txt,$angle)

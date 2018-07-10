@@ -146,8 +146,8 @@ class InvOrdenCompraRepository extends ServiceEntityRepository
                 $vrSubtotalGlobal += $vrSubtotal;
                 $vrDctoGlobal += $vrDcto;
 
-                $arOrdenCompraDetalle->setPorIva($porIva);
-                $arOrdenCompraDetalle->setPorDescuento($porDcto);
+                $arOrdenCompraDetalle->setPorcentajeIva($porIva);
+                $arOrdenCompraDetalle->setPorcentajeDescuento($porDcto);
                 $arOrdenCompraDetalle->setVrDescuento($vrDcto);
                 $arOrdenCompraDetalle->setCantidad($cantidad);
                 $arOrdenCompraDetalle->setVrPrecio($vrUnitario);

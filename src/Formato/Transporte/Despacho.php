@@ -5,6 +5,7 @@ namespace App\Formato\Transporte;
 use App\Entity\General\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteGuia;
+use App\Utilidades\Estandares;
 
 class Despacho extends \FPDF {
     public static $em;
@@ -29,26 +30,7 @@ class Despacho extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        $arConfiguracion = self::$em->getRepository(TteConfiguracion::class)->impresionFormato();
-        //{{ asset('../assets/css/general.css') }}
-        $this->Image('../assets/img/empresa/logo.jpeg', 12, 13, 35, 17);
-        //INFORMACIÓN EMPRESA
-        $this->SetXY(50, 10);
-        $this->Cell(150, 7, utf8_decode("ORDEN DE DESPACHO"), 0, 0, 'C', 1);
-        $this->SetXY(50, 18);
-        $this->SetFont('Arial', 'B', 9);
-        $this->Cell(20, 4, 'EMPRESA:', 0, 0, 'L', 1);
-        $this->Cell(100, 4, utf8_decode($arConfiguracion['nombre']), 0, 0, 'L', 0);
-        $this->SetXY(50, 22);
-        $this->Cell(20, 4, "NIT:", 0, 0, 'L', 1);
-        $this->Cell(100, 4, $arConfiguracion['nit'] . " - " . $arConfiguracion['digitoVerificacion'], 0, 0, 'L', 0);
-        $this->SetXY(50, 26);
-        $this->Cell(20, 4, utf8_decode("DIRECCIÓN:"), 0, 0, 'L', 1);
-        $this->Cell(100, 4, $arConfiguracion['direccion'], 0, 0, 'L', 0);
-        $this->SetXY(50, 30);
-        $this->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
-        $this->Cell(100, 4, $arConfiguracion['telefono'], 0, 0, 'L', 0);
-
+        Estandares::generarEncabezado($this,'ORDEN DE DESPACHO');
         $arDespacho = new TteDespacho();
         $arDespacho = self::$em->getRepository(TteDespacho::class)->find(self::$codigoDespacho);
         $this->SetFillColor(236, 236, 236);
@@ -66,7 +48,7 @@ class Despacho extends \FPDF {
         $this->Cell(30, 6, "CONDUCTOR:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(103, 6, utf8_decode($arDespacho->getConductorRel()->getNombreCorto()), 1, 0, 'L', 1);
+        $this->Cell(103, 6, utf8_decode($arDespacho->getConductorRel() ? $arDespacho->getConductorRel()->getNombreCorto()  : ''), 1, 0, 'L', 1);
 
         //linea 2
         $this->SetXY(10, 45);

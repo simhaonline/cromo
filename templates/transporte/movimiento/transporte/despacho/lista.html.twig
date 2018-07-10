@@ -54,12 +54,14 @@
         <tr>
             <th>ID</th>
             <th>OP</th>
+            <th>FECHA</th>
             <th>NUMERO</th>
             <th>VEH</th>
             <th>CONDUCTOR</th>
             <th>RUTA</th>
             <th>ORIGEN</th>
             <th>DESTINO</th>
+            <th>CANT</th>
             <th>UND</th>
             <th>PES</th>
             <th>VOL</th>
@@ -73,12 +75,14 @@
             <tr>
                 <td>{{ arDespacho.codigoDespachoPk }}</td>
                 <td>{{ arDespacho.codigoOperacionFk }}</td>
+                <td>{{ arDespacho.fechaSalida | date('Y-m-d') }}</td>
                 <td>{{ arDespacho.numero }}</td>
                 <td>{{ arDespacho.codigoVehiculoFk }}</td>
                 <td>{{ arDespacho.conductorNombre }}</td>
                 <td>{{ arDespacho.codigoRutaFk }}</td>
                 <td>{{ arDespacho.ciudadOrigen }}</td>
                 <td>{{ arDespacho.ciudadDestino }}</td>
+                <td class="numero">{{ arDespacho.cantidad }}</td>
                 <td class="numero">{{ arDespacho.unidades }}</td>
                 <td class="numero">{{ arDespacho.pesoReal }}</td>
                 <td class="numero">{{ arDespacho.pesoVolumen }}</td>

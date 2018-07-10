@@ -61,12 +61,14 @@ class TteDespachoRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'td')
             ->select('td.codigoDespachoPk')
+            ->addSelect('td.fechaSalida')
             ->addSelect('td.numero')
             ->addSelect('td.codigoOperacionFk')
             ->addSelect('td.codigoVehiculoFk')
             ->addSelect('td.codigoRutaFk')
             ->addSelect('co.nombre AS ciudadOrigen')
             ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('td.cantidad')
             ->addSelect('td.unidades')
             ->addSelect('td.pesoReal')
             ->addSelect('td.pesoVolumen')
@@ -94,7 +96,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         if($session->get('filtroTteDespachoCodigoConductor')){
             $queryBuilder->andWhere("td.codigoConductorFk = {$session->get('filtroTteDespachoCodigoConductor')}");
         }
-        $queryBuilder->orderBy('td.codigoDespachoPk', 'ASC');
+        $queryBuilder->orderBy('td.fechaSalida', 'DESC');
         return $queryBuilder;
 
     }

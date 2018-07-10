@@ -42,7 +42,6 @@ class ConductorController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arConductor->setNombreCorto($arConductor->getNombre1() . " " . $arConductor->getNombre2() . " " . $arConductor->getApellido1() . " " . $arConductor->getApellido2());
                 $em->persist($arConductor);
                 $em->flush();
                 return $this->redirect($this->generateUrl('admin_detalle', ['modulo' => 'transporte','entidad' => 'conductor','id'=> $arConductor->getCodigoConductorPk()]));

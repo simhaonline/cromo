@@ -9,6 +9,7 @@
 namespace App\Utilidades;
 
 
+use App\Entity\General\GenConfiguracion;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 final class Estandares
@@ -76,6 +77,8 @@ final class Estandares
      */
     public static function generarEncabezado($pdf, $titulo = ' ')
     {
+        /** @var  $arConfiguracion GenConfiguracion */
+        $arConfiguracion = BaseDatos::getEm()->getRepository(GenConfiguracion::class)->find(1);
         $pdf->SetFont('Arial', '', 5);
         $date = new \DateTime('now');
         $pdf->Text(168, 8, $date->format('Y-m-d H:i:s') . ' [Cromo | Inventario]');
@@ -92,16 +95,16 @@ final class Estandares
         $pdf->SetXY(53, 18);
         $pdf->SetFont('Arial', 'B', 9);
         $pdf->Cell(20, 4, "EMPRESA:", 0, 0, 'L', 1);
-        $pdf->Cell(100, 4, utf8_decode(''), 0, 0, 'L', 0);
+        $pdf->Cell(100, 4, utf8_decode($arConfiguracion ? $arConfiguracion->getNombre() : ''), 0, 0, 'L', 0);
         $pdf->SetXY(53, 22);
         $pdf->Cell(20, 4, "NIT:", 0, 0, 'L', 1);
-        $pdf->Cell(100, 4, '', 0, 0, 'L', 0);
+        $pdf->Cell(100, 4, $arConfiguracion ? $arConfiguracion->getNit() : '', 0, 0, 'L', 0);
         $pdf->SetXY(53, 26);
         $pdf->Cell(20, 4, utf8_decode("DIRECCIÓN:"), 0, 0, 'L', 1);
-        $pdf->Cell(100, 4, utf8_decode(''), 0, 0, 'L', 0);
+        $pdf->Cell(100, 4, utf8_decode($arConfiguracion ? $arConfiguracion->getDireccion() : ''), 0, 0, 'L', 0);
         $pdf->SetXY(53, 30);
         $pdf->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
-        $pdf->Cell(100, 4, '', 0, 0, 'L', 0);
+        $pdf->Cell(100, 4, $arConfiguracion ? $arConfiguracion->getTelefono() : '', 0, 0, 'L', 0);
     }
 
 }

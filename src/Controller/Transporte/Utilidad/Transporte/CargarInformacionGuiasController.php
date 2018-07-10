@@ -65,11 +65,11 @@ class CargarInformacionGuiasController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xlsx");
-//        $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
-//        if (!$arConfiguracion) {
-//            Mensajes::error('Debe de registrar una configuracion general en el sistema');
-//            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-//        }
+        $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
+        if (!$arConfiguracion) {
+            Mensajes::error('Debe de registrar una configuracion general en el sistema');
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
             ->add('attachment', FileType::class, array('attr' => ['class' => 'btn btn-sm btn-default']))
@@ -78,8 +78,8 @@ class CargarInformacionGuiasController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnCargar')->isClicked()) {
-//            $ruta = $arConfiguracion->getRutaTemporal();
-            $ruta = '/var/www/temporal/';
+            $ruta = $arConfiguracion->getRutaTemporal();
+//            $ruta = '/var/www/temporal/';
             if (!$ruta) {
                 Mensajes::error('Debe de ingresar una ruta temporal en la configuracion general del sistema');
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

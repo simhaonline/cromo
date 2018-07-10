@@ -31,6 +31,7 @@ class CargarInformacionGuiasController extends Controller
             ->add('txtCliente', TextType::class, ['required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger', 'style' => 'float:right']])
+            ->add('btnEliminarTodo', SubmitType::class, ['label' => 'Eliminar todo', 'attr' => ['class' => 'btn btn-sm btn-danger', 'style' => 'float:right']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -42,6 +43,10 @@ class CargarInformacionGuiasController extends Controller
                 if (count($arrSeleccionados) > 0) {
                     $em->getRepository(TteGuiaCarga::class)->eliminar($arrSeleccionados);
                 }
+                return $this->redirect($this->generateUrl('transporte_utilidad_transporte_cargarinformacionguias_lista'));
+            }
+            if ($form->get('btnEliminarTodo')->isClicked()) {
+                $em->getRepository(TteGuiaCarga::class)->eliminarTodo();
                 return $this->redirect($this->generateUrl('transporte_utilidad_transporte_cargarinformacionguias_lista'));
             }
         }
@@ -60,11 +65,11 @@ class CargarInformacionGuiasController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xlsx");
-        $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
-        if (!$arConfiguracion) {
-            Mensajes::error('Debe de registrar una configuracion general en el sistema');
-            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-        }
+//        $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
+//        if (!$arConfiguracion) {
+//            Mensajes::error('Debe de registrar una configuracion general en el sistema');
+//            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+//        }
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
             ->add('attachment', FileType::class, array('attr' => ['class' => 'btn btn-sm btn-default']))
@@ -73,7 +78,8 @@ class CargarInformacionGuiasController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnCargar')->isClicked()) {
-            $ruta = $arConfiguracion->getRutaTemporal();
+//            $ruta = $arConfiguracion->getRutaTemporal();
+            $ruta = '/var/www/temporal/';
             if (!$ruta) {
                 Mensajes::error('Debe de ingresar una ruta temporal en la configuracion general del sistema');
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
@@ -119,11 +125,11 @@ class CargarInformacionGuiasController extends Controller
                 if (count($arrCargas) > 0) {
                     foreach ($arrCargas as $arrCarga) {
                         $arGuiaCarga = new TteGuiaCarga();
-                        $arGuiaCarga->setNumero($arrCarga['codigoGuia']);
+                        $arGuiaCarga->setNumero(str_replace("'", '', $arrCarga['codigoGuia']));
                         $arGuiaCarga->setRemitente($arrCarga['remitente']);
                         $arGuiaCarga->setCliente($form->get('txtCliente')->getData());
                         $arGuiaCarga->setRelacionCliente($arrCarga['relacion']);
-                        $arGuiaCarga->setDocumentoCliente($arrCarga['documento']);
+                        $arGuiaCarga->setDocumentoCliente(str_replace("'", '', $arrCarga['codigoGuia']));
                         $arGuiaCarga->setFechaRegistro(new \DateTime('now'));
                         $arGuiaCarga->setNombreDestinatario($arrCarga['nombre']);
                         $arGuiaCarga->setDireccionDestinatario($arrCarga['direccion']);

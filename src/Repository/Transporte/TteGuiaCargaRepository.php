@@ -52,4 +52,13 @@ class TteGuiaCargaRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
+    public function eliminarTodo(){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->delete(TteGuiaCarga::class);
+        try{
+            $this->getEntityManager()->createQuery($queryBuilder)->execute();
+        } catch (\Exception $exception){
+        }
+    }
 }

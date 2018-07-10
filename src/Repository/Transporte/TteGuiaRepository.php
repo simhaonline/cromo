@@ -220,6 +220,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.codigoOperacionIngresoFk')
             ->addSelect('tg.codigoOperacionCargoFk')
             ->addSelect('tg.unidades')
+            ->addSelect('tg.codigoRutaFk')
             ->addSelect('tg.pesoReal')
             ->addSelect('tg.pesoVolumen')
             ->addSelect('tg.pesoVolumen')
@@ -240,7 +241,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteDespachoGuiaCodigoRuta') != '') {
             $queryBuilder->andWhere("tg.codigoRutaFk =  '{$session->get('filtroTteDespachoGuiaCodigoRuta')}'");
         }
-        $queryBuilder->orderBy('tg.codigoRutaFk, tg.codigoCiudadDestinoFk', 'ASC');
+        $queryBuilder->orderBy('tg.codigoRutaFk, tg.codigoCiudadDestinoFk, tg.ordenRuta', 'ASC');
         return $queryBuilder;
     }
 

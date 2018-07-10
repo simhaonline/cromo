@@ -105,7 +105,7 @@
                             <th title="Unidades">UND</th>
                             <th title="Peso">PES</th>
                             <th title="Volumen">VOL</th>
-                            <th></th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -120,7 +120,7 @@
                                 <td style="text-align: right">{{ arDespachoDetalle.unidades }}</td>
                                 <td style="text-align: right">{{ arDespachoDetalle.pesoReal }}</td>
                                 <td style="text-align: right">{{ arDespachoDetalle.pesoVolumen }}</td>
-                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDespachoDetalle.codigoDespachoDetallePk }}" /></td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDespachoDetalle.codigoDespachoDetallePk }}" /></td>
                             </tr>
                         {% endfor %}
                         </tbody>

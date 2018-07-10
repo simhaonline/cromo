@@ -33,11 +33,12 @@
             <th>OC</th>
             <th>NUMERO</th>
             <th>CLIENTE</th>
+            <th>RUTA</th>
             <th>DESTINO</th>
             <th>UND</th>
             <th>PES</th>
             <th>VOL</th>
-            <th></th>
+            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
         <tbody>
@@ -48,6 +49,7 @@
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
                 <td>{{ arGuia.numero }}</td>
                 <td>{{ arGuia.clienteNombreCorto }}</td>
+                <td>{{ arGuia.codigoRutaFk }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
                 <td style="text-align: right">{{ arGuia.unidades }}</td>
                 <td style="text-align: right">{{ arGuia.pesoReal }}</td>

@@ -140,6 +140,11 @@ class TteCliente
     protected $recibosClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteClienteCondicion", mappedBy="clienteRel")
+     */
+    protected $clientesCondicionesClienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoClientePk()
@@ -537,6 +542,22 @@ class TteCliente
     public function setRecibosClienteRel($recibosClienteRel): void
     {
         $this->recibosClienteRel = $recibosClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClientesCondicionesClienteRel()
+    {
+        return $this->clientesCondicionesClienteRel;
+    }
+
+    /**
+     * @param mixed $clientesCondicionesClienteRel
+     */
+    public function setClientesCondicionesClienteRel($clientesCondicionesClienteRel): void
+    {
+        $this->clientesCondicionesClienteRel = $clientesCondicionesClienteRel;
     }
 
 

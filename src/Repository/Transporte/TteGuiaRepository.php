@@ -109,7 +109,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteGuiaNumero') != "") {
             $queryBuilder->andWhere("tg.numero = " . $session->get('filtroTteGuiaNumero'));
         }
-        $queryBuilder->orderBy('tg.codigoGuiaPk', 'DESC');
+        $queryBuilder->orderBy('tg.fechaIngreso', 'DESC');
         return $queryBuilder;
     }
 

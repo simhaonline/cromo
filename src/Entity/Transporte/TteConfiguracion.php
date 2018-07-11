@@ -48,6 +48,11 @@ class TteConfiguracion
     private $numeroIdentificacionAseguradora;
 
     /**
+     * @ORM\Column(name="codigo_precio_general_fk", type="integer", nullable=true)
+     */
+    private $codigoPrecioGeneralFk;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -157,6 +162,22 @@ class TteConfiguracion
     public function setNumeroIdentificacionAseguradora($numeroIdentificacionAseguradora): void
     {
         $this->numeroIdentificacionAseguradora = $numeroIdentificacionAseguradora;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPrecioGeneralFk()
+    {
+        return $this->codigoPrecioGeneralFk;
+    }
+
+    /**
+     * @param mixed $codigoPrecioGeneralFk
+     */
+    public function setCodigoPrecioGeneralFk($codigoPrecioGeneralFk): void
+    {
+        $this->codigoPrecioGeneralFk = $codigoPrecioGeneralFk;
     }
 
 

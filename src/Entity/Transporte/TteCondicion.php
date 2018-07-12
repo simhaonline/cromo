@@ -43,17 +43,17 @@ class TteCondicion
     private $manejoMinimoDespacho = 0;
 
     /**
-     * @ORM\Column(name="precio_peso", type="boolean", nullable=true)
+     * @ORM\Column(name="precio_peso", type="boolean", nullable=true, options={"default" : 0})
      */
     private $precioPeso = false;
 
     /**
-     * @ORM\Column(name="precio_unidad", type="boolean", nullable=true)
+     * @ORM\Column(name="precio_unidad", type="boolean", nullable=true, options={"default" : 0})
      */
     private $precioUnidad = false;
 
     /**
-     * @ORM\Column(name="precio_adicional", type="boolean", nullable=true)
+     * @ORM\Column(name="precio_adicional", type="boolean", nullable=true, options={"default" : 0})
      */
     private $precioAdicional = false;
 

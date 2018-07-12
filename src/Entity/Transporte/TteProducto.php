@@ -42,6 +42,11 @@ class TteProducto
     protected $preciosDetallesProductoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteGuiaDetalle", mappedBy="productoRel")
+     */
+    protected $guiasDetallesProductoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoProductoPk()
@@ -135,6 +140,22 @@ class TteProducto
     public function setOrden($orden): void
     {
         $this->orden = $orden;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasDetallesProductoRel()
+    {
+        return $this->guiasDetallesProductoRel;
+    }
+
+    /**
+     * @param mixed $guiasDetallesProductoRel
+     */
+    public function setGuiasDetallesProductoRel($guiasDetallesProductoRel): void
+    {
+        $this->guiasDetallesProductoRel = $guiasDetallesProductoRel;
     }
 
 

@@ -58,7 +58,7 @@ class Usuario implements UserInterface, \Serializable
     private $password;
 
     /**
-     * @ORM\Column(name="clave_escritorio",type="string", length=50)
+     * @ORM\Column(name="clave_escritorio",type="string", length=50,nullable=true)
      */
     private $claveEscritorio;
 
@@ -331,7 +331,6 @@ class Usuario implements UserInterface, \Serializable
     {
         $this->claveEscritorio = $claveEscritorio;
     }
-
 
 }
 

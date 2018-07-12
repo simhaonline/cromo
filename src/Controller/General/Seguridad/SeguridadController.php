@@ -2,8 +2,8 @@
 
 namespace App\Controller\General\Seguridad;
 
-use App\Controller\Estructura\MensajesController;
 use App\Entity\Seguridad\Usuario;
+use App\Utilidades\Mensajes;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -87,7 +87,7 @@ class SeguridadController extends Controller
                     $claveNueva = $form->get('txtNuevaClave')->getData();
                     $claveConfirmacion = $form->get('txtConfirmacionClave')->getData();
                     if ($claveNueva != $claveConfirmacion) {
-                        MensajesController::error('Las contraseñas no coinciden');
+                        Mensajes::error('Las contraseñas no coinciden');
                     } else {
                         $arUsuario->setPassword(password_hash($claveNueva, PASSWORD_BCRYPT));
                     }
@@ -97,7 +97,7 @@ class SeguridadController extends Controller
                     $em->flush();
                     return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
                 } catch (\Exception $e) {
-                    MensajesController::error('El usuario ingresado ya se encuentra registrado');
+                    Mensajes::error('El usuario ingresado ya se encuentra registrado');
                 }
             }
         }
@@ -140,7 +140,7 @@ class SeguridadController extends Controller
                     }
             }
             if ($respuesta != '') {
-                MensajesController::error($respuesta);
+                Mensajes::error($respuesta);
             } else {
                 $em->flush();
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

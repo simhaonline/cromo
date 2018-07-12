@@ -10,29 +10,39 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class InvLote
 {
+
     /**
      * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $codigoLotePk;
+
+    /**
      * @ORM\Column(name="codigo_item_fk", type="integer")
      */     
     private $codigoItemFk;     
     
     /**
-     * @ORM\Id
      * @ORM\Column(name="lote_fk", type="string", length=40)
      */      
     private $loteFk;
     
     /**
-     * @ORM\Id
      * @ORM\Column(name="codigo_bodega_fk", type="string", length=10)
      */     
     private $codigoBodegaFk;
     
     /**
-     * @ORM\Column(name="cantidad_disponible", type="integer")
+     * @ORM\Column(name="cantidad_disponible", type="integer",options={"default" : 0}, nullable=true)
      */            
-    private $cantidadDisponible = 0;        
-    
+    private $cantidadDisponible = 0;
+
+    /**
+     * @ORM\Column(name="cantidad_existencia", type="integer",options={"default" : 0}, nullable=true)
+     */
+    private $cantidadExistencia = 0;
+
     /**
      * @ORM\Column(name="fecha_vencimiento", type="date", nullable=true)
      */            
@@ -49,6 +59,22 @@ class InvLote
      * @ORM\JoinColumn(name="codigo_bodega_fk", referencedColumnName="codigo_bodega_pk")
      */
     protected $bodegaRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoLotePk()
+    {
+        return $this->codigoLotePk;
+    }
+
+    /**
+     * @param mixed $codigoLotePk
+     */
+    public function setCodigoLotePk($codigoLotePk): void
+    {
+        $this->codigoLotePk = $codigoLotePk;
+    }
 
     /**
      * @return mixed
@@ -117,6 +143,22 @@ class InvLote
     /**
      * @return mixed
      */
+    public function getCantidadExistencia()
+    {
+        return $this->cantidadExistencia;
+    }
+
+    /**
+     * @param mixed $cantidadExistencia
+     */
+    public function setCantidadExistencia($cantidadExistencia): void
+    {
+        $this->cantidadExistencia = $cantidadExistencia;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFechaVencimiento()
     {
         return $this->fechaVencimiento;
@@ -161,4 +203,7 @@ class InvLote
     {
         $this->bodegaRel = $bodegaRel;
     }
+
+
+
 }

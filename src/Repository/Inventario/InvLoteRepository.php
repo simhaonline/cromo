@@ -7,6 +7,7 @@ use App\Entity\Inventario\InvMovimientoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvLoteRepository extends ServiceEntityRepository
 {
@@ -65,4 +66,16 @@ class InvLoteRepository extends ServiceEntityRepository
         }
         return $respuesta;
     }
+
+    public function existencia()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvLote::class, 'l')
+            ->select('l.codigoItemFk')
+            ->addSelect('l.codigoBodegaFk')
+            ->addSelect('l.loteFk')
+            ->where('l.cantidadDisponible > 0');
+        return $queryBuilder;
+    }
+
 }

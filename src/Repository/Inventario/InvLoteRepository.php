@@ -22,7 +22,6 @@ class InvLoteRepository extends ServiceEntityRepository
      * @param $codigoLote
      * @param $codigoBodega
      * @return string
-     * @throws \Doctrine\ORM\ORMException
      */
     public function validarLote($arMovimientoDetalle, $codigoLote, $codigoBodega)
     {
@@ -40,6 +39,7 @@ class InvLoteRepository extends ServiceEntityRepository
                 $arLote->setBodegaRel($arBodega);
                 $arLote->setItemRel($arMovimientoDetalle->getItemRel());
                 $arLote->setCantidadDisponible($arMovimientoDetalle->getCantidad());
+                $arLote->setCantidadExistencia($arMovimientoDetalle->getCantidad());
                 $arLote->setLoteFk($codigoLote);
                 $this->_em->persist($arLote);
                 $this->_em->flush();
@@ -50,16 +50,15 @@ class InvLoteRepository extends ServiceEntityRepository
             } elseif ($arLote) {
                 if ($operacionInv == 1) {
                     $arLote->setCantidadDisponible($arLote->getCantidadDisponible() + $arMovimientoDetalle->getCantidad());
+                    $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + $arMovimientoDetalle->getCantidad());
                     $this->_em->persist($arLote);
                 } else {
                     if ($arLote->getCantidadDisponible() - $arMovimientoDetalle->getCantidad() < 0) {
                         $respuesta = 'El lote ' . $arLote->getLoteFk() . ' de la bodega ' . $arBodega->getCodigoBodegaPk() . ', no tiene suficientes existencias para el item seleccionado.';
                     } else {
                         $arLote->setCantidadDisponible($arLote->getCantidadDisponible() - $arMovimientoDetalle->getCantidad());
+                        $arLote->setCantidadExistencia($arLote->getCantidadExistencia() - $arMovimientoDetalle->getCantidad());
                         $this->_em->persist($arLote);
-                        if($arLote->getCantidadDisponible() == 0){
-                            $this->getEntityManager()->remove($arLote);
-                        }
                     }
                 }
             }

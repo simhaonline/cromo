@@ -179,22 +179,29 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $this->_em->persist($arMovimiento);
         }
         $arMovimientoDetalles = $this->_em->getRepository('App:Inventario\InvMovimientoDetalle')->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
+        $arDocumento = $this->_em->getRepository('App:Inventario\InvDocumento')->find($arMovimiento->getCodigoDocumentoFk());
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arMovimientoDetalle->getCodigoItemFk()]);
             $arLote = $this->_em->getRepository('App:Inventario\InvLote')->findOneBy(['loteFk' => $arMovimientoDetalle->getLoteFk(), 'codigoBodegaFk' => $arMovimientoDetalle->getCodigoBodegaFk(), 'codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk()]);
-            if ($arLote->getCantidadDisponible() - $arMovimientoDetalle->getCantidad() <= 0) {
-                $this->_em->remove($arLote);
-            } else {
+            if ($arDocumento->getOperacionInventario() == 1) {
                 $arLote->setCantidadDisponible($arLote->getCantidadDisponible() - $arMovimientoDetalle->getCantidad());
-                $this->_em->persist($arLote);
+                $arLote->setCantidadExistencia($arLote->getCantidadExistencia() - $arMovimientoDetalle->getCantidad());
+            } else {
+                $arLote->setCantidadDisponible($arLote->getCantidadDisponible() + $arMovimientoDetalle->getCantidad());
+                $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + $arMovimientoDetalle->getCantidad());
             }
-            if($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk()){
+            $this->_em->persist($arLote);
+            if ($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk()) {
                 $arOrdenCompraDetalle = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->find($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk());
                 $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() + $arMovimientoDetalle->getCantidad());
                 $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() + $arMovimientoDetalle->getCantidad());
                 $this->_em->persist($arOrdenCompraDetalle);
             }
-            $arItem->setCantidadExistencia($arItem->getCantidadExistencia() - $arMovimientoDetalle->getCantidad());
+            if ($arDocumento->getOperacionInventario() == 1) {
+                $arItem->setCantidadExistencia($arItem->getCantidadExistencia() - $arMovimientoDetalle->getCantidad());
+            } else {
+                $arItem->setCantidadExistencia($arItem->getCantidadExistencia() + $arMovimientoDetalle->getCantidad());
+            }
             $this->_em->persist($arItem);
         }
         $this->_em->flush();

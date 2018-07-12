@@ -32,7 +32,7 @@ class InvDocumento
     private $abreviatura;
 
     /**
-     * @ORM\Column(name="operacion_inventario", type="smallint")
+     * @ORM\Column(name="operacion_inventario", type="smallint", nullable=true, options={"default" : 0})
      */
     private $operacionInventario = 0;
 
@@ -644,6 +644,7 @@ class InvDocumento
     {
         $this->movimientosDocumentoRel = $movimientosDocumentoRel;
     }
+
 
 
 }

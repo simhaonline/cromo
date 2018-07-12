@@ -93,6 +93,11 @@ class InvMovimientoDetalle
     private $vrTotal = 0;
 
     /**
+     * @ORM\Column(name="operacion_inventario", type="smallint", nullable=true, options={"default" : 0})
+     */
+    private $operacionInventario = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvMovimiento", inversedBy="movimientosDetallesMovimientoRel")
      * @ORM\JoinColumn(name="codigo_movimiento_fk", referencedColumnName="codigo_movimiento_pk")
      */
@@ -369,6 +374,22 @@ class InvMovimientoDetalle
     /**
      * @return mixed
      */
+    public function getOperacionInventario()
+    {
+        return $this->operacionInventario;
+    }
+
+    /**
+     * @param mixed $operacionInventario
+     */
+    public function setOperacionInventario($operacionInventario): void
+    {
+        $this->operacionInventario = $operacionInventario;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getMovimientoRel()
     {
         return $this->movimientoRel;
@@ -413,4 +434,6 @@ class InvMovimientoDetalle
     {
         $this->ordenCompraDetalleRel = $ordenCompraDetalleRel;
     }
+
+
 }

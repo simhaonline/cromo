@@ -138,6 +138,11 @@ class InvMovimiento
     private $estadoContabilizado = false;
 
     /**
+     * @ORM\Column(name="operacion_inventario", type="smallint", nullable=true, options={"default" : 0})
+     */
+    private $operacionInventario = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvDocumento", inversedBy="movimientosDocumentoRel")
      * @ORM\JoinColumn(name="codigo_documento_fk", referencedColumnName="codigo_documento_pk")
      */
@@ -566,6 +571,22 @@ class InvMovimiento
     /**
      * @return mixed
      */
+    public function getOperacionInventario()
+    {
+        return $this->operacionInventario;
+    }
+
+    /**
+     * @param mixed $operacionInventario
+     */
+    public function setOperacionInventario($operacionInventario): void
+    {
+        $this->operacionInventario = $operacionInventario;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDocumentoRel()
     {
         return $this->documentoRel;
@@ -626,6 +647,7 @@ class InvMovimiento
     {
         $this->movimientosDetallesMovimientoRel = $movimientosDetallesMovimientoRel;
     }
+
 
 
 }

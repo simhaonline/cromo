@@ -403,6 +403,11 @@ class TteGuia
     protected $novedadesGuiaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteGuiaDetalle", mappedBy="guiaRel")
+     */
+    protected $guiasDetallesGuiaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoGuiaPk()
@@ -1568,6 +1573,22 @@ class TteGuia
     public function setNovedadesGuiaRel($novedadesGuiaRel): void
     {
         $this->novedadesGuiaRel = $novedadesGuiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasDetallesGuiaRel()
+    {
+        return $this->guiasDetallesGuiaRel;
+    }
+
+    /**
+     * @param mixed $guiasDetallesGuiaRel
+     */
+    public function setGuiasDetallesGuiaRel($guiasDetallesGuiaRel): void
+    {
+        $this->guiasDetallesGuiaRel = $guiasDetallesGuiaRel;
     }
 
 

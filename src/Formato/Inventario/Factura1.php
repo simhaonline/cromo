@@ -147,6 +147,9 @@ class Factura1 extends \FPDF
 
     }
 
+    /**
+     * @param $pdf
+     */
     public function Body($pdf)
     {
         /**
@@ -161,12 +164,12 @@ class Factura1 extends \FPDF
             $pdf->SetX(19.5);
             $pdf->Cell(10, 6, $arMovimientoDetalle->getCodigoItemFk(), 1, 0, 'L');
             $pdf->Cell(94, 6, utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()), 1, 0, 'L');
-            $pdf->Cell(6, 6, $arMovimientoDetalle->getCodigoBodegaFk(), 1, 0, 'R');
+            $pdf->Cell(6, 6, substr($arMovimientoDetalle->getCodigoBodegaFk(),0,3), 1, 0, 'R');
             $pdf->Cell(11, 6, 'UNIDAD', 1, 0, 'C');
             $pdf->Cell(10, 6, $arMovimientoDetalle->getCantidad(), 1, 0, 'R');
             $pdf->Cell(18, 6, number_format($arMovimientoDetalle->getVrNeto(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(7, 6, number_format($arMovimientoDetalle->getPorIva(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(7.4, 6, number_format($arMovimientoDetalle->getPorDescuento(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(7, 6, number_format($arMovimientoDetalle->getPorcentajeIva(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(7.4, 6, number_format($arMovimientoDetalle->getPorcentajeDescuento(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(21, 6, number_format($arMovimientoDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);

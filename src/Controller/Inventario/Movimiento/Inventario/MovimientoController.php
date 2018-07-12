@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Inventario;
 
+use App\Entity\Inventario\InvConfiguracion;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
@@ -97,11 +98,16 @@ class MovimientoController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
      * @Route("/inv/mto/inventario/movimiento/detalle/{id}", name="inventario_movimiento_inventario_movimiento_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        /** @var  $arMovimiento InvMovimiento */
         $arMovimiento = $em->getRepository('App:Inventario\InvMovimiento')->find($id);
         $arMovimientoDetalles = $em->getRepository('App:Inventario\InvMovimientoDetalle')->findBy(['codigoMovimientoFk' => $id]);
         $form = $this->formularioDetalles($arMovimiento);
@@ -120,33 +126,35 @@ class MovimientoController extends Controller
                 if ($respuesta == '') {
                     $em->getRepository('App:Inventario\InvMovimiento')->autorizar($arMovimiento);
                 } else {
-                    Mensajeserror($respuesta);
+                    Mensajes::error($respuesta);
                 }
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository('App:Inventario\InvMovimiento')->desautorizar($arMovimiento);
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                $arDocumento = $em->getRepository('App:Inventario\InvDocumento')->findOneBy(['codigoDocumentoPk' => $arMovimiento->getCodigoDocumentoFk()]);
-                if($arDocumento->getCodigoDocumentoTipoFk() == 1){
-                } elseif($arDocumento->getCodigoDocumentoTipoFk() == 2){
-                } elseif($arDocumento->getCodigoDocumentoTipoFk() == 3){
-                    $objFormato = new Factura1();
-                    $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
+                if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'ENT') {
+                } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'SAL') {
+                } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC') {
+                    $codigoFactura = $em->getRepository(InvConfiguracion::class)->find(1)->getCodigoFormatoMovimiento();
+                    if($codigoFactura == 1){
+                        $objFormato = new Factura1();
+                        $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
+                    }
                 }
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->aprobar($arMovimiento);
                 if ($respuesta != '') {
-                    foreach ($respuesta as $respuesta){
-                        Mensajeserror($respuesta);
+                    foreach ($respuesta as $respuesta) {
+                        Mensajes::error($respuesta);
                     }
                 }
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva, $arrBodega, $arrLote);
                 if ($respuesta != '') {
-                    Mensajeserror($respuesta);
+                    Mensajes::error($respuesta);
                 }
             }
             if ($form->get('btnAnular')->isClicked()) {
@@ -166,12 +174,16 @@ class MovimientoController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/inv/mto/inventario/movimiento/detalle/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
+        $respuesta = '';
         $arMovimiento = $em->getRepository('App:Inventario\InvMovimiento')->find($id);
         $form = $this->formularioFiltroItems();
         $form->handleRequest($request);
@@ -184,21 +196,30 @@ class MovimientoController extends Controller
                 $arrItems = $request->request->get('itemCantidad');
                 if (count($arrItems) > 0) {
                     foreach ($arrItems as $codigoItem => $cantidad) {
+                        $arItem = $em->getRepository('App:Inventario\InvItem')->find($codigoItem);
                         if ($cantidad != '' && $cantidad != 0) {
-                            $arItem = $em->getRepository('App:Inventario\InvItem')->find($codigoItem);
-                            $arMovimientoDetalle = new InvMovimientoDetalle();
-                            $arMovimientoDetalle->setMovimientoRel($arMovimiento);
-                            $arMovimientoDetalle->setItemRel($arItem);
-                            $arMovimientoDetalle->setCantidad($cantidad);
-                            $em->persist($arMovimientoDetalle);
+                            if ($cantidad <= $arItem->getCantidadExistencia()) {
+                                $arMovimientoDetalle = new InvMovimientoDetalle();
+                                $arMovimientoDetalle->setMovimientoRel($arMovimiento);
+                                $arMovimientoDetalle->setItemRel($arItem);
+                                $arMovimientoDetalle->setCantidad($cantidad);
+                                $em->persist($arMovimientoDetalle);
+                            } else {
+                                $respuesta = "La cantidad seleccionada para el item: " . $arItem->getNombre() . " no puede ser mayor a las existencias del mismo.";
+                                break;
+                            }
                         }
                     }
-                    $em->flush();
-                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    if ($respuesta == '') {
+                        $em->flush();
+                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    } else {
+                        Mensajes::error($respuesta);
+                    }
                 }
             }
         }
-        $arItems = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
+        $arItems = $paginator->paginate($this->query, $request->query->getInt('page', 1), 30);
         return $this->render('inventario/movimiento/inventario/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems
@@ -245,7 +266,7 @@ class MovimientoController extends Controller
                             }
                         }
                         if ($respuesta != '') {
-                            Mensajeserror($respuesta);
+                            Mensajes::error($respuesta);
                         } else {
                             $em->flush();
                             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
@@ -337,10 +358,11 @@ class MovimientoController extends Controller
 
     private function formularioFiltroItems()
     {
+        $session = new Session();
         return $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
+            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('filtroInvItemCodigo')])
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvItemNombre')])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
     }
@@ -352,8 +374,8 @@ class MovimientoController extends Controller
     private function listaItems($em, $form)
     {
         $session = new Session();
-        $session->set('filtroCodigoItem', $form->get('txtCodigoItem')->getData());
-        $session->set('filtroNombreItem', $form->get('txtNombreItem')->getData());
-        $this->query = $em->getRepository('App:Inventario\InvItem')->listarItems($session->get('filtroNombreItem'), $session->get('filtroCodigoItem'));
+        $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
+        $session->set('filtroInvItemNombre', $form->get('txtNombreItem')->getData());
+        $this->query = $em->getRepository('App:Inventario\InvItem')->lista();
     }
 }

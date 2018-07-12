@@ -17,10 +17,11 @@ class InvLoteRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arLote InvLote
-     * @param $arMovimientoDetalle InvMovimientoDetalle
-     * @param $codigoLote integer
+     * @param $arMovimientoDetalle
+     * @param $codigoLote
+     * @param $codigoBodega
      * @return string
+     * @throws \Doctrine\ORM\ORMException
      */
     public function validarLote($arMovimientoDetalle, $codigoLote, $codigoBodega)
     {
@@ -50,11 +51,14 @@ class InvLoteRepository extends ServiceEntityRepository
                     $arLote->setCantidadDisponible($arLote->getCantidadDisponible() + $arMovimientoDetalle->getCantidad());
                     $this->_em->persist($arLote);
                 } else {
-                    if ($arLote->getCantidadDisponible() - $arMovimientoDetalle->getCantidad() <= 0) {
+                    if ($arLote->getCantidadDisponible() - $arMovimientoDetalle->getCantidad() < 0) {
                         $respuesta = 'El lote ' . $arLote->getLoteFk() . ' de la bodega ' . $arBodega->getCodigoBodegaPk() . ', no tiene suficientes existencias para el item seleccionado.';
                     } else {
                         $arLote->setCantidadDisponible($arLote->getCantidadDisponible() - $arMovimientoDetalle->getCantidad());
                         $this->_em->persist($arLote);
+                        if($arLote->getCantidadDisponible() == 0){
+                            $this->getEntityManager()->remove($arLote);
+                        }
                     }
                 }
             }

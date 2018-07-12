@@ -187,7 +187,7 @@ final class AdministracionController extends Controller
                 }
             }
         }
-        $arRegistros = $paginator->paginate($arRegistros, $request->query->getInt('page', 1), 10);
+        $arRegistros = $paginator->paginate($arRegistros, $request->query->getInt('page', 1), 30);
         return $this->render('estructura/lista.html.twig', [
             'arRegistros' => $arRegistros,
             'entidadCubo' => "",

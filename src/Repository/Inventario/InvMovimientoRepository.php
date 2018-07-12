@@ -64,8 +64,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $vrSubtotalGlobal += $vrSubtotal;
 
                 $arMovimientoDetalle->setLoteFk($arrLote[$arMovimientoDetalle->getCodigoMovimientoDetallePk()]);
-                $arMovimientoDetalle->setPorDescuento($porDescuento);
-                $arMovimientoDetalle->setPorIva($porIva);
+                $arMovimientoDetalle->setPorcentajeDescuento($porDescuento);
+                $arMovimientoDetalle->setPorcentajeIva($porIva);
                 $arMovimientoDetalle->setCodigoBodegaFk($arBodega->getCodigoBodegaPk());
                 $arMovimientoDetalle->setCantidad($cantidad);
                 $arMovimientoDetalle->setVrPrecio($vrUnitario);
@@ -122,9 +122,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arMovimiento InvMovimiento
+     * @param $arMovimiento
      * @return array
-     *
+     * @throws \Doctrine\ORM\ORMException
      */
     public function aprobar($arMovimiento)
     {

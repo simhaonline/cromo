@@ -18,6 +18,7 @@ class DocumentoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('codigoDocumentoPk',TextType::class,['label' => 'Codigo:','required' => true])
             ->add('nombre',TextType::class,['label' => 'Nombre: '])
             ->add('documentoTipoRel',EntityType::class,[
                 'required' => true,
@@ -52,8 +53,6 @@ class DocumentoType extends AbstractType
             ->add('codigoCuentaTesoreriaFk')
             ->add('tipoCuentaCartera')
             ->add('codigoCuentaCarteraFk')
-            ->add('asignarConsecutivoCreacion')
-            ->add('asignarConsecutivoImpresion')
             ->add('generaCostoPromedio')
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])

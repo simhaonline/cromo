@@ -43,11 +43,12 @@
             <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrIva | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
+            <td class="titulo">TERCERO:</td>
+            <td class="td-in-well">{{ arMovimiento.terceroRel.nombreCorto }}</td>
             <td class="titulo">SOPORTE:</td>
-            <td class="td-in-well" colspan="3">{{ arMovimiento.soporte }}</td>
+            <td class="td-in-well" style="text-align: left;">{{ arMovimiento.soporte }}</td>
             <td class="titulo">DESCUENTO:</td>
-            <td class="td-in-well"
-                style="text-align: right;">{{ arMovimiento.vrDescuento | number_format(0, '.', ',') }}</td>
+            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrDescuento | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>

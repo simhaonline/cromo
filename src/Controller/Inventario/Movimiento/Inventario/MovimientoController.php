@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Movimiento\Inventario;
 
 use App\Entity\Inventario\InvConfiguracion;
+use App\Formato\Inventario\Movimiento;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
@@ -133,6 +134,8 @@ class MovimientoController extends Controller
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'ENT') {
+                    $objFormato = new Movimiento();
+                    $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                 } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'SAL') {
                 } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC') {
                     $codigoFactura = $em->getRepository(InvConfiguracion::class)->find(1)->getCodigoFormatoMovimiento();

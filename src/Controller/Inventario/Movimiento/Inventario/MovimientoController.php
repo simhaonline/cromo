@@ -316,7 +316,7 @@ class MovimientoController extends Controller
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnCiudad = ['attr' => ['class' => 'form-control input-sm','readonly' => false,'placeholder' => 'Ciudad a enviar'],'data' => $arMovimiento->getCiudadFactura()];
+        $arrBtnCiudad = ['attr' => ['class' => 'form-control input-sm','readonly' => false,'placeholder' => 'Ciudad a enviar','required'=> false],'data' => $arMovimiento->getCiudadFactura()];
         if ($arMovimiento->getEstadoAnulado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
@@ -333,7 +333,7 @@ class MovimientoController extends Controller
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = true;
             $arrBtnActualizar['disabled'] = true;
-            $arrBtnCiudad['attr'] = ['class' => 'form-control input-sm','readonly' => true,'placeholder' => 'Ciudad a enviar'];
+            $arrBtnCiudad['attr'] = ['class' => 'form-control input-sm','readonly' => true,'placeholder' => 'Ciudad a enviar','required'=> false];
         } elseif ($arMovimiento->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
@@ -350,6 +350,9 @@ class MovimientoController extends Controller
             $arrBtnEliminar['disabled'] = false;
             $arrBtnAprobar['disabled'] = true;
             $arrBtnActualizar['disabled'] = false;
+        }
+        if($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() != 'FAC'){
+            $arrBtnCiudad['attr'] = ['class' => 'form-control input-sm','readonly' => true,'placeholder' => 'Ciudad a enviar','required'=> false];
         }
         return $this
             ->createFormBuilder()

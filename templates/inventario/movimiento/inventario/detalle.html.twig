@@ -11,11 +11,7 @@
             {{ form_widget(form.btnAnular) }}
         </div>
         <div class="btn-group">
-            {% if arMovimiento.documentoRel.codigoDocumentoTipoFk == 'FAC' %}
-                {{ form_widget(form.txtCiudadFactura) }}
-            {% else %}
-                {{ form_widget(form.txtCiudadFactura,{'attr':{'class' : 'hidden' }}) }}
-            {% endif %}
+            {{ form_widget(form.txtCiudadFactura) }}
         </div>
     </div>
     <div style="float:right">
@@ -48,7 +44,8 @@
             <td class="titulo">SOPORTE:</td>
             <td class="td-in-well" style="text-align: left;">{{ arMovimiento.soporte }}</td>
             <td class="titulo">DESCUENTO:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrDescuento | number_format(0, '.', ',') }}</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arMovimiento.vrDescuento | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>

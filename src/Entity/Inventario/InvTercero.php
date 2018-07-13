@@ -28,7 +28,7 @@ class InvTercero
     private $numeroIdentificacion;
 
     /**
-     * @ORM\Column(name="nombreCorto", type="string", length=150, nullable=true)
+     * @ORM\Column(name="nombre_corto", type="string", length=150, nullable=true)
      */
     private $nombreCorto;
 

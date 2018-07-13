@@ -44,7 +44,7 @@ class Movimiento extends \FPDF
     {
         /** @var  $arMovimiento InvMovimiento */
         $arMovimiento = self::$em->getRepository(InvMovimiento::class)->find(self::$codigoMovimiento);
-        Estandares::generarEncabezado($this, 'SOLICITUD');
+        Estandares::generarEncabezado($this, 'MOVIMIENTO');
         $intY = 40;
         $this->SetXY(10, $intY);
         $this->SetFont('Arial', 'B', 8);

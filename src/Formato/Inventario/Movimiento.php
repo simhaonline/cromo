@@ -2,8 +2,10 @@
 
 namespace App\Formato\Inventario;
 
+use App\Entity\General\GenConfiguracion;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
+use App\Utilidades\BaseDatos;
 use App\Utilidades\Estandares;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -28,13 +30,13 @@ class Movimiento extends \FPDF
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Arial', '', 40);
-        $pdf->SetTextColor(255,220,220);
+        $pdf->SetTextColor(255, 220, 220);
         if ($arMovimiento->getEstadoAnulado()) {
-            $pdf->RotatedText(90,150,'ANULADO',45);
-        } elseif(!$arMovimiento->getEstadoAprobado()) {
-            $pdf->RotatedText(90,150,'SIN APROBAR',45);
+            $pdf->RotatedText(90, 150, 'ANULADO', 45);
+        } elseif (!$arMovimiento->getEstadoAprobado()) {
+            $pdf->RotatedText(90, 150, 'SIN APROBAR', 45);
         }
-        $pdf->SetTextColor(0,0,0);
+        $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
         $pdf->Output("Movimiento_{$arMovimiento->getNumero()}.pdf", 'I');
@@ -44,7 +46,33 @@ class Movimiento extends \FPDF
     {
         /** @var  $arMovimiento InvMovimiento */
         $arMovimiento = self::$em->getRepository(InvMovimiento::class)->find(self::$codigoMovimiento);
-        Estandares::generarEncabezado($this, 'MOVIMIENTO');
+        /** @var  $arConfiguracion GenConfiguracion */
+        $this->SetFont('Arial', '', 5);
+        $date = new \DateTime('now');
+        $this->Text(168, 8, $date->format('Y-m-d H:i:s') . ' [Cromo | Inventario]');
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 10);
+        //Logo
+        $this->SetXY(53, 10);
+        try {
+            $this->Image('../public/img/empresa/logo.jpeg', 12, 13, 40, 25);
+        } catch (\Exception $exception) {
+        }
+
+        $this->Cell(147, 7, utf8_decode('MOVIMIENTO'), 0, 0, 'C', 1);
+        $this->SetXY(53, 18);
+        $this->SetFont('Arial', 'B', 9);
+        $this->Cell(20, 4, "EMPRESA:", 0, 0, 'L', 1);
+        $this->Cell(100, 4, utf8_decode($arMovimiento->getTerceroRel()->getNombreCorto() ?? ''), 0, 0, 'L', 0);
+        $this->SetXY(53, 22);
+        $this->Cell(20, 4, "NIT:", 0, 0, 'L', 1);
+        $this->Cell(100, 4, $arMovimiento->getTerceroRel()->getNumeroIdentificacion() ?? '', 0, 0, 'L', 0);
+        $this->SetXY(53, 26);
+        $this->Cell(20, 4, utf8_decode("DIRECCIÓN:"), 0, 0, 'L', 1);
+        $this->Cell(100, 4, utf8_decode($arMovimiento->getTerceroRel()->getDireccion()) ?? '', 0, 0, 'L', 0);
+        $this->SetXY(53, 30);
+        $this->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
+        $this->Cell(100, 4, $arMovimiento->getTerceroRel()->getTelefono() ?? '', 0, 0, 'L', 0);
         $intY = 40;
         $this->SetXY(10, $intY);
         $this->SetFont('Arial', 'B', 8);
@@ -167,7 +195,7 @@ class Movimiento extends \FPDF
         }
     }
 
-    function RotatedText($x,$y,$txt,$angle)
+    function RotatedText($x, $y, $txt, $angle)
     {
         //Text rotated around its origin
         $this->Rotate($angle, $x, $y);

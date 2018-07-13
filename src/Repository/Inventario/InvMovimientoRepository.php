@@ -122,15 +122,21 @@ class InvMovimientoRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arMovimiento
+     * @param $arMovimiento InvMovimiento
      * @return array
-     * @throws \Doctrine\ORM\ORMException
      */
     public function aprobar($arMovimiento)
     {
         $respuesta = [];
         $arDocumento = $this->_em->getRepository('App:Inventario\InvDocumento')->find($arMovimiento->getCodigoDocumentoFk());
         if (!$arMovimiento->getEstadoAprobado()) {
+            $stringFecha = $arMovimiento->getFecha()->format('Y-m-d');
+            $plazo = $arMovimiento->getTerceroRel()->getPlazoPago();
+
+            $fechaVencimiento = date_create($stringFecha);
+            $fechaVencimiento->modify("+ ".(string)$plazo." day");
+            $arMovimiento->setFechaVence($fechaVencimiento);
+
             $arDocumento->setConsecutivo($arDocumento->getConsecutivo() + 1);
             $arMovimiento->setEstadoAprobado(1);
             $arMovimiento->setNumero($arDocumento->getConsecutivo());

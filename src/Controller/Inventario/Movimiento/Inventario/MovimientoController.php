@@ -101,7 +101,6 @@ class MovimientoController extends Controller
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\ORMException
      * @Route("/inv/mto/inventario/movimiento/detalle/{id}", name="inventario_movimiento_inventario_movimiento_detalle")
      */
     public function detalle(Request $request, $id)
@@ -144,6 +143,9 @@ class MovimientoController extends Controller
                 }
             }
             if ($form->get('btnAprobar')->isClicked()) {
+                $arCiudad = $form->get('txtCiudadFactura')->getData();
+                $arMovimiento->setCiudadFactura($arCiudad);
+                $em->persist($arMovimiento);
                 $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->aprobar($arMovimiento);
                 if ($respuesta != '') {
                     foreach ($respuesta as $respuesta) {
@@ -311,6 +313,7 @@ class MovimientoController extends Controller
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnCiudad = ['attr' => ['class' => 'form-control input-sm','readonly' => false,'placeholder' => 'Ciudad a enviar'],'data' => $arMovimiento->getCiudadFactura()];
         if ($arMovimiento->getEstadoAnulado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
@@ -327,6 +330,7 @@ class MovimientoController extends Controller
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = true;
             $arrBtnActualizar['disabled'] = true;
+            $arrBtnCiudad['attr'] = ['class' => 'form-control input-sm','readonly' => true,'placeholder' => 'Ciudad a enviar'];
         } elseif ($arMovimiento->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
@@ -349,6 +353,7 @@ class MovimientoController extends Controller
             ->add('btnAutorizar', SubmitType::class, $arrBtnAutorizar)
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
             ->add('btnAprobar', SubmitType::class, $arrBtnAprobar)
+            ->add('txtCiudadFactura', TextType::class, $arrBtnCiudad)
             ->add('btnDesautorizar', SubmitType::class, $arrBtnDesautorizar)
             ->add('btnImprimir', SubmitType::class, $arrBtnImprimir)
             ->add('btnAnular', SubmitType::class, $arrBtnAnular)

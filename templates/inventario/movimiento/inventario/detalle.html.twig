@@ -10,6 +10,13 @@
             {{ form_widget(form.btnAprobar) }}
             {{ form_widget(form.btnAnular) }}
         </div>
+        <div class="btn-group">
+            {% if arMovimiento.documentoRel.codigoDocumentoTipoFk == 'FAC' %}
+                {{ form_widget(form.txtCiudadFactura) }}
+            {% else %}
+                {{ form_widget(form.txtCiudadFactura,{'attr':{'class' : 'hidden' }}) }}
+            {% endif %}
+        </div>
     </div>
     <div style="float:right">
         {% if arMovimiento.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}

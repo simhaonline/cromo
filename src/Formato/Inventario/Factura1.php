@@ -4,6 +4,7 @@ namespace App\Formato\Inventario;
 
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
+use App\Entity\Inventario\InvTercero;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class Factura1 extends \FPDF
@@ -20,56 +21,66 @@ class Factura1 extends \FPDF
     {
         self::$em = $em;
         self::$codigoMovimiento = $codigoMovimiento;
+        /** @var  $arMovimiento InvMovimiento */
+        $arMovimiento = $em->getRepository(InvMovimiento::class)->find($codigoMovimiento);
         ob_clean();
         $pdf = new Factura1('P', 'mm', 'letter');
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Factura_$codigoMovimiento.pdf", 'I');
+        $pdf->Output("Factura_{$arMovimiento->getNumero()}_{$arMovimiento->getTerceroRel()->getNombreCorto()}.pdf", 'I');
     }
 
     public function Header()
     {
         /** @var  $em ObjectManager */
         $em = self::$em;
+        /** @var  $arMovimiento InvMovimiento */
         $arMovimiento = $em->getRepository('App:Inventario\InvMovimiento')->find(self::$codigoMovimiento);
 
         $this->SetFont('Arial', 'B', 8);
         $this->SetXY(150.2, 25);
         $this->Cell(35, 4, 'FACTURA DE VENTA', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(17,4,$arMovimiento->getNumero(),0,0,'R',0);
+        $this->Cell(17, 4, $arMovimiento->getNumero(), 0, 0, 'R', 0);
 
         $this->SetFont('Arial', 'B', 8);
         $this->SetXY(150.2, 28);
         $this->Cell(35, 4, 'Fecha emision:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(17,4,$arMovimiento->getFecha()->format('d/m/Y'),0,0,'R',0);
+        $this->Cell(17, 4, $arMovimiento->getFecha()->format('d/m/Y'), 0, 0, 'R', 0);
+
+        $stringFecha = $arMovimiento->getFecha()->format('Y-m-d');
+        $plazo = $arMovimiento->getTerceroRel()->getPlazoPago();
+        $fechaVencimiento = date_create($stringFecha);
+        $fechaVencimiento->modify("+ " . (string)$plazo . " day");
 
         $this->SetFont('Arial', 'B', 8);
         $this->SetXY(150.2, 31);
         $this->Cell(35, 4, 'Fecha vencimiento:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(17,4,$arMovimiento->getFecha()->format('d/m/Y'),0,0,'R',0);
+        $this->Cell(17, 4, $fechaVencimiento->format('d/m/Y'), 0, 0, 'R', 0);
+
 
         $this->SetFont('Arial', 'B', 8);
         $this->SetXY(150.2, 34);
         $this->Cell(35, 4, 'Forma pago:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(17,4,'PENDIENTE',0,0,'R',0);
+        $this->Cell(17, 4, $plazo == 0 ? 'CONTADO' : 'CREDITO', 0, 0, 'R', 0);
 
         $this->SetFont('Arial', 'B', 8);
         $this->SetXY(150.2, 37);
         $this->Cell(35, 4, 'Plazo:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(17,4,'30 dias',0,0,'R',0);
+        $this->Cell(17, 4, $plazo, 0, 0, 'R', 0);
 
         $this->SetFont('Arial', 'B', 8);
         $this->SetXY(150.2, 40);
         $this->Cell(35, 4, 'Orden compra:', 0, 0, 'L', 0);
+
         $this->SetFont('Arial', '', 8);
-        $this->Cell(17,4,'0',0,0,'R',0);
+        $this->Cell(17, 4, $arMovimiento->getSoporte(), 0, 0, 'R', 0);
 
 
         $this->SetFillColor(200, 200, 200);
@@ -100,21 +111,24 @@ class Factura1 extends \FPDF
         $this->Cell(15, 4, 'NOMBRE:', 0, 0, 'L', 0);
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(30, 4, $arMovimiento->getTerceroRel()->getNombreCorto(), 0, 0, 'L', 0);
+        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getNombreCorto(), 0, 0, 'L', 0);
+        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getNombreCorto(), 0, 0, 'L', 0);
 
         $this->SetXY(19, 54.5);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(15, 4, 'NIT:', 0, 0, 'L', 0);
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(30, 4, $arMovimiento->getTerceroRel()->getNumeroIdentificacion(), 0, 0, 'L', 0);
+        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getNumeroIdentificacion(), 0, 0, 'L', 0);
+        $this->Cell(73, 4, utf8_decode($arMovimiento->getCiudadFactura()), 0, 0, 'L', 0);
 
         $this->SetXY(19, 58);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(15, 4, 'TELEFONO:', 0, 0, 'L', 0);
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(30, 4, $arMovimiento->getTerceroRel()->getTelefono(), 0, 0, 'L', 0);
+        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getTelefono(), 0, 0, 'L', 0);
+        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getDireccion(), 0, 0, 'L', 0);
 
         $this->SetXY(19, 61.5);
         $this->SetFont('Arial', 'B', 8);
@@ -160,14 +174,14 @@ class Factura1 extends \FPDF
         $arMovimientoDetalles = self::$em->getRepository('App:Inventario\InvMovimientoDetalle')->findBy(['codigoMovimientoFk' => self::$codigoMovimiento]);
         $pdf->SetFont('Arial', '', 7);
         /** @var  $arMovimientoDetalle InvMovimientoDetalle */
-        foreach ($arMovimientoDetalles  as $arMovimientoDetalle) {
+        foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $pdf->SetX(19.5);
             $pdf->Cell(10, 6, $arMovimientoDetalle->getCodigoItemFk(), 1, 0, 'L');
             $pdf->Cell(94, 6, utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()), 1, 0, 'L');
-            $pdf->Cell(6, 6, substr($arMovimientoDetalle->getCodigoBodegaFk(),0,3), 1, 0, 'R');
+            $pdf->Cell(6, 6, substr($arMovimientoDetalle->getCodigoBodegaFk(), 0, 3), 1, 0, 'R');
             $pdf->Cell(11, 6, 'UNIDAD', 1, 0, 'C');
             $pdf->Cell(10, 6, $arMovimientoDetalle->getCantidad(), 1, 0, 'R');
-            $pdf->Cell(18, 6, number_format($arMovimientoDetalle->getVrNeto(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(18, 6, number_format($arMovimientoDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(7, 6, number_format($arMovimientoDetalle->getPorcentajeIva(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(7.4, 6, number_format($arMovimientoDetalle->getPorcentajeDescuento(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(21, 6, number_format($arMovimientoDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
@@ -186,124 +200,124 @@ class Factura1 extends \FPDF
         $y = 178;
         $x = 181;
 
-        $this->SetXY(151,174.5);
+        $this->SetXY(151, 174.5);
         $this->SetFont('Arial', 'B', 7);
-        $this->Cell(30,3,'SUBTOTAL:',0,0,'R');
+        $this->Cell(30, 3, 'SUBTOTAL:', 0, 0, 'R');
         $this->SetFont('Arial', '', 7);
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20,3,number_format($arMovimiento->getVrSubtotal(), 0, '.', ','),0,0,'R');
+        $this->Cell(20, 3, number_format($arMovimiento->getVrSubtotal(), 0, '.', ','), 0, 0, 'R');
 
-        $this->SetXY(151,$y);
+        $this->SetXY(151, $y);
         $this->SetFont('Arial', 'B', 7);
-        $this->Cell(30,3,'(-)DESCUENTO:',0,0,'R');
+        $this->Cell(30, 3, '(-)DESCUENTO:', 0, 0, 'R');
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20,3,number_format($arMovimiento->getVrDescuento(), 0, '.', ','),0,0,'R');
-
-        $y += 3.8;
-        $this->SetFont('Arial', 'B', 7);
-        $this->SetXY(151,$y);
-        $this->Cell(30,3,'TOTAL NETO:',0,0,'R');
-        $this->SetX($x);
-        $this->SetFont('Arial', '', 7);
-        $this->Cell(20,3,number_format($arMovimiento->getVrNeto(), 0, '.', ','),0,0,'R');
+        $this->Cell(20, 3, number_format($arMovimiento->getVrDescuento(), 0, '.', ','), 0, 0, 'R');
 
         $y += 3.8;
         $this->SetFont('Arial', 'B', 7);
-        $this->SetXY(151,$y);
-        $this->Cell(30,3,'(+)IVA:',0,0,'R');
+        $this->SetXY(151, $y);
+        $this->Cell(30, 3, 'TOTAL NETO:', 0, 0, 'R');
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20,3,number_format($arMovimiento->getVrIva(), 0, '.', ','),0,0,'R');
+        $this->Cell(20, 3, number_format($arMovimiento->getVrNeto(), 0, '.', ','), 0, 0, 'R');
 
         $y += 3.8;
         $this->SetFont('Arial', 'B', 7);
-        $this->SetXY(151,$y);
-        $this->Cell(30,3,'TOTAL:',0,0,'R');
+        $this->SetXY(151, $y);
+        $this->Cell(30, 3, '(+)IVA:', 0, 0, 'R');
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20,3,number_format($arMovimiento->getVrTotal(), 0, '.', ','),0,0,'R');
+        $this->Cell(20, 3, number_format($arMovimiento->getVrIva(), 0, '.', ','), 0, 0, 'R');
 
         $y += 3.8;
         $this->SetFont('Arial', 'B', 7);
-        $this->SetXY(151,$y);
-        $this->Cell(30,3,'RTE CREE:',0,0,'R');
+        $this->SetXY(151, $y);
+        $this->Cell(30, 3, 'TOTAL:', 0, 0, 'R');
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20,3,number_format(0, 0, '.', ','),0,0,'R');
+        $this->Cell(20, 3, number_format($arMovimiento->getVrTotal(), 0, '.', ','), 0, 0, 'R');
 
         $y += 3.8;
         $this->SetFont('Arial', 'B', 7);
-        $this->SetXY(151,$y);
-        $this->Cell(30,3,'RTE FUENTE:',0,0,'R');
+        $this->SetXY(151, $y);
+        $this->Cell(30, 3, 'RTE CREE:', 0, 0, 'R');
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20,3,number_format(0, 0, '.', ','),0,0,'R');
+        $this->Cell(20, 3, number_format(0, 0, '.', ','), 0, 0, 'R');
 
         $y += 3.8;
         $this->SetFont('Arial', 'B', 7);
-        $this->SetXY(151,$y);
-        $this->Cell(30,3,'RTE IVA:',0,0,'R');
+        $this->SetXY(151, $y);
+        $this->Cell(30, 3, 'RTE FUENTE:', 0, 0, 'R');
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20,3,number_format(0, 0, '.', ','),0,0,'R');
+        $this->Cell(20, 3, number_format(0, 0, '.', ','), 0, 0, 'R');
 
         $y += 3.8;
         $this->SetFont('Arial', 'B', 7);
-        $this->SetXY(151,$y);
-        $this->Cell(30,3,'RETENCIONES:',0,0,'R');
+        $this->SetXY(151, $y);
+        $this->Cell(30, 3, 'RTE IVA:', 0, 0, 'R');
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20,3,number_format(0, 0, '.', ','),0,0,'R');
+        $this->Cell(20, 3, number_format(0, 0, '.', ','), 0, 0, 'R');
 
         $y += 3.8;
         $this->SetFont('Arial', 'B', 7);
-        $this->SetXY(151,$y);
-        $this->Cell(30,3,'TOTAL GENERAL:',0,0,'R');
+        $this->SetXY(151, $y);
+        $this->Cell(30, 3, 'RETENCIONES:', 0, 0, 'R');
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20,3,number_format($arMovimiento->getVrTotal(), 0, '.', ','),0,0,'R');
-        if($arMovimiento->getVrTotal() != 0){
+        $this->Cell(20, 3, number_format(0, 0, '.', ','), 0, 0, 'R');
+
+        $y += 3.8;
+        $this->SetFont('Arial', 'B', 7);
+        $this->SetXY(151, $y);
+        $this->Cell(30, 3, 'TOTAL GENERAL:', 0, 0, 'R');
+        $this->SetX($x);
+        $this->SetFont('Arial', '', 7);
+        $this->Cell(20, 3, number_format($arMovimiento->getVrTotal(), 0, '.', ','), 0, 0, 'R');
+        if ($arMovimiento->getVrTotal() != 0) {
             $vrTotalLetras = self::devolverNumeroLetras($arMovimiento->getVrTotal());
         } else {
             $vrTotalLetras = 'CERO PESOS';
         }
-        $this->SetXY(19,209);
+        $this->SetXY(19, 209);
         $this->SetFont('Arial', 'B', 6);
-        $this->Cell(20,3,'SON: '.$vrTotalLetras,0,0,'L');
+        $this->Cell(20, 3, 'SON: ' . $vrTotalLetras, 0, 0, 'L');
 
-        $this->Line(202.3,174.2,18.7,174.2);
-        $this->Line(202.3,212,18.7,212);
-        $this->Line(202.3,244.8,18.7,244.8);
-        $this->Line(202.3,253.6,18.7,253.6);
+        $this->Line(202.3, 174.2, 18.7, 174.2);
+        $this->Line(202.3, 212, 18.7, 212);
+        $this->Line(202.3, 244.8, 18.7, 244.8);
+        $this->Line(202.3, 253.6, 18.7, 253.6);
 
-        $this->Line(151.3,239.2,102.9,239.2);
-        $this->Line(202.2,239.2,154.5,239.2);
-        $this->Line(202.3,253.6,18.7,253.6);
+        $this->Line(151.3, 239.2, 102.9, 239.2);
+        $this->Line(202.2, 239.2, 154.5, 239.2);
+        $this->Line(202.3, 253.6, 18.7, 253.6);
         $this->SetFont('Arial', 'B', 6);
         $this->Text(102.9, 242, 'AUTORIZADO');
         $this->Text(154.5, 242, 'FIRMA DE RECIBIDO');
         $this->SetFont('Arial', 'B', 7.5);
 
-        $this->Text(19.7,182,'OBSERVACIONES:');
-        $this->SetXY(19.7,184);
+        $this->Text(19.7, 182, 'OBSERVACIONES:');
+        $this->SetXY(19.7, 184);
         $this->SetFont('Arial', '', 7.5);
-        $this->MultiCell(127,3,strtoupper($arMovimiento->getComentarios()),0,'L');
+        $this->MultiCell(127, 3, strtoupper($arMovimiento->getComentarios()), 0, 'L');
         $this->SetFont('Arial', 'B', 7.5);
-        $this->Text(37.5,248.5,'REALIZAR PAGO EN LA CUENTA DE AHORROS BANCOLOMBIA NUMERO 58098786765 A NOMBRE DE  FILTRAMED S.A.S');
+        $this->Text(37.5, 248.5, 'REALIZAR PAGO EN LA CUENTA DE AHORROS BANCOLOMBIA NUMERO 58098786765 A NOMBRE DE  FILTRAMED S.A.S');
 
         $this->SetFont('Arial', '', 5.5);
-        $this->Text(20.5,220,'* IVA REGIMEN COMUN');
-        $this->Text(20.5,222,'* NO SOMOS AUTORETENEDORES');
-        $this->Text(20.5,224,'* NO SOMOS GRANDES CONTRIBUYENTES');
-        $this->Text(20.5,226,'* CODIGO CIIU 4645 - CREE 0.3%');
-        $this->Text(20.5,228,'* LA PRENSETE FACTURA PRESENTA MERITO EJECUTIVO COMO TITULO VALOR');
-        $this->Text(20.5,230,' SEGUN LO ESTABLECIDO EN EL ART.3 DE LA LEY 1231 DE 2008');
-        $this->Text(20.5,232,'* RESOLUCION DIAN DE AUTORIZACION PARA FACTURACION POR COMPUTADOR');
-        $this->Text(20.5,234,' No 18762005231251 DESDE 2017/10/13 HASTA 2019/10/13. FACTURAS 0651 AL 1000');
+        $this->Text(20.5, 220, '* IVA REGIMEN COMUN');
+        $this->Text(20.5, 222, '* NO SOMOS AUTORETENEDORES');
+        $this->Text(20.5, 224, '* NO SOMOS GRANDES CONTRIBUYENTES');
+        $this->Text(20.5, 226, '* CODIGO CIIU 4645 - CREE 0.3%');
+        $this->Text(20.5, 228, '* LA PRENSETE FACTURA PRESENTA MERITO EJECUTIVO COMO TITULO VALOR');
+        $this->Text(20.5, 230, ' SEGUN LO ESTABLECIDO EN EL ART.3 DE LA LEY 1231 DE 2008');
+        $this->Text(20.5, 232, '* RESOLUCION DIAN DE AUTORIZACION PARA FACTURACION POR COMPUTADOR');
+        $this->Text(20.5, 234, ' No 18762005231251 DESDE 2017/10/13 HASTA 2019/10/13. FACTURAS 0651 AL 1000');
         $this->SetFont('Arial', '', 6.5);
-        $this->Text(65,251.5,'CRA 90 CL 65C-10 APTO 1917 MEDELLIN - CEL 300 448 02 19 - E-MAIL: comercial@filtramed.com');
+        $this->Text(65, 251.5, 'CRA 90 CL 65C-10 APTO 1917 MEDELLIN - CEL 300 448 02 19 - E-MAIL: comercial@filtramed.com');
         $this->Text(188, 257, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }
 

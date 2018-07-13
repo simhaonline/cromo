@@ -63,6 +63,11 @@ class InvMovimiento
     private $soporte;
 
     /**
+     * @ORM\Column(name="ciudad_factura", type="string", length=50, nullable=true)
+     */
+    private $ciudadFactura;
+
+    /**
      * @ORM\Column(name="por_iva", type="float", nullable=true)
      */
     private $porIva;
@@ -648,6 +653,19 @@ class InvMovimiento
         $this->movimientosDetallesMovimientoRel = $movimientosDetallesMovimientoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCiudadFactura()
+    {
+        return $this->ciudadFactura;
+    }
 
-
+    /**
+     * @param mixed $ciudadFactura
+     */
+    public function setCiudadFactura($ciudadFactura): void
+    {
+        $this->ciudadFactura = $ciudadFactura;
+    }
 }

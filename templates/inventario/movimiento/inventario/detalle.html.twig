@@ -66,6 +66,7 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>ID ITEM</th>
                             <th>ITEM</th>
                             <th>BODEGA</th>
                             <th>LOTE</th>
@@ -84,6 +85,7 @@
                         {% for arMovimientoDetalle in arMovimientoDetalles %}
                             <tr>
                                 {{ validarTipo(arMovimientoDetalle.codigoMovimientoDetallePk) }}
+                                {{ validarTipo(arMovimientoDetalle.codigoItemFk) }}
                                 {{ validarTipo(arMovimientoDetalle.itemRel.nombre) }}
 
                                 {% if arMovimiento.estadoAutorizado %}

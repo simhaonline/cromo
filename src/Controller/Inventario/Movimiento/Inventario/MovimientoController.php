@@ -122,6 +122,13 @@ class MovimientoController extends Controller
             $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
 
             if ($form->get('btnAutorizar')->isClicked()) {
+                $arCiudad = $form->get('txtCiudadFactura')->getData();
+                $arMovimiento->setCiudadFactura($arCiudad);
+
+                $arDireccion = $form->get('txtDireccion')->getData();
+                $arMovimiento->setDireccion($arDireccion);
+
+                $em->persist($arMovimiento);
                 $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva, $arrBodega, $arrLote);
                 if ($respuesta == '') {
                     $em->getRepository('App:Inventario\InvMovimiento')->autorizar($arMovimiento);
@@ -139,16 +146,13 @@ class MovimientoController extends Controller
                 } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'SAL') {
                 } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC') {
                     $codigoFactura = $em->getRepository(InvConfiguracion::class)->find(1)->getCodigoFormatoMovimiento();
-                    if($codigoFactura == 1){
+                    if ($codigoFactura == 1) {
                         $objFormato = new Factura1();
                         $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                     }
                 }
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $arCiudad = $form->get('txtCiudadFactura')->getData();
-                $arMovimiento->setCiudadFactura($arCiudad);
-                $em->persist($arMovimiento);
                 $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->aprobar($arMovimiento);
                 if ($respuesta != '') {
                     foreach ($respuesta as $respuesta) {
@@ -157,6 +161,12 @@ class MovimientoController extends Controller
                 }
             }
             if ($form->get('btnActualizar')->isClicked()) {
+                $arCiudad = $form->get('txtCiudadFactura')->getData();
+                $arMovimiento->setCiudadFactura($arCiudad);
+
+                $arDireccion = $form->get('txtDireccion')->getData();
+                $arMovimiento->setDireccion($arDireccion);
+                $em->persist($arMovimiento);
                 $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva, $arrBodega, $arrLote);
                 if ($respuesta != '') {
                     Mensajes::error($respuesta);
@@ -316,7 +326,8 @@ class MovimientoController extends Controller
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnCiudad = ['attr' => ['class' => 'form-control input-sm','readonly' => false,'placeholder' => 'Ciudad a enviar','required'=> false],'data' => $arMovimiento->getCiudadFactura()];
+        $arrBtnCiudad = ['attr' => ['class' => 'form-control input-sm', 'readonly' => false, 'placeholder' => 'Ciudad a enviar', 'required' => false], 'data' => $arMovimiento->getCiudadFactura()];
+        $arrBtnDireccion = ['attr' => ['class' => 'form-control input-sm', 'readonly' => false, 'placeholder' => 'Direccion a enviar', 'required' => false], 'data' => $arMovimiento->getDireccion()];
         if ($arMovimiento->getEstadoAnulado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
@@ -333,7 +344,8 @@ class MovimientoController extends Controller
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobar['disabled'] = true;
             $arrBtnActualizar['disabled'] = true;
-            $arrBtnCiudad['attr'] = ['class' => 'form-control input-sm','readonly' => true,'placeholder' => 'Ciudad a enviar','required'=> false];
+            $arrBtnCiudad['attr'] = ['class' => 'form-control input-sm', 'readonly' => true, 'placeholder' => 'Ciudad a enviar', 'required' => false];
+            $arrBtnDireccion = ['attr' => ['class' => 'form-control input-sm', 'readonly' => true, 'placeholder' => 'Direccion a enviar', 'required' => false], 'data' => $arMovimiento->getDireccion()];
         } elseif ($arMovimiento->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
@@ -351,8 +363,8 @@ class MovimientoController extends Controller
             $arrBtnAprobar['disabled'] = true;
             $arrBtnActualizar['disabled'] = false;
         }
-        if($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() != 'FAC'){
-            $arrBtnCiudad['attr'] = ['class' => 'form-control input-sm','readonly' => true,'placeholder' => 'Ciudad a enviar','required'=> false];
+        if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() != 'FAC') {
+            $arrBtnCiudad['attr'] = ['class' => 'form-control input-sm', 'readonly' => true, 'placeholder' => 'Ciudad a enviar', 'required' => false];
         }
         return $this
             ->createFormBuilder()
@@ -360,6 +372,7 @@ class MovimientoController extends Controller
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
             ->add('btnAprobar', SubmitType::class, $arrBtnAprobar)
             ->add('txtCiudadFactura', TextType::class, $arrBtnCiudad)
+            ->add('txtDireccion', TextType::class, $arrBtnDireccion)
             ->add('btnDesautorizar', SubmitType::class, $arrBtnDesautorizar)
             ->add('btnImprimir', SubmitType::class, $arrBtnImprimir)
             ->add('btnAnular', SubmitType::class, $arrBtnAnular)

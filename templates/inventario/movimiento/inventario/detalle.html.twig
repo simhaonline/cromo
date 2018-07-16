@@ -1,6 +1,6 @@
 {% extends 'base_inventario.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
     {{ notificar()|raw }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
@@ -12,6 +12,9 @@
         </div>
         <div class="btn-group">
             {{ form_widget(form.txtCiudadFactura) }}
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.txtDireccion) }}
         </div>
     </div>
     <div style="float:right">

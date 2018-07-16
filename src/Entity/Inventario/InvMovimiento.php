@@ -38,6 +38,11 @@ class InvMovimiento
     private $numero = 0;
 
     /**
+     * @ORM\Column(name="direccion", type="string",length=100, nullable=true)
+     */
+    private $direccion;
+
+    /**
      * @ORM\Column(name="fecha", type="datetime", nullable=true)
      */
     private $fecha;
@@ -667,5 +672,21 @@ class InvMovimiento
     public function setCiudadFactura($ciudadFactura): void
     {
         $this->ciudadFactura = $ciudadFactura;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDireccion()
+    {
+        return $this->direccion;
+    }
+
+    /**
+     * @param mixed $direccion
+     */
+    public function setDireccion($direccion): void
+    {
+        $this->direccion = $direccion;
     }
 }

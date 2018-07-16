@@ -128,7 +128,12 @@ class Factura1 extends \FPDF
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
         $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getTelefono(), 0, 0, 'L', 0);
-        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getDireccion(), 0, 0, 'L', 0);
+        if ($arMovimiento->getDireccion() != null && $arMovimiento->getDireccion() != '') {
+            $direccion = $arMovimiento->getDireccion();
+        } else {
+            $direccion = $arMovimiento->getTerceroRel()->getDireccion();
+        }
+        $this->Cell(73, 4, $direccion, 0, 0, 'L', 0);
 
         $this->SetXY(19, 61.5);
         $this->SetFont('Arial', 'B', 8);

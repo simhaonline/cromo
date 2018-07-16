@@ -47,6 +47,16 @@ class TteGuiaTipo
     private $orden = 0;
 
     /**
+     * @ORM\Column(name="validar_flete", type="boolean", nullable=true)
+     */
+    private $validarFlete = false;
+
+    /**
+     * @ORM\Column(name="validar_rango", type="boolean", nullable=true)
+     */
+    private $validarRango = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteFacturaTipo", inversedBy="guiasTiposFacturaTipoRel")
      * @ORM\JoinColumn(name="codigo_factura_tipo_fk", referencedColumnName="codigo_factura_tipo_pk")
      */
@@ -199,6 +209,38 @@ class TteGuiaTipo
     public function setOrden($orden): void
     {
         $this->orden = $orden;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValidarFlete()
+    {
+        return $this->validarFlete;
+    }
+
+    /**
+     * @param mixed $validarFlete
+     */
+    public function setValidarFlete($validarFlete): void
+    {
+        $this->validarFlete = $validarFlete;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValidarRango()
+    {
+        return $this->validarRango;
+    }
+
+    /**
+     * @param mixed $validarRango
+     */
+    public function setValidarRango($validarRango): void
+    {
+        $this->validarRango = $validarRango;
     }
 
 

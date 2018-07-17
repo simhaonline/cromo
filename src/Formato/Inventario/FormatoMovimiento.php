@@ -9,12 +9,13 @@ use App\Utilidades\BaseDatos;
 use App\Utilidades\Estandares;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class Movimiento extends \FPDF
+class FormatoMovimiento extends \FPDF
 {
 
     public static $em;
     public static $codigoMovimiento;
     public static $strLetras;
+    public static $numeroRegistros;
 
     /**
      * @param $em ObjectManager
@@ -25,7 +26,7 @@ class Movimiento extends \FPDF
         self::$em = $em;
         self::$codigoMovimiento = $codigoMovimiento;
         ob_clean();
-        $pdf = new Movimiento('P', 'mm', 'letter');
+        $pdf = new FormatoMovimiento('P', 'mm', 'letter');
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($codigoMovimiento);
         $pdf->AliasNbPages();
         $pdf->AddPage();
@@ -39,7 +40,7 @@ class Movimiento extends \FPDF
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Movimiento_{$arMovimiento->getNumero()}.pdf", 'I');
+        $pdf->Output("Movimiento_{$arMovimiento->getNumero()}.pdf", 'D');
     }
 
     public function Header()
@@ -150,6 +151,7 @@ class Movimiento extends \FPDF
     public function Body($pdf)
     {
         $arMovimientoDetalles = self::$em->getRepository('App:Inventario\InvMovimientoDetalle')->findBy(['codigoMovimientoFk' => self::$codigoMovimiento]);
+        self::$numeroRegistros = count($arMovimientoDetalles);
         $pdf->SetFont('Arial', '', 7);
         /** @var  $arMovimientoDetalle InvMovimientoDetalle */
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
@@ -164,7 +166,36 @@ class Movimiento extends \FPDF
             $pdf->Cell(7.4, 6, number_format($arMovimientoDetalle->getPorcentajeDescuento(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(21, 6, number_format($arMovimientoDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
-            $pdf->SetAutoPageBreak(true, 15);
+            $pdf->SetAutoPageBreak(true, 45);
+        }
+        $numeroPaginas = ceil(self::$numeroRegistros / 28);
+        if ($pdf->PageNo() == $numeroPaginas) {
+            $arMovimiento = self::$em->getRepository(InvMovimiento::class)->find(self::$codigoMovimiento);
+            $pdf->SetTextColor(0);
+            $pdf->Ln();
+            $pdf->Cell(140, 4, "", 0, 0, 'R');
+            $pdf->SetFont('Arial', 'B', 8);
+            $pdf->SetFillColor(236, 236, 236);
+            $pdf->Cell(25, 4, "SUBTOTAL", 1, 0, 'L', true);
+            $pdf->SetFillColor(255, 255, 255);
+            $pdf->SetFont('Arial', '', 8);
+            $pdf->Cell(25, 4, number_format($arMovimiento->getVrSubtotal(), 2, '.', ','), 1, 0, 'R');
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 8);
+            $pdf->SetFillColor(236, 236, 236);
+            $pdf->Cell(140, 4, "", 0, 0, 'R');
+            $pdf->Cell(25, 4, "IVA", 1, 0, 'L', true);
+            $pdf->SetFont('Arial', '', 8);
+            $pdf->SetFillColor(255, 255, 255);
+            $pdf->Cell(25, 4, number_format($arMovimiento->getVrIva(), 2, '.', ','), 1, 0, 'R');
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 8);
+            $pdf->SetFillColor(236, 236, 236);
+            $pdf->Cell(140, 4, "", 0, 0, 'R');
+            $pdf->Cell(25, 4, "TOTAL NETO", 1, 0, 'L', true);
+            $pdf->SetFont('Arial', '', 8);
+            $pdf->SetFillColor(255, 255, 255);
+            $pdf->Cell(25, 4, number_format($arMovimiento->getVrTotal(), 2, '.', ','), 1, 0, 'R');
         }
     }
 

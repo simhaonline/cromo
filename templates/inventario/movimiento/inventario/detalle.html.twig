@@ -11,10 +11,7 @@
             {{ form_widget(form.btnAnular) }}
         </div>
         <div class="btn-group">
-            {{ form_widget(form.txtCiudadFactura) }}
-        </div>
-        <div class="btn-group">
-            {{ form_widget(form.txtDireccion) }}
+            {{ form_widget(form.ciudadRel) }}
         </div>
     </div>
     <div style="float:right">
@@ -87,7 +84,9 @@
                         <tbody>
                         {% for arMovimientoDetalle in arMovimientoDetalles %}
                             <tr>
-                                {{ validarTipo(arMovimientoDetalle.codigoMovimientoDetallePk) }}
+                                {{ validarTipo(arMovimientoDetalle.codigoMovimientoDetallePk) }}<input type="hidden"
+                                                                                                       name="arrCodigo[]"
+                                                                                                       value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}">
                                 {{ validarTipo(arMovimientoDetalle.codigoItemFk) }}
                                 {{ validarTipo(arMovimientoDetalle.itemRel.nombre) }}
 
@@ -97,16 +96,16 @@
                                     {{ validarTipo(arMovimientoDetalle.cantidad) }}
                                 {% else %}
                                     <td style="text-align: center;">
-                                        <input type="text" style="text-align: right;"
+                                        <input type="text" style="text-align: right;width: 50%;"
                                                name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                value="{{ arMovimientoDetalle.codigoBodegaFk }}">
                                     </td>
                                     <td style="text-align: center;">
-                                        <input type="text" style="text-align: right;"
+                                        <input type="text" style="text-align: right;width: 50%;"
                                                name="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                value="{{ arMovimientoDetalle.loteFk }}">
                                     </td>
-                                    <td style="text-align: center;"><input type="number" style="text-align: right;"
+                                    <td style="text-align: center;"><input type="number" style="text-align: right; width: 50%;"
                                                                            name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.cantidad }}">
                                     </td>
@@ -114,7 +113,7 @@
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td style="text-align: right;">{{ arMovimientoDetalle.vrPrecio | number_format(0,'.',',') }}</td>
                                 {% else %}
-                                    <td style="text-align: center;"><input type="number" style="text-align: right;"
+                                    <td style="text-align: center;"><input type="number" style="text-align: right;width: 50%;"
                                                                            name="arrValor[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.vrPrecio }}">
                                     </td>
@@ -123,7 +122,7 @@
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td style="text-align: right;">{{ arMovimientoDetalle.porcentajeDescuento | number_format(0,'.',',') }}</td>
                                 {% else %}
-                                    <td style="text-align: center;"><input type="number" style="text-align: right;"
+                                    <td style="text-align: center;"><input type="number" style="text-align: right;width: 50%;"
                                                                            name="arrDescuento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.porcentajeDescuento }}">
                                     </td>
@@ -132,7 +131,7 @@
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td style="text-align: right;">{{ arMovimientoDetalle.porcentajeIva | number_format(0,'.',',') }}</td>
                                 {% else %}
-                                    <td style="text-align: center;"><input type="number" style="text-align: right;"
+                                    <td style="text-align: center;"><input type="number" style="text-align: right;width: 50%;"
                                                                            name="arrIva[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.porcentajeIva }}">
                                     </td>
@@ -168,7 +167,7 @@
                     {% else %}
                         <div class="btn-group">
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_detalle_nuevo', {'codigoDetalle': 0,'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 900)">Nuevo</a>
+                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 900)">Nuevo</a>
                         </div>
                         {% if arMovimiento.documentoRel.operacionInventario == 1 %}
                             <div class="btn-group">

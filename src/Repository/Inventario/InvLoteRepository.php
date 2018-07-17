@@ -23,7 +23,7 @@ class InvLoteRepository extends ServiceEntityRepository
      * @param $codigoBodega
      * @return string
      */
-    public function validarLote($arMovimientoDetalle, $codigoLote, $codigoBodega)
+    public function afectar($arMovimientoDetalle, $codigoLote, $codigoBodega)
     {
         $respuesta = '';
         $operacionInv = $arMovimientoDetalle->getMovimientoRel()->getDocumentoRel()->getOperacionInventario();

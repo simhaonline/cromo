@@ -2,14 +2,22 @@
 
 namespace App\Controller\Inventario\Movimiento\Inventario;
 
+use App\Entity\General\GenCiudad;
 use App\Entity\Inventario\InvConfiguracion;
+use App\Entity\Inventario\InvDocumento;
+use App\Entity\Inventario\InvItem;
+use App\Entity\Inventario\InvOrdenCompraDetalle;
+use App\Formato\Inventario\FormatoMovimiento;
 use App\Formato\Inventario\Movimiento;
+use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Form\Type\Inventario\MovimientoType;
 use App\Formato\Inventario\Factura1;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +38,7 @@ class MovimientoController extends Controller
     public function listaDocumentos(Request $request, $tipoDocumento)
     {
         $em = $this->getDoctrine()->getManager();
-        $arDocumentos = $em->getRepository('App:Inventario\InvDocumento')->findBy(['codigoDocumentoTipoFk' => $tipoDocumento]);
+        $arDocumentos = $em->getRepository(InvDocumento::class)->findBy(['codigoDocumentoTipoFk' => $tipoDocumento]);
         return $this->render('inventario/movimiento/inventario/listaDocumentos.html.twig', [
             'arDocumentos' => $arDocumentos,
             'tipoDocumento' => $tipoDocumento
@@ -47,7 +55,7 @@ class MovimientoController extends Controller
     public function listaMovimientos(Request $request, $codigoDocumento, $tipoDocumento)
     {
         $em = $this->getDoctrine()->getManager();
-        $arMovimientos = $em->getRepository('App:Inventario\InvMovimiento')->findBy(['codigoDocumentoFk' => $codigoDocumento]);
+        $arMovimientos = $em->getRepository(InvMovimiento::class)->findBy(['codigoDocumentoFk' => $codigoDocumento]);
         return $this->render('inventario/movimiento/inventario/listaMovimientos.html.twig', [
             'arMovimientos' => $arMovimientos,
             'codigoDocumento' => $codigoDocumento,
@@ -67,14 +75,14 @@ class MovimientoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arMovimiento = new InvMovimiento();
         if ($id != 0) {
-            $arMovimiento = $em->getRepository('App:Inventario\InvMovimiento')->find($id);
+            $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
             if (!$arMovimiento) {
                 return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_lista', ['codigoDocumento' => $codigoDocumento]));
             }
         }
         $arMovimiento->setFecha(new \DateTime('now'));
         $arMovimiento->setUsuario($this->getUser()->getUserName());
-        $arDocumento = $em->getRepository('App:Inventario\InvDocumento')->find($codigoDocumento);
+        $arDocumento = $em->getRepository(InvDocumento::class)->find($codigoDocumento);
         $arMovimiento->setDocumentoRel($arDocumento);
         $form = $this->createForm(MovimientoType::class, $arMovimiento);
         $form->handleRequest($request);
@@ -102,46 +110,68 @@ class MovimientoController extends Controller
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inv/mto/inventario/movimiento/detalle/{id}", name="inventario_movimiento_inventario_movimiento_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         /** @var  $arMovimiento InvMovimiento */
-        $arMovimiento = $em->getRepository('App:Inventario\InvMovimiento')->find($id);
-        $arMovimientoDetalles = $em->getRepository('App:Inventario\InvMovimientoDetalle')->findBy(['codigoMovimientoFk' => $id]);
-        $form = $this->formularioDetalles($arMovimiento);
+        $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
+        $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $id]);
+        $form = Estandares::botonera($arMovimiento->getEstadoAutorizado(), $arMovimiento->getEstadoAprobado(), $arMovimiento->getEstadoAnulado());
+
+        //Controles para el formulario
+        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrCiudadRel = [];
+
+        //Validacion de los estados
+        if ($arMovimiento->getEstadoAnulado()) {
+            $arrBtnEliminar['disabled'] = true;
+            $arrBtnActualizar['disabled'] = true;
+        } elseif ($arMovimiento->getEstadoAprobado()) {
+            $arrBtnEliminar['disabled'] = true;
+            $arrBtnActualizar['disabled'] = true;
+        } elseif ($arMovimiento->getEstadoAutorizado()) {
+            $arrBtnEliminar['disabled'] = true;
+            $arrBtnActualizar['disabled'] = true;
+        } else {
+            $arrBtnEliminar['disabled'] = false;
+            $arrBtnActualizar['disabled'] = false;
+            $arrBtnCiudad['attr'] = ['class' => 'form-control input-sm', 'readonly' => false, 'placeholder' => 'Ciudad a enviar', 'required' => false];
+            $arrBtnDireccion = ['attr' => ['class' => 'form-control input-sm', 'readonly' => false, 'placeholder' => 'Direccion a enviar', 'required' => false], 'data' => $arMovimiento->getDireccion()];
+        }
+        if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() != 'FAC') {
+
+        }
+        $form
+            ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
+            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
+            ->add('ciudadRel', EntityType::class, ['class' => GenCiudad::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'attr' => ['class' => 'to-select-2']
+            ]);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $arrIva = $request->request->get('arrIva');
-            $arrLote = $request->request->get('arrLote');
-            $arrValor = $request->request->get('arrValor');
-            $arrBodega = $request->request->get('arrBodega');
-            $arrCantidad = $request->request->get('arrCantidad');
-            $arrDescuento = $request->request->get('arrDescuento');
+            $arrControles = $request->request->all();
             $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-
             if ($form->get('btnAutorizar')->isClicked()) {
-                $arCiudad = $form->get('txtCiudadFactura')->getData();
-                $arMovimiento->setCiudadFactura($arCiudad);
-
-                $arDireccion = $form->get('txtDireccion')->getData();
-                $arMovimiento->setDireccion($arDireccion);
-
-                $em->persist($arMovimiento);
-                $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva, $arrBodega, $arrLote);
-                if ($respuesta == '') {
-                    $em->getRepository('App:Inventario\InvMovimiento')->autorizar($arMovimiento);
-                } else {
-                    Mensajes::error($respuesta);
-                }
+                $em->getRepository(InvMovimientoDetalle::class)->actualizarDetalles($arrControles, $form, $arMovimiento);
+                $em->getRepository(InvMovimiento::class)->autorizar($arMovimiento);
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvMovimiento')->desautorizar($arMovimiento);
+                $em->getRepository(InvMovimiento::class)->desautorizar($arMovimiento);
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'ENT') {
-                    $objFormato = new Movimiento();
+                    $objFormato = new FormatoMovimiento();
                     $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                 } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'SAL') {
                 } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC') {
@@ -153,7 +183,7 @@ class MovimientoController extends Controller
                 }
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->aprobar($arMovimiento);
+                $respuesta = $em->getRepository(InvMovimiento::class)->aprobar($arMovimiento);
                 if ($respuesta != '') {
                     foreach ($respuesta as $respuesta) {
                         Mensajes::error($respuesta);
@@ -161,24 +191,15 @@ class MovimientoController extends Controller
                 }
             }
             if ($form->get('btnActualizar')->isClicked()) {
-                $arCiudad = $form->get('txtCiudadFactura')->getData();
-                $arMovimiento->setCiudadFactura($arCiudad);
-
-                $arDireccion = $form->get('txtDireccion')->getData();
-                $arMovimiento->setDireccion($arDireccion);
-                $em->persist($arMovimiento);
-                $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva, $arrBodega, $arrLote);
-                if ($respuesta != '') {
-                    Mensajes::error($respuesta);
-                }
+                $em->getRepository(InvMovimientoDetalle::class)->actualizarDetalles($arrControles, $form, $arMovimiento);
             }
             if ($form->get('btnAnular')->isClicked()) {
-                $em->getRepository('App:Inventario\InvMovimiento')->anular($arMovimiento);
+                $em->getRepository(InvMovimiento::class)->anular($arMovimiento);
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $em->getRepository('App:Inventario\InvMovimientoDetalle')->eliminar($arMovimiento, $arrDetallesSeleccionados);
-                $respuesta = $em->getRepository('App:Inventario\InvMovimiento')->actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva, $arrBodega, $arrLote);
+                $em->getRepository(InvMovimientoDetalle::class)->eliminar($arMovimiento, $arrDetallesSeleccionados);
             }
+
             return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $id]));
         }
         return $this->render('inventario/movimiento/inventario/detalle.html.twig', [
@@ -196,28 +217,35 @@ class MovimientoController extends Controller
      */
     public function detalleNuevo(Request $request, $id)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $respuesta = '';
-        $arMovimiento = $em->getRepository('App:Inventario\InvMovimiento')->find($id);
-        $form = $this->formularioFiltroItems();
+        $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('filtroInvItemCodigo')])
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvItemNombre')])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->getForm();
         $form->handleRequest($request);
-        $this->listaItems($em, $form);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $this->listaItems($em, $form);
+                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
+                $session->set('filtroInvItemNombre', $form->get('txtNombreItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
                 if (count($arrItems) > 0) {
                     foreach ($arrItems as $codigoItem => $cantidad) {
-                        $arItem = $em->getRepository('App:Inventario\InvItem')->find($codigoItem);
+                        $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
                         if ($cantidad != '' && $cantidad != 0) {
                             if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'ENT' || $cantidad <= $arItem->getCantidadExistencia()) {
                                 $arMovimientoDetalle = new InvMovimientoDetalle();
                                 $arMovimientoDetalle->setMovimientoRel($arMovimiento);
                                 $arMovimientoDetalle->setItemRel($arItem);
                                 $arMovimientoDetalle->setCantidad($cantidad);
+                                $arMovimientoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
                                 $em->persist($arMovimientoDetalle);
                             } else {
                                 $respuesta = "La cantidad seleccionada para el item: " . $arItem->getNombre() . " no puede ser mayor a las existencias del mismo.";
@@ -234,7 +262,7 @@ class MovimientoController extends Controller
                 }
             }
         }
-        $arItems = $paginator->paginate($this->query, $request->query->getInt('page', 1), 30);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('inventario/movimiento/inventario/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems
@@ -248,12 +276,16 @@ class MovimientoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $form = $this->formularioFiltroDetalleOrdenCompra();
+        $form = $this->createFormBuilder()
+            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
+            ->add('txtCodigoOrdenCompra', TextType::class, ['label' => 'Codigo orden compra: ', 'required' => false])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
         $form->handleRequest($request);
-        $this->listaDetallesOrdenCompra($em, $form);
         $respuesta = '';
-        $arMovimiento = $em->getRepository('App:Inventario\InvMovimiento')->find($id);
-        $arOrdenCompra = $em->getRepository('App:Inventario\InvOrdenCompra')->findOneBy(['codigoOrdenCompraPk' => $id]);
+        $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrOrdenCompraDetalles = $request->request->get('itemCantidad');
@@ -261,15 +293,15 @@ class MovimientoController extends Controller
                     if (count($arrOrdenCompraDetalles) > 0) {
                         foreach ($arrOrdenCompraDetalles as $codigoOrdenCompraDetalle => $cantidad) {
                             if ($cantidad != '' && $cantidad != 0) {
-                                $arOrdenCompraDetalle = $em->getRepository('App:Inventario\InvOrdenCompraDetalle')->find($codigoOrdenCompraDetalle);
+                                $arOrdenCompraDetalle = $em->getRepository(InvOrdenCompraDetalle::class)->find($codigoOrdenCompraDetalle);
                                 if ($cantidad <= $arOrdenCompraDetalle->getCantidadPendiente()) {
-                                    $arItem = $em->getRepository('App:Inventario\InvItem')->find($arOrdenCompraDetalle->getCodigoItemFk());
+                                    $arItem = $em->getRepository(InvItem::class)->find($arOrdenCompraDetalle->getCodigoItemFk());
                                     $arMovimientoDetalle = new InvMovimientoDetalle();
                                     $arMovimientoDetalle->setMovimientoRel($arMovimiento);
                                     $arMovimientoDetalle->setItemRel($arItem);
                                     $arMovimientoDetalle->setCantidad($cantidad);
                                     $arMovimientoDetalle->setVrPrecio($arOrdenCompraDetalle->getVrPrecio());
-                                    $arMovimientoDetalle->setPorDescuento($arOrdenCompraDetalle->getPorDescuento());
+                                    $arMovimientoDetalle->setPorcentajeDescuento($arOrdenCompraDetalle->getPorDescuento());
                                     $arMovimientoDetalle->setVrDescuento($arOrdenCompraDetalle->getVrDescuento());
                                     $arMovimientoDetalle->setOrdenCompraDetalleRel($arOrdenCompraDetalle);
                                     $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() - $cantidad);
@@ -290,116 +322,10 @@ class MovimientoController extends Controller
                 }
             }
         }
-        $arOrdenCompraDetalles = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
+        $arOrdenCompraDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvOrdenCompraDetalle::class)->listarDetallesPendientes(), $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/inventario/detalleNuevoOrdenCompra.html.twig', [
             'form' => $form->createView(),
             'arOrdenCompraDetalles' => $arOrdenCompraDetalles
         ]);
-    }
-
-    private function formularioFiltroDetalleOrdenCompra()
-    {
-        return $this->createFormBuilder()
-            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
-            ->add('txtCodigoOrdenCompra', TextType::class, ['label' => 'Codigo orden compra: ', 'required' => false])
-            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->getForm();
-    }
-
-    private function listaDetallesOrdenCompra()
-    {
-        $this->query = $this->getDoctrine()->getManager()->getRepository('App:Inventario\InvOrdenCompraDetalle')->listarDetallesPendientes();
-    }
-
-    /**
-     * @param $arMovimiento InvMovimiento
-     * @return \Symfony\Component\Form\FormInterface
-     */
-    private function formularioDetalles($arMovimiento)
-    {
-        $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnAprobar = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-        $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnCiudad = ['attr' => ['class' => 'form-control input-sm', 'readonly' => false, 'placeholder' => 'Ciudad a enviar', 'required' => false], 'data' => $arMovimiento->getCiudadFactura()];
-        $arrBtnDireccion = ['attr' => ['class' => 'form-control input-sm', 'readonly' => false, 'placeholder' => 'Direccion a enviar', 'required' => false], 'data' => $arMovimiento->getDireccion()];
-        if ($arMovimiento->getEstadoAnulado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnAprobar['disabled'] = true;
-            $arrBtnActualizar['disabled'] = true;
-        } elseif ($arMovimiento->getEstadoAprobado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = false;
-            $arrBtnAnular['disabled'] = false;
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnAprobar['disabled'] = true;
-            $arrBtnActualizar['disabled'] = true;
-            $arrBtnCiudad['attr'] = ['class' => 'form-control input-sm', 'readonly' => true, 'placeholder' => 'Ciudad a enviar', 'required' => false];
-            $arrBtnDireccion = ['attr' => ['class' => 'form-control input-sm', 'readonly' => true, 'placeholder' => 'Direccion a enviar', 'required' => false], 'data' => $arMovimiento->getDireccion()];
-        } elseif ($arMovimiento->getEstadoAutorizado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = false;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnAprobar['disabled'] = false;
-            $arrBtnActualizar['disabled'] = true;
-        } else {
-            $arrBtnAutorizar['disabled'] = false;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnEliminar['disabled'] = false;
-            $arrBtnAprobar['disabled'] = true;
-            $arrBtnActualizar['disabled'] = false;
-        }
-        if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() != 'FAC') {
-            $arrBtnCiudad['attr'] = ['class' => 'form-control input-sm', 'readonly' => true, 'placeholder' => 'Ciudad a enviar', 'required' => false];
-        }
-        return $this
-            ->createFormBuilder()
-            ->add('btnAutorizar', SubmitType::class, $arrBtnAutorizar)
-            ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
-            ->add('btnAprobar', SubmitType::class, $arrBtnAprobar)
-            ->add('txtCiudadFactura', TextType::class, $arrBtnCiudad)
-            ->add('txtDireccion', TextType::class, $arrBtnDireccion)
-            ->add('btnDesautorizar', SubmitType::class, $arrBtnDesautorizar)
-            ->add('btnImprimir', SubmitType::class, $arrBtnImprimir)
-            ->add('btnAnular', SubmitType::class, $arrBtnAnular)
-            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
-            ->getForm();
-    }
-
-    private function formularioFiltroItems()
-    {
-        $session = new Session();
-        return $this->createFormBuilder()
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('filtroInvItemCodigo')])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvItemNombre')])
-            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->getForm();
-    }
-
-    /**
-     * @param $em ObjectManager
-     * @param $form \Symfony\Component\Form\FormInterface
-     */
-    private function listaItems($em, $form)
-    {
-        $session = new Session();
-        $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
-        $session->set('filtroInvItemNombre', $form->get('txtNombreItem')->getData());
-        $this->query = $em->getRepository('App:Inventario\InvItem')->lista();
     }
 }

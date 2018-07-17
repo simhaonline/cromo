@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="{{ asset('dist/css/sb-admin-2.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/morrisjs/morris.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="{{ asset('css/general.css') }}">
         <style type="text/css">
             td.titulo {
@@ -133,8 +134,16 @@
                                 <ul class="nav nav-third-level">
                                     <li>
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad':'tercero'}) }}">
-                                            Tercero</a>
-                                    <li><a href="{{ path('inventario_administracion_general_precio_lista') }}">Precio</a></li>
+                                            Tercero
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('inventario_administracion_general_precio_lista') }}">Precio
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('admin_lista',{'modulo':'inventario','entidad':'sucursal'}) }}">Sucursal
+                                        </a>
                                     </li>
                                 </ul>
                             <li>
@@ -255,6 +264,7 @@
     <script src="{{ asset('vendor/morrisjs/morris.min.js') }}"></script>
     <script src="{{ asset('data/morris-data.js') }}"></script>
     <script src="{{ asset('dist/js/sb-admin-2.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="{{ asset('js/general.js') }}"></script>
 {% endblock %}
 </body>

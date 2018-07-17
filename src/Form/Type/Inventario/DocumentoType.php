@@ -31,7 +31,7 @@ class DocumentoType extends AbstractType
                 'label' => 'Documento tipo:'
             ])
             ->add('abreviatura',TextType::class,['label' => 'Abreviatura: '])
-            ->add('operacionInventario',ChoiceType::class,['choices' => ['SUMA' => '1','RESTA' => '2']])
+            ->add('operacionInventario',ChoiceType::class,['choices' => ['SUMA' => '1','RESTA' => '-1']])
             ->add('operacionComercial')
             ->add('generaCartera')
             ->add('tipoAsientoCartera')

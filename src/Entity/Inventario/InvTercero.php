@@ -13,7 +13,7 @@ class InvTercero
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="codigo_tercero_pk",type="integer")
      */
     private $codigoTerceroPk;
 
@@ -110,6 +110,11 @@ class InvTercero
      * @ORM\OneToMany(targetEntity="InvPedido",mappedBy="terceroRel")
      */
     protected $pedidosTerceroRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="InvSucursal",mappedBy="terceroRel")
+     */
+    protected $sucursalesTerceroRel;
 
     /**
      * @return mixed
@@ -431,6 +436,20 @@ class InvTercero
         $this->pedidosTerceroRel = $pedidosTerceroRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSucursalesTerceroRel()
+    {
+        return $this->sucursalesTerceroRel;
+    }
 
+    /**
+     * @param mixed $sucursalesTerceroRel
+     */
+    public function setSucursalesTerceroRel($sucursalesTerceroRel): void
+    {
+        $this->sucursalesTerceroRel = $sucursalesTerceroRel;
+    }
 }
 

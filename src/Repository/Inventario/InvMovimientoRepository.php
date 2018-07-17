@@ -2,6 +2,10 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Inventario\InvBodega;
+use App\Entity\Inventario\InvDocumento;
+use App\Entity\Inventario\InvItem;
+use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimiento;
@@ -19,43 +23,41 @@ class InvMovimientoRepository extends ServiceEntityRepository
 
     /**
      * @param $arMovimiento InvMovimiento
-     * @param $arrValor array
-     * @param $arrCantidad array
-     * @param $arrDescuento array
-     * @param $arrIva array
-     * @param $arrBodega array
-     * @param $arrLote array
-     * @return string
+     * @throws \Doctrine\ORM\ORMException
      */
-    public function actualizar($arMovimiento, $arrValor, $arrCantidad, $arrDescuento, $arrIva, $arrBodega, $arrLote)
+    public function autorizar($arMovimiento)
+    {
+        $respuesta = $this->validarDetalles($arMovimiento->getCodigoMovimientoPk());
+        if (count($respuesta)) {
+            foreach ($respuesta as $error) {
+                Mensajes::error($error);
+            }
+        } else {
+            $this->afectar($arMovimiento, 1);
+            $arMovimiento->setEstadoAutorizado(1);
+            $this->getEntityManager()->persist($arMovimiento);
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @param $arMovimiento InvMovimiento
+     */
+    public function liquidar($arMovimiento)
     {
         $respuesta = '';
         $vrTotalGlobal = 0;
         $vrDescuentoGlobal = 0;
         $vrIvaGlobal = 0;
         $vrSubtotalGlobal = 0;
-        $arMovimientoDetalles = $this->_em->getRepository('App:Inventario\InvMovimientoDetalle')->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
+        $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
         if (count($arMovimientoDetalles) > 0) {
             foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-                if ($arrBodega[$arMovimientoDetalle->getCodigoMovimientoDetallePk()] != '') {
-                    $arBodega = $this->_em->getRepository('App:Inventario\InvBodega')->find($arrBodega[$arMovimientoDetalle->getCodigoMovimientoDetallePk()]);
-                    if (!$arBodega) {
-                        $respuesta = 'No se ha encontrado una bodega para el codigo ingresado en el detalle ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk();
-                        break;
-                    }
-                } else {
-                    $respuesta = 'Debe ingresar un codigo de bodega para el detalle ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk();
-                    break;
-                }
-                $id = $arMovimientoDetalle->getCodigoMovimientoDetallePk();
-                $vrUnitario = $arrValor[$id] != '' ? $arrValor[$id] : 0;
-                $cantidad = $arrCantidad[$id] != '' ? $arrCantidad[$id] : 0;
-                $porIva = $arrIva[$id] != '' ? $arrIva[$id] : 0;
-                $porDescuento = $arrDescuento[$id] != '' ? $arrDescuento[$id] : 0;
-
-                $vrSubtotal = $vrUnitario * $cantidad;
-                $vrDescuento = $vrSubtotal * ($porDescuento / 100);
-                $vrIva = $vrSubtotal * ($porIva / 100);
+                $vrSubtotal = $arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getCantidad();
+                $vrDescuento = $vrSubtotal * ($arMovimientoDetalle->getPorcentajeDescuento() / 100);
+                $vrIva = $vrSubtotal * ($arMovimientoDetalle->getPorcentajeIva() / 100);
                 $vrTotal = $vrSubtotal + $vrIva - $vrDescuento;
 
                 $vrTotalGlobal += $vrTotal;
@@ -63,153 +65,155 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $vrIvaGlobal += $vrIva;
                 $vrSubtotalGlobal += $vrSubtotal;
 
-                $arMovimientoDetalle->setLoteFk($arrLote[$arMovimientoDetalle->getCodigoMovimientoDetallePk()]);
-                $arMovimientoDetalle->setPorcentajeDescuento($porDescuento);
-                $arMovimientoDetalle->setPorcentajeIva($porIva);
-                $arMovimientoDetalle->setCodigoBodegaFk($arBodega->getCodigoBodegaPk());
-                $arMovimientoDetalle->setCantidad($cantidad);
-                $arMovimientoDetalle->setVrPrecio($vrUnitario);
                 $arMovimientoDetalle->setVrSubtotal($vrSubtotal);
                 $arMovimientoDetalle->setVrDescuento($vrDescuento);
                 $arMovimientoDetalle->setVrIva($vrIva);
                 $arMovimientoDetalle->setVrTotal($vrTotal);
-                $this->_em->persist($arMovimientoDetalle);
+                $this->getEntityManager()->persist($arMovimientoDetalle);
             }
             $arMovimiento->setVrIva($vrIvaGlobal);
             $arMovimiento->setVrSubtotal($vrSubtotalGlobal);
             $arMovimiento->setVrTotal($vrTotalGlobal);
             $arMovimiento->setVrDescuento($vrDescuentoGlobal);
-            $this->_em->persist($arMovimiento);
+            $this->getEntityManager()->persist($arMovimiento);
         } else {
             $arMovimiento->setVrIva(0);
             $arMovimiento->setVrSubtotal(0);
             $arMovimiento->setVrTotal(0);
             $arMovimiento->setVrDescuento(0);
-            $this->_em->persist($arMovimiento);
+            $this->getEntityManager()->persist($arMovimiento);
         }
         if ($respuesta == '') {
-            $this->_em->flush();
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error($respuesta);
+        }
+    }
+
+    /**
+     * @param $arMovimiento InvMovimiento
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function desautorizar($arMovimiento)
+    {
+        if ($arMovimiento->getEstadoAutorizado() == 1 && $arMovimiento->getEstadoAprobado() == 0) {
+            $this->afectar($arMovimiento, -1);
+            $arMovimiento->setEstadoAutorizado(0);
+            $this->getEntityManager()->persist($arMovimiento);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('El registro esta aprobado y no se puede desautorizar');
+        }
+    }
+
+    /**
+     * @param $arMovimiento InvMovimiento
+     * @param $tipo
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function afectar($arMovimiento, $tipo)
+    {
+        $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
+        foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+            $arItem = $this->getEntityManager()->getRepository(InvItem::class)->find($arMovimientoDetalle->getCodigoItemFk());
+            $arLote = $this->getEntityManager()->getRepository(InvLote::class)
+                ->findOneBy(['loteFk' => $arMovimientoDetalle->getLoteFk(), 'codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $arMovimientoDetalle->getCodigoBodegaFk()]);
+            if (!$arLote) {
+                $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle->getCodigoBodegaFk());
+                $arLote = new InvLote();
+                $arLote->setCodigoItemFk($arMovimientoDetalle->getCodigoItemFk());
+                $arLote->setItemRel($arItem);
+                $arLote->setCodigoBodegaFk($arMovimientoDetalle->getCodigoBodegaFk());
+                $arLote->setBodegaRel($arBodega);
+                $arLote->setLoteFk($arMovimientoDetalle->getLoteFk());
+                $arLote->setFechaVencimiento($arMovimientoDetalle->getFecha());
+                $this->getEntityManager()->persist($arLote);
+            }
+            if ($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk()) {
+                $arOrdenCompraDetalle = $this->getEntityManager()->getRepository(InvOrdenCompraDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk());
+                if ($arOrdenCompraDetalle) {
+                    $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() + $arMovimientoDetalle->getCantidad() * $tipo);
+                    $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() + $arMovimientoDetalle->getCantidad() * $tipo);
+                    $this->getEntityManager()->persist($arOrdenCompraDetalle);
+                }
+            }
+            $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + ($arMovimientoDetalle->getCantidad() * $arMovimiento->getDocumentoRel()->getOperacionInventario()) * $tipo);
+            $arLote->setCantidadDisponible($arLote->getCantidadDisponible() + ($arMovimientoDetalle->getCantidad() * $arMovimiento->getDocumentoRel()->getOperacionInventario()) * $tipo);
+            $arItem->setCantidadExistencia($arItem->getCantidadExistencia() + ($arMovimientoDetalle->getCantidad() * $arMovimiento->getDocumentoRel()->getOperacionInventario()) * $tipo);
+            $this->getEntityManager()->persist($arItem, $arLote);
+        }
+    }
+
+    /**
+     * @param $arMovimiento InvMovimiento
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function anular($arMovimiento)
+    {
+        if ($arMovimiento->getEstadoAprobado()) {
+            $this->afectar($arMovimiento, -1);
+            $arMovimiento->setEstadoAnulado(1);
+            $this->getEntityManager()->persist($arMovimiento);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('El registro esta aprobado y no se puede desautorizar');
+        }
+    }
+
+    /**
+     * @param $codigoMovimiento
+     * @return array
+     */
+    public function validarDetalles($codigoMovimiento)
+    {
+        $respuesta = [];
+        $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $codigoMovimiento]);
+        /** @var  $arMovimientoDetalle InvMovimientoDetalle */
+        foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+            if ($arMovimientoDetalle->getItemRel()->getAfectaInventario()) {
+                if (!$arMovimientoDetalle->getCodigoBodegaFk() || $arMovimientoDetalle->getCodigoBodegaFk() == '') {
+                    $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoBodegaFk() . ' no tiene asociada una bodega.';
+                } else {
+                    $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle->getCodigoBodegaFk());
+                    if (!$arBodega) {
+                        $respuesta[] = 'La bodega ingresada en el detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ', no existe.';
+                    }
+                }
+                if ($this->getEntityManager()->getRepository(InvMovimiento::class)->find($codigoMovimiento)->getDocumentoRel()->getOperacionInventario() == -1) {
+                    if (!$arMovimientoDetalle->getLoteFk() || $arMovimientoDetalle->getLoteFk() == '') {
+                        $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoBodegaFk() . ' no tiene asociada una bodega.';
+                    }
+                }
+            }
+            if ($arMovimientoDetalle->getCantidad() == 0) {
+                $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' tiene cantidad 0.';
+            }
         }
         return $respuesta;
     }
 
     /**
      * @param $arMovimiento InvMovimiento
-     */
-    public function desautorizar($arMovimiento)
-    {
-        if ($arMovimiento->getEstadoAutorizado() == 1 && $arMovimiento->getEstadoAprobado() == 0) {
-            $arMovimiento->setEstadoAutorizado(0);
-            $this->_em->persist($arMovimiento);
-            $this->_em->flush();
-        } else {
-            Mensajes::error('El registro esta impreso y no se puede desautorizar');
-        }
-    }
-
-    /**
-     * @param $arMovimiento InvMovimiento
-     */
-    public function autorizar($arMovimiento)
-    {
-        if (count($this->_em->getRepository('App:Inventario\InvMovimientoDetalle')->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()])) > 0) {
-            $arMovimiento->setEstadoAutorizado(1);
-            $this->_em->persist($arMovimiento);
-            $this->_em->flush();
-        } else {
-            Mensajes::error('No se puede autorizar, el registro no tiene detalles');
-        }
-    }
-
-    /**
-     * @param $arMovimiento InvMovimiento
-     * @return array
+     * @throws \Doctrine\ORM\ORMException
      */
     public function aprobar($arMovimiento)
     {
-        $respuesta = [];
-        $arDocumento = $this->_em->getRepository('App:Inventario\InvDocumento')->find($arMovimiento->getCodigoDocumentoFk());
+        $arDocumento = $this->getEntityManager()->getRepository(InvDocumento::class)->find($arMovimiento->getCodigoDocumentoFk());
         if (!$arMovimiento->getEstadoAprobado()) {
             $stringFecha = $arMovimiento->getFecha()->format('Y-m-d');
             $plazo = $arMovimiento->getTerceroRel()->getPlazoPago();
 
             $fechaVencimiento = date_create($stringFecha);
-            $fechaVencimiento->modify("+ ".(string)$plazo." day");
+            $fechaVencimiento->modify("+ " . (string)$plazo . " day");
             $arMovimiento->setFechaVence($fechaVencimiento);
 
             $arDocumento->setConsecutivo($arDocumento->getConsecutivo() + 1);
             $arMovimiento->setEstadoAprobado(1);
             $arMovimiento->setNumero($arDocumento->getConsecutivo());
-            $this->_em->persist($arMovimiento);
-            $this->_em->persist($arDocumento);
+            $this->getEntityManager()->persist($arMovimiento);
+            $this->getEntityManager()->persist($arDocumento);
         }
-        $arMovimientoDetalles = $this->_em->getRepository('App:Inventario\InvMovimientoDetalle')->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
-        foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-            $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arMovimientoDetalle->getCodigoItemFk()]);
-
-            $error = $this->_em->getRepository('App:Inventario\InvLote')->validarLote($arMovimientoDetalle, $arMovimientoDetalle->getLoteFk(), $arMovimientoDetalle->getCodigoBodegaFk());
-            if ($error != '') {
-                $respuesta[] = $error;
-            }
-            if (count($respuesta) > 0) {
-                break;
-            }
-            if ($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk()) {
-                $arOrdenCompraDetalle = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->find($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk());
-                if ($arOrdenCompraDetalle) {
-                    $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() - $arMovimientoDetalle->getCantidad());
-                    $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() - $arMovimientoDetalle->getCantidad());
-                    $this->_em->persist($arOrdenCompraDetalle);
-                }
-            }
-            if ($arDocumento->getOperacionInventario() == 1) {
-                $arItem->setCantidadExistencia($arItem->getCantidadExistencia() + $arMovimientoDetalle->getCantidad());
-            } else {
-                $arItem->setCantidadExistencia($arItem->getCantidadExistencia() - $arMovimientoDetalle->getCantidad());
-            }
-            $this->_em->persist($arItem);
-        }
-        if (count($respuesta) == 0) {
-            $this->_em->flush();
-        }
-        return $respuesta;
-    }
-
-    /**
-     * @param $arMovimiento InvMovimiento
-     */
-    public function anular($arMovimiento)
-    {
-        if ($arMovimiento->getEstadoAprobado() == 1) {
-            $arMovimiento->setEstadoAnulado(1);
-            $this->_em->persist($arMovimiento);
-        }
-        $arMovimientoDetalles = $this->_em->getRepository('App:Inventario\InvMovimientoDetalle')->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
-        $arDocumento = $this->_em->getRepository('App:Inventario\InvDocumento')->find($arMovimiento->getCodigoDocumentoFk());
-        foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-            $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arMovimientoDetalle->getCodigoItemFk()]);
-            $arLote = $this->_em->getRepository('App:Inventario\InvLote')->findOneBy(['loteFk' => $arMovimientoDetalle->getLoteFk(), 'codigoBodegaFk' => $arMovimientoDetalle->getCodigoBodegaFk(), 'codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk()]);
-            if ($arDocumento->getOperacionInventario() == 1) {
-                $arLote->setCantidadDisponible($arLote->getCantidadDisponible() - $arMovimientoDetalle->getCantidad());
-                $arLote->setCantidadExistencia($arLote->getCantidadExistencia() - $arMovimientoDetalle->getCantidad());
-            } else {
-                $arLote->setCantidadDisponible($arLote->getCantidadDisponible() + $arMovimientoDetalle->getCantidad());
-                $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + $arMovimientoDetalle->getCantidad());
-            }
-            $this->_em->persist($arLote);
-            if ($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk()) {
-                $arOrdenCompraDetalle = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->find($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk());
-                $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() + $arMovimientoDetalle->getCantidad());
-                $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() + $arMovimientoDetalle->getCantidad());
-                $this->_em->persist($arOrdenCompraDetalle);
-            }
-            if ($arDocumento->getOperacionInventario() == 1) {
-                $arItem->setCantidadExistencia($arItem->getCantidadExistencia() - $arMovimientoDetalle->getCantidad());
-            } else {
-                $arItem->setCantidadExistencia($arItem->getCantidadExistencia() + $arMovimientoDetalle->getCantidad());
-            }
-            $this->_em->persist($arItem);
-        }
-        $this->_em->flush();
+        $this->getEntityManager()->flush();
     }
 }

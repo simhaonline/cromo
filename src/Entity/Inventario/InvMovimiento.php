@@ -33,6 +33,11 @@ class InvMovimiento
     private $codigoDocumentoTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_sucursal_fk", type="string",length=10, nullable=true)
+     */
+    private $codigoSucursalFk;
+
+    /**
      * @ORM\Column(name="numero", type="integer", nullable=true)
      */
     private $numero = 0;
@@ -179,6 +184,12 @@ class InvMovimiento
     protected $movimientosDetallesMovimientoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="InvSucursal", inversedBy="movimientosSucursalRel")
+     * @ORM\JoinColumn(name="codigo_sucursal_fk", referencedColumnName="codigo_sucursal_pk")
+     */
+    protected $sucursalRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoMovimientoPk()
@@ -245,6 +256,22 @@ class InvMovimiento
     /**
      * @return mixed
      */
+    public function getCodigoSucursalFk()
+    {
+        return $this->codigoSucursalFk;
+    }
+
+    /**
+     * @param mixed $codigoSucursalFk
+     */
+    public function setCodigoSucursalFk($codigoSucursalFk): void
+    {
+        $this->codigoSucursalFk = $codigoSucursalFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getNumero()
     {
         return $this->numero;
@@ -256,6 +283,22 @@ class InvMovimiento
     public function setNumero($numero): void
     {
         $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDireccion()
+    {
+        return $this->direccion;
+    }
+
+    /**
+     * @param mixed $direccion
+     */
+    public function setDireccion($direccion): void
+    {
+        $this->direccion = $direccion;
     }
 
     /**
@@ -336,6 +379,22 @@ class InvMovimiento
     public function setSoporte($soporte): void
     {
         $this->soporte = $soporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadFactura()
+    {
+        return $this->ciudadFactura;
+    }
+
+    /**
+     * @param mixed $ciudadFactura
+     */
+    public function setCiudadFactura($ciudadFactura): void
+    {
+        $this->ciudadFactura = $ciudadFactura;
     }
 
     /**
@@ -661,32 +720,17 @@ class InvMovimiento
     /**
      * @return mixed
      */
-    public function getCiudadFactura()
+    public function getSucursalRel()
     {
-        return $this->ciudadFactura;
+        return $this->sucursalRel;
     }
 
     /**
-     * @param mixed $ciudadFactura
+     * @param mixed $sucursalRel
      */
-    public function setCiudadFactura($ciudadFactura): void
+    public function setSucursalRel($sucursalRel): void
     {
-        $this->ciudadFactura = $ciudadFactura;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDireccion()
-    {
-        return $this->direccion;
-    }
-
-    /**
-     * @param mixed $direccion
-     */
-    public function setDireccion($direccion): void
-    {
-        $this->direccion = $direccion;
+        $this->sucursalRel = $sucursalRel;
     }
 }
+

@@ -5,6 +5,7 @@ namespace App\Repository\General;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\General\GenEntidad;
 use App\Entity\Seguridad\Usuario;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -27,7 +28,7 @@ class GenEntidadRepository extends ServiceEntityRepository
      */
     public function generarDql($arEntidad, $opcion)
     {
-        $qb = $this->_em->createQueryBuilder()->from('App:'.ucfirst($arEntidad->getModulo())."\\".ucfirst($arEntidad->getPrefijo()).ucfirst($arEntidad->getEntidad()), 'tbl');
+        $qb = $this->_em->createQueryBuilder()->from('App:' . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad()), 'tbl');
         switch ($opcion) {
             case 0:
                 $arrLista = json_decode($arEntidad->getJsonLista());
@@ -59,7 +60,7 @@ class GenEntidadRepository extends ServiceEntityRepository
     public function generarDqlFixtures($arEntidad)
     {
         $arrLista = json_decode($arEntidad->getJsonLista());
-        $qb = $this->_em->createQueryBuilder()->from('App:'.ucfirst($arEntidad->getModulo())."\\".ucfirst($arEntidad->getPrefijo()).ucfirst($arEntidad->getEntidad()), 'tbl');
+        $qb = $this->_em->createQueryBuilder()->from('App:' . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad()), 'tbl');
         $qb->select('tbl.' . $arrLista[0]->campo . ' AS ID');
         $i = 0;
         foreach ($arrLista as $lista) {
@@ -142,12 +143,12 @@ class GenEntidadRepository extends ServiceEntityRepository
      */
     public function listaDetalles($arEntidad, $id)
     {
-        $qb = $this->_em->createQueryBuilder()->from('App:'.ucfirst($arEntidad->getModulo())."\\".ucfirst($arEntidad->getPrefijo()).ucfirst($arEntidad->getEntidad()), 'tbl');
+        $qb = $this->_em->createQueryBuilder()->from('App:' . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad()), 'tbl');
         $arrLista = json_decode($arEntidad->getJsonLista());
         foreach ($arrLista as $lista) {
             $qb->addSelect("tbl.{$lista->campo} AS {$lista->alias}");
         }
-        if($arrLista[0]->tipo == 'integer'){
+        if ($arrLista[0]->tipo == 'integer') {
             $qb->where("tbl.{$arrLista[0]->campo} = {$id}");
         } else {
             $qb->where("tbl.{$arrLista[0]->campo} = '{$id}'");
@@ -159,8 +160,10 @@ class GenEntidadRepository extends ServiceEntityRepository
 
     /**
      * @author Andres Acevedo
-     * @param $arEntidad GenEntidad
+     * @param $arEntidad
      * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function eliminar($arEntidad, $arrSeleccionados)
     {
@@ -194,15 +197,17 @@ class GenEntidadRepository extends ServiceEntityRepository
                 }
             }
         }
-        if(count($arrRespuestas) > 0){
-            foreach ($arrRespuestas as $arrRespuesta){
-                MensajesController::error($arrRespuesta);
+        if (count($arrRespuestas) > 0) {
+            foreach ($arrRespuestas as $error) {
+                Mensajes::error($error);
             }
+        } else {
+            $this->getEntityManager()->flush();
         }
     }
 
 
-    public function generarNavigator($modulo,$funcion, $grupo, $entidad )
+    public function generarNavigator($modulo, $funcion, $grupo, $entidad)
     {
         $qb = $this->_em->createQueryBuilder()->from('App:General\GenEntidad', 'ge')
             ->select('ge.modulo')
@@ -222,7 +227,7 @@ class GenEntidadRepository extends ServiceEntityRepository
         if ($funcion != '') {
             $qb->andWhere("ge.funcion = '{$funcion}'");
         }
-        $qb->orderBy("ge.modulo",'ASC');
+        $qb->orderBy("ge.modulo", 'ASC');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }

@@ -56,15 +56,15 @@ class ClienteController extends Controller
     }
 
     /**
-     * @Route("/transporte/administracion/vehiculo/detalle/{id}", name="transporte_administracion_transporte_vehiculo_detalle")
+     * @Route("/transporte/administracion/comercial/cliente/detalle/{id}", name="transporte_administracion_comercial_cliente_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arVehiculo = $em->getRepository(TteVehiculo::class)->find($id);
+        $arCliente = $em->getRepository(TteCliente::class)->find($id);
 
-        return $this->render('transporte/administracion/vehiculo/detalle.html.twig', array(
-            'arVehiculo' => $arVehiculo,
+        return $this->render('transporte/administracion/comercial/cliente/detalle.html.twig', array(
+            'arCliente' => $arCliente,
         ));
     }
 

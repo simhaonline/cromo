@@ -170,13 +170,13 @@ class InvSolicitudRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arSolicitud
+     * @param $arSolicitud InvSolicitud
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function autorizar($arSolicitud)
     {
-        if (count($this->getEntityManager()->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()])) > 0) {
+        if ($this->contarDetalles($arSolicitud->getCodigoSolicitudPk()) > 0) {
             $arSolicitud->setEstadoAutorizado(1);
             $this->getEntityManager()->persist($arSolicitud);
             $this->getEntityManager()->flush();
@@ -202,6 +202,21 @@ class InvSolicitudRepository extends ServiceEntityRepository
             }
         }
         return $respuesta;
+    }
+
+    /**
+     * @param $codigoSolicitud
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function contarDetalles($codigoSolicitud)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvSolicitudDetalle::class, 'isd')
+            ->select("COUNT(isd.codigoSolicitudDetallePk)")
+            ->where("isd.codigoSolicitudFk= {$codigoSolicitud} ");
+        $resultado =  $queryBuilder->getQuery()->getSingleResult();
+        return $resultado[1];
     }
 
 }

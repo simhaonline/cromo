@@ -2,6 +2,7 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Inventario\InvSucursal;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
@@ -75,6 +76,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
     public function actualizarDetalles($arrControles, $form, $arMovimiento)
     {
         if ($this->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
+            $arMovimiento->setSucursalRel($this->getEntityManager()->getRepository(InvSucursal::class)->find($form->get('sucursalRel')->getData()));
             $arrBodega = $arrControles['arrBodega'];
             $arrLote = $arrControles['arrLote'];
             $arrCantidad = $arrControles['arrCantidad'];

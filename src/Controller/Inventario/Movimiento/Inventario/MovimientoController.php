@@ -7,15 +7,14 @@ use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
+use App\Entity\Inventario\InvSucursal;
 use App\Formato\Inventario\FormatoMovimiento;
-use App\Formato\Inventario\Movimiento;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Form\Type\Inventario\MovimientoType;
 use App\Formato\Inventario\Factura1;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -125,23 +124,23 @@ class MovimientoController extends Controller
         //Controles para el formulario
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrCiudadRel = [];
+        $arrSucursalRel = ['class' => InvSucursal::class,
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('c')
+                    ->orderBy('c.codigoSucursalPk', 'ASC');
+            },
+            'choice_label' => 'codigoSucursalPk',
+            'disabled' => false,
+            'placeholder' => 'POR DEFECTO',
+            'data' => '',
+            'empty_data' => '',
+            'attr' => ['class' => 'to-select-2 form-control']
+        ];
 
-        //Validacion de los estados
-        if ($arMovimiento->getEstadoAnulado()) {
+        if ($arMovimiento->getEstadoAutorizado()) {
             $arrBtnEliminar['disabled'] = true;
             $arrBtnActualizar['disabled'] = true;
-        } elseif ($arMovimiento->getEstadoAprobado()) {
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnActualizar['disabled'] = true;
-        } elseif ($arMovimiento->getEstadoAutorizado()) {
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnActualizar['disabled'] = true;
-        } else {
-            $arrBtnEliminar['disabled'] = false;
-            $arrBtnActualizar['disabled'] = false;
-            $arrBtnCiudad['attr'] = ['class' => 'form-control input-sm', 'readonly' => false, 'placeholder' => 'Ciudad a enviar', 'required' => false];
-            $arrBtnDireccion = ['attr' => ['class' => 'form-control input-sm', 'readonly' => false, 'placeholder' => 'Direccion a enviar', 'required' => false], 'data' => $arMovimiento->getDireccion()];
+            $arrSucursalRel['disabled'] = true;
         }
         if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() != 'FAC') {
 
@@ -149,14 +148,7 @@ class MovimientoController extends Controller
         $form
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
-            ->add('ciudadRel', EntityType::class, ['class' => GenCiudad::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')
-                        ->orderBy('c.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'attr' => ['class' => 'to-select-2']
-            ]);
+            ->add('sucursalRel', EntityType::class, $arrSucursalRel);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

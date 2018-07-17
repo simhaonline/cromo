@@ -142,10 +142,12 @@ class DespachoController extends Controller
         $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
         $arrBotonCerrar = array('label' => 'Cerrar', 'disabled' => true);
         $arrBotonRetirarGuia = array('label' => 'Retirar', 'disabled' => false);
-        $arrBotonRndc = array('label' => 'RNDC', 'disabled' => false);
+        $arrBotonRndc = array('label' => 'RNDC', 'disabled' => true);
         $arrBotonImprimirManifiesto = array('label' => 'Manifiesto', 'disabled' => false);
-        if ($arDespacho->getEstadoAprobado()) {
+        if ($arDespacho->getEstadoAutorizado()) {
             $arrBotonRetirarGuia['disabled'] = true;
+        }
+        if ($arDespacho->getEstadoAprobado()) {
             if (!$arDespacho->getEstadoAnulado()) {
                 $arrBotonCerrar['disabled'] = false;
                 if ($arDespacho->getEstadoCerrado()) {
@@ -164,21 +166,29 @@ class DespachoController extends Controller
             ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(TteDespacho::class)->autorizar($arDespacho);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository(TteDespacho::class)->desautorizar($arDespacho);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
+            }
             if ($form->get('btnAprobar')->isClicked()) {
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->generar($id);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $id)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnCerrar')->isClicked()) {
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->cerrar($id);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $id)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnRndc')->isClicked()) {
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($id);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $id)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->anular($id);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $id)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrDespachoDetalles = $request->request->get('ChkSeleccionar');
@@ -186,7 +196,7 @@ class DespachoController extends Controller
                 if ($respuesta) {
                     $em->flush();
                 }
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('codigoDespacho' => $id)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new Despacho();

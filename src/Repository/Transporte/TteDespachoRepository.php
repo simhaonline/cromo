@@ -2,6 +2,7 @@
 
 namespace App\Repository\Transporte;
 
+use App\Utilidades\Mensajes;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteConsecutivo;
@@ -76,6 +77,8 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect('td.vrManejo')
             ->addSelect('td.vrDeclara')
             ->addSelect('c.nombreCorto AS conductorNombre')
+            ->addSelect('td.estadoAprobado')
+            ->addSelect('td.estadoAutorizado')
             ->addSelect('td.estadoAnulado')
             ->leftJoin('td.ciudadOrigenRel', 'co')
             ->leftJoin('td.ciudadDestinoRel ', 'cd')
@@ -99,6 +102,38 @@ class TteDespachoRepository extends ServiceEntityRepository
         $queryBuilder->orderBy('td.fechaSalida', 'DESC');
         return $queryBuilder;
 
+    }
+
+    /**
+     * @param $arDespacho
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function autorizar($arDespacho)
+    {
+        if ($this->contarDetalles($arDespacho->getCodigoDespachoPk()) > 0) {
+            $arDespacho->setEstadoAutorizado(1);
+            $this->getEntityManager()->persist($arDespacho);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('No se puede autorizar, el registro no tiene detalles');
+        }
+    }
+
+    /**
+     * @param $arDespacho
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function desautorizar($arDespacho)
+    {
+        if ($arDespacho->getEstadoAutorizado() == 1 && $arDespacho->getEstadoAprobado() == 0) {
+            $arDespacho->setEstadoAutorizado(0);
+            $this->getEntityManager()->persist($arDespacho);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('El registro esta impreso y no se puede desautorizar');
+        }
     }
 
     public function liquidar($codigoDespacho): bool
@@ -603,6 +638,21 @@ class TteDespachoRepository extends ServiceEntityRepository
 
         return $respuesta;
 
+    }
+
+    /**
+     * @param $codigoSolicitud
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function contarDetalles($codigoDespacho)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
+            ->select("COUNT(dd.codigoDespachoDetallePk)")
+            ->where("dd.codigoDespachoFk= {$codigoDespacho} ");
+        $resultado =  $queryBuilder->getQuery()->getSingleResult();
+        return $resultado[1];
     }
 
 }

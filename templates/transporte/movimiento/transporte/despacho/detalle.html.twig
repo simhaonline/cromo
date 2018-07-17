@@ -8,8 +8,8 @@
         </div>
     </div>
     <div style="float:right">
-        {% if arDespacho.estadoGenerado == 1 %}<span class="label label-default">Generado</span>{% endif %}
-        {% if arDespacho.estadoGenerado == 1 %}<span class="label label-default">Cerrado</span>{% endif %}
+        {% if arDespacho.estadoAutorizado == 1 %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arDespacho.estadoAprobado == 1 %}<span class="label label-default">Aprobado</span>{% endif %}
         {% if arDespacho.estadoAnulado == 1 %}<span class="label label-default">Anulado</span>{% endif %}
     </div>
     <br /><br />
@@ -129,7 +129,7 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        {% if arDespacho.estadoGenerado == 0 %}
+                        {% if arDespacho.estadoAutorizado == 0 %}
                             <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_detalle_adicionar_guia', {'id': arDespacho.codigoDespachoPk }) }}', 'DespachoAdicionarGuia', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>

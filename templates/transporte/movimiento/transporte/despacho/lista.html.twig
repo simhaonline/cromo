@@ -65,7 +65,9 @@
             <th>UND</th>
             <th>PES</th>
             <th>VOL</th>
-            <th>A</th>
+            <th>AUT</th>
+            <th>APR</th>
+            <th>ANU</th>
             <th></th>
             <th></th>
         </tr>
@@ -86,6 +88,8 @@
                 <td class="numero">{{ arDespacho.unidades }}</td>
                 <td class="numero">{{ arDespacho.pesoReal }}</td>
                 <td class="numero">{{ arDespacho.pesoVolumen }}</td>
+                <td class="estado">{{ arDespacho.estadoAutorizado?'SI':'NO' }}</td>
+                <td class="estado">{{ arDespacho.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arDespacho.estadoAnulado?'SI':'NO' }}</td>
                 <td style="text-align: center">
                     <a href="{{ path('transporte_movimiento_transporte_despacho_nuevo', { 'id': arDespacho.codigoDespachoPk }) }}">

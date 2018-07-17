@@ -216,6 +216,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
             ->select('tg.codigoGuiaPk')
+            ->addSelect('tg.codigoGuiaTipoFk')
             ->addSelect('tg.numero')
             ->addSelect('tg.codigoOperacionIngresoFk')
             ->addSelect('tg.codigoOperacionCargoFk')

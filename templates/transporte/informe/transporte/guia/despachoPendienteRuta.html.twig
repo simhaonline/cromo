@@ -28,7 +28,8 @@
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
-            <th>ID</th>
+            <th>TIPO</th>
+            <th>GUIA</th>
             <th>OI</th>
             <th>OC</th>
             <th>NUMERO</th>
@@ -72,6 +73,7 @@
             {% endif %}
 
             <tr>
+                <td>{{ arGuia.codigoGuiaTipoFk }}</td>
                 <td>{{ arGuia.codigoGuiaPk }}</td>
                 <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>

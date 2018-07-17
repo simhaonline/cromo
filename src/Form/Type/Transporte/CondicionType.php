@@ -3,6 +3,8 @@
 namespace App\Form\Type\Transporte;
 
 use App\Entity\Transporte\TteCondicion;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,6 +19,16 @@ class CondicionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('precioRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TtePrecio',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->orderBy('i.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Precio:'
+            ])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('porcentajeManejo',NumberType::class,['required' => true,'label' => 'Porcentaje:'])
             ->add('manejoMinimoUnidad',NumberType::class,['required' => true,'label' => 'Unidad minima:'])
@@ -31,7 +43,7 @@ class CondicionType extends AbstractType
             ->add('precioGeneral', CheckboxType::class, ['required' => false,'label' => 'Precio general'])
             ->add('redondearFlete', CheckboxType::class, ['required' => false,'label' => 'Redondear flete'])
             ->add('limitarDescuentoReexpedicion', CheckboxType::class, ['required' => false,'label' => 'Limitar descuento reexpedicion'])
-            ->add('comentario',TextareaType::class,['required' => true,'label' => 'Comentarios:'])
+            ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
         ;

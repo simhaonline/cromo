@@ -141,16 +141,15 @@ class MovimientoController extends Controller
                 $em->getRepository('App:Inventario\InvMovimiento')->desautorizar($arMovimiento);
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'ENT') {
-                    $objFormato = new FormatoMovimiento();
-                    $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
-                } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'SAL') {
-                } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC') {
+                if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC') {
                     $codigoFactura = $em->getRepository(InvConfiguracion::class)->find(1)->getCodigoFormatoMovimiento();
                     if ($codigoFactura == 1) {
                         $objFormato = new Factura1();
                         $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                     }
+                } else {
+                    $objFormato = new FormatoMovimiento();
+                    $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                 }
             }
             if ($form->get('btnAprobar')->isClicked()) {

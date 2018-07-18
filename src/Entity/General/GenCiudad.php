@@ -94,6 +94,11 @@ class GenCiudad
     protected $rhuEmpleadosCiudadExpedicionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvSucursal", mappedBy="ciudadRel")
+     */
+    protected $invSucursalesCiuidadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -349,6 +354,20 @@ class GenCiudad
         $this->rhuEmpleadosCiudadExpedicionRel = $rhuEmpleadosCiudadExpedicionRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getInvSucursalesCiuidadRel()
+    {
+        return $this->invSucursalesCiuidadRel;
+    }
 
+    /**
+     * @param mixed $invSucursalesCiuidadRel
+     */
+    public function setInvSucursalesCiuidadRel($invSucursalesCiuidadRel): void
+    {
+        $this->invSucursalesCiuidadRel = $invSucursalesCiuidadRel;
+    }
 }
 

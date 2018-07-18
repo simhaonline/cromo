@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\Inventario;
 
+use App\Entity\General\GenCiudad;
 use App\Entity\Inventario\InvSucursal;
 use App\Entity\Inventario\InvTercero;
 use Doctrine\ORM\EntityRepository;
@@ -26,7 +27,17 @@ class SucursalType extends AbstractType
                         ->orderBy('it.nombreCorto','ASC');
                 },
                 'choice_label' => 'nombreCorto',
-                'label' => 'Tercero: '
+                'label' => 'Tercero: ',
+                'attr' => ['class' => 'to-select-2']
+            ])
+            ->add('ciudadRel', EntityType::class, ['class' => GenCiudad::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre','ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Ciudad: ',
+                'attr' => ['class' => 'to-select-2']
             ])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);

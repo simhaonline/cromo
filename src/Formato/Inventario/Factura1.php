@@ -120,7 +120,7 @@ class Factura1 extends \FPDF
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
         $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getNumeroIdentificacion(), 0, 0, 'L', 0);
-        $this->Cell(73, 4, utf8_decode($arMovimiento->getCiudadFactura()), 0, 0, 'L', 0);
+        $this->Cell(73, 4, utf8_decode($arMovimiento->getSucursalRel() ? $arMovimiento->getSucursalRel()->getContacto() : ''), 0, 0, 'L', 0);
 
         $this->SetXY(19, 58);
         $this->SetFont('Arial', 'B', 8);
@@ -128,8 +128,8 @@ class Factura1 extends \FPDF
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
         $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getTelefono(), 0, 0, 'L', 0);
-        if ($arMovimiento->getDireccion() != null && $arMovimiento->getDireccion() != '') {
-            $direccion = $arMovimiento->getDireccion();
+        if ($arMovimiento->getSucursalRel()) {
+            $direccion = $arMovimiento->getSucursalRel()->getDireccion();
         } else {
             $direccion = $arMovimiento->getTerceroRel()->getDireccion();
         }
@@ -140,7 +140,8 @@ class Factura1 extends \FPDF
         $this->Cell(15, 4, 'DIRECCION:', 0, 0, 'L', 0);
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(30, 4, $arMovimiento->getTerceroRel()->getDireccion(), 0, 0, 'L', 0);
+        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getDireccion(), 0, 0, 'L', 0);
+        $this->Cell(73, 4, $arMovimiento->getSucursalRel() ? $arMovimiento->getSucursalRel()->getCiudadRel()->getNombre() : '', 0, 0, 'L', 0);
         $this->EncabezadoDetalles();
     }
 

@@ -32,7 +32,7 @@ class MovimientoController extends Controller
      * @param Request $request
      * @param $tipoDocumento
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/inv/mto/inventario/movimiento/lista/documentos/{tipoDocumento}", name="inventario_movimiento_inventario_movimiento_documentos_lista")
+     * @Route("/inventario/movimiento/inventario/movimiento/lista/documentos/{tipoDocumento}", name="inventario_movimiento_inventario_movimiento_documentos_lista")
      */
     public function listaDocumentos(Request $request, $tipoDocumento)
     {
@@ -49,7 +49,7 @@ class MovimientoController extends Controller
      * @param $codigoDocumento
      * @param $tipoDocumento
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/inv/mto/inventario/movimiento/lista/movimientos/{tipoDocumento}/{codigoDocumento}", name="inventario_movimiento_inventario_movimiento_lista")
+     * @Route("/inventario/movimiento/inventario/movimiento/lista/movimientos/{tipoDocumento}/{codigoDocumento}", name="inventario_movimiento_inventario_movimiento_lista")
      */
     public function listaMovimientos(Request $request, $codigoDocumento, $tipoDocumento)
     {
@@ -67,7 +67,7 @@ class MovimientoController extends Controller
      * @param $codigoDocumento
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/inv/mto/inventario/movimiento/nuevo/{codigoDocumento}/{id}", name="inventario_movimiento_inventario_movimiento_nuevo")
+     * @Route("/inventario/movimiento/inventario/movimiento/nuevo/{codigoDocumento}/{id}", name="inventario_movimiento_inventario_movimiento_nuevo")
      */
     public function nuevo(Request $request, $codigoDocumento, $id)
     {
@@ -111,7 +111,7 @@ class MovimientoController extends Controller
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @Route("/inv/mto/inventario/movimiento/detalle/{id}", name="inventario_movimiento_inventario_movimiento_detalle")
+     * @Route("/inventario/movimiento/inventario/movimiento/detalle/{id}", name="inventario_movimiento_inventario_movimiento_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -125,8 +125,9 @@ class MovimientoController extends Controller
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrSucursalRel = ['class' => InvSucursal::class,
-            'query_builder' => function (EntityRepository $er) {
+            'query_builder' => function (EntityRepository $er) use ($arMovimiento) {
                 return $er->createQueryBuilder('c')
+                    ->where('c.codigoTerceroFk = '.$arMovimiento->getCodigoTerceroFk())
                     ->orderBy('c.codigoSucursalPk', 'ASC');
             },
             'choice_label' => 'codigoSucursalPk',
@@ -137,13 +138,17 @@ class MovimientoController extends Controller
             'attr' => ['class' => 'to-select-2 form-control']
         ];
 
-        if ($arMovimiento->getEstadoAutorizado()) {
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnActualizar['disabled'] = true;
+        if($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() != 'FAC'){
             $arrSucursalRel['disabled'] = true;
-        }
-        if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() != 'FAC') {
-
+        } else {
+            if($arMovimiento->getSucursalRel()){
+                $arrSucursalRel['data'] = $em->getReference(InvSucursal::class, $arMovimiento->getCodigoSucursalFk());
+            }
+            if ($arMovimiento->getEstadoAutorizado()) {
+                $arrBtnEliminar['disabled'] = true;
+                $arrBtnActualizar['disabled'] = true;
+                $arrSucursalRel['disabled'] = true;
+            }
         }
         $form
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
@@ -162,23 +167,22 @@ class MovimientoController extends Controller
                 $em->getRepository(InvMovimiento::class)->desautorizar($arMovimiento);
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'ENT') {
-                    $objFormato = new FormatoMovimiento();
-                    $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
-                } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'SAL') {
-                } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC') {
+                if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC') {
                     $codigoFactura = $em->getRepository(InvConfiguracion::class)->find(1)->getCodigoFormatoMovimiento();
                     if ($codigoFactura == 1) {
                         $objFormato = new Factura1();
                         $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                     }
+                } else{
+                    $objFormato = new FormatoMovimiento();
+                    $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                 }
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $respuesta = $em->getRepository(InvMovimiento::class)->aprobar($arMovimiento);
                 if ($respuesta != '') {
-                    foreach ($respuesta as $respuesta) {
-                        Mensajes::error($respuesta);
+                    foreach ($respuesta as $error) {
+                        Mensajes::error($error);
                     }
                 }
             }
@@ -205,7 +209,7 @@ class MovimientoController extends Controller
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/inv/mto/inventario/movimiento/detalle/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_detalle_nuevo")
+     * @Route("/inventario/movimiento/inventario/movimiento/detalle/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id)
     {
@@ -262,7 +266,7 @@ class MovimientoController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/inventario/movimiento/detalle/ordencompra/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_ordencompra_detalle_nuevo")
+     * @Route("/inventario/movimiento/inventario/movimiento/detalle/ordencompra/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_ordencompra_detalle_nuevo")
      */
     public function detalleNuevoOrdenCompra(Request $request, $id)
     {

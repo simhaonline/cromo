@@ -33,10 +33,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 Mensajes::error($error);
             }
         } else {
-            $this->afectar($arMovimiento, 1);
-            $arMovimiento->setEstadoAutorizado(1);
-            $this->getEntityManager()->persist($arMovimiento);
-            $this->getEntityManager()->flush();
+            if ($this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
+                $this->afectar($arMovimiento, 1);
+                $arMovimiento->setEstadoAutorizado(1);
+                $this->getEntityManager()->persist($arMovimiento);
+                $this->getEntityManager()->flush();
+            } else {
+                Mensajes::error('El movimiento no contiene detalles');
+            }
         }
     }
 

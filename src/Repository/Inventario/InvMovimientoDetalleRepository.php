@@ -75,8 +75,13 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
      */
     public function actualizarDetalles($arrControles, $form, $arMovimiento)
     {
-        if ($this->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
+        if($form->get('sucursalRel')->getData() != ''){
             $arMovimiento->setSucursalRel($this->getEntityManager()->getRepository(InvSucursal::class)->find($form->get('sucursalRel')->getData()));
+        } else {
+            $arMovimiento->setSucursalRel(null);
+        }
+        $this->getEntityManager()->persist($arMovimiento);
+        if ($this->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
             $arrBodega = $arrControles['arrBodega'];
             $arrLote = $arrControles['arrLote'];
             $arrCantidad = $arrControles['arrCantidad'];
@@ -95,8 +100,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                 $this->getEntityManager()->persist($arMovimientoDetalle);
             }
             $this->getEntityManager()->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
-            $this->getEntityManager()->flush();
         }
+        $this->getEntityManager()->flush();
     }
 
     /**

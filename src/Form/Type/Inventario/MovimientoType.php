@@ -22,7 +22,7 @@ class MovimientoType extends AbstractType
                         ->orderBy('e.nombreCorto','DESC');
                 },
                 'choice_label' => 'nombreCorto',
-                'label' => 'Tercero:'
+               'label' => 'Tercero:'
             ])
             ->add('soporte')
             ->add('comentarios')

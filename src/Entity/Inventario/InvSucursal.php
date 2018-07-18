@@ -35,7 +35,7 @@ class InvSucursal
     private $contacto;
 
     /**
-     * @ORM\Column(name="codigo_ciudad_fk", type="string", length=150, nullable=true)
+     * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
      */
     private $codigoCiudadFk;
 
@@ -44,6 +44,12 @@ class InvSucursal
      * @ORM\JoinColumn(name="codigo_tercero_fk",referencedColumnName="codigo_tercero_pk")
      */
     protected $terceroRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad",inversedBy="invSucursalesCiuidadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk",referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvMovimiento", mappedBy="sucursalRel")
@@ -144,6 +150,22 @@ class InvSucursal
     public function setTerceroRel($terceroRel): void
     {
         $this->terceroRel = $terceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
     }
 
     /**

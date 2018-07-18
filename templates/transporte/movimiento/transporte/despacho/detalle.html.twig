@@ -154,6 +154,43 @@
             <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Volver</a>
         </div>
     </div>
-
     {{ form_end(form) }}
+    {% if arDespacho.estadoAutorizado == 0 %}
+    <br /><br />
+    <input type="text" id="txtGuiaCodigo"><button id="btnNuevoIndividual">Nuevo</button>
+    {% endif %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(function() {
+            var button = $("#btnNuevoIndividual");
+            var txtGuiaCodigo = $("#txtGuiaCodigo");
+            button.click(function() {
+                agregarGuia(txtGuiaCodigo.val());
+            });
+            txtGuiaCodigo.keydown(function (event) {
+                if(event.keyCode === 13) {
+                    agregarGuia(txtGuiaCodigo.val());
+                }
+            });
+        });
+
+        var agregarGuia = function(codigoGuia) {
+            endpoint = "http://localhost/cromo/public/index.php/transporte/api/guia/soporte/" + codigoGuia;
+            $.ajax(endpoint, {
+                type: 'POST',
+                data: {
+                    arrParametros: JSON.stringify({
+                        codigoGuia: codigoGuia
+                    }),
+                }
+            }).done(function(respuesta) {
+                if(respuesta && respuesta.error === true) {
+                    alert(respuesta.mensaje);
+                }
+                $("#txtGuiaCodigo").val("").focus();
+            });
+        };
+    </script>
 {% endblock %}

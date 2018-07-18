@@ -153,11 +153,6 @@ class TteDespacho
     private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="estado_generado", type="boolean", nullable=true, options={"default" : false})
-     */
-    private $estadoGenerado = false;
-
-    /**
      * @ORM\Column(name="estado_cerrado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoCerrado = false;
@@ -658,17 +653,33 @@ class TteDespacho
     /**
      * @return mixed
      */
-    public function getEstadoGenerado()
+    public function getEstadoAutorizado()
     {
-        return $this->estadoGenerado;
+        return $this->estadoAutorizado;
     }
 
     /**
-     * @param mixed $estadoGenerado
+     * @param mixed $estadoAutorizado
      */
-    public function setEstadoGenerado($estadoGenerado): void
+    public function setEstadoAutorizado($estadoAutorizado): void
     {
-        $this->estadoGenerado = $estadoGenerado;
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
     }
 
     /**
@@ -909,38 +920,6 @@ class TteDespacho
     public function setMonitoreosDespachoRel($monitoreosDespachoRel): void
     {
         $this->monitoreosDespachoRel = $monitoreosDespachoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAutorizado()
-    {
-        return $this->estadoAutorizado;
-    }
-
-    /**
-     * @param mixed $estadoAutorizado
-     */
-    public function setEstadoAutorizado($estadoAutorizado): void
-    {
-        $this->estadoAutorizado = $estadoAutorizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAprobado()
-    {
-        return $this->estadoAprobado;
-    }
-
-    /**
-     * @param mixed $estadoAprobado
-     */
-    public function setEstadoAprobado($estadoAprobado): void
-    {
-        $this->estadoAprobado = $estadoAprobado;
     }
 
 

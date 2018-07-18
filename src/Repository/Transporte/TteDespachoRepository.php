@@ -99,7 +99,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         if($session->get('filtroTteDespachoCodigoConductor')){
             $queryBuilder->andWhere("td.codigoConductorFk = {$session->get('filtroTteDespachoCodigoConductor')}");
         }
-        $queryBuilder->orderBy('td.fechaSalida', 'DESC');
+        $queryBuilder->orderBy('td.fechaRegistro', 'DESC');
         return $queryBuilder;
 
     }
@@ -155,12 +155,12 @@ class TteDespachoRepository extends ServiceEntityRepository
         return true;
     }
 
-    public function generar($codigoDespacho): string
+    public function aprobar($codigoDespacho): string
     {
         $respuesta = "";
         $em = $this->getEntityManager();
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
-        if (!$arDespacho->getEstadoGenerado()) {
+        if (!$arDespacho->getEstadoAprobado()) {
             if ($arDespacho->getCantidad() > 0) {
                 $fechaActual = new \DateTime('now');
                 $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 1, g.fechaDespacho=:fecha 
@@ -169,7 +169,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                     ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
                 $query->execute();
                 $arDespacho->setFechaSalida($fechaActual);
-                $arDespacho->setEstadoGenerado(1);
+                $arDespacho->setEstadoAprobado(1);
                 $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
                 if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
                     $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
@@ -363,23 +363,28 @@ class TteDespachoRepository extends ServiceEntityRepository
     public function reportarRndc($codigoDespacho): string
     {
         $em = $this->getEntityManager();
-        try {
-            $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
-            $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
-            $arrDespacho = $em->getRepository(TteDespacho::class)->dqlRndc($codigoDespacho);
-            //$respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
-            //if($respuesta) {
-            //$respuesta = $this->reportarRndcVehiculo($cliente, $arConfiguracionTransporte, $arrDespacho);
-            //if($respuesta) {
-            //$respuesta = $this->reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho);
-            //if($respuesta) {
-            $respuesta = $this->reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho);
-            //}
-            //}
-            //}
+        $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+        if($arDespacho->getNumeroRndc() == "") {
+            try {
+                $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
+                $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
+                $arrDespacho = $em->getRepository(TteDespacho::class)->dqlRndc($codigoDespacho);
+                //$respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
+                //if($respuesta) {
+                //$respuesta = $this->reportarRndcVehiculo($cliente, $arConfiguracionTransporte, $arrDespacho);
+                //if($respuesta) {
+                //$respuesta = $this->reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho);
+                //if($respuesta) {
+                //$respuesta = $this->reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho);
+                //}
+                //}
+                //}
 
-        } catch (Exception $e) {
-            return "Error al conectar el servicio: " . $e;
+            } catch (Exception $e) {
+                return "Error al conectar el servicio: " . $e;
+            }
+        } else {
+            Mensajes::error('Este despacho ya fue enviado al rndc');
         }
         return true;
     }

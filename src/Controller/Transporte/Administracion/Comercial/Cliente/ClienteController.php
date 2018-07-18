@@ -3,7 +3,11 @@
 namespace App\Controller\Transporte\Administracion\Comercial\Cliente;
 
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteClienteCondicion;
+use App\Entity\Transporte\TteCondicion;
 use App\Form\Type\Transporte\ClienteType;
+use App\Utilidades\Estandares;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -62,11 +66,64 @@ class ClienteController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $arCliente = $em->getRepository(TteCliente::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnEliminarDetalle')->isClicked()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteClienteCondicion::class)->eliminar($arrSeleccionados);
+            }
+
+        $arCondicion = $em->getRepository(TteClienteCondicion::class)->clienteCondicion($id);
 
         return $this->render('transporte/administracion/comercial/cliente/detalle.html.twig', array(
             'arCliente' => $arCliente,
+            'arCondiciones' => $arCondicion,
+            'form' => $form->createView()
         ));
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @Route("/transporte/administracion/comercial/cliente/detalle/nuevo/{id}", name="transporte_administracion_comercial_cliente_detalle_nuevo")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function detalleNuevo(Request $request, $id)
+    {
+        $paginator  = $this->get('knp_paginator');
+        $em = $this->getDoctrine()->getManager();
+        $respuesta = [];
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            if (count($arrSeleccionados) > 0) {
+                foreach ($arrSeleccionados AS $codigo) {
+                   if(!$em->getRepository(TteClienteCondicion::class)->findOneBy(['codigoClienteFk' => $id, 'codigoCondicionFk' => $codigo])){
+                       $arClienteCondicion = new TteClienteCondicion();
+                       $arClienteCondicion->setClienteRel($em->getRepository(TteCliente::class)->find($id));
+                       $arClienteCondicion->setCondicionRel($em->getRepository(TteCondicion::class)->find($codigo));
+                       $em->persist($arClienteCondicion);
+                   } else {
+                       $respuesta [] = "La condición con código {$codigo} ya se encuentra agregada para el cliente seleccionado";
+                   }
+                }
+                $em->flush();
+            }
+            if(count($respuesta) > 0){
+                foreach ($respuesta AS $error){
+                    Mensajes::error($error);
+                }
+            } else {
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        $arCondiciones = $paginator->paginate ($em->getRepository(TteCondicion::class)->lista(), $request->query->getInt('page', 1),30);
+        return $this->render('transporte/administracion/comercial/cliente/detalleNuevo.html.twig', ['arCondiciones' => $arCondiciones, 'form' => $form->createView()]);
+    }
 }
 

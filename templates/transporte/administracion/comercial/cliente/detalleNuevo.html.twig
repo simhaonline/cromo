@@ -1,0 +1,49 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>CONDICION</th>
+            <th>PORCENTAJE MANEJO</th>
+            <th>MANEJO MINIMO UNIDAD</th>
+            <th>MANEJO MINIMO DESPACHO</th>
+            <th>PRECIO PESO</th>
+            <th>PRECIO UNIDAD</th>
+            <th>PRECIO ADICIONAL</th>
+            <th>DESCUENTO PESO</th>
+            <th>DESCUENTO UNIDAD</th>
+            <th>PERMITE RECAUDO</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arCondicion in arCondiciones %}
+            <tr>
+                <td>{{ arCondicion.codigoCondicionPk }}</td>
+                <td>{{ arCondicion.nombre }}</td>
+                <td>{{ arCondicion.porcentajeManejo }}</td>
+                <td>{{ arCondicion.manejoMinimoUnidad }}</td>
+                <td>{{ arCondicion.manejoMinimoDespacho }}</td>
+                {{ validarTipo(arCondicion.precioPeso) }}
+                {{ validarTipo(arCondicion.precioUnidad) }}
+                {{ validarTipo(arCondicion.precioAdicional) }}
+                <td>{{ arCondicion.descuentoPeso }}</td>
+                <td>{{ arCondicion.descuentoUnidad }}</td>
+                {{ validarTipo(arCondicion.permiteRecaudo) }}
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                       value="{{ arCondicion.codigoCondicionPk }}"/></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-toolbar" style="float: right">
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arCondiciones) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

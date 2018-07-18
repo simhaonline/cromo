@@ -2,15 +2,12 @@
 
 namespace App\Controller\Inventario\Movimiento\Inventario;
 
-use App\Entity\General\GenCiudad;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Formato\Inventario\FormatoMovimiento;
-use App\Formato\Inventario\Movimiento;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
 use App\Entity\Inventario\InvSucursal;
-use App\Formato\Inventario\FormatoMovimiento;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;

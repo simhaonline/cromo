@@ -2,6 +2,8 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Transporte\TteDespacho;
+use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
@@ -217,6 +219,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
             ->select('tg.codigoGuiaPk')
             ->addSelect('tg.codigoGuiaTipoFk')
+            ->addSelect('tg.fechaIngreso')
             ->addSelect('tg.numero')
             ->addSelect('tg.codigoOperacionIngresoFk')
             ->addSelect('tg.codigoOperacionCargoFk')
@@ -724,6 +727,55 @@ class TteGuiaRepository extends ServiceEntityRepository
                 return [
                     'error' => true,
                     'mensaje' => 'La guia debe estar entregada',
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'mensaje' => "La guia " . $codigoGuia . " no existe ",
+            ];
+        }
+    }
+
+    /**
+     * @param $codigoGuia
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function apiDespachoAdicionar($codigoGuia, $codigoDespacho) {
+        $em = $this->getEntityManager();
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        if($arGuia) {
+            if($arGuia->getEstadoEmbarcado() == 0 && $arGuia->getEstadoDespachado() == 0 && $arGuia->getCodigoDespachoFk() == "") {
+                $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+                $arGuia->setDespachoRel($arDespacho);
+                $arGuia->setEstadoEmbarcado(1);
+                $em->persist($arGuia);
+                $arDespacho->setUnidades($arDespacho->getUnidades()+$arGuia->getUnidades());
+                $arDespacho->setPesoReal($arDespacho->getPesoReal()+$arGuia->getPesoReal());
+                $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen()+$arGuia->getPesoVolumen());
+                $arDespacho->setCantidad($arDespacho->getCantidad()+1);
+                $em->persist($arDespacho);
+                $arDespachoDetalle = new TteDespachoDetalle();
+                $arDespachoDetalle->setDespachoRel($arDespacho);
+                $arDespachoDetalle->setGuiaRel($arGuia);
+                $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
+                $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
+                $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
+                $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
+                $arDespachoDetalle->setUnidades($arGuia->getUnidades());
+                $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
+                $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                $em->persist($arDespachoDetalle);
+                $em->flush();
+                return [
+                    'error' => false,
+                    'mensaje' => '',
+                ];
+            } else {
+                return [
+                    'error' => true,
+                    'mensaje' => 'La guia se encuentra en el despacho ' . $arGuia->getCodigoDespachoFk(),
                 ];
             }
         } else {

@@ -36,4 +36,16 @@ class ApiGuiaController extends FOSRestController
         return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiSoporte($codigoGuia);
     }
 
+    /**
+     * @param Request $request
+     * @param int $codigoGuia
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     * @Rest\Post("/transporte/api/guia/despacho/adicionar/{codigoGuia}/{codigoDespacho}")
+     */
+    public function despachoAdicionar(Request $request, $codigoGuia=0, $codigoDespacho=0) {
+        $arrPost = json_decode($request->request->get("arrParametros"), true);
+        return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiDespachoAdicionar($codigoGuia, $codigoDespacho);
+    }
+
 }

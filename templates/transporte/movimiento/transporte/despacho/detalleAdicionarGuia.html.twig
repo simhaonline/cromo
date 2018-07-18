@@ -32,6 +32,7 @@
             <th>GUIA</th>
             <th>OI</th>
             <th>OC</th>
+            <th>FECHA</th>
             <th>NUMERO</th>
             <th>CLIENTE</th>
             <th>RUTA</th>
@@ -49,6 +50,7 @@
                 <td>{{ arGuia.codigoGuiaPk }}</td>
                 <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
+                <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
                 <td>{{ arGuia.numero }}</td>
                 <td>{{ arGuia.clienteNombreCorto }}</td>
                 <td>{{ arGuia.codigoRutaFk }}</td>

@@ -77,6 +77,11 @@ class TteCiudad
     private $reexpedicion = false;
 
     /**
+     * @ORM\Column(name="estado_inactivo", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $estadoInactivo = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteRuta", inversedBy="ciudadesRutaRel")
      * @ORM\JoinColumn(name="codigo_ruta_fk", referencedColumnName="codigo_ruta_pk")
      */
@@ -557,6 +562,22 @@ class TteCiudad
     public function setDepartamentoRel($departamentoRel): void
     {
         $this->departamentoRel = $departamentoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoInactivo()
+    {
+        return $this->estadoInactivo;
+    }
+
+    /**
+     * @param mixed $estadoInactivo
+     */
+    public function setEstadoInactivo($estadoInactivo): void
+    {
+        $this->estadoInactivo = $estadoInactivo;
     }
 
 

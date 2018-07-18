@@ -36,6 +36,7 @@ class DespachoType extends AbstractType {
                 'class' => TteCiudad::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
+                        ->andWhere('c.estadoInactivo = 0')
                         ->orderBy('c.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
@@ -44,6 +45,7 @@ class DespachoType extends AbstractType {
                 'class' => TteCiudad::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
+                        ->andWhere('c.estadoInactivo = 0')
                         ->orderBy('c.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',

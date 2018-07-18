@@ -97,8 +97,10 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>GUIA</th>
                             <th title="Operacion de ingreso">OI</th>
                             <th title="Operacion de cargo">OC</th>
+                            <th>FECHA</th>
                             <th>NUMERO</th>
                             <th>CLIENTE</th>
                             <th>DESTINO</th>
@@ -112,8 +114,10 @@
                         {% for arDespachoDetalle in arDespachoDetalles %}
                             <tr>
                                 <td>{{ arDespachoDetalle.codigoDespachoDetallePk }}</td>
+                                <td>{{ arDespachoDetalle.codigoGuiaFk }}</td>
                                 <td>{{ arDespachoDetalle.codigoOperacionIngresoFk }}</td>
                                 <td>{{ arDespachoDetalle.codigoOperacionCargoFk }}</td>
+                                <td>{{ arDespachoDetalle.fechaIngreso | date('Y-m-d') }}</td>
                                 <td>{{ arDespachoDetalle.numero }}</td>
                                 <td>{{ arDespachoDetalle.clienteNombreCorto }}</td>
                                 <td>{{ arDespachoDetalle.ciudadDestino }}</td>
@@ -132,6 +136,9 @@
                         {% if arDespacho.estadoAutorizado == 0 %}
                             <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_detalle_adicionar_guia', {'id': arDespacho.codigoDespachoPk }) }}', 'DespachoAdicionarGuia', 600, 900)">Nuevo</a>
                         {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnActualizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
@@ -157,27 +164,29 @@
     {{ form_end(form) }}
     {% if arDespacho.estadoAutorizado == 0 %}
     <br /><br />
-    <input type="text" id="txtGuiaCodigo"><button id="btnNuevoIndividual">Nuevo</button>
+    <input type="text" id="txtGuiaCodigo"><button id="btnNuevoIndividual">Adicionar</button>
     {% endif %}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
     <script>
+        var codigoDespacho = '{{ arDespacho.codigoDespachoPk }}';
         $(function() {
             var button = $("#btnNuevoIndividual");
             var txtGuiaCodigo = $("#txtGuiaCodigo");
             button.click(function() {
-                agregarGuia(txtGuiaCodigo.val());
+                agregarGuia(txtGuiaCodigo.val(), codigoDespacho);
             });
             txtGuiaCodigo.keydown(function (event) {
                 if(event.keyCode === 13) {
-                    agregarGuia(txtGuiaCodigo.val());
+                    agregarGuia(txtGuiaCodigo.val(), codigoDespacho);
                 }
             });
         });
 
-        var agregarGuia = function(codigoGuia) {
-            endpoint = "http://localhost/cromo/public/index.php/transporte/api/guia/soporte/" + codigoGuia;
+        var agregarGuia = function(codigoGuia, codigoDespacho) {
+
+            endpoint = "http://localhost/cromo/public/index.php/transporte/api/guia/despacho/adicionar/" + codigoGuia + "/" + codigoDespacho;
             $.ajax(endpoint, {
                 type: 'POST',
                 data: {

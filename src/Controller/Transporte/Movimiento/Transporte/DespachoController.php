@@ -141,11 +141,13 @@ class DespachoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
         $arrBotonCerrar = array('label' => 'Cerrar', 'disabled' => true);
+        $arrBotonActualizar = array('label' => 'Actualizar', 'disabled' => false);
         $arrBotonRetirarGuia = array('label' => 'Retirar', 'disabled' => false);
         $arrBotonRndc = array('label' => 'RNDC', 'disabled' => true);
         $arrBotonImprimirManifiesto = array('label' => 'Manifiesto', 'disabled' => false);
         if ($arDespacho->getEstadoAutorizado()) {
             $arrBotonRetirarGuia['disabled'] = true;
+            $arrBotonActualizar['disabled'] = true;
         }
         if ($arDespacho->getEstadoAprobado()) {
             if (!$arDespacho->getEstadoAnulado()) {
@@ -166,10 +168,12 @@ class DespachoController extends Controller
             ->add('btnCerrar', SubmitType::class, $arrBotonCerrar)
             ->add('btnRndc', SubmitType::class, $arrBotonRndc)
             ->add('btnRetirarGuia', SubmitType::class, $arrBotonRetirarGuia)
+            ->add('btnActualizar', SubmitType::class, $arrBotonActualizar)
             ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(TteDespacho::class)->liquidar($arDespacho);
                 $em->getRepository(TteDespacho::class)->autorizar($arDespacho);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
@@ -193,12 +197,17 @@ class DespachoController extends Controller
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->anular($id);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
+            if ($form->get('btnActualizar')->isClicked()) {
+                $em->getRepository(TteDespacho::class)->liquidar($arDespacho);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
+            }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrDespachoDetalles = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->retirarDetalle($arrDespachoDetalles);
                 if ($respuesta) {
                     $em->flush();
                 }
+                $em->getRepository(TteDespacho::class)->liquidar($arDespacho);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnImprimir')->isClicked()) {
@@ -242,7 +251,7 @@ class DespachoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                if (count($arrSeleccionados) > 0) {
+                if ($arrSeleccionados) {
                     foreach ($arrSeleccionados AS $codigo) {
                         $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
                         $arGuia->setDespachoRel($arDespacho);

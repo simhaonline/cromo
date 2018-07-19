@@ -124,21 +124,24 @@ class CargarInformacionGuiasController extends Controller
                 }
                 if (count($arrCargas) > 0) {
                     foreach ($arrCargas as $arrCarga) {
-                        $arGuiaCarga = new TteGuiaCarga();
-                        $arGuiaCarga->setNumero(str_replace("'", '', $arrCarga['codigoGuia']));
-                        $arGuiaCarga->setRemitente($arrCarga['remitente']);
-                        $arGuiaCarga->setCliente($form->get('txtCliente')->getData());
-                        $arGuiaCarga->setRelacionCliente($arrCarga['relacion']);
-                        $arGuiaCarga->setDocumentoCliente(str_replace("'", '', $arrCarga['codigoGuia']));
-                        $arGuiaCarga->setFechaRegistro(new \DateTime('now'));
-                        $arGuiaCarga->setNombreDestinatario($arrCarga['nombre']);
-                        $arGuiaCarga->setDireccionDestinatario($arrCarga['direccion']);
-                        $arGuiaCarga->setTelefonoDestinatario($arrCarga['telefono']);
-                        $arGuiaCarga->setCodigoCiudadOrigenFk($arrCarga['ciudadOrigen']);
-                        $arGuiaCarga->setCodigoCiudadDestinoFk($arrCarga['ciudadDestino']);
-                        $arGuiaCarga->setComentario($arrCarga['comentario']);
-                        $arGuiaCarga->setVrDeclarado((float)$arrCarga['vrDeclarado']);
-                        $em->persist($arGuiaCarga);
+                        $documento = str_replace("'", '', $arrCarga['codigoGuia']);
+                        if($documento != "") {
+                            $arGuiaCarga = new TteGuiaCarga();
+                            $arGuiaCarga->setNumero($documento);
+                            $arGuiaCarga->setRemitente($arrCarga['remitente']);
+                            $arGuiaCarga->setCliente($form->get('txtCliente')->getData());
+                            $arGuiaCarga->setRelacionCliente($arrCarga['relacion']);
+                            $arGuiaCarga->setDocumentoCliente($documento);
+                            $arGuiaCarga->setFechaRegistro(new \DateTime('now'));
+                            $arGuiaCarga->setNombreDestinatario($arrCarga['nombre']);
+                            $arGuiaCarga->setDireccionDestinatario($arrCarga['direccion']);
+                            $arGuiaCarga->setTelefonoDestinatario($arrCarga['telefono']);
+                            $arGuiaCarga->setCodigoCiudadOrigenFk($arrCarga['ciudadOrigen']);
+                            $arGuiaCarga->setCodigoCiudadDestinoFk($arrCarga['ciudadDestino']);
+                            $arGuiaCarga->setComentario($arrCarga['comentario']);
+                            $arGuiaCarga->setVrDeclarado((float)$arrCarga['vrDeclarado']);
+                            $em->persist($arGuiaCarga);
+                        }
                     }
                 }
                 $em->flush();

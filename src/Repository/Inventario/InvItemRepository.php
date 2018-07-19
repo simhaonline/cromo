@@ -78,4 +78,10 @@ class InvItemRepository extends ServiceEntityRepository
         $queryBuilder->orderBy('ii.codigoItemPk', 'ASC');
         return $queryBuilder;
     }
+
+    public function informacionRegenerarKardex(){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvItem::class,'i')
+            ->select('i.codigoItemPk');
+        return $queryBuilder->getQuery()->execute();
+    }
 }

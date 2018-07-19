@@ -118,4 +118,17 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         return $resultado[1];
     }
+
+    public function informacionRegenerarKardex($codigoItem){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class,'md')
+            ->select('(md.cantidad * d.operacionInventario) AS cantidadOperada')
+            ->addSelect('md.codigoBodegaFk')
+            ->addSelect('md.loteFk')
+            ->leftJoin('md.movimientoRel','m')
+            ->leftJoin('m.documentoRel','d')
+            ->where('m.estadoAutorizado = 1')
+            ->andWhere('d.operacionInventario != 0')
+            ->andWhere('md.codigoItemFk = '.$codigoItem);
+        return $queryBuilder->getQuery()->execute();
+    }
 }

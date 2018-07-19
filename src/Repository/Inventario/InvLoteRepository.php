@@ -2,11 +2,12 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvLoteRepository extends ServiceEntityRepository
@@ -29,9 +30,9 @@ class InvLoteRepository extends ServiceEntityRepository
         $operacionInv = $arMovimientoDetalle->getMovimientoRel()->getDocumentoRel()->getOperacionInventario();
         $arBodega = $this->_em->getRepository('App:Inventario\InvBodega')->find($codigoBodega);
         if ($codigoLote == '') {
-            $respuesta = 'Debe ingresar un numero de lote para el detalle '.$arMovimientoDetalle->getCodigoMovimientoDetallePk();
+            $respuesta = 'Debe ingresar un numero de lote para el detalle ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk();
         } else {
-            $arLote = $this->_em->getRepository('App:Inventario\InvLote')->findOneBy(['codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $codigoBodega,'loteFk' => $codigoLote]);
+            $arLote = $this->_em->getRepository('App:Inventario\InvLote')->findOneBy(['codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $codigoBodega, 'loteFk' => $codigoLote]);
             if (!$arLote && $operacionInv == 1) {
                 $arLote = new InvLote();
                 $arLote->setCodigoBodegaFk($arBodega->getCodigoBodegaPk());
@@ -46,7 +47,7 @@ class InvLoteRepository extends ServiceEntityRepository
                 $arMovimientoDetalle->setLoteFk($codigoLote);
                 $this->_em->persist($arMovimientoDetalle);
             } elseif (!$arLote && $operacionInv == 2) {
-                $respuesta = 'El lote '.$codigoLote.', no existe en la bodega '.$arBodega->getCodigoBodegaPk();
+                $respuesta = 'El lote ' . $codigoLote . ', no existe en la bodega ' . $arBodega->getCodigoBodegaPk();
             } elseif ($arLote) {
                 if ($operacionInv == 1) {
                     $arLote->setCantidadDisponible($arLote->getCantidadDisponible() + $arMovimientoDetalle->getCantidad());
@@ -77,4 +78,40 @@ class InvLoteRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function regenerarKardex()
+    {
+        $arLote = new InvLote();
+        //Se limpian las existencias en los lotes y en el inventario
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->update(InvLote::class, 'l')
+            ->set('l.cantidadDisponible', 0)
+            ->set('l.cantidadExistencia', 0);
+        $queryBuilder->getQuery()->execute();
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->update(InvItem::class, 'i')
+            ->set('l.cantidadExistencia', 0);
+        $queryBuilder->getQuery()->execute();
+        $arItems = $this->getEntityManager()->getRepository(InvItem::class)->informacionRegenerarKardex();
+        foreach ($arItems as $arItem) {
+            $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->informacionRegenerarKardex($arItem['codigoItemPk']);
+            if (count($arMovimientoDetalles) > 0) {
+                foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+                    if ($arLote->getCodigoBodegaFk() != $arMovimientoDetalle['codigoBodegaFk']
+                        && $arLote->getCodigoItemFk() != $arMovimientoDetalle['codigoItemFk']
+                        && $arLote->getLoteFk() != $arMovimientoDetalle['loteFk']) {
+                        $arLote = $this->getEntityManager()->getRepository(InvLote::class)
+                            ->findOneBy(['codigoItemFk' => $arItem['codigoItemPk'], 'codigoBodegaFk' => $arMovimientoDetalle['codigoBodegaFk'], 'codigoLotePk' => $arMovimientoDetalle['lotePk']]);
+                    }
+                    if ($arLote) {
+                        $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + $arMovimientoDetalle['cantiadadOperada']);
+                        $this->getEntityManager()->persist($arLote);
+                    }
+                }
+            }
+        }
+    }
 }

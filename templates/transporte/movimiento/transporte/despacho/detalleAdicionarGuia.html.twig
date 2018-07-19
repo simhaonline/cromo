@@ -30,6 +30,7 @@
         <tr>
             <th>TIPO</th>
             <th>GUIA</th>
+            <th>FECHA</th>
             <th>OI</th>
             <th>OC</th>
             <th>NUMERO</th>
@@ -47,6 +48,7 @@
             <tr>
                 <td>{{ arGuia.codigoGuiaTipoFk }}</td>
                 <td>{{ arGuia.codigoGuiaPk }}</td>
+                <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
                 <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
                 <td>{{ arGuia.numero }}</td>

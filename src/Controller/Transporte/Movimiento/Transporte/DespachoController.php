@@ -175,7 +175,7 @@ class DespachoController extends Controller
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->generar($id);
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->aprobar($id);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnCerrar')->isClicked()) {
@@ -194,6 +194,7 @@ class DespachoController extends Controller
                 $arrDespachoDetalles = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->retirarDetalle($arrDespachoDetalles);
                 if ($respuesta) {
+                    $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($id);
                     $em->flush();
                 }
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));

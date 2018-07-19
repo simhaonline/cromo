@@ -18,7 +18,9 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'SELECT dd.codigoDespachoDetallePk, 
+        dd.codigoGuiaFk,
         g.numero, 
+        g.codigoGuiaTipoFk,
         g.fechaIngreso,        
         g.codigoOperacionIngresoFk,
         g.codigoOperacionCargoFk,     

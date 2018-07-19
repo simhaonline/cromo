@@ -97,6 +97,9 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>TIPO</th>
+                            <th>GUIA</th>
+                            <th>FECHA</th>
                             <th title="Operacion de ingreso">OI</th>
                             <th title="Operacion de cargo">OC</th>
                             <th>NUMERO</th>
@@ -112,6 +115,9 @@
                         {% for arDespachoDetalle in arDespachoDetalles %}
                             <tr>
                                 <td>{{ arDespachoDetalle.codigoDespachoDetallePk }}</td>
+                                <td>{{ arDespachoDetalle.codigoGuiaTipoFk }}</td>
+                                <td>{{ arDespachoDetalle.codigoGuiaFk }}</td>
+                                <td>{{ arDespachoDetalle.fechaIngreso | date('Y-m-d') }}</td>
                                 <td>{{ arDespachoDetalle.codigoOperacionIngresoFk }}</td>
                                 <td>{{ arDespachoDetalle.codigoOperacionCargoFk }}</td>
                                 <td>{{ arDespachoDetalle.numero }}</td>
@@ -154,6 +160,45 @@
             <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Volver</a>
         </div>
     </div>
-
     {{ form_end(form) }}
+    {% if arDespacho.estadoAutorizado == 0 %}
+        <br /><br />
+        <input type="text" id="txtGuiaCodigo"><button id="btnAdicionar">Adicionar</button>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var codigoDespacho = '{{ arDespacho.codigoDespachoPk }}';
+        $(function() {
+            var button = $("#btnAdicionar");
+            var txtGuiaCodigo = $("#txtGuiaCodigo");
+            button.click(function() {
+                agregarGuia(txtGuiaCodigo.val(), codigoDespacho);
+            });
+            txtGuiaCodigo.keydown(function (event) {
+                if(event.keyCode === 13) {
+                    agregarGuia(txtGuiaCodigo.val(), codigoDespacho);
+                }
+            });
+        });
+
+        var agregarGuia = function(codigoGuia, codigoDespacho) {
+            endpoint = "http://localhost/cromo/public/index.php/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
+            $.ajax(endpoint, {
+                type: 'POST',
+                data: {
+                    arrParametros: JSON.stringify({
+                        codigoGuia: codigoGuia
+                    }),
+                }
+            }).done(function(respuesta) {
+                if(respuesta && respuesta.error === true) {
+                    alert(respuesta.mensaje);
+                }
+                $("#txtGuiaCodigo").val("").focus();
+            });
+        };
+    </script>
 {% endblock %}

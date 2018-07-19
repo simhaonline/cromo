@@ -155,12 +155,12 @@ class TteDespachoRepository extends ServiceEntityRepository
         return true;
     }
 
-    public function generar($codigoDespacho): string
+    public function aprobar($codigoDespacho): string
     {
         $respuesta = "";
         $em = $this->getEntityManager();
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
-        if (!$arDespacho->getEstadoGenerado()) {
+        if (!$arDespacho->getEstadoAprobado()) {
             if ($arDespacho->getCantidad() > 0) {
                 $fechaActual = new \DateTime('now');
                 $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 1, g.fechaDespacho=:fecha 
@@ -169,7 +169,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                     ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
                 $query->execute();
                 $arDespacho->setFechaSalida($fechaActual);
-                $arDespacho->setEstadoGenerado(1);
+                $arDespacho->setEstadoAprobado(1);
                 $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
                 if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
                     $arDespacho->setNumero($arDespachoTipo->getConsecutivo());

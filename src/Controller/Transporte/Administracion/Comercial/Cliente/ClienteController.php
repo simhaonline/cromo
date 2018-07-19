@@ -50,7 +50,7 @@ class ClienteController extends Controller
                 $arCliente->setNombreCorto($arCliente->getNombre1() . " " . $arCliente->getNombre2() . " " . $arCliente->getApellido1() . " " . $arCliente->getApellido2());
                 $em->persist($arCliente);
                 $em->flush();
-                return $this->redirect($this->generateUrl('admin_detalle', ['modulo' => 'transporte','entidad' => 'cliente','id'=> $arCliente->getCodigoClientePk()]));
+                return $this->redirect($this->generateUrl('transporte_administracion_comercial_cliente_detalle', ['id' => $arCliente->getCodigoClientePk()]));
             }
         }
         return $this->render('transporte/administracion/comercial/cliente/nuevo.html.twig', [

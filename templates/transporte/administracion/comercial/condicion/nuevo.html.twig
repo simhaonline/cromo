@@ -1,0 +1,93 @@
+{% extends 'base_transporte.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="col-sm-2 control-label">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+                <label for="form_precioRel" class="col-sm-2 control-label">Precio:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.precioRel, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_porcentajeManejo" class="col-sm-2 control-label">Porcentaje manejo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.porcentajeManejo, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+                <label for="form_manejoMinimoUnidad" class="col-sm-2 control-label">Manejo minimo unidad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.manejoMinimoUnidad, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_manejoMinimoDespacho" class="col-sm-2 control-label">Manejo minimo unidad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.manejoMinimoDespacho, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+                <label for="form_pesoMinimo" class="col-sm-2 control-label">Peso minimo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.pesoMinimo, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_precioPeso" class="col-sm-1 control-label"></label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.precioPeso) }}
+                </div>
+                <label for="form_precioUnidad" class="col-sm-1 control-label"></label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.precioUnidad) }}
+                </div>
+                <label for="form_precioAdicional" class="col-sm-1 control-label"></label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.precioAdicional) }}
+                </div>
+                <label for="form_permiteRecaudo" class="col-sm-1 control-label"></label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.permiteRecaudo) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_precioGeneral" class="col-sm-1 control-label"></label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.precioGeneral) }}
+                </div>
+                <label for="form_redondearFlete" class="col-sm-1 control-label"></label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.redondearFlete) }}
+                </div>
+                <label for="form_limitarDescuentoReexpedicion" class="col-sm-1 control-label"></label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.limitarDescuentoReexpedicion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_descuentoPeso" class="col-sm-2 control-label">Descuento peso:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.descuentoPeso, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+                <label for="form_descuentoUnidad" class="col-sm-2 control-label">Descuento unidad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.descuentoUnidad, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Comentario:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentario, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_comercial_condicion_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

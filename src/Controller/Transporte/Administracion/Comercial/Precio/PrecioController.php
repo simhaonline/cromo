@@ -44,7 +44,7 @@ class PrecioController extends Controller
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arPrecio);
                 $em->flush();
-                return $this->redirect($this->generateUrl('admin_detalle', ['modulo' => 'transporte', 'entidad' => 'precio', 'id' => $arPrecio->getCodigoPrecioPk()]));
+                return $this->redirect($this->generateUrl('transporte_administracion_comercial_precio_detalle', ['id' => $arPrecio->getCodigoPrecioPk()]));
             }
         }
         return $this->render('transporte/administracion/comercial/precio/nuevo.html.twig', [
@@ -99,8 +99,8 @@ class PrecioController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arPrecioDetalle);
-                $em->flush();
             }
+            $em->flush();
         }
 
         return $this->render('transporte/administracion/comercial/precio/detalleNuevo.html.twig', [

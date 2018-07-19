@@ -1,0 +1,21 @@
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Filtros
+        </div>
+        <div class="panel-body">
+            <label class="col-sm-2 control-label">Codigo movimiento:</label>
+            <div class="col-sm-4">
+                {{ form_widget(form.txtCodigoMovimiento) }}
+            </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.btnReliquidar) }}
+        </div>
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

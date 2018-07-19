@@ -2,9 +2,9 @@
 
 namespace App\Controller\Transporte\Administracion\Comercial\Precio;
 
-use App\Entity\Transporte\TteCliente;
-use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TtePrecio;
+use App\Entity\Transporte\TtePrecioDetalle;
+use App\Form\Type\Transporte\PrecioDetalleType;
 use App\Form\Type\Transporte\PrecioType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,71 +14,98 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class PrecioController extends Controller
 {
-   /**
-    * @Route("/transporte/adm/comercial/precio/lista", name="transporte_administracion_comercial_precio_lista")
-    */    
+    /**
+     * @Route("/transporte/administracion/comercial/precio/lista", name="transporte_administracion_comercial_precio_lista")
+     */
     public function lista(Request $request)
     {
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $query = $this->getDoctrine()->getRepository(TtePrecio::class)->lista();
-        $arPrecios = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        $arPrecios = $paginator->paginate($query, $request->query->getInt('page', 1), 10);
         return $this->render('transporte/administracion/comercial/precio/lista.html.twig', ['arPrecios' => $arPrecios]);
     }
 
     /**
-     * @Route("/transporte/adm/comercial/precio/nuevo/{codigoPrecio}", name="transporte_administracion_comercial_precio_nuevo")
+     * @Route("/transporte/administracion/comercial/precio/nuevo/{id}", name="transporte_administracion_comercial_precio_nuevo")
      */
-    public function nuevo(Request $request, $codigoPrecio)
+    public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arPrecio = new TtePrecio();
-        if($codigoPrecio == 0) {
-
+        if ($id != '0') {
+            $arPrecio = $em->getRepository(TtePrecio::class)->find($id);
+            if (!$arPrecio) {
+                return $this->redirect($this->generateUrl('transporte_administracion_comercial_precio_lista'));
+            }
         }
         $form = $this->createForm(PrecioType::class, $arPrecio);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arPrecio = $form->getData();
-            $em->persist($arPrecio);
-            $em->flush();
-            if ($form->get('guardarnuevo')->isClicked()) {
-                return $this->redirect($this->generateUrl('transporte_administracion_comercial_precio_nuevo', array('codigoPrecio' => 0)));
-            } else {
-                return $this->redirect($this->generateUrl('transporte_administracion_comercial_precio_lista'));
+            if ($form->get('guardar')->isClicked()) {
+                $em->persist($arPrecio);
+                $em->flush();
+                return $this->redirect($this->generateUrl('admin_detalle', ['modulo' => 'transporte', 'entidad' => 'precio', 'id' => $arPrecio->getCodigoPrecioPk()]));
             }
-
         }
-        return $this->render('transporte/administracion/comercial/precio/nuevo.html.twig', ['arPrecio' => $arPrecio,'form' => $form->createView()]);
+        return $this->render('transporte/administracion/comercial/precio/nuevo.html.twig', [
+            'arPrecio' => $arPrecio,
+            'form' => $form->createView()
+        ]);
     }
 
     /**
-     * @Route("/transporte/adm/comercial/precio/detalle/{codigoPrecio}", name="transporte_administracion_comercial_precio_detalle")
+     * @Route("/transporte/administracion/comercial/precio/detalle/{id}", name="transporte_administracion_comercial_precio_detalle")
      */
-    public function detalle(Request $request, $codigoPrecio)
+    public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        $arPrecio = $em->getRepository(TtePrecio::class)->find($id);
         $form = $this->createFormBuilder()
-            ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
+            ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
             ->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnImprimir')->isClicked()) {
-                $respuesta = $em->getRepository(TteGuia::class)->imprimir($codigoGuia);
-                if($respuesta) {
-                    $em->flush();
-                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
-                    //$formato = new \App\Formato\TteDespacho();
-                    //$formato->Generar($em, $codigoGuia);
-                }
+        if ($form->get('btnEliminarDetalle')->isClicked()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            $em->getRepository(TtePrecioDetalle::class)->eliminar($arrSeleccionados);
+        }
 
+        $arPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->lista($id);
+
+
+        return $this->render('transporte/administracion/comercial/precio/detalle.html.twig', array(
+            'arPrecio' => $arPrecio,
+            'arPrecioDetalles' => $arPrecioDetalle,
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * * @Route("/transporte/administracion/comercial/precio/detalle/nuevo/{id}", name="transporte_administracion_comercial_precio_detalle_nuevo")
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function detalleNuevo(Request $request, $id)
+    {
+        $paginator  = $this->get('knp_paginator');
+        $em = $this->getDoctrine()->getManager();
+        $arPrecioDetalle = new TtePrecioDetalle();
+        if ($id != '0') {
+            $arPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->find($id);
+        }
+        $form = $this->createForm(PrecioDetalleType::class, $arPrecioDetalle);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $em->persist($arPrecioDetalle);
+                $em->flush();
             }
         }
 
-        return $this->render('transporte/movimiento/transporte/guia/detalle.html.twig', [
-            'arGuia' => $arGuia,
-            'form' => $form->createView()]);
+        return $this->render('transporte/administracion/comercial/precio/detalleNuevo.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
-
 }
 

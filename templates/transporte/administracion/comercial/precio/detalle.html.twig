@@ -1,56 +1,35 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    <div class="btn-toolbar" style="float:left">
-        <div class="btn-group">
-            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-        </div>
+    <div class="row">
+        <!-- /.col-lg-12 -->
     </div>
-    <div style="float:right">
-        {% if 1 == 1 %}<span class="label label-default">Generado</span>{% endif %}
-    </div>
-    <br /><br />
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arFactura.codigoFacturaPk }}</td>
-            <td class="titulo">FECHA:</td>
-            <td class="td-in-well">{{ arFactura.fecha |date("Y/m/d") }}</td>
-            <td class="titulo" >FLETE:</td>
-            <td align="right">{{ arFactura.vrFlete | number_format(0, '.', ',')}}</td>
+            <td class="titulo"><b>CODIGO:</b></td>
+            <td class="td-in-well">{{ arPrecio.codigoPrecioPk }}</td>
+            <td class="titulo"><b>NOMBRE</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arPrecio.nombre }}</td>
         </tr>
         <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">GUIAS:</td>
-            <td class="td-in-well">{{ arFactura.guias }}</td>
-            <td class="titulo" >MANEJO:</td>
-            <td align="right">{{ arFactura.vrManejo | number_format(0, '.', ',')}}</td>
+            <td class="titulo"><b>FECHA VENCE:</b></td>
+            <td class="td-in-well">{{ arPrecio.fechaVence | date ('Y-m-d') }}</td>
+            <td class="titulo"><b></b></td>
+            <td></td>
         </tr>
         <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo" >SUBTOTAL:</td>
-            <td align="right">{{ arFactura.vrSubtotal | number_format(0, '.', ',')}}</td>
-        </tr>
-        <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo" >TOTAL:</td>
-            <td align="right">{{ arFactura.vrTotal | number_format(0, '.', ',')}}</td>
-        </tr>
-
-        <tr>
-            <td class="titulo" >COMENTARIO: </td>
-            <td class="td-in-well" colspan="5">{{ arFactura.comentario }}</td>
+            <td class="titulo"><b>COMENTARIOS:</b></td>
+            <td class="td-in-well" colspan="7">{{ arPrecio.comentario }}</td>
         </tr>
     </table>
+    <a name="marcador"></a>
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#guias" data-toggle="tab">Guias</a></li>
+        <li class="active"><a href="#contrato" data-toggle="tab">Detalle</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="guias">
@@ -59,35 +38,29 @@
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>OI</th>
-                            <th>OC</th>
-                            <th>NUMERO</th>
-                            <th>CLIENTE</th>
-                            <th>DESTINO</th>
-                            <th>UND</th>
-                            <th>PES</th>
-                            <th>VOL</th>
-                            <th>FLETE</th>
-                            <th>MANEJO</th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="PORCENTAJE MANEJO">ID</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="MANEJO UNIDAD MINIMO">VR PESO</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="MANEJO DESPACHO MINIMO">VR UND</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="MANEJO DESPACHO MINIMO">PESO TOPE</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="MANEJO DESPACHO MINIMO">VR PESO TOPE</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="MANEJO DESPACHO MINIMO">VR PESO TOPE ADIC</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="MANEJO DESPACHO MINIMO">MINIMO</p>
                             <th></th>
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for arGuia in arGuias %}
+                        {% for arPrecioDetalle in arPrecioDetalles %}
                             <tr>
-                                <td>{{ arGuia.codigoGuiaPk }}</td>
-                                <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
-                                <td>{{ arGuia.codigoOperacionCargoFk }}</td>
-                                <td>{{ arGuia.numero }}</td>
-                                <td>{{ arGuia.clienteNombreCorto }}</td>
-                                <td>{{ arGuia.ciudadDestino }}</td>
-                                <td style="text-align: right">{{ arGuia.unidades }}</td>
-                                <td style="text-align: right">{{ arGuia.pesoReal }}</td>
-                                <td style="text-align: right">{{ arGuia.pesoVolumen }}</td>
-                                <td style="text-align: right">{{ arGuia.vrFlete }}</td>
-                                <td style="text-align: right">{{ arGuia.vrManejo }}</td>
-                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
+                                <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
+                                <td>{{ arPrecioDetalle.vrPeso }}</td>
+                                <td>{{ arPrecioDetalle.vrUnidad }}</td>
+                                <td>{{ arPrecioDetalle.pesoTope }}</td>
+                                <td>{{ arPrecioDetalle.vrPesoTope }}</td>
+                                <td>{{ arPrecioDetalle.vrPesoTopeAdicional }}</td>
+                                <td>{{ arPrecioDetalle.minimo }}</td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                value="{{ arPrecioDetalle.codigoPrecioDetallePk }}"/></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -96,15 +69,16 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Adicionar</a>
+                        <a class="btn btn-default btn-sm"
+                        href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_precio_detalle_nuevo', {'id': arPrecio.codigoPrecioPk }) }}', 'precioDetalles', 600, 900)">Nuevo</a>
                     </div>
                     <div class="btn-group">
-                        {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                        {{ form_widget(form.btnEliminarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
     {{ form_end(form) }}
-    <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_lista') }}">Volver</a>
+    <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_comercial_precio_lista') }}">Volver</a>
 {% endblock %}

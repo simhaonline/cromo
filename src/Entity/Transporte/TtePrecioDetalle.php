@@ -48,7 +48,7 @@ class TtePrecioDetalle
     private $vrUnidad = 0;
 
     /**
-     * @ORM\Column(name="peso_tope", type="integer", options={"default" : 0})
+     * @ORM\Column(name="peso_tope", type="float", options={"default" : 0})
      */
     private $pesoTope = 0;
 

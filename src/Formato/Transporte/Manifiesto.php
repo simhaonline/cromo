@@ -20,20 +20,22 @@ class Manifiesto extends \FPDF {
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Manifiesto$codigoDespacho.pdf", 'D');
+        $pdf->Output("Manifiesto$codigoDespacho.pdf", 'I');
     }
 
     public function Header() {
         $arDespacho = self::$em->getRepository(TteDespacho::class)->find(self::$codigoDespacho);
         $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->find(1);
+        $this->Image('../public/img/recursos/transporte/logo_min_transporte.jpg', 15, 10, 70, 38);
+        $this->Image('../public/img/empresa/logo.jpeg', 90, 30, 40, 15);
         $this->SetFont('Arial', 'b', 14);
         $this->Text(90, 15, "MANIFIESTO ELECTRONICO DE CARGA");
         $this->Text(90, 20, $arConfiguracion->getNombre());
         $this->Text(90, 25, "NIT: " . $arConfiguracion->getNit());
-
-        $this->Text(90, 35, $arConfiguracion->getDireccion());
-        $this->Text(90, 40, $arConfiguracion->getTelefono());
-        $this->Text(90, 45, "BUCARAMANGA - SANTANDER");
+        $this->SetFont('Arial', 'b', 9);
+        $this->Text(138, 35, $arConfiguracion->getDireccion());
+        $this->Text(138, 40, $arConfiguracion->getTelefono());
+        $this->Text(138, 45, "BUCARAMANGA - SANTANDER");
 
         $this->SetFont('Arial', 'b', 5);
         $this->SetXY(190, 10);

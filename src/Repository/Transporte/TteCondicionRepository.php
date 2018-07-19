@@ -12,6 +12,7 @@ class TteCondicionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TteCondicion::class);
     }
+
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
             ->from('App:Transporte\TteCondicion','cc')

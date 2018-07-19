@@ -87,8 +87,9 @@ class ClienteController extends Controller
     /**
      * @param Request $request
      * @param $id
-     * @Route("/transporte/administracion/comercial/cliente/detalle/nuevo/{id}", name="transporte_administracion_comercial_cliente_detalle_nuevo")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * * @Route("/transporte/administracion/comercial/cliente/detalle/nuevo/{id}", name="transporte_administracion_comercial_cliente_detalle_nuevo")
+     * @throws \Doctrine\ORM\ORMException
      */
     public function detalleNuevo(Request $request, $id)
     {

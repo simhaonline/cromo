@@ -9,9 +9,9 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label for="form_sectorRel" class="col-sm-2 control-label"></label>
+                <label for="form_sectorRel" class="col-sm-2 control-label">Fecha vence:</label>
                 <div class="col-sm-4">
-
+                    {{ form_widget(form.fechaVence) }}
                 </div>
             </div>
             <div class="form-group">
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('transporte_adm_comercial_precio_lista') }}">Cancelar</a>
+        <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_comercial_precio_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
         {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>

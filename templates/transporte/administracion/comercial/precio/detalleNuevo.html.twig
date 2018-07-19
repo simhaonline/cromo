@@ -1,0 +1,60 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">Detalle nuevo</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_apellido1" class="col-sm-2 control-label">Producto:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.productoRel, { 'attr': {'class': 'form-control to-select-2'}}) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_apellido1" class="col-sm-2 control-label">Ciudad origen:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ciudadOrigenRel, { 'attr': {'class': 'form-control to-select-2'}}) }}
+                </div>
+                <label for="form_apellido2" class="col-sm-2 control-label">Ciudad destino:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ciudadDestinoRel, { 'attr': {'class': 'form-control to-select-2'}}) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_vrPeso" class="col-sm-2 control-label">Valor peso:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrPeso) }}
+                </div>
+                <label for="form_apellido2" class="col-sm-2 control-label">Valor unidad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrUnidad) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_vrPeso" class="col-sm-2 control-label">Peso tope:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.pesoTope) }}
+                </div>
+                <label for="form_apellido2" class="col-sm-2 control-label">Valor peso tope:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrPesoTope) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_vrPeso" class="col-sm-2 control-label">Peso tope adicional:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrPesoTopeAdicional) }}
+                </div>
+                <label for="form_apellido2" class="col-sm-2 control-label">Minimo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.minimo) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

@@ -33,7 +33,7 @@ class TtePrecio
     private $comentario;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TtePrecio", mappedBy="precioRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TtePrecioDetalle", mappedBy="precioRel")
      */
     protected $preciosDetallesPrecioRel;
 
@@ -137,8 +137,6 @@ class TtePrecio
     {
         $this->condicionesPrecioRel = $condicionesPrecioRel;
     }
-
-
 
 }
 

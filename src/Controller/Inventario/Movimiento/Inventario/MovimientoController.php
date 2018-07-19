@@ -87,14 +87,12 @@ class MovimientoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arMovimiento->setFecha(new \DateTime('now'));
+                $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
+                $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
+                $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
                 $em->persist($arMovimiento);
                 $em->flush();
                 return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));
-            }
-            if ($form->get('guardarnuevo')->isClicked()) {
-                $em->persist($arMovimiento);
-                $em->flush();
-                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_nuevo', ['id' => 0]));
             }
         }
         return $this->render('inventario/movimiento/inventario/nuevo.html.twig', [
@@ -238,8 +236,10 @@ class MovimientoController extends Controller
                             if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'ENT' || $cantidad <= $arItem->getCantidadExistencia()) {
                                 $arMovimientoDetalle = new InvMovimientoDetalle();
                                 $arMovimientoDetalle->setMovimientoRel($arMovimiento);
+                                $arMovimientoDetalle->setOperacionInventario($arMovimiento->getOperacionInventario());
                                 $arMovimientoDetalle->setItemRel($arItem);
                                 $arMovimientoDetalle->setCantidad($cantidad);
+                                $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
                                 $arMovimientoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
                                 $em->persist($arMovimientoDetalle);
                             } else {

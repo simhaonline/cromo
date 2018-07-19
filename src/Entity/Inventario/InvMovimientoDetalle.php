@@ -48,17 +48,32 @@ class InvMovimientoDetalle
     private $loteFk;
 
     /**
-     * @ORM\Column(name="cantidad", type="integer")
+     * @ORM\Column(name="cantidad", type="integer", options={"default" : 0})
      */
     private $cantidad = 0;
 
     /**
-     * @ORM\Column(name="porcentaje_iva", type="float", nullable=true)
+     * @ORM\Column(name="cantidad_operada", type="integer", options={"default" : 0})
+     */
+    private $cantidadOperada = 0;
+
+    /**
+     * @ORM\Column(name="cantidad_saldo", type="integer", options={"default" : 0})
+     */
+    private $cantidadSaldo = 0;
+
+    /**
+     * @ORM\Column(name="vr_costo", type="float", options={"default" : 0})
+     */
+    private $vrCosto = 0;
+
+    /**
+     * @ORM\Column(name="porcentaje_iva", type="float", nullable=true, options={"default" : 0})
      */
     private $porcentajeIva = 0;
 
     /**
-     * @ORM\Column(name="porcentaje_descuento", type="float", nullable=true)
+     * @ORM\Column(name="porcentaje_descuento", type="float", nullable=true, options={"default" : 0})
      */
     private $porcentajeDescuento = 0;
 
@@ -68,27 +83,27 @@ class InvMovimientoDetalle
     private $vrIva = 0;
 
     /**
-     * @ORM\Column(name="vr_precio", type="float")
+     * @ORM\Column(name="vr_precio", type="float", options={"default" : 0})
      */
     private $vrPrecio = 0;
 
     /**
-     * @ORM\Column(name="vr_subtotal", type="float")
+     * @ORM\Column(name="vr_subtotal", type="float", options={"default" : 0})
      */
     private $vrSubtotal = 0;
 
     /**
-     * @ORM\Column(name="vr_descuento", type="float")
+     * @ORM\Column(name="vr_descuento", type="float", options={"default" : 0})
      */
     private $vrDescuento = 0;
 
     /**
-     * @ORM\Column(name="vr_neto", type="float")
+     * @ORM\Column(name="vr_neto", type="float", options={"default" : 0})
      */
     private $vrNeto = 0;
 
     /**
-     * @ORM\Column(name="vr_total", type="float")
+     * @ORM\Column(name="vr_total", type="float", options={"default" : 0})
      */
     private $vrTotal = 0;
 
@@ -241,6 +256,22 @@ class InvMovimientoDetalle
     public function setCantidad($cantidad): void
     {
         $this->cantidad = $cantidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCosto()
+    {
+        return $this->vrCosto;
+    }
+
+    /**
+     * @param mixed $vrCosto
+     */
+    public function setVrCosto($vrCosto): void
+    {
+        $this->vrCosto = $vrCosto;
     }
 
     /**
@@ -434,6 +465,39 @@ class InvMovimientoDetalle
     {
         $this->ordenCompraDetalleRel = $ordenCompraDetalleRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadOperada()
+    {
+        return $this->cantidadOperada;
+    }
+
+    /**
+     * @param mixed $cantidadOperada
+     */
+    public function setCantidadOperada($cantidadOperada): void
+    {
+        $this->cantidadOperada = $cantidadOperada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadSaldo()
+    {
+        return $this->cantidadSaldo;
+    }
+
+    /**
+     * @param mixed $cantidadSaldo
+     */
+    public function setCantidadSaldo($cantidadSaldo): void
+    {
+        $this->cantidadSaldo = $cantidadSaldo;
+    }
+
 
 
 }

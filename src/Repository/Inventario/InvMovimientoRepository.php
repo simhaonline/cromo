@@ -34,7 +34,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             }
         } else {
             if ($this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
-                $this->afectar($arMovimiento, 1);
+                //$this->afectar($arMovimiento, 1);
                 $arMovimiento->setEstadoAutorizado(1);
                 $this->getEntityManager()->persist($arMovimiento);
                 $this->getEntityManager()->flush();
@@ -102,7 +102,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
     public function desautorizar($arMovimiento)
     {
         if ($arMovimiento->getEstadoAutorizado() == 1 && $arMovimiento->getEstadoAprobado() == 0) {
-            $this->afectar($arMovimiento, -1);
+            //$this->afectar($arMovimiento, -1);
             $arMovimiento->setEstadoAutorizado(0);
             $this->getEntityManager()->persist($arMovimiento);
             $this->getEntityManager()->flush();
@@ -120,6 +120,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
     {
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+
             $arItem = $this->getEntityManager()->getRepository(InvItem::class)->find($arMovimientoDetalle->getCodigoItemFk());
             $arLote = $this->getEntityManager()->getRepository(InvLote::class)
                 ->findOneBy(['loteFk' => $arMovimientoDetalle->getLoteFk(), 'codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $arMovimientoDetalle->getCodigoBodegaFk()]);
@@ -142,10 +143,24 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $this->getEntityManager()->persist($arOrdenCompraDetalle);
                 }
             }
+            $existenciaAnterior = $arItem->getCantidadExistencia();
+            $costoPromedio = $arItem->getVrCostoPromedio();
+            $cantidadSaldo = $arItem->getCantidadExistencia() + ($arMovimientoDetalle->getCantidadOperada() * $tipo);
             $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + ($arMovimientoDetalle->getCantidad() * $arMovimiento->getDocumentoRel()->getOperacionInventario()) * $tipo);
-            $arLote->setCantidadDisponible($arLote->getCantidadDisponible() + ($arMovimientoDetalle->getCantidad() * $arMovimiento->getDocumentoRel()->getOperacionInventario()) * $tipo);
-            $arItem->setCantidadExistencia($arItem->getCantidadExistencia() + ($arMovimientoDetalle->getCantidad() * $arMovimiento->getDocumentoRel()->getOperacionInventario()) * $tipo);
-            $this->getEntityManager()->persist($arItem, $arLote);
+            $arLote->setCantidadDisponible($arLote->getCantidadDisponible() + $arMovimientoDetalle->getCantidadOperada() * $tipo);
+
+            $arMovimientoDetalle->setCantidadSaldo($cantidadSaldo);
+            if($tipo == 1) {
+                if($arMovimiento->getGeneraCostoPromedio()) {
+                    if($existenciaAnterior != 0) {
+                        $costoPromedio = (($existenciaAnterior * $costoPromedio) + (($arMovimientoDetalle->getCantidad() * $arMovimientoDetalle->getVrPrecio()))) / $cantidadSaldo;
+                    }
+                }
+                $arMovimientoDetalle->setVrCosto($costoPromedio);
+            }
+            $arItem->setCantidadExistencia($cantidadSaldo);
+            $arItem->setVrCostoPromedio($costoPromedio);
+            $this->getEntityManager()->persist($arItem, $arLote, $arMovimientoDetalle);
         }
     }
 
@@ -205,6 +220,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
     {
         $arDocumento = $this->getEntityManager()->getRepository(InvDocumento::class)->find($arMovimiento->getCodigoDocumentoFk());
         if (!$arMovimiento->getEstadoAprobado()) {
+            $this->afectar($arMovimiento, 1);
             $stringFecha = $arMovimiento->getFecha()->format('Y-m-d');
             $plazo = $arMovimiento->getTerceroRel()->getPlazoPago();
 
@@ -215,6 +231,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $arDocumento->setConsecutivo($arDocumento->getConsecutivo() + 1);
             $arMovimiento->setEstadoAprobado(1);
             $arMovimiento->setNumero($arDocumento->getConsecutivo());
+            $arMovimiento->setFecha(new \DateTime('now'));
             $this->getEntityManager()->persist($arMovimiento);
             $this->getEntityManager()->persist($arDocumento);
         }

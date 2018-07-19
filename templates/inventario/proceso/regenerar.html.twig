@@ -1,5 +1,7 @@
 {% extends 'base_inventario.html.twig' %}
 {% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_errors(form) }}
     <div class="panel panel-default">
         <div class="panel-heading">
             Regenerar inventario
@@ -8,4 +10,6 @@
 
         </div>
     </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
 {% endblock %}

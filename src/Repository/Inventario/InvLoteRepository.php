@@ -78,40 +78,5 @@ class InvLoteRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    /**
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public function regenerarKardex()
-    {
-        $arLote = new InvLote();
-        //Se limpian las existencias en los lotes y en el inventario
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
-            ->update(InvLote::class, 'l')
-            ->set('l.cantidadDisponible', 0)
-            ->set('l.cantidadExistencia', 0);
-        $queryBuilder->getQuery()->execute();
 
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
-            ->update(InvItem::class, 'i')
-            ->set('l.cantidadExistencia', 0);
-        $queryBuilder->getQuery()->execute();
-        $arItems = $this->getEntityManager()->getRepository(InvItem::class)->informacionRegenerarKardex();
-        foreach ($arItems as $arItem) {
-            $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->informacionRegenerarKardex($arItem['codigoItemPk']);
-            if (count($arMovimientoDetalles) > 0) {
-                foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-                    if ($arLote->getCodigoBodegaFk() != $arMovimientoDetalle['codigoBodegaFk']
-                        && $arLote->getCodigoItemFk() != $arMovimientoDetalle['codigoItemFk']
-                        && $arLote->getLoteFk() != $arMovimientoDetalle['loteFk']) {
-                        $arLote = $this->getEntityManager()->getRepository(InvLote::class)
-                            ->findOneBy(['codigoItemFk' => $arItem['codigoItemPk'], 'codigoBodegaFk' => $arMovimientoDetalle['codigoBodegaFk'], 'codigoLotePk' => $arMovimientoDetalle['lotePk']]);
-                    }
-                    if ($arLote) {
-                        $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + $arMovimientoDetalle['cantiadadOperada']);
-                        $this->getEntityManager()->persist($arLote);
-                    }
-                }
-            }
-        }
-    }
 }

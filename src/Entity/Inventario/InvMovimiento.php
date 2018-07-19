@@ -158,6 +158,12 @@ class InvMovimiento
     private $operacionInventario = 0;
 
     /**
+     * @internal Para saber si el documento genera costo promedio
+     * @ORM\Column(name="genera_costo_promedio", type="boolean")
+     */
+    private $generaCostoPromedio = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvDocumento", inversedBy="movimientosDocumentoRel")
      * @ORM\JoinColumn(name="codigo_documento_fk", referencedColumnName="codigo_documento_pk")
      */
@@ -732,5 +738,24 @@ class InvMovimiento
     {
         $this->sucursalRel = $sucursalRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraCostoPromedio()
+    {
+        return $this->generaCostoPromedio;
+    }
+
+    /**
+     * @param mixed $generaCostoPromedio
+     */
+    public function setGeneraCostoPromedio($generaCostoPromedio): void
+    {
+        $this->generaCostoPromedio = $generaCostoPromedio;
+    }
+
+
+
 }
 

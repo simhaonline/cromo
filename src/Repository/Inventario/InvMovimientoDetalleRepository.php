@@ -2,6 +2,7 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvSucursal;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;
@@ -11,6 +12,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvMovimientoDetalleRepository extends ServiceEntityRepository
 {
@@ -131,4 +133,111 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->andWhere('md.codigoItemFk = '.$codigoItem);
         return $queryBuilder->getQuery()->execute();
     }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function regenerarExistencia()
+    {
+        $arLote = new InvLote();
+        //Se limpian las existencias en los lotes y en el inventario
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->update(InvLote::class, 'l')
+            ->set('l.cantidadDisponible', 0)
+            ->set('l.cantidadExistencia', 0);
+        $queryBuilder->getQuery()->execute();
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->update(InvItem::class, 'i')
+            ->set('l.cantidadExistencia', 0);
+        $queryBuilder->getQuery()->execute();
+        $arItems = $this->getEntityManager()->getRepository(InvItem::class)->informacionRegenerarKardex();
+        foreach ($arItems as $arItem) {
+            $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->informacionRegenerarKardex($arItem['codigoItemPk']);
+            if (count($arMovimientoDetalles) > 0) {
+                foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+                    if ($arLote->getCodigoBodegaFk() != $arMovimientoDetalle['codigoBodegaFk']
+                        && $arLote->getCodigoItemFk() != $arMovimientoDetalle['codigoItemFk']
+                        && $arLote->getLoteFk() != $arMovimientoDetalle['loteFk']) {
+                        $arLote = $this->getEntityManager()->getRepository(InvLote::class)
+                            ->findOneBy(['codigoItemFk' => $arItem['codigoItemPk'], 'codigoBodegaFk' => $arMovimientoDetalle['codigoBodegaFk'], 'codigoLotePk' => $arMovimientoDetalle['lotePk']]);
+                    }
+                    if ($arLote) {
+                        $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + $arMovimientoDetalle['cantiadadOperada']);
+                        $this->getEntityManager()->persist($arLote);
+                    }
+                }
+            }
+        }
+    }
+
+    public function listaRegenerarCostos($codigoItem){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class,'md')
+            ->select('md.codigoMovimientoDetallePk')
+            ->addSelect('md.cantidad')
+            ->addSelect('md.cantidadOperada')
+            ->addSelect('md.vrCosto')
+            ->addSelect('m.generaCostoPromedio')
+            ->leftJoin('md.movimientoRel','m')
+            ->where('m.estadoAprobado = 1')
+            ->andWhere('md.codigoItemFk = '.$codigoItem);
+        return $queryBuilder->getQuery()->execute();
+    }
+
+    public function regenerarCosto() {
+        $em = $this->getEntityManager();
+        $arItemes = $em->getRepository(InvItem::class)->listaRegenerar();
+        foreach ($arItemes as $arItem) {
+            $costoPromedio = 0;
+            $existenciaAnterior = 0;
+            $arMovimientosDetalles = $em->getRepository(InvMovimientoDetalle::class)->listaRegenerarCostos($arItem['codigoItemPk']);
+            foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
+                if($arMovimientoDetalle['generaCostoPromedio']) {
+                    $costoPromedio = $arMovimientoDetalle['vrCosto'];
+                    if($existenciaAnterior != 0) {
+                        $costoPromedio = (($existenciaAnterior * $costoPromedio) + (($arMovimientoDetalle['cantidad'] * $arMovimientoDetalle['vrCosto']))) / $existenciaAnterior;
+                    }
+                }
+                $existenciaAnterior += $arMovimientoDetalle['cantidadOperada'];
+                $arMovimientoDetalleAct = $em->getRepository(InvMovimientoDetalle::class)->find($arMovimientoDetalle['codigoMovimientoDetallePk']);
+                $arMovimientoDetalleAct->setVrCosto($costoPromedio);
+                $arMovimientoDetalleAct->setCantidadSaldo($existenciaAnterior);
+                $em->persist($arMovimientoDetalleAct);
+            }
+            $arItemAct = $em->getRepository(InvItem::class)->find($arItem['codigoItemPk']);
+            $arItemAct->setVrCostoPromedio($costoPromedio);
+            $arItemAct->setCantidadExistencia($existenciaAnterior);
+            $em->persist($arItemAct);
+        }
+        $em->flush();
+    }
+
+    public function listaKardex()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoMovimientoDetallePk')
+            ->addSelect('md.codigoItemFk')
+            ->addSelect('i.nombre AS nombreItem')
+            ->addSelect('md.cantidad')
+            ->addSelect('md.cantidadOperada')
+            ->addSelect('md.cantidadSaldo')
+            ->addSelect('md.vrCosto')
+            ->addSelect('md.vrPrecio')
+            ->addSelect('m.fecha')
+            ->addSelect('m.numero AS numeroMovimiento')
+            ->addSelect('d.nombre AS nombreDocumento')
+            ->leftJoin('md.movimientoRel', 'm')
+            ->leftJoin('m.documentoRel', 'd')
+            ->leftJoin('md.itemRel', 'i')
+            ->where('md.codigoMovimientoDetallePk != 0')
+            ->andWhere('m.estadoAprobado = 1')
+        ->orderBy('m.fecha', 'ASC');
+
+        if ($session->get('filtroInvItemCodigo')) {
+            $queryBuilder->andWhere("md.codigoItemFk = '{$session->get('filtroInvItemCodigo')}'");
+        }
+        return $queryBuilder;
+    }
+
 }

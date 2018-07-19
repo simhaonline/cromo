@@ -41,6 +41,7 @@ class InvItemRepository extends ServiceEntityRepository
             ->addSelect("ii.nombre AS NOMBRE")
             ->addSelect("ii.cantidadExistencia AS EXISTENCIAS")
             ->addSelect("ii.afectaInventario AS A_I")
+            ->addSelect("ii.vrCostoPromedio AS C_PROM")
             ->addSelect("ii.stockMinimo AS STOCK_MINIMO")
             ->addSelect("ii.stockMaximo AS STOCK_MAXIMO")
             ->addSelect("ii.vrPrecioPredeterminado AS PRECIO_PREDETERMINADO")
@@ -79,9 +80,11 @@ class InvItemRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function informacionRegenerarKardex(){
+    public function listaRegenerar(){
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvItem::class,'i')
             ->select('i.codigoItemPk');
         return $queryBuilder->getQuery()->execute();
     }
+
+
 }

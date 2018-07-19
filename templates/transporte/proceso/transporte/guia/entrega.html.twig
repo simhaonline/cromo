@@ -99,7 +99,7 @@
         });
 
         var agregarGuia = function(codigoGuia, fecha, hora) {
-            endpoint = "http://localhost/cromo/public/index.php/transporte/api/guia/entrega/" + codigoGuia;
+            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/entrega/" + codigoGuia;
             $.ajax(endpoint, {
                 type: 'POST',
                 data: {

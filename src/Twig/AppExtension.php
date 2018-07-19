@@ -8,6 +8,9 @@ use Twig\Extension\AbstractExtension;
 //Funciones personalizadas para twig
 class AppExtension extends AbstractExtension
 {
+    public function getEnv($env) {
+        return getenv($env);
+    }
 
     public function getFunctions()
     {
@@ -24,6 +27,7 @@ class AppExtension extends AbstractExtension
             new \Twig_Function('llenarArray', [$this, 'llenarArray']),
             new \Twig_Function('notificar', [$this, 'getNotifies']),
             new \Twig_Function('encriptar', [$this, 'encriptar']),
+            new \Twig_Function('env', [$this, "getEnv"]),
         ];
     }
 

@@ -185,7 +185,8 @@
         });
 
         var agregarGuia = function(codigoGuia, codigoDespacho) {
-            endpoint = "http://localhost/cromo/public/index.php/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
+            //endpoint = "http://localhost/cromo/public/index.php/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
+            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
             $.ajax(endpoint, {
                 type: 'POST',
                 data: {

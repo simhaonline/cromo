@@ -58,6 +58,11 @@ class TteFactura
     private $vrManejo = 0;
 
     /**
+     * @ORM\Column(name="vr_otros", type="float")
+     */
+    private $vrOtros = 0;
+
+    /**
      * @ORM\Column(name="vr_subtotal", type="float")
      */
     private $vrSubtotal = 0;
@@ -474,6 +479,22 @@ class TteFactura
     public function setPlazoPago($plazoPago): void
     {
         $this->plazoPago = $plazoPago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrOtros()
+    {
+        return $this->vrOtros;
+    }
+
+    /**
+     * @param mixed $vrOtros
+     */
+    public function setVrOtros($vrOtros): void
+    {
+        $this->vrOtros = $vrOtros;
     }
 
 

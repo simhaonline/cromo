@@ -6,7 +6,7 @@ use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-
+use Symfony\Component\HttpFoundation\Session\Session;
 class TteCumplidoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -14,15 +14,19 @@ class TteCumplidoRepository extends ServiceEntityRepository
         parent::__construct($registry, TteCumplido::class);
     }
 
-    public function lista(): array
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function lista()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT c.codigoCumplidoPk, 
-        c.fecha        
-        FROM App\Entity\Transporte\Cumplido c'
-        );
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCumplido::class, 'c');
+        $queryBuilder
+            ->select('c.codigoCumplidoPk')
+            ->addSelect('c.fecha')
+            ->where('c.codigoCumplidoPk <> 0');
+        $queryBuilder->orderBy('c.fecha', 'DESC');
+        return $queryBuilder;
     }
 
     public function liquidar($codigoCumplido): bool

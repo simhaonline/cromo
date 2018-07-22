@@ -2,8 +2,14 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
+use App\Controller\Estructura\FuncionesController;
+use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteCliente;
+use App\Form\Type\Transporte\CumplidoType;
+use App\Formato\Transporte\Cumplido;
+use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,46 +23,68 @@ class CumplidoController extends Controller
     */    
     public function lista(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $query = $this->getDoctrine()->getRepository(TteCumplido::class)->lista();
-        $arCumplidos = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('movimiento/transporte/cumplido/lista.html.twig', ['arCumplidos' => $arCumplidos]);
+        $arCumplidos = $paginator->paginate($em->getRepository(TteCumplido::class)->lista(), $request->query->getInt('page', 1),10);
+        return $this->render('transporte/movimiento/transporte/cumplido/lista.html.twig', ['arCumplidos' => $arCumplidos]);
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/cumplido/detalle/{codigoCumplido}", name="transporte_movimiento_transporte_cumplido_detalle")
+     * @Route("/transporte/movimiento/transporte/cumplido/detalle/{id}", name="transporte_movimiento_transporte_cumplido_detalle")
      */
-    public function detalle(Request $request, $codigoCumplido)
+    public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arCumplido = $em->getRepository(TteCumplido::class)->find($codigoCumplido);
-        $form = $this->createFormBuilder()
-            ->add('btnRetirarGuia', SubmitType::class, array('label' => 'Retirar'))
-            ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
-            ->getForm();
+        $arCumplido = $em->getRepository(TteCumplido::class)->find($id);
+        $paginator  = $this->get('knp_paginator');
+        $form = Estandares::botonera($arCumplido->getEstadoAutorizado(),$arCumplido->getEstadoAprobado(),$arCumplido->getEstadoAnulado());
+        $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        if($arCumplido->getEstadoAutorizado()){
+            $arrBtnRetirar['disabled'] = true;
+        }
+        $form->add('btnRetirarGuia', SubmitType::class, $arrBtnRetirar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-
+                $formato = new Cumplido();
+                $formato->Generar($em, $id);
+            }
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(TteCumplido::class)->autorizar($arCumplido);
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository(TteCumplido::class)->desAutorizar($arCumplido);
+            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(TteCumplido::class)->Aprobar($arCumplido);
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteCumplido::class)->retirarGuia($arrGuias);
                 if($respuesta) {
                     $em->flush();
-                    $this->getDoctrine()->getRepository(TteCumplido::class)->liquidar($codigoCumplido);
+                    $em->getRepository(TteCumplido::class)->liquidar($id);
                 }
             }
+            return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_detalle', ['id' => $id]));
         }
-        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->cumplido($codigoCumplido);
-        return $this->render('movimiento/transporte/cumplido/detalle.html.twig', [
+        $query = $this->getDoctrine()->getRepository(TteCumplidoPlanilla::class)->listaCumplidoDetalle($id);
+        $arCumplidoPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+
+        $query = $this->getDoctrine()->getRepository(TteCumplidoOtro::class)->listaCumplidoDetalle($id);
+        $arCumplidoOtros = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+
+        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->cumplido($id);
+        return $this->render('transporte/movimiento/transporte/cumplido/detalle.html.twig', [
             'arCumplido' => $arCumplido,
             'arGuias' => $arGuias,
+            'arCumplidoPlanillas' => $arCumplidoPlanillas,
+            'arCumplidoOtros' => $arCumplidoOtros,
             'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/transporte/movimiento/trasnporte/cumplido/detalle/adicionar/guia/{codigoCumplido}", name="transporte_movimiento_transporte_cumplido_detalle_adicionar_guia")
+     * @Route("/transporte/movimiento/transporte/cumplido/detalle/adicionar/guia/{codigoCumplido}", name="transporte_movimiento_transporte_cumplido_detalle_adicionar_guia")
      */
     public function detalleAdicionarGuia(Request $request, $codigoCumplido)
     {
@@ -72,7 +100,7 @@ class CumplidoController extends Controller
                 foreach ($arrSeleccionados AS $codigo) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
                     $arGuia->setCumplidoRel($arCumplido);
-                    $arGuia->setEstadoCumplido(1);
+                    $arGuia->setEstadoCumplidodo(1);
                     $em->persist($arGuia);
                 }
                 $em->flush();
@@ -81,8 +109,47 @@ class CumplidoController extends Controller
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->cumplidoPendiente($arCumplido->getCodigoClienteFk());
-        return $this->render('movimiento/transporte/despacho/detalleAdicionarRecibo.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/transporte/cumplido/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
+
+    /**
+     * @Route("/transporte/movimiento/transporte/cumplido/nuevo/{id}", name="transporte_movimiento_transporte_cumplido_nuevo")
+     */
+    public function nuevo(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $objFunciones = new FuncionesController();
+        $arCumplido = new TteCumplido();
+        if($id != 0) {
+            $arCumplido = $em->getRepository(TteCumplido::class)->find($id);
+        }
+        $form = $this->createForm(CumplidoType::class, $arCumplido);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+            if($txtCodigoCliente != '') {
+                $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
+                if($arCliente) {
+                    $arCumplido->setClienteRel($arCliente);
+                    if ($arCumplido->getPlazoPago() <= 0) {
+                        $arCumplido->setPlazoPago($arCumplido->getClienteRel()->getPlazoPago());
+                    }
+                    $fecha = new \DateTime('now');
+                    $arCumplido->setFecha($fecha);
+                    $arCumplido->setFechaVence($arCumplido->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha,$arCumplido->getPlazoPago()));
+                    $em->persist($arCumplido);
+                    $em->flush();
+                    if ($form->get('guardarnuevo')->isClicked()) {
+                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_nuevo', array('codigoRecogida' => 0)));
+                    } else {
+                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_lista'));
+                    }
+                }
+            }
+        }
+        return $this->render('transporte/movimiento/transporte/cumplido/nuevo.html.twig', ['$arCumplido' => $arCumplido,'form' => $form->createView()]);
+    }
+
 
 }
 

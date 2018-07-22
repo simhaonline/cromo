@@ -4,6 +4,8 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>FECHA</th>
+            <th></th>
             <th></th>
         </tr>
         </thead>
@@ -11,19 +13,31 @@
         {% for arCumplido in arCumplidos %}
             <tr>
                 <td>{{ arCumplido.codigoCumplidoPk }}</td>
-                <td style="text-align: center"><a href="{{ path('transporte_movimiento_transporte_cumplido_detalle', { 'codigoCumplido': arCumplido.codigoCumplidoPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td>{{ arCumplido.fecha | date('Y-m-d') }}</td>
+                <td style="text-align: center;">
+                    <a href="{{ path('transporte_movimiento_transporte_cumplido_nuevo',{'id' : arCumplido.codigoCumplidoPk}) }}">
+                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td style="text-align: center"><a href="{{ path('transporte_movimiento_transporte_cumplido_detalle', { 'id': arCumplido.codigoCumplidoPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <div class="btn-toolbar">
+    <div class="btn-group" style="float: left">
         <div class="btn-group" style="float: left">
             <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCumplidos.getTotalItemCount }}</span></div>
         </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arCumplidos) }}
+    </div>
 
-        <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-            {{ knp_pagination_render(arCumplidos) }}
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_cumplido_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>
     </div>
 {% endblock %}

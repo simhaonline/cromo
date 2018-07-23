@@ -1,0 +1,52 @@
+{% extends 'base_transporte.html.twig' %}
+{% block content %}
+    <div class="row">
+        <!-- /.col-lg-12 -->
+    </div>
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td class="titulo"><b>CODIGO NOVEDAD:</b></td>
+            <td class="td-in-well">{{ arNovedad.codigoNovedadPk }}</td>
+            <td class="titulo"><b>TIPO NOVEDAD:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arNovedad.novedadTipoRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>GUIA:</b></td>
+            <td class="td-in-well">{{ arNovedad.guiaRel.numero }}</td>
+            <td class="titulo"><b>FECHA REPORTE</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arNovedad.fechaReporte | date('Y-m-d') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>FECHA ATENCION:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arNovedad.fechaAtencion | date('Y-m-d') }}</td>
+            <td class="titulo"><b>FECHA SOLUCIONADO:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arNovedad.fechaSolucion | date('Y-m-d') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>REPORTADO:</b></td>
+            {{ validarTipo(arNovedad.estadoReporte) }}
+            <td class="titulo"><b>ATENDIDO:</b></td>
+            {{ validarTipo(arNovedad.estadoAtendido) }}
+        </tr>
+        <tr>
+            <td class="titulo"><b>SOLUCIONADO:</b></td>
+            {{ validarTipo(arNovedad.estadoSolucion) }}
+            <td class="titulo"><b></b></td>
+            <td class="titulo"><b></b></td>
+        </tr>
+    </table>
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td class="titulo"><b>DESCRIPCION:</b></td>
+            <td class="td-in-well">{{ arNovedad.descripcion }}</td>
+            <td class="titulo"><b>SOLUCION:</b></td>
+            <td class="td-in-well">{{ arNovedad.solucion }}</td>
+        </tr>
+    </table>
+    <a name="marcador"></a>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#contrato" data-toggle="tab">#</a></li>
+    </ul>
+    </br>
+    <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_novedad_lista') }}">Volver</a>
+{% endblock %}

@@ -5,12 +5,39 @@ namespace App\Repository\Transporte;
 use App\Entity\Transporte\TteNovedad;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteNovedadRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, TteNovedad::class);
+    }
+
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteNovedad::class, 'n')
+            ->select('n.codigoNovedadPk')
+            ->join('n.novedadTipoRel', 'nt')
+            ->join('n.guiaRel', 'g')
+            ->addSelect('nt.nombre')
+            ->addSelect('g.numero')
+            ->addSelect('n.descripcion')
+            ->addSelect('n.solucion')
+            ->addSelect('n.fechaReporte')
+            ->addSelect('n.fechaAtencion')
+            ->addSelect('n.fechaSolucion')
+            ->where('n.codigoNovedadPk IS NOT NULL')
+            ->orderBy('n.codigoNovedadPk', 'ASC');
+        if ($session->get('filtroNumeroGuia') != '') {
+            $queryBuilder->andWhere("g.numero LIKE '%{$session->get('filtroNumeroGuia')}%' ");
+        }
+        if ($session->get('filtroTteCodigoNovedadTipo')) {
+            $queryBuilder->andWhere("n.codigoNovedadTipoFk = '{$session->get('filtroTteCodigoNovedadTipo')}'");
+        }
+
+        return $queryBuilder;
     }
 
     public function guia($codigoGuia): array

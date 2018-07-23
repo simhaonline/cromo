@@ -36,7 +36,7 @@ class Despacho extends \FPDF {
         $this->SetFillColor(236, 236, 236);
         $this->SetFont('Arial', 'B', 10);
         //linea 1
-        $this->SetXY(10, 40);
+        $this->SetXY(5, 40);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(30, 6, utf8_decode("NUMERO:"), 1, 0, 'L', 1);
@@ -51,7 +51,7 @@ class Despacho extends \FPDF {
         $this->Cell(103, 6, utf8_decode($arDespacho->getConductorRel() ? $arDespacho->getConductorRel()->getNombreCorto()  : ''), 1, 0, 'L', 1);
 
         //linea 2
-        $this->SetXY(10, 45);
+        $this->SetXY(5, 45);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 5, utf8_decode("FECHA:"), 1, 0, 'L', 1);
@@ -72,14 +72,15 @@ class Despacho extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('GUIA', 'FECHA','CLIENTE','DESTINATARIO', 'CIUDAD', 'UND', 'PES', 'VOL');
+        $this->SetX(5);
+        $header = array('TIPO', 'GUIA', 'FECHA','CLIENTE','DESTINATARIO', 'DIRECCION', 'EMP', 'UND', 'PES');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(25, 15, 38, 50, 35, 10, 10, 10);
+        $w = array(8, 25, 10, 38, 50, 35, 10, 10, 10);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -94,7 +95,7 @@ class Despacho extends \FPDF {
 
     public function Body($pdf) {
         $arGuias = self::$em->getRepository(TteGuia::class)->despachoOrden(self::$codigoDespacho);
-        $pdf->SetX(10);
+        $pdf->SetX(5);
         $pdf->SetFont('Arial', '', 7);
         if($arGuias) {
             $numeroGuias = count($arGuias);
@@ -107,14 +108,16 @@ class Despacho extends \FPDF {
             $pesoTotal = 0;
             $volumenTotal = 0;
             foreach ($arGuias as $arGuia) {
-                $pdf->Cell(25, 4, $arGuia['numero'], 1, 0, 'L');
-                $pdf->Cell(15, 4, $arGuia['fechaIngreso']->format('Y-m-d'), 1, 0, 'L');
+                $pdf->SetX(5);
+                $pdf->Cell(8, 4, $arGuia['codigoGuiaTipoFk'], 1, 0, 'L');
+                $pdf->Cell(25, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
+                $pdf->Cell(10, 4, $arGuia['fechaIngreso']->format('m-d'), 1, 0, 'L');
                 $pdf->Cell(38, 4, substr(utf8_decode($arGuia['clienteNombreCorto']),0,20), 1, 0, 'L');
-                $pdf->Cell(50, 4, $arGuia['nombreDestinatario'], 1, 0, 'L');
-                $pdf->Cell(35, 4, $arGuia['ciudadDestino'], 1, 0, 'L');
+                $pdf->Cell(50, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,20), 1, 0, 'L');
+                $pdf->Cell(35, 4, substr(utf8_decode($arGuia['direccionDestinatario']),0,20), 1, 0, 'L');
+                $pdf->Cell(10, 4, $arGuia['codigoProductoFk'], 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(10, 4, number_format($arGuia['pesoVolumen'], 0, '.', ','), 1, 0, 'R');
                 $unidades += $arGuia['unidades'];
                 $peso += $arGuia['pesoReal'];
                 $volumen += $arGuia['pesoVolumen'];
@@ -122,6 +125,7 @@ class Despacho extends \FPDF {
                 $pesoTotal += $arGuia['pesoReal'];
                 $volumenTotal += $arGuia['pesoVolumen'];
                 $pdf->Ln();
+                $pdf->SetX(5);
                 $pdf->SetAutoPageBreak(true, 15);
 
                 $indiceGuia++;
@@ -135,8 +139,8 @@ class Despacho extends \FPDF {
                     $imprimirTotalGrupo = true;
                 }
                 if($imprimirTotalGrupo) {
-                    $pdf->Cell(163, 4, '', 1, 0, 'L');
-                    $pdf->Cell(10, 4, $unidades, 1, 0, 'R');
+                    $pdf->SetX(5);
+                    $pdf->Cell(176, 4, "TOTAL CIUDAD: ". $arGuia['ciudadDestino'], 1, 0, 'L');
                     $pdf->Cell(10, 4, $peso, 1, 0, 'R');
                     $pdf->Cell(10, 4, $volumen, 1, 0, 'R');
                     $pdf->Ln();
@@ -147,10 +151,12 @@ class Despacho extends \FPDF {
                 }
 
             }
+            $pdf->SetX(5);
             $pdf->Cell(163, 4, 'TOTAL', 1, 0, 'L');
             $pdf->Cell(10, 4, $unidadesTotal, 1, 0, 'R');
             $pdf->Cell(10, 4, $pesoTotal, 1, 0, 'R');
             $pdf->Cell(10, 4, $volumenTotal, 1, 0, 'R');
+            $pdf->SetX(5);
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }
@@ -161,11 +167,11 @@ class Despacho extends \FPDF {
         $this->SetFont('Arial', 'B', 9);
         $this->SetXY(10, 200);
 
-        $this->Text(10, 260, "CONDUCTOR: _____________________________________________");
-        $this->Text(10, 267, "");
-        $this->Text(10, 274, "C.C.:     ______________________ de ____________________");
+        //$this->Text(10, 260, "CONDUCTOR: _____________________________________________");
+        //$this->Text(10, 267, "");
+        //$this->Text(10, 274, "C.C.:     ______________________ de ____________________");
 
-        $this->Text(105, 260, "EMPRESA: _____________________________________________");
+        //$this->Text(105, 260, "EMPRESA: _____________________________________________");
 
         $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');

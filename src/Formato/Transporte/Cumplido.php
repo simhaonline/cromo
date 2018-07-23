@@ -21,7 +21,7 @@ class Cumplido extends \FPDF {
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("TteCumplido$codigoCumplido.pdf", 'I');
+        $pdf->Output("TteCumplido$codigoCumplido.pdf", 'D');
     }
 
     public function Header() {
@@ -30,7 +30,7 @@ class Cumplido extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this,'RELACION DE CUMPLIMIENTO');
+        Estandares::generarEncabezado($this,'RELACION CUMPLIDOS');
         $arCumplido = new TteCumplido();
         $arCumplido = self::$em->getRepository(TteCumplido::class)->find(self::$codigoCumplido);
         $this->SetFillColor(236, 236, 236);
@@ -45,7 +45,7 @@ class Cumplido extends \FPDF {
         $this->Cell(30, 6, $arCumplido->getCodigoCumplidoPk(), 1, 0, 'R', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "CONDUCTOR:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "CLIENTE:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(103, 6, utf8_decode($arCumplido->getClienteRel()->getNombreCorto()), 1, 0, 'L', 1);
@@ -60,11 +60,17 @@ class Cumplido extends \FPDF {
         $this->Cell(30, 5, $arCumplido->getFecha()->format('Y-m-d'), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 5, "COMENTARIOS:", 1, 0, 'L', 1);
+        $this->Cell(30, 5, "CANTIDAD:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(103, 5, $arCumplido->getComentario(), 1, 0, 'R', 1);
+        $this->MultiCell(103, 5, $arCumplido->getCantidad(), 1, 0, 'R', 1);
         $this->SetFont('Arial', 'B', 8);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "COMENTARIO:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->MultiCell(163,4,utf8_decode($arCumplido->getComentario()),1,'L');
 
         $this->EncabezadoDetalles();
 
@@ -105,15 +111,17 @@ class Cumplido extends \FPDF {
             $volumen = 0;
             $unidadesTotal = 0;
             $pesoTotal = 0;
+            $declaraTotal = 0;
             $volumenTotal = 0;
             $manejoTotal = 0;
             $recaudoTotal = 0;
+            $fleteTotal = 0;
             foreach ($arGuias as $arGuia) {
                 $pdf->Cell(20, 4, $arGuia['numero'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arGuia['documentoCliente'], 1, 0, 'L');
                 $pdf->Cell(35, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,20), 1, 0, 'L');
                 $pdf->Cell(28, 4, $arGuia['ciudadDestino'], 1, 0, 'L');
-                $pdf->Cell(10, 4, $arGuia['unidades'], 1, 0, 'L');
+                $pdf->Cell(10, 4, $arGuia['unidades'], 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoVolumen'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arGuia['vrDeclara'], 0, '.', ','), 1, 0, 'R');
@@ -126,7 +134,9 @@ class Cumplido extends \FPDF {
                 $unidadesTotal += $arGuia['unidades'];
                 $pesoTotal += $arGuia['pesoReal'];
                 $volumenTotal += $arGuia['pesoVolumen'];
+                $declaraTotal += $arGuia['vrDeclara'];
                 $manejoTotal += $arGuia['vrManejo'];
+                $fleteTotal += $arGuia['vrFlete'];
                 $recaudoTotal += $arGuia['vrRecaudo'];
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 15);
@@ -145,10 +155,14 @@ class Cumplido extends \FPDF {
                 }
 
             }
-            $pdf->Cell(163, 4, 'TOTAL', 1, 0, 'L');
-            $pdf->Cell(10, 4, $unidadesTotal, 1, 0, 'R');
-            $pdf->Cell(10, 4, $pesoTotal, 1, 0, 'R');
-            $pdf->Cell(10, 4, $volumenTotal, 1, 0, 'R');
+            $pdf->Cell(103, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(10, 4,  $unidadesTotal, 1, 0,'R');
+            $pdf->Cell(10, 4,  $pesoTotal, 1, 0,'R');
+            $pdf->Cell(10, 4,  $volumen, 1, 0,'R');
+            $pdf->Cell(15, 4, number_format($declaraTotal,0,'.',','), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($manejoTotal,0,'.',','), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($fleteTotal,0,'.',','), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($recaudoTotal,0,'.',','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

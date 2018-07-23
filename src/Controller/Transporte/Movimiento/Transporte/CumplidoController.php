@@ -93,7 +93,7 @@ class CumplidoController extends Controller
                 foreach ($arrSeleccionados AS $codigo) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
                     $arGuia->setCumplidoRel($arCumplido);
-                    $arGuia->setEstadoCumplidodo(1);
+                    $arGuia->setEstadoCumplido(1);
                     $em->persist($arGuia);
                 }
                 $em->flush();
@@ -131,7 +131,7 @@ class CumplidoController extends Controller
                     if ($form->get('guardarnuevo')->isClicked()) {
                         return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_nuevo', array('codigoRecogida' => 0)));
                     } else {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_lista'));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_detalle', ['id' => $arCumplido->getCodigoCumplidoPk()]));
                     }
                 }
             }

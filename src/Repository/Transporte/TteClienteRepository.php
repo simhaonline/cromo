@@ -39,6 +39,15 @@ class TteClienteRepository extends ServiceEntityRepository
             ->addSelect('tc.direccion')
             ->where('tc.codigoClientePk IS NOT NULL')
             ->orderBy('tc.codigoClientePk', 'ASC');
+        if ($session->get('filtroNombreCondicion') != '') {
+            $queryBuilder->andWhere("tc.nombreCorto LIKE '%{$session->get('filtroNombreCliente')}%' ");
+        }
+        if ($session->get('filtroNitCliente') != '') {
+            $queryBuilder->andWhere("tc.numeroIdentificacion LIKE '%{$session->get('filtroNitCliente')}%' ");
+        }
+        if ($session->get('filtroCodigoCliente') != '') {
+            $queryBuilder->andWhere("tc.codigoClientePk LIKE '%{$session->get('filtroCodigoCliente')}%' ");
+        }
 
         return $queryBuilder;
     }

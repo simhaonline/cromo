@@ -7,6 +7,8 @@ use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use App\Utilidades\Mensajes;
+
 class TteCumplidoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -43,9 +45,7 @@ class TteCumplidoRepository extends ServiceEntityRepository
         FROM App\Entity\Transporte\Guia g
         WHERE g.codigoCumplidoFk = :codigoCumplido')
             ->setParameter('codigoCumplido', $codigoCumplido);
-        $arrGuias = $query->getSingleResult();
         $arCumplido = $em->getRepository(TteCumplido::class)->find($codigoCumplido);
-        $arCumplido->setCantidad(intval($arrGuias['cantidad']));
         $em->persist($arCumplido);
         $em->flush();
         return true;
@@ -66,6 +66,31 @@ class TteCumplidoRepository extends ServiceEntityRepository
             }
         }
         return true;
+    }
+
+    public function autorizar($arCumplido)
+    {
+            $arCumplido->setEstadoAutorizado(1);
+            $this->getEntityManager()->persist($arCumplido);
+            $this->getEntityManager()->flush();
+    }
+
+    public function aprobar($arCumplido)
+    {
+        $arCumplido->setEstadoAprobado(1);
+        $this->getEntityManager()->persist($arCumplido);
+        $this->getEntityManager()->flush();
+    }
+
+    public function desAutorizar($arCumplido)
+    {
+        if ($arCumplido->getEstadoAutorizado() == 1 && $arCumplido->getEstadoAprobado() == 0) {
+            $arCumplido->setEstadoAutorizado(0);
+            $this->getEntityManager()->persist($arCumplido);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('No se puede desautorizar, el registro ya se encuentra aprobado');
+        }
     }
 
 }

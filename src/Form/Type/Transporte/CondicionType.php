@@ -23,8 +23,12 @@ class CondicionType extends AbstractType
                     return $er->createQueryBuilder('i')
                         ->orderBy('i.nombre', 'ASC');
                 },
-                'choice_label' => 'nombre',
-                'label' => 'Precio:'
+                'choice_label' => function($er){
+                $campo = $er->getCodigoPrecioPk() .  '-'  . $er->getNombre();
+
+                return $campo;
+
+                }
             ])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('porcentajeManejo',NumberType::class,['required' => true,'label' => 'Porcentaje:'])

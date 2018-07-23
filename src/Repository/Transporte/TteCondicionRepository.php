@@ -35,6 +35,9 @@ class TteCondicionRepository extends ServiceEntityRepository
             ->addSelect('cc.permiteRecaudo')
             ->where('cc.codigoCondicionPk IS NOT NULL')
             ->orderBy('cc.codigoCondicionPk', 'ASC');
+        if ($session->get('filtroNombreCondicion') != '') {
+            $queryBuilder->andWhere("cc.nombre LIKE '%{$session->get('filtroNombreCondicion')}%' ");
+        }
         return $queryBuilder;
     }
 }

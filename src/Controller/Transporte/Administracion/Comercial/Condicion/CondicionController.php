@@ -1,5 +1,6 @@
 <?php
 namespace App\Controller\Transporte\Administracion\Comercial\Condicion;
+
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteCondicion;
@@ -9,7 +10,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Session\Session;
+
 class CondicionController extends Controller
 {
     /**
@@ -17,10 +21,22 @@ class CondicionController extends Controller
      */
     public function lista(Request $request)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtNombre', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroNombreCondicion')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroNombreCondicion', $form->get('txtNombre')->getData());
+        }
         $arCondiciones = $paginator->paginate($em->getRepository(TteCondicion::class)->lista(), $request->query->getInt('page', 1),10);
-        return $this->render('transporte/administracion/comercial/condicion/lista.html.twig', ['arCondiciones' => $arCondiciones]);
+        return $this->render('transporte/administracion/comercial/condicion/lista.html.twig',
+            ['arCondiciones' => $arCondiciones,
+            'form' => $form->createView()
+        ]);
     }
     /**
      * @Route("/transporte/administracion/comercial/condicion/detalle/{id}", name="transporte_administracion_comercial_condicion_detalle")

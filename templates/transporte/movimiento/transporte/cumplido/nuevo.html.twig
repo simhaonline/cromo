@@ -33,7 +33,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Comentario:</label>
                 <div class="col-sm-10">
-                    {{ form_widget(form.comentario, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_widget(form.comentario, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
         </div>
@@ -41,6 +41,7 @@
     <div class="modal-footer">
         <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_cumplido_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}
 

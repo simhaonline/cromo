@@ -168,6 +168,7 @@ class DespachoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteDespacho::class)->autorizar($arDespacho);
+                $em->getRepository(TteDespacho::class)->liquidar($arDespacho);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {

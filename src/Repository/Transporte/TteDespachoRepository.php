@@ -140,7 +140,8 @@ class TteDespachoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT COUNT(g.codigoGuiaPk) as cantidad, SUM(g.unidades+0) as unidades, SUM(g.pesoReal+0) as pesoReal, SUM(g.pesoVolumen+0) as pesoVolumen
+            'SELECT COUNT(g.codigoGuiaPk) as cantidad, SUM(g.unidades+0) as unidades, SUM(g.pesoReal+0) as pesoReal, SUM(g.pesoVolumen+0) as pesoVolumen,
+                  SUM(g.vrFlete) as vrFlete, SUM(g.vrManejo) as vrManejo
         FROM App\Entity\Transporte\TteGuia g
         WHERE g.codigoDespachoFk = :codigoDespacho')
             ->setParameter('codigoDespacho', $codigoDespacho);
@@ -150,6 +151,8 @@ class TteDespachoRepository extends ServiceEntityRepository
         $arDespacho->setPesoReal(intval($arrGuias['pesoReal']));
         $arDespacho->setPesoVolumen(intval($arrGuias['pesoVolumen']));
         $arDespacho->setCantidad(intval($arrGuias['cantidad']));
+        $arDespacho->setVrFlete(intval($arrGuias['vrFlete']));
+        $arDespacho->setVrManejo(intval($arrGuias['vrManejo']));
         $em->persist($arDespacho);
         $em->flush();
         return true;

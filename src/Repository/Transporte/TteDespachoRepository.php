@@ -87,6 +87,9 @@ class TteDespachoRepository extends ServiceEntityRepository
         if($session->get('filtroTteDespachoCodigoVehiculo') != ''){
             $queryBuilder->andWhere("td.codigoVehiculoFk = '{$session->get('filtroTteDespachoCodigoVehiculo')}'");
         }
+        if($session->get('filtroTteDespachoCodigo') != ''){
+            $queryBuilder->andWhere("td.codigoDespachoPk = {$session->get('filtroTteDespachoCodigo')}");
+        }
         if($session->get('filtroTteDespachoNumero') != ''){
             $queryBuilder->andWhere("td.numero = {$session->get('filtroTteDespachoNumero')}");
         }
@@ -98,6 +101,14 @@ class TteDespachoRepository extends ServiceEntityRepository
         }
         if($session->get('filtroTteDespachoCodigoConductor')){
             $queryBuilder->andWhere("td.codigoConductorFk = {$session->get('filtroTteDespachoCodigoConductor')}");
+        }
+        switch ($session->get('filtroTteDespachoEstadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("td.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("td.estadoAprobado = 1");
+                break;
         }
         $queryBuilder->orderBy('td.fechaSalida', 'DESC');
         return $queryBuilder;
@@ -140,7 +151,8 @@ class TteDespachoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT COUNT(g.codigoGuiaPk) as cantidad, SUM(g.unidades+0) as unidades, SUM(g.pesoReal+0) as pesoReal, SUM(g.pesoVolumen+0) as pesoVolumen
+            'SELECT COUNT(g.codigoGuiaPk) as cantidad, SUM(g.unidades+0) as unidades, SUM(g.pesoReal+0) as pesoReal, SUM(g.pesoVolumen+0) as pesoVolumen,
+                  SUM(g.vrFlete) as vrFlete, SUM(g.vrManejo) as vrManejo
         FROM App\Entity\Transporte\TteGuia g
         WHERE g.codigoDespachoFk = :codigoDespacho')
             ->setParameter('codigoDespacho', $codigoDespacho);
@@ -150,6 +162,8 @@ class TteDespachoRepository extends ServiceEntityRepository
         $arDespacho->setPesoReal(intval($arrGuias['pesoReal']));
         $arDespacho->setPesoVolumen(intval($arrGuias['pesoVolumen']));
         $arDespacho->setCantidad(intval($arrGuias['cantidad']));
+        $arDespacho->setVrFlete(intval($arrGuias['vrFlete']));
+        $arDespacho->setVrManejo(intval($arrGuias['vrManejo']));
         $em->persist($arDespacho);
         $em->flush();
         return true;

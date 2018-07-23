@@ -33,6 +33,7 @@ class InvSucursalRepository extends ServiceEntityRepository
         $qb = $this-> _em->createQueryBuilder()
             ->from(InvSucursal::class,'s')
             ->select('s.codigoSucursalPk AS ID')
+            ->addSelect('s.nombre')
             ->addSelect('s.contacto')
             ->addSelect('s.direccion')
             ->addSelect('t.nombreCorto')

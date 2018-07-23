@@ -112,7 +112,7 @@ class Factura1 extends \FPDF
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
         $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getNombreCorto(), 0, 0, 'L', 0);
-        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getNombreCorto(), 0, 0, 'L', 0);
+        $this->Cell(73, 4, $arMovimiento->getSucursalRel() ? $arMovimiento->getSucursalRel()->getNombre() : '', 0, 0, 'L', 0);
 
         $this->SetXY(19, 54.5);
         $this->SetFont('Arial', 'B', 8);

@@ -19,6 +19,7 @@ class SucursalType extends AbstractType
     {
         $builder
             ->add('codigoSucursalPk', TextType::class, ['label' => 'Codigo sucursal: ', 'required' => true])
+            ->add('nombre', TextType::class, ['label' => 'Nombre: ', 'required' => true])
             ->add('direccion', TextType::class, ['label' => 'Dirección: ', 'required' => true])
             ->add('contacto', TextType::class, ['label' => 'Contacto: ', 'required' => false])
             ->add('terceroRel', EntityType::class, ['class' => InvTercero::class,

@@ -30,6 +30,11 @@ class InvSucursal
     private $direccion;
 
     /**
+     * @ORM\Column(name="nombre", type="string", length=150, nullable=true)
+     */
+    private $nombre;
+
+    /**
      * @ORM\Column(name="contacto", type="string", length=150, nullable=true)
      */
     private $contacto;
@@ -182,5 +187,21 @@ class InvSucursal
     public function setMovimientosSucursalRel($movimientosSucursalRel): void
     {
         $this->movimientosSucursalRel = $movimientosSucursalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
     }
 }

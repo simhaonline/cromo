@@ -26,7 +26,7 @@ class ReliquidarController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnReLiquidar')->isClicked()) {
+            if ($form->get('btnReliquidar')->isClicked()) {
                 if($form->get('txtCodigoMovimiento')->getData() != ''){
                     $em->getRepository(InvMovimiento::class)->liquidar($em->getRepository(InvMovimiento::class)->find($form->get('txtCodigoMovimiento')->getData()));
                 }

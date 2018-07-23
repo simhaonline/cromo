@@ -170,6 +170,7 @@ class FormatoMovimiento extends \FPDF
         }
         $numeroPaginas = ceil(self::$numeroRegistros / 28);
         if ($pdf->PageNo() == $numeroPaginas) {
+            /** @var  $arMovimiento InvMovimiento */
             $arMovimiento = self::$em->getRepository(InvMovimiento::class)->find(self::$codigoMovimiento);
             $pdf->SetTextColor(0);
             $pdf->Ln();

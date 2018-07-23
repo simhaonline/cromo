@@ -124,7 +124,7 @@ class MovimientoController extends Controller
         $arrSucursalRel = ['class' => InvSucursal::class,
             'query_builder' => function (EntityRepository $er) use ($arMovimiento) {
                 return $er->createQueryBuilder('c')
-                    ->where('c.codigoTerceroFk = '.$arMovimiento->getCodigoTerceroFk())
+                    ->where('c.codigoTerceroFk = ' . $arMovimiento->getCodigoTerceroFk())
                     ->orderBy('c.codigoSucursalPk', 'ASC');
             },
             'choice_label' => 'codigoSucursalPk',
@@ -135,17 +135,16 @@ class MovimientoController extends Controller
             'attr' => ['class' => 'to-select-2 form-control']
         ];
 
-        if($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() != 'FAC'){
+        if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() != 'FAC') {
             $arrSucursalRel['disabled'] = true;
-        } else {
-            if($arMovimiento->getSucursalRel()){
-                $arrSucursalRel['data'] = $em->getReference(InvSucursal::class, $arMovimiento->getCodigoSucursalFk());
-            }
-            if ($arMovimiento->getEstadoAutorizado()) {
-                $arrBtnEliminar['disabled'] = true;
-                $arrBtnActualizar['disabled'] = true;
-                $arrSucursalRel['disabled'] = true;
-            }
+        }
+        if ($arMovimiento->getSucursalRel()) {
+            $arrSucursalRel['data'] = $em->getReference(InvSucursal::class, $arMovimiento->getCodigoSucursalFk());
+        }
+        if ($arMovimiento->getEstadoAutorizado()) {
+            $arrBtnEliminar['disabled'] = true;
+            $arrBtnActualizar['disabled'] = true;
+            $arrSucursalRel['disabled'] = true;
         }
         $form
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)

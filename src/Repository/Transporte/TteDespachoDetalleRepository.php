@@ -65,8 +65,7 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
                   dd.codigoDespachoFk,
                   d.numero,
                   dt.nombre AS tipoDespacho,
-                  d.fechaSalida,
-                  d.estadoGenerado            
+                  d.fechaSalida          
         FROM App\Entity\Transporte\TteDespachoDetalle dd 
         LEFT JOIN dd.despachoRel d
         LEFT JOIN d.despachoTipoRel dt

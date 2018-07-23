@@ -41,6 +41,7 @@ class DespachoController extends Controller
         $session = new Session();
         $form = $this->createFormBuilder()
             ->add('txtVehiculo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigoVehiculo')])
+            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigo')])
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoNumero')])
             ->add('cboCiudadOrigenRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo('origen'))
             ->add('cboCiudadDestinoRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo('destino'))
@@ -52,6 +53,7 @@ class DespachoController extends Controller
         if ($form->get('btnFiltrar')->isClicked()) {
             $session->set('filtroTteDespachoCodigoVehiculo', $form->get('txtVehiculo')->getData());
             $session->set('filtroTteDespachoNumero', $form->get('txtNumero')->getData());
+            $session->set('filtroTteDespachoCodigo', $form->get('txtCodigo')->getData());
             if ($form->get('cboCiudadOrigenRel')->getData() != '') {
                 $session->set('filtroTteDespachoCodigoCiudadOrigen', $form->get('cboCiudadOrigenRel')->getData()->getCodigoCiudadPk());
             } else {

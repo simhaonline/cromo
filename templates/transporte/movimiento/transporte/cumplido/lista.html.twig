@@ -4,7 +4,12 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>CLIENTE</th>
             <th>FECHA</th>
+            <th>COMENTARIOS</th>
+            <th>AUT</th>
+            <th>APR</th>
+            <th>ANU</th>
             <th></th>
             <th></th>
         </tr>
@@ -13,7 +18,12 @@
         {% for arCumplido in arCumplidos %}
             <tr>
                 <td>{{ arCumplido.codigoCumplidoPk }}</td>
+                <td>{{ arCumplido.nombreCorto }}</td>
                 <td>{{ arCumplido.fecha | date('Y-m-d') }}</td>
+                <td>{{ arCumplido.comentario }}</td>
+                <td class="estado">{{ arCumplido.estadoAutorizado?'SI':'NO' }}</td>
+                <td class="estado">{{ arCumplido.estadoAprobado?'SI':'NO' }}</td>
+                <td class="estado">{{ arCumplido.estadoAnulado?'SI':'NO' }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('transporte_movimiento_transporte_cumplido_nuevo',{'id' : arCumplido.codigoCumplidoPk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">

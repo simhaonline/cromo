@@ -25,19 +25,9 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_facturaTipoRel" class="col-sm-2 control-label">Factura tipo:</label>
+                <label for="form_facturaTipoRel" class="col-sm-2 control-label">Fecha:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.facturaTipoRel, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Soporte:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.soporte, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label for="form_plazoPago" class="col-sm-2 control-label">Plazo pago:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.plazoPago, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.fecha, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group">
@@ -49,9 +39,8 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_lista') }}">Cancelar</a>
+        <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_cumplido_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
-        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}
 

@@ -23,7 +23,13 @@ class TteCumplidoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCumplido::class, 'c');
         $queryBuilder
             ->select('c.codigoCumplidoPk')
+            ->join('c.clienteRel', 'cl')
+            ->addSelect('cl.nombreCorto')
             ->addSelect('c.fecha')
+            ->addSelect('c.estadoAutorizado')
+            ->addSelect('c.estadoAprobado')
+            ->addSelect('c.estadoAnulado')
+            ->addSelect('c.comentario')
             ->where('c.codigoCumplidoPk <> 0');
         $queryBuilder->orderBy('c.fecha', 'DESC');
         return $queryBuilder;

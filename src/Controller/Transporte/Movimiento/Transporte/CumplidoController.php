@@ -68,18 +68,11 @@ class CumplidoController extends Controller
             }
             return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_detalle', ['id' => $id]));
         }
-        $query = $this->getDoctrine()->getRepository(TteCumplidoPlanilla::class)->listaCumplidoDetalle($id);
-        $arCumplidoPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-
-        $query = $this->getDoctrine()->getRepository(TteCumplidoOtro::class)->listaCumplidoDetalle($id);
-        $arCumplidoOtros = $paginator->paginate($query, $request->query->getInt('page', 1),10);
 
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->cumplido($id);
         return $this->render('transporte/movimiento/transporte/cumplido/detalle.html.twig', [
             'arCumplido' => $arCumplido,
             'arGuias' => $arGuias,
-            'arCumplidoPlanillas' => $arCumplidoPlanillas,
-            'arCumplidoOtros' => $arCumplidoOtros,
             'form' => $form->createView()]);
     }
 
@@ -131,12 +124,8 @@ class CumplidoController extends Controller
                 $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
                 if($arCliente) {
                     $arCumplido->setClienteRel($arCliente);
-                    if ($arCumplido->getPlazoPago() <= 0) {
-                        $arCumplido->setPlazoPago($arCumplido->getClienteRel()->getPlazoPago());
-                    }
                     $fecha = new \DateTime('now');
                     $arCumplido->setFecha($fecha);
-                    $arCumplido->setFechaVence($arCumplido->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha,$arCumplido->getPlazoPago()));
                     $em->persist($arCumplido);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {

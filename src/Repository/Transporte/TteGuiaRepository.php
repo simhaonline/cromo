@@ -260,8 +260,14 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.codigoOperacionCargoFk,     
         g.unidades,
         g.pesoReal,
-        g.pesoVolumen,             
-        c.nombreCorto AS clienteNombreCorto, 
+        g.pesoVolumen,
+        g.vrDeclara,
+        g.vrFlete,
+        g.vrManejo,
+        g.vrRecaudo,
+        g.documentoCliente,               
+        g.nombreDestinatario,
+        c.nombreCorto AS clienteNombreCorto,
         cd.nombre AS ciudadDestino
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c
@@ -422,7 +428,9 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.codigoOperacionCargoFk, 
         g.unidades,
         g.pesoReal,
-        g.pesoVolumen,        
+        g.pesoVolumen,
+        g.vrFlete,
+        g.vrManejo,        
         c.nombreCorto AS clienteNombreCorto, 
         cd.nombre AS ciudadDestino
         FROM App\Entity\Transporte\TteGuia g 
@@ -452,6 +460,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.pesoVolumen,
         g.vrDeclara,
         g.vrFlete,
+        g.vrFlete,
+        g.vrManejo,
         r.nombre AS nombreRuta
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c

@@ -216,7 +216,6 @@
                                 <td>{{ arDespachoDetalle.tipoDespacho }}</td>
                                 <td>{{ arDespachoDetalle.numero }}</td>
                                 <td>{{ arDespachoDetalle.fechaSalida | date('Y-m-d H:i') }}</td>
-                                <td>{% if arDespachoDetalle.estadoGenerado == 1 %} SI {% else %} NO {% endif %}</td>
                             </tr>
                         {% endfor %}
                         </tbody>

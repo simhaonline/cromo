@@ -187,7 +187,7 @@ class GuiaController extends Controller
             $arNovedad->setGuiaRel($arGuia);
             if ($codigoNovedad == 0) {
                 $arNovedad->setFechaRegistro(new \DateTime('now'));
-                $arNovedad->setFechaAtendido(new \DateTime('now'));
+                $arNovedad->setFechaAtencion(new \DateTime('now'));
                 $arNovedad->setFechaSolucion(new \DateTime('now'));
             }
 

@@ -279,6 +279,11 @@ class TteGuia
     private $usuario;
 
     /**
+     * @ORM\Column(name="empaque_referencia", type="string", length=80, nullable=true)
+     */
+    private $empaqueReferencia;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -1589,6 +1594,22 @@ class TteGuia
     public function setGuiasDetallesGuiaRel($guiasDetallesGuiaRel): void
     {
         $this->guiasDetallesGuiaRel = $guiasDetallesGuiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpaqueReferencia()
+    {
+        return $this->empaqueReferencia;
+    }
+
+    /**
+     * @param mixed $empaqueReferencia
+     */
+    public function setEmpaqueReferencia($empaqueReferencia): void
+    {
+        $this->empaqueReferencia = $empaqueReferencia;
     }
 
 

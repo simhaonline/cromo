@@ -38,6 +38,7 @@ class GuiaController extends Controller
         $form = $this->createFormBuilder()
             ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
             ->add('cboServicioRel', EntityType::class, $em->getRepository(TteServicio::class)->llenarCombo())
+            ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroTteGuiaCodigo')))
             ->add('txtDocumento', TextType::class, array('data' => $session->get('filtroTteGuiaDocumento')))
             ->add('txtNumero', TextType::class, array('data' => $session->get('filtroTteGuiaNumero')))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
@@ -62,6 +63,7 @@ class GuiaController extends Controller
                     }
                     $session->set('filtroTteGuiaDocumento', $form->get('txtDocumento')->getData());
                     $session->set('filtroTteGuiaNumero', $form->get('txtNumero')->getData());
+                    $session->set('filtroTteGuiaCodigo', $form->get('txtCodigo')->getData());
                 }
                 if ($form->get('btnExcel')->isClicked()) {
                     General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->lista())->execute(), "Guias");

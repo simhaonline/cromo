@@ -106,10 +106,12 @@
                 <td class="estado">{{ arDespacho.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arDespacho.estadoAnulado?'SI':'NO' }}</td>
                 <td style="text-align: center">
+                    {% if arDespacho.estadoAutorizado == 0 %}
                     <a href="{{ path('transporte_movimiento_transporte_despacho_nuevo', { 'id': arDespacho.codigoDespachoPk }) }}">
                         <i class="fa fa-edit" style="font-size: large;color: black;">
                         </i>
                     </a>
+                    {% endif %}
                 </td>
                 <td style="text-align: center">
                     <a href="{{ path('transporte_movimiento_transporte_despacho_detalle', { 'id': arDespacho.codigoDespachoPk }) }}">

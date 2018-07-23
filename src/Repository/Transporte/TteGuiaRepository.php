@@ -111,6 +111,9 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteGuiaNumero') != "") {
             $queryBuilder->andWhere("tg.numero = " . $session->get('filtroTteGuiaNumero'));
         }
+        if ($session->get('filtroTteGuiaCodigo') != "") {
+            $queryBuilder->andWhere("tg.codigoGuiaPk = " . $session->get('filtroTteGuiaCodigo'));
+        }
         $queryBuilder->orderBy('tg.fechaIngreso', 'DESC');
         return $queryBuilder;
     }

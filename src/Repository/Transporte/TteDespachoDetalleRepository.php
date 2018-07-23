@@ -26,7 +26,10 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         g.codigoOperacionCargoFk,     
         dd.unidades,
         dd.pesoReal,
-        dd.pesoVolumen,             
+        dd.pesoVolumen,
+        dd.vrFlete,
+        dd.vrManejo,
+        dd.vrCobroEntrega,             
         c.nombreCorto AS clienteNombreCorto, 
         cd.nombre AS ciudadDestino
         FROM App\Entity\Transporte\TteDespachoDetalle dd 

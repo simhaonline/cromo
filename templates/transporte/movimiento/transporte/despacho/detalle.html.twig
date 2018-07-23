@@ -113,6 +113,9 @@
                             <th>NUMERO</th>
                             <th>CLIENTE</th>
                             <th>DESTINO</th>
+                            <th>FLETE</th>
+                            <th>MANEJO</th>
+                            <th title="Cobro destino">COB_DES</th>
                             <th title="Unidades">UND</th>
                             <th title="Peso">PES</th>
                             <th title="Volumen">VOL</th>
@@ -131,9 +134,12 @@
                                 <td>{{ arDespachoDetalle.numero }}</td>
                                 <td>{{ arDespachoDetalle.clienteNombreCorto }}</td>
                                 <td>{{ arDespachoDetalle.ciudadDestino }}</td>
-                                <td style="text-align: right">{{ arDespachoDetalle.unidades }}</td>
-                                <td style="text-align: right">{{ arDespachoDetalle.pesoReal }}</td>
-                                <td style="text-align: right">{{ arDespachoDetalle.pesoVolumen }}</td>
+                                <td style="text-align: right">{{ arDespachoDetalle.vrFlete | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arDespachoDetalle.vrManejo | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arDespachoDetalle.vrCobroEntrega | number_format(0, '.', ',')}}</td>
+                                <td style="text-align: right">{{ arDespachoDetalle.unidades | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arDespachoDetalle.pesoReal | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arDespachoDetalle.pesoVolumen | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDespachoDetalle.codigoDespachoDetallePk }}" /></td>
                             </tr>
                         {% endfor %}

@@ -207,7 +207,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         cd.nombre AS ciudadDestino,
         g.nombreDestinatario,
         g.direccionDestinatario,
-        g.codigoProductoFk
+        g.codigoProductoFk,
+        g.empaqueReferencia
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd        

@@ -115,7 +115,7 @@ class Despacho extends \FPDF {
                 $pdf->Cell(38, 4, substr(utf8_decode($arGuia['clienteNombreCorto']),0,20), 1, 0, 'L');
                 $pdf->Cell(50, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,20), 1, 0, 'L');
                 $pdf->Cell(35, 4, substr(utf8_decode($arGuia['direccionDestinatario']),0,20), 1, 0, 'L');
-                $pdf->Cell(10, 4, $arGuia['codigoProductoFk'], 1, 0, 'L');
+                $pdf->Cell(10, 4, $arGuia['empaqueReferencia'], 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
                 $unidades += $arGuia['unidades'];
@@ -141,8 +141,8 @@ class Despacho extends \FPDF {
                 if($imprimirTotalGrupo) {
                     $pdf->SetX(5);
                     $pdf->Cell(176, 4, "TOTAL CIUDAD: ". $arGuia['ciudadDestino'], 1, 0, 'L');
+                    $pdf->Cell(10, 4, $unidades, 1, 0, 'R');
                     $pdf->Cell(10, 4, $peso, 1, 0, 'R');
-                    $pdf->Cell(10, 4, $volumen, 1, 0, 'R');
                     $pdf->Ln();
                     $pdf->SetAutoPageBreak(true, 15);
                     $unidades = 0;
@@ -152,10 +152,9 @@ class Despacho extends \FPDF {
 
             }
             $pdf->SetX(5);
-            $pdf->Cell(163, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(176, 4, 'TOTAL', 1, 0, 'L');
             $pdf->Cell(10, 4, $unidadesTotal, 1, 0, 'R');
             $pdf->Cell(10, 4, $pesoTotal, 1, 0, 'R');
-            $pdf->Cell(10, 4, $volumenTotal, 1, 0, 'R');
             $pdf->SetX(5);
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);

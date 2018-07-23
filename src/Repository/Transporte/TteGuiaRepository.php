@@ -470,7 +470,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd
         LEFT JOIN g.rutaRel r
-        WHERE g.estadoDespachado = 0 AND g.estadoAnulado = 0 ";
+        WHERE g.estadoEmbarcado = 0 AND g.estadoAnulado = 0 ";
         if ($session->get('filtroTteCodigoRuta')) {
             $dql .= " AND g.codigoRutaFk = " . $session->get('filtroTteCodigoRuta');
         }

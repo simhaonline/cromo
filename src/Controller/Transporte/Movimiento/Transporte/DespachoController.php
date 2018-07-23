@@ -24,6 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use SoapClient;
 
 class DespachoController extends Controller
@@ -47,10 +48,12 @@ class DespachoController extends Controller
             ->add('cboCiudadDestinoRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo('destino'))
             ->add('txtCodigoConductor', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigoVehiculo'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoNombreConductor'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+            ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteDespachoEstadoAprobado'), 'required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroTteDespachoEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
             $session->set('filtroTteDespachoCodigoVehiculo', $form->get('txtVehiculo')->getData());
             $session->set('filtroTteDespachoNumero', $form->get('txtNumero')->getData());
             $session->set('filtroTteDespachoCodigo', $form->get('txtCodigo')->getData());

@@ -102,6 +102,14 @@ class TteDespachoRepository extends ServiceEntityRepository
         if($session->get('filtroTteDespachoCodigoConductor')){
             $queryBuilder->andWhere("td.codigoConductorFk = {$session->get('filtroTteDespachoCodigoConductor')}");
         }
+        switch ($session->get('filtroTteDespachoEstadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("td.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("td.estadoAprobado = 1");
+                break;
+        }
         $queryBuilder->orderBy('td.fechaSalida', 'DESC');
         return $queryBuilder;
 

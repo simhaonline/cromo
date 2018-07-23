@@ -84,8 +84,8 @@
             <td class="td-in-well"></td>
             <td class="titulo">CANTIDAD:</td>
             <td class="td-in-well">{{ arDespacho.cantidad }}</td>
-            <td class="titulo" ></td>
-            <td align="right"></td>
+            <td class="titulo" >COBRO ENTREGA:</td>
+            <td align="right">{{ arDespacho.vrCobroEntrega | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo" >COMENTARIO: </td>

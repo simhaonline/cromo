@@ -143,6 +143,11 @@ class TteDespacho
     private $vrTotal = 0;
 
     /**
+     * @ORM\Column(name="vr_cobro_entrega", type="float", options={"default" : 0})
+     */
+    private $vrCobroEntrega = 0;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoAutorizado = false;
@@ -653,6 +658,22 @@ class TteDespacho
     /**
      * @return mixed
      */
+    public function getVrCobroEntrega()
+    {
+        return $this->vrCobroEntrega;
+    }
+
+    /**
+     * @param mixed $vrCobroEntrega
+     */
+    public function setVrCobroEntrega($vrCobroEntrega): void
+    {
+        $this->vrCobroEntrega = $vrCobroEntrega;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoAutorizado()
     {
         return $this->estadoAutorizado;
@@ -921,6 +942,7 @@ class TteDespacho
     {
         $this->monitoreosDespachoRel = $monitoreosDespachoRel;
     }
+
 
 
 

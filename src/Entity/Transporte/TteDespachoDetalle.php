@@ -83,6 +83,11 @@ class TteDespachoDetalle
     private $vrCosto = 0;
 
     /**
+     * @ORM\Column(name="vr_cobro_entrega", type="float", options={"default" : 0})
+     */
+    private $vrCobroEntrega = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDespacho", inversedBy="despachosDetallesDespachoRel")
      * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
      */
@@ -348,6 +353,22 @@ class TteDespachoDetalle
     public function setGuiaRel($guiaRel): void
     {
         $this->guiaRel = $guiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCobroEntrega()
+    {
+        return $this->vrCobroEntrega;
+    }
+
+    /**
+     * @param mixed $vrCobroEntrega
+     */
+    public function setVrCobroEntrega($vrCobroEntrega): void
+    {
+        $this->vrCobroEntrega = $vrCobroEntrega;
     }
 
 

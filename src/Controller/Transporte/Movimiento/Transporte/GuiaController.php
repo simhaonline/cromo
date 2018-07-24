@@ -98,29 +98,17 @@ class GuiaController extends Controller
                 if ($txtCodigoCliente != '') {
                     $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
                     if ($arCliente) {
-                        $error = "";
-                        if ($arGuia->getGuiaTipoRel()->getExigeNumero()) {
-                            if ($arGuia->getNumero() == "") {
-                                $error = "Debe diligenciar el numero de la guia";
-                            }
-                        } else {
-                            $arGuia->setNumero(null);
+                        if ($id == 0) {
+                            $arGuia->setFechaIngreso(new \DateTime('now'));
                         }
-                        if ($error == "") {
-                            if ($id == 0) {
-                                $arGuia->setFechaIngreso(new \DateTime('now'));
-                            }
-                            $arGuia->setClienteRel($arCliente);
-                            $arGuia->setOperacionIngresoRel($this->getUser()->getOperacionRel());
-                            $arGuia->setOperacionCargoRel($this->getUser()->getOperacionRel());
-                            $arGuia->setFactura($arGuia->getGuiaTipoRel()->getFactura());
-                            $arGuia->setCiudadOrigenRel($this->getUser()->getOperacionRel() ? $this->getUser()->getOperacionRel()->getCiudadRel() : null);
-                            $em->persist($arGuia);
-                            $em->flush();
-                            return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_lista'));
-                        } else {
-                            Mensajes::error($error);
-                        }
+                        /*$arGuia->setClienteRel($arCliente);
+                        $arGuia->setOperacionIngresoRel($this->getUser()->getOperacionRel());
+                        $arGuia->setOperacionCargoRel($this->getUser()->getOperacionRel());
+                        $arGuia->setFactura($arGuia->getGuiaTipoRel()->getFactura());
+                        $arGuia->setCiudadOrigenRel($this->getUser()->getOperacionRel() ? $this->getUser()->getOperacionRel()->getCiudadRel() : null);*/
+                        $em->persist($arGuia);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_lista'));
                     } else {
                         Mensajes::error('No se encontro un cliente con el codigo ingresado');
                     }

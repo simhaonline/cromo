@@ -159,6 +159,7 @@
                             <th>SOLUCION</th>
                             <th>TIPO</th>
                             <th>DESCRIPCION</th>
+                            <th>SOLUCION</th>
                             <th title="Atendido">ATE</th>
                             <th title="Reportado">REP</th>
                             <th title="Solucionado">SOL</th>
@@ -175,6 +176,7 @@
                                 <td>{{ arNovedad.fechaSolucion |date('Y-m-d H:i') }}</td>
                                 <td>{{ arNovedad.nombreTipo }}</td>
                                 <td>{{ arNovedad.descripcion }}</td>
+                                <td>{{ arNovedad.solucion }}</td>
                                 <td>{% if arNovedad.estadoAtendido == 1 %} SI {% else %} NO {% endif %}</td>
                                 <td>{% if arNovedad.estadoReporte == 1 %} SI {% else %} NO {% endif %}</td>
                                 <td>{% if arNovedad.estadoSolucion == 1 %} SI {% else %} NO {% endif %}</td>

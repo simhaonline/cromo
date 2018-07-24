@@ -9,33 +9,17 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.solucion, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <div class="col-sm-4">
-                    {{ form_widget(form.novedadTipoRel, { 'attr': {'class': 'hidden'} }) }}
-                </div>
-                <div class="col-sm-4">
-                    {{ form_widget(form.fecha, { 'attr': {'class': 'hidden'} }) }}
-                </div>
-                <div class="col-sm-4">
-                    {{ form_widget(form.fechaReporte, { 'attr': {'class': 'hidden'} }) }}
-                </div>
-                <div class="col-sm-4">
-                    {{ form_widget(form.descripcion, { 'attr': {'class': 'hidden'} }) }}
-                </div>
-                <div class="col-sm-4">
-                    {{ form_widget(form.estadoAtendido, { 'attr': {'class': 'hidden'} }) }}
-                </div>
             </div>
         </div>
     </div>
     <div>
         <div class="btn-toolbar" style="float: right">
             <div class="btn-group">
-                {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             </div>
         </div>
     </div>
-    {{ form_widget(form._token) }}
-    {{ form_end(form, {'render_rest':false}) }}
+{{ form_end(form) }}
     <br /><br />
 {% endblock %}
 

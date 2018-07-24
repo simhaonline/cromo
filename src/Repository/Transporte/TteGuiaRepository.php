@@ -435,6 +435,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.codigoOperacionCargoFk, 
         g.unidades,
         g.pesoReal,
+        g.documentoCliente,
         g.pesoVolumen,
         g.vrFlete,
         g.vrManejo,        

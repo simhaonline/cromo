@@ -13,6 +13,7 @@ use App\Form\Type\Transporte\NovedadType;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -198,10 +199,14 @@ class GuiaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $arNovedad = $em->getRepository(TteNovedad::class)->find($codigoNovedad);
-        $form = $this->createForm(NovedadType::class, $arNovedad);
+        $form = $this->createFormBuilder()
+            ->add('solucion', TextareaType::class, array('label' => 'Solucion'))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+        ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arNovedad->setEstadoSolucion(1);
+            $arNovedad->setSolucion($form->get('solucion')->getData());
             $em->persist($arNovedad);
             $em->flush();
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

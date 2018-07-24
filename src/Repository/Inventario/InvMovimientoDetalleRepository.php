@@ -192,15 +192,18 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             $existenciaAnterior = 0;
             $arMovimientosDetalles = $em->getRepository(InvMovimientoDetalle::class)->listaRegenerarCostos($arItem['codigoItemPk']);
             foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
+                $arMovimientoDetalleAct = $em->getRepository(InvMovimientoDetalle::class)->find($arMovimientoDetalle['codigoMovimientoDetallePk']);
                 if($arMovimientoDetalle['generaCostoPromedio']) {
-                    $costoPromedio = $arMovimientoDetalle['vrCosto'];
                     if($existenciaAnterior != 0) {
-                        $costoPromedio = (($existenciaAnterior * $costoPromedio) + (($arMovimientoDetalle['cantidad'] * $arMovimientoDetalle['vrCosto']))) / $existenciaAnterior;
+                        $existenciaTotal = $existenciaAnterior + $arMovimientoDetalle['cantidad'];
+                        $costoPromedio = (($existenciaAnterior * $costoPromedio) + (($arMovimientoDetalle['cantidad'] * $arMovimientoDetalle['vrCosto']))) / $existenciaTotal;
+                    } else {
+                        $costoPromedio = $arMovimientoDetalle['vrCosto'];
                     }
+                } else {
+                    $arMovimientoDetalleAct->setVrCosto($costoPromedio);
                 }
                 $existenciaAnterior += $arMovimientoDetalle['cantidadOperada'];
-                $arMovimientoDetalleAct = $em->getRepository(InvMovimientoDetalle::class)->find($arMovimientoDetalle['codigoMovimientoDetallePk']);
-                $arMovimientoDetalleAct->setVrCosto($costoPromedio);
                 $arMovimientoDetalleAct->setCantidadSaldo($existenciaAnterior);
                 $em->persist($arMovimientoDetalleAct);
             }

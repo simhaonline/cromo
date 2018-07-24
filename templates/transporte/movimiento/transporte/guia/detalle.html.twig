@@ -108,8 +108,8 @@
         <tr>
             <td class="titulo">DOCUMENTO:</td>
             <td class="td-in-well">{{ arGuia.documentoCliente }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="titulo">CUMPLIDO</td>
+            <td class="td-in-well">{{ arGuia.codigoCumplidoFk }}</td>
             <td class="titulo" ></td>
             <td align="right"></td>
         </tr>
@@ -210,9 +210,12 @@
                         <tr>
                             <th>ID</th>
                             <th>COD</th>
-                            <th>TIPO</th>
-                            <th>NUMERO</th>
-                            <th>FECHA</th>
+                            <th>PLACA</th>
+                            <th>NOMBRE CONDUCTOR</th>
+                            <th>CELULAR</th>
+                            <th>FECHA REGISTRO</th>
+                            <th>MANIFIESTO</th>
+                            <th>FECHA SALIDA</th>
                             <th title="Aprobado">APR</th>
                         </tr>
                         </thead>
@@ -221,9 +224,13 @@
                             <tr>
                                 <td>{{ arDespachoDetalle.codigoDespachoDetallePk }}</td>
                                 <td>{{ arDespachoDetalle.codigoDespachoFk }}</td>
-                                <td>{{ arDespachoDetalle.tipoDespacho }}</td>
+                                <td>{{ arDespachoDetalle.placa }}</td>
+                                <td>{{ arDespachoDetalle.nombreConductor }}</td>
+                                <td>{{ arDespachoDetalle.movil }}</td>
+                                <td>{{ arDespachoDetalle.fechaRegistro | date('Y-m-d H:i') }}</td>
                                 <td>{{ arDespachoDetalle.numero }}</td>
                                 <td>{{ arDespachoDetalle.fechaSalida | date('Y-m-d H:i') }}</td>
+                               {{ validarTipo(arDespachoDetalle.estadoAprobado) }}
                             </tr>
                         {% endfor %}
                         </tbody>

@@ -66,12 +66,19 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT dd.codigoDespachoDetallePk,
                   dd.codigoDespachoFk,
+                  d.fechaRegistro,
                   d.numero,
+                  cd.nombreCorto AS nombreConductor,
+                  cd.movil,
+                  vd.placa,
                   dt.nombre AS tipoDespacho,
-                  d.fechaSalida          
+                  d.fechaSalida,
+                  d.estadoAprobado             
         FROM App\Entity\Transporte\TteDespachoDetalle dd 
         LEFT JOIN dd.despachoRel d
         LEFT JOIN d.despachoTipoRel dt
+        LEFT JOIN d.conductorRel cd
+        LEFT JOIN d.vehiculoRel vd
         WHERE dd.codigoGuiaFk = :codigoGuia'
         )->setParameter('codigoGuia', $codigoGuia);
 

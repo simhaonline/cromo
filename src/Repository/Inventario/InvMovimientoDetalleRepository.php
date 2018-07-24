@@ -183,7 +183,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('m.generaCostoPromedio')
             ->leftJoin('md.movimientoRel','m')
             ->where('m.estadoAprobado = 1')
-            ->andWhere('md.codigoItemFk = '.$codigoItem);
+            ->andWhere('md.codigoItemFk = '.$codigoItem)
+        ->andWhere('md.afectaInventario = 0');
         return $queryBuilder->getQuery()->execute();
     }
 

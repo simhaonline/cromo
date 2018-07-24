@@ -232,7 +232,7 @@ class MovimientoController extends Controller
                     foreach ($arrItems as $codigoItem => $cantidad) {
                         $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
                         if ($cantidad != '' && $cantidad != 0) {
-                            if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'ENT' || $cantidad <= $arItem->getCantidadExistencia()) {
+                            if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'ENT' || $cantidad <= $arItem->getCantidadExistencia() || $arItem->getAfectaInventario() == 0) {
                                 $arMovimientoDetalle = new InvMovimientoDetalle();
                                 $arMovimientoDetalle->setMovimientoRel($arMovimiento);
                                 $arMovimientoDetalle->setOperacionInventario($arMovimiento->getOperacionInventario());

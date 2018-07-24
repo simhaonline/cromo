@@ -101,10 +101,10 @@
                 <td>{{ arDespacho.codigoRutaFk }}</td>
                 <td>{{ arDespacho.ciudadOrigen }}</td>
                 <td>{{ arDespacho.ciudadDestino }}</td>
-                <td class="numero">{{ arDespacho.cantidad }}</td>
-                <td class="numero">{{ arDespacho.unidades }}</td>
-                <td class="numero">{{ arDespacho.pesoReal }}</td>
-                <td class="numero">{{ arDespacho.pesoVolumen }}</td>
+                <td class="numero">{{ arDespacho.cantidad | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arDespacho.unidades | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arDespacho.pesoReal | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arDespacho.pesoVolumen  | number_format(0, '.', ',')}}</td>
                 <td class="estado">{{ arDespacho.estadoAutorizado?'SI':'NO' }}</td>
                 <td class="estado">{{ arDespacho.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arDespacho.estadoAnulado?'SI':'NO' }}</td>

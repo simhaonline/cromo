@@ -10,7 +10,7 @@ use App\Entity\Transporte\TteGuiaTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-
+use App\Utilidades\Mensajes;
 class TteGuiaRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -681,6 +681,31 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     }
 
+    public function redespacho($codigoGuia): bool
+    {
+        $em = $this->getEntityManager();
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        if($arGuia) {
+            if($arGuia->getEstadoDespachado() == 1 && $arGuia->getCodigoDespachoFk() && $arGuia->getEstadoAnulado() == 0 ) {
+                $arGuia->setFechaDespacho(NULL);
+                $arGuia->setFechaCumplido(NULL);
+                $arGuia->setFechaEntrega(NULL);
+                $arGuia->setEstadoDespachado(0);
+                $arGuia->setEstadoEmbarcado(0);
+                $arGuia->setEstadoEntregado(0);
+                $arGuia->setEstadoSoporte(0);
+                $arGuia->setCodigoDespachoFk(NULL);
+                $em->persist($arGuia);
+                $em->flush();
+                Mensajes::success("La guia se activo para redespacho");
+            } else {
+                Mensajes::error("La guia debe estar despachada y no puede estar anulada");
+            }
+        } else {
+            Mensajes::error("No existe la guia");
+        }
+        return true;
+    }
 
     /**
      * @param $codigoGuia

@@ -24,18 +24,21 @@ class RedespachoController extends Controller
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $arGuia = $em->getRepository(TteGuia::class)->findAll();
+        //$arGuia = $em->getRepository(TteGuia::class)->findAll();
         $form = $this->createFormBuilder()
-            ->add('txtCampo', TextType::class, array('data' => $session->get('campo')))
-            ->add('reDespacho', SubmitType::class, ['label' => 'ReDespacho', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('txtCodigo', TextType::class)
+            ->add('btnRedespacho', SubmitType::class, ['label' => 'Redespacho', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('reDespacho')->isClicked()) {
-                $em->getRepository(TteGuia::class)->find($arGuia);
+            if ($form->get('btnRedespacho')->isClicked()) {
+                $codigoGuia = $form->get('txtCodigo')->getData();
+                if($codigoGuia != "") {
+                    $em->getRepository(TteGuia::class)->redespacho($codigoGuia);
+                }
             }
         }
-        return $this->render('transporte/proceso/transporte/guia/reDespacho.html.twig', [
+        return $this->render('transporte/proceso/transporte/guia/redespacho.html.twig', [
             'form' => $form->createView()
         ]);
     }

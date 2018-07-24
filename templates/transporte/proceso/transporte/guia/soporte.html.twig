@@ -36,7 +36,7 @@
             <th>DESTINO</th>
             <th>UND</th>
             <th>PES</th>
-            <th></th>
+            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
         <tbody>
@@ -51,7 +51,8 @@
                 <td>{{ arGuia.ciudadDestino }}</td>
                 <td class="numero">{{ arGuia.unidades }}</td>
                 <td class="numero">{{ arGuia.pesoReal }}</td>
-                <td class="seleccion"><input type="checkbox" name="chkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
+                <td class="seleccion"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
+
             </tr>
         {% endfor %}
         </tbody>

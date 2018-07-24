@@ -95,7 +95,7 @@
                 <td class="estado">{{ arGuia.estadoCumplido?'SI':'NO' }}</td>
 
                 <td style="text-align: center;">
-                    {% if not arGuia.estadoAutorizado %}
+                    {% if arGuia.estadoEmbarcado == 0 %}
                         <a href="{{ path('transporte_movimiento_transporte_guia_nuevo',{'id' : arGuia.codigoGuiaPk}) }}">
                             <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
                             </i>

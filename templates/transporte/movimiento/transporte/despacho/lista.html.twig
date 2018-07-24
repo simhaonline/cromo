@@ -68,8 +68,9 @@
         <tr>
             <th>ID</th>
             <th>OP</th>
-            <th>FECHA</th>
+            <th>TIPO</th>
             <th>NUMERO</th>
+            <th>FECHA</th>
             <th>VEH</th>
             <th>CONDUCTOR</th>
             <th>RUTA</th>
@@ -91,8 +92,9 @@
             <tr>
                 <td>{{ arDespacho.codigoDespachoPk }}</td>
                 <td>{{ arDespacho.codigoOperacionFk }}</td>
-                <td>{{ arDespacho.fechaSalida | date('Y-m-d') }}</td>
+                <td>{{ arDespacho.despachoTipo }}</td>
                 <td>{{ arDespacho.numero }}</td>
+                <td>{{ arDespacho.fechaSalida | date('Y-m-d H:i') }}</td>
                 <td>{{ arDespacho.codigoVehiculoFk }}</td>
                 <td>{{ arDespacho.conductorNombre }}</td>
                 <td>{{ arDespacho.codigoRutaFk }}</td>

@@ -146,10 +146,12 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $existenciaAnterior = $arItem->getCantidadExistencia();
             $costoPromedio = $arItem->getVrCostoPromedio();
             $cantidadSaldo = $arItem->getCantidadExistencia() + ($arMovimientoDetalle->getCantidadOperada() * $tipo);
-            $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + ($arMovimientoDetalle->getCantidad() * $arMovimiento->getDocumentoRel()->getOperacionInventario()) * $tipo);
+            $cantidadOperada = $arMovimientoDetalle->getCantidad() * $arMovimiento->getOperacionInventario();
+            $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + ($arMovimientoDetalle->getCantidad() * $arMovimiento->getOperacionInventario()) * $tipo);
             $arLote->setCantidadDisponible($arLote->getCantidadDisponible() + $arMovimientoDetalle->getCantidadOperada() * $tipo);
 
             $arMovimientoDetalle->setCantidadSaldo($cantidadSaldo);
+            $arMovimientoDetalle->setCantidadOperada($cantidadOperada);
             if($tipo == 1) {
                 if($arMovimiento->getGeneraCostoPromedio()) {
                     if($existenciaAnterior != 0) {

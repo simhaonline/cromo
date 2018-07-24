@@ -80,6 +80,8 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect('td.estadoAprobado')
             ->addSelect('td.estadoAutorizado')
             ->addSelect('td.estadoAnulado')
+            ->addSelect('dt.nombre AS despachoTipo')
+            ->leftJoin('td.despachoTipoRel', 'dt')
             ->leftJoin('td.ciudadOrigenRel', 'co')
             ->leftJoin('td.ciudadDestinoRel ', 'cd')
             ->leftJoin('td.conductorRel', 'c')

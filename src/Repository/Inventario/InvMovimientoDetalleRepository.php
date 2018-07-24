@@ -97,6 +97,9 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                 $arMovimientoDetalle->setLoteFk($arrLote[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setCantidad($arrCantidad[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setVrPrecio($arrPrecio[$codigoMovimientoDetalle]);
+                if($arMovimiento->getGeneraCostoPromedio()) {
+                    $arMovimientoDetalle->setVrCosto($arrPrecio[$codigoMovimientoDetalle]);
+                }
                 $arMovimientoDetalle->setPorcentajeDescuento($arrPorcentajeDescuento[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoMovimientoDetalle]);
                 $this->getEntityManager()->persist($arMovimientoDetalle);

@@ -154,6 +154,9 @@
                         {% endif %}
                     </div>
                     <div class="btn-group">
+                        {{ form_widget(form.btnActualizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                    </div>
+                    <div class="btn-group">
                         {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                     </div>
                 </div>

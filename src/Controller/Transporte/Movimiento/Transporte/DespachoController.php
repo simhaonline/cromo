@@ -155,10 +155,12 @@ class DespachoController extends Controller
         $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
         $arrBotonCerrar = array('label' => 'Cerrar', 'disabled' => true);
         $arrBotonRetirarGuia = array('label' => 'Retirar', 'disabled' => false);
+        $arrBotonActualizar = array('label' => 'Actualizar', 'disabled' => false);
         $arrBotonRndc = array('label' => 'RNDC', 'disabled' => true);
         $arrBotonImprimirManifiesto = array('label' => 'Manifiesto', 'disabled' => false);
         if ($arDespacho->getEstadoAutorizado()) {
             $arrBotonRetirarGuia['disabled'] = true;
+            $arrBotonActualizar['disabled'] = true;
         }
         if ($arDespacho->getEstadoAprobado()) {
             if (!$arDespacho->getEstadoAnulado()) {
@@ -176,6 +178,7 @@ class DespachoController extends Controller
             ->add('btnCerrar', SubmitType::class, $arrBotonCerrar)
             ->add('btnRndc', SubmitType::class, $arrBotonRndc)
             ->add('btnRetirarGuia', SubmitType::class, $arrBotonRetirarGuia)
+            ->add('btnActualizar', SubmitType::class, $arrBotonActualizar)
             ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -211,6 +214,10 @@ class DespachoController extends Controller
                     $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($id);
                     $em->flush();
                 }
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
+            }
+            if ($form->get('btnActualizar')->isClicked()) {
+                $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($id);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnImprimir')->isClicked()) {

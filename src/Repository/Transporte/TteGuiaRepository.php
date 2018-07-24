@@ -819,7 +819,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             } else {
                 return [
                     'error' => true,
-                    'mensaje' => 'La guia ya esta embarcada en el despacho ' . $codigoDespacho,
+                    'mensaje' => 'La guia ya esta embarcada en el despacho ' . $arGuia->getCodigoDespachoFk(),
                 ];
             }
         } else {

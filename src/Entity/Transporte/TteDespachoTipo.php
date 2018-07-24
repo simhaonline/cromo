@@ -158,7 +158,5 @@ class TteDespachoTipo
         $this->viaje = $viaje;
     }
 
-
-
 }
 

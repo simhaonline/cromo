@@ -32,6 +32,7 @@ class NovedadType extends AbstractType {
             ->add('fecha', DateTimeType::class)
             ->add('fechaReporte', DateTimeType::class)
             ->add('descripcion',TextareaType::class, array('required' => false))
+            ->add('solucion',TextareaType::class, array('required' => false))
             ->add('estadoAtendido', CheckboxType::class, array('required' => false))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
     }

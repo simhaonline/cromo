@@ -87,8 +87,8 @@ class GuiaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $arGuia = new TteGuia();
-        if($id != 0){
-            $arGuia= $em->getRepository(TteGuia::class)->find($id);
+        if ($id != 0) {
+            $arGuia = $em->getRepository(TteGuia::class)->find($id);
         }
         $form = $this->createForm(GuiaType::class, $arGuia);
         $form->handleRequest($request);
@@ -130,7 +130,7 @@ class GuiaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $arGuia = $em->getRepository(TteGuia::class)->find($id);
-        $form = Estandares::botonera($arGuia->getEstadoAutorizado(),$arGuia->getEstadoAprobado(),$arGuia->getEstadoAnulado());
+        $form = Estandares::botonera($arGuia->getEstadoAutorizado(), $arGuia->getEstadoAprobado(), $arGuia->getEstadoAnulado());
         $form->add('btnRetirarNovedad', SubmitType::class, array('label' => 'Retirar'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -153,7 +153,7 @@ class GuiaController extends Controller
     }
 
 
-   /**
+    /**
      * @Route("/transporte/movimiento/trasnporte/guia/detalle/adicionar/novedad/{codigoGuia}/{codigoNovedad}", name="transporte_movimiento_transporte_guia_detalle_adicionar_novedad")
      */
     public function detalleAdicionarNovedad(Request $request, $codigoGuia, $codigoNovedad)
@@ -189,6 +189,25 @@ class GuiaController extends Controller
         return $this->render('transporte/movimiento/transporte/guia/detalleAdicionarNovedad.html.twig', [
             'arGuia' => $arGuia,
             'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/transporte/movimiento/transporte/novedad/solucion/{codigoNovedad}", name="transporte_movimiento_transporte_novedad_solucion")
+     */
+    public function novedadSolucion(Request $request, $codigoNovedad)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arNovedad = $em->getRepository(TteNovedad::class)->find($codigoNovedad);
+        $form = $this->createForm(NovedadType::class, $arNovedad);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arNovedad->setEstadoSolucion(1);
+            $em->persist($arNovedad);
+            $em->flush();
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        return $this->render('transporte/movimiento/transporte/guia/novedadSolucion.html.twig', array (
+        'form' => $form->createView()));
     }
 }
 

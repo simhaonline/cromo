@@ -41,5 +41,6 @@
     <div class="btn-toolbar" style="float: right">
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
-    {{ form_end(form) }}
+    {{ form_widget(form._token) }}
+    {{ form_end(form, {'render_rest':false}) }}
 {% endblock %}

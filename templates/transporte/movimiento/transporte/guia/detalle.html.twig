@@ -163,6 +163,7 @@
                             <th title="Reportado">REP</th>
                             <th title="Solucionado">SOL</th>
                             <th></th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -177,6 +178,11 @@
                                 <td>{% if arNovedad.estadoAtendido == 1 %} SI {% else %} NO {% endif %}</td>
                                 <td>{% if arNovedad.estadoReporte == 1 %} SI {% else %} NO {% endif %}</td>
                                 <td>{% if arNovedad.estadoSolucion == 1 %} SI {% else %} NO {% endif %}</td>
+                                {% if arNovedad.estadoSolucion == false %}
+                                    <td><a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_novedad_solucion', {'codigoNovedad': arNovedad.codigoNovedadPk }) }}', 'GuiaAdicionarNovedad', 600, 900)">Solucion</a></td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
                                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arNovedad.codigoNovedadPk }}" /></td>
                             </tr>
                         {% endfor %}

@@ -27,6 +27,11 @@ class TteDespachoTipo
     private $consecutivo = 0;
 
     /**
+     * @ORM\Column(name="viaje", type="boolean", nullable=true)
+     */
+    private $viaje = false;
+
+    /**
      * @ORM\Column(name="exige_numero", type="boolean", nullable=true)
      */
     private $exigeNumero = false;
@@ -135,6 +140,22 @@ class TteDespachoTipo
     public function setGeneraMonitoreo($generaMonitoreo): void
     {
         $this->generaMonitoreo = $generaMonitoreo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getViaje()
+    {
+        return $this->viaje;
+    }
+
+    /**
+     * @param mixed $viaje
+     */
+    public function setViaje($viaje): void
+    {
+        $this->viaje = $viaje;
     }
 
 

@@ -159,6 +159,11 @@ class TteGuia
     private $vrCobroEntrega = 0;
 
     /**
+     * @ORM\Column(name="vr_costo_reexpedicion", type="float", options={"default" : 0})
+     */
+    private $vrCostoReexpedicion = 0;
+
+    /**
      * @ORM\Column(name="estado_impreso", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoImpreso = false;
@@ -1610,6 +1615,22 @@ class TteGuia
     public function setEmpaqueReferencia($empaqueReferencia): void
     {
         $this->empaqueReferencia = $empaqueReferencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoReexpedicion()
+    {
+        return $this->vrCostoReexpedicion;
+    }
+
+    /**
+     * @param mixed $vrCostoReexpedicion
+     */
+    public function setVrCostoReexpedicion($vrCostoReexpedicion): void
+    {
+        $this->vrCostoReexpedicion = $vrCostoReexpedicion;
     }
 
 

@@ -13,6 +13,7 @@ use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoType;
 use App\Formato\Transporte\Despacho;
 use App\Formato\Transporte\Manifiesto;
+use App\Formato\Transporte\RelacionEntrega;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -225,8 +226,13 @@ class DespachoController extends Controller
                 $formato->Generar($em, $id);
             }
             if ($form->get('btnImprimirManifiesto')->isClicked()) {
-                $formato = new Manifiesto();
-                $formato->Generar($em, $id);
+                if($arDespacho->getDespachoTipoRel()->getViaje () != 1){
+                    $formato = new RelacionEntrega();
+                    $formato->Generar($em, $id);
+                } else {
+                    $formato = new Manifiesto();
+                    $formato->Generar($em, $id);
+                }
             }
         }
 

@@ -220,6 +220,37 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     }
 
+    public function relacionEntrega($codigoDespacho): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, 
+        g.codigoGuiaTipoFk,
+        g.numero, 
+        g.documentoCliente,
+        g.fechaIngreso,           
+        g.unidades,
+        g.fechaDespacho,
+        g.pesoReal,
+        g.pesoVolumen,             
+        c.nombreCorto AS clienteNombreCorto, 
+        g.codigoCiudadDestinoFk,
+        cd.nombre AS ciudadDestino,
+        g.nombreDestinatario,
+        g.direccionDestinatario,
+        g.codigoProductoFk,
+        g.empaqueReferencia
+        FROM App\Entity\Transporte\TteGuia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd        
+        WHERE g.codigoDespachoFk = :codigoDespacho
+        ORDER BY g.codigoCiudadDestinoFk, g.ordenRuta'
+        )->setParameter('codigoDespacho', $codigoDespacho);
+
+        return $query->execute();
+
+    }
+
     public function despachoPendiente()
     {
         $session = new Session();
@@ -254,6 +285,54 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         $queryBuilder->orderBy('tg.codigoRutaFk, tg.codigoCiudadDestinoFk, tg.ordenRuta', 'ASC');
         return $queryBuilder;
+    }
+
+    public function pendienteEntrega()
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $dql = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
+            ->select('tg.codigoGuiaPk')
+            ->addSelect('tg.codigoServicioFk')
+            ->addSelect('tg.codigoGuiaTipoFk')
+            ->addSelect('tg.numero')
+            ->addSelect('tg.documentoCliente')
+            ->addSelect('tg.fechaIngreso')
+            ->addSelect('tg.codigoOperacionIngresoFk')
+            ->addSelect('tg.codigoOperacionCargoFk')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('tg.unidades')
+            ->addSelect('tg.pesoReal')
+            ->addSelect('tg.pesoVolumen')
+            ->addSelect('tg.vrFlete')
+            ->addSelect('tg.vrManejo')
+            ->addSelect('tg.vrRecaudo')
+            ->addSelect('tg.estadoImpreso')
+            ->addSelect('tg.estadoAutorizado')
+            ->addSelect('tg.estadoAnulado')
+            ->addSelect('tg.estadoAprobado')
+            ->addSelect('tg.estadoEmbarcado')
+            ->addSelect('tg.estadoDespachado')
+            ->addSelect('tg.estadoEntregado')
+            ->addSelect('tg.estadoSoporte')
+            ->addSelect('tg.estadoCumplido')
+            ->addSelect('ct.nombreCorto')
+            ->addSelect(
+                '(dg.numero) AS manifiesto'
+            )
+            ->leftJoin('tg.clienteRel', 'c')
+            ->leftJoin('tg.ciudadDestinoRel', 'cd')
+            ->leftJoin('tg.despachoRel', 'dg')
+            ->leftJoin('dg.conductorRel', 'ct')
+            ->where('tg.estadoEntregado = 0')
+            ->andWhere('tg.estadoDespachado = 1')
+            ->andWhere('tg.estadoAnulado = 0');
+        $dql->orderBy('tg.codigoGuiaPk', 'DESC');
+
+        $query = $em->createQuery($dql);
+
+        return $query->execute();
     }
 
     public function cumplido($codigoCumplido): array

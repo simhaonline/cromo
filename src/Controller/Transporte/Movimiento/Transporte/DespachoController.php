@@ -49,32 +49,40 @@ class DespachoController extends Controller
             ->add('txtCodigoConductor', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigoVehiculo'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoNombreConductor'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteDespachoEstadoAprobado'), 'required' => false])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
-        if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroTteDespachoEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
-            $session->set('filtroTteDespachoCodigoVehiculo', $form->get('txtVehiculo')->getData());
-            $session->set('filtroTteDespachoNumero', $form->get('txtNumero')->getData());
-            $session->set('filtroTteDespachoCodigo', $form->get('txtCodigo')->getData());
-            if ($form->get('cboCiudadOrigenRel')->getData() != '') {
-                $session->set('filtroTteDespachoCodigoCiudadOrigen', $form->get('cboCiudadOrigenRel')->getData()->getCodigoCiudadPk());
-            } else {
-                $session->set('filtroTteDespachoCodigoCiudadOrigen', null);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTteDespachoEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
+                $session->set('filtroTteDespachoCodigoVehiculo', $form->get('txtVehiculo')->getData());
+                $session->set('filtroTteDespachoNumero', $form->get('txtNumero')->getData());
+                $session->set('filtroTteDespachoCodigo', $form->get('txtCodigo')->getData());
+                if ($form->get('cboCiudadOrigenRel')->getData() != '') {
+                    $session->set('filtroTteDespachoCodigoCiudadOrigen', $form->get('cboCiudadOrigenRel')->getData()->getCodigoCiudadPk());
+                } else {
+                    $session->set('filtroTteDespachoCodigoCiudadOrigen', null);
+                }
+                if ($form->get('cboCiudadDestinoRel')->getData() != '') {
+                    $session->set('filtroTteDespachoCodigoCiudadDestino', $form->get('cboCiudadDestinoRel')->getData()->getCodigoCiudadPk());
+                } else {
+                    $session->set('filtroTteDespachoCodigoCiudadDestino', null);
+                }
+                if ($form->get('txtCodigoConductor')->getData() != '') {
+                    $session->set('filtroTteDespachoCodigoConductor', $form->get('txtCodigoConductor')->getData());
+                    $session->set('filtroTteDespachoNombreConductor', $form->get('txtNombreCorto')->getData());
+                } else {
+                    $session->set('filtroTteDespachoCodigoConductor', null);
+                    $session->set('filtroTteDespachoNombreConductor', null);
+                }
             }
-            if ($form->get('cboCiudadDestinoRel')->getData() != '') {
-                $session->set('filtroTteDespachoCodigoCiudadDestino', $form->get('cboCiudadDestinoRel')->getData()->getCodigoCiudadPk());
-            } else {
-                $session->set('filtroTteDespachoCodigoCiudadDestino', null);
-            }
-            if ($form->get('txtCodigoConductor')->getData() != '') {
-                $session->set('filtroTteDespachoCodigoConductor', $form->get('txtCodigoConductor')->getData());
-                $session->set('filtroTteDespachoNombreConductor', $form->get('txtNombreCorto')->getData());
-            } else {
-                $session->set('filtroTteDespachoCodigoConductor', null);
-                $session->set('filtroTteDespachoNombreConductor', null);
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteDespacho::class)->eliminar($arrSeleccionados);
             }
         }
+
         $arDespachos = $paginator->paginate($this->getDoctrine()->getRepository(TteDespacho::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/movimiento/transporte/despacho/lista.html.twig', ['arDespachos' => $arDespachos, 'form' => $form->createView()]);
     }

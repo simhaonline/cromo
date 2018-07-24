@@ -272,6 +272,40 @@ class TteDespachoRepository extends ServiceEntityRepository
         return $respuesta;
     }
 
+    /**
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(TteDespacho::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            if (count($this->getEntityManager()->getRepository(TteDespachoDetalle::class)->findBy(['codigoDespachoFk' => $arRegistro->getCodigoDespachoPk()])) <= 0) {
+                                $this->getEntityManager()->remove($arRegistro);
+                            } else {
+                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                            }
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                }
+                if($respuesta != ''){
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
+    }
+
     public function retirarDetalle($arrDetalles): bool
     {
         $em = $this->getEntityManager();

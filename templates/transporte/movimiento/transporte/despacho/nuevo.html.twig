@@ -45,7 +45,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="input-group">
-                                <input id="txtCodigoVehiculo"  name="txtCodigoVehiculo"  type="text" class="form-control" value="{{ arRecogida.codigoVehiculoFk |default('') }}"/>
+                                <input id="txtCodigoVehiculo"  name="txtCodigoVehiculo"  type="text" class="form-control" value="{{ arDespacho.codigoVehiculoFk |default('') }}"/>
                                 <span class="input-group-btn">
                                         <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_vehiculo', { 'campoCodigo': 'txtCodigoVehiculo'}) }}', 'buscarVehiculo', 600, 900)">Buscar</a>
                                     </span>

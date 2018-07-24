@@ -213,7 +213,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd        
         WHERE g.codigoDespachoFk = :codigoDespacho
-        ORDER BY g.codigoRutaFk, g.ordenRuta'
+        ORDER BY g.codigoCiudadDestinoFk, g.ordenRuta'
         )->setParameter('codigoDespacho', $codigoDespacho);
 
         return $query->execute();

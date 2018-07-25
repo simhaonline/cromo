@@ -284,7 +284,7 @@ class Factura1 extends \FPDF
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
         $this->Cell(20, 3, number_format($arMovimiento->getVrNeto(), 0, '.', ','), 0, 0, 'R');
-        if ($arMovimiento->getVrTotal() != 0) {
+        if ($arMovimiento->getVrNeto() != 0) {
             $vrTotalLetras = self::devolverNumeroLetras($arMovimiento->getVrNeto());
         } else {
             $vrTotalLetras = 'CERO PESOS';

@@ -207,7 +207,9 @@ class FacturaController extends Controller
                 }
             }
         }
-        return $this->render('transporte/movimiento/comercial/factura/nuevo.html.twig', ['$arFactura' => $arFactura,'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/comercial/factura/nuevo.html.twig', [
+            'arFactura' => $arFactura,
+            'form' => $form->createView()]);
     }
 
 

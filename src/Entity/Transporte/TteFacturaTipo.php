@@ -32,6 +32,11 @@ class TteFacturaTipo
     private $resolucionFacturacion;
 
     /**
+     * @ORM\Column(name="guia_factura", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $guiaFactura = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="facturaTipoRel")
      */
     protected $facturasFacturaTipoRel;
@@ -135,6 +140,22 @@ class TteFacturaTipo
     public function setResolucionFacturacion($resolucionFacturacion): void
     {
         $this->resolucionFacturacion = $resolucionFacturacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaFactura()
+    {
+        return $this->guiaFactura;
+    }
+
+    /**
+     * @param mixed $guiaFactura
+     */
+    public function setGuiaFactura($guiaFactura): void
+    {
+        $this->guiaFactura = $guiaFactura;
     }
 
 

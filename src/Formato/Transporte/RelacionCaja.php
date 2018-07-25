@@ -29,7 +29,7 @@ class RelacionCaja extends \FPDF {
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
 
-        Estandares::generarEncabezado($this,'RELACION ENTREGA');
+        Estandares::generarEncabezado($this,'RELACION CAJA');
 
         $this->EncabezadoDetalles();
 
@@ -37,14 +37,14 @@ class RelacionCaja extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('ID', 'FECHA', 'FLETE', 'MANEJO', 'TOTAL');
+        $header = array('ID', 'FECHA', 'GUIA','F_GUIA', 'FLETE', 'MANEJO', 'TOTAL');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(15, 15, 15, 15, 15);
+        $w = array(15, 25, 25, 25, 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -65,17 +65,19 @@ class RelacionCaja extends \FPDF {
         if($arRecibos) {
             foreach ($arRecibos as $arRecibo) {
                 $pdf->Cell(15, 4, $arRecibo['codigoReciboPk'], 1, 0, 'L');
-                $pdf->Cell(15, 4, $arRecibo['fecha']->format('Y-m-d'), 1, 0, 'L');
+                $pdf->Cell(25, 4, $arRecibo['fecha']->format('Y-m-d'), 1, 0, 'L');
+                $pdf->Cell(25, 4, $arRecibo['codigoGuiaFk'], 1, 0, 'L');
+                $pdf->Cell(25, 4, $arRecibo['fechaIngreso']->format('Y-m-d'), 1, 0, 'L');
                 $pdf->Cell(15, 4, number_format($arRecibo['vrFlete'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arRecibo['vrManejo'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arRecibo['vrTotal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 15);
             }
-            $pdf->Cell(30, 4, 'TOTAL', 1, 0, 'L');
-            $pdf->Cell(15, 4, $arRelacionCaja->getVrFlete(), 1, 0, 'R');
-            $pdf->Cell(15, 4, $arRelacionCaja->getVrManejo(), 1, 0, 'R');
-            $pdf->Cell(15, 4, $arRelacionCaja->getVrTotal(), 1, 0, 'R');
+            $pdf->Cell(90, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(15, 4, number_format($arRelacionCaja->getVrFlete(), 0, '.', ',') , 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($arRelacionCaja->getVrManejo(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($arRelacionCaja->getVrTotal(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

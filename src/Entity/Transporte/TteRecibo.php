@@ -28,6 +28,11 @@ class TteRecibo
     private $codigoReciboTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_guia_fk", type="integer", nullable=true)
+     */
+    private $codigoGuiaFk;
+
+    /**
      * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoOperacionFk;
@@ -329,6 +334,22 @@ class TteRecibo
     public function setEstadoRelacion($estadoRelacion): void
     {
         $this->estadoRelacion = $estadoRelacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGuiaFk()
+    {
+        return $this->codigoGuiaFk;
+    }
+
+    /**
+     * @param mixed $codigoGuiaFk
+     */
+    public function setCodigoGuiaFk($codigoGuiaFk): void
+    {
+        $this->codigoGuiaFk = $codigoGuiaFk;
     }
 
 

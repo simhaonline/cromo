@@ -76,10 +76,11 @@
             <th>RUTA</th>
             <th>ORIGEN</th>
             <th>DESTINO</th>
+            <th>FLETE</th>
+            <th>ANTI</th>
             <th>CANT</th>
             <th>UND</th>
             <th>PES</th>
-            <th>VOL</th>
             <th>AUT</th>
             <th>APR</th>
             <th>ANU</th>
@@ -101,10 +102,11 @@
                 <td>{{ arDespacho.codigoRutaFk }}</td>
                 <td>{{ arDespacho.ciudadOrigen }}</td>
                 <td>{{ arDespacho.ciudadDestino }}</td>
+                <td class="numero">{{ arDespacho.vrFletePago | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arDespacho.vrAnticipo | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arDespacho.cantidad | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arDespacho.unidades | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arDespacho.pesoReal | number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arDespacho.pesoVolumen  | number_format(0, '.', ',')}}</td>
                 <td class="estado">{{ arDespacho.estadoAutorizado?'SI':'NO' }}</td>
                 <td class="estado">{{ arDespacho.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arDespacho.estadoAnulado?'SI':'NO' }}</td>

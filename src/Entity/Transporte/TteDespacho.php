@@ -143,9 +143,34 @@ class TteDespacho
     private $vrTotal = 0;
 
     /**
+     * @ORM\Column(name="vr_descuento_papeleria", type="float", options={"default" : 0})
+     */
+    private $vrDescuentoPapeleria = 0;
+
+    /**
+     * @ORM\Column(name="vr_descuento_seguridad", type="float", options={"default" : 0})
+     */
+    private $vrDescuentoSeguridad = 0;
+
+    /**
+     * @ORM\Column(name="vr_descuento_cargue", type="float", options={"default" : 0})
+     */
+    private $vrDescuentoCargue = 0;
+
+    /**
+     * @ORM\Column(name="vr_descuento_estampilla", type="float", options={"default" : 0})
+     */
+    private $vrDescuentoEstampilla = 0;
+
+    /**
      * @ORM\Column(name="vr_cobro_entrega", type="float", options={"default" : 0})
      */
     private $vrCobroEntrega = 0;
+
+    /**
+     * @ORM\Column(name="vr_saldo", type="float", options={"default" : 0})
+     */
+    private $vrSaldo = 0;
 
     /**
      * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
@@ -176,6 +201,11 @@ class TteDespacho
      * @ORM\Column(name="codigo_despacho_tipo_fk", type="string", length=20, nullable=true)
      */
     private $codigoDespachoTipoFk;
+
+    /**
+     * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
+     */
+    private $usuario;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDespachoTipo", inversedBy="despachosDespachoTipoRel")
@@ -941,6 +971,102 @@ class TteDespacho
     public function setMonitoreosDespachoRel($monitoreosDespachoRel): void
     {
         $this->monitoreosDespachoRel = $monitoreosDespachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuentoPapeleria()
+    {
+        return $this->vrDescuentoPapeleria;
+    }
+
+    /**
+     * @param mixed $vrDescuentoPapeleria
+     */
+    public function setVrDescuentoPapeleria($vrDescuentoPapeleria): void
+    {
+        $this->vrDescuentoPapeleria = $vrDescuentoPapeleria;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuentoSeguridad()
+    {
+        return $this->vrDescuentoSeguridad;
+    }
+
+    /**
+     * @param mixed $vrDescuentoSeguridad
+     */
+    public function setVrDescuentoSeguridad($vrDescuentoSeguridad): void
+    {
+        $this->vrDescuentoSeguridad = $vrDescuentoSeguridad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuentoCargue()
+    {
+        return $this->vrDescuentoCargue;
+    }
+
+    /**
+     * @param mixed $vrDescuentoCargue
+     */
+    public function setVrDescuentoCargue($vrDescuentoCargue): void
+    {
+        $this->vrDescuentoCargue = $vrDescuentoCargue;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuentoEstampilla()
+    {
+        return $this->vrDescuentoEstampilla;
+    }
+
+    /**
+     * @param mixed $vrDescuentoEstampilla
+     */
+    public function setVrDescuentoEstampilla($vrDescuentoEstampilla): void
+    {
+        $this->vrDescuentoEstampilla = $vrDescuentoEstampilla;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSaldo()
+    {
+        return $this->vrSaldo;
+    }
+
+    /**
+     * @param mixed $vrSaldo
+     */
+    public function setVrSaldo($vrSaldo): void
+    {
+        $this->vrSaldo = $vrSaldo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
     }
 
 

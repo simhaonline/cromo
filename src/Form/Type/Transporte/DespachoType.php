@@ -58,6 +58,10 @@ class DespachoType extends AbstractType {
             ))
             ->add('vrFletePago', NumberType::class)
             ->add('vrAnticipo', NumberType::class)
+            ->add('vrDescuentoPapeleria', NumberType::class)
+            ->add('vrDescuentoSeguridad', NumberType::class)
+            ->add('vrDescuentoCargue', NumberType::class)
+            ->add('vrDescuentoEstampilla', NumberType::class)
             ->add('comentario',TextareaType::class, array('required' => false))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
                 ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));

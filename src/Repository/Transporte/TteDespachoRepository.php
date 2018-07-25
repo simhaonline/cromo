@@ -76,6 +76,8 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect('td.vrFlete')
             ->addSelect('td.vrManejo')
             ->addSelect('td.vrDeclara')
+            ->addSelect('td.vrFletePago')
+            ->addSelect('td.vrAnticipo')
             ->addSelect('c.nombreCorto AS conductorNombre')
             ->addSelect('td.estadoAprobado')
             ->addSelect('td.estadoAutorizado')

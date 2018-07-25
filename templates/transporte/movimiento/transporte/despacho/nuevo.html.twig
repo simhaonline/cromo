@@ -5,16 +5,6 @@
         <div class="panel-heading">Informacion general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Tipo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.despachoTipoRel, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
                 <label for="txtNit" class="col-sm-2 control-label">Conductor:</label>
                 <div class="col-sm-10">
                     <div class="row">
@@ -34,11 +24,10 @@
                     </div>
                 </div>
             </div>
-
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Ruta:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Tipo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.rutaRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                    {{ form_widget(form.despachoTipoRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label class="col-sm-2 control-label">Vehiculo:</label>
                 <div class="col-sm-4">
@@ -54,24 +43,66 @@
                     </div>
                 </div>
             </div>
+
+
+            <div class="form-group form-group-sm">
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Ruta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.rutaRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Flete:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrFletePago, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
             <div class="form-group form-group-sm">
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Origen:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.ciudadOrigenRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
                 </div>
-                <label class="col-sm-2 control-label">Destino:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.ciudadDestinoRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Flete:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.vrFletePago, { 'attr': {'class': 'form-control'} }) }}
-                </div>
                 <label class="col-sm-2 control-label">Anticipo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.vrAnticipo, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Destino:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ciudadDestinoRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Papeleria:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrDescuentoPapeleria, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+                <label class="col-sm-2 control-label">Seguridad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrDescuentoSeguridad, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+                <label class="col-sm-2 control-label">Cargue:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrDescuentoCargue, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+                <label class="col-sm-2 control-label">Estampilla:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrDescuentoEstampilla, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group">

@@ -114,11 +114,26 @@ class DespachoController extends Controller
                         if ($txtCodigoVehiculo != '') {
                             $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
                             if ($arVehiculo) {
-                                $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
                                 $arDespacho->setVehiculoRel($arVehiculo);
                                 $arDespacho->setConductorRel($arConductor);
+                                $descuentos = $arDespacho->getVrDescuentoPapeleria() + $arDespacho->getVrDescuentoSeguridad() + $arDespacho->getVrDescuentoCargue() + $arDespacho->getVrDescuentoEstampilla();
+                                $retencionFuente = 0;
+                                if($arDespacho->getVrFletePago() > 107000) {
+                                    $retencionFuente = $arDespacho->getVrFletePago() * 1 / 100;
+                                }
+                                $industriaComercio = $arDespacho->getVrFletePago() * 0.6 /100;
+
+                                $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);
+                                $saldo = $total - $descuentos;
+                                $arDespacho->setVrIndustriaComercio($industriaComercio);
+                                $arDespacho->setVrRetencionFuente($retencionFuente);
+                                $arDespacho->setVrTotal($total);
+                                $arDespacho->setVrSaldo($saldo);
                                 if ($id == 0) {
                                     $arDespacho->setFechaRegistro(new \DateTime('now'));
+                                    $arDespacho->setFechaSalida(new \DateTime('now'));
+                                    $arDespacho->setUsuario($this->getUser()->getUsername());
+                                    $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
                                 }
                                 $em->persist($arDespacho);
                                 $em->flush();

@@ -55,6 +55,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $respuesta = '';
         $vrTotalBrutoGlobal = 0;
+        $vrTotalGlobal = 0;
         $vrTotalNetoGlobal = 0;
         $vrDescuentoGlobal = 0;
         $vrIvaGlobal = 0;
@@ -69,8 +70,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $vrDescuento = $vrSubtotal * ($arMovimientoDetalle->getPorcentajeDescuento() / 100);
             }
             $vrIva = $vrSubtotal * ($arMovimientoDetalle->getPorcentajeIva() / 100);
-            $vrTotalBruto = $vrSubtotal - $vrDescuento + $vrIva;
-            //$vrTotalNeto = $vrTotalBruto - $vrIva;
+            $vrTotalBruto = $vrSubtotal - $vrDescuento;
+            $vrTotal = $vrTotalBruto + $vrIva;
+            $vrTotalGlobal += $vrTotal;
             $vrTotalBrutoGlobal += $vrTotalBruto;
             $vrDescuentoGlobal += $vrDescuento;
             $vrIvaGlobal += $vrIva;
@@ -79,7 +81,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $arMovimientoDetalle->setVrSubtotal($vrSubtotal);
             $arMovimientoDetalle->setVrDescuento($vrDescuento);
             $arMovimientoDetalle->setVrIva($vrIva);
-            $arMovimientoDetalle->setVrTotal($vrTotalBruto);
+            $arMovimientoDetalle->setVrTotal($vrTotal);
             //$arMovimientoDetalle->setVrNeto($vrTotalNeto);
 
             $this->getEntityManager()->persist($arMovimientoDetalle);
@@ -102,10 +104,10 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 }
             }
         }
-        $vrTotalNetoGlobal = $vrTotalBrutoGlobal - $vrRetencionFuenteGlobal - $vrRetencionIvaGlobal;
+        $vrTotalNetoGlobal = $vrTotalGlobal - $vrRetencionFuenteGlobal - $vrRetencionIvaGlobal;
         $arMovimiento->setVrIva($vrIvaGlobal);
         $arMovimiento->setVrSubtotal($vrSubtotalGlobal);
-        $arMovimiento->setVrTotal($vrTotalBrutoGlobal);
+        $arMovimiento->setVrTotal($vrTotalGlobal);
         $arMovimiento->setVrNeto($vrTotalNetoGlobal);
         $arMovimiento->setVrDescuento($vrDescuentoGlobal);
         $arMovimiento->setVrRetencionFuente($vrRetencionFuenteGlobal);

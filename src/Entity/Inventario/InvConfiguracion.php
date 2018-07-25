@@ -51,6 +51,26 @@ class InvConfiguracion
      */
     private $codigoDocumentoMovimientosEntradaBodega = 0;
 
+    /**
+     * @ORM\Column(name="vr_base_retencion_fuente_venta", type="float", nullable=true)
+     */
+    private $vrBaseRetencionFuenteVenta = 0;
+
+    /**
+     * @ORM\Column(name="porcentaje_retencion_fuente", type="float", nullable=true)
+     */
+    private $porcentajeRetencionFuente = 0;
+
+    /**
+     * @ORM\Column(name="vr_base_retencion_iva_venta", type="float", nullable=true)
+     */
+    private $vrBaseRetencionIvaVenta = 0;
+
+    /**
+     * @ORM\Column(name="porcentaje_retencion_iva", type="float", nullable=true)
+     */
+    private $porcentajeRetencionIva = 0;
+
 
     /**
      * Set codigoConfiguracionPk.
@@ -243,4 +263,71 @@ class InvConfiguracion
     {
         return $this->codigoDocumentoMovimientosEntradaBodega;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVrBaseRetencionFuenteVenta()
+    {
+        return $this->vrBaseRetencionFuenteVenta;
+    }
+
+    /**
+     * @param mixed $vrBaseRetencionFuenteVenta
+     */
+    public function setVrBaseRetencionFuenteVenta($vrBaseRetencionFuenteVenta): void
+    {
+        $this->vrBaseRetencionFuenteVenta = $vrBaseRetencionFuenteVenta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeRetencionFuente()
+    {
+        return $this->porcentajeRetencionFuente;
+    }
+
+    /**
+     * @param mixed $porcentajeRetencionFuente
+     */
+    public function setPorcentajeRetencionFuente($porcentajeRetencionFuente): void
+    {
+        $this->porcentajeRetencionFuente = $porcentajeRetencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrBaseRetencionIvaVenta()
+    {
+        return $this->vrBaseRetencionIvaVenta;
+    }
+
+    /**
+     * @param mixed $vrBaseRetencionIvaVenta
+     */
+    public function setVrBaseRetencionIvaVenta($vrBaseRetencionIvaVenta): void
+    {
+        $this->vrBaseRetencionIvaVenta = $vrBaseRetencionIvaVenta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeRetencionIva()
+    {
+        return $this->porcentajeRetencionIva;
+    }
+
+    /**
+     * @param mixed $porcentajeRetencionIva
+     */
+    public function setPorcentajeRetencionIva($porcentajeRetencionIva): void
+    {
+        $this->porcentajeRetencionIva = $porcentajeRetencionIva;
+    }
+
+
+
 }

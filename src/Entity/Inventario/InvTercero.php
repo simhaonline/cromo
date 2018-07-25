@@ -86,6 +86,21 @@ class InvTercero
     private $autoretenedor = false;
 
     /**
+     * @ORM\Column(name="retencion_iva", type="boolean")
+     */
+    private $retencionIva = false;
+
+    /**
+     * @ORM\Column(name="retencion_fuente", type="boolean")
+     */
+    private $retencionFuente = false;
+
+    /**
+     * @ORM\Column(name="retencion_fuente_sin_bae", type="boolean")
+     */
+    private $retencionFuenteSinBase = false;
+
+    /**
      * @ORM\Column(name="codigo_precio_venta_fk", type="integer", nullable=true)
      */
     private $codigoPrecioVentaFk;
@@ -451,5 +466,56 @@ class InvTercero
     {
         $this->sucursalesTerceroRel = $sucursalesTerceroRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRetencionIva()
+    {
+        return $this->retencionIva;
+    }
+
+    /**
+     * @param mixed $retencionIva
+     */
+    public function setRetencionIva($retencionIva): void
+    {
+        $this->retencionIva = $retencionIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRetencionFuente()
+    {
+        return $this->retencionFuente;
+    }
+
+    /**
+     * @param mixed $retencionFuente
+     */
+    public function setRetencionFuente($retencionFuente): void
+    {
+        $this->retencionFuente = $retencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRetencionFuenteSinBase()
+    {
+        return $this->retencionFuenteSinBase;
+    }
+
+    /**
+     * @param mixed $retencionFuenteSinBase
+     */
+    public function setRetencionFuenteSinBase($retencionFuenteSinBase): void
+    {
+        $this->retencionFuenteSinBase = $retencionFuenteSinBase;
+    }
+
+
+
 }
 

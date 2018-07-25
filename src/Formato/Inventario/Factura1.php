@@ -227,7 +227,7 @@ class Factura1 extends \FPDF
         $this->Cell(30, 3, 'TOTAL NETO:', 0, 0, 'R');
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20, 3, number_format($arMovimiento->getVrNeto(), 0, '.', ','), 0, 0, 'R');
+        $this->Cell(20, 3, number_format($arMovimiento->getVrTotal() - $arMovimiento->getVrIva(), 0, '.', ','), 0, 0, 'R');
 
         $y += 3.8;
         $this->SetFont('Arial', 'B', 7);
@@ -259,7 +259,7 @@ class Factura1 extends \FPDF
         $this->Cell(30, 3, 'RTE FUENTE:', 0, 0, 'R');
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20, 3, number_format(0, 0, '.', ','), 0, 0, 'R');
+        $this->Cell(20, 3, number_format($arMovimiento->getVrRetencionFuente(), 0, '.', ','), 0, 0, 'R');
 
         $y += 3.8;
         $this->SetFont('Arial', 'B', 7);
@@ -267,7 +267,7 @@ class Factura1 extends \FPDF
         $this->Cell(30, 3, 'RTE IVA:', 0, 0, 'R');
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20, 3, number_format(0, 0, '.', ','), 0, 0, 'R');
+        $this->Cell(20, 3, number_format($arMovimiento->getVrRetencionIva(), 0, '.', ','), 0, 0, 'R');
 
         $y += 3.8;
         $this->SetFont('Arial', 'B', 7);
@@ -283,9 +283,9 @@ class Factura1 extends \FPDF
         $this->Cell(30, 3, 'TOTAL GENERAL:', 0, 0, 'R');
         $this->SetX($x);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(20, 3, number_format($arMovimiento->getVrTotal(), 0, '.', ','), 0, 0, 'R');
+        $this->Cell(20, 3, number_format($arMovimiento->getVrNeto(), 0, '.', ','), 0, 0, 'R');
         if ($arMovimiento->getVrTotal() != 0) {
-            $vrTotalLetras = self::devolverNumeroLetras($arMovimiento->getVrTotal());
+            $vrTotalLetras = self::devolverNumeroLetras($arMovimiento->getVrNeto());
         } else {
             $vrTotalLetras = 'CERO PESOS';
         }

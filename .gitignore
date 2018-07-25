@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 .env
 /public/bundles/
@@ -13,9 +12,5 @@
 /nbproject/*
 /.idea/
 /.idea/*
-###> symfony/webpack-encore-pack ###
-/node_modules/
-/public/build/
-###< symfony/webpack-encore-pack ###
 composer.lock
 symfony.lock

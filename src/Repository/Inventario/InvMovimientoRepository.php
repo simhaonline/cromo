@@ -3,6 +3,7 @@
 namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvBodega;
+use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvMovimientoDetalle;
@@ -51,42 +52,65 @@ class InvMovimientoRepository extends ServiceEntityRepository
      */
     public function liquidar($arMovimiento)
     {
+        $em = $this->getEntityManager();
         $respuesta = '';
-        $vrTotalGlobal = 0;
+        $vrTotalBrutoGlobal = 0;
+        $vrTotalNetoGlobal = 0;
         $vrDescuentoGlobal = 0;
         $vrIvaGlobal = 0;
         $vrSubtotalGlobal = 0;
+        $vrRetencionFuenteGlobal = 0;
+        $vrRetencionIvaGlobal = 0;
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
-        if ($arMovimientoDetalles > 0) {
-            foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-                $vrSubtotal = $arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getCantidad();
+        foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+            $vrSubtotal = $arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getCantidad();
+            $vrDescuento = 0;
+            if($arMovimientoDetalle->getPorcentajeDescuento() > 0) {
                 $vrDescuento = $vrSubtotal * ($arMovimientoDetalle->getPorcentajeDescuento() / 100);
-                $vrIva = $vrSubtotal * ($arMovimientoDetalle->getPorcentajeIva() / 100);
-                $vrTotal = $vrSubtotal + $vrIva - $vrDescuento;
-
-                $vrTotalGlobal += $vrTotal;
-                $vrDescuentoGlobal += $vrDescuento;
-                $vrIvaGlobal += $vrIva;
-                $vrSubtotalGlobal += $vrSubtotal;
-
-                $arMovimientoDetalle->setVrSubtotal($vrSubtotal);
-                $arMovimientoDetalle->setVrDescuento($vrDescuento);
-                $arMovimientoDetalle->setVrIva($vrIva);
-                $arMovimientoDetalle->setVrTotal($vrTotal);
-                $this->getEntityManager()->persist($arMovimientoDetalle);
             }
-            $arMovimiento->setVrIva($vrIvaGlobal);
-            $arMovimiento->setVrSubtotal($vrSubtotalGlobal);
-            $arMovimiento->setVrTotal($vrTotalGlobal);
-            $arMovimiento->setVrDescuento($vrDescuentoGlobal);
-            $this->getEntityManager()->persist($arMovimiento);
-        } else {
-            $arMovimiento->setVrIva(0);
-            $arMovimiento->setVrSubtotal(0);
-            $arMovimiento->setVrTotal(0);
-            $arMovimiento->setVrDescuento(0);
-            $this->getEntityManager()->persist($arMovimiento);
+            $vrIva = $vrSubtotal * ($arMovimientoDetalle->getPorcentajeIva() / 100);
+            $vrTotalBruto = $vrSubtotal - $vrDescuento + $vrIva;
+            //$vrTotalNeto = $vrTotalBruto - $vrIva;
+            $vrTotalBrutoGlobal += $vrTotalBruto;
+            $vrDescuentoGlobal += $vrDescuento;
+            $vrIvaGlobal += $vrIva;
+            $vrSubtotalGlobal += $vrSubtotal;
+
+            $arMovimientoDetalle->setVrSubtotal($vrSubtotal);
+            $arMovimientoDetalle->setVrDescuento($vrDescuento);
+            $arMovimientoDetalle->setVrIva($vrIva);
+            $arMovimientoDetalle->setVrTotal($vrTotalBruto);
+            //$arMovimientoDetalle->setVrNeto($vrTotalNeto);
+
+            $this->getEntityManager()->persist($arMovimientoDetalle);
         }
+        $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->liquidarMovimiento();
+        //Calcular retenciones en Ventas
+        if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC') {
+            //Retencion en la fuente
+            if ($arMovimiento->getTerceroRel()->getRetencionFuente()) {
+                if ($vrTotalBrutoGlobal >= $arrConfiguracion['vrBaseRetencionFuenteVenta'] || $arMovimiento->getTerceroRel()->getRetencionFuenteSinBase()) {
+                    $vrRetencionFuenteGlobal = ($vrTotalBrutoGlobal * $arrConfiguracion['porcentajeRetencionFuente']) / 100;
+                }
+            }
+
+            //Liquidar retencion de iva para las ventas, solo los grandes contribuyentes y entidades del estado nos retienen 50% iva
+            if ($arMovimiento->getTerceroRel()->getRetencionIva() == 1) {
+                //Validacion acordada con Luz Dary de que las devoluciones tambien validen la base
+                if ($vrIvaGlobal >=  $arrConfiguracion['vrBaseRetencionIvaVenta']) {
+                    $vrRetencionIvaGlobal = ($vrIvaGlobal * $arrConfiguracion['porcentajeRetencionIva']) / 100;
+                }
+            }
+        }
+        $vrTotalNetoGlobal = $vrTotalBrutoGlobal - $vrRetencionFuenteGlobal - $vrRetencionIvaGlobal;
+        $arMovimiento->setVrIva($vrIvaGlobal);
+        $arMovimiento->setVrSubtotal($vrSubtotalGlobal);
+        $arMovimiento->setVrTotal($vrTotalBrutoGlobal);
+        $arMovimiento->setVrNeto($vrTotalNetoGlobal);
+        $arMovimiento->setVrDescuento($vrDescuentoGlobal);
+        $arMovimiento->setVrRetencionFuente($vrRetencionFuenteGlobal);
+        $arMovimiento->setVrRetencionIva($vrRetencionIvaGlobal);
+        $this->getEntityManager()->persist($arMovimiento);
         if ($respuesta == '') {
             $this->getEntityManager()->flush();
         } else {

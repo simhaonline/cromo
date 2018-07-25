@@ -26,4 +26,18 @@ class InvConfiguracionRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function liquidarMovimiento(): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT c.vrBaseRetencionFuenteVenta,
+        c.vrBaseRetencionIvaVenta, 
+        c.porcentajeRetencionFuente, 
+        c.porcentajeRetencionIva
+        FROM App\Entity\Inventario\InvConfiguracion c 
+        WHERE c.codigoConfiguracionPk = :codigoConfiguracion'
+        )->setParameter('codigoConfiguracion', 1);
+        return $query->getSingleResult();
+    }
+
 }

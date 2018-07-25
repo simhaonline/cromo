@@ -78,11 +78,6 @@ class InvMovimiento
     private $ciudadFactura;
 
     /**
-     * @ORM\Column(name="por_iva", type="float", nullable=true)
-     */
-    private $porIva;
-
-    /**
      * @ORM\Column(name="vr_iva", type="float", nullable=true)
      */
     private $vrIva;
@@ -108,19 +103,14 @@ class InvMovimiento
     private $vrTotal = 0;
 
     /**
-     * @ORM\Column(name="vr_rte_fte", type="float")
+     * @ORM\Column(name="vr_retencion_fuente", type="float")
      */
-    private $vrRteFte = 0;
+    private $vrRetencionFuente = 0;
 
     /**
-     * @ORM\Column(name="vr_rte_iva", type="float")
+     * @ORM\Column(name="vr_retencion_iva", type="float")
      */
-    private $vrRteIva = 0;
-
-    /**
-     * @ORM\Column(name="vr_rte_cree", type="float")
-     */
-    private $vrRteCree = 0;
+    private $vrRetencionIva = 0;
 
     /**
      * @ORM\Column(name="comentarios", type="string", length=500, nullable=true)
@@ -406,22 +396,6 @@ class InvMovimiento
     /**
      * @return mixed
      */
-    public function getPorIva()
-    {
-        return $this->porIva;
-    }
-
-    /**
-     * @param mixed $porIva
-     */
-    public function setPorIva($porIva): void
-    {
-        $this->porIva = $porIva;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVrIva()
     {
         return $this->vrIva;
@@ -502,49 +476,33 @@ class InvMovimiento
     /**
      * @return mixed
      */
-    public function getVrRteFte()
+    public function getVrRetencionFuente()
     {
-        return $this->vrRteFte;
+        return $this->vrRetencionFuente;
     }
 
     /**
-     * @param mixed $vrRteFte
+     * @param mixed $vrRetencionFuente
      */
-    public function setVrRteFte($vrRteFte): void
+    public function setVrRetencionFuente($vrRetencionFuente): void
     {
-        $this->vrRteFte = $vrRteFte;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrRteIva()
-    {
-        return $this->vrRteIva;
-    }
-
-    /**
-     * @param mixed $vrRteIva
-     */
-    public function setVrRteIva($vrRteIva): void
-    {
-        $this->vrRteIva = $vrRteIva;
+        $this->vrRetencionFuente = $vrRetencionFuente;
     }
 
     /**
      * @return mixed
      */
-    public function getVrRteCree()
+    public function getVrRetencionIva()
     {
-        return $this->vrRteCree;
+        return $this->vrRetencionIva;
     }
 
     /**
-     * @param mixed $vrRteCree
+     * @param mixed $vrRetencionIva
      */
-    public function setVrRteCree($vrRteCree): void
+    public function setVrRetencionIva($vrRetencionIva): void
     {
-        $this->vrRteCree = $vrRteCree;
+        $this->vrRetencionIva = $vrRetencionIva;
     }
 
     /**
@@ -662,6 +620,22 @@ class InvMovimiento
     /**
      * @return mixed
      */
+    public function getGeneraCostoPromedio()
+    {
+        return $this->generaCostoPromedio;
+    }
+
+    /**
+     * @param mixed $generaCostoPromedio
+     */
+    public function setGeneraCostoPromedio($generaCostoPromedio): void
+    {
+        $this->generaCostoPromedio = $generaCostoPromedio;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDocumentoRel()
     {
         return $this->documentoRel;
@@ -737,22 +711,6 @@ class InvMovimiento
     public function setSucursalRel($sucursalRel): void
     {
         $this->sucursalRel = $sucursalRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGeneraCostoPromedio()
-    {
-        return $this->generaCostoPromedio;
-    }
-
-    /**
-     * @param mixed $generaCostoPromedio
-     */
-    public function setGeneraCostoPromedio($generaCostoPromedio): void
-    {
-        $this->generaCostoPromedio = $generaCostoPromedio;
     }
 
 

@@ -22,6 +22,11 @@ class CarNotaDebitoConcepto
     private $nombre;
 
     /**
+     * @ORM\Column(name="consecutivo", type="integer", nullable=true)
+     */
+    private $consecutivo = 0;
+
+    /**
      * @return mixed
      */
     public function getCodigoNotaDebitoConceptoPk()

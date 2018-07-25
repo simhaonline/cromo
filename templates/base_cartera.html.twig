@@ -65,22 +65,47 @@
                         <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
                     </li>
                     <li>
+                        <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                {#<a href="{{ path('lista',{'entidad':'CarCliente'} )}}">Cliente</a>#}
+                                <!-- /.nav-third-level -->
+                            </li>
+                            <li>
+                                <a href="#">Recibo <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li><a href="{{ path('cartera_movimiento_recibo_recibo_lista') }}">Recibo</a></li>
+                                    {#<li><a href="{{ path('lista',{'entidad':'CarCuentaCobrarTipo'}) }}">Tipo cuenta cobro</a>#}
+                                    {#</li>#}
+                                    {#<li><a href="{{ path('lista',{'entidad':'CarNotaCreditoConcepto'}) }}">Concepto nota#}
+                                    {#credito</a></li>#}
+                                    {#<li><a href="{{ path('lista',{'entidad':'CarNotaCreditoConcepto'}) }}">Concepto nota#}
+                                    {#debito</a></li>#}
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
                         <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="{{ path('lista',{'entidad':'CarCliente'} )}}">Cliente</a>
+                                {#<a href="{{ path('lista',{'entidad':'CarCliente'} )}}">Cliente</a>#}
                                 <!-- /.nav-third-level -->
                             </li>
                             <li>
                                 <a href="#">General <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('lista',{'entidad':'CarReciboTipo'}) }}">Tipo recibo</a></li>
-                                    <li><a href="{{ path('lista',{'entidad':'CarCuentaCobrarTipo'}) }}">Tipo cuenta cobro</a>
-                                    </li>
-                                    <li><a href="{{ path('lista',{'entidad':'CarNotaCreditoConcepto'}) }}">Concepto nota
-                                            credito</a></li>
-                                    <li><a href="{{ path('lista',{'entidad':'CarNotaCreditoConcepto'}) }}">Concepto nota
-                                            debito</a></li>
+                                    <li>
+                                        <a href="{{ path('admin_lista',{'modulo':'cartera','entidad':'tipoRecibo'}) }}">Tipo
+                                            recibo</a></li>
+                                    {#<li><a href="{{ path('lista',{'entidad':'CarCuentaCobrarTipo'}) }}">Tipo cuenta cobro</a>#}
+                                    {#</li>#}
+                                    {#<li><a href="{{ path('lista',{'entidad':'CarNotaCreditoConcepto'}) }}">Concepto nota#}
+                                            {#credito</a></li>#}
+                                    {#<li><a href="{{ path('lista',{'entidad':'CarNotaCreditoConcepto'}) }}">Concepto nota#}
+                                            {#debito</a></li>#}
                                 </ul>
                                 <!-- /.nav-third-level -->
                             </li>

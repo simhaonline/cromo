@@ -38,8 +38,10 @@ class GenConfiguracionEntidad extends Fixture
         /////////////////              FIN ESTRACTURA MODULO DE INVENTARIO                             ////////////////
 //
 //        /////////////////              INICIO ESTRACTURA MODULO DE CARTERA                             ////////////////
-//        $arrModuloCartera = ['cliente', 'reciboTipo', 'cuentaCobrarTipo', 'notaCreditoConcepto', 'notaDebitoConcepto'];
-//        $this->setConfiguracionEntidades($arrModuloCartera, $em, 'cartera');
+        $arrModuloCartera = [
+            'cliente,movimiento,cartera,0,0',
+            'reciboTipo,administracion,recibo,0,0'];
+        $this->setConfiguracionEntidades($arrModuloCartera, $em, 'cartera');
 //        /////////////////                 FIN ESTRACTURA MODULO DE CARTERA                             ////////////////
 //
         /////////////////              INICIO ESTRACTURA MODULO DE RECURSO HUMANO                            ////////////////

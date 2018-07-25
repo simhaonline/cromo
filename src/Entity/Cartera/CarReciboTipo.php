@@ -247,5 +247,22 @@ class CarReciboTipo
         $this->recibosReciboTipoRel = $recibosReciboTipoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getConsecutivo()
+    {
+        return $this->consecutivo;
+    }
+
+    /**
+     * @param mixed $consecutivo
+     */
+    public function setConsecutivo($consecutivo): void
+    {
+        $this->consecutivo = $consecutivo;
+    }
+
+
 
 }

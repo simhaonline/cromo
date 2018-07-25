@@ -38,6 +38,7 @@ class FacturaController extends Controller
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteFacturaEstadoAprobado'), 'required' => false])
             ->add('chkEstadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteFacturaEstadoAnulado'), 'required' => false])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -54,6 +55,10 @@ class FacturaController extends Controller
                     $session->set('filtroTteFacturaCodigoCliente', null);
                     $session->set('filtroTteFacturaNombreCliente', null);
                 }
+            }
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
             }
         }
         $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->lista(), $request->query->getInt('page', 1), 30);
@@ -199,11 +204,7 @@ class FacturaController extends Controller
                     $arFactura->setFechaVence($arFactura->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
                     $em->persist($arFactura);
                     $em->flush();
-                    if ($form->get('guardarnuevo')->isClicked()) {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_nuevo', array('codigoRecogida' => 0)));
-                    } else {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_lista'));
-                    }
+                    return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', array('id' => $arFactura->getCodigoFacturaPk())));
                 }
             }
         }

@@ -56,6 +56,7 @@
             <th>NUMERO</th>
             <th>FECHA</th>
             <th>CLIENTE</th>
+            <th>CANT</th>
             <th>FLETE</th>
             <th>MANEJO</th>
             <th>SUBTOTAL</th>
@@ -63,6 +64,7 @@
             <th>AUT</th>
             <th>APR</th>
             <th>ANU</th>
+            <th></th>
             <th></th>
             <th></th>
         </tr>
@@ -74,6 +76,7 @@
                 <td>{{ arFactura.numero }}</td>
                 <td>{{ arFactura.fecha | date('Y-m-d') }}</td>
                 <td>{{ arFactura.clienteNombre }}</td>
+                <td class="numero">{{ arFactura.guias | number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arFactura.vrFlete | number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arFactura.vrManejo | number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arFactura.vrSubtotal | number_format(0, '.', ',')}}</td>
@@ -83,12 +86,13 @@
                 <td class="estado">{{ arFactura.estadoAnulado?'SI':'NO' }}</td>
 
                 <td style="text-align: center;">
-                    {% if arFactura.estadoAutorizado == 0 %}
+                    {% if arFactura.estadoAutorizado == 0 and arFactura.guias <= 0 %}
                     <a href="{{ path('transporte_movimiento_comercial_factura_nuevo',{'id' : arFactura.codigoFacturaPk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
                     {% endif %}
                 </td>
                 <td style="text-align: center"><a href="{{ path('transporte_movimiento_comercial_factura_detalle', { 'id': arFactura.codigoFacturaPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arFactura.codigoFacturaPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -104,6 +108,9 @@
     </div>
 
     <div class="btn-toolbar" style="float: right">
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(form.btnEliminar) }}
+        </div>
         <div class="btn-group">
             <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>

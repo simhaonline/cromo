@@ -57,6 +57,11 @@ class TteGuiaTipo
     private $validarRango = false;
 
     /**
+     * @ORM\Column(name="genera_cobro", type="boolean", nullable=true)
+     */
+    private $generaCobro = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteFacturaTipo", inversedBy="guiasTiposFacturaTipoRel")
      * @ORM\JoinColumn(name="codigo_factura_tipo_fk", referencedColumnName="codigo_factura_tipo_pk")
      */
@@ -241,6 +246,22 @@ class TteGuiaTipo
     public function setValidarRango($validarRango): void
     {
         $this->validarRango = $validarRango;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraCobro()
+    {
+        return $this->generaCobro;
+    }
+
+    /**
+     * @param mixed $generaCobro
+     */
+    public function setGeneraCobro($generaCobro): void
+    {
+        $this->generaCobro = $generaCobro;
     }
 
 

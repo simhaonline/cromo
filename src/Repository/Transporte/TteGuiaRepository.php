@@ -355,6 +355,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.vrRecaudo,
         g.documentoCliente,               
         g.nombreDestinatario,
+        g.empaqueReferencia,
         c.nombreCorto AS clienteNombreCorto,
         cd.nombre AS ciudadDestino
         FROM App\Entity\Transporte\TteGuia g 

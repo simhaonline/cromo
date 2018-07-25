@@ -9,12 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CarNotaCreditoConcepto
 {
-    
+
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_nota_credito_concepto_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */        
+     * @ORM\Column(type="string", length=10, nullable=false, unique=true)
+     */
     private $codigoNotaCreditoConceptoPk;
 
     /**

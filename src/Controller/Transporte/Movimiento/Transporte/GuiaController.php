@@ -179,7 +179,8 @@ class GuiaController extends Controller
                 $arNovedad->setFechaAtencion(new \DateTime('now'));
                 $arNovedad->setFechaSolucion(new \DateTime('now'));
             }
-
+            $arGuia->setEstadoNovedad(1);
+            $em->persist($arGuia);
             $em->persist($arNovedad);
             $em->flush();
 
@@ -208,6 +209,9 @@ class GuiaController extends Controller
             $arNovedad->setEstadoSolucion(1);
             $arNovedad->setSolucion($form->get('solucion')->getData());
             $em->persist($arNovedad);
+            $arGuia = $em->getRepository(TteGuia::class)->find($arNovedad->getCodigoGuiaFk());
+            $arGuia->setEstadoNovedad(0);
+            $em->persist($arGuia);
             $em->flush();
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }

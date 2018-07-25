@@ -9,12 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CarReciboTipo
 {
-    
+
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_recibo_tipo_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */        
+     * @ORM\Column(type="string", length=10, nullable=false, unique=true)
+     */
     private $codigoReciboTipoPk;
 
     /**

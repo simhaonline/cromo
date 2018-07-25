@@ -35,7 +35,7 @@ class Manifiesto extends \FPDF {
         $this->SetFont('Arial', 'b', 9);
         $this->Text(138, 35, $arConfiguracion->getDireccion());
         $this->Text(138, 40, $arConfiguracion->getTelefono());
-        $this->Text(138, 45, "BUCARAMANGA - SANTANDER");
+        $this->Text(138, 45, "MEDELLIN - ANTIOQUIA");
 
         $this->SetFont('Arial', 'b', 5);
         $this->SetXY(190, 10);

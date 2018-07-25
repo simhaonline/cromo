@@ -398,6 +398,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT g.codigoGuiaPk, 
         g.numero,
+        g.fechaIngreso,
         g.codigoOperacionIngresoFk,
         g.codigoOperacionCargoFk, 
         g.unidades,
@@ -917,4 +918,59 @@ class TteGuiaRepository extends ServiceEntityRepository
             ];
         }
     }
+
+    /**
+     * @param $codigoDespacho $codigoGuia
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function apiFacturaAdicionar($codigoFactura, $codigoGuia) {
+        $em = $this->getEntityManager();
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+        if($arGuia && $arFactura) {
+            if($arGuia->getEstadoFacturaGenerada() == 0) {
+                if($arGuia->getFactura() == 0 && $arGuia->getEstadoAnulado() == 0) {
+                    if($arGuia->getCodigoClienteFk() == $arFactura->getCodigoClienteFk()) {
+                        $arGuia->setFacturaRel($arFactura);
+                        $arGuia->setEstadoFacturaGenerada(1);
+                        $em->persist($arGuia);
+
+                        //$arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
+                        //$arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
+                        //$arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
+                        $arFactura->setGuias($arFactura->getGuias()+1);
+                        $arFactura->setVrFlete($arFactura->getVrFlete() + $arGuia->getVrFlete());
+                        $em->persist($arFactura);
+                        $em->flush();
+                        return [
+                            'error' => false,
+                            'mensaje' => '',
+                        ];
+                    } else {
+                        return [
+                            'error' => true,
+                            'mensaje' => 'La guia es de otro cliente y no se puede adicionar a la factura ',
+                        ];
+                    }
+                } else {
+                    return [
+                        'error' => true,
+                        'mensaje' => 'La guia no puede ser una factura de venta y no puede estar anulada',
+                    ];
+                }
+            } else {
+                return [
+                    'error' => true,
+                    'mensaje' => 'La guia ya esta prefacturada o facturada en la factura ' . $arGuia->getCodigoFacturaFk(),
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'mensaje' => "La guia " . $codigoGuia . " o la factura " . $codigoFactura . " no existe ",
+            ];
+        }
+    }
+
 }

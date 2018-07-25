@@ -115,6 +115,11 @@ class TteFactura
     private $clienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaDetalle", mappedBy="facturaRel")
+     */
+    protected $facturasDetallesDespachoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="facturaRel")
      */
     protected $guiasFacturaRel;
@@ -495,6 +500,22 @@ class TteFactura
     public function setVrOtros($vrOtros): void
     {
         $this->vrOtros = $vrOtros;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesDespachoRel()
+    {
+        return $this->facturasDetallesDespachoRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesDespachoRel
+     */
+    public function setFacturasDetallesDespachoRel($facturasDetallesDespachoRel): void
+    {
+        $this->facturasDetallesDespachoRel = $facturasDetallesDespachoRel;
     }
 
 

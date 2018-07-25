@@ -5,7 +5,8 @@
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
-            <th>ID</th>
+            <th>GUIA</th>
+            <th>FECHA</th>
             <th>OI</th>
             <th>OC</th>
             <th>NUMERO</th>
@@ -23,6 +24,7 @@
         {% for arGuia in arGuias %}
             <tr>
                 <td>{{ arGuia.codigoGuiaPk }}</td>
+                <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
                 <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
                 <td>{{ arGuia.numero }}</td>

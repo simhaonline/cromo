@@ -9,7 +9,7 @@ use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-
+use Symfony\Component\HttpFoundation\Session\Session;
 class TteFacturaRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -17,7 +17,7 @@ class TteFacturaRepository extends ServiceEntityRepository
         parent::__construct($registry, TteFactura::class);
     }
 
-    public function lista(): array
+    public function listaDql(): array
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
@@ -33,6 +33,49 @@ class TteFacturaRepository extends ServiceEntityRepository
         LEFT JOIN f.clienteRel c'
         );
         return $query->execute();
+    }
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
+            ->select('f.codigoFacturaPk')
+            ->addSelect('f.numero')
+            ->addSelect('f.fecha')
+            ->addSelect('f.vrFlete')
+            ->addSelect('f.vrManejo')
+            ->addSelect('f.vrSubtotal')
+            ->addSelect('f.vrTotal')
+            ->addSelect('f.estadoAnulado')
+            ->addSelect('f.estadoAprobado')
+            ->addSelect('f.estadoAutorizado')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->leftJoin('f.clienteRel', 'c')
+            ->where('f.codigoFacturaPk <> 0');
+        if($session->get('filtroTteFacturaNumero') != ''){
+            $queryBuilder->andWhere("f.numero = {$session->get('filtroTteFacturaNumero')}");
+        }
+        if($session->get('filtroTteFacturaCodigoCliente')){
+            $queryBuilder->andWhere("f.codigoClienteFk = {$session->get('filtroTteFacturaCodigoCliente')}");
+        }
+        switch ($session->get('filtroTteFacturaEstadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("f.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoAprobado = 1");
+                break;
+        }
+        switch ($session->get('filtroTteFacturaEstadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("f.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->orderBy('f.estadoAprobado', 'ASC');
+        $queryBuilder->addOrderBy('f.estadoAprobado, f.fecha', 'DESC');
+        return $queryBuilder;
     }
 
     public function liquidar($id): bool

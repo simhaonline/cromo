@@ -3,6 +3,9 @@
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
+            <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
             {{ form_widget(form.btnAutorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnDesautorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnAprobar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
@@ -188,5 +191,44 @@
         </div>
     </div>
     {{ form_end(form) }}
-    <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_lista') }}">Volver</a>
+    {% if arFactura.estadoAutorizado == 0 %}
+        <br /><br />
+        <input type="text" id="txtGuiaCodigo"><button id="btnAdicionar">Adicionar</button>
+    {% endif %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var codigoFactura = '{{ arFactura.codigoFacturaPk }}';
+        $(function() {
+            var button = $("#btnAdicionar");
+            var txtGuiaCodigo = $("#txtGuiaCodigo");
+            button.click(function() {
+                agregarGuia(txtGuiaCodigo.val(), codigoFactura);
+            });
+            txtGuiaCodigo.keydown(function (event) {
+                if(event.keyCode === 13) {
+                    agregarGuia(txtGuiaCodigo.val(), codigoFactura);
+                }
+            });
+        });
+
+        var agregarGuia = function(codigoGuia, codigoFactura) {
+            //endpoint = "http://localhost/cromo/public/index.php/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
+            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/factura/adicionar/" + codigoFactura + "/" + codigoGuia;
+            $.ajax(endpoint, {
+                type: 'POST',
+                data: {
+                    arrParametros: JSON.stringify({
+                        codigoGuia: codigoGuia
+                    }),
+                }
+            }).done(function(respuesta) {
+                if(respuesta && respuesta.error === true) {
+                    alert(respuesta.mensaje);
+                }
+                $("#txtGuiaCodigo").val("").focus();
+            });
+        };
+    </script>
 {% endblock %}

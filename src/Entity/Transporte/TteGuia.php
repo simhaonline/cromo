@@ -403,6 +403,11 @@ class TteGuia
     protected $despachosDetallesGuiaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaDetalle", mappedBy="guiaRel")
+     */
+    protected $facturasDetallesGuiaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteCosto", mappedBy="guiaRel")
      */
     protected $costosGuiaRel;
@@ -1631,6 +1636,22 @@ class TteGuia
     public function setVrCostoReexpedicion($vrCostoReexpedicion): void
     {
         $this->vrCostoReexpedicion = $vrCostoReexpedicion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesGuiaRel()
+    {
+        return $this->facturasDetallesGuiaRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesGuiaRel
+     */
+    public function setFacturasDetallesGuiaRel($facturasDetallesGuiaRel): void
+    {
+        $this->facturasDetallesGuiaRel = $facturasDetallesGuiaRel;
     }
 
 

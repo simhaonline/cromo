@@ -308,16 +308,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.vrFlete')
             ->addSelect('tg.vrManejo')
             ->addSelect('tg.vrRecaudo')
-            ->addSelect('tg.estadoImpreso')
-            ->addSelect('tg.estadoAutorizado')
-            ->addSelect('tg.estadoAnulado')
-            ->addSelect('tg.estadoAprobado')
-            ->addSelect('tg.estadoEmbarcado')
-            ->addSelect('tg.estadoDespachado')
-            ->addSelect('tg.estadoEntregado')
-            ->addSelect('tg.estadoSoporte')
-            ->addSelect('tg.estadoCumplido')
             ->addSelect('ct.nombreCorto')
+            ->addSelect('ct.movil')
             ->addSelect(
                 '(dg.numero) AS manifiesto'
             )
@@ -329,6 +321,15 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->andWhere('tg.estadoDespachado = 1')
             ->andWhere('tg.estadoAnulado = 0');
         $dql->orderBy('tg.codigoGuiaPk', 'DESC');
+        if ($session->get('filtroNumeroGuia')) {
+            $dql->andWhere("tg.codigoGuiaPk = '{$session->get('filtroNumeroGuia')}'");
+        }
+        if ($session->get('filtroConductor') != '') {
+            $dql->andWhere("ct.nombreCorto LIKE '%{$session->get('filtroConductor')}%' ");
+        }
+        if ($session->get('filtroDocumentoCliente')) {
+            $dql->andWhere("tg.documentoCliente = '{$session->get('filtroDocumentoCliente')}'");
+        }
 
         $query = $em->createQuery($dql);
 

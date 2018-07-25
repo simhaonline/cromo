@@ -7,11 +7,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+
 class PendienteEntregaController extends Controller
 {
    /**
@@ -22,38 +24,22 @@ class PendienteEntregaController extends Controller
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $form = $this->formularioFiltro();
+        $form = $this->createFormBuilder()
+            ->add('txtGuia', NumberType::class, ['label' => 'Guia: ', 'required' => false, 'data' => $session->get('filtroNumeroGuia')])
+            ->add('txtConductor', TextType::class, ['label' => 'Conductor: ', 'required' => false, 'data' => $session->get('filtroConductor')])
+            ->add('txtDocumentoCliente', TextType::class, ['label' => 'Documento cliente: ', 'required' => false, 'data' => $session->get('filtroDocumentoCliente')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                if ($form->get('BtnFiltrar')->isClicked()) {
-                    $this->filtrar($form);
-                    $form = $this->formularioFiltro();
-                }
-            }
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroNumeroGuia', $form->get('txtGuia')->getData());
+            $session->set('filtroConductor', $form->get('txtConductor')->getData());
+            $session->set('filtroDocumentoCliente', $form->get('txtDocumentoCliente')->getData());
         }
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->pendienteEntrega(), $request->query->getInt('page', 1), 40);
         return $this->render('transporte/informe/transporte/guia/pendienteEntrega.html.twig', [
             'arGuias' => $arGuias,
             'form' => $form->createView()]);
-    }
-
-    private function filtrar($form)
-    {
-        $session = new session;
-        //$session->set('filtroTteCodigoConductor', $form->get('txtCodigoConductor')->getData());
-    }
-
-    private function formularioFiltro()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $session = new session;
-
-        $form = $this->createFormBuilder()
-
-            ->add('BtnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->getForm();
-        return $form;
     }
 
 

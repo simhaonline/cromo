@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Administracion\Comercial\Cliente;
 
+use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteClienteCondicion;
 use App\Entity\Transporte\TteCondicion;
@@ -12,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ClienteController extends Controller
@@ -24,10 +27,23 @@ class ClienteController extends Controller
      */
     public function lista(Request $request)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $arCliente = $paginator->paginate($em->getRepository(TteCliente::class)->lista(), $request->query->getInt('page', 1),10);
-        return $this->render('transporte/administracion/comercial/cliente/lista.html.twig', ['arCliente' => $arCliente]);
+        $form = $this->createFormBuilder()
+            ->add('txtNit', NumberType::class, ['label' => 'Nit: ', 'required' => false, 'data' => $session->get('filtroNitCliente')])
+            ->add('txtCliente', TextType::class, ['label' => 'Cliente: ', 'required' => false, 'data' => $session->get('filtroNombreCliente')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroNitCliente', $form->get('txtNit')->getData());
+            $session->set('filtroNombreCliente', $form->get('txtCliente')->getData());
+        }
+        $arCliente = $paginator->paginate($em->getRepository(TteCliente::class)->lista(), $request->query->getInt('page', 1),20);
+        return $this->render('transporte/administracion/comercial/cliente/lista.html.twig',
+            ['arCliente' => $arCliente,
+            'form' => $form->createView()]);
     }
 
     /**

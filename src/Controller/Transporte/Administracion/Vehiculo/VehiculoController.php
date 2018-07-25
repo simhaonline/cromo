@@ -2,12 +2,14 @@
 
 namespace App\Controller\Transporte\Administracion\Vehiculo;
 
+use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\VehiculoType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class VehiculoController extends Controller
@@ -19,10 +21,21 @@ class VehiculoController extends Controller
      */
     public function lista(Request $request)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $arVehiculo = $paginator->paginate($em->getRepository(TteVehiculo::class)->lista(), $request->query->getInt('page', 1),10);
-        return $this->render('transporte/administracion/vehiculo/lista.html.twig', ['arVehiculo' => $arVehiculo]);
+        $form = $this->createFormBuilder()
+            ->add('txtPlaca', TextType::class, ['label' => 'Placa: ', 'required' => false, 'data' => $session->get('filtroPlaca')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroPlaca', $form->get('txtPlaca')->getData());
+        }
+        $arVehiculo = $paginator->paginate($em->getRepository(TteVehiculo::class)->lista(), $request->query->getInt('page', 1),20);
+        return $this->render('transporte/administracion/vehiculo/lista.html.twig',
+            ['arVehiculo' => $arVehiculo,
+            'form' => $form->createView()]);
     }
 
     /**

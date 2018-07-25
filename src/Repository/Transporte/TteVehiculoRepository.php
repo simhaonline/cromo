@@ -28,6 +28,9 @@ class TteVehiculoRepository extends ServiceEntityRepository
             ->addSelect('m.nombre')
             ->where('v.codigoVehiculoPk IS NOT NULL')
             ->orderBy('v.placa', 'ASC');
+        if ($session->get('filtroPlaca')) {
+            $queryBuilder->andWhere("v.codigoVehiculoPk = '{$session->get('filtroPlaca')}'");
+        }
 
         return $queryBuilder;
     }

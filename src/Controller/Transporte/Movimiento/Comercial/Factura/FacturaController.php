@@ -72,10 +72,13 @@ class FacturaController extends Controller
         $paginator  = $this->get('knp_paginator');
         $form = Estandares::botonera($arFactura->getEstadoAutorizado(),$arFactura->getEstadoAprobado(),$arFactura->getEstadoAnulado());
         $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBotonActualizar = array('label' => 'Actualizar', 'disabled' => false);
         if($arFactura->getEstadoAutorizado()){
             $arrBtnRetirar['disabled'] = true;
+            $arrBotonActualizar['disabled'] = true;
         }
-        $form->add('btnRetirarGuia', SubmitType::class, $arrBtnRetirar);
+        $form->add('btnRetirarGuia', SubmitType::class, $arrBtnRetirar)
+            ->add('btnActualizar', SubmitType::class, $arrBotonActualizar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
@@ -84,12 +87,20 @@ class FacturaController extends Controller
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteFactura::class)->autorizar($arFactura);
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(TteFactura::class)->desAutorizar($arFactura);
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }
+
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TteFactura::class)->Aprobar($arFactura);
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnActualizar')->isClicked()) {
+                $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($id);
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
@@ -98,9 +109,10 @@ class FacturaController extends Controller
                     $em->getRepository(TteFactura::class)->liquidar($id);
                     $em->flush();
                 }
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }
 
-            return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
+
         }
         $query = $this->getDoctrine()->getRepository(TteFacturaPlanilla::class)->listaFacturaDetalle($id);
         $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1),10);

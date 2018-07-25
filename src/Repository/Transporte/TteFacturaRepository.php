@@ -160,7 +160,7 @@ class TteFacturaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $objFunciones = new FuncionesController();
         if (!$arFactura->getEstadoAprobado()) {
-            if ($arFactura->getGuia() > 0) {
+            if ($arFactura->getGuias() > 0) {
                 $fechaActual = new \DateTime('now');
                 $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 1, g.fechaFactura=:fecha 
                       WHERE g.codigoFacturaFk = :codigoFactura')

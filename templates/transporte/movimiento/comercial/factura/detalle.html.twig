@@ -104,13 +104,14 @@
                 </div>
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
-                    {% if not arFactura.estadoAutorizado %}
+                    {% if arFactura.estadoAutorizado == 0 %}
                     <div class="btn-group">
                         <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Adicionar</a>
                     </div>
-                    {% else %}
-                    <input type="button" class="btn btn-default btn-sm" value="Adicionar" disabled>
                     {% endif %}
+                    <div class="btn-group">
+                        {{ form_widget(form.btnActualizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                    </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                     </div>
@@ -139,16 +140,16 @@
                 </div>
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
-                    {% if not arFactura.estadoAutorizado %}
+                    {% if arFactura.estadoAutorizado == 0 %}
                     <div class="btn-group">
                         <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Adicionar</a>
                     </div>
-                    {% else %}
-                    <input type="button" class="btn btn-default btn-sm" value="Adicionar" disabled>
-                    <div class="btn-group">
-                        {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
-                    </div>
                     {% endif %}
+
+
+                    <div class="btn-group">
+                    {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -174,16 +175,16 @@
                 </div>
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
-                    {% if not arFactura.estadoAutorizado %}
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Adicionar</a>
+                        {% if arFactura.estadoAutorizado == 0 %}
+                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo</a>
+                        {% endif %}
                     </div>
-                    {% else %}
-                    <input type="button" class="btn btn-default btn-sm" value="Adicionar" disabled>
+
                     <div class="btn-group">
                         {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                     </div>
-                    {% endif %}
+
                 </div>
             </div>
         </div>
@@ -191,7 +192,9 @@
     {{ form_end(form) }}
     {% if arFactura.estadoAutorizado == 0 %}
         <br /><br />
-        <input type="text" id="txtGuiaCodigo"><button id="btnAdicionar">Adicionar</button>
+        <input type="text" id="txtGuiaCodigo"><button id="btnAdicionar">Adicionar guia</button>
+        <br/><br/>
+        <input type="text" id="txtGuiaDocumento"><button id="btnAdicionarDocumento">Adicionar documento</button>
     {% endif %}
 {% endblock %}
 {% block javascripts %}
@@ -200,9 +203,14 @@
         var codigoFactura = '{{ arFactura.codigoFacturaPk }}';
         $(function() {
             var button = $("#btnAdicionar");
+            var buttonDocumento = $("#btnAdicionarDocumento");
             var txtGuiaCodigo = $("#txtGuiaCodigo");
+            var txtGuiaDocumento = $("#txtGuiaDocumento");
             button.click(function() {
                 agregarGuia(txtGuiaCodigo.val(), codigoFactura);
+            });
+            buttonDocumento.click(function() {
+                agregarDocumento(txtGuiaDocumento.val(), codigoFactura);
             });
             txtGuiaCodigo.keydown(function (event) {
                 if(event.keyCode === 13) {
@@ -212,8 +220,7 @@
         });
 
         var agregarGuia = function(codigoGuia, codigoFactura) {
-            //endpoint = "http://localhost/cromo/public/index.php/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
-            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/factura/adicionar/" + codigoFactura + "/" + codigoGuia;
+            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/factura/adicionar/" + codigoFactura + "/" + codigoGuia + "/0/1";
             $.ajax(endpoint, {
                 type: 'POST',
                 data: {
@@ -226,6 +233,25 @@
                     alert(respuesta.mensaje);
                 }
                 $("#txtGuiaCodigo").val("").focus();
+            });
+        };
+
+        var agregarDocumento = function(documento, codigoFactura) {
+            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/factura/adicionar/" + codigoFactura + "/0/" + documento + "/2";
+            $.ajax(endpoint, {
+                type: 'POST',
+                data: {
+                    arrParametros: JSON.stringify({
+                        documento: documento
+                    }),
+                }
+            }).done(function(respuesta) {
+                if(respuesta && respuesta.error === true) {
+                    alert(respuesta.mensaje);
+                } else {
+                    alert("Documento agregado con exito");
+                }
+                $("#txtGuiaDocumento").val("").focus();
             });
         };
     </script>

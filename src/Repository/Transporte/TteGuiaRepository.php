@@ -925,10 +925,26 @@ class TteGuiaRepository extends ServiceEntityRepository
      * @return array
      * @throws \Doctrine\ORM\ORMException
      */
-    public function apiFacturaAdicionar($codigoFactura, $codigoGuia) {
+    public function apiFacturaAdicionar($codigoFactura, $codigoGuia, $documento, $tipo) {
         $em = $this->getEntityManager();
-        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+        $arGuia = NULL;
+
+        if($tipo == 1) {
+            $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        }
+        if($tipo == 2) {
+            $arGuiaDocumento = $em->getRepository(TteGuia::class)->findOneBy(array(
+                'documentoCliente' => $documento,
+                'codigoClienteFk' => $arFactura->getCodigoClienteFk(),
+                'estadoFacturaGenerada' => 0));
+            if($arGuiaDocumento) {
+                $arGuia = $em->getRepository(TteGuia::class)->find($arGuiaDocumento->getCodigoGuiaPk());
+            } else {
+                $arGuia = "";
+            }
+        }
+
         if($arGuia && $arFactura) {
             if($arGuia->getEstadoFacturaGenerada() == 0) {
                 if($arGuia->getFactura() == 0 && $arGuia->getEstadoAnulado() == 0) {

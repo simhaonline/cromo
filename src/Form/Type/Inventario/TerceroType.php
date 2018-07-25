@@ -6,6 +6,7 @@ use App\Entity\Inventario\InvTercero;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -25,6 +26,9 @@ class TerceroType extends AbstractType
             ->add('telefono',TextType::class,['label' => 'Telefono'])
             ->add('celular',TextType::class,['label' => 'Celular'])
             ->add('email',TextType::class,['label' => 'Email:'])
+            ->add('retencionIva', CheckboxType::class, ['required' => false, 'label' => 'Retencion iva'])
+            ->add('retencionFuente', CheckboxType::class, ['required' => false, 'label' => 'Retencion fuente'])
+            ->add('retencionFuenteSinBase', CheckboxType::class, ['required' => false, 'label' => 'Retencion iva'])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo',SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;

@@ -38,7 +38,7 @@ class SoporteController extends Controller
                 $codigoDespacho = $form->get('txtDespachoCodigo')->getData();
             }
             if ($form->get('btnSoporte')->isClicked()) {
-                $arrGuias = $request->request->get('chkSeleccionar');
+                $arrGuias = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteGuia::class)->soporte($arrGuias);
                 $codigoDespacho = $form->get('txtDespachoCodigo')->getData();
             }

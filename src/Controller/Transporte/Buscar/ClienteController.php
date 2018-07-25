@@ -23,16 +23,16 @@ class ClienteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('TxtNombre', TextType::class, array('label'  => 'Nombre'))
+            ->add('TxtNombre', TextType::class, array('label'  => 'Nombre','data' => $session->get('filtroTteNombreCliente')))
             ->add('TxtCodigo', TextType::class, array('label'  => 'Codigo'))
             ->add('TxtNit', TextType::class, array('label'  => 'Nit'))
             ->add('btnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroNombreCliente', $form->get('TxtNombre')->getData());
-            $session->set('filtroNitCliente', $form->get('TxtNit')->getData());
-            $session->set('filtroCodigoCliente', $form->get('TxtCodigo')->getData());
+            $session->set('filtroTteNombreCliente', $form->get('TxtNombre')->getData());
+            $session->set('filtroTteNitCliente', $form->get('TxtNit')->getData());
+            $session->set('filtroTteCodigoCliente', $form->get('TxtCodigo')->getData());
         }
         $arClientes = $em->getRepository(TteCliente::class)->findAll();
         $arClientes = $paginator->paginate($em->getRepository(TteCliente::class)->lista(), $request->query->getInt('page', 1),20);

@@ -224,6 +224,11 @@ class TteGuia
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="estado_novedad", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $estadoNovedad = false;
+
+    /**
      * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
      */
     private $codigoDespachoFk;
@@ -734,6 +739,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getFechaFactura()
+    {
+        return $this->fechaFactura;
+    }
+
+    /**
+     * @param mixed $fechaFactura
+     */
+    public function setFechaFactura($fechaFactura): void
+    {
+        $this->fechaFactura = $fechaFactura;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getUnidades()
     {
         return $this->unidades;
@@ -889,6 +910,22 @@ class TteGuia
     public function setVrCobroEntrega($vrCobroEntrega): void
     {
         $this->vrCobroEntrega = $vrCobroEntrega;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoReexpedicion()
+    {
+        return $this->vrCostoReexpedicion;
+    }
+
+    /**
+     * @param mixed $vrCostoReexpedicion
+     */
+    public function setVrCostoReexpedicion($vrCostoReexpedicion): void
+    {
+        $this->vrCostoReexpedicion = $vrCostoReexpedicion;
     }
 
     /**
@@ -1065,6 +1102,22 @@ class TteGuia
     public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoNovedad()
+    {
+        return $this->estadoNovedad;
+    }
+
+    /**
+     * @param mixed $estadoNovedad
+     */
+    public function setEstadoNovedad($estadoNovedad): void
+    {
+        $this->estadoNovedad = $estadoNovedad;
     }
 
     /**
@@ -1273,6 +1326,22 @@ class TteGuia
     public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpaqueReferencia()
+    {
+        return $this->empaqueReferencia;
+    }
+
+    /**
+     * @param mixed $empaqueReferencia
+     */
+    public function setEmpaqueReferencia($empaqueReferencia): void
+    {
+        $this->empaqueReferencia = $empaqueReferencia;
     }
 
     /**
@@ -1566,6 +1635,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getFacturasDetallesGuiaRel()
+    {
+        return $this->facturasDetallesGuiaRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesGuiaRel
+     */
+    public function setFacturasDetallesGuiaRel($facturasDetallesGuiaRel): void
+    {
+        $this->facturasDetallesGuiaRel = $facturasDetallesGuiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCostosGuiaRel()
     {
         return $this->costosGuiaRel;
@@ -1609,70 +1694,6 @@ class TteGuia
     public function setGuiasDetallesGuiaRel($guiasDetallesGuiaRel): void
     {
         $this->guiasDetallesGuiaRel = $guiasDetallesGuiaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEmpaqueReferencia()
-    {
-        return $this->empaqueReferencia;
-    }
-
-    /**
-     * @param mixed $empaqueReferencia
-     */
-    public function setEmpaqueReferencia($empaqueReferencia): void
-    {
-        $this->empaqueReferencia = $empaqueReferencia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrCostoReexpedicion()
-    {
-        return $this->vrCostoReexpedicion;
-    }
-
-    /**
-     * @param mixed $vrCostoReexpedicion
-     */
-    public function setVrCostoReexpedicion($vrCostoReexpedicion): void
-    {
-        $this->vrCostoReexpedicion = $vrCostoReexpedicion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturasDetallesGuiaRel()
-    {
-        return $this->facturasDetallesGuiaRel;
-    }
-
-    /**
-     * @param mixed $facturasDetallesGuiaRel
-     */
-    public function setFacturasDetallesGuiaRel($facturasDetallesGuiaRel): void
-    {
-        $this->facturasDetallesGuiaRel = $facturasDetallesGuiaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaFactura()
-    {
-        return $this->fechaFactura;
-    }
-
-    /**
-     * @param mixed $fechaFactura
-     */
-    public function setFechaFactura($fechaFactura): void
-    {
-        $this->fechaFactura = $fechaFactura;
     }
 
 

@@ -109,6 +109,11 @@ class TteGuia
     private $fechaSoporte;
 
     /**
+     * @ORM\Column(name="fecha_factura", type="datetime", nullable=true)
+     */
+    private $fechaFactura;
+
+    /**
      * @ORM\Column(name="unidades", type="float", options={"default" : 0})
      */
     private $unidades = 0;
@@ -1652,6 +1657,22 @@ class TteGuia
     public function setFacturasDetallesGuiaRel($facturasDetallesGuiaRel): void
     {
         $this->facturasDetallesGuiaRel = $facturasDetallesGuiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaFactura()
+    {
+        return $this->fechaFactura;
+    }
+
+    /**
+     * @param mixed $fechaFactura
+     */
+    public function setFechaFactura($fechaFactura): void
+    {
+        $this->fechaFactura = $fechaFactura;
     }
 
 

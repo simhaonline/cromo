@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaTipo;
 use App\Utilidades\Mensajes;
 use App\Entity\Transporte\TteFactura;
@@ -82,10 +83,10 @@ class TteFacturaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT COUNT(g.codigoGuiaPk) as cantidad, SUM(g.unidades+0) as unidades, SUM(g.pesoReal+0) as pesoReal,
-            SUM(g.pesoVolumen+0) as pesoVolumen, SUM(g.vrFlete+0) as vrFlete, SUM(g.vrManejo+0) as vrManejo
-        FROM App\Entity\Transporte\TteGuia g
-        WHERE g.codigoFacturaFk = :codigoFactura')
+            'SELECT COUNT(fd.codigoFacturaDetallePk) as cantidad, SUM(fd.unidades+0) as unidades, SUM(fd.pesoReal+0) as pesoReal,
+            SUM(fd.pesoVolumen+0) as pesoVolumen, SUM(fd.vrFlete+0) as vrFlete, SUM(fd.vrManejo+0) as vrManejo
+        FROM App\Entity\Transporte\TteFacturaDetalle fd
+        WHERE fd.codigoFacturaFk = :codigoFactura')
             ->setParameter('codigoFactura', $id);
         $arrGuias = $query->getSingleResult();
         $vrSubtotal = intval($arrGuias['vrFlete']) + intval($arrGuias['vrManejo']);
@@ -100,16 +101,19 @@ class TteFacturaRepository extends ServiceEntityRepository
         return true;
     }
 
-    public function retirarGuia($arrGuias): bool
+
+    public function retirarDetalle($arrDetalles): bool
     {
         $em = $this->getEntityManager();
-        if($arrGuias) {
-            if (count($arrGuias) > 0) {
-                foreach ($arrGuias AS $codigoGuia) {
-                    $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-                    $arGuia->setFacturaRel(null);
-                    $arGuia->setEstadoFacturado(0);
+        if ($arrDetalles) {
+            if (count($arrDetalles) > 0) {
+                foreach ($arrDetalles AS $codigo) {
+                    $arFacturaDetalle = $em->getRepository(TteFacturaDetalle::class)->find($codigo);
+                    $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalle->getCodigoGuiaFk());
+                    $arGuia->setFacturaRel(NULL);
+                    $arGuia->setEstadoFacturaGenerada(0);
                     $em->persist($arGuia);
+                    $em->remove($arFacturaDetalle);
                 }
                 $em->flush();
             }
@@ -149,26 +153,39 @@ class TteFacturaRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @param $arFactura TteFactura
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public function aprobar($arFactura)
+
+    public function aprobar($arFactura): string
     {
-        $arFacturaTipo = $this->getEntityManager()->getRepository(TteFacturaTipo::class)->find($arFactura->getCodigoFacturaTipoFk());
+        $respuesta = "";
+        $em = $this->getEntityManager();
         $objFunciones = new FuncionesController();
-        if ($arFactura->getEstadoAutorizado() == 1) {
-            $arFactura->setEstadoAprobado(1);
-            $fecha = new \DateTime('now');
-            $arFactura->setFecha($fecha);
-            $arFactura->setFechaVence($objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
-            $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo() + 1);
-            $arFactura->setNumero($arFacturaTipo->getConsecutivo());
-            $this->getEntityManager()->persist($arFactura);
-            $this->getEntityManager()->persist($arFacturaTipo);
-            $this->getEntityManager()->flush();
+        if (!$arFactura->getEstadoAprobado()) {
+            if ($arFactura->getGuia() > 0) {
+                $fechaActual = new \DateTime('now');
+                $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 1, g.fechaFactura=:fecha 
+                      WHERE g.codigoFacturaFk = :codigoFactura')
+                    ->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk())
+                    ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
+                $query->execute();
+
+                $arFactura->setEstadoAprobado(1);
+                $fecha = new \DateTime('now');
+                $arFactura->setFecha($fecha);
+                $arFactura->setFechaVence($objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
+                $arFacturaTipo = $this->getEntityManager()->getRepository(TteFacturaTipo::class)->find($arFactura->getCodigoFacturaTipoFk());
+                $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo() + 1);
+                $arFactura->setNumero($arFacturaTipo->getConsecutivo());
+                $this->getEntityManager()->persist($arFactura);
+                $this->getEntityManager()->persist($arFacturaTipo);
+                $em->flush();
+            } else {
+                $respuesta = "La factura debe tener guias asignadas";
+            }
         } else {
-            Mensajes::error('No se puede desautorizar, el registro ya se encuentra aprobado');
+            $respuesta = "La factura no puede estar previamente aprobada";
         }
+
+        return $respuesta;
     }
+
 }

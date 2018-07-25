@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Movimiento\Comercial\Factura;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteFactura;
+use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaOtro;
 use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
@@ -92,12 +93,13 @@ class FacturaController extends Controller
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarGuia($arrGuias);
+                $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarDetalle($arrGuias);
                 if($respuesta) {
-                    $em->flush();
                     $em->getRepository(TteFactura::class)->liquidar($id);
+                    $em->flush();
                 }
             }
+
             return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
         }
         $query = $this->getDoctrine()->getRepository(TteFacturaPlanilla::class)->listaFacturaDetalle($id);
@@ -107,9 +109,10 @@ class FacturaController extends Controller
         $arFacturaOtros = $paginator->paginate($query, $request->query->getInt('page', 1),10);
 
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->factura($id);
+        $arFacturaDetalles = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->factura($id);
         return $this->render('transporte/movimiento/comercial/factura/detalle.html.twig', [
             'arFactura' => $arFactura,
-            'arGuias' => $arGuias,
+            'arFacturaDetalles' => $arFacturaDetalles,
             'arFacturaPlanillas' => $arFacturaPlanillas,
             'arFacturaOtros' => $arFacturaOtros,
             'form' => $form->createView()]);
@@ -127,18 +130,31 @@ class FacturaController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-            if (count($arrSeleccionados) > 0) {
-                foreach ($arrSeleccionados AS $codigo) {
-                    $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
-                    $arGuia->setFacturaRel($arFactura);
-                    $arGuia->setEstadoFacturado(1);
-                    $em->persist($arGuia);
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if (count($arrSeleccionados) > 0) {
+                    foreach ($arrSeleccionados AS $codigo) {
+                        $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
+                        $arGuia->setFacturaRel($arFactura);
+                        $arGuia->setEstadoFacturaGenerada(1);
+                        $em->persist($arGuia);
+
+                        $arFacturaDetalle = new TteFacturaDetalle();
+                        $arFacturaDetalle->setFacturaRel($arFactura);
+                        $arFacturaDetalle->setGuiaRel($arGuia);
+                        $arFacturaDetalle->setVrDeclara($arGuia->getVrDeclara());
+                        $arFacturaDetalle->setVrFlete($arGuia->getVrFlete());
+                        $arFacturaDetalle->setVrManejo($arGuia->getVrManejo());
+                        $arFacturaDetalle->setUnidades($arGuia->getUnidades());
+                        $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
+                        $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                        $em->persist($arFacturaDetalle);
+                    }
+                    $em->flush();
+                    $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
                 }
-                $em->flush();
-                $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($codigoFactura);
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
-            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->facturaPendiente($arFactura->getCodigoClienteFk());
         return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);

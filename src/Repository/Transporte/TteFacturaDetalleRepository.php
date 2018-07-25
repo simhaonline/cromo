@@ -14,31 +14,28 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, TteFacturaDetalle::class);
     }
 
-    public function factura($codigoDespacho): array
+    public function factura($codigoFactura): array
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT dd.codigoDespachoDetallePk, 
-        dd.codigoGuiaFk,
+            'SELECT fd.codigoFacturaDetallePk, 
+        fd.codigoGuiaFk,
         g.numero, 
         g.codigoGuiaTipoFk,
         g.fechaIngreso,        
         g.codigoOperacionIngresoFk,
         g.codigoOperacionCargoFk,     
-        dd.unidades,
-        dd.pesoReal,
-        dd.pesoVolumen,
-        dd.vrFlete,
-        dd.vrManejo,
-        dd.vrCobroEntrega,             
-        c.nombreCorto AS clienteNombreCorto, 
+        fd.unidades,
+        fd.pesoReal,
+        fd.pesoVolumen,
+        fd.vrFlete,
+        fd.vrManejo,                      
         cd.nombre AS ciudadDestino
-        FROM App\Entity\Transporte\TteDespachoDetalle dd 
-        LEFT JOIN dd.guiaRel g
-        LEFT JOIN g.clienteRel c
+        FROM App\Entity\Transporte\TteFacturaDetalle fd 
+        LEFT JOIN fd.guiaRel g        
         LEFT JOIN g.ciudadDestinoRel cd
-        WHERE dd.codigoDespachoFk = :codigoDespacho'
-        )->setParameter('codigoDespacho', $codigoDespacho);
+        WHERE fd.codigoFacturaFk = :codigoFactura'
+        )->setParameter('codigoFactura', $codigoFactura);
 
         return $query->execute();
 

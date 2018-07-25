@@ -5,6 +5,7 @@ namespace App\Repository\Transporte;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteFactura;
+use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -411,8 +412,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.estadoFacturado = 0 AND g.codigoClienteFk = :codigoCliente
-        ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk'
+        WHERE g.estadoFacturaGenerada = 0 AND g.estadoAnulado = 0 AND g.codigoClienteFk = :codigoCliente
+        ORDER BY g.fechaIngreso ASC'
         )->setParameter('codigoCliente', $codigoCliente);
         return $query->execute();
     }
@@ -936,11 +937,23 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arGuia->setEstadoFacturaGenerada(1);
                         $em->persist($arGuia);
 
-                        //$arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
-                        //$arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
-                        //$arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
+                        $arFacturaDetalle = new TteFacturaDetalle();
+                        $arFacturaDetalle->setFacturaRel($arFactura);
+                        $arFacturaDetalle->setGuiaRel($arGuia);
+                        $arFacturaDetalle->setVrDeclara($arGuia->getVrDeclara());
+                        $arFacturaDetalle->setVrFlete($arGuia->getVrFlete());
+                        $arFacturaDetalle->setVrManejo($arGuia->getVrManejo());
+                        $arFacturaDetalle->setUnidades($arGuia->getUnidades());
+                        $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
+                        $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                        $em->persist($arFacturaDetalle);
+
                         $arFactura->setGuias($arFactura->getGuias()+1);
                         $arFactura->setVrFlete($arFactura->getVrFlete() + $arGuia->getVrFlete());
+                        $arFactura->setVrManejo($arFactura->getVrManejo() + $arGuia->getVrManejo());
+                        $subtotal = $arFactura->getVrSubtotal() + $arGuia->getVrFlete() + $arGuia->getVrManejo();
+                        $arFactura->setVrSubtotal($subtotal);
+                        $arFactura->setVrTotal($subtotal);
                         $em->persist($arFactura);
                         $em->flush();
                         return [

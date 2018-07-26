@@ -13,6 +13,15 @@ class CarClienteRepository extends ServiceEntityRepository
         parent::__construct($registry, CarCliente::class);
     }
 
+    public function camposPredeterminados(){
+        $qb = $this-> _em->createQueryBuilder()
+            ->from('App:Cartera\CarCliente','cl')
+            ->select('cl.codigoClientePk AS ID')
+            ->addSelect('cl.nombreCorto AS NOMBRE ');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
+
     public function lista(): array
     {
         $em = $this->getEntityManager();

@@ -37,6 +37,11 @@ class GenIdentificacion
     protected $tteClientesIdentificacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarCliente", mappedBy="identificacionRel")
+     */
+    protected $carClientesIdentificacionRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="identificacionRel")
      */
     protected $rhuAspirantesIdentificacionRel;
@@ -129,6 +134,22 @@ class GenIdentificacion
     public function setTteClientesIdentificacionRel($tteClientesIdentificacionRel): void
     {
         $this->tteClientesIdentificacionRel = $tteClientesIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCarClientesIdentificacionRel()
+    {
+        return $this->carClientesIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $carClientesIdentificacionRel
+     */
+    public function setCarClientesIdentificacionRel($carClientesIdentificacionRel): void
+    {
+        $this->carClientesIdentificacionRel = $carClientesIdentificacionRel;
     }
 
     /**

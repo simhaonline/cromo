@@ -171,33 +171,29 @@ class TteFacturaRepository extends ServiceEntityRepository
                     ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
                 $query->execute();
 
-                $arFactura->setEstadoAprobado(1);
+                //$arFactura->setEstadoAprobado(1);
                 $fecha = new \DateTime('now');
                 $arFactura->setFecha($fecha);
                 $arFactura->setFechaVence($objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
                 $arFacturaTipo = $this->getEntityManager()->getRepository(TteFacturaTipo::class)->find($arFactura->getCodigoFacturaTipoFk());
                 $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo() + 1);
-                $arFactura->setNumero($arFacturaTipo->getConsecutivo());
+                //$arFactura->setNumero($arFacturaTipo->getConsecutivo());
                 $this->getEntityManager()->persist($arFactura);
                 $this->getEntityManager()->persist($arFacturaTipo);
 
-                $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arFactura->getFacturaTipoRel()->getCodigoCuentaCobrarFk());
-                $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['nit' => $arFactura->getClienteRel()->getNit()]);
+                $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arFactura->getFacturaTipoRel()->getCodigoCuentaCobrarTipoFk());
+                $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => 0,'numeroIdentificacion' => $arFactura->getClienteRel()->getNumeroIdentificacion()]);
 
                 if (!$arClienteCartera) {
                     $arClienteCartera = new CarCliente();
-                    $arClienteCartera->setFormaPagoRel($arMovimiento->getTerceroRel()->getFormaPagoRel());
-                    $arClienteCartera->setCiudadRel($arMovimiento->getTerceroRel()->getCiudadRel());
-                    $arClienteCartera->setNit($arMovimiento->getTerceroRel()->getNumeroIdentificacion());
-                    $arClienteCartera->setDigitoVerificacion($arMovimiento->getTerceroRel()->getDigitoVerificacion());
-                    $arClienteCartera->setNombreCorto($arMovimiento->getTerceroRel()->getNombreCorto());
-                    $arClienteCartera->setPlazoPago($arMovimiento->getTerceroRel()->getPlazoPagoCliente());
-                    $arClienteCartera->setDireccion($arMovimiento->getTerceroRel()->getDireccion());
-                    $arClienteCartera->setTelefono($arMovimiento->getTerceroRel()->getTelefono());
-                    $arClienteCartera->setCelular($arMovimiento->getTerceroRel()->getCelular());
-                    $arClienteCartera->setFax($arMovimiento->getTerceroRel()->getFax());
-                    $arClienteCartera->setEmail($arMovimiento->getTerceroRel()->getEmail());
-                    //$arClienteCartera->setCodigoUsuario($arUsuario->getUserName());
+                    $arClienteCartera->setFormaPagoRel($arFactura->getClienteRel()->getFormaPagoRel());
+                    $arClienteCartera->setNumeroIdentificacion($arFactura->getClienteRel()->getNit());
+                    $arClienteCartera->setDigitoVerificacion($arFactura->getClienteRel()->getDigitoVerificacion());
+                    $arClienteCartera->setNombreCorto($arFactura->getClienteRel()->getNombreCorto());
+                    $arClienteCartera->setPlazoPago($arFactura->getClienteRel()->getPlazoPago());
+                    $arClienteCartera->setDireccion($arFactura->getClienteRel()->getDireccion());
+                    $arClienteCartera->setTelefono($arFactura->getClienteRel()->getTelefono());
+                    $arClienteCartera->setEmail($arFactura->getClienteRel()->getEmail());
                     $em->persist($arClienteCartera);
                 }
                 /*if ($arMovimiento->getDocumentoRel()->getGeneraCartera()) {

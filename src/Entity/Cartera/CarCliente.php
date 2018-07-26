@@ -15,12 +15,17 @@ class CarCliente
      * @ORM\Column(name="codigo_cliente_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */        
-    private $codigoClientePk;        
-    
+    private $codigoClientePk;
+
     /**
-     * @ORM\Column(name="nit", type="string", length=15, nullable=false, unique=true)
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=1, nullable=true)
      */
-    private $nit;        
+    private $codigoIdentificacionFk;
+
+    /**
+     * @ORM\Column(name="numero_identificacion", type="string", length=15, nullable=false, unique=true)
+     */
+    private $numeroIdentificacion;
     
     /**
      * @ORM\Column(name="digito_verificacion", type="string", length=1, nullable=true)
@@ -108,6 +113,12 @@ class CarCliente
     protected $recibosClienteRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="carClientesIdentificacionRel")
+     * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
+     */
+    private $identificacionRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenFormaPago", inversedBy="carClientesFormaPagoRel")
      * @ORM\JoinColumn(name="codigo_forma_pago_fk", referencedColumnName="codigo_forma_pago_pk")
      */
@@ -138,17 +149,33 @@ class CarCliente
     /**
      * @return mixed
      */
-    public function getNit()
+    public function getCodigoIdentificacionFk()
     {
-        return $this->nit;
+        return $this->codigoIdentificacionFk;
     }
 
     /**
-     * @param mixed $nit
+     * @param mixed $codigoIdentificacionFk
      */
-    public function setNit($nit): void
+    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
     {
-        $this->nit = $nit;
+        $this->codigoIdentificacionFk = $codigoIdentificacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroIdentificacion()
+    {
+        return $this->numeroIdentificacion;
+    }
+
+    /**
+     * @param mixed $numeroIdentificacion
+     */
+    public function setNumeroIdentificacion($numeroIdentificacion): void
+    {
+        $this->numeroIdentificacion = $numeroIdentificacion;
     }
 
     /**
@@ -421,6 +448,22 @@ class CarCliente
     public function setRecibosClienteRel($recibosClienteRel): void
     {
         $this->recibosClienteRel = $recibosClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdentificacionRel()
+    {
+        return $this->identificacionRel;
+    }
+
+    /**
+     * @param mixed $identificacionRel
+     */
+    public function setIdentificacionRel($identificacionRel): void
+    {
+        $this->identificacionRel = $identificacionRel;
     }
 
     /**

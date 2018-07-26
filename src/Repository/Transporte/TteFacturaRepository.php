@@ -172,13 +172,13 @@ class TteFacturaRepository extends ServiceEntityRepository
                     ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
                 $query->execute();
 
-                //$arFactura->setEstadoAprobado(1);
+                $arFactura->setEstadoAprobado(1);
                 $fecha = new \DateTime('now');
                 $arFactura->setFecha($fecha);
                 $arFactura->setFechaVence($objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
                 $arFacturaTipo = $this->getEntityManager()->getRepository(TteFacturaTipo::class)->find($arFactura->getCodigoFacturaTipoFk());
                 $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo() + 1);
-                //$arFactura->setNumero($arFacturaTipo->getConsecutivo());
+                $arFactura->setNumero($arFacturaTipo->getConsecutivo());
                 $this->getEntityManager()->persist($arFactura);
                 $this->getEntityManager()->persist($arFacturaTipo);
 

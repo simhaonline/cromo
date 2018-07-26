@@ -23,7 +23,7 @@ class CarCuentaCobrar
     private $codigoClienteFk;
 
     /**
-     * @ORM\Column(name="codigo_cuenta_cobrar_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_cuenta_cobrar_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCuentaCobrarTipoFk;
 
@@ -31,11 +31,6 @@ class CarCuentaCobrar
      * @ORM\Column(name="codigo_factura", type="integer", nullable=true)
      */
     private $codigoFactura;
-
-    /**
-     * @ORM\Column(name="codigo_factura_inventario_fk", type="integer", nullable=true)
-     */
-    private $codigoFacturaInventarioFk;
 
     /**
      * @ORM\Column(name="numero_documento", type="string", length=30, nullable=true)
@@ -58,69 +53,65 @@ class CarCuentaCobrar
     private $soporte;
 
     /**
-     * @ORM\Column(name="plazo", type="string", length=10, nullable=true)
+     * @ORM\Column(name="plazo", type="integer", nullable=true, options={"default" : 0})
      */
-    private $plazo;
+    private $plazo = 0;
 
     /**
-     * @ORM\Column(name="valor_original", type="float")
+     * @ORM\Column(name="vr_subtotal", type="float", nullable=true, options={"default" : 0})
      */
-    private $valorOriginal = 0;
+    private $vrSubtotal = 0;
 
     /**
-     * @ORM\Column(name="abono", type="float")
+     * @ORM\Column(name="vr_iva", type="float", nullable=true, options={"default" : 0})
      */
-    private $abono = 0;
+    private $vrIva = 0;
 
     /**
-     * @ORM\Column(name="saldo", type="float")
+     * @ORM\Column(name="vr_total", type="float", nullable=true, options={"default" : 0})
      */
-    private $saldo = 0;
+    private $vrTotal = 0;
 
     /**
-     * @ORM\Column(name="saldo_operado", type="float")
+     * @ORM\Column(name="vr_abono", type="float", nullable=true, options={"default" : 0})
      */
-    private $saldoOperado = 0;
+    private $vrAbono = 0;
 
     /**
-     * @ORM\Column(name="afiliacion", type="boolean")
+     * @ORM\Column(name="vr_saldo", type="float", nullable=true, options={"default" : 0})
      */
-    private $afiliacion = false;
+    private $vrSaldo = 0;
 
     /**
-     * @ORM\Column(name="operacion", type="integer")
+     * @ORM\Column(name="vr_saldo_operado", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrSaldoOperado = 0;
+
+    /**
+     * @ORM\Column(name="operacion", type="integer", nullable=true, options={"default" : 0})
      */
     private $operacion = 0;
 
     /**
-     * @ORM\Column(name="subtotal", type="float")
+     * @ORM\Column(name="vr_retencion_fuente", type="float", nullable=true, options={"default" : 0})
      */
-    private $subtotal = 0;
+    private $vrRetencionFuente = 0;
 
     /**
-     * @ORM\Column(name="retencion_fuente", type="float")
+     * @ORM\Column(name="vr_retencion_iva", type="float", nullable=true, options={"default" : 0})
      */
-    private $retencion_fuente = 0;
+    private $vrRetencionIva = 0;
 
     /**
-     * @ORM\Column(name="retencion_iva", type="float")
-     */
-    private $retencion_iva = 0;
-
-    /**
-     * @ORM\Column(name="retencion_ica", type="float")
-     */
-    private $retencion_ica = 0;
-
-    /**
-     * @ORM\Column(name="total_neto", type="float")
-     */
-    private $total_neto = 0;
-
-    /**
-     * @ORM\Column(name="comentario", type="string", length=120, nullable=true)
+     * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrarTipo", inversedBy="cuentasCobrarCuentaCobrarTipoRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_cobrar_tipo_fk", referencedColumnName="codigo_cuenta_cobrar_tipo_pk")
+     */
+    protected $cuentaCobrarTipoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="CarCliente", inversedBy="cuentaCobrarClientesRel")
@@ -190,22 +181,6 @@ class CarCuentaCobrar
     public function setCodigoFactura($codigoFactura): void
     {
         $this->codigoFactura = $codigoFactura;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoFacturaInventarioFk()
-    {
-        return $this->codigoFacturaInventarioFk;
-    }
-
-    /**
-     * @param mixed $codigoFacturaInventarioFk
-     */
-    public function setCodigoFacturaInventarioFk($codigoFacturaInventarioFk): void
-    {
-        $this->codigoFacturaInventarioFk = $codigoFacturaInventarioFk;
     }
 
     /**
@@ -291,81 +266,97 @@ class CarCuentaCobrar
     /**
      * @return mixed
      */
-    public function getValorOriginal()
+    public function getVrSubtotal()
     {
-        return $this->valorOriginal;
+        return $this->vrSubtotal;
     }
 
     /**
-     * @param mixed $valorOriginal
+     * @param mixed $vrSubtotal
      */
-    public function setValorOriginal($valorOriginal): void
+    public function setVrSubtotal($vrSubtotal): void
     {
-        $this->valorOriginal = $valorOriginal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAbono()
-    {
-        return $this->abono;
-    }
-
-    /**
-     * @param mixed $abono
-     */
-    public function setAbono($abono): void
-    {
-        $this->abono = $abono;
+        $this->vrSubtotal = $vrSubtotal;
     }
 
     /**
      * @return mixed
      */
-    public function getSaldo()
+    public function getVrIva()
     {
-        return $this->saldo;
+        return $this->vrIva;
     }
 
     /**
-     * @param mixed $saldo
+     * @param mixed $vrIva
      */
-    public function setSaldo($saldo): void
+    public function setVrIva($vrIva): void
     {
-        $this->saldo = $saldo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSaldoOperado()
-    {
-        return $this->saldoOperado;
-    }
-
-    /**
-     * @param mixed $saldoOperado
-     */
-    public function setSaldoOperado($saldoOperado): void
-    {
-        $this->saldoOperado = $saldoOperado;
+        $this->vrIva = $vrIva;
     }
 
     /**
      * @return mixed
      */
-    public function getAfiliacion()
+    public function getVrTotal()
     {
-        return $this->afiliacion;
+        return $this->vrTotal;
     }
 
     /**
-     * @param mixed $afiliacion
+     * @param mixed $vrTotal
      */
-    public function setAfiliacion($afiliacion): void
+    public function setVrTotal($vrTotal): void
     {
-        $this->afiliacion = $afiliacion;
+        $this->vrTotal = $vrTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAbono()
+    {
+        return $this->vrAbono;
+    }
+
+    /**
+     * @param mixed $vrAbono
+     */
+    public function setVrAbono($vrAbono): void
+    {
+        $this->vrAbono = $vrAbono;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSaldo()
+    {
+        return $this->vrSaldo;
+    }
+
+    /**
+     * @param mixed $vrSaldo
+     */
+    public function setVrSaldo($vrSaldo): void
+    {
+        $this->vrSaldo = $vrSaldo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSaldoOperado()
+    {
+        return $this->vrSaldoOperado;
+    }
+
+    /**
+     * @param mixed $vrSaldoOperado
+     */
+    public function setVrSaldoOperado($vrSaldoOperado): void
+    {
+        $this->vrSaldoOperado = $vrSaldoOperado;
     }
 
     /**
@@ -387,81 +378,33 @@ class CarCuentaCobrar
     /**
      * @return mixed
      */
-    public function getSubtotal()
+    public function getVrRetencionFuente()
     {
-        return $this->subtotal;
+        return $this->vrRetencionFuente;
     }
 
     /**
-     * @param mixed $subtotal
+     * @param mixed $vrRetencionFuente
      */
-    public function setSubtotal($subtotal): void
+    public function setVrRetencionFuente($vrRetencionFuente): void
     {
-        $this->subtotal = $subtotal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRetencionFuente()
-    {
-        return $this->retencion_fuente;
-    }
-
-    /**
-     * @param mixed $retencion_fuente
-     */
-    public function setRetencionFuente($retencion_fuente): void
-    {
-        $this->retencion_fuente = $retencion_fuente;
+        $this->vrRetencionFuente = $vrRetencionFuente;
     }
 
     /**
      * @return mixed
      */
-    public function getRetencionIva()
+    public function getVrRetencionIva()
     {
-        return $this->retencion_iva;
+        return $this->vrRetencionIva;
     }
 
     /**
-     * @param mixed $retencion_iva
+     * @param mixed $vrRetencionIva
      */
-    public function setRetencionIva($retencion_iva): void
+    public function setVrRetencionIva($vrRetencionIva): void
     {
-        $this->retencion_iva = $retencion_iva;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRetencionIca()
-    {
-        return $this->retencion_ica;
-    }
-
-    /**
-     * @param mixed $retencion_ica
-     */
-    public function setRetencionIca($retencion_ica): void
-    {
-        $this->retencion_ica = $retencion_ica;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTotalNeto()
-    {
-        return $this->total_neto;
-    }
-
-    /**
-     * @param mixed $total_neto
-     */
-    public function setTotalNeto($total_neto): void
-    {
-        $this->total_neto = $total_neto;
+        $this->vrRetencionIva = $vrRetencionIva;
     }
 
     /**
@@ -495,5 +438,22 @@ class CarCuentaCobrar
     {
         $this->clienteRel = $clienteRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaCobrarTipoRel()
+    {
+        return $this->cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaCobrarTipoRel
+     */
+    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
+    {
+        $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
+    }
+
 
 }

@@ -88,7 +88,7 @@ class TteFactura
     private $estadoAutorizado = false;
 
     /**
-     * @ORM\Column(name="estado_aprobado", type="boolean",options={"default" : false}, nullable=true)
+     * @ORM\Column(name="estado_aprobado", type="boolean", options={"default" : false}, nullable=true)
      */
     private $estadoAprobado = false;
 

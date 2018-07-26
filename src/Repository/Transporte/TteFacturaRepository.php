@@ -4,6 +4,7 @@ namespace App\Repository\Transporte;
 
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCliente;
+use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaTipo;
@@ -181,9 +182,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $this->getEntityManager()->persist($arFactura);
                 $this->getEntityManager()->persist($arFacturaTipo);
 
-                $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arFactura->getFacturaTipoRel()->getCodigoCuentaCobrarTipoFk());
                 $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arFactura->getClienteRel()->getCodigoIdentificacionFk(),'numeroIdentificacion' => $arFactura->getClienteRel()->getNumeroIdentificacion()]);
-
                 if (!$arClienteCartera) {
                     $arClienteCartera = new CarCliente();
                     $arClienteCartera->setFormaPagoRel($arFactura->getClienteRel()->getFormaPagoRel());
@@ -197,27 +196,21 @@ class TteFacturaRepository extends ServiceEntityRepository
                     $arClienteCartera->setCorreo($arFactura->getClienteRel()->getCorreo());
                     $em->persist($arClienteCartera);
                 }
-                /*if ($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
-                    $arCuentaCobrar = new \Brasa\CarteraBundle\Entity\CarCuentaCobrar();
-                    $arCuentaCobrar->setClienteRel($arClienteCartera);
-                    $arCuentaCobrar->setFacturaInventarioRel($arMovimiento);
-                    //$arCuentaCobrar->setAsesorRel($arAsesor);
-                    $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
-                    $arCuentaCobrar->setFecha($arMovimiento->getFecha());
-                    $arCuentaCobrar->setFechaVence($arMovimiento->getFecha());
-                    $arCuentaCobrar->setNumeroDocumento($arMovimiento->getNumero());
-                    $arCuentaCobrar->setCodigoFactura($arMovimiento->getCodigoMovimientoPk());
-                    $arCuentaCobrar->setSoporte($arMovimiento->getSoporte());
-                    $arCuentaCobrar->setValorOriginal($arMovimiento->getVrNeto());
-                    $arCuentaCobrar->setSaldo($arMovimiento->getVrNeto());
-                    $arCuentaCobrar->setPlazo($arClienteCartera->getPlazoPago());
-                    $arCuentaCobrar->setOperacion($arMovimiento->getOperacionComercial());
-                    $arCuentaCobrar->setSubtotal($arMovimiento->getVrSubtotal());
-                    $arCuentaCobrar->setAbono(0);
-                    $em->persist($arCuentaCobrar);
-                }*/
 
-
+                $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arFactura->getFacturaTipoRel()->getCodigoCuentaCobrarTipoFk());
+                $arCuentaCobrar = new CarCuentaCobrar();
+                $arCuentaCobrar->setClienteRel($arClienteCartera);
+                $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
+                $arCuentaCobrar->setFecha($arFactura->getFecha());
+                $arCuentaCobrar->setFechaVence($arFactura->getFechaVence());
+                $arCuentaCobrar->setNumeroDocumento($arFactura->getNumero());
+                $arCuentaCobrar->setVrSubtotal($arFactura->getVrSubtotal());
+                $arCuentaCobrar->setVrTotal($arFactura->getVrTotal());
+                $arCuentaCobrar->setVrSaldo($arFactura->getVrTotal());
+                $arCuentaCobrar->setVrSaldoOperado($arFactura->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
+                $arCuentaCobrar->setPlazo($arFactura->getPlazoPago());
+                $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
+                $em->persist($arCuentaCobrar);
 
                 $em->flush();
             } else {

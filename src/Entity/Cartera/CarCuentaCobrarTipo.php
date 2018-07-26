@@ -59,6 +59,11 @@ class CarCuentaCobrarTipo
     private $codigoCuentaRetencionFuenteFk;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarCuentaCobrar", mappedBy="cuentaCobrarTipoRel")
+     */
+    protected $cuentasCobrarCuentaCobrarTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaCobrarTipoPk()
@@ -200,6 +205,22 @@ class CarCuentaCobrarTipo
     public function setCodigoCuentaRetencionFuenteFk($codigoCuentaRetencionFuenteFk): void
     {
         $this->codigoCuentaRetencionFuenteFk = $codigoCuentaRetencionFuenteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentasCobrarCuentaCobrarTipoRel()
+    {
+        return $this->cuentasCobrarCuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentasCobrarCuentaCobrarTipoRel
+     */
+    public function setCuentasCobrarCuentaCobrarTipoRel($cuentasCobrarCuentaCobrarTipoRel): void
+    {
+        $this->cuentasCobrarCuentaCobrarTipoRel = $cuentasCobrarCuentaCobrarTipoRel;
     }
 
 

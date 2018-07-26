@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class CarReciboRepository extends ServiceEntityRepository
+class CarReciboDetalleRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {

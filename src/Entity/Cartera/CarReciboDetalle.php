@@ -93,6 +93,12 @@ class CarReciboDetalle
     private $operacion = 0;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarRecibo", inversedBy="recibosDetallesRecibosRel")
+     * @ORM\JoinColumn(name="codigo_recibo_fk", referencedColumnName="codigo_recibo_pk")
+     */
+    protected $reciboRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoReciboDetallePk()
@@ -347,6 +353,23 @@ class CarReciboDetalle
     {
         $this->operacion = $operacion;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getReciboRel()
+    {
+        return $this->reciboRel;
+    }
+
+    /**
+     * @param mixed $reciboRel
+     */
+    public function setReciboRel($reciboRel): void
+    {
+        $this->reciboRel = $reciboRel;
+    }
+
 
 
 }

@@ -40,7 +40,7 @@
                 <td>{{ arRecibo.numero }}</td>
                 <td>{{ arRecibo.fecha | date('Y-m-d') }}</td>
                 <td>{{ arRecibo.fechaPago | date('Y-m-d') }}</td>
-                <td>{{ arRecibo.nit }}</td>
+                <td>{{ arRecibo.numeroIdentificacion }}</td>
                 <td>{{ arRecibo.nombreCorto }}</td>
                 <td>{{ arRecibo.nombre }}</td>
                 <td>{{ arRecibo.vrPagoTotal }}</td>
@@ -54,7 +54,7 @@
                     </a>
                 </td>
                 <td style="text-align: center;">
-                    <a href="{{ path('transporte_administracion_comercial_cliente_detalle',{'id' : arRecibo.codigoReciboPk}) }}">
+                    <a href="{{ path('cartera_movimiento_recibo_recibo_detalle',{'id' : arRecibo.codigoReciboPk}) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>

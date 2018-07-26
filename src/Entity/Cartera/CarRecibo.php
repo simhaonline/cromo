@@ -136,6 +136,11 @@ class CarRecibo
     protected $cuentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="CarReciboDetalle", mappedBy="reciboRel")
+     */
+    protected $recibosDetallesRecibosRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoReciboPk()
@@ -517,6 +522,22 @@ class CarRecibo
     public function setCuentaRel($cuentaRel): void
     {
         $this->cuentaRel = $cuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecibosDetallesRecibosRel()
+    {
+        return $this->recibosDetallesRecibosRel;
+    }
+
+    /**
+     * @param mixed $recibosDetallesRecibosRel
+     */
+    public function setRecibosDetallesRecibosRel($recibosDetallesRecibosRel): void
+    {
+        $this->recibosDetallesRecibosRel = $recibosDetallesRecibosRel;
     }
 
 

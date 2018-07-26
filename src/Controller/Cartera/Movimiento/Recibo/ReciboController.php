@@ -76,18 +76,18 @@ class ReciboController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arRecibo = $em->getRepository(CarRecibo::class)->find($id);
         $form = $this->createFormBuilder()
-            ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
             ->getForm();
         $form->handleRequest($request);
-        if ($form->get('btnEliminarDetalle')->isClicked()) {
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                $em->getRepository(TteClienteCondicion::class)->eliminar($arrSeleccionados);
-            }
+//        if ($form->get('btnEliminarDetalle')->isClicked()) {
+//            $arrSeleccionados = $request->request->get('ChkSeleccionar');
+////                $em->getRepository(TteClienteCondicion::class)->eliminar($arrSeleccionados);
+//            }
 
-        $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->lista($id);
+        $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $id));
 
-        return $this->render('transporte/administracion/comercial/cliente/detalle.html.twig', array(
-            'arReciboDetalle' => $arReciboDetalle,
+        return $this->render('cartera/movimiento/recibo/detalle.html.twig', array(
+            'arRecibo'=> $arRecibo,
+            'arReciboDetalle'=> $arReciboDetalle,
             'form' => $form->createView()
         ));
     }

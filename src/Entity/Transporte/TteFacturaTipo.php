@@ -37,6 +37,11 @@ class TteFacturaTipo
     private $guiaFactura = false;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_cobrar_tipo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaCobrarTipoFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="facturaTipoRel")
      */
     protected $facturasFacturaTipoRel;
@@ -156,6 +161,22 @@ class TteFacturaTipo
     public function setGuiaFactura($guiaFactura): void
     {
         $this->guiaFactura = $guiaFactura;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCobrarTipoFk()
+    {
+        return $this->codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCobrarTipoFk
+     */
+    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
+    {
+        $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
     }
 
 

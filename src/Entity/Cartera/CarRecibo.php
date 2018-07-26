@@ -23,7 +23,7 @@ class CarRecibo
     private $fecha;
 
     /**
-     * @ORM\Column(name="codigo_cliente_fk", type="string", nullable=true)
+     * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
      */
     private $codigoClienteFk;
 

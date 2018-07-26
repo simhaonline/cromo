@@ -59,7 +59,7 @@ class ReciboController extends Controller
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arRecibo);
                 $em->flush();
-                return $this->redirect($this->generateUrl('transporte_administracion_comercial_cliente_detalle', ['id' => $arRecibo->getCodigoReciboPk()]));
+                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $arRecibo->getCodigoReciboPk()]));
             }
         }
         return $this->render('cartera/movimiento/recibo/nuevo.html.twig', [

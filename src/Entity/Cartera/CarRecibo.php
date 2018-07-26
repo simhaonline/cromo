@@ -28,7 +28,7 @@ class CarRecibo
     private $codigoClienteFk;
 
     /**
-     * @ORM\Column(name="codigo_cuenta_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_cuenta_fk", type="string", length=10, nullable=true)
      */
     private $codigoCuentaFk;
 
@@ -128,6 +128,12 @@ class CarRecibo
      * @ORM\JoinColumn(name="codigo_recibo_tipo_fk", referencedColumnName="codigo_recibo_tipo_pk")
      */
     protected $reciboTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCuenta", inversedBy="recibosCuentaRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_fk", referencedColumnName="codigo_cuenta_pk")
+     */
+    protected $cuentaRel;
 
     /**
      * @return mixed
@@ -496,5 +502,23 @@ class CarRecibo
     {
         $this->reciboTipoRel = $reciboTipoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaRel()
+    {
+        return $this->cuentaRel;
+    }
+
+    /**
+     * @param mixed $cuentaRel
+     */
+    public function setCuentaRel($cuentaRel): void
+    {
+        $this->cuentaRel = $cuentaRel;
+    }
+
+
 
 }

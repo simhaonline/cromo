@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class CumplidoController extends Controller
 {
@@ -25,8 +27,33 @@ class CumplidoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $arCumplidos = $paginator->paginate($em->getRepository(TteCumplido::class)->lista(), $request->query->getInt('page', 1),10);
-        return $this->render('transporte/movimiento/transporte/cumplido/lista.html.twig', ['arCumplidos' => $arCumplidos]);
+        $session = new Session();
+        $form = $this->createFormBuilder()
+            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                if ($form->get('txtCodigoCliente')->getData() != '') {
+                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+                } else {
+                    $session->set('filtroTteCodigoCliente', null);
+                    $session->set('filtroTteNombreCliente', null);
+                }
+            }
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
+            }
+        }
+        $arCumplidos = $paginator->paginate($em->getRepository(TteCumplido::class)->lista(), $request->query->getInt('page', 1),40);
+        return $this->render('transporte/movimiento/transporte/cumplido/lista.html.twig', [
+            'arCumplidos' => $arCumplidos,
+            'form' => $form->createView()]);
     }
 
     /**

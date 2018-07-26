@@ -28,6 +28,11 @@ class TteCumplido
     private $codigoClienteFk;
 
     /**
+     * @ORM\Column(name="codigo_cumplido_tipo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCumplidoTipoFk;
+
+    /**
      * @ORM\Column(name="cantidad", type="float")
      */
     private $cantidad = 0;
@@ -57,6 +62,12 @@ class TteCumplido
      * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
      */
     private $clienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteCumplidoTipo", inversedBy="cumplidosDespachoTipoRel")
+     * @ORM\JoinColumn(name="codigo_cumplido_tipo_fk", referencedColumnName="codigo_cumplido_tipo_pk")
+     */
+    private $cumplidoTipoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="cumplidoRel")
@@ -109,6 +120,22 @@ class TteCumplido
     public function setCodigoClienteFk($codigoClienteFk): void
     {
         $this->codigoClienteFk = $codigoClienteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCumplidoTipoFk()
+    {
+        return $this->codigoCumplidoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCumplidoTipoFk
+     */
+    public function setCodigoCumplidoTipoFk($codigoCumplidoTipoFk): void
+    {
+        $this->codigoCumplidoTipoFk = $codigoCumplidoTipoFk;
     }
 
     /**
@@ -205,6 +232,22 @@ class TteCumplido
     public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCumplidoTipoRel()
+    {
+        return $this->cumplidoTipoRel;
+    }
+
+    /**
+     * @param mixed $cumplidoTipoRel
+     */
+    public function setCumplidoTipoRel($cumplidoTipoRel): void
+    {
+        $this->cumplidoTipoRel = $cumplidoTipoRel;
     }
 
     /**

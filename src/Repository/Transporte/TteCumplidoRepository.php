@@ -34,6 +34,10 @@ class TteCumplidoRepository extends ServiceEntityRepository
             ->addSelect('c.comentario')
             ->where('c.codigoCumplidoPk <> 0');
         $queryBuilder->orderBy('c.fecha', 'DESC');
+
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("c.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        }
         return $queryBuilder;
     }
 

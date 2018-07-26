@@ -34,8 +34,8 @@ class FacturaController extends Controller
         $session = new Session();
         $form = $this->createFormBuilder()
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaNumero')])
-            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaCodigoCliente'), 'attr' => ['class' => 'form-control']])
-            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteFacturaEstadoAprobado'), 'required' => false])
             ->add('chkEstadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteFacturaEstadoAnulado'), 'required' => false])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
@@ -49,11 +49,11 @@ class FacturaController extends Controller
                 $session->set('filtroTteFacturaNumero', $form->get('txtNumero')->getData());
 
                 if ($form->get('txtCodigoCliente')->getData() != '') {
-                    $session->set('filtroTteFacturaCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                    $session->set('filtroTteFacturaNombreCliente', $form->get('txtNombreCorto')->getData());
+                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
                 } else {
-                    $session->set('filtroTteFacturaCodigoCliente', null);
-                    $session->set('filtroTteFacturaNombreCliente', null);
+                    $session->set('filtroTteCodigoCliente', null);
+                    $session->set('filtroTteNombreCliente', null);
                 }
             }
             if($form->get('btnEliminar')->isClicked()){

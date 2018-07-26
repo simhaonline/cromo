@@ -182,18 +182,19 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $this->getEntityManager()->persist($arFacturaTipo);
 
                 $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arFactura->getFacturaTipoRel()->getCodigoCuentaCobrarTipoFk());
-                $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => 0,'numeroIdentificacion' => $arFactura->getClienteRel()->getNumeroIdentificacion()]);
+                $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arFactura->getClienteRel()->getCodigoIdentificacionFk(),'numeroIdentificacion' => $arFactura->getClienteRel()->getNumeroIdentificacion()]);
 
                 if (!$arClienteCartera) {
                     $arClienteCartera = new CarCliente();
                     $arClienteCartera->setFormaPagoRel($arFactura->getClienteRel()->getFormaPagoRel());
-                    $arClienteCartera->setNumeroIdentificacion($arFactura->getClienteRel()->getNit());
+                    $arClienteCartera->setIdentificacionRel($arFactura->getClienteRel()->getIdentificacionRel());
+                    $arClienteCartera->setNumeroIdentificacion($arFactura->getClienteRel()->getNumeroIdentificacion());
                     $arClienteCartera->setDigitoVerificacion($arFactura->getClienteRel()->getDigitoVerificacion());
                     $arClienteCartera->setNombreCorto($arFactura->getClienteRel()->getNombreCorto());
                     $arClienteCartera->setPlazoPago($arFactura->getClienteRel()->getPlazoPago());
                     $arClienteCartera->setDireccion($arFactura->getClienteRel()->getDireccion());
                     $arClienteCartera->setTelefono($arFactura->getClienteRel()->getTelefono());
-                    $arClienteCartera->setEmail($arFactura->getClienteRel()->getEmail());
+                    $arClienteCartera->setCorreo($arFactura->getClienteRel()->getCorreo());
                     $em->persist($arClienteCartera);
                 }
                 /*if ($arMovimiento->getDocumentoRel()->getGeneraCartera()) {

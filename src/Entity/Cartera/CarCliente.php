@@ -73,7 +73,7 @@ class CarCliente
     private $fax;    
     
     /**
-     * @ORM\Column(name="correo", type="string", length=80, nullable=true)
+     * @ORM\Column(name="correo", type="string", length=1000, nullable=true)
      */
     private $correo;
     

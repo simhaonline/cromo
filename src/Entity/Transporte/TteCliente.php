@@ -78,7 +78,7 @@ class TteCliente
     private $plazoPago = 0;
 
     /**
-     * @ORM\Column(name="correo", type="string", length=200, nullable=true)
+     * @ORM\Column(name="correo", type="string", length=1000, nullable=true)
      */
     private $correo;
 
@@ -414,6 +414,22 @@ class TteCliente
     /**
      * @return mixed
      */
+    public function getCodigoFormaPagoFk()
+    {
+        return $this->codigoFormaPagoFk;
+    }
+
+    /**
+     * @param mixed $codigoFormaPagoFk
+     */
+    public function setCodigoFormaPagoFk($codigoFormaPagoFk): void
+    {
+        $this->codigoFormaPagoFk = $codigoFormaPagoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -457,6 +473,22 @@ class TteCliente
     public function setCondicionRel($condicionRel): void
     {
         $this->condicionRel = $condicionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormaPagoRel()
+    {
+        return $this->formaPagoRel;
+    }
+
+    /**
+     * @param mixed $formaPagoRel
+     */
+    public function setFormaPagoRel($formaPagoRel): void
+    {
+        $this->formaPagoRel = $formaPagoRel;
     }
 
     /**
@@ -570,39 +602,6 @@ class TteCliente
     {
         $this->clientesCondicionesClienteRel = $clientesCondicionesClienteRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoFormaPagoFk()
-    {
-        return $this->codigoFormaPagoFk;
-    }
-
-    /**
-     * @param mixed $codigoFormaPagoFk
-     */
-    public function setCodigoFormaPagoFk($codigoFormaPagoFk): void
-    {
-        $this->codigoFormaPagoFk = $codigoFormaPagoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFormaPagoRel()
-    {
-        return $this->formaPagoRel;
-    }
-
-    /**
-     * @param mixed $formaPagoRel
-     */
-    public function setFormaPagoRel($formaPagoRel): void
-    {
-        $this->formaPagoRel = $formaPagoRel;
-    }
-
 
 
 }

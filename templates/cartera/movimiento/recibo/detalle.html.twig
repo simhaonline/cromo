@@ -1,0 +1,26 @@
+{% extends 'base_cartera.html.twig' %}
+{% block content %}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="row">
+        <!-- /.col-lg-12 -->
+    </div>
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td class="titulo"><b>CODIGO CLIENTE:</b></td>
+            <td class="td-in-well">{{ arRecibo.codigoReciboPk }}</td>
+            <td class="titulo"><b>TIPO IDENTIFICACION</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arRecibo.numero }}</td>
+        </tr>
+    </table>
+    <a name="marcador"></a>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#contrato" data-toggle="tab">Condicion comercial</a></li>
+    </ul>
+    {{ form_end(form) }}
+    <a class="btn btn-default btn-sm" href="{{ path('cartera_movimiento_recibo_recibo_lista') }}">Volver</a>
+{% endblock %}

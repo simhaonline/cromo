@@ -1,17 +1,13 @@
-{% extends 'base_transporte.html.twig' %}
+{% extends 'base_cartera.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Cliente:</label>
+                <label class="col-sm-1 control-label">Numero:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.txtCliente, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-1 control-label">Identificacion:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtNit, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.txtNumero, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
         </div>
@@ -33,6 +29,8 @@
             <th>ANU</th>
             <th>AUT</th>
             <th>IMP</th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -44,23 +42,23 @@
                 <td>{{ arRecibo.fechaPago | date('Y-m-d') }}</td>
                 <td>{{ arRecibo.nit }}</td>
                 <td>{{ arRecibo.nombreCorto }}</td>
-                <td>{{ arRecibo.codigoCuentaFk }}</td>
+                <td>{{ arRecibo.nombre }}</td>
                 <td>{{ arRecibo.vrPagoTotal }}</td>
                 {{ validarTipo(arRecibo.estadoAnulado) }}
                 {{ validarTipo(arRecibo.estadoAutorizado) }}
                 {{ validarTipo(arRecibo.estadoImpreso) }}
-                {#<td style="text-align: center;">#}
-                    {#<a href="{{ path('transporte_administracion_comercial_cliente_nuevo',{'id' : arCliente.codigoClientePk}) }}">#}
-                        {#<i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">#}
-                        {#</i>#}
-                    {#</a>#}
-                {#</td>#}
-                {#<td style="text-align: center;">#}
-                    {#<a href="{{ path('transporte_administracion_comercial_cliente_detalle',{'id' : arCliente.codigoClientePk}) }}">#}
-                        {#<i class="fa fa-share-square-o" style="font-size: large;color: black;">#}
-                        {#</i>#}
-                    {#</a>#}
-                {#</td>#}
+                <td style="text-align: center;">
+                    <a href="{{ path('cartera_movimiento_recibo_recibo_nuevo',{'id' : arRecibo.codigoReciboPk}) }}">
+                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td style="text-align: center;">
+                    <a href="{{ path('transporte_administracion_comercial_cliente_detalle',{'id' : arRecibo.codigoReciboPk}) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
@@ -77,7 +75,7 @@
 
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
-            {#<a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_comercial_cliente_nuevo', {'id': 0}) }}">Nuevo</a>#}
+            <a class="btn btn-default btn-sm" href="{{ path('cartera_movimiento_recibo_recibo_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>
     </div>
     {{ form_end(form) }}

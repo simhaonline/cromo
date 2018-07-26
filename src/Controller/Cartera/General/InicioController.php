@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 class InicioController extends Controller
 {
    /**
-    * @Route("/car/general/inicio", name="cartera_general_inicio")
+    * @Route("/cartera/general/inicio", name="cartera_general_inicio")
     */    
     public function inicio(Request $request)
     {

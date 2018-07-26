@@ -12,8 +12,7 @@ class GenFormaPago
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_forma_pago_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_forma_pago_pk", type="string", length=10)
      */
     private $codigoFormaPagoPk;
 
@@ -26,6 +25,11 @@ class GenFormaPago
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarCliente", mappedBy="formaPagoRel")
      */
     protected $carClientesFormaPagoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteCliente", mappedBy="formaPagoRel")
+     */
+    protected $tteClientesFormaPagoRel;
 
     /**
      * @return mixed
@@ -74,6 +78,23 @@ class GenFormaPago
     {
         $this->carClientesFormaPagoRel = $carClientesFormaPagoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTteClientesFormaPagoRel()
+    {
+        return $this->tteClientesFormaPagoRel;
+    }
+
+    /**
+     * @param mixed $tteClientesFormaPagoRel
+     */
+    public function setTteClientesFormaPagoRel($tteClientesFormaPagoRel): void
+    {
+        $this->tteClientesFormaPagoRel = $tteClientesFormaPagoRel;
+    }
+
 
 }
 

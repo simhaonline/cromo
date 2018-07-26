@@ -93,6 +93,11 @@ class TteCliente
     private $codigoCondicionFk;
 
     /**
+     * @ORM\Column(name="codigo_forma_pago_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoFormaPagoFk;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -108,6 +113,12 @@ class TteCliente
      * @ORM\JoinColumn(name="codigo_condicion_fk", referencedColumnName="codigo_condicion_pk")
      */
     private $condicionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenFormaPago", inversedBy="tteClientesFormaPagoRel")
+     * @ORM\JoinColumn(name="codigo_forma_pago_fk", referencedColumnName="codigo_forma_pago_pk")
+     */
+    private $formaPagoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="clienteRel")
@@ -558,6 +569,38 @@ class TteCliente
     public function setClientesCondicionesClienteRel($clientesCondicionesClienteRel): void
     {
         $this->clientesCondicionesClienteRel = $clientesCondicionesClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFormaPagoFk()
+    {
+        return $this->codigoFormaPagoFk;
+    }
+
+    /**
+     * @param mixed $codigoFormaPagoFk
+     */
+    public function setCodigoFormaPagoFk($codigoFormaPagoFk): void
+    {
+        $this->codigoFormaPagoFk = $codigoFormaPagoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormaPagoRel()
+    {
+        return $this->formaPagoRel;
+    }
+
+    /**
+     * @param mixed $formaPagoRel
+     */
+    public function setFormaPagoRel($formaPagoRel): void
+    {
+        $this->formaPagoRel = $formaPagoRel;
     }
 
 

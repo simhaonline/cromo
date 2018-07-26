@@ -3,6 +3,8 @@
 namespace App\Repository\Transporte;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Cartera\CarCliente;
+use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaTipo;
 use App\Utilidades\Mensajes;
@@ -179,63 +181,45 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $this->getEntityManager()->persist($arFactura);
                 $this->getEntityManager()->persist($arFacturaTipo);
 
-                //$arCuentaCobrarTipo = $em->getRepository('BrasaCarteraBundle:CarCuentaCobrarTipo')->find(3);
-                /*$arClienteCartera = $em->getRepository('BrasaCarteraBundle:CarCliente')->findOneBy(['nit' => $arMovimiento->getTerceroRel()->getNumeroIdentificacion()]);
-                if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() != 4) {
-                    if ($arClienteCartera == null && $arMovimiento->getDocumentoRel()->getGeneraCartera() == 1) {
-                        $arClienteCartera = new \Brasa\CarteraBundle\Entity\CarCliente();
-                        $arClienteCartera->setFormaPagoRel($arMovimiento->getTerceroRel()->getFormaPagoRel());
-                        //$arClienteCartera->setAsesorRel($arAsesor);
-                        $arClienteCartera->setCiudadRel($arMovimiento->getTerceroRel()->getCiudadRel());
-                        $arClienteCartera->setNit($arMovimiento->getTerceroRel()->getNumeroIdentificacion());
-                        $arClienteCartera->setDigitoVerificacion($arMovimiento->getTerceroRel()->getDigitoVerificacion());
-                        $arClienteCartera->setNombreCorto($arMovimiento->getTerceroRel()->getNombreCorto());
-                        $arClienteCartera->setPlazoPago($arMovimiento->getTerceroRel()->getPlazoPagoCliente());
-                        $arClienteCartera->setDireccion($arMovimiento->getTerceroRel()->getDireccion());
-                        $arClienteCartera->setTelefono($arMovimiento->getTerceroRel()->getTelefono());
-                        $arClienteCartera->setCelular($arMovimiento->getTerceroRel()->getCelular());
-                        $arClienteCartera->setFax($arMovimiento->getTerceroRel()->getFax());
-                        $arClienteCartera->setEmail($arMovimiento->getTerceroRel()->getEmail());
-                        //$arClienteCartera->setCodigoUsuario($arUsuario->getUserName());
-                        $em->persist($arClienteCartera);
-                    }
-                    if ($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
-                        $arCuentaCobrar = new \Brasa\CarteraBundle\Entity\CarCuentaCobrar();
-                        $arCuentaCobrar->setClienteRel($arClienteCartera);
-                        $arCuentaCobrar->setFacturaInventarioRel($arMovimiento);
-                        //$arCuentaCobrar->setAsesorRel($arAsesor);
-                        $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
-                        $arCuentaCobrar->setFecha($arMovimiento->getFecha());
-                        $arCuentaCobrar->setFechaVence($arMovimiento->getFecha());
-                        $arCuentaCobrar->setNumeroDocumento($arMovimiento->getNumero());
-                        $arCuentaCobrar->setCodigoFactura($arMovimiento->getCodigoMovimientoPk());
-                        $arCuentaCobrar->setSoporte($arMovimiento->getSoporte());
-                        $arCuentaCobrar->setValorOriginal($arMovimiento->getVrNeto());
-                        $arCuentaCobrar->setSaldo($arMovimiento->getVrNeto());
-                        $arCuentaCobrar->setPlazo($arClienteCartera->getPlazoPago());
-                        $arCuentaCobrar->setOperacion($arMovimiento->getOperacionComercial());
-                        $arCuentaCobrar->setSubtotal($arMovimiento->getVrSubtotal());
-                        $arCuentaCobrar->setAbono(0);
-                        $em->persist($arCuentaCobrar);
-                    }
-                } else {
-                    $arCuentaCobrarTipo = $em->getRepository('BrasaCarteraBundle:CarCuentaCobrarTipo')->find(6);
+                $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arFactura->getFacturaTipoRel()->getCodigoCuentaCobrarFk());
+                $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['nit' => $arFactura->getClienteRel()->getNit()]);
+
+                if (!$arClienteCartera) {
+                    $arClienteCartera = new CarCliente();
+                    $arClienteCartera->setFormaPagoRel($arMovimiento->getTerceroRel()->getFormaPagoRel());
+                    $arClienteCartera->setCiudadRel($arMovimiento->getTerceroRel()->getCiudadRel());
+                    $arClienteCartera->setNit($arMovimiento->getTerceroRel()->getNumeroIdentificacion());
+                    $arClienteCartera->setDigitoVerificacion($arMovimiento->getTerceroRel()->getDigitoVerificacion());
+                    $arClienteCartera->setNombreCorto($arMovimiento->getTerceroRel()->getNombreCorto());
+                    $arClienteCartera->setPlazoPago($arMovimiento->getTerceroRel()->getPlazoPagoCliente());
+                    $arClienteCartera->setDireccion($arMovimiento->getTerceroRel()->getDireccion());
+                    $arClienteCartera->setTelefono($arMovimiento->getTerceroRel()->getTelefono());
+                    $arClienteCartera->setCelular($arMovimiento->getTerceroRel()->getCelular());
+                    $arClienteCartera->setFax($arMovimiento->getTerceroRel()->getFax());
+                    $arClienteCartera->setEmail($arMovimiento->getTerceroRel()->getEmail());
+                    //$arClienteCartera->setCodigoUsuario($arUsuario->getUserName());
+                    $em->persist($arClienteCartera);
+                }
+                /*if ($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
                     $arCuentaCobrar = new \Brasa\CarteraBundle\Entity\CarCuentaCobrar();
-                    $arCuentaCobrar->setCodigoCuentaCobrarTipoFk(6);
                     $arCuentaCobrar->setClienteRel($arClienteCartera);
+                    $arCuentaCobrar->setFacturaInventarioRel($arMovimiento);
+                    //$arCuentaCobrar->setAsesorRel($arAsesor);
                     $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
-                    $arCuentaCobrar->setOperacion($arMovimiento->getOperacionInventario());
                     $arCuentaCobrar->setFecha($arMovimiento->getFecha());
                     $arCuentaCobrar->setFechaVence($arMovimiento->getFecha());
                     $arCuentaCobrar->setNumeroDocumento($arMovimiento->getNumero());
                     $arCuentaCobrar->setCodigoFactura($arMovimiento->getCodigoMovimientoPk());
                     $arCuentaCobrar->setSoporte($arMovimiento->getSoporte());
-                    $arCuentaCobrar->setPlazo($arClienteCartera->getPlazoPago());
                     $arCuentaCobrar->setValorOriginal($arMovimiento->getVrNeto());
-                    $arCuentaCobrar->setSaldo(round($arMovimiento->getVrNeto()));
+                    $arCuentaCobrar->setSaldo($arMovimiento->getVrNeto());
+                    $arCuentaCobrar->setPlazo($arClienteCartera->getPlazoPago());
+                    $arCuentaCobrar->setOperacion($arMovimiento->getOperacionComercial());
+                    $arCuentaCobrar->setSubtotal($arMovimiento->getVrSubtotal());
                     $arCuentaCobrar->setAbono(0);
                     $em->persist($arCuentaCobrar);
                 }*/
+
 
 
                 $em->flush();

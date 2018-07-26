@@ -33,7 +33,7 @@ class CarCliente
     private $nombreCorto;
 
     /**
-     * @ORM\Column(name="codigo_forma_pago_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_forma_pago_fk", type="string", , length=10, nullable=true)
      */    
     private $codigoFormaPagoFk; 
     
@@ -454,5 +454,7 @@ class CarCliente
     {
         $this->ciudadRel = $ciudadRel;
     }
+
+
 
 }

@@ -64,6 +64,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $vrRetencionIvaGlobal = 0;
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+            if($arMovimiento->getCodigoDocumentoTipoFk() == "SAL") {
+                $arMovimientoDetalle->setVrPrecio($arMovimientoDetalle->getVrCosto());
+            }
             $vrSubtotal = $arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getCantidad();
             $vrDescuento = 0;
             if($arMovimientoDetalle->getPorcentajeDescuento() > 0) {

@@ -239,6 +239,8 @@ class MovimientoController extends Controller
                                 $arMovimientoDetalle->setItemRel($arItem);
                                 $arMovimientoDetalle->setCantidad($cantidad);
                                 $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
+                                $arMovimientoDetalle->setVrPrecio($arItem->getVrCostoPromedio());
+                                $arMovimientoDetalle->setVrCosto($arItem->getVrCostoPromedio());
                                 $arMovimientoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
                                 $em->persist($arMovimientoDetalle);
                             } else {

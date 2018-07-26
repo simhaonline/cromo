@@ -213,4 +213,18 @@ class TteRecogidaRepository extends ServiceEntityRepository
         return true;
     }
 
+    /**
+     * @param $codigo
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function contarDetalles($codigo){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class,'r')
+            ->select('COUNT(r.codigoRecogidaPk)')
+            ->where("r.codigoDespachoRecogidaFk = {$codigo}");
+        $resultado = $queryBuilder->getQuery()->getSingleResult();
+        return $resultado[1];
+    }
+
 }

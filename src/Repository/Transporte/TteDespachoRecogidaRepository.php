@@ -4,8 +4,10 @@ namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteRecogida;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteDespachoRecogidaRepository extends ServiceEntityRepository
 {
@@ -14,24 +16,32 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
         parent::__construct($registry, TteDespachoRecogida::class);
     }
 
-    public function lista(): array
+    /**
+     * @return \Doctrine\ORM\Query
+     */
+    public function lista()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT dr.codigoDespachoRecogidaPk, 
-        dr.fecha, 
-        dr.codigoOperacionFk,
-        dr.codigoVehiculoFk,
-        dr.codigoRutaRecogidaFk,
-        dr.cantidad,
-        dr.unidades,
-        dr.pesoReal,
-        dr.pesoVolumen,
-        dr.estadoDescargado,
-        dr.vrPago
-        FROM App\Entity\Transporte\TteDespachoRecogida dr');
-        return $query->execute();
-
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'dr')
+            ->select('dr.codigoDespachoRecogidaPk')
+            ->addSelect('dr.fecha')
+            ->addSelect('dr.codigoOperacionFk')
+            ->addSelect('dr.codigoVehiculoFk')
+            ->addSelect('dr.codigoRutaRecogidaFk')
+            ->addSelect('dr.cantidad')
+            ->addSelect('dr.unidades')
+            ->addSelect('dr.pesoReal')
+            ->addSelect('dr.pesoVolumen')
+            ->addSelect('dr.estadoDescargado')
+            ->addSelect('dr.vrPago')
+            ->where('dr.codigoDespachoRecogidaPk <> 0');
+        if($session->get('filtroTteDespachoVehiculoCodigo') != ''){
+            $queryBuilder->andWhere("dr.codigoVehiculoFk = '{$session->get('filtroTteDespachoVehiculoCodigo')}'");
+        }
+        if($session->get('filtroTteDespachoEstadoAprobado') != ''){
+            $queryBuilder->andWhere("dr.estadoAprobado = {$session->get('filtroTteDespachoEstadoAprobado')}");
+        }
+        return $queryBuilder->getQuery();
     }
 
     public function liquidar($codigoDespachoRecogida): bool
@@ -56,11 +66,11 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
     public function retirarRecogida($arrRecogidas): bool
     {
         $em = $this->getEntityManager();
-        if($arrRecogidas) {
+        if ($arrRecogidas) {
             if (count($arrRecogidas) > 0) {
                 foreach ($arrRecogidas AS $codigo) {
                     $arRecogida = $em->getRepository(TteRecogida::class)->find($codigo);
-                    if($arRecogida->getEstadoRecogido() == 0) {
+                    if ($arRecogida->getEstadoRecogido() == 0) {
                         $arRecogida->setDespachoRecogidaRel(null);
                         $arRecogida->setEstadoProgramado(0);
                         $em->persist($arRecogida);
@@ -75,11 +85,11 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
     public function descargarRecogida($arrRecogidas): bool
     {
         $em = $this->getEntityManager();
-        if($arrRecogidas) {
+        if ($arrRecogidas) {
             if (count($arrRecogidas) > 0) {
                 foreach ($arrRecogidas AS $codigo) {
                     $arRecogida = $em->getRepository(TteRecogida::class)->find($codigo);
-                    if($arRecogida->getEstadoRecogido() == 0 && $arRecogida->getUnidades() > 0 && $arRecogida->getPesoReal() > 0 && $arRecogida->getPesoVolumen() > 0) {
+                    if ($arRecogida->getEstadoRecogido() == 0 && $arRecogida->getUnidades() > 0 && $arRecogida->getPesoReal() > 0 && $arRecogida->getPesoVolumen() > 0) {
                         $arRecogida->setEstadoRecogido(1);
                         $em->persist($arRecogida);
                     }
@@ -88,5 +98,57 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             }
         }
         return true;
+    }
+
+    /**
+     * @param $arDespachoRecogida TteDespachoRecogida
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function autorizar($arDespachoRecogida){
+        if($this->getEntityManager()->getRepository(TteRecogida::class)->contarDetalles($arDespachoRecogida->getCodigoDespachoRecogidaPk()) > 0){
+            $arDespachoRecogida->setEstadoAutorizado(1);
+            $this->getEntityManager()->persist($arDespachoRecogida);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('El registro no tiene detalles');
+        }
+    }
+
+    /**
+     * @param $arDespachoRecogida TteDespachoRecogida
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function desautorizar($arDespachoRecogida){
+        $arDespachoRecogida->setEstadoAutorizado(0);
+        $this->getEntityManager()->persist($arDespachoRecogida);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @param $arDespachoRecogida TteDespachoRecogida
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function aprobar($arDespachoRecogida){
+        if($arDespachoRecogida->getEstadoAutorizado()){
+            $arDespachoRecogida->setEstadoAprobado(0);
+            $this->getEntityManager()->persist($arDespachoRecogida);
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    /**
+     * @param $arDespachoRecogida TteDespachoRecogida
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function anular($arDespachoRecogida){
+        if($arDespachoRecogida->getEstadoAprobado()){
+            $arDespachoRecogida->setEstadoAnulado(0);
+            $this->getEntityManager()->persist($arDespachoRecogida);
+            $this->getEntityManager()->flush();
+        }
     }
 }

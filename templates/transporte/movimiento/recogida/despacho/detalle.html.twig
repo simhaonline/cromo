@@ -1,23 +1,21 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    <div class="btn-toolbar" style="float:left">
-        <div class="btn-group">
-            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnMonitoreo, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-        </div>
+    {% include 'estructura/botonera.html.twig' %}
+    {{ form_widget(form.btnMonitoreo, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
     </div>
     <div style="float:right">
         {% if arDespachoRecogida.estadoMonitoreo == 1 %}<span class="label label-default">Monitoreo</span>{% endif %}
     </div>
-    <br /><br />
+    <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arDespachoRecogida.codigoDespachoRecogidaPk }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arDespachoRecogida.fecha |date("Y/m/d") }}</td>
-            <td class="titulo" >CANTIDAD:</td>
+            <td class="titulo">CANTIDAD:</td>
             <td align="right">{{ arDespachoRecogida.cantidad }}</td>
         </tr>
         <tr>
@@ -30,7 +28,7 @@
         </tr>
         <tr>
             <td class="titulo">RUTA:</td>
-            <td class="td-in-well">{{ arDespachoRecogida.rutaRecogidaRel.nombre }}</td>
+            <td class="td-in-well">{{ arDespachoRecogida.rutaRecogidaRel.nombre| default('') }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo">PESO:</td>
@@ -53,7 +51,7 @@
             <td align="right">{{ arDespachoRecogida.vrPago }}</td>
         </tr>
         <tr>
-            <td class="titulo" >COMENTARIO: </td>
+            <td class="titulo">COMENTARIO:</td>
             <td class="td-in-well" colspan="5">{{ arDespachoRecogida.comentario }}</td>
         </tr>
     </table>
@@ -98,7 +96,8 @@
                                 <td style="text-align: right">{{ arRecogida.pesoReal }}</td>
                                 <td style="text-align: right">{{ arRecogida.pesoVolumen }}</td>
                                 <td>{{ arRecogida.estadoRecogido?'SI':'NO' }}</td>
-                                <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecogida.codigoRecogidaPk }}" /></td>
+                                <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]"
+                                                                      value="{{ arRecogida.codigoRecogidaPk }}"/></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -107,10 +106,15 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_recogida_despacho_detalle_adicionar_recogida', {'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}', 'DespachoRecogidaAdicionarRecogida', 600, 900)">Adicionar</a>
+                        {% if arDespachoRecogida.estadoAutorizado %}
+                            <input type="button" class="btn btn-sm btn-default" value="Nuevo" disabled>
+                        {% else %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('transporte_movimiento_recogida_despacho_detalle_adicionar_recogida', {'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}', 'DespachoRecogidaAdicionarRecogida', 600, 900)">Nuevo</a>
+                        {% endif %}
                     </div>
                     <div class="btn-group">
-                        {{ form_widget(form.btnRetirarRecogida, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                        {{ form_widget(form.btnEliminarRecogida, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                     </div>
                 </div>
             </div>
@@ -133,7 +137,9 @@
                                 <td>{{ arDespachoRecogidaAuxiliar.codigoDespachoRecogidaAuxiliarPk }}</td>
                                 <td>{{ arDespachoRecogidaAuxiliar.numeroIdentificacion }}</td>
                                 <td>{{ arDespachoRecogidaAuxiliar.nombreCorto }}</td>
-                                <td style="text-align: center"><input type="checkbox" name="ChkSeleccionarAuxiliar[]" value="{{ arDespachoRecogidaAuxiliar.codigoDespachoRecogidaAuxiliarPk }}" /></td>
+                                <td style="text-align: center"><input type="checkbox" name="ChkSeleccionarAuxiliar[]"
+                                                                      value="{{ arDespachoRecogidaAuxiliar.codigoDespachoRecogidaAuxiliarPk }}"/>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -142,10 +148,15 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_recogida_despacho_detalle_adicionar_auxiliar', {'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}', 'DespachoRecogidaAdicionarAuxiliar', 600, 900)">Adicionar</a>
+                        {% if arDespachoRecogida.estadoAutorizado %}
+                            <input type="button" class="btn btn-sm btn-default" value="Nuevo" disabled>
+                        {% else %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('transporte_movimiento_recogida_despacho_detalle_adicionar_auxiliar', {'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}', 'DespachoRecogidaAdicionarAuxiliar', 600, 900)">Nuevo</a>
+                        {% endif %}
                     </div>
                     <div class="btn-group">
-                        {{ form_widget(form.btnRetirarAuxiliar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                        {{ form_widget(form.btnEliminarAuxiliar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                     </div>
                 </div>
             </div>
@@ -154,7 +165,8 @@
 
     <div class="btn-toolbar" style="float: left">
         <div class="btn-group">
-            <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_recogida_despacho_lista') }}">Volver</a>
+            <a class="btn btn-default btn-sm"
+               href="{{ path('transporte_movimiento_recogida_despacho_lista') }}">Volver</a>
         </div>
     </div>
 

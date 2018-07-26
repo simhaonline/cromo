@@ -1,5 +1,24 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="col-sm-1 control-label">Vehiculo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtVehiculo) }}
+                </div>
+                <label for="form_nombre" class="col-sm-2 control-label">Aprobado:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.choEstado) }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.btnFiltrar) }}
+        </div>
+    </div>
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
@@ -14,6 +33,8 @@
             <th>VOL</th>
             <th>PAGO</th>
             <th>DE</th>
+            <th></th>
+            <th></th>
             <th></th>
         </tr>
         </thead>
@@ -31,7 +52,21 @@
                 <td style="text-align: right">{{ arDespachoRecogida.pesoVolumen }}</td>
                 <td style="text-align: right">{{ arDespachoRecogida.vrPago }}</td>
                 <td style="text-align: center">{{ arDespachoRecogida.estadoDescargado?'SI':'NO' }}</td>
-                <td style="text-align: center"><a href="{{ path('transporte_movimiento_recogida_despacho_detalle', { 'id': arDespachoRecogida.codigoDespachoRecogidaPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center;">
+                    <a href="{{ path('transporte_movimiento_recogida_despacho_nuevo', { 'id': arDespachoRecogida.codigoDespachoRecogidaPk }) }}">
+                        <i class="fa fa-edit" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td style="text-align: center">
+                    <a href="{{ path('transporte_movimiento_recogida_despacho_detalle', { 'id': arDespachoRecogida.codigoDespachoRecogidaPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td style="text-align: center;">
+                    <input type="checkbox" name="ChkSeleccionados[]" value="{{ arDespachoRecogida.codigoDespachoRecogidaPk }}">
+                </td>
             </tr>
         {% endfor %}
         </tbody>
@@ -49,5 +84,10 @@
         <div class="btn-group">
             <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_recogida_despacho_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnEliminar) }}
+        </div>
     </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
 {% endblock %}

@@ -68,14 +68,29 @@ class TteDespachoRecogida
     private $vrDeclara = 0;
 
     /**
-     * @ORM\Column(name="estado_descargado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_descargado", type="boolean", nullable=true, options={"default": 0})
      */
     private $estadoDescargado = false;
 
     /**
-     * @ORM\Column(name="estado_monitoreo", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_monitoreo", type="boolean", nullable=true, options={"default": 0})
      */
     private $estadoMonitoreo = false;
+
+    /**
+     * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default": 0})
+     */
+    private $estadoAutorizado = false;
+
+    /**
+     * @ORM\Column(name="estado_aprobado", type="boolean", nullable=true, options={"default": 0})
+     */
+    private $estadoAprobado = false;
+
+    /**
+     * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default": 0})
+     */
+    private $estadoAnulado= false;
 
     /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
@@ -414,7 +429,52 @@ class TteDespachoRecogida
         $this->despachosRecogidasAuxiliaresDespachoRecogidaRel = $despachosRecogidasAuxiliaresDespachoRecogidaRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
 
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
 }
 

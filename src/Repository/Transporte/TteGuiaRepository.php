@@ -342,7 +342,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'SELECT g.codigoGuiaPk, 
-        g.numero, 
+        g.numero,         
         g.fechaIngreso,        
         g.codigoOperacionIngresoFk,
         g.codigoOperacionCargoFk,     
@@ -527,9 +527,10 @@ class TteGuiaRepository extends ServiceEntityRepository
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.estadoCumplido = 0 AND g.estadoSoporte = 1 AND g.codigoClienteFk = :codigoCliente
-        ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk'
-        )->setParameter('codigoCliente', $codigoCliente);
+        WHERE g.estadoCumplido = 0 AND g.estadoSoporte = 1 AND g.codigoClienteFk = :codigoCliente AND g.fechaIngreso >= :fechaIngreso 
+        ORDER BY g.fechaIngreso '
+        )->setParameter('codigoCliente', $codigoCliente)
+        ->setParameter('fechaIngreso', "2018-04-01");
         return $query->execute();
     }
 

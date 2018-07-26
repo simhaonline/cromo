@@ -17,6 +17,17 @@ class CumplidoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('cumplidoTipoRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TteCumplidoTipo',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('ct')
+                        ->orderBy('ct.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Cumplido tipo:',
+                'required' => true
+            ])
             ->add('fecha', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('comentario',TextareaType::class, array('required' => false))
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])

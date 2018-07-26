@@ -9,6 +9,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
 use App\Form\Type\Transporte\CumplidoType;
 use App\Formato\Transporte\Cumplido;
+use App\Formato\Transporte\CumplidoEntrega;
 use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,8 +74,14 @@ class CumplidoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-                $formato = new Cumplido();
-                $formato->Generar($em, $id);
+                if($arCumplido->getCumplidoTipoRel()->getEntregaMercancia()) {
+                    $formato = new CumplidoEntrega();
+                    $formato->Generar($em, $id);
+                } else {
+                    $formato = new Cumplido();
+                    $formato->Generar($em, $id);
+                }
+
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteCumplido::class)->autorizar($arCumplido);
@@ -163,7 +170,9 @@ class CumplidoController extends Controller
                 }
             }
         }
-        return $this->render('transporte/movimiento/transporte/cumplido/nuevo.html.twig', ['$arCumplido' => $arCumplido,'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/transporte/cumplido/nuevo.html.twig', [
+            'arCumplido' => $arCumplido,
+            'form' => $form->createView()]);
     }
 
 

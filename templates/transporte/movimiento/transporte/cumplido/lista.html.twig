@@ -33,6 +33,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>TIPO</th>
             <th>CLIENTE</th>
             <th>FECHA</th>
             <th>COMENTARIOS</th>
@@ -47,6 +48,7 @@
         {% for arCumplido in arCumplidos %}
             <tr>
                 <td>{{ arCumplido.codigoCumplidoPk }}</td>
+                <td>{{ arCumplido.tipoCumplido }}</td>
                 <td>{{ arCumplido.nombreCorto }}</td>
                 <td>{{ arCumplido.fecha | date('Y-m-d') }}</td>
                 <td>{{ arCumplido.comentario }}</td>

@@ -30,6 +30,12 @@
             <td class="td-in-well">{{ arCumplido.cantidad }}</td>
         </tr>
         <tr>
+            <td class="titulo">TIPO:</td>
+            <td class="td-in-well">{{ arCumplido.cumplidoTipoRel.nombre | default("") }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
             <td class="titulo" >COMENTARIO: </td>
             <td class="td-in-well" colspan="5">{{ arCumplido.comentario }}</td>
         </tr>

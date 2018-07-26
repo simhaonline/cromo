@@ -32,7 +32,9 @@ class TteCumplidoRepository extends ServiceEntityRepository
             ->addSelect('c.estadoAprobado')
             ->addSelect('c.estadoAnulado')
             ->addSelect('c.comentario')
-            ->where('c.codigoCumplidoPk <> 0');
+            ->addSelect('ct.nombre AS tipoCumplido')
+            ->where('c.codigoCumplidoPk <> 0')
+        ->leftJoin('c.cumplidoTipoRel', 'ct');
         $queryBuilder->orderBy('c.fecha', 'DESC');
 
         if($session->get('filtroTteCodigoCliente')){

@@ -63,10 +63,11 @@
             <td class="td-in-well" colspan="5">{{ arRecibo.comentarios }}</td>
         </tr>
     </table>
-    <a name="marcador"></a>
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#contrato" data-toggle="tab">Condicion comercial</a></li>
-    </ul>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('cartera_movimiento_recibo_recibo_detalle_nuevo', {'id': arRecibo.codigoReciboPk }) }}', 'AgregarNuevoDetalle', 600, 900)">Nuevo</a>
+        </div>
+    </div>
     {{ form_end(form) }}
     <a class="btn btn-default btn-sm" href="{{ path('cartera_movimiento_recibo_recibo_lista') }}">Volver</a>
 {% endblock %}

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Cartera\Movimiento\Recibo;
 
+use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Form\Type\Cartera\ReciboType;
@@ -91,48 +92,53 @@ class ReciboController extends Controller
             'form' => $form->createView()
         ));
     }
-//
-//    /**
-//     * @param Request $request
-//     * @param $id
-//     * @return Response
-//     * * @Route("/transporte/administracion/comercial/cliente/detalle/nuevo/{id}", name="transporte_administracion_comercial_cliente_detalle_nuevo")
-//     * @throws \Doctrine\ORM\ORMException
-//     */
-//    public function detalleNuevo(Request $request, $id)
-//    {
-//        $paginator  = $this->get('knp_paginator');
-//        $em = $this->getDoctrine()->getManager();
-//        $respuesta = [];
-//        $form = $this->createFormBuilder()
-//            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
-//            ->getForm();
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//            if (count($arrSeleccionados) > 0) {
-//                foreach ($arrSeleccionados AS $codigo) {
-//                   if(!$em->getRepository(TteClienteCondicion::class)->findOneBy(['codigoClienteFk' => $id, 'codigoCondicionFk' => $codigo])){
-//                       $arClienteCondicion = new TteClienteCondicion();
-//                       $arClienteCondicion->setClienteRel($em->getRepository(TteCliente::class)->find($id));
-//                       $arClienteCondicion->setCondicionRel($em->getRepository(TteCondicion::class)->find($codigo));
-//                       $em->persist($arClienteCondicion);
-//                   } else {
-//                       $respuesta [] = "La condición con código {$codigo} ya se encuentra agregada para el cliente seleccionado";
-//                   }
-//                }
-//                $em->flush();
-//            }
-//            if(count($respuesta) > 0){
-//                foreach ($respuesta AS $error){
-//                    Mensajes::error($error);
-//                }
-//            } else {
-//            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-//            }
-//        }
-//        $arCondiciones = $paginator->paginate ($em->getRepository(TteCondicion::class)->lista(), $request->query->getInt('page', 1),30);
-//        return $this->render('transporte/administracion/comercial/cliente/detalleNuevo.html.twig', ['arCondiciones' => $arCondiciones, 'form' => $form->createView()]);
-//    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * * @Route("/cartera/movimiento/recibo/recibo/detalle/nuevo/{id}", name="cartera_movimiento_recibo_recibo_detalle_nuevo")
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function detalleNuevo(Request $request, $id)
+    {
+        $paginator = $this->get('knp_paginator');
+        $em = $this->getDoctrine()->getManager();
+        $arRecibo = $em->getRepository(CarRecibo::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('BtnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arrControles = $request->request->All();
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados AS $codigoCuentaCobrar) {
+                        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrar);
+                        $vrPago = $em->getRepository('BrasaCarteraBundle:CarReciboDetalle')->vrPagoRecibo($codigoCuentaCobrar, $id);
+                        $saldo = $arrControles['TxtSaldo' . $codigoCuentaCobrar] - $vrPago;
+                        $arReciboDetalle = new CarReciboDetalle();
+                        $arReciboDetalle->setReciboRel($arRecibo);
+                        $arReciboDetalle->setCuentaCobrarRel($arCuentaCobrar);
+                        $arReciboDetalle->setVrPago($saldo);
+                        $arReciboDetalle->setNumeroFactura($arCuentaCobrar->getNumeroDocumento());
+                        $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
+                        $arReciboDetalle->setOperacion(1);
+                        $em->persist($arReciboDetalle);
+                    }
+                    $em->flush();
+                }
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        $arCuentasCobrar = new CarCuentaCobrar();
+        $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->cuentasCobrar($arRecibo->getCodigoClienteFk());
+        $arCuentasCobrar = $paginator->paginate($arCuentasCobrar, $request->query->get('page', 1), 50);
+        return $this->render('BrasaCarteraBundle:Movimientos/Recibo:detalleNuevo.html.twig', array(
+            'arCuentasCobrar' => $arCuentasCobrar,
+            'arRecibo' => $arRecibo,
+            'form' => $form->createView()));
+    }
 }
 

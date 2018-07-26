@@ -36,7 +36,7 @@ class ClienteType extends AbstractType {
                 },
                 'choice_label' => 'nombre',
             ))
-            ->add('nit', IntegerType::class, array('required' => true))
+            ->add('numeroIdentificacion', IntegerType::class, array('required' => true))
             ->add('digitoVerificacion',IntegerType::class, array('required' => false))
             ->add('nombreCorto',TextType::class, array('required' => true))
             ->add('direccion',TextType::class, array('required' => false))

@@ -5,6 +5,7 @@ namespace App\Repository\Transporte;
 use App\Entity\Transporte\TteRecogida;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteRecogidaRepository extends ServiceEntityRepository
 {
@@ -30,12 +31,10 @@ class TteRecogidaRepository extends ServiceEntityRepository
             r.anunciante, 
             r.direccion, 
             r.telefono,
-            r.codigoOperacionFk,
-            cond.conductorRel.nombreCorto AS conductorNombreCorto
+            r.codigoOperacionFk
         FROM App\Entity\Transporte\TteRecogida r 
         LEFT JOIN r.clienteRel c
-        LEFT JOIN r.ciudadRel co
-        LEFT JOIN  r.conductorRel cond'
+        LEFT JOIN r.ciudadRel co'
         );
         return $query->execute();
 
@@ -245,17 +244,16 @@ class TteRecogidaRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class, 'r');
         $queryBuilder
-            ->select('r.codigoRecodigaPk')
+            ->select('r.codigoRecogidaPk')
             ->addSelect('r.fecha')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
-            ->addSelect('c.unidades')
-            ->addSelect('c.pesoReal')
+            ->addSelect('r.unidades')
+            ->addSelect('r.pesoReal')
             ->leftJoin('r.clienteRel', 'c')
-            ->leftJoin('r.conductorRel', 'co')
             ->where('r.codigoDespachoRecogidaFk = ' . $codigoDespachoRecogida);
         $queryBuilder->orderBy('r.fecha', 'ASC');
 
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult() ;
     }
 
 }

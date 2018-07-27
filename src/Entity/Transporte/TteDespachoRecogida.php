@@ -18,6 +18,11 @@ class TteDespachoRecogida
     private $codigoDespachoRecogidaPk;
 
     /**
+     * @ORM\Column(name="codigo_despacho_recogida_tipo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoDespachoRecogidaTipoFk;
+
+    /**
      * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoOperacionFk;
@@ -31,6 +36,11 @@ class TteDespachoRecogida
      * @ORM\Column(name="fecha", type="datetime", nullable=true)
      */
     private $fecha;
+
+    /**
+     * @ORM\Column(name="numero", type="float", nullable=true)
+     */
+    private $numero;
 
     /**
      * @ORM\Column(name="codigo_vehiculo_fk", type="string", length=20, nullable=true)
@@ -151,6 +161,17 @@ class TteDespachoRecogida
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
+
+    /**
+     * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
+     */
+    private $usuario;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDespachoRecogidaTipo", inversedBy="despachosRecogidasDespachoRecogidaTipoRel")
+     * @ORM\JoinColumn(name="codigo_despacho_recogida_tipo_fk", referencedColumnName="codigo_despacho_recogida_tipo_pk")
+     */
+    private $despachoRecogidaTipoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteOperacion", inversedBy="despachosRecogidasOperacionRel")
@@ -728,6 +749,70 @@ class TteDespachoRecogida
     public function setConductorRel($conductorRel): void
     {
         $this->conductorRel = $conductorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoRecogidaTipoFk()
+    {
+        return $this->codigoDespachoRecogidaTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoRecogidaTipoFk
+     */
+    public function setCodigoDespachoRecogidaTipoFk($codigoDespachoRecogidaTipoFk): void
+    {
+        $this->codigoDespachoRecogidaTipoFk = $codigoDespachoRecogidaTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoRecogidaTipoRel()
+    {
+        return $this->despachoRecogidaTipoRel;
+    }
+
+    /**
+     * @param mixed $despachoRecogidaTipoRel
+     */
+    public function setDespachoRecogidaTipoRel($despachoRecogidaTipoRel): void
+    {
+        $this->despachoRecogidaTipoRel = $despachoRecogidaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero($numero): void
+    {
+        $this->numero = $numero;
     }
 
 

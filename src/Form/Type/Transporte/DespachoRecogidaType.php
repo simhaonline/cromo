@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\Transporte;
 
+use App\Entity\Transporte\TteDespachoRecogidaTipo;
 use App\Entity\Transporte\TteRutaRecogida;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,7 +23,14 @@ class DespachoRecogidaType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-
+            ->add('despachoRecogidaTipoRel', EntityType::class, array(
+                'class' => TteDespachoRecogidaTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('drt')
+                        ->orderBy('drt.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+            ))
             ->add('rutaRecogidaRel', EntityType::class, array(
                 'class' => TteRutaRecogida::class,
                 'query_builder' => function (EntityRepository $er) {

@@ -72,7 +72,7 @@ class DespachoRecogida extends \FPDF {
         $this->Cell(30, 6, 'NUMERO', 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(66, 6, $arDespacho->getCodigoDespachoRecogidaPk() , 1, 0, 'L', 1);
+        $this->Cell(66, 6, $arDespacho->getNumero() , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 6, "IND COM::", 1, 0, 'L', 1);
@@ -110,14 +110,14 @@ class DespachoRecogida extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('GUIA', 'DOC', 'FECHA', 'CLIENTE', 'DESTINATARIO', 'DESTINO', 'UND', 'PESO');
+        $header = array('GUIA', 'FECHA','CLIENTE', 'UND', 'PESO');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(16, 20, 15, 42, 45, 33, 10, 10);
+        $w = array(16, 25, 100, 10, 10);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -136,14 +136,11 @@ class DespachoRecogida extends \FPDF {
         $pdf->SetFont('Arial', '', 7);
         if($arRecogidas) {
             foreach ($arRecogidas as $arRecogida) {
-                $pdf->Cell(16, 4, $arRecogidas['codigoRecogidaPk'], 1, 0, 'L');
-                $pdf->Cell(20, 4, "", 1, 0, 'L');
-                $pdf->Cell(15, 4, $arRecogidas['fecha']->format('Y-m-d'), 1, 0, 'L');
-                $pdf->Cell(42, 4, substr($arRecogidas['clienteNombreCorto'],1,26), 1, 0, 'L');
-                $pdf->Cell(45, 4, substr("",0,26), 1, 0, 'L');
-                $pdf->Cell(33, 4, substr("",0,16), 1, 0, 'L');
-                $pdf->Cell(10, 4, number_format($arRecogidas['unidades'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(10, 4, number_format($arRecogidas['pesoReal'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(16, 4, $arRecogida['codigoRecogidaPk'], 1, 0, 'L');
+                $pdf->Cell(25, 4, $arRecogida['fecha']->format('Y-m-d H:i'), 1, 0, 'L');
+                $pdf->Cell(100, 4, substr($arRecogida['clienteNombreCorto'],0,100), 1, 0, 'L');
+                $pdf->Cell(10, 4, number_format($arRecogida['unidades'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(10, 4, number_format($arRecogida['pesoReal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 15);
             }

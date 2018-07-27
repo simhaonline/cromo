@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteDespachoRecogida;
+use App\Entity\Transporte\TteDespachoRecogidaTipo;
 use App\Entity\Transporte\TteRecogida;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -25,6 +26,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'dr')
             ->select('dr.codigoDespachoRecogidaPk')
             ->addSelect('dr.fecha')
+            ->addSelect('dr.numero')
             ->addSelect('dr.codigoOperacionFk')
             ->addSelect('dr.codigoVehiculoFk')
             ->addSelect('dr.codigoRutaRecogidaFk')
@@ -34,13 +36,16 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->addSelect('dr.pesoVolumen')
             ->addSelect('dr.estadoDescargado')
             ->addSelect('dr.vrFletePago')
-            ->where('dr.codigoDespachoRecogidaPk <> 0');
+            ->addSelect('cond.nombreCorto AS conductorNombreCorto')
+            ->where('dr.codigoDespachoRecogidaPk <> 0')
+        ->leftJoin('dr.conductorRel', 'cond');
         if($session->get('filtroTteDespachoVehiculoCodigo') != ''){
             $queryBuilder->andWhere("dr.codigoVehiculoFk = '{$session->get('filtroTteDespachoVehiculoCodigo')}'");
         }
         if($session->get('filtroTteDespachoEstadoAprobado') != ''){
             $queryBuilder->andWhere("dr.estadoAprobado = {$session->get('filtroTteDespachoEstadoAprobado')}");
         }
+        $queryBuilder->orderBy('dr.fecha', 'DESC');
         return $queryBuilder->getQuery();
     }
 
@@ -132,7 +137,15 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function aprobar($arDespachoRecogida){
+        $em = $this->getEntityManager();
         if($arDespachoRecogida->getEstadoAutorizado()){
+            $arDespachoRecogidaTipo = $em->getRepository(TteDespachoRecogidaTipo::class)->find($arDespachoRecogida->getCodigoDespachoRecogidaTipoFk());
+            if ($arDespachoRecogida->getNumero() == 0 || $arDespachoRecogida->getNumero() == NULL) {
+                $arDespachoRecogida->setNumero($arDespachoRecogidaTipo->getConsecutivo());
+                $arDespachoRecogidaTipo->setConsecutivo($arDespachoRecogidaTipo->getConsecutivo() + 1);
+                $em->persist($arDespachoRecogidaTipo);
+            }
+
             $arDespachoRecogida->setEstadoAprobado(0);
             $this->getEntityManager()->persist($arDespachoRecogida);
             $this->getEntityManager()->flush();

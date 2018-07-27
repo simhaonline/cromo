@@ -23,11 +23,12 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>NUMERO</th>
+            <th>FECHA</th>
             <th>OP</th>
             <th>VEH</th>
             <th>CONDUCTOR</th>
             <th>RUTA</th>
-            <th>FECHA</th>
             <th>CAN</th>
             <th>UND</th>
             <th>PES</th>
@@ -43,11 +44,12 @@
         {% for arDespachoRecogida in arDespachosRecogida %}
             <tr>
                 <td>{{ arDespachoRecogida.codigoDespachoRecogidaPk }}</td>
+                <td>{{ arDespachoRecogida.numero }}</td>
+                <td>{{ arDespachoRecogida.fecha | date('Y-m-d') }}</td>
                 <td>{{ arDespachoRecogida.codigoOperacionFk }}</td>
                 <td>{{ arDespachoRecogida.codigoVehiculoFk }}</td>
                 <td>{{ arDespachoRecogida.conductorNombreCorto }}</td>
                 <td>{{ arDespachoRecogida.codigoRutaRecogidaFk }}</td>
-                <td>{{ arDespachoRecogida.fecha | date('Y-m-d') }}</td>
                 <td style="text-align: right">{{ arDespachoRecogida.cantidad }}</td>
                 <td style="text-align: right">{{ arDespachoRecogida.unidades }}</td>
                 <td style="text-align: right">{{ arDespachoRecogida.pesoReal }}</td>

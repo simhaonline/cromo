@@ -175,6 +175,7 @@ class TteNovedadRepository extends ServiceEntityRepository
             ->addSelect('nt.nombre AS nombreTipo')
             ->addSelect('n.descripcion')
             ->addSelect('n.fechaRegistro')
+            ->addSelect('g.fechaIngreso')
             ->addSelect('n.estadoAtendido')
             ->addSelect('n.estadoSolucion')
             ->addSelect('g.empaqueReferencia')

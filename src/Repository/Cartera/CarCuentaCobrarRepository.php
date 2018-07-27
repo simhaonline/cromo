@@ -15,6 +15,27 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         parent::__construct($registry, CarCuentaCobrar::class);
     }
 
+    public function lista(): array
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc');
+        $qb->select('cc.codigoCuentaCobrarPk')
+            ->leftJoin('cc.clienteRel','cl')
+            ->addSelect('cc.numeroDocumento')
+            ->addSelect('cl.nombreCorto')
+            ->addSelect('cl.numeroIdentificacion')
+            ->where('cc.codigoCuentaCobrarPk <> 0')
+            ->orderBy('cc.codigoCuentaCobrarPk', 'DESC');
+        if ($session->get('filtroNumero')) {
+            $qb->andWhere("cc.numeroDocumento = '{$session->get('filtroNumero')}'");
+        }
+        $query = $qb->getDQL();
+        $query = $em->createQuery($query);
+
+        return $query->execute();
+    }
+
     public function cuentasCobrar()
     {
         $session = new Session();

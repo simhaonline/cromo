@@ -54,6 +54,7 @@
             <th>TIPO</th>
             <th>DESCRIPCION</th>
             <th>REGISTRO</th>
+            <th>GUIA INGRESO</th>
             <th>ATE</th>
             <th>SOL</th>
         </tr>
@@ -72,6 +73,7 @@
                 <td>{{ arNovedad.nombreTipo }}</td>
                 <td>{{ arNovedad.descripcion }}</td>
                 <td>{{ arNovedad.fechaRegistro |date('Y-m-d H:i') }}</td>
+                <td>{{ arNovedad.fechaIngreso |date('Y-m-d H:i') }}</td>
                 <td>{% if arNovedad.estadoAtendido == 1 %} SI {% else %} NO {% endif %}</td>
                 <td>{% if arNovedad.estadoSolucion == 1 %} SI {% else %} NO {% endif %}</td>
             </tr>

@@ -75,7 +75,6 @@
                                 <a href="#">Recibo <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li><a href="{{ path('cartera_movimiento_recibo_recibo_lista') }}">Recibo</a></li>
-                                    {#<li><a href="{{ path('lista',{'entidad':'CarCuentaCobrarTipo'}) }}">Tipo cuenta cobro</a>#}
                                     {#</li>#}
                                     {#<li><a href="{{ path('lista',{'entidad':'CarNotaCreditoConcepto'}) }}">Concepto nota#}
                                     {#credito</a></li>#}
@@ -83,6 +82,12 @@
                                     {#debito</a></li>#}
                                 </ul>
                                 <!-- /.nav-third-level -->
+                            </li>
+                            <li>
+                                <a href="#">Cuenta cobrar <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li><a href="{{ path('cartera_movimiento_cuenta_cobrar_lista') }}">Cuenta cobrar</a>
+                                </ul>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->

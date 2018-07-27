@@ -14,3 +14,4 @@
 /.idea/*
 composer.lock
 symfony.lock
+/config/packages/sensio_framework_extra.yaml

@@ -105,6 +105,12 @@ class CarReciboDetalle
     protected $cuentaCobrarRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrarTipo", inversedBy="recibosDetallesCuentaCobrarTipoRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_cobrar_tipo_fk", referencedColumnName="codigo_cuenta_cobrar_tipo_pk")
+     */
+    protected $cuentaCobrarTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoReciboDetallePk()

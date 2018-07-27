@@ -5,13 +5,23 @@
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Cliente:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtCliente, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-1 control-label">Identificacion:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtNit, { 'attr': {'class': 'form-control'} }) }}
+                <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                <div class="col-sm-11">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtCodigoCliente) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                {{ form_widget(form.txtNombreCorto) }}
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

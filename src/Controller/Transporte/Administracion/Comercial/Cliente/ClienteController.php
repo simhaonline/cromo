@@ -31,14 +31,19 @@ class ClienteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtNit', NumberType::class, ['label' => 'Nit: ', 'required' => false, 'data' => $session->get('filtroNitCliente')])
-            ->add('txtCliente', TextType::class, ['label' => 'Cliente: ', 'required' => false, 'data' => $session->get('filtroNombreCliente')])
+            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroNitCliente', $form->get('txtNit')->getData());
-            $session->set('filtroNombreCliente', $form->get('txtCliente')->getData());
+            if ($form->get('txtCodigoCliente')->getData() != '') {
+                $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+            } else {
+                $session->set('filtroTteCodigoCliente', null);
+                $session->set('filtroTteNombreCliente', null);
+            }
         }
         $arCliente = $paginator->paginate($em->getRepository(TteCliente::class)->lista(), $request->query->getInt('page', 1),20);
         return $this->render('transporte/administracion/comercial/cliente/lista.html.twig',

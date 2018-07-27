@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
@@ -29,6 +30,8 @@ class ReporteNovedadController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => $session->get('filtroFechaDesde')])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $session->get('filtroFechaHasta')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -36,8 +39,10 @@ class ReporteNovedadController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroFechaDesde', $form->get('fechaDesde')->getData());
+                $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData());
                 $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData());
+                $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
             General::get()->setExportar($em->createQuery($em->getRepository(TteNovedad::class)->reporteNovedad())->execute(), "Novedades");

@@ -180,11 +180,14 @@ class TteNovedadRepository extends ServiceEntityRepository
             ->addSelect('g.empaqueReferencia')
             ->where('n.codigoNovedadPk IS NOT NULL')
             ->orderBy('n.codigoNovedadPk', 'DESC');
-        if ($session != "") {
+        if ($session->get('filtroFechaDesde') != null) {
             $queryBuilder->andWhere("n.fechaRegistro >= '{$session->get('filtroFechaDesde')->format('Y-m-d')} 00:00:00'");
         }
-        if ($session != "") {
+        if ($session->get('filtroFechaHasta') != null) {
             $queryBuilder->andWhere("n.fechaRegistro <= '{$session->get('filtroFechaHasta')->format('Y-m-d')} 23:59:59'");
+        }
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("g.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }
 
         return $queryBuilder;

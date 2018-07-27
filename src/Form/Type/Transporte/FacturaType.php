@@ -24,10 +24,11 @@ class FacturaType extends AbstractType {
             ->add('facturaTipoRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\Transporte\TteFacturaTipo',
-                'query_builder' => function (EntityRepository $er) {
+                'query_builder' => function (EntityRepository $er) use ($options) {
                     return $er->createQueryBuilder('ft')
                         ->orderBy('ft.nombre', 'ASC')
-                        ->where('ft.guiaFactura = 0');
+                        ->where('ft.guiaFactura = 0')
+                        ->andWhere("ft.codigoFacturaClaseFk = '". $options['data']->getCodigoFacturaClaseFk() ."'");
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Fecha tipo:',

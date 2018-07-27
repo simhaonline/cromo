@@ -190,7 +190,7 @@
         </div>
     </div>
     {{ form_end(form) }}
-    {% if arFactura.estadoAutorizado == 0 %}
+    {% if arFactura.estadoAutorizado == 0 and arFactura.codigoFacturaClaseFk == 'FA'%}
         <br /><br />
         <input type="text" id="txtGuiaCodigo"><button id="btnAdicionar">Adicionar guia</button>
         <br/><br/>

@@ -178,15 +178,17 @@ class FacturaController extends Controller
     }
 
     /**
-     * @Route("/transporte/movimiento/comercial/factura/nuevo/{id}", name="transporte_movimiento_comercial_factura_nuevo")
+     * @Route("/transporte/movimiento/comercial/factura/nuevo/{id}/{clase}", name="transporte_movimiento_comercial_factura_nuevo")
      */
-    public function nuevo(Request $request, $id)
+    public function nuevo(Request $request, $id, $clase)
     {
         $em = $this->getDoctrine()->getManager();
         $objFunciones = new FuncionesController();
         $arFactura = new TteFactura();
         if($id != 0) {
             $arFactura = $em->getRepository(TteFactura::class)->find($id);
+        } else {
+            $arFactura->setCodigoFacturaClaseFk($clase);
         }
         $form = $this->createForm(FacturaType::class, $arFactura);
         $form->handleRequest($request);
@@ -213,6 +215,47 @@ class FacturaController extends Controller
             'form' => $form->createView()]);
     }
 
+    /**
+     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/nc/{codigoFactura}", name="transporte_movimiento_comercial_factura_detalle_adicionar_nc_guia")
+     */
+    public function detalleAdicionarGuiaNc(Request $request, $codigoFactura)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if (count($arrSeleccionados) > 0) {
+                    foreach ($arrSeleccionados AS $codigo) {
+                        $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
+                        $arGuia->setFacturaRel($arFactura);
+                        $arGuia->setEstadoFacturaGenerada(1);
+                        $em->persist($arGuia);
+
+                        $arFacturaDetalle = new TteFacturaDetalle();
+                        $arFacturaDetalle->setFacturaRel($arFactura);
+                        $arFacturaDetalle->setGuiaRel($arGuia);
+                        $arFacturaDetalle->setVrDeclara($arGuia->getVrDeclara());
+                        $arFacturaDetalle->setVrFlete($arGuia->getVrFlete());
+                        $arFacturaDetalle->setVrManejo($arGuia->getVrManejo());
+                        $arFacturaDetalle->setUnidades($arGuia->getUnidades());
+                        $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
+                        $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                        $em->persist($arFacturaDetalle);
+                    }
+                    $em->flush();
+                    $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
+                }
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->facturaPendiente($arFactura->getCodigoClienteFk());
+        return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+    }
 
 
 }

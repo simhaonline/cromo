@@ -37,6 +37,11 @@ class TteFacturaTipo
     private $guiaFactura = false;
 
     /**
+     * @ORM\Column(name="codigo_factura_clase_fk", type="string", length=2, nullable=true)
+     */
+    private $codigoFacturaClaseFk;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_cobrar_tipo_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaCobrarTipoFk;
@@ -177,6 +182,22 @@ class TteFacturaTipo
     public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
     {
         $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaClaseFk()
+    {
+        return $this->codigoFacturaClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaClaseFk
+     */
+    public function setCodigoFacturaClaseFk($codigoFacturaClaseFk): void
+    {
+        $this->codigoFacturaClaseFk = $codigoFacturaClaseFk;
     }
 
 

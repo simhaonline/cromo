@@ -53,6 +53,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>TIPO</th>
             <th>NUMERO</th>
             <th>FECHA</th>
             <th>CLIENTE</th>
@@ -73,6 +74,7 @@
         {% for arFactura in arFacturas %}
             <tr>
                 <td>{{ arFactura.codigoFacturaPk }}</td>
+                <td>{{ arFactura.facturaTipo }}</td>
                 <td>{{ arFactura.numero }}</td>
                 <td>{{ arFactura.fecha | date('Y-m-d') }}</td>
                 <td>{{ arFactura.clienteNombre }}</td>
@@ -87,7 +89,7 @@
 
                 <td style="text-align: center;">
                     {% if arFactura.estadoAutorizado == 0 and arFactura.guias <= 0 %}
-                    <a href="{{ path('transporte_movimiento_comercial_factura_nuevo',{'id' : arFactura.codigoFacturaPk}) }}">
+                    <a href="{{ path('transporte_movimiento_comercial_factura_nuevo',{'id' : arFactura.codigoFacturaPk, 'clase' : arFactura.codigoFacturaClaseFk }) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
                     {% endif %}
                 </td>
@@ -112,7 +114,8 @@
             {{ form_widget(form.btnEliminar) }}
         </div>
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_nuevo', {'id': 0}) }}">Nuevo</a>
+            <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_nuevo', {'id': 0, 'clase': 'NC'}) }}">Nueva nota credito</a>
+            <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_nuevo', {'id': 0, 'clase': 'FA'}) }}">Nueva factura</a>
         </div>
     </div>
     {{ form_end(form) }}

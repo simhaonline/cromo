@@ -23,6 +23,11 @@ class TteFactura
     private $codigoFacturaTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_factura_clase_fk", type="string", length=2, nullable=true)
+     */
+    private $codigoFacturaClaseFk;
+
+    /**
      * @ORM\Column(name="numero", type="float")
      */
     private $numero = 0;
@@ -169,6 +174,22 @@ class TteFactura
     /**
      * @return mixed
      */
+    public function getCodigoFacturaClaseFk()
+    {
+        return $this->codigoFacturaClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaClaseFk
+     */
+    public function setCodigoFacturaClaseFk($codigoFacturaClaseFk): void
+    {
+        $this->codigoFacturaClaseFk = $codigoFacturaClaseFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getNumero()
     {
         return $this->numero;
@@ -196,6 +217,22 @@ class TteFactura
     public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaVence()
+    {
+        return $this->fechaVence;
+    }
+
+    /**
+     * @param mixed $fechaVence
+     */
+    public function setFechaVence($fechaVence): void
+    {
+        $this->fechaVence = $fechaVence;
     }
 
     /**
@@ -265,6 +302,22 @@ class TteFactura
     /**
      * @return mixed
      */
+    public function getVrOtros()
+    {
+        return $this->vrOtros;
+    }
+
+    /**
+     * @param mixed $vrOtros
+     */
+    public function setVrOtros($vrOtros): void
+    {
+        $this->vrOtros = $vrOtros;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrSubtotal()
     {
         return $this->vrSubtotal;
@@ -313,113 +366,17 @@ class TteFactura
     /**
      * @return mixed
      */
-    public function getComentario()
+    public function getPlazoPago()
     {
-        return $this->comentario;
+        return $this->plazoPago;
     }
 
     /**
-     * @param mixed $comentario
+     * @param mixed $plazoPago
      */
-    public function setComentario($comentario): void
+    public function setPlazoPago($plazoPago): void
     {
-        $this->comentario = $comentario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturaTipoRel()
-    {
-        return $this->facturaTipoRel;
-    }
-
-    /**
-     * @param mixed $facturaTipoRel
-     */
-    public function setFacturaTipoRel($facturaTipoRel): void
-    {
-        $this->facturaTipoRel = $facturaTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClienteRel()
-    {
-        return $this->clienteRel;
-    }
-
-    /**
-     * @param mixed $clienteRel
-     */
-    public function setClienteRel($clienteRel): void
-    {
-        $this->clienteRel = $clienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiasFacturaRel()
-    {
-        return $this->guiasFacturaRel;
-    }
-
-    /**
-     * @param mixed $guiasFacturaRel
-     */
-    public function setGuiasFacturaRel($guiasFacturaRel): void
-    {
-        $this->guiasFacturaRel = $guiasFacturaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturasPlanillasFacturaRel()
-    {
-        return $this->facturasPlanillasFacturaRel;
-    }
-
-    /**
-     * @param mixed $facturasPlanillasFacturaRel
-     */
-    public function setFacturasPlanillasFacturaRel($facturasPlanillasFacturaRel): void
-    {
-        $this->facturasPlanillasFacturaRel = $facturasPlanillasFacturaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturasOtrosFacturaRel()
-    {
-        return $this->facturasOtrosFacturaRel;
-    }
-
-    /**
-     * @param mixed $facturasOtrosFacturaRel
-     */
-    public function setFacturasOtrosFacturaRel($facturasOtrosFacturaRel): void
-    {
-        $this->facturasOtrosFacturaRel = $facturasOtrosFacturaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaVence()
-    {
-        return $this->fechaVence;
-    }
-
-    /**
-     * @param mixed $fechaVence
-     */
-    public function setFechaVence($fechaVence): void
-    {
-        $this->fechaVence = $fechaVence;
+        $this->plazoPago = $plazoPago;
     }
 
     /**
@@ -473,33 +430,49 @@ class TteFactura
     /**
      * @return mixed
      */
-    public function getPlazoPago()
+    public function getComentario()
     {
-        return $this->plazoPago;
+        return $this->comentario;
     }
 
     /**
-     * @param mixed $plazoPago
+     * @param mixed $comentario
      */
-    public function setPlazoPago($plazoPago): void
+    public function setComentario($comentario): void
     {
-        $this->plazoPago = $plazoPago;
+        $this->comentario = $comentario;
     }
 
     /**
      * @return mixed
      */
-    public function getVrOtros()
+    public function getFacturaTipoRel()
     {
-        return $this->vrOtros;
+        return $this->facturaTipoRel;
     }
 
     /**
-     * @param mixed $vrOtros
+     * @param mixed $facturaTipoRel
      */
-    public function setVrOtros($vrOtros): void
+    public function setFacturaTipoRel($facturaTipoRel): void
     {
-        $this->vrOtros = $vrOtros;
+        $this->facturaTipoRel = $facturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
     }
 
     /**
@@ -516,6 +489,54 @@ class TteFactura
     public function setFacturasDetallesDespachoRel($facturasDetallesDespachoRel): void
     {
         $this->facturasDetallesDespachoRel = $facturasDetallesDespachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasFacturaRel()
+    {
+        return $this->guiasFacturaRel;
+    }
+
+    /**
+     * @param mixed $guiasFacturaRel
+     */
+    public function setGuiasFacturaRel($guiasFacturaRel): void
+    {
+        $this->guiasFacturaRel = $guiasFacturaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasPlanillasFacturaRel()
+    {
+        return $this->facturasPlanillasFacturaRel;
+    }
+
+    /**
+     * @param mixed $facturasPlanillasFacturaRel
+     */
+    public function setFacturasPlanillasFacturaRel($facturasPlanillasFacturaRel): void
+    {
+        $this->facturasPlanillasFacturaRel = $facturasPlanillasFacturaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasOtrosFacturaRel()
+    {
+        return $this->facturasOtrosFacturaRel;
+    }
+
+    /**
+     * @param mixed $facturasOtrosFacturaRel
+     */
+    public function setFacturasOtrosFacturaRel($facturasOtrosFacturaRel): void
+    {
+        $this->facturasOtrosFacturaRel = $facturasOtrosFacturaRel;
     }
 
 

@@ -53,8 +53,11 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.estadoAnulado')
             ->addSelect('f.estadoAprobado')
             ->addSelect('f.estadoAutorizado')
+            ->addSelect('f.codigoFacturaClaseFk')
             ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('ft.nombre AS facturaTipo')
             ->leftJoin('f.clienteRel', 'c')
+            ->leftJoin('f.facturaTipoRel', 'ft')
             ->where('f.codigoFacturaPk <> 0');
         if($session->get('filtroTteFacturaNumero') != ''){
             $queryBuilder->andWhere("f.numero = {$session->get('filtroTteFacturaNumero')}");

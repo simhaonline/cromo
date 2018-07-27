@@ -108,6 +108,11 @@ class CarCuentaCobrar
     private $vrRetencionIva = 0;
 
     /**
+     * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoAnulado = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -495,6 +500,22 @@ class CarCuentaCobrar
     public function setRecibosDetallesCuentaCobrarRel($recibosDetallesCuentaCobrarRel): void
     {
         $this->recibosDetallesCuentaCobrarRel = $recibosDetallesCuentaCobrarRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
     }
 
 

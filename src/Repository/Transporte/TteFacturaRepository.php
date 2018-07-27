@@ -215,6 +215,8 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
                 $arCuentaCobrar->setFecha($arFactura->getFecha());
                 $arCuentaCobrar->setFechaVence($arFactura->getFechaVence());
+                $arCuentaCobrar->setModulo("TTE");
+                $arCuentaCobrar->setCodigoDocumento($arFactura->getCodigoFacturaPk());
                 $arCuentaCobrar->setNumeroDocumento($arFactura->getNumero());
                 $arCuentaCobrar->setVrSubtotal($arFactura->getVrSubtotal());
                 $arCuentaCobrar->setVrTotal($arFactura->getVrTotal());
@@ -244,9 +246,23 @@ class TteFacturaRepository extends ServiceEntityRepository
                 if($arFactura->getEstadoAprobado() == 1) {
                     if($arFactura->getEstadoAnulado() == 0) {
                         if($arFactura->getCodigoFacturaClaseFk() == 'FA') {
-                            $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 0, g.estadoFacturaGenerada = 0, g.fechaFactura=NULL 
-                      WHERE g.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
-                            $query->execute();
+                            $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->findOneBy(array('modulo' => 'TTE', 'codigoDocumento' => $arFactura->getCodigoFacturaPk()));
+                            if($arCuentaCobrar) {
+                                $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.codigoFacturaFk = null, g.estadoFacturado = 0, g.estadoFacturaGenerada = 0, g.fechaFactura=NULL 
+                                WHERE g.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
+                                $query->execute();
+                                $arCuentaCobrarAct = $em->getRepository(CarCuentaCobrar::class)->find($arCuentaCobrar->getCodigoCuentaCobrarPk());
+                                $arCuentaCobrarAct->setVrSubtotal(0);
+                                $arCuentaCobrarAct->setVrTotal(0);
+                                $arCuentaCobrarAct->setVrIva(0);
+                                $arCuentaCobrarAct->setVrRetencionFuente(0);
+                                $arCuentaCobrarAct->setVrRetencionIva(0);
+                                $arCuentaCobrarAct->setVrSaldo(0);
+                                $arCuentaCobrarAct->setVrSaldoOperado(0);
+                                $arCuentaCobrarAct->setEstadoAnulado(1);
+                                $em->persist($arCuentaCobrarAct);
+                                $em->flush();
+                            }
                         }
                     } else {
                         Mensajes::error("La factura no puede estar previamente anulada");

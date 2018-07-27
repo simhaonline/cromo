@@ -106,7 +106,7 @@ class FacturaController extends Controller
                 $em->getRepository(TteFactura::class)->Aprobar($arFactura);
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }
-            if ($form->get('btnAprobar')->isClicked()) {
+            if ($form->get('btnAnular')->isClicked()) {
                 $em->getRepository(TteFactura::class)->Anular($arFactura);
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }

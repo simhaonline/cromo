@@ -556,6 +556,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.vrFlete,
         g.vrFlete,
         g.vrManejo,
+        g.nombreDestinatario,
         r.nombre AS nombreRuta
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c

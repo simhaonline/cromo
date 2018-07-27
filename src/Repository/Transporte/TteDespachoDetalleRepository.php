@@ -36,7 +36,8 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         LEFT JOIN dd.guiaRel g
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd
-        WHERE dd.codigoDespachoFk = :codigoDespacho'
+        WHERE dd.codigoDespachoFk = :codigoDespacho
+        ORDER BY cd.nombre ASC '
         )->setParameter('codigoDespacho', $codigoDespacho);
 
         return $query->execute();

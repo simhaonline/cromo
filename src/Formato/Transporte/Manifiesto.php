@@ -110,7 +110,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(205, $yt, "TELEFONO");
         $pdf->Text(245, $yt, "CIUDAD");
         $pdf->SetFont('Arial', '', 8);
-        $pdf->Text(33, $yt+5, $arDespacho['conductorNombre']);
+        $pdf->Text(18, $yt+5, $arDespacho['conductorNombre']);
         $pdf->Text(90, $yt+5, $arDespacho['conductorIdentificacion']);
         $pdf->Text(155, $yt+5, $arDespacho['conductorDireccion']);
         $pdf->Text(205, $yt+5, $arDespacho['conductorTelefono']);
@@ -160,8 +160,8 @@ class Manifiesto extends \FPDF {
         $pdf->Text(198, $yt, "TELEFONO");
         $pdf->Text(216, $yt, "N LICENCIA");
         $pdf->Text(247, $yt, "CIUDAD");
-        $pdf->SetFont('Arial', '', 8);
-        $pdf->Text(25, $yt+5, $arDespacho['conductorNombre']);
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Text(16, $yt+5, $arDespacho['conductorNombre']);
         $pdf->Text(70, $yt+5, $arDespacho['conductorIdentificacion']);
         $pdf->Text(147, $yt+5, $arDespacho['conductorDireccion']);
         $pdf->Text(198, $yt+5, $arDespacho['conductorTelefono']);
@@ -378,13 +378,13 @@ class Manifiesto extends \FPDF {
                     $indice = 0;
 
                 }
-                $pdf->Cell(25, 4, $arGuia['numero'], 1, 0, 'L');
+                $pdf->Cell(25, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
                 $pdf->Cell(25, 4, "KILO", 1, 0, 'L');
-                $pdf->Cell(25, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'L');
+                $pdf->Cell(25, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'L');
                 $pdf->Cell(25, 4, 'VARIOS', 1, 0, 'L');
                 $pdf->Cell(30, 4, 'VARIOS', 1, 0, 'L');
                 $pdf->Cell(65, 4, substr(utf8_decode($arGuia['clienteNombreCorto']),0,20), 1, 0, 'L');
-                $pdf->Cell(45, 4, $arGuia['nombreDestinatario'], 1, 0, 'L');
+                $pdf->Cell(45, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,28), 1, 0, 'L');
                 $pdf->Cell(20, 4, "054125", 1, 0, 'R');
                 $pdf->Ln();
                 $pdf->SetX(15);

@@ -42,9 +42,9 @@
             <th>GUIA</th>
             <th>OI</th>
             <th>OC</th>
-            <th>NUMERO</th>
             <th>FECHA</th>
             <th>CLIENTE</th>
+            <th>DESTINATARIO</th>
             <th>DESTINO</th>
             <th>DECLARA</th>
             <th>FLETE</th>
@@ -65,7 +65,7 @@
             {% if codigoRuta != arGuia.codigoRutaFk %}
                 {% if contador > 0 %}
                     <tr>
-                        <td id="suptipo" colspan="8"></td>
+                        <td id="suptipo" colspan="9"></td>
                         <td class="numero">{{ totalDeclara | number_format(0, '.', ',') }}</td>
                         <td class="numero">{{ totalFlete | number_format(0, '.', ',') }}</td>
                         <td class="numero">{{ totalUnidades | number_format(0, '.', ',') }}</td>
@@ -91,9 +91,9 @@
                 <td>{{ arGuia.codigoGuiaPk }}</td>
                 <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
-                <td>{{ arGuia.numero }}</td>
                 <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
                 <td>{{ arGuia.clienteNombreCorto }}</td>
+                <td>{{ arGuia.nombreDestinatario }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
                 <td class="numero">{{ arGuia.vrDeclara | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arGuia.vrFlete | number_format(0, '.', ',') }}</td>

@@ -71,6 +71,7 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>GUIA</th>
                             <th>OI</th>
                             <th>OC</th>
                             <th>NUMERO</th>
@@ -86,6 +87,7 @@
                         <tbody>
                         {% for arFacturaDetalle in arFacturaDetalles %}
                             <tr>
+                                <td>{{ arFacturaDetalle.codigoFacturaDetallePk }}</td>
                                 <td>{{ arFacturaDetalle.codigoGuiaFk }}</td>
                                 <td>{{ arFacturaDetalle.codigoOperacionIngresoFk }}</td>
                                 <td>{{ arFacturaDetalle.codigoOperacionCargoFk }}</td>
@@ -105,9 +107,12 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     {% if arFactura.estadoAutorizado == 0 %}
-                    <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo</a>
-                    </div>
+                        {% if arFactura.codigoFacturaClaseFk == 'FA' %}
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo</a>
+                        {% endif %}
+                        {% if arFactura.codigoFacturaClaseFk == 'NC' %}
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_nc_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo</a>
+                        {% endif %}
                     {% endif %}
                     <div class="btn-group">
                         {{ form_widget(form.btnActualizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
@@ -177,7 +182,7 @@
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
                         {% if arFactura.estadoAutorizado == 0 %}
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo</a>
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
 

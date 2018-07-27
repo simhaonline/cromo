@@ -103,6 +103,11 @@ class TteFactura
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="estado_contabilizado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoContabilizado = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -537,6 +542,22 @@ class TteFactura
     public function setFacturasOtrosFacturaRel($facturasOtrosFacturaRel): void
     {
         $this->facturasOtrosFacturaRel = $facturasOtrosFacturaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
     }
 
 

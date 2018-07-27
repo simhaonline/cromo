@@ -4,6 +4,7 @@ namespace App\Controller\Transporte\Movimiento\Transporte;
 
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteDespachoDetalle;
+use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteNovedad;
@@ -146,10 +147,12 @@ class GuiaController extends Controller
         }
         $arNovedades = $this->getDoctrine()->getRepository(TteNovedad::class)->guia($id);
         $arDespachoDetalles = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->guia($id);
+        $arFacturaDetalles = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->guia($id);
         return $this->render('transporte/movimiento/transporte/guia/detalle.html.twig', [
             'arGuia' => $arGuia,
             'arNovedades' => $arNovedades,
             'arDespachoDetalles' => $arDespachoDetalles,
+            'arFacturaDetalles' => $arFacturaDetalles,
             'form' => $form->createView()]);
     }
 

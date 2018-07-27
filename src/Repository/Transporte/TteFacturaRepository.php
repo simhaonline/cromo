@@ -109,17 +109,19 @@ class TteFacturaRepository extends ServiceEntityRepository
     }
 
 
-    public function retirarDetalle($arrDetalles): bool
+    public function retirarDetalle($arrDetalles, $arFactura): bool
     {
         $em = $this->getEntityManager();
         if ($arrDetalles) {
             if (count($arrDetalles) > 0) {
                 foreach ($arrDetalles AS $codigo) {
                     $arFacturaDetalle = $em->getRepository(TteFacturaDetalle::class)->find($codigo);
-                    $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalle->getCodigoGuiaFk());
-                    $arGuia->setFacturaRel(NULL);
-                    $arGuia->setEstadoFacturaGenerada(0);
-                    $em->persist($arGuia);
+                    if($arFactura->getCodigoFacturaClaseFk() == 'FA') {
+                        $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalle->getCodigoGuiaFk());
+                        $arGuia->setFacturaRel(NULL);
+                        $arGuia->setEstadoFacturaGenerada(0);
+                        $em->persist($arGuia);
+                    }
                     $em->remove($arFacturaDetalle);
                 }
                 $em->flush();
@@ -135,7 +137,7 @@ class TteFacturaRepository extends ServiceEntityRepository
      */
     public function autorizar($arFactura)
     {
-        if (count($this->getEntityManager()->getRepository(TteGuia::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()])) > 0) {
+        if (count($this->getEntityManager()->getRepository(TteFacturaDetalle::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()])) > 0) {
             $arFactura->setEstadoAutorizado(1);
             $this->getEntityManager()->persist($arFactura);
             $this->getEntityManager()->flush();
@@ -169,12 +171,19 @@ class TteFacturaRepository extends ServiceEntityRepository
         if (!$arFactura->getEstadoAprobado()) {
             if ($arFactura->getGuias() > 0) {
                 $fechaActual = new \DateTime('now');
-                $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 1, g.fechaFactura=:fecha 
+                if($arFactura->getCodigoFacturaClaseFk() == 'FA') {
+                    $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 1, g.fechaFactura=:fecha 
                       WHERE g.codigoFacturaFk = :codigoFactura')
-                    ->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk())
-                    ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
-                $query->execute();
-
+                        ->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk())
+                        ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
+                    $query->execute();
+                }
+                if($arFactura->getCodigoFacturaClaseFk() == 'NC') {
+                    $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 0, g.estadoFacturaGenerada = 0 
+                      WHERE g.codigoFacturaFk = :codigoFactura')
+                        ->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
+                    $query->execute();
+                }
                 $arFactura->setEstadoAprobado(1);
                 $fecha = new \DateTime('now');
                 $arFactura->setFecha($fecha);
@@ -226,6 +235,13 @@ class TteFacturaRepository extends ServiceEntityRepository
         return $respuesta;
     }
 
+    public function anular($arFactura): string
+    {
+        $respuesta = "";
+        $em = $this->getEntityManager();
+        return $respuesta;
+    }
+
     /**
      * @param $arrSeleccionados
      * @throws \Doctrine\ORM\ORMException
@@ -258,6 +274,33 @@ class TteFacturaRepository extends ServiceEntityRepository
                 }
             }
         }
+    }
+
+    public function notaCredito($codigoCliente)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
+            ->select('f.codigoFacturaPk')
+            ->addSelect('f.numero')
+            ->addSelect('f.fecha')
+            ->addSelect('f.guias')
+            ->addSelect('f.vrFlete')
+            ->addSelect('f.vrManejo')
+            ->addSelect('f.vrSubtotal')
+            ->addSelect('f.vrTotal')
+            ->addSelect('f.estadoAnulado')
+            ->addSelect('f.estadoAprobado')
+            ->addSelect('f.estadoAutorizado')
+            ->addSelect('f.codigoFacturaClaseFk')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('ft.nombre AS facturaTipo')
+            ->leftJoin('f.clienteRel', 'c')
+            ->leftJoin('f.facturaTipoRel', 'ft')
+            ->where('f.codigoClienteFk = ' . $codigoCliente)
+        ->andWhere('f.estadoAprobado = 1')
+            ->andWhere('f.estadoAnulado = 0');
+        $queryBuilder->orderBy('f.fecha', 'DESC');
+        return $queryBuilder;
     }
 
 }

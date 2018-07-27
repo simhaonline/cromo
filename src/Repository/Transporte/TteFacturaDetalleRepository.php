@@ -41,4 +41,22 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
 
     }
 
+    public function guia($codigoGuia): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT fd.codigoFacturaDetallePk,
+                  fd.codigoFacturaFk,
+                  f.numero,
+                  f.fecha,                  
+                  ft.nombre AS tipoFactura             
+        FROM App\Entity\Transporte\TteFacturaDetalle fd 
+        LEFT JOIN fd.facturaRel f
+        LEFT JOIN f.facturaTipoRel ft
+        WHERE fd.codigoGuiaFk = :codigoGuia ORDER BY f.fecha ASC'
+        )->setParameter('codigoGuia', $codigoGuia);
+
+        return $query->execute();
+    }
+
 }

@@ -82,6 +82,9 @@ class FacturaController extends Controller
             $arrBtnRetirar['disabled'] = true;
             $arrBotonActualizar['disabled'] = true;
         }
+        if($arFactura->getCodigoFacturaClaseFk() == 'NC') {
+            $arrBotonActualizar['disabled'] = true;
+        }
         $form->add('btnRetirarGuia', SubmitType::class, $arrBtnRetirar)
             ->add('btnActualizar', SubmitType::class, $arrBotonActualizar);
         $form->handleRequest($request);
@@ -103,13 +106,17 @@ class FacturaController extends Controller
                 $em->getRepository(TteFactura::class)->Aprobar($arFactura);
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(TteFactura::class)->Anular($arFactura);
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
+            }
             if ($form->get('btnActualizar')->isClicked()) {
                 $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($id);
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarDetalle($arrGuias);
+                $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarDetalle($arrGuias, $arFactura);
                 if($respuesta) {
                     $em->getRepository(TteFactura::class)->liquidar($id);
                     $em->flush();
@@ -221,6 +228,7 @@ class FacturaController extends Controller
     public function detalleAdicionarGuiaNc(Request $request, $codigoFactura)
     {
         $em = $this->getDoctrine()->getManager();
+        $paginator  = $this->get('knp_paginator');
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
@@ -231,21 +239,24 @@ class FacturaController extends Controller
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 if (count($arrSeleccionados) > 0) {
                     foreach ($arrSeleccionados AS $codigo) {
-                        $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
-                        $arGuia->setFacturaRel($arFactura);
-                        $arGuia->setEstadoFacturaGenerada(1);
-                        $em->persist($arGuia);
+                        //$arFacturaReferencia = $em->getRepository(TteFactura::class)->find($codigo);
+                        $arFacturaDetallesReferencia = $em->getRepository(TteFacturaDetalle::class)->findBy(array('codigoFacturaFk' => $codigo));
+                        foreach ($arFacturaDetallesReferencia as $arFacturaDetalleReferencia) {
+                            $arFacturaDetalle = new TteFacturaDetalle();
+                            $arFacturaDetalle->setFacturaRel($arFactura);
+                            $arFacturaDetalle->setGuiaRel($arFacturaDetalleReferencia->getGuiaRel());
+                            $arFacturaDetalle->setVrDeclara($arFacturaDetalleReferencia->getVrDeclara());
+                            $arFacturaDetalle->setVrFlete($arFacturaDetalleReferencia->getVrFlete());
+                            $arFacturaDetalle->setVrManejo($arFacturaDetalleReferencia->getVrManejo());
+                            $arFacturaDetalle->setUnidades($arFacturaDetalleReferencia->getUnidades());
+                            $arFacturaDetalle->setPesoReal($arFacturaDetalleReferencia->getPesoReal());
+                            $arFacturaDetalle->setPesoVolumen($arFacturaDetalleReferencia->getPesoVolumen());
+                            $em->persist($arFacturaDetalle);
 
-                        $arFacturaDetalle = new TteFacturaDetalle();
-                        $arFacturaDetalle->setFacturaRel($arFactura);
-                        $arFacturaDetalle->setGuiaRel($arGuia);
-                        $arFacturaDetalle->setVrDeclara($arGuia->getVrDeclara());
-                        $arFacturaDetalle->setVrFlete($arGuia->getVrFlete());
-                        $arFacturaDetalle->setVrManejo($arGuia->getVrManejo());
-                        $arFacturaDetalle->setUnidades($arGuia->getUnidades());
-                        $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
-                        $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                        $em->persist($arFacturaDetalle);
+                            $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalleReferencia->getCodigoGuiaFk());
+                            $arGuia->setFacturaRel($arFactura);
+                            $em->persist($arGuia);
+                        }
                     }
                     $em->flush();
                     $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
@@ -253,8 +264,10 @@ class FacturaController extends Controller
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->facturaPendiente($arFactura->getCodigoClienteFk());
-        return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->notaCredito($arFactura->getCodigoClienteFk()), $request->query->getInt('page', 1), 30);
+        return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarFactura.html.twig', [
+            'arFacturas' => $arFacturas,
+            'form' => $form->createView()]);
     }
 
 

@@ -156,4 +156,38 @@ class TteNovedadRepository extends ServiceEntityRepository
         return true;
     }
 
+    public function reporteNovedad(){
+
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteNovedad::class, 'n')
+            ->select('n.codigoNovedadPk')
+            ->join('n.novedadTipoRel', 'nt')
+            ->join('n.guiaRel', 'g')
+            ->join('g.clienteRel', 'c')
+            ->join('g.ciudadDestinoRel', 'cd')
+            ->addSelect('g.codigoGuiaPk AS guia')
+            ->addSelect('c.nombreCorto AS cliente')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.remitente')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('nt.nombre AS nombreTipo')
+            ->addSelect('n.descripcion')
+            ->addSelect('n.fechaRegistro')
+            ->addSelect('n.estadoAtendido')
+            ->addSelect('n.estadoSolucion')
+            ->addSelect('g.empaqueReferencia')
+            ->where('n.codigoNovedadPk IS NOT NULL')
+            ->orderBy('n.codigoNovedadPk', 'DESC');
+        if ($session != "") {
+            $queryBuilder->andWhere("n.fechaRegistro >= '{$session->get('filtroFechaDesde')->format('Y-m-d')} 00:00:00'");
+        }
+        if ($session != "") {
+            $queryBuilder->andWhere("n.fechaRegistro <= '{$session->get('filtroFechaHasta')->format('Y-m-d')} 23:59:59'");
+        }
+
+        return $queryBuilder;
+
+    }
 }

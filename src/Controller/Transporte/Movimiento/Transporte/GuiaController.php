@@ -211,6 +211,7 @@ class GuiaController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $arNovedad->setEstadoSolucion(1);
             $arNovedad->setSolucion($form->get('solucion')->getData());
+            $arNovedad->setFechaSolucion(new \DateTime('now'));
             $em->persist($arNovedad);
             $arGuia = $em->getRepository(TteGuia::class)->find($arNovedad->getCodigoGuiaFk());
             $arGuia->setEstadoNovedad(0);

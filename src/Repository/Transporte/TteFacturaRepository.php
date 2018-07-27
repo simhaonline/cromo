@@ -239,6 +239,27 @@ class TteFacturaRepository extends ServiceEntityRepository
     {
         $respuesta = "";
         $em = $this->getEntityManager();
+        if($arFactura->getCodigoFacturaClaseFk() == "FA") {
+            if($arFactura->getEstadoContabilizado() == 0) {
+                if($arFactura->getEstadoAprobado() == 1) {
+                    if($arFactura->getEstadoAnulado() == 0) {
+                        if($arFactura->getCodigoFacturaClaseFk() == 'FA') {
+                            $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 0, g.estadoFacturaGenerada = 0, g.fechaFactura=NULL 
+                      WHERE g.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
+                            $query->execute();
+                        }
+                    } else {
+                        Mensajes::error("La factura no puede estar previamente anulada");
+                    }
+                } else {
+                    Mensajes::error("La factura debe estar aprobada");
+                }
+            } else {
+                Mensajes::error("La factura ya esta contabilizada");
+            }
+        } else {
+            Mensajes::error("Solo se pueden anular las facturas");
+        }
         return $respuesta;
     }
 

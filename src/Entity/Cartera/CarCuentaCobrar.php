@@ -28,9 +28,14 @@ class CarCuentaCobrar
     private $codigoCuentaCobrarTipoFk;
 
     /**
-     * @ORM\Column(name="codigo_factura", type="integer", nullable=true)
+     * @ORM\Column(name="modulo", type="string", length=3, nullable=true)
      */
-    private $codigoFactura;
+    private $modulo;
+
+    /**
+     * @ORM\Column(name="codigo_documento", type="integer", nullable=true)
+     */
+    private $codigoDocumento;
 
     /**
      * @ORM\Column(name="numero_documento", type="string", length=30, nullable=true)
@@ -175,17 +180,33 @@ class CarCuentaCobrar
     /**
      * @return mixed
      */
-    public function getCodigoFactura()
+    public function getModulo()
     {
-        return $this->codigoFactura;
+        return $this->modulo;
     }
 
     /**
-     * @param mixed $codigoFactura
+     * @param mixed $modulo
      */
-    public function setCodigoFactura($codigoFactura): void
+    public function setModulo($modulo): void
     {
-        $this->codigoFactura = $codigoFactura;
+        $this->modulo = $modulo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDocumento()
+    {
+        return $this->codigoDocumento;
+    }
+
+    /**
+     * @param mixed $codigoDocumento
+     */
+    public function setCodigoDocumento($codigoDocumento): void
+    {
+        $this->codigoDocumento = $codigoDocumento;
     }
 
     /**
@@ -431,22 +452,6 @@ class CarCuentaCobrar
     /**
      * @return mixed
      */
-    public function getClienteRel()
-    {
-        return $this->clienteRel;
-    }
-
-    /**
-     * @param mixed $clienteRel
-     */
-    public function setClienteRel($clienteRel): void
-    {
-        $this->clienteRel = $clienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCuentaCobrarTipoRel()
     {
         return $this->cuentaCobrarTipoRel;
@@ -458,6 +463,22 @@ class CarCuentaCobrar
     public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
     {
         $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
     }
 
     /**

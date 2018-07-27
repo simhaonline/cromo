@@ -99,6 +99,12 @@ class CarReciboDetalle
     protected $reciboRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrar", inversedBy="recibosDetallesCuentaCobrarRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_cobrar_fk", referencedColumnName="codigo_cuenta_cobrar_pk")
+     */
+    protected $cuentaCobrarRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoReciboDetallePk()
@@ -368,6 +374,22 @@ class CarReciboDetalle
     public function setReciboRel($reciboRel): void
     {
         $this->reciboRel = $reciboRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaCobrarRel()
+    {
+        return $this->cuentaCobrarRel;
+    }
+
+    /**
+     * @param mixed $cuentaCobrarRel
+     */
+    public function setCuentaCobrarRel($cuentaCobrarRel): void
+    {
+        $this->cuentaCobrarRel = $cuentaCobrarRel;
     }
 
 

@@ -15,26 +15,25 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         parent::__construct($registry, CarCuentaCobrar::class);
     }
 
-    public function cuentaCobrar()
+    public function cuentasCobrar()
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
             ->select('cc.codigoCuentaCobrarPk')
+            ->addSelect('cc.numeroDocumento')
+            ->addSelect('cc.vrTotal')
+            ->addSelect('cc.vrSaldo')
+            ->addSelect('cc.plazo')
+            ->addSelect('cc.fecha')
+            ->addSelect('cc.fechaVence')
+            ->addSelect('cct.nombre')
+            ->join('cc.clienteRel','cl')
+            ->join('cc.cuentaCobrarTipoRel', 'cct')
             ->where('cc.vrSaldo <> 0')
             ->andWhere('cc.operacion = 1')
             ->orderBy('cc.codigoCuentaCobrarPk', 'ASC');
 
         return $queryBuilder;
-    }
-
-    public function cuentasCobrar1($codigCliente = "") {
-        $em = $this->getEntityManager();
-        $dql   = "SELECT cc FROM BrasaCarteraBundle:CarCuentaCobrar cc where cc.saldo <> 0 AND cc.operacion = 1 AND cc.codigoClienteFk = {$codigCliente}";
-        $query = $em->createQuery($dql);
-        $arCuentasCobro = $query->getResult();
-
-        return $arCuentasCobro;
-
     }
 
 }

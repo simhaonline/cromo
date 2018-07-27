@@ -120,6 +120,11 @@ class CarCuentaCobrar
     protected $clienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="CarReciboDetalle", mappedBy="cuentaCobrarRel")
+     */
+    protected $recibosDetallesCuentaCobrarRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaCobrarPk()
@@ -454,6 +459,23 @@ class CarCuentaCobrar
     {
         $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRecibosDetallesCuentaCobrarRel()
+    {
+        return $this->recibosDetallesCuentaCobrarRel;
+    }
+
+    /**
+     * @param mixed $recibosDetallesCuentaCobrarRel
+     */
+    public function setRecibosDetallesCuentaCobrarRel($recibosDetallesCuentaCobrarRel): void
+    {
+        $this->recibosDetallesCuentaCobrarRel = $recibosDetallesCuentaCobrarRel;
+    }
+
 
 
 }

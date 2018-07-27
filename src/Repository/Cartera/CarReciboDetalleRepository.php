@@ -14,4 +14,15 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, CarReciboDetalle::class);
     }
 
+    public function vrPagoRecibo($codigoCuentaCobrar, $id) {
+        $em = $this->getEntityManager();
+        $dql = "SELECT SUM(rd.vrPagoAfectar) as valor FROM App\Entity\Cartera\CarReciboDetalle rd "
+            . "WHERE rd.codigoCuentaCobrarFk = " . $codigoCuentaCobrar . " AND rd.codigoReciboFk = " . $id;
+        $query = $em->createQuery($dql);
+        $vrTotalPago = $query->getSingleScalarResult();
+        if (!$vrTotalPago) {
+            $vrTotalPago = 0;
+        }
+        return $vrTotalPago;
+    }
 }

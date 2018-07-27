@@ -33,7 +33,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->addSelect('dr.pesoReal')
             ->addSelect('dr.pesoVolumen')
             ->addSelect('dr.estadoDescargado')
-            ->addSelect('dr.vrPago')
+            ->addSelect('dr.vrFletePago')
             ->where('dr.codigoDespachoRecogidaPk <> 0');
         if($session->get('filtroTteDespachoVehiculoCodigo') != ''){
             $queryBuilder->andWhere("dr.codigoVehiculoFk = '{$session->get('filtroTteDespachoVehiculoCodigo')}'");

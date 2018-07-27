@@ -44,6 +44,21 @@ class DespachoRecogidaController extends Controller
                     if ($arVehiculo) {
                         $arDespachoRecogida->setVehiculoRel($arVehiculo);
                         $arDespachoRecogida->setOperacionRel($this->getUser()->getOperacionRel());
+
+                        $descuentos = $arDespachoRecogida->getVrDescuentoPapeleria() + $arDespachoRecogida->getVrDescuentoSeguridad() + $arDespachoRecogida->getVrDescuentoCargue() + $arDespachoRecogida->getVrDescuentoEstampilla();
+                        $retencionFuente = 0;
+                        if($arDespachoRecogida->getVrFletePago() > 107000) {
+                            $retencionFuente = $arDespachoRecogida->getVrFletePago() * 1 / 100;
+                        }
+                        $industriaComercio = $arDespachoRecogida->getVrFletePago() * 0.6 /100;
+
+                        $total = $arDespachoRecogida->getVrFletePago() - ($arDespachoRecogida->getVrAnticipo() + $retencionFuente + $industriaComercio);
+                        $saldo = $total - $descuentos;
+                        $arDespachoRecogida->setVrIndustriaComercio($industriaComercio);
+                        $arDespachoRecogida->setVrRetencionFuente($retencionFuente);
+                        $arDespachoRecogida->setVrTotal($total);
+                        $arDespachoRecogida->setVrSaldo($saldo);
+
                         $em->persist($arDespachoRecogida);
                         $em->flush();
                         return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', ['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));

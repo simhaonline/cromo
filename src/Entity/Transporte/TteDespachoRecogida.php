@@ -58,14 +58,64 @@ class TteDespachoRecogida
     private $pesoVolumen = 0;
 
     /**
-     * @ORM\Column(name="vr_pago", type="float")
+     * @ORM\Column(name="vr_flete_pago", type="float", options={"default" : 0})
      */
-    private $vrPago = 0;
+    private $vrFletePago = 0;
+
+    /**
+     * @ORM\Column(name="vr_anticipo", type="float", options={"default" : 0})
+     */
+    private $vrAnticipo = 0;
+
+    /**
+     * @ORM\Column(name="vr_industria_comercio", type="float", options={"default" : 0})
+     */
+    private $vrIndustriaComercio = 0;
+
+    /**
+     * @ORM\Column(name="vr_retencion_fuente", type="float", options={"default" : 0})
+     */
+    private $vrRetencionFuente = 0;
+
+    /**
+     * @ORM\Column(name="vr_retencion_ica", type="float", options={"default" : 0})
+     */
+    private $vrRetencionIca = 0;
+
+    /**
+     * @ORM\Column(name="vr_total", type="float", options={"default" : 0})
+     */
+    private $vrTotal = 0;
+
+    /**
+     * @ORM\Column(name="vr_descuento_papeleria", type="float", options={"default" : 0})
+     */
+    private $vrDescuentoPapeleria = 0;
+
+    /**
+     * @ORM\Column(name="vr_descuento_seguridad", type="float", options={"default" : 0})
+     */
+    private $vrDescuentoSeguridad = 0;
+
+    /**
+     * @ORM\Column(name="vr_descuento_cargue", type="float", options={"default" : 0})
+     */
+    private $vrDescuentoCargue = 0;
+
+    /**
+     * @ORM\Column(name="vr_descuento_estampilla", type="float", options={"default" : 0})
+     */
+    private $vrDescuentoEstampilla = 0;
 
     /**
      * @ORM\Column(name="vr_declara", type="float")
      */
     private $vrDeclara = 0;
+
+    /**
+     * @ORM\Column(name="vr_saldo", type="float", options={"default" : 0})
+     */
+    private $vrSaldo = 0;
 
     /**
      * @ORM\Column(name="estado_descargado", type="boolean", nullable=true, options={"default": 0})
@@ -272,17 +322,161 @@ class TteDespachoRecogida
     /**
      * @return mixed
      */
-    public function getVrPago()
+    public function getVrFletePago()
     {
-        return $this->vrPago;
+        return $this->vrFletePago;
     }
 
     /**
-     * @param mixed $vrPago
+     * @param mixed $vrFletePago
      */
-    public function setVrPago($vrPago): void
+    public function setVrFletePago($vrFletePago): void
     {
-        $this->vrPago = $vrPago;
+        $this->vrFletePago = $vrFletePago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAnticipo()
+    {
+        return $this->vrAnticipo;
+    }
+
+    /**
+     * @param mixed $vrAnticipo
+     */
+    public function setVrAnticipo($vrAnticipo): void
+    {
+        $this->vrAnticipo = $vrAnticipo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIndustriaComercio()
+    {
+        return $this->vrIndustriaComercio;
+    }
+
+    /**
+     * @param mixed $vrIndustriaComercio
+     */
+    public function setVrIndustriaComercio($vrIndustriaComercio): void
+    {
+        $this->vrIndustriaComercio = $vrIndustriaComercio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRetencionFuente()
+    {
+        return $this->vrRetencionFuente;
+    }
+
+    /**
+     * @param mixed $vrRetencionFuente
+     */
+    public function setVrRetencionFuente($vrRetencionFuente): void
+    {
+        $this->vrRetencionFuente = $vrRetencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRetencionIca()
+    {
+        return $this->vrRetencionIca;
+    }
+
+    /**
+     * @param mixed $vrRetencionIca
+     */
+    public function setVrRetencionIca($vrRetencionIca): void
+    {
+        $this->vrRetencionIca = $vrRetencionIca;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotal()
+    {
+        return $this->vrTotal;
+    }
+
+    /**
+     * @param mixed $vrTotal
+     */
+    public function setVrTotal($vrTotal): void
+    {
+        $this->vrTotal = $vrTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuentoPapeleria()
+    {
+        return $this->vrDescuentoPapeleria;
+    }
+
+    /**
+     * @param mixed $vrDescuentoPapeleria
+     */
+    public function setVrDescuentoPapeleria($vrDescuentoPapeleria): void
+    {
+        $this->vrDescuentoPapeleria = $vrDescuentoPapeleria;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuentoSeguridad()
+    {
+        return $this->vrDescuentoSeguridad;
+    }
+
+    /**
+     * @param mixed $vrDescuentoSeguridad
+     */
+    public function setVrDescuentoSeguridad($vrDescuentoSeguridad): void
+    {
+        $this->vrDescuentoSeguridad = $vrDescuentoSeguridad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuentoCargue()
+    {
+        return $this->vrDescuentoCargue;
+    }
+
+    /**
+     * @param mixed $vrDescuentoCargue
+     */
+    public function setVrDescuentoCargue($vrDescuentoCargue): void
+    {
+        $this->vrDescuentoCargue = $vrDescuentoCargue;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuentoEstampilla()
+    {
+        return $this->vrDescuentoEstampilla;
+    }
+
+    /**
+     * @param mixed $vrDescuentoEstampilla
+     */
+    public function setVrDescuentoEstampilla($vrDescuentoEstampilla): void
+    {
+        $this->vrDescuentoEstampilla = $vrDescuentoEstampilla;
     }
 
     /**
@@ -331,6 +525,54 @@ class TteDespachoRecogida
     public function setEstadoMonitoreo($estadoMonitoreo): void
     {
         $this->estadoMonitoreo = $estadoMonitoreo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
     }
 
     /**
@@ -432,49 +674,19 @@ class TteDespachoRecogida
     /**
      * @return mixed
      */
-    public function getEstadoAutorizado()
+    public function getVrSaldo()
     {
-        return $this->estadoAutorizado;
+        return $this->vrSaldo;
     }
 
     /**
-     * @param mixed $estadoAutorizado
+     * @param mixed $vrSaldo
      */
-    public function setEstadoAutorizado($estadoAutorizado): void
+    public function setVrSaldo($vrSaldo): void
     {
-        $this->estadoAutorizado = $estadoAutorizado;
+        $this->vrSaldo = $vrSaldo;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEstadoAprobado()
-    {
-        return $this->estadoAprobado;
-    }
 
-    /**
-     * @param mixed $estadoAprobado
-     */
-    public function setEstadoAprobado($estadoAprobado): void
-    {
-        $this->estadoAprobado = $estadoAprobado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAnulado()
-    {
-        return $this->estadoAnulado;
-    }
-
-    /**
-     * @param mixed $estadoAnulado
-     */
-    public function setEstadoAnulado($estadoAnulado): void
-    {
-        $this->estadoAnulado = $estadoAnulado;
-    }
 }
 

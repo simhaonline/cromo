@@ -31,11 +31,14 @@ class DespachoRecogidaType extends AbstractType {
                 },
                 'choice_label' => 'nombre',
             ))
-            ->add('fecha', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
-            ->add('vrPago',NumberType::class, array('required' => true))
+            ->add('vrFletePago', NumberType::class)
+            ->add('vrAnticipo', NumberType::class)
+            ->add('vrDescuentoPapeleria', NumberType::class)
+            ->add('vrDescuentoSeguridad', NumberType::class)
+            ->add('vrDescuentoCargue', NumberType::class)
+            ->add('vrDescuentoEstampilla', NumberType::class)
             ->add('comentario',TextareaType::class, array('required' => false))
-            ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
-                ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));
+            ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
     }
 
     /**

@@ -20,7 +20,7 @@ class Manifiesto extends \FPDF {
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Manifiesto$codigoDespacho.pdf", 'D');
+        $pdf->Output("Manifiesto$codigoDespacho.pdf", 'I');
     }
 
     public function Header() {
@@ -110,7 +110,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(205, $yt, "TELEFONO");
         $pdf->Text(245, $yt, "CIUDAD");
         $pdf->SetFont('Arial', '', 8);
-        $pdf->Text(18, $yt+5, $arDespacho['conductorNombre']);
+        $pdf->Text(18, $yt+5, utf8_decode($arDespacho['conductorNombre']));
         $pdf->Text(90, $yt+5, $arDespacho['conductorIdentificacion']);
         $pdf->Text(155, $yt+5, $arDespacho['conductorDireccion']);
         $pdf->Text(205, $yt+5, $arDespacho['conductorTelefono']);
@@ -161,7 +161,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(216, $yt, "N LICENCIA");
         $pdf->Text(247, $yt, "CIUDAD");
         $pdf->SetFont('Arial', '', 7);
-        $pdf->Text(16, $yt+5, $arDespacho['conductorNombre']);
+        $pdf->Text(17, $yt+5, utf8_decode($arDespacho['conductorNombre']));
         $pdf->Text(70, $yt+5, $arDespacho['conductorIdentificacion']);
         $pdf->Text(147, $yt+5, $arDespacho['conductorDireccion']);
         $pdf->Text(198, $yt+5, $arDespacho['conductorTelefono']);
@@ -225,12 +225,17 @@ class Manifiesto extends \FPDF {
 
         $y += 5;
         $pdf->Rect($x, $y, 260, $alto3);
+        $pdf->Text(212, $y+18, "COBRO ENTREGA:");
+        $pdf->setXY(232, $yt+17);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell(25, 4, $arDespacho['vrCobroEntrega'], 0, 0, 'R');
 
         $y += 20;
         $pdf->Rect($x, $y, 100, $alto2);
         $pdf->Rect($x+100, $y, 80, $alto2);
         $pdf->Rect($x+180, $y, 80, $alto2);
         $yt += 25;
+        $pdf->SetFont('Arial', 'b', 8);
         $pdf->Text(60, $yt, "VALORES");
         $pdf->Text(137, $yt, "CARGUE/DESCARGUE");
         $pdf->Text(215, $yt, "OBSERVACIONES");
@@ -271,6 +276,8 @@ class Manifiesto extends \FPDF {
         $pdf->Text(20, $yt, "RETENCION ICA:");
         $pdf->Text(120, $yt, "CARGUE PAGADO POR:");
         $pdf->SetFont('Arial', '', 8);
+        $pdf->Text(120, $yt+5, "LOGICUARTAS SAS");
+        $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
         $pdf->Cell(25, 4, $arDespacho['vrRetencionIca'], 0, 0, 'R');
 
@@ -294,6 +301,8 @@ class Manifiesto extends \FPDF {
         $pdf->SetFont('Arial', 'b', 8);
         $pdf->Text(20, $yt, "VALOR ANTICIPO:");
         $pdf->Text(120, $yt, "DESCARGUE PAGADO POR:");
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Text(120, $yt+5, "LOGICUARTAS SAS");
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
         $pdf->Cell(25, 4, $arDespacho['vrAnticipo'], 0, 0, 'R');

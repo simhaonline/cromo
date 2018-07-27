@@ -350,6 +350,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         d.vrRetencionFuente,
         d.vrRetencionIca,
         d.vrAnticipo,
+        d.vrCobroEntrega,
         c.numeroIdentificacion AS conductorIdentificacion,
         c.nombreCorto AS conductorNombre,
         c.direccion AS conductorDireccion,

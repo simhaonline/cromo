@@ -17,12 +17,25 @@ class TteRecogidaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT r.codigoRecogidaPk, r.fechaRegistro, r.fecha, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad, 
-        r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen, r.anunciante, r.direccion, r.telefono,
-        r.codigoOperacionFk
+            'SELECT r.codigoRecogidaPk, 
+            r.fechaRegistro, 
+            r.fecha, 
+            c.nombreCorto AS clienteNombreCorto, 
+            co.nombre AS ciudad, 
+            r.estadoProgramado, 
+            r.estadoRecogido, 
+            r.unidades, 
+            r.pesoReal, 
+            r.pesoVolumen, 
+            r.anunciante, 
+            r.direccion, 
+            r.telefono,
+            r.codigoOperacionFk,
+            cond.conductorRel.nombreCorto AS conductorNombreCorto
         FROM App\Entity\Transporte\TteRecogida r 
         LEFT JOIN r.clienteRel c
-        LEFT JOIN r.ciudadRel co'
+        LEFT JOIN r.ciudadRel co
+        LEFT JOIN  r.conductorRel cond'
         );
         return $query->execute();
 
@@ -225,6 +238,24 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->where("r.codigoDespachoRecogidaFk = {$codigo}");
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         return $resultado[1];
+    }
+
+    public function listaFormato($codigoDespachoRecogida)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class, 'r');
+        $queryBuilder
+            ->select('r.codigoRecodigaPk')
+            ->addSelect('r.fecha')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('c.unidades')
+            ->addSelect('c.pesoReal')
+            ->leftJoin('r.clienteRel', 'c')
+            ->leftJoin('r.conductorRel', 'co')
+            ->where('r.codigoDespachoRecogidaFk = ' . $codigoDespachoRecogida);
+        $queryBuilder->orderBy('r.fecha', 'ASC');
+
+        return $queryBuilder;
     }
 
 }

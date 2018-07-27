@@ -118,16 +118,6 @@ class TteConductor
     private $comentario;
 
     /**
-     * @ORM\OneToMany(targetEntity="TteDespacho", mappedBy="conductorRel")
-     */
-    protected $despachosConductorRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="TteRecogida", mappedBy="conductorRel")
-     */
-    protected $recogidasConductorRel;
-
-    /**
      * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="conductoresCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -138,6 +128,21 @@ class TteConductor
      * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
      */
     private $identificacionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TteDespacho", mappedBy="conductorRel")
+     */
+    protected $despachosConductorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TteRecogida", mappedBy="conductorRel")
+     */
+    protected $recogidasConductorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TteDespachoRecogida", mappedBy="conductorRel")
+     */
+    protected $despachosRecogidasConductorRel;
 
     /**
      * @return mixed
@@ -153,6 +158,22 @@ class TteConductor
     public function setCodigoConductorPk($codigoConductorPk): void
     {
         $this->codigoConductorPk = $codigoConductorPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoIdentificacionFk()
+    {
+        return $this->codigoIdentificacionFk;
+    }
+
+    /**
+     * @param mixed $codigoIdentificacionFk
+     */
+    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
+    {
+        $this->codigoIdentificacionFk = $codigoIdentificacionFk;
     }
 
     /**
@@ -270,33 +291,33 @@ class TteConductor
     /**
      * @return mixed
      */
-    public function getTelefono()
+    public function getFechaRegistro()
     {
-        return $this->telefono;
+        return $this->fechaRegistro;
     }
 
     /**
-     * @param mixed $telefono
+     * @param mixed $fechaRegistro
      */
-    public function setTelefono($telefono): void
+    public function setFechaRegistro($fechaRegistro): void
     {
-        $this->telefono = $telefono;
+        $this->fechaRegistro = $fechaRegistro;
     }
 
     /**
      * @return mixed
      */
-    public function getDespachosConductorRel()
+    public function getFechaNacimiento()
     {
-        return $this->despachosConductorRel;
+        return $this->fechaNacimiento;
     }
 
     /**
-     * @param mixed $despachosConductorRel
+     * @param mixed $fechaNacimiento
      */
-    public function setDespachosConductorRel($despachosConductorRel): void
+    public function setFechaNacimiento($fechaNacimiento): void
     {
-        $this->despachosConductorRel = $despachosConductorRel;
+        $this->fechaNacimiento = $fechaNacimiento;
     }
 
     /**
@@ -318,65 +339,17 @@ class TteConductor
     /**
      * @return mixed
      */
-    public function getCiudadRel()
+    public function getTelefono()
     {
-        return $this->ciudadRel;
+        return $this->telefono;
     }
 
     /**
-     * @param mixed $ciudadRel
+     * @param mixed $telefono
      */
-    public function setCiudadRel($ciudadRel): void
+    public function setTelefono($telefono): void
     {
-        $this->ciudadRel = $ciudadRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumeroLicencia()
-    {
-        return $this->numeroLicencia;
-    }
-
-    /**
-     * @param mixed $numeroLicencia
-     */
-    public function setNumeroLicencia($numeroLicencia): void
-    {
-        $this->numeroLicencia = $numeroLicencia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComentario()
-    {
-        return $this->comentario;
-    }
-
-    /**
-     * @param mixed $comentario
-     */
-    public function setComentario($comentario): void
-    {
-        $this->comentario = $comentario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoIdentificacionFk()
-    {
-        return $this->codigoIdentificacionFk;
-    }
-
-    /**
-     * @param mixed $codigoIdentificacionFk
-     */
-    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
-    {
-        $this->codigoIdentificacionFk = $codigoIdentificacionFk;
+        $this->telefono = $telefono;
     }
 
     /**
@@ -398,33 +371,17 @@ class TteConductor
     /**
      * @return mixed
      */
-    public function getIdentificacionRel()
+    public function getNumeroLicencia()
     {
-        return $this->identificacionRel;
+        return $this->numeroLicencia;
     }
 
     /**
-     * @param mixed $identificacionRel
+     * @param mixed $numeroLicencia
      */
-    public function setIdentificacionRel($identificacionRel): void
+    public function setNumeroLicencia($numeroLicencia): void
     {
-        $this->identificacionRel = $identificacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaVenceLicencia()
-    {
-        return $this->fechaVenceLicencia;
-    }
-
-    /**
-     * @param mixed $fechaVenceLicencia
-     */
-    public function setFechaVenceLicencia($fechaVenceLicencia): void
-    {
-        $this->fechaVenceLicencia = $fechaVenceLicencia;
+        $this->numeroLicencia = $numeroLicencia;
     }
 
     /**
@@ -446,6 +403,22 @@ class TteConductor
     /**
      * @return mixed
      */
+    public function getFechaVenceLicencia()
+    {
+        return $this->fechaVenceLicencia;
+    }
+
+    /**
+     * @param mixed $fechaVenceLicencia
+     */
+    public function setFechaVenceLicencia($fechaVenceLicencia): void
+    {
+        $this->fechaVenceLicencia = $fechaVenceLicencia;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getBarrio()
     {
         return $this->barrio;
@@ -457,22 +430,6 @@ class TteConductor
     public function setBarrio($barrio): void
     {
         $this->barrio = $barrio;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaRegistro()
-    {
-        return $this->fechaRegistro;
-    }
-
-    /**
-     * @param mixed $fechaRegistro
-     */
-    public function setFechaRegistro($fechaRegistro): void
-    {
-        $this->fechaRegistro = $fechaRegistro;
     }
 
     /**
@@ -510,17 +467,65 @@ class TteConductor
     /**
      * @return mixed
      */
-    public function getFechaNacimiento()
+    public function getComentario()
     {
-        return $this->fechaNacimiento;
+        return $this->comentario;
     }
 
     /**
-     * @param mixed $fechaNacimiento
+     * @param mixed $comentario
      */
-    public function setFechaNacimiento($fechaNacimiento): void
+    public function setComentario($comentario): void
     {
-        $this->fechaNacimiento = $fechaNacimiento;
+        $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdentificacionRel()
+    {
+        return $this->identificacionRel;
+    }
+
+    /**
+     * @param mixed $identificacionRel
+     */
+    public function setIdentificacionRel($identificacionRel): void
+    {
+        $this->identificacionRel = $identificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosConductorRel()
+    {
+        return $this->despachosConductorRel;
+    }
+
+    /**
+     * @param mixed $despachosConductorRel
+     */
+    public function setDespachosConductorRel($despachosConductorRel): void
+    {
+        $this->despachosConductorRel = $despachosConductorRel;
     }
 
     /**
@@ -539,6 +544,21 @@ class TteConductor
         $this->recogidasConductorRel = $recogidasConductorRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDespachosRecogidasConductorRel()
+    {
+        return $this->despachosRecogidasConductorRel;
+    }
+
+    /**
+     * @param mixed $despachosRecogidasConductorRel
+     */
+    public function setDespachosRecogidasConductorRel($despachosRecogidasConductorRel): void
+    {
+        $this->despachosRecogidasConductorRel = $despachosRecogidasConductorRel;
+    }
 
 
 }

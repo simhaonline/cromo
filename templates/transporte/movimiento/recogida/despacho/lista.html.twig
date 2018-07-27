@@ -25,6 +25,7 @@
             <th>ID</th>
             <th>OP</th>
             <th>VEH</th>
+            <th>CONDUCTOR</th>
             <th>RUTA</th>
             <th>FECHA</th>
             <th>CAN</th>
@@ -44,6 +45,7 @@
                 <td>{{ arDespachoRecogida.codigoDespachoRecogidaPk }}</td>
                 <td>{{ arDespachoRecogida.codigoOperacionFk }}</td>
                 <td>{{ arDespachoRecogida.codigoVehiculoFk }}</td>
+                <td>{{ arDespachoRecogida.conductorNombreCorto }}</td>
                 <td>{{ arDespachoRecogida.codigoRutaRecogidaFk }}</td>
                 <td>{{ arDespachoRecogida.fecha | date('Y-m-d') }}</td>
                 <td style="text-align: right">{{ arDespachoRecogida.cantidad }}</td>

@@ -23,32 +23,32 @@
             <td class="td-in-well">{{ arDespachoRecogida.codigoVehiculoFk }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo">(-)ANTICIPO:</td>
-            <td align="right">{{ arDespachoRecogida.unidades }}</td>
+            <td class="titulo" >(-)ANTICIPO:</td>
+            <td align="right">{{ arDespachoRecogida.vrAnticipo | number_format(0, '.', ',')  }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CONDUCTOR:</td>
+            <td class="td-in-well">{{ arDespachoRecogida.conductorRel.nombreCorto | default('') }}</td>
+            <td class="titulo">CANTIDAD:</td>
+            <td align="right">{{ arDespachoRecogida.cantidad }}</td>
+            <td class="titulo" >(-)INDUSTRIA COMERCIO</td>
+            <td align="right">{{ arDespachoRecogida.vrIndustriaComercio | number_format(0, '.', ',')  }}</td>
         </tr>
         <tr>
             <td class="titulo">RUTA:</td>
             <td class="td-in-well">{{ arDespachoRecogida.rutaRecogidaRel.nombre| default('') }}</td>
-            <td class="titulo">CANTIDAD:</td>
-            <td align="right">{{ arDespachoRecogida.cantidad }}</td>
-            <td class="titulo">(-)INDUSTRIA COMERCIO</td>
-            <td align="right">{{ arDespachoRecogida.pesoReal }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
             <td class="titulo">UNIDADES:</td>
             <td align="right">{{ arDespachoRecogida.unidades }}</td>
-            <td class="titulo">(-)RETENCION FUENTE:</td>
-            <td align="right">{{ arDespachoRecogida.pesoVolumen }}</td>
+            <td class="titulo" >(-)RETENCION FUENTE</td>
+            <td align="right">{{ arDespachoRecogida.vrRetencionFuente | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo">PESO:</td>
             <td align="right">{{ arDespachoRecogida.pesoReal }}</td>
-            <td class="titulo">TOTAL:</td>
-            <td align="right">{{ arDespachoRecogida.vrFletePago }}</td>
+            <td class="titulo" >TOTAL</td>
+            <td align="right">{{ arDespachoRecogida.vrTotal | number_format(0, '.', ',')  }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>

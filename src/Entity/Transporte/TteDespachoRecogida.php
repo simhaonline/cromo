@@ -38,6 +38,11 @@ class TteDespachoRecogida
     private $codigoVehiculoFk;
 
     /**
+     * @ORM\Column(name="codigo_conductor_fk", type="integer", nullable=true)
+     */
+    private $codigoConductorFk;
+
+    /**
      * @ORM\Column(name="cantidad", type="float")
      */
     private $cantidad = 0;
@@ -164,6 +169,12 @@ class TteDespachoRecogida
      * @ORM\JoinColumn(name="codigo_ruta_recogida_fk", referencedColumnName="codigo_ruta_recogida_pk")
      */
     private $rutaRecogidaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteConductor", inversedBy="despachosRecogidasConductorRel")
+     * @ORM\JoinColumn(name="codigo_conductor_fk", referencedColumnName="codigo_conductor_pk")
+     */
+    private $conductorRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteRecogida", mappedBy="despachoRecogidaRel")
@@ -685,6 +696,38 @@ class TteDespachoRecogida
     public function setVrSaldo($vrSaldo): void
     {
         $this->vrSaldo = $vrSaldo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConductorFk()
+    {
+        return $this->codigoConductorFk;
+    }
+
+    /**
+     * @param mixed $codigoConductorFk
+     */
+    public function setCodigoConductorFk($codigoConductorFk): void
+    {
+        $this->codigoConductorFk = $codigoConductorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConductorRel()
+    {
+        return $this->conductorRel;
+    }
+
+    /**
+     * @param mixed $conductorRel
+     */
+    public function setConductorRel($conductorRel): void
+    {
+        $this->conductorRel = $conductorRel;
     }
 
 

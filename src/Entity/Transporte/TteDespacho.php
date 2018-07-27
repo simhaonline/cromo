@@ -688,6 +688,70 @@ class TteDespacho
     /**
      * @return mixed
      */
+    public function getVrDescuentoPapeleria()
+    {
+        return $this->vrDescuentoPapeleria;
+    }
+
+    /**
+     * @param mixed $vrDescuentoPapeleria
+     */
+    public function setVrDescuentoPapeleria($vrDescuentoPapeleria): void
+    {
+        $this->vrDescuentoPapeleria = $vrDescuentoPapeleria;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuentoSeguridad()
+    {
+        return $this->vrDescuentoSeguridad;
+    }
+
+    /**
+     * @param mixed $vrDescuentoSeguridad
+     */
+    public function setVrDescuentoSeguridad($vrDescuentoSeguridad): void
+    {
+        $this->vrDescuentoSeguridad = $vrDescuentoSeguridad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuentoCargue()
+    {
+        return $this->vrDescuentoCargue;
+    }
+
+    /**
+     * @param mixed $vrDescuentoCargue
+     */
+    public function setVrDescuentoCargue($vrDescuentoCargue): void
+    {
+        $this->vrDescuentoCargue = $vrDescuentoCargue;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuentoEstampilla()
+    {
+        return $this->vrDescuentoEstampilla;
+    }
+
+    /**
+     * @param mixed $vrDescuentoEstampilla
+     */
+    public function setVrDescuentoEstampilla($vrDescuentoEstampilla): void
+    {
+        $this->vrDescuentoEstampilla = $vrDescuentoEstampilla;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrCobroEntrega()
     {
         return $this->vrCobroEntrega;
@@ -699,6 +763,22 @@ class TteDespacho
     public function setVrCobroEntrega($vrCobroEntrega): void
     {
         $this->vrCobroEntrega = $vrCobroEntrega;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSaldo()
+    {
+        return $this->vrSaldo;
+    }
+
+    /**
+     * @param mixed $vrSaldo
+     */
+    public function setVrSaldo($vrSaldo): void
+    {
+        $this->vrSaldo = $vrSaldo;
     }
 
     /**
@@ -795,6 +875,22 @@ class TteDespacho
     public function setCodigoDespachoTipoFk($codigoDespachoTipoFk): void
     {
         $this->codigoDespachoTipoFk = $codigoDespachoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
     }
 
     /**
@@ -972,103 +1068,6 @@ class TteDespacho
     {
         $this->monitoreosDespachoRel = $monitoreosDespachoRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getVrDescuentoPapeleria()
-    {
-        return $this->vrDescuentoPapeleria;
-    }
-
-    /**
-     * @param mixed $vrDescuentoPapeleria
-     */
-    public function setVrDescuentoPapeleria($vrDescuentoPapeleria): void
-    {
-        $this->vrDescuentoPapeleria = $vrDescuentoPapeleria;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrDescuentoSeguridad()
-    {
-        return $this->vrDescuentoSeguridad;
-    }
-
-    /**
-     * @param mixed $vrDescuentoSeguridad
-     */
-    public function setVrDescuentoSeguridad($vrDescuentoSeguridad): void
-    {
-        $this->vrDescuentoSeguridad = $vrDescuentoSeguridad;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrDescuentoCargue()
-    {
-        return $this->vrDescuentoCargue;
-    }
-
-    /**
-     * @param mixed $vrDescuentoCargue
-     */
-    public function setVrDescuentoCargue($vrDescuentoCargue): void
-    {
-        $this->vrDescuentoCargue = $vrDescuentoCargue;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrDescuentoEstampilla()
-    {
-        return $this->vrDescuentoEstampilla;
-    }
-
-    /**
-     * @param mixed $vrDescuentoEstampilla
-     */
-    public function setVrDescuentoEstampilla($vrDescuentoEstampilla): void
-    {
-        $this->vrDescuentoEstampilla = $vrDescuentoEstampilla;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrSaldo()
-    {
-        return $this->vrSaldo;
-    }
-
-    /**
-     * @param mixed $vrSaldo
-     */
-    public function setVrSaldo($vrSaldo): void
-    {
-        $this->vrSaldo = $vrSaldo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUsuario()
-    {
-        return $this->usuario;
-    }
-
-    /**
-     * @param mixed $usuario
-     */
-    public function setUsuario($usuario): void
-    {
-        $this->usuario = $usuario;
-    }
-
 
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Recogida\Despacho;
 
+use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoRecogidaType;
@@ -10,6 +11,7 @@ use App\Entity\Transporte\TteRecogida;
 use App\Entity\Transporte\TteAuxiliar;
 use App\Entity\Transporte\TteMonitoreo;
 use App\Formato\Transporte\Despacho;
+use App\Formato\Transporte\DespachoRecogida;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -38,36 +40,48 @@ class DespachoRecogidaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $txtCodigoVehiculo = $request->request->get('txtCodigoVehiculo');
-                if ($txtCodigoVehiculo != '') {
-                    $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
-                    if ($arVehiculo) {
-                        $arDespachoRecogida->setVehiculoRel($arVehiculo);
-                        $arDespachoRecogida->setOperacionRel($this->getUser()->getOperacionRel());
+                $txtCodigoConductor = $request->request->get('txtCodigoConductor');
+                if ($txtCodigoConductor != '') {
+                    $arConductor = $em->getRepository(TteConductor::class)->find($txtCodigoConductor);
+                    if ($arConductor) {
+                        $txtCodigoVehiculo = $request->request->get('txtCodigoVehiculo');
+                        if ($txtCodigoVehiculo != '') {
+                            $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
+                            if ($arVehiculo) {
+                                $arDespachoRecogida->setVehiculoRel($arVehiculo);
+                                $arDespachoRecogida->setConductorRel($arConductor);
+                                $arDespachoRecogida->setOperacionRel($this->getUser()->getOperacionRel());
 
-                        $descuentos = $arDespachoRecogida->getVrDescuentoPapeleria() + $arDespachoRecogida->getVrDescuentoSeguridad() + $arDespachoRecogida->getVrDescuentoCargue() + $arDespachoRecogida->getVrDescuentoEstampilla();
-                        $retencionFuente = 0;
-                        if($arDespachoRecogida->getVrFletePago() > 107000) {
-                            $retencionFuente = $arDespachoRecogida->getVrFletePago() * 1 / 100;
+                                $descuentos = $arDespachoRecogida->getVrDescuentoPapeleria() + $arDespachoRecogida->getVrDescuentoSeguridad() + $arDespachoRecogida->getVrDescuentoCargue() + $arDespachoRecogida->getVrDescuentoEstampilla();
+                                $retencionFuente = 0;
+                                if($arDespachoRecogida->getVrFletePago() > 107000) {
+                                    $retencionFuente = $arDespachoRecogida->getVrFletePago() * 1 / 100;
+                                }
+                                $industriaComercio = $arDespachoRecogida->getVrFletePago() * 0.6 /100;
+
+                                $total = $arDespachoRecogida->getVrFletePago() - ($arDespachoRecogida->getVrAnticipo() + $retencionFuente + $industriaComercio);
+                                $saldo = $total - $descuentos;
+                                $arDespachoRecogida->setVrIndustriaComercio($industriaComercio);
+                                $arDespachoRecogida->setVrRetencionFuente($retencionFuente);
+                                $arDespachoRecogida->setVrTotal($total);
+                                $arDespachoRecogida->setVrSaldo($saldo);
+
+                                $em->persist($arDespachoRecogida);
+                                $em->flush();
+                                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', ['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
+                            } else {
+                                Mensajes::error('No se ha encontrado un vehiculo con el codigo ingresado');
+                            }
+                        } else {
+                            Mensajes::error('Debe seleccionar un vehiculo');
                         }
-                        $industriaComercio = $arDespachoRecogida->getVrFletePago() * 0.6 /100;
-
-                        $total = $arDespachoRecogida->getVrFletePago() - ($arDespachoRecogida->getVrAnticipo() + $retencionFuente + $industriaComercio);
-                        $saldo = $total - $descuentos;
-                        $arDespachoRecogida->setVrIndustriaComercio($industriaComercio);
-                        $arDespachoRecogida->setVrRetencionFuente($retencionFuente);
-                        $arDespachoRecogida->setVrTotal($total);
-                        $arDespachoRecogida->setVrSaldo($saldo);
-
-                        $em->persist($arDespachoRecogida);
-                        $em->flush();
-                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', ['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
                     } else {
-                        Mensajes::error('No se ha encontrado un vehiculo con el codigo ingresado');
+                        Mensajes::error('No se ha encontrado un conductor con el codigo ingresado');
                     }
                 } else {
-                    Mensajes::error('Debe seleccionar un vehiculo');
+                    Mensajes::error('Debe seleccionar un conductor');
                 }
+
             }
         }
         return $this->render('transporte/movimiento/recogida/despacho/nuevo.html.twig', [
@@ -139,7 +153,7 @@ class DespachoRecogidaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-                $formato = new Despacho();
+                $formato = new DespachoRecogida();
                 $formato->Generar($em, $id);
             }
             if ($form->get('btnMonitoreo')->isClicked()) {

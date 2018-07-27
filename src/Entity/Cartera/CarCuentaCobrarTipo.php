@@ -228,5 +228,22 @@ class CarCuentaCobrarTipo
         $this->cuentasCobrarCuentaCobrarTipoRel = $cuentasCobrarCuentaCobrarTipoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRecibosDetallesCuentaCobrarTipoRel()
+    {
+        return $this->recibosDetallesCuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $recibosDetallesCuentaCobrarTipoRel
+     */
+    public function setRecibosDetallesCuentaCobrarTipoRel($recibosDetallesCuentaCobrarTipoRel): void
+    {
+        $this->recibosDetallesCuentaCobrarTipoRel = $recibosDetallesCuentaCobrarTipoRel;
+    }
+
+
 
 }

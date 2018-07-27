@@ -28,7 +28,7 @@ class CarReciboDetalle
     private $codigoCuentaCobrarFk;
 
     /**
-     * @ORM\Column(name="codigo_cuenta_cobrar_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_cuenta_cobrar_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCuentaCobrarTipoFk;
 
@@ -396,6 +396,22 @@ class CarReciboDetalle
     public function setCuentaCobrarRel($cuentaCobrarRel): void
     {
         $this->cuentaCobrarRel = $cuentaCobrarRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaCobrarTipoRel()
+    {
+        return $this->cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaCobrarTipoRel
+     */
+    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
+    {
+        $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
     }
 
 

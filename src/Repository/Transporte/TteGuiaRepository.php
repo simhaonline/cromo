@@ -2,6 +2,7 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteFactura;
@@ -515,6 +516,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT g.codigoGuiaPk, 
         g.numero,
+        g.fechaIngreso,
         g.codigoOperacionIngresoFk,
         g.codigoOperacionCargoFk, 
         g.unidades,
@@ -529,7 +531,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         LEFT JOIN g.clienteRel c
         LEFT JOIN g.ciudadDestinoRel cd
         WHERE g.estadoCumplido = 0 AND g.estadoSoporte = 1 AND g.codigoClienteFk = :codigoCliente AND g.fechaIngreso >= :fechaIngreso 
-        ORDER BY g.fechaIngreso '
+        ORDER BY g.fechaIngreso DESC '
         )->setParameter('codigoCliente', $codigoCliente)
         ->setParameter('fechaIngreso', "2018-04-01");
         return $query->execute();
@@ -1002,6 +1004,76 @@ class TteGuiaRepository extends ServiceEntityRepository
             return [
                 'error' => true,
                 'mensaje' => "La guia " . $codigoGuia . " o la factura " . $codigoFactura . " no existe ",
+            ];
+        }
+    }
+
+
+    /**
+     * @param $codigoCumplido $codigoGuia
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function apiCumplidoAdicionar($codigoCumplido, $codigoGuia, $documento, $tipo) {
+        $em = $this->getEntityManager();
+        $arCumplido = $em->getRepository(TteCumplido::class)->find($codigoCumplido);
+        $arGuia = NULL;
+
+        if($tipo == 1) {
+            $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        }
+        if($tipo == 2) {
+            $arGuiaDocumento = $em->getRepository(TteGuia::class)->findOneBy(array(
+                'documentoCliente' => $documento,
+                'codigoClienteFk' => $arCumplido->getCodigoClienteFk(),
+                'estadoCumplido' => 0));
+            if($arGuiaDocumento) {
+                $arGuia = $em->getRepository(TteGuia::class)->find($arGuiaDocumento->getCodigoGuiaPk());
+            } else {
+                $arGuia = "";
+            }
+        }
+
+        if($arGuia && $arCumplido) {
+            if($arGuia->getEstadoCumplido() == 0) {
+                if($arGuia->getEstadoAnulado() == 0) {
+                    if($arGuia->getCodigoClienteFk() == $arCumplido->getCodigoClienteFk()) {
+                        $arGuia->setCumplidoRel($arCumplido);
+                        $arGuia->setEstadoCumplido(1);
+                        $em->persist($arGuia);
+
+                        //$arCumplido->setUnidades($arCumplido->getUnidades() + $arGuia->getUnidades());
+                        //$arCumplido->setPesoReal($arCumplido->getPesoReal() + $arGuia->getPesoReal());
+                        //$arCumplido->setPesoVolumen($arCumplido->getPesoVolumen() + $arGuia->getPesoVolumen());
+                        $arCumplido->setCantidad($arCumplido->getCantidad() + 1);
+                        $em->persist($arCumplido);
+                        $em->flush();
+                        return [
+                            'error' => false,
+                            'mensaje' => '',
+                        ];
+                    } else {
+                        return [
+                            'error' => true,
+                            'mensaje' => 'La guia es de otro cliente y no se puede adicionar al cumplido ',
+                        ];
+                    }
+                } else {
+                    return [
+                        'error' => true,
+                        'mensaje' => 'La guia no puede estar anulada',
+                    ];
+                }
+            } else {
+                return [
+                    'error' => true,
+                    'mensaje' => 'La guia ya esta en los cumplidos ' . $arGuia->getCodigoCumplidoFk(),
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'mensaje' => "La guia " . $codigoGuia . " o el cumplido " . $codigoCumplido . " no existe pendiente para cumplido",
             ];
         }
     }

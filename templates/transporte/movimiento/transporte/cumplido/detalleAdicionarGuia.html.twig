@@ -5,11 +5,11 @@
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
-            <th>ID</th>
             <th>OI</th>
             <th>OC</th>
             <th>GUIA</th>
-            <th>NUM CLIENTE</th>
+            <th>FECHA</th>
+            <th>DOCUMENTO</th>
             <th>CLIENTE</th>
             <th>DESTINO</th>
             <th>UND</th>
@@ -23,10 +23,10 @@
         <tbody>
         {% for arGuia in arGuias %}
             <tr>
-                <td>{{ arGuia.codigoGuiaPk }}</td>
                 <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
-                <td>{{ arGuia.numero }}</td>
+                <td>{{ arGuia.codigoGuiaPk }}</td>
+                <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
                 <td>{{ arGuia.documentoCliente }}</td>
                 <td>{{ arGuia.clienteNombreCorto }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>

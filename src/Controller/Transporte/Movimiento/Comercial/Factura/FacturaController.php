@@ -244,6 +244,7 @@ class FacturaController extends Controller
                         foreach ($arFacturaDetallesReferencia as $arFacturaDetalleReferencia) {
                             $arFacturaDetalle = new TteFacturaDetalle();
                             $arFacturaDetalle->setFacturaRel($arFactura);
+                            $arFacturaDetalle->setFacturaDetalleRel($arFacturaDetalleReferencia);
                             $arFacturaDetalle->setGuiaRel($arFacturaDetalleReferencia->getGuiaRel());
                             $arFacturaDetalle->setVrDeclara($arFacturaDetalleReferencia->getVrDeclara());
                             $arFacturaDetalle->setVrFlete($arFacturaDetalleReferencia->getVrFlete());

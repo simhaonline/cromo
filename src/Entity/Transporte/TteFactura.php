@@ -127,7 +127,7 @@ class TteFactura
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaDetalle", mappedBy="facturaRel")
      */
-    protected $facturasDetallesDespachoRel;
+    protected $facturasDetallesFacturaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="facturaRel")
@@ -435,6 +435,22 @@ class TteFactura
     /**
      * @return mixed
      */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -483,17 +499,17 @@ class TteFactura
     /**
      * @return mixed
      */
-    public function getFacturasDetallesDespachoRel()
+    public function getFacturasDetallesFacturaRel()
     {
-        return $this->facturasDetallesDespachoRel;
+        return $this->facturasDetallesFacturaRel;
     }
 
     /**
-     * @param mixed $facturasDetallesDespachoRel
+     * @param mixed $facturasDetallesFacturaRel
      */
-    public function setFacturasDetallesDespachoRel($facturasDetallesDespachoRel): void
+    public function setFacturasDetallesFacturaRel($facturasDetallesFacturaRel): void
     {
-        $this->facturasDetallesDespachoRel = $facturasDetallesDespachoRel;
+        $this->facturasDetallesFacturaRel = $facturasDetallesFacturaRel;
     }
 
     /**
@@ -542,22 +558,6 @@ class TteFactura
     public function setFacturasOtrosFacturaRel($facturasOtrosFacturaRel): void
     {
         $this->facturasOtrosFacturaRel = $facturasOtrosFacturaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoContabilizado()
-    {
-        return $this->estadoContabilizado;
-    }
-
-    /**
-     * @param mixed $estadoContabilizado
-     */
-    public function setEstadoContabilizado($estadoContabilizado): void
-    {
-        $this->estadoContabilizado = $estadoContabilizado;
     }
 
 

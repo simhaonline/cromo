@@ -179,7 +179,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                     $query->execute();
                 }
                 if($arFactura->getCodigoFacturaClaseFk() == 'NC') {
-                    $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 0, g.estadoFacturaGenerada = 0 
+                    $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 0, g.estadoFacturaGenerada = 0, g.codigoFacturaFk = null 
                       WHERE g.codigoFacturaFk = :codigoFactura')
                         ->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
                     $query->execute();
@@ -189,8 +189,8 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $arFactura->setFecha($fecha);
                 $arFactura->setFechaVence($objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
                 $arFacturaTipo = $this->getEntityManager()->getRepository(TteFacturaTipo::class)->find($arFactura->getCodigoFacturaTipoFk());
-                $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo() + 1);
                 $arFactura->setNumero($arFacturaTipo->getConsecutivo());
+                $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo() + 1);
                 $this->getEntityManager()->persist($arFactura);
                 $this->getEntityManager()->persist($arFacturaTipo);
 

@@ -23,6 +23,11 @@ class TteFacturaDetalle
     private $codigoFacturaFk;
 
     /**
+     * @ORM\Column(name="codigo_factura_detalle_fk", type="integer", nullable=true)
+     */
+    private $codigoFacturaDetalleFk;
+
+    /**
      * @ORM\Column(name="codigo_guia_fk", type="integer", nullable=true)
      */
     private $codigoGuiaFk;
@@ -64,10 +69,21 @@ class TteFacturaDetalle
     private $facturaRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteFacturaDetalle", inversedBy="facturasDetallesFacturaDetalleRel")
+     * @ORM\JoinColumn(name="codigo_factura_detalle_fk", referencedColumnName="codigo_factura_detalle_pk")
+     */
+    private $facturaDetalleRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteGuia", inversedBy="facturasDetallesGuiaRel")
      * @ORM\JoinColumn(name="codigo_guia_fk", referencedColumnName="codigo_guia_pk")
      */
     private $guiaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaDetalle", mappedBy="facturaDetalleRel")
+     */
+    protected $facturasDetallesFacturaDetalleRel;
 
     /**
      * @return mixed
@@ -243,6 +259,54 @@ class TteFacturaDetalle
     public function setGuiaRel($guiaRel): void
     {
         $this->guiaRel = $guiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaDetalleFk()
+    {
+        return $this->codigoFacturaDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaDetalleFk
+     */
+    public function setCodigoFacturaDetalleFk($codigoFacturaDetalleFk): void
+    {
+        $this->codigoFacturaDetalleFk = $codigoFacturaDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaDetalleRel()
+    {
+        return $this->facturaDetalleRel;
+    }
+
+    /**
+     * @param mixed $facturaDetalleRel
+     */
+    public function setFacturaDetalleRel($facturaDetalleRel): void
+    {
+        $this->facturaDetalleRel = $facturaDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesFacturaDetalleRel()
+    {
+        return $this->facturasDetallesFacturaDetalleRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesFacturaDetalleRel
+     */
+    public function setFacturasDetallesFacturaDetalleRel($facturasDetallesFacturaDetalleRel): void
+    {
+        $this->facturasDetallesFacturaDetalleRel = $facturasDetallesFacturaDetalleRel;
     }
 
 

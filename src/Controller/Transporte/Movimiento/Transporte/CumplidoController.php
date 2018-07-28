@@ -85,12 +85,15 @@ class CumplidoController extends Controller
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteCumplido::class)->autorizar($arCumplido);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(TteCumplido::class)->desAutorizar($arCumplido);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TteCumplido::class)->Aprobar($arCumplido);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_detalle', ['id' => $id]));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
@@ -99,8 +102,9 @@ class CumplidoController extends Controller
                     $em->flush();
                     $em->getRepository(TteCumplido::class)->liquidar($id);
                 }
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_detalle', ['id' => $id]));
             }
-            return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_detalle', ['id' => $id]));
+
         }
 
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->cumplido($id);

@@ -47,7 +47,7 @@
     <ul class="nav nav-tabs">
         <li class="active"><a href="#guias" data-toggle="tab">Guias</a></li>
     </ul>
-    <div class="tab-content">
+
     <div class="tab-pane active" id="guias">
         <div id="detalles" style="width: 100%"><br>
             <div class="table-responsive">
@@ -94,7 +94,7 @@
             <div class="btn-toolbar" style="float: right">
                 {% if arCumplido.estadoAutorizado == 0 %}
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_cumplido_detalle_adicionar_guia', {'codigoCumplido': arCumplido.codigoCumplidoPk }) }}', 'CumplidoAdicionarGuia', 600, 900)">Adicionar</a>
+                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_cumplido_detalle_adicionar_guia', {'codigoCumplido': arCumplido.codigoCumplidoPk }) }}', 'CumplidoAdicionarGuia', 600, 900)">Nuevo</a>
                     </div>
                 {% endif %}
                 <div class="btn-group">

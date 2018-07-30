@@ -75,6 +75,7 @@
                             <th>OI</th>
                             <th>OC</th>
                             <th>NUMERO</th>
+                            <th>DOCUMENTO</th>
                             <th>DESTINO</th>
                             <th>UND</th>
                             <th>PES</th>
@@ -92,6 +93,7 @@
                                 <td>{{ arFacturaDetalle.codigoOperacionIngresoFk }}</td>
                                 <td>{{ arFacturaDetalle.codigoOperacionCargoFk }}</td>
                                 <td>{{ arFacturaDetalle.numero }}</td>
+                                <td>{{ arFacturaDetalle.documentoCliente }}</td>
                                 <td>{{ arFacturaDetalle.ciudadDestino }}</td>
                                 <td style="text-align: right">{{ arFacturaDetalle.unidades | number_format(0, '.', ',')}}</td>
                                 <td style="text-align: right">{{ arFacturaDetalle.pesoReal | number_format(0, '.', ',')}}</td>

@@ -33,6 +33,7 @@ class FacturaController extends Controller
         $paginator  = $this->get('knp_paginator');
         $session = new Session();
         $form = $this->createFormBuilder()
+            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaCodigo')])
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaNumero')])
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
@@ -47,6 +48,7 @@ class FacturaController extends Controller
                 $session->set('filtroTteFacturaEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
                 $session->set('filtroTteFacturaEstadoAnulado', $form->get('chkEstadoAnulado')->getData());
                 $session->set('filtroTteFacturaNumero', $form->get('txtNumero')->getData());
+                $session->set('filtroTteFacturaCodigo', $form->get('txtCodigo')->getData());
 
                 if ($form->get('txtCodigoCliente')->getData() != '') {
                     $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
@@ -61,7 +63,7 @@ class FacturaController extends Controller
                 $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
             }
         }
-        $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->lista(), $request->query->getInt('page', 1), 30);
+        $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('transporte/movimiento/comercial/factura/lista.html.twig', [
             'arFacturas' => $arFacturas,
             'form' => $form->createView() ]);

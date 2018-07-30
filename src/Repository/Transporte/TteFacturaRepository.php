@@ -62,6 +62,9 @@ class TteFacturaRepository extends ServiceEntityRepository
         if($session->get('filtroTteFacturaNumero') != ''){
             $queryBuilder->andWhere("f.numero = {$session->get('filtroTteFacturaNumero')}");
         }
+        if($session->get('filtroTteFacturaCodigo') != ''){
+            $queryBuilder->andWhere("f.codigoFacturaPk = {$session->get('filtroTteFacturaCodigo')}");
+        }
         if($session->get('filtroTteCodigoCliente')){
             $queryBuilder->andWhere("f.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }

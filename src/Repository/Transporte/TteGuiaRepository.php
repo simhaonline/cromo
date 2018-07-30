@@ -426,6 +426,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT g.codigoGuiaPk, 
         g.numero,
+        g.documentoCliente,
         g.fechaIngreso,
         g.codigoOperacionIngresoFk,
         g.codigoOperacionCargoFk, 

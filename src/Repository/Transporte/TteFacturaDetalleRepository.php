@@ -4,6 +4,7 @@ namespace App\Repository\Transporte;
 
 
 use App\Entity\Transporte\TteFacturaDetalle;
+use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -58,6 +59,34 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         )->setParameter('codigoGuia', $codigoGuia);
 
         return $query->execute();
+    }
+
+    /**
+     * @param $arrControles array
+     * @param $arFactura TteFactura
+     * @param $form FormInterface
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function actualizarDetalles($arrControles, $form, $arMovimiento)
+    {
+        $em = $this->getEntityManager();
+        $arrDocumentoCliente = $arrControles['arrDocumentoCliente'];
+        $arrFlete = $arrControles['arrFlete'];
+        $arrManejo = $arrControles['arrManejo'];
+        $arrCodigo = $arrControles['arrCodigo'];
+        foreach ($arrCodigo as $codigoFacturaDetalle) {
+            $arFacturaDetalle = $em->getRepository(TteFacturaDetalle::class)->find($codigoFacturaDetalle);
+            $arFacturaDetalle->setVrFlete($arrFlete[$codigoFacturaDetalle]);
+            $arFacturaDetalle->setVrManejo($arrManejo[$codigoFacturaDetalle]);
+            $em->persist($arFacturaDetalle);
+            $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalle->getCodigoGuiaFk());
+            $arGuia->setDocumentoCliente($arrDocumentoCliente[$codigoFacturaDetalle]);
+            $arGuia->setVrFlete($arrFlete[$codigoFacturaDetalle]);
+            $arGuia->setVrManejo($arrManejo[$codigoFacturaDetalle]);
+            $em->persist($arGuia);
+        }
+        $em->flush();
     }
 
 }

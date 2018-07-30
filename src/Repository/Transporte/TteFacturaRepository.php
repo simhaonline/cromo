@@ -252,9 +252,6 @@ class TteFacturaRepository extends ServiceEntityRepository
                         if($arFactura->getCodigoFacturaClaseFk() == 'FA') {
                             $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->findOneBy(array('modulo' => 'TTE', 'codigoDocumento' => $arFactura->getCodigoFacturaPk()));
                             if($arCuentaCobrar) {
-                                $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.codigoFacturaFk = null, g.estadoFacturado = 0, g.estadoFacturaGenerada = 0, g.fechaFactura=NULL 
-                                WHERE g.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
-                                $query->execute();
                                 $arCuentaCobrarAct = $em->getRepository(CarCuentaCobrar::class)->find($arCuentaCobrar->getCodigoCuentaCobrarPk());
                                 $arCuentaCobrarAct->setVrSubtotal(0);
                                 $arCuentaCobrarAct->setVrTotal(0);
@@ -265,23 +262,25 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arCuentaCobrarAct->setVrSaldoOperado(0);
                                 $arCuentaCobrarAct->setEstadoAnulado(1);
                                 $em->persist($arCuentaCobrarAct);
-
-                                $arFactura->setVrTotal(0);
-                                $arFactura->setVrSubtotal(0);
-                                $arFactura->setVrFlete(0);
-                                $arFactura->setVrManejo(0);
-                                $arFactura->setGuias(0);
-                                $arFactura->setVrOtros(0);
-                                $arFactura->setEstadoAnulado(1);
-                                $em->persist($arFactura);
-
-                                $query = $em->createQuery('UPDATE App\Entity\Transporte\TteFacturaDetalle fd set fd.vrFlete = 0, fd.vrManejo = 0,  fd.unidades = 0, 
-                                fd.pesoReal = 0, fd.pesoVolumen = 0, fd.vrDeclara = 0 
-                                WHERE fd.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
-                                $query->execute();
-
-                                $em->flush();
                             }
+                            $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.codigoFacturaFk = null, g.estadoFacturado = 0, g.estadoFacturaGenerada = 0, g.fechaFactura=NULL 
+                                WHERE g.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
+                            $query->execute();
+
+                            $arFactura->setVrTotal(0);
+                            $arFactura->setVrSubtotal(0);
+                            $arFactura->setVrFlete(0);
+                            $arFactura->setVrManejo(0);
+                            $arFactura->setGuias(0);
+                            $arFactura->setVrOtros(0);
+                            $arFactura->setEstadoAnulado(1);
+                            $em->persist($arFactura);
+                            $query = $em->createQuery('UPDATE App\Entity\Transporte\TteFacturaDetalle fd set fd.vrFlete = 0, fd.vrManejo = 0,  fd.unidades = 0, 
+                            fd.pesoReal = 0, fd.pesoVolumen = 0, fd.vrDeclara = 0 
+                            WHERE fd.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
+                            $query->execute();
+                            $em->flush();
+
                         }
                     } else {
                         Mensajes::error("La factura no puede estar previamente anulada");

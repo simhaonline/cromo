@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -37,11 +38,23 @@ class GuiaController extends Controller
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
+        $fecha = new \DateTime('now');
+        if($session->get('filtroFechaDesde') == "") {
+            $session->set('filtroFechaDesde', $fecha->format('Y-m-d'));
+        }
+        if($session->get('filtroFechaHasta') == "") {
+            $session->set('filtroFechaHasta', $fecha->format('Y-m-d'));
+        }
         $form = $this->createFormBuilder()
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
+            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
             ->add('cboServicioRel', EntityType::class, $em->getRepository(TteServicio::class)->llenarCombo())
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroTteGuiaCodigo')))
             ->add('txtDocumento', TextType::class, array('data' => $session->get('filtroTteGuiaDocumento')))
+            ->add('txtCodigoFactura', TextType::class, array('data' => $session->get('filtroCodigoFactura')))
             ->add('txtNumero', TextType::class, array('data' => $session->get('filtroTteGuiaNumero')))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
@@ -63,9 +76,14 @@ class GuiaController extends Controller
                     } else {
                         $session->set('filtroTteGuiaCodigoServicio', null);
                     }
+                    $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                    $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                    $session->set('filtroCodigoFactura', $form->get('txtCodigoFactura')->getData());
                     $session->set('filtroTteGuiaDocumento', $form->get('txtDocumento')->getData());
                     $session->set('filtroTteGuiaNumero', $form->get('txtNumero')->getData());
                     $session->set('filtroTteGuiaCodigo', $form->get('txtCodigo')->getData());
+                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
                 }
                 if ($form->get('btnExcel')->isClicked()) {
                     General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->lista())->execute(), "Guias");

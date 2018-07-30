@@ -98,6 +98,11 @@ class CarRecibo
     private $estadoExportado = 0;
 
     /**
+     * @ORM\Column(name="estado_aprobado", type="boolean")
+     */
+    private $estadoAprobado = 0;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean")
      */
     private $estadoAutorizado = 0;
@@ -538,6 +543,22 @@ class CarRecibo
     public function setRecibosDetallesRecibosRel($recibosDetallesRecibosRel): void
     {
         $this->recibosDetallesRecibosRel = $recibosDetallesRecibosRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
     }
 
 

@@ -3,7 +3,10 @@
 namespace App\Repository\Cartera;
 
 
+use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
+use App\Entity\Cartera\CarReciboDetalle;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -45,23 +48,33 @@ class CarReciboRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-//    public function eliminar($arrSeleccionados)
-//    {
-//        $respuesta = '';
-//        $em = $this->getEntityManager();
-//        if ($arrSeleccionados) {
-//            foreach ($arrSeleccionados AS $codigo) {
-//                $ar = $em->getRepository(CarReciboTipo::class)->find($codigo);
-//                if ($ar) {
-//                    $em->remove($ar);
-//                }
-//            }
-//            try {
-//                $em->flush();
-//            } catch (\Exception $exception) {
-//                $respuesta = 'No se puede eliminar, el registro esta siendo utilizado en el sistema';
-//            }
-//        }
-//        return $respuesta;
-//    }
+    public function autorizar($arRecibo)
+    {
+        if (count($this->getEntityManager()->getRepository(CarReciboDetalle::class)->findBy(['codigoReciboFk' => $arRecibo->getCodigoReciboPk()])) > 0) {
+            $arRecibo->setEstadoAutorizado(1);
+            $this->getEntityManager()->persist($arRecibo);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('No se puede autorizar, el registro no tiene detalles');
+        }
+    }
+
+    public function desAutorizar($arRecibo)
+    {
+        $em = $this->getEntityManager();
+        $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $arRecibo->getCodigoREciboPk()));
+        foreach ($arReciboDetalles AS $arReciboDetalle) {
+            $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
+            $saldo = $arCuentaCobrar->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
+            $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
+            $arCuentaCobrar->setVrSaldo($saldo);
+            $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
+            $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
+            $em->persist($arCuentaCobrar);
+        }
+
+        $arRecibo->setEstadoAutorizado(0);
+        $em->persist($arRecibo);
+        $em->flush();
+    }
 }

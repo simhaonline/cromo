@@ -5,7 +5,10 @@ namespace App\Controller\Cartera\Movimiento\Recibo;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
+use App\Entity\Transporte\TteRecibo;
 use App\Form\Type\Cartera\ReciboType;
+use App\Utilidades\Estandares;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,9 +79,65 @@ class ReciboController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $arRecibo = $em->getRepository(CarRecibo::class)->find($id);
-        $form = $this->createFormBuilder()
-            ->getForm();
+        $form = Estandares::botonera($arRecibo->getEstadoAutorizado(),$arRecibo->getEstadoAprobado(),$arRecibo->getEstadoAnulado());
+        $arrBtnEliminarDetalle = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnActualizarDetalle = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        if($arRecibo->getEstadoAutorizado()){
+            $arrBtnEliminarDetalle['disabled'] = true;
+            $arrBtnActualizarDetalle['disabled'] = true;
+        }
+        $form->add('btnEliminarDetalle', SubmitType::class, $arrBtnEliminarDetalle);
+        $form->add('btnActualizarDetalle', SubmitType::class, $arrBtnActualizarDetalle);
         $form->handleRequest($request);
+        if ($form->get('btnEliminarDetalle')->isClicked()) {
+            if ($arRecibo->getEstadoAutorizado() == 0) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(CarReciboDetalle::class)->eliminarSeleccionados($arrSeleccionados);
+                $em->getRepository(CarReciboDetalle::class)->liquidar($id);
+            } else {
+                Mensajes::error('No se puede eliminar el registro, esta autorizado');
+            }
+            return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', array('id' => $id)));
+        }
+        if ($form->get('btnAutorizar')->isClicked()) {
+            if($arRecibo->getEstadoAutorizado() == 0){
+                $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $id));
+                if (count($em->getRepository(CarReciboDetalle::class)->findBy(['codigoReciboFk' => $arRecibo->getCodigoReciboPk()])) > 0){
+                    foreach ($arReciboDetalles AS $arReciboDetalle) {
+                        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
+                        $saldo = $arCuentaCobrar->getVrSaldo() - $arReciboDetalle->getVrPagoAfectar();
+                        $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
+                        $arCuentaCobrar->setVrSaldo($saldo);
+                        $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
+                        $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
+                        $em->persist($arCuentaCobrar);
+                    }
+                    $arRecibo->setEstadoAutorizado(1);
+                    $em->persist($arRecibo);
+                    $em->flush();
+                } else {
+                    Mensajes::error("No se puede autorizar un recibo sin detalles");
+                }
+            }
+            return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
+        }
+        if ($form->get('btnDesautorizar')->isClicked()) {
+            if ($arRecibo->getEstadoAutorizado() == 1 && $arRecibo->getEstadoImpreso() == 0) {
+                $em->getRepository(CarRecibo::class)->desAutorizar($arRecibo);
+                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
+            }else {
+                Mensajes::error("El recibo debe estar autorizado y no puede estar impreso");
+            }
+        }
+        if ($form->get('btnActualizarDetalle')->isClicked()) {
+            if ($arRecibo->getEstadoAutorizado() == 0) {
+                $arrControles = $request->request->All();
+                $em->getRepository(CarReciboDetalle::class)->actualizarDetalle($arrControles, $arRecibo);
+                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
+            } else {
+                Mensajes::error("No se puede actualizar, el registro se encuentra autorizado");
+            }
+        }
         $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $id));
 
         return $this->render('cartera/movimiento/recibo/detalle.html.twig', array(
@@ -135,5 +194,54 @@ class ReciboController extends Controller
             'arRecibo' => $arRecibo,
             'form' => $form->createView()));
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * * @Route("/cartera/movimiento/recibo/recibo/detalle/aplicar/{id}", name="cartera_movimiento_recibo_recibo_detalle_aplicar")
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function detalleNuevoAplicar(Request $request, $id)
+    {
+        $paginator = $this->get('knp_paginator');
+        $em = $this->getDoctrine()->getManager();
+        $arRecibo = $em->getRepository(CarRecibo::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arrControles = $request->request->All();
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados AS $codigoCuentaCobrar) {
+                        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrar);
+                        $vrPago = $em->getRepository(CarReciboDetalle::class)->vrPagoRecibo($codigoCuentaCobrar, $id);
+                        $saldo = $arrControles['TxtSaldo' . $codigoCuentaCobrar] - $vrPago;
+                        $arReciboDetalle = new CarReciboDetalle();
+                        $arReciboDetalle->setReciboRel($arRecibo);
+                        $arReciboDetalle->setCuentaCobrarRel($arCuentaCobrar);
+                        $arReciboDetalle->setVrPago($saldo);
+                        $arReciboDetalle->setNumeroFactura($arCuentaCobrar->getNumeroDocumento());
+                        $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
+                        $arReciboDetalle->setOperacion(0);
+                        $em->persist($arReciboDetalle);
+                    }
+                    $em->flush();
+                }
+                $em->getRepository(CarReciboDetalle::class)->liquidar($id);
+            }
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->cuentasCobrarAplicar($arRecibo->getCodigoClienteFk());
+        $arCuentasCobrar = $paginator->paginate($arCuentasCobrar, $request->query->get('page', 1), 50);
+        return $this->render('cartera/movimiento/recibo/detalleAplicar.html.twig', array(
+            'arCuentasCobrar' => $arCuentasCobrar,
+            'arRecibo' => $arRecibo,
+            'form' => $form->createView()));
+    }
+
 }
 

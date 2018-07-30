@@ -101,6 +101,10 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->leftJoin('tg.clienteRel', 'c')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->where('tg.codigoGuiaPk <> 0');
+        $fecha =  new \DateTime('now');
+        if ($session->get('filtroCodigoFactura')) {
+            $queryBuilder->andWhere("tg.codigoFacturaFk = '" . $session->get('filtroCodigoFactura') . "'");
+        }
         if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
             $queryBuilder->andWhere("tg.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");
         }
@@ -115,6 +119,19 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         if ($session->get('filtroTteGuiaCodigo') != "") {
             $queryBuilder->andWhere("tg.codigoGuiaPk = " . $session->get('filtroTteGuiaCodigo'));
+        }
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if ($session->get('filtroFechaDesde') != null) {
+            $queryBuilder->andWhere("tg.fechaIngreso >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+        } else {
+            $queryBuilder->andWhere("tg.fechaIngreso >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+        }
+        if ($session->get('filtroFechaHasta') != null) {
+            $queryBuilder->andWhere("tg.fechaIngreso <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+        } else {
+            $queryBuilder->andWhere("tg.fechaIngreso <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
         }
         $queryBuilder->orderBy('tg.fechaIngreso', 'DESC');
 

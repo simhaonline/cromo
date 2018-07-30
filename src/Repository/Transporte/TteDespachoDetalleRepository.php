@@ -5,6 +5,7 @@ namespace App\Repository\Transporte;
 use App\Entity\Transporte\TteDespachoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteDespachoDetalleRepository extends ServiceEntityRepository
 {
@@ -86,4 +87,33 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function detalle(){
+
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
+            ->select('dd.codigoDespachoDetallePk')
+            ->join('dd.guiaRel', 'gd')
+            ->join('dd.despachoRel', 'd')
+            ->join('gd.clienteRel', 'c')
+            ->addSelect('dd.vrCosto AS Costo')
+            ->addSelect('d.codigoDespachoPk')
+            ->addSelect('c.codigoClientePk')
+            ->addSelect('c.nombreCorto')
+            ->addSelect('c.numeroIdentificacion')
+            ->addSelect('dd.unidades')
+            ->addSelect('dd.pesoReal')
+            ->addSelect('dd.pesoVolumen')
+            ->addSelect('dd.vrDeclara')
+            ->addSelect('dd.vrFlete')
+            ->orderBy('dd.codigoDespachoDetallePk', 'DESC');
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if($session->get('filtroCodigoDespacho')){
+            $queryBuilder->andWhere("d.codigoDespachoPk = {$session->get('filtroCodigoDespacho')}");
+        }
+
+        return $queryBuilder;
+
+    }
 }

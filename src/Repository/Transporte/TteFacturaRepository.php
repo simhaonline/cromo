@@ -85,7 +85,8 @@ class TteFacturaRepository extends ServiceEntityRepository
                 break;
         }
         $queryBuilder->orderBy('f.estadoAprobado', 'ASC');
-        $queryBuilder->addOrderBy('f.estadoAprobado, f.fecha', 'DESC');
+        $queryBuilder->addOrderBy('f.fecha', 'DESC');
+        $queryBuilder->addOrderBy('f.codigoFacturaPk', 'DESC');
         return $queryBuilder;
     }
 

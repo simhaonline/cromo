@@ -311,6 +311,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.vrFlete')
             ->addSelect('tg.vrManejo')
             ->addSelect('tg.vrRecaudo')
+            ->addSelect('tg.estadoNovedad')
             ->addSelect('ct.nombreCorto')
             ->addSelect('ct.movil')
             ->addSelect(
@@ -332,6 +333,12 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         if ($session->get('filtroDocumentoCliente')) {
             $dql->andWhere("tg.documentoCliente = '{$session->get('filtroDocumentoCliente')}'");
+        }
+        if ($session->get('filtroFechaDesde') != null) {
+            $dql->andWhere("tg.fechaIngreso >= '{$session->get('filtroFechaDesde')->format('Y-m-d')} 00:00:00'");
+        }
+        if ($session->get('filtroFechaHasta') != null) {
+            $dql->andWhere("tg.fechaIngreso <= '{$session->get('filtroFechaHasta')->format('Y-m-d')} 23:59:59'");
         }
 
         $query = $em->createQuery($dql);
@@ -1078,4 +1085,58 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
     }
 
+    public function excelPendienteEntrega(){
+
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
+            ->select('tg.codigoGuiaPk')
+            ->addSelect('tg.codigoServicioFk')
+            ->addSelect('tg.codigoGuiaTipoFk')
+            ->addSelect('tg.numero')
+            ->addSelect('tg.documentoCliente')
+            ->addSelect('tg.fechaIngreso')
+            ->addSelect('tg.codigoOperacionIngresoFk')
+            ->addSelect('tg.codigoOperacionCargoFk')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('tg.unidades')
+            ->addSelect('tg.pesoReal')
+            ->addSelect('tg.pesoVolumen')
+            ->addSelect('tg.vrFlete')
+            ->addSelect('tg.vrManejo')
+            ->addSelect('tg.vrRecaudo')
+            ->addSelect('ct.nombreCorto')
+            ->addSelect('ct.movil')
+            ->addSelect(
+                '(dg.numero) AS manifiesto'
+            )
+            ->addSelect('tg.estadoNovedad')
+            ->leftJoin('tg.clienteRel', 'c')
+            ->leftJoin('tg.ciudadDestinoRel', 'cd')
+            ->leftJoin('tg.despachoRel', 'dg')
+            ->leftJoin('dg.conductorRel', 'ct')
+            ->where('tg.estadoEntregado = 0')
+            ->andWhere('tg.estadoDespachado = 1')
+            ->andWhere('tg.estadoAnulado = 0');
+        $queryBuilder->orderBy('tg.codigoGuiaPk', 'DESC');
+            $queryBuilder->orderBy('tg.codigoGuiaPk', 'DESC');
+        if ($session->get('filtroNumeroGuia')) {
+            $queryBuilder->andWhere("tg.codigoGuiaPk = '{$session->get('filtroNumeroGuia')}'");
+        }
+        if ($session->get('filtroConductor') != '') {
+            $queryBuilder->andWhere("ct.nombreCorto LIKE '%{$session->get('filtroConductor')}%' ");
+        }
+        if ($session->get('filtroDocumentoCliente')) {
+            $queryBuilder->andWhere("tg.documentoCliente = '{$session->get('filtroDocumentoCliente')}'");
+        }
+        if ($session->get('filtroFechaDesde') != null) {
+            $queryBuilder->andWhere("tg.fechaIngreso >= '{$session->get('filtroFechaDesde')->format('Y-m-d')} 00:00:00'");
+        }
+        if ($session->get('filtroFechaHasta') != null) {
+            $queryBuilder->andWhere("tg.fechaIngreso <= '{$session->get('filtroFechaHasta')->format('Y-m-d')} 23:59:59'");
+        }
+
+        return $queryBuilder;
+
+    }
 }

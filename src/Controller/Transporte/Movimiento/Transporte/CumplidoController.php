@@ -111,7 +111,7 @@ class CumplidoController extends Controller
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_detalle', ['id' => $id]));
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TteGuia::class)->cumplido($id), "Guias");
+                General::get()->setExportar($em->getRepository(TteGuia::class)->cumplido($id), "Cumplidos $id");
             }
         }
 

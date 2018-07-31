@@ -43,6 +43,33 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
 
     }
 
+    public function facturaPlanilla($codigoFacturaPlanilla)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFacturaDetalle::class, 'fd');
+        $queryBuilder
+            ->select('fd.codigoFacturaDetallePk')
+            ->addSelect('fd.codigoGuiaFk')
+            ->addSelect('g.numero')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.codigoGuiaFk')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('fd.unidades')
+            ->addSelect('fd.pesoReal')
+            ->addSelect('fd.pesoVolumen')
+            ->addSelect('fd.vrFlete')
+            ->addSelect('fd.vrManejo')
+            ->addSelect('cd.ciudadDestino')
+            ->leftJoin('fd.guiaRel', 'g')
+            ->leftJoin('fd.ciudadDestinoRel', 'cd')
+            ->where('fd.codigoFacturaPlanillaFk = ' . $codigoFacturaPlanilla);
+        $queryBuilder->orderBy('fd.fechaIngreso', 'DESC');
+
+        return $queryBuilder;
+    }
+
     public function guia($codigoGuia): array
     {
         $em = $this->getEntityManager();

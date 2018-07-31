@@ -28,6 +28,11 @@ class TteFacturaDetalle
     private $codigoFacturaDetalleFk;
 
     /**
+     * @ORM\Column(name="codigo_factura_planilla_fk", type="integer", nullable=true)
+     */
+    private $codigoFacturaPlanillaFk;
+
+    /**
      * @ORM\Column(name="codigo_guia_fk", type="integer", nullable=true)
      */
     private $codigoGuiaFk;
@@ -73,6 +78,12 @@ class TteFacturaDetalle
      * @ORM\JoinColumn(name="codigo_factura_detalle_fk", referencedColumnName="codigo_factura_detalle_pk")
      */
     private $facturaDetalleRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteFacturaPlanilla", inversedBy="facturasDetallesFacturaPlanillaRel")
+     * @ORM\JoinColumn(name="codigo_factura_planilla_fk", referencedColumnName="codigo_factura_planilla_pk")
+     */
+    private $facturaPlanillaRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteGuia", inversedBy="facturasDetallesGuiaRel")
@@ -307,6 +318,38 @@ class TteFacturaDetalle
     public function setFacturasDetallesFacturaDetalleRel($facturasDetallesFacturaDetalleRel): void
     {
         $this->facturasDetallesFacturaDetalleRel = $facturasDetallesFacturaDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaPlanillaFk()
+    {
+        return $this->codigoFacturaPlanillaFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaPlanillaFk
+     */
+    public function setCodigoFacturaPlanillaFk($codigoFacturaPlanillaFk): void
+    {
+        $this->codigoFacturaPlanillaFk = $codigoFacturaPlanillaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaPlanillaRel()
+    {
+        return $this->facturaPlanillaRel;
+    }
+
+    /**
+     * @param mixed $facturaPlanillaRel
+     */
+    public function setFacturaPlanillaRel($facturaPlanillaRel): void
+    {
+        $this->facturaPlanillaRel = $facturaPlanillaRel;
     }
 
 

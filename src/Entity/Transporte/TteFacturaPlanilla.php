@@ -59,6 +59,11 @@ class TteFacturaPlanilla
     protected $guiasFacturaPlanillaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaDetalle", mappedBy="facturaPlanillaRel")
+     */
+    protected $facturasDetallesFacturaPlanillaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoFacturaPlanillaPk()
@@ -200,6 +205,22 @@ class TteFacturaPlanilla
     public function setNumero($numero): void
     {
         $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesFacturaPlanillaRel()
+    {
+        return $this->facturasDetallesFacturaPlanillaRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesFacturaPlanillaRel
+     */
+    public function setFacturasDetallesFacturaPlanillaRel($facturasDetallesFacturaPlanillaRel): void
+    {
+        $this->facturasDetallesFacturaPlanillaRel = $facturasDetallesFacturaPlanillaRel;
     }
 
 

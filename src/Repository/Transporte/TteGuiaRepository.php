@@ -382,8 +382,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             'SELECT g.codigoGuiaPk, 
         g.numero,         
         g.fechaIngreso,        
-        g.codigoOperacionIngresoFk,
-        g.codigoOperacionCargoFk,     
+        g.documentoCliente,               
+        g.nombreDestinatario,
         g.unidades,
         g.pesoReal,
         g.pesoVolumen,
@@ -391,9 +391,9 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.vrFlete,
         g.vrManejo,
         g.vrRecaudo,
-        g.documentoCliente,               
-        g.nombreDestinatario,
         g.empaqueReferencia,
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk,     
         c.nombreCorto AS clienteNombreCorto,
         cd.nombre AS ciudadDestino
         FROM App\Entity\Transporte\TteGuia g 
@@ -401,7 +401,6 @@ class TteGuiaRepository extends ServiceEntityRepository
         LEFT JOIN g.ciudadDestinoRel cd
         WHERE g.codigoCumplidoFk = :codigoCumplido'
         )->setParameter('codigoCumplido', $codigoCumplido);
-
         return $query->execute();
 
     }

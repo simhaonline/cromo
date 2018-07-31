@@ -10,6 +10,7 @@ use App\Entity\Transporte\TteCliente;
 use App\Form\Type\Transporte\CumplidoType;
 use App\Formato\Transporte\Cumplido;
 use App\Formato\Transporte\CumplidoEntrega;
+use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,7 @@ class CumplidoController extends Controller
         $paginator  = $this->get('knp_paginator');
         $session = new Session();
         $form = $this->createFormBuilder()
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
@@ -50,6 +52,9 @@ class CumplidoController extends Controller
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
             }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($em->getRepository(TteCumplido::class)->lista())->execute(), "Guias");
+            }
         }
         $arCumplidos = $paginator->paginate($em->getRepository(TteCumplido::class)->lista(), $request->query->getInt('page', 1),40);
         return $this->render('transporte/movimiento/transporte/cumplido/lista.html.twig', [
@@ -66,6 +71,7 @@ class CumplidoController extends Controller
         $arCumplido = $em->getRepository(TteCumplido::class)->find($id);
         $paginator  = $this->get('knp_paginator');
         $form = Estandares::botonera($arCumplido->getEstadoAutorizado(),$arCumplido->getEstadoAprobado(),$arCumplido->getEstadoAnulado());
+        $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
         $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         if($arCumplido->getEstadoAutorizado()){
             $arrBtnRetirar['disabled'] = true;
@@ -104,7 +110,9 @@ class CumplidoController extends Controller
                 }
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_cumplido_detalle', ['id' => $id]));
             }
-
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TteGuia::class)->cumplido($id), "Guias");
+            }
         }
 
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->cumplido($id);

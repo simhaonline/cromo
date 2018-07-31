@@ -3,12 +3,7 @@
 namespace App\Formato\Cartera;
 
 use App\Entity\Cartera\CarRecibo;
-use App\Entity\General\GenConfiguracion;
-use App\Entity\Transporte\TteConfiguracion;
-use App\Entity\Transporte\TteDespacho;
-use App\Entity\Transporte\TteDespachoRecogida;
-use App\Entity\Transporte\TteGuia;
-use App\Entity\Transporte\TteRecogida;
+use App\Entity\Cartera\CarReciboDetalle;
 use App\Utilidades\Estandares;
 
 class Recibo extends \FPDF {
@@ -47,10 +42,10 @@ class Recibo extends \FPDF {
         $this->Cell(66, 6, utf8_decode($arRecibo->getClienteRel()->getNombreCorto()) , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, 'FLETE:', 1, 0, 'L', 1);
+        $this->Cell(30, 6, 'NUMERO:', 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, '' , 1, 0, 'R', 1);
+        $this->Cell(65, 6, $arRecibo->getNumero() , 1, 0, 'R', 1);
         //linea 2
         $this->SetXY(10, 46);
         $this->SetFillColor(200, 200, 200);
@@ -61,10 +56,10 @@ class Recibo extends \FPDF {
         $this->Cell(66, 6, $arRecibo->getClienteRel()->getNumeroIdentificacion() , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "ANTICIPO:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "FECHA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6,  '' , 1, 0, 'R', 1);
+        $this->Cell(65, 6,  $arRecibo->getFecha()->format('Y-m-d') , 1, 0, 'R', 1);
         //linea 3
         $this->SetXY(10, 52);
         $this->SetFillColor(200, 200, 200);
@@ -75,62 +70,39 @@ class Recibo extends \FPDF {
         $this->Cell(66, 6, $arRecibo->getClienteRel()->getDireccion() , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "IND COM::", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "FECHA PAGO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6,'', 1, 0, 'R', 1);
+        $this->Cell(65, 6,$arRecibo->getFechaPago()->format('Y-m-d'), 1, 0, 'R', 1);
         //linea 4
         $this->SetXY(10, 58);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 6, 'CIUDAD', 1, 0, 'L', 1);
+        $this->Cell(30, 6, 'TELEFONO', 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial','', 8);
-        $this->Cell(66, 6, $arRecibo->getClienteRel()->getCiudadRel()->getNombre() , 1, 0, 'L', 1);
+        $this->Cell(66, 6, $arRecibo->getClienteRel()->getTelefono() , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "RTE FUENTE:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "TOTAL:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 6, number_format($arRecibo->getVrPagoTotal()), 1, 0, 'R', 1);
+
+        //linea 5
+        $this->SetXY(10, 64);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 6, 'CUENTA', 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial','', 8);
+        $this->Cell(66, 6, $arRecibo->getCuentaRel()->getNombre() , 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 6, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(65, 6, '', 1, 0, 'R', 1);
-//
-//        $this->SetXY(10, 64);
-//        $this->SetFillColor(200, 200, 200);
-//        $this->SetFont('Arial', 'B', 8);
-//        $this->Cell(30, 6, '', 1, 0, 'L', 1);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->SetFont('Arial','', 8);
-//        $this->Cell(66, 6, '' , 1, 0, 'R', 1);
-//        $this->SetFont('Arial', 'B', 8);
-//        $this->SetFillColor(200, 200, 200);
-//        $this->Cell(30, 6, "ESTAMPILLA:", 1, 0, 'L', 1);
-//        $this->SetFont('Arial', '', 8);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->Cell(65, 6, number_format($arDespacho->getVrDescuentoEstampilla()), 1, 0, 'R', 1);
-//
-//        $this->SetXY(10, 70);
-//        $this->SetFillColor(200, 200, 200);
-//        $this->SetFont('Arial', 'B', 8);
-//        $this->Cell(30, 6, '', 1, 0, 'L', 1);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->SetFont('Arial','', 8);
-//        $this->Cell(66, 6, '' , 1, 0, 'R', 1);
-//        $this->SetFont('Arial', 'B', 8);
-//        $this->SetFillColor(200, 200, 200);
-//        $this->Cell(30, 6, "SALDO:", 1, 0, 'L', 1);
-//        $this->SetFont('Arial', '', 8);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->Cell(65, 6, number_format($arDespacho->getVrSaldo()), 1, 0, 'R', 1);
-//        //linea 4
-//        //linea 4
-//        $this->SetXY(10, 76);
-//        $this->SetFillColor(200, 200, 200);
-//        $this->SetFont('Arial', 'B', 8);
-//        $this->Cell(30, 6, 'COMENTARIOS:', 1, 0, 'L', 1);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->SetFont('Arial', '', 8);
-//        $this->Cell(161, 6,  utf8_decode($arDespacho->getComentario()) , 1, 0, 'L', 1);
-
 
         $this->EncabezadoDetalles();
 
@@ -138,14 +110,14 @@ class Recibo extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('GUIA', 'FECHA','CLIENTE', 'UND', 'PESO');
+        $header = array('ID', 'TIPO','NUMERO', 'FECHA', 'DESCUENTO', 'AJUSTE PESO', 'RTE FTE', 'RET ICA','VALOR');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(16, 25, 100, 10, 10);
+        $w = array(15, 35, 20, 20, 20, 20, 20, 20, 21, 21);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -159,42 +131,28 @@ class Recibo extends \FPDF {
     }
 
     public function Body($pdf) {
-//        $arRecogidas = self::$em->getRepository(TteRecogida::class)->listaFormato(self::$codigoDespacho);
-//        $pdf->SetX(10);
-//        $pdf->SetFont('Arial', '', 7);
-//        if($arRecogidas) {
-//            foreach ($arRecogidas as $arRecogida) {
-//                $pdf->Cell(16, 4, $arRecogida['codigoRecogidaPk'], 1, 0, 'L');
-//                $pdf->Cell(25, 4, $arRecogida['fecha']->format('Y-m-d H:i'), 1, 0, 'L');
-//                $pdf->Cell(100, 4, substr($arRecogida['clienteNombreCorto'],0,100), 1, 0, 'L');
-//                $pdf->Cell(10, 4, number_format($arRecogida['unidades'], 0, '.', ','), 1, 0, 'R');
-//                $pdf->Cell(10, 4, number_format($arRecogida['pesoReal'], 0, '.', ','), 1, 0, 'R');
-//                $pdf->Ln();
-//                $pdf->SetAutoPageBreak(true, 15);
-//            }
-//            $pdf->Ln();
-//            $pdf->SetAutoPageBreak(true, 15);
-//        }
+        $arRecibosDetalle = self::$em->getRepository(CarReciboDetalle::class)->listaFormato(self::$codigoRecibo);
+        $pdf->SetX(10);
+        $pdf->SetFont('Arial', '', 7);
+        if($arRecibosDetalle) {
+            foreach ($arRecibosDetalle as $arReciboDetalle) {
+                $pdf->Cell(15, 4, $arReciboDetalle['codigoReciboDetallePk'], 1, 0, 'L');
+                $pdf->Cell(35, 4, $arReciboDetalle['cuentaCobrarTipo'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arReciboDetalle['numeroFactura'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arReciboDetalle['fecha']->format('Y-m-d'), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arReciboDetalle['vrDescuento'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arReciboDetalle['vrAjustePeso'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arReciboDetalle['vrRetencionFuente'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arReciboDetalle['vrRetencionIca'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(21, 4, number_format($arReciboDetalle['vrPagoAfectar'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Ln();
+                $pdf->SetAutoPageBreak(true, 85);
+            }
+            $pdf->Ln();
+            $pdf->SetAutoPageBreak(true, 15);
+        }
     }
 
-    public function Footer() {
-        $this->SetFont('Arial','', 8);
-        $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(10, 200);
-
-        $this->Text(10, 260, "______________________________________________");
-        $this->Text(10, 264, "DESPACHADO POR");
-        $this->Text(10, 268, "C.C:");
-
-        $this->Text(120, 260, "______________________________________________");
-        $this->Text(120, 264, "CONDUCTOR");
-        $this->Text(120, 268, "C.C:");
-
-        $this->SetFont('Arial', '', 8);
-        $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
-
-
-    }
 }
 
 ?>

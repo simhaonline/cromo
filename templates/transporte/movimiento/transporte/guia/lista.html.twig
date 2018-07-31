@@ -61,7 +61,10 @@
                 <div class="col-sm-2">
                     {{ form_widget(form.txtCodigoFactura, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-3 control-label"></label>
+                <label class="col-sm-1 control-label">Facturado:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.chkEstadoFacturado) }}
+                </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Hasta:</label>
@@ -71,10 +74,6 @@
                 <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-2">
 
-                </div>
-                <label class="col-sm-1 control-label">Facturado:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.chkEstadoFacturado) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

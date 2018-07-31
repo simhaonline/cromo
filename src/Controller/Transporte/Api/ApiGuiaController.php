@@ -65,6 +65,18 @@ class ApiGuiaController extends FOSRestController
      * @param int $codigoGuia
      * @return array
      * @throws \Doctrine\ORM\ORMException
+     * @Rest\Post("/transporte/api/guia/factura/planilla/adicionar/{codigoFacturaPlanilla}/{codigoGuia}/{documento}/{tipo}")
+     */
+    public function adicionarFacturaPlanilla(Request $request, $codigoFacturaPlanilla =0, $codigoGuia=0, $documento="", $tipo=0) {
+        $arrPost = json_decode($request->request->get("arrParametros"), true);
+        return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiFacturaPlanillaAdicionar($codigoFacturaPlanilla, $codigoGuia, $documento, $tipo);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $codigoGuia
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/transporte/api/guia/cumplido/adicionar/{codigoCumplido}/{codigoGuia}/{documento}/{tipo}")
      */
     public function adicionarCumplido(Request $request, $codigoCumplido =0, $codigoGuia=0, $documento="", $tipo=0) {

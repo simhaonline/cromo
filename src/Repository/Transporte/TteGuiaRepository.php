@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
+use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -1013,6 +1014,92 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arFactura->setVrSubtotal($subtotal);
                         $arFactura->setVrTotal($subtotal);
                         $em->persist($arFactura);
+                        $em->flush();
+                        return [
+                            'error' => false,
+                            'mensaje' => '',
+                        ];
+                    } else {
+                        return [
+                            'error' => true,
+                            'mensaje' => 'La guia es de otro cliente y no se puede adicionar a la factura ',
+                        ];
+                    }
+                } else {
+                    return [
+                        'error' => true,
+                        'mensaje' => 'La guia no puede ser una factura de venta y no puede estar anulada',
+                    ];
+                }
+            } else {
+                return [
+                    'error' => true,
+                    'mensaje' => 'La guia ya esta prefacturada o facturada en la factura ' . $arGuia->getCodigoFacturaFk(),
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'mensaje' => "La guia " . $codigoGuia . " o la factura " . $codigoFactura . " no existe ",
+            ];
+        }
+    }
+
+    /**
+     * @param $codigoDespacho $codigoGuia
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function apiFacturaPlanillaAdicionar($codigoFacturaPlanilla, $codigoGuia, $documento, $tipo) {
+        $em = $this->getEntityManager();
+        $arFacturaPlanilla = $em->getRepository(TteFacturaPlanilla::class)->find($codigoFacturaPlanilla);
+        $arFactura = $em->getRepository(TteFactura::class)->find($arFacturaPlanilla->getCodigoFacturaFk());
+        $arGuia = NULL;
+
+        if($tipo == 1) {
+            $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        }
+        if($tipo == 2) {
+            $arGuiaDocumento = $em->getRepository(TteGuia::class)->findOneBy(array(
+                'documentoCliente' => $documento,
+                'codigoClienteFk' => $arFactura->getCodigoClienteFk(),
+                'estadoFacturaGenerada' => 0));
+            if($arGuiaDocumento) {
+                $arGuia = $em->getRepository(TteGuia::class)->find($arGuiaDocumento->getCodigoGuiaPk());
+            } else {
+                $arGuia = "";
+            }
+        }
+
+        if($arGuia && $arFactura) {
+            if($arGuia->getEstadoFacturaGenerada() == 0) {
+                if($arGuia->getFactura() == 0 && $arGuia->getEstadoAnulado() == 0) {
+                    if($arGuia->getCodigoClienteFk() == $arFactura->getCodigoClienteFk()) {
+                        $arGuia->setFacturaRel($arFactura);
+                        $arGuia->setEstadoFacturaGenerada(1);
+                        $em->persist($arGuia);
+
+                        $arFacturaDetalle = new TteFacturaDetalle();
+                        $arFacturaDetalle->setFacturaRel($arFactura);
+                        $arFacturaDetalle->setGuiaRel($arGuia);
+                        $arFacturaDetalle->setVrDeclara($arGuia->getVrDeclara());
+                        $arFacturaDetalle->setVrFlete($arGuia->getVrFlete());
+                        $arFacturaDetalle->setVrManejo($arGuia->getVrManejo());
+                        $arFacturaDetalle->setUnidades($arGuia->getUnidades());
+                        $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
+                        $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                        $em->persist($arFacturaDetalle);
+
+                        $arFactura->setGuias($arFactura->getGuias()+1);
+                        $arFactura->setVrFlete($arFactura->getVrFlete() + $arGuia->getVrFlete());
+                        $arFactura->setVrManejo($arFactura->getVrManejo() + $arGuia->getVrManejo());
+                        $subtotal = $arFactura->getVrSubtotal() + $arGuia->getVrFlete() + $arGuia->getVrManejo();
+                        $arFactura->setVrSubtotal($subtotal);
+                        $arFactura->setVrTotal($subtotal);
+                        $em->persist($arFactura);
+
+                        //$arFacturaPlanilla->set
+
                         $em->flush();
                         return [
                             'error' => false,

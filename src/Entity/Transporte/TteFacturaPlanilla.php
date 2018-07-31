@@ -48,6 +48,11 @@ class TteFacturaPlanilla
     private $vrTotal = 0;
 
     /**
+     * @ORM\Column(name="guias", type="integer", nullable=true)
+     */
+    private $guias = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteFactura", inversedBy="facturasPlanillasFacturaRel")
      * @ORM\JoinColumn(name="codigo_factura_fk", referencedColumnName="codigo_factura_pk")
      */
@@ -221,6 +226,22 @@ class TteFacturaPlanilla
     public function setFacturasDetallesFacturaPlanillaRel($facturasDetallesFacturaPlanillaRel): void
     {
         $this->facturasDetallesFacturaPlanillaRel = $facturasDetallesFacturaPlanillaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuias()
+    {
+        return $this->guias;
+    }
+
+    /**
+     * @param mixed $guias
+     */
+    public function setGuias($guias): void
+    {
+        $this->guias = $guias;
     }
 
 

@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteFacturaDetalleRepository extends ServiceEntityRepository
 {
@@ -52,7 +53,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('fd.codigoGuiaFk')
             ->addSelect('g.numero')
             ->addSelect('g.documentoCliente')
-            ->addSelect('g.codigoGuiaFk')
+            ->addSelect('g.codigoGuiaTipoFk')
             ->addSelect('g.fechaIngreso')
             ->addSelect('g.codigoOperacionIngresoFk')
             ->addSelect('g.codigoOperacionCargoFk')
@@ -61,11 +62,11 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('fd.pesoVolumen')
             ->addSelect('fd.vrFlete')
             ->addSelect('fd.vrManejo')
-            ->addSelect('cd.ciudadDestino')
+            ->addSelect('cd.nombre as ciudadDestino')
             ->leftJoin('fd.guiaRel', 'g')
-            ->leftJoin('fd.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->where('fd.codigoFacturaPlanillaFk = ' . $codigoFacturaPlanilla);
-        $queryBuilder->orderBy('fd.fechaIngreso', 'DESC');
+        //$queryBuilder->orderBy('g.fechaIngreso', 'DESC');
 
         return $queryBuilder;
     }

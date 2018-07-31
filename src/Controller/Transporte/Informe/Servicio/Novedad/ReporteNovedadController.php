@@ -29,11 +29,18 @@ class ReporteNovedadController extends Controller
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
+        $fecha = new \DateTime('now');
+        if($session->get('filtroFechaDesde') == "") {
+            $session->set('filtroFechaDesde', $fecha->format('Y-m-d'));
+        }
+        if($session->get('filtroFechaHasta') == "") {
+            $session->set('filtroFechaHasta', $fecha->format('Y-m-d'));
+        }
         $form = $this->createFormBuilder()
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => $session->get('filtroFechaDesde')])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $session->get('filtroFechaHasta')])
             ->add('chkEstadoAtendido', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteNovedadEstadoAtendido'), 'required' => false])
             ->add('chkEstadoSolucionado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteNovedadEstadoSolucionado'), 'required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -41,8 +48,8 @@ class ReporteNovedadController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData());
-            $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData());
+            $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+            $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
             $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
             $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
             $session->set('filtroTteNovedadEstadoAtendido', $form->get('chkEstadoAtendido')->getData());

@@ -21,7 +21,7 @@ class Factura extends \FPDF {
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("TteFactura$codigoFactura.pdf", 'D');
+        $pdf->Output("TteFactura$codigoFactura.pdf", 'I');
     }
 
     public function Header() {
@@ -112,7 +112,7 @@ class Factura extends \FPDF {
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(20, 20, 50, 20, 10, 10, 15, 15, 15, 15);
+        $w = array(17, 18, 50, 20, 10, 10, 15, 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -131,10 +131,10 @@ class Factura extends \FPDF {
         $pdf->SetFont('Arial', '', 7);
         if($arGuias) {
             foreach ($arGuias as $arGuia) {
-                $pdf->Cell(20, 4, $arGuia['numero'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arGuia['documentoCliente'], 1, 0, 'L');
-                $pdf->Cell(50, 4, $arGuia['nombreDestinatario'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arGuia['ciudadDestino'], 1, 0, 'L');
+                $pdf->Cell(17, 4, $arGuia['numero'], 1, 0, 'L');
+                $pdf->Cell(18, 4, $arGuia['documentoCliente'], 1, 0, 'L');
+                $pdf->Cell(50, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,30), 1, 0, 'L');
+                $pdf->Cell(20, 4, utf8_decode($arGuia['ciudadDestino']), 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoFacturado'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arGuia['vrDeclara'], 0, '.', ','), 1, 0, 'R');
@@ -142,7 +142,7 @@ class Factura extends \FPDF {
                 $pdf->Cell(15, 4, number_format($arGuia['vrManejo'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arGuia['vrTotal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Ln();
-                $pdf->SetAutoPageBreak(true, 15);
+                $pdf->SetAutoPageBreak(true, 85);
             }
         }
     }

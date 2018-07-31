@@ -1088,6 +1088,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arFacturaDetalle->setUnidades($arGuia->getUnidades());
                         $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
                         $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                        $arFacturaDetalle->setFacturaPlanillaRel($arFacturaPlanilla);
                         $em->persist($arFacturaDetalle);
 
                         $arFactura->setGuias($arFactura->getGuias()+1);
@@ -1098,7 +1099,12 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arFactura->setVrTotal($subtotal);
                         $em->persist($arFactura);
 
-                        //$arFacturaPlanilla->set
+                        $arFacturaPlanilla->setGuias($arFacturaPlanilla->getGuias()+1);
+                        $arFacturaPlanilla->setVrFlete($arFacturaPlanilla->getVrFlete() + $arGuia->getVrFlete());
+                        $arFacturaPlanilla->setVrManejo($arFacturaPlanilla->getVrManejo() + $arGuia->getVrManejo());
+                        $subtotal = $arFacturaPlanilla->getVrTotal() + $arGuia->getVrFlete() + $arGuia->getVrManejo();
+                        $arFacturaPlanilla->setVrTotal($subtotal);
+                        $em->persist($arFacturaPlanilla);
 
                         $em->flush();
                         return [
@@ -1126,7 +1132,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         } else {
             return [
                 'error' => true,
-                'mensaje' => "La guia " . $codigoGuia . " o la factura " . $codigoFactura . " no existe ",
+                'mensaje' => "La guia " . $codigoGuia . " o la factura planilla" . $codigoFacturaPlanilla . " no existe ",
             ];
         }
     }

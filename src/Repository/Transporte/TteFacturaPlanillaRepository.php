@@ -21,6 +21,7 @@ class TteFacturaPlanillaRepository extends ServiceEntityRepository
         $queryBuilder
             ->select('fp.codigoFacturaPlanillaPk')
             ->addSelect('fp.numero')
+            ->addSelect('fp.guias')
             ->addSelect('fp.vrFlete')
             ->addSelect('fp.vrManejo')
             ->where('fp.codigoFacturaFk = ' . $codigoFactura);

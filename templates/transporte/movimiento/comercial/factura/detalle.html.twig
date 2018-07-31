@@ -71,6 +71,7 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>PLANILLA</th>
                             <th>GUIA</th>
                             <th>OI</th>
                             <th>OC</th>
@@ -89,6 +90,7 @@
                         {% for arFacturaDetalle in arFacturaDetalles %}
                             <tr>
                                 <td><input type="hidden" name="arrCodigo[]" value="{{ arFacturaDetalle.codigoFacturaDetallePk }}">{{ arFacturaDetalle.codigoFacturaDetallePk }}</td>
+                                <td>{{ arFacturaDetalle.codigoFacturaPlanillaFk }}</td>
                                 <td>{{ arFacturaDetalle.codigoGuiaFk }}</td>
                                 <td>{{ arFacturaDetalle.codigoOperacionIngresoFk }}</td>
                                 <td>{{ arFacturaDetalle.codigoOperacionCargoFk }}</td>
@@ -144,6 +146,7 @@
                         <tr>
                             <th>ID</th>
                             <th>NUMERO</th>
+                            <th>CANT</th>
                             <th>FLETE</th>
                             <th>MANEJO</th>
                             <th></th>
@@ -156,6 +159,7 @@
                             <tr>
                                 <td>{{ arFacturaPlanilla.codigoFacturaPlanillaPk }}</td>
                                 <td>{{ arFacturaPlanilla.numero }}</td>
+                                <td>{{ arFacturaPlanilla.guias | number_format(0, '.', ',') }}</td>
                                 <td>{{ arFacturaPlanilla.vrFlete | number_format(0, '.', ',') }}</td>
                                 <td>{{ arFacturaPlanilla.vrManejo | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;">

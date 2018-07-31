@@ -21,6 +21,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'SELECT fd.codigoFacturaDetallePk, 
+        fd.codigoFacturaPlanillaFk,
         fd.codigoGuiaFk,
         g.numero,
         g.documentoCliente, 

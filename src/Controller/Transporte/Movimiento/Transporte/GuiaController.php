@@ -24,6 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class GuiaController extends Controller
 {
@@ -56,6 +57,7 @@ class GuiaController extends Controller
             ->add('txtDocumento', TextType::class, array('data' => $session->get('filtroTteGuiaDocumento')))
             ->add('txtCodigoFactura', TextType::class, array('data' => $session->get('filtroCodigoFactura')))
             ->add('txtNumero', TextType::class, array('data' => $session->get('filtroTteGuiaNumero')))
+            ->add('chkEstadoFacturado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteGuiaEstadoFacturado'), 'required' => false])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
@@ -84,6 +86,7 @@ class GuiaController extends Controller
                     $session->set('filtroTteGuiaCodigo', $form->get('txtCodigo')->getData());
                     $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
                     $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+                    $session->set('filtroTteGuiaEstadoFacturado', $form->get('chkEstadoFacturado')->getData());
                 }
                 if ($form->get('btnExcel')->isClicked()) {
                     General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->lista())->execute(), "Guias");

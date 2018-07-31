@@ -98,6 +98,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.estadoEntregado')
             ->addSelect('tg.estadoSoporte')
             ->addSelect('tg.estadoCumplido')
+            ->addSelect('tg.estadoFacturado')
             ->leftJoin('tg.clienteRel', 'c')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->where('tg.codigoGuiaPk <> 0');
@@ -132,6 +133,14 @@ class TteGuiaRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("tg.fechaIngreso <= '{$session->get('filtroFechaHasta')} 23:59:59'");
         } else {
             $queryBuilder->andWhere("tg.fechaIngreso <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+        }
+        switch ($session->get('filtroTteGuiaEstadoFacturado')) {
+            case '0':
+                $queryBuilder->andWhere("tg.estadoFacturado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("tg.estadoFacturado = 1");
+                break;
         }
         $queryBuilder->orderBy('tg.fechaIngreso', 'DESC');
 

@@ -28,6 +28,11 @@ class TteFacturaPlanilla
     private $soporte;
 
     /**
+     * @ORM\Column(name="numero", type="string", length=50, nullable=true)
+     */
+    private $numero;
+
+    /**
      * @ORM\Column(name="vr_flete", type="float")
      */
     private $vrFlete = 0;
@@ -179,6 +184,22 @@ class TteFacturaPlanilla
     public function setGuiasFacturaPlanillaRel($guiasFacturaPlanillaRel): void
     {
         $this->guiasFacturaPlanillaRel = $guiasFacturaPlanillaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero($numero): void
+    {
+        $this->numero = $numero;
     }
 
 

@@ -19,8 +19,12 @@ class PendienteSolucionarController extends Controller
     */    
     public function lista(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $form = $this->formularioFiltro();
+        $session = new session;
+        $form = $this->createFormBuilder()
+            ->add('btnReportar', SubmitType::class, array('label' => 'Reportar'))
+            ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
@@ -48,18 +52,5 @@ class PendienteSolucionarController extends Controller
             $session->set('filtroTteCodigoRuta', null);
         }
     }
-
-    private function formularioFiltro()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $session = new session;
-
-        $form = $this->createFormBuilder()
-            ->add('btnReportar', SubmitType::class, array('label' => 'Reportar'))
-            ->getForm();
-        return $form;
-    }
-
-
 }
 

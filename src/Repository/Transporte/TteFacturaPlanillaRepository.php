@@ -15,15 +15,16 @@ class TteFacturaPlanillaRepository extends ServiceEntityRepository
         parent::__construct($registry, TteFacturaPlanilla::class);
     }
 
-    public function listaFacturaDetalle($codigoFactura): array
+    public function listaFacturaDetalle($codigoFactura)
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT fp.codigoFacturaPlanillaPk 
-        FROM App\Entity\Transporte\TteFacturaPlanilla fp
-        WHERE fp.codigoFacturaFk = :codigoFactura'
-        )->setParameter('codigoFactura', $codigoFactura);
-        return $query->execute();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFacturaPlanilla::class, 'fp');
+        $queryBuilder
+            ->select('fp.codigoFacturaPlanillaPk')
+            ->addSelect('fp.numero')
+            ->addSelect('fp.vrFlete')
+            ->addSelect('fp.vrManejo')
+            ->where('fp.codigoFacturaFk = ' . $codigoFactura);
+        return $queryBuilder;
     }
 
 }

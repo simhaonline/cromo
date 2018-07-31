@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Utilidad\Servicio\Novedad;
 
+use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteNovedad;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,22 +20,27 @@ class NotificarController extends Controller
     */    
     public function lista(Request $request, \Swift_Mailer $mailer)
     {
+        $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->formularioFiltro();
         $form->handleRequest($request);
+        $query = $this->getDoctrine()->getRepository(TteNovedad::class)->pendienteSolucionarCliente();
+        $arNovedades = $paginator->paginate($query, $request->query->getInt('page', 1),500);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 if ($request->request->get('OpSinReportar')) {
-
-
                     $codigo = $request->request->get('OpSinReportar');
-                    //$arCierreMes = $em->getRepository('BrasaTurnoBundle:TurCierreMes')->find($codigoCierreMes);
-                    //$this->generarDistribucion($arCierreMes);//Ejecutar funcion que realiza el proceso de distribucion de centro de costo.
-                    $message = (new \Swift_Message('Hello Email'))
-                        ->setFrom('informacionsemantica@gmail.com')
-                        ->setTo('maestradaz3@gmail.com')
+                    $arCliente = $em->getRepository(TteCliente::class)->find($codigo);
+                    $destinatario = explode(';', strtolower($arCliente->getCorreo()));
+                    $arNovedadesPendientes = $em->getRepository(TteNovedad::class)->utilidadNotificar($codigo);
+                    $cuerpo = $this->render('transporte/utilidad/servicio/novedad/correo.html.twig', [
+                        'arNovedades' => $arNovedadesPendientes,
+                        'form' => $form->createView()]);
+                    $message = (new \Swift_Message('Reporte novedades pendientes'))
+                        ->setFrom('infologicuartas@gmail.com')
+                        ->setTo($destinatario)
                         ->setBody(
-                            "Hola mundo",
+                            $cuerpo,
                             'text/html'
                         );
                     $mailer->send($message);
@@ -44,8 +50,7 @@ class NotificarController extends Controller
                 }
             }
         }
-        $query = $this->getDoctrine()->getRepository(TteNovedad::class)->pendienteSolucionarCliente();
-        $arNovedades = $paginator->paginate($query, $request->query->getInt('page', 1),500);
+
         return $this->render('transporte/utilidad/servicio/novedad/notificar.html.twig', [
             'arNovedades' => $arNovedades,
             'form' => $form->createView()]);

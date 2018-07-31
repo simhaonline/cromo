@@ -16,7 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
-
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class ReporteNovedadController extends Controller
 {
    /**
@@ -34,15 +34,19 @@ class ReporteNovedadController extends Controller
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => $session->get('filtroFechaDesde')])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $session->get('filtroFechaHasta')])
+            ->add('chkEstadoAtendido', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteNovedadEstadoAtendido'), 'required' => false])
+            ->add('chkEstadoSolucionado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteNovedadEstadoSolucionado'), 'required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData());
-                $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData());
-                $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+            $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData());
+            $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData());
+            $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+            $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+            $session->set('filtroTteNovedadEstadoAtendido', $form->get('chkEstadoAtendido')->getData());
+            $session->set('filtroTteNovedadEstadoSolucionado', $form->get('chkEstadoSolucionado')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
             General::get()->setExportar($em->createQuery($em->getRepository(TteNovedad::class)->reporteNovedad())->execute(), "Novedades");

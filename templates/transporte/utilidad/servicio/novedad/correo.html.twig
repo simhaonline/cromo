@@ -1,0 +1,29 @@
+<h4>Este correo se envia automaticamente, por favor enviar las soluciones a los ejecutivos
+    de servicio encargados (andres.quintero@logicuartas.com, andres.marin@logicuartas.com, marleny.velez@logicuartas.com)</h4>
+<h4>A continuacion le relaciono las novedades pendientes por solucion:</h4>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>FECHA</th>
+            <th>GUIA</th>
+            <th>DOCUMENTO</th>
+            <th>REF</th>
+            <th>CAUSAL</th>
+            <th>COMENTARIO</th>
+            <th>UNIDADES</th>
+            <th>PESO</th>
+        </tr>
+        {% for arNovedad in arNovedades %}
+        <tr>
+            <td>{{ arNovedad.codigoNovedadPk }}</td>
+            <td>{{ arNovedad.fechaIngreso | date('Y-m-d') }}</td>
+            <td>{{ arNovedad.codigoGuiaFk }}</td>
+            <td>{{ arNovedad.documentoCliente }}</td>
+            <td>{{ arNovedad.empaqueReferencia }}</td>
+            <td>{{ arNovedad.causal }}</td>
+            <td>{{ arNovedad.descripcion }}</td>
+            <td>{{ arNovedad.unidades }}</td>
+            <td>{{ arNovedad.pesoReal }}</td>
+        </tr>
+        {% endfor %}
+    </table>

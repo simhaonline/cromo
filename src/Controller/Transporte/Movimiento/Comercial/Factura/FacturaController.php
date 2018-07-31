@@ -10,6 +10,7 @@ use App\Entity\Transporte\TteFacturaOtro;
 use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
+use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
 use App\Utilidades\Estandares;
@@ -79,15 +80,18 @@ class FacturaController extends Controller
         $paginator  = $this->get('knp_paginator');
         $form = Estandares::botonera($arFactura->getEstadoAutorizado(),$arFactura->getEstadoAprobado(),$arFactura->getEstadoAnulado());
         $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnRetirarPlanilla = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBotonActualizar = array('label' => 'Actualizar', 'disabled' => false);
         if($arFactura->getEstadoAutorizado()){
             $arrBtnRetirar['disabled'] = true;
+            $arrBtnRetirarPlanilla['disabled'] = true;
             $arrBotonActualizar['disabled'] = true;
         }
         if($arFactura->getCodigoFacturaClaseFk() == 'NC') {
             $arrBotonActualizar['disabled'] = true;
         }
         $form->add('btnRetirarGuia', SubmitType::class, $arrBtnRetirar)
+            ->add('btnRetirarPlanilla', SubmitType::class, $arrBtnRetirarPlanilla)
             ->add('btnActualizar', SubmitType::class, $arrBotonActualizar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -132,11 +136,8 @@ class FacturaController extends Controller
         }
         $query = $this->getDoctrine()->getRepository(TteFacturaPlanilla::class)->listaFacturaDetalle($id);
         $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-
         $query = $this->getDoctrine()->getRepository(TteFacturaOtro::class)->listaFacturaDetalle($id);
         $arFacturaOtros = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-
-        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->factura($id);
         $arFacturaDetalles = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->factura($id);
         return $this->render('transporte/movimiento/comercial/factura/detalle.html.twig', [
             'arFactura' => $arFactura,
@@ -186,6 +187,75 @@ class FacturaController extends Controller
         }
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->facturaPendiente($arFactura->getCodigoClienteFk());
         return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/planilla/guia/{codigoFactura}/{codigoFacturaPlanilla}", name="transporte_movimiento_comercial_factura_detalle_adicionar_planilla_guia")
+     */
+    public function detalleAdicionarGuiaPlanilla(Request $request, $codigoFactura, $codigoPlanillaFactura)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if (count($arrSeleccionados) > 0) {
+                    foreach ($arrSeleccionados AS $codigo) {
+                        $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
+                        $arGuia->setFacturaRel($arFactura);
+                        $arGuia->setEstadoFacturaGenerada(1);
+                        $em->persist($arGuia);
+
+                        $arFacturaDetalle = new TteFacturaDetalle();
+                        $arFacturaDetalle->setFacturaRel($arFactura);
+                        $arFacturaDetalle->setGuiaRel($arGuia);
+                        $arFacturaDetalle->setVrDeclara($arGuia->getVrDeclara());
+                        $arFacturaDetalle->setVrFlete($arGuia->getVrFlete());
+                        $arFacturaDetalle->setVrManejo($arGuia->getVrManejo());
+                        $arFacturaDetalle->setUnidades($arGuia->getUnidades());
+                        $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
+                        $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                        $em->persist($arFacturaDetalle);
+                    }
+                    $em->flush();
+                    $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
+                }
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->facturaPendiente($arFactura->getCodigoClienteFk());
+        return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/planilla/{codigoFactura}/{id}", name="transporte_movimiento_comercial_factura_detalle_adicionar_planilla")
+     */
+    public function detalleAdicionarPlanilla(Request $request, $codigoFactura, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $arFacturaPlanilla = new TteFacturaPlanilla();
+        if($id != 0) {
+            $arFacturaPlanilla = $em->getRepository(TteFacturaPlanilla::class)->find($id);
+        } else {
+            $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+            $arFacturaPlanilla->setFacturaRel($arFactura);
+        }
+        $form = $this->createForm(FacturaPlanillaType::class, $arFacturaPlanilla);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $em->persist($arFacturaPlanilla);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarPlanilla.html.twig',
+            ['form' => $form->createView()]);
     }
 
     /**

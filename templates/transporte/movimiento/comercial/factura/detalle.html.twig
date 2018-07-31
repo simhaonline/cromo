@@ -143,6 +143,11 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>NUMERO</th>
+                            <th>FLETE</th>
+                            <th>MANEJO</th>
+                            <th></th>
+                            <th></th>
                             <th></th>
                         </tr>
                         </thead>
@@ -150,6 +155,21 @@
                         {% for arFacturaPlanilla in arFacturaPlanillas %}
                             <tr>
                                 <td>{{ arFacturaPlanilla.codigoFacturaPlanillaPk }}</td>
+                                <td>{{ arFacturaPlanilla.numero }}</td>
+                                <td>{{ arFacturaPlanilla.vrFlete | number_format(0, '.', ',') }}</td>
+                                <td>{{ arFacturaPlanilla.vrManejo | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: center;">
+                                    {% if arFactura.estadoAutorizado == 0 %}
+                                        <a href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_planilla_guia',{ 'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaPlanilla': arFacturaPlanilla.codigoFacturaPlanillaPk }) }}', 'FacturaAdicionarPlanillaGuia', 600, 900)">
+                                            <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
+                                    {% endif %}
+                                </td>
+                                <td style="text-align: center;">
+                                    {% if arFactura.estadoAutorizado == 0 %}
+                                        <a href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_planilla',{ 'codigoFactura': arFactura.codigoFacturaPk, 'id': arFacturaPlanilla.codigoFacturaPlanillaPk }) }}', 'FacturaAdicionarPlanilla', 600, 900)">
+                                            <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
+                                    {% endif %}
+                                </td>
                                 <td><input type="checkbox" name="ChkSeleccionarPlanill[]" value="{{ arFacturaPlanilla.codigoFacturaPlanillaPk }}" /></td>
                             </tr>
                         {% endfor %}
@@ -159,14 +179,13 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     {% if arFactura.estadoAutorizado == 0 %}
-                    <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Adicionar</a>
-                    </div>
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_planilla', {'codigoFactura': arFactura.codigoFacturaPk, 'id': 0 }) }}', 'FacturaAdicionarPlanilla', 600, 900)">Nuevo</a>
+                        </div>
                     {% endif %}
 
-
                     <div class="btn-group">
-                    {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                    {{ form_widget(form.btnRetirarPlanilla, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                     </div>
                 </div>
             </div>

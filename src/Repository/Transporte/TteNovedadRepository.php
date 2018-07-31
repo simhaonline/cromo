@@ -190,8 +190,44 @@ class TteNovedadRepository extends ServiceEntityRepository
         if($session->get('filtroTteCodigoCliente')){
             $queryBuilder->andWhere("g.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }
-
+        switch ($session->get('filtroTteNovedadEstadoAtendido')) {
+            case '0':
+                $queryBuilder->andWhere("n.estadoAtendido = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("n.estadoAtendido = 1");
+                break;
+        }
+        switch ($session->get('filtroTteNovedadEstadoSolucionado')) {
+            case '0':
+                $queryBuilder->andWhere("n.estadoSolucion = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("n.estadoSolucion = 1");
+                break;
+        }
         return $queryBuilder;
 
+    }
+
+    public function utilidadNotificar($codigoCliente)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteNovedad::class, 'n');
+        $queryBuilder
+            ->select('n.codigoNovedadPk')
+            ->addSelect('n.codigoGuiaFk')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.empaqueReferencia')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('nt.nombre AS causal')
+            ->addSelect('n.descripcion')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.unidades')
+            ->leftJoin('n.guiaRel', 'g')
+            ->leftJoin('n.novedadTipoRel', 'nt')
+            ->where('g.codigoClienteFk = ' . $codigoCliente)
+            ->andWhere('n.estadoSolucion = 0');
+        return $queryBuilder->getQuery()->getResult();
     }
 }

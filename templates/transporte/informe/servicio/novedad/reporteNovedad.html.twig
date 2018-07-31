@@ -27,12 +27,22 @@
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Desde:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     {{ form_widget(form.fechaDesde) }}
                 </div>
+                <label class="col-sm-1 control-label">Atendido:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.chkEstadoAtendido) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Hasta:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     {{ form_widget(form.fechaHasta) }}
+                </div>
+                <label class="col-sm-1 control-label">Solucionado:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.chkEstadoSolucionado) }}
                 </div>
             </div>
         </div>

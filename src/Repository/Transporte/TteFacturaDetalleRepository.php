@@ -26,15 +26,16 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         g.numero,
         g.documentoCliente, 
         g.codigoGuiaTipoFk,
+        g.nombreDestinatario,
+        cd.nombre AS ciudadDestino,
         g.fechaIngreso,        
-        g.codigoOperacionIngresoFk,
-        g.codigoOperacionCargoFk,     
         fd.unidades,
         fd.pesoReal,
         fd.pesoVolumen,
         fd.vrFlete,
-        fd.vrManejo,                      
-        cd.nombre AS ciudadDestino
+        fd.vrManejo,                   
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk     
         FROM App\Entity\Transporte\TteFacturaDetalle fd 
         LEFT JOIN fd.guiaRel g        
         LEFT JOIN g.ciudadDestinoRel cd

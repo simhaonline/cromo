@@ -13,6 +13,7 @@ use App\Entity\Transporte\TteCliente;
 use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
+use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,6 +83,7 @@ class FacturaController extends Controller
         $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnRetirarPlanilla = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBotonActualizar = array('label' => 'Actualizar', 'disabled' => false);
+        $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
         if($arFactura->getEstadoAutorizado()){
             $arrBtnRetirar['disabled'] = true;
             $arrBtnRetirarPlanilla['disabled'] = true;
@@ -130,6 +132,9 @@ class FacturaController extends Controller
                     $em->flush();
                 }
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TteFacturaDetalle::class)->factura($id), "Facturas $id");
             }
 
 

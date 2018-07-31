@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteNovedad;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -234,5 +235,18 @@ class TteNovedadRepository extends ServiceEntityRepository
             ->where('g.codigoClienteFk = ' . $codigoCliente)
             ->andWhere('n.estadoSolucion = 0');
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        foreach ($arrSeleccionados as $arrSeleccionado) {
+            $arNovedad = $this->getEntityManager()->getRepository(TteNovedad::class)->find($arrSeleccionado);
+            if ($arNovedad->getEstadoSolucion() == 0) {
+                $this->getEntityManager()->remove($arNovedad);
+            }else {
+                Mensajes::error("No se puede eliminar el registro ya se encuentra solucionado");
+            }
+        }
+        $this->getEntityManager()->flush();
     }
 }

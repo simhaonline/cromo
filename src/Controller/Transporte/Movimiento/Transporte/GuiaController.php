@@ -168,6 +168,10 @@ class GuiaController extends Controller
                 }
 
             }
+            if ($form->get('btnRetirarNovedad')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteNovedad::class)->eliminar($arrSeleccionados);
+            }
         }
         $arNovedades = $this->getDoctrine()->getRepository(TteNovedad::class)->guia($id);
         $arDespachoDetalles = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->guia($id);

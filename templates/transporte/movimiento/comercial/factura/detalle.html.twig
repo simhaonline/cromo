@@ -159,13 +159,13 @@
                             <tr>
                                 <td>{{ arFacturaPlanilla.codigoFacturaPlanillaPk }}</td>
                                 <td>{{ arFacturaPlanilla.numero }}</td>
-                                <td>{{ arFacturaPlanilla.guias | number_format(0, '.', ',') }}</td>
-                                <td>{{ arFacturaPlanilla.vrFlete | number_format(0, '.', ',') }}</td>
-                                <td>{{ arFacturaPlanilla.vrManejo | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arFacturaPlanilla.guias | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arFacturaPlanilla.vrFlete | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arFacturaPlanilla.vrManejo | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;">
                                     {% if arFactura.estadoAutorizado == 0 %}
                                         <a href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_planilla_guia',{ 'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaPlanilla': arFacturaPlanilla.codigoFacturaPlanillaPk }) }}', 'FacturaAdicionarPlanillaGuia', 600, 900)">
-                                            <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
+                                            <i title="Editar el registro" class="fa fa-calendar" style="font-size: large;color: black;"></i></a>
                                     {% endif %}
                                 </td>
                                 <td style="text-align: center;">

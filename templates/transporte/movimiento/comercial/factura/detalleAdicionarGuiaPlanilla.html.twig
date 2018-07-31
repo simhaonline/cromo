@@ -50,6 +50,9 @@
 
     <div class="btn-toolbar" style="float: right">
         {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        <div class="btn-group">
+            {{ form_widget(form.btnRetirar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+        </div>
     </div>
     {{ form_end(form) }}
 

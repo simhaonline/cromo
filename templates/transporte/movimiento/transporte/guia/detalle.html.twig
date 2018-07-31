@@ -282,6 +282,9 @@
                             <th>TIPO</th>
                             <th>NUMERO</th>
                             <th>FECHA</th>
+                            <th>PLANILLA</th>
+                            <th>FLETE</th>
+                            <th>MANEJO</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -292,6 +295,9 @@
                                 <td>{{ arFacturaDetalle.tipoFactura }}</td>
                                 <td>{{ arFacturaDetalle.numero }}</td>
                                 <td>{{ arFacturaDetalle.fecha | date('Y-m-d H:i') }}</td>
+                                <td>{{ arFacturaDetalle.codigoFacturaPlanillaFk }}</td>
+                                <td style="text-align: right">{{ arFacturaDetalle.vrFlete | number_format(0, '.', ',')}}</td>
+                                <td style="text-align: right">{{ arFacturaDetalle.vrManejo | number_format(0, '.', ',')}}</td>
                             </tr>
                         {% endfor %}
                         </tbody>

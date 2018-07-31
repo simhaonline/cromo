@@ -80,7 +80,10 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
                   fd.codigoFacturaFk,
                   f.numero,
                   f.fecha,                  
-                  ft.nombre AS tipoFactura             
+                  ft.nombre AS tipoFactura,
+                  fd.codigoFacturaPlanillaFk,
+                  fd.vrFlete,
+                  fd.vrManejo             
         FROM App\Entity\Transporte\TteFacturaDetalle fd 
         LEFT JOIN fd.facturaRel f
         LEFT JOIN f.facturaTipoRel ft

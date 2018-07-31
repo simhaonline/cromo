@@ -7,6 +7,7 @@ use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Transporte\TteFacturaDetalle;
+use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteFacturaTipo;
 use App\Utilidades\Mensajes;
 use App\Entity\Transporte\TteFactura;
@@ -108,6 +109,28 @@ class TteFacturaRepository extends ServiceEntityRepository
         $arFactura->setVrSubtotal($vrSubtotal);
         $arFactura->setVrTotal($vrSubtotal);
         $em->persist($arFactura);
+
+        $arFacturaPlanillas = $em->getRepository(TteFacturaPlanilla::class)->findBy(array('codigoFacturaFk' => $id));
+        foreach ($arFacturaPlanillas as $arFacturaPlanilla) {
+
+            $query = $em->createQuery(
+                'SELECT COUNT(fd.codigoFacturaDetallePk) as cantidad, SUM(fd.unidades+0) as unidades, SUM(fd.pesoReal+0) as pesoReal,
+            SUM(fd.pesoVolumen+0) as pesoVolumen, SUM(fd.vrFlete+0) as vrFlete, SUM(fd.vrManejo+0) as vrManejo
+            FROM App\Entity\Transporte\TteFacturaDetalle fd
+            WHERE fd.codigoFacturaFk = :codigoFactura AND fd.codigoFacturaPlanillaFk = :codigoFacturaPlanilla')
+                ->setParameter('codigoFactura', $id)
+            ->setParameter('codigoFacturaPlanilla', $arFacturaPlanilla->getCodigoFacturaPlanillaPk());
+
+            $arrGuias = $query->getSingleResult();
+            $vrSubtotal = intval($arrGuias['vrFlete']) + intval($arrGuias['vrManejo']);
+            $arFacturaPlanillaAct = $em->getRepository(TteFacturaPlanilla::class)->find($arFacturaPlanilla->getCodigoFacturaPlanillaPk());
+            $arFacturaPlanillaAct->setGuias(intval($arrGuias['cantidad']));
+            $arFacturaPlanillaAct->setVrFlete(intval($arrGuias['vrFlete']));
+            $arFacturaPlanillaAct->setVrManejo(intval($arrGuias['vrManejo']));
+            $arFacturaPlanillaAct->setVrTotal($vrSubtotal);
+            $em->persist($arFacturaPlanillaAct);
+        }
+
         $em->flush();
         return true;
     }
@@ -120,13 +143,38 @@ class TteFacturaRepository extends ServiceEntityRepository
             if (count($arrDetalles) > 0) {
                 foreach ($arrDetalles AS $codigo) {
                     $arFacturaDetalle = $em->getRepository(TteFacturaDetalle::class)->find($codigo);
-                    if($arFactura->getCodigoFacturaClaseFk() == 'FA') {
-                        $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalle->getCodigoGuiaFk());
-                        $arGuia->setFacturaRel(NULL);
-                        $arGuia->setEstadoFacturaGenerada(0);
-                        $em->persist($arGuia);
+                    if($arFacturaDetalle->getCodigoFacturaPlanillaFk() == "") {
+                        if($arFactura->getCodigoFacturaClaseFk() == 'FA') {
+                            $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalle->getCodigoGuiaFk());
+                            $arGuia->setFacturaRel(NULL);
+                            $arGuia->setEstadoFacturaGenerada(0);
+                            $em->persist($arGuia);
+                        }
+                        $em->remove($arFacturaDetalle);
                     }
-                    $em->remove($arFacturaDetalle);
+                }
+                $em->flush();
+            }
+        }
+        return true;
+    }
+
+    public function retirarDetallePlanilla($arrDetalles, $arFactura): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arrDetalles) {
+            if (count($arrDetalles) > 0) {
+                foreach ($arrDetalles AS $codigo) {
+                    $arFacturaDetalle = $em->getRepository(TteFacturaDetalle::class)->find($codigo);
+                    if($arFacturaDetalle->getCodigoFacturaPlanillaFk() != "") {
+                        if($arFactura->getCodigoFacturaClaseFk() == 'FA') {
+                            $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalle->getCodigoGuiaFk());
+                            $arGuia->setFacturaRel(NULL);
+                            $arGuia->setEstadoFacturaGenerada(0);
+                            $em->persist($arGuia);
+                        }
+                        $em->remove($arFacturaDetalle);
+                    }
                 }
                 $em->flush();
             }
@@ -183,7 +231,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                     $query->execute();
                 }
                 if($arFactura->getCodigoFacturaClaseFk() == 'NC') {
-                    $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 0, g.estadoFacturaGenerada = 0, g.codigoFacturaFk = null 
+                    $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 0, g.estadoFacturaGenerada = 0, g.codigoFacturaFk = null, g.codigoFacturaPlanillaFk = null  
                       WHERE g.codigoFacturaFk = :codigoFactura')
                         ->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
                     $query->execute();
@@ -263,7 +311,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arCuentaCobrarAct->setEstadoAnulado(1);
                                 $em->persist($arCuentaCobrarAct);
                             }
-                            $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.codigoFacturaFk = null, g.estadoFacturado = 0, g.estadoFacturaGenerada = 0, g.fechaFactura=NULL 
+                            $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.codigoFacturaFk = null, g.codigoFacturaPlanillaFk = null, g.estadoFacturado = 0, g.estadoFacturaGenerada = 0, g.fechaFactura=NULL 
                                 WHERE g.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
                             $query->execute();
 

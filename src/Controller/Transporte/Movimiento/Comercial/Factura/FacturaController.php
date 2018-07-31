@@ -199,35 +199,26 @@ class FacturaController extends Controller
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $arFacturaPlanilla = $em->getRepository(TteFacturaPlanilla::class)->find($codigoFacturaPlanilla);
         $form = $this->createFormBuilder()
+            ->add('btnRetirar', SubmitType::class, array('label' => 'Retirar'))
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                if (count($arrSeleccionados) > 0) {
-                    foreach ($arrSeleccionados AS $codigo) {
-                        $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
-                        $arGuia->setFacturaRel($arFactura);
-                        $arGuia->setEstadoFacturaGenerada(1);
-                        $em->persist($arGuia);
-
-                        $arFacturaDetalle = new TteFacturaDetalle();
-                        $arFacturaDetalle->setFacturaRel($arFactura);
-                        $arFacturaDetalle->setGuiaRel($arGuia);
-                        $arFacturaDetalle->setVrDeclara($arGuia->getVrDeclara());
-                        $arFacturaDetalle->setVrFlete($arGuia->getVrFlete());
-                        $arFacturaDetalle->setVrManejo($arGuia->getVrManejo());
-                        $arFacturaDetalle->setUnidades($arGuia->getUnidades());
-                        $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
-                        $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                        $em->persist($arFacturaDetalle);
-                    }
-                    $em->flush();
-                    $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
-                }
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
+            if ($form->get('btnRetirar')->isClicked()) {
+                $arrGuias = $request->request->get('ChkSeleccionar');
+                $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarDetallePlanilla($arrGuias, $arFactura);
+                if($respuesta) {
+                    $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
+                    $em->flush();
+                }
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle_adicionar_planilla_guia', [
+                    'codigoFactura' => $codigoFactura,
+                    'codigoFacturaPlanilla' => $codigoFacturaPlanilla]));
+            }
+
         }
         $arFacturaDetalles = $paginator->paginate($this->getDoctrine()->getRepository(TteFacturaDetalle::class)->facturaPlanilla($codigoFacturaPlanilla), $request->query->getInt('page', 1), 50);
         return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarGuiaPlanilla.html.twig', [

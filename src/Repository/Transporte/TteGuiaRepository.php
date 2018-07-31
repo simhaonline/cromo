@@ -1158,11 +1158,11 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroDocumentoCliente')) {
             $queryBuilder->andWhere("tg.documentoCliente = '{$session->get('filtroDocumentoCliente')}'");
         }
-        if ($session->get('filtroFechaDesde') != null) {
-            $queryBuilder->andWhere("tg.fechaIngreso >= '{$session->get('filtroFechaDesde')->format('Y-m-d')} 00:00:00'");
+        if ($session->get('filtroFechaDesdeEntrega') != null) {
+            $queryBuilder->andWhere("tg.fechaIngreso >= '{$session->get('filtroFechaDesdeEntrega')->format('Y-m-d')} 00:00:00'");
         }
-        if ($session->get('filtroFechaHasta') != null) {
-            $queryBuilder->andWhere("tg.fechaIngreso <= '{$session->get('filtroFechaHasta')->format('Y-m-d')} 23:59:59'");
+        if ($session->get('filtroFechaHastaEntrega') != null) {
+            $queryBuilder->andWhere("tg.fechaIngreso <= '{$session->get('filtroFechaHastaEntrega')->format('Y-m-d')} 23:59:59'");
         }
 
         return $queryBuilder;

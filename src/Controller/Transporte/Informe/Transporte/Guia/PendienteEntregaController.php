@@ -44,7 +44,7 @@ class PendienteEntregaController extends Controller
             $session->set('filtroDocumentoCliente', $form->get('txtDocumentoCliente')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->excelPendienteEntrega())->execute(), "Novedades");
+            General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->excelPendienteEntrega())->execute(), "Pendiente entrega");
         }
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->pendienteEntrega(), $request->query->getInt('page', 1), 40);
         return $this->render('transporte/informe/transporte/guia/pendienteEntrega.html.twig', [

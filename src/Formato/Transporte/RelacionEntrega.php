@@ -48,7 +48,7 @@ class RelacionEntrega extends \FPDF {
         $this->Cell(30, 6, 'FLETE:', 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, number_format($arDespacho->getVrFlete()) , 1, 0, 'R', 1);
+        $this->Cell(65, 6, number_format($arDespacho->getVrFletePago()) , 1, 0, 'R', 1);
         //linea 2
         $this->SetXY(10, 46);
         $this->SetFillColor(200, 200, 200);
@@ -143,7 +143,7 @@ class RelacionEntrega extends \FPDF {
                 $pdf->Cell(10, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Ln();
-                $pdf->SetAutoPageBreak(true, 15);
+                $pdf->SetAutoPageBreak(true, 60);
             }
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);

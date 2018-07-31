@@ -50,7 +50,7 @@ class Recibo extends \FPDF {
         $this->Cell(30, 6, 'FLETE:', 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, number_format($arRecibo->getVrPago()) , 1, 0, 'R', 1);
+        $this->Cell(65, 6, '' , 1, 0, 'R', 1);
         //linea 2
         $this->SetXY(10, 46);
         $this->SetFillColor(200, 200, 200);
@@ -64,35 +64,35 @@ class Recibo extends \FPDF {
         $this->Cell(30, 6, "ANTICIPO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6,  $arRecibo->getClienteRel()->getNumeroIdentificacion() , 1, 0, 'R', 1);
-//        //linea 3
-//        $this->SetXY(10, 52);
-//        $this->SetFillColor(200, 200, 200);
-//        $this->SetFont('Arial', 'B', 8);
-//        $this->Cell(30, 6, 'NUMERO', 1, 0, 'L', 1);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->SetFont('Arial', '', 8);
-//        $this->Cell(66, 6, $arDespacho->getNumero() , 1, 0, 'L', 1);
-//        $this->SetFont('Arial', 'B', 8);
-//        $this->SetFillColor(200, 200, 200);
-//        $this->Cell(30, 6, "IND COM::", 1, 0, 'L', 1);
-//        $this->SetFont('Arial', '', 8);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->Cell(65, 6,number_format($arDespacho->getVrIndustriaComercio()), 1, 0, 'R', 1);
-//        //linea 3
-//        $this->SetXY(10, 58);
-//        $this->SetFillColor(200, 200, 200);
-//        $this->SetFont('Arial', 'B', 8);
-//        $this->Cell(30, 6, '', 1, 0, 'L', 1);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->SetFont('Arial','', 8);
-//        $this->Cell(66, 6, '' , 1, 0, 'R', 1);
-//        $this->SetFont('Arial', 'B', 8);
-//        $this->SetFillColor(200, 200, 200);
-//        $this->Cell(30, 6, "RTE FUENTE:", 1, 0, 'L', 1);
-//        $this->SetFont('Arial', '', 8);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->Cell(65, 6, number_format($arDespacho->getVrRetencionFuente()), 1, 0, 'R', 1);
+        $this->Cell(65, 6,  '' , 1, 0, 'R', 1);
+        //linea 3
+        $this->SetXY(10, 52);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 6, 'DIRECCION', 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(66, 6, $arRecibo->getClienteRel()->getDireccion() , 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 6, "IND COM::", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 6,'', 1, 0, 'R', 1);
+        //linea 4
+        $this->SetXY(10, 58);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 6, 'CIUDAD', 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial','', 8);
+        $this->Cell(66, 6, $arRecibo->getClienteRel()->getCiudadRel()->getNombre() , 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 6, "RTE FUENTE:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 6, '', 1, 0, 'R', 1);
 //
 //        $this->SetXY(10, 64);
 //        $this->SetFillColor(200, 200, 200);

@@ -64,7 +64,7 @@ class TteCumplido
     private $clienteRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteCumplidoTipo", inversedBy="cumplidosDespachoTipoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteCumplidoTipo", inversedBy="cumplidosCumplidoTipoRel")
      * @ORM\JoinColumn(name="codigo_cumplido_tipo_fk", referencedColumnName="codigo_cumplido_tipo_pk")
      */
     private $cumplidoTipoRel;
@@ -265,7 +265,6 @@ class TteCumplido
     {
         $this->guiasCumplidoRel = $guiasCumplidoRel;
     }
-
 
 
 }

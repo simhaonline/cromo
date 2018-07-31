@@ -360,11 +360,11 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroDocumentoCliente')) {
             $dql->andWhere("tg.documentoCliente = '{$session->get('filtroDocumentoCliente')}'");
         }
-        if ($session->get('filtroFechaDesde') != null) {
-            $dql->andWhere("tg.fechaIngreso >= '{$session->get('filtroFechaDesde')->format('Y-m-d')} 00:00:00'");
+        if ($session->get('filtroFechaDesdeEntrega') != null) {
+            $dql->andWhere("tg.fechaIngreso >= '{$session->get('filtroFechaDesdeEntrega')->format('Y-m-d')} 00:00:00'");
         }
-        if ($session->get('filtroFechaHasta') != null) {
-            $dql->andWhere("tg.fechaIngreso <= '{$session->get('filtroFechaHasta')->format('Y-m-d')} 23:59:59'");
+        if ($session->get('filtroFechaHastaEntrega') != null) {
+            $dql->andWhere("tg.fechaIngreso <= '{$session->get('filtroFechaHastaEntrega')->format('Y-m-d')} 23:59:59'");
         }
 
         $query = $em->createQuery($dql);

@@ -27,8 +27,8 @@ class PendienteEntregaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => $session->get('filtroFechaDesde')])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $session->get('filtroFechaHasta')])
+            ->add('fechaDesdeEntrega', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => $session->get('filtroFechaDesdeEntrega')])
+            ->add('fechaHastaEntrega', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $session->get('filtroFechaHastaEntrega')])
             ->add('txtGuia', NumberType::class, ['label' => 'Guia: ', 'required' => false, 'data' => $session->get('filtroNumeroGuia')])
             ->add('txtConductor', TextType::class, ['label' => 'Conductor: ', 'required' => false, 'data' => $session->get('filtroConductor')])
             ->add('txtDocumentoCliente', TextType::class, ['label' => 'Documento cliente: ', 'required' => false, 'data' => $session->get('filtroDocumentoCliente')])
@@ -37,8 +37,8 @@ class PendienteEntregaController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData());
-            $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData());
+            $session->set('filtroFechaDesdeEntrega',  $form->get('fechaDesdeEntrega')->getData());
+            $session->set('filtroFechaHastaEntrega', $form->get('fechaHastaEntrega')->getData());
             $session->set('filtroNumeroGuia', $form->get('txtGuia')->getData());
             $session->set('filtroConductor', $form->get('txtConductor')->getData());
             $session->set('filtroDocumentoCliente', $form->get('txtDocumentoCliente')->getData());

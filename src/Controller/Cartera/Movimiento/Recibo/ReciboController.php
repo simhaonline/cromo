@@ -7,6 +7,7 @@ use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Transporte\TteRecibo;
 use App\Form\Type\Cartera\ReciboType;
+use App\Formato\Cartera\Recibo;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -128,6 +129,14 @@ class ReciboController extends Controller
             }else {
                 Mensajes::error("El recibo debe estar autorizado y no puede estar impreso");
             }
+        }
+        if ($form->get('btnAprobar')->isClicked()) {
+            $em->getRepository(CarRecibo::class)->aprobar($arRecibo);
+            return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
+        }
+        if ($form->get('btnImprimir')->isClicked()) {
+            $formato = new Recibo();
+            $formato->Generar($em, $id);
         }
         if ($form->get('btnActualizarDetalle')->isClicked()) {
             if ($arRecibo->getEstadoAutorizado() == 0) {

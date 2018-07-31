@@ -112,7 +112,7 @@ class Factura extends \FPDF {
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(17, 18, 50, 24, 10, 10, 15, 15, 15, 15);
+        $w = array(17, 24, 43, 26, 10, 10, 15, 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -132,9 +132,9 @@ class Factura extends \FPDF {
         if($arGuias) {
             foreach ($arGuias as $arGuia) {
                 $pdf->Cell(17, 4, $arGuia['numero'], 1, 0, 'L');
-                $pdf->Cell(18, 4, $arGuia['documentoCliente'], 1, 0, 'L');
-                $pdf->Cell(50, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,33), 1, 0, 'L');
-                $pdf->Cell(24, 4, substr(utf8_decode($arGuia['ciudadDestino']),0,15), 1, 0, 'L');
+                $pdf->Cell(24, 4, $arGuia['documentoCliente'], 1, 0, 'L');
+                $pdf->Cell(43, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,28), 1, 0, 'L');
+                $pdf->Cell(26, 4, substr(utf8_decode($arGuia['ciudadDestino']),0,15), 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoFacturado'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arGuia['vrDeclara'], 0, '.', ','), 1, 0, 'R');
@@ -195,7 +195,7 @@ class Factura extends \FPDF {
         $this->Text(25, 278, utf8_decode("Todo pago debe hacerse a la orden del primer beneficiario LOGICUARTAS S.A.S consignar en BANCOLOMBIA la cuenta corriente 01882109665"));
         $this->SetXY(7, 279);
         $this->MultiCell(193,3,  utf8_decode("Factura impresa en computador por LOGICUARTAS S.A.S NIT 900486121-3 SEGÚN".$arFactura->getFacturaTipoRel()->getResolucionFacturacion()),0,'C');
-        $this->Text(65, 287, utf8_decode("Pasados 10 días no se aceptan devoluciones y/o reclamos de esta factura"));
+        $this->Text(65, 284, utf8_decode("Pasados 10 días no se aceptan devoluciones y/o reclamos de esta factura"));
         $this->SetFont('Arial', '', 8);
         $this->Text(165, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }

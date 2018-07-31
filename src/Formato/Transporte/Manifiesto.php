@@ -48,13 +48,18 @@ class Manifiesto extends \FPDF {
 
         $this->SetFillColor(236, 236, 236);
         $this->SetFont('Arial', '', 14);
-        $this->SetXY(190, 30);
-        $this->Cell(50, 7, "MANIFIESTO:", 1, 0, 'L', 1);
-        $this->Cell(35, 7, $arDespacho->getNumero(), 1, 0, 'R', 1);
+        $this->SetXY(190, 28);
+        $this->Cell(50, 5, "MANIFIESTO:", 1, 0, 'L', 1);
+        $this->Cell(35, 5, $arDespacho->getNumero(), 1, 0, 'R', 1);
 
-        $this->SetXY(190, 37);
-        $this->Cell(50, 7, "AUTORIZACION:", 1, 0, 'L', 1);
-        $this->Cell(35, 7, $arDespacho->getNumeroRndc(), 1, 0, 'R', 1);
+        $this->SetXY(190, 33);
+        $this->Cell(50, 5, "AUTORIZACION:", 1, 0, 'L', 1);
+        $this->Cell(35, 5, $arDespacho->getNumeroRndc(), 1, 0, 'R', 1);
+        $this->Text(245, 14, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+
+        $this->SetXY(190, 38);
+        $this->Cell(50, 5, "NUMERO:", 1, 0, 'L', 1);
+        $this->Cell(35, 5, $arDespacho->getCodigoDespachoPk(), 1, 0, 'R', 1);
         $this->Text(245, 14, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
 
         $this->EncabezadoDetalles();

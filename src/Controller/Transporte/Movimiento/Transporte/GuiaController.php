@@ -24,6 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class GuiaController extends Controller
@@ -47,6 +48,7 @@ class GuiaController extends Controller
             $session->set('filtroFechaHasta', $fecha->format('Y-m-d'));
         }
         $form = $this->createFormBuilder()
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
@@ -87,6 +89,7 @@ class GuiaController extends Controller
                     $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
                     $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
                     $session->set('filtroTteGuiaEstadoFacturado', $form->get('chkEstadoFacturado')->getData());
+                    $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
                 }
                 if ($form->get('btnExcel')->isClicked()) {
                     General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->lista())->execute(), "Guias");

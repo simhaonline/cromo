@@ -92,6 +92,7 @@
             <th>RTE FUENTE</th>
             <th>PAGO</th>
             <th>TOTAL</th>
+            <th></th>
             <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
@@ -110,6 +111,7 @@
                     <td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrRetencionFuente{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrRetencionFuente  }}" size="6" style="height:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
                     <td style="text-align: right"><input style="text-align: right" type="text" name="TxtValorPago{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrPago  }}" size="6" style="height:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
                     <td style="text-align: right">{{ arReciboDetalle.vrPagoAfectar | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: center"><a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('cartera_movimiento_recibo_recibo_detalle_aplicar', {'id': arReciboDetalle.codigoReciboDetallePk }) }}', 'AgregarNuevoDetalle', 600, 900)">Aplicar</a></td>
                 {% else %}
                     <td style="text-align: right">{{ arReciboDetalle.vrDescuento | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ arReciboDetalle.vrAjustePeso | number_format(0, '.', ',') }}</td>
@@ -118,6 +120,7 @@
                     <td style="text-align: right">{{ arReciboDetalle.vrRetencionFuente | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ arReciboDetalle.vrPago | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ arReciboDetalle.vrPagoAfectar | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right"></td>
                 {% endif %}
                 <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arReciboDetalle.codigoReciboDetallePk }}" /></td>
             </tr>

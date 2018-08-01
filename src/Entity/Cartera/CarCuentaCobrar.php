@@ -135,6 +135,11 @@ class CarCuentaCobrar
     protected $recibosDetallesCuentaCobrarRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="CarReciboDetalle", mappedBy="cuentaCobrarAplicacionRel")
+     */
+    protected $recibosDetallesCuentaCobrarAplicacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaCobrarPk()

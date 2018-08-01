@@ -37,6 +37,11 @@ class TteFacturaTipo
     private $guiaFactura = false;
 
     /**
+     * @ORM\Column(name="prefijo", type="string", length=5, nullable=true)
+     */
+    private $prefijo;
+
+    /**
      * @ORM\Column(name="codigo_factura_clase_fk", type="string", length=2, nullable=true)
      */
     private $codigoFacturaClaseFk;

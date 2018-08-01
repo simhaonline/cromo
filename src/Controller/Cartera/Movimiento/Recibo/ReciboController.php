@@ -222,44 +222,40 @@ class ReciboController extends Controller
      */
     public function detalleNuevoAplicar(Request $request, $id)
     {
-        $paginator = $this->get('knp_paginator');
-        $em = $this->getDoctrine()->getManager();
-        $arRecibo = $em->getRepository(CarRecibo::class)->find($id);
-        $form = $this->createFormBuilder()
-            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnGuardar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $arrControles = $request->request->All();
-                if ($arrSeleccionados) {
-                    foreach ($arrSeleccionados AS $codigoCuentaCobrar) {
+        {
+            $em = $this->getDoctrine()->getManager();
+            $paginator = $this->get('knp_paginator');
+            $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->find($id);
+            $form = $this->createFormBuilder()
+                ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
+                ->getForm();
+            $form->handleRequest($request);
+            if ($form->isSubmitted()) {
+                if ($form->isValid()) {
+                    if ($request->request->get('OpAplicar')) {
+                        set_time_limit(0);
+                        ini_set("memory_limit", -1);
+                        $codigoCuentaCobrar = $request->request->get('OpAplicar');
                         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrar);
-                        $vrPago = $em->getRepository(CarReciboDetalle::class)->vrPagoRecibo($codigoCuentaCobrar, $id);
-                        $saldo = $arrControles['TxtSaldo' . $codigoCuentaCobrar] - $vrPago;
-                        $arReciboDetalle = new CarReciboDetalle();
-                        $arReciboDetalle->setReciboRel($arRecibo);
-                        $arReciboDetalle->setCuentaCobrarRel($arCuentaCobrar);
-                        $arReciboDetalle->setVrPago($saldo);
-                        $arReciboDetalle->setNumeroFactura($arCuentaCobrar->getNumeroDocumento());
+                        $arReciboDetalle->setCuentaCobrarAplicacionRel($arCuentaCobrar);
+                        $arReciboDetalle->setNumeroDocumentoAplicacion($arCuentaCobrar->getNumeroDocumento());
                         $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
                         $arReciboDetalle->setOperacion(0);
+                        $arReciboDetalle->setVrPago(round($arCuentaCobrar->getSaldo()));
+                        $arReciboDetalle->setVrPagoAfectar(round($arCuentaCobrar->getSaldo()));
                         $em->persist($arReciboDetalle);
+                        $em->flush();
+                        $em->getRepository('BrasaCarteraBundle:CarReciboDetalle')->liquidar($arReciboDetalle->getCodigoReciboFk());
                     }
-                    $em->flush();
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
-                $em->getRepository(CarReciboDetalle::class)->liquidar($id);
             }
-            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->cuentasCobrarAplicar($arReciboDetalle->getReciboRel()->getCodigoClienteFk());
+            $arCuentasCobrar = $paginator->paginate($arCuentasCobrar, $request->query->get('page', 1), 50);
+            return $this->render('cartera/movimiento/recibo/detalleaAplicar.html.twig', array(
+                'arCuentasCobrar' => $arCuentasCobrar,
+                'form' => $form->createView()));
         }
-        $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->cuentasCobrarAplicar($arRecibo->getCodigoClienteFk());
-        $arCuentasCobrar = $paginator->paginate($arCuentasCobrar, $request->query->get('page', 1), 50);
-        return $this->render('cartera/movimiento/recibo/detalleAplicar.html.twig', array(
-            'arCuentasCobrar' => $arCuentasCobrar,
-            'arRecibo' => $arRecibo,
-            'form' => $form->createView()));
     }
-
 }
 

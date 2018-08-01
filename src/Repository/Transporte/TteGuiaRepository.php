@@ -649,8 +649,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('c.correo')
             ->addSelect('COUNT(g.codigoGuiaPk) AS numero')
             ->leftJoin('g.clienteRel', 'c')
-            ->where("g.fechaEntrega >= '" . $fechaDesde . " 00:00:00'")
-            ->andWhere("g.fechaEntrega <= '" . $fechaHasta . " 23:59:59'")
+            ->where("g.fechaSoporte >= '" . $fechaDesde . " 00:00:00'")
+            ->andWhere("g.fechaSoporte <= '" . $fechaHasta . " 23:59:59'")
             ->andWhere('g.estadoEntregado = 1')
             ->groupBy('g.codigoClienteFk')
             ->orderBy('COUNT(g.codigoGuiaPk)', 'DESC');
@@ -674,8 +674,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.fechaEntrega')
             ->addSelect('cd.nombre as destino')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
-            ->where("g.fechaEntrega >= '" . $fechaDesde . " 00:00:00'")
-            ->andWhere("g.fechaEntrega <= '" . $fechaHasta . " 23:59:59'")
+            ->where("g.fechaSoporte >= '" . $fechaDesde . " 00:00:00'")
+            ->andWhere("g.fechaSoporte <= '" . $fechaHasta . " 23:59:59'")
             ->andWhere('g.estadoEntregado = 1')
             ->andWhere('g.codigoClienteFk = ' . $codigoCliente);
         return $queryBuilder->getQuery()->getResult();

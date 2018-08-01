@@ -6,6 +6,7 @@ namespace App\Repository\Cartera;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
+use App\Entity\Cartera\CarReciboTipo;
 use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -62,7 +63,7 @@ class CarReciboRepository extends ServiceEntityRepository
     public function desAutorizar($arRecibo)
     {
         $em = $this->getEntityManager();
-        $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $arRecibo->getCodigoREciboPk()));
+        $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $arRecibo->getCodigoReciboPk()));
         foreach ($arReciboDetalles AS $arReciboDetalle) {
             $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
             $saldo = $arCuentaCobrar->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
@@ -78,10 +79,19 @@ class CarReciboRepository extends ServiceEntityRepository
         $em->flush();
     }
 
-    public function aprobar($arRecibo)
-    {
-        $arRecibo->setEstadoAprobado(1);
-        $this->getEntityManager()->persist($arRecibo);
-        $this->getEntityManager()->flush();
+    public function aprobar($arRecibo){
+        $em = $this->getEntityManager();
+        if($arRecibo->getEstadoAutorizado()){
+            $arReciboTipo = $em->getRepository(CarReciboTipo::class)->find($arRecibo->getCodigoReciboTipoFk());
+            if ($arRecibo->getNumero() == 0 || $arRecibo->getNumero() == NULL) {
+                $arRecibo->setNumero($arReciboTipo->getConsecutivo());
+                $arReciboTipo->setConsecutivo($arReciboTipo->getConsecutivo() + 1);
+                $em->persist($arReciboTipo);
+            }
+
+            $arRecibo->setEstadoAprobado(0);
+            $this->getEntityManager()->persist($arRecibo);
+            $this->getEntityManager()->flush();
+        }
     }
 }

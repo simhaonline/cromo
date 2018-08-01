@@ -38,6 +38,11 @@ class CarRecibo
     private $codigoAsesorFk;
 
     /**
+     * @ORM\Column(name="codigo_recibo_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoReciboTipoFk;
+
+    /**
      * @ORM\Column(name="numero", type="string", length=30, nullable=true)
      */
     private $numero;
@@ -223,6 +228,22 @@ class CarRecibo
     public function setCodigoAsesorFk($codigoAsesorFk): void
     {
         $this->codigoAsesorFk = $codigoAsesorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoReciboTipoFk()
+    {
+        return $this->codigoReciboTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoReciboTipoFk
+     */
+    public function setCodigoReciboTipoFk($codigoReciboTipoFk): void
+    {
+        $this->codigoReciboTipoFk = $codigoReciboTipoFk;
     }
 
     /**
@@ -420,6 +441,22 @@ class CarRecibo
     /**
      * @return mixed
      */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoAutorizado()
     {
         return $this->estadoAutorizado;
@@ -544,23 +581,6 @@ class CarRecibo
     {
         $this->recibosDetallesRecibosRel = $recibosDetallesRecibosRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAprobado()
-    {
-        return $this->estadoAprobado;
-    }
-
-    /**
-     * @param mixed $estadoAprobado
-     */
-    public function setEstadoAprobado($estadoAprobado): void
-    {
-        $this->estadoAprobado = $estadoAprobado;
-    }
-
 
 
 }

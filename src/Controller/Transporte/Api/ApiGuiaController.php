@@ -15,13 +15,15 @@ class ApiGuiaController extends FOSRestController
      * @param int $codigoGuia
      * @return array
      * @throws \Doctrine\ORM\ORMException
-     * @Rest\Post("/transporte/api/guia/entrega/{codigoGuia}")
+     * @Rest\Post("/transporte/api/guia/entrega/{codigoGuia}/{soporte}")
      */
-    public function entrega(Request $request, $codigoGuia=0) {
+    public function entrega(Request $request, $codigoGuia = 0, $soporte = "") {
+
         $arrPost = json_decode($request->request->get("arrParametros"), true);
         $fecha = $arrPost['fecha'];
         $hora = $arrPost['hora'];
-        return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiEntrega($codigoGuia, $fecha, $hora);
+        return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiEntrega($codigoGuia, $fecha, $hora, $soporte);
+
     }
 
     /**

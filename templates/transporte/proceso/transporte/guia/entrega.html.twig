@@ -78,7 +78,9 @@
     {{ form_end(form) }}
     <br /><br />
     <input type="text" id="txtGuiaCodigo"><button id="btnEntregaIndividual">Entregar</button>
-    <input type="date" id="txtFecha" name="fecha" value="{{ "now"|date("Y-m-d") }}"><input type="time" id="txtHora" name="hora" value="{{ "now"|date("H:i") }}">
+    <input type="date" id="txtFecha" name="fecha" value="{{ "now"|date("Y-m-d") }}">
+    <input type="time" id="txtHora" name="hora" value="{{ "now"|date("H:i") }}">
+    <label><input type="checkbox" id="chkSoporte" name="chkSoporte" value="si"> Soporte</label>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -88,33 +90,49 @@
             var txtGuiaCodigo = $("#txtGuiaCodigo");
             var txtFecha = $("#txtFecha");
             var txtHora = $("#txtHora");
+            var soporte = "";
             button.click(function() {
-                agregarGuia(txtGuiaCodigo.val(), txtFecha.val(), txtHora.val());
+                if($('input:checkbox[name=chkSoporte]:checked').val() == "si") {
+                    soporte = "si";
+                } else {
+                    soporte = "no";
+                }
+                agregarGuia(txtGuiaCodigo.val(), txtFecha.val(), txtHora.val(), soporte);
             });
             txtGuiaCodigo.keydown(function (event) {
+                if($('input:checkbox[name=chkSoporte]:checked').val() == "si") {
+                    soporte = "si";
+                } else {
+                    soporte = "no";
+                }
                 if(event.keyCode === 13) {
-                    agregarGuia(txtGuiaCodigo.val(), txtFecha.val(), txtHora.val());
+                    agregarGuia(txtGuiaCodigo.val(), txtFecha.val(), txtHora.val(), soporte);
                 }
             });
         });
 
-        var agregarGuia = function(codigoGuia, fecha, hora) {
-            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/entrega/" + codigoGuia;
-            $.ajax(endpoint, {
-                type: 'POST',
-                data: {
-                    arrParametros: JSON.stringify({
-                        codigoGuia: codigoGuia,
-                        fecha: fecha,
-                        hora: hora
-                    }),
-                }
-            }).done(function(respuesta) {
-                if(respuesta && respuesta.error === true) {
-                    alert(respuesta.mensaje);
-                }
-                $("#txtGuiaCodigo").val("").focus();
-            });
+        var agregarGuia = function(codigoGuia, fecha, hora, soporte) {
+            if(codigoGuia != '') {
+                endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/entrega/" + codigoGuia + "/" + soporte;
+                $.ajax(endpoint, {
+                    type: 'POST',
+                    data: {
+                        arrParametros: JSON.stringify({
+                            codigoGuia: codigoGuia,
+                            fecha: fecha,
+                            hora: hora,
+                            soporte: soporte
+                        }),
+                    }
+                }).done(function(respuesta) {
+                    if(respuesta && respuesta.error === true) {
+                        alert(respuesta.mensaje);
+                    }
+                    $("#txtGuiaCodigo").val("").focus();
+                });
+            } else {
+                alert('Debe digitar una guia');
+            }
         };
     </script>
 {% endblock %}

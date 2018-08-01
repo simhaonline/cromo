@@ -43,6 +43,19 @@ class TteCumplidoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function factura($codigoCliente)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCumplido::class, 'c');
+        $queryBuilder
+            ->select('c.codigoCumplidoPk')
+            ->addSelect('c.fecha')
+            ->where('c.codigoClienteFk = ' . $codigoCliente);
+        $queryBuilder->orderBy('c.fecha', 'DESC');
+
+        return $queryBuilder;
+    }
+
     public function liquidar($codigoCumplido): bool
     {
         $em = $this->getEntityManager();

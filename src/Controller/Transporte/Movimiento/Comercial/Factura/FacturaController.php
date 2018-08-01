@@ -4,6 +4,7 @@ namespace App\Controller\Transporte\Movimiento\Comercial\Factura;
 
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
+use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaOtro;
@@ -195,6 +196,69 @@ class FacturaController extends Controller
     }
 
     /**
+     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/cumplido/{codigoFactura}/{codigoFacturaPlanilla}", name="transporte_movimiento_comercial_factura_detalle_adicionar_guia_cumplido")
+     */
+    public function detalleAdicionarGuiaCumplido(Request $request, $codigoFactura, $codigoFacturaPlanilla)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $paginator  = $this->get('knp_paginator');
+        $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+        $arFacturaPlanilla = NULL;
+        if($codigoFacturaPlanilla != 0) {
+            $arFacturaPlanilla = $em->getRepository(TteFacturaPlanilla::class)->find($codigoFacturaPlanilla);
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados AS $codigo) {
+                        $arGuias = $em->getRepository(TteGuia::class)->findBy(array('codigoCumplidoFk' => $codigo, 'estadoFacturaGenerada' => 0, 'estadoFacturado' => 0));
+                        if($arGuias) {
+                            foreach ($arGuias as $arGuiaCumplido) {
+                                $arGuia = $em->getRepository(TteGuia::class)->find($arGuiaCumplido->getCodigoGuiaPk());
+                                if($arGuia->getEstadoFacturaGenerada() == 0 && $arGuia->getEstadoFacturado() == 0) {
+                                    if($arFacturaPlanilla) {
+                                        $arGuia->setFacturaPlanillaRel($arFacturaPlanilla);
+                                    }
+                                    $arGuia->setFacturaRel($arFactura);
+                                    $arGuia->setEstadoFacturaGenerada(1);
+                                    $em->persist($arGuia);
+
+                                    $arFacturaDetalle = new TteFacturaDetalle();
+                                    $arFacturaDetalle->setFacturaRel($arFactura);
+                                    if($arFacturaPlanilla) {
+                                        $arFacturaDetalle->setFacturaPlanillaRel($arFacturaPlanilla);
+                                    }
+                                    $arFacturaDetalle->setGuiaRel($arGuia);
+                                    $arFacturaDetalle->setVrDeclara($arGuia->getVrDeclara());
+                                    $arFacturaDetalle->setVrFlete($arGuia->getVrFlete());
+                                    $arFacturaDetalle->setVrManejo($arGuia->getVrManejo());
+                                    $arFacturaDetalle->setUnidades($arGuia->getUnidades());
+                                    $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
+                                    $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                                    $em->persist($arFacturaDetalle);
+                                }
+                            }
+                        }
+                    }
+                    $em->flush();
+                    $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
+                }
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        $arCumplidos = $paginator->paginate($this->getDoctrine()->getRepository(TteCumplido::class)->factura($arFactura->getCodigoClienteFk()), $request->query->getInt('page', 1), 30);
+        return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarGuiaCumplido.html.twig', [
+            'arCumplidos' => $arCumplidos,
+            'form' => $form->createView()]);
+    }
+
+    /**
      * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/planilla/guia/{codigoFactura}/{codigoFacturaPlanilla}", name="transporte_movimiento_comercial_factura_detalle_adicionar_planilla_guia")
      */
     public function detalleAdicionarGuiaPlanilla(Request $request, $codigoFactura, $codigoFacturaPlanilla)
@@ -225,7 +289,7 @@ class FacturaController extends Controller
             }
 
         }
-        $arFacturaDetalles = $paginator->paginate($this->getDoctrine()->getRepository(TteFacturaDetalle::class)->facturaPlanilla($codigoFacturaPlanilla), $request->query->getInt('page', 1), 50);
+        $arFacturaDetalles = $paginator->paginate($this->getDoctrine()->getRepository(TteFacturaDetalle::class)->facturaPlanilla($codigoFacturaPlanilla), $request->query->getInt('page', 1), 1000);
         return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarGuiaPlanilla.html.twig', [
             'arFactura' => $arFactura,
             'arFacturaPlanilla' => $arFacturaPlanilla,

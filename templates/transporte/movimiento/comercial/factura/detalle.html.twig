@@ -83,7 +83,7 @@
                             <th>VOL</th>
                             <th>FLETE</th>
                             <th>MANEJO</th>
-                            <th></th>
+                            <th><input type="checkbox" name="ChkSeleccionar" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -126,6 +126,7 @@
                     </div>
                     {% if arFactura.estadoAutorizado == 0 %}
                         {% if arFactura.codigoFacturaClaseFk == 'FA' %}
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia_cumplido', {'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaPlanilla': 0 }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo (cumplido)</a>
                             <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo</a>
                         {% endif %}
                         {% if arFactura.codigoFacturaClaseFk == 'NC' %}
@@ -155,6 +156,7 @@
                             <th></th>
                             <th></th>
                             <th></th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -167,8 +169,13 @@
                                 <td class="numero">{{ arFacturaPlanilla.vrManejo | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;">
                                     {% if arFactura.estadoAutorizado == 0 %}
-                                        <a href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_planilla_guia',{ 'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaPlanilla': arFacturaPlanilla.codigoFacturaPlanillaPk }) }}', 'FacturaAdicionarPlanillaGuia', 600, 900)">
-                                            <i title="Editar el registro" class="fa fa-calendar" style="font-size: large;color: black;"></i></a>
+                                        <a href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia_cumplido',{ 'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaPlanilla': arFacturaPlanilla.codigoFacturaPlanillaPk }) }}', 'FacturaAdicionarPlanillaCumplido', 600, 900)" class="btn btn-default btn-xs">Nuevo (cumplido)</a>
+                                    {% endif %}
+                                </td>
+
+                                <td style="text-align: center;">
+                                    {% if arFactura.estadoAutorizado == 0 %}
+                                        <a href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_planilla_guia',{ 'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaPlanilla': arFacturaPlanilla.codigoFacturaPlanillaPk }) }}', 'FacturaAdicionarPlanillaGuia', 600, 900)" class="btn btn-default btn-xs">Nuevo (guia)</a>
                                     {% endif %}
                                 </td>
                                 <td style="text-align: center;">

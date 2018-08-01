@@ -844,7 +844,7 @@ class TteGuiaRepository extends ServiceEntityRepository
      * @return array
      * @throws \Doctrine\ORM\ORMException
      */
-    public function apiEntrega($codigoGuia, $fecha, $hora) {
+    public function apiEntrega($codigoGuia, $fecha, $hora, $soporte) {
         $em = $this->getEntityManager();
         $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
         if($arGuia) {
@@ -853,6 +853,9 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $fechaHora = date_create($fecha . " " . $hora);
                     $arGuia->setFechaEntrega($fechaHora);
                     $arGuia->setEstadoEntregado(1);
+                    if($soporte == "si"){
+                        $arGuia->setEstadoSoporte(1);
+                    }
                     $em->persist($arGuia);
                     $em->flush();
                     return [

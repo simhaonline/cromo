@@ -246,38 +246,46 @@
         });
 
         var agregarGuia = function(codigoGuia, codigoDespacho) {
-            //endpoint = "http://localhost/cromo/public/index.php/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
-            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
-            $.ajax(endpoint, {
-                type: 'POST',
-                data: {
-                    arrParametros: JSON.stringify({
-                        codigoGuia: codigoGuia
-                    }),
-                }
-            }).done(function(respuesta) {
-                if(respuesta && respuesta.error === true) {
-                    alert(respuesta.mensaje);
-                }
-                $("#txtGuiaCodigo").val("").focus();
-            });
+            if(codigoGuia != '') {
+                endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
+                $.ajax(endpoint, {
+                    type: 'POST',
+                    data: {
+                        arrParametros: JSON.stringify({
+                            codigoGuia: codigoGuia
+                        }),
+                    }
+                }).done(function(respuesta) {
+                    if(respuesta && respuesta.error === true) {
+                        alert(respuesta.mensaje);
+                    }
+                    $("#txtGuiaCodigo").val("").focus();
+                });
+            } else {
+                alert("Debe digitar un numero de guia");
+            }
+
         };
 
         var agregarDocumento = function(documento, codigoDespacho) {
-            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/documento/" + codigoDespacho + "/" + documento;
-            $.ajax(endpoint, {
-                type: 'POST',
-                data: {
-                    arrParametros: JSON.stringify({
-                        documento: documento
-                    }),
-                }
-            }).done(function(respuesta) {
-                if(respuesta && respuesta.error === true) {
-                    alert(respuesta.mensaje);
-                }
-                $("#txtGuiaDocumento").val("").focus();
-            });
+            if(documento != '') {
+                endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/documento/" + codigoDespacho + "/" + documento;
+                $.ajax(endpoint, {
+                    type: 'POST',
+                    data: {
+                        arrParametros: JSON.stringify({
+                            documento: documento
+                        }),
+                    }
+                }).done(function(respuesta) {
+                    if(respuesta && respuesta.error === true) {
+                        alert(respuesta.mensaje);
+                    }
+                    $("#txtGuiaDocumento").val("").focus();
+                });
+            } else {
+                alert("Debe digitar un documento de guia");
+            }
         };
     </script>
 {% endblock %}

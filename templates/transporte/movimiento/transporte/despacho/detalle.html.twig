@@ -1,7 +1,13 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    {% include 'estructura/botonera.html.twig' %}
+
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botoneraLibre.html.twig' %}
             {{ form_widget(form.btnCerrar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnRndc, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnImprimirManifiesto, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
@@ -135,6 +141,7 @@
                             <th title="Operacion de ingreso">OI</th>
                             <th title="Operacion de cargo">OC</th>
                             <th>NUMERO</th>
+                            <th>DOCUMENTO</th>
                             <th>CLIENTE</th>
                             <th>DESTINO</th>
                             <th>FLETE</th>
@@ -156,6 +163,7 @@
                                 <td>{{ arDespachoDetalle.codigoOperacionIngresoFk }}</td>
                                 <td>{{ arDespachoDetalle.codigoOperacionCargoFk }}</td>
                                 <td>{{ arDespachoDetalle.numero }}</td>
+                                <td>{{ arDespachoDetalle.documentoCliente }}</td>
                                 <td>{{ arDespachoDetalle.clienteNombreCorto }}</td>
                                 <td>{{ arDespachoDetalle.ciudadDestino }}</td>
                                 <td style="text-align: right">{{ arDespachoDetalle.vrFlete | number_format(0, '.', ',') }}</td>
@@ -174,7 +182,7 @@
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
                         {% if arDespacho.estadoAutorizado == 0 %}
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_detalle_adicionar_guia', {'id': arDespacho.codigoDespachoPk }) }}', 'DespachoAdicionarGuia', 600, 900)">Nuevo</a>
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_detalle_adicionar_guia', {'id': arDespacho.codigoDespachoPk }) }}', 'DespachoAdicionarGuia', 600, 1200)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">
@@ -205,6 +213,8 @@
     {% if arDespacho.estadoAutorizado == 0 %}
         <br /><br />
         <input type="text" id="txtGuiaCodigo"><button id="btnAdicionar">Adicionar</button>
+        <br /><br />
+        <input type="text" id="txtGuiaDocumento"><button id="btnAdicionarDocumento">Adicionar documento</button>
     {% endif %}
 {% endblock %}
 
@@ -214,13 +224,23 @@
         var codigoDespacho = '{{ arDespacho.codigoDespachoPk }}';
         $(function() {
             var button = $("#btnAdicionar");
+            var buttonDocumento = $("#btnAdicionarDocumento");
             var txtGuiaCodigo = $("#txtGuiaCodigo");
+            var txtGuiaDocumento = $("#txtGuiaDocumento");
             button.click(function() {
                 agregarGuia(txtGuiaCodigo.val(), codigoDespacho);
             });
             txtGuiaCodigo.keydown(function (event) {
                 if(event.keyCode === 13) {
                     agregarGuia(txtGuiaCodigo.val(), codigoDespacho);
+                }
+            });
+            buttonDocumento.click(function() {
+                agregarDocumento(txtGuiaDocumento.val(), codigoDespacho);
+            });
+            txtGuiaDocumento.keydown(function (event) {
+                if(event.keyCode === 13) {
+                    agregarDocumento(txtGuiaDocumento.val(), codigoDespacho);
                 }
             });
         });
@@ -240,6 +260,23 @@
                     alert(respuesta.mensaje);
                 }
                 $("#txtGuiaCodigo").val("").focus();
+            });
+        };
+
+        var agregarDocumento = function(documento, codigoDespacho) {
+            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/documento/" + codigoDespacho + "/" + documento;
+            $.ajax(endpoint, {
+                type: 'POST',
+                data: {
+                    arrParametros: JSON.stringify({
+                        documento: documento
+                    }),
+                }
+            }).done(function(respuesta) {
+                if(respuesta && respuesta.error === true) {
+                    alert(respuesta.mensaje);
+                }
+                $("#txtGuiaDocumento").val("").focus();
             });
         };
     </script>

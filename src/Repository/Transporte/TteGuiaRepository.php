@@ -291,6 +291,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.codigoGuiaTipoFk')
             ->addSelect('tg.fechaIngreso')
             ->addSelect('tg.numero')
+            ->addSelect('tg.documentoCliente')
             ->addSelect('tg.codigoOperacionIngresoFk')
             ->addSelect('tg.codigoOperacionCargoFk')
             ->addSelect('tg.unidades')
@@ -961,6 +962,58 @@ class TteGuiaRepository extends ServiceEntityRepository
             return [
                 'error' => true,
                 'mensaje' => "La guia " . $codigoGuia . " o el despacho " . $codigoDespacho . " no existe ",
+            ];
+        }
+    }
+
+    /**
+     * @param $codigoDespacho $codigoGuia
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function apiDespachoAdicionarDocumento($codigoDespacho, $documento) {
+        $em = $this->getEntityManager();
+        $arGuia = $em->getRepository(TteGuia::class)->findOneBy(array('documentoCliente' => $documento, 'estadoEmbarcado' => 0, 'estadoAnulado' => 0));
+        $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+        if($arDespacho) {
+            if($arGuia) {
+                $arGuia = $em->getRepository(TteGuia::class)->find($arGuia->getCodigoGuiaPk());
+                $arGuia->setDespachoRel($arDespacho);
+                $arGuia->setEstadoEmbarcado(1);
+                $em->persist($arGuia);
+
+                $arDespachoDetalle = new TteDespachoDetalle();
+                $arDespachoDetalle->setDespachoRel($arDespacho);
+                $arDespachoDetalle->setGuiaRel($arGuia);
+                $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
+                $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
+                $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
+                $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
+                $arDespachoDetalle->setUnidades($arGuia->getUnidades());
+                $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
+                $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                $em->persist($arDespachoDetalle);
+
+                $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
+                $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
+                $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
+                $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
+                $em->persist($arDespacho);
+                $em->flush();
+                return [
+                    'error' => false,
+                    'mensaje' => '',
+                ];
+            } else {
+                return [
+                    'error' => true,
+                    'mensaje' => "La guia con documento " . $documento . " no existe o ya esta embarcada en otro despacho",
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'mensaje' => "El despacho " . $codigoDespacho . " no existe ",
             ];
         }
     }

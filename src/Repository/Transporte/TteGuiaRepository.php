@@ -299,6 +299,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.pesoReal')
             ->addSelect('tg.pesoVolumen')
             ->addSelect('tg.pesoVolumen')
+            ->addSelect('tg.nombreDestinatario as destinatario')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
             ->addSelect('cd.nombre AS ciudadDestino')
             ->leftJoin('tg.clienteRel', 'c')
@@ -617,6 +618,24 @@ class TteGuiaRepository extends ServiceEntityRepository
 
 
         return $query->execute();
+    }
+
+    public function informeProduccionCliente($fechaDesde, $fechaHasta)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoClienteFk')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('SUM(g.vrFlete) AS vrFlete')
+            ->addSelect('SUM(g.vrManejo) AS vrManejo')
+            ->leftJoin('g.clienteRel', 'c')
+            ->where("g.fechaIngreso >= '" . $fechaDesde . " 00:00:00'")
+            ->andWhere("g.fechaIngreso <= '" . $fechaHasta . " 23:59:59'")
+        ->groupBy('g.codigoClienteFk')
+        ->orderBy('SUM(g.vrFlete)', 'DESC');
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function pendienteConductor(): array

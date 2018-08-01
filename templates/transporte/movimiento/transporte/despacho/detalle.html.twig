@@ -143,6 +143,7 @@
                             <th>NUMERO</th>
                             <th>DOCUMENTO</th>
                             <th>CLIENTE</th>
+                            <th>DESTINATARIO</th>
                             <th>DESTINO</th>
                             <th>FLETE</th>
                             <th>MANEJO</th>
@@ -164,7 +165,8 @@
                                 <td>{{ arDespachoDetalle.codigoOperacionCargoFk }}</td>
                                 <td>{{ arDespachoDetalle.numero }}</td>
                                 <td>{{ arDespachoDetalle.documentoCliente }}</td>
-                                <td>{{ arDespachoDetalle.clienteNombreCorto }}</td>
+                                <td>{{ arDespachoDetalle.clienteNombreCorto |slice(0, 25) }}</td>
+                                <td>{{ arDespachoDetalle.nombreDestinatario |slice(0, 25) }}</td>
                                 <td>{{ arDespachoDetalle.ciudadDestino }}</td>
                                 <td style="text-align: right">{{ arDespachoDetalle.vrFlete | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arDespachoDetalle.vrManejo | number_format(0, '.', ',') }}</td>
@@ -202,11 +204,6 @@
                 <div class="separador-1"></div>
 
             </div>
-        </div>
-    </div>
-    <div class="btn-toolbar" style="float: left">
-        <div class="btn-group">
-            <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Volver</a>
         </div>
     </div>
     {{ form_end(form) }}

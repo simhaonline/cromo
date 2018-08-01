@@ -141,9 +141,9 @@ class FacturaController extends Controller
 
         }
         $query = $this->getDoctrine()->getRepository(TteFacturaPlanilla::class)->listaFacturaDetalle($id);
-        $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1),50);
         $query = $this->getDoctrine()->getRepository(TteFacturaOtro::class)->listaFacturaDetalle($id);
-        $arFacturaOtros = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        $arFacturaOtros = $paginator->paginate($query, $request->query->getInt('page', 1),50);
         $arFacturaDetalles = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->factura($id);
         return $this->render('transporte/movimiento/comercial/factura/detalle.html.twig', [
             'arFactura' => $arFactura,

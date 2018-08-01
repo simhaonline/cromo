@@ -37,6 +37,7 @@
             <th>DOCUMENTO</th>
             <th>CLIENTE</th>
             <th>RUTA</th>
+            <th>DESTINATARIO</th>
             <th>DESTINO</th>
             <th>UND</th>
             <th>PES</th>
@@ -54,8 +55,9 @@
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
                 <td>{{ arGuia.numero }}</td>
                 <td>{{ arGuia.documentoCliente }}</td>
-                <td>{{ arGuia.clienteNombreCorto }}</td>
+                <td>{{ arGuia.clienteNombreCorto |slice(0, 25) }}</td>
                 <td>{{ arGuia.codigoRutaFk }}</td>
+                <td>{{ arGuia.destinatario |slice(0, 25) }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
                 <td style="text-align: right">{{ arGuia.unidades }}</td>
                 <td style="text-align: right">{{ arGuia.pesoReal }}</td>

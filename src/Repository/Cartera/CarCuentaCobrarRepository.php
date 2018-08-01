@@ -31,12 +31,16 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.vrTotal')
             ->addSelect('cc.vrAbono')
             ->addSelect('cc.vrSaldo')
+            ->addSelect('cc.soporte')
             ->addSelect('cl.nombreCorto')
             ->addSelect('cl.numeroIdentificacion')
             ->where('cc.codigoCuentaCobrarPk <> 0')
             ->orderBy('cc.codigoCuentaCobrarPk', 'DESC');
         if ($session->get('filtroNumero')) {
             $qb->andWhere("cc.numeroDocumento = '{$session->get('filtroNumero')}'");
+        }
+        if($session->get('filtroCarCodigoCliente')){
+            $qb->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
         }
         $query = $qb->getDQL();
         $query = $em->createQuery($query);

@@ -1,0 +1,79 @@
+{% extends 'base_transporte.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                <div class="col-sm-11">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtCodigoCliente) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                {{ form_widget(form.txtNombreCorto) }}
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('cartera_buscar_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Numero:</label>
+                <div class="col-sm-2">
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.btnFiltrar) }}
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>NUMERO</th>
+            <th>TIPO</th>
+            <th>FECHA</th>
+            <th>VENCE</th>
+            <th>SOPORTE</th>
+            <th>NIT</th>
+            <th>CLIENTE</th>
+            <th>PLAZO</th>
+            <th>VALOR</th>
+            <th>ABONO</th>
+            <th>SALDO</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arCuentaCobrar in arCuentasCobrar %}
+            <tr>
+                <td>{{ arCuentaCobrar.codigoCuentaCobrarPk }}</td>
+                <td>{{ arCuentaCobrar.numeroDocumento }}</td>
+                <td>{{ arCuentaCobrar.tipo }}</td>
+                <td>{{ arCuentaCobrar.fecha | date('Y-m-d') }}</td>
+                <td>{{ arCuentaCobrar.fechaVence | date('Y-m-d') }}</td>
+                <td>{{ arCuentaCobrar.soporte }}</td>
+                <td>{{ arCuentaCobrar.numeroIdentificacion }}</td>
+                <td>{{ arCuentaCobrar.nombreCorto }}</td>
+                <td>{{ arCuentaCobrar.plazo }}</td>
+                <td>{{ arCuentaCobrar.vrTotal }}</td>
+                <td>{{ arCuentaCobrar.vrAbono }}</td>
+                <td>{{ arCuentaCobrar.vrSaldo }}</td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}
+

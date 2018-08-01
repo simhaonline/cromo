@@ -919,6 +919,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $arGuia->setEstadoEntregado(1);
                     if($soporte == "si"){
                         $arGuia->setEstadoSoporte(1);
+                        $arGuia->setFechaSoporte(new \DateTime('now'));
                     }
                     $em->persist($arGuia);
                     $em->flush();

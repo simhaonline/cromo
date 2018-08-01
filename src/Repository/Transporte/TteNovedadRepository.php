@@ -184,14 +184,14 @@ class TteNovedadRepository extends ServiceEntityRepository
             ->orderBy('n.codigoNovedadPk', 'DESC');
         $fecha =  new \DateTime('now');
         if ($session->get('filtroFechaDesde') != null) {
-            $queryBuilder->andWhere("g.fechaIngreso >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            $queryBuilder->andWhere("n.fechaRegistro >= '{$session->get('filtroFechaDesde')} 00:00:00'");
         } else {
-            $queryBuilder->andWhere("g.fechaIngreso >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            $queryBuilder->andWhere("n.fechaRegistro >='" . $fecha->format('Y-m-d') . " 00:00:00'");
         }
         if ($session->get('filtroFechaHasta') != null) {
-            $queryBuilder->andWhere("g.fechaIngreso <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            $queryBuilder->andWhere("n.fechaRegistro <= '{$session->get('filtroFechaHasta')} 23:59:59'");
         } else {
-            $queryBuilder->andWhere("g.fechaIngreso <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            $queryBuilder->andWhere("n.fechaRegistroo <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
         }
         if($session->get('filtroTteCodigoCliente')){
             $queryBuilder->andWhere("g.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");

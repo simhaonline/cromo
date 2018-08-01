@@ -121,6 +121,15 @@ class ReciboController extends Controller
                         $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
                         $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
                         $em->persist($arCuentaCobrar);
+                        if ($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk()) {
+                            $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk());
+                            $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
+                            $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
+                            $arCuentaCobrarAplicacion->setVrSaldo($saldo);
+                            $arCuentaCobrarAplicacion->setvRSaldoOperado($saldoOperado);
+                            $arCuentaCobrarAplicacion->setAbono($arCuentaCobrarAplicacion->getvRAbono() - $arReciboDetalle->getVrPagoAfectar());
+                            $em->persist($arCuentaCobrarAplicacion);
+                        }
                     }
                     $arRecibo->setEstadoAutorizado(1);
                     $em->persist($arRecibo);
@@ -227,7 +236,6 @@ class ReciboController extends Controller
             $paginator = $this->get('knp_paginator');
             $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->find($id);
             $form = $this->createFormBuilder()
-                ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
                 ->getForm();
             $form->handleRequest($request);
             if ($form->isSubmitted()) {
@@ -237,15 +245,14 @@ class ReciboController extends Controller
                         ini_set("memory_limit", -1);
                         $codigoCuentaCobrar = $request->request->get('OpAplicar');
                         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrar);
-                        $arReciboDetalle->setCuentaCobrarAplicacionRel($arCuentaCobrar);
                         $arReciboDetalle->setNumeroDocumentoAplicacion($arCuentaCobrar->getNumeroDocumento());
                         $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
                         $arReciboDetalle->setOperacion(0);
-                        $arReciboDetalle->setVrPago(round($arCuentaCobrar->getSaldo()));
-                        $arReciboDetalle->setVrPagoAfectar(round($arCuentaCobrar->getSaldo()));
+                        $arReciboDetalle->setVrPago(round($arCuentaCobrar->getVrSaldo()));
+                        $arReciboDetalle->setVrPagoAfectar(round($arCuentaCobrar->getVrSaldo()));
                         $em->persist($arReciboDetalle);
                         $em->flush();
-                        $em->getRepository('BrasaCarteraBundle:CarReciboDetalle')->liquidar($arReciboDetalle->getCodigoReciboFk());
+                        $em->getRepository(CarReciboDetalle::class)->liquidar($arReciboDetalle->getCodigoReciboFk());
                     }
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }

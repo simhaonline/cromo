@@ -26,7 +26,7 @@
                 <td>{{arCuentasCobrar.fechaVence | date('Y-m-d')}}</td>
                 <td style="text-align: right">{{ arCuentasCobrar.vrTotal | number_format(2, '.', ',') }}</td>
                 <td style="text-align: right"><input width="60px" style="text-align: right" type="text" name="TxtSaldo{{ arCuentasCobrar.codigoCuentaCobrarPk }}" value="{{ arCuentasCobrar.vrSaldo  }}" size="8" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
-                <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arCuentasCobrar.codigoCuentaCobrarPk }}" /></td>
+                <td><button class="btn btn-default btn-xs" type="submit" name="OpAplicar" value="{{ arCuentasCobrar.codigoCuentaCobrarPk }}">Aplicar</button></td>
                 {%endfor%}
             </tr>
         </tbody>
@@ -36,9 +36,6 @@
         </div>
         <div class="btn-group btn-sm" style="float: left;margin-left: 0px;padding-top: 0px;">
             {{ knp_pagination_render(arCuentasCobrar) }}
-        </div>
-        <div class="modal-footer">
-            {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
         </div>
         {{ form_end(form) }}
 {% endblock %}

@@ -6,6 +6,7 @@ use App\Entity\Inventario\InvPrecio;
 use App\Entity\Inventario\InvSucursal;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvSucursalRepository extends ServiceEntityRepository
 {
@@ -14,19 +15,29 @@ class InvSucursalRepository extends ServiceEntityRepository
         parent::__construct($registry, InvSucursal::class);
     }
 
-    public function lista(): array
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function lista()
     {
-        $qb = $this->getEntityManager()->createQueryBuilder()->from(InvPrecio::class,'p')
-//            ->join('p.terceroRel', 't')
-            ->select('p.codigoPrecioPk')
-            ->addSelect('p.nombre')
-            ->addSelect('p.fechaVence')
-//            ->addSelect('t.nombreCorto AS terceroNombreCorto')
-            ->where('p.codigoPrecioPk <> 0')
-            ->orderBy('p.codigoPrecioPk','DESC');
-        $dql = $this->getEntityManager()->createQuery($qb->getDQL());
-        return $dql->execute();
-
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvSucursal::class,'s')
+            ->select('s.codigoSucursalPk')
+            ->leftJoin('s.ciudadRel','c')
+            ->addSelect('s.direccion')
+            ->addSelect('s.contacto')
+            ->addSelect('c.nombre AS ciudad')
+            ->addSelect('s.nombre')
+            ->where("s.codigoTerceroFk ={$session->get('filtroInvBuscarSucursalCodigoTercero')}");
+        if($session->get('filtroInvBuscarSucursalDireccion')){
+            $queryBuilder->andWhere("s.direccion LIKE '%{$session->get('filtroInvBuscarSucursalDireccion')}%'");
+            $session->set('filtroInvBuscarSucursalDireccion',null);
+        }
+        if($session->get('filtroInvBuscarSucursalContacto')){
+            $queryBuilder->andWhere("s.contacto LIKE '%{$session->get('filtroInvBuscarSucursalContacto')}%'");
+            $session->set('filtroInvBuscarSucursalContacto',null);
+        }
+        return $queryBuilder;
     }
 
     public function camposPredeterminados(){

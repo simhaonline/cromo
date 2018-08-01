@@ -18,6 +18,7 @@
                 <th>ANU</th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -37,10 +38,17 @@
                     <td class="estado">{{ arMovimiento.estadoAnulado?'SI':'NO' }}</td>
                     <td style="text-align: center;">
                         {% if not arMovimiento.estadoAutorizado %}
-                        <a href="{{ path('inventario_movimiento_inventario_movimiento_nuevo', {'codigoDocumento':arMovimiento.codigoDocumentoFk,'id': arMovimiento.codigoMovimientoPk}) }}">
-                            <i class="fa fa-edit" style="font-size: large">
-                            </i>
-                        </a>
+                            {% if tipoDocumento != 'FAC' %}
+                                <a href="{{ path('inventario_movimiento_inventario_movimiento_nuevo', {'codigoDocumento':arMovimiento.codigoDocumentoFk,'id': arMovimiento.codigoMovimientoPk}) }}">
+                                    <i class="fa fa-edit" style="font-size: large">
+                                    </i>
+                                </a>
+                            {% else %}
+                                <a href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_factura', {'codigoDocumento':arMovimiento.codigoDocumentoFk,'id': arMovimiento.codigoMovimientoPk}) }}">
+                                    <i class="fa fa-edit" style="font-size: large">
+                                    </i>
+                                </a>
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td style="text-align: center;">
@@ -49,15 +57,23 @@
                             </i>
                         </a>
                     </td>
+                    <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arMovimiento.codigoMovimientoPk }}"></td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
     <div class="btn-group" style="float: right;">
-        <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_inventario_movimiento_nuevo',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+        {% if tipoDocumento != 'FAC' %}
+            <a class="btn btn-sm btn-default"
+               href="{{ path('inventario_movimiento_inventario_movimiento_nuevo',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+        {% else %}
+            <a class="btn btn-sm btn-default"
+               href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_factura',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+        {% endif %}
     </div>
     <div class="btn-group">
-        <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento': tipoDocumento}) }}">volver</a>
+        <a class="btn btn-sm btn-default"
+           href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento': tipoDocumento}) }}">volver</a>
     </div>
 {% endblock %}

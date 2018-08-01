@@ -1,0 +1,110 @@
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="col-sm-2 control-label">Nit:</label>
+                <div class="col-sm-4" style="padding-left: 0px;">
+                    {% if not arTercero.codigoTerceroPk %}
+                        <div class="col-sm-7">
+                            {{ form_widget(form.numeroIdentificacion) }}
+                            {{ form_errors(form.numeroIdentificacion) }}
+                        </div>
+                        <label for="form_nombre" class="col-sm-3 control-label">Digito ver:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.digitoVerificacion) }}
+                            {{ form_errors(form.digitoVerificacion) }}
+                        </div>
+                    {% else %}
+                        <div class="col-sm-7">
+                            {{ form_widget(form.numeroIdentificacion,{'attr' : {'disabled' : 'disabled'}}) }}
+                            {{ form_errors(form.numeroIdentificacion) }}
+                        </div>
+                        <label for="form_nombre" class="col-sm-3 control-label">Digito ver:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.digitoVerificacion,{'attr' : {'disabled' : 'disabled'}}) }}
+                            {{ form_errors(form.digitoVerificacion) }}
+                        </div>
+                    {% endif %}
+                </div>
+                <label for="form_fechaVence" class="col-sm-1 control-label">Nombre corto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombreCorto) }}
+                    {{ form_errors(form.nombreCorto) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="col-sm-2 control-label">Nombres:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombres) }}
+                    {{ form_errors(form.nombres) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaVence" class="col-sm-2 control-label">Primer apellido:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.apellido1) }}
+                    {{ form_errors(form.apellido1) }}
+                </div>
+                <label for="form_fechaVence" class="col-sm-1 control-label">Segundo apellido:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.apellido2) }}
+                    {{ form_errors(form.apellido2) }}
+                </div>
+            </div>
+            <hr>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaVence" class="col-sm-2 control-label">Direccion:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.direccion) }}
+                    {{ form_errors(form.direccion) }}
+                </div>
+                <label for="form_nombre" class="col-sm-1 control-label">Plazo pago:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.plazoPago) }}
+                    {{ form_errors(form.plazoPago) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaVence" class="col-sm-2 control-label">Telefono:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.telefono) }}
+                    {{ form_errors(form.telefono) }}
+                </div>
+                <label for="form_nombre" class="col-sm-1 control-label">Celular:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.celular) }}
+                    {{ form_errors(form.celular) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaVence" class="col-sm-2 control-label">Email:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.email) }}
+                    {{ form_errors(form.email) }}
+                </div>
+            </div>
+            <hr>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-2 col-sm-2">
+                    {{ form_widget(form.retencionIva) }}
+                </div>
+                <div class="col-sm-2">
+                    {{ form_widget(form.retencionFuente) }}
+                </div>
+                <div class="col-sm-2">
+                    {{ form_widget(form.retencionFuenteSinBase) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" style="float: left;"
+           href="{{ path('inventario_administracion_general_tercero_lista') }}">Volver</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

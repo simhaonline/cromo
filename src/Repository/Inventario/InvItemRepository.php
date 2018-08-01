@@ -72,9 +72,11 @@ class InvItemRepository extends ServiceEntityRepository
             ->where('ii.codigoItemPk <> 0');
         if ($session->get('filtroInvItemCodigo') != '') {
             $queryBuilder->andWhere("ii.codigoItemPk = {$session->get('filtroInvItemCodigo')}");
+            $session->set('filtroInvItemCodigo','');
         }
         if ($session->get('filtroInvItemNombre') != '') {
             $queryBuilder->andWhere("ii.nombre LIKE '%{$session->get('filtroInvItemNombre')}%' ");
+            $session->set('filtroInvItemNombre','');
         }
         $queryBuilder->orderBy('ii.codigoItemPk', 'ASC');
         return $queryBuilder;

@@ -3,6 +3,8 @@
 namespace App\Controller\Inventario\Movimiento\Inventario;
 
 use App\Entity\Inventario\InvConfiguracion;
+use App\Entity\Inventario\InvTercero;
+use App\Form\Type\Inventario\FacturaType;
 use App\Formato\Inventario\FormatoMovimiento;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
@@ -104,6 +106,54 @@ class MovimientoController extends Controller
 
     /**
      * @param Request $request
+     * @param $codigoDocumento
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/movimiento/inventario/movimiento/nuevo/factura/{codigoDocumento}/{id}", name="inventario_movimiento_inventario_movimiento_nuevo_factura")
+     */
+    public function nuevoFactura(Request $request, $codigoDocumento, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arMovimiento = new InvMovimiento();
+        if ($id != 0) {
+            $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
+            if (!$arMovimiento) {
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_lista', ['codigoDocumento' => $codigoDocumento]));
+            }
+        }
+        $arMovimiento->setUsuario($this->getUser()->getUserName());
+        $arDocumento = $em->getRepository(InvDocumento::class)->find($codigoDocumento);
+        $arMovimiento->setDocumentoRel($arDocumento);
+        $form = $this->createForm(FacturaType::class, $arMovimiento);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arMovimiento->setTerceroRel($em->getRepository(InvTercero::class)->find($arMovimiento->getCodigoTerceroFk()));
+                if ($id == 0) {
+                    $arMovimiento->setFecha(new \DateTime('now'));
+                    if($arMovimiento->getPlazoPago() == 0){
+                        $arMovimiento->setPlazoPago($arMovimiento->getTerceroRel()->getPlazoPago());
+                    }
+                }
+                $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
+                $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
+                $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
+                $arMovimiento->setSucursalRel($em->getRepository(InvSucursal::class)->find($arMovimiento->getCodigoSucursalFk()));
+                $em->persist($arMovimiento);
+                $em->flush();
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));
+            }
+        }
+        return $this->render('inventario/movimiento/inventario/nuevoFactura.html.twig', [
+            'tipoDocumento' => $arDocumento->getCodigoDocumentoTipoFk(),
+            'arMovimiento' => $arMovimiento,
+            'form' => $form->createView()
+        ]);
+    }
+
+
+    /**
+     * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
@@ -121,35 +171,14 @@ class MovimientoController extends Controller
         //Controles para el formulario
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrSucursalRel = ['class' => InvSucursal::class,
-            'query_builder' => function (EntityRepository $er) use ($arMovimiento) {
-                return $er->createQueryBuilder('c')
-                    ->where('c.codigoTerceroFk = ' . $arMovimiento->getCodigoTerceroFk())
-                    ->orderBy('c.codigoSucursalPk', 'ASC');
-            },
-            'choice_label' => 'codigoSucursalPk',
-            'disabled' => false,
-            'placeholder' => 'POR DEFECTO',
-            'data' => '',
-            'empty_data' => '',
-            'attr' => ['class' => 'to-select-2 form-control']
-        ];
 
-        if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() != 'FAC') {
-            $arrSucursalRel['disabled'] = true;
-        }
-        if ($arMovimiento->getSucursalRel()) {
-            $arrSucursalRel['data'] = $em->getReference(InvSucursal::class, $arMovimiento->getCodigoSucursalFk());
-        }
         if ($arMovimiento->getEstadoAutorizado()) {
             $arrBtnEliminar['disabled'] = true;
             $arrBtnActualizar['disabled'] = true;
-            $arrSucursalRel['disabled'] = true;
         }
         $form
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
-            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
-            ->add('sucursalRel', EntityType::class, $arrSucursalRel);
+            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -169,7 +198,7 @@ class MovimientoController extends Controller
                         $objFormato = new Factura1();
                         $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                     }
-                } else{
+                } else {
                     $objFormato = new FormatoMovimiento();
                     $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                 }
@@ -215,9 +244,9 @@ class MovimientoController extends Controller
         $respuesta = '';
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
         $form = $this->createFormBuilder()
+            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('filtroInvItemCodigo')])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvItemNombre')])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
@@ -239,7 +268,7 @@ class MovimientoController extends Controller
                                 $arMovimientoDetalle->setItemRel($arItem);
                                 $arMovimientoDetalle->setCantidad($cantidad);
                                 $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
-                                if($arMovimiento->getCodigoDocumentoTipoFk() == "SAL") {
+                                if ($arMovimiento->getCodigoDocumentoTipoFk() == "SAL") {
                                     $arMovimientoDetalle->setVrPrecio($arItem->getVrCostoPromedio());
                                     $arMovimientoDetalle->setVrCosto($arItem->getVrCostoPromedio());
                                 }

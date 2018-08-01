@@ -10,9 +10,6 @@
             {{ form_widget(form.btnAprobar) }}
             {{ form_widget(form.btnAnular) }}
         </div>
-        <div class="btn-group">
-            {{ form_widget(form.sucursalRel) }}
-        </div>
     </div>
     <div style="float:right">
         {% if arMovimiento.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
@@ -36,7 +33,8 @@
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arMovimiento.fecha | date('Y-m-d H:i') }}</td>
             <td class="titulo">(-)DESCUENTO:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrDescuento | number_format(0, '.', ',') }}</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arMovimiento.vrDescuento | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">TERCERO:</td>
@@ -52,7 +50,8 @@
             <td class="titulo"></td>
             <td class="td-in-well" style="text-align: left;"></td>
             <td class="titulo">BRUTO:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrTotal | number_format(0, '.', ',') }}</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arMovimiento.vrTotal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
@@ -60,7 +59,8 @@
             <td class="titulo"></td>
             <td class="td-in-well" style="text-align: left;"></td>
             <td class="titulo">(-)RTE FUENTE:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrRetencionFuente | number_format(0, '.', ',') }}</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arMovimiento.vrRetencionFuente | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
@@ -68,7 +68,8 @@
             <td class="titulo"></td>
             <td class="td-in-well" style="text-align: left;"></td>
             <td class="titulo">(-)RTE IVA:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrRetencionIva | number_format(0, '.', ',') }}</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arMovimiento.vrRetencionIva | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
@@ -76,7 +77,8 @@
             <td class="titulo"></td>
             <td class="td-in-well" style="text-align: left;"></td>
             <td class="titulo">NETO:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrNeto | number_format(0, '.', ',') }}</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arMovimiento.vrNeto | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
@@ -96,8 +98,8 @@
                             <th>ID</th>
                             <th>ID ITEM</th>
                             <th>ITEM</th>
-                            <th>BODEGA</th>
                             <th>LOTE</th>
+                            <th>BODEGA</th>
                             <th>CANTIDAD</th>
                             <th title="Precio por unidad">PRECIO</th>
                             <th>SUBTOTAL</th>
@@ -119,21 +121,28 @@
                                 {{ validarTipo(arMovimientoDetalle.itemRel.nombre) }}
 
                                 {% if arMovimiento.estadoAutorizado %}
-                                    {{ validarTipo(arMovimientoDetalle.codigoBodegaFk) }}
                                     {{ validarTipo(arMovimientoDetalle.loteFk) }}
+                                    {{ validarTipo(arMovimientoDetalle.codigoBodegaFk) }}
                                     {{ validarTipo(arMovimientoDetalle.cantidad) }}
                                 {% else %}
                                     <td style="text-align: center;">
                                         <input type="text" style="text-align: right;width: 50%;"
-                                               name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                               value="{{ arMovimientoDetalle.codigoBodegaFk }}">
+                                               name="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               id="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.loteFk }}">
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoBodega' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','codigoItem' : arMovimientoDetalle.codigoItemFk }) }}','BuscarLote',600,900)"
+                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
                                     <td style="text-align: center;">
                                         <input type="text" style="text-align: right;width: 50%;"
-                                               name="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                               value="{{ arMovimientoDetalle.loteFk }}">
+                                               name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               id="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.codigoBodegaFk }}">
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBodega',600,900)"
+                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
-                                    <td style="text-align: center;"><input type="number" style="text-align: right; width: 50%;"
+                                    <td style="text-align: center;"><input type="number"
+                                                                           style="text-align: right; width: 50%;"
                                                                            name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.cantidad }}">
                                     </td>
@@ -141,7 +150,8 @@
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td style="text-align: right;">{{ arMovimientoDetalle.vrPrecio | number_format(0,'.',',') }}</td>
                                 {% else %}
-                                    <td style="text-align: center;"><input type="number" style="text-align: right;width: 50%;"
+                                    <td style="text-align: center;"><input type="number"
+                                                                           style="text-align: right;width: 90%;"
                                                                            name="arrValor[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.vrPrecio }}">
                                     </td>
@@ -150,7 +160,8 @@
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td style="text-align: right;">{{ arMovimientoDetalle.porcentajeDescuento | number_format(0,'.',',') }}</td>
                                 {% else %}
-                                    <td style="text-align: center;"><input type="number" style="text-align: right;width: 50%;"
+                                    <td style="text-align: center;"><input type="number"
+                                                                           style="text-align: right;width: 50%;"
                                                                            name="arrDescuento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.porcentajeDescuento }}">
                                     </td>
@@ -159,7 +170,8 @@
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td style="text-align: right;">{{ arMovimientoDetalle.porcentajeIva | number_format(0,'.',',') }}</td>
                                 {% else %}
-                                    <td style="text-align: center;"><input type="number" style="text-align: right;width: 50%;"
+                                    <td style="text-align: center;"><input type="number"
+                                                                           style="text-align: right;width: 50%;"
                                                                            name="arrIva[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.porcentajeIva }}">
                                     </td>

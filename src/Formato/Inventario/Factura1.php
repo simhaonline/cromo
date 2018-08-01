@@ -52,7 +52,7 @@ class Factura1 extends \FPDF
         $this->Cell(17, 4, $arMovimiento->getFecha()->format('d/m/Y'), 0, 0, 'R', 0);
 
         $stringFecha = $arMovimiento->getFecha()->format('Y-m-d');
-        $plazo = $arMovimiento->getTerceroRel()->getPlazoPago();
+        $plazo = $arMovimiento->getPlazoPago();
         $fechaVencimiento = date_create($stringFecha);
         $fechaVencimiento->modify("+ " . (string)$plazo . " day");
 

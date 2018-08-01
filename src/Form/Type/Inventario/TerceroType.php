@@ -15,23 +15,21 @@ class TerceroType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('digitoVerificacion')
-            ->add('numeroIdentificacion',TextType::class,['label' => 'Identificación:'])
-            ->add('nombreCorto',TextType::class,['label' => 'Nombre corto:'])
-            ->add('nombres',TextType::class,['label' => 'Nombres:'])
-            ->add('apellido1',TextType::class,['label' => 'Primer apellido:'])
-            ->add('apellido2',TextType::class,['label' => 'Segundo apellido:'])
-            ->add('plazoPago',TextType::class,['label' => 'Plazo:'])
-            ->add('direccion',TextType::class,['label' => 'Dirección:'])
-            ->add('telefono',TextType::class,['label' => 'Telefono'])
-            ->add('celular',TextType::class,['label' => 'Celular'])
-            ->add('email',TextType::class,['label' => 'Email:'])
-            ->add('retencionIva', CheckboxType::class, ['required' => false, 'label' => 'Retencion iva'])
-            ->add('retencionFuente', CheckboxType::class, ['required' => false, 'label' => 'Retencion fuente'])
-            ->add('retencionFuenteSinBase', CheckboxType::class, ['required' => false, 'label' => 'Retencion iva'])
-            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo',SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])
-        ;
+            ->add('digitoVerificacion', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
+            ->add('numeroIdentificacion', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
+            ->add('nombreCorto', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
+            ->add('nombres', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
+            ->add('apellido1', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
+            ->add('apellido2', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
+            ->add('plazoPago', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
+            ->add('direccion', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
+            ->add('telefono', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
+            ->add('celular', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
+            ->add('email', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
+            ->add('retencionIva', CheckboxType::class, ['required' => false])
+            ->add('retencionFuente', CheckboxType::class, ['required' => false])
+            ->add('retencionFuenteSinBase', CheckboxType::class, ['required' => false])
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

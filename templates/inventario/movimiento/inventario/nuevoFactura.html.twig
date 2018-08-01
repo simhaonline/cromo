@@ -1,0 +1,105 @@
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    <script type="application/javascript">
+        function habilitarSucursal() {
+            var codigoTercero = document.getElementById("factura_codigoTerceroFk").value;
+            if (codigoTercero.length === 0) {
+                var link = document.getElementById("btn_buscarSucursal");
+                link.setAttribute('href', "#");
+                alert('Seleccione un tercero para continuar');
+                return false;
+            } else {
+                var link = document.getElementById("btn_buscarSucursal");
+                var url = '{{ path('inventario_buscar_sucursal_lista', { 'campoCodigo': 'factura_codigoSucursalFk', 'campoDireccion': 'form_txtDireccion'}) }}/' + codigoTercero;
+                link.setAttribute('href', "javascript:abrirVentana3('" + url + "', 'buscarSucursal', 600, 900)");
+            }
+        }
+    </script>
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtNit" class="col-sm-2 control-label">Tercero:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.codigoTerceroFk) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="form_txtNombreTercero"
+                                       name="form_txtNombreTercero" readonly
+                                        {% if arMovimiento.terceroRel %}
+                                    value="{{ arMovimiento.terceroRel.nombreCorto }}"
+                                        {% endif %}>
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('inv_bus_tercero', { 'campoCodigo': 'factura_codigoTerceroFk', 'campoNombre': 'form_txtNombreTercero' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="txtNit" class="col-sm-2 control-label">Sucursal:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.codigoSucursalFk) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="form_txtDireccion" name="form_txtDireccion"
+                                       readonly
+                                        {% if arMovimiento.sucursalRel %}
+                                    value="{{ arMovimiento.sucursalRel.direccion }}"
+                                        {% endif %}>
+                                <span class="input-group-btn">
+                                        <a onclick="return habilitarSucursal()" class="btn btn-default btn-sm" id="btn_buscarSucursal"
+                                           href="#">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label  class="col-sm-2 control-label">Soporte:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.soporte, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.soporte) }}
+                </div>
+                <label class="col-sm-2 control-label">Plazo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.plazoPago, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.plazoPago) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Comentario:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentarios, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.comentarios) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="float: right;">
+        <div class="btn-group">
+            {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        </div>
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-sm btn-default"
+           href="{{ path('inventario_movimiento_inventario_movimiento_lista',{'tipoDocumento': tipoDocumento,'codigoDocumento': arMovimiento.documentoRel.codigoDocumentoPk }) }}">Cancelar</a>
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

@@ -77,11 +77,6 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
      */
     public function actualizarDetalles($arrControles, $form, $arMovimiento)
     {
-        if($form->get('sucursalRel')->getData() != ''){
-            $arMovimiento->setSucursalRel($this->getEntityManager()->getRepository(InvSucursal::class)->find($form->get('sucursalRel')->getData()));
-        } else {
-            $arMovimiento->setSucursalRel(null);
-        }
         $this->getEntityManager()->persist($arMovimiento);
         if ($this->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
             $arrBodega = $arrControles['arrBodega'];

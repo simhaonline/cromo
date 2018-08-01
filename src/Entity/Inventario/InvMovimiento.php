@@ -168,9 +168,7 @@ class InvMovimiento
     /**
      * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="movimientosTerceroRel")
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
-     * @Assert\NotBlank(
-     *     message="El campo no puede estar vacio"
-     * )
+
      */
     protected $terceroRel;
 

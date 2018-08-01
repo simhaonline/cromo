@@ -67,6 +67,19 @@ class InvLoteRepository extends ServiceEntityRepository
         return $respuesta;
     }
 
+    public function lista(){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvLote::class,'l')
+            ->select('l.codigoLotePk')
+            ->addSelect('l.loteFk')
+            ->addSelect('l.codigoBodegaFk')
+            ->where("l.codigoItemFk = {$session->get('filtroInvBuscarLoteItem')}");
+        if($session->get('filtroInvBuscarLoteCodigo') != ''){
+            $queryBuilder->andWhere("l.codigoLotePk =  {$session->get('filtroInvBuscarLoteCodigo')}");
+        }
+        return $queryBuilder;
+    }
+
     public function existencia()
     {
         $session = new Session();

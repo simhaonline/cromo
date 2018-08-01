@@ -205,6 +205,22 @@ class TteFacturaTipo
         $this->codigoFacturaClaseFk = $codigoFacturaClaseFk;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPrefijo()
+    {
+        return $this->prefijo;
+    }
+
+    /**
+     * @param mixed $prefijo
+     */
+    public function setPrefijo($prefijo): void
+    {
+        $this->prefijo = $prefijo;
+    }
+
 
 
 }

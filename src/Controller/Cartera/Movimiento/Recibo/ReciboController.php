@@ -245,6 +245,7 @@ class ReciboController extends Controller
                         ini_set("memory_limit", -1);
                         $codigoCuentaCobrar = $request->request->get('OpAplicar');
                         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrar);
+                        $arReciboDetalle->setCodigoCuentaCobrarAplicacionFk($arCuentaCobrar);
                         $arReciboDetalle->setNumeroDocumentoAplicacion($arCuentaCobrar->getNumeroDocumento());
                         $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
                         $arReciboDetalle->setOperacion(0);

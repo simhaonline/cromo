@@ -5,6 +5,7 @@ namespace App\Repository\Cartera;
 use App\Entity\Cartera\CarCliente;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class CarClienteRepository extends ServiceEntityRepository
 {
@@ -22,25 +23,27 @@ class CarClienteRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function lista(): array
+    public function lista()
     {
-        $em = $this->getEntityManager();
-        $qb = $em->createQueryBuilder()->from(CarCliente::class, 'cc');
-        $qb->select('cc.codigoClientePk AS ID')
-            ->join("cc.formaPagoRel", "fp")
-            ->join('cc.ciudadRel', 'c')
-            ->addSelect('cc.digitoVerificacion AS DIGITO')
-            ->addSelect('cc.nit AS NIT')
-            ->addSelect('c.nombre AS CIUDAD')
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCliente::class, 'cc')
+            ->select('cc.codigoClientePk')
             ->addSelect('cc.nombreCorto AS NOMBRE')
-            ->addSelect('fp.nombre AS FORMA_PAGO')
+            ->addSelect('cc.digitoVerificacion')
             ->addSelect('cc.plazoPago AS PLAZO')
             ->where('cc.codigoClientePk <> 0')
             ->orderBy('cc.codigoClientePk', 'DESC');
-        $query = $qb->getDQL();
-        $query = $em->createQuery($query);
+        if ($session->get('filtroTteNombreCliente') != '') {
+            $queryBuilder->andWhere("cc.nombreCorto LIKE '%{$session->get('filtroTteNombreCliente')}%' ");
+        }
+        if ($session->get('filtroNitCliente') != '') {
+            $queryBuilder->andWhere("cc.numeroIdentificacion LIKE '%{$session->get('filtroTteNitCliente')}%' ");
+        }
+        if ($session->get('filtroTteCodigoCliente') != '') {
+            $queryBuilder->andWhere("cc.codigoClientePk LIKE '%{$session->get('filtroTteCodigoCliente')}%' ");
+        }
 
-        return $query->execute();
+        return $queryBuilder;
     }
 
     public function eliminar($arrSeleccionados)

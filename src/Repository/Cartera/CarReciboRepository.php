@@ -89,7 +89,7 @@ class CarReciboRepository extends ServiceEntityRepository
                 $em->persist($arReciboTipo);
             }
 
-            $arRecibo->setEstadoAprobado(0);
+            $arRecibo->setEstadoAprobado(1);
             $this->getEntityManager()->persist($arRecibo);
             $this->getEntityManager()->flush();
         }

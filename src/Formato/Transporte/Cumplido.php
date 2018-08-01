@@ -57,13 +57,13 @@ class Cumplido extends \FPDF {
         $this->Cell(30, 5, utf8_decode("FECHA:"), 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(30, 5, $arCumplido->getFecha()->format('Y-m-d'), 1, 0, 'L', 1);
+        $this->Cell(30, 5, $arCumplido->getFecha()->format('Y-m-d'), 1, 0, 'R', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 5, "CANTIDAD:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->MultiCell(103, 5, $arCumplido->getCantidad(), 1, 0, 'R', 1);
+        $this->MultiCell(103, 5, $arCumplido->getCantidad(), 1, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);

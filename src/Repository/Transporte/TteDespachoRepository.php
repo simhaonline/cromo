@@ -415,26 +415,34 @@ class TteDespachoRepository extends ServiceEntityRepository
 
     }
 
-    public function reportarRndc($codigoDespacho): string
+    public function reportarRndc($arDespacho): string
     {
         $em = $this->getEntityManager();
-        try {
-            $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
-            $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
-            $arrDespacho = $em->getRepository(TteDespacho::class)->dqlRndc($codigoDespacho);
-            //$respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
-            //if($respuesta) {
-            //$respuesta = $this->reportarRndcVehiculo($cliente, $arConfiguracionTransporte, $arrDespacho);
-            //if($respuesta) {
-            //$respuesta = $this->reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho);
-            //if($respuesta) {
-            $respuesta = $this->reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho);
-            //}
-            //}
-            //}
+        if($arDespacho->getNumeroRndc() == "") {
+            if($arDespacho->getEstadoAprobado() == 1 && $arDespacho->getEstadoAnulado() == 0) {
+                try {
+                    $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
+                    $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
+                    $arrDespacho = $em->getRepository(TteDespacho::class)->dqlRndc($arDespacho->getCodigoDespachoPk());
+                    $respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
+                    if($respuesta) {
+                    //$respuesta = $this->reportarRndcVehiculo($cliente, $arConfiguracionTransporte, $arrDespacho);
+                    //if($respuesta) {
+                    //$respuesta = $this->reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho);
+                    //if($respuesta) {
+                    //$respuesta = $this->reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho);
+                    //}
+                    //}
+                    }
 
-        } catch (Exception $e) {
-            return "Error al conectar el servicio: " . $e;
+                } catch (Exception $e) {
+                    return "Error al conectar el servicio: " . $e;
+                }
+            } else {
+                Mensajes::error("El despacho debe estar aprobado y sin anular");
+            }
+        } else {
+            Mensajes::error("El viaje ya fue reportado al rndc");
         }
         return true;
     }
@@ -519,7 +527,8 @@ class TteDespachoRepository extends ServiceEntityRepository
             $cadena_xml = simplexml_load_string($respuesta);
             if ($cadena_xml->ErrorMSG != "") {
                 $respuesta = false;
-                echo $cadena_xml->ErrorMSG;
+
+                Mensajes::error(utf8_decode($cadena_xml->ErrorMSG));
                 break;
             }
         }

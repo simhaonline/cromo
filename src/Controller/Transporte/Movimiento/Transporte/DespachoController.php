@@ -181,6 +181,7 @@ class DespachoController extends Controller
         if ($arDespacho->getEstadoAprobado()) {
             if (!$arDespacho->getEstadoAnulado()) {
                 $arrBotonCerrar['disabled'] = false;
+                $arrBotonRndc['disabled'] = false;
                 if ($arDespacho->getEstadoCerrado()) {
                     $arrBotonCerrar['disabled'] = true;
                 }
@@ -216,7 +217,7 @@ class DespachoController extends Controller
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnRndc')->isClicked()) {
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($id);
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($arDespacho);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnAnular')->isClicked()) {

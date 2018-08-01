@@ -1,0 +1,29 @@
+<h4>Este correo se envia automaticamente, por favor no responder</h4>
+<h4>A continuacion le relaciono los envios entregados:</h4>
+    <table border="1">
+        <tr>
+            <th>GUIA</th>
+            <th>FECHA</th>
+            <th>ENTREGA</th>
+            <th>DOCUMENTO</th>
+            <th>DESTINATARIO</th>
+            <th>DESTINO</th>
+            <th>UNIDADES</th>
+            <th>FLETE</th>
+            <th>MANEJO</th>
+        </tr>
+        {% for arGuia in arGuias %}
+        <tr>
+            <td>{{ arGuia.codigoGuiaPk }}</td>
+            <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
+            <td>{{ arGuia.fechaEntrega | date('Y-m-d') }}</td>
+            <td>{{ arGuia.documentoCliente }}</td>
+            <td>{{ arGuia.nombreDestinatario }}</td>
+            <td>{{ arGuia.destino }}</td>
+            <td>{{ arGuia.unidades }}</td>
+            <td>{{ arGuia.vrFlete }}</td>
+            <td>{{ arGuia.vrManejo }}</td>
+
+        </tr>
+        {% endfor %}
+    </table>

@@ -638,6 +638,49 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function utilidadNotificarEntrega($fechaDesde, $fechaHasta)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoClienteFk')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('c.correo')
+            ->addSelect('COUNT(g.codigoGuiaPk) AS numero')
+            ->leftJoin('g.clienteRel', 'c')
+            ->where("g.fechaIngreso >= '" . $fechaDesde . " 00:00:00'")
+            ->andWhere("g.fechaIngreso <= '" . $fechaHasta . " 23:59:59'")
+            ->andWhere('g.estadoEntregado = 1')
+            ->groupBy('g.codigoClienteFk')
+            ->orderBy('COUNT(g.codigoGuiaPk)', 'DESC');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function utilidadNotificarEntregaDetalle($codigoCliente, $fechaDesde, $fechaHasta)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.unidades')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.fechaEntrega')
+            ->addSelect('cd.nombre as destino')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where("g.fechaIngreso >= '" . $fechaDesde . " 00:00:00'")
+            ->andWhere("g.fechaIngreso <= '" . $fechaHasta . " 23:59:59'")
+            ->andWhere('g.estadoEntregado = 1')
+            ->andWhere('g.codigoClienteFk = ' . $codigoCliente);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+
     public function pendienteConductor(): array
     {
         $session = new Session();

@@ -2,38 +2,59 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
     {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros de busqueda</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_TxtCodigo" class="col-sm-2 control-label">Desde:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
+                <label for="form_estadoAutorizado" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_TxtCodigo" class="col-sm-2 control-label">Hasta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+                <label for="form_estadoAutorizado" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
             <th>COD</th>
             <th>CLIENTE</th>
-            <th>PEND</th>
-            <th></th>
+            <th>CANTIDAD</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
-        {% for arNovedad in arNovedades %}
+        {% for arGuia in arGuias %}
             <tr>
-                <td>{{ arNovedad.codigoClienteFk }}</td>
-                <td>{{ arNovedad.cliente }}</td>
-                <td>{{ arNovedad.cantidad }}</td>
-                <td><button class="btn btn-default btn-xs" type="submit" name="OpSinReportar" value="{{ arNovedad.codigoClienteFk }}">Sin reportar</button></td>
-                <td><button class="btn btn-default btn-xs" type="submit" name="OpTodos" value="{{ arNovedad.codigoClienteFk }}">Todos</button></td>
+                <td>{{ arGuia.codigoClienteFk }}</td>
+                <td>{{ arGuia.clienteNombre }}</td>
+                <td class="numero">{{ arGuia.numero | number_format(0, '.', ',') }}</td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoClienteFk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <div class="btn-group" style="float: left">
-        <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arNovedades.getTotalItemCount }}</span></div>
-    </div>
-
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-        {{ knp_pagination_render(arNovedades) }}
-    </div>
     <div class="btn-toolbar" style="float: right">
-        <div class="btn-group">
-
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(form.btnReportar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
         </div>
     </div>
     {{ form_rest(form) }}

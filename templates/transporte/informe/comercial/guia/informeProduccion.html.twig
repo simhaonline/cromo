@@ -1,8 +1,5 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
-    {% set codigoRuta = '' %}
-    {% set contador = 0 %}
-    {% set numeroGuias = arGuias|length %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
     {{ form_errors(form) }}
     <div class="panel panel-default">

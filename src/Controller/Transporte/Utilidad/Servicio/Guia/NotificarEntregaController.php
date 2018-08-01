@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Utilidad\Servicio\Guia;
 
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteNovedad;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
-
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 class NotificarEntregaController extends Controller
 {
    /**
@@ -22,32 +23,53 @@ class NotificarEntregaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $form = $this->formularioFiltro();
+
+        $form = $this->createFormBuilder()
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text'])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnReportar', SubmitType::class, array('label' => 'Reportar'))
+            ->getForm();
         $form->handleRequest($request);
         $arGuias = null;
-        //$query = $this->getDoctrine()->getRepository(TteNovedad::class)->pendienteSolucionarCliente();
-        //$arNovedades = $paginator->paginate($query, $request->query->getInt('page', 1),500);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                if ($request->request->get('OpSinReportar')) {
-                    $codigo = $request->request->get('OpSinReportar');
-                    $arCliente = $em->getRepository(TteCliente::class)->find($codigo);
-                    $destinatario = explode(';', strtolower($arCliente->getCorreo()));
-                    $arNovedadesPendientes = $em->getRepository(TteNovedad::class)->utilidadNotificar($codigo);
-                    $cuerpo = $this->render('transporte/utilidad/servicio/novedad/correo.html.twig', [
-                        'arNovedades' => $arNovedadesPendientes,
-                        'form' => $form->createView()]);
-                    $message = (new \Swift_Message('Reporte novedades pendientes'))
-                        ->setFrom('infologicuartas@gmail.com')
-                        ->setTo($destinatario)
-                        ->setBody(
-                            $cuerpo,
-                            'text/html'
-                        );
-                    $mailer->send($message);
+                if ($form->get('btnFiltrar')->isClicked()) {
+                    if($form->get('fechaDesde')->getData() && $form->get('fechaHasta')->getData()) {
+                        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->utilidadNotificarEntrega(
+                            $form->get('fechaDesde')->getData()->format('Y-m-d'),
+                            $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                    }
+                }
+                if ($form->get('btnReportar')->isClicked()) {
+                    if($form->get('fechaDesde')->getData() && $form->get('fechaHasta')->getData()) {
+                        $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                        if ($arrSeleccionados) {
+                            foreach ($arrSeleccionados as $codigo) {
+                                $arCliente = $em->getRepository(TteCliente::class)->find($codigo);
+                                $destinatario = explode(';', strtolower($arCliente->getCorreo()));
+                                $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->utilidadNotificarEntregaDetalle(
+                                    $codigo,
+                                    $form->get('fechaDesde')->getData()->format('Y-m-d'),
+                                    $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                                $cuerpo = $this->render('transporte/utilidad/servicio/guia/correo.html.twig', [
+                                    'arGuias' => $arGuias,
+                                    'form' => $form->createView()]);
+                                $message = (new \Swift_Message('Reporte entregas'))
+                                    ->setFrom('infologicuartas@gmail.com')
+                                    ->setTo($destinatario)
+                                    ->setBody(
+                                        $cuerpo,
+                                        'text/html'
+                                    );
+                                $mailer->send($message);
 
-                    return $this->redirect($this->generateUrl('transporte_uti_servicio_novedad_notificar'));
-
+                            }
+                        }
+                        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->utilidadNotificarEntrega(
+                            $form->get('fechaDesde')->getData()->format('Y-m-d'),
+                            $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                    }
                 }
             }
         }

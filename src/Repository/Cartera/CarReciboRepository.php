@@ -72,8 +72,16 @@ class CarReciboRepository extends ServiceEntityRepository
             $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
             $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
             $em->persist($arCuentaCobrar);
+            if ($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk()) {
+                $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk());
+                $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
+                $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
+                $arCuentaCobrarAplicacion->setVrSaldo($saldo);
+                $arCuentaCobrarAplicacion->setVrSaldoOperado($saldoOperado);
+                $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
+                $em->persist($arCuentaCobrarAplicacion);
+            }
         }
-
         $arRecibo->setEstadoAutorizado(0);
         $em->persist($arRecibo);
         $em->flush();

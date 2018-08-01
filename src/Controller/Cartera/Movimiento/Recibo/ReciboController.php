@@ -111,29 +111,48 @@ class ReciboController extends Controller
         }
         if ($form->get('btnAutorizar')->isClicked()) {
             if($arRecibo->getEstadoAutorizado() == 0){
+                $error = false;
                 $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $id));
                 if (count($em->getRepository(CarReciboDetalle::class)->findBy(['codigoReciboFk' => $arRecibo->getCodigoReciboPk()])) > 0){
                     foreach ($arReciboDetalles AS $arReciboDetalle) {
-                        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
-                        $saldo = $arCuentaCobrar->getVrSaldo() - $arReciboDetalle->getVrPagoAfectar();
-                        $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
-                        $arCuentaCobrar->setVrSaldo($saldo);
-                        $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
-                        $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
-                        $em->persist($arCuentaCobrar);
                         if ($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk()) {
                             $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk());
-                            $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
-                            $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
-                            $arCuentaCobrarAplicacion->setVrSaldo($saldo);
-                            $arCuentaCobrarAplicacion->setvRSaldoOperado($saldoOperado);
-                            $arCuentaCobrarAplicacion->setAbono($arCuentaCobrarAplicacion->getvRAbono() - $arReciboDetalle->getVrPagoAfectar());
-                            $em->persist($arCuentaCobrarAplicacion);
+                            if ($arCuentaCobrarAplicacion->getVrSaldo() >= $arReciboDetalle->getVrPagoAfectar()) {
+                                $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
+                                $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
+                                $arCuentaCobrarAplicacion->setVrSaldo($saldo);
+                                $arCuentaCobrarAplicacion->setvRSaldoOperado($saldoOperado);
+                                $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
+                                $em->persist($arCuentaCobrarAplicacion);
+                                //Cuenta por cobrar
+                                $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
+                                $saldo = $arCuentaCobrar->getVrSaldo() - $arReciboDetalle->getVrPagoAfectar();
+                                $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
+                                $arCuentaCobrar->setVrSaldo($saldo);
+                                $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
+                                $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
+                                $em->persist($arCuentaCobrar);
+                            } else {
+                                Mensajes::error('El valor a afectar del documento aplicacion ' . $arCuentaCobrarAplicacion->getNumeroDocumento() . " supera el saldo desponible: " . $arCuentaCobrarAplicacion->getVrSaldo());
+                                $error = true;
+                                break;
+                            }
+
+                        } else {
+                            $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
+                            $saldo = $arCuentaCobrar->getVrSaldo() - $arReciboDetalle->getVrPagoAfectar();
+                            $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
+                            $arCuentaCobrar->setVrSaldo($saldo);
+                            $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
+                            $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
+                            $em->persist($arCuentaCobrar);
                         }
                     }
-                    $arRecibo->setEstadoAutorizado(1);
-                    $em->persist($arRecibo);
-                    $em->flush();
+                    if($error == false){
+                        $arRecibo->setEstadoAutorizado(1);
+                        $em->persist($arRecibo);
+                        $em->flush();
+                    }
                 } else {
                     Mensajes::error("No se puede autorizar un recibo sin detalles");
                 }
@@ -245,7 +264,7 @@ class ReciboController extends Controller
                         ini_set("memory_limit", -1);
                         $codigoCuentaCobrar = $request->request->get('OpAplicar');
                         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrar);
-                        $arReciboDetalle->setCodigoCuentaCobrarAplicacionFk($arCuentaCobrar);
+                        $arReciboDetalle->setCuentaCobrarAplicacionRel($arCuentaCobrar);
                         $arReciboDetalle->setNumeroDocumentoAplicacion($arCuentaCobrar->getNumeroDocumento());
                         $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
                         $arReciboDetalle->setOperacion(0);

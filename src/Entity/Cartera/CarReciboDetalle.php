@@ -420,6 +420,22 @@ class CarReciboDetalle
         $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCuentaCobrarAplicacionRel()
+    {
+        return $this->cuentaCobrarAplicacionRel;
+    }
+
+    /**
+     * @param mixed $cuentaCobrarAplicacionRel
+     */
+    public function setCuentaCobrarAplicacionRel($cuentaCobrarAplicacionRel): void
+    {
+        $this->cuentaCobrarAplicacionRel = $cuentaCobrarAplicacionRel;
+    }
+
 
 
 }

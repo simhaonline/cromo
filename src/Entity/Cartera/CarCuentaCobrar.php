@@ -446,6 +446,22 @@ class CarCuentaCobrar
     /**
      * @return mixed
      */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -510,17 +526,17 @@ class CarCuentaCobrar
     /**
      * @return mixed
      */
-    public function getEstadoAnulado()
+    public function getRecibosDetallesCuentaCobrarAplicacionRel()
     {
-        return $this->estadoAnulado;
+        return $this->recibosDetallesCuentaCobrarAplicacionRel;
     }
 
     /**
-     * @param mixed $estadoAnulado
+     * @param mixed $recibosDetallesCuentaCobrarAplicacionRel
      */
-    public function setEstadoAnulado($estadoAnulado): void
+    public function setRecibosDetallesCuentaCobrarAplicacionRel($recibosDetallesCuentaCobrarAplicacionRel): void
     {
-        $this->estadoAnulado = $estadoAnulado;
+        $this->recibosDetallesCuentaCobrarAplicacionRel = $recibosDetallesCuentaCobrarAplicacionRel;
     }
 
 

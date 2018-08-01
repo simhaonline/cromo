@@ -19,12 +19,11 @@ class CarReciboRepository extends ServiceEntityRepository
         parent::__construct($registry, CarRecibo::class);
     }
 
-    public function lista(): array
+    public function lista()
     {
         $session = new Session();
-        $em = $this->getEntityManager();
-        $qb = $em->createQueryBuilder()->from(CarRecibo::class, 'r');
-        $qb->select('r.codigoReciboPk')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarRecibo::class, 'r')
+            ->select('r.codigoReciboPk')
             ->leftJoin('r.clienteRel','cr')
             ->leftJoin('r.cuentaRel','c')
             ->addSelect('c.nombre')
@@ -41,12 +40,13 @@ class CarReciboRepository extends ServiceEntityRepository
             ->where('r.codigoReciboPk <> 0')
             ->orderBy('r.codigoReciboPk', 'DESC');
         if ($session->get('filtroNumero')) {
-            $qb->andWhere("r.numero = '{$session->get('filtroNumero')}'");
+            $queryBuilder->andWhere("r.numero = '{$session->get('filtroNumero')}'");
         }
-        $query = $qb->getDQL();
-        $query = $em->createQuery($query);
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        }
 
-        return $query->execute();
+        return $queryBuilder;
     }
 
     public function autorizar($arRecibo)

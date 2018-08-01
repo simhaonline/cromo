@@ -30,12 +30,21 @@ class ReciboController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroCarCodigoCliente'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroCarNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('txtNumero', NumberType::class, ['label' => 'Numero: ', 'required' => false, 'data' => $session->get('filtroNumero')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
             $session->set('filtroNumero', $form->get('txtNumero')->getData());
+            if ($form->get('txtCodigoCliente')->getData() != '') {
+                $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+            } else {
+                $session->set('filtroTteCodigoCliente', null);
+                $session->set('filtroTteNombreCliente', null);
+            }
         }
         $arRecibo = $paginator->paginate($em->getRepository(CarRecibo::class)->lista(), $request->query->getInt('page', 1),20);
         return $this->render('cartera/movimiento/recibo/lista.html.twig',

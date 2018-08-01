@@ -28,9 +28,8 @@ class CarClienteRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCliente::class, 'cc')
             ->select('cc.codigoClientePk')
-            ->addSelect('cc.nombreCorto AS NOMBRE')
-            ->addSelect('cc.digitoVerificacion')
-            ->addSelect('cc.plazoPago AS PLAZO')
+            ->addSelect('cc.nombreCorto')
+            ->addSelect('cc.numeroIdentificacion')
             ->where('cc.codigoClientePk <> 0')
             ->orderBy('cc.codigoClientePk', 'DESC');
         if ($session->get('filtroTteNombreCliente') != '') {

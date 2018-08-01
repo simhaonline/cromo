@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class ClienteController extends Controller
 {
    /**
-    * @Route("/transporte/buscar/cliente/{campoCodigo}/{campoNombre}", name="cartera_buscar_cliente")
+    * @Route("/cartera/buscar/cliente/{campoCodigo}/{campoNombre}", name="cartera_buscar_cliente")
     */    
     public function lista(Request $request, $campoCodigo, $campoNombre)
     {

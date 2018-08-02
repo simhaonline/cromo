@@ -164,6 +164,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('cd.nombre AS ciudadDestino')
             ->addSelect('g.unidades')
             ->addSelect('g.pesoReal')
+            ->addSelect('g.estadoNovedad')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->where('g.codigoDespachoFk = ' . $codigoDespacho)

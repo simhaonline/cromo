@@ -134,9 +134,10 @@ class Factura extends \FPDF {
         $pdf->SetFont('Arial', '', 7);
         if($arFacturaPlanillas) {
             foreach ($arFacturaPlanillas as $arFacturaPlanilla) {
-                $pdf->Cell(17, 4, "", 1, 0, 'L');
+                $pdf->Cell(17, 4, "Planilla:", 1, 0, 'L');
                 $pdf->Cell(24, 4, $arFacturaPlanilla['numero'], 1, 0, 'L');
-                $pdf->Cell(69, 4, "", 1, 0, 'L');
+                $pdf->Cell(43, 4, "", 1, 0, 'L');
+                $pdf->Cell(26, 4, "Numero guias:", 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arFacturaPlanilla['guias'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(25, 4, "", 1, 0, 'L');
                 $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrFlete'], 0, '.', ','), 1, 0, 'R');

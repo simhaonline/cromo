@@ -15,18 +15,22 @@ use App\Entity\Transporte\TteCliente;
 use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
+use App\Formato\Transporte\ListaFactura;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use App\Utilidades\Mensajes;
+
 class FacturaController extends Controller
 {
    /**
@@ -38,6 +42,10 @@ class FacturaController extends Controller
         $paginator  = $this->get('knp_paginator');
         $session = new Session();
         $form = $this->createFormBuilder()
+            ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaCodigo')])
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaNumero')])
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
@@ -54,6 +62,9 @@ class FacturaController extends Controller
                 $session->set('filtroTteFacturaEstadoAnulado', $form->get('chkEstadoAnulado')->getData());
                 $session->set('filtroTteFacturaNumero', $form->get('txtNumero')->getData());
                 $session->set('filtroTteFacturaCodigo', $form->get('txtCodigo')->getData());
+                $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
 
                 if ($form->get('txtCodigoCliente')->getData() != '') {
                     $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
@@ -66,6 +77,10 @@ class FacturaController extends Controller
             if($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
+            }
+            if ($form->get('btnPdf')->isClicked()) {
+                $formato = new ListaFactura();
+                $formato->Generar($em);
             }
         }
         $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->lista(), $request->query->getInt('page', 1), 50);

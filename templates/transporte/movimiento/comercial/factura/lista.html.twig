@@ -39,13 +39,25 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label"></label>
+                <label class="col-sm-1 control-label">Desde:</label>
                 <div class="col-sm-5">
-
+                    {{ form_widget(form.fechaDesde) }}
                 </div>
                 <label class="col-sm-1 control-label">Anulado:</label>
                 <div class="col-sm-5">
                     {{ form_widget(form.chkEstadoAnulado, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.filtrarFecha) }}
                 </div>
             </div>
         </div>
@@ -117,9 +129,12 @@
         <div class="btn-group" style="float: right;">
             {{ form_widget(form.btnEliminar) }}
         </div>
-        <div class="btn-group">
+        <div class="btn-group" style="float: right;">
             <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_nuevo', {'id': 0, 'clase': 'NC'}) }}">Nueva nota credito</a>
             <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_nuevo', {'id': 0, 'clase': 'FA'}) }}">Nueva factura</a>
+        </div>
+        <div class="btn-group" style="float: right">
+            {{ form_widget(form.btnPdf, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
     </div>
     {{ form_end(form) }}

@@ -60,6 +60,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->leftJoin('f.clienteRel', 'c')
             ->leftJoin('f.facturaTipoRel', 'ft')
             ->where('f.codigoFacturaPk <> 0');
+        $fecha =  new \DateTime('now');
         if($session->get('filtroTteFacturaNumero') != ''){
             $queryBuilder->andWhere("f.numero = {$session->get('filtroTteFacturaNumero')}");
         }
@@ -68,6 +69,18 @@ class TteFacturaRepository extends ServiceEntityRepository
         }
         if($session->get('filtroTteCodigoCliente')){
             $queryBuilder->andWhere("f.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("f.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("f.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("f.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("f.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
         }
         switch ($session->get('filtroTteFacturaEstadoAprobado')) {
             case '0':
@@ -88,7 +101,8 @@ class TteFacturaRepository extends ServiceEntityRepository
         $queryBuilder->orderBy('f.estadoAprobado', 'ASC');
         $queryBuilder->addOrderBy('f.fecha', 'DESC');
         $queryBuilder->addOrderBy('f.codigoFacturaPk', 'DESC');
-        return $queryBuilder;
+
+        return $queryBuilder->getQuery()->execute();
     }
 
     public function liquidar($id): bool

@@ -8,11 +8,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+
 class PendienteDespachoRutaController extends Controller
 {
    /**
@@ -57,6 +59,13 @@ class PendienteDespachoRutaController extends Controller
             $session->set('filtroTteCodigoServicio', null);
         }
         $session->set('filtroTteMostrarDevoluciones', $form->get('ChkMostrarDevoluciones')->getData());
+        if ($form->get('txtCodigoCliente')->getData() != '') {
+            $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+            $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+        } else {
+            $session->set('filtroTteCodigoCliente', null);
+            $session->set('filtroTteNombreCliente', null);
+        }
     }
 
     private function formularioFiltro()
@@ -94,6 +103,8 @@ class PendienteDespachoRutaController extends Controller
             $arrayPropiedadesServicio['data'] = $em->getReference("App\Entity\Transporte\TteServicio", $session->get('filtroTteCodigoServicio'));
         }
         $form = $this->createFormBuilder()
+            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('ChkMostrarDevoluciones', CheckboxType::class, array('label' => false, 'required' => false, 'data' => $session->get('filtroTteMostrarDevoluciones')))
             ->add('rutaRel', EntityType::class, $arrayPropiedadesRuta)
             ->add('servicioRel', EntityType::class, $arrayPropiedadesServicio)

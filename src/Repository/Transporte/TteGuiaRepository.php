@@ -612,6 +612,9 @@ class TteGuiaRepository extends ServiceEntityRepository
         if(!$session->get('filtroTteMostrarDevoluciones')) {
             $dql .= " AND g.codigoServicioFk <> 'DEV'";
         }
+        if($session->get('filtroTteCodigoCliente')){
+            $dql .= " AND g.codigoClienteFk = '" . $session->get('filtroTteCodigoCliente') . "'";
+        }
         $dql .= " ORDER BY g.codigoRutaFk, g.codigoCiudadDestinoFk";
 
         $query = $em->createQuery($dql);

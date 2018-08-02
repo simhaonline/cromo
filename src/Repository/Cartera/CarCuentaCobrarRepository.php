@@ -32,15 +32,29 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.vrAbono')
             ->addSelect('cc.vrSaldo')
             ->addSelect('cc.soporte')
+            ->addSelect('cc.fecha')
             ->addSelect('cl.nombreCorto')
             ->addSelect('cl.numeroIdentificacion')
             ->where('cc.codigoCuentaCobrarPk <> 0')
             ->orderBy('cc.codigoCuentaCobrarPk', 'DESC');
+        $fecha =  new \DateTime('now');
         if($session->get('filtroCarCuentaCobrarNumero') != ''){
             $qb->andWhere("cc.numeroDocumento = {$session->get('filtroCarCuentaCobrarNumero')}");
         }
         if($session->get('filtroCarCodigoCliente')){
             $qb->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroFechaDesde') != null) {
+                $qb->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $qb->andWhere("cc.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $qb->andWhere("cc.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $qb->andWhere("cc.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
         }
         $query = $qb->getDQL();
         $query = $em->createQuery($query);

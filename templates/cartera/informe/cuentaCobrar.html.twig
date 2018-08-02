@@ -31,6 +31,24 @@
                     {{ form_widget(form.txtNumero) }}
                 </div>
             </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Desde:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-1 control-label"></label>
+            <div class="col-sm-5">
+                {{ form_widget(form.filtrarFecha) }}
+            </div>
         </div>
         <div class="modal-footer">
             {{ form_widget(form.btnFiltrar) }}

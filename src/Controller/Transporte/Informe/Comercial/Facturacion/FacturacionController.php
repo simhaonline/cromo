@@ -63,7 +63,7 @@ class FacturacionController extends Controller
                 $formato->Generar($em);
             }
         }
-        $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->listaInforme(), $request->query->getInt('page', 1), 50);
+        $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->listaInforme(), $request->query->getInt('page', 1), 500);
         return $this->render('transporte/informe/comercial/facturacion/factura.html.twig', [
             'arFacturas' => $arFacturas,
             'form' => $form->createView() ]);

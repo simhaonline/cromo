@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -26,14 +27,10 @@ class CuentaCobrarController extends Controller
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $fecha = new \DateTime('now');
-        if($session->get('filtroFechaDesde') == "") {
-            $session->set('filtroFechaDesde', $fecha->format('Y-m-d'));
-        }
-        if($session->get('filtroFechaHasta') == "") {
-            $session->set('filtroFechaHasta', $fecha->format('Y-m-d'));
-        }
         $form = $this->createFormBuilder()
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroCarCuentaCobrarNumero')])
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroCarCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroCarNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
@@ -44,12 +41,15 @@ class CuentaCobrarController extends Controller
             $session->set('filtroCarCuentaCobrarNumero', $form->get('txtNumero')->getData());
             $session->set('filtroCarCodigoCliente', $form->get('txtCodigoCliente')->getData());
             $session->set('filtroCarNombreCliente', $form->get('txtNombreCorto')->getData());
+            $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+            $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+            $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
         }
 //        if ($form->get('btnExcel')->isClicked()) {
 //            General::get()->setExportar($em->createQuery($em->getRepository(CarCuentaCobrar::class)->lista())->execute(), "Novedades");
 //        }
         $query = $this->getDoctrine()->getRepository(CarCuentaCobrar::class)->lista();
-        $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1),30);
+        $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1),500);
         return $this->render('cartera/informe/cuentaCobrar.html.twig', [
             'arCuentasCobrar' => $arCuentasCobrar,
             'form' => $form->createView()]);

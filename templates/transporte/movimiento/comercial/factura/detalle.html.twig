@@ -126,6 +126,7 @@
                     </div>
                     {% if arFactura.estadoAutorizado == 0 %}
                         {% if arFactura.codigoFacturaClaseFk == 'FA' %}
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia_archivo', {'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaPlanilla': 0 }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo (archivo)</a>
                             <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia_cumplido', {'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaPlanilla': 0 }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo (cumplido)</a>
                             <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo</a>
                         {% endif %}
@@ -157,6 +158,7 @@
                             <th></th>
                             <th></th>
                             <th></th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -167,6 +169,11 @@
                                 <td class="numero">{{ arFacturaPlanilla.guias | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arFacturaPlanilla.vrFlete | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arFacturaPlanilla.vrManejo | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: center;">
+                                    {% if arFactura.estadoAutorizado == 0 %}
+                                        <a href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia_archivo',{ 'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaPlanilla': arFacturaPlanilla.codigoFacturaPlanillaPk }) }}', 'FacturaAdicionarPlanillaCumplido', 600, 900)" class="btn btn-default btn-xs">Nuevo (archivo)</a>
+                                    {% endif %}
+                                </td>
                                 <td style="text-align: center;">
                                     {% if arFactura.estadoAutorizado == 0 %}
                                         <a href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia_cumplido',{ 'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaPlanilla': arFacturaPlanilla.codigoFacturaPlanillaPk }) }}', 'FacturaAdicionarPlanillaCumplido', 600, 900)" class="btn btn-default btn-xs">Nuevo (cumplido)</a>

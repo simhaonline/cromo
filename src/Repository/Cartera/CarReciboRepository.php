@@ -82,7 +82,7 @@ class CarReciboRepository extends ServiceEntityRepository
 
                     } else {
                         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
-                        if($arCuentaCobrar->getVrSaldo() > $arReciboDetalle->getVrPagoAfectar()) {
+                        if($arCuentaCobrar->getVrSaldo() >= $arReciboDetalle->getVrPagoAfectar()) {
                             $saldo = $arCuentaCobrar->getVrSaldo() - $arReciboDetalle->getVrPagoAfectar();
                             $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
                             $arCuentaCobrar->setVrSaldo($saldo);

@@ -34,12 +34,14 @@ class CuentaCobrarController extends Controller
             $session->set('filtroFechaHasta', $fecha->format('Y-m-d'));
         }
         $form = $this->createFormBuilder()
+            ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroCarCuentaCobrarNumero')])
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroCarCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroCarNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroCarCuentaCobrarNumero', $form->get('txtNumero')->getData());
             $session->set('filtroCarCodigoCliente', $form->get('txtCodigoCliente')->getData());
             $session->set('filtroCarNombreCliente', $form->get('txtNombreCorto')->getData());
         }
@@ -47,7 +49,7 @@ class CuentaCobrarController extends Controller
 //            General::get()->setExportar($em->createQuery($em->getRepository(CarCuentaCobrar::class)->lista())->execute(), "Novedades");
 //        }
         $query = $this->getDoctrine()->getRepository(CarCuentaCobrar::class)->lista();
-        $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1),100);
+        $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1),30);
         return $this->render('cartera/informe/cuentaCobrar.html.twig', [
             'arCuentasCobrar' => $arCuentasCobrar,
             'form' => $form->createView()]);

@@ -28,7 +28,7 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Numero:</label>
                 <div class="col-sm-2">
-
+                    {{ form_widget(form.txtNumero) }}
                 </div>
             </div>
         </div>
@@ -73,6 +73,14 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCuentasCobrar.getTotalItemCount }}</span></div>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arCuentasCobrar) }}
+    </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

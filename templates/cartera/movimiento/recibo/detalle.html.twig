@@ -50,8 +50,8 @@
             <td class="td-in-well"  align="right">{{ arRecibo.vrTotalRetencionIca | number_format }}</td>
         </tr>
         <tr>
-            <td class="titulo"><b></b></td>
-            <td class="td-in-well"></td>
+            <td class="titulo"><b>FECHA PAGO:</b></td>
+            <td class="td-in-well">{{ arRecibo.fechaPago | date('Y-m-d') }}</td>
             <td class="titulo"><b>RETENCION IVA:</b></td>
             <td class="td-in-well"  align="right">{{ arRecibo.vrTotalRetencionIva | number_format }}</td>
         </tr>

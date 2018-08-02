@@ -122,4 +122,32 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         $em->flush();
     }
 
+    public function formatoFactura($codigoFactura): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT fd.codigoGuiaFk, 
+        g.numero,
+        g.documentoCliente, 
+        g.fechaIngreso,        
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk,     
+        fd.unidades,
+        g.pesoFacturado,                
+        fd.vrFlete,
+        fd.vrManejo,
+        g.vrDeclara,
+        fd.vrFlete + fd.vrManejo AS vrTotal,
+        g.nombreDestinatario,                      
+        cd.nombre AS ciudadDestino
+        FROM App\Entity\Transporte\TteFacturaDetalle fd 
+        LEFT JOIN fd.guiaRel g      
+        LEFT JOIN g.ciudadDestinoRel cd
+        WHERE fd.codigoFacturaFk = :codigoFactura and fd.codigoFacturaPlanillaFk IS NULL'
+        )->setParameter('codigoFactura', $codigoFactura);
+
+        return $query->execute();
+
+    }
+
 }

@@ -28,4 +28,22 @@ class TteFacturaPlanillaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function formatoFactura($codigoFactura): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT fp.codigoFacturaPlanillaPk, 
+        fp.numero,
+        fp.guias,
+        fp.vrFlete, 
+        fp.vrManejo,
+        fp.vrFlete + fp.vrManejo AS vrTotal        
+        FROM App\Entity\Transporte\TteFacturaPlanilla fp 
+        WHERE fp.codigoFacturaFk = :codigoFactura'
+        )->setParameter('codigoFactura', $codigoFactura);
+
+        return $query->execute();
+
+    }
+
 }

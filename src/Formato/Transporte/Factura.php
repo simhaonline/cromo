@@ -5,6 +5,8 @@ namespace App\Formato\Transporte;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteFactura;
+use App\Entity\Transporte\TteFacturaDetalle;
+use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
 
 class Factura extends \FPDF {
@@ -126,7 +128,27 @@ class Factura extends \FPDF {
     }
 
     public function Body($pdf) {
-        $arGuias = self::$em->getRepository(TteGuia::class)->formatoFactura(self::$codigoFactura);
+
+        $arFacturaPlanillas = self::$em->getRepository(TteFacturaPlanilla::class)->formatoFactura(self::$codigoFactura);
+        $pdf->SetX(10);
+        $pdf->SetFont('Arial', '', 7);
+        if($arFacturaPlanillas) {
+            foreach ($arFacturaPlanillas as $arFacturaPlanilla) {
+                $pdf->Cell(17, 4, "", 1, 0, 'L');
+                $pdf->Cell(24, 4, $arFacturaPlanilla['numero'], 1, 0, 'L');
+                $pdf->Cell(69, 4, "", 1, 0, 'L');
+                $pdf->Cell(10, 4, number_format($arFacturaPlanilla['guias'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(25, 4, "", 1, 0, 'L');
+                $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrFlete'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrManejo'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrTotal'], 0, '.', ','), 1, 0, 'R');
+
+                $pdf->Ln();
+                $pdf->SetAutoPageBreak(true, 85);
+            }
+        }
+
+        $arGuias = self::$em->getRepository(TteFacturaDetalle::class)->formatoFactura(self::$codigoFactura);
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         if($arGuias) {

@@ -846,37 +846,6 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function formatoFactura($codigoFactura): array
-    {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
-        g.numero,
-        g.documentoCliente, 
-        g.fechaIngreso,        
-        g.codigoOperacionIngresoFk,
-        g.codigoOperacionCargoFk,     
-        g.unidades,
-        g.pesoReal,
-        g.pesoVolumen,
-        g.pesoFacturado,
-        g.vrDeclara,
-        g.vrFlete,
-        g.vrManejo,
-        g.vrFlete + g.vrManejo AS vrTotal,
-        g.nombreDestinatario,             
-        c.nombreCorto AS clienteNombreCorto, 
-        cd.nombre AS ciudadDestino
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.codigoFacturaFk = :codigoFactura'
-        )->setParameter('codigoFactura', $codigoFactura);
-
-        return $query->execute();
-
-    }
-
     public function redespacho($codigoGuia): bool
     {
         $em = $this->getEntityManager();

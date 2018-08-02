@@ -32,6 +32,11 @@ class GenFormaPago
     protected $tteClientesFormaPagoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvTercero", mappedBy="formaPagoRel")
+     */
+    protected $invTercerosFormaPagoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoFormaPagoPk()
@@ -94,6 +99,23 @@ class GenFormaPago
     {
         $this->tteClientesFormaPagoRel = $tteClientesFormaPagoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getInvTercerosFormaPagoRel()
+    {
+        return $this->invTercerosFormaPagoRel;
+    }
+
+    /**
+     * @param mixed $invTercerosFormaPagoRel
+     */
+    public function setInvTercerosFormaPagoRel($invTercerosFormaPagoRel): void
+    {
+        $this->invTercerosFormaPagoRel = $invTercerosFormaPagoRel;
+    }
+
 
 
 }

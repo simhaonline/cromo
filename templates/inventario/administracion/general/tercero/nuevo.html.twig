@@ -8,27 +8,15 @@
             <div class="form-group form-group-sm">
                 <label for="form_nombre" class="col-sm-2 control-label">Nit:</label>
                 <div class="col-sm-4" style="padding-left: 0px;">
-                    {% if not arTercero.codigoTerceroPk %}
-                        <div class="col-sm-7">
-                            {{ form_widget(form.numeroIdentificacion) }}
-                            {{ form_errors(form.numeroIdentificacion) }}
-                        </div>
-                        <label for="form_nombre" class="col-sm-3 control-label">Digito ver:</label>
-                        <div class="col-sm-2">
-                            {{ form_widget(form.digitoVerificacion) }}
-                            {{ form_errors(form.digitoVerificacion) }}
-                        </div>
-                    {% else %}
-                        <div class="col-sm-7">
-                            {{ form_widget(form.numeroIdentificacion,{'attr' : {'disabled' : 'disabled'}}) }}
-                            {{ form_errors(form.numeroIdentificacion) }}
-                        </div>
-                        <label for="form_nombre" class="col-sm-3 control-label">Digito ver:</label>
-                        <div class="col-sm-2">
-                            {{ form_widget(form.digitoVerificacion,{'attr' : {'disabled' : 'disabled'}}) }}
-                            {{ form_errors(form.digitoVerificacion) }}
-                        </div>
-                    {% endif %}
+                    <div class="col-sm-7">
+                        {{ form_widget(form.numeroIdentificacion) }}
+                        {{ form_errors(form.numeroIdentificacion) }}
+                    </div>
+                    <label for="form_nombre" class="col-sm-3 control-label">Digito ver:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.digitoVerificacion) }}
+                        {{ form_errors(form.digitoVerificacion) }}
+                    </div>
                 </div>
                 <label for="form_fechaVence" class="col-sm-1 control-label">Nombre corto:</label>
                 <div class="col-sm-4">

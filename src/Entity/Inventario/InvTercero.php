@@ -18,14 +18,20 @@ class InvTercero
     private $codigoTerceroPk;
 
     /**
-     * @ORM\Column(name="digito_verificacion", type="string", length=1, nullable=true)
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=1, nullable=true)
      */
-    private $digitoVerificacion;
+    private $codigoIdentificacionFk;
 
     /**
      * @ORM\Column(name="numero_identificacion", type="string", length=80)
      */
     private $numeroIdentificacion;
+
+    /**
+     * @ORM\Column(name="digito_verificacion", type="string", length=1, nullable=true)
+     */
+    private $digitoVerificacion;
+
 
     /**
      * @ORM\Column(name="nombre_corto", type="string", length=150, nullable=true)
@@ -53,7 +59,7 @@ class InvTercero
     private $codigoClasificacionTributariaFk;
 
     /**
-     * @ORM\Column(name="codigo_forma_pago_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_forma_pago_fk", type="string", length=10, nullable=true)
      */
     private $codigoFormaPagoFk;
 
@@ -106,10 +112,22 @@ class InvTercero
     private $codigoPrecioVentaFk;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="invTercerosIdentificacionRel")
+     * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
+     */
+    private $identificacionRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvPrecio", inversedBy="tercerosPrecioVentaRel")
      * @ORM\JoinColumn(name="codigo_precio_venta_fk", referencedColumnName="codigo_precio_pk")
      */
     protected $precioVentaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenFormaPago", inversedBy="invTercerosFormaPagoRel")
+     * @ORM\JoinColumn(name="codigo_forma_pago_fk", referencedColumnName="codigo_forma_pago_pk")
+     */
+    private $formaPagoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvOrdenCompra",mappedBy="terceroRel")
@@ -150,17 +168,17 @@ class InvTercero
     /**
      * @return mixed
      */
-    public function getDigitoVerificacion()
+    public function getCodigoIdentificacionFk()
     {
-        return $this->digitoVerificacion;
+        return $this->codigoIdentificacionFk;
     }
 
     /**
-     * @param mixed $digitoVerificacion
+     * @param mixed $codigoIdentificacionFk
      */
-    public function setDigitoVerificacion($digitoVerificacion): void
+    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
     {
-        $this->digitoVerificacion = $digitoVerificacion;
+        $this->codigoIdentificacionFk = $codigoIdentificacionFk;
     }
 
     /**
@@ -177,6 +195,22 @@ class InvTercero
     public function setNumeroIdentificacion($numeroIdentificacion): void
     {
         $this->numeroIdentificacion = $numeroIdentificacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDigitoVerificacion()
+    {
+        return $this->digitoVerificacion;
+    }
+
+    /**
+     * @param mixed $digitoVerificacion
+     */
+    public function setDigitoVerificacion($digitoVerificacion): void
+    {
+        $this->digitoVerificacion = $digitoVerificacion;
     }
 
     /**
@@ -374,6 +408,54 @@ class InvTercero
     /**
      * @return mixed
      */
+    public function getRetencionIva()
+    {
+        return $this->retencionIva;
+    }
+
+    /**
+     * @param mixed $retencionIva
+     */
+    public function setRetencionIva($retencionIva): void
+    {
+        $this->retencionIva = $retencionIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRetencionFuente()
+    {
+        return $this->retencionFuente;
+    }
+
+    /**
+     * @param mixed $retencionFuente
+     */
+    public function setRetencionFuente($retencionFuente): void
+    {
+        $this->retencionFuente = $retencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRetencionFuenteSinBase()
+    {
+        return $this->retencionFuenteSinBase;
+    }
+
+    /**
+     * @param mixed $retencionFuenteSinBase
+     */
+    public function setRetencionFuenteSinBase($retencionFuenteSinBase): void
+    {
+        $this->retencionFuenteSinBase = $retencionFuenteSinBase;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoPrecioVentaFk()
     {
         return $this->codigoPrecioVentaFk;
@@ -390,6 +472,22 @@ class InvTercero
     /**
      * @return mixed
      */
+    public function getIdentificacionRel()
+    {
+        return $this->identificacionRel;
+    }
+
+    /**
+     * @param mixed $identificacionRel
+     */
+    public function setIdentificacionRel($identificacionRel): void
+    {
+        $this->identificacionRel = $identificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPrecioVentaRel()
     {
         return $this->precioVentaRel;
@@ -401,6 +499,22 @@ class InvTercero
     public function setPrecioVentaRel($precioVentaRel): void
     {
         $this->precioVentaRel = $precioVentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormaPagoRel()
+    {
+        return $this->formaPagoRel;
+    }
+
+    /**
+     * @param mixed $formaPagoRel
+     */
+    public function setFormaPagoRel($formaPagoRel): void
+    {
+        $this->formaPagoRel = $formaPagoRel;
     }
 
     /**
@@ -466,55 +580,6 @@ class InvTercero
     {
         $this->sucursalesTerceroRel = $sucursalesTerceroRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getRetencionIva()
-    {
-        return $this->retencionIva;
-    }
-
-    /**
-     * @param mixed $retencionIva
-     */
-    public function setRetencionIva($retencionIva): void
-    {
-        $this->retencionIva = $retencionIva;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRetencionFuente()
-    {
-        return $this->retencionFuente;
-    }
-
-    /**
-     * @param mixed $retencionFuente
-     */
-    public function setRetencionFuente($retencionFuente): void
-    {
-        $this->retencionFuente = $retencionFuente;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRetencionFuenteSinBase()
-    {
-        return $this->retencionFuenteSinBase;
-    }
-
-    /**
-     * @param mixed $retencionFuenteSinBase
-     */
-    public function setRetencionFuenteSinBase($retencionFuenteSinBase): void
-    {
-        $this->retencionFuenteSinBase = $retencionFuenteSinBase;
-    }
-
 
 
 }

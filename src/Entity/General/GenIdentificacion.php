@@ -57,6 +57,11 @@ class GenIdentificacion
     protected $rhuEmpleadosIdentificacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvTercero", mappedBy="identificacionRel")
+     */
+    protected $invTercerosIdentificacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoIdentificacionPk()
@@ -199,6 +204,23 @@ class GenIdentificacion
     {
         $this->rhuEmpleadosIdentificacionRel = $rhuEmpleadosIdentificacionRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getInvTercerosIdentificacionRel()
+    {
+        return $this->invTercerosIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $invTercerosIdentificacionRel
+     */
+    public function setInvTercerosIdentificacionRel($invTercerosIdentificacionRel): void
+    {
+        $this->invTercerosIdentificacionRel = $invTercerosIdentificacionRel;
+    }
+
 
 
 }

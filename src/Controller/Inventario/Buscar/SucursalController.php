@@ -28,7 +28,7 @@ class SucursalController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($form->get('BtnFiltrar')->isClicked()) {
+            if($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvBuscarSucursalDireccion',$form->get('TxtDireccion')->getData());
                 $session->set('filtroInvBuscarSucursalContacto',$form->get('TxtContacto')->getData());
             }

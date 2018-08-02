@@ -2,6 +2,9 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Cartera\CarCliente;
+use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumento;
@@ -251,6 +254,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
      */
     public function aprobar($arMovimiento)
     {
+        $em = $this->getEntityManager();
         $arDocumento = $this->getEntityManager()->getRepository(InvDocumento::class)->find($arMovimiento->getCodigoDocumentoFk());
         if (!$arMovimiento->getEstadoAprobado()) {
             $this->afectar($arMovimiento, 1);
@@ -260,14 +264,54 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $fechaVencimiento = date_create($stringFecha);
             $fechaVencimiento->modify("+ " . (string)$plazo . " day");
             $arMovimiento->setFechaVence($fechaVencimiento);
-
-            $arDocumento->setConsecutivo($arDocumento->getConsecutivo() + 1);
-            $arMovimiento->setEstadoAprobado(1);
             $arMovimiento->setNumero($arDocumento->getConsecutivo());
+            $arMovimiento->setEstadoAprobado(1);
             $arMovimiento->setFecha(new \DateTime('now'));
             $this->getEntityManager()->persist($arMovimiento);
+
+            $arDocumento->setConsecutivo($arDocumento->getConsecutivo() + 1);
             $this->getEntityManager()->persist($arDocumento);
+
+            if($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
+                $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arMovimiento->getTerceroRel()->getCodigoIdentificacionFk(),'numeroIdentificacion' => $arMovimiento->getTerceroRel()->getNumeroIdentificacion()]);
+                if (!$arClienteCartera) {
+                    $arClienteCartera = new CarCliente();
+                    $arClienteCartera->setFormaPagoRel($arMovimiento->getTerceroRel()->getFormaPagoRel());
+                    $arClienteCartera->setIdentificacionRel($arMovimiento->getTerceroRel()->getIdentificacionRel());
+                    $arClienteCartera->setNumeroIdentificacion($arMovimiento->getTerceroRel()->getNumeroIdentificacion());
+                    $arClienteCartera->setDigitoVerificacion($arMovimiento->getTerceroRel()->getDigitoVerificacion());
+                    $arClienteCartera->setNombreCorto($arMovimiento->getTerceroRel()->getNombreCorto());
+                    $arClienteCartera->setPlazoPago($arMovimiento->getTerceroRel()->getPlazoPago());
+                    $arClienteCartera->setDireccion($arMovimiento->getTerceroRel()->getDireccion());
+                    $arClienteCartera->setTelefono($arMovimiento->getTerceroRel()->getTelefono());
+                    $arClienteCartera->setCorreo($arMovimiento->getTerceroRel()->getEmail());
+                    $em->persist($arClienteCartera);
+                }
+
+                $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arMovimiento->getDocumentoRel()->getCodigoCuentaCobrarTipoFk());
+                $arCuentaCobrar = new CarCuentaCobrar();
+                $arCuentaCobrar->setClienteRel($arClienteCartera);
+                $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
+                $arCuentaCobrar->setFecha($arMovimiento->getFecha());
+                $arCuentaCobrar->setFechaVence($arMovimiento->getFechaVence());
+                $arCuentaCobrar->setModulo("INV");
+                $arCuentaCobrar->setCodigoDocumento($arMovimiento->getCodigoMovimientoPk());
+                $arCuentaCobrar->setNumeroDocumento($arMovimiento->getNumero());
+                $arCuentaCobrar->setSoporte($arMovimiento->getSoporte());
+                $arCuentaCobrar->setVrSubtotal($arMovimiento->getVrSubtotal());
+                $arCuentaCobrar->setVrIva($arMovimiento->getVrIva());
+                $arCuentaCobrar->setVrTotal($arMovimiento->getVrTotal());
+                $arCuentaCobrar->setVrRetencionFuente($arMovimiento->getVrRetencionFuente());
+                $arCuentaCobrar->setVrRetencionIva($arMovimiento->getVrRetencionIva());
+                $arCuentaCobrar->setVrSaldo($arMovimiento->getVrTotal());
+                $arCuentaCobrar->setVrSaldoOperado($arMovimiento->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
+                $arCuentaCobrar->setPlazo($arMovimiento->getPlazoPago());
+                $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
+                $em->persist($arCuentaCobrar);
+            }
+
+            $this->getEntityManager()->flush();
         }
-        $this->getEntityManager()->flush();
+
     }
 }

@@ -99,93 +99,49 @@ class ReciboController extends Controller
         $form->add('btnEliminarDetalle', SubmitType::class, $arrBtnEliminarDetalle);
         $form->add('btnActualizarDetalle', SubmitType::class, $arrBtnActualizarDetalle);
         $form->handleRequest($request);
-        if ($form->get('btnEliminarDetalle')->isClicked()) {
-            if ($arRecibo->getEstadoAutorizado() == 0) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(CarReciboDetalle::class)->eliminarSeleccionados($arrSeleccionados);
-                $em->getRepository(CarReciboDetalle::class)->liquidar($id);
-            } else {
-                Mensajes::error('No se puede eliminar el registro, esta autorizado');
-            }
-            return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', array('id' => $id)));
-        }
-        if ($form->get('btnAutorizar')->isClicked()) {
-            if($arRecibo->getEstadoAutorizado() == 0){
-                $error = false;
-                $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $id));
-                if (count($em->getRepository(CarReciboDetalle::class)->findBy(['codigoReciboFk' => $arRecibo->getCodigoReciboPk()])) > 0){
-                    foreach ($arReciboDetalles AS $arReciboDetalle) {
-                        if ($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk()) {
-                            $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk());
-                            if ($arCuentaCobrarAplicacion->getVrSaldo() >= $arReciboDetalle->getVrPagoAfectar()) {
-                                $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
-                                $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
-                                $arCuentaCobrarAplicacion->setVrSaldo($saldo);
-                                $arCuentaCobrarAplicacion->setvRSaldoOperado($saldoOperado);
-                                $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
-                                $em->persist($arCuentaCobrarAplicacion);
-                                //Cuenta por cobrar
-                                $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
-                                $saldo = $arCuentaCobrar->getVrSaldo() - $arReciboDetalle->getVrPagoAfectar();
-                                $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
-                                $arCuentaCobrar->setVrSaldo($saldo);
-                                $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
-                                $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
-                                $em->persist($arCuentaCobrar);
-                            } else {
-                                Mensajes::error('El valor a afectar del documento aplicacion ' . $arCuentaCobrarAplicacion->getNumeroDocumento() . " supera el saldo desponible: " . $arCuentaCobrarAplicacion->getVrSaldo());
-                                $error = true;
-                                break;
-                            }
-
-                        } else {
-                            $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
-                            $saldo = $arCuentaCobrar->getVrSaldo() - $arReciboDetalle->getVrPagoAfectar();
-                            $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
-                            $arCuentaCobrar->setVrSaldo($saldo);
-                            $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
-                            $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
-                            $em->persist($arCuentaCobrar);
-                        }
-                    }
-                    if($error == false){
-                        $arRecibo->setEstadoAutorizado(1);
-                        $em->persist($arRecibo);
-                        $em->flush();
-                    }
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnEliminarDetalle')->isClicked()) {
+                if ($arRecibo->getEstadoAutorizado() == 0) {
+                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                    $em->getRepository(CarReciboDetalle::class)->eliminarSeleccionados($arrSeleccionados);
+                    $em->getRepository(CarReciboDetalle::class)->liquidar($id);
                 } else {
-                    Mensajes::error("No se puede autorizar un recibo sin detalles");
+                    Mensajes::error('No se puede eliminar el registro, esta autorizado');
+                }
+                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', array('id' => $id)));
+            }
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(CarRecibo::class)->autorizar($arRecibo);
+                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                if ($arRecibo->getEstadoAutorizado() == 1 && $arRecibo->getEstadoImpreso() == 0) {
+                    $em->getRepository(CarRecibo::class)->desAutorizar($arRecibo);
+                    return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
+                }else {
+                    Mensajes::error("El recibo debe estar autorizado y no puede estar impreso");
                 }
             }
-            return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
-        }
-        if ($form->get('btnDesautorizar')->isClicked()) {
-            if ($arRecibo->getEstadoAutorizado() == 1 && $arRecibo->getEstadoImpreso() == 0) {
-                $em->getRepository(CarRecibo::class)->desAutorizar($arRecibo);
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(CarRecibo::class)->aprobar($arRecibo);
                 return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
-            }else {
-                Mensajes::error("El recibo debe estar autorizado y no puede estar impreso");
+            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $formato = new Recibo();
+                $formato->Generar($em, $id);
+            }
+            if ($form->get('btnActualizarDetalle')->isClicked()) {
+                if ($arRecibo->getEstadoAutorizado() == 0) {
+                    $arrControles = $request->request->All();
+                    $em->getRepository(CarReciboDetalle::class)->actualizarDetalle($arrControles, $arRecibo);
+                    return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
+                } else {
+                    Mensajes::error("No se puede actualizar, el registro se encuentra autorizado");
+                }
             }
         }
-        if ($form->get('btnAprobar')->isClicked()) {
-            $em->getRepository(CarRecibo::class)->aprobar($arRecibo);
-            return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
-        }
-        if ($form->get('btnImprimir')->isClicked()) {
-            $formato = new Recibo();
-            $formato->Generar($em, $id);
-        }
-        if ($form->get('btnActualizarDetalle')->isClicked()) {
-            if ($arRecibo->getEstadoAutorizado() == 0) {
-                $arrControles = $request->request->All();
-                $em->getRepository(CarReciboDetalle::class)->actualizarDetalle($arrControles, $arRecibo);
-                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
-            } else {
-                Mensajes::error("No se puede actualizar, el registro se encuentra autorizado");
-            }
-        }
-        $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $id));
 
+        $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $id));
         return $this->render('cartera/movimiento/recibo/detalle.html.twig', array(
             'arRecibo'=> $arRecibo,
             'arReciboDetalle'=> $arReciboDetalle,
@@ -216,12 +172,15 @@ class ReciboController extends Controller
                 if ($arrSeleccionados) {
                     foreach ($arrSeleccionados AS $codigoCuentaCobrar) {
                         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrar);
-                        $vrPago = $em->getRepository(CarReciboDetalle::class)->vrPagoRecibo($codigoCuentaCobrar, $id);
-                        $saldo = $arrControles['TxtSaldo' . $codigoCuentaCobrar] - $vrPago;
+                        //Lo quito mario porque no sabia que era
+                        //$vrPago = $em->getRepository(CarReciboDetalle::class)->vrPagoRecibo($codigoCuentaCobrar, $id);
+                        //$saldo = $arrControles['TxtSaldo' . $codigoCuentaCobrar] - $vrPago;
+                        $saldo = $arrControles['TxtSaldo' . $codigoCuentaCobrar];
                         $arReciboDetalle = new CarReciboDetalle();
                         $arReciboDetalle->setReciboRel($arRecibo);
                         $arReciboDetalle->setCuentaCobrarRel($arCuentaCobrar);
                         $arReciboDetalle->setVrPago($saldo);
+                        $arReciboDetalle->setVrPagoAfectar($saldo);
                         $arReciboDetalle->setNumeroFactura($arCuentaCobrar->getNumeroDocumento());
                         $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
                         $arReciboDetalle->setOperacion(1);

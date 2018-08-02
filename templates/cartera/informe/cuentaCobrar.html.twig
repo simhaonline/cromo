@@ -65,9 +65,9 @@
                 <td>{{ arCuentaCobrar.numeroIdentificacion }}</td>
                 <td>{{ arCuentaCobrar.nombreCorto }}</td>
                 <td>{{ arCuentaCobrar.plazo }}</td>
-                <td>{{ arCuentaCobrar.vrTotal }}</td>
-                <td>{{ arCuentaCobrar.vrAbono }}</td>
-                <td>{{ arCuentaCobrar.vrSaldo }}</td>
+                <td class="numero">{{ arCuentaCobrar.vrTotal | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arCuentaCobrar.vrAbono | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arCuentaCobrar.vrSaldo | number_format(0, '.', ',')}}</td>
 
             </tr>
         {% endfor %}

@@ -10,7 +10,7 @@
                     <div class="row">
                         <div class="col-lg-2">
                             <div class="input-group">
-                                <input id="txtCodigoItem"  name="txtCodigoItem"  type="text" class="form-control" value=""/>
+                                {{ form_widget(form.txtCodigoItem) }}
                             </div>
                         </div>
                         <div class="col-lg-10">
@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            {{ form_widget(form.btnFiltrar) }}
+            {{ form_widget(form.btnGenerar) }} {{ form_widget(form.btnFiltrar) }}
         </div>
     </div>
     <div class="table-responsive">
@@ -44,32 +44,24 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>DOCUMENTO</th>
                 <th>FECHA</th>
-                <th>NUMERO</th>
-                <th>COD</th>
-                <th>ITEM</th>
-                <th>CAN</th>
-                <th>C_O</th>
+                <th>CODIGO</th>
+                <th>NOMBRE</th>
                 <th>SALDO</th>
                 <th>COSTO</th>
-                <th>PRECIO</th>
+                <th>TOTAL</th>
             </tr>
             </thead>
             <tbody>
-            {% for arMovimientoDetalle in arMovimientosDetalles %}
+            {% for arInventarioValorizado in arInventarioValorizado %}
                 <tr>
-                    <td>{{ arMovimientoDetalle.codigoMovimientoDetallePk }}</td>
-                    <td>{{ arMovimientoDetalle.nombreDocumento }}</td>
-                    <td>{{ arMovimientoDetalle.fecha | date ('Y-m-d H:i')}}</td>
-                    <td>{{ arMovimientoDetalle.numeroMovimiento }}</td>
-                    <td>{{ arMovimientoDetalle.codigoItemFk }}</td>
-                    <td>{{ arMovimientoDetalle.nombreItem }}</td>
-                    <td class="numero">{{ arMovimientoDetalle.cantidad | number_format(0, '.', ',') }}</td>
-                    <td class="numero">{{ arMovimientoDetalle.cantidadOperada | number_format(0, '.', ',') }}</td>
-                    <td class="numero">{{ arMovimientoDetalle.cantidadSaldo | number_format(0, '.', ',')}}</td>
-                    <td class="numero">{{ arMovimientoDetalle.vrCosto | number_format(0, '.', ',')}}</td>
-                    <td class="numero">{{ arMovimientoDetalle.vrPrecio | number_format(0, '.', ',')}}</td>
+                    <td>{{ arInventarioValorizado.codigoInventarioValorizadoPk }}</td>
+                    <td>{{ arInventarioValorizado.fecha | date ('Y-m-d')}}</td>
+                    <td>{{ arInventarioValorizado.codigoItemFk }}</td>
+                    <td>{{ arInventarioValorizado.nombreItem }}</td>
+                    <td class="numero">{{ arInventarioValorizado.saldo | number_format(0, '.', ',') }}</td>
+                    <td class="numero">{{ arInventarioValorizado.vrCosto | number_format(0, '.', ',')}}</td>
+                    <td class="numero">{{ arInventarioValorizado.vrCostoTotal | number_format(0, '.', ',')}}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -78,15 +70,15 @@
     <div class="btn-group" style="float: left">
         <div class="btn-group" style="float: left">
             <div class="btn btn-default btn-sm">Registros <span
-                        class="badge">{{ arMovimientosDetalles.getTotalItemCount }}</span>
+                        class="badge">{{ arInventarioValorizado.getTotalItemCount }}</span>
             </div>
         </div>
     </div>
     <div class="btn-toolbar">
-
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
     </div>
     <div class="btn-group btn-xs">
-        {{ knp_pagination_render(arMovimientosDetalles) }}
+        {{ knp_pagination_render(arInventarioValorizado) }}
     </div>
     {{ form_end(form) }}
 {% endblock %}

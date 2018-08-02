@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Informe\Inventario\Movimiento;
 
+use App\Entity\Inventario\InvInventarioValorizado;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\General\General;
 class InventarioValorizadoController extends Controller
 {
    /**
@@ -26,18 +28,28 @@ class InventarioValorizadoController extends Controller
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('fechaHasta', DateType::class, array('label' => 'Fecha hasta: ', 'required' => false, 'data' => new \DateTime('now')))
-            ->add('btnGenerar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('txtCodigoItem', TextType::class, ['required' => false, 'data' => $session->get('filtroInvItemCodigo'), 'attr' => ['class' => 'form-control']])
+            ->add('btnGenerar', SubmitType::class, ['label' => 'Generar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Generar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
+            }
             if ($form->get('btnGenerar')->isClicked()) {
-                //$txtCodigoItem = $request->request->get('txtCodigoItem');
-                //$session->set('filtroInvItemCodigo', $txtCodigoItem);
+                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
+                $em->getRepository(InvInventarioValorizado::class)->generar($form->get('fechaHasta')->getData()->format('Y-m-d'));
+
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($em->getRepository(InvInventarioValorizado::class)->lista())->execute(), "InventarioValorizado");
             }
         }
-        $arMovimientosDetalles = $paginator->paginate($em->getRepository(InvMovimientoDetalle::class)->listaKardex(), $request->query->getInt('page', 1), 30);
+        $arInventarioValorizado = $paginator->paginate($em->getRepository(InvInventarioValorizado::class)->lista(), $request->query->getInt('page', 1), 1000);
         return $this->render('inventario/informe/inventario/movimiento/inventarioValorizado.html.twig', [
-            'arMovimientosDetalles' => $arMovimientosDetalles,
+            'arInventarioValorizado' => $arInventarioValorizado,
             'form' => $form->createView()
         ]);
     }

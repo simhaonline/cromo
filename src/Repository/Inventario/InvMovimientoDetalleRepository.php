@@ -241,4 +241,24 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function registroFecha($codigoItem, $fechaHasta)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoMovimientoDetallePk')
+            ->addSelect('md.codigoItemFk')
+            ->addSelect('md.vrCosto')
+            ->addSelect('md.cantidadSaldo')
+            ->addSelect('m.fecha')
+            ->leftJoin('md.movimientoRel', 'm')
+            ->where('md.codigoItemFk = ' . $codigoItem)
+            ->andWhere('m.estadoAnulado = 0')
+            ->andWhere('m.estadoAprobado = 1')
+            ->andWhere("m.fecha <= '" . $fechaHasta . " 23:59:59'")
+            ->orderBy('m.fecha', 'DESC')
+            ->setMaxResults(1);
+        $resultado = $queryBuilder->getQuery()->getResult();
+        return $resultado;
+    }
+
 }

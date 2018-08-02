@@ -24,13 +24,13 @@ class KardexController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('txtCodigoItem', TextType::class, ['required' => false, 'data' => $session->get('filtroInvItemCodigo'), 'attr' => ['class' => 'form-control']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $txtCodigoItem = $request->request->get('txtCodigoItem');
-                $session->set('filtroInvItemCodigo', $txtCodigoItem);
+                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
             }
         }
         $arMovimientosDetalles = $paginator->paginate($em->getRepository(InvMovimientoDetalle::class)->listaKardex(), $request->query->getInt('page', 1), 30);

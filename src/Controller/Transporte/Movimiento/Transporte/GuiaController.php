@@ -48,6 +48,7 @@ class GuiaController extends Controller
             $session->set('filtroFechaHasta', $fecha->format('Y-m-d'));
         }
         $form = $this->createFormBuilder()
+            ->add('txtRemitente', TextType::class, array('data' => $session->get('filtroTteGuiaRemitente')))
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
@@ -80,6 +81,7 @@ class GuiaController extends Controller
                     } else {
                         $session->set('filtroTteGuiaCodigoServicio', null);
                     }
+                    $session->set('filtroTteGuiaRemitente', $form->get('txtRemitente')->getData());
                     $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
                     $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                     $session->set('filtroCodigoFactura', $form->get('txtCodigoFactura')->getData());

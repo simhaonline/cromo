@@ -84,6 +84,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.codigoOperacionCargoFk')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
             ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('tg.remitente')
             ->addSelect('tg.unidades')
             ->addSelect('tg.pesoReal')
             ->addSelect('tg.pesoVolumen')
@@ -104,6 +105,9 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->where('tg.codigoGuiaPk <> 0');
         $fecha =  new \DateTime('now');
+        if ($session->get('filtroTteGuiaRemitente') != "") {
+            $queryBuilder->andWhere("tg.remitente LIKE '%" . $session->get('filtroTteGuiaRemitente') . "%'");
+        }
         if ($session->get('filtroCodigoFactura')) {
             $queryBuilder->andWhere("tg.codigoFacturaFk = '" . $session->get('filtroCodigoFactura') . "'");
         }

@@ -85,7 +85,7 @@ class InvItemRepository extends ServiceEntityRepository
     public function listaRegenerar(){
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvItem::class,'i')
             ->select('i.codigoItemPk')
-        ->andWhere('i.afectaInventario = 0');
+        ->andWhere('i.afectaInventario = 1');
         return $queryBuilder->getQuery()->execute();
     }
 

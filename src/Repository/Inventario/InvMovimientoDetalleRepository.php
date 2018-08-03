@@ -175,6 +175,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.cantidad')
             ->addSelect('md.cantidadOperada')
             ->addSelect('md.vrCosto')
+            ->addSelect('md.vrPrecio')
+            ->addSelect('md.porcentajeDescuento')
             ->addSelect('m.generaCostoPromedio')
             ->leftJoin('md.movimientoRel','m')
             ->where('m.estadoAprobado = 1')
@@ -196,7 +198,14 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                         $existenciaTotal = $existenciaAnterior + $arMovimientoDetalle['cantidad'];
                         $costoPromedio = (($existenciaAnterior * $costoPromedio) + (($arMovimientoDetalle['cantidad'] * $arMovimientoDetalle['vrCosto']))) / $existenciaTotal;
                     } else {
-                        $costoPromedio = $arMovimientoDetalle['vrCosto'];
+                        $precioBruto = $arMovimientoDetalle['vrPrecio'] - (($arMovimientoDetalle['vrPrecio'] * $arMovimientoDetalle['porcentajeDescuento']) / 100);
+                        if($arMovimientoDetalle['vrCosto'] != $precioBruto) {
+                            $arMovimientoDetalleAct->setVrCosto($precioBruto);
+                            $costoPromedio = $precioBruto;
+                        } else {
+                            $costoPromedio = $arMovimientoDetalle['vrCosto'];
+                        }
+
                     }
                 } else {
                     $arMovimientoDetalleAct->setVrCosto($costoPromedio);

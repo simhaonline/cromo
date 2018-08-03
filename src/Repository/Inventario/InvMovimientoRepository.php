@@ -16,6 +16,7 @@ use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvMovimientoRepository extends ServiceEntityRepository
 {
@@ -23,6 +24,49 @@ class InvMovimientoRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, InvMovimiento::class);
+    }
+
+
+    public function lista($codigoDocumento)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm');
+        $queryBuilder
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('m.numero')
+            ->addSelect('t.nombreCorto AS terceroNombreCorto')
+            ->addSelect('m.fecha')
+            ->addSelect('m.vrSubtotal')
+            ->addSelect('m.vrIva')
+            ->addSelect('m.vrDescuento')
+            ->addSelect('m.vrNeto')
+            ->addSelect('m.vrTotal')
+            ->addSelect('m.estadoAnulado')
+            ->addSelect('m.estadoAprobado')
+            ->addSelect('m.estadoAutorizado')
+            ->leftJoin('m.terceroRel', 't')
+            ->where("m.codigoDocumentoFk = '" . $codigoDocumento . "'");
+        if ($session->get('filtroInvMovimientoNumero') != "") {
+            $queryBuilder->andWhere("m.numero = " . $session->get('filtroInvMovimientoNumero'));
+        }
+        if ($session->get('filtroInvMovimientoCodigo') != "") {
+            $queryBuilder->andWhere("m.codigoMovimientoPk = " . $session->get('filtroInvMovimientoCodigo'));
+        }
+        if($session->get('filtroInvCodigoTercero')){
+            $queryBuilder->andWhere("m.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
+        }
+
+        switch ($session->get('filtroInvMovimientoEstadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("m.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("m.estadoAutorizado = 1");
+                break;
+        }
+        $queryBuilder->orderBy('m.estadoAprobado', 'ASC');
+        $queryBuilder->addOrderBy('m.fecha', 'DESC');
+        return $queryBuilder;
     }
 
     /**
@@ -70,13 +114,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
             if($arMovimiento->getCodigoDocumentoTipoFk() == "SAL") {
                 $arMovimientoDetalle->setVrPrecio($arMovimientoDetalle->getVrCosto());
             }
-            $vrSubtotal = $arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getCantidad();
-            $vrDescuento = 0;
-            if($arMovimientoDetalle->getPorcentajeDescuento() > 0) {
-                $vrDescuento = $vrSubtotal * ($arMovimientoDetalle->getPorcentajeDescuento() / 100);
+            $vrPrecio = $arMovimientoDetalle->getVrPrecio() - (($arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getPorcentajeDescuento()) / 100);
+            if($arMovimiento->getGeneraCostoPromedio()) {
+                $arMovimientoDetalle->setVrCosto($vrPrecio);
             }
-            $vrIva = $vrSubtotal * ($arMovimientoDetalle->getPorcentajeIva() / 100);
-            $vrTotalBruto = $vrSubtotal - $vrDescuento;
+            $vrSubtotal = $vrPrecio * $arMovimientoDetalle->getCantidad();
+            $vrDescuento = ($arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getCantidad()) - $vrSubtotal;
+            $vrIva = ($vrSubtotal * ($arMovimientoDetalle->getPorcentajeIva()) / 100);
+            $vrTotalBruto = $vrSubtotal;
             $vrTotal = $vrTotalBruto + $vrIva;
             $vrTotalGlobal += $vrTotal;
             $vrTotalBrutoGlobal += $vrTotalBruto;

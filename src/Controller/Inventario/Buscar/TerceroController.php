@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class TerceroController extends Controller
 {
    /**
-    * @Route("/inv/bus/tercero/{campoCodigo}/{campoNombre}", name="inv_bus_tercero")
+    * @Route("/inv/bus/tercero/{campoCodigo}/{campoNombre}", name="inventario_bus_tercero")
     */    
     public function lista(Request $request, $campoCodigo, $campoNombre)
     {

@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class MovimientoController extends Controller
 {
@@ -55,11 +56,32 @@ class MovimientoController extends Controller
     public function listaMovimientos(Request $request, $codigoDocumento, $tipoDocumento)
     {
         $em = $this->getDoctrine()->getManager();
-        $arMovimientos = $em->getRepository(InvMovimiento::class)->findBy(['codigoDocumentoFk' => $codigoDocumento]);
+        $session = new Session();
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
+            ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoCodigo')))
+            ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvMovimientoNumero')))
+            ->add('chkEstadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvMovimientoEstadoAutorizado'), 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+                    $session->set('filtroInvMovimientoNumero', $form->get('txtNumero')->getData());
+                    $session->set('filtroInvMovimientoCodigo', $form->get('txtCodigo')->getData());
+                    $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
+                    $session->set('filtroInvMovimientoEstadoAutorizado', $form->get('chkEstadoAutorizado')->getData());
+                }
+            }
+        }
+        $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->lista($codigoDocumento), $request->query->getInt('page', 1), 30);
         return $this->render('inventario/movimiento/inventario/listaMovimientos.html.twig', [
             'arMovimientos' => $arMovimientos,
             'codigoDocumento' => $codigoDocumento,
-            'tipoDocumento' => $tipoDocumento
+            'tipoDocumento' => $tipoDocumento,
+            'form' => $form->createView()
         ]);
     }
 

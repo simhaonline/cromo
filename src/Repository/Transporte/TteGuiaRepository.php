@@ -108,8 +108,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteGuiaRemitente') != "") {
             $queryBuilder->andWhere("tg.remitente LIKE '%" . $session->get('filtroTteGuiaRemitente') . "%'");
         }
-        if ($session->get('filtroCodigoFactura')) {
-            $queryBuilder->andWhere("tg.codigoFacturaFk = '" . $session->get('filtroCodigoFactura') . "'");
+        if ($session->get('filtroTteFacturaCodigo')) {
+            $queryBuilder->andWhere("tg.codigoFacturaFk = '" . $session->get('filtroTteFacturaCodigo') . "'");
         }
         if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
             $queryBuilder->andWhere("tg.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");

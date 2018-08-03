@@ -32,7 +32,7 @@
             <td class="td-in-well">{{ arMovimiento.numero }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arMovimiento.fecha | date('Y-m-d H:i') }}</td>
-            <td class="titulo">(-)DESCUENTO:</td>
+            <td class="titulo">DESCUENTO:</td>
             <td class="td-in-well"
                 style="text-align: right;">{{ arMovimiento.vrDescuento | number_format(0, '.', ',') }}</td>
         </tr>
@@ -126,7 +126,7 @@
                                     {{ validarTipo(arMovimientoDetalle.cantidad) }}
                                 {% else %}
                                     <td style="text-align: center;">
-                                        <input type="text" style="text-align: right;width: 50%;"
+                                        <input type="text" style="text-align: left;width: 50%;"
                                                name="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                id="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                value="{{ arMovimientoDetalle.loteFk }}">
@@ -134,7 +134,7 @@
                                            class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
                                     <td style="text-align: center;">
-                                        <input type="text" style="text-align: right;width: 50%;"
+                                        <input type="text" style="text-align: left;width: 50%;"
                                                name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                id="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                value="{{ arMovimientoDetalle.codigoBodegaFk }}">

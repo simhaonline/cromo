@@ -58,7 +58,7 @@ class GuiaController extends Controller
             ->add('cboServicioRel', EntityType::class, $em->getRepository(TteServicio::class)->llenarCombo())
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroTteGuiaCodigo')))
             ->add('txtDocumento', TextType::class, array('data' => $session->get('filtroTteGuiaDocumento')))
-            ->add('txtCodigoFactura', TextType::class, array('data' => $session->get('filtroCodigoFactura')))
+            ->add('txtCodigoFactura', TextType::class, array('data' => $session->get('filtroTteFacturaCodigo')))
             ->add('txtNumero', TextType::class, array('data' => $session->get('filtroTteGuiaNumero')))
             ->add('chkEstadoFacturado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteGuiaEstadoFacturado'), 'required' => false])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
@@ -84,7 +84,7 @@ class GuiaController extends Controller
                     $session->set('filtroTteGuiaRemitente', $form->get('txtRemitente')->getData());
                     $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
                     $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
-                    $session->set('filtroCodigoFactura', $form->get('txtCodigoFactura')->getData());
+                    $session->set('filtroTteFacturaCodigo', $form->get('txtCodigoFactura')->getData());
                     $session->set('filtroTteGuiaDocumento', $form->get('txtDocumento')->getData());
                     $session->set('filtroTteGuiaNumero', $form->get('txtNumero')->getData());
                     $session->set('filtroTteGuiaCodigo', $form->get('txtCodigo')->getData());

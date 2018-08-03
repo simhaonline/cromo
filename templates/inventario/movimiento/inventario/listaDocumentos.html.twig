@@ -7,6 +7,7 @@
                 <th>ID</th>
                 <th>NOMBRE</th>
                 <th>ABREVIATURA</th>
+                <th>CONSECUTIVO</th>
                 <th></th>
             </tr>
             </thead>
@@ -16,6 +17,7 @@
                     <td>{{ arDocumento.codigoDocumentoPk }}</td>
                     <td>{{ arDocumento.nombre | default('') }}</td>
                     <td>{{ arDocumento.abreviatura | default('') }}</td>
+                    <td>{{ arDocumento.consecutivo }}</td>
                     <td style="text-align: center;">
                         <a href="{{ path('inventario_movimiento_inventario_movimiento_lista', {'tipoDocumento': tipoDocumento,'codigoDocumento' : arDocumento.codigoDocumentoPk }) }}">
                             <i class="fa fa-share-square-o" style="font-size: large">

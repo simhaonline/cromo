@@ -144,7 +144,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(23, $yt+5, $arDespacho['codigoVehiculoFk']);
         $pdf->Text(49, $yt+5, $arDespacho['vehiculoMarca']);
         $pdf->Text(70, $yt+5, $arDespacho['vehiculoPlacaRemolque']);
-        $pdf->Text(115, $yt+5, $arDespacho['vehiculoConfiguracion']);
+        $pdf->Text(125, $yt+5, $arDespacho['vehiculoConfiguracion']);
         $pdf->Text(142, $yt+5, $arDespacho['vehiculoPesoVacio']);
         $pdf->Text(170, $yt+5, $arDespacho['vehiculoNumeroPoliza']);
         $pdf->Text(194, $yt+5, $arDespacho['aseguradoraNombre']);
@@ -158,7 +158,7 @@ class Manifiesto extends \FPDF {
         $pdf->Rect($x+200, $y, 20, $alto1);
         $pdf->Rect($x+220, $y, 40, $alto1);
         $yt += 10;
-        $pdf->SetFont('Arial', 'b', 8);
+        $pdf->SetFont('Arial', 'b', 7);
         $pdf->Text(25, $yt, "CONDUCTOR");
         $pdf->Text(70, $yt, "DOCUMENTO IDENTIFICACION");
         $pdf->Text(147, $yt, "DIRECCION");
@@ -166,7 +166,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(216, $yt, "N LICENCIA");
         $pdf->Text(247, $yt, "CIUDAD");
         $pdf->SetFont('Arial', '', 7);
-        $pdf->Text(17, $yt+5, utf8_decode($arDespacho['conductorNombre']));
+        $pdf->Text(16, $yt+5, utf8_decode($arDespacho['conductorNombre']));
         $pdf->Text(70, $yt+5, $arDespacho['conductorIdentificacion']);
         $pdf->Text(147, $yt+5, $arDespacho['conductorDireccion']);
         $pdf->Text(198, $yt+5, $arDespacho['conductorTelefono']);
@@ -180,14 +180,14 @@ class Manifiesto extends \FPDF {
         $pdf->Rect($x+180, $y, 20, $alto1);
         $pdf->Rect($x+200, $y, 60, $alto1);
         $yt += 10;
-        $pdf->SetFont('Arial', 'b', 8);
-        $pdf->Text(15, $yt, "POSEEDOR O TENEDOR VEHICULO");
+        $pdf->SetFont('Arial', 'b', 7);
+        $pdf->Text(16, $yt, "POSEEDOR O TENEDOR VEHICULO");
         $pdf->Text(70, $yt, "DOCUMENTO IDENTIFICACION");
         $pdf->Text(147, $yt, "DIRECCION");
         $pdf->Text(198, $yt, "TELEFONO");
         $pdf->Text(238, $yt, "CIUDAD");
-        $pdf->SetFont('Arial', '', 8);
-        $pdf->Text(15, $yt+5, $arDespacho['poseedorNombre']);
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Text(16, $yt+5, utf8_decode($arDespacho['poseedorNombre']));
         $pdf->Text(70, $yt+5, $arDespacho['poseedorNumeroIdentificacion']);
         $pdf->Text(147, $yt+5, $arDespacho['poseedorDireccion']);
         $pdf->Text(198, $yt+5, $arDespacho['poseedorTelefono']);

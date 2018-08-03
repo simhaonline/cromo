@@ -166,7 +166,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(216, $yt, "N LICENCIA");
         $pdf->Text(247, $yt, "CIUDAD");
         $pdf->SetFont('Arial', '', 7);
-        $pdf->Text(16, $yt+5, utf8_decode($arDespacho['conductorNombre']));
+        $pdf->Text(16, $yt+5, substr(utf8_decode($arDespacho['conductorNombre']),0, 30));
         $pdf->Text(70, $yt+5, $arDespacho['conductorIdentificacion']);
         $pdf->Text(147, $yt+5, $arDespacho['conductorDireccion']);
         $pdf->Text(198, $yt+5, $arDespacho['conductorTelefono']);
@@ -187,7 +187,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(198, $yt, "TELEFONO");
         $pdf->Text(238, $yt, "CIUDAD");
         $pdf->SetFont('Arial', '', 7);
-        $pdf->Text(16, $yt+5, utf8_decode($arDespacho['poseedorNombre']));
+        $pdf->Text(16, $yt+5, substr(utf8_decode($arDespacho['poseedorNombre']),0,30));
         $pdf->Text(70, $yt+5, $arDespacho['poseedorNumeroIdentificacion']);
         $pdf->Text(147, $yt+5, $arDespacho['poseedorDireccion']);
         $pdf->Text(198, $yt+5, $arDespacho['poseedorTelefono']);

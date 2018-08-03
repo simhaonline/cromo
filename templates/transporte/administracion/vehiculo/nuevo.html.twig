@@ -83,11 +83,11 @@
             <div class="form-group form-group-sm">
                 <label for="form_poseedorRel" class="col-sm-2 control-label">Poseedor:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.poseedorRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.poseedorRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
                 </div>
                 <label for="form_propietarioRel" class="col-sm-2 control-label">Propietario:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.propietarioRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.propietarioRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -113,23 +113,18 @@
         </div>
     </div>
     <div class="panel panel-default">
-        <div class="panel-heading">Información aseguradora</div>
+        <div class="panel-heading">Información propietario</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_aesguradoraRel" class="col-sm-2 control-label">Aseguradora:</label>
+                <label for="form_aesguradoraRel" class="col-sm-2 control-label">Propietario:</label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.aseguradoraRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.aseguradoraRel, { 'attr': {'class': 'form-control '} }) }}
                     {{ form_errors(form.aseguradoraRel) }}
                 </div>
-                <label for="form_numeroPoliza" class="col-sm-2 control-label">Numero poliza:</label>
+                <label for="form_numeroPoliza" class="col-sm-2 control-label">Poseedor:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.numeroPoliza, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.numeroPoliza) }}
-                </div>
-                <label for="form_fechaVencePoliza" class="col-sm-2 control-label">Fecha vencimiento:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.fechaVencePoliza, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.fechaVencePoliza) }}
                 </div>
             </div>
         </div>

@@ -30,7 +30,7 @@ class VehiculoType extends AbstractType
                 'label' => 'Aseguradora:'
             ])
             ->add('poseedorRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\Transporte\TtePoseedor',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('p')
@@ -40,7 +40,7 @@ class VehiculoType extends AbstractType
                 'label' => 'Poseedor:'
             ])
             ->add('propietarioRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\Transporte\TtePoseedor',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('pr')

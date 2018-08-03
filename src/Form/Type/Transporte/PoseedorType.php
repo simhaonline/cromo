@@ -18,7 +18,7 @@ class PoseedorType extends AbstractType
     {
         $builder
             ->add('identificacionRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\General\GenIdentificacion',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')
@@ -28,7 +28,7 @@ class PoseedorType extends AbstractType
                 'label' => 'Identificacion tipo:'
             ])
             ->add('ciudadRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\Transporte\TteCiudad',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
@@ -44,8 +44,8 @@ class PoseedorType extends AbstractType
             ->add('apellido1',TextType::class,['required' => true,'label' => 'Primer apellido:'])
             ->add('apellido2',TextType::class,['required' => false,'label' => 'Segundo apellido:'])
             ->add('direccion',TextType::class,['required' => true,'label' => 'Direccion:'])
-            ->add('telefono',NumberType::class,['required' => true,'label' => 'Telefono:'])
-            ->add('movil',NumberType::class,['required' => true,'label' => 'Celular:'])
+            ->add('telefono',NumberType::class,['required' => false,'label' => 'Telefono:'])
+            ->add('movil',TextType::class,['required' => false,'label' => 'Celular:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
         ;

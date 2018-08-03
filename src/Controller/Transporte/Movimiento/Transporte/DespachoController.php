@@ -11,6 +11,7 @@ use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteRuta;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoType;
+use App\Formato\Transporte\CobroEntrega;
 use App\Formato\Transporte\Despacho;
 use App\Formato\Transporte\Manifiesto;
 use App\Formato\Transporte\RelacionEntrega;
@@ -174,6 +175,7 @@ class DespachoController extends Controller
         $arrBotonActualizar = array('label' => 'Actualizar', 'disabled' => false);
         $arrBotonRndc = array('label' => 'RNDC', 'disabled' => true);
         $arrBotonImprimirManifiesto = array('label' => 'Manifiesto', 'disabled' => false);
+        $arrBotonCobroEntrega = array('label' => 'Cobro entrega', 'disabled' => true);
         if ($arDespacho->getEstadoAutorizado()) {
             $arrBotonRetirarGuia['disabled'] = true;
             $arrBotonActualizar['disabled'] = true;
@@ -182,6 +184,7 @@ class DespachoController extends Controller
             if (!$arDespacho->getEstadoAnulado()) {
                 $arrBotonCerrar['disabled'] = false;
                 $arrBotonRndc['disabled'] = false;
+                $arrBotonCobroEntrega['disabled'] = false;
                 if ($arDespacho->getEstadoCerrado()) {
                     $arrBotonCerrar['disabled'] = true;
                 }
@@ -196,7 +199,8 @@ class DespachoController extends Controller
             ->add('btnRndc', SubmitType::class, $arrBotonRndc)
             ->add('btnRetirarGuia', SubmitType::class, $arrBotonRetirarGuia)
             ->add('btnActualizar', SubmitType::class, $arrBotonActualizar)
-            ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto);
+            ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto)
+            ->add('btnCobroEntrega', SubmitType::class, $arrBotonCobroEntrega);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
@@ -249,6 +253,10 @@ class DespachoController extends Controller
                     $formato = new Manifiesto();
                     $formato->Generar($em, $id);
                 }
+            }
+            if ($form->get('btnCobroEntrega')->isClicked()) {
+                $formato = new CobroEntrega();
+                $formato->Generar($em, $id);
             }
         }
 

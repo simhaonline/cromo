@@ -258,6 +258,36 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     }
 
+    public function despachoCobroEntrega($codigoDespacho): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, 
+        g.codigoGuiaTipoFk,
+        g.numero, 
+        g.fechaIngreso,           
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,             
+        c.nombreCorto AS clienteNombreCorto, 
+        g.codigoCiudadDestinoFk,
+        cd.nombre AS ciudadDestino,
+        g.nombreDestinatario,
+        g.direccionDestinatario,
+        g.codigoProductoFk,
+        g.empaqueReferencia,
+        g.vrCobroEntrega
+        FROM App\Entity\Transporte\TteGuia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd        
+        WHERE g.codigoDespachoFk = :codigoDespacho AND g.vrCobroEntrega > 0
+        ORDER BY g.codigoCiudadDestinoFk, g.ordenRuta'
+        )->setParameter('codigoDespacho', $codigoDespacho);
+
+        return $query->execute();
+
+    }
+
     public function relacionEntrega($codigoDespacho): array
     {
         $em = $this->getEntityManager();

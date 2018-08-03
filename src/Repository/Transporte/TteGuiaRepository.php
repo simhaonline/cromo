@@ -639,6 +639,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('SUM(g.vrFlete) AS vrFlete')
             ->addSelect('SUM(g.vrManejo) AS vrManejo')
             ->addSelect('SUM(g.unidades) AS unidades')
+            ->addSelect('SUM(g.vrFlete) + SUM(g.vrManejo) AS total')
             ->leftJoin('g.clienteRel', 'c')
             ->where("g.fechaIngreso >= '" . $fechaDesde . " 00:00:00'")
             ->andWhere("g.fechaIngreso <= '" . $fechaHasta . " 23:59:59'")

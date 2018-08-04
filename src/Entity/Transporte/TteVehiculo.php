@@ -184,6 +184,12 @@ class TteVehiculo
     private $tipoCarroceriaRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteLinea", inversedBy="vehiculosLineaRel")
+     * @ORM\JoinColumn(name="codigo_linea_fk", referencedColumnName="codigo_linea_pk")
+     */
+    private $lineaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteDespacho", mappedBy="vehiculoRel")
      */
     protected $despachosVehiculoRel;
@@ -793,6 +799,22 @@ class TteVehiculo
     public function setColorRel($colorRel): void
     {
         $this->colorRel = $colorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLineaRel()
+    {
+        return $this->lineaRel;
+    }
+
+    /**
+     * @param mixed $lineaRel
+     */
+    public function setLineaRel($lineaRel): void
+    {
+        $this->lineaRel = $lineaRel;
     }
 
 

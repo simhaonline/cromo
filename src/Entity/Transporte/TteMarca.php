@@ -27,6 +27,11 @@ class TteMarca
     protected $vehiculosMarcaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteLinea", mappedBy="marcaRel")
+     */
+    protected $lineasMarcaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoMarcaPk()
@@ -72,6 +77,22 @@ class TteMarca
     public function setVehiculosMarcaRel($vehiculosMarcaRel): void
     {
         $this->vehiculosMarcaRel = $vehiculosMarcaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLineasMarcaRel()
+    {
+        return $this->lineasMarcaRel;
+    }
+
+    /**
+     * @param mixed $lineasMarcaRel
+     */
+    public function setLineasMarcaRel($lineasMarcaRel): void
+    {
+        $this->lineasMarcaRel = $lineasMarcaRel;
     }
 
 

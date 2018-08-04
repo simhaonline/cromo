@@ -424,15 +424,15 @@ class TteDespachoRepository extends ServiceEntityRepository
                     $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
                     $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
                     $arrDespacho = $em->getRepository(TteDespacho::class)->dqlRndc($arDespacho->getCodigoDespachoPk());
-                    $respuesta = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
-                    if($respuesta) {
-                    //$respuesta = $this->reportarRndcVehiculo($cliente, $arConfiguracionTransporte, $arrDespacho);
-                    //if($respuesta) {
+                    $retorno = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
+                    if($retorno) {
+                        $retorno = $this->reportarRndcVehiculo($cliente, $arConfiguracionTransporte, $arrDespacho);
+                        if($retorno) {
                     //$respuesta = $this->reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho);
                     //if($respuesta) {
                     //$respuesta = $this->reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho);
                     //}
-                    //}
+                        }
                     }
 
                 } catch (Exception $e) {
@@ -450,7 +450,7 @@ class TteDespachoRepository extends ServiceEntityRepository
     public function reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho): string
     {
         $em = $this->getEntityManager();
-        $respuesta = true;
+        $retorno = true;
         $arrTerceros = array();
 
         $arrTercerosPoseedores = $em->getRepository(TtePoseedor::class)->dqlRndc($arrDespacho['codigoPoseedorFk'], $arrDespacho['codigoPropietarioFk']);
@@ -517,7 +517,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $strPoseedorXML .= "
                                         <CODCATEGORIALICENCIACONDUCCION>" . $arrTercero['categoriaLicencia'] . "</CODCATEGORIALICENCIACONDUCCION>
                                         <NUMLICENCIACONDUCCION>" . $arrTercero['numeroLicencia'] . "</NUMLICENCIACONDUCCION>
-                                        <FECHAVENCIMIENTOLICENCIA>" . $arrTercero['fechaVenceLicencia']->format('Y/m/d') . "</FECHAVENCIMIENTOLICENCIA>";
+                                        <FECHAVENCIMIENTOLICENCIA>" . $arrTercero['fechaVenceLicencia']->format('d/m/Y') . "</FECHAVENCIMIENTOLICENCIA>";
             }
 
             $strPoseedorXML .= "</variables>
@@ -526,21 +526,23 @@ class TteDespachoRepository extends ServiceEntityRepository
             $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strPoseedorXML));
             $cadena_xml = simplexml_load_string($respuesta);
             if ($cadena_xml->ErrorMSG != "") {
-                $respuesta = false;
-
-                Mensajes::error(utf8_decode($cadena_xml->ErrorMSG));
-                break;
+                $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
+                if(substr($errorRespuesta, 0, 9) != "DUPLICADO") {
+                    $retorno = false;
+                    Mensajes::error($errorRespuesta);
+                    break;
+                }
             }
         }
 
-        return $respuesta;
+        return $retorno;
 
     }
 
     public function reportarRndcVehiculo($cliente, $arConfiguracionTransporte, $arrDespacho): string
     {
         $em = $this->getEntityManager();
-        $respuesta = true;
+        $retorno = true;
         $arVehiculo = $em->getRepository(TteVehiculo::class)->dqlRndc($arrDespacho['codigoVehiculoFk']);
         $strVehiculoXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
                         <root>
@@ -569,8 +571,8 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 <CODTIPOIDTENEDOR>" . $arVehiculo['tipoIdentificacionPoseedor'] . "</CODTIPOIDTENEDOR>
                                 <NUMIDTENEDOR>" . $arVehiculo['numeroIdentificacionPoseedor'] . "</NUMIDTENEDOR> 
                                 <NUMSEGUROSOAT>" . $arVehiculo['numeroPoliza'] . "</NUMSEGUROSOAT> 
-                                <FECHAVENCIMIENTOSOAT>" . $arVehiculo['fechaVencePoliza']->format('Y/m/d') . "</FECHAVENCIMIENTOSOAT>
-                                <NUMNITASEGURADORASOAT>" . $arVehiculo['numeroIdentificacionAseguradora'] . $arVehiculo['digitoVerificacionAseguradora'] . "</NUMNITASEGURADORASOAT>
+                                <FECHAVENCIMIENTOSOAT>" . $arVehiculo['fechaVencePoliza']->format('d/m/Y') . "</FECHAVENCIMIENTOSOAT>
+                                <NUMNITASEGURADORASOAT>" . $arVehiculo['numeroIdentificacionAseguradora'] . "</NUMNITASEGURADORASOAT>
                                 <CAPACIDADUNIDADCARGA>" . $arVehiculo['capacidad'] . "</CAPACIDADUNIDADCARGA>
                                 <UNIDADMEDIDACAPACIDAD>1</UNIDADMEDIDACAPACIDAD>
                             </variables>
@@ -579,12 +581,12 @@ class TteDespachoRepository extends ServiceEntityRepository
         $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strVehiculoXML));
         $cadena_xml = simplexml_load_string($respuesta);
         if ($cadena_xml->ErrorMSG != "") {
-            $respuesta = false;
-            echo $cadena_xml->ErrorMSG;
+            $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
+            $retorno = false;
+            Mensajes::error($errorRespuesta);
         }
 
-
-        return $respuesta;
+        return $retorno;
 
     }
 

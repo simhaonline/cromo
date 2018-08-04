@@ -79,8 +79,7 @@ class TteVehiculoRepository extends ServiceEntityRepository
         ps.numeroIdentificacion as numeroIdentificacionPoseedor, 
         v.numeroPoliza,
         v.fechaVencePoliza,
-        a.numeroIdentificacion as numeroIdentificacionAseguradora,
-        a.digitoVerificacion as digitoVerificacionAseguradora,
+        a.numeroIdentificacion as numeroIdentificacionAseguradora,        
         v.capacidad       
         FROM App\Entity\Transporte\TteVehiculo v          
         LEFT JOIN v.marcaRel m 

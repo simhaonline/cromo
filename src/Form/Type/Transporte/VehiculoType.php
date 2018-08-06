@@ -105,7 +105,7 @@ class VehiculoType extends AbstractType
             ->add('codigoVehiculoPk',TextType::class,['required' => true,'label' => 'Codigo Vehiculo:'])
             ->add('placa',TextType::class,['required' => true,'label' => 'Placa:'])
             ->add('configuracion',TextType::class,['required' => true,'label' => 'Configuracion:'])
-            ->add('placaRemolque',TextType::class,['required' => true,'label' => 'Placa remolque:'])
+            ->add('placaRemolque',TextType::class,['required' => false,'label' => 'Placa remolque:'])
             ->add('modelo',NumberType::class,['required' => true,'label' => 'Modelo:'])
             ->add('modeloRepotenciado',NumberType::class,['required' => false,'label' => 'Modelo repotenciado:'])
             ->add('motor',TextType::class,['required' => true,'label' => 'Motor:'])

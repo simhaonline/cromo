@@ -205,7 +205,6 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                         } else {
                             $costoPromedio = $arMovimientoDetalle['vrCosto'];
                         }
-
                     }
                 } else {
                     $arMovimientoDetalleAct->setVrCosto($costoPromedio);
@@ -234,6 +233,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.cantidadSaldo')
             ->addSelect('md.vrCosto')
             ->addSelect('md.vrPrecio')
+            ->addSelect('md.loteFk')
             ->addSelect('m.fecha')
             ->addSelect('m.numero AS numeroMovimiento')
             ->addSelect('d.nombre AS nombreDocumento')
@@ -242,6 +242,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('md.itemRel', 'i')
             ->where('md.codigoMovimientoDetallePk != 0')
             ->andWhere('m.estadoAprobado = 1')
+            ->andWhere('m.estadoAnulado = 0')
         ->orderBy('m.fecha', 'ASC');
 
         if ($session->get('filtroInvItemCodigo')) {

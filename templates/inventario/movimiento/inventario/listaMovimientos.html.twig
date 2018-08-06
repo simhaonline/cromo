@@ -111,19 +111,38 @@
             </tbody>
         </table>
     </div>
-    <div class="btn-group" style="float: right;">
-        {% if tipoDocumento != 'FAC' %}
-            <a class="btn btn-sm btn-default"
-               href="{{ path('inventario_movimiento_inventario_movimiento_nuevo',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
-        {% else %}
-            <a class="btn btn-sm btn-default"
-               href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_factura',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
-        {% endif %}
+
+
+
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arMovimientos.getTotalItemCount }}</span></div>
+        </div>
     </div>
-    <div class="btn-group">
-        <a class="btn btn-sm btn-default"
-           href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento': tipoDocumento}) }}">volver</a>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arMovimientos) }}
     </div>
+
+    <div class="btn-toolbar" style="float: right">
+
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default"
+               href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento': tipoDocumento}) }}">volver</a>
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+        <div class="btn-group" style="float: right;">
+            {% if tipoDocumento != 'FAC' %}
+                <a class="btn btn-sm btn-default"
+                   href="{{ path('inventario_movimiento_inventario_movimiento_nuevo',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+            {% else %}
+                <a class="btn btn-sm btn-default"
+                   href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_factura',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+            {% endif %}
+        </div>
+    </div>
+
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

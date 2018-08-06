@@ -428,10 +428,10 @@ class TteDespachoRepository extends ServiceEntityRepository
                     if($retorno) {
                         $retorno = $this->reportarRndcVehiculo($cliente, $arConfiguracionTransporte, $arrDespacho);
                         if($retorno) {
-                    //$respuesta = $this->reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho);
-                    //if($respuesta) {
-                    //$respuesta = $this->reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho);
-                    //}
+                            $retorno = $this->reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho);
+                            if($retorno) {
+                            //$respuesta = $this->reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho);
+                            }
                         }
                     }
 
@@ -582,8 +582,10 @@ class TteDespachoRepository extends ServiceEntityRepository
         $cadena_xml = simplexml_load_string($respuesta);
         if ($cadena_xml->ErrorMSG != "") {
             $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
-            $retorno = false;
-            Mensajes::error($errorRespuesta);
+            if(substr($errorRespuesta, 0, 9) != "DUPLICADO") {
+                $retorno = false;
+                Mensajes::error($errorRespuesta);
+            }
         }
 
         return $retorno;
@@ -593,9 +595,9 @@ class TteDespachoRepository extends ServiceEntityRepository
     public function reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho): string
     {
         $em = $this->getEntityManager();
-        $respuesta = true;
-        $destinatario = "100000" . $arrDespacho['numero'];
-        $propietario = "500000" . $arrDespacho['numero'];
+        $retorno = true;
+        $destinatario = "222222222";
+        $propietario = "222222222";
         $strGuiaXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
                         <root>
                             <acceso>
@@ -627,7 +629,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 <CODSEDEPROPIETARIO>1</CODSEDEPROPIETARIO>
                                 <DUENOPOLIZA>E</DUENOPOLIZA>
                                 <NUMPOLIZATRANSPORTE>" . $arConfiguracionTransporte->getNumeroPoliza() . "</NUMPOLIZATRANSPORTE>
-                                <FECHAVENCIMIENTOPOLIZACARGA>" . $arConfiguracionTransporte->getFechaVencePoliza()->format('Y/m/d') . "</FECHAVENCIMIENTOPOLIZACARGA>
+                                <FECHAVENCIMIENTOPOLIZACARGA>" . $arConfiguracionTransporte->getFechaVencePoliza()->format('d/m/Y') . "</FECHAVENCIMIENTOPOLIZACARGA>
                                 <COMPANIASEGURO>" . $arConfiguracionTransporte->getNumeroIdentificacionAseguradora() . "</COMPANIASEGURO>
                                 <HORASPACTOCARGA>24</HORASPACTOCARGA>
                                 <MINUTOSPACTOCARGA>00</MINUTOSPACTOCARGA>
@@ -643,12 +645,13 @@ class TteDespachoRepository extends ServiceEntityRepository
         $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strGuiaXML));
         $cadena_xml = simplexml_load_string($respuesta);
         if ($cadena_xml->ErrorMSG != "") {
-            $respuesta = false;
-            echo $cadena_xml->ErrorMSG;
+            $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
+            $retorno = false;
+            Mensajes::error($errorRespuesta);
         }
 
 
-        return $respuesta;
+        return $retorno;
 
     }
 

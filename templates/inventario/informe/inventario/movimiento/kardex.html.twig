@@ -49,6 +49,7 @@
                 <th>NUMERO</th>
                 <th>COD</th>
                 <th>ITEM</th>
+                <th>LOTE</th>
                 <th>CAN</th>
                 <th>C_O</th>
                 <th>SALDO</th>
@@ -65,6 +66,7 @@
                     <td>{{ arMovimientoDetalle.numeroMovimiento }}</td>
                     <td>{{ arMovimientoDetalle.codigoItemFk }}</td>
                     <td>{{ arMovimientoDetalle.nombreItem }}</td>
+                    <td>{{ arMovimientoDetalle.loteFk }}</td>
                     <td class="numero">{{ arMovimientoDetalle.cantidad | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arMovimientoDetalle.cantidadOperada | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arMovimientoDetalle.cantidadSaldo | number_format(0, '.', ',')}}</td>

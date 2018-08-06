@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use App\General\General;
 
 class MovimientoController extends Controller
 {
@@ -63,6 +64,7 @@ class MovimientoController extends Controller
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoCodigo')))
             ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvMovimientoNumero')))
             ->add('chkEstadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvMovimientoEstadoAutorizado'), 'required' => false])
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
@@ -73,6 +75,9 @@ class MovimientoController extends Controller
                     $session->set('filtroInvMovimientoCodigo', $form->get('txtCodigo')->getData());
                     $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
                     $session->set('filtroInvMovimientoEstadoAutorizado', $form->get('chkEstadoAutorizado')->getData());
+                }
+                if ($form->get('btnExcel')->isClicked()) {
+                    General::get()->setExportar($em->createQuery($em->getRepository(InvMovimiento::class)->lista($codigoDocumento))->execute(), "Movimientos");
                 }
             }
         }

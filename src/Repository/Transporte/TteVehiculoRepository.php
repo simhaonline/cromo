@@ -67,7 +67,7 @@ class TteVehiculoRepository extends ServiceEntityRepository
         v.configuracion,
         v.numeroEjes,
         v.codigoMarcaFk as codigoMarca,
-        v.codigoLineaFk as codigoLinea,
+        l.linea as codigoLinea,
         v.codigoColorFk as codigoColor,
         v.codigoTipoCombustibleFk as tipoCombustible,
         v.codigoTipoCarroceriaFk as tipoCarroceria,
@@ -83,6 +83,7 @@ class TteVehiculoRepository extends ServiceEntityRepository
         v.capacidad       
         FROM App\Entity\Transporte\TteVehiculo v          
         LEFT JOIN v.marcaRel m 
+        LEFT JOIN v.lineaRel l
         LEFT JOIN v.propietarioRel p
         LEFT JOIN v.poseedorRel ps
         LEFT JOIN v.aseguradoraRel a 

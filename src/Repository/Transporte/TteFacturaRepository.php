@@ -39,6 +39,7 @@ class TteFacturaRepository extends ServiceEntityRepository
         );
         return $query->execute();
     }
+
     public function lista()
     {
         $session = new Session();
@@ -167,6 +168,38 @@ class TteFacturaRepository extends ServiceEntityRepository
         $queryBuilder->orderBy('f.estadoAprobado', 'ASC');
         $queryBuilder->addOrderBy('f.fecha', 'DESC');
         $queryBuilder->addOrderBy('f.codigoFacturaPk', 'DESC');
+
+        return $queryBuilder->getQuery()->execute();
+    }
+
+    public function controlFactura()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
+            ->select('f.codigoFacturaPk')
+            ->addSelect('f.numero')
+            ->addSelect('f.fecha')
+            ->addSelect('c.nombreCorto')
+            ->addSelect('f.vrFlete')
+            ->addSelect('f.vrManejo')
+            ->addSelect('f.vrSubtotal')
+            ->addSelect('f.vrTotal')
+            ->addSelect('ft.nombre')
+            ->addSelect('f.codigoFacturaClaseFk')
+            ->addSelect('ft.nombre')
+            ->addSelect('f.codigoFacturaTipoFk')
+            ->leftJoin('f.clienteRel', 'c')
+            ->leftJoin('f.facturaTipoRel', 'ft')
+            ->where('f.codigoFacturaPk <> 0')
+            ->andWhere('f.estadoAprobado = 1')
+            ->andWhere('f.estadoAnulado = 0')
+            ->orderBy('f.codigoFacturaTipoFk, f.numero','DESC');
+        $fecha =  new \DateTime('now');
+        if ($session->get('filtroTteFecha') != null) {
+            $queryBuilder->andWhere("f.fecha >= '{$session->get('filtroTteFecha')} 00:00:00' AND f.fecha <= '{$session->get('filtroTteFecha')} 23:59:59'");
+        } else {
+            $queryBuilder->andWhere("f.fecha ='" . $fecha->format('Y-m-d') . " 00:00:00'");
+        }
 
         return $queryBuilder->getQuery()->execute();
     }

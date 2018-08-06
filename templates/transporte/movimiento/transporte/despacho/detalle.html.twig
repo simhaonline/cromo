@@ -47,7 +47,7 @@
         </tr>
         <tr>
             <td class="titulo">CONDUCTOR:</td>
-            <td class="td-in-well">{{ arDespacho.conductorRel.nombreCorto | default('') }}</td>
+            <td class="td-in-well">{{ arDespacho.conductorRel.numeroIdentificacion | default('') }} - {{ arDespacho.conductorRel.nombreCorto | default('') }}</td>
             <td class="titulo">VEHICULO:</td>
             <td class="td-in-well">{{ arDespacho.codigoVehiculoFk }}</td>
             <td class="titulo" >(-)RETENCION FUENTE</td>

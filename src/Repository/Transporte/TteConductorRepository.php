@@ -27,6 +27,11 @@ class TteConductorRepository extends ServiceEntityRepository
             ->addSelect('c.movil')
             ->where('c.codigoConductorPk IS NOT NULL')
             ->orderBy('c.codigoConductorPk');
+
+        if ($session->get('filtroTteConductorNombre') != "") {
+            $queryBuilder->andWhere("c.nombreCorto LIKE '%" . $session->get('filtroTteConductorNombre') . "%'");
+        }
+
         return $queryBuilder;
     }
 

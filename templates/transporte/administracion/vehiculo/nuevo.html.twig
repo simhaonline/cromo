@@ -43,6 +43,16 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_marcaRel" class="col-sm-2 control-label">Linea:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.lineaRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                </div>
+                <label for="form_colorRel" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="form_tipoCarroceriaRel" class="col-sm-2 control-label">Tipo carroceria:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.tipoCarroceriaRel, { 'attr': {'class': 'form-control'} }) }}
@@ -54,29 +64,29 @@
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_numeroEjes" class="col-sm-2 control-label">Numero ejes:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     {{ form_widget(form.numeroEjes, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label for="form_serie" class="col-sm-2 control-label">Numero serie:</label>
+                <label for="form_serie" class="col-sm-1 control-label">Numero serie:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.serie, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label for="form_chasis" class="col-sm-2 control-label">Numero chasis:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     {{ form_widget(form.chasis, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_configuracion" class="col-sm-2 control-label">Configuracion:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     {{ form_widget(form.configuracion, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label for="form_pesoVacion" class="col-sm-2 control-label">Peso vacío:</label>
+                <label for="form_pesoVacion" class="col-sm-1 control-label">Peso vacío:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.pesoVacio, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label for="form_capacidad" class="col-sm-2 control-label">Capacidad:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     {{ form_widget(form.capacidad, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
@@ -92,10 +102,10 @@
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_celular" class="col-sm-2 control-label">Celular:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     {{ form_widget(form.celular, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label for="form_rndc" class="col-sm-2 control-label">Registro nacional:</label>
+                <label for="form_rndc" class="col-sm-1 control-label">Registro nal:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.registroNacionalCarga, { 'attr': {'class': 'form-control'} }) }}
                 </div>
@@ -113,18 +123,22 @@
         </div>
     </div>
     <div class="panel panel-default">
-        <div class="panel-heading">Información propietario</div>
+        <div class="panel-heading">Información aseguradora</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_aesguradoraRel" class="col-sm-2 control-label">Propietario:</label>
-                <div class="col-sm-2">
+                <label for="form_aesguradoraRel" class="col-sm-2 control-label">Aseguradora:</label>
+                <div class="col-sm-4">
                     {{ form_widget(form.aseguradoraRel, { 'attr': {'class': 'form-control '} }) }}
                     {{ form_errors(form.aseguradoraRel) }}
                 </div>
-                <label for="form_numeroPoliza" class="col-sm-2 control-label">Poseedor:</label>
-                <div class="col-sm-2">
+                <label for="form_numeroPoliza" class="col-sm-2 control-label">Numero poliza:</label>
+                <div class="col-sm-1">
                     {{ form_widget(form.numeroPoliza, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.numeroPoliza) }}
+                </div>
+                <label for="form_numeroPoliza" class="col-sm-1 control-label">Numero poliza:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaVencePoliza) }}
                 </div>
             </div>
         </div>

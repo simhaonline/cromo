@@ -89,13 +89,26 @@ class VehiculoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Color:'
             ])
+            ->add('lineaRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TteLinea',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('l')
+                        ->leftJoin('l.marcaRel', 'm')
+                        ->orderBy('m.nombre', 'ASC');
+                },
+                'choice_label' => function ($linea) {
+                    return $linea->getMarcaRel()->getNombre() . ' - ' . $linea->getNombre();
+                },
+                'label' => 'Linea:'
+            ])
             ->add('codigoVehiculoPk',TextType::class,['required' => true,'label' => 'Codigo Vehiculo:'])
             ->add('placa',TextType::class,['required' => true,'label' => 'Placa:'])
             ->add('configuracion',TextType::class,['required' => true,'label' => 'Configuracion:'])
             ->add('placaRemolque',TextType::class,['required' => true,'label' => 'Placa remolque:'])
             ->add('modelo',NumberType::class,['required' => true,'label' => 'Modelo:'])
             ->add('modeloRepotenciado',NumberType::class,['required' => false,'label' => 'Modelo repotenciado:'])
-            ->add('motor',NumberType::class,['required' => true,'label' => 'Motor:'])
+            ->add('motor',TextType::class,['required' => true,'label' => 'Motor:'])
             ->add('numeroEjes',NumberType::class,['required' => true,'label' => 'Numero ejes:'])
             ->add('chasis',TextType::class,['required' => true,'label' => 'Chasis:'])
             ->add('serie',TextType::class,['required' => true,'label' => 'Serie:'])

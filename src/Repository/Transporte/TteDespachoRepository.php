@@ -403,10 +403,14 @@ class TteDespachoRepository extends ServiceEntityRepository
         d.vrFletePago,
         d.vrAnticipo,
         d.vrRetencionFuente,
-        d.codigoCiudadOrigenFk as codigoCiudadOrigen,
-        d.codigoCiudadDestinoFk as codigoCiudadDestino
+        d.codigoCiudadOrigenFk,
+        d.codigoCiudadDestinoFk,
+        co.codigoInterface as codigoCiudadOrigen,
+        cd.codigoInterface as codigoCiudadDestino
         FROM App\Entity\Transporte\TteDespacho d          
-        LEFT JOIN d.vehiculoRel v             
+        LEFT JOIN d.vehiculoRel v 
+        LEFT JOIN d.ciudadOrigenRel co
+        LEFT JOIN d.ciudadDestinoRel cd          
         WHERE d.codigoDespachoPk = :codigoDespacho
         ORDER BY d.codigoDespachoPk DESC '
         )->setParameter('codigoDespacho', $codigoDespacho);
@@ -464,7 +468,9 @@ class TteDespachoRepository extends ServiceEntityRepository
                 'movil' => $arTerceroPoseedor['movil'],
                 'direccion' => utf8_decode($arTerceroPoseedor['direccion']),
                 'codigoCiudad' => $arTerceroPoseedor['codigoCiudad'],
-                'conductor' => 0);
+                'conductor' => 0,
+                'codigoSede' => 1,
+                'nombreSede' => "PRINCIPAL");
         }
 
         $arrConductor = $em->getRepository(TteConductor::class)->dqlRndc($arrDespacho['codigoConductorFk']);
@@ -480,7 +486,36 @@ class TteDespachoRepository extends ServiceEntityRepository
             'conductor' => 1,
             'fechaVenceLicencia' => $arrConductor['fechaVenceLicencia'],
             'numeroLicencia' => $arrConductor['numeroLicencia'],
-            'categoriaLicencia' => $arrConductor['categoriaLicencia']);
+            'categoriaLicencia' => $arrConductor['categoriaLicencia'],
+            'codigoSede' => 1,
+            'nombreSede' => "PRINCIPAL");
+        //Remitente
+        $arrTerceros[] = array('identificacionTipo' => "C",
+            'identificacion' => "222222222",
+            'nombre1' => "VARIOS REMITENTE",
+            'apellido1' => "VARIOS",
+            'apellido2' => "VARIOS",
+            'direccion' => "CALLE PRINCIPAL",
+            'telefono' => "",
+            'movil' => "",
+            'conductor' => 0,
+            'codigoCiudad' => $arrDespacho['codigoCiudadOrigen'],
+            'codigoSede' => $arrDespacho['codigoCiudadOrigenFk'],
+            'nombreSede' => $arrDespacho['codigoCiudadOrigen']."PRINCIPAL");
+
+        //Destinatario
+        $arrTerceros[] = array('identificacionTipo' => "C",
+            'identificacion' => "333333333",
+            'nombre1' => "VARIOS DESTINATARIO",
+            'apellido1' => "VARIOS",
+            'apellido2' => "VARIOS",
+            'direccion' => "CALLE PRINCIPAL",
+            'telefono' => "",
+            'movil' => "",
+            'conductor' => 0,
+            'codigoCiudad' => $arrDespacho['codigoCiudadDestino'],
+            'codigoSede' => $arrDespacho['codigoCiudadDestinoFk'],
+            'nombreSede' => $arrDespacho['codigoCiudadDestino']."PRINCIPAL");
 
         foreach ($arrTerceros as $arrTercero) {
             $strPoseedorXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
@@ -502,8 +537,8 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $strPoseedorXML .= "<PRIMERAPELLIDOIDTERCERO>" . $arrTercero['apellido1'] . "</PRIMERAPELLIDOIDTERCERO>
                                                             <SEGUNDOAPELLIDOIDTERCERO>" . $arrTercero['apellido2'] . "</SEGUNDOAPELLIDOIDTERCERO>";
             }
-            $strPoseedorXML .= "<CODSEDETERCERO>1</CODSEDETERCERO>";
-            $strPoseedorXML .= "<NOMSEDETERCERO>PRINCIPAL</NOMSEDETERCERO>";
+            $strPoseedorXML .= "<CODSEDETERCERO>" . $arrTercero['codigoSede'] . "</CODSEDETERCERO>";
+            $strPoseedorXML .= "<NOMSEDETERCERO>" . $arrTercero['nombreSede'] . "</NOMSEDETERCERO>";
             if ($arrTercero['telefono'] != "") {
                 $strPoseedorXML .= "<NUMTELEFONOCONTACTO>" . $arrTercero['telefono'] . "</NUMTELEFONOCONTACTO>";
             }
@@ -596,8 +631,6 @@ class TteDespachoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $retorno = true;
-        $destinatario = "222222222";
-        $propietario = "222222222";
         $strGuiaXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
                         <root>
                             <acceso>
@@ -619,14 +652,14 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 <CANTIDADCARGADA>" . $arrDespacho['pesoReal'] . "</CANTIDADCARGADA>
                                 <UNIDADMEDIDACAPACIDAD>1</UNIDADMEDIDACAPACIDAD>
                                 <CODTIPOIDREMITENTE>C</CODTIPOIDREMITENTE>
-                                <NUMIDREMITENTE>$propietario</NUMIDREMITENTE>
-                                <CODSEDEREMITENTE>1</CODSEDEREMITENTE>
+                                <NUMIDREMITENTE>222222222</NUMIDREMITENTE>
+                                <CODSEDEREMITENTE>" . $arrDespacho['codigoCiudadOrigenFk'] . "</CODSEDEREMITENTE>
                                 <CODTIPOIDDESTINATARIO>C</CODTIPOIDDESTINATARIO>
-                                <NUMIDDESTINATARIO>$destinatario</NUMIDDESTINATARIO>
-                                <CODSEDEDESTINATARIO>1</CODSEDEDESTINATARIO>
+                                <NUMIDDESTINATARIO>333333333</NUMIDDESTINATARIO>
+                                <CODSEDEDESTINATARIO>" . $arrDespacho['codigoCiudadDestinoFk'] . "</CODSEDEDESTINATARIO>
                                 <CODTIPOIDPROPIETARIO>C</CODTIPOIDPROPIETARIO>
-                                <NUMIDPROPIETARIO>$propietario</NUMIDPROPIETARIO>
-                                <CODSEDEPROPIETARIO>1</CODSEDEPROPIETARIO>
+                                <NUMIDPROPIETARIO>222222222</NUMIDPROPIETARIO>
+                                <CODSEDEPROPIETARIO>" . $arrDespacho['codigoCiudadOrigenFk'] . "</CODSEDEPROPIETARIO>
                                 <DUENOPOLIZA>E</DUENOPOLIZA>
                                 <NUMPOLIZATRANSPORTE>" . $arConfiguracionTransporte->getNumeroPoliza() . "</NUMPOLIZATRANSPORTE>
                                 <FECHAVENCIMIENTOPOLIZACARGA>" . $arConfiguracionTransporte->getFechaVencePoliza()->format('d/m/Y') . "</FECHAVENCIMIENTOPOLIZACARGA>
@@ -646,10 +679,11 @@ class TteDespachoRepository extends ServiceEntityRepository
         $cadena_xml = simplexml_load_string($respuesta);
         if ($cadena_xml->ErrorMSG != "") {
             $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
-            $retorno = false;
-            Mensajes::error($errorRespuesta);
+            if(substr($errorRespuesta, 0, 9) != "DUPLICADO") {
+                $retorno = false;
+                Mensajes::error($errorRespuesta);
+            }
         }
-
 
         return $retorno;
 

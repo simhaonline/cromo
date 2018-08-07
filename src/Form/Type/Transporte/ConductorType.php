@@ -52,7 +52,7 @@ class ConductorType extends AbstractType
             ->add('categoriaLicencia',TextType::class,['required' => true,'label' => 'Categoria:'])
             ->add('fechaVenceLicencia', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('barrio',TextType::class,['required' => true,'label' => 'Barrio:'])
-            ->add('alias',TextType::class,['required' => true,'label' => 'Alias:'])
+            ->add('alias',TextType::class,['required' => false,'label' => 'Alias:'])
             ->add('codigoVehiculo',TextType::class,['required' => true,'label' => 'Codigo vehiculo:'])
             ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])

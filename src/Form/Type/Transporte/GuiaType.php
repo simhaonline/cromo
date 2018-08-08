@@ -26,14 +26,6 @@ class GuiaType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('guiaTipoRel', EntityType::class, array(
-                'class' => TteGuiaTipo::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('gt')
-                        ->orderBy('gt.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-            ))
             ->add('servicioRel', EntityType::class, array(
                 'class' => TteServicio::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -58,7 +50,6 @@ class GuiaType extends AbstractType {
                 },
                 'choice_label' => 'nombre',
             ))
-            ->add('numero', NumberType::class, array('required' => false))
             ->add('documentoCliente', TextType::class)
             ->add('remitente', TextType::class)
             ->add('nombreDestinatario', TextType::class)

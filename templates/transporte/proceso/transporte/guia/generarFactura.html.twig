@@ -27,9 +27,10 @@
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
-            <th>ID</th>
+            <th>GUIA</th>
             <th>OI</th>
             <th>OC</th>
+            <th>TIPO</th>
             <th>NUMERO</th>
             <th>DOC_CLIENTE</th>
             <th>FECHA</th>
@@ -37,8 +38,6 @@
             <th>DESTINO</th>
             <th>UND</th>
             <th>PES</th>
-            <th>FECHA</th>
-            <th>HORA</th>
             <th>NOV</th>
             <th></th>
         </tr>
@@ -49,6 +48,7 @@
                 <td>{{ arGuia.codigoGuiaPk }}</td>
                 <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
+                <td>{{ arGuia.codigoGuiaTipoFk }}</td>
                 <td>{{ arGuia.numero }}</td>
                 <td>{{ arGuia.documentoCliente }}</td>
                 <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
@@ -56,8 +56,6 @@
                 <td>{{ arGuia.ciudadDestino }}</td>
                 <td class="numero">{{ arGuia.unidades }}</td>
                 <td class="numero">{{ arGuia.pesoReal }}</td>
-                <td style="text-align: right"><input class="input-grid" type="text" name="txtFechaEntrega{{ arGuia.codigoGuiaPk }}" value="{{ "now"|date("Y/m/d") }}" size="20" style="text-align: right; width:80px" onclick="this.select()"/></td>
-                <td style="text-align: right"><input class="input-grid" type="text" name="txtHoraEntrega{{ arGuia.codigoGuiaPk }}"  value="{{ "now"|date("H:i") }}" size="10" style="text-align: right; width:40px" onclick="this.select()"/></td>
                 {{ validarTipo(arGuia.estadoNovedad) }}
                 <td class="seleccion"><input type="checkbox" name="chkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
             </tr>

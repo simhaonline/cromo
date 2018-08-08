@@ -25,24 +25,17 @@ class GenerarFacturaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('btnGenerar', SubmitType::class, array('label' => 'Entregar'))
+            ->add('btnGenerar', SubmitType::class, array('label' => 'Generar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $session = new session;
-                $session->set('filtroTteDespachoCodigo', $form->get('txtDespachoCodigo')->getData());
-                $codigoDespacho = $form->get('txtDespachoCodigo')->getData();
-            }
-            if ($form->get('btnEntrega')->isClicked()) {
+            if ($form->get('btnGenerar')->isClicked()) {
                 $arrGuias = $request->request->get('chkSeleccionar');
-                $arrControles = $request->request->All();
-                $respuesta = $this->getDoctrine()->getRepository(TteGuia::class)->entrega($arrGuias, $arrControles);
-                $codigoDespacho = $form->get('txtDespachoCodigo')->getData();
+                $respuesta = $this->getDoctrine()->getRepository(TteGuia::class)->generarFactura($arrGuias);
             }
         }
-        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaGenerarFactura(), $request->query->getInt('page', 1), 30);
-        return $this->render('transporte/proceso/transporte/guia/entrega.html.twig', [
+        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaGenerarFactura(), $request->query->getInt('page', 1), 100);
+        return $this->render('transporte/proceso/transporte/guia/generarFactura.html.twig', [
             'arGuias' => $arGuias,
             'form' => $form->createView()
         ]);

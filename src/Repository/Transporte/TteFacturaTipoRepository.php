@@ -14,6 +14,7 @@ class TteFacturaTipoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TteFacturaTipo::class);
     }
+
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
             ->from('App:Transporte\TteFacturaTipo','ft')

@@ -42,7 +42,7 @@ class FacturaController extends Controller
             }
             if ($form->get('btnPdf')->isClicked()) {
                 $formato = new ControlFactura();
-                $formato->Generar($em);
+                $formato->Generar($em, $session->get('filtroTteFecha') );
             }
         }
         $arFacturasTipos = $this->getDoctrine()->getRepository(TteFacturaTipo::class)->controlFactura($session->get('filtroTteFecha'));

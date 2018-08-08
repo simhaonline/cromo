@@ -45,7 +45,7 @@ class ProduccionClienteController extends Controller
                 if ($form->get('btnExcel')->isClicked()) {
                     $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
                     $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
-                    General::get()->setExportar($em->createQuery($this->getDoctrine()->getRepository(TteGuia::class)->informeProduccionCliente($fechaDesde, $fechaHasta))->execute(), "Guias");
+                    General::get()->setExportar($em->createQuery($this->getDoctrine()->getRepository(TteGuia::class)->informeProduccionCliente($fechaDesde, $fechaHasta))->execute(), "Produccion_Cliente");
                 }
             }
         }

@@ -14,6 +14,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use App\General\General;
 class ProduccionClienteController extends Controller
 {
    /**
@@ -22,54 +23,35 @@ class ProduccionClienteController extends Controller
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $form = $this->formularioFiltro();
-        $form->handleRequest($request);
-        $arGuias = null;
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                if ($form->get('BtnFiltrar')->isClicked()) {
-                    $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
-                    $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
-                    $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->informeProduccionCliente($fechaDesde, $fechaHasta);
-                    $form = $this->formularioFiltro();
-                }
-            }
-        }
-
-        return $this->render('transporte/informe/comercial/guia/informeProduccion.html.twig', [
-            'arGuias' => $arGuias,
-            'form' => $form->createView()]);
-    }
-
-    private function filtrar($form)
-    {
-        $session = new session;
-        $arRuta = $form->get('rutaRel')->getData();
-        if ($arRuta) {
-            $session->set('filtroTteCodigoRuta', $arRuta->getCodigoRutaPk());
-        } else {
-            $session->set('filtroTteCodigoRuta', null);
-        }
-        $arServicio = $form->get('servicioRel')->getData();
-        if ($arServicio) {
-            $session->set('filtroTteCodigoServicio', $arServicio->getCodigoServicioPk());
-        } else {
-            $session->set('filtroTteCodigoServicio', null);
-        }
-        $session->set('filtroTteMostrarDevoluciones', $form->get('ChkMostrarDevoluciones')->getData());
-    }
-
-    private function formularioFiltro()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $session = new session;
+        $paginator = $this->get('knp_paginator');
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $fecha])
-            ->add('BtnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
-        return $form;
+        $form->handleRequest($request);
+        $arGuias = null;
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                if ($form->get('btnFiltrar')->isClicked()) {
+                    $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
+                    $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
+                    $queryBuilder = $this->getDoctrine()->getRepository(TteGuia::class)->informeProduccionCliente($fechaDesde, $fechaHasta);
+                    $arGuias = $queryBuilder->getQuery()->getResult();
+                    $arGuias = $paginator->paginate($arGuias, $request->query->getInt('page', 1), 1000);
+                }
+                if ($form->get('btnExcel')->isClicked()) {
+                    $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
+                    $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
+                    General::get()->setExportar($em->createQuery($this->getDoctrine()->getRepository(TteGuia::class)->informeProduccionCliente($fechaDesde, $fechaHasta))->execute(), "Guias");
+                }
+            }
+        }
+        return $this->render('transporte/informe/comercial/guia/informeProduccion.html.twig', [
+            'arGuias' => $arGuias,
+            'form' => $form->createView()]);
     }
 
 

@@ -797,6 +797,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
         $queryBuilder
             ->select('g.codigoGuiaPk')
+            ->addSelect('g.codigoGuiaTipoFk')
+            ->addSelect('g.codigoServicioFk')
             ->addSelect('g.numero')
             ->addSelect('g.documentoCliente')
             ->addSelect('g.nombreDestinatario')
@@ -806,7 +808,9 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.fechaIngreso')
             ->addSelect('g.fechaEntrega')
             ->addSelect('cd.nombre as destino')
+            ->addSelect('c.nombreCorto as clienteNombreCorto')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.clienteRel', 'c')
             ->where("g.fechaSoporte >= '" . $fechaDesde . " 00:00:00'")
             ->andWhere("g.fechaSoporte <= '" . $fechaHasta . " 23:59:59'")
             ->andWhere('g.estadoEntregado = 1')

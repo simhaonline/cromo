@@ -2,9 +2,12 @@
 <h4>A continuacion le relaciono los envios entregados:</h4>
     <table border="1">
         <tr>
+            <th>TIPO</th>
+            <th>SERV</th>
             <th>GUIA</th>
             <th>FECHA</th>
             <th>ENTREGA</th>
+            <th>CLIENTE</th>
             <th>DOCUMENTO</th>
             <th>DESTINATARIO</th>
             <th>DESTINO</th>
@@ -14,16 +17,18 @@
         </tr>
         {% for arGuia in arGuias %}
         <tr>
+            <td>{{ arGuia.codigoGuiaTipoFk }}</td>
+            <td>{{ arGuia.codigoServicioFk }}</td>
             <td>{{ arGuia.codigoGuiaPk }}</td>
             <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
             <td>{{ arGuia.fechaEntrega | date('Y-m-d') }}</td>
+            <td>{{ arGuia.clienteNombreCorto }}</td>
             <td>{{ arGuia.documentoCliente }}</td>
             <td>{{ arGuia.nombreDestinatario }}</td>
             <td>{{ arGuia.destino }}</td>
             <td>{{ arGuia.unidades }}</td>
             <td>{{ arGuia.vrFlete }}</td>
             <td>{{ arGuia.vrManejo }}</td>
-
         </tr>
         {% endfor %}
     </table>

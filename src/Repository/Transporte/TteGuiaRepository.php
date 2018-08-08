@@ -1489,4 +1489,22 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     }
 
+    public function tableroProduccionMes($mes): array
+    {
+        $em = $this->getEntityManager();
+        $sql = "SELECT DAY(fecha_ingreso) as dia, 
+                SUM(vr_flete) as flete, 
+                SUM(vr_manejo) as manejo, 
+                SUM(vr_flete + vr_manejo) as total 
+                FROM tte_guia 
+                WHERE fecha_ingreso >= '2018-08-01' 
+                GROUP BY DAY(fecha_ingreso)";
+        $connection = $em->getConnection();
+        $statement = $connection->prepare($sql);
+        $statement->execute();
+        $results = $statement->fetchAll();
+
+        return $results;
+    }
+
 }

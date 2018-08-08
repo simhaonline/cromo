@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Transporte\Tablero;
+namespace App\Controller\Transporte\Tablero\Recogida;
 
 use App\Formato\Despacho;
 use App\Entity\Transporte\TteRecogida;
@@ -10,10 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Ob\HighchartsBundle\Highcharts\Highchart;
 
-class RecogidaController extends Controller
+class ResumenController extends Controller
 {
    /**
-    * @Route("/transporte/tab/recogida/recogida", name="transporte_tablero_recogida_recogida")
+    * @Route("/transporte/tablero/recogida/recogida/resumen", name="transporte_tablero_recogida_recogida_resumen")
     */    
     public function principal(Request $request)
     {

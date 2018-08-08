@@ -44,8 +44,7 @@
                         </a>
                     </li>
                     <li class="divider"></li>
-                    <li>
-                        <a href="{{ path('transporte_tablero_guia') }}">
+                    <li><a href="{{ path('transporte_tablero_transporte_guia_pendiente') }}">
                             <div>
                                 <i class="fa fa-comment fa-fw"></i> Guias
                                 <span class="pull-right text-muted small">4 minutes ago</span>
@@ -366,7 +365,20 @@
                             <li>
                                 <a href="#">Recogida <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_tablero_recogida_recogida') }}">Recogida</a></li>
+                                    <li><a href="{{ path('transporte_tablero_recogida_recogida_resumen') }}">Recogida</a></li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                            <li>
+                                <a href="#">Transporte <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="#">Guia <span class="fa arrow"></span></a>
+                                        <ul class="nav nav-third-level">
+                                            <li><a href="{{ path('transporte_tablero_transporte_guia_pendiente') }}">Pendiente</a></li>
+                                            <li><a href="{{ path('transporte_tablero_transporte_guia_produccion') }}">Produccion</a></li>
+                                        </ul>
+                                    </li>
                                 </ul>
                                 <!-- /.nav-third-level -->
                             </li>

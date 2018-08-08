@@ -1,23 +1,24 @@
 <?php
 
-namespace App\Controller\Transporte\Tablero;
+namespace App\Controller\Transporte\Tablero\Transporte\Guia;
 
-use App\Entity\TteGuia;
+
+use App\Entity\Transporte\TteGuia;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class GuiaController extends Controller
+class PendienteController extends Controller
 {
    /**
-    * @Route("/transporte/tab/guia", name="transporte_tablero_guia")
+    * @Route("/transporte/tablero/transporte/guia/pendiente", name="transporte_tablero_transporte_guia_pendiente")
     */    
     public function principal(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $arrResumenPendientes = $em->getRepository(TteGuia::class)->resumenPendientesCuenta();
-        return $this->render('tablero/guia.html.twig', [
+        return $this->render('transporte/tablero/transporte/guia/pendiente.html.twig', [
             'arrResumenPendientes' => $arrResumenPendientes
             ]);
     }

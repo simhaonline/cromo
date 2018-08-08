@@ -1460,7 +1460,6 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->where('tg.estadoEntregado = 0')
             ->andWhere('tg.estadoDespachado = 1')
             ->andWhere('tg.estadoAnulado = 0');
-
         $queryBuilder->orderBy('tg.codigoGuiaPk', 'DESC');
         switch ($session->get('filtroTteGuiaEstadoNovedad')) {
             case '0':

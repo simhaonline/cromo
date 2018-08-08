@@ -434,11 +434,10 @@ class TteDespachoRepository extends ServiceEntityRepository
                         if($retorno) {
                             $retorno = $this->reportarRndcGuia($cliente, $arConfiguracionTransporte, $arrDespacho);
                             if($retorno) {
-                            //$respuesta = $this->reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho);
+                                $this->reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho, $arDespacho);
                             }
                         }
                     }
-
                 } catch (Exception $e) {
                     return "Error al conectar el servicio: " . $e;
                 }
@@ -689,10 +688,18 @@ class TteDespachoRepository extends ServiceEntityRepository
 
     }
 
-    public function reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho): string
+    /**
+     * @param $cliente
+     * @param $arConfiguracionTransporte
+     * @param $arrDespacho
+     * @param $arDespacho
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function reportarRndcManifiesto($cliente, $arConfiguracionTransporte, $arrDespacho, $arDespacho): string
     {
         $em = $this->getEntityManager();
-        $respuesta = true;
+        $retorno = true;
         $guia = $arrDespacho['numero'];
         $arrPoseedor = $em->getRepository(TtePoseedor::class)->dqlRndcManifiesto($arrDespacho['codigoPoseedorFk']);
         $arrConductor = $em->getRepository(TteConductor::class)->dqlRndcManifiesto($arrDespacho['codigoConductorFk']);
@@ -710,7 +717,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                                 <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
                                                 <NUMMANIFIESTOCARGA>" . $arrDespacho['numero'] . "</NUMMANIFIESTOCARGA>
                                                 <CODOPERACIONTRANSPORTE>P</CODOPERACIONTRANSPORTE>
-                                                <FECHAEXPEDICIONMANIFIESTO>" . $arrDespacho['fechaSalida']->format('Y/m/d') . "</FECHAEXPEDICIONMANIFIESTO>
+                                                <FECHAEXPEDICIONMANIFIESTO>" . $arrDespacho['fechaSalida']->format('d/m/Y') . "</FECHAEXPEDICIONMANIFIESTO>
                                                 <CODMUNICIPIOORIGENMANIFIESTO>" . $arrDespacho['codigoCiudadOrigen'] . "</CODMUNICIPIOORIGENMANIFIESTO>
                                                 <CODMUNICIPIODESTINOMANIFIESTO>" . $arrDespacho['codigoCiudadDestino'] . "</CODMUNICIPIODESTINOMANIFIESTO>
                                                 <CODIDTITULARMANIFIESTO>" . $arrPoseedor['codigoIdentificacionFk'] . "</CODIDTITULARMANIFIESTO>
@@ -722,7 +729,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                                 <RETENCIONFUENTEMANIFIESTO>" . $arrDespacho['vrRetencionFuente'] . "</RETENCIONFUENTEMANIFIESTO>
                                                 <RETENCIONICAMANIFIESTOCARGA>0</RETENCIONICAMANIFIESTOCARGA>
                                                 <VALORANTICIPOMANIFIESTO>" . $arrDespacho['vrAnticipo'] . "</VALORANTICIPOMANIFIESTO>
-                                                <FECHAPAGOSALDOMANIFIESTO>" . $arrDespacho['fechaSalida']->format('Y/m/d') . "</FECHAPAGOSALDOMANIFIESTO>                                                
+                                                <FECHAPAGOSALDOMANIFIESTO>" . $arrDespacho['fechaSalida']->format('d/m/Y') . "</FECHAPAGOSALDOMANIFIESTO>                                                
                                                 <CODRESPONSABLEPAGOCARGUE>E</CODRESPONSABLEPAGOCARGUE>
                                                 <CODRESPONSABLEPAGODESCARGUE>E</CODRESPONSABLEPAGODESCARGUE>
                                                 <OBSERVACIONES>NADA</OBSERVACIONES>
@@ -734,13 +741,112 @@ class TteDespachoRepository extends ServiceEntityRepository
         $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strManifiestoXML));
         $cadena_xml = simplexml_load_string($respuesta);
         if ($cadena_xml->ErrorMSG != "") {
-            $respuesta = false;
-            echo $cadena_xml->ErrorMSG;
+            $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
+            //if(substr($errorRespuesta, 0, 9) != "DUPLICADO") {
+                $retorno = false;
+                Mensajes::error($errorRespuesta);
+            //}
+        } else {
+            if($cadena_xml->ingresoid) {
+                $arDespacho->setNumeroRndc(utf8_decode($cadena_xml->ingresoid));
+                $em->persist($arDespacho);
+                $em->flush();
+            }
         }
 
 
-        return $respuesta;
+        return $retorno;
 
+    }
+
+    public function cumplirRndc($codigo): string
+    {
+        $em = $this->getEntityManager();
+        $arDespacho = $em->getRepository(TteDespacho::class)->find($codigo);
+        if($arDespacho->getEstadoCumplirRndc() == 0) {
+            try {
+                $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
+                $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
+                $strXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+                            <root>
+                                <acceso>
+                                    <username>" . $arConfiguracionTransporte->getUsuarioRndc() . "</username>
+                                    <password>" . $arConfiguracionTransporte->getClaveRndc() . "</password>
+                                </acceso>
+                                <solicitud>
+                                    <tipo>1</tipo>
+                                    <procesoid>5</procesoid>
+                                </solicitud>
+                                <variables>
+                                    <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
+                                    <CONSECUTIVOREMESA>100" . $arDespacho->getNumero() . "</CONSECUTIVOREMESA>
+                                    <NUMMANIFIESTOCARGA>" . $arDespacho->getNumero() . "</NUMMANIFIESTOCARGA>
+                                    <TIPOCUMPLIDOREMESA>C</TIPOCUMPLIDOREMESA>
+                                    <FECHALLEGADACARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHALLEGADACARGUE>
+                                    <HORALLEGADACARGUEREMESA>14:00</HORALLEGADACARGUEREMESA>
+                                    <FECHAENTRADACARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHAENTRADACARGUE>
+                                    <HORAENTRADACARGUEREMESA>16:00</HORAENTRADACARGUEREMESA>
+                                    <FECHASALIDACARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHASALIDACARGUE>
+                                    <HORASALIDACARGUEREMESA>17:00</HORASALIDACARGUEREMESA>
+                                                                        
+                                    <FECHALLEGADADESCARGUE>" . $arDespacho->getFechaSoporte()->format('d/m/Y') . "</FECHALLEGADADESCARGUE>
+                                    <HORALLEGADADESCARGUECUMPLIDO>18:00</HORALLEGADADESCARGUECUMPLIDO>
+                                    <FECHAENTRADADESCARGUE>" . $arDespacho->getFechaSoporte()->format('d/m/Y') . "</FECHAENTRADADESCARGUE>
+                                    <HORAENTRADADESCARGUECUMPLIDO>19:00</HORAENTRADADESCARGUECUMPLIDO>
+                                    <FECHASALIDADESCARGUE>" . $arDespacho->getFechaSoporte()->format('d/m/Y') . "</FECHASALIDADESCARGUE>
+                                    <HORASALIDADESCARGUECUMPLIDO>20:00</HORASALIDADESCARGUECUMPLIDO>                                    
+                                    <CANTIDADENTREGADA>" . $arDespacho->getCantidad() . "</CANTIDADENTREGADA>";
+                $strXML .= "</variables>
+                              </root>";
+                $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strXML));
+                $cadena_xml = simplexml_load_string($respuesta);
+                if ($cadena_xml->ErrorMSG != "") {
+                    $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
+                    Mensajes::error($errorRespuesta);
+                } else {
+                    if($cadena_xml->ingresoid) {
+                        $strXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+                            <root>
+                                <acceso>
+                                    <username>" . $arConfiguracionTransporte->getUsuarioRndc() . "</username>
+                                    <password>" . $arConfiguracionTransporte->getClaveRndc() . "</password>
+                                </acceso>
+                                <solicitud>
+                                    <tipo>1</tipo>
+                                    <procesoid>6</procesoid>
+                                </solicitud>
+                                <variables>
+                                    <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
+                                    <NUMMANIFIESTOCARGA>" . $arDespacho->getNumero() . "</NUMMANIFIESTOCARGA>
+                                    <TIPOCUMPLIDOMANIFIESTO>C</TIPOCUMPLIDOMANIFIESTO>
+                                    <FECHAENTREGADOCUMENTOS>" . $arDespacho->getFechaSoporte()->format('d/m/Y') . "</FECHAENTREGADOCUMENTOS>
+                                    <VALORADICIONALHORASCARGUE>0</VALORADICIONALHORASCARGUE>                                    
+                                    <VALORSOBREANTICIPO>0</VALORSOBREANTICIPO>";
+
+                        $strXML .= "</variables>
+                                                        </root>";
+
+                        $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strXML));
+                        $cadena_xml = simplexml_load_string($respuesta);
+                        if ($cadena_xml->ErrorMSG != "") {
+                            $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
+                            Mensajes::error($errorRespuesta);
+                        } else {
+                            if($cadena_xml->ingresoid) {
+                                $arDespacho->setEstadoCumplirRndc(1);
+                                $em->persist($arDespacho);
+                                $em->flush();
+                            }
+                        }
+                    }
+                }
+            } catch (Exception $e) {
+                return "Error al conectar el servicio: " . $e;
+            }
+        } else {
+            Mensajes::error("El viaje ya fue cumplidor en el rndc");
+        }
+        return true;
     }
 
     /**
@@ -756,6 +862,48 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->where("dd.codigoDespachoFk= {$codigoDespacho} ");
         $resultado =  $queryBuilder->getQuery()->getSingleResult();
         return $resultado[1];
+    }
+
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function pendienteCumplirRndc()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
+            ->select('d.codigoDespachoPk')
+            ->addSelect('d.fechaSalida')
+            ->addSelect('d.fechaSoporte')
+            ->addSelect('d.numero')
+            ->addSelect('d.codigoOperacionFk')
+            ->addSelect('d.codigoVehiculoFk')
+            ->addSelect('d.codigoRutaFk')
+            ->addSelect('co.nombre AS ciudadOrigen')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('d.cantidad')
+            ->addSelect('d.unidades')
+            ->addSelect('d.pesoReal')
+            ->addSelect('d.pesoVolumen')
+            ->addSelect('d.vrFlete')
+            ->addSelect('d.vrManejo')
+            ->addSelect('d.vrDeclara')
+            ->addSelect('d.vrFletePago')
+            ->addSelect('d.vrAnticipo')
+            ->addSelect('c.nombreCorto AS conductorNombre')
+            ->addSelect('d.estadoAprobado')
+            ->addSelect('d.estadoAutorizado')
+            ->addSelect('d.estadoAnulado')
+            ->addSelect('d.estadoSoporte')
+            ->addSelect('dt.nombre AS despachoTipo')
+            ->addSelect('d.usuario')
+            ->leftJoin('d.despachoTipoRel', 'dt')
+            ->leftJoin('d.ciudadOrigenRel', 'co')
+            ->leftJoin('d.ciudadDestinoRel ', 'cd')
+            ->leftJoin('d.conductorRel', 'c')
+            ->where('d.numeroRndc <> 0 AND d.estadoCumplirRndc = 0');
+        $queryBuilder->orderBy('d.fechaSalida', 'DESC');
+        return $queryBuilder;
+
     }
 
 }

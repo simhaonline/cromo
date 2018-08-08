@@ -43,6 +43,11 @@ class TteDespacho
     private $fechaLlegada;
 
     /**
+     * @ORM\Column(name="fecha_soporte", type="datetime", nullable=true)
+     */
+    private $fechaSoporte;
+
+    /**
      * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoOperacionFk;
@@ -188,9 +193,19 @@ class TteDespacho
     private $estadoCerrado = false;
 
     /**
+     * @ORM\Column(name="estado_soporte", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoSoporte = false;
+
+    /**
      * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoAnulado = false;
+
+    /**
+     * @ORM\Column(name="estado_cumplir_rndc", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoCumplirRndc = false;
 
     /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
@@ -1067,6 +1082,54 @@ class TteDespacho
     public function setMonitoreosDespachoRel($monitoreosDespachoRel): void
     {
         $this->monitoreosDespachoRel = $monitoreosDespachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoSoporte()
+    {
+        return $this->estadoSoporte;
+    }
+
+    /**
+     * @param mixed $estadoSoporte
+     */
+    public function setEstadoSoporte($estadoSoporte): void
+    {
+        $this->estadoSoporte = $estadoSoporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoCumplirRndc()
+    {
+        return $this->estadoCumplirRndc;
+    }
+
+    /**
+     * @param mixed $estadoCumplirRndc
+     */
+    public function setEstadoCumplirRndc($estadoCumplirRndc): void
+    {
+        $this->estadoCumplirRndc = $estadoCumplirRndc;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaSoporte()
+    {
+        return $this->fechaSoporte;
+    }
+
+    /**
+     * @param mixed $fechaSoporte
+     */
+    public function setFechaSoporte($fechaSoporte): void
+    {
+        $this->fechaSoporte = $fechaSoporte;
     }
 
 

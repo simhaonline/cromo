@@ -95,6 +95,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.vrFlete')
             ->addSelect('tg.vrManejo')
             ->addSelect('tg.vrRecaudo')
+            ->addSelect('tg.vrDeclara')
             ->addSelect('tg.estadoImpreso')
             ->addSelect('tg.estadoAutorizado')
             ->addSelect('tg.estadoAnulado')

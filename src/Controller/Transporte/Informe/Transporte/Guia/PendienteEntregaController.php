@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -27,6 +28,7 @@ class PendienteEntregaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('chkEstadoNovedad', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteGuiaEstadoNovedad'), 'required' => false])
             ->add('fechaDesdeEntrega', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => $session->get('filtroFechaDesdeEntrega')])
             ->add('fechaHastaEntrega', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $session->get('filtroFechaHastaEntrega')])
             ->add('txtGuia', NumberType::class, ['label' => 'Guia: ', 'required' => false, 'data' => $session->get('filtroNumeroGuia')])
@@ -42,6 +44,7 @@ class PendienteEntregaController extends Controller
             $session->set('filtroNumeroGuia', $form->get('txtGuia')->getData());
             $session->set('filtroConductor', $form->get('txtConductor')->getData());
             $session->set('filtroDocumentoCliente', $form->get('txtDocumentoCliente')->getData());
+            $session->set('filtroTteGuiaEstadoNovedad', $form->get('chkEstadoNovedad')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
             General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->excelPendienteEntrega())->execute(), "Pendiente entrega");

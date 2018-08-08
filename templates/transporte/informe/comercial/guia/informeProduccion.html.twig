@@ -67,14 +67,6 @@
         <td style="text-align: right">{{ douManejo | number_format(0, '.', ',') }}</td>
         <td style="text-align: right">{{ douTotal | number_format(0, '.', ',') }}</td>
     </table>
-    <div class="btn-group" style="float: left">
-        <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arGuias.getTotalItemCount }}</span></div>
-        </div>
-    </div>
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-        {{ knp_pagination_render(arGuias) }}
-    </div>
     <div class="btn-group">
         {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
     </div>

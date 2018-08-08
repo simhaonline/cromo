@@ -423,6 +423,14 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->andWhere('tg.estadoDespachado = 1')
             ->andWhere('tg.estadoAnulado = 0');
         $dql->orderBy('tg.codigoGuiaPk', 'DESC');
+        switch ($session->get('filtroTteGuiaEstadoNovedad')) {
+            case '0':
+                $dql->andWhere("tg.estadoNovedad = 0");
+                break;
+            case '1':
+                $dql->andWhere("tg.estadoNovedad = 1");
+                break;
+        }
         if ($session->get('filtroNumeroGuia')) {
             $dql->andWhere("tg.codigoGuiaPk = '{$session->get('filtroNumeroGuia')}'");
         }
@@ -1452,8 +1460,16 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->where('tg.estadoEntregado = 0')
             ->andWhere('tg.estadoDespachado = 1')
             ->andWhere('tg.estadoAnulado = 0');
+
         $queryBuilder->orderBy('tg.codigoGuiaPk', 'DESC');
-            $queryBuilder->orderBy('tg.codigoGuiaPk', 'DESC');
+        switch ($session->get('filtroTteGuiaEstadoNovedad')) {
+            case '0':
+                $queryBuilder->andWhere("tg.estadoNovedad = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("tg.estadoNovedad = 1");
+                break;
+        }
         if ($session->get('filtroNumeroGuia')) {
             $queryBuilder->andWhere("tg.codigoGuiaPk = '{$session->get('filtroNumeroGuia')}'");
         }

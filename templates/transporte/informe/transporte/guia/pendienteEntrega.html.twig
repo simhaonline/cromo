@@ -10,7 +10,7 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.txtGuia, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-1 control-label">Conductor:</label>
+                <label class="col-sm-2 control-label">Conductor:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtConductor, { 'attr': {'class': 'form-control'} }) }}
                 </div>
@@ -19,6 +19,10 @@
                 <label class="col-sm-1 control-label">Documento cliente:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtDocumentoCliente, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Novedad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.chkEstadoNovedad) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

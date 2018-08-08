@@ -229,6 +229,11 @@ class TteGuia
     private $estadoNovedad = false;
 
     /**
+     * @ORM\Column(name="estado_factura_exportado", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $estadoFacturaExportado = false;
+
+    /**
      * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
      */
     private $codigoDespachoFk;
@@ -1694,6 +1699,22 @@ class TteGuia
     public function setGuiasDetallesGuiaRel($guiasDetallesGuiaRel): void
     {
         $this->guiasDetallesGuiaRel = $guiasDetallesGuiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoFacturaExportado()
+    {
+        return $this->estadoFacturaExportado;
+    }
+
+    /**
+     * @param mixed $estadoFacturaExportado
+     */
+    public function setEstadoFacturaExportado($estadoFacturaExportado): void
+    {
+        $this->estadoFacturaExportado = $estadoFacturaExportado;
     }
 
 

@@ -7,7 +7,7 @@ use App\Utilidades\BaseDatos;
 use App\Utilidades\Estandares;
 
 
-class FacturaInforme extends \FPDF {
+class ControlFactura extends \FPDF {
     public static $em;
 
 
@@ -15,12 +15,12 @@ class FacturaInforme extends \FPDF {
         ob_clean();
         //$em = $miThis->getDoctrine()->getManager();
         self::$em = $em;
-        $pdf = new FacturaInforme();
+        $pdf = new ControlFactura();
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("ListaFactura.pdf", 'D');
+        $pdf->Output("ControlFactura.pdf", 'D');
     }
 
     public function Header() {

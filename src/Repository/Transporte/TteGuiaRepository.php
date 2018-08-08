@@ -180,6 +180,29 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function listaGenerarFactura()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.estadoNovedad')
+            ->addSelect('g.documentoCliente')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.factura = 1');
+        $queryBuilder->orderBy('g.codigoGuiaPk', 'DESC');
+        return $queryBuilder;
+    }
+
     public function listaSoporte($codigoDespacho)
     {
         $session = new Session();

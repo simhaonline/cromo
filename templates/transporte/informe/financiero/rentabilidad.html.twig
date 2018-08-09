@@ -36,14 +36,42 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th></th>
+            <th>TIPO</th>
+            <th>NUMERO</th>
+            <th>FECHA</th>
+            <th>PLACA</th>
+            <th>CONDUCTOR</th>
+            <th>DESTINO</th>
+            <th>RUTA</th>
+            <th>GUIAS</th>
+            <th>UNIDADES</th>
+            <th>PESO</th>
+            <th>MANEJO</th>
+            <th>FLETE</th>
+            <th>TOTAL</th>
+            <th>PAGO</th>
+            <th>%UT</th>
         </tr>
         </thead>
         <tbody>
         {% for arDespacho in arDespachos %}
             <tr>
                 <td>{{ arDespacho.codigoDespachoPk }}</td>
-                <td class="numero">{{ arDespacho.fletePago | number_format(0, '.', ',') }}</td>
+                <td>{{ arDespacho.despachoTipo }}</td>
+                <td>{{ arDespacho.numero }}</td>
+                <td>{{ arDespacho.fechaSalida | date('Y-m-d') }}</td>
+                <td>{{ arDespacho.codigoVehiculoFk }}</td>
+                <td>{{ arDespacho.conductorNombre }}</td>
+                <td>{{ arDespacho.ciudadDestino }}</td>
+                <td></td>
+                <td class="numero">{{ arDespacho.cantidad | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arDespacho.unidades | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arDespacho.pesoReal | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arDespacho.vrManejo | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arDespacho.vrFlete | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arDespacho.vrTotalIngreso | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arDespacho.vrFletePago | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arDespacho.porcentajeRentabilidad | number_format(0, '.', ',') }}</td>
             </tr>
         {% endfor %}
         </tbody>

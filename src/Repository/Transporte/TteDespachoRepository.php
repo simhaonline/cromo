@@ -162,7 +162,13 @@ class TteDespachoRepository extends ServiceEntityRepository
         WHERE g.codigoDespachoFk = :codigoDespacho')
             ->setParameter('codigoDespacho', $codigoDespacho);
         $arrGuias = $query->getSingleResult();
+        $total = intval($arrGuias['vrFlete']) + intval($arrGuias['vrManejo']);
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+        $margen = 0;
+        if($total > 0) {
+            $margen = ($arDespacho->getVrFletepago() / $total) * 100;
+        }
+
         $arDespacho->setUnidades(intval($arrGuias['unidades']));
         $arDespacho->setPesoReal(intval($arrGuias['pesoReal']));
         $arDespacho->setPesoVolumen(intval($arrGuias['pesoVolumen']));
@@ -170,6 +176,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $arDespacho->setVrFlete(intval($arrGuias['vrFlete']));
         $arDespacho->setVrManejo(intval($arrGuias['vrManejo']));
         $arDespacho->setVrCobroEntrega(intval($arrGuias['vrCobroEntrega']));
+        $arDespacho->setPorcentajeRentabilidad($margen);
         $em->persist($arDespacho);
         $em->flush();
         return true;
@@ -919,7 +926,6 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect('d.codigoOperacionFk')
             ->addSelect('d.codigoVehiculoFk')
             ->addSelect('d.codigoRutaFk')
-            ->addSelect('co.nombre AS ciudadOrigen')
             ->addSelect('cd.nombre AS ciudadDestino')
             ->addSelect('d.cantidad')
             ->addSelect('d.unidades')
@@ -927,21 +933,24 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect('d.pesoVolumen')
             ->addSelect('d.vrFlete')
             ->addSelect('d.vrManejo')
+            ->addSelect('d.vrFlete + d.vrManejo AS vrTotalIngreso')
             ->addSelect('d.vrDeclara')
+            ->addSelect('d.vrCosto')
             ->addSelect('d.vrFletePago')
             ->addSelect('d.vrAnticipo')
             ->addSelect('c.nombreCorto AS conductorNombre')
             ->addSelect('d.estadoAprobado')
             ->addSelect('d.estadoAutorizado')
             ->addSelect('d.estadoAnulado')
-            ->addSelect('dt.nombre AS despachoTipo')
-            ->addSelect('d.usuario')
-            ->leftJoin('d.despachoTipoRel', 'dt')
-            ->leftJoin('d.ciudadOrigenRel', 'co')
+            ->addSelect('d.porcentajeRentabilidad')
+            ->addSelect('dt.nombre as despachoTipo')
             ->leftJoin('d.ciudadDestinoRel ', 'cd')
             ->leftJoin('d.conductorRel', 'c')
-            ->where("d.fechaSalida >= '" . $fechaDesde . " 00:00:00' AND d.fechaSalida <='" . $fechaHasta . " 23:59:59'");
-        $queryBuilder->orderBy('d.fechaSalida', 'DESC');
+            ->leftJoin('d.despachoTipoRel', 'dt')
+            ->where("d.fechaSalida >= '" . $fechaDesde . " 00:00:00' AND d.fechaSalida <='" . $fechaHasta . " 23:59:59'")
+            ->andWhere('d.estadoAprobado = 1')
+        ->orderBy('d.codigoDespachoTipoFk', 'ASC')
+        ->addOrderBy('d.fechaSalida', 'DESC');
         return $queryBuilder;
 
     }

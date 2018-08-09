@@ -178,6 +178,16 @@ class TteDespacho
     private $vrSaldo = 0;
 
     /**
+     * @ORM\Column(name="vr_costo", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrCosto = 0;
+
+    /**
+     * @ORM\Column(name="porcentaje_rentabilidad", type="float", nullable=true, options={"default" : 0})
+     */
+    private $porcentajeRentabilidad = 0;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoAutorizado = false;
@@ -1130,6 +1140,38 @@ class TteDespacho
     public function setFechaSoporte($fechaSoporte): void
     {
         $this->fechaSoporte = $fechaSoporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCosto()
+    {
+        return $this->vrCosto;
+    }
+
+    /**
+     * @param mixed $vrCosto
+     */
+    public function setVrCosto($vrCosto): void
+    {
+        $this->vrCosto = $vrCosto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeRentabilidad()
+    {
+        return $this->porcentajeRentabilidad;
+    }
+
+    /**
+     * @param mixed $porcentajeRentabilidad
+     */
+    public function setPorcentajeRentabilidad($porcentajeRentabilidad): void
+    {
+        $this->porcentajeRentabilidad = $porcentajeRentabilidad;
     }
 
 

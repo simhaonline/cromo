@@ -453,6 +453,48 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function guiasCliente()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg');
+        $queryBuilder
+            ->select('tg.codigoGuiaPk AS guia')
+            ->addSelect('c.nombreCorto AS cliente')
+            ->addSelect('tg.documentoCliente AS docCliente')
+            ->addSelect('tg.nombreDestinatario ')
+            ->addSelect('tg.direccionDestinatario')
+            ->addSelect('cd.nombre AS ciudad')
+            ->addSelect('tg.unidades')
+            ->addSelect('tg.pesoFacturado AS peso')
+            ->addSelect('tg.vrFlete')
+            ->addSelect('tg.vrManejo')
+            ->addSelect('tg.vrFlete + tg.vrManejo AS vrTotal')
+            ->addSelect('tg.vrDeclara')
+            ->addSelect('tg.fechaIngreso')
+            ->leftJoin('tg.clienteRel', 'c')
+            ->leftJoin('tg.ciudadDestinoRel', 'cd')
+            ->where('tg.codigoGuiaPk <> 0');
+        $fecha =  new \DateTime('now');
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroTteFechaDesde') != null) {
+                $queryBuilder->andWhere("tg.fechaIngreso >= '{$session->get('filtroTteFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("tg.fechaIngreso >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroTteFechaHasta') != null) {
+                $queryBuilder->andWhere("tg.fechaIngreso <= '{$session->get('filtroTteFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("tg.fechaIngreso <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        $queryBuilder->orderBy('tg.fechaIngreso', 'DESC');
+
+        return $queryBuilder;
+    }
+
     public function cumplido($codigoCumplido): array
     {
         $em = $this->getEntityManager();

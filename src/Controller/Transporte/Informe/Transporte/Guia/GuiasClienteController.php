@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
+use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
 use App\General\General;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,11 +24,10 @@ class GuiasClienteController extends Controller
    /**
     * @Route("/transporte/informe/transporte/guia/guias/cliente", name="transporte_informe_transporte_guia_guias_cliente")
     */    
-    public function lista(Request $request)
+    public function lista(Request $request,  \Swift_Mailer $mailer)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $fecha = new \DateTime('now');
         if($session->get('filtroFechaDesde') == "") {
             $session->set('filtroFechaDesde', $fecha->format('Y-m-d'));
@@ -35,8 +35,9 @@ class GuiasClienteController extends Controller
         if($session->get('filtroFechaHasta') == "") {
             $session->set('filtroFechaHasta', $fecha->format('Y-m-d'));
         }
+        $arGuias = null;
         $form = $this->createFormBuilder()
-            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
+            ->add('btnEnviar', SubmitType::class, array('label' => 'Enviar correo'))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteFechaHasta'))])
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
@@ -47,20 +48,44 @@ class GuiasClienteController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+                if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked() || $form->get('btnEnviar')->isClicked()) {
                     $session = new session;
                     $session->set('filtroTteFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
                     $session->set('filtroTteFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                     $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
                     $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-                    $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
+                    if($form->get('txtCodigoCliente')->getData() != ''){
+                        $arGuias = $em->getRepository(TteGuia::class)->guiasCliente()->getQuery()->getResult();
+                    }
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->guiasCliente())->execute(), "Guias");
+                    General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->guiasCliente())->execute(), "Guias cliente");
+                }
+                if ($form->get('btnEnviar')->isClicked()) {
+                        $codigoCliente = $form->get('txtCodigoCliente')->getData();
+                        if($codigoCliente != "") {
+                            $arCliente = $em->getRepository(TteCliente::class)->find($codigoCliente);
+                            if($arCliente) {
+                                $destinatario = explode(';', strtolower($arCliente->getCorreo()));
+                                $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->guiasCliente($codigoCliente)->getQuery()->getResult();
+                                $cuerpo = $this->render('transporte/informe/transporte/guia/correo.html.twig', [
+                                    'arGuias' => $arGuias,
+                                    'form' => $form->createView()]);
+                                $message = (new \Swift_Message('Guias cliente'))
+                                    ->setFrom('infologicuartas@gmail.com')
+                                    ->setTo($destinatario)
+                                    ->setBody(
+                                        $cuerpo,
+                                        'text/html'
+                                    );
+                                $mailer->send($message);
+                            }
+                            $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->guiasCliente($codigoCliente);
+                        }
                 }
             }
         }
-        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->guiasCliente(), $request->query->getInt('page', 1), 40);
+
         return $this->render('transporte/informe/transporte/guia/guiasCliente.html.twig', [
             'arGuias' => $arGuias,
             'form' => $form->createView()]);

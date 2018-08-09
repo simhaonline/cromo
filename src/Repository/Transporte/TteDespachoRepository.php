@@ -906,4 +906,44 @@ class TteDespachoRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function rentabilidad($fechaDesde, $fechaHasta)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
+            ->select('d.codigoDespachoPk')
+            ->addSelect('d.fechaSalida')
+            ->addSelect('d.numero')
+            ->addSelect('d.codigoOperacionFk')
+            ->addSelect('d.codigoVehiculoFk')
+            ->addSelect('d.codigoRutaFk')
+            ->addSelect('co.nombre AS ciudadOrigen')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('d.cantidad')
+            ->addSelect('d.unidades')
+            ->addSelect('d.pesoReal')
+            ->addSelect('d.pesoVolumen')
+            ->addSelect('d.vrFlete')
+            ->addSelect('d.vrManejo')
+            ->addSelect('d.vrDeclara')
+            ->addSelect('d.vrFletePago')
+            ->addSelect('d.vrAnticipo')
+            ->addSelect('c.nombreCorto AS conductorNombre')
+            ->addSelect('d.estadoAprobado')
+            ->addSelect('d.estadoAutorizado')
+            ->addSelect('d.estadoAnulado')
+            ->addSelect('dt.nombre AS despachoTipo')
+            ->addSelect('d.usuario')
+            ->leftJoin('d.despachoTipoRel', 'dt')
+            ->leftJoin('d.ciudadOrigenRel', 'co')
+            ->leftJoin('d.ciudadDestinoRel ', 'cd')
+            ->leftJoin('d.conductorRel', 'c')
+            ->where("d.fechaSalida >= '" . $fechaDesde . " 00:00:00' AND d.fechaSalida <='" . $fechaHasta . " 23:59:59'");
+        $queryBuilder->orderBy('d.fechaSalida', 'DESC');
+        return $queryBuilder;
+
+    }
+
 }

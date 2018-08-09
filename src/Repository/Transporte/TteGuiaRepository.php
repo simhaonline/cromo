@@ -1536,16 +1536,41 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     }
 
-    public function tableroProduccionMes($mes): array
+    public function tableroProduccionMes($fecha): array
     {
         $em = $this->getEntityManager();
+        $fecha->modify('first day of this month');
+        $fechaDesde = $fecha->format('Y-m-d');
+        $fecha->modify('last day of this month');
+        $fechaHasta = $fecha->format('Y-m-d');
         $sql = "SELECT DAY(fecha_ingreso) as dia, 
                 SUM(vr_flete) as flete, 
                 SUM(vr_manejo) as manejo, 
                 SUM(vr_flete + vr_manejo) as total 
                 FROM tte_guia 
-                WHERE fecha_ingreso >= '2018-08-01' 
+                WHERE fecha_ingreso >= '" . $fechaDesde . " 00:00:00' AND fecha_ingreso <='" . $fechaHasta ." 23:59:59'  
                 GROUP BY DAY(fecha_ingreso)";
+        $connection = $em->getConnection();
+        $statement = $connection->prepare($sql);
+        $statement->execute();
+        $results = $statement->fetchAll();
+
+        return $results;
+    }
+
+    public function tableroProduccionAnio($fecha): array
+    {
+        $em = $this->getEntityManager();
+
+        $fechaDesde = $fecha->format('Y') . "-01-01";
+        $fechaHasta = $fecha->format('Y') . "-12-31";
+        $sql = "SELECT MONTH(fecha_ingreso) as dia, 
+                SUM(vr_flete) as flete, 
+                SUM(vr_manejo) as manejo, 
+                SUM(vr_flete + vr_manejo) as total 
+                FROM tte_guia 
+                WHERE fecha_ingreso >= '" . $fechaDesde . " 00:00:00' AND fecha_ingreso <='" . $fechaHasta ." 23:59:59'  
+                GROUP BY MONTH(fecha_ingreso)";
         $connection = $em->getConnection();
         $statement = $connection->prepare($sql);
         $statement->execute();

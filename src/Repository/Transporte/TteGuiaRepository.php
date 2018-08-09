@@ -703,6 +703,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $arCuentaCobrar->setFecha($arFactura->getFecha());
                     $arCuentaCobrar->setFechaVence($arFactura->getFechaVence());
                     $arCuentaCobrar->setModulo("TTE");
+                    $arCuentaCobrar->setNumeroReferencia($arGuia->getCodigoDespachoFk());
                     $arCuentaCobrar->setCodigoDocumento($arFactura->getCodigoFacturaPk());
                     $arCuentaCobrar->setNumeroDocumento($arFactura->getNumero());
                     $arCuentaCobrar->setVrSubtotal($arFactura->getVrSubtotal());

@@ -43,6 +43,11 @@ class CarCuentaCobrar
     private $numeroDocumento;
 
     /**
+     * @ORM\Column(name="numero_referencia", type="string", length=30, nullable=true)
+     */
+    private $numeroReferencia;
+
+    /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
@@ -537,6 +542,22 @@ class CarCuentaCobrar
     public function setRecibosDetallesCuentaCobrarAplicacionRel($recibosDetallesCuentaCobrarAplicacionRel): void
     {
         $this->recibosDetallesCuentaCobrarAplicacionRel = $recibosDetallesCuentaCobrarAplicacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroReferencia()
+    {
+        return $this->numeroReferencia;
+    }
+
+    /**
+     * @param mixed $numeroReferencia
+     */
+    public function setNumeroReferencia($numeroReferencia): void
+    {
+        $this->numeroReferencia = $numeroReferencia;
     }
 
 

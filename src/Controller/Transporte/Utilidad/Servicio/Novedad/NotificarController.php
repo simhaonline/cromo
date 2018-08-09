@@ -56,17 +56,6 @@ class NotificarController extends Controller
             'form' => $form->createView()]);
     }
 
-    private function filtrar($form)
-    {
-        $session = new session;
-        $arRuta = $form->get('rutaRel')->getData();
-        if ($arRuta) {
-            $session->set('filtroTteCodigoRuta', $arRuta->getCodigoRutaPk());
-        } else {
-            $session->set('filtroTteCodigoRuta', null);
-        }
-    }
-
     private function formularioFiltro()
     {
         $em = $this->getDoctrine()->getManager();

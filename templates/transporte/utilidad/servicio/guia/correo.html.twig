@@ -14,6 +14,7 @@
             <th>UNIDADES</th>
             <th>FLETE</th>
             <th>MANEJO</th>
+            <th>NOV</th>
         </tr>
         {% for arGuia in arGuias %}
         <tr>
@@ -29,6 +30,7 @@
             <td>{{ arGuia.unidades }}</td>
             <td>{{ arGuia.vrFlete }}</td>
             <td>{{ arGuia.vrManejo }}</td>
+            <td class="estado">{{ arGuia.estadoNovedad?'SI':'NO' }}</td>
         </tr>
         {% endfor %}
     </table>

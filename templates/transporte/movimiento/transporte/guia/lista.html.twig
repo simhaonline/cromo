@@ -123,6 +123,7 @@
             <th title="Soporte de entrega">S</th>
             <th title="Cumplido entregado al cliente">C</th>
             <th title="Facturado">F</th>
+            <th title="Con novedad">N</th>
             <th></th>
             <th></th>
         </tr>
@@ -153,6 +154,7 @@
                 <td class="estado">{{ arGuia.estadoSoporte?'SI':'NO' }}</td>
                 <td class="estado">{{ arGuia.estadoCumplido?'SI':'NO' }}</td>
                 <td class="estado">{{ arGuia.estadoFacturado?'SI':'NO' }}</td>
+                <td class="estado">{{ arGuia.estadoNovedad?'SI':'NO' }}</td>
 
                 <td style="text-align: center;">
                     {% if arGuia.estadoEmbarcado == 0 %}

@@ -106,6 +106,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.estadoSoporte')
             ->addSelect('tg.estadoCumplido')
             ->addSelect('tg.estadoFacturado')
+            ->addSelect('tg.estadoNovedad')
             ->leftJoin('tg.clienteRel', 'c')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->where('tg.codigoGuiaPk <> 0');
@@ -849,6 +850,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.vrManejo')
             ->addSelect('g.fechaIngreso')
             ->addSelect('g.fechaEntrega')
+            ->addSelect('g.estadoNovedad')
             ->addSelect('cd.nombre as destino')
             ->addSelect('c.nombreCorto as clienteNombreCorto')
             ->leftJoin('g.ciudadDestinoRel', 'cd')

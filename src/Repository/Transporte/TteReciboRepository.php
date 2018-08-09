@@ -23,6 +23,8 @@ class TteReciboRepository extends ServiceEntityRepository
         r.vrManejo,
         r.vrTotal,
         g.fechaIngreso,
+        g.codigoGuiaTipoFk,
+        g.numero as guiaNumero,
         r.codigoGuiaFk         
         FROM App\Entity\Transporte\TteRecibo r 
         LEFT JOIN r.guiaRel g

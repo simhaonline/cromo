@@ -141,12 +141,12 @@
                 <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
                 <td>{{ arGuia.clienteNombreCorto }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
-                <td class="numero">{{ arGuia.unidades }}</td>
-                <td class="numero">{{ arGuia.pesoReal }}</td>
-                <td class="numero">{{ arGuia.pesoVolumen }}</td>
-                <td class="numero">{{ arGuia.vrFlete }}</td>
-                <td class="numero">{{ arGuia.vrManejo }}</td>
-                <td class="numero">{{ arGuia.vrRecaudo }}</td>
+                <td class="numero">{{ arGuia.unidades | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arGuia.pesoReal | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arGuia.pesoVolumen | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arGuia.vrFlete | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arGuia.vrManejo | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arGuia.vrRecaudo | number_format(0, '.', ',')}}</td>
                 <td class="estado">{{ arGuia.estadoImpreso?'SI':'NO' }}</td>
                 <td class="estado">{{ arGuia.estadoEmbarcado?'SI':'NO' }}</td>
                 <td class="estado">{{ arGuia.estadoDespachado?'SI':'NO' }}</td>

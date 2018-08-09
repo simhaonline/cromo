@@ -8,6 +8,7 @@ use App\Form\Type\Transporte\DespachoType;
 use App\Form\Type\Transporte\RelacionCajaType;
 use App\Formato\Transporte\RelacionCaja;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,10 +22,13 @@ class RelacionCajaController extends Controller
     */    
     public function lista(Request $request)
     {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $query = $this->getDoctrine()->getRepository(TteRelacionCaja::class)->lista();
-        $arRelacionesCaja = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('transporte/movimiento/control/relacioncaja/lista.html.twig', ['arRelacionesCaja' => $arRelacionesCaja]);
+        $arRelacionesCaja = $paginator->paginate($em->getRepository(TteRelacionCaja::class)->lista(), $request->query->getInt('page', 1), 30);
+
+        return $this->render('transporte/movimiento/control/relacioncaja/lista.html.twig', [
+            'arRelacionesCaja' => $arRelacionesCaja]);
     }
 
     /**

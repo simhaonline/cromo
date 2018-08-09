@@ -6,6 +6,7 @@ use App\Entity\Transporte\TteRecibo;
 use App\Entity\Transporte\TteRelacionCaja;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteRelacionCajaRepository extends ServiceEntityRepository
 {
@@ -14,19 +15,26 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
         parent::__construct($registry, TteRelacionCaja::class);
     }
 
-    public function lista(): array
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function lista()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT rc.codigoRelacionCajaPk, 
-        rc.fecha,
-        rc.vrTotal
-        FROM App\Entity\Transporte\TteRelacionCaja rc         
-        ORDER BY rc.codigoRelacionCajaPk DESC'
-        );
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRelacionCaja::class, 'rc');
+        $queryBuilder
+            ->select('rc.codigoRelacionCajaPk')
+            ->addSelect('rc.fecha')
+            ->addSelect('rc.vrTotal')
+            ->where('rc.codigoRelacionCajaPk <> 0');
+        if ($session->get('filtroTteReciboCajaCodigo') != "") {
+            $queryBuilder->andWhere("rc.codigoRelacionCajaPk = " . $session->get('filtroTteReciboCajaCodigo'));
+        }
+        $queryBuilder->orderBy('rc.fecha', 'DESC');
 
+        return $queryBuilder;
     }
+
 
     public function liquidar($codigoRelacionCaja): bool
     {

@@ -67,6 +67,7 @@ class ReciboController extends Controller
         }
         $arRecibo->setFecha(new \DateTime('now'));
         $arRecibo->setFechaPago(new \DateTime('now'));
+        $arRecibo->setUsuario($this->getUser()->getUserName());
         $form = $this->createForm(ReciboType::class, $arRecibo);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

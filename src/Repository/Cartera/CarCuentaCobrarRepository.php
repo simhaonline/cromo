@@ -24,6 +24,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->leftJoin('cc.clienteRel','cl')
             ->leftJoin('cc.cuentaCobrarTipoRel','cct')
             ->addSelect('cc.numeroDocumento')
+            ->addSelect('cc.codigoCuentaCobrarTipoFk')
             ->addSelect('cc.numeroReferencia')
             ->addSelect('cct.nombre AS tipo')
             ->addSelect('cc.fecha')
@@ -39,6 +40,9 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->andWhere('cc.vrSaldo > 0')
             ->orderBy('cc.codigoCuentaCobrarPk', 'DESC');
         $fecha =  new \DateTime('now');
+        if ($session->get('filtroCarCuentaCobrarTipo') != "") {
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo')."'");
+        }
         if($session->get('filtroCarNumeroReferencia') != ''){
             $queryBuilder->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
         }

@@ -3,6 +3,7 @@
 namespace App\Controller\Cartera\Informe\CuentaCobrar\CuentaCobrar;
 
 use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Formato\Cartera\CuentaCobrar;
 use App\General\General;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +32,7 @@ class CuentaCobrarController extends Controller
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('cboTipoCuentaRel', EntityType::class, $em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
@@ -42,6 +44,12 @@ class CuentaCobrarController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
+            $arCuentaCobrarTipo = $form->get('cboTipoCuentaRel')->getData();
+            if ($arCuentaCobrarTipo) {
+                $session->set('filtroCarCuentaCobrarTipo', $arCuentaCobrarTipo->getCodigoCuentaCobrarTipoPk());
+            } else {
+                $session->set('filtroCarCuentaCobrarTipo', null);
+            }
             $session->set('filtroCarNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
             $session->set('filtroCarCuentaCobrarNumero', $form->get('txtNumero')->getData());
             $session->set('filtroCarCodigoCliente', $form->get('txtCodigoCliente')->getData());

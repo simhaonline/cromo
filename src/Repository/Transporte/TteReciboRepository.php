@@ -25,9 +25,11 @@ class TteReciboRepository extends ServiceEntityRepository
         g.fechaIngreso,
         g.codigoGuiaTipoFk,
         g.numero as guiaNumero,
-        r.codigoGuiaFk         
+        r.codigoGuiaFk,
+        c.nombreCorto AS clienteNombre         
         FROM App\Entity\Transporte\TteRecibo r 
         LEFT JOIN r.guiaRel g
+        LEFT JOIN r.clienteRel c
         WHERE r.codigoRelacionCajaFk = :codigoRelacionCaja'
         )->setParameter('codigoRelacionCaja', $codigoRelacionCaja);
 

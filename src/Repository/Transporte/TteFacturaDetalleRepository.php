@@ -33,7 +33,9 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         fd.pesoReal,
         fd.pesoVolumen,
         fd.vrFlete,
-        fd.vrManejo,                   
+        fd.vrManejo,
+        fd.vrDeclara,
+        g.vrRecaudo,                   
         g.codigoOperacionIngresoFk,
         g.codigoOperacionCargoFk     
         FROM App\Entity\Transporte\TteFacturaDetalle fd 

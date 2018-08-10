@@ -94,7 +94,7 @@ class Factura extends \FPDF {
         $this->Text(12, $y, utf8_decode("SEÑOR(ES):"));
         $this->Text(45, $y, utf8_decode($arFactura->getClienteRel()->getNombreCorto()));
         $this->Text(12, $y+5, utf8_decode("NIT:"));
-        $this->Text(45, $y+5, utf8_decode($arFactura->getClienteRel()->getNumeroIdentificacion()));
+        $this->Text(45, $y+5, $arFactura->getClienteRel()->getNumeroIdentificacion() . "-" . $arFactura->getClienteRel()->getDigitoVerificacion());
         $this->Text(12, $y+10, utf8_decode("DIRECCION:"));
         $this->Text(45, $y+10, utf8_decode($arFactura->getClienteRel()->getDireccion()));
         $this->Text(12, $y+15, utf8_decode("CIUDAD:"));

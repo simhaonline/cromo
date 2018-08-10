@@ -34,6 +34,7 @@ class CarReciboRepository extends ServiceEntityRepository
             ->addSelect('r.fechaPago')
             ->addSelect('r.codigoCuentaFk')
             ->addSelect('r.vrPagoTotal')
+            ->addSelect('r.usuario')
             ->addSelect('r.estadoAutorizado')
             ->addSelect('r.estadoAnulado')
             ->addSelect('r.estadoImpreso')

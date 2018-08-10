@@ -46,6 +46,7 @@
             <th>CLIENTE</th>
             <th>CUENTA</th>
             <th>TOTAL</th>
+            <th>USUARIO</th>
             <th>ANU</th>
             <th>AUT</th>
             <th>IMP</th>
@@ -64,6 +65,7 @@
                 <td>{{ arRecibo.nombreCorto }}</td>
                 <td>{{ arRecibo.nombre }}</td>
                 <td>{{ arRecibo.vrPagoTotal }}</td>
+                <td>{{ arRecibo.usuario }}</td>
                 {{ validarTipo(arRecibo.estadoAnulado) }}
                 {{ validarTipo(arRecibo.estadoAutorizado) }}
                 {{ validarTipo(arRecibo.estadoImpreso) }}

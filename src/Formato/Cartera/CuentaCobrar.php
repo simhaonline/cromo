@@ -54,7 +54,7 @@ class CuentaCobrar extends \FPDF {
 
     public function Body($pdf) {
         $em = BaseDatos::getEm();
-        $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->lista();
+        $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->lista()->getQuery()->getResult();
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         foreach ($arCuentasCobrar as $arCuentaCobrar) {

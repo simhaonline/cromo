@@ -30,6 +30,7 @@ class CuentaCobrarController extends Controller
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
@@ -52,6 +53,9 @@ class CuentaCobrarController extends Controller
         if ($form->get('btnPdf')->isClicked()) {
             $formato = new CuentaCobrar();
             $formato->Generar($em);
+        }
+        if ($form->get('btnExcel')->isClicked()) {
+            General::get()->setExportar($em->createQuery($em->getRepository(CarCuentaCobrar::class)->lista())->execute(), "Cuenta cobrar");
         }
         $query = $this->getDoctrine()->getRepository(CarCuentaCobrar::class)->lista();
         $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1),500);

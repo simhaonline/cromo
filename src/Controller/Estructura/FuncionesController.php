@@ -48,6 +48,15 @@ final class FuncionesController
         return $dateNuevaFecha;
     }
 
+    public function sumarDiasFechaNumero($intDias, $dateFecha)
+    {
+        $fecha = $dateFecha->format('Y-m-j');
+        $nuevafecha = strtotime('+' . $intDias . ' day', strtotime($fecha));
+        $nuevafecha = date('Y-m-j', $nuevafecha);
+        $dateNuevaFecha = date_create($nuevafecha);
+        return $dateNuevaFecha;
+    }
+
     /**
      * @param $index
      * @return string

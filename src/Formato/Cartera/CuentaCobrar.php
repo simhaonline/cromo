@@ -32,14 +32,14 @@ class CuentaCobrar extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('TIPO', 'NUMERO','NIT', 'NOMBRE', 'FECHA', 'VENCE', 'PLAZO', 'TOTAL');
+        $header = array('TIPO', 'NUMERO','NIT', 'NOMBRE', 'FECHA', 'VENCE', 'PLAZO', 'VALOR', 'ABONO', 'SALDO');
         $this->SetFillColor(170, 170, 170);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('arial', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(30, 15, 15, 50, 15, 15, 10, 15);
+        $w = array(30, 15, 15, 45, 15, 15, 10, 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
@@ -57,27 +57,17 @@ class CuentaCobrar extends \FPDF {
         $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->lista();
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
-        $unidades = 0;
-        $flete = 0;
-        $manejo = 0;
-        $subTotal = 0;
-        $total = 0;
         foreach ($arCuentasCobrar as $arCuentaCobrar) {
             $pdf->Cell(30, 4, $arCuentaCobrar['tipo'], 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arCuentaCobrar['numeroDocumento'], 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arCuentaCobrar['numeroIdentificacion'], 'LRB', 0, 'L');
-            $pdf->Cell(50, 4, substr($arCuentaCobrar['nombreCorto'],0,30), 'LRB', 0, 'L');
+            $pdf->Cell(45, 4, substr($arCuentaCobrar['nombreCorto'],0,28), 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arCuentaCobrar['fecha']->format('Y-m-d'), 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arCuentaCobrar['fechaVence']->format('Y-m-d'), 'LRB', 0, 'R');
             $pdf->Cell(10, 4, $arCuentaCobrar['plazo'], 'LRB', 0, 'R');
-//            $pdf->Cell(15, 4, number_format($arFactura['vrManejo']), 'LRB', 0, 'R');
-//            $pdf->Cell(15, 4, number_format($arFactura['vrSubtotal']), 'LRB', 0, 'R');
-//            $pdf->Cell(15, 4, number_format($arFactura['vrTotal']), 'LRB', 0, 'R');
-//            $unidades += $arFactura['guias'];
-//            $flete += $arFactura['vrFlete'];
-//            $manejo += $arFactura['vrManejo'];
-//            $subTotal += $arFactura['vrSubtotal'];
-//            $total += $arFactura['vrTotal'];
+            $pdf->Cell(15, 4, number_format($arCuentaCobrar['vrTotal']), 'LRB', 0, 'R');
+            $pdf->Cell(15, 4, number_format($arCuentaCobrar['vrAbono']), 'LRB', 0, 'R');
+            $pdf->Cell(15, 4, number_format($arCuentaCobrar['vrSaldo']), 'LRB', 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

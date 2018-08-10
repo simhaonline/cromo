@@ -30,6 +30,10 @@
                 <div class="col-sm-2">
                     {{ form_widget(form.txtNumero) }}
                 </div>
+                <label class="col-sm-1 control-label">Numero refencia:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.txtNumeroReferencia) }}
+                </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Desde:</label>
@@ -58,7 +62,8 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>NUMERO</th>
+            <th>NUM</th>
+            <th>NUM REFERENCIA</th>
             <th>TIPO</th>
             <th>FECHA</th>
             <th>VENCE</th>
@@ -76,6 +81,7 @@
             <tr>
                 <td>{{ arCuentaCobrar.codigoCuentaCobrarPk }}</td>
                 <td>{{ arCuentaCobrar.numeroDocumento }}</td>
+                <td>{{ arCuentaCobrar.numeroReferencia }}</td>
                 <td>{{ arCuentaCobrar.tipo }}</td>
                 <td>{{ arCuentaCobrar.fecha | date('Y-m-d') }}</td>
                 <td>{{ arCuentaCobrar.fechaVence | date('Y-m-d') }}</td>
@@ -98,6 +104,11 @@
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
         {{ knp_pagination_render(arCuentasCobrar) }}
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group" style="float: right">
+            {{ form_widget(form.btnPdf, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+        </div>
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}

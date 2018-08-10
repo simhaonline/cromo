@@ -243,7 +243,7 @@ class RhuSolicitud
     protected $rhuSeleccionSolicitudRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuSolicitudSexoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuSolicitudesSexoRel")
      * @ORM\JoinColumn(name="codigo_sexo_fk", referencedColumnName="codigo_sexo_pk")
      */
     protected $sexoRel;

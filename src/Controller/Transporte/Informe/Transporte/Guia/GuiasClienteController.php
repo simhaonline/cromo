@@ -26,6 +26,8 @@ class GuiasClienteController extends Controller
     */    
     public function lista(Request $request,  \Swift_Mailer $mailer)
     {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $fecha = new \DateTime('now');

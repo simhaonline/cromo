@@ -2,6 +2,7 @@
 
 namespace App\Controller\Cartera\Movimiento\Recibo;
 
+use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
@@ -18,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class ReciboController extends Controller
 {
     /**
@@ -33,20 +34,30 @@ class ReciboController extends Controller
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroCarCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroCarNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('txtNumero', NumberType::class, ['label' => 'Numero: ', 'required' => false, 'data' => $session->get('filtroNumero')])
+            ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroCarReciboEstadoAprobado'), 'required' => false])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
-        if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroNumero', $form->get('txtNumero')->getData());
-            if ($form->get('txtCodigoCliente')->getData() != '') {
-                $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-            } else {
-                $session->set('filtroTteCodigoCliente', null);
-                $session->set('filtroTteNombreCliente', null);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroNumero', $form->get('txtNumero')->getData());
+                $session->set('filtroCarReciboEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
+                if ($form->get('txtCodigoCliente')->getData() != '') {
+                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+                } else {
+                    $session->set('filtroTteCodigoCliente', null);
+                    $session->set('filtroTteNombreCliente', null);
+                }
+            }
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(CarRecibo::class)->eliminar($arrSeleccionados);
             }
         }
-        $arRecibo = $paginator->paginate($em->getRepository(CarRecibo::class)->lista(), $request->query->getInt('page', 1),20);
+
+        $arRecibo = $paginator->paginate($em->getRepository(CarRecibo::class)->lista(), $request->query->getInt('page', 1),30);
         return $this->render('cartera/movimiento/recibo/lista.html.twig',
             ['arRecibo' => $arRecibo,
             'form' => $form->createView()]);
@@ -64,17 +75,28 @@ class ReciboController extends Controller
             if (!$arRecibo) {
                 return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
             }
+        } else {
+            $arRecibo->setFechaPago(new \DateTime('now'));
+            $arRecibo->setUsuario($this->getUser()->getUserName());
         }
-        $arRecibo->setFecha(new \DateTime('now'));
-        $arRecibo->setFechaPago(new \DateTime('now'));
-        $arRecibo->setUsuario($this->getUser()->getUserName());
         $form = $this->createForm(ReciboType::class, $arRecibo);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $em->persist($arRecibo);
-                $em->flush();
-                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $arRecibo->getCodigoReciboPk()]));
+                $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+                if($txtCodigoCliente != '') {
+                    $arCliente = $em->getRepository(CarCliente::class)->find($txtCodigoCliente);
+                    if ($arCliente) {
+                        if ($id == 0) {
+                            $arRecibo->setFecha(new \DateTime('now'));
+                        }
+                        $arRecibo->setClienteRel($arCliente);
+                        $em->persist($arRecibo);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $arRecibo->getCodigoReciboPk()]));
+                    }
+                }
+
             }
         }
         return $this->render('cartera/movimiento/recibo/nuevo.html.twig', [

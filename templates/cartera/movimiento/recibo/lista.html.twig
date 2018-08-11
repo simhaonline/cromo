@@ -29,6 +29,14 @@
                 <div class="col-sm-2">
                     {{ form_widget(form.txtNumero, { 'attr': {'class': 'form-control'} }) }}
                 </div>
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-2">
+
+                </div>
+                <label class="col-sm-1 control-label">Aprobado:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.chkEstadoAprobado, { 'attr': {'class': 'form-control'} }) }}
+                </div>
             </div>
         </div>
         <div class="modal-footer">
@@ -49,7 +57,8 @@
             <th>USUARIO</th>
             <th>ANU</th>
             <th>AUT</th>
-            <th>IMP</th>
+            <th>APR</th>
+            <th></th>
             <th></th>
             <th></th>
         </tr>
@@ -68,12 +77,14 @@
                 <td>{{ arRecibo.usuario }}</td>
                 {{ validarTipo(arRecibo.estadoAnulado) }}
                 {{ validarTipo(arRecibo.estadoAutorizado) }}
-                {{ validarTipo(arRecibo.estadoImpreso) }}
+                {{ validarTipo(arRecibo.estadoAprobado) }}
                 <td style="text-align: center;">
+                    {% if arRecibo.estadoAutorizado == 0 %}
                     <a href="{{ path('cartera_movimiento_recibo_recibo_nuevo',{'id' : arRecibo.codigoReciboPk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
                         </i>
                     </a>
+                    {% endif %}
                 </td>
                 <td style="text-align: center;">
                     <a href="{{ path('cartera_movimiento_recibo_recibo_detalle',{'id' : arRecibo.codigoReciboPk}) }}">
@@ -81,6 +92,7 @@
                         </i>
                     </a>
                 </td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecibo.codigoReciboPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -96,6 +108,9 @@
     </div>
 
     <div class="btn-toolbar" style="float: right">
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(form.btnEliminar) }}
+        </div>
         <div class="btn-group">
             <a class="btn btn-default btn-sm" href="{{ path('cartera_movimiento_recibo_recibo_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>

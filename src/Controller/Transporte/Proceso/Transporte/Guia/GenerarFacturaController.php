@@ -25,10 +25,16 @@ class GenerarFacturaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('txtDespachoCodigo', TextType::class, array('required' => false,'data' => $session->get('filtroTteDespachoCodigo')))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGenerar', SubmitType::class, array('label' => 'Generar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session = new session;
+                $session->set('filtroTteDespachoCodigo', $form->get('txtDespachoCodigo')->getData());
+            }
             if ($form->get('btnGenerar')->isClicked()) {
                 $arrGuias = $request->request->get('chkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteGuia::class)->generarFactura($arrGuias);

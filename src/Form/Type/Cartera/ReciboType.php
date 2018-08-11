@@ -25,7 +25,8 @@ class ReciboType extends AbstractType
                         ->orderBy('c.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Cuenta:'
+                'label' => 'Cuenta:',
+                'required' => true
             ])
             ->add('reciboTipoRel',EntityType::class,[
                 'required' => false,
@@ -35,19 +36,9 @@ class ReciboType extends AbstractType
                         ->orderBy('rt.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Tipo recibo:'
+                'label' => 'Tipo recibo:',
+                'required' => true
             ])
-            ->add('clienteRel',EntityType::class,[
-                'required' => false,
-                'class' => 'App\Entity\Cartera\CarCliente',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('cc')
-                        ->orderBy('cc.nombreCorto', 'ASC');
-                },
-                'choice_label' => 'nombreCorto',
-                'label' => 'Cliente:'
-            ])
-            ->add('fecha', DateType::class, array('format' => 'yyyyMMdd'))
             ->add('fechaPago', DateType::class, array('format' => 'yyyyMMdd'))
             ->add('comentarios',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])

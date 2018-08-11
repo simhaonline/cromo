@@ -201,15 +201,22 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('cd.nombre AS ciudadDestino')
             ->addSelect('g.unidades')
             ->addSelect('g.pesoReal')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.vrAbono')
             ->addSelect('g.estadoNovedad')
             ->addSelect('g.documentoCliente')
+            ->addSelect('g.codigoDespachoFk')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->where('g.factura = 1')
             ->andWhere('g.estadoFacturaExportado = 0')
-            ->orderBy('g.codigoGuiaTipoFk', 'ASC')
-            ->addOrderBy('g.fechaIngreso', 'ASC')
+            ->orderBy('g.fechaIngreso', 'ASC')
+            ->addOrderBy('g.codigoGuiaTipoFk', 'ASC')
         ->addOrderBy('g.numero', 'ASC');
+        if ($session->get('filtroTteDespachoCodigo')) {
+            $queryBuilder->andWhere("g.codigoDespachoFk = '" . $session->get('filtroTteDespachoCodigo') . "'");
+        }
         return $queryBuilder;
     }
 

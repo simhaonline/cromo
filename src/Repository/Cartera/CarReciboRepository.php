@@ -38,15 +38,24 @@ class CarReciboRepository extends ServiceEntityRepository
             ->addSelect('r.estadoAutorizado')
             ->addSelect('r.estadoAnulado')
             ->addSelect('r.estadoImpreso')
+            ->addSelect('r.estadoAprobado')
             ->where('r.codigoReciboPk <> 0')
-            ->orderBy('r.codigoReciboPk', 'DESC');
+            ->orderBy('r.estadoAprobado', 'ASC')
+        ->addOrderBy('r.fecha', 'DESC');
         if ($session->get('filtroNumero')) {
             $queryBuilder->andWhere("r.numero = '{$session->get('filtroNumero')}'");
         }
         if($session->get('filtroTteCodigoCliente')){
             $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }
-
+        switch ($session->get('filtroCarReciboEstadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoAprobado = 1");
+                break;
+        }
         return $queryBuilder;
     }
 
@@ -148,6 +157,40 @@ class CarReciboRepository extends ServiceEntityRepository
             $arRecibo->setEstadoAprobado(1);
             $this->getEntityManager()->persist($arRecibo);
             $this->getEntityManager()->flush();
+        }
+    }
+
+    /**
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(CarRecibo::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            if (count($this->getEntityManager()->getRepository(CarReciboDetalle::class)->findBy(['codigoReciboFk' => $arRegistro->getCodigoReciboPk()])) <= 0) {
+                                $this->getEntityManager()->remove($arRegistro);
+                            } else {
+                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                            }
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                }
+                if($respuesta != ''){
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
         }
     }
 }

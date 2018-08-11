@@ -25,6 +25,7 @@ class TteReciboRepository extends ServiceEntityRepository
         g.fechaIngreso,
         g.codigoGuiaTipoFk,
         g.numero as guiaNumero,
+        g.documentoCliente,
         r.codigoGuiaFk,
         c.nombreCorto AS clienteNombre         
         FROM App\Entity\Transporte\TteRecibo r 

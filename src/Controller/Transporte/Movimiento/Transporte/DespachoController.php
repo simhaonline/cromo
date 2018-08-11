@@ -291,23 +291,27 @@ class DespachoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                if (count($arrSeleccionados) > 0) {
+                if ($arrSeleccionados) {
                     foreach ($arrSeleccionados AS $codigo) {
                         $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
-                        $arGuia->setDespachoRel($arDespacho);
-                        $arGuia->setEstadoEmbarcado(1);
-                        $em->persist($arGuia);
-                        $arDespachoDetalle = new TteDespachoDetalle();
-                        $arDespachoDetalle->setDespachoRel($arDespacho);
-                        $arDespachoDetalle->setGuiaRel($arGuia);
-                        $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
-                        $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
-                        $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
-                        $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
-                        $arDespachoDetalle->setUnidades($arGuia->getUnidades());
-                        $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
-                        $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                        $em->persist($arDespachoDetalle);
+                        if($arGuia) {
+                            if($arGuia->getCodigoDespachoFk() == NULL) {
+                                $arGuia->setDespachoRel($arDespacho);
+                                $arGuia->setEstadoEmbarcado(1);
+                                $em->persist($arGuia);
+                                $arDespachoDetalle = new TteDespachoDetalle();
+                                $arDespachoDetalle->setDespachoRel($arDespacho);
+                                $arDespachoDetalle->setGuiaRel($arGuia);
+                                $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
+                                $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
+                                $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
+                                $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
+                                $arDespachoDetalle->setUnidades($arGuia->getUnidades());
+                                $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
+                                $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                                $em->persist($arDespachoDetalle);
+                            }
+                        }
                     }
                     $em->flush();
                     $em->getRepository(TteDespacho::class)->liquidar($id);

@@ -1149,7 +1149,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         if($arGuia && $arDespacho) {
-            if($arGuia->getEstadoEmbarcado() == 0) {
+            if($arGuia->getEstadoEmbarcado() == 0 && $arGuia->getCodigoDespachoFk() == null) {
                 $arGuia->setDespachoRel($arDespacho);
                 $arGuia->setEstadoEmbarcado(1);
                 $em->persist($arGuia);
@@ -1197,7 +1197,7 @@ class TteGuiaRepository extends ServiceEntityRepository
      */
     public function apiDespachoAdicionarDocumento($codigoDespacho, $documento) {
         $em = $this->getEntityManager();
-        $arGuia = $em->getRepository(TteGuia::class)->findOneBy(array('documentoCliente' => $documento, 'estadoEmbarcado' => 0, 'estadoAnulado' => 0));
+        $arGuia = $em->getRepository(TteGuia::class)->findOneBy(array('documentoCliente' => $documento, 'estadoEmbarcado' => 0, 'estadoAnulado' => 0, 'codigoDespachoFk' => null));
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         if($arDespacho) {
             if($arGuia) {

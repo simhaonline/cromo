@@ -156,7 +156,6 @@ class TteGuiaRepository extends ServiceEntityRepository
                 break;
         }
         $queryBuilder->orderBy('tg.fechaIngreso', 'DESC');
-
         return $queryBuilder;
     }
 
@@ -217,6 +216,10 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteDespachoCodigo')) {
             $queryBuilder->andWhere("g.codigoDespachoFk = '" . $session->get('filtroTteDespachoCodigo') . "'");
         }
+        if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
+            $queryBuilder->andWhere("g.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");
+        }
+
         return $queryBuilder;
     }
 
@@ -1588,5 +1591,6 @@ class TteGuiaRepository extends ServiceEntityRepository
 
         return $results;
     }
+
 
 }

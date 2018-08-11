@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Proceso\Transporte\Guia;
 
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteGuiaTipo;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
-
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 class GenerarFacturaController extends Controller
 {
     /**
@@ -26,6 +27,7 @@ class GenerarFacturaController extends Controller
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtDespachoCodigo', TextType::class, array('required' => false,'data' => $session->get('filtroTteDespachoCodigo')))
+            ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGenerar', SubmitType::class, array('label' => 'Generar'))
             ->getForm();
@@ -34,6 +36,12 @@ class GenerarFacturaController extends Controller
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session = new session;
                 $session->set('filtroTteDespachoCodigo', $form->get('txtDespachoCodigo')->getData());
+                $arGuiaTipo = $form->get('cboGuiaTipoRel')->getData();
+                if ($arGuiaTipo) {
+                    $session->set('filtroTteGuiaCodigoGuiaTipo', $arGuiaTipo->getCodigoGuiaTipoPk());
+                } else {
+                    $session->set('filtroTteGuiaCodigoGuiaTipo', null);
+                }
             }
             if ($form->get('btnGenerar')->isClicked()) {
                 $arrGuias = $request->request->get('chkSeleccionar');

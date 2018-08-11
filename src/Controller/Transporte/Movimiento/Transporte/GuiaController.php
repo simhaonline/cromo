@@ -69,9 +69,9 @@ class GuiaController extends Controller
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
                     $session = new session;
-                    $arRuta = $form->get('cboGuiaTipoRel')->getData();
-                    if ($arRuta) {
-                        $session->set('filtroTteGuiaCodigoGuiaTipo', $arRuta->getCodigoGuiaTipoPk());
+                    $arGuiaTipo = $form->get('cboGuiaTipoRel')->getData();
+                    if ($arGuiaTipo) {
+                        $session->set('filtroTteGuiaCodigoGuiaTipo', $arGuiaTipo->getCodigoGuiaTipoPk());
                     } else {
                         $session->set('filtroTteGuiaCodigoGuiaTipo', null);
                     }

@@ -6,13 +6,9 @@
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-2">
-
-                </div>
-                <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-2">
-
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cboGuiaTipoRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label class="col-sm-2 control-label">Codigo despacho:</label>
                 <div class="col-sm-4">

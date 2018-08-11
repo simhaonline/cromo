@@ -37,6 +37,11 @@ class GenIdentificacion
     protected $tteClientesIdentificacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDestinatario", mappedBy="identificacionRel")
+     */
+    protected $tteDestinatariosIdentificacionRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarCliente", mappedBy="identificacionRel")
      */
     protected $carClientesIdentificacionRel;
@@ -219,6 +224,22 @@ class GenIdentificacion
     public function setInvTercerosIdentificacionRel($invTercerosIdentificacionRel): void
     {
         $this->invTercerosIdentificacionRel = $invTercerosIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTteDestinatariosIdentificacionRel()
+    {
+        return $this->tteDestinatariosIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $tteDestinatariosIdentificacionRel
+     */
+    public function setTteDestinatariosIdentificacionRel($tteDestinatariosIdentificacionRel): void
+    {
+        $this->tteDestinatariosIdentificacionRel = $tteDestinatariosIdentificacionRel;
     }
 
 

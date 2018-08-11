@@ -521,7 +521,7 @@ class TteFacturaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function contabilizar()
+    public function listaContabilizar()
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
@@ -566,6 +566,24 @@ class TteFacturaRepository extends ServiceEntityRepository
         };
 
         return $queryBuilder->getQuery()->execute();
+    }
+
+    public function contabilizar($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            foreach ($arr AS $codigo) {
+                /*$arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+                if($arGuia->getEstadoDespachado() == 1 && $arGuia->getEstadoEntregado() == 0) {
+                    $fechaHora = date_create($arrControles['txtFechaEntrega' . $codigoGuia] . " " . $arrControles['txtHoraEntrega' . $codigoGuia]);
+                    $arGuia->setFechaEntrega($fechaHora);
+                    $arGuia->setEstadoEntregado(1);
+                    $em->persist($arGuia);
+                }*/
+            }
+            //$em->flush();
+        }
+        return true;
     }
 
 }

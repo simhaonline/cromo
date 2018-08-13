@@ -144,6 +144,11 @@ class TteCiudad
     protected $departamentoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteDestinatario", mappedBy="ciudadRel")
+     */
+    protected $ciudadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -558,6 +563,23 @@ class TteCiudad
     {
         $this->departamentoRel = $departamentoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
+    }
+
 
 
 }

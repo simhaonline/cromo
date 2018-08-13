@@ -23,6 +23,11 @@ class TteDestinatario
     private $codigoIdentificacionFk;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCiudadFk;
+
+    /**
      * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=true)
      */
     private $numeroIdentificacion;
@@ -92,6 +97,12 @@ class TteDestinatario
      * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
      */
     private $identificacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="ciudadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    private $ciudadRel;
 
     /**
      * @return mixed

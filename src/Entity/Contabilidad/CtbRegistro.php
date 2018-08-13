@@ -88,7 +88,7 @@ class CtbRegistro
     protected $comprobanteRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Contabilidad\CtbCentroCosto", inversedBy="ctbRegistrosCentroCostoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Contabilidad\CtbCentroCosto", inversedBy="registrosCentroCostoRel")
      * @ORM\JoinColumn(name="codigo_centro_costo_fk", referencedColumnName="codigo_centro_costo_pk")
      */
     private $centroCostoRel;
@@ -332,6 +332,8 @@ class CtbRegistro
     {
         $this->centroCostoRel = $centroCostoRel;
     }
+
+
 
 }
 

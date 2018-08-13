@@ -27,10 +27,21 @@ class TteOperacion
     private $codigoCiudadFk;
 
     /**
+     * @ORM\Column(name="codigo_centro_costo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCentroCostoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="operacionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     private $ciudadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Contabilidad\CtbCentroCosto", inversedBy="tteOperacionesCentroCostoRel")
+     * @ORM\JoinColumn(name="codigo_centro_costo_fk", referencedColumnName="codigo_centro_costo_pk")
+     */
+    private $centroCostoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="operacionIngresoRel")
@@ -283,6 +294,38 @@ class TteOperacion
     public function setRecibosOperacionRel($recibosOperacionRel): void
     {
         $this->recibosOperacionRel = $recibosOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCentroCostoFk()
+    {
+        return $this->codigoCentroCostoFk;
+    }
+
+    /**
+     * @param mixed $codigoCentroCostoFk
+     */
+    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
+    {
+        $this->codigoCentroCostoFk = $codigoCentroCostoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCentroCostoRel()
+    {
+        return $this->centroCostoRel;
+    }
+
+    /**
+     * @param mixed $centroCostoRel
+     */
+    public function setCentroCostoRel($centroCostoRel): void
+    {
+        $this->centroCostoRel = $centroCostoRel;
     }
 
 

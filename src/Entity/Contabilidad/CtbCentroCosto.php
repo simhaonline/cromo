@@ -47,7 +47,12 @@ class CtbCentroCosto
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Contabilidad\CtbRegistro", mappedBy="centroCostoRel")
      */
-    protected $ctbRegistrosCentroCostoRel;
+    protected $registrosCentroCostoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteOperacion", mappedBy="centroCostoRel")
+     */
+    protected $tteOperacionesCentroCostoRel;
 
     /**
      * @return mixed
@@ -100,18 +105,36 @@ class CtbCentroCosto
     /**
      * @return mixed
      */
-    public function getCtbRegistrosCentroCostoRel()
+    public function getRegistrosCentroCostoRel()
     {
-        return $this->ctbRegistrosCentroCostoRel;
+        return $this->registrosCentroCostoRel;
     }
 
     /**
-     * @param mixed $ctbRegistrosCentroCostoRel
+     * @param mixed $registrosCentroCostoRel
      */
-    public function setCtbRegistrosCentroCostoRel($ctbRegistrosCentroCostoRel): void
+    public function setRegistrosCentroCostoRel($registrosCentroCostoRel): void
     {
-        $this->ctbRegistrosCentroCostoRel = $ctbRegistrosCentroCostoRel;
+        $this->registrosCentroCostoRel = $registrosCentroCostoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTteOperacionesCentroCostoRel()
+    {
+        return $this->tteOperacionesCentroCostoRel;
+    }
+
+    /**
+     * @param mixed $tteOperacionesCentroCostoRel
+     */
+    public function setTteOperacionesCentroCostoRel($tteOperacionesCentroCostoRel): void
+    {
+        $this->tteOperacionesCentroCostoRel = $tteOperacionesCentroCostoRel;
+    }
+
+
 
 }
 

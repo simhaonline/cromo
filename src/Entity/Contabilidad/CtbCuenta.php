@@ -40,6 +40,41 @@ class CtbCuenta
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_padre_fk", type="string", length=20, nullable=true)
+     */
+    private $codigo_cuenta_padre_fk;
+
+    /**
+     * @ORM\Column(name="permite_movimiento", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $permiteMovimiento = false;
+
+    /**
+     * @ORM\Column(name="exige_tercero", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $exigeTercero = false;
+
+    /**
+     * @ORM\Column(name="exige_centro_costo", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $exigeCentroCosto = false;
+
+    /**
+     * @ORM\Column(name="exige_base", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $exigeBase = false;
+
+    /**
+     * @ORM\Column(name="porcentaje_base_retencion", type="float", nullable=true)
+     */
+    private $porcentajeBaseRetencion = 0;
+
+    /**
+     * @ORM\Column(name="nivel", type="integer", nullable=true, options={"default" : 1})
+     */
+    private $nivel = 1;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Contabilidad\CtbRegistro", mappedBy="cuentaRel")
      */
     protected $ctbRegistrosCuentaRel;
@@ -79,6 +114,118 @@ class CtbCuenta
     /**
      * @return mixed
      */
+    public function getCodigoCuentaPadreFk()
+    {
+        return $this->codigo_cuenta_padre_fk;
+    }
+
+    /**
+     * @param mixed $codigo_cuenta_padre_fk
+     */
+    public function setCodigoCuentaPadreFk($codigo_cuenta_padre_fk): void
+    {
+        $this->codigo_cuenta_padre_fk = $codigo_cuenta_padre_fk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPermiteMovimiento()
+    {
+        return $this->permiteMovimiento;
+    }
+
+    /**
+     * @param mixed $permiteMovimiento
+     */
+    public function setPermiteMovimiento($permiteMovimiento): void
+    {
+        $this->permiteMovimiento = $permiteMovimiento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExigeTercero()
+    {
+        return $this->exigeTercero;
+    }
+
+    /**
+     * @param mixed $exigeTercero
+     */
+    public function setExigeTercero($exigeTercero): void
+    {
+        $this->exigeTercero = $exigeTercero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExigeCentroCosto()
+    {
+        return $this->exigeCentroCosto;
+    }
+
+    /**
+     * @param mixed $exigeCentroCosto
+     */
+    public function setExigeCentroCosto($exigeCentroCosto): void
+    {
+        $this->exigeCentroCosto = $exigeCentroCosto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExigeBase()
+    {
+        return $this->exigeBase;
+    }
+
+    /**
+     * @param mixed $exigeBase
+     */
+    public function setExigeBase($exigeBase): void
+    {
+        $this->exigeBase = $exigeBase;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeBaseRetencion()
+    {
+        return $this->porcentajeBaseRetencion;
+    }
+
+    /**
+     * @param mixed $porcentajeBaseRetencion
+     */
+    public function setPorcentajeBaseRetencion($porcentajeBaseRetencion): void
+    {
+        $this->porcentajeBaseRetencion = $porcentajeBaseRetencion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNivel()
+    {
+        return $this->nivel;
+    }
+
+    /**
+     * @param mixed $nivel
+     */
+    public function setNivel($nivel): void
+    {
+        $this->nivel = $nivel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCtbRegistrosCuentaRel()
     {
         return $this->ctbRegistrosCuentaRel;
@@ -91,6 +238,7 @@ class CtbCuenta
     {
         $this->ctbRegistrosCuentaRel = $ctbRegistrosCuentaRel;
     }
+
 
 }
 

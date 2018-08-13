@@ -62,6 +62,11 @@ class TteFacturaTipo
     private $codigoCuentaIngresoManejoFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_caja_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaCajaFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="facturaTipoRel")
      */
     protected $facturasFacturaTipoRel;
@@ -261,6 +266,22 @@ class TteFacturaTipo
     public function setGuiasTiposFacturaTipoRel($guiasTiposFacturaTipoRel): void
     {
         $this->guiasTiposFacturaTipoRel = $guiasTiposFacturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCajaFk()
+    {
+        return $this->codigoCuentaCajaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCajaFk
+     */
+    public function setCodigoCuentaCajaFk($codigoCuentaCajaFk): void
+    {
+        $this->codigoCuentaCajaFk = $codigoCuentaCajaFk;
     }
 
 

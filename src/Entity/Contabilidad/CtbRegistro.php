@@ -55,19 +55,19 @@ class CtbRegistro
     private $numeroReferencia = 0;
 
     /**
-     * @ORM\Column(name="debito", type="float")
+     * @ORM\Column(name="vr_debito", type="float", nullable=true, options={"default" : 0})
      */
-    private $debito = 0;
+    private $vrDebito = 0;
 
     /**
-     * @ORM\Column(name="credito", type="float")
+     * @ORM\Column(name="vr_credito", type="float", nullable=true, options={"default" : 0})
      */
-    private $credito = 0;
+    private $vrCredito = 0;
 
     /**
-     * @ORM\Column(name="base", type="float")
+     * @ORM\Column(name="vr_base", type="float", nullable=true, options={"default" : 0})
      */
-    private $base = 0;
+    private $vrBase = 0;
 
     /**
      * @ORM\Column(name="naturaleza", type="string", length=1, nullable=true)
@@ -239,49 +239,49 @@ class CtbRegistro
     /**
      * @return mixed
      */
-    public function getDebito()
+    public function getVrDebito()
     {
-        return $this->debito;
+        return $this->vrDebito;
     }
 
     /**
-     * @param mixed $debito
+     * @param mixed $vrDebito
      */
-    public function setDebito($debito): void
+    public function setVrDebito($vrDebito): void
     {
-        $this->debito = $debito;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCredito()
-    {
-        return $this->credito;
-    }
-
-    /**
-     * @param mixed $credito
-     */
-    public function setCredito($credito): void
-    {
-        $this->credito = $credito;
+        $this->vrDebito = $vrDebito;
     }
 
     /**
      * @return mixed
      */
-    public function getBase()
+    public function getVrCredito()
     {
-        return $this->base;
+        return $this->vrCredito;
     }
 
     /**
-     * @param mixed $base
+     * @param mixed $vrCredito
      */
-    public function setBase($base): void
+    public function setVrCredito($vrCredito): void
     {
-        $this->base = $base;
+        $this->vrCredito = $vrCredito;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrBase()
+    {
+        return $this->vrBase;
+    }
+
+    /**
+     * @param mixed $vrBase
+     */
+    public function setVrBase($vrBase): void
+    {
+        $this->vrBase = $vrBase;
     }
 
     /**
@@ -395,7 +395,6 @@ class CtbRegistro
     {
         $this->centroCostoRel = $centroCostoRel;
     }
-
 
 
 }

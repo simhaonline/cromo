@@ -584,6 +584,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.estadoContabilizado')
             ->addSelect('ft.codigoCuentaIngresoFleteFk')
             ->addSelect('ft.codigoCuentaIngresoManejoFk')
+            ->addSelect('ft.naturalezaCuentaIngreso')
             ->addSelect('ft.codigoCuentaCajaFk')
             ->addSelect('o.coddigoCentroCostoFk')
             ->leftJoin('f.facturaTipoRel', 'ft')
@@ -617,19 +618,23 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
-
+                            if($arFactura['naturalezaCuentaIngreso'] == 'D') {
+                                $arRegistro->setVrDebito($arFactura['vrFlete']);
+                                $arRegistro->setNaturaleza('D');
+                            } else {
+                                $arRegistro->setVrCredito($arFactura['vrFlete']);
+                                $arRegistro->setNaturaleza('C');
+                            }
                             $em->persist($arRegistro);
                         } else {
                             $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete";
                             break;
                         }
-
                     }
                 } else {
                     $error = "La factura codigo " . $codigo . " no existe";
                     break;
                 }
-
             }
             if($error == "") {
                 $em->flush();

@@ -6,6 +6,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
+use App\Entity\Contabilidad\CtbCuenta;
 use App\Entity\Contabilidad\CtbRegistro;
 use App\Entity\Contabilidad\CtbTercero;
 use App\Entity\Transporte\TteCliente;
@@ -571,21 +572,62 @@ class TteFacturaRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->execute();
     }
 
+    public function registroContabilizar($codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
+            ->select('f.codigoFacturaPk')
+            ->addSelect('f.codigoClienteFk')
+            ->addSelect('f.fecha')
+            ->addSelect('f.estadoAprobado')
+            ->addSelect('f.estadoContabilizado')
+            ->addSelect('ft.codigoCuentaIngresoFleteFk')
+            ->addSelect('ft.codigoCuentaIngresoManejoFk')
+            ->addSelect('ft.codigoCuentaCajaFk')
+            ->leftJoin('f.facturaTipoRel', 'ft')
+            ->where('f.codigoFacturaPk = ' . $codigo);
+        $arFactura = $queryBuilder->getQuery()->getSingleResult();
+        return $arFactura;
+    }
+
     public function contabilizar($arr): bool
     {
         $em = $this->getEntityManager();
         if ($arr) {
+            $error = "";
             foreach ($arr AS $codigo) {
-                $arFactura = $em->getRepository(TteFactura::class)->find($codigo);
-                if($arFactura->getEstadoAprobado() == 1 && $arFactura->getEstadoContabilizado() == 0) {
-                    $arTercero = $em->getRepository(TteCliente::class)->terceroContabilidad($arFactura->getCodigoClienteFk());
-                    //Cuenta del ingreso
-                    $arRegistro = new CtbRegistro();
-                    $arRegistro->setTerceroRel($arTercero);
-                    $em->persist($arRegistro);
+                $arFactura = $em->getRepository(TteFactura::class)->registroContabilizar($codigo);
+                if($arFactura) {
+                    if($arFactura['estadoAprobado'] == 1 && $arFactura['estadoContabilizado'] == 0) {
+                        $arTercero = $em->getRepository(TteCliente::class)->terceroContabilidad($arFactura['codigoClienteFk']);
+                        //Cuenta del ingreso flete
+                        if($arFactura['codigoCuentaIngresoFleteFk']) {
+                            $arCuenta = $em->getRepository(CtbCuenta::class)->find($arFactura['codigoCuentaIngresoFleteFk']);
+                            if(!$arCuenta) {
+                                $error = "No se encuentra la cuenta del flete " . $arFactura['cuentaIngresoFleteFk'];
+                                break;
+                            }
+                            $arRegistro = new CtbRegistro();
+                            $arRegistro->setTerceroRel($arTercero);
+                            $arRegistro->setCuentaRel($arCuenta);
+                            $em->persist($arRegistro);
+                        } else {
+                            $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete";
+                            break;
+                        }
+                    }
+                } else {
+                    $error = "La factura codigo " . $codigo . " no existe";
+                    break;
                 }
+
             }
-            $em->flush();
+            if($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+
         }
         return true;
     }

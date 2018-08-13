@@ -177,17 +177,18 @@ class DespachoController extends Controller
         $arrBotonRndc = array('label' => 'RNDC', 'disabled' => true);
         $arrBotonImprimirManifiesto = array('label' => 'Manifiesto', 'disabled' => false);
         $arrBotonCobroEntrega = array('label' => 'Cobro entrega', 'disabled' => true);
-        $arrBotonLiquidacion = array('label' => 'Liquidacion', 'disabled' => false);
+        $arrBotonLiquidacion = array('label' => 'Liquidacion', 'disabled' => true);
         if ($arDespacho->getEstadoAutorizado()) {
             $arrBotonRetirarGuia['disabled'] = true;
             $arrBotonActualizar['disabled'] = true;
         }
         if ($arDespacho->getEstadoAprobado()) {
             if (!$arDespacho->getEstadoAnulado()) {
+                $arrBotonLiquidacion['disabled'] = false;
                 $arrBotonCerrar['disabled'] = false;
                 $arrBotonRndc['disabled'] = false;
                 $arrBotonCobroEntrega['disabled'] = false;
-                $arrBotoLiquidacion['disabled'] = false;
+
                 if ($arDespacho->getEstadoCerrado()) {
                     $arrBotonCerrar['disabled'] = true;
                 }

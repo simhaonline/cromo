@@ -13,6 +13,7 @@ use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoType;
 use App\Formato\Transporte\CobroEntrega;
 use App\Formato\Transporte\Despacho;
+use App\Formato\Transporte\Liquidacion;
 use App\Formato\Transporte\Manifiesto;
 use App\Formato\Transporte\RelacionEntrega;
 use App\Utilidades\Estandares;
@@ -176,6 +177,7 @@ class DespachoController extends Controller
         $arrBotonRndc = array('label' => 'RNDC', 'disabled' => true);
         $arrBotonImprimirManifiesto = array('label' => 'Manifiesto', 'disabled' => false);
         $arrBotonCobroEntrega = array('label' => 'Cobro entrega', 'disabled' => true);
+        $arrBotonLiquidacion = array('label' => 'Liquidacion', 'disabled' => false);
         if ($arDespacho->getEstadoAutorizado()) {
             $arrBotonRetirarGuia['disabled'] = true;
             $arrBotonActualizar['disabled'] = true;
@@ -185,6 +187,7 @@ class DespachoController extends Controller
                 $arrBotonCerrar['disabled'] = false;
                 $arrBotonRndc['disabled'] = false;
                 $arrBotonCobroEntrega['disabled'] = false;
+                $arrBotoLiquidacion['disabled'] = false;
                 if ($arDespacho->getEstadoCerrado()) {
                     $arrBotonCerrar['disabled'] = true;
                 }
@@ -200,6 +203,7 @@ class DespachoController extends Controller
             ->add('btnRetirarGuia', SubmitType::class, $arrBotonRetirarGuia)
             ->add('btnActualizar', SubmitType::class, $arrBotonActualizar)
             ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto)
+            ->add('btnLiquidacion', SubmitType::class, $arrBotonLiquidacion)
             ->add('btnCobroEntrega', SubmitType::class, $arrBotonCobroEntrega);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -256,6 +260,10 @@ class DespachoController extends Controller
             }
             if ($form->get('btnCobroEntrega')->isClicked()) {
                 $formato = new CobroEntrega();
+                $formato->Generar($em, $id);
+            }
+            if ($form->get('btnLiquidacion')->isClicked()) {
+                $formato = new Liquidacion();
                 $formato->Generar($em, $id);
             }
         }

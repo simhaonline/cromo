@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Monitoreo\Monitoreo;
 
+use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TteMonitoreoDetalle;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,15 +11,19 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class MonitoreoController extends Controller
 {
    /**
     * @Route("/transporte/movimiento/monitoreo/monitoreo/lista", name="transporte_movimiento_monitoreo_monitoreo_lista")
     */    
-    public function lista()
+    public function lista(Request $request)
     {
-        $arMonitoreos = $this->getDoctrine()->getRepository(TteMonitoreo::class)->lista();
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $arMonitoreos = $paginator->paginate($em->getRepository(TteMonitoreo::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/movimiento/monitoreo/monitoreo/lista.html.twig', ['arMonitoreos' => $arMonitoreos]);
     }
 

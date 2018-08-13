@@ -21,9 +21,17 @@
                 <td>{{ arMonitoreo.codigoVehiculoFk }}</td>
                 <td>{{ arMonitoreo.soporte }}</td>
                 <td>{{ arMonitoreo.codigoDespachoFk }}</td>
-                <td style="text-align: center"><a href="{{ path('transporte_movimiento_monitoreo_monitoreo_detalle', { 'codigoMonitoreo': arMonitoreo.codigoMonitoreoPk }) }}"><img src="{{ asset('../assets/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a href="{{ path('transporte_movimiento_monitoreo_monitoreo_detalle', { 'codigoMonitoreo': arMonitoreo.codigoMonitoreoPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arMonitoreos.getTotalItemCount }}</span></div>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arMonitoreos) }}
+    </div>
 {% endblock %}

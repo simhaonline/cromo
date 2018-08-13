@@ -6,6 +6,7 @@ use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TteVehiculo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteMonitoreoRepository extends ServiceEntityRepository
 {
@@ -14,20 +15,20 @@ class TteMonitoreoRepository extends ServiceEntityRepository
         parent::__construct($registry, TteMonitoreo::class);
     }
 
-    public function lista(): array
+    public function lista()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT m.codigoMonitoreoPk,
-                  m.fechaInicio,
-                  m.fechaFin,
-                  m.codigoVehiculoFk,
-                  m.soporte,
-                  m.codigoDespachoFk
-        FROM App\Entity\Transporte\TteMonitoreo m'
-        );
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteMonitoreo::class, 'm')
+            ->select('m.codigoMonitoreoPk')
+            ->addSelect('m.fechaInicio')
+            ->addSelect('m.fechaFin')
+            ->addSelect('m.codigoVehiculoFk')
+            ->addSelect('m.soporte')
+            ->addSelect('m.codigoDespachoFk')
+            ->where('m.codigoMonitoreoPk <> 0')
+        ->orderBy('m.fechaRegistro', 'DESC');
 
-        return $query->execute();
+        return $queryBuilder->getQuery()->execute();
     }
 
     public function generar($codigoVehiculo): bool

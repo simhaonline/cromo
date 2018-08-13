@@ -89,6 +89,11 @@ class TteOperacion
     protected $recibosOperacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFactura", mappedBy="operacionRel")
+     */
+    protected $facturasOperacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoOperacionPk()
@@ -326,6 +331,22 @@ class TteOperacion
     public function setCentroCostoRel($centroCostoRel): void
     {
         $this->centroCostoRel = $centroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasOperacionRel()
+    {
+        return $this->facturasOperacionRel;
+    }
+
+    /**
+     * @param mixed $facturasOperacionRel
+     */
+    public function setFacturasOperacionRel($facturasOperacionRel): void
+    {
+        $this->facturasOperacionRel = $facturasOperacionRel;
     }
 
 

@@ -6,6 +6,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
+use App\Entity\Contabilidad\CtbCentroCosto;
 use App\Entity\Contabilidad\CtbCuenta;
 use App\Entity\Contabilidad\CtbRegistro;
 use App\Entity\Contabilidad\CtbTercero;
@@ -584,7 +585,9 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('ft.codigoCuentaIngresoFleteFk')
             ->addSelect('ft.codigoCuentaIngresoManejoFk')
             ->addSelect('ft.codigoCuentaCajaFk')
+            ->addSelect('o.coddigoCentroCostoFk')
             ->leftJoin('f.facturaTipoRel', 'ft')
+            ->leftJoin('f.operacionRel', 'o')
             ->where('f.codigoFacturaPk = ' . $codigo);
         $arFactura = $queryBuilder->getQuery()->getSingleResult();
         return $arFactura;
@@ -610,11 +613,17 @@ class TteFacturaRepository extends ServiceEntityRepository
                             $arRegistro = new CtbRegistro();
                             $arRegistro->setTerceroRel($arTercero);
                             $arRegistro->setCuentaRel($arCuenta);
+                            if($arCuenta->getExigeCentroCosto()) {
+                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
+                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                            }
+
                             $em->persist($arRegistro);
                         } else {
                             $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete";
                             break;
                         }
+
                     }
                 } else {
                     $error = "La factura codigo " . $codigo . " no existe";

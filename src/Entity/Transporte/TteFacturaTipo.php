@@ -62,9 +62,19 @@ class TteFacturaTipo
     private $codigoCuentaIngresoManejoFk;
 
     /**
+     * @ORM\Column(name="naturaleza_cuenta_ingreso", type="string", length=1, nullable=true)
+     */
+    private $naturalezaCuentaIngreso = 0;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_cliente_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaClienteFk;
+
+    /**
+     * @ORM\Column(name="naturaleza_cuenta_cliente", type="string", length=1, nullable=true)
+     */
+    private $naturalezaCuentaCliente = 0;
 
     /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="facturaTipoRel")
@@ -239,6 +249,22 @@ class TteFacturaTipo
     /**
      * @return mixed
      */
+    public function getNaturalezaCuentaIngreso()
+    {
+        return $this->naturalezaCuentaIngreso;
+    }
+
+    /**
+     * @param mixed $naturalezaCuentaIngreso
+     */
+    public function setNaturalezaCuentaIngreso($naturalezaCuentaIngreso): void
+    {
+        $this->naturalezaCuentaIngreso = $naturalezaCuentaIngreso;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoCuentaClienteFk()
     {
         return $this->codigoCuentaClienteFk;
@@ -250,6 +276,22 @@ class TteFacturaTipo
     public function setCodigoCuentaClienteFk($codigoCuentaClienteFk): void
     {
         $this->codigoCuentaClienteFk = $codigoCuentaClienteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNaturalezaCuentaCliente()
+    {
+        return $this->naturalezaCuentaCliente;
+    }
+
+    /**
+     * @param mixed $naturalezaCuentaCliente
+     */
+    public function setNaturalezaCuentaCliente($naturalezaCuentaCliente): void
+    {
+        $this->naturalezaCuentaCliente = $naturalezaCuentaCliente;
     }
 
     /**

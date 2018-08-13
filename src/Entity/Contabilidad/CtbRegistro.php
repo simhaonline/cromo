@@ -50,6 +50,11 @@ class CtbRegistro
     private $numero = 0;
 
     /**
+     * @ORM\Column(name="numero_referencia", type="integer", nullable=true)
+     */
+    private $numeroReferencia = 0;
+
+    /**
      * @ORM\Column(name="debito", type="float")
      */
     private $debito = 0;
@@ -65,9 +70,19 @@ class CtbRegistro
     private $base = 0;
 
     /**
-     * @ORM\Column(name="descripcion_contable", type="text", nullable=true)
+     * @ORM\Column(name="naturaleza", type="string", length=1, nullable=true)
      */
-    private $descripcionContable;
+    private $naturaleza = 0;
+
+    /**
+     * @ORM\Column(name="descripcion", type="text", nullable=true)
+     */
+    private $descripcion;
+
+    /**
+     * @ORM\Column(name="estadoIntercambio", type="boolean", options={"default" : 0})
+     */
+    private $estadoIntercambio = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Contabilidad\CtbCuenta", inversedBy="ctbRegistrosCuentaRel")
@@ -208,6 +223,22 @@ class CtbRegistro
     /**
      * @return mixed
      */
+    public function getNumeroReferencia()
+    {
+        return $this->numeroReferencia;
+    }
+
+    /**
+     * @param mixed $numeroReferencia
+     */
+    public function setNumeroReferencia($numeroReferencia): void
+    {
+        $this->numeroReferencia = $numeroReferencia;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDebito()
     {
         return $this->debito;
@@ -256,17 +287,49 @@ class CtbRegistro
     /**
      * @return mixed
      */
-    public function getDescripcionContable()
+    public function getNaturaleza()
     {
-        return $this->descripcionContable;
+        return $this->naturaleza;
     }
 
     /**
-     * @param mixed $descripcionContable
+     * @param mixed $naturaleza
      */
-    public function setDescripcionContable($descripcionContable): void
+    public function setNaturaleza($naturaleza): void
     {
-        $this->descripcionContable = $descripcionContable;
+        $this->naturaleza = $naturaleza;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * @param mixed $descripcion
+     */
+    public function setDescripcion($descripcion): void
+    {
+        $this->descripcion = $descripcion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoIntercambio()
+    {
+        return $this->estadoIntercambio;
+    }
+
+    /**
+     * @param mixed $estadoIntercambio
+     */
+    public function setEstadoIntercambio($estadoIntercambio): void
+    {
+        $this->estadoIntercambio = $estadoIntercambio;
     }
 
     /**

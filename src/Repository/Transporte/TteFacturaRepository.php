@@ -6,6 +6,9 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
+use App\Entity\Contabilidad\CtbRegistro;
+use App\Entity\Contabilidad\CtbTercero;
+use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteFacturaTipo;
@@ -573,15 +576,16 @@ class TteFacturaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arr) {
             foreach ($arr AS $codigo) {
-                /*$arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-                if($arGuia->getEstadoDespachado() == 1 && $arGuia->getEstadoEntregado() == 0) {
-                    $fechaHora = date_create($arrControles['txtFechaEntrega' . $codigoGuia] . " " . $arrControles['txtHoraEntrega' . $codigoGuia]);
-                    $arGuia->setFechaEntrega($fechaHora);
-                    $arGuia->setEstadoEntregado(1);
-                    $em->persist($arGuia);
-                }*/
+                $arFactura = $em->getRepository(TteFactura::class)->find($codigo);
+                if($arFactura->getEstadoAprobado() == 1 && $arFactura->getEstadoContabilizado() == 0) {
+                    $arTercero = $em->getRepository(TteCliente::class)->terceroContabilidad($arFactura->getCodigoClienteFk());
+                    //Cuenta del ingreso
+                    $arRegistro = new CtbRegistro();
+                    $arRegistro->setTerceroRel($arTercero);
+                    $em->persist($arRegistro);
+                }
             }
-            //$em->flush();
+            $em->flush();
         }
         return true;
     }

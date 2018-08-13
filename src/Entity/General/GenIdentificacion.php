@@ -67,6 +67,11 @@ class GenIdentificacion
     protected $invTercerosIdentificacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Contabilidad\CtbTercero", mappedBy="identificacionRel")
+     */
+    protected $ctbTercerosIdentificacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoIdentificacionPk()

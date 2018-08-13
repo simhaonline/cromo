@@ -21,9 +21,9 @@ class CtbTercero
     private $codigoTerceroPk;
 
     /**
-     * @ORM\Column(name="codigo_identificacion_tipo_fk", type="integer")
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=1, nullable=true)
      */
-    private $codigoIdentificacionTipoFk;
+    private $codigoIdentificacionFk;
 
     /**
      * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
@@ -161,7 +161,7 @@ class CtbTercero
     protected $ciudadRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="ctbTercerosIdentificacionTipoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="ctbTercerosIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
      * @Assert\NotNull(message="Este campo no puede estar vacio")
      */
@@ -191,17 +191,17 @@ class CtbTercero
     /**
      * @return mixed
      */
-    public function getCodigoIdentificacionTipoFk()
+    public function getCodigoIdentificacionFk()
     {
-        return $this->codigoIdentificacionTipoFk;
+        return $this->codigoIdentificacionFk;
     }
 
     /**
-     * @param mixed $codigoIdentificacionTipoFk
+     * @param mixed $codigoIdentificacionFk
      */
-    public function setCodigoIdentificacionTipoFk($codigoIdentificacionTipoFk): void
+    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
     {
-        $this->codigoIdentificacionTipoFk = $codigoIdentificacionTipoFk;
+        $this->codigoIdentificacionFk = $codigoIdentificacionFk;
     }
 
     /**
@@ -447,17 +447,17 @@ class CtbTercero
     /**
      * @return mixed
      */
-    public function getIdentificacionTipoRel()
+    public function getIdentificacionRel()
     {
-        return $this->identificacionTipoRel;
+        return $this->identificacionRel;
     }
 
     /**
-     * @param mixed $identificacionTipoRel
+     * @param mixed $identificacionRel
      */
-    public function setIdentificacionTipoRel($identificacionTipoRel): void
+    public function setIdentificacionRel($identificacionRel): void
     {
-        $this->identificacionTipoRel = $identificacionTipoRel;
+        $this->identificacionRel = $identificacionRel;
     }
 
     /**
@@ -475,6 +475,9 @@ class CtbTercero
     {
         $this->ctbRegistrosTerceroRel = $ctbRegistrosTerceroRel;
     }
+
+
+
 
 }
 

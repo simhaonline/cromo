@@ -52,6 +52,16 @@ class TteFacturaTipo
     private $codigoCuentaCobrarTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_ingreso_flete_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaIngresoFleteFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_ingreso_manejo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaIngresoManejoFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="facturaTipoRel")
      */
     protected $facturasFacturaTipoRel;
@@ -112,38 +122,6 @@ class TteFacturaTipo
     /**
      * @return mixed
      */
-    public function getFacturasFacturaTipoRel()
-    {
-        return $this->facturasFacturaTipoRel;
-    }
-
-    /**
-     * @param mixed $facturasFacturaTipoRel
-     */
-    public function setFacturasFacturaTipoRel($facturasFacturaTipoRel): void
-    {
-        $this->facturasFacturaTipoRel = $facturasFacturaTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiasTiposFacturaTipoRel()
-    {
-        return $this->guiasTiposFacturaTipoRel;
-    }
-
-    /**
-     * @param mixed $guiasTiposFacturaTipoRel
-     */
-    public function setGuiasTiposFacturaTipoRel($guiasTiposFacturaTipoRel): void
-    {
-        $this->guiasTiposFacturaTipoRel = $guiasTiposFacturaTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getResolucionFacturacion()
     {
         return $this->resolucionFacturacion;
@@ -176,17 +154,17 @@ class TteFacturaTipo
     /**
      * @return mixed
      */
-    public function getCodigoCuentaCobrarTipoFk()
+    public function getPrefijo()
     {
-        return $this->codigoCuentaCobrarTipoFk;
+        return $this->prefijo;
     }
 
     /**
-     * @param mixed $codigoCuentaCobrarTipoFk
+     * @param mixed $prefijo
      */
-    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
+    public function setPrefijo($prefijo): void
     {
-        $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
+        $this->prefijo = $prefijo;
     }
 
     /**
@@ -208,17 +186,81 @@ class TteFacturaTipo
     /**
      * @return mixed
      */
-    public function getPrefijo()
+    public function getCodigoCuentaCobrarTipoFk()
     {
-        return $this->prefijo;
+        return $this->codigoCuentaCobrarTipoFk;
     }
 
     /**
-     * @param mixed $prefijo
+     * @param mixed $codigoCuentaCobrarTipoFk
      */
-    public function setPrefijo($prefijo): void
+    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
     {
-        $this->prefijo = $prefijo;
+        $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaIngresoFleteFk()
+    {
+        return $this->codigoCuentaIngresoFleteFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaIngresoFleteFk
+     */
+    public function setCodigoCuentaIngresoFleteFk($codigoCuentaIngresoFleteFk): void
+    {
+        $this->codigoCuentaIngresoFleteFk = $codigoCuentaIngresoFleteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaIngresoManejoFk()
+    {
+        return $this->codigoCuentaIngresoManejoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaIngresoManejoFk
+     */
+    public function setCodigoCuentaIngresoManejoFk($codigoCuentaIngresoManejoFk): void
+    {
+        $this->codigoCuentaIngresoManejoFk = $codigoCuentaIngresoManejoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasFacturaTipoRel()
+    {
+        return $this->facturasFacturaTipoRel;
+    }
+
+    /**
+     * @param mixed $facturasFacturaTipoRel
+     */
+    public function setFacturasFacturaTipoRel($facturasFacturaTipoRel): void
+    {
+        $this->facturasFacturaTipoRel = $facturasFacturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasTiposFacturaTipoRel()
+    {
+        return $this->guiasTiposFacturaTipoRel;
+    }
+
+    /**
+     * @param mixed $guiasTiposFacturaTipoRel
+     */
+    public function setGuiasTiposFacturaTipoRel($guiasTiposFacturaTipoRel): void
+    {
+        $this->guiasTiposFacturaTipoRel = $guiasTiposFacturaTipoRel;
     }
 
 

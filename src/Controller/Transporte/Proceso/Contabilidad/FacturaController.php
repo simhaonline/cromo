@@ -43,7 +43,7 @@ class FacturaController extends Controller
                 }
             }
             if ($form->get('btnContabilizar')->isClicked()) {
-                $arr = $request->request->get('chkSeleccionar');
+                $arr = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->contabilizar($arr);
             }
         }

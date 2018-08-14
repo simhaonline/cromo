@@ -101,4 +101,15 @@ final class FuncionesController
         return $letra;
     }
 
+    public static function RellenarNr($Nro, $Str, $NroCr)
+    {
+        $Longitud = strlen($Nro);
+
+        $Nc = $NroCr - $Longitud;
+        for ($i = 0; $i < $Nc; $i++)
+            $Nro = $Str . $Nro;
+
+        return (string)$Nro;
+    }
+
 }

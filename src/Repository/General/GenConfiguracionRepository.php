@@ -29,5 +29,21 @@ class GenConfiguracionRepository extends ServiceEntityRepository
 
     }
 
+    public function parametro($campo): string
+    {
+        $em = $this->getEntityManager();
+        $dato = "";
+        $query = $em->createQuery(
+            "SELECT c.".$campo."
+        FROM App\Entity\General\GenConfiguracion c 
+        WHERE c.codigoConfiguracionPk = :codigoConfiguracion"
+        )->setParameter('codigoConfiguracion', 1);
+        $arConfiguracion = $query->getSingleResult();
+        if($arConfiguracion) {
+            $dato = $arConfiguracion[$campo];
+        }
+        return $dato;
+
+    }
 
 }

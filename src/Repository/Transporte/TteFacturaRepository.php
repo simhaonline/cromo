@@ -7,6 +7,7 @@ use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Contabilidad\CtbCentroCosto;
+use App\Entity\Contabilidad\CtbComprobante;
 use App\Entity\Contabilidad\CtbCuenta;
 use App\Entity\Contabilidad\CtbRegistro;
 use App\Entity\Contabilidad\CtbTercero;
@@ -582,11 +583,15 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.fecha')
             ->addSelect('f.estadoAprobado')
             ->addSelect('f.estadoContabilizado')
+            ->addSelect('f.vrFlete')
+            ->addSelect('f.vrManejo')
+            ->addSelect('f.vrTotal')
             ->addSelect('ft.codigoCuentaIngresoFleteFk')
             ->addSelect('ft.codigoCuentaIngresoManejoFk')
             ->addSelect('ft.naturalezaCuentaIngreso')
-            ->addSelect('ft.codigoCuentaCajaFk')
-            ->addSelect('o.coddigoCentroCostoFk')
+            ->addSelect('ft.naturalezaCuentaCliente')
+            ->addSelect('ft.codigoCuentaClienteFk')
+            ->addSelect('o.codigoCentroCostoFk')
             ->leftJoin('f.facturaTipoRel', 'ft')
             ->leftJoin('f.operacionRel', 'o')
             ->where('f.codigoFacturaPk = ' . $codigo);
@@ -603,21 +608,24 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $arFactura = $em->getRepository(TteFactura::class)->registroContabilizar($codigo);
                 if($arFactura) {
                     if($arFactura['estadoAprobado'] == 1 && $arFactura['estadoContabilizado'] == 0) {
+                        $arComprobante = $em->getRepository(CtbComprobante::class)->find('00003');
                         $arTercero = $em->getRepository(TteCliente::class)->terceroContabilidad($arFactura['codigoClienteFk']);
                         //Cuenta del ingreso flete
                         if($arFactura['codigoCuentaIngresoFleteFk']) {
                             $arCuenta = $em->getRepository(CtbCuenta::class)->find($arFactura['codigoCuentaIngresoFleteFk']);
                             if(!$arCuenta) {
-                                $error = "No se encuentra la cuenta del flete " . $arFactura['cuentaIngresoFleteFk'];
+                                $error = "No se encuentra la cuenta del flete " . $arFactura['codigoCuentaIngresoFleteFk'];
                                 break;
                             }
                             $arRegistro = new CtbRegistro();
                             $arRegistro->setTerceroRel($arTercero);
                             $arRegistro->setCuentaRel($arCuenta);
+                            $arRegistro->setComprobanteRel($arComprobante);
                             if($arCuenta->getExigeCentroCosto()) {
                                 $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
+                            $arRegistro->setFecha($arFactura['fecha']);
                             if($arFactura['naturalezaCuentaIngreso'] == 'D') {
                                 $arRegistro->setVrDebito($arFactura['vrFlete']);
                                 $arRegistro->setNaturaleza('D');
@@ -630,6 +638,65 @@ class TteFacturaRepository extends ServiceEntityRepository
                             $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete";
                             break;
                         }
+
+                        //Cuenta del ingreso manejo
+                        if($arFactura['codigoCuentaIngresoManejoFk']) {
+                            $arCuenta = $em->getRepository(CtbCuenta::class)->find($arFactura['codigoCuentaIngresoManejoFk']);
+                            if(!$arCuenta) {
+                                $error = "No se encuentra la cuenta del manejo " . $arFactura['codigoCuentaIngresoManejoFk'];
+                                break;
+                            }
+                            $arRegistro = new CtbRegistro();
+                            $arRegistro->setTerceroRel($arTercero);
+                            $arRegistro->setCuentaRel($arCuenta);
+                            $arRegistro->setComprobanteRel($arComprobante);
+                            if($arCuenta->getExigeCentroCosto()) {
+                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
+                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                            }
+                            $arRegistro->setFecha($arFactura['fecha']);
+                            if($arFactura['naturalezaCuentaIngreso'] == 'D') {
+                                $arRegistro->setVrDebito($arFactura['vrManejo']);
+                                $arRegistro->setNaturaleza('D');
+                            } else {
+                                $arRegistro->setVrCredito($arFactura['vrManejo']);
+                                $arRegistro->setNaturaleza('C');
+                            }
+                            $em->persist($arRegistro);
+                        } else {
+                            $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por manejo";
+                            break;
+                        }
+
+                        //Cuenta cliente
+                        if($arFactura['codigoCuentaClienteFk']) {
+                            $arCuenta = $em->getRepository(CtbCuenta::class)->find($arFactura['codigoCuentaClienteFk']);
+                            if(!$arCuenta) {
+                                $error = "No se encuentra la cuenta cliente " . $arFactura['codigoCuentaClienteFk'];
+                                break;
+                            }
+                            $arRegistro = new CtbRegistro();
+                            $arRegistro->setTerceroRel($arTercero);
+                            $arRegistro->setCuentaRel($arCuenta);
+                            $arRegistro->setComprobanteRel($arComprobante);
+                            if($arCuenta->getExigeCentroCosto()) {
+                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
+                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                            }
+                            $arRegistro->setFecha($arFactura['fecha']);
+                            if($arFactura['naturalezaCuentaCliente'] == 'D') {
+                                $arRegistro->setVrDebito($arFactura['vrTotal']);
+                                $arRegistro->setNaturaleza('D');
+                            } else {
+                                $arRegistro->setVrCredito($arFactura['vrTotal']);
+                                $arRegistro->setNaturaleza('C');
+                            }
+                            $em->persist($arRegistro);
+                        } else {
+                            $error = "El tipo de factura no tiene configurada la cuenta cliente";
+                            break;
+                        }
+
                     }
                 } else {
                     $error = "La factura codigo " . $codigo . " no existe";

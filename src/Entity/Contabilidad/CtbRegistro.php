@@ -80,7 +80,7 @@ class CtbRegistro
     private $descripcion;
 
     /**
-     * @ORM\Column(name="estadoIntercambio", type="boolean", options={"default" : 0})
+     * @ORM\Column(name="estado_intercambio", type="boolean", options={"default" : 0})
      */
     private $estadoIntercambio = 0;
 
@@ -395,6 +395,7 @@ class CtbRegistro
     {
         $this->centroCostoRel = $centroCostoRel;
     }
+
 
 
 }

@@ -61,22 +61,24 @@
                 <li>
                     <a href="#"><i class="fa fa-money fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li><a href="{{ path('lista',{'entidad':'CtbRegistro'}) }}">Registro</a></li>
+                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Registro</a></li>
                         <li><a href="#">Asiento</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li><a href="{{ path('lista',{'entidad':'CtbTercero'}) }}">Tercero</a></li>
-                        <li><a href="{{ path('lista',{'entidad':'CtbComprobante'}) }}">Comprobante</a></li>
-                        <li><a href="{{ path('lista',{'entidad':'CtbCuenta'}) }}">Cuenta</a></li>
-                        <li><a href="{{ path('lista',{'entidad':'CtbCentroCosto'}) }}">Centro costo</a></li>
+                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Tercero</a></li>
+                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Comprobante</a></li>
+                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Cuenta</a></li>
+                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Centro costo</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-retweet fa-fw"></i> Proceso<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level"></ul>
+                    <a href="#"><i class="fa fa-retweet fa-fw"></i> Utilidad<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="{{ path('contabilidad_utilidad_intercambio_registro_lista') }}">Intercambio de datos</a>
+                    </ul>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-file-text-o fa-fw"></i> Informe<span class="fa arrow"></span></a>

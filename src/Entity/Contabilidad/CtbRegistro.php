@@ -55,6 +55,11 @@ class CtbRegistro
     private $numeroReferencia = 0;
 
     /**
+     * @ORM\Column(name="numero_prefijo", type="string", length=20, nullable=true)
+     */
+    private $numeroPrefijo;
+
+    /**
      * @ORM\Column(name="vr_debito", type="float", nullable=true, options={"default" : 0})
      */
     private $vrDebito = 0;
@@ -394,6 +399,22 @@ class CtbRegistro
     public function setCentroCostoRel($centroCostoRel): void
     {
         $this->centroCostoRel = $centroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroPrefijo()
+    {
+        return $this->numeroPrefijo;
+    }
+
+    /**
+     * @param mixed $numeroPrefijo
+     */
+    public function setNumeroPrefijo($numeroPrefijo): void
+    {
+        $this->numeroPrefijo = $numeroPrefijo;
     }
 
 

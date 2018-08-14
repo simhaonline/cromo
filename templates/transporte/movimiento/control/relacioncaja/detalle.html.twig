@@ -3,13 +3,19 @@
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnAutorizar) }}
+            {{ form_widget(form.btnDesautorizar) }}
+            {{ form_widget(form.btnImprimir) }}
+            {{ form_widget(form.btnAprobar) }}
+            {{ form_widget(form.btnAnular) }}
         </div>
     </div>
     <div style="float:right">
-
+        {% if arRelacionCaja.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arRelacionCaja.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arRelacionCaja.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
-    <br /><br />
+    <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">CODIGO:</td>
@@ -94,9 +100,11 @@
                 </div>
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
+                    {% if arRelacionCaja.estadoAutorizado == 0%}
                     <div class="btn-group">
                         <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_control_relacioncaja_detalle_adicionar_recibo', {'codigoRelacionCaja': arRelacionCaja.codigoRelacionCajaPk }) }}', 'RelacionCajaAdicionaRecibo', 600, 900)">Adicionar</a>
                     </div>
+                    {% endif %}
                     <div class="btn-group">
                         {{ form_widget(form.btnRetirarRecibo, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                     </div>

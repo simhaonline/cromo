@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteRelacionCaja;
 use App\Form\Type\Transporte\DespachoType;
 use App\Form\Type\Transporte\RelacionCajaType;
 use App\Formato\Transporte\RelacionCaja;
+use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -68,15 +69,33 @@ class RelacionCajaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $arRelacionCaja = $em->getRepository(TteRelacionCaja::class)->find($codigoRelacionCaja);
-        $form = $this->createFormBuilder()
-            ->add('btnRetirarRecibo', SubmitType::class, array('label' => 'Retirar'))
-            ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
-            ->getForm();
+        $form = Estandares::botonera($arRelacionCaja->getEstadoAutorizado(), $arRelacionCaja->getEstadoAprobado(), $arRelacionCaja->getEstadoAnulado());
+
+        //Controles para el formulario
+        $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+
+        if ($arRelacionCaja->getEstadoAutorizado()) {
+            $arrBtnRetirar['disabled'] = true;
+        }
+        $form
+            ->add('btnRetirarRecibo', SubmitType::class, $arrBtnRetirar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new RelacionCaja();
                 $formato->Generar($em, $codigoRelacionCaja);
+            }
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(TteRelacionCaja::class)->autorizar($arRelacionCaja);
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', ['codigoRelacionCaja' => $codigoRelacionCaja]));
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository(TteRelacionCaja::class)->desautorizar($arRelacionCaja);
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', ['codigoRelacionCaja' => $codigoRelacionCaja]));
+            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(TteRelacionCaja::class)->aprobar($arRelacionCaja);
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', ['codigoRelacionCaja' => $codigoRelacionCaja]));
             }
             if ($form->get('btnRetirarRecibo')->isClicked()) {
                 $arr = $request->request->get('ChkSeleccionar');

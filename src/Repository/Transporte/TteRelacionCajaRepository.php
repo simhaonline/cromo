@@ -4,6 +4,7 @@ namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteRecibo;
 use App\Entity\Transporte\TteRelacionCaja;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -55,7 +56,7 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
         return true;
     }
 
-    public function retirarRecibo($arrDetalles): bool
+    public function retirarRecibo($arrDetalles)
     {
         $em = $this->getEntityManager();
         if($arrDetalles) {
@@ -72,4 +73,45 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
         return true;
     }
 
+    public function autorizar($arRelacionCaja){
+        if($this->getEntityManager()->getRepository(TteRelacionCaja::class)->contarDetalles($arRelacionCaja->getCodigoRelacionCajaPk()) > 0){
+            $arRelacionCaja->setEstadoAutorizado(1);
+            $this->getEntityManager()->persist($arRelacionCaja);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('El registro no tiene detalles');
+        }
+    }
+
+    public function desautorizar($arRelacionCaja)
+    {
+        if ($arRelacionCaja->getEstadoAutorizado() == 1 && $arRelacionCaja->getEstadoAprobado() == 0) {
+            $arRelacionCaja->setEstadoAutorizado(0);
+            $this->getEntityManager()->persist($arRelacionCaja);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('El registro esta aprobado y no se puede desautorizar');
+        }
+    }
+
+    public function contarDetalles($codigoRelacionCaja)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecibo::class, 'r')
+            ->select("COUNT(r.codigoReciboPk)")
+            ->where("r.codigoRelacionCajaFk= {$codigoRelacionCaja} ");
+        $resultado =  $queryBuilder->getQuery()->getSingleResult();
+        return $resultado[1];
+    }
+
+    public function aprobar($arRelacionCaja)
+    {
+        if($arRelacionCaja->getEstadoAutorizado() == 1 && $arRelacionCaja->getEstadoAprobado() == 0) {
+            $arRelacionCaja->setEstadoAprobado(1);
+            $this->getEntityManager()->persist($arRelacionCaja);
+            $this->getEntityManager()->flush();
+
+        } else {
+            Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
+        }
+    }
 }

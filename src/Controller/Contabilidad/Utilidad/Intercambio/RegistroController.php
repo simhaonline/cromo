@@ -4,6 +4,8 @@ namespace App\Controller\Contabilidad\Utilidad\Intercambio;
 
 use App\Entity\Contabilidad\CtbRegistro;
 use App\Entity\General\GenConfiguracion;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,24 +29,29 @@ class RegistroController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroCtbRegistroFiltroFecha')))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroCtbRegistroFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroCtbRegistroFechaHasta'))])
+            ->add('txtComprobante', TextType::class, ['required' => false, 'data' => $session->get('filtroCtbComprobante'), 'attr' => ['class' => 'form-control']])
+            ->add('btnDescargar', SubmitType::class, ['label' => 'Descargar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGenerar', SubmitType::class, ['label' => 'Generar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                if ($form->get('txtCodigoCliente')->getData() != '') {
-                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-                } else {
-                    $session->set('filtroTteCodigoCliente', null);
-                    $session->set('filtroTteNombreCliente', null);
-                }
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnGenerar')->isClicked() || $form->get('btnDescargar')->isClicked()) {
+                $session->set('filtroCtbRegistroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroCtbRegistroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                $session->set('filtroCtbRegistroFiltroFecha', $form->get('filtrarFecha')->getData());
+                $session->set('filtroCtbComprobante', $form->get('txtComprobante')->getData());
             }
             if ($form->get('btnGenerar')->isClicked()) {
-                $arr = $request->request->get('ChkSeleccionar');
                 $this->ilimitada();
             }
+            if ($form->get('btnDescargar')->isClicked()) {
+                $em->getRepository(CtbRegistro::class)->aplicarIntercambio();
+            }
+
         }
         $arRegistros = $paginator->paginate($em->getRepository(CtbRegistro::class)->listaIntercambio(), $request->query->getInt('page', 1),20);
         return $this->render('contabilidad/utilidad/intercambio/registro/lista.html.twig',
@@ -96,7 +103,6 @@ class RegistroController extends Controller
             fputs($ar, "\n");
         }
         fclose($ar);
-        $em->getRepository(CtbRegistro::class)->aplicarIntercambio();
         header('Content-Description: File Transfer');
         header('Content-Type: text/csv; charset=ISO-8859-15');
         header('Content-Disposition: attachment; filename=' . basename($strArchivo));

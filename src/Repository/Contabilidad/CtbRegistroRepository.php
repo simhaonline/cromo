@@ -58,14 +58,14 @@ class CtbRegistroRepository extends ServiceEntityRepository
         if($session->get('filtroCtbNumeroReferencia') != ''){
             $queryBuilder->andWhere("r.numeroReferencia = {$session->get('filtroCtbNumeroReferencia')}");
         }
-        if($session->get('filtroFecha') == true){
-            if ($session->get('filtroFechaDesde') != null) {
-                $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+        if($session->get('filtroCtbRegistroFiltroFecha') == true){
+            if ($session->get('filtroCtbRegistroFechaDesde') != null) {
+                $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroCtbRegistroFechaDesde')} 00:00:00'");
             } else {
                 $queryBuilder->andWhere("r.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
             }
-            if ($session->get('filtroFechaHasta') != null) {
-                $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            if ($session->get('filtroCtbRegistroFechaHasta') != null) {
+                $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroCtbRegistroFechaHasta')} 23:59:59'");
             } else {
                 $queryBuilder->andWhere("r.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
@@ -97,6 +97,22 @@ class CtbRegistroRepository extends ServiceEntityRepository
             ->leftJoin('r.terceroRel', 't')
             ->leftJoin('r.comprobanteRel', 'c')
             ->where('r.estadoIntercambio = 0');
+        $fecha =  new \DateTime('now');
+        if($session->get('filtroCtbComprobante') != ''){
+            $queryBuilder->andWhere("r.codigoComprobanteFk = {$session->get('filtroCtbComprobante')}");
+        }
+        if($session->get('filtroCtbRegistroFiltroFecha') == true){
+            if ($session->get('filtroCtbRegistroFechaDesde') != null) {
+                $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroCtbRegistroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("r.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroCtbRegistroFechaHasta') != null) {
+                $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroCtbRegistroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("r.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
         return $queryBuilder;
     }
 

@@ -38,9 +38,9 @@ class RegistroController extends Controller
             ->add('txtCuenta', TextType::class, ['required' => false, 'data' => $session->get('filtroCtbCuenta'), 'attr' => ['class' => 'form-control']])
             ->add('txtCentroCosto', TextType::class, ['required' => false, 'data' => $session->get('filtroCtbCentroCosto'), 'attr' => ['class' => 'form-control']])
             ->add('txtNumeroReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroCtbNumeroReferencia'), 'attr' => ['class' => 'form-control']])
-            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroCtbRegistroFiltroFecha')))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroCtbRegistroFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroCtbRegistroFechaHasta'))])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -54,9 +54,9 @@ class RegistroController extends Controller
                 $session->set('filtroCtbCuenta', $form->get('txtCuenta')->getData());
                 $session->set('filtroCtbCentroCosto', $form->get('txtCentroCosto')->getData());
                 $session->set('filtroCtbNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
-                $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
-                $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
-                $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
+                $session->set('filtroCtbRegistroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroCtbRegistroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                $session->set('filtroCtbRegistroFiltroFecha', $form->get('filtrarFecha')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->createQuery($em->getRepository(CtbRegistro::class)->registros())->execute(), "Registros");

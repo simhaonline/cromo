@@ -77,6 +77,11 @@ class TteFacturaTipo
     private $naturalezaCuentaCliente = 0;
 
     /**
+     * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoComprobanteFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="facturaTipoRel")
      */
     protected $facturasFacturaTipoRel;
@@ -324,6 +329,22 @@ class TteFacturaTipo
     public function setGuiasTiposFacturaTipoRel($guiasTiposFacturaTipoRel): void
     {
         $this->guiasTiposFacturaTipoRel = $guiasTiposFacturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteFk()
+    {
+        return $this->codigoComprobanteFk;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteFk
+     */
+    public function setCodigoComprobanteFk($codigoComprobanteFk): void
+    {
+        $this->codigoComprobanteFk = $codigoComprobanteFk;
     }
 
 

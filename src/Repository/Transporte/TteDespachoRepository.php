@@ -989,7 +989,8 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->leftJoin('d.ciudadDestinoRel ', 'cd')
             ->leftJoin('d.conductorRel', 'c')
             ->where('d.estadoContabilizado =  0')
-            ->andWhere('d.estadoAprobado = 1');
+            ->andWhere('d.estadoAprobado = 1')
+        ->andWhere('dt.viaje = 1');
         $fecha =  new \DateTime('now');
         if($session->get('filtroTteDespachoFiltroFecha') == true){
             if ($session->get('filtroTteDespachoFechaDesde') != null) {
@@ -1005,6 +1006,47 @@ class TteDespachoRepository extends ServiceEntityRepository
         };
 
         return $queryBuilder->getQuery()->execute();
+    }
+
+    public function registroContabilizar($codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
+            ->select('d.codigoDespachoPk')
+            ->where('d.codigoDespachoPk = ' . $codigo);
+        $arDespacho = $queryBuilder->getQuery()->getSingleResult();
+        return $arDespacho;
+    }
+
+    public function contabilizar($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $error = "";
+            foreach ($arr AS $codigo) {
+                $arDespacho = $em->getRepository(TteDespacho::class)->registroContabilizar($codigo);
+                if($arDespacho) {
+                    if($arDespacho['estadoAprobado'] == 1 && $arDespacho['estadoContabilizado'] == 0) {
+                        $arComprobante = $em->getRepository(CtbComprobante::class)->find('00025');
+                        //$arTercero = $em->getRepository(TteCliente::class)->terceroContabilidad($arFactura['codigoClienteFk']);
+
+                        /*$arFacturaAct = $em->getRepository(TteFactura::class)->find($arFactura['codigoFacturaPk']);
+                        $arFacturaAct->setEstadoContabilizado(1);
+                        $em->persist($arFacturaAct);*/
+                    }
+                } else {
+                    $error = "La despacho codigo " . $codigo . " no existe";
+                    break;
+                }
+            }
+            if($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+
+        }
+        return true;
     }
 
 }

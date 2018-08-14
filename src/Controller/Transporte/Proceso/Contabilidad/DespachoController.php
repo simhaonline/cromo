@@ -39,26 +39,13 @@ class DespachoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
-                $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
-                $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
-                if ($form->get('txtCodigoCliente')->getData() != '') {
-                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-                } else {
-                    $session->set('filtroTteCodigoCliente', null);
-                    $session->set('filtroTteNombreCliente', null);
-                }
-                $arFacturaTipo = $form->get('cboFacturaTipoRel')->getData();
-                if ($arFacturaTipo) {
-                    $session->set('filtroTteFacturaCodigoFacturaTipo', $arFacturaTipo->getCodigoFacturaTipoPk());
-                } else {
-                    $session->set('filtroTteFacturaCodigoFacturaTipo', null);
-                }
+                $session->set('filtroTteDespachoFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroTteDespachoFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                $session->set('filtroTteDespachoFiltroFecha', $form->get('filtrarFecha')->getData());
             }
             if ($form->get('btnContabilizar')->isClicked()) {
                 $arr = $request->request->get('ChkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->contabilizar($arr);
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->contabilizar($arr);
             }
         }
         $arDespachos = $paginator->paginate($em->getRepository(TteDespacho::class)->listaContabilizar(), $request->query->getInt('page', 1),100);

@@ -15,6 +15,7 @@
             <th>FLETE</th>
             <th>MANEJO</th>
             <th>NOV</th>
+            <th>NOV_SOL</th>
         </tr>
         {% for arGuia in arGuias %}
         <tr>
@@ -31,6 +32,7 @@
             <td>{{ arGuia.vrFlete }}</td>
             <td>{{ arGuia.vrManejo }}</td>
             <td class="estado">{{ arGuia.estadoNovedad?'SI':'NO' }}</td>
+            <td class="estado">{{ arGuia.estadoNovedadSolucion?'SI':'NO' }}</td>
         </tr>
         {% endfor %}
     </table>

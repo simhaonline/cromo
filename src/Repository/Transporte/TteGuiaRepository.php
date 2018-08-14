@@ -862,6 +862,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.fechaIngreso')
             ->addSelect('g.fechaEntrega')
             ->addSelect('g.estadoNovedad')
+            ->addSelect('g.estadoNovedadSolucion')
             ->addSelect('cd.nombre as destino')
             ->addSelect('c.nombreCorto as clienteNombreCorto')
             ->leftJoin('g.ciudadDestinoRel', 'cd')

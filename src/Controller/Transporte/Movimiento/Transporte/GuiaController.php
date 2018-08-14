@@ -245,6 +245,7 @@ class GuiaController extends Controller
             $em->persist($arNovedad);
             $arGuia = $em->getRepository(TteGuia::class)->find($arNovedad->getCodigoGuiaFk());
             $arGuia->setEstadoNovedad(0);
+            $arGuia->setEstadoNovedadSolucion(1);
             $em->persist($arGuia);
             $em->flush();
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

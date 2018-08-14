@@ -229,6 +229,11 @@ class TteGuia
     private $estadoNovedad = false;
 
     /**
+     * @ORM\Column(name="estado_novedad_solucion", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $estadoNovedadSolucion = false;
+
+    /**
      * @ORM\Column(name="estado_factura_exportado", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoFacturaExportado = false;
@@ -1715,6 +1720,22 @@ class TteGuia
     public function setEstadoFacturaExportado($estadoFacturaExportado): void
     {
         $this->estadoFacturaExportado = $estadoFacturaExportado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoNovedadSolucion()
+    {
+        return $this->estadoNovedadSolucion;
+    }
+
+    /**
+     * @param mixed $estadoNovedadSolucion
+     */
+    public function setEstadoNovedadSolucion($estadoNovedadSolucion): void
+    {
+        $this->estadoNovedadSolucion = $estadoNovedadSolucion;
     }
 
 

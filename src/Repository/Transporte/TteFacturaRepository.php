@@ -599,6 +599,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('ft.naturalezaCuentaIngreso')
             ->addSelect('ft.naturalezaCuentaCliente')
             ->addSelect('ft.codigoCuentaClienteFk')
+            ->addSelect('ft.prefijo')
             ->addSelect('o.codigoCentroCostoFk')
             ->leftJoin('f.facturaTipoRel', 'ft')
             ->leftJoin('f.operacionRel', 'o')
@@ -633,6 +634,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
+                            $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
                             $arRegistro->setNumero($arFactura['numero']);
                             $arRegistro->setFecha($arFactura['fecha']);
                             if($arFactura['naturalezaCuentaIngreso'] == 'D') {
@@ -664,6 +666,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
+                            $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
                             $arRegistro->setNumero($arFactura['numero']);
                             $arRegistro->setFecha($arFactura['fecha']);
                             if($arFactura['naturalezaCuentaIngreso'] == 'D') {
@@ -695,8 +698,9 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
-                            $arRegistro->setFecha($arFactura['fecha']);
+                            $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
                             $arRegistro->setNumero($arFactura['numero']);
+                            $arRegistro->setFecha($arFactura['fecha']);
                             if($arFactura['naturalezaCuentaCliente'] == 'D') {
                                 $arRegistro->setVrDebito($arFactura['vrTotal']);
                                 $arRegistro->setNaturaleza('D');

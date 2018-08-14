@@ -81,6 +81,7 @@ class CtbRegistroRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CtbRegistro::class, 'r')
             ->select('r.codigoRegistroPk')
             ->addSelect('r.numero')
+            ->addSelect('r.numeroReferencia')
             ->addSelect('r.fecha')
             ->addSelect('r.vrDebito')
             ->addSelect('r.vrCredito')
@@ -89,10 +90,13 @@ class CtbRegistroRepository extends ServiceEntityRepository
             ->addSelect('r.codigoCentroCostoFk')
             ->addSelect('r.codigoCuentaFk')
             ->addSelect('r.codigoComprobanteFk')
+            ->addSelect('c.nombre')
             ->addSelect('r.descripcion')
             ->addSelect('r.codigoTerceroFk')
             ->addSelect('t.numeroIdentificacion')
+            ->addSelect('t.nombreCorto')
             ->leftJoin('r.terceroRel', 't')
+            ->leftJoin('r.comprobanteRel', 'c')
             ->where('r.estadoIntercambio = 0');
         return $queryBuilder;
     }

@@ -25,8 +25,9 @@ class RegistroController extends Controller
      */
     public function lista(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
         $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroCtbCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroCtbNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
@@ -35,6 +36,7 @@ class RegistroController extends Controller
             ->add('txtNumeroHasta', TextType::class, ['required' => false, 'data' => $session->get('filtroCtbNumeroHasta'), 'attr' => ['class' => 'form-control']])
             ->add('txtCuenta', TextType::class, ['required' => false, 'data' => $session->get('filtroCtbCuenta'), 'attr' => ['class' => 'form-control']])
             ->add('txtCentroCosto', TextType::class, ['required' => false, 'data' => $session->get('filtroCtbCentroCosto'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNumeroReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroCtbNumeroReferencia'), 'attr' => ['class' => 'form-control']])
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
@@ -49,12 +51,14 @@ class RegistroController extends Controller
                 $session->set('filtroCtbNumeroHasta', $form->get('txtNumeroHasta')->getData());
                 $session->set('filtroCtbCuenta', $form->get('txtCuenta')->getData());
                 $session->set('filtroCtbCentroCosto', $form->get('txtCentroCosto')->getData());
+                $session->set('filtroCtbNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
                 $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
                 $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
             }
         }
-        $arRegistros = $this->getDoctrine()->getRepository(CtbRegistro::class)->registros()->getQuery()->getResult();
+        $query = $this->getDoctrine()->getRepository(CtbRegistro::class)->registros();
+        $arRegistros = $paginator->paginate($query, $request->query->getInt('page', 1),500);
         return $this->render('contabilidad/informe/registro/registros.html.twig', [
             'arRegistros' => $arRegistros,
             'form' => $form->createView() ]);

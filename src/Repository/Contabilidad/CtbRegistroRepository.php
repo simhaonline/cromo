@@ -57,6 +57,9 @@ class CtbRegistroRepository extends ServiceEntityRepository
         if($session->get('filtroCtbCentroCosto') != ''){
             $queryBuilder->andWhere("r.codigoCentroCostoFk = {$session->get('filtroCtbCentroCosto')}");
         }
+        if($session->get('filtroCtbNumeroReferencia') != ''){
+            $queryBuilder->andWhere("r.numeroReferencia = {$session->get('filtroCtbNumeroReferencia')}");
+        }
         if($session->get('filtroFecha') == true){
             if ($session->get('filtroFechaDesde') != null) {
                 $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");

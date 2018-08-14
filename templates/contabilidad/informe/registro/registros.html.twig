@@ -27,28 +27,32 @@
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Comprobante:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     {{ form_widget(form.txtComprobante) }}
                 </div>
-                <label class="col-sm-1 control-label">Numero hasta:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.txtNumeroHasta) }}
-                </div>
-                <label class="col-sm-4 control-label">Numero desde:</label>
-                <div class="col-sm-2">
+                <label class="col-sm-1 control-label">Numero desde:</label>
+                <div class="col-sm-4">
                     {{ form_widget(form.txtNumeroDesde) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Cuenta:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     {{ form_widget(form.txtCuenta) }}
+                </div>
+                <label class="col-sm-1 control-label">Numero Hasta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtNumeroHasta) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Centro costo:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     {{ form_widget(form.txtCentroCosto) }}
+                </div>
+                <label class="col-sm-1 control-label">Numero referencia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtNumeroReferencia) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -104,13 +108,21 @@
                 <td>{{ arRegistro.codigoCentroCostoFk }}</td>
                 <td>{{ arRegistro.numeroIdentificacion }}</td>
                 <td>{{ arRegistro.nombreCorto }}</td>
-                <td class="numero">{{ arRegistro.vrDebito }}</td>
-                <td class="numero">{{ arRegistro.vrCredito }}</td>
-                <td class="numero">{{ arRegistro.vrBase }}</td>
+                <td class="numero">{{ arRegistro.vrDebito | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arRegistro.vrCredito | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arRegistro.vrBase | number_format(0, '.', ',')}}</td>
                 <td>{{ arRegistro.descripcion }}</td>
             </tr>
         {% endfor %}
     </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRegistros.getTotalItemCount }}</span></div>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arRegistros) }}
+    </div>
     {#<div class="btn-group">#}
         {#{{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}#}
     {#</div>#}

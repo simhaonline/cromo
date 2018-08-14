@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Proceso\Contabilidad;
 
+use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaTipo;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -15,13 +16,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-class FacturaController extends Controller
+class DespachoController extends Controller
 {
     /**
      * @param Request $request
      * @return Response
      * @throws \Doctrine\ORM\ORMException
-     * @Route("/transporte/proceso/contabilidad/factura/lista", name="transporte_proceso_contabilidad_factura_lista")
+     * @Route("/transporte/proceso/contabilidad/despacho/lista", name="transporte_proceso_contabilidad_despacho_lista")
      */
     public function lista(Request $request)
     {
@@ -29,12 +30,9 @@ class FacturaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
-            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
-            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-            ->add('cboFacturaTipoRel', EntityType::class, $em->getRepository(TteFacturaTipo::class)->llenarCombo())
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTteDespachoFiltroFecha')))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteDespachoFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteDespachoFechaHasta'))])
             ->add('btnContabilizar', SubmitType::class, ['label' => 'Contabilizar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -63,9 +61,9 @@ class FacturaController extends Controller
                 $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->contabilizar($arr);
             }
         }
-        $arFacturas = $paginator->paginate($em->getRepository(TteFactura::class)->listaContabilizar(), $request->query->getInt('page', 1),100);
-        return $this->render('transporte/proceso/contabilidad/factura/lista.html.twig',
-            ['arFacturas' => $arFacturas,
+        $arDespachos = $paginator->paginate($em->getRepository(TteDespacho::class)->listaContabilizar(), $request->query->getInt('page', 1),100);
+        return $this->render('transporte/proceso/contabilidad/despacho/lista.html.twig',
+            ['arDespachos' => $arDespachos,
             'form' => $form->createView()]);
     }
 

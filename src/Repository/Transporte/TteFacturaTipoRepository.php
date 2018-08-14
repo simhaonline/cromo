@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteFacturaTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Doctrine\ORM\EntityRepository;
 
 class TteFacturaTipoRepository extends ServiceEntityRepository
 {
@@ -52,6 +53,30 @@ class TteFacturaTipoRepository extends ServiceEntityRepository
         }
 
         return $arFacturaTipos;
+    }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function llenarCombo()
+    {
+        $session = new Session();
+        $array = [
+            'class' => TteFacturaTipo::class,
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('ft')
+                    ->orderBy('ft.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""
+        ];
+        if ($session->get('filtroTteFacturaCodigoFacturaTipo')) {
+            $array['data'] = $this->getEntityManager()->getReference(TteFacturaTipo::class, $session->get('filtroTteFacturaCodigoFacturaTipo'));
+        }
+        return $array;
     }
 
 }

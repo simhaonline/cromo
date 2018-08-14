@@ -672,6 +672,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $total = $arGuia->getVrFlete() + $arGuia->getVrManejo();
                     $arFactura->setVrFlete($arGuia->getVrFlete());
                     $arFactura->setVrManejo($arGuia->getVrManejo());
+                    $arFactura->setVrSubtotal($total);
                     $arFactura->setVrTotal($total);
                     $arFactura->setGuias(1);
                     $arFactura->setClienteRel($arGuia->getClienteRel());

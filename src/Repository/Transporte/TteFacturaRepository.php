@@ -89,6 +89,9 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("f.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
         }
+        if($session->get('filtroTteFacturaCodigoFacturaTipo')) {
+            $queryBuilder->andWhere("f.codigoFacturaTipoFk = '" . $session->get('filtroTteFacturaCodigoFacturaTipo') . "'");
+        }
         switch ($session->get('filtroTteFacturaEstadoAprobado')) {
             case '0':
                 $queryBuilder->andWhere("f.estadoAprobado = 0");
@@ -547,7 +550,8 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('ft.nombre AS facturaTipo')
             ->leftJoin('f.clienteRel', 'c')
             ->leftJoin('f.facturaTipoRel', 'ft')
-            ->where('f.estadoContabilizado =  0');
+            ->where('f.estadoContabilizado =  0')
+        ->andWhere('f.estadoAprobado = 1');
         $fecha =  new \DateTime('now');
         if($session->get('filtroTteFacturaNumero') != ''){
             $queryBuilder->andWhere("f.numero = {$session->get('filtroTteFacturaNumero')}");
@@ -570,6 +574,9 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("f.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
         };
+        if($session->get('filtroTteFacturaCodigoFacturaTipo')) {
+            $queryBuilder->andWhere("f.codigoFacturaTipoFk = '" . $session->get('filtroTteFacturaCodigoFacturaTipo') . "'");
+        }
 
         return $queryBuilder->getQuery()->execute();
     }
@@ -580,6 +587,7 @@ class TteFacturaRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
             ->select('f.codigoFacturaPk')
             ->addSelect('f.codigoClienteFk')
+            ->addSelect('f.numero')
             ->addSelect('f.fecha')
             ->addSelect('f.estadoAprobado')
             ->addSelect('f.estadoContabilizado')
@@ -625,6 +633,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
+                            $arRegistro->setNumero($arFactura['numero']);
                             $arRegistro->setFecha($arFactura['fecha']);
                             if($arFactura['naturalezaCuentaIngreso'] == 'D') {
                                 $arRegistro->setVrDebito($arFactura['vrFlete']);
@@ -633,6 +642,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setVrCredito($arFactura['vrFlete']);
                                 $arRegistro->setNaturaleza('C');
                             }
+                            $arRegistro->setDescripcion('INGRESO FLETE');
                             $em->persist($arRegistro);
                         } else {
                             $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete";
@@ -654,6 +664,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
+                            $arRegistro->setNumero($arFactura['numero']);
                             $arRegistro->setFecha($arFactura['fecha']);
                             if($arFactura['naturalezaCuentaIngreso'] == 'D') {
                                 $arRegistro->setVrDebito($arFactura['vrManejo']);
@@ -662,6 +673,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setVrCredito($arFactura['vrManejo']);
                                 $arRegistro->setNaturaleza('C');
                             }
+                            $arRegistro->setDescripcion('INGRESO MANEJO');
                             $em->persist($arRegistro);
                         } else {
                             $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por manejo";
@@ -684,6 +696,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setFecha($arFactura['fecha']);
+                            $arRegistro->setNumero($arFactura['numero']);
                             if($arFactura['naturalezaCuentaCliente'] == 'D') {
                                 $arRegistro->setVrDebito($arFactura['vrTotal']);
                                 $arRegistro->setNaturaleza('D');
@@ -691,12 +704,15 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setVrCredito($arFactura['vrTotal']);
                                 $arRegistro->setNaturaleza('C');
                             }
+                            $arRegistro->setDescripcion('CLIENTES');
                             $em->persist($arRegistro);
                         } else {
                             $error = "El tipo de factura no tiene configurada la cuenta cliente";
                             break;
                         }
-
+                        $arFacturaAct = $em->getRepository(TteFactura::class)->find($arFactura['codigoFacturaPk']);
+                        $arFacturaAct->setEstadoContabilizado(1);
+                        $em->persist($arFacturaAct);
                     }
                 } else {
                     $error = "La factura codigo " . $codigo . " no existe";

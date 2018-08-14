@@ -213,6 +213,11 @@ class TteDespacho
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="estado_contabilizado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoContabilizado = false;
+
+    /**
      * @ORM\Column(name="estado_cumplir_rndc", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoCumplirRndc = false;
@@ -1172,6 +1177,22 @@ class TteDespacho
     public function setPorcentajeRentabilidad($porcentajeRentabilidad): void
     {
         $this->porcentajeRentabilidad = $porcentajeRentabilidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
     }
 
 

@@ -10,6 +10,7 @@ use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaOtro;
 use App\Entity\Transporte\TteFacturaPlanilla;
+use App\Entity\Transporte\TteFacturaTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
 use App\Form\Type\Transporte\FacturaPlanillaType;
@@ -18,6 +19,7 @@ use App\Formato\Transporte\Factura;
 use App\Formato\Transporte\ListaFactura;
 use App\General\General;
 use App\Utilidades\Estandares;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -52,6 +54,7 @@ class FacturaController extends Controller
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteFacturaEstadoAprobado'), 'required' => false])
             ->add('chkEstadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteFacturaEstadoAnulado'), 'required' => false])
+            ->add('cboFacturaTipoRel', EntityType::class, $em->getRepository(TteFacturaTipo::class)->llenarCombo())
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -72,6 +75,13 @@ class FacturaController extends Controller
                 } else {
                     $session->set('filtroTteCodigoCliente', null);
                     $session->set('filtroTteNombreCliente', null);
+                }
+
+                $arFacturaTipo = $form->get('cboFacturaTipoRel')->getData();
+                if ($arFacturaTipo) {
+                    $session->set('filtroTteFacturaCodigoFacturaTipo', $arFacturaTipo->getCodigoFacturaTipoPk());
+                } else {
+                    $session->set('filtroTteFacturaCodigoFacturaTipo', null);
                 }
             }
             if($form->get('btnEliminar')->isClicked()){

@@ -33,9 +33,9 @@
                 <div class="col-sm-2">
                     {{ form_widget(form.txtCodigo, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-1 control-label">Aprobado:</label>
+                <label class="col-sm-1 control-label">Tipo:</label>
                 <div class="col-sm-5">
-                    {{ form_widget(form.chkEstadoAprobado, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.cboFacturaTipoRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -43,15 +43,19 @@
                 <div class="col-sm-5">
                     {{ form_widget(form.fechaDesde) }}
                 </div>
-                <label class="col-sm-1 control-label">Anulado:</label>
+                <label class="col-sm-1 control-label">Aprobado:</label>
                 <div class="col-sm-5">
-                    {{ form_widget(form.chkEstadoAnulado, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.chkEstadoAprobado, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Hasta:</label>
                 <div class="col-sm-5">
                     {{ form_widget(form.fechaHasta) }}
+                </div>
+                <label class="col-sm-1 control-label">Anulado:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.chkEstadoAnulado, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

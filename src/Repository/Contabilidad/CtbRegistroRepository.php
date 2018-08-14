@@ -80,6 +80,7 @@ class CtbRegistroRepository extends ServiceEntityRepository
             ->select('r.codigoRegistroPk')
             ->addSelect('r.numero')
             ->addSelect('r.numeroReferencia')
+            ->addSelect('r.numeroPrefijo')
             ->addSelect('r.fecha')
             ->addSelect('r.vrDebito')
             ->addSelect('r.vrCredito')

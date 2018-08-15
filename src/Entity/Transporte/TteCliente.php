@@ -141,6 +141,11 @@ class TteCliente
     protected $cumplidosClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteRecaudo", mappedBy="clienteRel")
+     */
+    protected $recaudosClienteRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="clienteRel")
      */
     protected $facturasClienteRel;
@@ -602,6 +607,23 @@ class TteCliente
     {
         $this->clientesCondicionesClienteRel = $clientesCondicionesClienteRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRecaudosClienteRel()
+    {
+        return $this->recaudosClienteRel;
+    }
+
+    /**
+     * @param mixed $recaudosClienteRel
+     */
+    public function setRecaudosClienteRel($recaudosClienteRel): void
+    {
+        $this->recaudosClienteRel = $recaudosClienteRel;
+    }
+
 
 
 }

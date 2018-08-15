@@ -535,6 +535,33 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     }
 
+    public function recaudo($codigoRecaudo): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, 
+        g.numero,         
+        g.fechaIngreso,        
+        g.documentoCliente,               
+        g.nombreDestinatario,
+        g.unidades,
+        g.pesoReal,
+        g.pesoVolumen,
+        g.vrDeclara,
+        g.vrFlete,
+        g.vrManejo,
+        g.vrRecaudo,   
+        c.nombreCorto AS clienteNombreCorto,
+        cd.nombre AS ciudadDestino
+        FROM App\Entity\Transporte\TteGuia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd
+        WHERE g.codigoRecaudoFk = :codigoRecaudo'
+        )->setParameter('codigoRecaudo', $codigoRecaudo);
+        return $query->execute();
+
+    }
+
     public function factura($codigoFactura): array
     {
         $em = $this->getEntityManager();
@@ -754,6 +781,33 @@ class TteGuiaRepository extends ServiceEntityRepository
         ORDER BY g.fechaIngreso DESC '
         )->setParameter('codigoCliente', $codigoCliente)
         ->setParameter('fechaIngreso', "2018-04-01");
+        return $query->execute();
+    }
+
+    public function recaudoPendiente($codigoCliente): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT g.codigoGuiaPk, 
+        g.numero,
+        g.fechaIngreso,
+        g.codigoOperacionIngresoFk,
+        g.codigoOperacionCargoFk, 
+        g.unidades,
+        g.pesoReal,
+        g.documentoCliente,
+        g.pesoVolumen,
+        g.vrFlete,
+        g.vrManejo,        
+        c.nombreCorto AS clienteNombreCorto, 
+        cd.nombre AS ciudadDestino
+        FROM App\Entity\Transporte\TteGuia g 
+        LEFT JOIN g.clienteRel c
+        LEFT JOIN g.ciudadDestinoRel cd
+        WHERE g.estadoRecaudoDevolucion = 0 AND g.vrRecaudo > 0 AND g.estadoAnulado = 0 AND g.codigoClienteFk = :codigoCliente AND g.fechaIngreso >= :fechaIngreso 
+        ORDER BY g.fechaIngreso DESC '
+        )->setParameter('codigoCliente', $codigoCliente)
+            ->setParameter('fechaIngreso', "2018-04-01");
         return $query->execute();
     }
 

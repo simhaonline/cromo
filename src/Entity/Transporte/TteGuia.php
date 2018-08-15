@@ -209,6 +209,11 @@ class TteGuia
     private $estadoCumplido = false;
 
     /**
+     * @ORM\Column(name="estado_recaudo_devolucion", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $estadoRecaudoDevolucion = false;
+
+    /**
      * @ORM\Column(name="estado_facturado", type="boolean", nullable=true, options={"default" : 0})
      */
     private $estadoFacturado = false;
@@ -247,6 +252,11 @@ class TteGuia
      * @ORM\Column(name="codigo_cumplido_fk", type="integer", nullable=true)
      */
     private $codigoCumplidoFk;
+
+    /**
+     * @ORM\Column(name="codigo_recaudo_fk", type="integer", nullable=true)
+     */
+    private $codigoRecaudoFk;
 
     /**
      * @ORM\Column(name="codigo_factura_fk", type="integer", nullable=true)
@@ -363,6 +373,12 @@ class TteGuia
      * @ORM\JoinColumn(name="codigo_cumplido_fk", referencedColumnName="codigo_cumplido_pk")
      */
     private $cumplidoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteRecaudo", inversedBy="guiasRecaudoRel")
+     * @ORM\JoinColumn(name="codigo_recaudo_fk", referencedColumnName="codigo_recaudo_pk")
+     */
+    private $recaudoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteFactura", inversedBy="guiasFacturaRel")
@@ -1069,6 +1085,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getEstadoRecaudoDevolucion()
+    {
+        return $this->estadoRecaudoDevolucion;
+    }
+
+    /**
+     * @param mixed $estadoRecaudoDevolucion
+     */
+    public function setEstadoRecaudoDevolucion($estadoRecaudoDevolucion): void
+    {
+        $this->estadoRecaudoDevolucion = $estadoRecaudoDevolucion;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoFacturado()
     {
         return $this->estadoFacturado;
@@ -1133,6 +1165,38 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getEstadoNovedadSolucion()
+    {
+        return $this->estadoNovedadSolucion;
+    }
+
+    /**
+     * @param mixed $estadoNovedadSolucion
+     */
+    public function setEstadoNovedadSolucion($estadoNovedadSolucion): void
+    {
+        $this->estadoNovedadSolucion = $estadoNovedadSolucion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoFacturaExportado()
+    {
+        return $this->estadoFacturaExportado;
+    }
+
+    /**
+     * @param mixed $estadoFacturaExportado
+     */
+    public function setEstadoFacturaExportado($estadoFacturaExportado): void
+    {
+        $this->estadoFacturaExportado = $estadoFacturaExportado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoDespachoFk()
     {
         return $this->codigoDespachoFk;
@@ -1160,6 +1224,22 @@ class TteGuia
     public function setCodigoCumplidoFk($codigoCumplidoFk): void
     {
         $this->codigoCumplidoFk = $codigoCumplidoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRecaudoFk()
+    {
+        return $this->codigoRecaudoFk;
+    }
+
+    /**
+     * @param mixed $codigoRecaudoFk
+     */
+    public function setCodigoRecaudoFk($codigoRecaudoFk): void
+    {
+        $this->codigoRecaudoFk = $codigoRecaudoFk;
     }
 
     /**
@@ -1501,6 +1581,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getRecaudoRel()
+    {
+        return $this->recaudoRel;
+    }
+
+    /**
+     * @param mixed $recaudoRel
+     */
+    public function setRecaudoRel($recaudoRel): void
+    {
+        $this->recaudoRel = $recaudoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFacturaRel()
     {
         return $this->facturaRel;
@@ -1704,38 +1800,6 @@ class TteGuia
     public function setGuiasDetallesGuiaRel($guiasDetallesGuiaRel): void
     {
         $this->guiasDetallesGuiaRel = $guiasDetallesGuiaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoFacturaExportado()
-    {
-        return $this->estadoFacturaExportado;
-    }
-
-    /**
-     * @param mixed $estadoFacturaExportado
-     */
-    public function setEstadoFacturaExportado($estadoFacturaExportado): void
-    {
-        $this->estadoFacturaExportado = $estadoFacturaExportado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoNovedadSolucion()
-    {
-        return $this->estadoNovedadSolucion;
-    }
-
-    /**
-     * @param mixed $estadoNovedadSolucion
-     */
-    public function setEstadoNovedadSolucion($estadoNovedadSolucion): void
-    {
-        $this->estadoNovedadSolucion = $estadoNovedadSolucion;
     }
 
 

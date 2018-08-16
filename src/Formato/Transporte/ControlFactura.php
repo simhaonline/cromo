@@ -23,7 +23,7 @@ class ControlFactura extends \FPDF
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf, $fecha);
-        $pdf->Output("Comprobante informe diario.pdf", 'I');
+        $pdf->Output("Comprobante informe diario.pdf", 'D');
     }
 
     public function Header()

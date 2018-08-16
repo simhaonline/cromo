@@ -33,6 +33,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm');
         $queryBuilder
             ->select('m.codigoMovimientoPk')
+            ->addSelect('m.codigoDocumentoFk')
             ->addSelect('m.numero')
             ->addSelect('t.nombreCorto AS terceroNombreCorto')
             ->addSelect('m.fecha')

@@ -41,6 +41,7 @@
             <th>ANU</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -60,6 +61,7 @@
                     </a>
                 </td>
                 <td style="text-align: center"><a href="{{ path('transporte_movimiento_transporte_recaudo_detalle', { 'id': arRecaudo.codigoRecaudoPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecaudo.codigoRecaudoPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>

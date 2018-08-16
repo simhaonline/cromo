@@ -50,7 +50,7 @@ class CumplidoController extends Controller
             }
             if($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
+                $em->getRepository(TteCumplido::class)->eliminar($arrSeleccionados);
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->createQuery($em->getRepository(TteCumplido::class)->lista())->execute(), "Guias");

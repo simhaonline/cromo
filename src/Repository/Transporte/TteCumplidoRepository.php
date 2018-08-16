@@ -43,6 +43,36 @@ class TteCumplidoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(TteCumplido::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            if (count($this->getEntityManager()->getRepository(TteGuia::class)->findBy(['codigoCumplidoFk' => $arRegistro->getCodigoCumplidoPk()])) <= 0) {
+                                $this->getEntityManager()->remove($arRegistro);
+                            } else {
+                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                            }
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                }
+                if($respuesta != ''){
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
+    }
+
     public function factura($codigoCliente)
     {
         $session = new Session();
@@ -59,12 +89,12 @@ class TteCumplidoRepository extends ServiceEntityRepository
     public function liquidar($codigoCumplido): bool
     {
         $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT COUNT(g.codigoGuiaPk) as cantidad, SUM(g.unidades+0) as unidades, SUM(g.pesoReal+0) as pesoReal, SUM(g.pesoVolumen+0) as pesoVolumen
-        FROM App\Entity\Transporte\Guia g
-        WHERE g.codigoCumplidoFk = :codigoCumplido')
-            ->setParameter('codigoCumplido', $codigoCumplido);
+        $query = $em->createQueryBuilder()->from("App:Transporte\TteGuia","g")
+            ->select("COUNT(g.codigoGuiaPk) as cantidad, SUM(g.unidades+0) as unidades, SUM(g.pesoReal+0) as pesoReal, SUM(g.pesoVolumen+0) as pesoVolumen")
+            ->where("g.codigoCumplidoFk = {$codigoCumplido}");
+        $arGuias = $query->getQuery()->getSingleResult();
         $arCumplido = $em->getRepository(TteCumplido::class)->find($codigoCumplido);
+        $arCumplido->setCantidad(intval($arGuias['cantidad']));
         $em->persist($arCumplido);
         $em->flush();
         return true;

@@ -48,7 +48,7 @@ class RecaudoController extends Controller
             }
             if($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
+                $em->getRepository(TteRecaudo::class)->eliminar($arrSeleccionados);
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->createQuery($em->getRepository(TteRecaudo::class)->lista())->execute(), "Guias");

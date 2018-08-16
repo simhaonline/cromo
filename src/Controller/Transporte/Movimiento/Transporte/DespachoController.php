@@ -123,7 +123,7 @@ class DespachoController extends Controller
                                 if($arDespacho->getVrFletePago() > 107000) {
                                     $retencionFuente = $arDespacho->getVrFletePago() * 1 / 100;
                                 }
-                                $industriaComercio = $arDespacho->getVrFletePago() * 0.6 /100;
+                                $industriaComercio = $arDespacho->getVrFletePago() * 0.2 /100;
 
                                 $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);
                                 $saldo = $total - $descuentos;

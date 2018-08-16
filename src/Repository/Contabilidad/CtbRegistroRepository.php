@@ -21,6 +21,7 @@ class CtbRegistroRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CtbRegistro::class, 'r')
             ->select('r.codigoRegistroPk AS id')
             ->addSelect('r.numero')
+            ->addSelect('r.numeroPrefijo')
             ->addSelect('r.numeroReferencia')
             ->addSelect('r.fecha')
             ->addSelect('r.codigoComprobanteFk AS idComprobante')

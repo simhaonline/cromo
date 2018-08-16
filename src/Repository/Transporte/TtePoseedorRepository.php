@@ -2,6 +2,7 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Contabilidad\CtbTercero;
 use App\Entity\Transporte\TtePoseedor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -60,4 +61,26 @@ class TtePoseedorRepository extends ServiceEntityRepository
         return $arPoseedor;
 
     }
+
+    public function terceroContabilidad($codigo)
+    {
+        $em = $this->getEntityManager();
+        $arTercero = null;
+        $arPoseedor = $em->getRepository(TtePoseedor::class)->find($codigo);
+        if($arPoseedor) {
+            $arTercero = $em->getRepository(CtbTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arPoseedor->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPoseedor->getNumeroIdentificacion()));
+            if(!$arTercero) {
+                $arTercero = new CtbTercero();
+                $arTercero->setIdentificacionRel($arPoseedor->getIdentificacionRel());
+                $arTercero->setNumeroIdentificacion($arPoseedor->getNumeroIdentificacion());
+                $arTercero->setNombreCorto($arPoseedor->getNombreCorto());
+                $arTercero->setDireccion($arPoseedor->getDireccion());
+                $arTercero->setTelefono($arPoseedor->getTelefono());
+                $em->persist($arTercero);
+            }
+        }
+
+        return $arTercero;
+    }
+
 }

@@ -76,6 +76,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>P</th>
             <th>NUMERO</th>
             <th>NUMERO_REF</th>
             <th>FECHA</th>
@@ -94,6 +95,7 @@
         {% for arRegistro in arRegistros %}
             <tr>
                 <td>{{ arRegistro.id }}</td>
+                <td>{{ arRegistro.numeroPrefijo }}</td>
                 <td>{{ arRegistro.numero }}</td>
                 <td>{{ arRegistro.numeroReferencia }}</td>
                 <td>{{ arRegistro.fecha | date('Y-m-d') }}</td>

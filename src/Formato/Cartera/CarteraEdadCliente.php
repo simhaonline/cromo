@@ -55,7 +55,7 @@ class CarteraEdadCliente extends \FPDF {
         $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->carteraEdadesCliente()->getQuery()->getResult();
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
-        $arrTotalesCliente = array('1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
+        $arrTotalesCliente = array('0'=>0, '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
         $primerCliente = true;
         foreach ($arCuentasCobrar as $arCuentaCobrar) {
             if($primerCliente){
@@ -66,7 +66,7 @@ class CarteraEdadCliente extends \FPDF {
             }
             if($arCuentaCobrar['codigoClienteFk'] != $cliente){
                 $pdf->SetX(89);
-                $pdf->Cell(18, 4, number_format($arrTotalesCliente[1]), 'LRB', 0, 'R');
+                $pdf->Cell(18, 4, number_format($arrTotalesCliente[0]+$arrTotalesCliente[1]), 'LRB', 0, 'R');
                 $pdf->Cell(18, 4, number_format($arrTotalesCliente[2]), 'LRB', 0, 'R');
                 $pdf->Cell(18, 4, number_format($arrTotalesCliente[3]), 'LRB', 0, 'R');
                 $pdf->Cell(18, 4, number_format($arrTotalesCliente[4]), 'LRB', 0, 'R');
@@ -75,12 +75,12 @@ class CarteraEdadCliente extends \FPDF {
                 $pdf->Ln(4);
                 $pdf->Cell(187,4,$arCuentaCobrar['clienteNombre'],1,0,'L');
                 $cliente = $arCuentaCobrar['codigoClienteFk'];
-                $arrTotalesCliente = array('1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
+                $arrTotalesCliente = array('0' => 0, '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
                 $pdf->Ln(4);
             }
-            $arrRango = array('1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
+            $arrRango = array('1' => 0, '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
             $arrRango[$arCuentaCobrar['rango']] = $arCuentaCobrar['vrSaldo'];
-            for($i = 1; $i <= 6; $i++) {
+            for($i = 0; $i <= 6; $i++) {
                 $arrTotalesCliente[$i] += $arrRango[$i];
             }
             $pdf->Cell(15, 4, $arCuentaCobrar['codigoCuentaCobrarTipoFk'], 'LRB', 0, 'L');
@@ -88,7 +88,7 @@ class CarteraEdadCliente extends \FPDF {
             $pdf->Cell(17, 4, $arCuentaCobrar['fecha']->format('Y-m-d'), 'LRB', 0, 'L');
             $pdf->Cell(17, 4, $arCuentaCobrar['fechaVence']->format('Y-m-d'), 'LRB', 0, 'L');
             $pdf->Cell(10, 4, number_format($arCuentaCobrar['diasVencimiento']), 'LRB', 0, 'R');
-            $pdf->Cell(18, 4, number_format($arrRango[1]), 'LRB', 0, 'R');
+            $pdf->Cell(18, 4, number_format($arrRango[0]+$arrRango[1]), 'LRB', 0, 'R');
             $pdf->Cell(18, 4, number_format($arrRango[2]), 'LRB', 0, 'R');
             $pdf->Cell(18, 4, number_format($arrRango[3]), 'LRB', 0, 'R');
             $pdf->Cell(18, 4, number_format($arrRango[4]), 'LRB', 0, 'R');

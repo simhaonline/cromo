@@ -26,6 +26,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use SoapClient;
@@ -44,6 +46,9 @@ class DespachoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $session = new Session();
         $form = $this->createFormBuilder()
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTteMovDespachoFiltroFecha')))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteMovDespachoFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteMovDespachoFechaHasta'))])
             ->add('txtVehiculo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigoVehiculo')])
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigo')])
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoNumero')])
@@ -58,6 +63,9 @@ class DespachoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTteMovDespachoFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroTteMovDespachoFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                $session->set('filtroTteMovDespachoFiltroFecha', $form->get('filtrarFecha')->getData());
                 $session->set('filtroTteDespachoEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
                 $session->set('filtroTteDespachoCodigoVehiculo', $form->get('txtVehiculo')->getData());
                 $session->set('filtroTteDespachoNumero', $form->get('txtNumero')->getData());

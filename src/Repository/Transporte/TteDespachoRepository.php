@@ -93,6 +93,19 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->leftJoin('td.ciudadDestinoRel ', 'cd')
             ->leftJoin('td.conductorRel', 'c')
             ->where('td.codigoDespachoPk <> 0');
+        $fecha =  new \DateTime('now');
+        if($session->get('filtroTteMovDespachoFiltroFecha') == true){
+            if ($session->get('filtroTteMovDespachoFechaDesde') != null) {
+                $queryBuilder->andWhere("td.fechaSalida >= '{$session->get('filtroTteMovDespachoFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("td.fechaSalida >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroTteMovDespachoFechaHasta') != null) {
+                $queryBuilder->andWhere("td.fechaSalida <= '{$session->get('filtroTteMovDespachoFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("td.fechaSalida <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
         if($session->get('filtroTteDespachoCodigoVehiculo') != ''){
             $queryBuilder->andWhere("td.codigoVehiculoFk = '{$session->get('filtroTteDespachoCodigoVehiculo')}'");
         }

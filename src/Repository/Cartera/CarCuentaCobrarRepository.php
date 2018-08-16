@@ -137,5 +137,98 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function generarVencimientos () {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
+            ->select('cc.codigoCuentaCobrarPk')
+            ->addSelect('cc.fechaVence')
+            ->where('cc.vrSaldo <> 0')
+            ->andWhere('cc.operacion = 1');
+        $arCuentasCobrar = $queryBuilder->getQuery()->getResult();
+        $fecha = new \DateTime('now');
+        foreach ($arCuentasCobrar AS $arCuentaCobrar) {
+            $arCuentaCobrarAct = $em->getRepository(CarCuentaCobrar::class)->find($arCuentaCobrar['codigoCuentaCobrarPk']);
+            $interval = date_diff($arCuentaCobrar['fechaVence'], $fecha);
+            $dias = $interval->format('%r%a');
+            $arCuentaCobrarAct->setDiasVencimiento($dias);
+            $rango = 1;
+            if($dias <= 0) {
+                $rango = 1;
+            } else {
+                if($dias <= 30 ) {
+                    $rango = 2;
+                } else {
+                    if($dias <= 60 ) {
+                        $rango = 3;
+                    } else {
+                        if($dias <= 90 ) {
+                            $rango = 4;
+                        } else {
+                            if($dias <= 180 ) {
+                                $rango = 5;
+                            } else {
+                                $rango = 6;
+                            }
+                        }
+                    }
+                }
+            }
+            $arCuentaCobrarAct->setRango($rango);
+            $em->persist($arCuentaCobrarAct);
+        }
+        $em->flush();
+    }
 
+    public function carteraEdadesCliente()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
+            ->select('cc.codigoCuentaCobrarPk')
+            ->addSelect('cc.codigoClienteFk')
+            ->addSelect('cc.codigoCuentaCobrarTipoFk')
+            ->addSelect('cc.numeroDocumento')
+            ->addSelect('cc.vrTotal')
+            ->addSelect('cc.vrSaldo')
+            ->addSelect('cc.vrAbono')
+            ->addSelect('cc.diasVencimiento')
+            ->addSelect('cc.plazo')
+            ->addSelect('cc.rango')
+            ->addSelect('cc.fecha')
+            ->addSelect('cc.fechaVence')
+            ->addSelect('c.nombreCorto as clienteNombre')
+            ->addSelect('c.numeroIdentificacion')
+            ->join('cc.clienteRel','c')
+            ->join('cc.cuentaCobrarTipoRel', 'cct')
+            ->where('cc.vrSaldo <> 0')
+            ->orderBy('cc.codigoClienteFk', 'ASC')
+        ->addOrderBy('cc.rango', 'ASC')
+        ->addOrderBy('cc.diasVencimiento', 'ASC');
+
+        $fecha =  new \DateTime('now');
+        if ($session->get('filtroCarCuentaCobrarTipo') != "") {
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo')."'");
+        }
+        if($session->get('filtroCarNumeroReferencia') != ''){
+            $queryBuilder->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
+        }
+        if($session->get('filtroCarCuentaCobrarNumero') != ''){
+            $queryBuilder->andWhere("cc.numeroDocumento = {$session->get('filtroCarCuentaCobrarNumero')}");
+        }
+        if($session->get('filtroCarCodigoCliente')){
+            $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("cc.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("cc.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("cc.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        return $queryBuilder;
+    }
 }

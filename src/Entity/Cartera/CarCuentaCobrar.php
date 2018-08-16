@@ -118,6 +118,16 @@ class CarCuentaCobrar
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="dias_vencimiento", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $diasVencimiento = 0;
+
+    /**
+     * @ORM\Column(name="rango", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $rango = 0;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -558,6 +568,38 @@ class CarCuentaCobrar
     public function setNumeroReferencia($numeroReferencia): void
     {
         $this->numeroReferencia = $numeroReferencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasVencimiento()
+    {
+        return $this->diasVencimiento;
+    }
+
+    /**
+     * @param mixed $diasVencimiento
+     */
+    public function setDiasVencimiento($diasVencimiento): void
+    {
+        $this->diasVencimiento = $diasVencimiento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRango()
+    {
+        return $this->rango;
+    }
+
+    /**
+     * @param mixed $rango
+     */
+    public function setRango($rango): void
+    {
+        $this->rango = $rango;
     }
 
 

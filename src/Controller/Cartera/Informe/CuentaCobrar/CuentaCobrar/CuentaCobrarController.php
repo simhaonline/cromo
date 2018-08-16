@@ -4,6 +4,8 @@ namespace App\Controller\Cartera\Informe\CuentaCobrar\CuentaCobrar;
 
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
+use App\Formato\Cartera\CarteraEdad;
+use App\Formato\Cartera\CarteraEdadCliente;
 use App\Formato\Cartera\CuentaCobrar;
 use App\General\General;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +33,8 @@ class CuentaCobrarController extends Controller
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
+            ->add('btnGenerarVencimientos', SubmitType::class, array('label' => 'Generar rango'))
+            ->add('btnCarteraEdadesCliente', SubmitType::class, array('label' => 'Cartera edades'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('cboTipoCuentaRel', EntityType::class, $em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
@@ -43,7 +47,7 @@ class CuentaCobrarController extends Controller
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
-        if ($form->get('btnFiltrar')->isClicked()) {
+        if ($form->get('btnFiltrar')->isClicked() || $form->get('btnPdf')->isClicked() || $form->get('btnCarteraEdadesCliente')->isClicked() || $form->get('btnExcel')->isClicked()) {
             $arCuentaCobrarTipo = $form->get('cboTipoCuentaRel')->getData();
             if ($arCuentaCobrarTipo) {
                 $session->set('filtroCarCuentaCobrarTipo', $arCuentaCobrarTipo->getCodigoCuentaCobrarTipoPk());
@@ -62,11 +66,18 @@ class CuentaCobrarController extends Controller
             $formato = new CuentaCobrar();
             $formato->Generar($em);
         }
+        if ($form->get('btnCarteraEdadesCliente')->isClicked()) {
+            $formato = new CarteraEdadCliente();
+            $formato->Generar($em);
+        }
+        if ($form->get('btnGenerarVencimientos')->isClicked()) {
+            $em->getRepository(CarCuentaCobrar::class)->generarVencimientos();
+        }
         if ($form->get('btnExcel')->isClicked()) {
             General::get()->setExportar($em->createQuery($em->getRepository(CarCuentaCobrar::class)->lista())->execute(), "Cuenta cobrar");
         }
         $query = $this->getDoctrine()->getRepository(CarCuentaCobrar::class)->lista();
-        $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1),500);
+        $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1),50);
         return $this->render('cartera/informe/cuentaCobrar.html.twig', [
             'arCuentasCobrar' => $arCuentasCobrar,
             'form' => $form->createView()]);

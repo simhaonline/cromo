@@ -138,11 +138,6 @@ class TteDespacho
     private $vrRetencionFuente = 0;
 
     /**
-     * @ORM\Column(name="vr_retencion_ica", type="float", options={"default" : 0})
-     */
-    private $vrRetencionIca = 0;
-
-    /**
      * @ORM\Column(name="vr_total", type="float", options={"default" : 0})
      */
     private $vrTotal = 0;
@@ -393,6 +388,22 @@ class TteDespacho
     public function setFechaLlegada($fechaLlegada): void
     {
         $this->fechaLlegada = $fechaLlegada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaSoporte()
+    {
+        return $this->fechaSoporte;
+    }
+
+    /**
+     * @param mixed $fechaSoporte
+     */
+    public function setFechaSoporte($fechaSoporte): void
+    {
+        $this->fechaSoporte = $fechaSoporte;
     }
 
     /**
@@ -686,22 +697,6 @@ class TteDespacho
     /**
      * @return mixed
      */
-    public function getVrRetencionIca()
-    {
-        return $this->vrRetencionIca;
-    }
-
-    /**
-     * @param mixed $vrRetencionIca
-     */
-    public function setVrRetencionIca($vrRetencionIca): void
-    {
-        $this->vrRetencionIca = $vrRetencionIca;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVrTotal()
     {
         return $this->vrTotal;
@@ -814,6 +809,38 @@ class TteDespacho
     /**
      * @return mixed
      */
+    public function getVrCosto()
+    {
+        return $this->vrCosto;
+    }
+
+    /**
+     * @param mixed $vrCosto
+     */
+    public function setVrCosto($vrCosto): void
+    {
+        $this->vrCosto = $vrCosto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeRentabilidad()
+    {
+        return $this->porcentajeRentabilidad;
+    }
+
+    /**
+     * @param mixed $porcentajeRentabilidad
+     */
+    public function setPorcentajeRentabilidad($porcentajeRentabilidad): void
+    {
+        $this->porcentajeRentabilidad = $porcentajeRentabilidad;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoAutorizado()
     {
         return $this->estadoAutorizado;
@@ -862,6 +889,22 @@ class TteDespacho
     /**
      * @return mixed
      */
+    public function getEstadoSoporte()
+    {
+        return $this->estadoSoporte;
+    }
+
+    /**
+     * @param mixed $estadoSoporte
+     */
+    public function setEstadoSoporte($estadoSoporte): void
+    {
+        $this->estadoSoporte = $estadoSoporte;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoAnulado()
     {
         return $this->estadoAnulado;
@@ -873,6 +916,38 @@ class TteDespacho
     public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoCumplirRndc()
+    {
+        return $this->estadoCumplirRndc;
+    }
+
+    /**
+     * @param mixed $estadoCumplirRndc
+     */
+    public function setEstadoCumplirRndc($estadoCumplirRndc): void
+    {
+        $this->estadoCumplirRndc = $estadoCumplirRndc;
     }
 
     /**
@@ -1097,102 +1172,6 @@ class TteDespacho
     public function setMonitoreosDespachoRel($monitoreosDespachoRel): void
     {
         $this->monitoreosDespachoRel = $monitoreosDespachoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoSoporte()
-    {
-        return $this->estadoSoporte;
-    }
-
-    /**
-     * @param mixed $estadoSoporte
-     */
-    public function setEstadoSoporte($estadoSoporte): void
-    {
-        $this->estadoSoporte = $estadoSoporte;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoCumplirRndc()
-    {
-        return $this->estadoCumplirRndc;
-    }
-
-    /**
-     * @param mixed $estadoCumplirRndc
-     */
-    public function setEstadoCumplirRndc($estadoCumplirRndc): void
-    {
-        $this->estadoCumplirRndc = $estadoCumplirRndc;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaSoporte()
-    {
-        return $this->fechaSoporte;
-    }
-
-    /**
-     * @param mixed $fechaSoporte
-     */
-    public function setFechaSoporte($fechaSoporte): void
-    {
-        $this->fechaSoporte = $fechaSoporte;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrCosto()
-    {
-        return $this->vrCosto;
-    }
-
-    /**
-     * @param mixed $vrCosto
-     */
-    public function setVrCosto($vrCosto): void
-    {
-        $this->vrCosto = $vrCosto;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPorcentajeRentabilidad()
-    {
-        return $this->porcentajeRentabilidad;
-    }
-
-    /**
-     * @param mixed $porcentajeRentabilidad
-     */
-    public function setPorcentajeRentabilidad($porcentajeRentabilidad): void
-    {
-        $this->porcentajeRentabilidad = $porcentajeRentabilidad;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoContabilizado()
-    {
-        return $this->estadoContabilizado;
-    }
-
-    /**
-     * @param mixed $estadoContabilizado
-     */
-    public function setEstadoContabilizado($estadoContabilizado): void
-    {
-        $this->estadoContabilizado = $estadoContabilizado;
     }
 
 

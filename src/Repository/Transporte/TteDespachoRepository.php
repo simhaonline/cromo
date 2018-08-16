@@ -2,6 +2,10 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Contabilidad\CtbCentroCosto;
+use App\Entity\Contabilidad\CtbComprobante;
+use App\Entity\Contabilidad\CtbCuenta;
+use App\Entity\Contabilidad\CtbRegistro;
 use App\Utilidades\Mensajes;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
@@ -1014,9 +1018,17 @@ class TteDespachoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
             ->select('d.codigoDespachoPk')
             ->addSelect('v.codigoPropietarioFk')
+            ->addSelect('d.numero')
+            ->addSelect('d.fechaSalida')
             ->addSelect('d.estadoAprobado')
             ->addSelect('d.estadoContabilizado')
+            ->addSelect('d.vrFletePago')
+            ->addSelect('dt.codigoComprobanteFk')
+            ->addSelect('dt.codigoCuentaFleteFk')
+            ->addSelect('o.codigoCentroCostoFk')
             ->leftJoin('d.vehiculoRel', 'v')
+            ->leftJoin('d.despachoTipoRel', 'dt')
+            ->leftJoin('d.operacionRel', 'o')
             ->where('d.codigoDespachoPk = ' . $codigo);
         $arDespacho = $queryBuilder->getQuery()->getSingleResult();
         return $arDespacho;
@@ -1031,14 +1043,14 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $arDespacho = $em->getRepository(TteDespacho::class)->registroContabilizar($codigo);
                 if($arDespacho) {
                     if($arDespacho['estadoAprobado'] == 1 && $arDespacho['estadoContabilizado'] == 0) {
-                        //$arComprobante = $em->getRepository(CtbComprobante::class)->find('00025');
+                        $arComprobante = $em->getRepository(CtbComprobante::class)->find($arDespacho['codigoComprobanteFk']);
                         $arTercero = $em->getRepository(TtePoseedor::class)->terceroContabilidad($arDespacho['codigoPropietarioFk']);
 
                         //Cuenta flete pagado
-                        /*if($arFactura['codigoCuentaIngresoFleteFk']) {
-                            $arCuenta = $em->getRepository(CtbCuenta::class)->find($arFactura['codigoCuentaIngresoFleteFk']);
+                        if($arDespacho['codigoCuentaFleteFk']) {
+                            $arCuenta = $em->getRepository(CtbCuenta::class)->find($arDespacho['codigoCuentaFleteFk']);
                             if(!$arCuenta) {
-                                $error = "No se encuentra la cuenta del flete " . $arFactura['codigoCuentaIngresoFleteFk'];
+                                $error = "No se encuentra la cuenta del flete " . $arDespacho['codigoCuentaFleteFk'];
                                 break;
                             }
                             $arRegistro = new CtbRegistro();
@@ -1046,25 +1058,25 @@ class TteDespachoRepository extends ServiceEntityRepository
                             $arRegistro->setCuentaRel($arCuenta);
                             $arRegistro->setComprobanteRel($arComprobante);
                             if($arCuenta->getExigeCentroCosto()) {
-                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
+                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
-                            $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
-                            $arRegistro->setNumero($arFactura['numero']);
-                            $arRegistro->setFecha($arFactura['fecha']);
-                            if($arFactura['naturalezaCuentaIngreso'] == 'D') {
-                                $arRegistro->setVrDebito($arFactura['vrFlete']);
+                            $arRegistro->setNumero($arDespacho['numero']);
+                            $arRegistro->setFecha($arDespacho['fechaSalida']);
+                            $naturaleza = "D";
+                            if($naturaleza == 'D') {
+                                $arRegistro->setVrDebito($arDespacho['vrFletePago']);
                                 $arRegistro->setNaturaleza('D');
                             } else {
-                                $arRegistro->setVrCredito($arFactura['vrFlete']);
+                                $arRegistro->setVrCredito($arDespacho['vrFletePago']);
                                 $arRegistro->setNaturaleza('C');
                             }
-                            $arRegistro->setDescripcion('INGRESO FLETE');
+                            $arRegistro->setDescripcion('FLETE PAGADO');
                             $em->persist($arRegistro);
                         } else {
-                            $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete";
+                            $error = "El tipo de despacho no tiene configurada la cuenta para el flete pagado";
                             break;
-                        }*/
+                        }
 
                         /*$arFacturaAct = $em->getRepository(TteFactura::class)->find($arFactura['codigoFacturaPk']);
                         $arFacturaAct->setEstadoContabilizado(1);

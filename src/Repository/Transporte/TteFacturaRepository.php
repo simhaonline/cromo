@@ -599,6 +599,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('ft.naturalezaCuentaIngreso')
             ->addSelect('ft.naturalezaCuentaCliente')
             ->addSelect('ft.codigoCuentaClienteFk')
+            ->addSelect('ft.codigoComprobanteFk')
             ->addSelect('ft.prefijo')
             ->addSelect('o.codigoCentroCostoFk')
             ->leftJoin('f.facturaTipoRel', 'ft')
@@ -617,7 +618,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $arFactura = $em->getRepository(TteFactura::class)->registroContabilizar($codigo);
                 if($arFactura) {
                     if($arFactura['estadoAprobado'] == 1 && $arFactura['estadoContabilizado'] == 0) {
-                        $arComprobante = $em->getRepository(CtbComprobante::class)->find('00003');
+                        $arComprobante = $em->getRepository(CtbComprobante::class)->find($arFactura['codigoComprobanteFk']);
                         $arTercero = $em->getRepository(TteCliente::class)->terceroContabilidad($arFactura['codigoClienteFk']);
                         //Cuenta del ingreso flete
                         if($arFactura['codigoCuentaIngresoFleteFk']) {

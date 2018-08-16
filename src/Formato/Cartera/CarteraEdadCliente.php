@@ -56,6 +56,7 @@ class CarteraEdadCliente extends \FPDF {
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         $arrTotalesCliente = array('0'=>0, '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
+        $arrTotalesGeneral = array('0'=>0, '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
         $primerCliente = true;
         foreach ($arCuentasCobrar as $arCuentaCobrar) {
             if($primerCliente){
@@ -65,7 +66,10 @@ class CarteraEdadCliente extends \FPDF {
                 $pdf->Ln(4);
             }
             if($arCuentaCobrar['codigoClienteFk'] != $cliente){
-                $pdf->SetX(89);
+                $totalCliente = array_sum($arrTotalesCliente);
+                $pdf->SetX(45);
+                $pdf->Cell(17, 4, "TOTAL:", 'LRB', 0, 'L');
+                $pdf->Cell(27, 4, number_format($totalCliente), 'LRB', 0, 'R');
                 $pdf->Cell(18, 4, number_format($arrTotalesCliente[0]+$arrTotalesCliente[1]), 'LRB', 0, 'R');
                 $pdf->Cell(18, 4, number_format($arrTotalesCliente[2]), 'LRB', 0, 'R');
                 $pdf->Cell(18, 4, number_format($arrTotalesCliente[3]), 'LRB', 0, 'R');
@@ -78,10 +82,11 @@ class CarteraEdadCliente extends \FPDF {
                 $arrTotalesCliente = array('0' => 0, '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
                 $pdf->Ln(4);
             }
-            $arrRango = array('1' => 0, '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
+            $arrRango = array('0' => 0, '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
             $arrRango[$arCuentaCobrar['rango']] = $arCuentaCobrar['vrSaldo'];
             for($i = 0; $i <= 6; $i++) {
                 $arrTotalesCliente[$i] += $arrRango[$i];
+                $arrTotalesGeneral[$i] += $arrRango[$i];
             }
             $pdf->Cell(15, 4, $arCuentaCobrar['codigoCuentaCobrarTipoFk'], 'LRB', 0, 'L');
             $pdf->Cell(20, 4, $arCuentaCobrar['numeroDocumento'], 'LRB', 0, 'L');
@@ -97,7 +102,17 @@ class CarteraEdadCliente extends \FPDF {
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }
-
+        $totalGeneral = array_sum($arrTotalesGeneral);
+        //$pdf->SetX(45);
+        $pdf->Cell(52, 4, "TOTAL GENERAL:", 'LRB', 0, 'L');
+        $pdf->Cell(27, 4, number_format($totalGeneral), 'LRB', 0, 'R');
+        $pdf->Cell(18, 4, number_format($arrTotalesGeneral[0]+$arrTotalesGeneral[1]), 'LRB', 0, 'R');
+        $pdf->Cell(18, 4, number_format($arrTotalesGeneral[2]), 'LRB', 0, 'R');
+        $pdf->Cell(18, 4, number_format($arrTotalesGeneral[3]), 'LRB', 0, 'R');
+        $pdf->Cell(18, 4, number_format($arrTotalesGeneral[4]), 'LRB', 0, 'R');
+        $pdf->Cell(18, 4, number_format($arrTotalesGeneral[5]), 'LRB', 0, 'R');
+        $pdf->Cell(18, 4, number_format($arrTotalesGeneral[6]), 'LRB', 0, 'R');
+        $pdf->Ln(4);
 
     }
 

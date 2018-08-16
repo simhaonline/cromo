@@ -57,9 +57,9 @@ class TteDespachoTipo
     private $codigoCuentaRetencionFuenteFk;
 
     /**
-     * @ORM\Column(name="codigo_cuenta_retencion_ica_fk", type="string", length=20, nullable=true)
+     * @ORM\Column(name="codigo_cuenta_industria_comercio_fk", type="string", length=20, nullable=true)
      */
-    private $codigoCuentaRetencionIcaFk;
+    private $codigoCuentaIndustriaComercioFk;
 
     /**
      * @ORM\Column(name="codigo_cuenta_seguridad_fk", type="string", length=20, nullable=true)
@@ -147,6 +147,22 @@ class TteDespachoTipo
     /**
      * @return mixed
      */
+    public function getViaje()
+    {
+        return $this->viaje;
+    }
+
+    /**
+     * @param mixed $viaje
+     */
+    public function setViaje($viaje): void
+    {
+        $this->viaje = $viaje;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getExigeNumero()
     {
         return $this->exigeNumero;
@@ -163,22 +179,6 @@ class TteDespachoTipo
     /**
      * @return mixed
      */
-    public function getDespachosDespachoTipoRel()
-    {
-        return $this->despachosDespachoTipoRel;
-    }
-
-    /**
-     * @param mixed $despachosDespachoTipoRel
-     */
-    public function setDespachosDespachoTipoRel($despachosDespachoTipoRel): void
-    {
-        $this->despachosDespachoTipoRel = $despachosDespachoTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getGeneraMonitoreo()
     {
         return $this->generaMonitoreo;
@@ -190,22 +190,6 @@ class TteDespachoTipo
     public function setGeneraMonitoreo($generaMonitoreo): void
     {
         $this->generaMonitoreo = $generaMonitoreo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getViaje()
-    {
-        return $this->viaje;
-    }
-
-    /**
-     * @param mixed $viaje
-     */
-    public function setViaje($viaje): void
-    {
-        $this->viaje = $viaje;
     }
 
     /**
@@ -259,17 +243,17 @@ class TteDespachoTipo
     /**
      * @return mixed
      */
-    public function getCodigoCuentaRetencionIcaFk()
+    public function getCodigoCuentaIndustriaComercioFk()
     {
-        return $this->codigoCuentaRetencionIcaFk;
+        return $this->codigoCuentaIndustriaComercioFk;
     }
 
     /**
-     * @param mixed $codigoCuentaRetencionIcaFk
+     * @param mixed $codigoCuentaIndustriaComercioFk
      */
-    public function setCodigoCuentaRetencionIcaFk($codigoCuentaRetencionIcaFk): void
+    public function setCodigoCuentaIndustriaComercioFk($codigoCuentaIndustriaComercioFk): void
     {
-        $this->codigoCuentaRetencionIcaFk = $codigoCuentaRetencionIcaFk;
+        $this->codigoCuentaIndustriaComercioFk = $codigoCuentaIndustriaComercioFk;
     }
 
     /**
@@ -368,6 +352,21 @@ class TteDespachoTipo
         $this->codigoCuentaPagarFk = $codigoCuentaPagarFk;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDespachosDespachoTipoRel()
+    {
+        return $this->despachosDespachoTipoRel;
+    }
+
+    /**
+     * @param mixed $despachosDespachoTipoRel
+     */
+    public function setDespachosDespachoTipoRel($despachosDespachoTipoRel): void
+    {
+        $this->despachosDespachoTipoRel = $despachosDespachoTipoRel;
+    }
 
 
 }

@@ -16,9 +16,10 @@ class TteFacturaTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, TteFacturaTipo::class);
     }
 
-    public function camposPredeterminados(){
-        $qb = $this-> _em->createQueryBuilder()
-            ->from('App:Transporte\TteFacturaTipo','ft')
+    public function camposPredeterminados()
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->from('App:Transporte\TteFacturaTipo', 'ft')
             ->select('ft.codigoFacturaTipoPk AS ID')
             ->addSelect('ft.nombre AS NOMBRE')
             ->addSelect('ft.consecutivo AS CONSECUTIVO');
@@ -38,16 +39,22 @@ class TteFacturaTipoRepository extends ServiceEntityRepository
             $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
                 ->select('MIN(f.numero) as desde')
                 ->addSelect('MAX(f.numero) as hasta')
-            ->where("f.codigoFacturaTipoFk = '" . $arFacturaTipo['codigoFacturaTipoPk'] . "'")
-            ->andWhere("f.fecha >= '$fecha 00:00:00' AND f.fecha <= '$fecha 23:59:59'")
-            ->andWhere("f.estadoAprobado = 1");
+                ->addSelect('SUM(f.vrTotal) AS vrTotal')
+                ->addSelect('COUNT(f.codigoFacturaPk) AS numeroFacturas')
+                ->where("f.codigoFacturaTipoFk = '" . $arFacturaTipo['codigoFacturaTipoPk'] . "'")
+                ->andWhere("f.fecha >= '$fecha 00:00:00' AND f.fecha <= '$fecha 23:59:59'")
+                ->andWhere("f.estadoAprobado = 1");
             $arFactura = $queryBuilder->getQuery()->getSingleResult();
-            if($arFactura['desde']) {
+            if ($arFactura['desde']) {
                 $arFacturaTipos[$pos]['desde'] = $arFactura['desde'];
                 $arFacturaTipos[$pos]['hasta'] = $arFactura['hasta'];
+                $arFacturaTipos[$pos]['vrTotal'] = $arFactura['vrTotal'];
+                $arFacturaTipos[$pos]['numeroFacturas'] = $arFactura['numeroFacturas'];
             } else {
                 $arFacturaTipos[$pos]['desde'] = "Sin registros";
                 $arFacturaTipos[$pos]['hasta'] = "Sin registros";
+                $arFacturaTipos[$pos]['vrTotal'] = 0;
+                $arFacturaTipos[$pos]['numeroFacturas'] = 0;
             }
             $pos++;
         }

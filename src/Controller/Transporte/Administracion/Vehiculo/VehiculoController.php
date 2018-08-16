@@ -43,6 +43,8 @@ class VehiculoController extends Controller
      */
     public function nuevo(Request $request, $id)
     {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
         $arVehiculo = new TteVehiculo();
         if ($id != '0') {

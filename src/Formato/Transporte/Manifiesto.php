@@ -147,7 +147,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(125, $yt+5, $arDespacho['vehiculoConfiguracion']);
         $pdf->Text(142, $yt+5, $arDespacho['vehiculoPesoVacio']);
         $pdf->Text(170, $yt+5, $arDespacho['vehiculoNumeroPoliza']);
-        $pdf->Text(194, $yt+5, $arDespacho['aseguradoraNombre']);
+        $pdf->Text(194, $yt+5, utf8_decode(substr($arDespacho['aseguradoraNombre'],0,24)));
         $pdf->Text(245, $yt+5, $arDespacho['vehiculoFechaVencePoliza']->format('Y-m-d'));
 
         $y += 10;
@@ -284,7 +284,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(120, $yt+5, "LOGICUARTAS SAS");
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
-        $pdf->Cell(25, 4, '0', 0, 0, 'R');
+        $pdf->Cell(25, 4, number_format($arDespacho['vrIndustriaComercio']), 0, 0, 'R');
 
         $y += 5;
         $pdf->Rect($x, $y, 50, $alto2);
@@ -295,7 +295,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(20, $yt, "VALOR NETO A PAGAR:");
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
-        $neto = $arDespacho['vrFletePago']-($arDespacho['vrRetencionFuente']);
+        $neto = $arDespacho['vrFletePago']-($arDespacho['vrRetencionFuente'] - $arDespacho['vrIndustriaComercio']);
         $pdf->Cell(25, 4, $neto, 0, 0, 'R');
 
         $y += 5;

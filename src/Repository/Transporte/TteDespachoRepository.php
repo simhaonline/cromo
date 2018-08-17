@@ -1021,7 +1021,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("d.fechaSalida <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
         };
-
+        $queryBuilder->orderBy('d.fechaSalida', 'ASC');
         return $queryBuilder->getQuery()->execute();
     }
 

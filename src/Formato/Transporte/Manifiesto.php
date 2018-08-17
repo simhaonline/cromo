@@ -284,7 +284,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(120, $yt+5, "LOGICUARTAS SAS");
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
-        $pdf->Cell(25, 4, $arDespacho['vrRetencionIca'], 0, 0, 'R');
+        $pdf->Cell(25, 4, '0', 0, 0, 'R');
 
         $y += 5;
         $pdf->Rect($x, $y, 50, $alto2);
@@ -295,7 +295,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(20, $yt, "VALOR NETO A PAGAR:");
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
-        $neto = $arDespacho['vrFletePago']-($arDespacho['vrRetencionFuente']+$arDespacho['vrRetencionIca']);
+        $neto = $arDespacho['vrFletePago']-($arDespacho['vrRetencionFuente']);
         $pdf->Cell(25, 4, $neto, 0, 0, 'R');
 
         $y += 5;

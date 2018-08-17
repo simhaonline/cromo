@@ -756,6 +756,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $arFactura = new TteFactura();
                     $arFactura->setFacturaTipoRel($arGuia->getGuiaTipoRel()->getFacturaTipoRel());
                     $arFactura->setCodigoFacturaClaseFk('FA');
+                    $arFactura->setOperacionRel($arGuia->getOperacionIngresoRel());
                     $arFactura->setNumero($arGuia->getNumero());
                     $arFactura->setFecha($arGuia->getFechaIngreso());
                     $arFactura->setFechaVence($arGuia->getFechaIngreso());
@@ -768,6 +769,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $arFactura->setClienteRel($arGuia->getClienteRel());
                     $arFactura->setEstadoAutorizado(1);
                     $arFactura->setEstadoAprobado(1);
+                    $arFactura->setUsuario($this->getUser()->getUsername());
                     $em->persist($arFactura);
 
                     $arFacturaDetalle = new TteFacturaDetalle();

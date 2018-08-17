@@ -143,7 +143,7 @@ class RecaudoController extends Controller
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->recaudoPendiente($arRecaudo->getCodigoClienteFk());
-        return $this->render('transporte/movimiento/transporte/cumplido/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/transporte/recaudo/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
 
     /**

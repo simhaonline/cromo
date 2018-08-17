@@ -798,7 +798,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.documentoCliente,
         g.pesoVolumen,
         g.vrFlete,
-        g.vrManejo,        
+        g.vrManejo,
+        g.vrRecaudo,         
         c.nombreCorto AS clienteNombreCorto, 
         cd.nombre AS ciudadDestino
         FROM App\Entity\Transporte\TteGuia g 

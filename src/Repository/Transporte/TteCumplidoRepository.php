@@ -127,6 +127,8 @@ class TteCumplidoRepository extends ServiceEntityRepository
     public function aprobar($arCumplido)
     {
         $arCumplido->setEstadoAprobado(1);
+        $fecha = new \DateTime('now');
+        $arCumplido->setFecha($fecha);
         $this->getEntityManager()->persist($arCumplido);
         $this->getEntityManager()->flush();
     }

@@ -637,6 +637,8 @@ class TteFacturaRepository extends ServiceEntityRepository
                             }
                             $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
                             $arRegistro->setNumero($arFactura['numero']);
+                            $arRegistro->setNumeroReferenciaPrefijo($arFactura['prefijo']);
+                            $arRegistro->setNumeroReferencia($arFactura['numero']);
                             $arRegistro->setFecha($arFactura['fecha']);
                             if($arFactura['naturalezaCuentaIngreso'] == 'D') {
                                 $arRegistro->setVrDebito($arFactura['vrFlete']);
@@ -669,6 +671,8 @@ class TteFacturaRepository extends ServiceEntityRepository
                             }
                             $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
                             $arRegistro->setNumero($arFactura['numero']);
+                            $arRegistro->setNumeroReferenciaPrefijo($arFactura['prefijo']);
+                            $arRegistro->setNumeroReferencia($arFactura['numero']);
                             $arRegistro->setFecha($arFactura['fecha']);
                             if($arFactura['naturalezaCuentaIngreso'] == 'D') {
                                 $arRegistro->setVrDebito($arFactura['vrManejo']);
@@ -701,6 +705,8 @@ class TteFacturaRepository extends ServiceEntityRepository
                             }
                             $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
                             $arRegistro->setNumero($arFactura['numero']);
+                            $arRegistro->setNumeroReferenciaPrefijo($arFactura['prefijo']);
+                            $arRegistro->setNumeroReferencia($arFactura['numero']);
                             $arRegistro->setFecha($arFactura['fecha']);
                             if($arFactura['naturalezaCuentaCliente'] == 'D') {
                                 $arRegistro->setVrDebito($arFactura['vrTotal']);

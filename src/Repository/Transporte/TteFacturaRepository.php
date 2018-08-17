@@ -573,7 +573,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             } else {
                 $queryBuilder->andWhere("f.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
-        };
+        }
         if($session->get('filtroTteFacturaCodigoFacturaTipo')) {
             $queryBuilder->andWhere("f.codigoFacturaTipoFk = '" . $session->get('filtroTteFacturaCodigoFacturaTipo') . "'");
         }

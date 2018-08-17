@@ -464,6 +464,46 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function pendienteRecaudo()
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
+            ->select('tg.codigoGuiaPk')
+            ->addSelect('tg.documentoCliente')
+            ->addSelect('tg.fechaIngreso')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('tg.unidades')
+            ->addSelect('tg.pesoReal')
+            ->addSelect('tg.vrFlete')
+            ->addSelect('tg.vrManejo')
+            ->addSelect('tg.vrRecaudo')
+            ->leftJoin('tg.clienteRel', 'c')
+            ->leftJoin('tg.despachoRel', 'dg')
+            ->where('tg.estadoEntregado = 0')
+            ->andWhere('tg.estadoRecaudoDevolucion = 0')
+            ->andWhere('tg.vrRecaudo > 0');
+        $queryBuilder->orderBy('tg.codigoGuiaPk', 'DESC');
+        $fecha =  new \DateTime('now');
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("tg.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("tg.fechaIngreso >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("tg.fechaIngreso >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("tg.fechaIngreso <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("tg.fechaIngreso <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+
+        return $queryBuilder;
+    }
+
     public function guiasCliente()
     {
         $session = new Session();

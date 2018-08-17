@@ -47,6 +47,21 @@ class CarCuentaCobrarTipo
     private $codigoCuentaRetencionFuenteFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_industria_comercio_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaIndustriaComercioFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_ajuste_peso_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaAjustePesoFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_descuento_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaDescuentoFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarCuentaCobrar", mappedBy="cuentaCobrarTipoRel")
      */
     protected $cuentasCobrarCuentaCobrarTipoRel;
@@ -198,6 +213,54 @@ class CarCuentaCobrarTipo
     public function setRecibosDetallesCuentaCobrarTipoRel($recibosDetallesCuentaCobrarTipoRel): void
     {
         $this->recibosDetallesCuentaCobrarTipoRel = $recibosDetallesCuentaCobrarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaIndustriaComercioFk()
+    {
+        return $this->codigoCuentaIndustriaComercioFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaIndustriaComercioFk
+     */
+    public function setCodigoCuentaIndustriaComercioFk($codigoCuentaIndustriaComercioFk): void
+    {
+        $this->codigoCuentaIndustriaComercioFk = $codigoCuentaIndustriaComercioFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaAjustePesoFk()
+    {
+        return $this->codigoCuentaAjustePesoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaAjustePesoFk
+     */
+    public function setCodigoCuentaAjustePesoFk($codigoCuentaAjustePesoFk): void
+    {
+        $this->codigoCuentaAjustePesoFk = $codigoCuentaAjustePesoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaDescuentoFk()
+    {
+        return $this->codigoCuentaDescuentoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaDescuentoFk
+     */
+    public function setCodigoCuentaDescuentoFk($codigoCuentaDescuentoFk): void
+    {
+        $this->codigoCuentaDescuentoFk = $codigoCuentaDescuentoFk;
     }
 
 

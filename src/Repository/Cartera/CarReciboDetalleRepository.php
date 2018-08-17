@@ -141,8 +141,14 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
             ->addSelect('rd.vrAjustePeso')
             ->addSelect('rd.vrRetencionFuente')
             ->addSelect('rd.vrRetencionIca')
-            ->addSelect('rd.vrPagoAfectar')
-            ->addSelect('cct.nombre AS cuentaCobrarTipo')
+            ->addSelect('rd.vrRetencionIva')
+            ->addSelect('rd.vrPago')
+            ->addSelect('cct.codigoCuentaRetencionFuenteFk')
+            ->addSelect('cct.codigoCuentaIndustriaComercioFk')
+            ->addSelect('cct.codigoCuentaRetencionIvaFk')
+            ->addSelect('cct.codigoCuentaDescuentoFk')
+            ->addSelect('cct.codigoCuentaClienteFk')
+            ->addSelect('cct.codigoCuentaAjustePesoFk')
             ->leftJoin('rd.cuentaCobrarTipoRel', 'cct')
             ->where('rd.codigoReciboFk = ' . $codigoRecibo);
         $queryBuilder->orderBy('rd.codigoReciboDetallePk', 'ASC');

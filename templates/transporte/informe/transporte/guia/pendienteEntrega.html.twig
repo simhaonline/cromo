@@ -58,6 +58,7 @@
             <th>PES</th>
             <th>VOL</th>
             <th>NOV</th>
+            <th>N_S</th>
         </tr>
         </thead>
         <tbody>
@@ -78,6 +79,7 @@
                 <td class="numero">{{ arGuia.pesoReal }}</td>
                 <td class="numero">{{ arGuia.pesoVolumen }}</td>
                 {{ validarTipo(arGuia.estadoNovedad) }}
+                {{ validarTipo(arGuia.estadoNovedadSolucion) }}
             </tr>
         {% endfor %}
         </tbody>

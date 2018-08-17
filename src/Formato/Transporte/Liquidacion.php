@@ -44,10 +44,16 @@ class Liquidacion extends \FPDF {
         $this->Cell(70, 6, utf8_decode($arDespacho->getConductorRel()->getNombreCorto()), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "FECHA:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "ORDEN:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(64, 6, $arDespacho->getFechaRegistro()->format('Y-m-d'), 1, 0, 'L', 1);
+        $this->Cell(22, 6, $arDespacho->getCodigoDespachoPk(), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(20, 6, "NUMERO:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(22, 6, $arDespacho->getNumero(), 1, 0, 'L', 1);
 
         //linea2
         $this->SetFillColor(236, 236, 236);
@@ -61,7 +67,7 @@ class Liquidacion extends \FPDF {
         $this->Cell(70, 6, $arDespacho->getCodigoVehiculoFk(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "FECHA INGRESO:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "FECHA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(64, 6, $arDespacho->getFechaRegistro()->format('Y-m-d'), 1, 0, 'L', 1);

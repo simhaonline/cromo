@@ -445,11 +445,10 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.vrManejo')
             ->addSelect('tg.vrRecaudo')
             ->addSelect('tg.estadoNovedad')
+            ->addSelect('tg.estadoNovedadSolucion')
             ->addSelect('ct.nombreCorto')
             ->addSelect('ct.movil')
-            ->addSelect(
-                '(dg.numero) AS manifiesto'
-            )
+            ->addSelect('(dg.numero) AS manifiesto')
             ->leftJoin('tg.clienteRel', 'c')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->leftJoin('tg.despachoRel', 'dg')

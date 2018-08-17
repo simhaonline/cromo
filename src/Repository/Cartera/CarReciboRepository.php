@@ -548,9 +548,9 @@ class CarReciboRepository extends ServiceEntityRepository
                         }
 
 
-                        /*$arReciboAct = $em->getRepository(CarRecibo::class)->find($arRecibo['codigoReciboPk']);
+                        $arReciboAct = $em->getRepository(CarRecibo::class)->find($arRecibo['codigoReciboPk']);
                         $arReciboAct->setEstadoContabilizado(1);
-                        $em->persist($arReciboAct);*/
+                        $em->persist($arReciboAct);
                     }
                 } else {
                     $error = "La despacho codigo " . $codigo . " no existe";

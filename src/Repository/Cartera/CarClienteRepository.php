@@ -80,7 +80,7 @@ class CarClienteRepository extends ServiceEntityRepository
                 $arTercero->setNombreCorto($arCliente->getNombreCorto());
                 $arTercero->setDireccion($arCliente->getDireccion());
                 $arTercero->setTelefono($arTercero->getTelefono());
-                $arTercero->setEmail($arCliente->getCorreo());
+                //$arTercero->setEmail($arCliente->getCorreo());
                 $em->persist($arTercero);
             }
         }

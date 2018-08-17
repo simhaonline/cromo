@@ -37,6 +37,11 @@ class GenCuenta
     private $tipo;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_contable_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaContableFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="GenBanco", inversedBy="cuentasBancoRel")
      * @ORM\JoinColumn(name="codigo_banco_fk", referencedColumnName="codigo_banco_pk")
      */
@@ -157,6 +162,22 @@ class GenCuenta
     public function setRecibosCuentaRel($recibosCuentaRel): void
     {
         $this->recibosCuentaRel = $recibosCuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaContableFk()
+    {
+        return $this->codigoCuentaContableFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaContableFk
+     */
+    public function setCodigoCuentaContableFk($codigoCuentaContableFk): void
+    {
+        $this->codigoCuentaContableFk = $codigoCuentaContableFk;
     }
 
 

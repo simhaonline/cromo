@@ -120,9 +120,22 @@ class CtbRegistroRepository extends ServiceEntityRepository
 
     public function aplicarIntercambio()
     {
+        $session = new Session();
         $em = $this->getEntityManager();
-        $query = $em->createQuery('UPDATE App\Entity\Contabilidad\CtbRegistro r set r.estadoIntercambio = 1 
-                      WHERE r.estadoIntercambio = 0');
+        $dql = "UPDATE App\Entity\Contabilidad\CtbRegistro r set r.estadoIntercambio = 1 
+                      WHERE r.estadoIntercambio = 0";
+        if($session->get('filtroCtbComprobante') != ''){
+            $dql .= " AND r.codigoComprobanteFk = {$session->get('filtroCtbComprobante')}";
+        }
+        if($session->get('filtroCtbRegistroFiltroFecha') == true){
+            if ($session->get('filtroCtbRegistroFechaDesde') != null) {
+                $dql .= " AND r.fecha >= '{$session->get('filtroCtbRegistroFechaDesde')} 00:00:00'";
+            }
+            if ($session->get('filtroCtbRegistroFechaHasta') != null) {
+                $dql .= " AND r.fecha <= '{$session->get('filtroCtbRegistroFechaHasta')} 23:59:59'";
+            }
+        }
+        $query = $em->createQuery($dql);
         $query->execute();
 
     }

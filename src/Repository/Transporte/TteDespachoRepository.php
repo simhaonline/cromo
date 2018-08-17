@@ -1091,6 +1091,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setNumero($arDespacho['numero']);
+                            $arRegistro->setNumeroReferencia($arDespacho['numero']);
                             $arRegistro->setFecha($arDespacho['fechaSalida']);
                             $naturaleza = "D";
                             if($naturaleza == 'D') {
@@ -1125,6 +1126,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setNumero($arDespacho['numero']);
+                            $arRegistro->setNumeroReferencia($arDespacho['numero']);
                             $arRegistro->setFecha($arDespacho['fechaSalida']);
                             $naturaleza = "C";
                             if($naturaleza == 'D') {
@@ -1162,6 +1164,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setNumero($arDespacho['numero']);
+                            $arRegistro->setNumeroReferencia($arDespacho['numero']);
                             $arRegistro->setFecha($arDespacho['fechaSalida']);
                             $naturaleza = "C";
                             if($naturaleza == 'D') {
@@ -1199,6 +1202,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setNumero($arDespacho['numero']);
+                            $arRegistro->setNumeroReferencia($arDespacho['numero']);
                             $arRegistro->setFecha($arDespacho['fechaSalida']);
                             $naturaleza = "C";
                             if($naturaleza == 'D') {
@@ -1233,6 +1237,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setNumero($arDespacho['numero']);
+                            $arRegistro->setNumeroReferencia($arDespacho['numero']);
                             $arRegistro->setFecha($arDespacho['fechaSalida']);
                             $naturaleza = "C";
                             if($naturaleza == 'D') {
@@ -1267,6 +1272,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setNumero($arDespacho['numero']);
+                            $arRegistro->setNumeroReferencia($arDespacho['numero']);
                             $arRegistro->setFecha($arDespacho['fechaSalida']);
                             $naturaleza = "C";
                             if($naturaleza == 'D') {
@@ -1301,6 +1307,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setNumero($arDespacho['numero']);
+                            $arRegistro->setNumeroReferencia($arDespacho['numero']);
                             $arRegistro->setFecha($arDespacho['fechaSalida']);
                             $naturaleza = "C";
                             if($naturaleza == 'D') {
@@ -1335,6 +1342,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setNumero($arDespacho['numero']);
+                            $arRegistro->setNumeroReferencia($arDespacho['numero']);
                             $arRegistro->setFecha($arDespacho['fechaSalida']);
                             $naturaleza = "C";
                             if($naturaleza == 'D') {
@@ -1369,6 +1377,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setNumero($arDespacho['numero']);
+                            $arRegistro->setNumeroReferencia($arDespacho['numero']);
                             $arRegistro->setFecha($arDespacho['fechaSalida']);
                             $naturaleza = "C";
                             if($naturaleza == 'D') {

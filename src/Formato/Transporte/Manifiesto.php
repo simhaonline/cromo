@@ -284,7 +284,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(120, $yt+5, "LOGICUARTAS SAS");
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
-        $pdf->Cell(25, 4, number_format($arDespacho['vrIndustriaComercio']), 0, 0, 'R');
+        $pdf->Cell(25, 4, $arDespacho['vrIndustriaComercio'], 0, 0, 'R');
 
         $y += 5;
         $pdf->Rect($x, $y, 50, $alto2);
@@ -397,7 +397,7 @@ class Manifiesto extends \FPDF {
                 $pdf->Cell(25, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'L');
                 $pdf->Cell(25, 4, 'VARIOS', 1, 0, 'L');
                 $pdf->Cell(30, 4, 'VARIOS', 1, 0, 'L');
-                $pdf->Cell(65, 4, substr(utf8_decode($arGuia['clienteNombreCorto']),0,20), 1, 0, 'L');
+                $pdf->Cell(65, 4, substr(utf8_decode($arGuia['clienteNombre']),0,20), 1, 0, 'L');
                 $pdf->Cell(45, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,28), 1, 0, 'L');
                 $pdf->Cell(20, 4, "054125", 1, 0, 'R');
                 $pdf->Ln();

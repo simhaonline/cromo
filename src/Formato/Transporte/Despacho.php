@@ -112,7 +112,7 @@ class Despacho extends \FPDF {
                 $pdf->Cell(8, 4, $arGuia['codigoGuiaTipoFk'], 1, 0, 'L');
                 $pdf->Cell(25, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
                 $pdf->Cell(10, 4, $arGuia['fechaIngreso']->format('m-d'), 1, 0, 'L');
-                $pdf->Cell(38, 4, substr(utf8_decode($arGuia['clienteNombreCorto']),0,20), 1, 0, 'L');
+                $pdf->Cell(38, 4, substr(utf8_decode($arGuia['clienteNombre']),0,20), 1, 0, 'L');
                 $pdf->Cell(50, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,20), 1, 0, 'L');
                 $pdf->Cell(35, 4, substr(utf8_decode($arGuia['direccionDestinatario']),0,20), 1, 0, 'L');
                 $pdf->Cell(10, 4, $arGuia['empaqueReferencia'], 1, 0, 'L');

@@ -247,57 +247,80 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function despacho($codigoDespacho): array
+    public function despacho($codigoDespacho)
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
-        g.numero, 
-        g.fechaIngreso,        
-        g.codigoOperacionIngresoFk,
-        g.codigoOperacionCargoFk,     
-        g.unidades,
-        g.pesoReal,
-        g.pesoVolumen,             
-        c.nombreCorto AS clienteNombreCorto, 
-        cd.nombre AS ciudadDestino,
-        g.nombreDestinatario
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.codigoDespachoFk = :codigoDespacho'
-        )->setParameter('codigoDespacho', $codigoDespacho);
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.nombreDestinatario')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.codigoDespachoFk = ' . $codigoDespacho);
+        $queryBuilder->orderBy('g.codigoGuiaPk', 'DESC');
 
-        return $query->execute();
-
+        return $queryBuilder;
     }
 
-    public function despachoOrden($codigoDespacho): array
+    public function despachoOrden($codigoDespacho)
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
-        g.codigoGuiaTipoFk,
-        g.numero, 
-        g.fechaIngreso,           
-        g.unidades,
-        g.pesoReal,
-        g.pesoVolumen,             
-        c.nombreCorto AS clienteNombreCorto, 
-        g.codigoCiudadDestinoFk,
-        cd.nombre AS ciudadDestino,
-        g.nombreDestinatario,
-        g.direccionDestinatario,
-        g.codigoProductoFk,
-        g.empaqueReferencia
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd        
-        WHERE g.codigoDespachoFk = :codigoDespacho
-        ORDER BY g.codigoCiudadDestinoFk, g.ordenRuta'
-        )->setParameter('codigoDespacho', $codigoDespacho);
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.codigoGuiaTipoFk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.direccionDestinatario')
+            ->addSelect('g.codigoProductoFk')
+            ->addSelect('g.empaqueReferencia')
+            ->addSelect('g.codigoCiudadDestinoFk')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->orderBy('g.codigoCiudadDestinoFk')
+            ->addOrderBy('g.ordenRuta')
+            ->where('g.codigoDespachoFk = ' . $codigoDespacho);
 
-        return $query->execute();
+        return $queryBuilder->getQuery()->execute();
+//        $em = $this->getEntityManager();
+//        $query = $em->createQuery(
+//            'SELECT g.codigoGuiaPk,
+//        g.codigoGuiaTipoFk,
+//        g.numero,
+//        g.fechaIngreso,
+//        g.unidades,
+//        g.pesoReal,
+//        g.pesoVolumen,
+//        c.nombreCorto AS clienteNombreCorto,
+//        g.codigoCiudadDestinoFk,
+//        cd.nombre AS ciudadDestino,
+//        g.nombreDestinatario,
+//        g.direccionDestinatario,
+//        g.codigoProductoFk,
+//        g.empaqueReferencia
+//        FROM App\Entity\Transporte\TteGuia g
+//        LEFT JOIN g.clienteRel c
+//        LEFT JOIN g.ciudadDestinoRel cd
+//        WHERE g.codigoDespachoFk = :codigoDespacho
+//        ORDER BY g.codigoCiudadDestinoFk, g.ordenRuta'
+//        )->setParameter('codigoDespacho', $codigoDespacho);
+//
+//        return $query->execute();
 
     }
 

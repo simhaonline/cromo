@@ -154,7 +154,7 @@ class Factura extends \FPDF {
         $pdf->SetFont('Arial', '', 7);
         if($arGuias) {
             foreach ($arGuias as $arGuia) {
-                $pdf->Cell(17, 4, $arGuia['numero'], 1, 0, 'L');
+                $pdf->Cell(17, 4, $arGuia['codigoGuiaFk'], 1, 0, 'L');
                 $pdf->Cell(24, 4, $arGuia['documentoCliente'], 1, 0, 'L');
                 $pdf->Cell(43, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,28), 1, 0, 'L');
                 $pdf->Cell(26, 4, substr(utf8_decode($arGuia['ciudadDestino']),0,15), 1, 0, 'L');

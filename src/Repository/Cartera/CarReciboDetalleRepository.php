@@ -145,6 +145,7 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
             ->addSelect('rd.vrPago')
             ->addSelect('rd.vrPagoAfectar')
             ->addSelect('cc.numeroDocumento')
+            ->addSelect('cct.prefijo')
             ->addSelect('cct.codigoCuentaRetencionFuenteFk')
             ->addSelect('cct.codigoCuentaIndustriaComercioFk')
             ->addSelect('cct.codigoCuentaRetencionIvaFk')

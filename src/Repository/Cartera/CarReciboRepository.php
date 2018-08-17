@@ -221,9 +221,9 @@ class CarReciboRepository extends ServiceEntityRepository
             ->where('r.estadoContabilizado =  0')
             ->andWhere('r.estadoAprobado = 1')
         ->orderBy('r.fecha', 'ASC');
-        if ($session->get('filtroCarReciboNumero')) {
+        /*if ($session->get('filtroCarReciboNumero')) {
             $queryBuilder->andWhere("r.numero = '{$session->get('filtroCarReciboNumero')}'");
-        }
+        }*/
         if($session->get('filtroCarCodigoCliente')){
             $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
         }
@@ -297,13 +297,14 @@ class CarReciboRepository extends ServiceEntityRepository
                                     }*/
                                     $arRegistro->setNumero($arRecibo['numero']);
                                     $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                     $arRegistro->setFecha($arRecibo['fecha']);
                                     $naturaleza = "C";
                                     if($naturaleza == 'D') {
-                                        $arRegistro->setVrDebito($arReciboDetalle['vrPago']);
+                                        $arRegistro->setVrDebito($arReciboDetalle['vrPagoAfectar']);
                                         $arRegistro->setNaturaleza('D');
                                     } else {
-                                        $arRegistro->setVrCredito($arReciboDetalle['vrPago']);
+                                        $arRegistro->setVrCredito($arReciboDetalle['vrPagoAfectar']);
                                         $arRegistro->setNaturaleza('C');
                                     }
                                     $arRegistro->setDescripcion($descripcion);
@@ -334,6 +335,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                     }*/
                                     $arRegistro->setNumero($arRecibo['numero']);
                                     $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                     $arRegistro->setFecha($arRecibo['fecha']);
                                     $naturaleza = "D";
                                     if($naturaleza == 'D') {
@@ -344,7 +346,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                         $arRegistro->setNaturaleza('C');
                                     }
                                     if($arCuenta->getExigeBase()) {
-                                        $arRegistro->setVrBase($arReciboDetalle['vrFletePagoAfectar']);
+                                        $arRegistro->setVrBase($arReciboDetalle['vrPagoAfectar']);
                                     }
                                     $arRegistro->setDescripcion($descripcion);
                                     $em->persist($arRegistro);
@@ -374,6 +376,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                     }*/
                                     $arRegistro->setNumero($arRecibo['numero']);
                                     $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                     $arRegistro->setFecha($arRecibo['fecha']);
                                     $naturaleza = "D";
                                     if($naturaleza == 'D') {
@@ -384,7 +387,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                         $arRegistro->setNaturaleza('C');
                                     }
                                     if($arCuenta->getExigeBase()) {
-                                        $arRegistro->setVrBase($arReciboDetalle['vrFletePagoAfectar']);
+                                        $arRegistro->setVrBase($arReciboDetalle['vrPagoAfectar']);
                                     }
                                     $arRegistro->setDescripcion($descripcion);
                                     $em->persist($arRegistro);
@@ -414,6 +417,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                     }*/
                                     $arRegistro->setNumero($arRecibo['numero']);
                                     $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                     $arRegistro->setFecha($arRecibo['fecha']);
                                     $naturaleza = "D";
                                     if($naturaleza == 'D') {
@@ -451,6 +455,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                     }*/
                                     $arRegistro->setNumero($arRecibo['numero']);
                                     $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                     $arRegistro->setFecha($arRecibo['fecha']);
                                     $naturaleza = "D";
                                     if($naturaleza == 'D') {
@@ -488,6 +493,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                     }*/
                                     $arRegistro->setNumero($arRecibo['numero']);
                                     $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                     $arRegistro->setFecha($arRecibo['fecha']);
                                     $naturaleza = "D";
                                     if($naturaleza == 'D') {

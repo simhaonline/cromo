@@ -17,6 +17,7 @@
             <th>VOL</th>
             <th>FLETE</th>
             <th>MANEJO</th>
+            <th>RECAUDO</th>
             <th></th>
         </tr>
         </thead>
@@ -33,8 +34,9 @@
                 <td style="text-align: right">{{ arGuia.unidades }}</td>
                 <td style="text-align: right">{{ arGuia.pesoReal }}</td>
                 <td style="text-align: right">{{ arGuia.pesoVolumen }}</td>
-                <td style="text-align: right">{{ arGuia.vrFlete }}</td>
-                <td style="text-align: right">{{ arGuia.vrManejo }}</td>
+                <td class = 'numero'>{{ arGuia.vrFlete | number_format }}</td>
+                <td class = "numero">{{ arGuia.vrManejo | number_format }}</td>
+                <td class = "numero">{{ arGuia.vrRecaudo | number_format }}</td>
                 <td  style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
             </tr>
         {% endfor %}

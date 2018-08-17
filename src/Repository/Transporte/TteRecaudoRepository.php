@@ -36,7 +36,7 @@ class TteRecaudoRepository extends ServiceEntityRepository
         $queryBuilder->orderBy('rc.fecha', 'DESC');
 
         if($session->get('filtroTteCodigoCliente')){
-            $queryBuilder->andWhere("c.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+            $queryBuilder->andWhere("rc.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }
         return $queryBuilder;
     }
@@ -127,6 +127,8 @@ class TteRecaudoRepository extends ServiceEntityRepository
     public function aprobar($arRecaudo)
     {
         if($arRecaudo->getEstadoAutorizado() == 1 && $arRecaudo->getEstadoAprobado() == 0) {
+            $fecha = new \DateTime('now');
+            $arRecaudo->setFecha($fecha);
             $arRecaudo->setEstadoAprobado(1);
             $this->getEntityManager()->persist($arRecaudo);
             $this->getEntityManager()->flush();

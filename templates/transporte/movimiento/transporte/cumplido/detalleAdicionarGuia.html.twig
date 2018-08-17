@@ -33,8 +33,8 @@
                 <td style="text-align: right">{{ arGuia.unidades }}</td>
                 <td style="text-align: right">{{ arGuia.pesoReal }}</td>
                 <td style="text-align: right">{{ arGuia.pesoVolumen }}</td>
-                <td style="text-align: right">{{ arGuia.vrFlete }}</td>
-                <td style="text-align: right">{{ arGuia.vrManejo }}</td>
+                <td style="text-align: right">{{ arGuia.vrFlete | number_format }}</td>
+                <td style="text-align: right">{{ arGuia.vrManejo | number_format }}</td>
                 <td  style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
             </tr>
         {% endfor %}

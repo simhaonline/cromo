@@ -250,6 +250,7 @@ class CarReciboRepository extends ServiceEntityRepository
             ->select('r.codigoReciboPk')
             ->addSelect('r.numero')
             ->addSelect('r.fecha')
+            ->addSelect('r.vrPago')
             ->addSelect('r.codigoClienteFk')
             ->addSelect('r.estadoAprobado')
             ->addSelect('r.estadoContabilizado')
@@ -297,7 +298,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                     $arRegistro->setNumero($arRecibo['numero']);
                                     $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                     $arRegistro->setFecha($arRecibo['fecha']);
-                                    $naturaleza = "D";
+                                    $naturaleza = "C";
                                     if($naturaleza == 'D') {
                                         $arRegistro->setVrDebito($arReciboDetalle['vrPago']);
                                         $arRegistro->setNaturaleza('D');
@@ -342,6 +343,9 @@ class CarReciboRepository extends ServiceEntityRepository
                                         $arRegistro->setVrCredito($arReciboDetalle['vrRetencionFuente']);
                                         $arRegistro->setNaturaleza('C');
                                     }
+                                    if($arCuenta->getExigeBase()) {
+                                        $arRegistro->setVrBase($arReciboDetalle['vrFletePagoAfectar']);
+                                    }
                                     $arRegistro->setDescripcion($descripcion);
                                     $em->persist($arRegistro);
                                 } else {
@@ -378,6 +382,9 @@ class CarReciboRepository extends ServiceEntityRepository
                                     } else {
                                         $arRegistro->setVrCredito($arReciboDetalle['vrRetencionIca']);
                                         $arRegistro->setNaturaleza('C');
+                                    }
+                                    if($arCuenta->getExigeBase()) {
+                                        $arRegistro->setVrBase($arReciboDetalle['vrFletePagoAfectar']);
                                     }
                                     $arRegistro->setDescripcion($descripcion);
                                     $em->persist($arRegistro);
@@ -521,10 +528,10 @@ class CarReciboRepository extends ServiceEntityRepository
                             $arRegistro->setFecha($arRecibo['fecha']);
                             $naturaleza = "D";
                             if($naturaleza == 'D') {
-                                $arRegistro->setVrDebito($arReciboDetalle['vrDescuento']);
+                                $arRegistro->setVrDebito($arRecibo['vrPago']);
                                 $arRegistro->setNaturaleza('D');
                             } else {
-                                $arRegistro->setVrCredito($arReciboDetalle['vrDescuento']);
+                                $arRegistro->setVrCredito($arRecibo['vrPago']);
                                 $arRegistro->setNaturaleza('C');
                             }
                             $arRegistro->setDescripcion($descripcion);

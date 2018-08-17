@@ -32,6 +32,11 @@ class CarCuentaCobrarTipo
     private $saldoInicial = 0;
 
     /**
+     * @ORM\Column(name="prefijo", type="string", length=5, nullable=true)
+     */
+    private $prefijo;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_cliente_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaClienteFk;
@@ -261,6 +266,22 @@ class CarCuentaCobrarTipo
     public function setCodigoCuentaDescuentoFk($codigoCuentaDescuentoFk): void
     {
         $this->codigoCuentaDescuentoFk = $codigoCuentaDescuentoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrefijo()
+    {
+        return $this->prefijo;
+    }
+
+    /**
+     * @param mixed $prefijo
+     */
+    public function setPrefijo($prefijo): void
+    {
+        $this->prefijo = $prefijo;
     }
 
 

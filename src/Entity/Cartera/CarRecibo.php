@@ -18,7 +18,7 @@ class CarRecibo
     private $codigoReciboPk;
 
     /**
-     * @ORM\Column(name="fecha", type="date", nullable=true)
+     * @ORM\Column(name="fecha", type="datetime", nullable=true)
      */
     private $fecha;
 
@@ -581,6 +581,7 @@ class CarRecibo
     {
         $this->recibosDetallesRecibosRel = $recibosDetallesRecibosRel;
     }
+
 
 
 }

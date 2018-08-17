@@ -3,10 +3,12 @@
 namespace App\Repository\Cartera;
 
 
+use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Cartera\CarReciboTipo;
+use App\Entity\Contabilidad\CtbComprobante;
 use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -24,8 +26,6 @@ class CarReciboRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarRecibo::class, 'r')
             ->select('r.codigoReciboPk')
-            ->leftJoin('r.clienteRel','cr')
-            ->leftJoin('r.cuentaRel','c')
             ->addSelect('c.nombre')
             ->addSelect('cr.nombreCorto')
             ->addSelect('cr.numeroIdentificacion')
@@ -39,14 +39,16 @@ class CarReciboRepository extends ServiceEntityRepository
             ->addSelect('r.estadoAnulado')
             ->addSelect('r.estadoImpreso')
             ->addSelect('r.estadoAprobado')
+            ->leftJoin('r.clienteRel','cr')
+            ->leftJoin('r.cuentaRel','c')
             ->where('r.codigoReciboPk <> 0')
             ->orderBy('r.estadoAprobado', 'ASC')
         ->addOrderBy('r.fecha', 'DESC');
-        if ($session->get('filtroNumero')) {
-            $queryBuilder->andWhere("r.numero = '{$session->get('filtroNumero')}'");
+        if ($session->get('filtroCarReciboNumero')) {
+            $queryBuilder->andWhere("r.numero = '{$session->get('filtroCarReciboNumero')}'");
         }
-        if($session->get('filtroTteCodigoCliente')){
-            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        if($session->get('filtroCarCodigoCliente')){
+            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
         }
         switch ($session->get('filtroCarReciboEstadoAprobado')) {
             case '0':
@@ -193,4 +195,137 @@ class CarReciboRepository extends ServiceEntityRepository
             }
         }
     }
+
+    public function listaContabilizar()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarRecibo::class, 'r')
+            ->select('r.codigoReciboPk')
+            ->addSelect('c.nombre')
+            ->addSelect('cr.nombreCorto')
+            ->addSelect('cr.numeroIdentificacion')
+            ->addSelect('r.numero')
+            ->addSelect('r.fecha')
+            ->addSelect('r.fechaPago')
+            ->addSelect('r.codigoCuentaFk')
+            ->addSelect('r.vrPagoTotal')
+            ->addSelect('r.usuario')
+            ->addSelect('r.estadoAutorizado')
+            ->addSelect('r.estadoAnulado')
+            ->addSelect('r.estadoImpreso')
+            ->addSelect('r.estadoAprobado')
+            ->leftJoin('r.clienteRel','cr')
+            ->leftJoin('r.cuentaRel','c')
+            ->where('r.estadoContabilizado =  0')
+            ->andWhere('r.estadoAprobado = 1')
+        ->orderBy('r.fecha', 'ASC');
+        if ($session->get('filtroCarReciboNumero')) {
+            $queryBuilder->andWhere("r.numero = '{$session->get('filtroCarReciboNumero')}'");
+        }
+        if($session->get('filtroCarCodigoCliente')){
+            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        }
+        $fecha =  new \DateTime('now');
+        if($session->get('filtroCarReciboFiltroFecha') == true){
+            if ($session->get('filtroCarReciboFechaDesde') != null) {
+                $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroCarReciboFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("r.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroCarReciboFechaHasta') != null) {
+                $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroCarReciboFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("r.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        };
+        return $queryBuilder->getQuery()->execute();
+    }
+
+    public function registroContabilizar($codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarRecibo::class, 'r')
+            ->select('r.codigoReciboPk')
+            ->addSelect('r.codigoClienteFk')
+            ->addSelect('r.estadoAprobado')
+            ->addSelect('r.estadoContabilizado')
+            ->addSelect('rt.codigoComprobanteFk')
+            ->leftJoin('r.reciboTipoRel', 'rt')
+            ->where('r.codigoReciboPk = ' . $codigo);
+        $arRecibo = $queryBuilder->getQuery()->getSingleResult();
+        return $arRecibo;
+    }
+
+    public function contabilizar($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $error = "";
+            foreach ($arr AS $codigo) {
+                $arRecibo = $em->getRepository(CarRecibo::class)->registroContabilizar($codigo);
+                if($arRecibo) {
+                    if($arRecibo['estadoAprobado'] == 1 && $arRecibo['estadoContabilizado'] == 0) {
+                        $arComprobante = $em->getRepository(CtbComprobante::class)->find($arRecibo['codigoComprobanteFk']);
+                        $arTercero = $em->getRepository(CarCliente::class)->terceroContabilidad($arRecibo['codigoClienteFk']);
+
+                        $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->listaContabilizar($codigo);
+                        foreach ($arReciboDetalles as $arReciboDetalle) {
+
+                        }
+                        //Cuenta industria y comercio
+                        /*$descripcion = "INDUSTRIA COMERCIO";
+                        $cuenta = $arDespacho['codigoCuentaIndustriaComercioFk'];
+                        if($cuenta) {
+                            $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                            if(!$arCuenta) {
+                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                break;
+                            }
+                            $arRegistro = new CtbRegistro();
+                            $arRegistro->setTerceroRel($arTercero);
+                            $arRegistro->setCuentaRel($arCuenta);
+                            $arRegistro->setComprobanteRel($arComprobante);
+                            if($arCuenta->getExigeCentroCosto()) {
+                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                            }
+                            $arRegistro->setNumero($arDespacho['numero']);
+                            $arRegistro->setFecha($arDespacho['fechaSalida']);
+                            $naturaleza = "C";
+                            if($naturaleza == 'D') {
+                                $arRegistro->setVrDebito($arDespacho['vrIndustriaComercio']);
+                                $arRegistro->setNaturaleza('D');
+                            } else {
+                                $arRegistro->setVrCredito($arDespacho['vrIndustriaComercio']);
+                                $arRegistro->setNaturaleza('C');
+                            }
+                            if($arCuenta->getExigeBase()) {
+                                $arRegistro->setVrBase($arDespacho['vrFletePago']);
+                            }
+                            $arRegistro->setDescripcion($descripcion);
+                            $em->persist($arRegistro);
+                        } else {
+                            $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
+                            break;
+                        }*/
+
+                        /*$arDespachoAct = $em->getRepository(TteDespacho::class)->find($arDespacho['codigoDespachoPk']);
+                        $arDespachoAct->setEstadoContabilizado(1);
+                        $em->persist($arDespachoAct);*/
+                    }
+                } else {
+                    $error = "La despacho codigo " . $codigo . " no existe";
+                    break;
+                }
+            }
+            if($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+
+        }
+        return true;
+    }
+
 }

@@ -130,4 +130,23 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getResult() ;
     }
+
+    public function listaContabilizar($codigoRecibo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarReciboDetalle::class, 'rd');
+        $queryBuilder
+            ->select('rd.codigoReciboDetallePk')
+            ->addSelect('rd.numeroFactura')
+            ->addSelect('rd.vrDescuento')
+            ->addSelect('rd.vrAjustePeso')
+            ->addSelect('rd.vrRetencionFuente')
+            ->addSelect('rd.vrRetencionIca')
+            ->addSelect('rd.vrPagoAfectar')
+            ->addSelect('cct.nombre AS cuentaCobrarTipo')
+            ->leftJoin('rd.cuentaCobrarTipoRel', 'cct')
+            ->where('rd.codigoReciboFk = ' . $codigoRecibo);
+        $queryBuilder->orderBy('rd.codigoReciboDetallePk', 'ASC');
+
+        return $queryBuilder->getQuery()->getResult() ;
+    }
 }

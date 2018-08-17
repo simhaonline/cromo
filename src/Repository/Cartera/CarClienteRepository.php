@@ -3,6 +3,7 @@
 namespace App\Repository\Cartera;
 
 use App\Entity\Cartera\CarCliente;
+use App\Entity\Contabilidad\CtbTercero;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -63,6 +64,28 @@ class CarClienteRepository extends ServiceEntityRepository
             }
         }
         return $respuesta;
+    }
+
+    public function terceroContabilidad($codigo)
+    {
+        $em = $this->getEntityManager();
+        $arTercero = null;
+        $arCliente = $em->getRepository(CarCliente::class)->find($codigo);
+        if($arCliente) {
+            $arTercero = $em->getRepository(CtbTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arCliente->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arCliente->getNumeroIdentificacion()));
+            if(!$arTercero) {
+                $arTercero = new CtbTercero();
+                $arTercero->setIdentificacionRel($arCliente->getIdentificacionRel());
+                $arTercero->setNumeroIdentificacion($arCliente->getNumeroIdentificacion());
+                $arTercero->setNombreCorto($arCliente->getNombreCorto());
+                $arTercero->setDireccion($arCliente->getDireccion());
+                $arTercero->setTelefono($arTercero->getTelefono());
+                $arTercero->setEmail($arCliente->getCorreo());
+                $em->persist($arTercero);
+            }
+        }
+
+        return $arTercero;
     }
 
 }

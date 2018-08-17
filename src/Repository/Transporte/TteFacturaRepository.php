@@ -715,9 +715,9 @@ class TteFacturaRepository extends ServiceEntityRepository
                             $error = "El tipo de factura no tiene configurada la cuenta cliente";
                             break;
                         }
-                        $arFacturaAct = $em->getRepository(TteFactura::class)->find($arFactura['codigoFacturaPk']);
+                        /*$arFacturaAct = $em->getRepository(TteFactura::class)->find($arFactura['codigoFacturaPk']);
                         $arFacturaAct->setEstadoContabilizado(1);
-                        $em->persist($arFacturaAct);
+                        $em->persist($arFacturaAct);*/
                     }
                 } else {
                     $error = "La factura codigo " . $codigo . " no existe";

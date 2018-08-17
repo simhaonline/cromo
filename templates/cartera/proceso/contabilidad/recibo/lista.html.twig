@@ -1,4 +1,4 @@
-{% extends 'base_cartera.html.twig' %}
+{% extends 'base_transporte.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
@@ -25,17 +25,25 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Numero:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.txtNumero, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-2">
-
-                </div>
-                <label class="col-sm-1 control-label">Aprobado:</label>
+                <label class="col-sm-1 control-label">Desde:</label>
                 <div class="col-sm-5">
-                    {{ form_widget(form.chkEstadoAprobado, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
+                <label class="col-sm-1 control-label">Tipo:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.cboReciboTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.filtrarFecha) }}
                 </div>
             </div>
         </div>
@@ -58,13 +66,11 @@
             <th>ANU</th>
             <th>AUT</th>
             <th>APR</th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
         <tbody>
-        {% for arRecibo in arRecibo %}
+        {% for arRecibo in arRecibos %}
             <tr>
                 <td>{{ arRecibo.codigoReciboPk }}</td>
                 <td>{{ arRecibo.numero }}</td>
@@ -78,43 +84,26 @@
                 {{ validarTipo(arRecibo.estadoAnulado) }}
                 {{ validarTipo(arRecibo.estadoAutorizado) }}
                 {{ validarTipo(arRecibo.estadoAprobado) }}
-                <td style="text-align: center;">
-                    {% if arRecibo.estadoAutorizado == 0 %}
-                    <a href="{{ path('cartera_movimiento_recibo_recibo_nuevo',{'id' : arRecibo.codigoReciboPk}) }}">
-                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
-                        </i>
-                    </a>
-                    {% endif %}
-                </td>
-                <td style="text-align: center;">
-                    <a href="{{ path('cartera_movimiento_recibo_recibo_detalle',{'id' : arRecibo.codigoReciboPk}) }}">
-                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
-                        </i>
-                    </a>
-                </td>
                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecibo.codigoReciboPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <div class="btn-group" style="float: left">
+    <div>
         <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRecibo.getTotalItemCount }}</span></div>
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRecibos.getTotalItemCount }}</span></div>
         </div>
-    </div>
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-        {{ knp_pagination_render(arRecibo) }}
+
+        <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+            {{ knp_pagination_render(arRecibos) }}
+        </div>
+        <div class="btn-toolbar" style="float: right">
+            <div class="btn-group">
+                {{ form_widget(form.btnContabilizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            </div>
+        </div>
     </div>
 
-    <div class="btn-toolbar" style="float: right">
-        <div class="btn-group" style="float: right;">
-            {{ form_widget(form.btnEliminar) }}
-        </div>
-        <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('cartera_movimiento_recibo_recibo_nuevo', {'id': 0}) }}">Nuevo</a>
-        </div>
-    </div>
     {{ form_end(form) }}
 {% endblock %}
 

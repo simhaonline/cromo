@@ -1134,6 +1134,9 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arRegistro->setVrCredito($arDespacho['vrIndustriaComercio']);
                                 $arRegistro->setNaturaleza('C');
                             }
+                            if($arCuenta->getExigeBase()) {
+                                $arRegistro->setVrBase($arDespacho['vrFletePago']);
+                            }
                             $arRegistro->setDescripcion($descripcion);
                             $em->persist($arRegistro);
                         } else {
@@ -1167,6 +1170,9 @@ class TteDespachoRepository extends ServiceEntityRepository
                             } else {
                                 $arRegistro->setVrCredito($arDespacho['vrRetencionFuente']);
                                 $arRegistro->setNaturaleza('C');
+                            }
+                            if($arCuenta->getExigeBase()) {
+                                $arRegistro->setVrBase($arDespacho['vrFletePago']);
                             }
                             $arRegistro->setDescripcion($descripcion);
                             $em->persist($arRegistro);

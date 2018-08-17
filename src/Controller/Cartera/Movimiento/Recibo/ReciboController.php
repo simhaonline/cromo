@@ -33,7 +33,7 @@ class ReciboController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroCarCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroCarNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-            ->add('txtNumero', NumberType::class, ['label' => 'Numero: ', 'required' => false, 'data' => $session->get('filtroNumero')])
+            ->add('txtNumero', NumberType::class, ['label' => 'Numero: ', 'required' => false, 'data' => $session->get('filtroCarReciboNumero')])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroCarReciboEstadoAprobado'), 'required' => false])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -41,14 +41,14 @@ class ReciboController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroNumero', $form->get('txtNumero')->getData());
+                $session->set('filtroCarReciboNumero', $form->get('txtNumero')->getData());
                 $session->set('filtroCarReciboEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
                 if ($form->get('txtCodigoCliente')->getData() != '') {
-                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+                    $session->set('filtroCarCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                    $session->set('filtroCarNombreCliente', $form->get('txtNombreCorto')->getData());
                 } else {
-                    $session->set('filtroTteCodigoCliente', null);
-                    $session->set('filtroTteNombreCliente', null);
+                    $session->set('filtroCarCodigoCliente', null);
+                    $session->set('filtroCarNombreCliente', null);
                 }
             }
             if($form->get('btnEliminar')->isClicked()){

@@ -32,13 +32,6 @@ class CarCuentaCobrarTipo
     private $saldoInicial = 0;
 
     /**
-     * @ORM\Column(name="tipo_cuenta_cliente", type="integer", nullable=true)
-     * 1-Debito
-     * 2-Credito
-     */
-    private $tipoCuentaCliente = 1;
-
-    /**
      * @ORM\Column(name="codigo_cuenta_cliente_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaClienteFk;
@@ -47,11 +40,6 @@ class CarCuentaCobrarTipo
      * @ORM\Column(name="codigo_cuenta_retencion_iva_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaRetencionIvaFk;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_retencion_ica_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCuentaRetencionIcaFk;
 
     /**
      * @ORM\Column(name="codigo_cuenta_retencion_fuente_fk", type="string", length=20, nullable=true)
@@ -135,22 +123,6 @@ class CarCuentaCobrarTipo
     /**
      * @return mixed
      */
-    public function getTipoCuentaCliente()
-    {
-        return $this->tipoCuentaCliente;
-    }
-
-    /**
-     * @param mixed $tipoCuentaCliente
-     */
-    public function setTipoCuentaCliente($tipoCuentaCliente): void
-    {
-        $this->tipoCuentaCliente = $tipoCuentaCliente;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCodigoCuentaClienteFk()
     {
         return $this->codigoCuentaClienteFk;
@@ -178,22 +150,6 @@ class CarCuentaCobrarTipo
     public function setCodigoCuentaRetencionIvaFk($codigoCuentaRetencionIvaFk): void
     {
         $this->codigoCuentaRetencionIvaFk = $codigoCuentaRetencionIvaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaRetencionIcaFk()
-    {
-        return $this->codigoCuentaRetencionIcaFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaRetencionIcaFk
-     */
-    public function setCodigoCuentaRetencionIcaFk($codigoCuentaRetencionIcaFk): void
-    {
-        $this->codigoCuentaRetencionIcaFk = $codigoCuentaRetencionIcaFk;
     }
 
     /**

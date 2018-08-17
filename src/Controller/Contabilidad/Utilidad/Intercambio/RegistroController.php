@@ -76,7 +76,7 @@ class RegistroController extends Controller
                 $naturaleza = "1";
             } else {
                 $valor = $arRegistro['vrCredito'];
-                $naturaleza = "1";
+                $naturaleza = "2";
             }
             $srtCentroCosto = "";
             if ($arRegistro['codigoCentroCostoFk']) {

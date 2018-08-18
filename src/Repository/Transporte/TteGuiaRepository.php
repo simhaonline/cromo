@@ -738,7 +738,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         return true;
     }
 
-    public function generarFactura($arrGuias): bool
+    public function generarFactura($arrGuias, $usuario): bool
     {
         $em = $this->getEntityManager();
         if ($arrGuias) {
@@ -768,7 +768,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $arFactura->setClienteRel($arGuia->getClienteRel());
                     $arFactura->setEstadoAutorizado(1);
                     $arFactura->setEstadoAprobado(1);
-                    $arFactura->setUsuario($this->getUser()->getUsername());
+                    $arFactura->setUsuario($usuario);
                     $em->persist($arFactura);
 
                     $arFacturaDetalle = new TteFacturaDetalle();

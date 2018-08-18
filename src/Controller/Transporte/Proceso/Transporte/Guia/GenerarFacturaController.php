@@ -45,7 +45,7 @@ class GenerarFacturaController extends Controller
             }
             if ($form->get('btnGenerar')->isClicked()) {
                 $arrGuias = $request->request->get('chkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(TteGuia::class)->generarFactura($arrGuias);
+                $respuesta = $this->getDoctrine()->getRepository(TteGuia::class)->generarFactura($arrGuias, $this->getUser()->getUsername());
             }
         }
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaGenerarFactura(), $request->query->getInt('page', 1), 100);

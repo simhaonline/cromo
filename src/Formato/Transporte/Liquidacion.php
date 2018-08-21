@@ -175,7 +175,7 @@ class Liquidacion extends \FPDF {
         $this->SetXY(5, 113);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(48, 4, 'TOTAL DESCUENTOS', 1, 0, 'C', 1);
-        $this->Cell(30, 4, number_format($arDespacho->getVrIndustriaComercio() + $arDespacho->getVrRetencionFuente() + $arDespacho->getVrDescuentoSeguridad() + $arDespacho->getVrDescuentoPapeleria() + $arDespacho->getVrDescuentoEstampilla()), 1, 0, 'R', 1);
+        $this->Cell(30, 4, number_format($arDespacho->getVrIndustriaComercio() + $arDespacho->getVrRetencionFuente() + $arDespacho->getVrDescuentoSeguridad() + $arDespacho->getVrDescuentoPapeleria() + $arDespacho->getVrDescuentoEstampilla() + $arDespacho->getvrDescuentoCargue()), 1, 0, 'R', 1);
 
         //linea11
         $this->SetXY(5, 117);

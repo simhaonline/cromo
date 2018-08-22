@@ -54,6 +54,13 @@
         </tr>
         </thead>
         <tbody>
+        {% set douCantidades = 0  %}
+        {% set douUnidades = 0  %}
+        {% set douPesoReal = 0  %}
+        {% set douManejo = 0  %}
+        {% set douFlete = 0  %}
+        {% set douTotalIngreso = 0  %}
+        {% set douFletePago = 0  %}
         {% for arDespacho in arDespachos %}
             <tr>
                 <td>{{ arDespacho.codigoDespachoPk }}</td>
@@ -72,9 +79,24 @@
                 <td class="numero">{{ arDespacho.vrTotalIngreso | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arDespacho.vrFletePago | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arDespacho.porcentajeRentabilidad | number_format(0, '.', ',') }}</td>
+                {% set douCantidades = douCantidades + arDespacho.cantidad %}
+                {% set douUnidades = douUnidades + arDespacho.unidades %}
+                {% set douPesoReal = douPesoReal + arDespacho.pesoReal %}
+                {% set douManejo = douManejo + arDespacho.vrManejo %}
+                {% set douFlete = douFlete + arDespacho.vrFlete %}
+                {% set douTotalIngreso = douTotalIngreso + arDespacho.vrTotalIngreso %}
+                {% set douFletePago = douFletePago + arDespacho.vrFletePago %}
             </tr>
         {% endfor %}
-        </tbody>
+        <td colspan="8"></td>
+        <td style="text-align: right">{{ douCantidades }}</td>
+        <td style="text-align: right">{{ douUnidades }}</td>
+        <td style="text-align: right">{{ douPesoReal }}</td>
+        <td style="text-align: right">{{ douManejo | number_format(0, '.', ',') }}</td>
+        <td style="text-align: right">{{ douFlete | number_format(0, '.', ',') }}</td>
+        <td style="text-align: right">{{ douTotalIngreso | number_format(0, '.', ',') }}</td>
+        <td style="text-align: right">{{ douFletePago | number_format(0, '.', ',') }}</td>
+        <td></td>
     </table>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">

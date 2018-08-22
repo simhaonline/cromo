@@ -29,8 +29,8 @@ class RentabilidadController extends Controller
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text'])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $fecha])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
@@ -39,9 +39,11 @@ class RentabilidadController extends Controller
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked() || $form->get('btnPdf')->isClicked()) {
                     if($form->get('fechaDesde')->getData() && $form->get('fechaHasta')->getData()) {
-                        $arDespachos = $this->getDoctrine()->getRepository(TteDespacho::class)->rentabilidad(
-                            $form->get('fechaDesde')->getData()->format('Y-m-d'),
-                            $form->get('fechaHasta')->getData()->format('Y-m-d'))->getQuery()->getResult();
+                        $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
+                        $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
+                        $queryBuilder = $this->getDoctrine()->getRepository(TteDespacho::class)->rentabilidad($fechaDesde, $fechaHasta);
+                        $arDespachos = $queryBuilder->getQuery()->getResult();
+                        $arDespachos = $paginator->paginate($arDespachos, $request->query->getInt('page', 1), 1000);
                     }
                 }
                 if ($form->get('btnPdf')->isClicked()) {

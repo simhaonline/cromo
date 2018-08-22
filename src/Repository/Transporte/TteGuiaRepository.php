@@ -321,6 +321,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->where('g.codigoDespachoFk = '. $codigoDespacho)
+            ->andWhere('g.vrCobroEntrega > 0')
             ->orderBy('g.codigoCiudadDestinoFk')
             ->addOrderBy('g.ordenRuta');
 
@@ -355,33 +356,6 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addOrderBy('g.ordenRuta');
 
         return $queryBuilder->getQuery()->getResult();
-//        $em = $this->getEntityManager();
-//        $query = $em->createQuery(
-//            'SELECT g.codigoGuiaPk,
-//        g.codigoGuiaTipoFk,
-//        g.numero,
-//        g.documentoCliente,
-//        g.fechaIngreso,
-//        g.unidades,
-//        g.fechaDespacho,
-//        g.pesoReal,
-//        g.pesoVolumen,
-//        c.nombreCorto AS clienteNombreCorto,
-//        g.codigoCiudadDestinoFk,
-//        cd.nombre AS ciudadDestino,
-//        g.nombreDestinatario,
-//        g.direccionDestinatario,
-//        g.codigoProductoFk,
-//        g.empaqueReferencia
-//        FROM App\Entity\Transporte\TteGuia g
-//        LEFT JOIN g.clienteRel c
-//        LEFT JOIN g.ciudadDestinoRel cd
-//        WHERE g.codigoDespachoFk = :codigoDespacho
-//        ORDER BY g.codigoCiudadDestinoFk, g.ordenRuta'
-//        )->setParameter('codigoDespacho', $codigoDespacho);
-//
-//        return $query->execute();
-
     }
 
     public function despachoPendiente()

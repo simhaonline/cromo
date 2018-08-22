@@ -1628,6 +1628,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                 '(dg.numero) AS manifiesto'
             )
             ->addSelect('tg.estadoNovedad')
+            ->addSelect('tg.estadoNovedadSolucion')
             ->leftJoin('tg.clienteRel', 'c')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->leftJoin('tg.despachoRel', 'dg')

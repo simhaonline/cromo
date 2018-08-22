@@ -297,13 +297,73 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->where('g.codigoDespachoFk = ' . $codigoDespacho);
 
         return $queryBuilder->getQuery()->execute();
+    }
+
+    public function despachoCobroEntrega($codigoDespacho)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.codigoGuiaTipoFk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.direccionDestinatario')
+            ->addSelect('g.codigoProductoFk')
+            ->addSelect('g.empaqueReferencia')
+            ->addSelect('g.vrCobroEntrega')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.codigoDespachoFk = '. $codigoDespacho)
+            ->orderBy('g.codigoCiudadDestinoFk')
+            ->addOrderBy('g.ordenRuta');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function relacionEntrega($codigoDespacho): array
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.codigoGuiaTipoFk')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.fechaDespacho')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.direccionDestinatario')
+            ->addSelect('g.codigoProductoFk')
+            ->addSelect('g.empaqueReferencia')
+            ->addSelect('g.vrCobroEntrega')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.codigoDespachoFk = '. $codigoDespacho)
+            ->orderBy('g.codigoCiudadDestinoFk')
+            ->addOrderBy('g.ordenRuta');
+
+        return $queryBuilder->getQuery()->getResult();
 //        $em = $this->getEntityManager();
 //        $query = $em->createQuery(
 //            'SELECT g.codigoGuiaPk,
 //        g.codigoGuiaTipoFk,
 //        g.numero,
+//        g.documentoCliente,
 //        g.fechaIngreso,
 //        g.unidades,
+//        g.fechaDespacho,
 //        g.pesoReal,
 //        g.pesoVolumen,
 //        c.nombreCorto AS clienteNombreCorto,
@@ -321,67 +381,6 @@ class TteGuiaRepository extends ServiceEntityRepository
 //        )->setParameter('codigoDespacho', $codigoDespacho);
 //
 //        return $query->execute();
-
-    }
-
-    public function despachoCobroEntrega($codigoDespacho): array
-    {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
-        g.codigoGuiaTipoFk,
-        g.numero, 
-        g.fechaIngreso,           
-        g.unidades,
-        g.pesoReal,
-        g.pesoVolumen,             
-        c.nombreCorto AS clienteNombreCorto, 
-        g.codigoCiudadDestinoFk,
-        cd.nombre AS ciudadDestino,
-        g.nombreDestinatario,
-        g.direccionDestinatario,
-        g.codigoProductoFk,
-        g.empaqueReferencia,
-        g.vrCobroEntrega
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd        
-        WHERE g.codigoDespachoFk = :codigoDespacho AND g.vrCobroEntrega > 0
-        ORDER BY g.codigoCiudadDestinoFk, g.ordenRuta'
-        )->setParameter('codigoDespacho', $codigoDespacho);
-
-        return $query->execute();
-
-    }
-
-    public function relacionEntrega($codigoDespacho): array
-    {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
-        g.codigoGuiaTipoFk,
-        g.numero, 
-        g.documentoCliente,
-        g.fechaIngreso,           
-        g.unidades,
-        g.fechaDespacho,
-        g.pesoReal,
-        g.pesoVolumen,             
-        c.nombreCorto AS clienteNombreCorto, 
-        g.codigoCiudadDestinoFk,
-        cd.nombre AS ciudadDestino,
-        g.nombreDestinatario,
-        g.direccionDestinatario,
-        g.codigoProductoFk,
-        g.empaqueReferencia
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd        
-        WHERE g.codigoDespachoFk = :codigoDespacho
-        ORDER BY g.codigoCiudadDestinoFk, g.ordenRuta'
-        )->setParameter('codigoDespacho', $codigoDespacho);
-
-        return $query->execute();
 
     }
 
@@ -567,87 +566,83 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function cumplido($codigoCumplido): array
+    public function cumplido($codigoCumplido)
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
-        g.numero,         
-        g.fechaIngreso,        
-        g.documentoCliente,               
-        g.nombreDestinatario,
-        g.unidades,
-        g.pesoReal,
-        g.pesoVolumen,
-        g.vrDeclara,
-        g.vrFlete,
-        g.vrManejo,
-        g.vrRecaudo,
-        g.empaqueReferencia,
-        g.codigoOperacionIngresoFk,
-        g.codigoOperacionCargoFk,     
-        c.nombreCorto AS clienteNombreCorto,
-        cd.nombre AS ciudadDestino
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.codigoCumplidoFk = :codigoCumplido'
-        )->setParameter('codigoCumplido', $codigoCumplido);
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(  TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.vrDeclara')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.vrRecaudo')
+            ->addSelect('g.empaqueReferencia')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.codigoCumplidoFk =' . $codigoCumplido);
 
+        return $queryBuilder->getQuery()->getResult();
     }
 
-    public function recaudo($codigoRecaudo): array
+    public function recaudo($codigoRecaudo)
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
-        g.numero,         
-        g.fechaIngreso,        
-        g.documentoCliente,               
-        g.nombreDestinatario,
-        g.unidades,
-        g.pesoReal,
-        g.pesoVolumen,
-        g.vrDeclara,
-        g.vrFlete,
-        g.vrManejo,
-        g.vrRecaudo,   
-        c.nombreCorto AS clienteNombreCorto,
-        cd.nombre AS ciudadDestino
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.codigoRecaudoFk = :codigoRecaudo'
-        )->setParameter('codigoRecaudo', $codigoRecaudo);
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.vrDeclara')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.vrRecaudo')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.codigoRecaudoFk =' . $codigoRecaudo);
 
+        return $queryBuilder->getQuery()->getResult();
     }
 
-    public function factura($codigoFactura): array
+    public function factura($codigoFactura)
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT g.codigoGuiaPk, 
-        g.numero, 
-        g.fechaIngreso,        
-        g.codigoOperacionIngresoFk,
-        g.codigoOperacionCargoFk,     
-        g.unidades,
-        g.pesoReal,
-        g.pesoVolumen,
-        g.vrFlete,
-        g.vrManejo,             
-        c.nombreCorto AS clienteNombreCorto, 
-        cd.nombre AS ciudadDestino
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd
-        WHERE g.codigoFacturaFk = :codigoFactura'
-        )->setParameter('codigoFactura', $codigoFactura);
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumenl')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.codigoFacturaFk =' . $codigoFactura);
 
-        return $query->execute();
-
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function facturaPendiente($codigoCliente = null): array

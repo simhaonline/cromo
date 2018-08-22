@@ -137,9 +137,9 @@ class RelacionEntrega extends \FPDF {
                 $pdf->Cell(16, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arGuia['documentoCliente'], 1, 0, 'L');
                 $pdf->Cell(15, 4, $arGuia['fechaDespacho']->format('Y-m-d'), 1, 0, 'L');
-                $pdf->Cell(42, 4, substr($arGuia['clienteNombreCorto'],1,26), 1, 0, 'L');
+                $pdf->Cell(42, 4, utf8_decode(substr($arGuia['clienteNombreCorto'],1,26)), 1, 0, 'L');
                 $pdf->Cell(45, 4, substr($arGuia['nombreDestinatario'],0,26), 1, 0, 'L');
-                $pdf->Cell(33, 4, substr($arGuia['ciudadDestino'],0,16), 1, 0, 'L');
+                $pdf->Cell(33, 4, substr($arGuia['ciudadDestino'],0,20), 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Ln();

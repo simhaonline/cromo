@@ -50,8 +50,10 @@ class Factura extends \FPDF {
         $this->SetFont('Arial', 'b', 10);
         $this->Cell(25, 5, utf8_decode($arConfiguracion->getNit()."-".$arConfiguracion->getDigitoVerificacion()), 0, 0, 'l', 1);
         $this->SetFont('Arial', '', 8);
-        $this->SetXY(50, 30);
-        $this->Cell(25, 5, utf8_decode("SOMOS REGIMEN COMUN NO RESPONSABLES DE IVA"), 0, 0, 'l', 1);
+        $this->SetXY(50, 28);
+        $this->Cell(25, 4, utf8_decode("SOMOS REGIMEN COMUN NO RESPONSABLES DE IVA"), 0, 0, 'l', 1);
+        $this->SetXY(45, 31.5);
+        $this->Cell(25, 4, utf8_decode("CODIGO CIIU 4923 TRANSPORTE DE CARGA POR CARRETERA"), 0, 0, 'l', 1);
 
         $y = 20;
         $this->SetFont('Arial', 'B', 10);

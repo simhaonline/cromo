@@ -26,22 +26,9 @@
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Anunciante:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.anunciante, { 'attr': {'class': 'form-control'} }) }}
-                </div>
                 <label for="form_sectorRel" class="col-sm-2 control-label">Fecha:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fecha) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Direccion:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.direccion, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label for="form_sectorRel" class="col-sm-2 control-label">Telefono:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.telefono, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -64,11 +51,11 @@
             <div class="form-group form-group-sm">
                 <label for="form_conductoRel" class="col-sm-2 control-label">Conductor:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.conductorRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.conductorRel, { 'attr': {'class': 'form-control to-select-2'}}) }}
                 </div>
                 <label for="form_vehiculoRel" class="col-sm-2 control-label">Vehiculo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.vehiculoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.vehiculoRel, { 'attr': {'class': 'form-control to-select-2'}}) }}
                 </div>
             </div>
         </div>

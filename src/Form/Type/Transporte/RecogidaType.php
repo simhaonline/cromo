@@ -22,7 +22,7 @@ class RecogidaType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
             ->add('conductorRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\Transporte\TteConductor',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
@@ -32,7 +32,7 @@ class RecogidaType extends AbstractType {
                 'label' => 'Conductor:'
             ])
             ->add('vehiculoRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\Transporte\TteVehiculo',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('v')
@@ -41,10 +41,7 @@ class RecogidaType extends AbstractType {
                 'choice_label' => 'placa',
                 'label' => 'Vehiculo:'
             ])
-            ->add('anunciante',TextType::class, array('required' => true))
             ->add('fecha', DateTimeType::class)
-            ->add('direccion', TextType::class)
-            ->add('telefono', TextType::class)
             ->add('unidades', NumberType::class)
             ->add('pesoReal', NumberType::class)
             ->add('pesoVolumen', NumberType::class)

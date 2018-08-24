@@ -174,6 +174,9 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("f.estadoAnulado = 1");
                 break;
         }
+        if($session->get('filtroTteFacturaCodigoFacturaTipo')) {
+            $queryBuilder->andWhere("f.codigoFacturaTipoFk = '" . $session->get('filtroTteFacturaCodigoFacturaTipo') . "'");
+        }
         $queryBuilder->orderBy('f.estadoAprobado', 'ASC');
         $queryBuilder->addOrderBy('f.fecha', 'DESC');
         $queryBuilder->addOrderBy('f.codigoFacturaPk', 'DESC');

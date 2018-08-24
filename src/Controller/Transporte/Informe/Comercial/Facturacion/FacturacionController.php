@@ -4,8 +4,10 @@ namespace App\Controller\Transporte\Informe\Comercial\Facturacion;
 
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteFactura;
+use App\Entity\Transporte\TteFacturaTipo;
 use App\Formato\Transporte\FacturaInforme;
 use App\Formato\Transporte\ListaFactura;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -37,6 +39,7 @@ class FacturacionController extends Controller
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteFacturaEstadoAprobado'), 'required' => false])
             ->add('chkEstadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteFacturaEstadoAnulado'), 'required' => false])
+            ->add('cboFacturaTipoRel', EntityType::class, $em->getRepository(TteFacturaTipo::class)->llenarCombo())
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -56,6 +59,12 @@ class FacturacionController extends Controller
                 } else {
                     $session->set('filtroTteCodigoCliente', null);
                     $session->set('filtroTteNombreCliente', null);
+                }
+                $arFacturaTipo = $form->get('cboFacturaTipoRel')->getData();
+                if ($arFacturaTipo) {
+                    $session->set('filtroTteFacturaCodigoFacturaTipo', $arFacturaTipo->getCodigoFacturaTipoPk());
+                } else {
+                    $session->set('filtroTteFacturaCodigoFacturaTipo', null);
                 }
             }
             if ($form->get('btnPdf')->isClicked()) {

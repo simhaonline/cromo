@@ -1059,40 +1059,71 @@ class TteGuiaRepository extends ServiceEntityRepository
     }
 
 
-    public function pendienteConductor(): array
+    public function pendienteConductor()
     {
         $session = new Session();
-        $em = $this->getEntityManager();
-        $dql = "SELECT g.codigoGuiaPk, 
-        g.numero, 
-        g.fechaIngreso,
-        g.codigoOperacionIngresoFk,
-        g.codigoOperacionCargoFk, 
-        g.codigoRutaFk,
-        c.nombreCorto AS clienteNombreCorto,  
-        cd.nombre AS ciudadDestino,
-        g.unidades,
-        g.pesoReal,
-        g.pesoVolumen,
-        g.vrDeclara,
-        g.vrFlete,
-        con.nombreCorto as nombreConductor,
-        d.codigoConductorFk
-        FROM App\Entity\Transporte\TteGuia g 
-        LEFT JOIN g.clienteRel c
-        LEFT JOIN g.ciudadDestinoRel cd
-        LEFT JOIN g.despachoRel d
-        LEFT JOIN d.conductorRel con     
-        WHERE g.estadoDespachado = 1 AND g.estadoAnulado = 0 AND g.estadoSoporte = 0 AND g.codigoDespachoFk IS NOT NULL ";
-        if ($session->get('filtroTteCodigoConductor')) {
-            $dql .= " AND d.codigoConductorFk = " . $session->get('filtroTteCodigoConductor');
-        }
-        $dql .= "ORDER BY d.codigoConductorFk, g.codigoCiudadDestinoFk";
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('g.codigoRutaFk')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.vrDeclara')
+            ->addSelect('g.vrFlete')
+//            ->addSelect('con.nombreCorto AS nombreConductor')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+//            ->leftJoin('g.conductorRel', 'con')
+            ->where('g.estadoDespachado = 1')
+            ->andWhere('g.estadoAnulado = 0')
+            ->andWhere('g.estadoSoporte = 0')
+            ->andWhere('g.codigoDespachoFk <> 0')
+            ->orderBy('g.codigoCiudadDestinoFk');
+            if ($session->get('filtroTteCodigoConductor')) {
+                $queryBuilder .= " AND g.codigoConductorFk = " . $session->get('filtroTteCodigoConductor');
+            }
 
-        $query = $em->createQuery($dql);
+            return $queryBuilder->getQuery()->getResult();
 
-
-        return $query->execute();
+//        $session = new Session();
+//        $em = $this->getEntityManager();
+//        $dql = "SELECT g.codigoGuiaPk,
+//        g.numero,
+//        g.fechaIngreso,
+//        g.codigoOperacionIngresoFk,
+//        g.codigoOperacionCargoFk,
+//        g.codigoRutaFk,
+//        c.nombreCorto AS clienteNombreCorto,
+//        cd.nombre AS ciudadDestino,
+//        g.unidades,
+//        g.pesoReal,
+//        g.pesoVolumen,
+//        g.vrDeclara,
+//        g.vrFlete,
+//        con.nombreCorto as nombreConductor,
+//        d.codigoConductorFk
+//        FROM App\Entity\Transporte\TteGuia g
+//        LEFT JOIN g.clienteRel c
+//        LEFT JOIN g.ciudadDestinoRel cd
+//        LEFT JOIN g.despachoRel d
+//        LEFT JOIN d.conductorRel con
+//        WHERE g.estadoDespachado = 1 AND g.estadoAnulado = 0 AND g.estadoSoporte = 0 AND g.codigoDespachoFk IS NOT NULL ";
+//        if ($session->get('filtroTteCodigoConductor')) {
+//            $dql .= " AND d.codigoConductorFk = " . $session->get('filtroTteCodigoConductor');
+//        }
+//        $dql .= "ORDER BY d.codigoConductorFk, g.codigoCiudadDestinoFk";
+//
+//        $query = $em->createQuery($dql);
+//
+//
+//        return $query->execute();
     }
 
     public function pendiente(): array

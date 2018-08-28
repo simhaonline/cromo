@@ -155,10 +155,16 @@ class Factura extends \FPDF {
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         if($arGuias) {
+            $unidadesTotal = 0;
+            $kilosFacturadosTotal = 0;
+            $declaraTotal = 0;
+            $fleteTotal = 0;
+            $manejoTotal = 0;
+            $total = 0;
             foreach ($arGuias as $arGuia) {
                 $pdf->Cell(17, 4, $arGuia['codigoGuiaFk'], 1, 0, 'L');
                 $pdf->Cell(24, 4, $arGuia['documentoCliente'], 1, 0, 'L');
-                $pdf->Cell(43, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,28), 1, 0, 'L');
+                $pdf->Cell(43, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,27), 1, 0, 'L');
                 $pdf->Cell(26, 4, substr(utf8_decode($arGuia['ciudadDestino']),0,15), 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoFacturado'], 0, '.', ','), 1, 0, 'R');
@@ -166,9 +172,24 @@ class Factura extends \FPDF {
                 $pdf->Cell(15, 4, number_format($arGuia['vrFlete'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arGuia['vrManejo'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arGuia['vrTotal'], 0, '.', ','), 1, 0, 'R');
+                $unidadesTotal += $arGuia['unidades'];
+                $kilosFacturadosTotal += $arGuia['pesoFacturado'];
+                $declaraTotal += $arGuia['vrDeclara'];
+                $fleteTotal += $arGuia['vrFlete'];
+                $manejoTotal += $arGuia['vrManejo'];
+                $total += $arGuia['vrTotal'];
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 85);
             }
+            $pdf->Cell(110, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(10, 4,  $unidadesTotal, 1, 0,'R');
+            $pdf->Cell(10, 4,  $kilosFacturadosTotal, 1, 0,'R');
+            $pdf->Cell(15, 4,  number_format($declaraTotal), 1, 0,'R');
+            $pdf->Cell(15, 4,  number_format($fleteTotal), 1, 0,'R');
+            $pdf->Cell(15, 4,  number_format($manejoTotal), 1, 0,'R');
+            $pdf->Cell(15, 4,  number_format($total), 1, 0,'R');
+            $pdf->Ln();
+            $pdf->SetAutoPageBreak(true, 15);
         }
     }
 

@@ -67,7 +67,7 @@ class Factura extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         $this->SetFillColor(170, 170, 170);
         $this->SetXY(160, $y+15);
-        $this->Cell(39, 6, "FECHA", 1, 0, 'C', 1);
+        $this->Cell(39, 6, "FECHA EXPEDICION", 1, 0, 'C', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetXY(160, $y+20);
         $this->Cell(13, 7, $arFactura->getFecha()->format('d'), 1, 0, 'C', 1);

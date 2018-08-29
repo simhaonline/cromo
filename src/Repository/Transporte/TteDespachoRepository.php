@@ -29,33 +29,34 @@ class TteDespachoRepository extends ServiceEntityRepository
         parent::__construct($registry, TteDespacho::class);
     }
 
+    /**
+     * @return string
+     */
     public function listaDql(): string
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT d.codigoDespachoPk, 
-        d.numero,
-        d.codigoOperacionFk,
-        d.codigoVehiculoFk,
-        d.codigoRutaFk, 
-        co.nombre AS ciudadOrigen, 
-        cd.nombre AS ciudadDestino,
-        d.unidades,
-        d.pesoReal,
-        d.pesoVolumen,
-        d.vrFlete,
-        d.vrManejo,
-        d.vrDeclara,
-        c.nombreCorto AS conductorNombre,
-        d.estadoAnulado
-        FROM App\Entity\Transporte\TteDespacho d         
-        LEFT JOIN d.ciudadOrigenRel co
-        LEFT JOIN d.ciudadDestinoRel cd
-        LEFT JOIN d.conductorRel c
-        ORDER BY d.codigoDespachoPk DESC'
-        );
-        return $query->getDQL();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
+            ->select('td.codigoDespachoPk')
+            ->addSelect('d.numero')
+            ->addSelect('d.codigoOperacionFk')
+            ->addSelect('d.codigoVehiculoFk')
+            ->addSelect('d.codigoRutaFk')
+            ->addSelect('co.nombre AS ciudadOrigen')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('d.unidades')
+            ->addSelect('d.pesoReal')
+            ->addSelect('d.pesoVolumen')
+            ->addSelect('d.vrFlete')
+            ->addSelect('d.vrManejo')
+            ->addSelect('d.vrDeclara')
+            ->addSelect('c.nombreCorto AS conductorNombre')
+            ->addSelect('d.estadoAnulado')
+            ->leftJoin('d.ciudadOrigenRel', 'co')
+            ->leftJoin('d.ciudadDestinoRel', 'cd')
+            ->leftJoin('d.conductorRel', 'c')
+            ->orderBy('d.codigoDespachoPk', 'DESC');
 
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**

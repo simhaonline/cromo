@@ -255,6 +255,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
      */
     public function anular($arMovimiento)
     {
+        $em = $this->getEntityManager();
         if ($arMovimiento->getEstadoAprobado()) {
             $this->afectar($arMovimiento, -1);
             $arMovimiento->setVrSubtotal(0);

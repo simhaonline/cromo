@@ -33,6 +33,11 @@ class TteMonitoreoDetalle
     private $fechaReporte;
 
     /**
+     * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
+     */
+    private $comentario;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteMonitoreo", inversedBy="monitoreosDetallesMonitoreoRel")
      * @ORM\JoinColumn(name="codigo_monitoreo_fk", referencedColumnName="codigo_monitoreo_pk")
      */
@@ -116,6 +121,22 @@ class TteMonitoreoDetalle
     public function setMonitoreoRel($monitoreoRel): void
     {
         $this->monitoreoRel = $monitoreoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param mixed $comentario
+     */
+    public function setComentario($comentario): void
+    {
+        $this->comentario = $comentario;
     }
 
 

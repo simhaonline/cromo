@@ -27,8 +27,21 @@ class TteMonitoreoRepository extends ServiceEntityRepository
             ->addSelect('m.codigoDespachoFk')
             ->where('m.codigoMonitoreoPk <> 0')
         ->orderBy('m.fechaRegistro', 'DESC');
+        $fecha =  new \DateTime('now');
+        if($session->get('filtroTteMovMonitoreoFiltroFecha') == true){
+            if ($session->get('filtroTteMovMonitoreoFechaDesde') != null) {
+                $queryBuilder->andWhere("m.fechaInicio >= '{$session->get('filtroTteMovMonitoreoFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("m.fechaInicio >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroTteMovMonitoreoFechaHasta') != null) {
+                $queryBuilder->andWhere("m.fechaFin <= '{$session->get('filtroTteMovMonitoreoFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("m.fechaFin <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
 
-        return $queryBuilder->getQuery()->execute();
+        return $queryBuilder;
     }
 
     public function generar($codigoVehiculo): bool

@@ -2,9 +2,12 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TteMonitoreoDetalle;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteMonitoreoDetalleRepository extends ServiceEntityRepository
 {
@@ -13,17 +16,31 @@ class TteMonitoreoDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, TteMonitoreoDetalle::class);
     }
 
-    public function monitoreo($codigoMonitoreo): array
+    public function monitoreo()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT md.codigoMonitoreoDetallePk
-            
-        FROM App\Entity\Transporte\TteMonitoreoDetalle md 
-        WHERE md.codigoMonitoreoFk = :codigoMonitoreo'
-        )->setParameter('codigoMonitoreo', $codigoMonitoreo);
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteMonitoreoDetalle::class, 'md');
+        $queryBuilder
+            ->select('md.codigoMonitoreoDetallePk')
+            ->addSelect('md.fechaRegistro')
+            ->addSelect('md.fechaReporte')
+            ->addSelect('md.comentario');
+        $queryBuilder->orderBy('md.codigoMonitoreoDetallePk', 'DESC');
 
-        return $query->execute();
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        foreach ($arrSeleccionados as $arrSeleccionado) {
+            $arMonitoreoDetalle = $this->getEntityManager()->getRepository(TteMonitoreoDetalle::class)->find($arrSeleccionado);
+            $arMonitoreo = $this->getEntityManager()->getRepository(TteMonitoreo::class)->find($arMonitoreoDetalle->getCodigoMonitoreoFk());
+            if ($arMonitoreo->getEstadoCerrado() == 0) {
+                $this->getEntityManager()->remove($arMonitoreoDetalle);
+            }else {
+                Mensajes::error("No se puede eliminar el registro ya se encuentra cerrado");
+            }
+        }
+        $this->getEntityManager()->flush();
     }
 
 }

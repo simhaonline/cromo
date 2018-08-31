@@ -28,14 +28,9 @@
             <td class="titulo" ></td>
             <td align="right"></td>
         </tr>
-        <tr>
-            <td class="titulo" >COMENTARIO: </td>
-            <td class="td-in-well" colspan="5">{{ arMonitoreo.comentario }}</td>
-        </tr>
     </table>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Reportes</a></li>
-        <li><a href="#despachos" data-toggle="tab">???</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="detalles">
@@ -45,7 +40,9 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>FECHA</th>
+                            <th>FECHA REGISTRO</th>
+                            <th>FECHA REPORTE</th>
+                            <th>COMENTARIO</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -53,7 +50,9 @@
                         {% for arMonitoreoDetalle in arMonitoreoDetalles %}
                             <tr>
                                 <td>{{ arMonitoreoDetalle.codigoMonitoreoDetallePk }}</td>
+                                <td>{{ arMonitoreoDetalle.fechaRegistro |date('Y-m-d H:i') }}</td>
                                 <td>{{ arMonitoreoDetalle.fechaReporte |date('Y-m-d H:i') }}</td>
+                                <td>{{ arMonitoreoDetalle.comentario }}</td>
                                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arMonitoreoDetalle.codigoMonitoreoDetallePk }}" /></td>
                             </tr>
                         {% endfor %}
@@ -76,7 +75,6 @@
                 <div class="table-responsive">
                 </div>
                 <div class="separador-1"></div>
-
             </div>
         </div>
     </div>

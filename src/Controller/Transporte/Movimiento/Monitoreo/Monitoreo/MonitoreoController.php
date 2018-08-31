@@ -5,6 +5,11 @@ namespace App\Controller\Transporte\Movimiento\Monitoreo\Monitoreo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TteMonitoreoDetalle;
+use App\Form\Type\Transporte\MonitoreoDetalleType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,11 +25,25 @@ class MonitoreoController extends Controller
     */    
     public function lista(Request $request)
     {
-        $session = new Session();
-        $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
+        $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $form = $this->createFormBuilder()
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTteMovMonitoreoFiltroFecha')))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteMovMonitoreoFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteMovMonitoreoFechaHasta'))])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTteMovMonitoreoFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroTteMovMonitoreoFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                $session->set('filtroTteMovMonitoreoFiltroFecha', $form->get('filtrarFecha')->getData());
+            }
+        }
         $arMonitoreos = $paginator->paginate($em->getRepository(TteMonitoreo::class)->lista(), $request->query->getInt('page', 1), 30);
-        return $this->render('transporte/movimiento/monitoreo/monitoreo/lista.html.twig', ['arMonitoreos' => $arMonitoreos]);
+        return $this->render('transporte/movimiento/monitoreo/monitoreo/lista.html.twig', ['arMonitoreos' => $arMonitoreos, 'form' => $form->createView()]);
     }
 
     /**
@@ -40,15 +59,10 @@ class MonitoreoController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnImprimir')->isClicked()) {
-                $respuesta = $em->getRepository(TteGuia::class)->imprimir($codigoGuia);
-                if($respuesta) {
-                    $em->flush();
-                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
-                    //$formato = new \App\Formato\TteDespacho();
-                    //$formato->Generar($em, $codigoGuia);
-                }
-
+            if ($form->get('btnRetirarDetalle')->isClicked()) {
+                $arrMonitoreoDetalle = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteMonitoreoDetalle::class)->eliminar($arrMonitoreoDetalle);
+                return $this->redirect($this->generateUrl('transporte_movimiento_monitoreo_monitoreo_detalle', ['codigoMonitoreo' => $codigoMonitoreo]));
             }
         }
         $arMonitoreoDetalles = $this->getDoctrine()->getRepository(TteMonitoreoDetalle::class)->monitoreo($codigoMonitoreo);
@@ -61,38 +75,28 @@ class MonitoreoController extends Controller
     /**
      * @Route("/transporte/movimiento/monitoreo/monitoreo/detalle/adicionar/reporte/{codigoMonitoreo}/{codigoMonitoreoDetalle}", name="transporte_movimiento_monitoreo_monitoreo_detalle_adicionar_reporte")
      */
-    public function detalleAdicionarNovedad(Request $request, $codigoMonitoreo, $codigoMonitoreoDetalle)
+    public function detalleAdicionar(Request $request, $codigoMonitoreo, $codigoMonitoreoDetalle)
     {
         $em = $this->getDoctrine()->getManager();
-        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-        $arNovedad = new TteNovedad();
-        if($codigoNovedad == 0) {
-            $arNovedad->setEstadoAtendido(true);
-            $arNovedad->setFechaReporte(new \DateTime('now'));
-            $arNovedad->setFecha(new \DateTime('now'));
-        } else {
-            $arNovedad = $em->getRepository(TteNovedad::class)->find($codigoNovedad);
-        }
-        $form = $this->createForm(NovedadType::class, $arNovedad);
+        $arMonitoreo = $em->getRepository(TteMonitoreo::class)->find($codigoMonitoreo);
+        $arMonitoreoDetalle = new TteMonitoreoDetalle();
+        $form = $this->createForm(MonitoreoDetalleType::class, $arMonitoreoDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arNovedad = $form->getData();
-            $arNovedad->setGuiaRel($arGuia);
-            if($codigoNovedad == 0) {
-                $arNovedad->setFechaRegistro(new \DateTime('now'));
-                $arNovedad->setFechaAtendido(new \DateTime('now'));
-                $arNovedad->setFechaSolucion(new \DateTime('now'));
+            if ($codigoMonitoreoDetalle == 0) {
+                $arMonitoreoDetalle->setFechaRegistro(new \DateTime('now'));
+                $arMonitoreoDetalle->setFechaReporte(new \DateTime('now'));
+                $arMonitoreoDetalle->setMonitoreoRel($arMonitoreo);
             }
-
-            $em->persist($arNovedad);
+            $em->persist($arMonitoreoDetalle);
             $em->flush();
 
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
 
         }
 
-        return $this->render('transporte/movimiento/transporte/guia/detalleAdicionarNovedad.html.twig', [
-            'arGuia' => $arGuia,
+        return $this->render('transporte/movimiento/monitoreo/monitoreo/detalleAdicionar.html.twig', [
+            'arMonitoreoDetalle' => $arMonitoreoDetalle,
             'form' => $form->createView()]);
     }
 

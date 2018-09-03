@@ -16,14 +16,15 @@ class TteMonitoreoDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, TteMonitoreoDetalle::class);
     }
 
-    public function monitoreo()
+    public function monitoreo($codigoMonitoreo)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteMonitoreoDetalle::class, 'md');
         $queryBuilder
             ->select('md.codigoMonitoreoDetallePk')
             ->addSelect('md.fechaRegistro')
             ->addSelect('md.fechaReporte')
-            ->addSelect('md.comentario');
+            ->addSelect('md.comentario')
+            ->where('md.codigoMonitoreoFk = ' . $codigoMonitoreo);
         $queryBuilder->orderBy('md.codigoMonitoreoDetallePk', 'DESC');
 
         return $queryBuilder->getQuery()->getResult();

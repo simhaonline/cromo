@@ -10,23 +10,25 @@
     <div style="float:right">
         {% if arMonitoreo.estadoCerrado == 1 %}<span class="label label-default">Cerrado</span>{% endif %}
     </div>
-    <br /><br />
+    <br /><br>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">ID:</td>
             <td class="td-in-well">{{ arMonitoreo.codigoMonitoreoPk }}</td>
             <td class="titulo">INICIO:</td>
             <td class="td-in-well">{{ arMonitoreo.fechaInicio |date("Y/m/d H:i") }}</td>
-            <td class="titulo" ></td>
-            <td align="right"></td>
         </tr>
         <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="titulo">VEHICULO:</td>
+            <td class="td-in-well">{{ arMonitoreo.codigoVehiculoFk }}</td>
             <td class="titulo">FIN:</td>
             <td class="td-in-well">{{ arMonitoreo.fechaFin |date("Y/m/d H:i") }}</td>
-            <td class="titulo" ></td>
-            <td align="right"></td>
+        </tr>
+        <tr>
+            <td class="titulo">CONDUCTOR</td>
+            <td class="td-in-well">{{ arMonitoreo.despachoRel.conductorRel.nombreCorto }}</td>
+            <td class="titulo">DESTINO</td>
+            <td class="td-in-well">{{ arMonitoreo.despachoRel.ciudadDestinoRel.nombre }}</td>
         </tr>
     </table>
     <ul class="nav nav-tabs">

@@ -25,6 +25,12 @@ class TteMonitoreoRepository extends ServiceEntityRepository
             ->addSelect('m.codigoVehiculoFk')
             ->addSelect('m.soporte')
             ->addSelect('m.codigoDespachoFk')
+            ->addSelect('c.nombreCorto')
+            ->addSelect('cd.nombre')
+            ->leftJoin('m.vehiculoRel', 'v')
+            ->leftJoin('m.despachoRel', 'd')
+            ->leftJoin('d.conductorRel', 'c')
+            ->leftJoin('d.ciudadDestinoRel', 'cd')
             ->where('m.codigoMonitoreoPk <> 0')
         ->orderBy('m.fechaRegistro', 'DESC');
         $fecha =  new \DateTime('now');

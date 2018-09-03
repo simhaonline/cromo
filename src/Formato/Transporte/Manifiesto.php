@@ -321,7 +321,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(20, $yt, "SALDO A PAGAR:");
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
-        $saldo = $neto - $arDespacho['vrAnticipo'];
+        $saldo = $arDespacho['vrSaldo'];
         $pdf->Cell(25, 4, $saldo, 0, 0, 'R');
 
         $y += 8;

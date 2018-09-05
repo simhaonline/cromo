@@ -714,7 +714,7 @@ class ControlFactura extends \FPDF
         $pdf->SetX(176);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
-        $pdf->Cell(19, 4, $vrTotal, 1, 0, 'R', 1);
+        $pdf->Cell(19, 4, '0', 1, 0, 'R', 1);
         $pdf->Ln(6);
         //Bloque 4
         $pdf->SetFillColor(255, 255, 255);

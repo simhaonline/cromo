@@ -71,20 +71,26 @@ class TteRecogidaRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    public function despacho($codigoRecogidaDespacho): array
+    public function despacho($codigoRecogidaDespacho)
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT r.codigoRecogidaPk, r.fechaRegistro, r.fecha, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad, 
-        r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen
-        FROM App\Entity\Transporte\TteRecogida r 
-        LEFT JOIN r.clienteRel c
-        LEFT JOIN r.ciudadRel co
-        
-        WHERE r.codigoDespachoRecogidaFk = :codigoDespachoRecogida'
-        )->setParameter('codigoDespachoRecogida', $codigoRecogidaDespacho);
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class, 'r');
+        $queryBuilder
+            ->select('r.codigoRecogidaPk')
+            ->addSelect('r.fechaRegistro')
+            ->addSelect('r.fecha')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('co.nombre AS ciudad')
+            ->addSelect('r.estadoProgramado')
+            ->addSelect('r.estadoRecogido')
+            ->addSelect('r.unidades')
+            ->addSelect('r.pesoReal')
+            ->addSelect('r.pesoVolumen')
+            ->leftJoin('r.clienteRel', 'c')
+            ->leftJoin('r.ciudadRel', 'co')
+            ->where('r.codigoDespachoRecogidaFk = ' . $codigoRecogidaDespacho);
 
-        return $query->execute();
+        return $queryBuilder->getQuery()->getResult();
 
     }
 

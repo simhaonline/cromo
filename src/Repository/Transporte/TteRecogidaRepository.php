@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteRecogida;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -14,30 +15,60 @@ class TteRecogidaRepository extends ServiceEntityRepository
         parent::__construct($registry, TteRecogida::class);
     }
 
-    public function lista(): array
+    public function lista()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT r.codigoRecogidaPk, 
-            r.fechaRegistro, 
-            r.fecha, 
-            c.nombreCorto AS clienteNombreCorto, 
-            co.nombre AS ciudad, 
-            r.estadoProgramado, 
-            r.estadoRecogido, 
-            r.unidades, 
-            r.pesoReal, 
-            r.pesoVolumen, 
-            r.anunciante, 
-            r.direccion, 
-            r.telefono,
-            r.codigoOperacionFk
-        FROM App\Entity\Transporte\TteRecogida r 
-        LEFT JOIN r.clienteRel c
-        LEFT JOIN r.ciudadRel co'
-        );
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class, 'r');
+        $queryBuilder
+            ->select('r.codigoRecogidaPk')
+            ->addSelect('r.fechaRegistro')
+            ->addSelect('r.fecha')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('co.nombre AS ciudad')
+            ->addSelect('r.estadoProgramado')
+            ->addSelect('r.estadoRecogido')
+            ->addSelect('r.unidades')
+            ->addSelect('r.pesoReal')
+            ->addSelect('r.pesoVolumen')
+            ->addSelect('r.anunciante')
+            ->addSelect('r.direccion')
+            ->addSelect('r.telefono')
+            ->addSelect('r.estadoAutorizado')
+            ->addSelect('r.codigoOperacionFk')
+            ->leftJoin('r.clienteRel', 'c')
+            ->leftJoin('r.ciudadRel', 'co');
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        $queryBuilder->orderBy('r.fecha', 'DESC');
 
+        return $queryBuilder->getQuery()->getResult();
+
+    }
+
+    public function autorizar($arRecogida)
+    {
+        $arRecogida->setEstadoAutorizado(1);
+        $this->getEntityManager()->persist($arRecogida);
+        $this->getEntityManager()->flush();
+    }
+
+    public function desAutorizar($arRecogida)
+    {
+        if ($arRecogida->getEstadoAutorizado() == 1 && $arRecogida->getEstadoAprobado() == 0) {
+            $arRecogida->setEstadoAutorizado(0);
+            $this->getEntityManager()->persist($arRecogida);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('No se puede desautorizar, el registro ya se encuentra aprobado');
+        }
+    }
+
+    public function aprobar($arRecogida)
+    {
+        $arRecogida->setEstadoAprobado(1);
+        $this->getEntityManager()->persist($arRecogida);
+        $this->getEntityManager()->flush();
     }
 
     public function despacho($codigoRecogidaDespacho): array

@@ -41,6 +41,16 @@ class RecogidaType extends AbstractType {
                 'choice_label' => 'placa',
                 'label' => 'Vehiculo:'
             ])
+            ->add('ciudadRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\Transporte\TteCiudad',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Ciudad:'
+            ])
             ->add('fecha', DateTimeType::class)
             ->add('unidades', NumberType::class)
             ->add('pesoReal', NumberType::class)

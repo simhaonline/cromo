@@ -25,8 +25,9 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_sectorRel" class="col-sm-2 control-label"></label>
+                <label for="form_sectorRel" class="col-sm-2 control-label">Ciudad:</label>
                 <div class="col-sm-4">
+                    {{ form_widget(form.ciudadRel, { 'attr': {'class': 'form-control to-select-2'}}) }}
                 </div>
                 <label for="form_sectorRel" class="col-sm-2 control-label">Fecha:</label>
                 <div class="col-sm-4">

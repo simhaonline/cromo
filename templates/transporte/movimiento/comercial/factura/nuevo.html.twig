@@ -50,7 +50,17 @@
     </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_lista') }}">Cancelar</a>
+
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        {#<script>#}
+            {#$(document).ready(function () {#}
+                {#$("#form_guardar").on('click', function (event) {#}
+                    {#event.preventDefault();#}
+                    {#//do something#}
+                    {#$(this).prop('disabled', true);#}
+                {#});#}
+            {#});#}
+        {#</script>#}
         {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}

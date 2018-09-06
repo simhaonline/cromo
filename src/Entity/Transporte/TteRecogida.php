@@ -113,6 +113,21 @@ class TteRecogida
     private $estadoDescargado = false;
 
     /**
+     * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoAutorizado = false;
+
+    /**
+     * @ORM\Column(name="estado_aprobado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoAprobado = false;
+
+    /**
+     * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoAnulado = false;
+
+    /**
      * @ORM\Column(name="codigo_despacho_recogida_fk", type="integer", nullable=true)
      */
     private $codigoDespachoRecogidaFk;
@@ -604,6 +619,54 @@ class TteRecogida
     public function setVehiculoRel($vehiculoRel): void
     {
         $this->vehiculoRel = $vehiculoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
     }
 
 

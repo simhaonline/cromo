@@ -3,13 +3,17 @@
 namespace App\Controller\Transporte\Movimiento\Recogida\Recogida;
 
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteRecaudo;
 use App\Entity\Transporte\TteRecogida;
 use App\Form\Type\Transporte\RecogidaType;
 use App\Formato\Transporte\Recogida;
+use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RecogidaController extends Controller
 {
@@ -18,27 +22,56 @@ class RecogidaController extends Controller
     */    
     public function lista(Request $request)
     {
+        $session = new Session();
         $paginator  = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+                }
+            }
+        }
         $query = $this->getDoctrine()->getRepository(TteRecogida::class)->lista();
-        $arRecogidas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('transporte/movimiento/recogida/recogida/lista.html.twig', ['arRecogidas' => $arRecogidas]);
+        $arRecogidas = $paginator->paginate($query, $request->query->getInt('page', 1),20);
+        return $this->render('transporte/movimiento/recogida/recogida/lista.html.twig', [
+            'arRecogidas' => $arRecogidas ,
+            'form' => $form->createView()
+        ]);
     }
 
     /**
-     * @Route("/transporte/movimiento/recogida/recogida/detalle/{codigoRecogida}", name="transporte_movimiento_recogida_recogida_detalle")
+     * @Route("/transporte/movimiento/recogida/recogida/detalle/{id}", name="transporte_movimiento_recogida_recogida_detalle")
      */
-    public function detalle(Request $request, $codigoRecogida)
+    public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arRecogida = $em->getRepository(TteRecogida::class)->find($codigoRecogida);
-        $form = $this->createFormBuilder()
-            ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
-            ->getForm();
+        $arRecogida = $em->getRepository(TteRecogida::class)->find($id);
+        $form = Estandares::botonera($arRecogida->getEstadoAutorizado(),$arRecogida->getEstadoAprobado(),$arRecogida->getEstadoAnulado());
+        $form->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new Recogida();
-                $formato->Generar($em, $codigoRecogida);
+                $formato->Generar($em, $id);
+            }
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(TteRecogida::class)->autorizar($arRecogida);
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository(TteRecaudo::class)->desAutorizar($arRecogida);
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(TteRecaudo::class)->Aprobar($arRecogida);
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_detalle', ['id' => $id]));
             }
         }
 
@@ -48,17 +81,18 @@ class RecogidaController extends Controller
     }
 
     /**
-     * @Route("/transporte/movimiento/recogida/recogida/nuevo/{codigoRecogida}", name="transporte_movimiento_recogida_recogida_nuevo")
+     * @Route("/transporte/movimiento/recogida/recogida/nuevo/{id}", name="transporte_movimiento_recogida_recogida_nuevo")
      */
-    public function nuevo(Request $request, $codigoRecogida)
+    public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        if($codigoRecogida == 0) {
-            $arRecogida = new TteRecogida();
+        $arRecogida = new TteRecogida();
+        if ($id != 0) {
+            $arRecogida = $em->getRepository(TteRecogida::class)->find($id);
+        } else {
             $arRecogida->setFechaRegistro(new \DateTime('now'));
             $arRecogida->setFecha(new \DateTime('now'));
         }
-
         $form = $this->createForm(RecogidaType::class, $arRecogida);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -75,7 +109,7 @@ class RecogidaController extends Controller
                     $em->persist($arRecogida);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_nuevo', array('id' => 0)));
                     } else {
                         return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_lista'));
                     }

@@ -67,8 +67,11 @@
         <td style="text-align: right">{{ douManejo | number_format(0, '.', ',') }}</td>
         <td style="text-align: right">{{ douTotal | number_format(0, '.', ',') }}</td>
     </table>
-    <div class="btn-group">
+    <div class="btn-group" style="float: right">
         {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right">
+        {{ form_widget(form.btnPdf, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}

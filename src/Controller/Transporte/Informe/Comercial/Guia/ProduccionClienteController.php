@@ -4,6 +4,7 @@ namespace App\Controller\Transporte\Informe\Comercial\Guia;
 
 use App\Entity\Transporte\TteGuia;
 use App\Formato\Transporte\PendienteDespachoRuta;
+use App\Formato\Transporte\ProduccionCliente;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,6 +27,7 @@ class ProduccionClienteController extends Controller
         $paginator = $this->get('knp_paginator');
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
+            ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $fecha])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
@@ -47,6 +49,12 @@ class ProduccionClienteController extends Controller
                     $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
                     General::get()->setExportar($em->createQuery($this->getDoctrine()->getRepository(TteGuia::class)->informeProduccionCliente($fechaDesde, $fechaHasta))->execute(), "Produccion_Cliente");
                 }
+            }
+            $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
+            $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
+            if ($form->get('btnPdf')->isClicked()) {
+                $formato = new ProduccionCliente();
+                $formato->Generar($em, $fechaDesde, $fechaHasta);
             }
         }
         return $this->render('transporte/informe/comercial/guia/informeProduccion.html.twig', [

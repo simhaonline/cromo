@@ -1,0 +1,15 @@
+{% extends 'base_recursoHumano.html.twig' %}
+{% block content %}
+    <table class="table table-striped table-bordered table-hover">
+        <tbody>
+        {% for llave,datos in arMovimientos %}
+            <tr>
+                {% for key,dato in datos %}
+                    {{ validarTipo(dato) }}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+

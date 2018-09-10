@@ -73,14 +73,14 @@ class CobroEntrega extends \FPDF {
     public function EncabezadoDetalles() {
         $this->Ln(12);
         $this->SetX(5);
-        $header = array('TIPO', 'GUIA', 'FECHA','CLIENTE','DESTINATARIO', 'DIRECCION',  'COBRO ENTREGA');
+        $header = array('TIPO', 'GUIA', 'NUMERO', 'FECHA','CLIENTE','DESTINATARIO', 'DIRECCION',  'COBRO ENTREGA');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(8, 25, 10, 38, 50, 35, 28);
+        $w = array(8, 16, 16, 10, 38, 43, 35, 28);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -105,10 +105,11 @@ class CobroEntrega extends \FPDF {
             foreach ($arGuias as $arGuia) {
                 $pdf->SetX(5);
                 $pdf->Cell(8, 4, $arGuia['codigoGuiaTipoFk'], 1, 0, 'L');
-                $pdf->Cell(25, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
+                $pdf->Cell(16, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
+                $pdf->Cell(16, 4, $arGuia['numero'], 1, 0, 'L');
                 $pdf->Cell(10, 4, $arGuia['fechaIngreso']->format('m-d'), 1, 0, 'L');
                 $pdf->Cell(38, 4, substr(utf8_decode(utf8_decode($arGuia['clienteNombreCorto'])),0,20), 1, 0, 'L');
-                $pdf->Cell(50, 4, substr(utf8_decode(utf8_decode($arGuia['nombreDestinatario'])),0,20), 1, 0, 'L');
+                $pdf->Cell(43, 4, substr(utf8_decode(utf8_decode($arGuia['nombreDestinatario'])),0,20), 1, 0, 'L');
                 $pdf->Cell(35, 4, substr(utf8_decode(utf8_decode($arGuia['direccionDestinatario'])),0,20), 1, 0, 'L');
                 $pdf->Cell(28, 4, number_format($arGuia['vrCobroEntrega'], 0, '.', ','), 1, 0, 'R');
                 $cobroTotal += $arGuia['vrCobroEntrega'];

@@ -57,9 +57,30 @@ class TteGuiaTipo
     private $validarRango = false;
 
     /**
+     * @return mixed
+     */
+    public function getGeneraCobroEntrega()
+    {
+        return $this->generaCobroEntrega;
+    }
+
+    /**
+     * @param mixed $generaCobroEntrega
+     */
+    public function setGeneraCobroEntrega($generaCobroEntrega): void
+    {
+        $this->generaCobroEntrega = $generaCobroEntrega;
+    }
+
+    /**
      * @ORM\Column(name="genera_cobro", type="boolean", nullable=true)
      */
     private $generaCobro = false;
+
+    /**
+     * @ORM\Column(name="genera_cobro_entrega", type="boolean", nullable=true)
+     */
+    private $generaCobroEntrega = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteFacturaTipo", inversedBy="guiasTiposFacturaTipoRel")

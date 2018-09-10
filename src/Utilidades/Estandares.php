@@ -81,7 +81,7 @@ final class Estandares
         $arConfiguracion = BaseDatos::getEm()->getRepository(GenConfiguracion::class)->find(1);
         $pdf->SetFont('Arial', '', 5);
         $date = new \DateTime('now');
-        $pdf->Text(168, 8, $date->format('Y-m-d H:i:s') . ' [Cromo | Inventario]');
+        $pdf->Text(168, 8, $date->format('Y-m-d H:i:s') . ' [Cromo | ERP]');
         $pdf->SetFillColor(200, 200, 200);
         $pdf->SetFont('Arial', 'B', 10);
         //Logo

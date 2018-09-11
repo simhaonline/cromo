@@ -1853,7 +1853,9 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.estadoNovedad')
             ->leftJoin('tg.clienteRel', 'c')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
-            ->where('tg.codigoGuiaPk <> 0');
+            ->where('tg.factura = 0')
+            ->andWhere('tg.estadoFacturaGenerada = 0')
+            ->andWhere('tg.estadoAnulado = 0');
         if ($session->get('filtroTteGuiaDocumento') != "") {
             $queryBuilder->andWhere("tg.documentoCliente LIKE '%" . $session->get('filtroTteGuiaDocumento') . "%'");
         }

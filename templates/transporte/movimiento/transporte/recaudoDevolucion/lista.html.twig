@@ -55,12 +55,12 @@
                 <td class="estado">{{ arRecaudo.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arRecaudo.estadoAnulado?'SI':'NO' }}</td>
                 <td style="text-align: center;">
-                    <a href="{{ path('transporte_movimiento_transporte_recaudo_nuevo',{'id' : arRecaudo.codigoRecaudoPk}) }}">
+                    <a href="{{ path('transporte_movimiento_transporte_recaudo_devolucion_nuevo',{'id' : arRecaudo.codigoRecaudoPk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
                         </i>
                     </a>
                 </td>
-                <td style="text-align: center"><a href="{{ path('transporte_movimiento_transporte_recaudo_detalle', { 'id': arRecaudo.codigoRecaudoPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a href="{{ path('transporte_movimiento_transporte_recaudo_devolucion_detalle', { 'id': arRecaudo.codigoRecaudoPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecaudo.codigoRecaudoPk }}" /></td>
             </tr>
         {% endfor %}
@@ -84,7 +84,7 @@
             {{ form_widget(form.btnEliminar) }}
         </div>
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_recaudo_nuevo', {'id': 0}) }}">Nuevo</a>
+            <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_recaudo_devolucion_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>
     </div>
     {{ form_end(form) }}

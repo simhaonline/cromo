@@ -631,7 +631,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('cd.nombre AS ciudadDestino')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
-            ->where('g.codigoRecaudoFk =' . $codigoRecaudo);
+            ->where('g.codigoRecaudoDevolucionFk =' . $codigoRecaudo);
 
         return $queryBuilder->getQuery()->getResult();
     }

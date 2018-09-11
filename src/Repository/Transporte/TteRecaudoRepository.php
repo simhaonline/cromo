@@ -93,7 +93,7 @@ class TteRecaudoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQueryBuilder()->from("App:Transporte\TteGuia","g")
             ->select("COUNT(g.codigoGuiaPk) as cantidad, SUM(g.vrRecaudo+0) as vrTotalRecaudo")
-            ->where("g.codigoRecaudoFk = {$codigoRecaudo}");
+            ->where("g.codigoRecaudoDevolucionFk = {$codigoRecaudo}");
         $arGuias = $query->getQuery()->getSingleResult();
         $arRecaudo = $em->getRepository(TteRecaudo::class)->find($codigoRecaudo);
         $arRecaudo->setCantidad(intval($arGuias['cantidad']));
@@ -142,7 +142,7 @@ class TteRecaudoRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
             ->select("COUNT(g.codigoGuiaPk)")
-            ->where("g.codigoRecaudoFk= {$codigoRecaudo} ");
+            ->where("g.codigoRecaudoDevolucionFk= {$codigoRecaudo} ");
         $resultado =  $queryBuilder->getQuery()->getSingleResult();
         return $resultado[1];
     }

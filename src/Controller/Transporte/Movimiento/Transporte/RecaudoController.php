@@ -21,7 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class RecaudoController extends Controller
 {
    /**
-    * @Route("/transporte/movimiento/transporte/recaudo/lista", name="transporte_movimiento_transporte_recaudo_lista")
+    * @Route("/transporte/movimiento/transporte/recaudoDevolucion/lista", name="transporte_movimiento_transporte_recaudo_devolucion_lista")
     */    
     public function lista(Request $request)
     {
@@ -55,13 +55,13 @@ class RecaudoController extends Controller
             }
         }
         $arRecaudos = $paginator->paginate($em->getRepository(TteRecaudo::class)->lista(), $request->query->getInt('page', 1),40);
-        return $this->render('transporte/movimiento/transporte/recaudo/lista.html.twig', [
+        return $this->render('transporte/movimiento/transporte/recaudoDevolucion/lista.html.twig', [
             'arRecaudos' => $arRecaudos,
             'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/recaudo/detalle/{id}", name="transporte_movimiento_transporte_recaudo_detalle")
+     * @Route("/transporte/movimiento/transporte/recaudoDevolucion/detalle/{id}", name="transporte_movimiento_transporte_recaudo_devolucion_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -82,15 +82,15 @@ class RecaudoController extends Controller
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteRecaudo::class)->autorizar($arRecaudo);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(TteRecaudo::class)->desAutorizar($arRecaudo);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TteRecaudo::class)->Aprobar($arRecaudo);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $id]));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
@@ -99,7 +99,7 @@ class RecaudoController extends Controller
                     $em->flush();
                     $em->getRepository(TteRecaudo::class)->liquidar($id);
                 }
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new Recaudo();
@@ -111,7 +111,7 @@ class RecaudoController extends Controller
         }
 
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->recaudo($id);
-        return $this->render('transporte/movimiento/transporte/recaudo/detalle.html.twig', [
+        return $this->render('transporte/movimiento/transporte/recaudoDevolucion/detalle.html.twig', [
             'arRecaudo' => $arRecaudo,
             'arGuias' => $arGuias,
             'form' => $form->createView()]);
@@ -143,11 +143,11 @@ class RecaudoController extends Controller
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->recaudoPendiente($arRecaudo->getCodigoClienteFk());
-        return $this->render('transporte/movimiento/transporte/recaudo/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/transporte/recaudoDevolucion/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/recaudo/nuevo/{id}", name="transporte_movimiento_transporte_recaudo_nuevo")
+     * @Route("/transporte/movimiento/transporte/recaudoDevolucion/nuevo/{id}", name="transporte_movimiento_transporte_recaudo_devolucion_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -170,14 +170,14 @@ class RecaudoController extends Controller
                     $em->persist($arRecaudo);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_nuevo', array('codigoRecaudo' => 0)));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_nuevo', array('codigoRecaudo' => 0)));
                     } else {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_detalle', ['id' => $arRecaudo->getCodigoRecaudoPk()]));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $arRecaudo->getCodigoRecaudoPk()]));
                     }
                 }
             }
         }
-        return $this->render('transporte/movimiento/transporte/recaudo/nuevo.html.twig', [
+        return $this->render('transporte/movimiento/transporte/recaudoDevolucion/nuevo.html.twig', [
             'arRecaudo' => $arRecaudo,
             'form' => $form->createView()]);
     }

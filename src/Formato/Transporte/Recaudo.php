@@ -30,7 +30,7 @@ class Recaudo extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this,'RELACION RECAUDO');
+        Estandares::generarEncabezado($this,'RELACION RECAUDO DEVOLUCION');
         $arRecaudo = new TteRecaudo();
         $arRecaudo = self::$em->getRepository(TteRecaudo::class)->find(self::$id);
         $this->SetFillColor(236, 236, 236);

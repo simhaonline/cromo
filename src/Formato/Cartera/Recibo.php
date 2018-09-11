@@ -104,6 +104,21 @@ class Recibo extends \FPDF {
         $this->SetFillColor(272, 272, 272);
         $this->Cell(65, 6, number_format($arRecibo->getVrPagoTotal()), 1, 0, 'R', 1);
 
+        //linea 6
+        $this->SetXY(10, 70);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 6, 'SOPORTE', 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial','', 8);
+        $this->Cell(66, 6, $arRecibo->getSoporte() , 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 6, "", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 6, '', 1, 0, 'R', 1);
+
         $this->EncabezadoDetalles();
 
     }

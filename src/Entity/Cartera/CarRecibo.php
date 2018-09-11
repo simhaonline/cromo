@@ -48,6 +48,11 @@ class CarRecibo
     private $numero;
 
     /**
+     * @ORM\Column(name="soporte", type="string", length=20, nullable=true)
+     */
+    private $soporte;
+
+    /**
      * @ORM\Column(name="fecha_pago", type="date", nullable=true)
      */
     private $fechaPago;
@@ -582,6 +587,20 @@ class CarRecibo
         $this->recibosDetallesRecibosRel = $recibosDetallesRecibosRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSoporte()
+    {
+        return $this->soporte;
+    }
 
+    /**
+     * @param mixed $soporte
+     */
+    public function setSoporte($soporte): void
+    {
+        $this->soporte = $soporte;
+    }
 
 }

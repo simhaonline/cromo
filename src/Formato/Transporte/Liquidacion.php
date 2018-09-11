@@ -202,47 +202,48 @@ class Liquidacion extends \FPDF {
         $this->Cell(48, 4, 'PLANILLA-DESCUENTO-ANTICIPO', 1, 0, 'C', 1);
         $this->SetXY(53, 129);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(30, 8, number_format($arDespacho->getVrSaldo()), 1, 0, 'R', 1);
+        $this->Cell(30, 8, number_format($arDespacho->getVrSaldo() + $arDespacho->getVrCobroEntrega() - $arDespacho->getVrCobroEntregaRechazado()), 1, 0, 'R', 1);
 
         //linea9 Col2
         $this->SetXY(90, 81);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', 'B', 7);
-        $this->MultiCell(18, 6, 'CONTRA ENTREGA', 1, 'L', false);
+        $this->MultiCell(18, 6, 'COBRO DESTINO', 1, 'L', false);
         $this->SetFont('Arial', '', 7);
         $this->SetXY(108, 81);
-        $this->Cell(42, 4, 'TOTAL DESPACHOS:', 1, 0, 'L', 1);
+        $this->Cell(42, 4, 'COBRO:', 1, 0, 'L', 1);
         $this->Cell(49, 4, number_format($arDespacho->getVrCobroEntrega()), 1, 0, 'R', 1);
         $this->SetXY(108, 85);
-        $this->Cell(42, 4, 'RECAUDO:', 1, 0, 'L', 1);
-        $this->Cell(49, 4, number_format($arDespacho->getVrRecaudo()), 1, 0, 'R', 1);
+        $this->Cell(42, 4, 'RECHAZADO:', 1, 0, 'L', 1);
+        $this->Cell(49, 4, number_format($arDespacho->getVrCobroEntregaRechazado()), 1, 0, 'R', 1);
         $this->SetXY(108, 89);
-        $this->Cell(42, 4, 'FLETES NO PAGADOS:', 1, 0, 'L', 1);
+        $this->Cell(42, 4, '', 1, 0, 'L', 1);
         $this->Cell(49, 4, number_format('0'), 1, 0, 'R', 1);
         $this->SetXY(90, 93);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(60, 4, 'TOTAL REINTREGO CONTRAENTREGA', 1, 0, 'C', 1);
-        $this->Cell(49, 4, number_format($arDespacho->getVrCobroEntrega() + $arDespacho->getVrRecaudo()), 1, 0, 'R', 1);
+        $this->Cell(49, 4, number_format($arDespacho->getVrCobroEntrega() - $arDespacho->getVrCobroEntregaRechazado()), 1, 0, 'R', 1);
 
         //linea10 Col2
+        $cobro = $arDespacho->getVrCobroEntrega() - $arDespacho->getVrCobroEntregaRechazado();
         $this->SetXY(90, 97);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', 'B', 7);
-        $this->MultiCell(18, 4, 'SALDO NETO- PLANILLA:', 1, 'L', false);
+        $this->MultiCell(18, 4, 'SALDO NETO:', 1, 'L', false);
         $this->SetFont('Arial', '', 7);
         $this->SetXY(108, 97);
-        $this->MultiCell(42, 12, 'SALDO PLANILLAS - FLETES', 1, 'L', false);
+        $this->MultiCell(42, 12, 'SALDO PLANILLAS + COBRO', 1, 'L', false);
         $this->SetXY(150, 97);
-        $this->Cell(49, 12, number_format($arDespacho->getVrSaldo()), 1, 0, 'R', 1);
+        $this->Cell(49, 12, number_format($arDespacho->getVrSaldo() + $arDespacho->getVrCobroEntregaRechazado()), 1, 0, 'R', 1);
 
         //linea11 Col2
         $this->SetXY(90, 105);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', 'B', 7);
-        $this->Cell(18, 8, 'ABONOS:', 1, 0, 'C', 1);
+        $this->Cell(18, 8, '', 1, 0, 'C', 1);
         $this->SetFont('Arial', '', 7);
-        $this->Cell(42, 8, 'RECIBO DE CAJA No:', 1, 0, 'L', 1);
-        $this->Cell(49, 8, number_format('0'), 1, 0, 'R', 1);
+        $this->Cell(42, 8, 'SALDO A PAGAR', 1, 0, 'L', 1);
+        $this->Cell(49, 8, number_format($arDespacho->getVrSaldo()), 1, 0, 'R', 1);
 
         //linea12 Col2
         $this->SetXY(90, 113);

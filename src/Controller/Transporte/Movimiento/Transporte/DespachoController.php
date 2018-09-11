@@ -4,12 +4,14 @@ namespace App\Controller\Transporte\Movimiento\Transporte;
 
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteConductor;
+use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteRuta;
 use App\Entity\Transporte\TteVehiculo;
+use App\Form\Type\Transporte\DespachoLiquidarType;
 use App\Form\Type\Transporte\DespachoType;
 use App\Formato\Transporte\CobroEntrega;
 use App\Formato\Transporte\Despacho;
@@ -124,14 +126,15 @@ class DespachoController extends Controller
                         if ($txtCodigoVehiculo != '') {
                             $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
                             if ($arVehiculo) {
+                                $arrConfiguracionLiquidarDespacho = $em->getRepository(TteConfiguracion::class)->liquidarDespacho();
                                 $arDespacho->setVehiculoRel($arVehiculo);
                                 $arDespacho->setConductorRel($arConductor);
                                 $descuentos = $arDespacho->getVrDescuentoPapeleria() + $arDespacho->getVrDescuentoSeguridad() + $arDespacho->getVrDescuentoCargue() + $arDespacho->getVrDescuentoEstampilla();
                                 $retencionFuente = 0;
-                                if($arDespacho->getVrFletePago() > 107000) {
-                                    $retencionFuente = $arDespacho->getVrFletePago() * 1 / 100;
+                                if($arDespacho->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
+                                    $retencionFuente = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
                                 }
-                                $industriaComercio = $arDespacho->getVrFletePago() * 0.2 /100;
+                                $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] /100;
 
                                 $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);
                                 $saldo = $total - $descuentos;
@@ -354,5 +357,31 @@ class DespachoController extends Controller
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->despachoPendiente(), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * @Route("/transporte/movimiento/transporte/despacho/liquidar/{id}", name="transporte_movimiento_transporte_despacho_liquidar")
+     */
+    public function liquidar(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arDespacho = new TteDespacho();
+        if ($id != 0) {
+            $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
+        }
+        $form = $this->createForm(DespachoLiquidarType::class, $arDespacho);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arDespacho = $form->getData();
+                $em->getRepository(TteDespacho::class)->liquidar($id);
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('transporte/movimiento/transporte/despacho/liquidar.html.twig', ['arDespacho' => $arDespacho, 'form' => $form->createView()]);
+    }
+
 }
 

@@ -168,6 +168,11 @@ class TteDespacho
     private $vrCobroEntrega = 0;
 
     /**
+     * @ORM\Column(name="vr_cobro_entrega_rechazado", type="float", options={"default" : 0})
+     */
+    private $vrCobroEntregaRechazado = 0;
+
+    /**
      * @ORM\Column(name="vr_saldo", type="float", options={"default" : 0})
      */
     private $vrSaldo = 0;
@@ -1172,6 +1177,22 @@ class TteDespacho
     public function setMonitoreosDespachoRel($monitoreosDespachoRel): void
     {
         $this->monitoreosDespachoRel = $monitoreosDespachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCobroEntregaRechazado()
+    {
+        return $this->vrCobroEntregaRechazado;
+    }
+
+    /**
+     * @param mixed $vrCobroEntregaRechazado
+     */
+    public function setVrCobroEntregaRechazado($vrCobroEntregaRechazado): void
+    {
+        $this->vrCobroEntregaRechazado = $vrCobroEntregaRechazado;
     }
 
 

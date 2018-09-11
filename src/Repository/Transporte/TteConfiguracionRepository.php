@@ -13,4 +13,14 @@ class TteConfiguracionRepository extends ServiceEntityRepository
         parent::__construct($registry, TteConfiguracion::class);
     }
 
+    public function liquidarDespacho(): array
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteConfiguracion::class, 'c')
+            ->select('c.vrBaseRetencionFuente')
+            ->addSelect('c.porcentajeIndustriaComercio')
+            ->addSelect('c.porcentajeRetencionFuente')
+            ->where('c.codigoConfiguracionPk = 1');
+        return $queryBuilder->getQuery()->getSingleResult();
+
+    }
 }

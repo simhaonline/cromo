@@ -195,6 +195,22 @@ class TteDespachoRepository extends ServiceEntityRepository
         $arDespacho->setVrManejo(intval($arrGuias['vrManejo']));
         $arDespacho->setVrCobroEntrega(intval($arrGuias['vrCobroEntrega']));
         $arDespacho->setPorcentajeRentabilidad($margen);
+        //Totales
+        $arrConfiguracionLiquidarDespacho = $em->getRepository(TteConfiguracion::class)->liquidarDespacho();
+        $descuentos = $arDespacho->getVrDescuentoPapeleria() + $arDespacho->getVrDescuentoSeguridad() + $arDespacho->getVrDescuentoCargue() + $arDespacho->getVrDescuentoEstampilla();
+        $retencionFuente = 0;
+        if($arDespacho->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
+            $retencionFuente = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
+        }
+        $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] /100;
+
+        $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);
+        $saldo = ($total + $arDespacho->getVrCobroEntregaRechazado()) - ($descuentos+$arDespacho->getVrCobroEntrega());
+        $arDespacho->setVrIndustriaComercio($industriaComercio);
+        $arDespacho->setVrRetencionFuente($retencionFuente);
+        $arDespacho->setVrTotal($total);
+        $arDespacho->setVrSaldo($saldo);
+
         $em->persist($arDespacho);
         $em->flush();
         return true;

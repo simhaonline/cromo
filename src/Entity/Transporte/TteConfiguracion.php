@@ -53,6 +53,21 @@ class TteConfiguracion
     private $codigoPrecioGeneralFk;
 
     /**
+     * @ORM\Column(name="vr_base_retencion_fuente", type="float", options={"default" : 0})
+     */
+    private $vrBaseRetencionFuente = 0;
+
+    /**
+     * @ORM\Column(name="porcentaje_retencion_fuente", type="float", options={"default" : 0})
+     */
+    private $porcentajeRetencionFuente = 0;
+
+    /**
+     * @ORM\Column(name="porcentaje_industria_comercio", type="float", options={"default" : 0})
+     */
+    private $porcentajeIndustriaComercio = 0;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -178,6 +193,54 @@ class TteConfiguracion
     public function setCodigoPrecioGeneralFk($codigoPrecioGeneralFk): void
     {
         $this->codigoPrecioGeneralFk = $codigoPrecioGeneralFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrBaseRetencionFuente()
+    {
+        return $this->vrBaseRetencionFuente;
+    }
+
+    /**
+     * @param mixed $vrBaseRetencionFuente
+     */
+    public function setVrBaseRetencionFuente($vrBaseRetencionFuente): void
+    {
+        $this->vrBaseRetencionFuente = $vrBaseRetencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeRetencionFuente()
+    {
+        return $this->porcentajeRetencionFuente;
+    }
+
+    /**
+     * @param mixed $porcentajeRetencionFuente
+     */
+    public function setPorcentajeRetencionFuente($porcentajeRetencionFuente): void
+    {
+        $this->porcentajeRetencionFuente = $porcentajeRetencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeIndustriaComercio()
+    {
+        return $this->porcentajeIndustriaComercio;
+    }
+
+    /**
+     * @param mixed $porcentajeIndustriaComercio
+     */
+    public function setPorcentajeIndustriaComercio($porcentajeIndustriaComercio): void
+    {
+        $this->porcentajeIndustriaComercio = $porcentajeIndustriaComercio;
     }
 
 

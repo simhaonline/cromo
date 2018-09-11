@@ -13,6 +13,7 @@
             {{ form_widget(form.btnImprimirManifiesto, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnCobroEntrega, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnLiquidacion, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_liquidar', {'id': arDespacho.codigoDespachoPk }) }}', 'DespachoLiquidar', 600, 1200)">Liquidar</a>
         </div>
     </div>
     <div style="float:right">
@@ -100,24 +101,24 @@
             <td class="td-in-well"></td>
             <td class="titulo">FLETE:</td>
             <td class="td-in-well">{{ arDespacho.vrFlete | number_format(0, '.', ',') }}</td>
-            <td class="titulo" >SALDO:</td>
-            <td align="right">{{ arDespacho.vrSaldo | number_format(0, '.', ',') }}</td>
+            <td class="titulo" >(-)COBRO ENTREGA:</td>
+            <td align="right">{{ arDespacho.vrCobroEntrega | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo">MANEJO:</td>
             <td class="td-in-well">{{ arDespacho.vrManejo | number_format(0, '.', ',') }}</td>
-            <td class="titulo" ></td>
-            <td align="right"></td>
+            <td class="titulo" >(+)COBRO (RECHAZADO):</td>
+            <td align="right">{{ arDespacho.vrCobroEntregaRechazado | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo">COBRO ENTREGA:</td>
             <td class="td-in-well">{{ arDespacho.vrCobroEntrega | number_format(0, '.', ',') }}</td>
-            <td class="titulo" ></td>
-            <td align="right"></td>
+            <td class="titulo" >SALDO:</td>
+            <td align="right">{{ arDespacho.vrSaldo | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo" >COMENTARIO: </td>

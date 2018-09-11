@@ -53,6 +53,11 @@ class CarRecibo
     private $soporte;
 
     /**
+     * @ORM\Column(name="numero_documento", type="string", length=20, nullable=true)
+     */
+    private $numeroDocumento;
+
+    /**
      * @ORM\Column(name="fecha_pago", type="date", nullable=true)
      */
     private $fechaPago;
@@ -602,5 +607,22 @@ class CarRecibo
     {
         $this->soporte = $soporte;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroDocumento()
+    {
+        return $this->numeroDocumento;
+    }
+
+    /**
+     * @param mixed $numeroDocumento
+     */
+    public function setNumeroDocumento($numeroDocumento): void
+    {
+        $this->numeroDocumento = $numeroDocumento;
+    }
+
 
 }

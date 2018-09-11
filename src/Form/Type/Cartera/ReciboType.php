@@ -40,6 +40,7 @@ class ReciboType extends AbstractType
                 'label' => 'Tipo recibo:',
                 'required' => true
             ])
+            ->add('numeroDocumento', TextType::class, array('required' => false))
             ->add('soporte', TextType::class, array('required' => false))
             ->add('fechaPago', DateType::class, array('format' => 'yyyyMMdd'))
             ->add('comentarios',TextareaType::class,['required' => false,'label' => 'Comentarios:'])

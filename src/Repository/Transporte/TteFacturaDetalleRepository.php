@@ -107,16 +107,19 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arrDocumentoCliente = $arrControles['arrDocumentoCliente'];
+        $arrDeclara = $arrControles['arrDeclara'];
         $arrFlete = $arrControles['arrFlete'];
         $arrManejo = $arrControles['arrManejo'];
         $arrCodigo = $arrControles['arrCodigo'];
         foreach ($arrCodigo as $codigoFacturaDetalle) {
             $arFacturaDetalle = $em->getRepository(TteFacturaDetalle::class)->find($codigoFacturaDetalle);
+            $arFacturaDetalle->setVrDeclara($arrDeclara[$codigoFacturaDetalle]);
             $arFacturaDetalle->setVrFlete($arrFlete[$codigoFacturaDetalle]);
             $arFacturaDetalle->setVrManejo($arrManejo[$codigoFacturaDetalle]);
             $em->persist($arFacturaDetalle);
             $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalle->getCodigoGuiaFk());
             $arGuia->setDocumentoCliente($arrDocumentoCliente[$codigoFacturaDetalle]);
+            $arGuia->setVrDeclara($arrDeclara[$codigoFacturaDetalle]);
             $arGuia->setVrFlete($arrFlete[$codigoFacturaDetalle]);
             $arGuia->setVrManejo($arrManejo[$codigoFacturaDetalle]);
             $em->persist($arGuia);

@@ -81,6 +81,7 @@
                             <th>UND</th>
                             <th>PES</th>
                             <th>VOL</th>
+                            <th>DECLARADO</th>
                             <th>FLETE</th>
                             <th>MANEJO</th>
                             <th><input type="checkbox" name="ChkSeleccionar" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -106,9 +107,11 @@
                                 <td style="text-align: right">{{ arFacturaDetalle.pesoReal | number_format(0, '.', ',')}}</td>
                                 <td style="text-align: right">{{ arFacturaDetalle.pesoVolumen | number_format(0, '.', ',')}}</td>
                                 {% if arFactura.estadoAutorizado == 0 %}
+                                    <td style="text-align: right;"><input type="text" style="text-align: right;width:80px;" name="arrDeclara[{{ arFacturaDetalle.codigoFacturaDetallePk }}]" value="{{ arFacturaDetalle.vrDeclara }}"></td>
                                     <td style="text-align: right;"><input type="text" style="text-align: right;width:80px;" name="arrFlete[{{ arFacturaDetalle.codigoFacturaDetallePk }}]" value="{{ arFacturaDetalle.vrFlete }}"></td>
                                     <td style="text-align: right;"><input type="text" style="text-align: right;width:80px;" name="arrManejo[{{ arFacturaDetalle.codigoFacturaDetallePk }}]" value="{{ arFacturaDetalle.vrManejo }}"></td>
                                 {% else %}
+                                    <td style="text-align: right">{{ arFacturaDetalle.vrDeclara | number_format(0, '.', ',')}}</td>
                                     <td style="text-align: right">{{ arFacturaDetalle.vrFlete | number_format(0, '.', ',')}}</td>
                                     <td style="text-align: right">{{ arFacturaDetalle.vrManejo | number_format(0, '.', ',')}}</td>
                                 {% endif %}

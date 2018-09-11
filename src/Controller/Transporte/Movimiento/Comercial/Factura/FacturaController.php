@@ -189,6 +189,7 @@ class FacturaController extends Controller
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -216,6 +217,9 @@ class FacturaController extends Controller
                     $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
                 }
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TteGuia::class)->facturaPendiente($arFactura->getCodigoClienteFk()), "Facturas");
             }
         }
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->facturaPendiente($arFactura->getCodigoClienteFk());

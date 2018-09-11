@@ -11,6 +11,7 @@ use App\Entity\Transporte\TteRecaudoCobro;
 use App\Form\Type\Transporte\RecaudoCobroType;
 use App\Form\Type\Transporte\RecaudoType;
 use App\Formato\Transporte\Recaudo;
+use App\Formato\Transporte\RecaudoCobro;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,7 +103,7 @@ class RecaudoCobroController extends Controller
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_cobro_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                $formato = new Recaudo();
+                $formato = new RecaudoCobro();
                 $formato->Generar($em, $id);
             }
             if ($form->get('btnExcel')->isClicked()) {

@@ -31,10 +31,11 @@
                 <td class="estado">{{ arRecaudoCobro.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arRecaudoCobro.estadoAnulado?'SI':'NO' }}</td>
                 <td style="text-align: center;">
+                    {% if arRecaudoCobro.estadoAutorizado == 0 %}
                     <a href="{{ path('transporte_movimiento_transporte_recaudo_cobro_nuevo',{'id' : arRecaudoCobro.codigoRecaudoCobroPk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
                         </i>
-                    </a>
+                        {% endif %}</a>
                 </td>
                 <td style="text-align: center"><a href="{{ path('transporte_movimiento_transporte_recaudo_cobro_detalle', { 'id': arRecaudoCobro.codigoRecaudoCobroPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecaudoCobro.codigoRecaudoCobroPk }}" /></td>

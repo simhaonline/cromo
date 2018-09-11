@@ -1,0 +1,49 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>OI</th>
+            <th>OC</th>
+            <th>GUIA</th>
+            <th>FECHA</th>
+            <th>DOCUMENTO</th>
+            <th>CLIENTE</th>
+            <th>DESTINO</th>
+            <th>UND</th>
+            <th>PES</th>
+            <th>VOL</th>
+            <th>FLETE</th>
+            <th>MANEJO</th>
+            <th>RECAUDO</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arGuia in arGuias %}
+            <tr>
+                <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
+                <td>{{ arGuia.codigoOperacionCargoFk }}</td>
+                <td>{{ arGuia.codigoGuiaPk }}</td>
+                <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
+                <td>{{ arGuia.documentoCliente }}</td>
+                <td>{{ arGuia.clienteNombreCorto }}</td>
+                <td>{{ arGuia.ciudadDestino }}</td>
+                <td style="text-align: right">{{ arGuia.unidades }}</td>
+                <td style="text-align: right">{{ arGuia.pesoReal }}</td>
+                <td style="text-align: right">{{ arGuia.pesoVolumen }}</td>
+                <td class = 'numero'>{{ arGuia.vrFlete | number_format }}</td>
+                <td class = "numero">{{ arGuia.vrManejo | number_format }}</td>
+                <td class = "numero">{{ arGuia.vrRecaudo | number_format }}</td>
+                <td  style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-toolbar" style="float: right">
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

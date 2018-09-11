@@ -637,6 +637,35 @@ class TteGuiaRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $codigoRecaudo
+     * @return mixed
+     */
+    public function recaudoCobro($codigoRecaudoCobro)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.vrDeclara')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.vrRecaudo')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.codigoRecaudoCobroFk =' . $codigoRecaudoCobro);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
      * @param $codigoFactura
      * @return mixed
      */
@@ -927,6 +956,40 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->andWhere('g.vrRecaudo > 0')
             ->andWhere('g.estadoAnulado = 0')
             ->andWhere('g.codigoClienteFk =' . $codigoCliente)
+            ->andWhere("g.fechaIngreso >= '2018-04-01'")
+            ->orderBy('g.fechaIngreso', 'DESC');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param $codigoCliente
+     * @return array
+     */
+    public function recaudoCobroPendiente()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.vrRecaudo')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.codigoRecaudoCobroFk <> 0')
+            ->where('g.estadoRecaudoCobro = 0')
+            ->andWhere('g.vrRecaudo > 0')
+            ->andWhere('g.estadoAnulado = 0')
             ->andWhere("g.fechaIngreso >= '2018-04-01'")
             ->orderBy('g.fechaIngreso', 'DESC');
 

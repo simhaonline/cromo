@@ -859,75 +859,77 @@ class TteGuiaRepository extends ServiceEntityRepository
             if ($arrGuias) {
                 $objFunciones = new FuncionesController();
                 foreach ($arrGuias AS $codigoGuia) {
-                    $fechaActual = new \DateTime('now');
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-                    $arGuia->setEstadoFacturaExportado(1);
-                    $arGuia->setEstadoFacturaGenerada(1);
-                    $arGuia->setEstadoFacturado(1);
-                    $arGuia->setFechaFactura($fechaActual);
-                    $em->persist($arGuia);
-                    $arFactura = new TteFactura();
-                    $arFactura->setFacturaTipoRel($arGuia->getGuiaTipoRel()->getFacturaTipoRel());
-                    $arFactura->setCodigoFacturaClaseFk('FA');
-                    $arFactura->setOperacionRel($arGuia->getOperacionIngresoRel());
-                    $arFactura->setNumero($arGuia->getNumero());
-                    $arFactura->setFecha($arGuia->getFechaIngreso());
-                    $arFactura->setFechaVence($arGuia->getFechaIngreso());
-                    $total = $arGuia->getVrFlete() + $arGuia->getVrManejo();
-                    $arFactura->setVrFlete($arGuia->getVrFlete());
-                    $arFactura->setVrManejo($arGuia->getVrManejo());
-                    $arFactura->setVrSubtotal($total);
-                    $arFactura->setVrTotal($total);
-                    $arFactura->setGuias(1);
-                    $arFactura->setClienteRel($arGuia->getClienteRel());
-                    $arFactura->setEstadoAutorizado(1);
-                    $arFactura->setEstadoAprobado(1);
-                    $arFactura->setUsuario($usuario);
-                    $em->persist($arFactura);
+                    if(!$arGuia->getEstadoFacturaExportado()) {
+                        $fechaActual = new \DateTime('now');
+                        $arGuia->setEstadoFacturaExportado(1);
+                        $arGuia->setEstadoFacturaGenerada(1);
+                        $arGuia->setEstadoFacturado(1);
+                        $arGuia->setFechaFactura($fechaActual);
+                        $em->persist($arGuia);
+                        $arFactura = new TteFactura();
+                        $arFactura->setFacturaTipoRel($arGuia->getGuiaTipoRel()->getFacturaTipoRel());
+                        $arFactura->setCodigoFacturaClaseFk('FA');
+                        $arFactura->setOperacionRel($arGuia->getOperacionIngresoRel());
+                        $arFactura->setNumero($arGuia->getNumero());
+                        $arFactura->setFecha($arGuia->getFechaIngreso());
+                        $arFactura->setFechaVence($arGuia->getFechaIngreso());
+                        $total = $arGuia->getVrFlete() + $arGuia->getVrManejo();
+                        $arFactura->setVrFlete($arGuia->getVrFlete());
+                        $arFactura->setVrManejo($arGuia->getVrManejo());
+                        $arFactura->setVrSubtotal($total);
+                        $arFactura->setVrTotal($total);
+                        $arFactura->setGuias(1);
+                        $arFactura->setClienteRel($arGuia->getClienteRel());
+                        $arFactura->setEstadoAutorizado(1);
+                        $arFactura->setEstadoAprobado(1);
+                        $arFactura->setUsuario($usuario);
+                        $em->persist($arFactura);
 
-                    $arFacturaDetalle = new TteFacturaDetalle();
-                    $arFacturaDetalle->setFacturaRel($arFactura);
-                    $arFacturaDetalle->setGuiaRel($arGuia);
-                    $arFacturaDetalle->setVrManejo($arGuia->getVrManejo());
-                    $arFacturaDetalle->setVrFlete($arGuia->getVrFlete());
-                    $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
-                    $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                    $arFacturaDetalle->setUnidades($arGuia->getUnidades());
-                    $arFacturaDetalle->setVrDeclara($arGuia->getVrDeclara());
-                    $em->persist($arFacturaDetalle);
+                        $arFacturaDetalle = new TteFacturaDetalle();
+                        $arFacturaDetalle->setFacturaRel($arFactura);
+                        $arFacturaDetalle->setGuiaRel($arGuia);
+                        $arFacturaDetalle->setVrManejo($arGuia->getVrManejo());
+                        $arFacturaDetalle->setVrFlete($arGuia->getVrFlete());
+                        $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
+                        $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                        $arFacturaDetalle->setUnidades($arGuia->getUnidades());
+                        $arFacturaDetalle->setVrDeclara($arGuia->getVrDeclara());
+                        $em->persist($arFacturaDetalle);
 
-                    $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arFactura->getClienteRel()->getCodigoIdentificacionFk(),'numeroIdentificacion' => $arFactura->getClienteRel()->getNumeroIdentificacion()]);
-                    if (!$arClienteCartera) {
-                        $arClienteCartera = new CarCliente();
-                        $arClienteCartera->setFormaPagoRel($arFactura->getClienteRel()->getFormaPagoRel());
-                        $arClienteCartera->setIdentificacionRel($arFactura->getClienteRel()->getIdentificacionRel());
-                        $arClienteCartera->setNumeroIdentificacion($arFactura->getClienteRel()->getNumeroIdentificacion());
-                        $arClienteCartera->setDigitoVerificacion($arFactura->getClienteRel()->getDigitoVerificacion());
-                        $arClienteCartera->setNombreCorto($arFactura->getClienteRel()->getNombreCorto());
-                        $arClienteCartera->setPlazoPago($arFactura->getClienteRel()->getPlazoPago());
-                        $arClienteCartera->setDireccion($arFactura->getClienteRel()->getDireccion());
-                        $arClienteCartera->setTelefono($arFactura->getClienteRel()->getTelefono());
-                        $arClienteCartera->setCorreo($arFactura->getClienteRel()->getCorreo());
-                        $em->persist($arClienteCartera);
+                        $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arFactura->getClienteRel()->getCodigoIdentificacionFk(),'numeroIdentificacion' => $arFactura->getClienteRel()->getNumeroIdentificacion()]);
+                        if (!$arClienteCartera) {
+                            $arClienteCartera = new CarCliente();
+                            $arClienteCartera->setFormaPagoRel($arFactura->getClienteRel()->getFormaPagoRel());
+                            $arClienteCartera->setIdentificacionRel($arFactura->getClienteRel()->getIdentificacionRel());
+                            $arClienteCartera->setNumeroIdentificacion($arFactura->getClienteRel()->getNumeroIdentificacion());
+                            $arClienteCartera->setDigitoVerificacion($arFactura->getClienteRel()->getDigitoVerificacion());
+                            $arClienteCartera->setNombreCorto($arFactura->getClienteRel()->getNombreCorto());
+                            $arClienteCartera->setPlazoPago($arFactura->getClienteRel()->getPlazoPago());
+                            $arClienteCartera->setDireccion($arFactura->getClienteRel()->getDireccion());
+                            $arClienteCartera->setTelefono($arFactura->getClienteRel()->getTelefono());
+                            $arClienteCartera->setCorreo($arFactura->getClienteRel()->getCorreo());
+                            $em->persist($arClienteCartera);
+                        }
+
+                        $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arFactura->getFacturaTipoRel()->getCodigoCuentaCobrarTipoFk());
+                        $arCuentaCobrar = new CarCuentaCobrar();
+                        $arCuentaCobrar->setClienteRel($arClienteCartera);
+                        $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
+                        $arCuentaCobrar->setFecha($arFactura->getFecha());
+                        $arCuentaCobrar->setFechaVence($arFactura->getFechaVence());
+                        $arCuentaCobrar->setModulo("TTE");
+                        $arCuentaCobrar->setNumeroReferencia($arGuia->getCodigoDespachoFk());
+                        $arCuentaCobrar->setCodigoDocumento($arFactura->getCodigoFacturaPk());
+                        $arCuentaCobrar->setNumeroDocumento($arFactura->getNumero());
+                        $arCuentaCobrar->setVrSubtotal($arFactura->getVrSubtotal());
+                        $arCuentaCobrar->setVrTotal($arFactura->getVrTotal());
+                        $arCuentaCobrar->setVrSaldo($arFactura->getVrTotal());
+                        $arCuentaCobrar->setVrSaldoOperado($arFactura->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
+                        $arCuentaCobrar->setPlazo($arFactura->getPlazoPago());
+                        $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
+                        $em->persist($arCuentaCobrar);
                     }
-
-                    $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arFactura->getFacturaTipoRel()->getCodigoCuentaCobrarTipoFk());
-                    $arCuentaCobrar = new CarCuentaCobrar();
-                    $arCuentaCobrar->setClienteRel($arClienteCartera);
-                    $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
-                    $arCuentaCobrar->setFecha($arFactura->getFecha());
-                    $arCuentaCobrar->setFechaVence($arFactura->getFechaVence());
-                    $arCuentaCobrar->setModulo("TTE");
-                    $arCuentaCobrar->setNumeroReferencia($arGuia->getCodigoDespachoFk());
-                    $arCuentaCobrar->setCodigoDocumento($arFactura->getCodigoFacturaPk());
-                    $arCuentaCobrar->setNumeroDocumento($arFactura->getNumero());
-                    $arCuentaCobrar->setVrSubtotal($arFactura->getVrSubtotal());
-                    $arCuentaCobrar->setVrTotal($arFactura->getVrTotal());
-                    $arCuentaCobrar->setVrSaldo($arFactura->getVrTotal());
-                    $arCuentaCobrar->setVrSaldoOperado($arFactura->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
-                    $arCuentaCobrar->setPlazo($arFactura->getPlazoPago());
-                    $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
-                    $em->persist($arCuentaCobrar);
                 }
                 $em->flush();
             }

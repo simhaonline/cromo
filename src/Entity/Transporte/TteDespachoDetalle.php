@@ -88,6 +88,11 @@ class TteDespachoDetalle
     private $vrCobroEntrega = 0;
 
     /**
+     * @ORM\Column(name="vr_precio_reexpedicion", type="float", options={"default" : 0})
+     */
+    private $vrPrecioReexpedicion = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDespacho", inversedBy="despachosDetallesDespachoRel")
      * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
      */
@@ -369,6 +374,22 @@ class TteDespachoDetalle
     public function setVrCobroEntrega($vrCobroEntrega): void
     {
         $this->vrCobroEntrega = $vrCobroEntrega;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPrecioReexpedicion()
+    {
+        return $this->vrPrecioReexpedicion;
+    }
+
+    /**
+     * @param mixed $vrPrecioReexpedicion
+     */
+    public function setVrPrecioReexpedicion($vrPrecioReexpedicion): void
+    {
+        $this->vrPrecioReexpedicion = $vrPrecioReexpedicion;
     }
 
 

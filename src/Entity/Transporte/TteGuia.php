@@ -324,6 +324,11 @@ class TteGuia
     private $reexpedicion = false;
 
     /**
+     * @ORM\Column(name="cortesia", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $cortesia = false;
+
+    /**
      * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
      */
     private $usuario;
@@ -1885,6 +1890,22 @@ class TteGuia
     public function setEstadoContabilizadoRecaudo($estadoContabilizadoRecaudo): void
     {
         $this->estadoContabilizadoRecaudo = $estadoContabilizadoRecaudo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCortesia()
+    {
+        return $this->cortesia;
+    }
+
+    /**
+     * @param mixed $cortesia
+     */
+    public function setCortesia($cortesia): void
+    {
+        $this->cortesia = $cortesia;
     }
 
 

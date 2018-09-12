@@ -37,7 +37,7 @@ class TteGuiaTipo
     private $codigoFacturaTipoFk;
 
     /**
-     * @ORM\Column(name="exige_numero", type="boolean", nullable=true)
+     * @ORM\Column(name="exige_numero", type="boolean", nullable=true, options={"default" : 0})
      */
     private $exigeNumero = false;
 
@@ -47,14 +47,20 @@ class TteGuiaTipo
     private $orden = 0;
 
     /**
-     * @ORM\Column(name="validar_flete", type="boolean", nullable=true)
+     * @ORM\Column(name="validar_flete", type="boolean", nullable=true, options={"default" : 0})
      */
     private $validarFlete = false;
 
     /**
-     * @ORM\Column(name="validar_rango", type="boolean", nullable=true)
+     * @ORM\Column(name="validar_rango", type="boolean", nullable=true, options={"default" : 0})
      */
     private $validarRango = false;
+
+    /**
+     * @ORM\Column(name="cortesia", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $cortesia = false;
+
 
     /**
      * @return mixed
@@ -283,6 +289,22 @@ class TteGuiaTipo
     public function setGeneraCobro($generaCobro): void
     {
         $this->generaCobro = $generaCobro;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCortesia()
+    {
+        return $this->cortesia;
+    }
+
+    /**
+     * @param mixed $cortesia
+     */
+    public function setCortesia($cortesia): void
+    {
+        $this->cortesia = $cortesia;
     }
 
 

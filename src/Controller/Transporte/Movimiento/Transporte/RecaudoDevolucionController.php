@@ -8,7 +8,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Form\Type\Transporte\RecaudoType;
-use App\Formato\Transporte\Recaudo;
+use App\Formato\Transporte\RecaudoDevolucion;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,7 +102,7 @@ class RecaudoDevolucionController extends Controller
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                $formato = new Recaudo();
+                $formato = new RecaudoDevolucion();
                 $formato->Generar($em, $id);
             }
             if ($form->get('btnExcel')->isClicked()) {
@@ -153,32 +153,33 @@ class RecaudoDevolucionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $objFunciones = new FuncionesController();
-        $arRecaudo = new TteRecaudoDevolucion();
+        $arRecaudoDevolucion = new TteRecaudoDevolucion();
         if($id != 0) {
-            $arRecaudo = $em->getRepository(TteRecaudoDevolucion::class)->find($id);
+            $arRecaudoDevolucion = $em->getRepository(TteRecaudoDevolucion::class)->find($id);
         }
-        $form = $this->createForm(RecaudoType::class, $arRecaudo);
+        $arRecaudoDevolucion->setUsuario($this->getUser()->getUserName());
+        $form = $this->createForm(RecaudoType::class, $arRecaudoDevolucion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $txtCodigoCliente = $request->request->get('txtCodigoCliente');
             if($txtCodigoCliente != '') {
                 $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
                 if($arCliente) {
-                    $arRecaudo->setClienteRel($arCliente);
+                    $arRecaudoDevolucion->setClienteRel($arCliente);
                     $fecha = new \DateTime('now');
-                    $arRecaudo->setFecha($fecha);
-                    $em->persist($arRecaudo);
+                    $arRecaudoDevolucion->setFecha($fecha);
+                    $em->persist($arRecaudoDevolucion);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {
                         return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_nuevo', array('codigoRecaudo' => 0)));
                     } else {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $arRecaudo->getCodigoRecaudoDevolucionPk()]));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $arRecaudoDevolucion->getCodigoRecaudoDevolucionPk()]));
                     }
                 }
             }
         }
         return $this->render('transporte/movimiento/transporte/recaudoDevolucion/nuevo.html.twig', [
-            'arRecaudo' => $arRecaudo,
+            'arRecaudo' => $arRecaudoDevolucion,
             'form' => $form->createView()]);
     }
 

@@ -53,6 +53,11 @@ class TteRecaudoCobro
     private $comentario;
 
     /**
+     * @ORM\Column(name="usuario",type="string",length=25)
+     */
+    private $usuario;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="recaudoCobroRel")
      */
     protected $guiasRecaudoCobroRel;
@@ -199,6 +204,22 @@ class TteRecaudoCobro
     public function setGuiasRecaudoCobroRel($guiasRecaudoCobroRel): void
     {
         $this->guiasRecaudoCobroRel = $guiasRecaudoCobroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
     }
 
 

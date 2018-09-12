@@ -10,7 +10,7 @@ use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Entity\Transporte\TteRecaudoCobro;
 use App\Form\Type\Transporte\RecaudoCobroType;
 use App\Form\Type\Transporte\RecaudoType;
-use App\Formato\Transporte\Recaudo;
+use App\Formato\Transporte\RecaudoDevolucion;
 use App\Formato\Transporte\RecaudoCobro;
 use App\General\General;
 use App\Utilidades\Estandares;
@@ -157,6 +157,7 @@ class RecaudoCobroController extends Controller
         if($id != 0) {
             $arRecaudoCobro = $em->getRepository(TteRecaudoCobro::class)->find($id);
         }
+        $arRecaudoCobro->setUsuario($this->getUser()->getUserName());
         $form = $this->createForm(RecaudoCobroType::class, $arRecaudoCobro);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

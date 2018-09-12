@@ -27,14 +27,14 @@
             <td class="td-in-well">{{ arRecaudo.fecha |date("Y/m/d") }}</td>
         </tr>
         <tr>
-            <td class="titulo">CLIENTE</td>
+            <td class="titulo">CLIENTE:</td>
             <td class="td-in-well">{{ arRecaudo.clienteRel.nombreCorto }}</td>
             <td class="titulo">GUIAS:</td>
             <td class="numero">{{ arRecaudo.cantidad }}</td>
         </tr>
         <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="titulo">USUARIO:</td>
+            <td class="td-in-well">{{ arRecaudo.usuario }}</td>
             <td class="titulo">RECAUDO:</td>
             <td class="numero">{{ arRecaudo.vrTotal | number_format(0, '.', ',')}}</td>
         </tr>

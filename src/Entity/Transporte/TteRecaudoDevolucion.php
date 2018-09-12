@@ -58,6 +58,11 @@ class TteRecaudoDevolucion
     private $comentario;
 
     /**
+     * @ORM\Column(name="usuario",type="string",length=25)
+     */
+    private $usuario;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteCliente", inversedBy="recaudosClienteRel")
      * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
      */
@@ -242,6 +247,22 @@ class TteRecaudoDevolucion
     public function setGuiasRecaudoDevolucionRel($guiasRecaudoDevolucionRel): void
     {
         $this->guiasRecaudoDevolucionRel = $guiasRecaudoDevolucionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
     }
 
 

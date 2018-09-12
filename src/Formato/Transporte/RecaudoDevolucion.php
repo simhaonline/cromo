@@ -7,7 +7,7 @@ use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Entity\Transporte\TteGuia;
 use App\Utilidades\Estandares;
 
-class Recaudo extends \FPDF {
+class RecaudoDevolucion extends \FPDF {
     public static $em;
     public static $id;
 
@@ -16,9 +16,18 @@ class Recaudo extends \FPDF {
         //$em = $miThis->getDoctrine()->getManager();
         self::$em = $em;
         self::$id = $id;
-        $pdf = new Recaudo();
+        $pdf = new RecaudoDevolucion();
+        $arRecaudoDevolucion = $em->getRepository(TteRecaudoDevolucion::class)->find($id);
         $pdf->AliasNbPages();
         $pdf->AddPage();
+        $pdf->SetFont('Arial', '', 40);
+        $pdf->SetTextColor(255, 220, 220);
+        if ($arRecaudoDevolucion->getEstadoAnulado()) {
+            $pdf->RotatedText(90, 150, 'ANULADO', 45);
+        } elseif (!$arRecaudoDevolucion->getEstadoAprobado()) {
+            $pdf->RotatedText(90, 150, 'SIN APROBAR', 45);
+        }
+        $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
         $pdf->Output("TteRecaudo$id.pdf", 'D');
@@ -69,10 +78,10 @@ class Recaudo extends \FPDF {
         $this->SetXY(10, 50);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 5, utf8_decode(""), 1, 0, 'L', 1);
+        $this->Cell(30, 5, utf8_decode("USUARIO"), 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(60, 5, '', 1, 0, 'R', 1);
+        $this->Cell(60, 5, utf8_decode($arRecaudo->getUsuario()), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 5, "TOTAL:", 1, 0, 'L', 1);
@@ -186,6 +195,35 @@ class Recaudo extends \FPDF {
     public function Footer() {
         $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+    }
+
+    var $angle = 0;
+
+    function Rotate($angle, $x = -1, $y = -1)
+    {
+        if ($x == -1)
+            $x = $this->x;
+        if ($y == -1)
+            $y = $this->y;
+        if ($this->angle != 0)
+            $this->_out('Q');
+        $this->angle = $angle;
+        if ($angle != 0) {
+            $angle *= M_PI / 180;
+            $c = cos($angle);
+            $s = sin($angle);
+            $cx = $x * $this->k;
+            $cy = ($this->h - $y) * $this->k;
+            $this->_out(sprintf('q %.5F %.5F %.5F %.5F %.2F %.2F cm 1 0 0 1 %.2F %.2F cm', $c, $s, -$s, $c, $cx, $cy, -$cx, -$cy));
+        }
+    }
+
+    function RotatedText($x, $y, $txt, $angle)
+    {
+        //Text rotated around its origin
+        $this->Rotate($angle, $x, $y);
+        $this->Text($x, $y, $txt);
+        $this->Rotate(0);
     }
 }
 

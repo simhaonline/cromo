@@ -33,7 +33,7 @@ security:
 
             logout:
                 path:   /logout
-                target: /inicio            
+                target: /login
             
     access_control:
         - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -40,11 +40,11 @@ class TteRecaudoCobroRepository extends ServiceEntityRepository
         $respuesta = '';
         if ($arrSeleccionados) {
             foreach ($arrSeleccionados as $codigo) {
-                $arRegistro = $this->getEntityManager()->getRepository(TteRecaudo::class)->find($codigo);
+                $arRegistro = $this->getEntityManager()->getRepository(TteRecaudoCobro::class)->find($codigo);
                 if ($arRegistro) {
                     if ($arRegistro->getEstadoAprobado() == 0) {
                         if ($arRegistro->getEstadoAutorizado() == 0) {
-                            if (count($this->getEntityManager()->getRepository(TteGuia::class)->findBy(['codigoRecaudoFk' => $arRegistro->getCodigoRecaudoPk()])) <= 0) {
+                            if (count($this->getEntityManager()->getRepository(TteGuia::class)->findBy(['codigoRecaudoCobroFk' => $arRegistro->getCodigoRecaudoCobroPk()])) <= 0) {
                                 $this->getEntityManager()->remove($arRegistro);
                             } else {
                                 $respuesta = 'No se puede eliminar, el registro tiene detalles';

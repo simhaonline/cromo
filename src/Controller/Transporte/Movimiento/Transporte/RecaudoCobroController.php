@@ -6,7 +6,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
-use App\Entity\Transporte\TteRecaudo;
+use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Entity\Transporte\TteRecaudoCobro;
 use App\Form\Type\Transporte\RecaudoCobroType;
 use App\Form\Type\Transporte\RecaudoType;
@@ -49,7 +49,7 @@ class RecaudoCobroController extends Controller
             }
             if($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteRecaudo::class)->eliminar($arrSeleccionados);
+                $em->getRepository(TteRecaudoCobro::class)->eliminar($arrSeleccionados);
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->createQuery($em->getRepository(TteRecaudoCobro::class)->lista())->execute(), "Guias");

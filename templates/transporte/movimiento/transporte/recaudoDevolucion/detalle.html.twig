@@ -22,7 +22,7 @@
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arRecaudo.codigoRecaudoPk }}</td>
+            <td class="td-in-well">{{ arRecaudo.codigoRecaudoDevolucionPk }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arRecaudo.fecha |date("Y/m/d") }}</td>
         </tr>
@@ -97,7 +97,7 @@
                 </div>
                 {% if arRecaudo.estadoAutorizado == 0 %}
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_recaudo_detalle_adicionar_guia', {'codigoRecaudo': arRecaudo.codigoRecaudoPk }) }}', 'CumplidoAdicionarGuia', 600, 900)">Nuevo</a>
+                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_recaudo_detalle_adicionar_guia', {'codigoRecaudo': arRecaudo.codigoRecaudoDevolucionPk }) }}', 'CumplidoAdicionarGuia', 600, 900)">Nuevo</a>
                     </div>
                 {% endif %}
                 <div class="btn-group">

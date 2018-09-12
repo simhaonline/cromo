@@ -3,7 +3,7 @@
 namespace App\Formato\Transporte;
 
 use App\Entity\General\TteConfiguracion;
-use App\Entity\Transporte\TteRecaudo;
+use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteRecaudoCobro;
 use App\Utilidades\Estandares;

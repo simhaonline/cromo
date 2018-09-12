@@ -47,7 +47,7 @@
         <tbody>
         {% for arRecaudo in arRecaudos %}
             <tr>
-                <td>{{ arRecaudo.codigoRecaudoPk }}</td>
+                <td>{{ arRecaudo.codigoRecaudoDevolucionPk }}</td>
                 <td>{{ arRecaudo.nombreCorto }}</td>
                 <td>{{ arRecaudo.fecha | date('Y-m-d') }}</td>
                 <td>{{ arRecaudo.comentario }}</td>
@@ -55,13 +55,15 @@
                 <td class="estado">{{ arRecaudo.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arRecaudo.estadoAnulado?'SI':'NO' }}</td>
                 <td style="text-align: center;">
-                    <a href="{{ path('transporte_movimiento_transporte_recaudo_devolucion_nuevo',{'id' : arRecaudo.codigoRecaudoPk}) }}">
+                    {% if arRecaudo.estadoAutorizado == 0 %}
+                    <a href="{{ path('transporte_movimiento_transporte_recaudo_devolucion_nuevo',{'id' : arRecaudo.codigoRecaudoDevolucionPk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
                         </i>
                     </a>
+                    {% endif %}
                 </td>
-                <td style="text-align: center"><a href="{{ path('transporte_movimiento_transporte_recaudo_devolucion_detalle', { 'id': arRecaudo.codigoRecaudoPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
-                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecaudo.codigoRecaudoPk }}" /></td>
+                <td style="text-align: center"><a href="{{ path('transporte_movimiento_transporte_recaudo_devolucion_detalle', { 'id': arRecaudo.codigoRecaudoDevolucionPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecaudo.codigoRecaudoDevolucionPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>

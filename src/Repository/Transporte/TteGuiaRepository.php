@@ -956,7 +956,6 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->andWhere('g.vrRecaudo > 0')
             ->andWhere('g.estadoAnulado = 0')
             ->andWhere('g.codigoClienteFk =' . $codigoCliente)
-            ->andWhere("g.fechaIngreso >= '2018-04-01'")
             ->orderBy('g.fechaIngreso', 'DESC');
 
         return $queryBuilder->getQuery()->getResult();
@@ -986,11 +985,10 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('cd.nombre AS ciudadDestino')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
-            ->where('g.codigoRecaudoCobroFk <> 0')
-            ->where('g.estadoRecaudoCobro = 0')
+            ->where('g.codigoRecaudoCobroFk is null')
+            ->andwhere('g.estadoRecaudoCobro = 0')
             ->andWhere('g.vrRecaudo > 0')
             ->andWhere('g.estadoAnulado = 0')
-            ->andWhere("g.fechaIngreso >= '2018-04-01'")
             ->orderBy('g.fechaIngreso', 'DESC');
 
         return $queryBuilder->getQuery()->getResult();

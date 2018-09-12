@@ -385,10 +385,10 @@ class TteGuia
     private $cumplidoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TteRecaudo", inversedBy="guiasRecaudoRel")
-     * @ORM\JoinColumn(name="codigo_recaudo_devolucion_fk", referencedColumnName="codigo_recaudo_pk")
+     * @ORM\ManyToOne(targetEntity="TteRecaudoDevolucion", inversedBy="guiasRecaudoDevolucionRel")
+     * @ORM\JoinColumn(name="codigo_recaudo_devolucion_fk", referencedColumnName="codigo_recaudo_devolucion_pk")
      */
-    private $recaudoRel;
+    private $recaudoDevolucionRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteRecaudoCobro", inversedBy="guiasRecaudoCobroRel")
@@ -1629,17 +1629,17 @@ class TteGuia
     /**
      * @return mixed
      */
-    public function getRecaudoRel()
+    public function getRecaudoDevolucionRel()
     {
-        return $this->recaudoRel;
+        return $this->recaudoDevolucionRel;
     }
 
     /**
-     * @param mixed $recaudoRel
+     * @param mixed $recaudoDevolucionRel
      */
-    public function setRecaudoRel($recaudoRel): void
+    public function setRecaudoDevolucionRel($recaudoDevolucionRel): void
     {
-        $this->recaudoRel = $recaudoRel;
+        $this->recaudoDevolucionRel = $recaudoDevolucionRel;
     }
 
     /**
@@ -1865,6 +1865,7 @@ class TteGuia
     {
         $this->guiasDetallesGuiaRel = $guiasDetallesGuiaRel;
     }
+
 
 
 }

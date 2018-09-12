@@ -3,7 +3,7 @@
 namespace App\Formato\Transporte;
 
 use App\Entity\General\TteConfiguracion;
-use App\Entity\Transporte\TteRecaudo;
+use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Entity\Transporte\TteGuia;
 use App\Utilidades\Estandares;
 
@@ -31,8 +31,8 @@ class Recaudo extends \FPDF {
         //Logo
 
         Estandares::generarEncabezado($this,'RELACION RECAUDO DEVOLUCION');
-        $arRecaudo = new TteRecaudo();
-        $arRecaudo = self::$em->getRepository(TteRecaudo::class)->find(self::$id);
+        $arRecaudo = new TteRecaudoDevolucion();
+        $arRecaudo = self::$em->getRepository(TteRecaudoDevolucion::class)->find(self::$id);
         $this->SetFillColor(236, 236, 236);
         $this->SetFont('Arial', 'B', 10);
         //linea 1
@@ -42,7 +42,7 @@ class Recaudo extends \FPDF {
         $this->Cell(30, 6, utf8_decode("NUMERO:"), 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(60, 6, $arRecaudo->getCodigoRecaudoPk(), 1, 0, 'L', 1);
+        $this->Cell(60, 6, $arRecaudo->getCodigoRecaudoDevolucionPk(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 6, "FECHA:", 1, 0, 'L', 1);

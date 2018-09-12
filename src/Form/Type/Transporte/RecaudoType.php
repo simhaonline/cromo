@@ -2,7 +2,7 @@
 
 namespace App\Form\Type\Transporte;
 
-use App\Entity\Transporte\TteRecaudo;
+use App\Entity\Transporte\TteRecaudoDevolucion;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -27,7 +27,7 @@ class RecaudoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => TteRecaudo::class,
+            'data_class' => TteRecaudoDevolucion::class,
         ]);
     }
 }

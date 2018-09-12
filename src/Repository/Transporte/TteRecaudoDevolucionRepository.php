@@ -3,17 +3,17 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteGuia;
-use App\Entity\Transporte\TteRecaudo;
+use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class TteRecaudoRepository extends ServiceEntityRepository
+class TteRecaudoDevolucionRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, TteRecaudo::class);
+        parent::__construct($registry, TteRecaudoDevolucion::class);
     }
 
     /**
@@ -22,9 +22,9 @@ class TteRecaudoRepository extends ServiceEntityRepository
     public function lista()
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecaudo::class, 'rc');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecaudoDevolucion::class, 'rc');
         $queryBuilder
-            ->select('rc.codigoRecaudoPk')
+            ->select('rc.codigoRecaudoDevolucionPk')
             ->join('rc.clienteRel', 'c')
             ->addSelect('c.nombreCorto')
             ->addSelect('rc.fecha')
@@ -32,7 +32,7 @@ class TteRecaudoRepository extends ServiceEntityRepository
             ->addSelect('rc.estadoAprobado')
             ->addSelect('rc.estadoAnulado')
             ->addSelect('rc.comentario')
-            ->where('rc.codigoRecaudoPk <> 0');
+            ->where('rc.codigoRecaudoDevolucionPk <> 0');
         $queryBuilder->orderBy('rc.fecha', 'DESC');
 
         if($session->get('filtroTteCodigoCliente')){
@@ -46,11 +46,11 @@ class TteRecaudoRepository extends ServiceEntityRepository
         $respuesta = '';
         if ($arrSeleccionados) {
             foreach ($arrSeleccionados as $codigo) {
-                $arRegistro = $this->getEntityManager()->getRepository(TteRecaudo::class)->find($codigo);
+                $arRegistro = $this->getEntityManager()->getRepository(TteRecaudoDevolucion::class)->find($codigo);
                 if ($arRegistro) {
                     if ($arRegistro->getEstadoAprobado() == 0) {
                         if ($arRegistro->getEstadoAutorizado() == 0) {
-                            if (count($this->getEntityManager()->getRepository(TteGuia::class)->findBy(['codigoRecaudoFk' => $arRegistro->getCodigoRecaudoPk()])) <= 0) {
+                            if (count($this->getEntityManager()->getRepository(TteGuia::class)->findBy(['codigoRecaudoDevolucionFk' => $arRegistro->getCodigoRecaudoDevolucionPk()])) <= 0) {
                                 $this->getEntityManager()->remove($arRegistro);
                             } else {
                                 $respuesta = 'No se puede eliminar, el registro tiene detalles';
@@ -78,7 +78,7 @@ class TteRecaudoRepository extends ServiceEntityRepository
             if (count($arrGuias) > 0) {
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-                    $arGuia->setRecaudoRel(null);
+                    $arGuia->setRecaudoDevolucionRel(null);
                     $arGuia->setEstadoRecaudoDevolucion(0);
                     $em->persist($arGuia);
                 }
@@ -95,7 +95,7 @@ class TteRecaudoRepository extends ServiceEntityRepository
             ->select("COUNT(g.codigoGuiaPk) as cantidad, SUM(g.vrRecaudo+0) as vrTotalRecaudo")
             ->where("g.codigoRecaudoDevolucionFk = {$codigoRecaudo}");
         $arGuias = $query->getQuery()->getSingleResult();
-        $arRecaudo = $em->getRepository(TteRecaudo::class)->find($codigoRecaudo);
+        $arRecaudo = $em->getRepository(TteRecaudoDevolucion::class)->find($codigoRecaudo);
         $arRecaudo->setCantidad(intval($arGuias['cantidad']));
         $arRecaudo->setVrTotal(intval($arGuias['vrTotalRecaudo']));
         $em->persist($arRecaudo);
@@ -103,34 +103,34 @@ class TteRecaudoRepository extends ServiceEntityRepository
         return true;
     }
 
-    public function autorizar($arRecaudo){
-        if($this->getEntityManager()->getRepository(TteRecaudo::class)->contarDetalles($arRecaudo->getCodigoRecaudoPk()) > 0){
-            $arRecaudo->setEstadoAutorizado(1);
-            $this->getEntityManager()->persist($arRecaudo);
+    public function autorizar($arRecaudoDevolucion){
+        if($this->getEntityManager()->getRepository(TteRecaudoDevolucion::class)->contarDetalles($arRecaudoDevolucion->getCodigoRecaudoDevolucionPk()) > 0){
+            $arRecaudoDevolucion->setEstadoAutorizado(1);
+            $this->getEntityManager()->persist($arRecaudoDevolucion);
             $this->getEntityManager()->flush();
         } else {
             Mensajes::error('El registro no tiene detalles');
         }
     }
 
-    public function desautorizar($arRecaudo)
+    public function desautorizar($arRecaudoDevolucion)
     {
-        if ($arRecaudo->getEstadoAutorizado() == 1 && $arRecaudo->getEstadoAprobado() == 0) {
-            $arRecaudo->setEstadoAutorizado(0);
-            $this->getEntityManager()->persist($arRecaudo);
+        if ($arRecaudoDevolucion->getEstadoAutorizado() == 1 && $arRecaudoDevolucion->getEstadoAprobado() == 0) {
+            $arRecaudoDevolucion->setEstadoAutorizado(0);
+            $this->getEntityManager()->persist($arRecaudoDevolucion);
             $this->getEntityManager()->flush();
         } else {
             Mensajes::error('El registro esta aprobado y no se puede desautorizar');
         }
     }
 
-    public function aprobar($arRecaudo)
+    public function aprobar($arRecaudoDevolucion)
     {
-        if($arRecaudo->getEstadoAutorizado() == 1 && $arRecaudo->getEstadoAprobado() == 0) {
+        if($arRecaudoDevolucion->getEstadoAutorizado() == 1 && $arRecaudoDevolucion->getEstadoAprobado() == 0) {
             $fecha = new \DateTime('now');
-            $arRecaudo->setFecha($fecha);
-            $arRecaudo->setEstadoAprobado(1);
-            $this->getEntityManager()->persist($arRecaudo);
+            $arRecaudoDevolucion->setFecha($fecha);
+            $arRecaudoDevolucion->setEstadoAprobado(1);
+            $this->getEntityManager()->persist($arRecaudoDevolucion);
             $this->getEntityManager()->flush();
 
         } else {

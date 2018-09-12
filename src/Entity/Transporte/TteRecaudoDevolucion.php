@@ -6,16 +6,16 @@ namespace App\Entity\Transporte;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Transporte\TteRecaudoRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Transporte\TteRecaudoDevolucionRepository")
  */
-class TteRecaudo
+class TteRecaudoDevolucion
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $codigoRecaudoPk;
+    private $codigoRecaudoDevolucionPk;
 
     /**
      * @ORM\Column(name="fecha", type="datetime", nullable=true)
@@ -64,24 +64,24 @@ class TteRecaudo
     private $clienteRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="recaudoRel")
+     * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="recaudoDevolucionRel")
      */
-    protected $guiasRecaudoRel;
+    protected $guiasRecaudoDevolucionRel;
 
     /**
      * @return mixed
      */
-    public function getCodigoRecaudoPk()
+    public function getCodigoRecaudoDevolucionPk()
     {
-        return $this->codigoRecaudoPk;
+        return $this->codigoRecaudoDevolucionPk;
     }
 
     /**
-     * @param mixed $codigoRecaudoPk
+     * @param mixed $codigoRecaudoDevolucionPk
      */
-    public function setCodigoRecaudoPk($codigoRecaudoPk): void
+    public function setCodigoRecaudoDevolucionPk($codigoRecaudoDevolucionPk): void
     {
-        $this->codigoRecaudoPk = $codigoRecaudoPk;
+        $this->codigoRecaudoDevolucionPk = $codigoRecaudoDevolucionPk;
     }
 
     /**
@@ -231,17 +231,17 @@ class TteRecaudo
     /**
      * @return mixed
      */
-    public function getGuiasRecaudoRel()
+    public function getGuiasRecaudoDevolucionRel()
     {
-        return $this->guiasRecaudoRel;
+        return $this->guiasRecaudoDevolucionRel;
     }
 
     /**
-     * @param mixed $guiasRecaudoRel
+     * @param mixed $guiasRecaudoDevolucionRel
      */
-    public function setGuiasRecaudoRel($guiasRecaudoRel): void
+    public function setGuiasRecaudoDevolucionRel($guiasRecaudoDevolucionRel): void
     {
-        $this->guiasRecaudoRel = $guiasRecaudoRel;
+        $this->guiasRecaudoDevolucionRel = $guiasRecaudoDevolucionRel;
     }
 
 

@@ -6,7 +6,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
-use App\Entity\Transporte\TteRecaudo;
+use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Form\Type\Transporte\RecaudoType;
 use App\Formato\Transporte\Recaudo;
 use App\General\General;
@@ -18,7 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class RecaudoController extends Controller
+class RecaudoDevolucionController extends Controller
 {
    /**
     * @Route("/transporte/movimiento/transporte/recaudoDevolucion/lista", name="transporte_movimiento_transporte_recaudo_devolucion_lista")
@@ -48,13 +48,13 @@ class RecaudoController extends Controller
             }
             if($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteRecaudo::class)->eliminar($arrSeleccionados);
+                $em->getRepository(TteRecaudoDevolucion::class)->eliminar($arrSeleccionados);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(TteRecaudo::class)->lista())->execute(), "Guias");
+                General::get()->setExportar($em->createQuery($em->getRepository(TteRecaudoDevolucion::class)->lista())->execute(), "Guias");
             }
         }
-        $arRecaudos = $paginator->paginate($em->getRepository(TteRecaudo::class)->lista(), $request->query->getInt('page', 1),40);
+        $arRecaudos = $paginator->paginate($em->getRepository(TteRecaudoDevolucion::class)->lista(), $request->query->getInt('page', 1),40);
         return $this->render('transporte/movimiento/transporte/recaudoDevolucion/lista.html.twig', [
             'arRecaudos' => $arRecaudos,
             'form' => $form->createView()]);
@@ -66,7 +66,7 @@ class RecaudoController extends Controller
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arRecaudo = $em->getRepository(TteRecaudo::class)->find($id);
+        $arRecaudo = $em->getRepository(TteRecaudoDevolucion::class)->find($id);
         $paginator  = $this->get('knp_paginator');
         $form = Estandares::botonera($arRecaudo->getEstadoAutorizado(),$arRecaudo->getEstadoAprobado(),$arRecaudo->getEstadoAnulado());
         $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
@@ -81,23 +81,23 @@ class RecaudoController extends Controller
 
             }
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository(TteRecaudo::class)->autorizar($arRecaudo);
+                $em->getRepository(TteRecaudoDevolucion::class)->autorizar($arRecaudo);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository(TteRecaudo::class)->desAutorizar($arRecaudo);
+                $em->getRepository(TteRecaudoDevolucion::class)->desAutorizar($arRecaudo);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository(TteRecaudo::class)->Aprobar($arRecaudo);
+                $em->getRepository(TteRecaudoDevolucion::class)->Aprobar($arRecaudo);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $id]));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(TteRecaudo::class)->retirarGuia($arrGuias);
+                $respuesta = $this->getDoctrine()->getRepository(TteRecaudoDevolucion::class)->retirarGuia($arrGuias);
                 if($respuesta) {
                     $em->flush();
-                    $em->getRepository(TteRecaudo::class)->liquidar($id);
+                    $em->getRepository(TteRecaudoDevolucion::class)->liquidar($id);
                 }
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $id]));
             }
@@ -123,7 +123,7 @@ class RecaudoController extends Controller
     public function detalleAdicionarGuia(Request $request, $codigoRecaudo)
     {
         $em = $this->getDoctrine()->getManager();
-        $arRecaudo = $em->getRepository(TteRecaudo::class)->find($codigoRecaudo);
+        $arRecaudo = $em->getRepository(TteRecaudoDevolucion::class)->find($codigoRecaudo);
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();
@@ -133,12 +133,12 @@ class RecaudoController extends Controller
             if (count($arrSeleccionados) > 0) {
                 foreach ($arrSeleccionados AS $codigo) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
-                    $arGuia->setRecaudoRel($arRecaudo);
+                    $arGuia->setRecaudoDevolucionRel($arRecaudo);
                     $arGuia->setEstadoRecaudoDevolucion(1);
                     $em->persist($arGuia);
                 }
                 $em->flush();
-                $this->getDoctrine()->getRepository(TteRecaudo::class)->liquidar($codigoRecaudo);
+                $this->getDoctrine()->getRepository(TteRecaudoDevolucion::class)->liquidar($codigoRecaudo);
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
@@ -153,9 +153,9 @@ class RecaudoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $objFunciones = new FuncionesController();
-        $arRecaudo = new TteRecaudo();
+        $arRecaudo = new TteRecaudoDevolucion();
         if($id != 0) {
-            $arRecaudo = $em->getRepository(TteRecaudo::class)->find($id);
+            $arRecaudo = $em->getRepository(TteRecaudoDevolucion::class)->find($id);
         }
         $form = $this->createForm(RecaudoType::class, $arRecaudo);
         $form->handleRequest($request);
@@ -172,7 +172,7 @@ class RecaudoController extends Controller
                     if ($form->get('guardarnuevo')->isClicked()) {
                         return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_nuevo', array('codigoRecaudo' => 0)));
                     } else {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $arRecaudo->getCodigoRecaudoPk()]));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_detalle', ['id' => $arRecaudo->getCodigoRecaudoDevolucionPk()]));
                     }
                 }
             }

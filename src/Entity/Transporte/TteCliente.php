@@ -141,7 +141,7 @@ class TteCliente
     protected $cumplidosClienteRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TteRecaudo", mappedBy="clienteRel")
+     * @ORM\OneToMany(targetEntity="TteRecaudoDevolucion", mappedBy="clienteRel")
      */
     protected $recaudosClienteRel;
 

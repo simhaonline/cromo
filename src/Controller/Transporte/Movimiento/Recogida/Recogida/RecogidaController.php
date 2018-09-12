@@ -3,7 +3,7 @@
 namespace App\Controller\Transporte\Movimiento\Recogida\Recogida;
 
 use App\Entity\Transporte\TteCliente;
-use App\Entity\Transporte\TteRecaudo;
+use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Entity\Transporte\TteRecogida;
 use App\Form\Type\Transporte\RecogidaType;
 use App\Formato\Transporte\Recogida;
@@ -66,11 +66,11 @@ class RecogidaController extends Controller
                 return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository(TteRecaudo::class)->desAutorizar($arRecogida);
+                $em->getRepository(TteRecaudoDevolucion::class)->desAutorizar($arRecogida);
                 return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository(TteRecaudo::class)->Aprobar($arRecogida);
+                $em->getRepository(TteRecaudoDevolucion::class)->Aprobar($arRecogida);
                 return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_detalle', ['id' => $id]));
             }
         }

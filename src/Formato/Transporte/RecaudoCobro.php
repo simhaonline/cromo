@@ -64,7 +64,7 @@ class RecaudoCobro extends \FPDF {
         $this->SetXY(10, 45);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 5, utf8_decode("USUARIO"), 1, 0, 'L', 1);
+        $this->Cell(30, 5, utf8_decode("USUARIO:"), 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(60, 5, utf8_decode($arRecaudoCobro->getUsuario()), 1, 0, 'L', 1);
@@ -79,10 +79,10 @@ class RecaudoCobro extends \FPDF {
         $this->SetXY(10, 50);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 5, utf8_decode(""), 1, 0, 'L', 1);
+        $this->Cell(30, 5, utf8_decode("SOPORTE:"), 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(60, 5, '', 1, 0, 'R', 1);
+        $this->Cell(60, 5, utf8_decode($arRecaudoCobro->getSoporte()), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 5, "TOTAL:", 1, 0, 'L', 1);

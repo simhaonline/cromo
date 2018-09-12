@@ -53,6 +53,11 @@ class TteRecaudoCobro
     private $comentario;
 
     /**
+     * @ORM\Column(name="soporte", type="string", length=50, nullable=true)
+     */
+    private $soporte;
+
+    /**
      * @ORM\Column(name="usuario",type="string",length=25)
      */
     private $usuario;
@@ -220,6 +225,22 @@ class TteRecaudoCobro
     public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoporte()
+    {
+        return $this->soporte;
+    }
+
+    /**
+     * @param mixed $soporte
+     */
+    public function setSoporte($soporte): void
+    {
+        $this->soporte = $soporte;
     }
 
 

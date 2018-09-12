@@ -71,11 +71,14 @@ class MasivoController extends Controller
                     if($fichero != "." && $fichero != "..") {
                         $partes = explode(".", $fichero);
                         if(count($partes) == 2 ) {
-                            $arRegistroCarga = new DocRegistroCarga();
-                            $arRegistroCarga->setIdentificador($partes[0]);
-                            $arRegistroCarga->setExtension($partes[1]);
-                            $arRegistroCarga->setArchivo($fichero);
-                            $em->persist($arRegistroCarga);
+                            $extension = $partes[1];
+                            if($extension == 'pdf') {
+                                $arRegistroCarga = new DocRegistroCarga();
+                                $arRegistroCarga->setIdentificador($partes[0]);
+                                $arRegistroCarga->setExtension($extension);
+                                $arRegistroCarga->setArchivo($fichero);
+                                $em->persist($arRegistroCarga);
+                            }
                         }
                     }
                 }

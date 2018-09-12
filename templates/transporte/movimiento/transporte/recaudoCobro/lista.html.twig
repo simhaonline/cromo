@@ -12,7 +12,8 @@
         <tr>
             <th>ID</th>
             <th>FECHA</th>
-            <th>COMENTARIOS</th>
+            <th>TOTAL</th>
+            <th>USUARIO</th>
             <th>AUT</th>
             <th>APR</th>
             <th>ANU</th>
@@ -26,7 +27,8 @@
             <tr>
                 <td>{{ arRecaudoCobro.codigoRecaudoCobroPk }}</td>
                 <td>{{ arRecaudoCobro.fecha | date('Y-m-d') }}</td>
-                <td>{{ arRecaudoCobro.comentario }}</td>
+                <td>{{ arRecaudoCobro.vrTotal | number_format(0, '.', ',')}}</td>
+                <td>{{ arRecaudoCobro.usuario }}</td>
                 <td class="estado">{{ arRecaudoCobro.estadoAutorizado?'SI':'NO' }}</td>
                 <td class="estado">{{ arRecaudoCobro.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arRecaudoCobro.estadoAnulado?'SI':'NO' }}</td>

@@ -26,10 +26,11 @@ class TteRecaudoCobroRepository extends ServiceEntityRepository
         $queryBuilder
             ->select('rc.codigoRecaudoCobroPk')
             ->addSelect('rc.fecha')
+            ->addSelect('rc.vrTotal')
+            ->addSelect('rc.usuario')
             ->addSelect('rc.estadoAutorizado')
             ->addSelect('rc.estadoAprobado')
             ->addSelect('rc.estadoAnulado')
-            ->addSelect('rc.comentario')
             ->where('rc.codigoRecaudoCobroPk <> 0');
         $queryBuilder->orderBy('rc.fecha', 'DESC');
         return $queryBuilder;

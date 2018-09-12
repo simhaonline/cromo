@@ -35,7 +35,8 @@
             <th>ID</th>
             <th>CLIENTE</th>
             <th>FECHA</th>
-            <th>COMENTARIOS</th>
+            <th>TOTAL</th>
+            <th>USUARIO</th>
             <th>AUT</th>
             <th>APR</th>
             <th>ANU</th>
@@ -50,7 +51,8 @@
                 <td>{{ arRecaudo.codigoRecaudoDevolucionPk }}</td>
                 <td>{{ arRecaudo.nombreCorto }}</td>
                 <td>{{ arRecaudo.fecha | date('Y-m-d') }}</td>
-                <td>{{ arRecaudo.comentario }}</td>
+                <td>{{ arRecaudo.vrTotal | number_format(0, '.', ',')}}</td>
+                <td>{{ arRecaudo.usuario }}</td>
                 <td class="estado">{{ arRecaudo.estadoAutorizado?'SI':'NO' }}</td>
                 <td class="estado">{{ arRecaudo.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arRecaudo.estadoAnulado?'SI':'NO' }}</td>

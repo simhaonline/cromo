@@ -1975,4 +1975,45 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    /**
+     * @return mixed
+     */
+    public function listaContabilizarRecaudo()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.vrRecaudo')
+            ->leftJoin('g.clienteRel', 'c')
+            ->where('g.estadoContabilizadoRecaudo =  0')
+            ->andWhere('g.vrRecaudo > 0')
+        ->orderBy('g.fechaIngreso', 'DESC');
+        $fecha =  new \DateTime('now');
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("g.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("g.fechaIngreso >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("g.fechaIngreso >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("g.fechaIngreso <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("g.fechaIngreso <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+
+        return $queryBuilder->getQuery()->execute();
+    }
+
 }

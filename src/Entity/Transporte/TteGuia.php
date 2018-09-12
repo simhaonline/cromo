@@ -249,6 +249,11 @@ class TteGuia
     private $estadoFacturaExportado = false;
 
     /**
+     * @ORM\Column(name="estado_contabilizado_recaudo", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $estadoContabilizadoRecaudo = false;
+
+    /**
      * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
      */
     private $codigoDespachoFk;
@@ -1864,6 +1869,22 @@ class TteGuia
     public function setGuiasDetallesGuiaRel($guiasDetallesGuiaRel): void
     {
         $this->guiasDetallesGuiaRel = $guiasDetallesGuiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizadoRecaudo()
+    {
+        return $this->estadoContabilizadoRecaudo;
+    }
+
+    /**
+     * @param mixed $estadoContabilizadoRecaudo
+     */
+    public function setEstadoContabilizadoRecaudo($estadoContabilizadoRecaudo): void
+    {
+        $this->estadoContabilizadoRecaudo = $estadoContabilizadoRecaudo;
     }
 
 

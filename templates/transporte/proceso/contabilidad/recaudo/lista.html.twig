@@ -1,0 +1,102 @@
+{% extends 'base_transporte.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                <div class="col-sm-11">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtCodigoCliente) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                {{ form_widget(form.txtNombreCorto) }}
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Desde:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.filtrarFecha) }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.btnFiltrar) }}
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>GUIA</th>
+            <th>DOC CLIENTE</th>
+            <th>FECHA</th>
+            <th>CLIENTE</th>
+            <th>UNIDADES</th>
+            <th>PESO</th>
+            <th>FLETE</th>
+            <th>MANEJO</th>
+            <th>RECAUDO</th>
+            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arRecaudo in arRecaudos %}
+            <tr>
+                <td>{{ arRecaudo.codigoGuiaPk }}</td>
+                <td>{{ arRecaudo.documentoCliente }}</td>
+                <td>{{ arRecaudo.fechaIngreso | date('Y-m-d') }}</td>
+                <td>{{ arRecaudo.clienteNombreCorto }}</td>
+                <td>{{ arRecaudo.unidades }}</td>
+                <td>{{ arRecaudo.pesoVolumen }}</td>
+                <td class="numero">{{ arRecaudo.vrFlete | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arRecaudo.vrManejo | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arRecaudo.vrRecaudo | number_format(0, '.', ',')}}</td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecaudo.codigoGuiaPk }}" /></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRecaudos.getTotalItemCount }}</span></div>
+        </div>
+
+        <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+            {{ knp_pagination_render(arRecaudos) }}
+        </div>
+        <div class="btn-toolbar" style="float: right">
+            <div class="btn-group">
+                {{ form_widget(form.btnContabilizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            </div>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}
+

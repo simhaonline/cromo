@@ -17,10 +17,10 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class PendienteRecaudoController extends Controller
+class PendienteRecaudoDevolucionController extends Controller
 {
    /**
-    * @Route("/transporte/informe/transporte/guia/pendiente/recaudo", name="transporte_informe_transporte_guia_pendiente_recaudo")
+    * @Route("/transporte/informe/transporte/guia/pendiente/recaudoDevolucion", name="transporte_informe_transporte_guia_pendiente_recaudo_devolucion")
     */    
     public function lista(Request $request)
     {
@@ -50,10 +50,10 @@ class PendienteRecaudoController extends Controller
             $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->getRepository(TteGuia::class)->pendienteRecaudo()->getQuery()->getResult(), "Pendiente recaudo");
+            General::get()->setExportar($em->getRepository(TteGuia::class)->pendienteRecaudoDevolucion(), "Pendiente recaudo devolucion");
         }
-        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->pendienteRecaudo(), $request->query->getInt('page', 1), 40);
-        return $this->render('transporte/informe/transporte/guia/pendienteRecaudo.html.twig', [
+        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->pendienteRecaudoDevolucion(), $request->query->getInt('page', 1), 40);
+        return $this->render('transporte/informe/transporte/guia/pendienteRecaudoDevolucion.html.twig', [
             'arGuias' => $arGuias,
             'form' => $form->createView()]);
     }

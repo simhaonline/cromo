@@ -65,10 +65,13 @@
         <tr>
             <th>ID</th>
             <th>TIPO</th>
+            <th>CODIGO</th>
             <th>FACTURA</th>
             <th>FECHA</th>
             <th>CLIENTE</th>
             <th>GUIA</th>
+            <th>NUMERO</th>
+            <th>DOCUMENTO CLIENTE</th>
             <th>UNIDADES</th>
             <th>PESO</th>
             <th>VOLUMEN</th>
@@ -82,10 +85,13 @@
             <tr>
                 <td>{{ arFacturaDetalle.codigoFacturaDetallePk }}</td>
                 <td>{{ arFacturaDetalle.facturaTipo }}</td>
+                <td>{{ arFacturaDetalle.codigoFacturaFk }}</td>
                 <td>{{ arFacturaDetalle.numeroFactura }}</td>
                 <td>{{ arFacturaDetalle.fechaFactura | date('Y-m-d') }}</td>
                 <td>{{ arFacturaDetalle.clienteNombreCorto }}</td>
                 <td>{{ arFacturaDetalle.codigoGuiaFk }}</td>
+                <td>{{ arFacturaDetalle.numero }}</td>
+                <td>{{ arFacturaDetalle.documentoCliente }}</td>
                 <td class="numero">{{ arFacturaDetalle.unidades }}</td>
                 <td class="numero">{{ arFacturaDetalle.pesoReal }}</td>
                 <td class="numero">{{ arFacturaDetalle.pesoVolumen }}</td>
@@ -102,8 +108,8 @@
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
         {{ knp_pagination_render(arFacturaDetalles) }}
     </div>
-    <div class="btn-group">
-        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    <div class="btn-group" style="float: right">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}

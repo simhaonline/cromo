@@ -160,11 +160,14 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFacturaDetalle::class, 'fd')
             ->select('fd.codigoFacturaDetallePk')
-            ->addSelect('fd.codigoGuiaFk')
+            ->addSelect('ft.nombre AS facturaTipo')
+            ->addSelect('fd.codigoFacturaFk')
             ->addSelect('f.numero AS numeroFactura')
             ->addSelect('f.fecha AS fechaFactura')
-            ->addSelect('ft.nombre AS facturaTipo')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('fd.codigoGuiaFk')
+            ->addSelect('g.numero')
+            ->addSelect('g.documentoCliente')
             ->addSelect('fd.unidades')
             ->addSelect('fd.pesoReal')
             ->addSelect('fd.pesoVolumen')
@@ -174,7 +177,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
             ->leftJoin('fd.facturaRel', 'f')
             ->leftJoin('f.facturaTipoRel', 'ft')
             ->leftJoin('f.clienteRel', 'c')
-            ->orderBy('fd.codigoFacturaDetallePk', 'DESC');
+            ->leftJoin('fd.guiaRel', 'g');
         $fecha =  new \DateTime('now');
         if($session->get('filtroTteCodigoCliente')){
             $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
@@ -194,6 +197,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("f.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
         }
+        $queryBuilder->orderBy('f.fecha', 'DESC');
 
         return $queryBuilder;
 

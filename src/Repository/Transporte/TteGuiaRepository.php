@@ -1389,7 +1389,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.fechaCumplido as fechaCumplido')
             ->addSelect('g.estadoNovedad as novedad')
             ->where("g.codigoGuiaPk = " . $codigoGuia);
-        return $queryBuilder->getQuery()->getSingleResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**

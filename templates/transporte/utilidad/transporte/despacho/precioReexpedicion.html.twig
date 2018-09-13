@@ -6,13 +6,18 @@
         <div class="panel-heading">Filtro</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Numero guia</label>
+                <label class="col-sm-2 control-label">Numero guía</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtGuiaNumero, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label">Codigo despacho:</label>
+                <label class="col-sm-2 control-label">Código despacho:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtDespachoCodigo, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div><div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Código guía</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtGuiaCodigo, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
         </div>
@@ -28,9 +33,15 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>COD.GUIA</th>
-            <th>COD.DESPACHO</th>
-            <th>NUMERO GUIA</th>
+            <th>COD</th>
+            <th>GUIA</th>
+            <th>DESPACHO</th>
+            <th>CLIENTE</th>
+            <th>DESTINATARIO</th>
+            <th>DESTINO</th>
+            <th>DECLARADO</th>
+            <th>FLETE</th>
+            <th>MANEJO</th>
             <th>PRECIO REEXPEDICION</th>
         </tr>
         </thead>
@@ -39,9 +50,15 @@
             <tr>
                 <td>{{ arDespachoDetalle.codigoDespachoDetallePk }}</td>
                 <td>{{ arDespachoDetalle.codigoGuiaFk }}</td>
+                <td>{{ arDespachoDetalle.numero }}</td>
                 <td>{{ arDespachoDetalle.codigoDespachoFk }}</td>
-                <td>{{ arDespachoDetalle.guiaRel.numero }}</td>
-                <td style="text-align: center;"><input type="text" value="{{ arDespachoDetalle.vrPrecioReexpedicion }}" name="arrVrPrecioReexpedicion[{{ arDespachoDetalle.codigoDespachoDetallePk }}]"></td>
+                <td>{{ arDespachoDetalle.nombreCorto }}</td>
+                <td>{{ arDespachoDetalle.nombreDestinatario }}</td>
+                <td>{{ arDespachoDetalle.nombre }}</td>
+                <td style="text-align: right;">{{ arDespachoDetalle.vrDeclara | number_format(0, '.', ',')  }}</td>
+                <td style="text-align: right;">{{ arDespachoDetalle.vrFlete | number_format(0, '.', ',')  }}</td>
+                <td style="text-align: right;">{{ arDespachoDetalle.vrManejo | number_format(0, '.', ',')  }}</td>
+                <td style="text-align: center;"><input type="text" style="text-align: right;" value="{{ arDespachoDetalle.vrPrecioReexpedicion }}" name="arrVrPrecioReexpedicion[{{ arDespachoDetalle.codigoDespachoDetallePk }}]"></td>
             </tr>
         {% endfor %}
         </tbody>

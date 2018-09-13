@@ -25,8 +25,9 @@ class PrecioReexpedicionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtDespachoCodigo', TextType::class, array('data' => $session->get('filtroTtePrecioReexpedicionDespachoCodigo'),'required' => false))
-            ->add('txtGuiaNumero', TextType::class, array('data' => $session->get('filtroTtePrecioReexpedicionGuiaNumero'),'required' => false))
+            ->add('txtDespachoCodigo', TextType::class, array('data' => $session->get('filtroTtePrecioReexpedicionDespachoCodigo'), 'required' => false))
+            ->add('txtGuiaNumero', TextType::class, array('data' => $session->get('filtroTtePrecioReexpedicionGuiaNumero'), 'required' => false))
+            ->add('txtGuiaCodigo', TextType::class, array('data' => $session->get('filtroTtePrecioReexpedicionGuiaCodigo'), 'required' => false))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnActualizar', SubmitType::class, array('label' => 'Actualizar'))
             ->getForm();
@@ -35,14 +36,15 @@ class PrecioReexpedicionController extends Controller
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroTtePrecioReexpedicionDespachoCodigo', $form->get('txtDespachoCodigo')->getData());
                 $session->set('filtroTtePrecioReexpedicionGuiaNumero', $form->get('txtGuiaNumero')->getData());
+                $session->set('filtroTtePrecioReexpedicionGuiaCodigo', $form->get('txtGuiaCodigo')->getData());
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $arrDespachoDetalles = $request->request->get('arrVrPrecioReexpedicion');
-                if(count($arrDespachoDetalles) > 0){
+                if (count($arrDespachoDetalles) > 0) {
                     foreach ($arrDespachoDetalles as $pk => $vrPrecioReexpedicion) {
-                        if($vrPrecioReexpedicion){
-                            $arDespachoDetalle = $em->getRepository(TteDespachoDetalle::class)->find($pk);
-                            if($arDespachoDetalle){
+                        $arDespachoDetalle = $em->getRepository(TteDespachoDetalle::class)->find($pk);
+                        if ($arDespachoDetalle) {
+                            if($vrPrecioReexpedicion > 0 || ($vrPrecioReexpedicion == 0 && $arDespachoDetalle->getVrPrecioReexpedicion() > 0)){
                                 $arDespachoDetalle->setVrPrecioReexpedicion($vrPrecioReexpedicion);
                                 $em->persist($arDespachoDetalle);
                             }

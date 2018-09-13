@@ -124,16 +124,32 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
     public function reexpedicion()
     {
         $session = new Session();
-        if ($session->get('filtroTtePrecioReexpedicionDespachoCodigo') != '' || $session->get('filtroTtePrecioReexpedicionGuiaNumero') != '') {
+        if ($session->get('filtroTtePrecioReexpedicionDespachoCodigo') != '' || $session->get('filtroTtePrecioReexpedicionGuiaCodigo') != '' || $session->get('filtroTtePrecioReexpedicionGuiaNumero') != '') {
             $qb = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
-                ->select('dd')
+                ->select('dd.codigoDespachoDetallePk')
+                ->addSelect('dd.codigoGuiaFk')
+                ->addSelect('g.numero')
+                ->addSelect('dd.codigoDespachoFk')
+                ->addSelect('c.nombreCorto')
+                ->addSelect('g.nombreDestinatario')
+                ->addSelect('cd.nombre')
+                ->addSelect('g.vrDeclara')
+                ->addSelect('g.vrFlete')
+                ->addSelect('g.vrManejo')
+                ->addSelect('dd.vrPrecioReexpedicion')
+                ->addSelect('cd.nombre')
                 ->leftJoin('dd.guiaRel', 'g')
+                ->leftJoin('g.clienteRel', 'c')
+                ->leftJoin('g.ciudadDestinoRel', 'cd')
                 ->where('dd.codigoDespachoDetallePk <> 0');
             if ($session->get('filtroTtePrecioReexpedicionDespachoCodigo') != '') {
                 $qb->andWhere("dd.codigoDespachoFk = {$session->get('filtroTtePrecioReexpedicionDespachoCodigo')}");
             }
             if ($session->get('filtroTtePrecioReexpedicionGuiaNumero') != '') {
                 $qb->andWhere("g.numero = {$session->get('filtroTtePrecioReexpedicionGuiaNumero')}");
+            }
+            if ($session->get('filtroTtePrecioReexpedicionGuiaCodigo') != '') {
+                $qb->andWhere("dd.codigoGuiaFk = {$session->get('filtroTtePrecioReexpedicionGuiaCodigo')}");
             }
             $qb->orderBy('dd.codigoDespachoDetallePk', 'ASC');
         } else {

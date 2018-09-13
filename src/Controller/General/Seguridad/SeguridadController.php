@@ -3,8 +3,11 @@
 namespace App\Controller\General\Seguridad;
 
 use App\Entity\Seguridad\Usuario;
+use App\Entity\Transporte\TteOperacion;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -57,7 +60,24 @@ class SeguridadController extends Controller
                 $arrPropiedadesClaves = ['attr' => ['readonly' => 'readonly']];
             }
         }
+        $arrPropiedadesOperacionRel = [
+            'required' => false,
+            'class' => 'App\Entity\Transporte\TteOperacion',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('op')
+                    ->orderBy('op.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'label' => 'Operacion:',
+            'empty_data' => "",
+            'placeholder' => "SIN OPERACION",
+            'data' => ""
+        ];
+        if($arUsuario->getOperacionRel()){
+            $arrPropiedadesOperacionRel["data"] = $em->getReference(TteOperacion::class, $arUsuario->getCodigoOperacionFk());
+        }
         $form = $this->createFormBuilder()
+            ->add('operacionRel',EntityType::class, $arrPropiedadesOperacionRel)
             ->add('txtUser', TextType::class, ['data' => $arUsuario->getUsername()])
             ->add('txtEmail', TextType::class, ['data' => $arUsuario->getEmail()])
             ->add('txtCargo', TextType::class, ['data' => $arUsuario->getCargo(),'required' => false])
@@ -83,6 +103,7 @@ class SeguridadController extends Controller
                 $arUsuario->setNombreCorto($form->get('txtNombreCorto')->getData());
                 $arUsuario->setTelefono($form->get('txtTelefono')->getData());
                 $arUsuario->setExtension($form->get('txtExtension')->getData());
+                $arUsuario->setOperacionRel($form->get('operacionRel')->getData());
                 if ($id == 0) {
                     $claveNueva = $form->get('txtNuevaClave')->getData();
                     $claveConfirmacion = $form->get('txtConfirmacionClave')->getData();

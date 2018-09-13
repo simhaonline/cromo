@@ -4,7 +4,9 @@ namespace App\Repository\Seguridad;
 
 use App\Entity\Seguridad\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class UsuarioRepository extends ServiceEntityRepository
 {
@@ -13,6 +15,25 @@ class UsuarioRepository extends ServiceEntityRepository
         parent::__construct($registry, Usuario::class);
     }
 
-
+    public function llenarCombo()
+    {
+        $session = new Session();
+        $array = [
+            'class' => Usuario::class,
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('r')
+                    ->orderBy('r.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""
+        ];
+        if ($session->get('filtroTteDespachoTipo')) {
+            $array['data'] = $this->getEntityManager()->getReference(Usuario::class, $session->get('filtroTteDespachoTipo'));
+        }
+        return $array;
+    }
 
 }

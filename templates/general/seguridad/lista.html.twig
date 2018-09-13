@@ -15,6 +15,7 @@
             <thead>
             <tr>
                 <th>USERNAME</th>
+                <th>OPERACION</th>
                 <th>NOMBRE</th>
                 <th>IDENTIFICACION</th>
                 <th>CARGO</th>
@@ -30,6 +31,7 @@
             {% for arUsuario in arUsuarios %}
                 <tr>
                     {{ validarTipo(arUsuario.username) }}
+                    {{ validarTipo(arUsuario.codigoOperacionFk) }}
                     {{ validarTipo(arUsuario.nombreCorto) }}
                     {{ validarTipo(arUsuario.numeroIdentificacion) }}
                     {{ validarTipo(arUsuario.cargo) }}

@@ -90,7 +90,8 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function detalle(){
+    public function detalle()
+    {
 
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
@@ -109,14 +110,35 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
             ->addSelect('dd.vrDeclara')
             ->addSelect('dd.vrFlete')
             ->orderBy('dd.codigoDespachoDetallePk', 'DESC');
-        if($session->get('filtroTteCodigoCliente')){
+        if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
         }
-        if($session->get('filtroCodigoDespacho')){
+        if ($session->get('filtroCodigoDespacho')) {
             $queryBuilder->andWhere("d.codigoDespachoPk = {$session->get('filtroCodigoDespacho')}");
         }
 
         return $queryBuilder;
 
+    }
+
+    public function reexpedicion()
+    {
+        $session = new Session();
+        if ($session->get('filtroTtePrecioReexpedicionDespachoCodigo') != '' || $session->get('filtroTtePrecioReexpedicionGuiaNumero') != '') {
+            $qb = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
+                ->select('dd')
+                ->leftJoin('dd.guiaRel', 'g')
+                ->where('dd.codigoDespachoDetallePk <> 0');
+            if ($session->get('filtroTtePrecioReexpedicionDespachoCodigo') != '') {
+                $qb->andWhere("dd.codigoDespachoFk = {$session->get('filtroTtePrecioReexpedicionDespachoCodigo')}");
+            }
+            if ($session->get('filtroTtePrecioReexpedicionGuiaNumero') != '') {
+                $qb->andWhere("g.numero = {$session->get('filtroTtePrecioReexpedicionGuiaNumero')}");
+            }
+            $qb->orderBy('dd.codigoDespachoDetallePk', 'ASC');
+        } else {
+            $qb = [];
+        }
+        return $qb;
     }
 }

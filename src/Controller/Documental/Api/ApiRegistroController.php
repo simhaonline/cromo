@@ -2,6 +2,7 @@
 
 namespace App\Controller\Documental\Api;
 
+use App\Entity\Documental\DocRegistro;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,13 +15,16 @@ class ApiRegistroController extends FOSRestController
      * @param int $identificador
      * @return array
      * @throws \Doctrine\ORM\ORMException
-     * @Rest\Get("/documental/api/registro/masivo/{identificador}")
+     * @Rest\Post("/documental/api/registro/masivo/{tipo}/{identificador}")
      */
-    public function consulta(Request $request, $identificador = 0) {
+    public function consulta($tipo = "", $identificador = 0) {
         set_time_limit(0);
         ini_set("memory_limit", -1);
-        $archivo = "/almacenamiento/masivo/guia/1/990023629.pdf";
-        try{
+        $arRegistro = $this->getDoctrine()->getManager()->getRepository(DocRegistro::class)->findOneBy(array('identificador' => $identificador));
+        if($arRegistro) {
+            $archivo = "/almacenamiento/masivo/" . $tipo . "/" . $arRegistro->getDirectorio() . "/" . $arRegistro->getArchivoDestino() . "." . $arRegistro->getExtension();
+            //$archivo = "/almacenamiento/masivo/guia/1/990023629.pdf";
+
             $type = pathinfo($archivo, PATHINFO_EXTENSION);
             $data = file_get_contents($archivo);
             $size = filesize($archivo); //bytes
@@ -32,9 +36,14 @@ class ApiRegistroController extends FOSRestController
                 'type' => $type
 
             ];
-        }
-        catch (\Exception $exception){
-            return ['error'=>$exception];
+        } else {
+            return [
+                'status' => false,
+                'binary' => "",
+                'size' => "",
+                'type' => ""
+
+            ];
         }
     }
 

@@ -131,9 +131,7 @@ class MasivoController extends Controller
                                     break;
                                 }
                             }
-
                             $origen = $directorioBandeja . "/" . $arRegistroCarga->getArchivo();
-                            $destino = $directorio . $arRegistroCarga->getArchivo();
                             if(file_exists($origen)) {
                                 $arRegistro = new DocRegistro();
                                 $arRegistro->setIdentificador($arRegistroCarga->getIdentificador());
@@ -143,6 +141,7 @@ class MasivoController extends Controller
                                 $arRegistro->setDirectorio($arDirectorio->getDirectorio());
                                 $archivoDestino = rand(100000, 999999) . "_" . $arRegistroCarga->getIdentificador();
                                 $arRegistro->setArchivoDestino($archivoDestino);
+                                $destino = $directorio . $archivoDestino . "." . $arRegistroCarga->getExtension();
                                 $em->persist($arRegistro);
 
                                 $arDirectorio->setNumeroArchivos($arDirectorio->getNumeroArchivos()+1);

@@ -11,7 +11,7 @@ class SegUsuario extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $arUsuario = $manager->getRepository(Usuario::class)->find('semantica');
+        $arUsuario = $manager->getRepository(Usuario::class)->findOneBy(array('username' => 'semantica'));
         if(!$arUsuario) {
             $arUsuario = new Usuario();
             $arUsuario->getNombreCorto('SEMANTICA');

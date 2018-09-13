@@ -330,6 +330,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.pesoReal')
             ->addSelect('g.pesoVolumen')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('c.numeroIdentificacion AS nit')
             ->addSelect('cd.nombre AS ciudadDestino')
             ->addSelect('g.nombreDestinatario')
             ->addSelect('g.direccionDestinatario')

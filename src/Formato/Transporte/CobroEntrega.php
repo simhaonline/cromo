@@ -73,14 +73,14 @@ class CobroEntrega extends \FPDF {
     public function EncabezadoDetalles() {
         $this->Ln(12);
         $this->SetX(5);
-        $header = array('TIPO', 'GUIA', 'NUMERO', 'FECHA','CLIENTE','DESTINATARIO', 'FLE/MAN', 'RECAUDO', 'TOTAL');
+        $header = array('TIPO', 'GUIA', 'NUMERO', 'FECHA','CLIENTE', 'NIT' , 'DESTINATARIO', 'FLE/MAN', 'RECAUDO', 'TOTAL');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(8, 16, 16, 10, 38, 43, 20, 20, 20);
+        $w = array(8, 16, 16, 10, 38, 16, 35, 18, 18, 18);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -108,14 +108,15 @@ class CobroEntrega extends \FPDF {
                 $pdf->Cell(16, 4, $arGuia['numero'], 1, 0, 'L');
                 $pdf->Cell(10, 4, $arGuia['fechaIngreso']->format('m-d'), 1, 0, 'L');
                 $pdf->Cell(38, 4, substr(utf8_decode(utf8_decode($arGuia['clienteNombreCorto'])),0,20), 1, 0, 'L');
-                $pdf->Cell(43, 4, substr(utf8_decode(utf8_decode($arGuia['nombreDestinatario'])),0,20), 1, 0, 'L');
+                $pdf->Cell(16, 4, $arGuia['nit'], 1, 0, 'L');
+                $pdf->Cell(35, 4, substr(utf8_decode(utf8_decode($arGuia['nombreDestinatario'])),0,10), 1, 0, 'L');
                 $fleteManejo = 0;
                 if($arGuia['generaCobroEntrega']) {
                     $fleteManejo = ($arGuia['vrFlete'] + $arGuia['vrManejo']) - $arGuia['vrAbono'];
                 }
-                $pdf->Cell(20, 4, number_format($fleteManejo, 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(20, 4, number_format($arGuia['vrRecaudo'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(20, 4, number_format($arGuia['vrCobroEntrega'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(18, 4, number_format($fleteManejo, 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(18, 4, number_format($arGuia['vrRecaudo'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(18, 4, number_format($arGuia['vrCobroEntrega'], 0, '.', ','), 1, 0, 'R');
                 $fleteManejoTotal += $fleteManejo;
                 $cobroTotal += $arGuia['vrCobroEntrega'];
                 $recaudoTotal += $arGuia['vrRecaudo'];
@@ -125,10 +126,10 @@ class CobroEntrega extends \FPDF {
 
             }
             $pdf->SetX(5);
-            $pdf->Cell(131, 4, 'TOTAL', 1, 0, 'L');
-            $pdf->Cell(20, 4, number_format($fleteManejoTotal), 1, 0, 'R');
-            $pdf->Cell(20, 4, number_format($recaudoTotal), 1, 0, 'R');
-            $pdf->Cell(20, 4, number_format($cobroTotal), 1, 0, 'R');
+            $pdf->Cell(139, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(18, 4, number_format($fleteManejoTotal), 1, 0, 'R');
+            $pdf->Cell(18, 4, number_format($recaudoTotal), 1, 0, 'R');
+            $pdf->Cell(18, 4, number_format($cobroTotal), 1, 0, 'R');
             $pdf->SetX(5);
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);

@@ -155,4 +155,48 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
 
     }
 
+    public function detalle(){
+
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFacturaDetalle::class, 'fd')
+            ->select('fd.codigoFacturaDetallePk')
+            ->addSelect('fd.codigoGuiaFk')
+            ->addSelect('f.numero AS numeroFactura')
+            ->addSelect('f.fecha AS fechaFactura')
+            ->addSelect('ft.nombre AS facturaTipo')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('fd.unidades')
+            ->addSelect('fd.pesoReal')
+            ->addSelect('fd.pesoVolumen')
+            ->addSelect('fd.vrDeclara')
+            ->addSelect('fd.vrFlete')
+            ->addSelect('fd.vrManejo')
+            ->leftJoin('fd.facturaRel', 'f')
+            ->leftJoin('f.facturaTipoRel', 'ft')
+            ->leftJoin('f.clienteRel', 'c')
+            ->orderBy('fd.codigoFacturaDetallePk', 'DESC');
+        $fecha =  new \DateTime('now');
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if($session->get('filtroNumeroFactura')){
+            $queryBuilder->andWhere("f.numero = {$session->get('filtroNumeroFactura')}");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("f.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("f.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("f.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("f.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+
+        return $queryBuilder;
+
+    }
+
 }

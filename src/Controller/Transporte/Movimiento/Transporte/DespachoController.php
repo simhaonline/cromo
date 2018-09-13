@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
+use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteRuta;
@@ -56,6 +57,7 @@ class DespachoController extends Controller
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoNumero')])
             ->add('cboCiudadOrigenRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo('origen'))
             ->add('cboCiudadDestinoRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo('destino'))
+            ->add('cboDespachoTipoRel', EntityType::class, $em->getRepository(TteDespachoTipo::class)->llenarCombo('destino'))
             ->add('txtCodigoConductor', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigoVehiculo'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoNombreConductor'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteDespachoEstadoAprobado'), 'required' => false])
@@ -81,6 +83,11 @@ class DespachoController extends Controller
                     $session->set('filtroTteDespachoCodigoCiudadDestino', $form->get('cboCiudadDestinoRel')->getData()->getCodigoCiudadPk());
                 } else {
                     $session->set('filtroTteDespachoCodigoCiudadDestino', null);
+                }
+                if ($form->get('cboDespachoTipoRel')->getData() != '') {
+                    $session->set('filtroTteDespachoTipo', $form->get('cboDespachoTipoRel')->getData()->getCodigoDespachoTipoPk());
+                } else {
+                    $session->set('filtroTteDespachoTipo', null);
                 }
                 if ($form->get('txtCodigoConductor')->getData() != '') {
                     $session->set('filtroTteDespachoCodigoConductor', $form->get('txtCodigoConductor')->getData());

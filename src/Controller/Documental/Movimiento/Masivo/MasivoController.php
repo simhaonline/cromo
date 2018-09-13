@@ -71,13 +71,22 @@ class MasivoController extends Controller
                     if($fichero != "." && $fichero != "..") {
                         $partes = explode(".", $fichero);
                         if(count($partes) == 2 ) {
+                            $nombre = $partes[0];
                             $extension = $partes[1];
-                            if($extension == 'pdf') {
-                                $arRegistroCarga = new DocRegistroCarga();
-                                $arRegistroCarga->setIdentificador($partes[0]);
-                                $arRegistroCarga->setExtension($extension);
-                                $arRegistroCarga->setArchivo($fichero);
-                                $em->persist($arRegistroCarga);
+                            $archivo = $directorioBandeja . "/" . $fichero;
+                            $tamano = filesize($archivo) / 1000;
+                            if($tamano < 8000) {
+                                if($extension == 'pdf') {
+                                    $arRegistroCarga = new DocRegistroCarga();
+                                    $arRegistroCarga->setIdentificador($nombre);
+                                    $arRegistroCarga->setExtension($extension);
+                                    $arRegistroCarga->setArchivo($fichero);
+                                    $arRegistroCarga->getTamano($tamano);
+                                    $em->persist($arRegistroCarga);
+                                }
+                            }
+                            else {
+                                Mensajes::info("El archivo " . $fichero . " no fue procesado por que excede los 8M");
                             }
                         }
                     }
@@ -123,27 +132,26 @@ class MasivoController extends Controller
                                 }
                             }
 
-                            $arRegistro = new DocRegistro();
-                            $arRegistro->setIdentificador($arRegistroCarga->getIdentificador());
-                            $arRegistro->setMasivoTipoRel($arMasivoTipo);
-                            $arRegistro->setArchivo($arRegistroCarga->getArchivo());
-                            $arRegistro->setExtension($arRegistroCarga->getExtension());
-                            $arRegistro->setDirectorio($arDirectorio->getDirectorio());
-                            $archivoDestino = rand(100000, 999999) . "_" . $arRegistroCarga->getIdentificador();
-                            $arRegistro->setArchivoDestino($archivoDestino);
-                            $em->persist($arRegistro);
-
-                            $arDirectorio->setNumeroArchivos($arDirectorio->getNumeroArchivos()+1);
-                            $em->persist($arDirectorio);
-
-                            $em->remove($arRegistroCarga);
-
-                            $em->flush();
-
-
                             $origen = $directorioBandeja . "/" . $arRegistroCarga->getArchivo();
                             $destino = $directorio . $arRegistroCarga->getArchivo();
-                            copy($origen, $destino);
+                            if(file_exists($origen)) {
+                                $arRegistro = new DocRegistro();
+                                $arRegistro->setIdentificador($arRegistroCarga->getIdentificador());
+                                $arRegistro->setMasivoTipoRel($arMasivoTipo);
+                                $arRegistro->setArchivo($arRegistroCarga->getArchivo());
+                                $arRegistro->setExtension($arRegistroCarga->getExtension());
+                                $arRegistro->setDirectorio($arDirectorio->getDirectorio());
+                                $archivoDestino = rand(100000, 999999) . "_" . $arRegistroCarga->getIdentificador();
+                                $arRegistro->setArchivoDestino($archivoDestino);
+                                $em->persist($arRegistro);
+
+                                $arDirectorio->setNumeroArchivos($arDirectorio->getNumeroArchivos()+1);
+                                $em->persist($arDirectorio);
+                                $em->remove($arRegistroCarga);
+                                $em->flush();
+                                copy($origen, $destino);
+                                unlink($origen);
+                            }
                         }
                     }
                 } else {

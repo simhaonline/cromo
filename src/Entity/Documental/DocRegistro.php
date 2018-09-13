@@ -48,6 +48,11 @@ class DocRegistro
     private $extension;
 
     /**
+     * @ORM\Column(name="tamano", type="float", options={"default" : 0})
+     */
+    private $tamano = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Documental\DocMasivoTipo", inversedBy="registrosMasivoTipoRel")
      * @ORM\JoinColumn(name="codigo_masivo_tipo_fk", referencedColumnName="codigo_masivo_tipo_pk")
      */
@@ -104,22 +109,6 @@ class DocRegistro
     /**
      * @return mixed
      */
-    public function getMasivoTipoRel()
-    {
-        return $this->masivoTipoRel;
-    }
-
-    /**
-     * @param mixed $masivoTipoRel
-     */
-    public function setMasivoTipoRel($masivoTipoRel): void
-    {
-        $this->masivoTipoRel = $masivoTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getArchivo()
     {
         return $this->archivo;
@@ -131,22 +120,6 @@ class DocRegistro
     public function setArchivo($archivo): void
     {
         $this->archivo = $archivo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDirectorio()
-    {
-        return $this->directorio;
-    }
-
-    /**
-     * @param mixed $directorio
-     */
-    public function setDirectorio($directorio): void
-    {
-        $this->directorio = $directorio;
     }
 
     /**
@@ -168,6 +141,22 @@ class DocRegistro
     /**
      * @return mixed
      */
+    public function getDirectorio()
+    {
+        return $this->directorio;
+    }
+
+    /**
+     * @param mixed $directorio
+     */
+    public function setDirectorio($directorio): void
+    {
+        $this->directorio = $directorio;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getExtension()
     {
         return $this->extension;
@@ -179,6 +168,38 @@ class DocRegistro
     public function setExtension($extension): void
     {
         $this->extension = $extension;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTamano()
+    {
+        return $this->tamano;
+    }
+
+    /**
+     * @param mixed $tamano
+     */
+    public function setTamano($tamano): void
+    {
+        $this->tamano = $tamano;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMasivoTipoRel()
+    {
+        return $this->masivoTipoRel;
+    }
+
+    /**
+     * @param mixed $masivoTipoRel
+     */
+    public function setMasivoTipoRel($masivoTipoRel): void
+    {
+        $this->masivoTipoRel = $masivoTipoRel;
     }
 
 

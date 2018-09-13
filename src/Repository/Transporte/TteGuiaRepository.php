@@ -761,6 +761,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->where('g.estadoFacturaGenerada = 0')
             ->andWhere('g.estadoAnulado = 0')
+            ->andWhere('g.factura = 0')
             ->andWhere('g.cortesia = 0')
             ->andWhere('g.codigoClienteFk =' . $codigoCliente);
 

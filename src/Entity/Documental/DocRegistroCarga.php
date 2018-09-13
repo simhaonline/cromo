@@ -33,6 +33,11 @@ class DocRegistroCarga
     private $extension;
 
     /**
+     * @ORM\Column(name="tamano", type="float", options={"default" : 0})
+     */
+    private $tamano = 0;
+
+    /**
      * @return mixed
      */
     public function getCodigoRegistroCargaPk()
@@ -94,6 +99,22 @@ class DocRegistroCarga
     public function setExtension($extension): void
     {
         $this->extension = $extension;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTamano()
+    {
+        return $this->tamano;
+    }
+
+    /**
+     * @param mixed $tamano
+     */
+    public function setTamano($tamano): void
+    {
+        $this->tamano = $tamano;
     }
 
 

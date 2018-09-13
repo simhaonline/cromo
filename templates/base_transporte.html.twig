@@ -166,47 +166,30 @@
                         <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
+
                                 <a href="#">Transporte <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li>
-                                        <a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'aseguradora'}) }}">Aseguradora</a>
+                                        <a href="#">Vehiculo <span class="fa arrow"></span></a>
+                                        <ul class="nav nav-four-level">
+                                            <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'aseguradora'}) }}">Aseguradora</a></li>
+                                            <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'poseedor'}) }}">Poseedor</a></li>
+                                            <li><a href="{{ path('transporte_administracion_transporte_conductor_lista') }}">Conductor</a></li>
+                                            <li><a href="{{ path('transporte_administracion_transporte_vehiculo_lista') }}">Vehículo</a></li>
+                                            <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'tipoCombustible'}) }}">Tipo combustible</a></li>
+                                            <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'linea'}) }}">Linea</a></li>
+                                            <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'marca'}) }}">Marca</a></li>
+                                            <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'color'}) }}">Color</a></li>
+                                            <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'tipoCarroceria'}) }}">Carrocería tipo </a></li>
+                                        </ul>
+                                        <!-- /.nav-third-level -->
                                     </li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'poseedor'}) }}">Poseedor</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_administracion_transporte_conductor_lista') }}">Conductor</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_administracion_transporte_vehiculo_lista') }}">Vehículo</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'tipoCombustible'}) }}">Tipo
-                                            combustible</a></li>
-                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'marca'}) }}">Marca</a>
-                                    </li>
-                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'color'}) }}">Color</a>
-                                    </li>
-                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Ruta</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'rutaRecogida'}) }}">Ruta
-                                            recogida</a></li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'tipoCarroceria'}) }}">Carrocería
-                                            tipo </a></li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'novedadTipo'}) }}">Novedad
-                                            tipo</a></li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'auxiliar'}) }}">Auxiliar</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'guiaTipo'}) }}">Guía
-                                            tipo</a></li>
-                                    <li>
-                                        <a href="{{ path('transporte_administracion_comercial_precio_lista') }}">Precio</a>
-                                    </li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Ruta</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'rutaRecogida'}) }}">Ruta recogida</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'novedadTipo'}) }}">Novedad tipo</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'auxiliar'}) }}">Auxiliar</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'guiaTipo'}) }}">Guía tipo</a></li>
+                                    <li><a href="{{ path('transporte_administracion_comercial_precio_lista') }}">Precio</a></li>
                                 </ul>
                                 <!-- /.nav-third-level -->
                             </li>

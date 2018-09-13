@@ -13,6 +13,7 @@ class TteTipoCombustibleRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TteTipoCombustible::class);
     }
+
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
             ->from('App:Transporte\TteTipoCombustible','tc')

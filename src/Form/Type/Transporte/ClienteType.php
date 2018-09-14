@@ -42,7 +42,7 @@ class ClienteType extends AbstractType
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
             ->add('digitoVerificacion',NumberType::class,['required' => true,'label' => 'Digito:'])
             ->add('nombreCorto',TextType::class,['required' => true,'label' => 'Razon social:'])
-            ->add('nombre1',TextType::class,['required' => true,'label' => 'Primer nombre:'])
+            ->add('nombre1',TextType::class,['required' => false,'label' => 'Primer nombre:'])
             ->add('nombre2',TextType::class,['required' => false,'label' => 'Segundo nombre:'])
             ->add('apellido1',TextType::class,['required' => false,'label' => 'Primer apellido:'])
             ->add('apellido2',TextType::class,['required' => false,'label' => 'Segundo apellido:'])

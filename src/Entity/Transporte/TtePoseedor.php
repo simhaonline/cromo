@@ -19,7 +19,7 @@ class TtePoseedor
 
 
     /**
-     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=1, nullable=true)
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=3 , nullable=true)
      */
     private $codigoIdentificacionFk;
 
@@ -274,6 +274,22 @@ class TtePoseedor
     /**
      * @return mixed
      */
+    public function getMovil()
+    {
+        return $this->movil;
+    }
+
+    /**
+     * @param mixed $movil
+     */
+    public function setMovil($movil): void
+    {
+        $this->movil = $movil;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCiudadRel()
     {
         return $this->ciudadRel;
@@ -334,24 +350,6 @@ class TtePoseedor
     {
         $this->vehiculosPropietarioRel = $vehiculosPropietarioRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getMovil()
-    {
-        return $this->movil;
-    }
-
-    /**
-     * @param mixed $movil
-     */
-    public function setMovil($movil): void
-    {
-        $this->movil = $movil;
-    }
-
-
 
 
 }

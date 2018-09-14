@@ -18,7 +18,7 @@ class TteDestinatario
     private $codigoDestinatarioPk;
 
     /**
-     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=1, nullable=true)
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=3, nullable=true)
      */
     private $codigoIdentificacionFk;
 
@@ -134,6 +134,22 @@ class TteDestinatario
     public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
     {
         $this->codigoIdentificacionFk = $codigoIdentificacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadFk()
+    {
+        return $this->codigoCiudadFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadFk
+     */
+    public function setCodigoCiudadFk($codigoCiudadFk): void
+    {
+        $this->codigoCiudadFk = $codigoCiudadFk;
     }
 
     /**
@@ -360,6 +376,21 @@ class TteDestinatario
         $this->identificacionRel = $identificacionRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
+    }
 
 
 

@@ -18,7 +18,7 @@ class TteCliente
     private $codigoClientePk;
 
     /**
-     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=1, nullable=true)
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=3, nullable=true)
      */
     private $codigoIdentificacionFk;
 
@@ -563,6 +563,22 @@ class TteCliente
     /**
      * @return mixed
      */
+    public function getRecaudosClienteRel()
+    {
+        return $this->recaudosClienteRel;
+    }
+
+    /**
+     * @param mixed $recaudosClienteRel
+     */
+    public function setRecaudosClienteRel($recaudosClienteRel): void
+    {
+        $this->recaudosClienteRel = $recaudosClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFacturasClienteRel()
     {
         return $this->facturasClienteRel;
@@ -608,21 +624,6 @@ class TteCliente
         $this->clientesCondicionesClienteRel = $clientesCondicionesClienteRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRecaudosClienteRel()
-    {
-        return $this->recaudosClienteRel;
-    }
-
-    /**
-     * @param mixed $recaudosClienteRel
-     */
-    public function setRecaudosClienteRel($recaudosClienteRel): void
-    {
-        $this->recaudosClienteRel = $recaudosClienteRel;
-    }
 
 
 

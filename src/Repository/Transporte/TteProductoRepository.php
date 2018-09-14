@@ -18,7 +18,8 @@ class TteProductoRepository extends ServiceEntityRepository
         $qb = $this-> _em->createQueryBuilder()
             ->from('App:Transporte\TteProducto','p')
             ->select('p.codigoProductoPk AS ID')
-            ->addSelect('p.nombre AS NOMBRE');
+            ->addSelect('p.nombre AS NOMBRE')
+            ->addSelect('p.orden AS ORDEN');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }

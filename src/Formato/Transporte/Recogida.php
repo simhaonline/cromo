@@ -144,13 +144,13 @@ class Recogida extends \FPDF {
         $this->Cell(30, 4, "CONDUCTOR:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, utf8_decode($arRecogida->getConductorRel()->getNombreCorto()), 1, 0, 'L', 1);
+        $this->Cell(65, 4, utf8_decode($arRecogida->getConductorRel() ? $arRecogida->getConductorRel()->getNombreCorto(): ''), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, 'IDENTIFICACION', 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, utf8_decode($arRecogida->getConductorRel()->getNumeroIdentificacion()), 1, 0, 'L', 1);
+        $this->Cell(65, 4, utf8_decode($arRecogida->getConductorRel() ? $arRecogida->getConductorRel()->getNumeroIdentificacion(): ''), 1, 0, 'L', 1);
         //BLOQUE 8
         $this->SetXY(10, $intY2 + 4);
         $this->SetFont('Arial', 'B', 8);
@@ -158,13 +158,13 @@ class Recogida extends \FPDF {
         $this->Cell(30, 4, "LICENCIA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, utf8_decode($arRecogida->getConductorRel()->getNumeroLicencia()), 1, 0, 'L', 1);
+        $this->Cell(65, 4, utf8_decode($arRecogida->getConductorRel() ? $arRecogida->getConductorRel()->getNumeroLicencia(): ''), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, 'PLACA', 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, utf8_decode($arRecogida->getVehiculoRel()->getPlaca()), 1, 0, 'L', 1);
+        $this->Cell(65, 4, utf8_decode($arRecogida->getVehiculoRel() ? $arRecogida->getVehiculoRel()->getPlaca(): ''), 1, 0, 'L', 1);
         //BLOQUE 9
         $this->SetXY(10, $intY2 + 8);
         $this->SetFont('Arial', 'B', 8);
@@ -172,13 +172,13 @@ class Recogida extends \FPDF {
         $this->Cell(30, 4, "MARCA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, utf8_decode($arRecogida->getVehiculoRel()->getMarcaRel()->getCodigoMarcaPk()), 1, 0, 'L', 1);
+        $this->Cell(65, 4, utf8_decode($arRecogida->getVehiculoRel() ? $arRecogida->getVehiculoRel()->getMarcaRel()->getCodigoMarcaPk(): ''), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, 'COLOR', 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, utf8_decode($arRecogida->getVehiculoRel()->getColorRel()->getNombre()), 1, 0, 'L', 1);
+        $this->Cell(65, 4, utf8_decode($arRecogida->getVehiculoRel() ? $arRecogida->getVehiculoRel()->getColorRel()->getNombre(): ''), 1, 0, 'L', 1);
         //BLOQUE 10
         $this->SetXY(10, $intY2 + 12);
         $this->SetFont('Arial', 'B', 8);
@@ -186,7 +186,7 @@ class Recogida extends \FPDF {
         $this->Cell(30, 4, "MODELO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, utf8_decode($arRecogida->getVehiculoRel()->getModelo()), 1, 0, 'L', 1);
+        $this->Cell(65, 4, utf8_decode($arRecogida->getVehiculoRel() ? $arRecogida->getVehiculoRel()->getModelo(): ''), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, '', 1, 0, 'L', 1);

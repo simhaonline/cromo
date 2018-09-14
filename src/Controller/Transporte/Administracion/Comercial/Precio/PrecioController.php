@@ -37,6 +37,8 @@ class PrecioController extends Controller
             if (!$arPrecio) {
                 return $this->redirect($this->generateUrl('transporte_administracion_comercial_precio_lista'));
             }
+        } else {
+            $arPrecio->setFechaVence(new \DateTime('now'));
         }
         $form = $this->createForm(PrecioType::class, $arPrecio);
         $form->handleRequest($request);

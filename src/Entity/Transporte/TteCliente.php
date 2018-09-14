@@ -38,6 +38,11 @@ class TteCliente
     private $nombreCorto;
 
     /**
+     * @ORM\Column(name="nombre_extendido", type="string", length=500, nullable=true)
+     */
+    private $nombreExtendido;
+
+    /**
      * @ORM\Column(name="nombre1", type="string", length=50, nullable=true)
      */
     private $nombre1;
@@ -622,6 +627,22 @@ class TteCliente
     public function setClientesCondicionesClienteRel($clientesCondicionesClienteRel): void
     {
         $this->clientesCondicionesClienteRel = $clientesCondicionesClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreExtendido()
+    {
+        return $this->nombreExtendido;
+    }
+
+    /**
+     * @param mixed $nombreExtendido
+     */
+    public function setNombreExtendido($nombreExtendido): void
+    {
+        $this->nombreExtendido = $nombreExtendido;
     }
 
 

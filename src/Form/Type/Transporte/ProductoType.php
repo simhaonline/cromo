@@ -16,10 +16,10 @@ class ProductoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoProductoPk',IntegerType::class,['required' => true,'label' => 'codigo producto pk:'])
+            ->add('codigoProductoPk', TextType::class,['required' => true,'label' => 'Codigo producto pk:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
-            ->add('codigoTransporte',IntegerType::class,['required' => true,'label' => 'codigo transporte:'])
-            ->add('orden',IntegerType::class,['required' => true,'label' => 'orden:'])
+            ->add('codigoTransporte',IntegerType::class,['required' => true,'label' => 'Codigo transporte:'])
+            ->add('orden',IntegerType::class,['required' => true,'label' => 'Orden:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
         ;

@@ -24,7 +24,7 @@ class PrecioType extends AbstractType {
         $builder
             ->add('nombre', TextType::class)
             ->add('comentario',TextareaType::class, array('required' => false))
-            ->add('fechaVence', DateType::class)
+            ->add('fechaVence', DateType::class, array('format' => 'yyyyMMdd'))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
             ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));
     }

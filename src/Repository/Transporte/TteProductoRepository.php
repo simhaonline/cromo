@@ -14,6 +14,13 @@ class TteProductoRepository extends ServiceEntityRepository
         parent::__construct($registry, TteProducto::class);
     }
 
-
+    public function camposPredeterminados(){
+        $qb = $this-> _em->createQueryBuilder()
+            ->from('App:Transporte\TteProducto','p')
+            ->select('p.codigoProductoPk AS ID')
+            ->addSelect('p.nombre AS NOMBRE');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
 
 }

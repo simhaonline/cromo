@@ -83,28 +83,29 @@ class PrecioController extends Controller
 
     /**
      * @param Request $request
+     * @param $codigoPrecio
      * @param $id
      * @return Response
-     * * @Route("/transporte/administracion/comercial/precio/detalle/nuevo/{id}", name="transporte_administracion_comercial_precio_detalle_nuevo")
-     * @throws \Doctrine\ORM\ORMException
+     * @Route("/transporte/administracion/comercial/precio/detalle/nuevo/{codigoPrecio}/{id}", name="transporte_administracion_comercial_precio_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $id)
+    public function detalleNuevo(Request $request, $codigoPrecio, $id)
     {
-        $paginator  = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arPrecioDetalle = new TtePrecioDetalle();
-        if ($id != '0') {
+        $arPrecio = $em->getRepository(TtePrecio::class)->find($codigoPrecio);
+        if($id != '0'){
             $arPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->find($id);
         }
         $form = $this->createForm(PrecioDetalleType::class, $arPrecioDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
+                $arPrecioDetalle->setPrecioRel($arPrecio);
                 $em->persist($arPrecioDetalle);
+                $em->flush();
             }
-            $em->flush();
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
-
         return $this->render('transporte/administracion/comercial/precio/detalleNuevo.html.twig', [
             'form' => $form->createView()
         ]);

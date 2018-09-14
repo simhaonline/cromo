@@ -19,12 +19,14 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TtePrecioDetalle::class, 'prd')
             ->select('prd.codigoPrecioDetallePk')
+            ->addSelect('p.nombre')
             ->addSelect('prd.vrPeso')
             ->addSelect('prd.vrUnidad')
             ->addSelect('prd.pesoTope')
             ->addSelect('prd.vrPesoTope')
             ->addSelect('prd.vrPesoTopeAdicional')
             ->addSelect('prd.minimo')
+            ->leftJoin('prd.productoRel', 'p')
             ->where('prd.codigoPrecioFk = ' . $id )
             ->orderBy('prd.codigoPrecioDetallePk', 'ASC')
             ->getQuery();

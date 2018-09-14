@@ -39,12 +39,14 @@
                         <thead>
                         <tr>
                             <th><p data-toggle="tooltip" data-placement="top" title="PORCENTAJE MANEJO">ID</p></th>
-                            <th><p data-toggle="tooltip" data-placement="top" title="MANEJO UNIDAD MINIMO">VR PESO</p></th>
-                            <th><p data-toggle="tooltip" data-placement="top" title="MANEJO DESPACHO MINIMO">VR UND</p>
-                            <th><p data-toggle="tooltip" data-placement="top" title="MANEJO DESPACHO MINIMO">PESO TOPE</p>
-                            <th><p data-toggle="tooltip" data-placement="top" title="MANEJO DESPACHO MINIMO">VR PESO TOPE</p>
-                            <th><p data-toggle="tooltip" data-placement="top" title="MANEJO DESPACHO MINIMO">VR PESO TOPE ADIC</p>
-                            <th><p data-toggle="tooltip" data-placement="top" title="MANEJO DESPACHO MINIMO">MINIMO</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="PRODUCTO">PRODUCTO</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO">PESO</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR UNIDAD">UND</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="PESO TOPE">PESO TOPE</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO TOPE">VR PESO TOPE</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO TOPE ADICION">VR PESO TOPE ADIC</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="MINIMO">MINIMO</p>
+                            <th></th>
                             <th></th>
                             </th>
                         </tr>
@@ -53,12 +55,19 @@
                         {% for arPrecioDetalle in arPrecioDetalles %}
                             <tr>
                                 <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
+                                <td>{{ arPrecioDetalle.nombre }}</td>
                                 <td>{{ arPrecioDetalle.vrPeso }}</td>
                                 <td>{{ arPrecioDetalle.vrUnidad }}</td>
                                 <td>{{ arPrecioDetalle.pesoTope }}</td>
                                 <td>{{ arPrecioDetalle.vrPesoTope }}</td>
                                 <td>{{ arPrecioDetalle.vrPesoTopeAdicional }}</td>
                                 <td>{{ arPrecioDetalle.minimo }}</td>
+                                <td style="text-align: center;">
+                                    <a href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': arPrecioDetalle.codigoPrecioDetallePk }) }}', 'precioDetalles', 600, 900)">
+                                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
+                                        </i>
+                                    </a>
+                                </td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                 value="{{ arPrecioDetalle.codigoPrecioDetallePk }}"/></td>
                             </tr>
@@ -70,7 +79,7 @@
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
                         <a class="btn btn-default btn-sm"
-                        href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_precio_detalle_nuevo', {'id': arPrecio.codigoPrecioPk }) }}', 'precioDetalles', 600, 900)">Nuevo</a>
+                        href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': 0 }) }}', 'precioDetalles', 600, 900)">Nuevo</a>
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnEliminarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}

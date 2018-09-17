@@ -39,7 +39,7 @@ class DescargaController extends Controller
             }
         }
         $arRecogidas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('proceso/recogida/recogida/descarga.html.twig', [
+        return $this->render('transporte/proceso/recogida/recogida/descarga.html.twig', [
             'arRecogidas' => $arRecogidas,
             'form' => $form->createView()]);
     }

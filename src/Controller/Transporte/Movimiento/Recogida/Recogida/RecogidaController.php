@@ -8,6 +8,7 @@ use App\Entity\Transporte\TteRecogida;
 use App\Form\Type\Transporte\RecogidaType;
 use App\Formato\Transporte\Recogida;
 use App\Utilidades\Estandares;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -26,7 +27,9 @@ class RecogidaController extends Controller
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
+            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteRecogidaCodigo')])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+            ->add('chkEstadoProgramado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteRecogidaEstadoProgramado'), 'required' => false])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
@@ -35,6 +38,8 @@ class RecogidaController extends Controller
                 if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
                     $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
                     $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+                    $session->set('filtroTteRecogidaEstadoProgramado', $form->get('chkEstadoProgramado')->getData());
+                    $session->set('filtroTteRecogidaCodigo', $form->get('txtCodigo')->getData());
                 }
             }
         }

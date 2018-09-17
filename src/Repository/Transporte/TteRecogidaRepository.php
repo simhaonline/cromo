@@ -40,9 +40,20 @@ class TteRecogidaRepository extends ServiceEntityRepository
         if($session->get('filtroTteCodigoCliente')){
             $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }
+        if($session->get('filtroTteRecogidaCodigo') != ''){
+            $queryBuilder->andWhere("r.codigoRecogidaPk = {$session->get('filtroTteRecogidaCodigo')}");
+        }
+        switch ($session->get('filtroTteRecogidaEstadoProgramado')) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoProgramado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoProgramado = 1");
+                break;
+        }
         $queryBuilder->orderBy('r.fecha', 'DESC');
 
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder;
 
     }
 

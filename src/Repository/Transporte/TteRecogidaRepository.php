@@ -57,6 +57,46 @@ class TteRecogidaRepository extends ServiceEntityRepository
 
     }
 
+    public function pendienteProgramar()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class, 'r');
+        $queryBuilder
+            ->select('r.codigoRecogidaPk')
+            ->addSelect('r.fechaRegistro')
+            ->addSelect('r.fecha')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('co.nombre AS ciudad')
+            ->addSelect('r.anunciante')
+            ->addSelect('r.direccion')
+            ->addSelect('r.telefono')
+            ->addSelect('r.unidades')
+            ->addSelect('r.pesoReal')
+            ->addSelect('r.pesoVolumen')
+            ->leftJoin('r.clienteRel', 'c')
+            ->leftJoin('r.ciudadRel', 'co')
+            ->where('r.estadoProgramado = 0')
+            ->andWhere('r.estadoAnulado = 0');
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if($session->get('filtroTteRecogidaCodigo') != ''){
+            $queryBuilder->andWhere("r.codigoRecogidaPk = {$session->get('filtroTteRecogidaCodigo')}");
+        }
+        switch ($session->get('filtroTteRecogidaEstadoProgramado')) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoProgramado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoProgramado = 1");
+                break;
+        }
+        $queryBuilder->orderBy('r.fecha', 'DESC');
+
+        return $queryBuilder;
+
+    }
+
     public function autorizar($arRecogida)
     {
         $arRecogida->setEstadoAutorizado(1);

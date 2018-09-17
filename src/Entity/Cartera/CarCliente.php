@@ -18,7 +18,7 @@ class CarCliente
     private $codigoClientePk;
 
     /**
-     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=1, nullable=true)
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=3, nullable=true)
      */
     private $codigoIdentificacionFk;
 

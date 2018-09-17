@@ -59,6 +59,7 @@
             <th>R</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -88,6 +89,7 @@
                     {% endif %}
                 </td>
                 <td style="text-align: center"><a href="{{ path('transporte_movimiento_recogida_recogida_detalle', { 'id': arRecogida.codigoRecogidaPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecogida.codigoRecogidaPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -100,8 +102,10 @@
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
         {{ knp_pagination_render(arRecogidas) }}
     </div>
-
     <div class="btn-toolbar" style="float: right">
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(form.btnEliminar) }}
+        </div>
         <div class="btn-group">
             <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_recogida_recogida_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>

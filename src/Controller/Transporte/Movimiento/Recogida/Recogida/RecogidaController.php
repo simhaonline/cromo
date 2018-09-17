@@ -23,6 +23,7 @@ class RecogidaController extends Controller
     */    
     public function lista(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $session = new Session();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
@@ -30,16 +31,21 @@ class RecogidaController extends Controller
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteRecogidaCodigo')])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('chkEstadoProgramado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteRecogidaEstadoProgramado'), 'required' => false])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+                if ($form->get('btnFiltrar')->isClicked()) {
                     $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
                     $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
                     $session->set('filtroTteRecogidaEstadoProgramado', $form->get('chkEstadoProgramado')->getData());
                     $session->set('filtroTteRecogidaCodigo', $form->get('txtCodigo')->getData());
+                }
+                if($form->get('btnEliminar')->isClicked()){
+                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                    $em->getRepository(TteRecogida::class)->eliminar($arrSeleccionados);
                 }
             }
         }

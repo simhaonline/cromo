@@ -37,10 +37,10 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->addSelect('r.codigoOperacionFk')
             ->leftJoin('r.clienteRel', 'c')
             ->leftJoin('r.ciudadRel', 'co');
-        if($session->get('filtroTteCodigoCliente')){
+        if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }
-        if($session->get('filtroTteRecogidaCodigo') != ''){
+        if ($session->get('filtroTteRecogidaCodigo') != '') {
             $queryBuilder->andWhere("r.codigoRecogidaPk = {$session->get('filtroTteRecogidaCodigo')}");
         }
         switch ($session->get('filtroTteRecogidaEstadoProgramado')) {
@@ -55,6 +55,32 @@ class TteRecogidaRepository extends ServiceEntityRepository
 
         return $queryBuilder;
 
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(TteRecogida::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            $this->getEntityManager()->remove($arRegistro);
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                }
+                if ($respuesta != '') {
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
     }
 
     public function pendienteProgramar()
@@ -77,10 +103,10 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->leftJoin('r.ciudadRel', 'co')
             ->where('r.estadoProgramado = 0')
             ->andWhere('r.estadoAnulado = 0');
-        if($session->get('filtroTteCodigoCliente')){
+        if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }
-        if($session->get('filtroTteRecogidaCodigo') != ''){
+        if ($session->get('filtroTteRecogidaCodigo') != '') {
             $queryBuilder->andWhere("r.codigoRecogidaPk = {$session->get('filtroTteRecogidaCodigo')}");
         }
         switch ($session->get('filtroTteRecogidaEstadoProgramado')) {
@@ -157,7 +183,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
         FROM App\Entity\Transporte\TteRecogida r 
         LEFT JOIN r.clienteRel c
         LEFT JOIN r.ciudadRel co
-        WHERE r.estadoProgramado = 0 AND r.fecha BETWEEN :fechaDesde AND :fechaHasta'
+        WHERE r.estadoProgramado = 0 AND r.estadoAutorizado = 1 AND r.estadoAprobado = 1 AND r.fecha BETWEEN :fechaDesde AND :fechaHasta'
         )->setParameter('fechaDesde', $fechaDesde)
             ->setParameter('fechaHasta', $fechaHasta);
         return $query->execute();
@@ -279,13 +305,13 @@ class TteRecogidaRepository extends ServiceEntityRepository
     public function descarga($arrRecogidas, $arrControles): bool
     {
         $em = $this->getEntityManager();
-        if($arrRecogidas) {
+        if ($arrRecogidas) {
             if (count($arrRecogidas) > 0) {
                 foreach ($arrRecogidas AS $codigo) {
                     $arRecogida = $em->getRepository(TteRecogida::class)->find($codigo);
-                    $arRecogida->setUnidades($arrControles['txtUnidades'.$codigo]);
-                    $arRecogida->setPesoReal($arrControles['txtPesoReal'.$codigo]);
-                    $arRecogida->setPesoVolumen($arrControles['txtPesoVolumen'.$codigo]);
+                    $arRecogida->setUnidades($arrControles['txtUnidades' . $codigo]);
+                    $arRecogida->setPesoReal($arrControles['txtPesoReal' . $codigo]);
+                    $arRecogida->setPesoVolumen($arrControles['txtPesoVolumen' . $codigo]);
                     $arRecogida->setEstadoDescargado(1);
                     $em->persist($arRecogida);
                 }
@@ -298,11 +324,11 @@ class TteRecogidaRepository extends ServiceEntityRepository
     public function recoge($arrRecogidas, $arrControles): bool
     {
         $em = $this->getEntityManager();
-        if($arrRecogidas) {
+        if ($arrRecogidas) {
             if (count($arrRecogidas) > 0) {
                 foreach ($arrRecogidas AS $codigo) {
                     $arRecogida = $em->getRepository(TteRecogida::class)->find($codigo);
-                    $fechaHora = date_create($arrControles['txtFecha'.$codigo] . " " . $arrControles['txtHora'.$codigo]);
+                    $fechaHora = date_create($arrControles['txtFecha' . $codigo] . " " . $arrControles['txtHora' . $codigo]);
                     $arRecogida->setFechaEfectiva($fechaHora);
                     $arRecogida->setEstadoRecogido(1);
                     $em->persist($arRecogida);
@@ -319,8 +345,9 @@ class TteRecogidaRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function contarDetalles($codigo){
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class,'r')
+    public function contarDetalles($codigo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class, 'r')
             ->select('COUNT(r.codigoRecogidaPk)')
             ->where("r.codigoDespachoRecogidaFk = {$codigo}");
         $resultado = $queryBuilder->getQuery()->getSingleResult();
@@ -341,7 +368,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->where('r.codigoDespachoRecogidaFk = ' . $codigoDespachoRecogida);
         $queryBuilder->orderBy('r.fecha', 'ASC');
 
-        return $queryBuilder->getQuery()->getResult() ;
+        return $queryBuilder->getQuery()->getResult();
     }
 
 }

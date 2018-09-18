@@ -1,12 +1,17 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    {% include 'estructura/botonera.html.twig' %}
-    {{ form_widget(form.btnMonitoreo, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-    </div>
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+            {{ form_widget(form.btnMonitoreo, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+        </div>
     </div>
     <div style="float:right">
         {% if arDespachoRecogida.estadoMonitoreo == 1 %}<span class="label label-default">Monitoreo</span>{% endif %}
+        {% if arDespachoRecogida.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arDespachoRecogida.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arDespachoRecogida.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">

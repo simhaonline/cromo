@@ -183,6 +183,7 @@ class GuiaController extends Controller
             'arNovedades' => $arNovedades,
             'arDespachoDetalles' => $arDespachoDetalles,
             'arFacturaDetalles' => $arFacturaDetalles,
+            'clase' => 'tte_guia',
             'form' => $form->createView()]);
     }
 

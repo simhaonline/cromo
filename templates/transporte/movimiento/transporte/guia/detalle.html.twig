@@ -1,8 +1,10 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    {% include 'estructura/botonera.html.twig' %}
-    </div>
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
     </div>
     <div style="float:right">
         {% if arGuia.estadoImpreso == 1 %}<span class="label label-default">Impreso</span>{% endif %}

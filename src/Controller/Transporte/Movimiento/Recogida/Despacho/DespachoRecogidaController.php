@@ -111,18 +111,8 @@ class DespachoRecogidaController extends Controller
                 $session->set('filtroTteDespachoEstadoAprobado', $form->get('choEstado')->getData());
             }
             if($form->get('btnEliminar')->isClicked()){
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                foreach ($arrSeleccionados as $codigoRecogida){
-                    $arDespachoRecogida = $em->getRepository(TteDespachoRecogida::class)->find($codigoRecogida);
-                    if($arDespachoRecogida){
-                        $em->remove($arDespachoRecogida);
-                    }
-                }
-                try{
-                    $em->flush();
-                }catch (\Exception $e){
-
-                }
+                $arrSeleccionados = $request->request->get('ChkSeleccionados');
+                $em->getRepository(TteDespachoRecogida::class)->eliminar($arrSeleccionados);
             }
         }
         $arDespachosRecogida = $paginator->paginate($this->getDoctrine()->getRepository(TteDespachoRecogida::class)->lista(), $request->query->getInt('page', 1), 20);
@@ -150,7 +140,7 @@ class DespachoRecogidaController extends Controller
         }
         $form->add('btnEliminarRecogida', SubmitType::class, $arrBtnEliminarRecogida)
             ->add('btnEliminarAuxiliar', SubmitType::class, $arrBtnEliminarAuxiliar)
-            ->add('btnMonitoreo', SubmitType::class, array('label' => 'TteMonitoreo'));
+            ->add('btnMonitoreo', SubmitType::class, array('label' => 'Monitoreo'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
@@ -175,7 +165,7 @@ class DespachoRecogidaController extends Controller
                     $em->flush();
                     $em->getRepository(TteDespachoRecogida::class)->liquidar($id);
                 }
-                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', array('codigoDespachoRecogida' => $id)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->autorizar($arDespachoRecogida);

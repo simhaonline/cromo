@@ -6,16 +6,16 @@ namespace App\Entity\Documental;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Documental\DocRegistroRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Documental\DocMasivoRepository")
  */
-class DocRegistro
+class DocMasivo
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $codigoRegistroPk;
+    private $codigoMasivoPk;
 
     /**
      * @ORM\Column(name="identificador", type="string", length=50, nullable=true)
@@ -53,7 +53,7 @@ class DocRegistro
     private $tamano = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Documental\DocMasivoTipo", inversedBy="registrosMasivoTipoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Documental\DocMasivoTipo", inversedBy="masivosMasivoTipoRel")
      * @ORM\JoinColumn(name="codigo_masivo_tipo_fk", referencedColumnName="codigo_masivo_tipo_pk")
      */
     protected $masivoTipoRel;
@@ -61,17 +61,17 @@ class DocRegistro
     /**
      * @return mixed
      */
-    public function getCodigoRegistroPk()
+    public function getCodigoMasivoPk()
     {
-        return $this->codigoRegistroPk;
+        return $this->codigoMasivoPk;
     }
 
     /**
-     * @param mixed $codigoRegistroPk
+     * @param mixed $codigoMasivoPk
      */
-    public function setCodigoRegistroPk($codigoRegistroPk): void
+    public function setCodigoMasivoPk($codigoMasivoPk): void
     {
-        $this->codigoRegistroPk = $codigoRegistroPk;
+        $this->codigoMasivoPk = $codigoMasivoPk;
     }
 
     /**

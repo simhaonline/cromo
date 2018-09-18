@@ -17,5 +17,21 @@ class InicioController extends Controller
         $em = $this->getDoctrine()->getManager();
         return $this->render('documental/general/inicio.html.twig');
     }
+
+    /**
+     * @Route("/documental/general/lista/{tipo}/{codigo}", name="documental_general_general_lista")
+     */
+    public function listaAction(Request $request, $tipo, $codigo) {
+        $em = $this->getDoctrine()->getManager();
+        $paginator  = $this->get('knp_paginator');
+        $query = $em->createQuery($em->getRepository('BrasaAdministracionDocumentalBundle:AdArchivo')->listaDQL($codigoDocumento, $numero));
+        $arArchivos = $paginator->paginate($query, $request->query->get('page', 1), 50);
+        return $this->render('BrasaAdministracionDocumentalBundle:Archivos:lista.html.twig', array(
+            'arArchivos' => $arArchivos,
+            'codigoDocumento' => $codigoDocumento,
+            'numero' => $numero,
+        ));
+    }
+
 }
 

@@ -6,16 +6,16 @@ namespace App\Entity\Documental;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Documental\DocRegistroCargaRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Documental\DocMasivoCargaRepository")
  */
-class DocRegistroCarga
+class DocMasivoCarga
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $codigoRegistroCargaPk;
+    private $codigoMasivoCargaPk;
 
     /**
      * @ORM\Column(name="identificador", type="string", length=50, nullable=true)
@@ -40,17 +40,17 @@ class DocRegistroCarga
     /**
      * @return mixed
      */
-    public function getCodigoRegistroCargaPk()
+    public function getCodigoMasivoCargaPk()
     {
-        return $this->codigoRegistroCargaPk;
+        return $this->codigoMasivoCargaPk;
     }
 
     /**
-     * @param mixed $codigoRegistroCargaPk
+     * @param mixed $codigoMasivoCargaPk
      */
-    public function setCodigoRegistroCargaPk($codigoRegistroCargaPk): void
+    public function setCodigoMasivoCargaPk($codigoMasivoCargaPk): void
     {
-        $this->codigoRegistroCargaPk = $codigoRegistroCargaPk;
+        $this->codigoMasivoCargaPk = $codigoMasivoCargaPk;
     }
 
     /**

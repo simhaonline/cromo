@@ -23,9 +23,9 @@ class DocMasivoTipo
     private $nombre;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Documental\DocRegistro", mappedBy="masivoTipoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Documental\DocMasivo", mappedBy="masivoTipoRel")
      */
-    protected $registrosMasivoTipoRel;
+    protected $masivosMasivoTipoRel;
 
     /**
      * @return mixed
@@ -62,17 +62,17 @@ class DocMasivoTipo
     /**
      * @return mixed
      */
-    public function getRegistrosMasivoTipoRel()
+    public function getMasivosMasivoTipoRel()
     {
-        return $this->registrosMasivoTipoRel;
+        return $this->masivosMasivoTipoRel;
     }
 
     /**
-     * @param mixed $registrosMasivoTipoRel
+     * @param mixed $masivosMasivoTipoRel
      */
-    public function setRegistrosMasivoTipoRel($registrosMasivoTipoRel): void
+    public function setMasivosMasivoTipoRel($masivosMasivoTipoRel): void
     {
-        $this->registrosMasivoTipoRel = $registrosMasivoTipoRel;
+        $this->masivosMasivoTipoRel = $masivosMasivoTipoRel;
     }
 
 

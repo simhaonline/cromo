@@ -4,3 +4,6 @@
         {{ form_widget(form.btnImprimir) }}
         {{ form_widget(form.btnAprobar) }}
         {{ form_widget(form.btnAnular) }}
+        {% if clase is defined %}
+                {#<a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('brs_ad_archivos_lista', { 'codigoDocumento': 3,  'numero': arEmpleado.codigoEmpleadoPk }) }}', 'Archivos', 500, 800)">Archivos</a>#}
+        {% endif %}

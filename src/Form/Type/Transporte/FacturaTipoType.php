@@ -20,7 +20,7 @@ class FacturaTipoType extends AbstractType
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('consecutivo',NumberType::class,['required' => true,'label' => 'Consecutivo:'])
             ->add('prefijo',TextType::class,['required' => false,'label' => 'Prefijo:'])
-            ->add('resolucionFacturacion',TextType::class,['required' => true,'label' => 'Resolucion:'])
+            ->add('resolucionFacturacion',TextType::class,['required' => false,'label' => 'Resolucion:'])
             ->add('guiaFactura', CheckboxType::class, array('required'  => false))
             ->add('codigoCuentaCobrarTipoFk',TextType::class,['required' => false,'label' => 'Codigo cuenta cobrar tipo fk:'])
             ->add('codigoFacturaClaseFk',TextType::class,['required' => false,'label' => 'Codigo factura clase fk:'])

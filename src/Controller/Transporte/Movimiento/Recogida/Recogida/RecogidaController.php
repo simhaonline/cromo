@@ -122,7 +122,7 @@ class RecogidaController extends Controller
                     if ($form->get('guardarnuevo')->isClicked()) {
                         return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_nuevo', array('id' => 0)));
                     } else {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_lista'));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_detalle',['id' => $arRecogida->getCodigoRecogidaPk()]));
                     }
                 }
             }

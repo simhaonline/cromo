@@ -22,7 +22,13 @@ class TteFacturaTipoRepository extends ServiceEntityRepository
             ->from('App:Transporte\TteFacturaTipo', 'ft')
             ->select('ft.codigoFacturaTipoPk AS ID')
             ->addSelect('ft.nombre AS NOMBRE')
-            ->addSelect('ft.consecutivo AS CONSECUTIVO');
+            ->addSelect('ft.prefijo AS PREFIJO')
+            ->addSelect('ft.consecutivo AS CONSECUTIVO')
+            ->addSelect('ft.codigoCuentaIngresoFleteFk AS CUENTA_INGRESO_FLETE')
+            ->addSelect('ft.codigoCuentaIngresoManejoFk AS CUENTA_INGRESO_MANEJO')
+            ->addSelect('ft.codigoCuentaClienteFk AS CUENTA_CLIENTE')
+            ->addSelect('ft.naturalezaCuentaIngreso AS NATURALEZA_CUENTA_INGRESO')
+            ->addSelect('ft.naturalezaCuentaCliente AS NATURALEZA_CUENTA_CLIENTE');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }

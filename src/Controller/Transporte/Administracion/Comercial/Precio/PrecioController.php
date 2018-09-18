@@ -6,6 +6,7 @@ use App\Entity\Transporte\TtePrecio;
 use App\Entity\Transporte\TtePrecioDetalle;
 use App\Form\Type\Transporte\PrecioDetalleType;
 use App\Form\Type\Transporte\PrecioType;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -99,12 +100,17 @@ class PrecioController extends Controller
         $form = $this->createForm(PrecioDetalleType::class, $arPrecioDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
-                $arPrecioDetalle->setPrecioRel($arPrecio);
-                $em->persist($arPrecioDetalle);
-                $em->flush();
+            $arPrecioDetalleExistente = $em->getRepository(TtePrecioDetalle::class)->findBy(['codigoCiudadOrigenFk' => $arPrecioDetalle->getCodigoCiudadOrigenFk(),'codigoCiudadDestinoFk' => $arPrecioDetalle->getCodigoCiudadDestinoFk()]);
+            if(!$arPrecioDetalleExistente){
+                if ($form->get('guardar')->isClicked()) {
+                    $arPrecioDetalle->setPrecioRel($arPrecio);
+                    $em->persist($arPrecioDetalle);
+                    $em->flush();
+                }
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            } else {
+                Mensajes::error('Hola soy julian me gusta la japi');
             }
-            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         return $this->render('transporte/administracion/comercial/precio/detalleNuevo.html.twig', [
             'form' => $form->createView()

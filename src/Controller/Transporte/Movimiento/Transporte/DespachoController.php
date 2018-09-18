@@ -10,10 +10,12 @@ use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
+use App\Entity\Transporte\TteNovedad;
 use App\Entity\Transporte\TteRuta;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoLiquidarType;
 use App\Form\Type\Transporte\DespachoType;
+use App\Form\Type\Transporte\NovedadType;
 use App\Formato\Transporte\CobroEntrega;
 use App\Formato\Transporte\Despacho;
 use App\Formato\Transporte\Liquidacion;
@@ -182,7 +184,9 @@ class DespachoController extends Controller
     /**
      * @param Request $request
      * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/transporte/movimiento/transporte/despacho/detalle/{id}", name="transporte_movimiento_transporte_despacho_detalle")
      */
     public function detalle(Request $request, $id)
@@ -363,6 +367,45 @@ class DespachoController extends Controller
 
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->despachoPendiente(), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $codigoDespacho
+     * @param $id
+     * @return Response
+     * @Route("/transporte/movimiento/trasnporte/guia/detalle/adicionar/novedad/{codigoDespacho}/{id}", name="transporte_movimiento_transporte_guia_detalle_adicionar_novedad")
+     */
+    public function detalleAdicionarNovedad(Request $request, $codigoDespacho, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arNovedad = new TteNovedad();
+        if ($id == 0) {
+            $arNovedad->setEstadoAtendido(true);
+            $arNovedad->setFechaReporte(new \DateTime('now'));
+            $arNovedad->setFecha(new \DateTime('now'));
+        } else {
+            $arNovedad = $em->getRepository(TteNovedad::class)->find($id);
+        }
+        $form = $this->createForm(NovedadType::class, $arNovedad);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+            $arNovedad->setDespachoRel($arDespacho);
+            if ($id == 0) {
+                $arNovedad->setFechaRegistro(new \DateTime('now'));
+                $arNovedad->setFechaAtencion(new \DateTime('now'));
+                $arNovedad->setFechaSolucion(new \DateTime('now'));
+            }
+            $arDespacho->setEstadoNovedad(true);
+            $em->persist($arDespacho);
+            $em->persist($arNovedad);
+            $em->flush();
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarNovedad.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**

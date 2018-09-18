@@ -1239,6 +1239,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getEstadoContabilizadoRecaudo()
+    {
+        return $this->estadoContabilizadoRecaudo;
+    }
+
+    /**
+     * @param mixed $estadoContabilizadoRecaudo
+     */
+    public function setEstadoContabilizadoRecaudo($estadoContabilizadoRecaudo): void
+    {
+        $this->estadoContabilizadoRecaudo = $estadoContabilizadoRecaudo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoDespachoFk()
     {
         return $this->codigoDespachoFk;
@@ -1458,6 +1474,22 @@ class TteGuia
     public function setReexpedicion($reexpedicion): void
     {
         $this->reexpedicion = $reexpedicion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCortesia()
+    {
+        return $this->cortesia;
+    }
+
+    /**
+     * @param mixed $cortesia
+     */
+    public function setCortesia($cortesia): void
+    {
+        $this->cortesia = $cortesia;
     }
 
     /**
@@ -1875,39 +1907,4 @@ class TteGuia
     {
         $this->guiasDetallesGuiaRel = $guiasDetallesGuiaRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoContabilizadoRecaudo()
-    {
-        return $this->estadoContabilizadoRecaudo;
-    }
-
-    /**
-     * @param mixed $estadoContabilizadoRecaudo
-     */
-    public function setEstadoContabilizadoRecaudo($estadoContabilizadoRecaudo): void
-    {
-        $this->estadoContabilizadoRecaudo = $estadoContabilizadoRecaudo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCortesia()
-    {
-        return $this->cortesia;
-    }
-
-    /**
-     * @param mixed $cortesia
-     */
-    public function setCortesia($cortesia): void
-    {
-        $this->cortesia = $cortesia;
-    }
-
-
-
 }

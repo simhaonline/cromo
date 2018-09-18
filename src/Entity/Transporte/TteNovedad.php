@@ -78,6 +78,11 @@ class TteNovedad
     private $codigoGuiaFk;
 
     /**
+     * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
+     */
+    private $codigoDespachoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteNovedadTipo", inversedBy="novedadesNovedadTipoRel")
      * @ORM\JoinColumn(name="codigo_novedad_tipo_fk", referencedColumnName="codigo_novedad_tipo_pk")
      */
@@ -88,6 +93,12 @@ class TteNovedad
      * @ORM\JoinColumn(name="codigo_guia_fk", referencedColumnName="codigo_guia_pk")
      */
     private $guiaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteDespacho", inversedBy="novedadesDespachoRel")
+     * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
+     */
+    private $despachoRel;
 
     /**
      * @return mixed
@@ -300,6 +311,22 @@ class TteNovedad
     /**
      * @return mixed
      */
+    public function getCodigoDespachoFk()
+    {
+        return $this->codigoDespachoFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoFk
+     */
+    public function setCodigoDespachoFk($codigoDespachoFk): void
+    {
+        $this->codigoDespachoFk = $codigoDespachoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getNovedadTipoRel()
     {
         return $this->novedadTipoRel;
@@ -329,7 +356,21 @@ class TteNovedad
         $this->guiaRel = $guiaRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDespachoRel()
+    {
+        return $this->despachoRel;
+    }
 
+    /**
+     * @param mixed $despachoRel
+     */
+    public function setDespachoRel($despachoRel): void
+    {
+        $this->despachoRel = $despachoRel;
+    }
 
 
 }

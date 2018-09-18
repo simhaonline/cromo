@@ -13,7 +13,7 @@ class TteDespacho
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="codigo_despacho_pk")
      */
     private $codigoDespachoPk;
 
@@ -223,6 +223,11 @@ class TteDespacho
     private $estadoCumplirRndc = false;
 
     /**
+     * @ORM\Column(name="estado_novedad", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoNovedad = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -298,6 +303,11 @@ class TteDespacho
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteMonitoreo", mappedBy="despachoRel")
      */
     protected $monitoreosDespachoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TteNovedad", mappedBy="despachoRel")
+     */
+    protected $novedadesDespachoRel;
 
     /**
      * @return mixed
@@ -798,6 +808,22 @@ class TteDespacho
     /**
      * @return mixed
      */
+    public function getVrCobroEntregaRechazado()
+    {
+        return $this->vrCobroEntregaRechazado;
+    }
+
+    /**
+     * @param mixed $vrCobroEntregaRechazado
+     */
+    public function setVrCobroEntregaRechazado($vrCobroEntregaRechazado): void
+    {
+        $this->vrCobroEntregaRechazado = $vrCobroEntregaRechazado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrSaldo()
     {
         return $this->vrSaldo;
@@ -953,6 +979,22 @@ class TteDespacho
     public function setEstadoCumplirRndc($estadoCumplirRndc): void
     {
         $this->estadoCumplirRndc = $estadoCumplirRndc;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoNovedad()
+    {
+        return $this->estadoNovedad;
+    }
+
+    /**
+     * @param mixed $estadoNovedad
+     */
+    public function setEstadoNovedad($estadoNovedad): void
+    {
+        $this->estadoNovedad = $estadoNovedad;
     }
 
     /**
@@ -1182,20 +1224,17 @@ class TteDespacho
     /**
      * @return mixed
      */
-    public function getVrCobroEntregaRechazado()
+    public function getNovedadesDespachoRel()
     {
-        return $this->vrCobroEntregaRechazado;
+        return $this->novedadesDespachoRel;
     }
 
     /**
-     * @param mixed $vrCobroEntregaRechazado
+     * @param mixed $novedadesDespachoRel
      */
-    public function setVrCobroEntregaRechazado($vrCobroEntregaRechazado): void
+    public function setNovedadesDespachoRel($novedadesDespachoRel): void
     {
-        $this->vrCobroEntregaRechazado = $vrCobroEntregaRechazado;
+        $this->novedadesDespachoRel = $novedadesDespachoRel;
     }
-
-
-
 }
 

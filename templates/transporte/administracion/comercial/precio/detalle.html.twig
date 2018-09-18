@@ -6,9 +6,14 @@
         })
     </script>
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    <div class="row">
-        <!-- /.col-lg-12 -->
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('inventario_movimiento_compra_solicitud_lista') }}">Volver</a>
+        </div>
     </div>
+    <br>
+    <br>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo"><b>CODIGO:</b></td>
@@ -40,6 +45,8 @@
                         <tr>
                             <th><p data-toggle="tooltip" data-placement="top" title="PORCENTAJE MANEJO">ID</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="PRODUCTO">PRODUCTO</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD ORIGEN">ORIGEN</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD DESTINO">DESTINO</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO">PESO</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="VALOR UNIDAD">UND</p>
                             <th><p data-toggle="tooltip" data-placement="top" title="PESO TOPE">PESO TOPE</p>
@@ -56,11 +63,13 @@
                             <tr>
                                 <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
                                 <td>{{ arPrecioDetalle.nombre }}</td>
-                                <td>{{ arPrecioDetalle.vrPeso }}</td>
-                                <td>{{ arPrecioDetalle.vrUnidad }}</td>
+                                <td>{{ arPrecioDetalle.ciudadOrigen }}</td>
+                                <td>{{ arPrecioDetalle.ciudadDestino }}</td>
+                                <td style="text-align: right;">{{ arPrecioDetalle.vrPeso | number_format(0, '.', ',')  }}</td>
+                                <td style="text-align: right;">{{ arPrecioDetalle.vrUnidad | number_format(0, '.', ',') }}</td>
                                 <td>{{ arPrecioDetalle.pesoTope }}</td>
-                                <td>{{ arPrecioDetalle.vrPesoTope }}</td>
-                                <td>{{ arPrecioDetalle.vrPesoTopeAdicional }}</td>
+                                <td style="text-align: right;">{{ arPrecioDetalle.vrPesoTope | number_format(0, '.', ',')  }}</td>
+                                <td style="text-align: right;">{{ arPrecioDetalle.vrPesoTopeAdicional | number_format(0, '.', ',')  }}</td>
                                 <td>{{ arPrecioDetalle.minimo }}</td>
                                 <td style="text-align: center;">
                                     <a href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': arPrecioDetalle.codigoPrecioDetallePk }) }}', 'precioDetalles', 600, 900)">
@@ -74,6 +83,15 @@
                         {% endfor %}
                         </tbody>
                     </table>
+                </div>
+                <div class="btn-group" style="float: left">
+                    <div class="btn-group" style="float: left">
+                        <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arPrecioDetalles.getTotalItemCount }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+                    {{ knp_pagination_render(arPrecioDetalles) }}
                 </div>
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
@@ -89,5 +107,4 @@
         </div>
     </div>
     {{ form_end(form) }}
-    <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_comercial_precio_lista') }}">Volver</a>
 {% endblock %}

@@ -21,8 +21,7 @@ class PrecioController extends Controller
     public function lista(Request $request)
     {
         $paginator = $this->get('knp_paginator');
-        $query = $this->getDoctrine()->getRepository(TtePrecio::class)->lista();
-        $arPrecios = $paginator->paginate($query, $request->query->getInt('page', 1), 10);
+        $arPrecios = $paginator->paginate($this->getDoctrine()->getRepository(TtePrecio::class)->lista(), $request->query->getInt('page', 1), 10);
         return $this->render('transporte/administracion/comercial/precio/lista.html.twig', ['arPrecios' => $arPrecios]);
     }
 
@@ -62,6 +61,7 @@ class PrecioController extends Controller
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
         $arPrecio = $em->getRepository(TtePrecio::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
@@ -72,12 +72,10 @@ class PrecioController extends Controller
             $em->getRepository(TtePrecioDetalle::class)->eliminar($arrSeleccionados);
         }
 
-        $arPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->lista($id);
-
-
+        $arPrecioDetalles = $paginator->paginate($em->getRepository(TtePrecioDetalle::class)->lista($id), $request->query->getInt('page', 1), 70);
         return $this->render('transporte/administracion/comercial/precio/detalle.html.twig', array(
             'arPrecio' => $arPrecio,
-            'arPrecioDetalles' => $arPrecioDetalle,
+            'arPrecioDetalles' => $arPrecioDetalles,
             'form' => $form->createView()
         ));
     }

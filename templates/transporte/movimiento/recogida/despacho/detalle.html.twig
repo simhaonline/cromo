@@ -1,9 +1,11 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    {% include 'estructura/botonera.html.twig' %}
-    {{ form_widget(form.btnMonitoreo, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-    </div>
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+            {{ form_widget(form.btnMonitoreo, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+        </div>
     </div>
     <div style="float:right">
         {% if arDespachoRecogida.estadoMonitoreo == 1 %}<span class="label label-default">Monitoreo</span>{% endif %}

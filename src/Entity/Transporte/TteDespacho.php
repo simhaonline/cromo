@@ -228,6 +228,11 @@ class TteDespacho
     private $estadoNovedad = false;
 
     /**
+     * @ORM\Column(name="estado_novedad_solucion", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoNovedadSolucion = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -995,6 +1000,22 @@ class TteDespacho
     public function setEstadoNovedad($estadoNovedad): void
     {
         $this->estadoNovedad = $estadoNovedad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoNovedadSolucion()
+    {
+        return $this->estadoNovedadSolucion;
+    }
+
+    /**
+     * @param mixed $estadoNovedadSolucion
+     */
+    public function setEstadoNovedadSolucion($estadoNovedadSolucion): void
+    {
+        $this->estadoNovedadSolucion = $estadoNovedadSolucion;
     }
 
     /**

@@ -24,6 +24,7 @@ use App\Formato\Transporte\RelacionEntrega;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -227,7 +228,8 @@ class DespachoController extends Controller
             ->add('btnActualizar', SubmitType::class, $arrBotonActualizar)
             ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto)
             ->add('btnLiquidacion', SubmitType::class, $arrBotonLiquidacion)
-            ->add('btnCobroEntrega', SubmitType::class, $arrBotonCobroEntrega);
+            ->add('btnCobroEntrega', SubmitType::class, $arrBotonCobroEntrega)
+            ->add('btnRetirarNovedad', SubmitType::class, array('label' => 'Retirar'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
@@ -289,11 +291,16 @@ class DespachoController extends Controller
                 $formato = new Liquidacion();
                 $formato->Generar($em, $id);
             }
+            if ($form->get('btnRetirarNovedad')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteNovedad::class)->eliminar($arrSeleccionados);
+            }
         }
-
-        $arDespachoDetalles = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->despacho($id);
+        $arNovedades = $em->getRepository(TteNovedad::class)->despacho($id);
+        $arDespachoDetalles = $em->getRepository(TteDespachoDetalle::class)->despacho($id);
         return $this->render('transporte/movimiento/transporte/despacho/detalle.html.twig', [
             'arDespacho' => $arDespacho,
+            'arNovedades' => $arNovedades,
             'arDespachoDetalles' => $arDespachoDetalles,
             'form' => $form->createView()]);
     }
@@ -374,7 +381,7 @@ class DespachoController extends Controller
      * @param $codigoDespacho
      * @param $id
      * @return Response
-     * @Route("/transporte/movimiento/trasnporte/guia/detalle/adicionar/novedad/{codigoDespacho}/{id}", name="transporte_movimiento_transporte_guia_detalle_adicionar_novedad")
+     * @Route("/transporte/movimiento/trasnporte/despacho/detalle/adicionar/novedad/{codigoDespacho}/{id}", name="transporte_movimiento_transporte_despacho_detalle_adicionar_novedad")
      */
     public function detalleAdicionarNovedad(Request $request, $codigoDespacho, $id)
     {
@@ -433,5 +440,31 @@ class DespachoController extends Controller
         return $this->render('transporte/movimiento/transporte/despacho/liquidar.html.twig', ['arDespacho' => $arDespacho, 'form' => $form->createView()]);
     }
 
+    /**
+     * @Route("/transporte/movimiento/transporte/novedad/despacho/solucion/{codigoNovedad}", name="transporte_movimiento_transporte_novedad_despacho_solucion")
+     */
+    public function novedadSolucion(Request $request, $codigoNovedad)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arNovedad = $em->getRepository(TteNovedad::class)->find($codigoNovedad);
+        $form = $this->createFormBuilder()
+            ->add('solucion', TextareaType::class, array('label' => 'Solucion'))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arNovedad->setEstadoSolucion(1);
+            $arNovedad->setSolucion($form->get('solucion')->getData());
+            $arNovedad->setFechaSolucion(new \DateTime('now'));
+            $arDespacho = $em->getRepository(TteDespacho::class)->find($arNovedad->getCodigoDespachoFk());
+            $arDespacho->setEstadoNovedad(0);
+            $arDespacho->setEstadoNovedadSolucion(1);
+            $em->persist($arNovedad);
+            $em->persist($arDespacho);
+            $em->flush();
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        return $this->render('transporte/movimiento/transporte/despacho/novedadSolucion.html.twig', array (
+            'form' => $form->createView()));
+    }
 }
-

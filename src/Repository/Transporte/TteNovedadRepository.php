@@ -45,7 +45,8 @@ class TteNovedadRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT n.codigoNovedadPk,
+            'SELECT
+                  n.codigoNovedadPk,
                   n.fecha,
                   n.fechaReporte,
                   n.fechaSolucion,
@@ -248,5 +249,22 @@ class TteNovedadRepository extends ServiceEntityRepository
             }
         }
         $this->getEntityManager()->flush();
+    }
+
+    public function despacho($codigoDespacho){
+        $qb = $this->getEntityManager()->createQueryBuilder()->from(TteNovedad::class,'n')
+            ->select('n.codigoNovedadPk')
+            ->addSelect('n.fecha')
+            ->addSelect('n.fechaReporte')
+            ->addSelect('n.fechaSolucion')
+            ->addSelect('n.descripcion')
+            ->addSelect('n.solucion')
+            ->addSelect('n.estadoAtendido')
+            ->addSelect('n.estadoReporte')
+            ->addSelect('n.estadoSolucion')
+            ->addSelect('nt.nombre as nombreTipo')
+            ->where("n.codigoDespachoFk = {$codigoDespacho}")
+            ->leftJoin('n.novedadTipoRel', 'nt');
+        return $qb->getQuery()->execute();
     }
 }

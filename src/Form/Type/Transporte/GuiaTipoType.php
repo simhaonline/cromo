@@ -32,7 +32,12 @@ class GuiaTipoType extends AbstractType
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('factura', CheckboxType::class, array('required'  => false))
             ->add('consecutivo',NumberType::class,['required' => true,'label' => 'Consecutivo:'])
+            ->add('cortesia', CheckboxType::class, array('required'  => false))
             ->add('exigeNumero', CheckboxType::class, array('required'  => false))
+            ->add('validarFlete', CheckboxType::class, array('required'  => false))
+            ->add('validarRango', CheckboxType::class, array('required'  => false))
+            ->add('generaCobro', CheckboxType::class, array('required'  => false))
+            ->add('generaCobroEntrega', CheckboxType::class, array('required'  => false))
             ->add('orden',NumberType::class,['required' => true,'label' => 'Orden:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;

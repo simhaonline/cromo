@@ -181,7 +181,7 @@ class TteFacturaRepository extends ServiceEntityRepository
         $queryBuilder->addOrderBy('f.fecha', 'DESC');
         $queryBuilder->addOrderBy('f.codigoFacturaPk', 'DESC');
 
-        return $queryBuilder->getQuery()->execute();
+        return $queryBuilder;
     }
 
     public function controlFactura()

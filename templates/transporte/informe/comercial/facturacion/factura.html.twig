@@ -17,7 +17,8 @@
                             <div class="input-group">
                                 {{ form_widget(form.txtNombreCorto) }}
                                 <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>
@@ -88,11 +89,11 @@
         </tr>
         </thead>
         <tbody>
-        {% set douCantidades = 0  %}
-        {% set douFlete = 0  %}
-        {% set douManejo = 0  %}
-        {% set douSubTotal = 0  %}
-        {% set douTotal = 0  %}
+        {% set douCantidades = 0 %}
+        {% set douFlete = 0 %}
+        {% set douManejo = 0 %}
+        {% set douSubTotal = 0 %}
+        {% set douTotal = 0 %}
         {% for arFactura in arFacturas %}
             <tr>
                 <td>{{ arFactura.codigoFacturaPk }}</td>
@@ -103,10 +104,10 @@
                 <td class="estado">{{ arFactura.estadoAutorizado?'SI':'NO' }}</td>
                 <td class="estado">{{ arFactura.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arFactura.estadoAnulado?'SI':'NO' }}</td>
-                <td class="numero">{{ arFactura.guias | number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arFactura.vrFlete | number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arFactura.vrManejo | number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arFactura.vrSubtotal | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arFactura.guias | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arFactura.vrFlete | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arFactura.vrManejo | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arFactura.vrSubtotal | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arFactura.vrTotal| number_format(0, '.', ',') }}</td>
                 {% set douCantidades = douCantidades + arFactura.guias %}
                 {% set douFlete = douFlete + arFactura.vrFlete %}
@@ -126,14 +127,20 @@
 
     <div class="btn-group" style="float: left">
         <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arFacturas.getTotalItemCount }}</span></div>
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arFacturas.getTotalItemCount }}</span>
+            </div>
         </div>
     </div>
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-        {{ knp_pagination_render(arFacturas) }}
-    </div>
-    <div class="btn-group" style="float: right">
-        {{ form_widget(form.btnPdf, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+            {{ knp_pagination_render(arFacturas) }}
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+        <div class="btn-group" style="float: right">
+            {{ form_widget(form.btnPdf, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+        </div>
     </div>
     {{ form_end(form) }}
 {% endblock %}

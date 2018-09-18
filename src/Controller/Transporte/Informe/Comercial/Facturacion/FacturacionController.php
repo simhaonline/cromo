@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaTipo;
 use App\Formato\Transporte\FacturaInforme;
 use App\Formato\Transporte\ListaFactura;
+use App\General\General;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +31,7 @@ class FacturacionController extends Controller
         $session = new Session();
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
@@ -70,6 +72,9 @@ class FacturacionController extends Controller
             if ($form->get('btnPdf')->isClicked()) {
                 $formato = new FacturaInforme();
                 $formato->Generar($em);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($em->getRepository(TteFactura::class)->listaInforme())->execute(), "Guias");
             }
         }
         $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->listaInforme(), $request->query->getInt('page', 1), 500);

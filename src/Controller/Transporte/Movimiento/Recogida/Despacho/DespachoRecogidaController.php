@@ -165,7 +165,7 @@ class DespachoRecogidaController extends Controller
                     $em->flush();
                     $em->getRepository(TteDespachoRecogida::class)->liquidar($id);
                 }
-                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', array('codigoDespachoRecogida' => $id)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->autorizar($arDespachoRecogida);

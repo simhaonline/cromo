@@ -100,7 +100,8 @@ class PrecioController extends Controller
         $form = $this->createForm(PrecioDetalleType::class, $arPrecioDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arPrecioDetalleExistente = $em->getRepository(TtePrecioDetalle::class)->findBy(['codigoCiudadOrigenFk' => $arPrecioDetalle->getCodigoCiudadOrigenFk(),'codigoCiudadDestinoFk' => $arPrecioDetalle->getCodigoCiudadDestinoFk()]);
+            $arPrecioDetalleExistente = $em->getRepository(TtePrecioDetalle::class)
+                ->findBy(['ciudadOrigenRel' => $arPrecioDetalle->getCiudadOrigenRel(), 'ciudadDestinoRel'=> $arPrecioDetalle->getCiudadDestinoRel(), 'productoRel' => $arPrecioDetalle->getProductoRel()]);
             if(!$arPrecioDetalleExistente){
                 if ($form->get('guardar')->isClicked()) {
                     $arPrecioDetalle->setPrecioRel($arPrecio);
@@ -109,7 +110,7 @@ class PrecioController extends Controller
                 }
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             } else {
-                Mensajes::error('Error');
+                Mensajes::error('Ya existe un producto con la misma ciudad de origen y destino');
             }
         }
         return $this->render('transporte/administracion/comercial/precio/detalleNuevo.html.twig', [

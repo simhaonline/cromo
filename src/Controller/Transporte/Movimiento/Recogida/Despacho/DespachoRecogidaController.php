@@ -140,7 +140,7 @@ class DespachoRecogidaController extends Controller
         }
         $form->add('btnEliminarRecogida', SubmitType::class, $arrBtnEliminarRecogida)
             ->add('btnEliminarAuxiliar', SubmitType::class, $arrBtnEliminarAuxiliar)
-            ->add('btnMonitoreo', SubmitType::class, array('label' => 'TteMonitoreo'));
+            ->add('btnMonitoreo', SubmitType::class, array('label' => 'Monitoreo'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {

@@ -109,7 +109,7 @@ class PrecioController extends Controller
                 }
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             } else {
-                Mensajes::error('Hola soy julian me gusta la japi');
+                Mensajes::error('Error');
             }
         }
         return $this->render('transporte/administracion/comercial/precio/detalleNuevo.html.twig', [

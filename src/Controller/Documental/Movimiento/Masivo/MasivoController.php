@@ -4,9 +4,9 @@ namespace App\Controller\Documental\Movimiento\Masivo;
 
 
 use App\Entity\Documental\DocDirectorio;
+use App\Entity\Documental\DocMasivo;
+use App\Entity\Documental\DocMasivoCarga;
 use App\Entity\Documental\DocMasivoTipo;
-use App\Entity\Documental\DocRegistro;
-use App\Entity\Documental\DocRegistroCarga;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,7 +20,7 @@ use App\Utilidades\Mensajes;
 class MasivoController extends Controller
 {
    /**
-    * @Route("/documental/movimiento/masivo/registro/lista", name="documental_movimiento_masivo_registro_lista")
+    * @Route("/documental/movimiento/masivo/masivo/lista", name="documental_movimiento_masivo_masivo_lista")
     */    
     public function lista(Request $request)
     {
@@ -28,24 +28,24 @@ class MasivoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtIdentificador', TextType::class, ['required' => false, 'data' => $session->get('filtroDocRegistroIdentificador')])
+            ->add('txtIdentificador', TextType::class, ['required' => false, 'data' => $session->get('filtroDocMasivoIdentificador')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroDocRegistroIdentificador', $form->get('txtNumero')->getData());
+                $session->set('filtroDocMasivoIdentificador', $form->get('txtIdentificador')->getData());
             }
         }
-        $arRegistros = $paginator->paginate($em->getRepository(DocRegistro::class)->lista(), $request->query->getInt('page', 1), 10);
-        return $this->render('documental/movimiento/masivo/registro/lista.html.twig', [
-            'arRegistros' => $arRegistros,
+        $arMasivos = $paginator->paginate($em->getRepository(DocMasivo::class)->lista(), $request->query->getInt('page', 1), 50);
+        return $this->render('documental/movimiento/masivo/masivo/lista.html.twig', [
+            'arMasivos' => $arMasivos,
             'form' => $form->createView()
         ]);
     }
 
     /**
-     * @Route("/documental/movimiento/masivo/registro/carga", name="documental_movimiento_masivo_registro_carga")
+     * @Route("/documental/movimiento/masivo/masivo/carga", name="documental_movimiento_masivo_masivo_carga")
      */
     public function carga(Request $request)
     {
@@ -53,7 +53,7 @@ class MasivoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtIdentificador', TextType::class, ['required' => false, 'data' => $session->get('filtroDocRegistroIdentificador')])
+            ->add('txtIdentificador', TextType::class, ['required' => false, 'data' => $session->get('filtroDocMasivoIdentificador')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnEliminarDetalle', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnAnalizarBandeja', SubmitType::class, ['label' => 'Analizar bandeja', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -62,7 +62,7 @@ class MasivoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroDocRegistroIdentificador', $form->get('txtNumero')->getData());
+                $session->set('filtroDocMasivoIdentificador', $form->get('txtNumero')->getData());
             }
             if ($form->get('btnAnalizarBandeja')->isClicked()) {
                 $directorioBandeja = "/bandeja";
@@ -77,12 +77,12 @@ class MasivoController extends Controller
                             $tamano = filesize($archivo) / 1000;
                             if($tamano < 8000) {
                                 if($extension == 'pdf') {
-                                    $arRegistroCarga = new DocRegistroCarga();
-                                    $arRegistroCarga->setIdentificador($nombre);
-                                    $arRegistroCarga->setExtension($extension);
-                                    $arRegistroCarga->setArchivo($fichero);
-                                    $arRegistroCarga->getTamano($tamano);
-                                    $em->persist($arRegistroCarga);
+                                    $arMasivoCarga = new DocMasivoCarga();
+                                    $arMasivoCarga->setIdentificador($nombre);
+                                    $arMasivoCarga->setExtension($extension);
+                                    $arMasivoCarga->setArchivo($fichero);
+                                    $arMasivoCarga->getTamano($tamano);
+                                    $em->persist($arMasivoCarga);
                                 }
                             }
                             else {
@@ -95,8 +95,8 @@ class MasivoController extends Controller
             }
             if ($form->get('btnEliminarDetalle')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(DocRegistroCarga::class)->eliminar($arrDetallesSeleccionados);
-                return $this->redirect($this->generateUrl('documental_movimiento_masivo_registro_carga'));
+                $em->getRepository(DocMasivoCarga::class)->eliminar($arrDetallesSeleccionados);
+                return $this->redirect($this->generateUrl('documental_movimiento_masivo_masivo_carga'));
             }
             if ($form->get('btnCargar')->isClicked()) {
                 $tipo = "guia";
@@ -116,8 +116,8 @@ class MasivoController extends Controller
                     }
                     if($arDirectorio) {
                         $arDirectorio = $em->getRepository(DocDirectorio::class)->find($arDirectorio->getCodigoDirectorioPk());
-                        $arRegistrosCargas = $em->getRepository(DocRegistroCarga::class)->findAll();
-                        foreach ($arRegistrosCargas as $arRegistroCarga) {
+                        $arMasivosCargas = $em->getRepository(DocMasivoCarga::class)->findAll();
+                        foreach ($arMasivosCargas as $arMasivoCarga) {
                             if($arDirectorio->getNumeroArchivos() >= 50000) {
                                 $arDirectorio->setNumeroArchivos(0);
                                 $arDirectorio->setDirectorio($arDirectorio->getDirectorio()+1);
@@ -131,22 +131,22 @@ class MasivoController extends Controller
                                     break;
                                 }
                             }
-                            $origen = $directorioBandeja . "/" . $arRegistroCarga->getArchivo();
+                            $origen = $directorioBandeja . "/" . $arMasivoCarga->getArchivo();
                             if(file_exists($origen)) {
-                                $arRegistro = new DocRegistro();
-                                $arRegistro->setIdentificador($arRegistroCarga->getIdentificador());
-                                $arRegistro->setMasivoTipoRel($arMasivoTipo);
-                                $arRegistro->setArchivo($arRegistroCarga->getArchivo());
-                                $arRegistro->setExtension($arRegistroCarga->getExtension());
-                                $arRegistro->setDirectorio($arDirectorio->getDirectorio());
-                                $archivoDestino = rand(100000, 999999) . "_" . $arRegistroCarga->getIdentificador();
-                                $arRegistro->setArchivoDestino($archivoDestino);
-                                $destino = $directorio . $archivoDestino . "." . $arRegistroCarga->getExtension();
-                                $em->persist($arRegistro);
+                                $arMasivo = new DocMasivo();
+                                $arMasivo->setIdentificador($arMasivoCarga->getIdentificador());
+                                $arMasivo->setMasivoTipoRel($arMasivoTipo);
+                                $arMasivo->setArchivo($arMasivoCarga->getArchivo());
+                                $arMasivo->setExtension($arMasivoCarga->getExtension());
+                                $arMasivo->setDirectorio($arDirectorio->getDirectorio());
+                                $archivoDestino = rand(100000, 999999) . "_" . $arMasivoCarga->getIdentificador();
+                                $arMasivo->setArchivoDestino($archivoDestino);
+                                $destino = $directorio . $archivoDestino . "." . $arMasivoCarga->getExtension();
+                                $em->persist($arMasivo);
 
                                 $arDirectorio->setNumeroArchivos($arDirectorio->getNumeroArchivos()+1);
                                 $em->persist($arDirectorio);
-                                $em->remove($arRegistroCarga);
+                                $em->remove($arMasivoCarga);
                                 $em->flush();
                                 copy($origen, $destino);
                                 unlink($origen);
@@ -156,12 +156,12 @@ class MasivoController extends Controller
                 } else {
                     Mensajes::error("No existe el directorio principal " . $directorioDestino);
                 }
-                return $this->redirect($this->generateUrl('documental_movimiento_masivo_registro_carga'));
+                return $this->redirect($this->generateUrl('documental_movimiento_masivo_masivo_carga'));
             }
         }
-        $arRegistrosCargas = $paginator->paginate($em->getRepository(DocRegistroCarga::class)->lista(), $request->query->getInt('page', 1), 10);
-        return $this->render('documental/movimiento/masivo/registro/carga.html.twig', [
-            'arRegistrosCargas' => $arRegistrosCargas,
+        $arMasivosCargas = $paginator->paginate($em->getRepository(DocMasivoCarga::class)->lista(), $request->query->getInt('page', 1), 50);
+        return $this->render('documental/movimiento/masivo/masivo/carga.html.twig', [
+            'arMasivosCargas' => $arMasivosCargas,
             'form' => $form->createView()
         ]);
     }

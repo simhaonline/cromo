@@ -2,12 +2,12 @@
 
 namespace App\Controller\Documental\Api;
 
-use App\Entity\Documental\DocRegistro;
+use App\Entity\Documental\DocMasivo;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 
-class ApiRegistroController extends FOSRestController
+class ApiMasivoController extends FOSRestController
 {
 
     /**
@@ -15,14 +15,14 @@ class ApiRegistroController extends FOSRestController
      * @param int $identificador
      * @return array
      * @throws \Doctrine\ORM\ORMException
-     * @Rest\Post("/documental/api/registro/masivo/{tipo}/{identificador}")
+     * @Rest\Post("/documental/api/masivo/masivo/{tipo}/{identificador}")
      */
     public function consulta($tipo = "", $identificador = 0) {
         set_time_limit(0);
         ini_set("memory_limit", -1);
-        $arRegistro = $this->getDoctrine()->getManager()->getRepository(DocRegistro::class)->findOneBy(array('identificador' => $identificador));
-        if($arRegistro) {
-            $archivo = "/almacenamiento/masivo/" . $tipo . "/" . $arRegistro->getDirectorio() . "/" . $arRegistro->getArchivoDestino() . "." . $arRegistro->getExtension();
+        $arMasivo = $this->getDoctrine()->getManager()->getRepository(DocMasivo::class)->findOneBy(array('identificador' => $identificador));
+        if($arMasivo) {
+            $archivo = "/almacenamiento/masivo/" . $tipo . "/" . $arMasivo->getDirectorio() . "/" . $arMasivo->getArchivoDestino() . "." . $arMasivo->getExtension();
             //$archivo = "/almacenamiento/masivo/guia/1/990023629.pdf";
 
             $type = pathinfo($archivo, PATHINFO_EXTENSION);

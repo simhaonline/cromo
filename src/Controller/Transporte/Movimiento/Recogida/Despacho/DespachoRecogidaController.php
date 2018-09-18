@@ -125,7 +125,7 @@ class DespachoRecogidaController extends Controller
                 }
             }
         }
-        $arDespachosRecogida = $paginator->paginate($this->getDoctrine()->getRepository(TteDespachoRecogida::class)->lista(), $request->query->getInt('page', 1), 10);
+        $arDespachosRecogida = $paginator->paginate($this->getDoctrine()->getRepository(TteDespachoRecogida::class)->lista(), $request->query->getInt('page', 1), 20);
         return $this->render('transporte/movimiento/recogida/despacho/lista.html.twig', ['arDespachosRecogida' => $arDespachosRecogida, 'form' => $form->createView()]);
     }
 
@@ -227,7 +227,7 @@ class DespachoRecogidaController extends Controller
         }
         $arRecogidas = $this->getDoctrine()->getRepository(TteRecogida::class)->despachoPendiente($arDespachoRecogida->getFecha()->format('Y-m-d'));
         if(count($arRecogidas) == 0){
-            Mensajes::error('No hay recogidas autorizadas ni aprobadas pendientes');
+            Mensajes::error('No hay recogidas autorizadas y aprobadas pendientes por asignar');
         }
         return $this->render('transporte/movimiento/recogida/despacho/detalleAdicionarRecogida.html.twig', ['arRecogidas' => $arRecogidas, 'form' => $form->createView()]);
     }

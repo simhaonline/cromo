@@ -13,4 +13,16 @@ class TteDespachoRecogidaTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, TteDespachoRecogidaTipo::class);
     }
 
+    public function camposPredeterminados()
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->from('App:Transporte\TteDespachoRecogidaTipo', 'drt')
+            ->select('drt.codigoDespachoRecogidaTipoPk AS ID')
+            ->addSelect('drt.nombre AS NOMBRE')
+            ->addSelect('drt.consecutivo AS CONSECUTIVO')
+            ->addSelect('drt.generaMonitoreo AS GENERA_MONITOREO');
+        $query = $this->_em->createQuery($qb->getDQL());
+        return $query->execute();
+    }
+
 }

@@ -192,26 +192,19 @@
                                         <!-- /.nav-third-level -->
                                     </li>
                                     <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Ruta</a></li>
-                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'rutaRecogida'}) }}">Ruta recogida</a></li>
                                     <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'novedadTipo'}) }}">Novedad tipo</a></li>
                                     <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'auxiliar'}) }}">Auxiliar</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'despachoTipo'}) }}">Despacho tipo</a></li>
                                 </ul>
                                 <!-- /.nav-third-level -->
                             </li>
                             <li>
                                 <a href="#">General <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'operacion'}) }}">Operacion</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'consecutivo'}) }}">Consecutivo</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'departamento'}) }}">Departamento</a>
-                                    </li>
-                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ciudad'}) }}">Ciudad</a>
-                                    </li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'operacion'}) }}">Operacion</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'consecutivo'}) }}">Consecutivo</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'departamento'}) }}">Departamento</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ciudad'}) }}">Ciudad</a></li>
                                 </ul>
                                 <!-- /.nav-third-level -->
                             </li>
@@ -234,7 +227,8 @@
                             <li>
                                 <a href="#">Recogida <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'despachoTipo'}) }}">Despacho tipo</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'despachoRecogidaTipo'}) }}">Despacho recogida tipo</a></li>
+                                    <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'rutaRecogida'}) }}">Ruta recogida</a></li>
                                 </ul>
                                 <!-- /.nav-third-level -->
                             </li>

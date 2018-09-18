@@ -16,7 +16,7 @@ class DespachoTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoDespachoTipoPk',TextType::class,['required' => true,'label' => 'Codigo factura:'])
+            ->add('codigoDespachoTipoPk',TextType::class,['required' => true,'label' => 'Codigo despacho tipo pk:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('consecutivo',NumberType::class,['required' => true,'label' => 'Consecutivo:'])
             ->add('exigeNumero', CheckboxType::class, array('required'  => false))

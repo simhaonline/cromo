@@ -111,18 +111,8 @@ class DespachoRecogidaController extends Controller
                 $session->set('filtroTteDespachoEstadoAprobado', $form->get('choEstado')->getData());
             }
             if($form->get('btnEliminar')->isClicked()){
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                foreach ($arrSeleccionados as $codigoRecogida){
-                    $arDespachoRecogida = $em->getRepository(TteDespachoRecogida::class)->find($codigoRecogida);
-                    if($arDespachoRecogida){
-                        $em->remove($arDespachoRecogida);
-                    }
-                }
-                try{
-                    $em->flush();
-                }catch (\Exception $e){
-
-                }
+                $arrSeleccionados = $request->request->get('ChkSeleccionados');
+                $em->getRepository(TteDespachoRecogida::class)->eliminar($arrSeleccionados);
             }
         }
         $arDespachosRecogida = $paginator->paginate($this->getDoctrine()->getRepository(TteDespachoRecogida::class)->lista(), $request->query->getInt('page', 1), 20);

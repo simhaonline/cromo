@@ -7,6 +7,9 @@
     </div>
     <div style="float:right">
         {% if arDespachoRecogida.estadoMonitoreo == 1 %}<span class="label label-default">Monitoreo</span>{% endif %}
+        {% if arDespachoRecogida.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arDespachoRecogida.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arDespachoRecogida.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">

@@ -8,9 +8,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Transporte\TteGuiaRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class TteGuia
 {
+//    public $infoLog = [
+//        "primaryKey" => "codigoGuiaPk",
+//        "camposSeguimiento" => [
+//            'remitente',
+//        ],
+//    ];
+
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

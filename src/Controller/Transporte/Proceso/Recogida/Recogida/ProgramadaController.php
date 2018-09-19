@@ -16,7 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class ProgramadaController extends Controller
 {
    /**
-    * @Route("/transporte/pro/recogida/recogida/programada", name="transporte_pro_recogida_recogida_programada")
+    * @Route("/transporte/proceso/recogida/recogida/programada", name="transporte_proceso_recogida_recogida_programada")
     */    
     public function lista(Request $request)
     {
@@ -54,7 +54,7 @@ class ProgramadaController extends Controller
     }
 
     /**
-     * @Route("/transporte/pro/recogida/recogida/nuevo/{codigoRecogidaProgramada}", name="transporte_pro_recogida_recogida_nuevo")
+     * @Route("/transporte/proceso/recogida/recogida/nuevo/{codigoRecogidaProgramada}", name="transporte_proceso_recogida_recogida_nuevo")
      */
     public function nuevo(Request $request, $codigoRecogidaProgramada)
     {

@@ -83,6 +83,11 @@ class Usuario implements UserInterface, \Serializable
      */
     private $operacionRel;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\General\GenLog", mappedBy="usuarioRel")
+     */
+    protected $logsUsuarioRel;
+
     public function __construct()
     {
         $this->isActive = true;
@@ -331,6 +336,24 @@ class Usuario implements UserInterface, \Serializable
     {
         $this->claveEscritorio = $claveEscritorio;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLogsUsuarioRel()
+    {
+        return $this->logsUsuarioRel;
+    }
+
+    /**
+     * @param mixed $logsUsuarioRel
+     */
+    public function setLogsUsuarioRel($logsUsuarioRel): void
+    {
+        $this->logsUsuarioRel = $logsUsuarioRel;
+    }
+
+
 
 }
 

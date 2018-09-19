@@ -2,6 +2,7 @@
 
 namespace App\Repository\Transporte;
 
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteNovedad;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -266,5 +267,46 @@ class TteNovedadRepository extends ServiceEntityRepository
             ->where("n.codigoDespachoFk = {$codigoDespacho}")
             ->leftJoin('n.novedadTipoRel', 'nt');
         return $qb->getQuery()->execute();
+    }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function novedadesPorDiaMesAtual(){
+        $fecha = new \DateTime('now');
+        $fechaDesde = $fecha->format('Y-m').'-01';
+        //Obtenemos el ultimo dia del mes seleccionado
+        $fechaHasta = FuncionesController::ultimoDia($fecha);
+        $sql = "SELECT DAY(fecha_registro) as dia, 
+                COUNT(codigo_novedad_pk) as cantidad
+                FROM tte_novedad 
+                WHERE fecha_registro >= '" . $fechaDesde . " 00:00:00' AND fecha_registro <='" . $fechaHasta ." 23:59:59'  
+                GROUP BY DAY(fecha_registro)";
+        $connection = $this->getEntityManager()->getConnection();
+        $statement = $connection->prepare($sql);
+        $statement->execute();
+        $results = $statement->fetchAll();
+        return $results;
+    }
+
+    /**
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function novedadesPorMesAnioActual(){
+        $fecha = new \DateTime('now');
+        $fechaDesde = $fecha->format('Y') . "-01-01";
+        $fechaHasta = $fecha->format('Y') . "-12-31";
+        $sql = "SELECT MONTH(fecha_registro) as mes, 
+                COUNT(codigo_novedad_pk) as cantidad
+                FROM tte_novedad 
+                WHERE fecha_registro >= '" . $fechaDesde . " 00:00:00' AND fecha_registro <='" . $fechaHasta ." 23:59:59'  
+                GROUP BY MONTH(fecha_registro)";
+        $connection = $this->getEntityManager()->getConnection();
+        $statement = $connection->prepare($sql);
+        $statement->execute();
+        $results = $statement->fetchAll();
+        return $results;
     }
 }

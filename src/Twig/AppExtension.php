@@ -28,6 +28,7 @@ class AppExtension extends AbstractExtension
             new \Twig_Function('notificar', [$this, 'getNotifies']),
             new \Twig_Function('encriptar', [$this, 'encriptar']),
             new \Twig_Function('env', [$this, "getEnv"]),
+            new \Twig_Function('mesATexto', [$this, "mesATexto"]),
         ];
     }
 
@@ -97,6 +98,16 @@ class AppExtension extends AbstractExtension
         } else {
             return '';
         }
+    }
+
+    /**
+     * @author Andres Acevedo
+     * @param $dato
+     * @return mixed
+     */
+    public function mesATexto($dato){
+        $meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+        return $meses[$dato - 1];
     }
 
     /**

@@ -112,4 +112,10 @@ final class FuncionesController
         return (string)$Nro;
     }
 
+    public static function ultimoDia($fecha){
+        $fechaDesde = $fecha->format('Y-m').'-01';
+        $aux = date('Y-m-d', strtotime("{$fechaDesde} + 1 month"));
+        $fechaHasta = date('Y-m-d', strtotime("{$aux} - 1 day"));
+        return $fechaHasta;
+    }
 }

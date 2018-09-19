@@ -169,17 +169,16 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
     public function aprobar($arDespachoRecogida){
         $em = $this->getEntityManager();
         if($arDespachoRecogida->getEstadoAutorizado()){
-            $arDespachoRecogidaTipo = $em->getRepository(TteDespachoRecogidaTipo::class)->find($arDespachoRecogida->getCodigoDespachoRecogidaTipoFk());
             if ($arDespachoRecogida->getNumero() == 0 || $arDespachoRecogida->getNumero() == NULL) {
+                $arDespachoRecogidaTipo = $em->getRepository(TteDespachoRecogidaTipo::class)->find($arDespachoRecogida->getCodigoDespachoRecogidaTipoFk());
                 $arDespachoRecogida->setEstadoAprobado(1);
                 $arDespachoRecogida->setNumero($arDespachoRecogidaTipo->getConsecutivo());
                 $arDespachoRecogidaTipo->setConsecutivo($arDespachoRecogidaTipo->getConsecutivo() + 1);
                 $em->persist($arDespachoRecogidaTipo);
             }
 
-            $arDespachoRecogida->setEstadoAprobado(0);
-            $this->getEntityManager()->persist($arDespachoRecogida);
-            $this->getEntityManager()->flush();
+            $em->persist($arDespachoRecogida);
+            $em->flush();
         }
     }
 

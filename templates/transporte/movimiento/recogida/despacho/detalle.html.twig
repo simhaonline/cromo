@@ -1,6 +1,12 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="btn-toolbar" style="float: left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('transporte_movimiento_recogida_despacho_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
@@ -9,9 +15,9 @@
     </div>
     <div style="float:right">
         {% if arDespachoRecogida.estadoMonitoreo == 1 %}<span class="label label-default">Monitoreo</span>{% endif %}
-        {% if arDespachoRecogida.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
-        {% if arDespachoRecogida.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
-        {% if arDespachoRecogida.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arDespachoRecogida.estadoAutorizado == 1 %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arDespachoRecogida.estadoAprobado == 1 %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arDespachoRecogida.estadoAnulado == 1 %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">
@@ -205,13 +211,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="btn-toolbar" style="float: left">
-        <div class="btn-group">
-            <a class="btn btn-default btn-sm"
-               href="{{ path('transporte_movimiento_recogida_despacho_lista') }}">Volver</a>
         </div>
     </div>
 

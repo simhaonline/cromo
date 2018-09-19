@@ -12,6 +12,7 @@ class DocMasivoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, DocMasivo::class);
     }
+
     public function lista()
     {
         $session = new Session();
@@ -22,6 +23,17 @@ class DocMasivoRepository extends ServiceEntityRepository
         if ($session->get('filtroDocMasivoIdentificador') != '') {
             $queryBuilder->andWhere("m.identificador = {$session->get('filtroDocMasivoIdentificador')}");
         }
+        return $queryBuilder;
+    }
+
+    public function listaArchivo($tipo, $codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(DocMasivo::class, 'm')
+            ->select('m.codigoMasivoPk')
+            ->addSelect('m.identificador')
+            ->where("m.codigoMasivoTipoFk = '" . $tipo . "'")
+            ->andWhere("m.identificador = '" . $codigo . "'");
         return $queryBuilder;
     }
 }

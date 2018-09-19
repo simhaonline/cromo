@@ -3,6 +3,7 @@
 namespace App\Controller\Documental\Movimiento\Masivo;
 
 
+use App\Entity\Documental\DocConfiguracion;
 use App\Entity\Documental\DocDirectorio;
 use App\Entity\Documental\DocMasivo;
 use App\Entity\Documental\DocMasivoCarga;
@@ -65,7 +66,8 @@ class MasivoController extends Controller
                 $session->set('filtroDocMasivoIdentificador', $form->get('txtNumero')->getData());
             }
             if ($form->get('btnAnalizarBandeja')->isClicked()) {
-                $directorioBandeja = "/bandeja";
+                $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
+                $directorioBandeja = $arrConfiguracion['rutaBandeja'];
                 $ficheros  = scandir($directorioBandeja);
                 foreach ($ficheros as $fichero) {
                     if($fichero != "." && $fichero != "..") {
@@ -74,14 +76,14 @@ class MasivoController extends Controller
                             $nombre = $partes[0];
                             $extension = $partes[1];
                             $archivo = $directorioBandeja . "/" . $fichero;
-                            $tamano = filesize($archivo) / 1000;
-                            if($tamano < 8000) {
+                            $tamano = filesize($archivo);
+                            if($tamano < 8000000) {
                                 if($extension == 'pdf') {
                                     $arMasivoCarga = new DocMasivoCarga();
                                     $arMasivoCarga->setIdentificador($nombre);
                                     $arMasivoCarga->setExtension($extension);
                                     $arMasivoCarga->setArchivo($fichero);
-                                    $arMasivoCarga->getTamano($tamano);
+                                    $arMasivoCarga->setTamano($tamano);
                                     $em->persist($arMasivoCarga);
                                 }
                             }
@@ -99,10 +101,11 @@ class MasivoController extends Controller
                 return $this->redirect($this->generateUrl('documental_movimiento_masivo_masivo_carga'));
             }
             if ($form->get('btnCargar')->isClicked()) {
-                $tipo = "guia";
+                $tipo = "tte_guia";
                 $arMasivoTipo = $em->getRepository(DocMasivoTipo::class)->find($tipo);
-                $directorioBandeja = "/bandeja";
-                $directorioDestino = "/almacenamiento/masivo/";
+                $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
+                $directorioBandeja = $arrConfiguracion['rutaBandeja'];
+                $directorioDestino = $arrConfiguracion['rutaAlmacenamiento'] . "/";
                 if(file_exists($directorioDestino)) {
                     $arDirectorio = $em->getRepository(DocDirectorio::class)->findOneBy(array('tipo' => 'M', 'codigoMasivoTipoFk' => $tipo));
                     if(!$arDirectorio) {
@@ -139,8 +142,9 @@ class MasivoController extends Controller
                                 $arMasivo->setArchivo($arMasivoCarga->getArchivo());
                                 $arMasivo->setExtension($arMasivoCarga->getExtension());
                                 $arMasivo->setDirectorio($arDirectorio->getDirectorio());
+                                $arMasivo->setTamano($arMasivoCarga->getTamano());
                                 $archivoDestino = rand(100000, 999999) . "_" . $arMasivoCarga->getIdentificador();
-                                $arMasivo->setArchivoDestino($archivoDestino);
+                                $arMasivo->setArchivoDestino($archivoDestino . "." . $arMasivoCarga->getExtension());
                                 $destino = $directorio . $archivoDestino . "." . $arMasivoCarga->getExtension();
                                 $em->persist($arMasivo);
 

@@ -8,7 +8,10 @@ use App\Entity\Transporte\TteRecogida;
 use App\Form\Type\Transporte\RecogidaType;
 use App\Formato\Transporte\Recogida;
 use App\Utilidades\Estandares;
+use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -130,5 +133,31 @@ class RecogidaController extends Controller
         return $this->render('transporte/movimiento/recogida/recogida/nuevo.html.twig', ['arRecogida' => $arRecogida,'form' => $form->createView()]);
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/transporte/movimiento/recogida/recogida/reprogramar/{id}", name="transporte_movimiento_recogida_reprogramar_nuevo")
+     */
+    public function reprogramarRecodiga(Request $request, $id){
+        $em = $this->getDoctrine()->getManager();
+        $arRecogida = $em->getRepository(TteRecogida::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('fecha', DateType::class,array('widget' => 'single_text','data' => $arRecogida->getFecha(), 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
+            ->add('btnGuardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->getForm();
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            if($form->get('btnGuardar')->isClicked()){
+                $arRecogida->setFecha($form->get('fecha')->getData());
+                $em->persist($arRecogida);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('transporte/movimiento/recogida/recogida/reprogramar.html.twig',[
+            'form' => $form->createView()
+        ]);
+    }
 }
 

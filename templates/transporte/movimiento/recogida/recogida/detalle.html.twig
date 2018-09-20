@@ -9,6 +9,12 @@
             {{ form_widget(form.btnAnular, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
+    {% if arRecogida.codigoDespachoRecogidaFk is null %}
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="javascript:abrirVentana3('{{ path('transporte_movimiento_recogida_reprogramar_nuevo',{'id' : arRecogida.codigoRecogidaPk }) }}','ReprogramarRecogida', 300, 500)">Reprogramar</a>
+        </div>
+    {% endif %}
     </div>
     <div style="float:right">
         {% if arRecogida.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
@@ -17,14 +23,14 @@
         {% if arRecogida.estadoProgramado == 1 %}<span class="label label-default">Programado</span>{% endif %}
         {% if arRecogida.estadoRecogido == 1 %}<span class="label label-default">Recogida</span>{% endif %}
     </div>
-    <br /><br />
+    <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arRecogida.codigoRecogidaPk }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arRecogida.fecha |date("Y/m/d") }}</td>
-            <td class="titulo" >UNIDADES:</td>
+            <td class="titulo">UNIDADES:</td>
             <td align="right">{{ arRecogida.unidades }}</td>
         </tr>
         <tr>
@@ -52,10 +58,10 @@
             <td align="right"></td>
         </tr>
         <tr>
-            <td class="titulo" >COMENTARIO: </td>
+            <td class="titulo">COMENTARIO:</td>
             <td class="td-in-well" colspan="5">{{ arRecogida.comentario }}</td>
         </tr>
     </table>
     {{ form_end(form) }}
-    <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_recogida_recogida_lista') }}">Volver</a>
+    <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_recogida_recogida_lista') }}">Volver</a>
 {% endblock %}

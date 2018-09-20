@@ -1,2 +1,12 @@
 DELETE FROM tte_recogida;
 DELETE FROM tte_despacho_recogida;
+DELETE FROM tte_novedad;
+DELETE FROM tte_monitoreo;
+DELETE FROM tte_factura_detalle;
+DELETE FROM tte_despacho_detalle;
+DELETE FROM tte_recibo;
+DELETE FROM tte_guia;
+DELETE FROM tte_despacho;
+DELETE FROM tte_factura;
+DELETE FROM ctb_registro;
+DELETE FROM car_cuenta_cobrar;

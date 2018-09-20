@@ -29,7 +29,7 @@ class Factura extends \FPDF {
     public function Header() {
         $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
         $arFactura = self::$em->getRepository('App:Transporte\TteFactura')->find(self::$codigoFactura);
-        $this->Image('../public/img/empresa/logo.jpeg', 10, 8, 40, 18);
+        $this->Image('../public/img/empresa/logo.jpg', 10, 8, 40, 18);
         $this->Image('../public/img/recursos/transporte/veritas.jpeg', 110, 8, 50, 25);
         $this->SetFont('Arial', 'b', 9);
         $this->SetFillColor(272, 272, 272);

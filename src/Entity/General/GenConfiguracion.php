@@ -47,7 +47,7 @@ class GenConfiguracion
     private $direccion;
 
     /**
-     * @ORM\Column(name="logo", type="blob")
+     * @ORM\Column(name="logo", type="blob", nullable=true)
      */
     private $logo;
 
@@ -118,6 +118,22 @@ class GenConfiguracion
     /**
      * @return mixed
      */
+    public function getRutaTemporal()
+    {
+        return $this->rutaTemporal;
+    }
+
+    /**
+     * @param mixed $rutaTemporal
+     */
+    public function setRutaTemporal($rutaTemporal): void
+    {
+        $this->rutaTemporal = $rutaTemporal;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getTelefono()
     {
         return $this->telefono;
@@ -163,20 +179,7 @@ class GenConfiguracion
         $this->logo = $logo;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRutaTemporal()
-    {
-        return $this->rutaTemporal;
-    }
 
-    /**
-     * @param mixed $rutaTemporal
-     */
-    public function setRutaTemporal($rutaTemporal): void
-    {
-        $this->rutaTemporal = $rutaTemporal;
-    }
+
 }
 

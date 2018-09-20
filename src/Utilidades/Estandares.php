@@ -87,7 +87,7 @@ final class Estandares
         //Logo
         $pdf->SetXY(53, 10);
         try {
-            $pdf->Image('../public/img/empresa/logo.jpeg', 12, 13, 40, 25);
+            $pdf->Image('../public/img/empresa/logo.jpg', 12, 13, 40, 25);
         } catch (\Exception $exception) {
         }
         //INFORMACIÓN EMPRESA

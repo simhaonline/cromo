@@ -22,7 +22,9 @@ class ApiMasivoController extends FOSRestController
         ini_set("memory_limit", -1);
         $arMasivo = $this->getDoctrine()->getManager()->getRepository(DocMasivo::class)->findOneBy(array('identificador' => $identificador));
         if($arMasivo) {
-            $archivo = "/almacenamiento/masivo/" . $tipo . "/" . $arMasivo->getDirectorio() . "/" . $arMasivo->getArchivoDestino();
+            $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
+            //$archivo = "/almacenamiento/masivo/" . $tipo . "/" . $arMasivo->getDirectorio() . "/" . $arMasivo->getArchivoDestino();
+            $archivo = $arrConfiguracion['rutaAlmacenamiento'] . "/" . $arMasivo->getCodigoMasivoTipoFk() . "/" .  $arMasivo->getDirectorio() . "/" . $arMasivo->getArchivoDestino();
             //$archivo = "/almacenamiento/masivo/guia/1/990023629.pdf";
 
             $type = pathinfo($archivo, PATHINFO_EXTENSION);

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Documental\Api;
 
+use App\Entity\Documental\DocConfiguracion;
 use App\Entity\Documental\DocMasivo;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -17,12 +18,12 @@ class ApiMasivoController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/documental/api/masivo/masivo/{tipo}/{identificador}")
      */
-    public function consulta($tipo = "", $identificador = 0) {
+    public function consulta($tipo = "tte_guia", $identificador = 0) {
         set_time_limit(0);
         ini_set("memory_limit", -1);
-        $arMasivo = $this->getDoctrine()->getManager()->getRepository(DocMasivo::class)->findOneBy(array('identificador' => $identificador));
+        $arMasivo = $this->getDoctrine()->getManager()->getRepository(DocMasivo::class)->findOneBy(array('codigoMasivoTipoFk'=>$tipo, 'identificador' => $identificador));
         if($arMasivo) {
-            $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
+            $arrConfiguracion = $this->getDoctrine()->getManager()->getRepository(DocConfiguracion::class)->archivoMasivo();
             //$archivo = "/almacenamiento/masivo/" . $tipo . "/" . $arMasivo->getDirectorio() . "/" . $arMasivo->getArchivoDestino();
             $archivo = $arrConfiguracion['rutaAlmacenamiento'] . "/" . $arMasivo->getCodigoMasivoTipoFk() . "/" .  $arMasivo->getDirectorio() . "/" . $arMasivo->getArchivoDestino();
             //$archivo = "/almacenamiento/masivo/guia/1/990023629.pdf";

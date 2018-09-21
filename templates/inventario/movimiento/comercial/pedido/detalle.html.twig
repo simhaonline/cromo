@@ -2,22 +2,13 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     {{ notificar()|raw }}
-    <div class="row">
-        <div class="col-lg-12">
-            <h3 class='page-header'>
-                Inventario movimiento
-                <small style="font-size: 20px">Inventario: pedido detalle</small>
-            </h3>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            {{ form_widget(form.btnAutorizar) }}
-            {{ form_widget(form.btnDesautorizar) }}
-            {{ form_widget(form.btnImprimir) }}
-            {{ form_widget(form.btnAprobar) }}
-            {{ form_widget(form.btnAnular) }}
+            <a class="btn btn-default btn-sm"
+               href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
     <div style="float:right">
@@ -25,42 +16,42 @@
         {% if arPedido.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arPedido.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
-    <br /><br />
+    <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">CODIGO:</td>
             <td class="td-in-well">{{ arPedido.codigoPedidoPk }}</td>
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arPedido.usuario }}</td>
-            <td class="titulo" >SUBTOTAL:</td>
-            <td align="right">{{ arPedido.vrSubtotal | number_format(0, '.', ',')}}</td>
+            <td class="titulo">SUBTOTAL:</td>
+            <td align="right">{{ arPedido.vrSubtotal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arPedido.numero }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arPedido.fecha | date('Y-m-d') }}</td>
-            <td class="titulo" >IVA:</td>
-            <td align="right">{{ arPedido.vrIva | number_format(0, '.', ',')}}</td>
+            <td class="titulo">IVA:</td>
+            <td align="right">{{ arPedido.vrIva | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
-            <td class="titulo" >SOPORTE:</td>
+            <td class="titulo">SOPORTE:</td>
             <td class="td-in-well">{{ arPedido.soporte }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo" >NETO:</td>
-            <td align="right">{{ arPedido.vrNeto | number_format(0, '.', ',')}}</td>
+            <td class="titulo">NETO:</td>
+            <td align="right">{{ arPedido.vrNeto | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
-            <td class="titulo" ></td>
+            <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo" >TOTAL:</td>
-            <td align="right">{{ arPedido.vrTotal | number_format(0, '.', ',')}}</td>
+            <td class="titulo">TOTAL:</td>
+            <td align="right">{{ arPedido.vrTotal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
-            <td class="titulo" >COMENTARIO: </td>
+            <td class="titulo">COMENTARIO:</td>
             <td class="td-in-well" colspan="5">{{ arPedido.comentario }}</td>
         </tr>
     </table>
@@ -94,25 +85,28 @@
                                 <td>{{ arPedidoDetalle.itemNombre | default('') }}</td>
                                 <td>{{ arPedidoDetalle.itemMarcaNombre | default('') }}</td>
                                 <td class="numero">{{ arPedidoDetalle.cantidad }}</td>
-                                <td class="numero">{{ arPedidoDetalle.vrPrecio }}</td>
+                                <td class="numero">{{ arPedidoDetalle.vrPrecio | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arPedidoDetalle.porcentajeIva }}</td>
-                                <td class="numero">{{ arPedidoDetalle.vrIva }}</td>
-                                <td class="numero">{{ arPedidoDetalle.vrSubtotal }}</td>
-                                <td class="numero">{{ arPedidoDetalle.vrTotal }}</td>
+                                <td class="numero">{{ arPedidoDetalle.vrIva | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPedidoDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPedidoDetalle.vrTotal | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arPedidoDetalle.cantidadPendiente }}</td>
-                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk }}" /></td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                                       value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"/>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                {#<div class="separador-1"></div>#}
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
                         {% if arPedido.estadoAutorizado == true %}
-                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled" value="Nuevo"/>
+                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
+                                   value="Nuevo"/>
                         {% else %}
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_pedido_detalle_nuevo', {'codigoDetalle': 0,'id':arPedido.codigoPedidoPk }) }}', 'PedidoAdicionarDetalle', 600, 900)">Nuevo</a>
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_pedido_detalle_nuevo', {'id': 0,'codigoPedido':arPedido.codigoPedidoPk }) }}', 'PedidoAdicionarDetalle', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">
@@ -126,5 +120,4 @@
         </div>
     </div>
     {{ form_end(form) }}
-    <a  class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Volver</a>
 {% endblock %}

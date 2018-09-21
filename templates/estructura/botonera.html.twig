@@ -1,9 +1,8 @@
-
-        {{ form_widget(form.btnAutorizar) }}
-        {{ form_widget(form.btnDesautorizar) }}
-        {{ form_widget(form.btnImprimir) }}
-        {{ form_widget(form.btnAprobar) }}
-        {{ form_widget(form.btnAnular) }}
-        {% if clase is defined %}
-                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('documental_general_general_lista', { 'tipo': clase.clase,  'codigo': clase.codigo }) }}', 'Archivos', 500, 800)">Archivos</a>
-        {% endif %}
+{{ form_widget(form.btnAutorizar) }}
+{{ form_widget(form.btnDesautorizar) }}
+{{ form_widget(form.btnImprimir) }}
+{{ form_widget(form.btnAprobar) }}
+{{ form_widget(form.btnAnular) }}
+{% if clase is defined %}
+<a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('documental_general_general_lista', { 'tipo': clase.clase,  'codigo': clase.codigo }) }}', 'Archivos', 500, 800)">Archivos</a>
+{% endif %}

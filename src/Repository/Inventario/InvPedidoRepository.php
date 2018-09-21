@@ -42,15 +42,21 @@ class InvPedidoRepository extends ServiceEntityRepository
 
     }
 
-    public function liquidar($codigoPedido): bool
+    /**
+     * @param $codigoPedido
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function liquidar($codigoPedido)
     {
-        $arPedido = $this->getEntityManager()->getRepository(InvPedido::class)->find($codigoPedido);
-        $arPedidoDetalles = $this->getEntityManager()->getRepository(InvPedidoDetalle::class)->findBy(array('codigoPedidoFk' => $codigoPedido));
+        $em = $this->getEntityManager();
+        $arPedido = $em->getRepository(InvPedido::class)->find($codigoPedido);
+        $arPedidoDetalles = $em->getRepository(InvPedidoDetalle::class)->findBy(['codigoPedidoFk' => $codigoPedido]);
         $subtotalGeneral = 0;
         $ivaGeneral = 0;
         $totalGeneral = 0;
         foreach ($arPedidoDetalles as $arPedidoDetalle) {
-            $arPedidoDetalleAct = $this->getEntityManager()->getRepository(InvPedidoDetalle::class)->find($arPedidoDetalle->getCodigoPedidoDetallePk());
+            $arPedidoDetalleAct = $em->getRepository(InvPedidoDetalle::class)->find($arPedidoDetalle->getCodigoPedidoDetallePk());
             $subtotal = $arPedidoDetalle->getCantidad() * $arPedidoDetalle->getVrPrecio();
             $porcentajeIva = $arPedidoDetalle->getPorcentajeIva();
             $iva = $subtotal * $porcentajeIva / 100;
@@ -61,17 +67,22 @@ class InvPedidoRepository extends ServiceEntityRepository
             $arPedidoDetalleAct->setVrSubtotal($subtotal);
             $arPedidoDetalleAct->setVrIva($iva);
             $arPedidoDetalleAct->setVrTotal($total);
-            $this->getEntityManager()->persist($arPedidoDetalleAct);
+            $em->persist($arPedidoDetalleAct);
         }
         $arPedido->setVrSubtotal($subtotalGeneral);
         $arPedido->setVrIva($ivaGeneral);
         $arPedido->setVrTotal($totalGeneral);
-        $this->getEntityManager()->persist($arPedido);
-        $this->getEntityManager()->flush();
-        return true;
+        $em->persist($arPedido);
+        $em->flush();
     }
 
-
+    /**
+     * @param $arPedido InvPedido
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function autorizar($arPedido)
     {
         if(!$arPedido->getEstadoAutorizado()) {
@@ -91,6 +102,11 @@ class InvPedidoRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param $arPedido InvPedido
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function desautorizar($arPedido)
     {
         if($arPedido->getEstadoAutorizado()) {
@@ -103,17 +119,27 @@ class InvPedidoRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param $arPedido InvPedido
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function aprobar($arPedido)
     {
         if($arPedido->getEstadoAutorizado() == 1 && $arPedido->getEstadoAprobado() == 0) {
             $arPedido->setEstadoAprobado(1);
             $this->getEntityManager()->persist($arPedido);
             $this->getEntityManager()->flush();
-
         } else {
             Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
         }
     }
+
+    /**
+     * @param $arPedido InvPedido
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function anular($arPedido)
     {
         if($arPedido->getEstadoAprobado() == 1 && $arPedido->getEstadoAnulado() == 0) {

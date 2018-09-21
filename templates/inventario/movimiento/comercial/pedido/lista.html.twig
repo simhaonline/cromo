@@ -1,6 +1,5 @@
 {% extends 'base_inventario.html.twig' %}
 {% block content %}
-    {% set foo = "one,two,three"|split(',') %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
     {{ form_errors(form) }}
     <div class="panel panel-default">
@@ -59,7 +58,11 @@
                 <td class="estado">{{ arPedido.estadoAutorizado?'SI':'NO' }}</td>
                 <td class="estado">{{ arPedido.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arPedido.estadoAnulado?'SI':'NO' }}</td>
-                <td style="text-align: center"><a href="{{ path('inventario_movimiento_comercial_pedido_detalle', { 'id': arPedido.codigoPedidoPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a
+                            href="{{ path('inventario_movimiento_comercial_pedido_detalle', { 'id': arPedido.codigoPedidoPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i>
+                    </a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
@@ -67,7 +70,8 @@
 
     <div class="btn-group" style="float: left">
         <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arPedidos.getTotalItemCount }}</span></div>
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arPedidos.getTotalItemCount }}</span>
+            </div>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
@@ -79,10 +83,10 @@
             {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
         </div>
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_comercial_pedido_nuevo', {'id': 0}) }}">Nuevo</a>
+            <a class="btn btn-default btn-sm"
+               href="{{ path('inventario_movimiento_comercial_pedido_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}
-

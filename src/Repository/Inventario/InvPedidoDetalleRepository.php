@@ -3,10 +3,10 @@
 namespace App\Repository\Inventario;
 
 
+use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use App\Utilidades\Mensajes;
 class InvPedidoDetalleRepository extends ServiceEntityRepository
 {
@@ -39,10 +39,16 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
 
         return $query->execute();
     }
+
+    /**
+     * @param $arPedido InvPedido
+     * @param $arrDetallesSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function eliminar($arPedido, $arrDetallesSeleccionados)
     {
         $em = $this->getEntityManager();
-        if ($arPedido->getEstadoAutorizado() == 0) {
+        if (!$arPedido->getEstadoAutorizado()) {
             if (count($arrDetallesSeleccionados)) {
                 foreach ($arrDetallesSeleccionados as $codigo) {
                     $ar = $em->getRepository(InvPedidoDetalle::class)->find($codigo);

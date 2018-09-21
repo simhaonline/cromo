@@ -7,15 +7,10 @@ use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvPrecioDetalle;
 use App\Entity\Inventario\InvTercero;
-use App\Formato\Inventario\Pedido;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
-use http\Env\Response;
+use App\General\General;
+use App\Utilidades\Estandares;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,54 +20,60 @@ use App\Form\Type\Inventario\PedidoType;
 class PedidoController extends Controller
 {
     /**
-     * @Route("/inv/mto/comercial/pedido/lista", name="inventario_movimiento_comercial_pedido_lista")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/movimiento/comercial/pedido/lista", name="inventario_movimiento_comercial_pedido_lista")
      */
     public function lista(Request $request)
     {
-        $paginator  = $this->get('knp_paginator');
-        $form = $this->formularioFiltro();
+        $session = new Session();
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('numero', TextType::class, array('data' => $session->get('filtroInvPedidoPedidoNumero')))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
-                    $session = new session;
-                    $session->set('filtroInvNumeroPedido', $form->get('numero')->getData());
+                    $session->set('filtroInvPedidoPedidoNumero', $form->get('numero')->getData());
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    $query = $this->getDoctrine()->getRepository(InvPedido::class)->lista();
-                    General::get()->setExportar($query, "Guias");
+                    General::get()->setExportar($this->getDoctrine()->getRepository(InvPedido::class)->lista(), "Pedidos");
                 }
             }
         }
-        $query = $this->getDoctrine()->getRepository(InvPedido::class)->lista();
-        $arPedidos = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        $arPedidos = $paginator->paginate($this->getDoctrine()->getRepository(InvPedido::class)->lista(), $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/comercial/pedido/lista.html.twig', [
             'arPedidos' => $arPedidos,
             'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/inv/mto/comercial/pedido/nuevo/{id}", name="inventario_movimiento_comercial_pedido_nuevo")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/movimiento/comercial/pedido/nuevo/{id}", name="inventario_movimiento_comercial_pedido_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arPedido = new InvPedido();
         if ($id != 0) {
-            $arPedido = $em->getRepository('App:Inventario\Invpedido')->find($id);
+            $arPedido = $em->getRepository(InvPedido::class)->find($id);
         }
         $form = $this->createForm(PedidoType::class, $arPedido);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arPedido = $form->getData();
                 $txtCodigoTercero = $request->request->get('txtCodigoTercero');
-                if($txtCodigoTercero != '') {
+                if ($txtCodigoTercero != '') {
                     $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
-                    if($arTercero) {
+                    if ($arTercero) {
                         $arPedido->setTerceroRel($arTercero);
                         $arPedido->setFecha(new \DateTime('now'));
-                        if($id == 0) {
+                        if ($id == 0) {
                             $arPedido->setFecha(new \DateTime('now'));
                             $arPedido->setUsuario($this->getUser()->getUserName());
                         }
@@ -90,52 +91,58 @@ class PedidoController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/comercial/pedido/detalle/{id}", name="inventario_movimiento_comercial_pedido_detalle")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @Route("/inventario/movimiento/comercial/pedido/detalle/{id}", name="inventario_movimiento_comercial_pedido_detalle")
      */
     public function detalle(Request $request, $id)
     {
-        $paginator  = $this->get('knp_paginator');
-        //$objFormatopedido = new pedido();
+        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arPedido = $em->getRepository(InvPedido::class)->find($id);
-        $form = $this->formularioDetalles($arPedido);
+        $form = Estandares::botonera($arPedido->getEstadoAutorizado(), $arPedido->getEstadoAprobado(), $arPedido->getEstadoAnulado());
+        $arrBtnActualizarDetalle = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        if($arPedido->getEstadoAutorizado()){
+            $arrBtnActualizarDetalle['disabled'] = true;
+            $arrBtnEliminar['disabled'] = true;
+        }
+        $form->add('btnActualizarDetalle', SubmitType::class, $arrBtnActualizarDetalle);
+        $form->add('btnEliminar', SubmitType::class, $arrBtnActualizarDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(InvPedido::class)->liquidar($id);
                 $em->getRepository(InvPedido::class)->autorizar($arPedido);
-                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository('App:Inventario\Invpedido')->desautorizar($arPedido);
-                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
+                $em->getRepository(InvPedido::class)->desautorizar($arPedido);
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 //$objFormatopedido->Generar($em, $id);
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository('App:Inventario\Invpedido')->aprobar($arPedido);
-                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
+                $em->getRepository(InvPedido::class)->aprobar($arPedido);
             }
             if ($form->get('btnAnular')->isClicked()) {
-                $respuesta = $em->getRepository('App:Inventario\Invpedido')->anular($arPedido);
-                if($respuesta != ''){
-                    Mensajeserror($respuesta);
-                }
-                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
+                $em->getRepository(InvPedido::class)->anular($arPedido);
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(InvPedidoDetalle::class)->eliminar($arPedido, $arrDetallesSeleccionados);
                 $em->getRepository(InvPedido::class)->liquidar($id);
-                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
             }
             if ($form->get('btnActualizarDetalle')->isClicked()) {
                 $em->getRepository(InvPedido::class)->liquidar($id);
-                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
             }
+            return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
         }
-        $query = $em->getRepository(InvPedidoDetalle::class)->pedido($id);
-        $arPedidoDetalles = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        $arPedidoDetalles = $paginator->paginate($em->getRepository(InvPedidoDetalle::class)->pedido($id), $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/comercial/pedido/detalle.html.twig', [
             'form' => $form->createView(),
             'arPedidoDetalles' => $arPedidoDetalles,
@@ -144,89 +151,61 @@ class PedidoController extends Controller
     }
 
     /**
-     * @Route("/inv/mto/comercial/pedido/detalle/nuevo/{id}", name="inventario_movimiento_comercial_pedido_detalle_nuevo")
+     * @param Request $request
+     * @param $codigoPedido
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @Route("/inventario/movimiento/comercial/pedido/detalle/nuevo/{codigoPedido}/{id}", name="inventario_movimiento_comercial_pedido_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $id)
+    public function detalleNuevo(Request $request, $codigoPedido, $id)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $arPedido = $em->getRepository(InvPedido::class)->find($id);
-        $form = $this->formularioFiltroItems();
-        $form->handleRequest($request);
-        $this->listaItems($em, $form);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $this->listaItems($em, $form);
-            }
-            if ($form->get('btnGuardar')->isClicked()) {
-                $codigoPrecioVenta = null;
-                if($arPedido->getTerceroRel()->getCodigoPrecioVentaFk()) {
-                    $codigoPrecioVenta = $arPedido->getTerceroRel()->getCodigoPrecioVentaFk();
-                }
-
-                $arrItems = $request->request->get('itemCantidad');
-                if (count($arrItems) > 0) {
-                    foreach ($arrItems as $codigoItem => $cantidad) {
-                        if ($cantidad != '' && $cantidad != 0) {
-                            $precio = $em->getRepository(InvPrecioDetalle::class)->precioVenta($codigoPrecioVenta, $codigoItem);
-                            $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
-                            $arPedidoDetalle = new InvPedidoDetalle();
-                            $arPedidoDetalle->setPedidoRel($arPedido);
-                            $arPedidoDetalle->setItemRel($arItem);
-                            $arPedidoDetalle->setCantidad($cantidad);
-                            $arPedidoDetalle->setCantidadPendiente($cantidad);
-                            $arPedidoDetalle->setVrPrecio($precio);
-                            $arPedidoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
-                            $em->persist($arPedidoDetalle);
-                        }
-                    }
-                    $em->flush();
-                    $em->getRepository(InvPedido::class)->liquidar($id);
-                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-                }
-            }
-        }
-        $arItems = $paginator->paginate($this->query, $request->query->getInt('page', 1), 10);
-        return $this->render('inventario/movimiento/comercial/pedido/detalleNuevo.html.twig', [
-            'form' => $form->createView(),
-            'arItems' => $arItems
-        ]);
-    }
-
-
-    private function formularioFiltro()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $session = new session;
-
+        $arPedido = $em->getRepository(InvPedido::class)->find($codigoPedido);
         $form = $this->createFormBuilder()
-            ->add('numero', TextType::class, array('data' => $session->get('filtroInvNumeroPedido')))
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->getForm();
-        return $form;
-    }
-
-    private function formularioFiltroItems()
-    {
-        return $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
-    }
-
-    /**
-     * @param $em ObjectManager
-     * @param $form \Symfony\Component\Form\FormInterface
-     */
-    private function listaItems($em, $form)
-    {
-        $session = new Session();
-        $session->set('filtroCodigoItem', $form->get('txtCodigoItem')->getData());
-        $session->set('filtroNombreItem', $form->get('txtNombreItem')->getData());
-        $this->query = $em->getRepository('App:Inventario\InvItem')->listarItems($session->get('filtroNombreItem'), $session->get('filtroCodigoItem'));
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
+                $session->set('filtroInvItemNombre', $form->get('txtNombreItem')->getData());
+            }
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrItems = $request->request->get('itemCantidad');
+                if (count($arrItems) > 0) {
+                    foreach ($arrItems as $codigoItem => $cantidad) {
+                        if ($cantidad != '' && $cantidad != 0) {
+                            $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
+                            $precioVenta = $em->getRepository(InvPrecioDetalle::class)->obtenerPrecio($arPedido->getTerceroRel()->getCodigoPrecioVentaFk(), $codigoItem);
+                            $arPedidoDetalle = new InvPedidoDetalle();
+                            $arPedidoDetalle->setPedidoRel($arPedido);
+                            $arPedidoDetalle->setItemRel($arItem);
+                            $arPedidoDetalle->setCantidad($cantidad);
+                            $arPedidoDetalle->setCantidadPendiente($cantidad);
+                            $arPedidoDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
+                            $arPedidoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
+                            $em->persist($arPedidoDetalle);
+                        }
+                    }
+                    $em->flush();
+                    $em->getRepository(InvPedido::class)->liquidar($codigoPedido);
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                }
+            }
+        }
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 10);
+        return $this->render('inventario/movimiento/comercial/pedido/detalleNuevo.html.twig', [
+            'form' => $form->createView(),
+            'arItems' => $arItems
+        ]);
     }
 
     /**
@@ -242,21 +221,20 @@ class PedidoController extends Controller
         $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizarDetalle = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        if($ar->getEstadoAutorizado()) {
+        if ($ar->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnActualizarDetalle['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
-            if($ar->getEstadoAprobado()) {
+            if ($ar->getEstadoAprobado()) {
                 $arrBtnDesautorizar['disabled'] = true;
-                if(!$ar->getEstadoAnulado()) {
+                if (!$ar->getEstadoAnulado()) {
                     $arrBtnAnular['disabled'] = false;
                 }
             } else {
                 $arrBtnAprobar['disabled'] = false;
             }
         }
-
         return $this
             ->createFormBuilder()
             ->add('btnAutorizar', SubmitType::class, $arrBtnAutorizar)
@@ -268,5 +246,4 @@ class PedidoController extends Controller
             ->add('btnActualizarDetalle', SubmitType::class, $arrBtnActualizarDetalle)
             ->getForm();
     }
-
 }

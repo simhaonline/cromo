@@ -8,11 +8,20 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 class InvPrecioDetalleRepository extends ServiceEntityRepository
 {
+    /**
+     * InvPrecioDetalleRepository constructor.
+     * @param RegistryInterface $registry
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, InvPrecioDetalle::class);
     }
 
+    /**
+     * @param $codigoPrecioVenta
+     * @param $codigoItem
+     * @return float
+     */
     public function precioVenta($codigoPrecioVenta, $codigoItem): float
     {
         $precio = 0;
@@ -26,6 +35,10 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
         return $precio;
     }
 
+    /**
+     * @param $id
+     * @return \Doctrine\ORM\QueryBuilder
+     */
     public function lista($id)
     {
         $session = new Session();
@@ -44,6 +57,11 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    /**
+     * @param $arrSeleccionados
+     * @return string
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function eliminar($arrSeleccionados)
     {
         $respuesta = '';
@@ -62,5 +80,19 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
             }
         }
         return $respuesta;
+    }
+
+    /**
+     * @param $codigPrecio integer
+     * @param $codigoItem integer
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function obtenerPrecio($codigPrecio, $codigoItem){
+        $qb = $this->getEntityManager()->createQueryBuilder()->from(InvPrecioDetalle::class,'pd')
+            ->select('pd.vrPrecio as precio')
+            ->where("pd.codigoPrecioFk = {$codigPrecio}")
+            ->andWhere("pd.codigoItemFk = {$codigoItem}");
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }

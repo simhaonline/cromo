@@ -42,7 +42,7 @@ class DespachoRecogidaController extends Controller
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroTteDespachoRecogidaFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
                 $session->set('filtroTteDespachoRecogidaFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
-                $session->set('filtroTteDespachoFiltroFecha', $form->get('filtrarFecha')->getData());
+                $session->set('filtroTteDespachoRecogidaFiltroFecha', $form->get('filtrarFecha')->getData());
             }
             if ($form->get('btnContabilizar')->isClicked()) {
                 $arr = $request->request->get('ChkSeleccionar');

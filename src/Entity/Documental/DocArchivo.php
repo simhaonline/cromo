@@ -43,7 +43,7 @@ class DocArchivo
     private $nombre;
 
     /**
-     * @ORM\Column(name="extensionOriginal", type="string", length=250, nullable=true)
+     * @ORM\Column(name="extension_original", type="string", length=250, nullable=true)
      */
     private $extensionOriginal;
 

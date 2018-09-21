@@ -24,6 +24,18 @@
         </div>
         <!-- /.col-lg-12 -->
     </div>
+
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a href="{{ path('admin_lista',{'modulo':arEntidad.modulo,'entidad':arEntidad.entidad }) }}" class="btn btn-sm btn-default">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% if clase is defined %}
+                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('documental_general_general_lista', { 'tipo': clase.clase,  'codigo': clase.codigo }) }}', 'Archivos', 500, 800)">Archivos</a>
+            {% endif %}
+        </div>
+    </div>
+    <br /><br />
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             {% set ar = [] %}
@@ -45,8 +57,5 @@
         </tr>
     </table>
     <hr>
-    <div style="float: left">
-        <a href="{{ path('admin_lista',{'modulo':arEntidad.modulo,'entidad':arEntidad.entidad }) }}"
-           class="btn btn-sm btn-default">Volver</a>
-    </div>
+
 {% endblock %}

@@ -215,7 +215,8 @@ final class AdministracionController extends Controller
         return $this->render('estructura/detalles.html.twig', [
             'arEntidad' => $arEntidad,
             'arRegistro' => $arRegistro,
-            'arrCampos' => $arrCampos
+            'arrCampos' => $arrCampos,
+            'clase' => array('clase'=>$arEntidad->getPrefijo() . "_" . $entidad, 'codigo' => $id),
         ]);
     }
 

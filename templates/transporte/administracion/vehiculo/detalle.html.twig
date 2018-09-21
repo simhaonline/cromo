@@ -1,8 +1,16 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
-    <div class="row">
-        <!-- /.col-lg-12 -->
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_transporte_vehiculo_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% if clase is defined %}
+                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('documental_general_general_lista', { 'tipo': clase.clase,  'codigo': clase.codigo }) }}', 'Archivos', 500, 800)">Archivos</a>
+            {% endif %}
+        </div>
     </div>
+    <br /><br />
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo"><b>CODIGO VEHICULO:</b></td>
@@ -38,7 +46,7 @@
             <td class="titulo"><b>SERIE:</b></td>
             <td class="td-in-well">{{ arVehiculo.serie }}</td>
             <td class="titulo"><b>MARCA:</b></td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.marcaRel.nombre }}</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.marcaRel.nombre | default("") }}</td>
         </tr>
         <tr>
             <td class="titulo"><b>PESO VACIO:</b></td>
@@ -48,13 +56,13 @@
         </tr>
         <tr>
             <td class="titulo"><b>COLOR:</b></td>
-            <td class="td-in-well">{{ arVehiculo.colorRel.nombre }}</td>
+            <td class="td-in-well">{{ arVehiculo.colorRel.nombre | default("") }}</td>
             <td class="titulo"><b>CONFIGURACION:</b></td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.configuracion }}</td>
         </tr>
         <tr>
             <td class="titulo"><b>POSEEDOR:</b></td>
-            <td class="td-in-well">{{ arVehiculo.poseedorRel.nombreCorto }}</td>
+            <td class="td-in-well">{{ arVehiculo.poseedorRel.nombreCorto | default("") }}</td>
             <td class="titulo"><b>PROPIETARIO:</b></td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.propietarioRel.nombreCorto }}</td>
         </tr>
@@ -72,5 +80,5 @@
         <li><a href="#adicionales" data-toggle="tab">#</a></li>
     </ul>
     </br>
-    <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_transporte_vehiculo_lista') }}">Volver</a>
+
 {% endblock %}

@@ -6,6 +6,7 @@ use App\Entity\Contabilidad\CtbCentroCosto;
 use App\Entity\Contabilidad\CtbComprobante;
 use App\Entity\Contabilidad\CtbCuenta;
 use App\Entity\Contabilidad\CtbRegistro;
+use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteDespachoRecogidaTipo;
 use App\Entity\Transporte\TtePoseedor;
@@ -115,6 +116,22 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
         $arDespachoRecogida->setPesoReal(intval($arrRecogidas['pesoReal']));
         $arDespachoRecogida->setPesoVolumen(intval($arrRecogidas['pesoVolumen']));
         $arDespachoRecogida->setCantidad(intval($arrRecogidas['cantidad']));
+        //Totales
+        $arrConfiguracionLiquidarDespacho = $em->getRepository(TteConfiguracion::class)->liquidarDespacho();
+        $descuentos = $arDespachoRecogida->getVrDescuentoPapeleria() + $arDespachoRecogida->getVrDescuentoSeguridad() + $arDespachoRecogida->getVrDescuentoCargue() + $arDespachoRecogida->getVrDescuentoEstampilla();
+        $retencionFuente = 0;
+        if ($arDespachoRecogida->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
+            $retencionFuente = $arDespachoRecogida->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
+        }
+        $industriaComercio = $arDespachoRecogida->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] / 100;
+
+        $total = $arDespachoRecogida->getVrFletePago() - ($arDespachoRecogida->getVrAnticipo() + $retencionFuente + $industriaComercio);
+        $saldo = $total - $descuentos;
+        $arDespachoRecogida->setVrIndustriaComercio($industriaComercio);
+        $arDespachoRecogida->setVrRetencionFuente($retencionFuente);
+        $arDespachoRecogida->setVrTotal($total);
+        $arDespachoRecogida->setVrSaldo($saldo);
+
         $em->persist($arDespachoRecogida);
         $em->flush();
         return true;

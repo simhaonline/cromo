@@ -302,6 +302,7 @@ class DespachoController extends Controller
             'arDespacho' => $arDespacho,
             'arNovedades' => $arNovedades,
             'arDespachoDetalles' => $arDespachoDetalles,
+            'clase' => array('clase'=>'tte_despacho', 'codigo' => $id),
             'form' => $form->createView()]);
     }
 

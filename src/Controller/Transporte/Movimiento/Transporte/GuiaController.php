@@ -187,7 +187,6 @@ class GuiaController extends Controller
             'form' => $form->createView()]);
     }
 
-
     /**
      * @Route("/transporte/movimiento/trasnporte/guia/detalle/adicionar/novedad/{codigoGuia}/{codigoNovedad}", name="transporte_movimiento_transporte_guia_detalle_adicionar_novedad")
      */

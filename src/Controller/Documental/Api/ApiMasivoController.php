@@ -25,7 +25,7 @@ class ApiMasivoController extends FOSRestController
         if($arMasivo) {
             $arrConfiguracion = $this->getDoctrine()->getManager()->getRepository(DocConfiguracion::class)->archivoMasivo();
             //$archivo = "/almacenamiento/masivo/" . $tipo . "/" . $arMasivo->getDirectorio() . "/" . $arMasivo->getArchivoDestino();
-            $archivo = $arrConfiguracion['rutaAlmacenamiento'] . "/" . $arMasivo->getCodigoMasivoTipoFk() . "/" .  $arMasivo->getDirectorio() . "/" . $arMasivo->getArchivoDestino();
+            $archivo = $arrConfiguracion['rutaAlmacenamiento'] . "/masivo/" . $arMasivo->getCodigoMasivoTipoFk() . "/" .  $arMasivo->getDirectorio() . "/" . $arMasivo->getArchivoDestino();
             //$archivo = "/almacenamiento/masivo/guia/1/990023629.pdf";
 
             $type = pathinfo($archivo, PATHINFO_EXTENSION);

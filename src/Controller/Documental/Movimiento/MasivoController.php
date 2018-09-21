@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Documental\Movimiento\Masivo;
+namespace App\Controller\Documental\Movimiento;
 
 
 use App\Entity\Documental\DocConfiguracion;
@@ -105,7 +105,7 @@ class MasivoController extends Controller
                 $arMasivoTipo = $em->getRepository(DocMasivoTipo::class)->find($tipo);
                 $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
                 $directorioBandeja = $arrConfiguracion['rutaBandeja'];
-                $directorioDestino = $arrConfiguracion['rutaAlmacenamiento'] . "/";
+                $directorioDestino = $arrConfiguracion['rutaAlmacenamiento'] . "/masivo/";
                 if(file_exists($directorioDestino)) {
                     $arDirectorio = $em->getRepository(DocDirectorio::class)->findOneBy(array('tipo' => 'M', 'codigoMasivoTipoFk' => $tipo));
                     if(!$arDirectorio) {
@@ -170,7 +170,31 @@ class MasivoController extends Controller
         ]);
     }
 
+    /**
+     * @Route("/documental/movimiento/masivo/masivo/descargar/{codigo}", name="documental_movimiento_masivo_masivo_descargar")
+     */
+    public function descargarAction($codigo) {
+        $em = $this->getDoctrine()->getManager();
+        $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
+        $arArchivo = $em->getRepository(DocMasivo::class)->find($codigo);
+        $strRuta = $arrConfiguracion['rutaAlmacenamiento'] . "/masivo/" . $arArchivo->getCodigoMasivoTipoFk() . "/" .  $arArchivo->getDirectorio() . "/" . $arArchivo->getArchivoDestino();
+        // Generate response
+        $response = new Response();
 
+        // Set headers
+        $response->headers->set('Cache-Control', 'private');
+        $response->headers->set('Content-type', "application/pdf");
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $arArchivo->getArchivo() . '";');
+        $response->headers->set('Content-length', $arArchivo->getTamano());
+        $response->sendHeaders();
+        if(file_exists ($strRuta)){
+            $response->setContent(readfile($strRuta));
+        }else{
+            echo "<script>alert('No existe el archivo en el servidor a pesar de estar asociado en base de datos, por favor comuniquese con soporte');window.close()</script>";
+        }
+        return $response;
+
+    }
 
 }
 

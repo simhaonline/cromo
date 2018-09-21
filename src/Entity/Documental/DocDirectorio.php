@@ -23,6 +23,11 @@ class DocDirectorio
     private $tipo;
 
     /**
+     * @ORM\Column(name="clase", type="string", length=50, nullable=true)
+     */
+    private $clase;
+
+    /**
      * @ORM\Column(name="codigo_masivo_tipo_fk", type="string", length=20, nullable=true)
      */
     private $codigoMasivoTipoFk;
@@ -72,6 +77,22 @@ class DocDirectorio
     /**
      * @return mixed
      */
+    public function getClase()
+    {
+        return $this->clase;
+    }
+
+    /**
+     * @param mixed $clase
+     */
+    public function setClase($clase): void
+    {
+        $this->clase = $clase;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoMasivoTipoFk()
     {
         return $this->codigoMasivoTipoFk;
@@ -116,7 +137,6 @@ class DocDirectorio
     {
         $this->numeroArchivos = $numeroArchivos;
     }
-
 
 
 }

@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Movimiento\Recogida\Despacho;
 
 use App\Entity\Transporte\TteConductor;
+use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoRecogidaType;
@@ -54,13 +55,14 @@ class DespachoRecogidaController extends Controller
                                 $arDespachoRecogida->setVehiculoRel($arVehiculo);
                                 $arDespachoRecogida->setConductorRel($arConductor);
                                 $arDespachoRecogida->setOperacionRel($this->getUser()->getOperacionRel());
+                                $arrConfiguracionLiquidarDespacho = $em->getRepository(TteConfiguracion::class)->liquidarDespacho();
 
                                 $descuentos = $arDespachoRecogida->getVrDescuentoPapeleria() + $arDespachoRecogida->getVrDescuentoSeguridad() + $arDespachoRecogida->getVrDescuentoCargue() + $arDespachoRecogida->getVrDescuentoEstampilla();
                                 $retencionFuente = 0;
-                                if($arDespachoRecogida->getVrFletePago() > 107000) {
-                                    $retencionFuente = $arDespachoRecogida->getVrFletePago() * 1 / 100;
+                                if($arDespachoRecogida->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
+                                    $retencionFuente = $arDespachoRecogida->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
                                 }
-                                $industriaComercio = $arDespachoRecogida->getVrFletePago() * 0.6 /100;
+                                $industriaComercio = $arDespachoRecogida->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] /100;
 
                                 $total = $arDespachoRecogida->getVrFletePago() - ($arDespachoRecogida->getVrAnticipo() + $retencionFuente + $industriaComercio);
                                 $saldo = $total - $descuentos;

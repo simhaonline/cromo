@@ -14,5 +14,30 @@ class DocDirectorioRepository extends ServiceEntityRepository
         parent::__construct($registry, DocDirectorio::class);
     }
 
-
+    public function devolverDirectorio($tipo, $clase) {
+        $em = $this->getEntityManager();
+        $directorio = "";
+        $arDirectorio = $em->getRepository(DocDirectorio::class)->findOneBy(array('tipo' => $tipo, 'clase' => $clase));
+        if($arDirectorio) {
+            if($arDirectorio->getNumeroArchivos() >= 50000) {
+                $arDirectorio->setNumeroArchivos(1);
+                $arDirectorio->setDirectorio($arDirectorio->getDirectorio()+1);
+                $em->persist($arDirectorio);
+                $directorio = $arDirectorio->getDirectorio();
+            } else {
+                $arDirectorio->setNumeroArchivos($arDirectorio->getNumeroArchivos()+1);
+                $directorio = $arDirectorio->getDirectorio();
+            }
+        } else {
+            $arDirectorio = new DocDirectorio();
+            $arDirectorio->setDirectorio(1);
+            $arDirectorio->setNumeroArchivos(1);
+            $arDirectorio->setTipo($tipo);
+            $arDirectorio->setClase($clase);
+            $em->persist($arDirectorio);
+            $directorio = "1";
+        }
+        $em->flush();
+        return $directorio;
+    }
 }

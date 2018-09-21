@@ -29,11 +29,14 @@ class DocArchivoRepository extends ServiceEntityRepository
     public function listaArchivo($tipo, $codigo)
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(DocMasivo::class, 'm')
-            ->select('m.codigoMasivoPk')
-            ->addSelect('m.identificador')
-            ->where("m.codigoMasivoTipoFk = '" . $tipo . "'")
-            ->andWhere("m.identificador = '" . $codigo . "'");
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(DocArchivo::class, 'a')
+            ->select('a.codigoArchivoPk')
+            ->addSelect('a.codigo')
+            ->addSelect('a.nombre')
+            ->addSelect('a.fecha')
+            ->addSelect('a.descripcion')
+            ->where("a.codigoArchivoTipoFk = '" . $tipo . "'")
+            ->andWhere("a.codigo = '" . $codigo . "'");
         return $queryBuilder;
     }
 }

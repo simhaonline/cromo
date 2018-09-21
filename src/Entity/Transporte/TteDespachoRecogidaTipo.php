@@ -32,6 +32,56 @@ class TteDespachoRecogidaTipo
     private $generaMonitoreo = false;
 
     /**
+     * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoComprobanteFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_flete_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaFleteFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_retencion_fuente_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaRetencionFuenteFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_industria_comercio_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaIndustriaComercioFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_seguridad_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaSeguridadFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_cargue_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaCargueFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_estampilla_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaEstampillaFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_papeleria_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaPapeleriaFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_anticipo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaAnticipoFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_pagar_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaPagarFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoRecogida", mappedBy="despachoRecogidaTipoRel")
      */
     protected $despachosRecogidasDespachoRecogidaTipoRel;
@@ -114,6 +164,166 @@ class TteDespachoRecogidaTipo
     public function setDespachosRecogidasDespachoRecogidaTipoRel($despachosRecogidasDespachoRecogidaTipoRel): void
     {
         $this->despachosRecogidasDespachoRecogidaTipoRel = $despachosRecogidasDespachoRecogidaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteFk()
+    {
+        return $this->codigoComprobanteFk;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteFk
+     */
+    public function setCodigoComprobanteFk($codigoComprobanteFk): void
+    {
+        $this->codigoComprobanteFk = $codigoComprobanteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaFleteFk()
+    {
+        return $this->codigoCuentaFleteFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaFleteFk
+     */
+    public function setCodigoCuentaFleteFk($codigoCuentaFleteFk): void
+    {
+        $this->codigoCuentaFleteFk = $codigoCuentaFleteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaRetencionFuenteFk()
+    {
+        return $this->codigoCuentaRetencionFuenteFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaRetencionFuenteFk
+     */
+    public function setCodigoCuentaRetencionFuenteFk($codigoCuentaRetencionFuenteFk): void
+    {
+        $this->codigoCuentaRetencionFuenteFk = $codigoCuentaRetencionFuenteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaIndustriaComercioFk()
+    {
+        return $this->codigoCuentaIndustriaComercioFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaIndustriaComercioFk
+     */
+    public function setCodigoCuentaIndustriaComercioFk($codigoCuentaIndustriaComercioFk): void
+    {
+        $this->codigoCuentaIndustriaComercioFk = $codigoCuentaIndustriaComercioFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaSeguridadFk()
+    {
+        return $this->codigoCuentaSeguridadFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaSeguridadFk
+     */
+    public function setCodigoCuentaSeguridadFk($codigoCuentaSeguridadFk): void
+    {
+        $this->codigoCuentaSeguridadFk = $codigoCuentaSeguridadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCargueFk()
+    {
+        return $this->codigoCuentaCargueFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCargueFk
+     */
+    public function setCodigoCuentaCargueFk($codigoCuentaCargueFk): void
+    {
+        $this->codigoCuentaCargueFk = $codigoCuentaCargueFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaEstampillaFk()
+    {
+        return $this->codigoCuentaEstampillaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaEstampillaFk
+     */
+    public function setCodigoCuentaEstampillaFk($codigoCuentaEstampillaFk): void
+    {
+        $this->codigoCuentaEstampillaFk = $codigoCuentaEstampillaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaPapeleriaFk()
+    {
+        return $this->codigoCuentaPapeleriaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaPapeleriaFk
+     */
+    public function setCodigoCuentaPapeleriaFk($codigoCuentaPapeleriaFk): void
+    {
+        $this->codigoCuentaPapeleriaFk = $codigoCuentaPapeleriaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaAnticipoFk()
+    {
+        return $this->codigoCuentaAnticipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaAnticipoFk
+     */
+    public function setCodigoCuentaAnticipoFk($codigoCuentaAnticipoFk): void
+    {
+        $this->codigoCuentaAnticipoFk = $codigoCuentaAnticipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaPagarFk()
+    {
+        return $this->codigoCuentaPagarFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaPagarFk
+     */
+    public function setCodigoCuentaPagarFk($codigoCuentaPagarFk): void
+    {
+        $this->codigoCuentaPagarFk = $codigoCuentaPagarFk;
     }
 
 

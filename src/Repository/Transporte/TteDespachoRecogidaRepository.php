@@ -2,8 +2,13 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Contabilidad\CtbCentroCosto;
+use App\Entity\Contabilidad\CtbComprobante;
+use App\Entity\Contabilidad\CtbCuenta;
+use App\Entity\Contabilidad\CtbRegistro;
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteDespachoRecogidaTipo;
+use App\Entity\Transporte\TtePoseedor;
 use App\Entity\Transporte\TteRecogida;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -247,12 +252,6 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("dr.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
         }
-        if($session->get('filtroTteDespachoRecogidaVehiculoCodigo') != ''){
-            $queryBuilder->andWhere("dr.codigoVehiculoFk = '{$session->get('filtroTteDespachoRecogidaVehiculoCodigo')}'");
-        }
-        if($session->get('filtroTteDespachoRecogidaEstadoAprobado') != ''){
-            $queryBuilder->andWhere("dr.estadoAprobado = {$session->get('filtroTteDespachoRecogidaEstadoAprobado')}");
-        }
         $queryBuilder->orderBy('dr.fecha', 'DESC');
         return $queryBuilder->getQuery()->execute();
     }
@@ -260,39 +259,39 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
     public function registroContabilizar($codigo)
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
-            ->select('d.codigoDespachoPk')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'dr')
+            ->select('dr.codigoDespachoRecogidaPk')
             ->addSelect('v.codigoPropietarioFk')
-            ->addSelect('d.numero')
-            ->addSelect('d.fechaSalida')
-            ->addSelect('d.estadoAprobado')
-            ->addSelect('d.estadoContabilizado')
-            ->addSelect('d.vrFletePago')
-            ->addSelect('d.vrIndustriaComercio')
-            ->addSelect('d.vrRetencionFuente')
-            ->addSelect('d.vrAnticipo')
-            ->addSelect('d.vrSaldo')
-            ->addSelect('d.vrDescuentoCargue')
-            ->addSelect('d.vrDescuentoEstampilla')
-            ->addSelect('d.vrDescuentoPapeleria')
-            ->addSelect('d.vrDescuentoSeguridad')
-            ->addSelect('dt.codigoComprobanteFk')
-            ->addSelect('dt.codigoCuentaFleteFk')
-            ->addSelect('dt.codigoCuentaIndustriaComercioFk')
-            ->addSelect('dt.codigoCuentaRetencionFuenteFk')
-            ->addSelect('dt.codigoCuentaCargueFk')
-            ->addSelect('dt.codigoCuentaSeguridadFk')
-            ->addSelect('dt.codigoCuentaEstampillaFk')
-            ->addSelect('dt.codigoCuentaAnticipoFk')
-            ->addSelect('dt.codigoCuentaPapeleriaFk')
-            ->addSelect('dt.codigoCuentaPagarFk')
+            ->addSelect('dr.numero')
+            ->addSelect('dr.fecha')
+            ->addSelect('dr.estadoAprobado')
+            ->addSelect('dr.estadoContabilizado')
+            ->addSelect('dr.vrFletePago')
+            ->addSelect('dr.vrIndustriaComercio')
+            ->addSelect('dr.vrRetencionFuente')
+            ->addSelect('dr.vrAnticipo')
+            ->addSelect('dr.vrSaldo')
+            ->addSelect('dr.vrDescuentoCargue')
+            ->addSelect('dr.vrDescuentoEstampilla')
+            ->addSelect('dr.vrDescuentoPapeleria')
+            ->addSelect('dr.vrDescuentoSeguridad')
+            ->addSelect('drt.codigoComprobanteFk')
+            ->addSelect('drt.codigoCuentaFleteFk')
+            ->addSelect('drt.codigoCuentaIndustriaComercioFk')
+            ->addSelect('drt.codigoCuentaRetencionFuenteFk')
+            ->addSelect('drt.codigoCuentaCargueFk')
+            ->addSelect('drt.codigoCuentaSeguridadFk')
+            ->addSelect('drt.codigoCuentaEstampillaFk')
+            ->addSelect('drt.codigoCuentaAnticipoFk')
+            ->addSelect('drt.codigoCuentaPapeleriaFk')
+            ->addSelect('drt.codigoCuentaPagarFk')
             ->addSelect('o.codigoCentroCostoFk')
-            ->leftJoin('d.vehiculoRel', 'v')
-            ->leftJoin('d.despachoTipoRel', 'dt')
-            ->leftJoin('d.operacionRel', 'o')
-            ->where('d.codigoDespachoPk = ' . $codigo);
-        $arDespacho = $queryBuilder->getQuery()->getSingleResult();
-        return $arDespacho;
+            ->leftJoin('dr.vehiculoRel', 'v')
+            ->leftJoin('dr.despachoRecogidaTipoRel', 'drt')
+            ->leftJoin('dr.operacionRel', 'o')
+            ->where('dr.codigoDespachoRecogidaPk = ' . $codigo);
+        $arDespachoRecogida = $queryBuilder->getQuery()->getSingleResult();
+        return $arDespachoRecogida;
     }
 
     public function contabilizar($arr): bool
@@ -301,18 +300,18 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
         if ($arr) {
             $error = "";
             foreach ($arr AS $codigo) {
-                $arDespacho = $em->getRepository(TteDespacho::class)->registroContabilizar($codigo);
-                if ($arDespacho) {
-                    if ($arDespacho['estadoAprobado'] == 1 && $arDespacho['estadoContabilizado'] == 0) {
-                        $arComprobante = $em->getRepository(CtbComprobante::class)->find($arDespacho['codigoComprobanteFk']);
-                        $arTercero = $em->getRepository(TtePoseedor::class)->terceroContabilidad($arDespacho['codigoPropietarioFk']);
+                $arDespachoRecogida = $em->getRepository(TteDespachoRecogida::class)->registroContabilizar($codigo);
+                if ($arDespachoRecogida) {
+                    if ($arDespachoRecogida['estadoAprobado'] == 1 && $arDespachoRecogida['estadoContabilizado'] == 0) {
+                        $arComprobante = $em->getRepository(CtbComprobante::class)->find($arDespachoRecogida['codigoComprobanteFk']);
+                        $arTercero = $em->getRepository(TtePoseedor::class)->terceroContabilidad($arDespachoRecogida['codigoPropietarioFk']);
 
                         //Cuenta flete pagado
-                        if ($arDespacho['vrFletePago'] > 0) {
-                            if ($arDespacho['codigoCuentaFleteFk']) {
-                                $arCuenta = $em->getRepository(CtbCuenta::class)->find($arDespacho['codigoCuentaFleteFk']);
+                        if ($arDespachoRecogida['vrFletePago'] > 0) {
+                            if ($arDespachoRecogida['codigoCuentaFleteFk']) {
+                                $arCuenta = $em->getRepository(CtbCuenta::class)->find($arDespachoRecogida['codigoCuentaFleteFk']);
                                 if (!$arCuenta) {
-                                    $error = "No se encuentra la cuenta del flete " . $arDespacho['codigoCuentaFleteFk'];
+                                    $error = "No se encuentra la cuenta del flete " . $arDespachoRecogida['codigoCuentaFleteFk'];
                                     break;
                                 }
                                 $arRegistro = new CtbRegistro();
@@ -320,18 +319,18 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespachoRecogida['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                $arRegistro->setNumero($arDespachoRecogida['numero']);
+                                $arRegistro->setNumeroReferencia($arDespachoRecogida['numero']);
+                                $arRegistro->setFecha($arDespachoRecogida['fecha']);
                                 $naturaleza = "D";
                                 if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrFletePago']);
+                                    $arRegistro->setVrDebito($arDespachoRecogida['vrFletePago']);
                                     $arRegistro->setNaturaleza('D');
                                 } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrFletePago']);
+                                    $arRegistro->setVrCredito($arDespachoRecogida['vrFletePago']);
                                     $arRegistro->setNaturaleza('C');
                                 }
                                 $arRegistro->setDescripcion('FLETE PAGADO');
@@ -343,9 +342,9 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                         }
 
                         //Cuenta industria y comercio
-                        if ($arDespacho['vrIndustriaComercio'] > 0) {
+                        if ($arDespachoRecogida['vrIndustriaComercio'] > 0) {
                             $descripcion = "INDUSTRIA COMERCIO";
-                            $cuenta = $arDespacho['codigoCuentaIndustriaComercioFk'];
+                            $cuenta = $arDespachoRecogida['codigoCuentaIndustriaComercioFk'];
                             if ($cuenta) {
                                 $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
@@ -357,22 +356,22 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespachoRecogida['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                $arRegistro->setNumero($arDespachoRecogida['numero']);
+                                $arRegistro->setNumeroReferencia($arDespachoRecogida['numero']);
+                                $arRegistro->setFecha($arDespachoRecogida['fecha']);
                                 $naturaleza = "C";
                                 if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrIndustriaComercio']);
+                                    $arRegistro->setVrDebito($arDespachoRecogida['vrIndustriaComercio']);
                                     $arRegistro->setNaturaleza('D');
                                 } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrIndustriaComercio']);
+                                    $arRegistro->setVrCredito($arDespachoRecogida['vrIndustriaComercio']);
                                     $arRegistro->setNaturaleza('C');
                                 }
                                 if ($arCuenta->getExigeBase()) {
-                                    $arRegistro->setVrBase($arDespacho['vrFletePago']);
+                                    $arRegistro->setVrBase($arDespachoRecogida['vrFletePago']);
                                 }
                                 $arRegistro->setDescripcion($descripcion);
                                 $em->persist($arRegistro);
@@ -383,9 +382,9 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                         }
 
                         //Cuenta retencion fuente
-                        if ($arDespacho['vrRetencionFuente'] > 0) {
+                        if ($arDespachoRecogida['vrRetencionFuente'] > 0) {
                             $descripcion = "RETENCION FUENTE";
-                            $cuenta = $arDespacho['codigoCuentaRetencionFuenteFk'];
+                            $cuenta = $arDespachoRecogida['codigoCuentaRetencionFuenteFk'];
                             if ($cuenta) {
                                 $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
@@ -397,22 +396,22 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespachoRecogida['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                $arRegistro->setNumero($arDespachoRecogida['numero']);
+                                $arRegistro->setNumeroReferencia($arDespachoRecogida['numero']);
+                                $arRegistro->setFecha($arDespachoRecogida['fecha']);
                                 $naturaleza = "C";
                                 if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrRetencionFuente']);
+                                    $arRegistro->setVrDebito($arDespachoRecogida['vrRetencionFuente']);
                                     $arRegistro->setNaturaleza('D');
                                 } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrRetencionFuente']);
+                                    $arRegistro->setVrCredito($arDespachoRecogida['vrRetencionFuente']);
                                     $arRegistro->setNaturaleza('C');
                                 }
                                 if ($arCuenta->getExigeBase()) {
-                                    $arRegistro->setVrBase($arDespacho['vrFletePago']);
+                                    $arRegistro->setVrBase($arDespachoRecogida['vrFletePago']);
                                 }
                                 $arRegistro->setDescripcion($descripcion);
                                 $em->persist($arRegistro);
@@ -423,9 +422,9 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                         }
 
                         //Descuento seguridad
-                        if ($arDespacho['vrDescuentoSeguridad'] > 0) {
+                        if ($arDespachoRecogida['vrDescuentoSeguridad'] > 0) {
                             $descripcion = "DESCUENTO SEGURIDAD";
-                            $cuenta = $arDespacho['codigoCuentaSeguridadFk'];
+                            $cuenta = $arDespachoRecogida['codigoCuentaSeguridadFk'];
                             if ($cuenta) {
                                 $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
@@ -437,18 +436,18 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespachoRecogida['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                $arRegistro->setNumero($arDespachoRecogida['numero']);
+                                $arRegistro->setNumeroReferencia($arDespachoRecogida['numero']);
+                                $arRegistro->setFecha($arDespachoRecogida['fecha']);
                                 $naturaleza = "C";
                                 if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrDescuentoSeguridad']);
+                                    $arRegistro->setVrDebito($arDespachoRecogida['vrDescuentoSeguridad']);
                                     $arRegistro->setNaturaleza('D');
                                 } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrDescuentoSeguridad']);
+                                    $arRegistro->setVrCredito($arDespachoRecogida['vrDescuentoSeguridad']);
                                     $arRegistro->setNaturaleza('C');
                                 }
                                 $arRegistro->setDescripcion($descripcion);
@@ -460,9 +459,9 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                         }
 
                         //Descuento cargue
-                        if ($arDespacho['vrDescuentoCargue'] > 0) {
+                        if ($arDespachoRecogida['vrDescuentoCargue'] > 0) {
                             $descripcion = "DESCUENTO CARGUE";
-                            $cuenta = $arDespacho['codigoCuentaCargueFk'];
+                            $cuenta = $arDespachoRecogida['codigoCuentaCargueFk'];
                             if ($cuenta) {
                                 $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
@@ -474,18 +473,18 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespachoRecogida['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                $arRegistro->setNumero($arDespachoRecogida['numero']);
+                                $arRegistro->setNumeroReferencia($arDespachoRecogida['numero']);
+                                $arRegistro->setFecha($arDespachoRecogida['fecha']);
                                 $naturaleza = "C";
                                 if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrDescuentoCargue']);
+                                    $arRegistro->setVrDebito($arDespachoRecogida['vrDescuentoCargue']);
                                     $arRegistro->setNaturaleza('D');
                                 } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrDescuentoCargue']);
+                                    $arRegistro->setVrCredito($arDespachoRecogida['vrDescuentoCargue']);
                                     $arRegistro->setNaturaleza('C');
                                 }
                                 $arRegistro->setDescripcion($descripcion);
@@ -497,9 +496,9 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                         }
 
                         //Descuento estampilla
-                        if ($arDespacho['vrDescuentoEstampilla'] > 0) {
+                        if ($arDespachoRecogida['vrDescuentoEstampilla'] > 0) {
                             $descripcion = "DESCUENTO ESTAMPILLA";
-                            $cuenta = $arDespacho['codigoCuentaEstampillaFk'];
+                            $cuenta = $arDespachoRecogida['codigoCuentaEstampillaFk'];
                             if ($cuenta) {
                                 $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
@@ -511,18 +510,18 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespachoRecogida['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                $arRegistro->setNumero($arDespachoRecogida['numero']);
+                                $arRegistro->setNumeroReferencia($arDespachoRecogida['numero']);
+                                $arRegistro->setFecha($arDespachoRecogida['fecha']);
                                 $naturaleza = "C";
                                 if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrDescuentoEstampilla']);
+                                    $arRegistro->setVrDebito($arDespachoRecogida['vrDescuentoEstampilla']);
                                     $arRegistro->setNaturaleza('D');
                                 } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrDescuentoEstampilla']);
+                                    $arRegistro->setVrCredito($arDespachoRecogida['vrDescuentoEstampilla']);
                                     $arRegistro->setNaturaleza('C');
                                 }
                                 $arRegistro->setDescripcion($descripcion);
@@ -534,9 +533,9 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                         }
 
                         //Descuento papeleria
-                        if ($arDespacho['vrDescuentoPapeleria'] > 0) {
+                        if ($arDespachoRecogida['vrDescuentoPapeleria'] > 0) {
                             $descripcion = "DESCUENTO PAPELERIA";
-                            $cuenta = $arDespacho['codigoCuentaPapeleriaFk'];
+                            $cuenta = $arDespachoRecogida['codigoCuentaPapeleriaFk'];
                             if ($cuenta) {
                                 $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
@@ -548,18 +547,18 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespachoRecogida['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                $arRegistro->setNumero($arDespachoRecogida['numero']);
+                                $arRegistro->setNumeroReferencia($arDespachoRecogida['numero']);
+                                $arRegistro->setFecha($arDespachoRecogida['fecha']);
                                 $naturaleza = "C";
                                 if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrDescuentoPapeleria']);
+                                    $arRegistro->setVrDebito($arDespachoRecogida['vrDescuentoPapeleria']);
                                     $arRegistro->setNaturaleza('D');
                                 } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrDescuentoPapeleria']);
+                                    $arRegistro->setVrCredito($arDespachoRecogida['vrDescuentoPapeleria']);
                                     $arRegistro->setNaturaleza('C');
                                 }
                                 $arRegistro->setDescripcion($descripcion);
@@ -571,9 +570,9 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                         }
 
                         //Anticipo
-                        if ($arDespacho['vrAnticipo'] > 0) {
+                        if ($arDespachoRecogida['vrAnticipo'] > 0) {
                             $descripcion = "ANTICIPO";
-                            $cuenta = $arDespacho['codigoCuentaAnticipoFk'];
+                            $cuenta = $arDespachoRecogida['codigoCuentaAnticipoFk'];
                             if ($cuenta) {
                                 $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
@@ -585,18 +584,18 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespachoRecogida['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                $arRegistro->setNumero($arDespachoRecogida['numero']);
+                                $arRegistro->setNumeroReferencia($arDespachoRecogida['numero']);
+                                $arRegistro->setFecha($arDespachoRecogida['fecha']);
                                 $naturaleza = "C";
                                 if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrAnticipo']);
+                                    $arRegistro->setVrDebito($arDespachoRecogida['vrAnticipo']);
                                     $arRegistro->setNaturaleza('D');
                                 } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrAnticipo']);
+                                    $arRegistro->setVrCredito($arDespachoRecogida['vrAnticipo']);
                                     $arRegistro->setNaturaleza('C');
                                 }
                                 $arRegistro->setDescripcion($descripcion);
@@ -608,9 +607,9 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                         }
 
                         //Saldo
-                        if ($arDespacho['vrSaldo'] > 0) {
+                        if ($arDespachoRecogida['vrSaldo'] > 0) {
                             $descripcion = "POR PAGAR";
-                            $cuenta = $arDespacho['codigoCuentaPagarFk'];
+                            $cuenta = $arDespachoRecogida['codigoCuentaPagarFk'];
                             if ($cuenta) {
                                 $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
@@ -622,18 +621,18 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespachoRecogida['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                $arRegistro->setNumero($arDespachoRecogida['numero']);
+                                $arRegistro->setNumeroReferencia($arDespachoRecogida['numero']);
+                                $arRegistro->setFecha($arDespachoRecogida['fecha']);
                                 $naturaleza = "C";
                                 if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrSaldo']);
+                                    $arRegistro->setVrDebito($arDespachoRecogida['vrSaldo']);
                                     $arRegistro->setNaturaleza('D');
                                 } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrSaldo']);
+                                    $arRegistro->setVrCredito($arDespachoRecogida['vrSaldo']);
                                     $arRegistro->setNaturaleza('C');
                                 }
                                 $arRegistro->setDescripcion($descripcion);
@@ -644,7 +643,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                             }
                         }
 
-                        $arDespachoAct = $em->getRepository(TteDespacho::class)->find($arDespacho['codigoDespachoPk']);
+                        $arDespachoAct = $em->getRepository(TteDespachoRecogida::class)->find($arDespachoRecogida['codigoDespachoRecogidaPk']);
                         $arDespachoAct->setEstadoContabilizado(1);
                         $em->persist($arDespachoAct);
                     }

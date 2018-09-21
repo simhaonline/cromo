@@ -31,17 +31,17 @@ class DespachoRecogidaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTteDespachoFiltroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteDespachoFechaDesde'))])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteDespachoFechaHasta'))])
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTteDespachoRecogidaFiltroFecha')))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteDespachoRecogidaFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteDespachoRecogidaFechaHasta'))])
             ->add('btnContabilizar', SubmitType::class, ['label' => 'Contabilizar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroTteDespachoFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
-                $session->set('filtroTteDespachoFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                $session->set('filtroTteDespachoRecogidaFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroTteDespachoRecogidaFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroTteDespachoFiltroFecha', $form->get('filtrarFecha')->getData());
             }
             if ($form->get('btnContabilizar')->isClicked()) {
@@ -49,9 +49,9 @@ class DespachoRecogidaController extends Controller
                 $respuesta = $this->getDoctrine()->getRepository(TteDespachoRecogida::class)->contabilizar($arr);
             }
         }
-        $arDespachosRecogidas = $paginator->paginate($em->getRepository(TteDespachoRecogida::class)->listaContabilizar(), $request->query->getInt('page', 1),100);
-        return $this->render('transporte/proceso/contabilidad/despacho/lista.html.twig',
-            ['arDespachos' => $arDespachosRecogidas,
+        $arDespachosRecogida = $paginator->paginate($em->getRepository(TteDespachoRecogida::class)->listaContabilizar(), $request->query->getInt('page', 1),100);
+        return $this->render('transporte/proceso/contabilidad/despachoRecogida/lista.html.twig',
+            ['arDespachosRecogida' => $arDespachosRecogida,
             'form' => $form->createView()]);
     }
 

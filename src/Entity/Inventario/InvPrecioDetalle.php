@@ -33,6 +33,11 @@ class InvPrecioDetalle
     private $vrPrecio = 0;
 
     /**
+     * @ORM\Column(name="dias_promedio_entrega",options={"default" : 0}, type="float")
+     */
+    private $diasPromedioEntrega = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvPrecio", inversedBy="preciosDetallesPrecioRel")
      * @ORM\JoinColumn(name="codigo_precio_fk", referencedColumnName="codigo_precio_pk")
      */
@@ -138,6 +143,22 @@ class InvPrecioDetalle
     public function setItemRel($itemRel): void
     {
         $this->itemRel = $itemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasPromedioEntrega()
+    {
+        return $this->diasPromedioEntrega;
+    }
+
+    /**
+     * @param mixed $diasPromedioEntrega
+     */
+    public function setDiasPromedioEntrega($diasPromedioEntrega): void
+    {
+        $this->diasPromedioEntrega = $diasPromedioEntrega;
     }
 
 

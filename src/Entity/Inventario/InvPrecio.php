@@ -55,6 +55,11 @@ class InvPrecio
     private $venta = false;
 
     /**
+     * @ORM\Column(name="comentarios", type="string", length=200, nullable=true)
+     */
+    private $comentarios;
+
+    /**
      * @return mixed
      */
     public function getCodigoPrecioPk()
@@ -180,6 +185,22 @@ class InvPrecio
     public function setTercerosPrecioCompraRel($tercerosPrecioCompraRel): void
     {
         $this->tercerosPrecioCompraRel = $tercerosPrecioCompraRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarios()
+    {
+        return $this->comentarios;
+    }
+
+    /**
+     * @param mixed $comentarios
+     */
+    public function setComentarios($comentarios): void
+    {
+        $this->comentarios = $comentarios;
     }
 
 

@@ -2,18 +2,34 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     {{ notificar()|raw }}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            <a href="{{ path('inventario_administracion_general_precio_lista') }}" class="btn btn-default btn-sm">Volver</a>
+        </div>
+    </div>
+    <br>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">CODIGO:</td>
             <td class="td-in-well">{{ arPrecio.codigoPrecioPk }}</td>
-            <td class="titulo">FECHA VENCE:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arPrecio.fechaVence | date('Y-m-d') }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arPrecio.nombre }}</td>
         </tr>
         <tr>
             <td class="titulo">COMPRA:</td>
             {{ validarTipo(arPrecio.compra) }}
+            <td class="titulo">FECHA VENCE:</td>
+            {{ validarTipo(arPrecio.fechaVence | date('Y-m-d')) }}
+        </tr>
+        <tr>
             <td class="titulo">VENTA:</td>
             {{ validarTipo(arPrecio.venta) }}
+            <td class="titulo"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIO:</td>
+            <td class="td-in-well" colspan="7">{{ arPrecio.comentarios }}</td>
         </tr>
     </table>
     <ul class="nav nav-tabs">
@@ -29,8 +45,10 @@
                             <th>ID</th>
                             <th>ITEM</th>
                             <th>MARCA</th>
+                            <th title="DIAS PROMEDIO ENTREGA">DIAS PROM ENT</th>
                             <th>PRECIO</th>
                             <th>% IVA</th>
+                            <th></th>
                             <th></th>
                         </tr>
                         </thead>
@@ -40,16 +58,21 @@
                                 <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
                                 <td>{{ arPrecioDetalle.nombre }}</td>
                                 <td>{{ arPrecioDetalle.marca }}</td>
+                                <td style="width: 100px;">{{ arPrecioDetalle.diasPromedioEntrega }}</td>
                                 <td class="numero">{{ arPrecioDetalle.vrPrecio | number_format }}</td>
                                 <td class="numero">{{ arPrecioDetalle.porcentajeIva }}</td>
+                                <td style="text-align: center;"><a href="javascript:abrirVentana3('{{ path('inventario_administracion_general_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': arPrecioDetalle.codigoPrecioDetallePk }) }}', 'precioDetalles', 600, 900)"><i class="fa fa-edit" style="font-size: large; color: black;" t></i></a>
+                                </td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPrecioDetalle.codigoPrecioDetallePk }}" /></td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                {#<div class="separador-1"></div>#}
                     <div class="btn-toolbar" style="float: right">
+                        <div class="btn-group">
+                            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                        </div>
                         <div class="btn-group">
                             <a class="btn btn-default btn-sm"
                                href="javascript:abrirVentana3('{{ path('inventario_administracion_general_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': 0 }) }}', 'precioDetalles', 600, 900)">Nuevo</a>
@@ -57,9 +80,6 @@
                         <div class="btn-group">
                             {{ form_widget(form.btnEliminarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                         </div>
-                    </div>
-                    <div class="btn-group">
-                        {#{{ form_widget(form.btnEliminar) }}#}
                     </div>
                 </div>
             </div>

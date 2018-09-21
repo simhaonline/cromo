@@ -32,10 +32,11 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPrecioDetalle::class, 'pd');
         $queryBuilder
             ->select('pd.codigoPrecioDetallePk')
-            ->addSelect('pd.vrPrecio')
+            ->addSelect('m.nombre AS marca')
             ->addSelect('i.nombre')
             ->addSelect('i.porcentajeIva')
-            ->addSelect('m.nombre AS marca')
+            ->addSelect('pd.vrPrecio')
+            ->addSelect('pd.diasPromedioEntrega')
             ->leftJoin('pd.itemRel', 'i')
             ->leftJoin('i.marcaRel', 'm')
             ->where('pd.codigoPrecioFk = ' . $id );
@@ -43,4 +44,23 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        $em = $this->getEntityManager();
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados AS $codigo) {
+                $ar = $em->getRepository(InvPrecioDetalle::class)->find($codigo);
+                if ($ar) {
+                    $em->remove($ar);
+                }
+            }
+            try {
+                $em->flush();
+            } catch (\Exception $exception) {
+                $respuesta = 'No se puede eliminar, el registro esta siendo utilizado en el sistema';
+            }
+        }
+        return $respuesta;
+    }
 }

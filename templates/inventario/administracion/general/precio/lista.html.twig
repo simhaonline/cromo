@@ -1,29 +1,23 @@
 {% extends 'base_inventario.html.twig' %}
 {% block content %}
-    <br>
     {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
     {{ form_errors(form) }}
     <div class="panel panel-default">
-        <div class="panel-heading">Filtros de busqueda</div>
+        <div class="panel-heading">Filtros</div>
         <div class="panel-body">
-            {#<div class="form-group form-group-sm">#}
-                {#<label for="form_TxtCodigo" class="col-sm-2 control-label"></label>#}
-                {#<div class="col-sm-4">#}
-
-                {#</div>#}
-                {#<label for="form_estadoAutorizado" class="col-sm-1 control-label">Numero:</label>#}
-                {#<div class="col-sm-2">#}
-                    {#{{ form_widget(form.numero, { 'attr': {'class': 'form-control'} }) }}#}
-                {#</div>#}
-                {#<label for="form_estadoAutorizado" class="col-sm-1 control-label"></label>#}
-                {#<div class="col-sm-2">#}
-                {#</div>#}
-            {#</div>#}
             <div class="form-group form-group-sm">
-                <div class="col-sm-offset-2 col-sm-10">
-                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                <label class="col-sm-2 control-label">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtNombre, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.chkTipoPrecio, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.btnFiltrar) }}
         </div>
     </div>
     <table class="table table-striped table-bordered table-hover">
@@ -32,6 +26,9 @@
             <th>ID</th>
             <th>NOMBRE</th>
             <th>FECHA_VENCE</th>
+            <th>VENTA</th>
+            <th>COMPRA</th>
+            <th></th>
             <th></th>
         </tr>
         </thead>
@@ -41,7 +38,17 @@
                 <td>{{ arPrecio.codigoPrecioPk }}</td>
                 <td>{{ arPrecio.nombre }}</td>
                 <td>{{ arPrecio.fechaVence | date('Y-m-d') }}</td>
-                <td style="text-align: center"><a href="{{ path('inventario_administracion_general_precio_detalle', { 'id': arPrecio.codigoPrecioPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                {{ validarTipo(arPrecio.venta) }}
+                {{ validarTipo(arPrecio.compra) }}
+                <td style="text-align: center;">
+                    <a href="{{ path('inventario_administracion_general_precio_nuevo',{'id' : arPrecio.codigoPrecioPk}) }}">
+                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td style="text-align: center"><a
+                            href="{{ path('inventario_administracion_general_precio_detalle', { 'id': arPrecio.codigoPrecioPk }) }}"><img
+                                src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -49,7 +56,8 @@
 
     <div class="btn-group" style="float: left">
         <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arPrecios.getTotalItemCount }}</span></div>
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arPrecios.getTotalItemCount }}</span>
+            </div>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
@@ -61,7 +69,8 @@
             {#{{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}#}
         </div>
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('inventario_administracion_general_precio_nuevo', {'id': 0}) }}">Nuevo</a>
+            <a class="btn btn-default btn-sm"
+               href="{{ path('inventario_administracion_general_precio_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>
     </div>
     {{ form_rest(form) }}

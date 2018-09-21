@@ -6,6 +6,7 @@ use App\Entity\Inventario\InvPrecioDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+
 class InvPrecioDetalleRepository extends ServiceEntityRepository
 {
     /**
@@ -25,9 +26,9 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
     public function precioVenta($codigoPrecioVenta, $codigoItem): float
     {
         $precio = 0;
-        if($codigoPrecioVenta && $codigoItem) {
+        if ($codigoPrecioVenta && $codigoItem) {
             $arPrecioDetalle = $this->getEntityManager()->getRepository(InvPrecioDetalle::class)->findOneBy(array('codigoPrecioDetallePk' => $codigoPrecioVenta, 'codigoItemFk' => $codigoItem));
-            if($arPrecioDetalle) {
+            if ($arPrecioDetalle) {
                 $precio = $arPrecioDetalle->getVrPrecio();
             }
         }
@@ -52,7 +53,37 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.diasPromedioEntrega')
             ->leftJoin('pd.itemRel', 'i')
             ->leftJoin('i.marcaRel', 'm')
-            ->where('pd.codigoPrecioFk = ' . $id );
+            ->where('pd.codigoPrecioFk = ' . $id);
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @param $id
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function informePrecioDetalle()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPrecioDetalle::class, 'pd');
+        $queryBuilder
+            ->select('pd.codigoPrecioDetallePk')
+            ->addSelect('p.nombre AS precio')
+            ->addSelect('m.nombre AS marca')
+            ->addSelect('i.nombre')
+            ->addSelect('i.porcentajeIva')
+            ->addSelect('pd.vrPrecio')
+            ->addSelect('pd.diasPromedioEntrega')
+            ->addSelect('pd.vrPrecio')
+            ->leftJoin('pd.itemRel', 'i')
+            ->leftJoin('i.marcaRel', 'm')
+            ->leftJoin('pd.precioRel', 'p');
+        if ($session->get('filtroInvItem') != '') {
+            $queryBuilder->andWhere("i.nombre LIKE '%{$session->get('filtroInvItem')}%' ");
+        }
+        if ($session->get('filtroInvNombreListPrecio') != '') {
+            $queryBuilder->andWhere("p.nombre LIKE '%{$session->get('filtroInvNombreListPrecio')}%' ");
+        }
 
         return $queryBuilder;
     }
@@ -88,8 +119,9 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function obtenerPrecio($codigPrecio, $codigoItem){
-        $qb = $this->getEntityManager()->createQueryBuilder()->from(InvPrecioDetalle::class,'pd')
+    public function obtenerPrecio($codigPrecio, $codigoItem)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()->from(InvPrecioDetalle::class, 'pd')
             ->select('pd.vrPrecio as precio')
             ->where("pd.codigoPrecioFk = {$codigPrecio}")
             ->andWhere("pd.codigoItemFk = {$codigoItem}");

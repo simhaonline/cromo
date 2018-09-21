@@ -38,8 +38,10 @@
             <td class="td-in-well" style="text-align: right;">{{ arOrdenCompra.vrIva |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
+            <td class="titulo">TERCERO:</td>
+            <td class="td-in-well">{{ arOrdenCompra.terceroRel.nombreCorto }}</td>
             <td class="titulo">SOPORTE:</td>
-            <td class="td-in-well" colspan="3">{{ arOrdenCompra.soporte }}</td>
+            <td class="td-in-well">{{ arOrdenCompra.soporte }}</td>
             <td class="titulo">DESCUENTO:</td>
             <td class="td-in-well"
                 style="text-align: right;">{{ arOrdenCompra.vrDescuento |number_format(0, '.', ',') }}</td>
@@ -79,7 +81,7 @@
                         {% for arOrdenCompraDetalle in arOrdenCompraDetalles %}
                             <tr>
                                 <td>{{ arOrdenCompraDetalle.codigoOrdenCompraDetallePk }}</td>
-                                <td>{{ arOrdenCompraDetalle.itemRel.nombre | default('') }}</td>
+                                <td>{{ arOrdenCompraDetalle.nombre | default('') }}</td>
                                 {% if arOrdenCompra.estadoAutorizado == false %}
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="Cantidad"

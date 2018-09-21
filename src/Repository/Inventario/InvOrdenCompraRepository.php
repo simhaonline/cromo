@@ -19,6 +19,8 @@ class InvOrdenCompraRepository extends ServiceEntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvOrdenCompra', 'ioc');
         $qb
             ->select('ioc.codigoOrdenCompraPk as ID')
+            ->join('ioc.terceroRel', 't')
+            ->addSelect('t.nombreCorto AS TERCERO')
             ->addSelect('ioc.numero as NUMERO')
             ->addSelect('ioc.fecha as FECHA')
             ->addSelect('ioc.soporte as SOPORTE')

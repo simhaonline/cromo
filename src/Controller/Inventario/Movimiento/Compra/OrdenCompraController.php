@@ -4,6 +4,7 @@ namespace App\Controller\Inventario\Movimiento\Compra;
 
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvOrdenCompra;
+use App\Entity\Inventario\InvPrecioDetalle;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -90,10 +91,12 @@ class OrdenCompraController extends Controller
         ]);
     }
 
+
     /**
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      * @Route("/inventario/movimiento/inventario/ordencompra/detalle/nuevo/{id}", name="inventario_movimiento_inventario_ordenCompra_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id)
@@ -121,8 +124,11 @@ class OrdenCompraController extends Controller
                         if ($cantidad != '' && $cantidad != 0) {
                             $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
                             $arOrdenCompraDetalle = new InvOrdenCompraDetalle();
+                            $precioVenta = $em->getRepository(InvPrecioDetalle::class)->obtenerPrecio($arOrdenCompra->getTerceroRel()->getCodigoPrecioCompraFk(), $codigoItem);
+                            $arOrdenCompraDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
                             $arOrdenCompraDetalle->setOrdenCompraRel($arOrdenCompra);
                             $arOrdenCompraDetalle->setItemRel($arItem);
+                            $arOrdenCompraDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
                             $arOrdenCompraDetalle->setCantidad($cantidad);
                             $arOrdenCompraDetalle->setCantidadPendiente($cantidad);
                             $em->persist($arOrdenCompraDetalle);
@@ -144,6 +150,7 @@ class OrdenCompraController extends Controller
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      * @Route("/inventario/movimiento/inventario/ordencompra/solicitud/detalle/nuevo/{id}", name="inventario_movimiento_inventario_ordenCompra_solicitud_detalle_nuevo")
      */
     public function detalleNuevoSolicitud(Request $request, $id)
@@ -172,6 +179,8 @@ class OrdenCompraController extends Controller
                                 if ($cantidad <= $arSolicitudDetalle->getCantidadPendiente()) {
                                     $arItem = $em->getRepository('App:Inventario\InvItem')->find($arSolicitudDetalle->getCodigoItemFk());
                                     $arOrdenCompraDetalle = new InvOrdenCompraDetalle();
+                                    $precioVenta = $em->getRepository(InvPrecioDetalle::class)->obtenerPrecio($arOrdenCompra->getTerceroRel()->getCodigoPrecioCompraFk(), $arItem->getCodigoItemPk());
+                                    $arOrdenCompraDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
                                     $arOrdenCompraDetalle->setOrdenCompraRel($arOrdenCompra);
                                     $arOrdenCompraDetalle->setItemRel($arItem);
                                     $arOrdenCompraDetalle->setCantidadPendiente($cantidad);

@@ -200,9 +200,10 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->join('cc.clienteRel','c')
             ->join('cc.cuentaCobrarTipoRel', 'cct')
             ->where('cc.vrSaldo <> 0')
-            ->orderBy('cc.codigoClienteFk', 'ASC')
-        ->addOrderBy('cc.rango', 'ASC')
-        ->addOrderBy('cc.diasVencimiento', 'ASC');
+            ->orderBy('c.nombreCorto', 'ASC')
+            ->addOrderBy('cc.rango', 'ASC')
+
+            ->addOrderBy('cc.numeroDocumento', 'ASC');
 
         $fecha =  new \DateTime('now');
         if ($session->get('filtroCarCuentaCobrarTipo') != "") {

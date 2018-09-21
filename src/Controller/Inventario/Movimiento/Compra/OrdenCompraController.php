@@ -22,7 +22,7 @@ class OrdenCompraController extends Controller
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/inventario/movimientoinventario/ordencompra/detalle/{id}", name="inventario_movimiento_inventario_ordenCompra_detalle")
+     * @Route("/inventario/movimiento/inventario/ordencompra/detalle/{id}", name="inventario_movimiento_inventario_ordenCompra_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -94,7 +94,7 @@ class OrdenCompraController extends Controller
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/inventario/movimientoinventario/ordencompra/detalle/nuevo/{id}", name="inventario_movimiento_inventario_ordenCompra_detalle_nuevo")
+     * @Route("/inventario/movimiento/inventario/ordencompra/detalle/nuevo/{id}", name="inventario_movimiento_inventario_ordenCompra_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id)
     {
@@ -144,7 +144,7 @@ class OrdenCompraController extends Controller
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/inventario/movimientoinventario/ordencompra/solicitud/detalle/nuevo/{id}", name="inventario_movimiento_inventario_ordenCompra_solicitud_detalle_nuevo")
+     * @Route("/inventario/movimiento/inventario/ordencompra/solicitud/detalle/nuevo/{id}", name="inventario_movimiento_inventario_ordenCompra_solicitud_detalle_nuevo")
      */
     public function detalleNuevoSolicitud(Request $request, $id)
     {
@@ -167,7 +167,7 @@ class OrdenCompraController extends Controller
                 if ($arrSolicitudDetalles) {
                     if (count($arrSolicitudDetalles) > 0) {
                         foreach ($arrSolicitudDetalles as $codigoSolicitudDetalle => $cantidad) {
-                            if ($cantidad != '' && $cantidad != 0) {
+                            if ($cantidad != '' && $cantidad != 0 && $cantidad > 0) {
                                 $arSolicitudDetalle = $em->getRepository('App:Inventario\InvSolicitudDetalle')->find($codigoSolicitudDetalle);
                                 if ($cantidad <= $arSolicitudDetalle->getCantidadPendiente()) {
                                     $arItem = $em->getRepository('App:Inventario\InvItem')->find($arSolicitudDetalle->getCodigoItemFk());
@@ -175,6 +175,7 @@ class OrdenCompraController extends Controller
                                     $arOrdenCompraDetalle->setOrdenCompraRel($arOrdenCompra);
                                     $arOrdenCompraDetalle->setItemRel($arItem);
                                     $arOrdenCompraDetalle->setCantidadPendiente($cantidad);
+                                    $arOrdenCompraDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
                                     $arOrdenCompraDetalle->setCantidad($cantidad);
                                     $arOrdenCompraDetalle->setSolicitudDetalleRel($arSolicitudDetalle);
                                     $arSolicitudDetalle->setCantidadPendiente($arSolicitudDetalle->getCantidadPendiente() - $cantidad);
@@ -183,6 +184,8 @@ class OrdenCompraController extends Controller
                                 } else {
                                     $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada.";
                                 }
+                            } else {
+                                $respuesta = "La cantidad ingresada no es valida por favor verifique.";
                             }
                         }
                         if ($respuesta != '') {
@@ -201,6 +204,9 @@ class OrdenCompraController extends Controller
             }
         }
         $arSolicitudesDetalles = $paginator->paginate($em->getRepository(InvSolicitudDetalle::class)->listarDetallesPendientes(), $request->query->getInt('page', 1), 10);
+        if(count($arSolicitudesDetalles) == 0){
+            Mensajes::error('No hay solicitudes pendientes o no se encuentran aprobadas');
+        }
         return $this->render('inventario/movimiento/compra/ordenCompra/detalleNuevoSolicitud.html.twig', [
             'form' => $form->createView(),
             'arSolicitudesDetalles' => $arSolicitudesDetalles

@@ -6,6 +6,10 @@ namespace App\Controller\Inventario\Administracion\General\Precio;
 use App\Entity\Inventario\InvPrecio;
 use App\Entity\Inventario\InvPrecioDetalle;
 use App\Form\Type\Inventario\PrecioType;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -15,21 +19,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class PrecioController extends Controller
 {
     /**
-     * @Route("/inv/adm/gen/precio/lista", name="inventario_administracion_general_precio_lista")
+     * @Route("/inventario/administracion/general/precio/lista", name="inventario_administracion_general_precio_lista")
      */
     public function lista(Request $request)
     {
         $paginator  = $this->get('knp_paginator');
-        $form = $this->formularioFiltro();
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                if ($form->get('btnFiltrar')->isClicked()) {
-                    $this->filtrar($form);
-                    $form = $this->formularioFiltro();
-                }
-            }
-        }
+        $form = $this->createFormBuilder()
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->getForm();
         $query = $this->getDoctrine()->getRepository(InvPrecio::class)->lista();
         $arPrecios = $paginator->paginate($query, $request->query->getInt('page', 1),10);
         return $this->render('inventario/administracion/general/precio/lista.html.twig', [
@@ -38,7 +35,7 @@ class PrecioController extends Controller
     }
 
     /**
-     * @Route("inv/adm/gen/precio/nuevo/{id}", name="inventario_administracion_general_precio_nuevo")
+     * @Route("inventario/administracion/general/precio/nuevo/{id}", name="inventario_administracion_general_precio_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -83,82 +80,67 @@ class PrecioController extends Controller
     }
 
     /**
-     * @Route("/inv/adm/gen/precio/detalle/{id}", name="inventario_administracion_general_precio_detalle")
+     * @Route("/inventario/administracion/general/precio/detalle/{id}", name="inventario_administracion_general_precio_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $paginator  = $this->get('knp_paginator');
-        //$objFormatopedido = new pedido();
         $em = $this->getDoctrine()->getManager();
         $arPrecio = $em->getRepository(InvPrecio::class)->find($id);
-        $form = $this->formularioDetalles($arPrecio);
-        $form->handleRequest($request);
-        $query = $em->getRepository(InvPrecioDetalle::class)->listar($id);
+        $form = $this->createFormBuilder()
+            ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
+            ->getForm();
+        $query = $em->getRepository(InvPrecioDetalle::class)->lista($id);
         $arPrecioDetalles = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('inventario/movimiento/comercial/pedido/detalle.html.twig', [
+        return $this->render('inventario/administracion/general/precio/detalle.html.twig', [
             'form' => $form->createView(),
             'arPrecioDetalles' => $arPrecioDetalles,
             'arPrecio' => $arPrecio
         ]);
     }
 
-    private function formularioFiltro()
+    /**
+     * @param Request $request
+     * @param $codigoPrecio
+     * @param $id
+     * @Route("/inventario/administracion/general/precio/detalle/nuevo/{codigoPrecio}/{id}", name="inventario_administracion_general_precio_detalle_nuevo")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function detalleNuevo(Request $request, $codigoPrecio, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $session = new session;
-
-        $form = $this->createFormBuilder()
-            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->getForm();
-        return $form;
-    }
-
-    private function formularioDetalles($ar)
-    {
-        $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnAprobar = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnImprimir = ['label' => 'Imprimir', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnAnular = ['label' => 'Anular', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-        if ($ar->getEstadoAnulado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnAprobar['disabled'] = true;
-        } elseif ($ar->getEstadoAprobado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = false;
-            $arrBtnAnular['disabled'] = false;
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnAprobar['disabled'] = true;
-        } elseif ($ar->getEstadoAutorizado()) {
-            $arrBtnAutorizar['disabled'] = true;
-            $arrBtnDesautorizar['disabled'] = false;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnEliminar['disabled'] = true;
-            $arrBtnAprobar['disabled'] = false;
-        } else {
-            $arrBtnAutorizar['disabled'] = false;
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnImprimir['disabled'] = true;
-            $arrBtnAnular['disabled'] = true;
-            $arrBtnEliminar['disabled'] = false;
-            $arrBtnAprobar['disabled'] = true;
+        $arPrecioDetalle = new InvPrecioDetalle();
+        $arPrecio = $em->getRepository(InvPrecio::class)->find($codigoPrecio);
+        if($id != '0'){
+            $arPrecioDetalle = $em->getRepository(InvPrecioDetalle::class)->find($id);
         }
-        return $this
-            ->createFormBuilder()
-            ->add('btnAutorizar', SubmitType::class, $arrBtnAutorizar)
-            ->add('btnAprobar', SubmitType::class, $arrBtnAprobar)
-            ->add('btnDesautorizar', SubmitType::class, $arrBtnDesautorizar)
-            ->add('btnImprimir', SubmitType::class, $arrBtnImprimir)
-            ->add('btnAnular', SubmitType::class, $arrBtnAnular)
-            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
+        $form = $this->createFormBuilder()
+            ->add('itemRel', EntityType::class, [
+                'class' => 'App\Entity\Inventario\InvItem',
+                'query_builder' => function (EntityRepository $er){
+                    return $er->createQueryBuilder('i')
+                        ->orderBy('i.nombre');
+                },
+                'choice_label' => 'nombre',
+                'required' => false
+            ])
+            ->add('vrPrecio', NumberType::class, array('label' => 'precio'))
+            ->add('guardar', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+                if ($form->get('guardar')->isClicked()) {
+                    $arPrecioDetalle->setItemRel($form->get('itemRel')->getData());
+                    $arPrecioDetalle->setVrPrecio($form->get('vrPrecio')->getData());
+                    $arPrecioDetalle->setPrecioRel($arPrecio);
+                    $em->persist($arPrecioDetalle);
+                    $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('inventario/administracion/general/precio/detalleNuevo.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }
 

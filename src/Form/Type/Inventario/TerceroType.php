@@ -3,6 +3,8 @@
 namespace App\Form\Type\Inventario;
 
 use App\Entity\Inventario\InvTercero;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -15,6 +17,26 @@ class TerceroType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('precioCompraRel', EntityType::class, [
+                'class' => 'App\Entity\Inventario\InvPrecio',
+                'query_builder' => function (EntityRepository $er){
+                return $er->createQueryBuilder('pc')
+                    ->where('pc.compra = 1')
+                    ->orderBy('pc.nombre');
+                },
+                'choice_label' => 'nombre',
+                'required' => false
+            ])
+            ->add('precioVentaRel', EntityType::class, [
+                'class' => 'App\Entity\Inventario\InvPrecio',
+                'query_builder' => function (EntityRepository $er){
+                return $er->createQueryBuilder('pv')
+                    ->where('pv.venta = 1')
+                    ->orderBy('pv.nombre');
+                },
+                'choice_label' => 'nombre',
+                'required' => false
+            ])
             ->add('digitoVerificacion', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('numeroIdentificacion', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
             ->add('nombreCorto', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])

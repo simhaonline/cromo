@@ -89,6 +89,21 @@
             </div>
         </div>
     </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Listas de precios</div>
+            <div class="panel-body">
+                <div class="form-group form-group-sm">
+                    <label for="form_precioVentaRel" class="col-sm-2 control-label">Lista de precios de venta:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.precioVentaRel) }}
+                    </div>
+                    <label for="form_precioCompraRel" class="col-sm-2 control-label">Lista de precios de compra:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.precioCompraRel) }}
+                    </div>
+                </div>
+            </div>
+    </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm" style="float: left;"
            href="{{ path('inventario_administracion_general_tercero_lista') }}">Volver</a>

@@ -26,8 +26,21 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
         return $precio;
     }
 
-    public function listar(){
+    public function lista($id)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPrecioDetalle::class, 'pd');
+        $queryBuilder
+            ->select('pd.codigoPrecioDetallePk')
+            ->addSelect('pd.vrPrecio')
+            ->addSelect('i.nombre')
+            ->addSelect('i.porcentajeIva')
+            ->addSelect('m.nombre AS marca')
+            ->leftJoin('pd.itemRel', 'i')
+            ->leftJoin('i.marcaRel', 'm')
+            ->where('pd.codigoPrecioFk = ' . $id );
 
+        return $queryBuilder;
     }
 
 }

@@ -69,7 +69,7 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
             ->addSelect('it.stockMinimo')
             ->addSelect('it.stockMaximo')
             ->where('s.estadoAprobado = true')
-            ->where('s.estadoAnulado = false')
+            ->andWhere('s.estadoAnulado = false')
             ->andWhere('isd.cantidadPendiente > 0');
         if ($session->get('filtroInvItemNombre') != '') {
             $queryBuilder->andWhere("it.nombre LIKE '%{$session->get('filtroInvItemNombre')}%'");

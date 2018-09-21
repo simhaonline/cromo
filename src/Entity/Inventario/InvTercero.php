@@ -102,7 +102,7 @@ class InvTercero
     private $retencionFuente = false;
 
     /**
-     * @ORM\Column(name="retencion_fuente_sin_bae", type="boolean")
+     * @ORM\Column(name="retencion_fuente_sin_base", type="boolean")
      */
     private $retencionFuenteSinBase = false;
 
@@ -110,6 +110,11 @@ class InvTercero
      * @ORM\Column(name="codigo_precio_venta_fk", type="integer", nullable=true)
      */
     private $codigoPrecioVentaFk;
+
+    /**
+     * @ORM\Column(name="codigo_precio_compra_fk", type="integer", nullable=true)
+     */
+    private $codigoPrecioCompraFk;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="invTercerosIdentificacionRel")
@@ -122,6 +127,12 @@ class InvTercero
      * @ORM\JoinColumn(name="codigo_precio_venta_fk", referencedColumnName="codigo_precio_pk")
      */
     protected $precioVentaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvPrecio", inversedBy="tercerosPrecioCompraRel")
+     * @ORM\JoinColumn(name="codigo_precio_compra_fk", referencedColumnName="codigo_precio_pk")
+     */
+    protected $precioCompraRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenFormaPago", inversedBy="invTercerosFormaPagoRel")
@@ -472,6 +483,22 @@ class InvTercero
     /**
      * @return mixed
      */
+    public function getCodigoPrecioCompraFk()
+    {
+        return $this->codigoPrecioCompraFk;
+    }
+
+    /**
+     * @param mixed $codigoPrecioCompraFk
+     */
+    public function setCodigoPrecioCompraFk($codigoPrecioCompraFk): void
+    {
+        $this->codigoPrecioCompraFk = $codigoPrecioCompraFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getIdentificacionRel()
     {
         return $this->identificacionRel;
@@ -499,6 +526,22 @@ class InvTercero
     public function setPrecioVentaRel($precioVentaRel): void
     {
         $this->precioVentaRel = $precioVentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrecioCompraRel()
+    {
+        return $this->precioCompraRel;
+    }
+
+    /**
+     * @param mixed $precioCompraRel
+     */
+    public function setPrecioCompraRel($precioCompraRel): void
+    {
+        $this->precioCompraRel = $precioCompraRel;
     }
 
     /**
@@ -580,6 +623,7 @@ class InvTercero
     {
         $this->sucursalesTerceroRel = $sucursalesTerceroRel;
     }
+
 
 
 }

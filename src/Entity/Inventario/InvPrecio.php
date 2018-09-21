@@ -40,6 +40,11 @@ class InvPrecio
     protected $tercerosPrecioVentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvTercero",mappedBy="precioCompraRel")
+     */
+    protected $tercerosPrecioCompraRel;
+
+    /**
      * @ORM\Column(name="compra", type="boolean", nullable=true)
      */
     private $compra = false;
@@ -159,6 +164,22 @@ class InvPrecio
     public function setVenta($venta): void
     {
         $this->venta = $venta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTercerosPrecioCompraRel()
+    {
+        return $this->tercerosPrecioCompraRel;
+    }
+
+    /**
+     * @param mixed $tercerosPrecioCompraRel
+     */
+    public function setTercerosPrecioCompraRel($tercerosPrecioCompraRel): void
+    {
+        $this->tercerosPrecioCompraRel = $tercerosPrecioCompraRel;
     }
 
 

@@ -36,12 +36,12 @@
         </tr>
         </thead>
         <tbody>
-        {% for arPrecios in arPrecios %}
+        {% for arPrecio in arPrecios %}
             <tr>
-                <td>{{ arPrecios.codigoPrecioPk }}</td>
-                <td>{{ arPrecios.nombre }}</td>
-                <td>{{ arPrecios.fechaVence | date('Y-m-d') }}</td>
-                <td style="text-align: center"><a href="{{ path('inventario_movimiento_comercial_pedido_detalle', { 'id': arPrecios.codigoPrecioPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td>{{ arPrecio.codigoPrecioPk }}</td>
+                <td>{{ arPrecio.nombre }}</td>
+                <td>{{ arPrecio.fechaVence | date('Y-m-d') }}</td>
+                <td style="text-align: center"><a href="{{ path('inventario_administracion_general_precio_detalle', { 'id': arPrecio.codigoPrecioPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}
         </tbody>

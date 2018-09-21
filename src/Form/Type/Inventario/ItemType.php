@@ -33,7 +33,7 @@ class ItemType extends AbstractType
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Linea:',
-                'required' => true])
+                'required' => false])
             ->add('grupoRel', EntityType::class, [
                 'class' => 'App\Entity\Inventario\InvGrupo',
                 'query_builder' => function (EntityRepository $er) {
@@ -41,8 +41,8 @@ class ItemType extends AbstractType
                         ->orderBy('e.nombre', 'DESC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Grupo:'
-                , 'required' => true])
+                'label' => 'Grupo:',
+                'required' => false])
             ->add('subgrupoRel', EntityType::class, [
                 'class' => 'App\Entity\Inventario\InvSubgrupo',
                 'query_builder' => function (EntityRepository $er) {
@@ -51,7 +51,7 @@ class ItemType extends AbstractType
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Subgrupo:'
-                , 'required' => true])
+                , 'required' => false])
             ->add('marcaRel', EntityType::class, [
                 'class' => 'App\Entity\Inventario\InvMarca',
                 'query_builder' => function (EntityRepository $er) {

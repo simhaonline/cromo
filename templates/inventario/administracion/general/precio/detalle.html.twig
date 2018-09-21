@@ -2,66 +2,18 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     {{ notificar()|raw }}
-    <div class="row">
-        <div class="col-lg-12">
-            <h3 class='page-header'>
-                Inventario administracion
-                <small style="font-size: 20px">Inventario: precio detalle</small>
-            </h3>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
-    {#<div class="btn-toolbar" style="float:left">#}
-        {#<div class="btn-group">#}
-            {#{{ form_widget(form.btnAutorizar) }}#}
-            {#{{ form_widget(form.btnDesautorizar) }}#}
-            {#{{ form_widget(form.btnImprimir) }}#}
-            {#{{ form_widget(form.btnAprobar) }}#}
-            {#{{ form_widget(form.btnAnular) }}#}
-        {#</div>#}
-    {#</div>#}
-    {#<div style="float:right">#}
-        {#{% if arPedido.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}#}
-        {#{% if arPedido.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}#}
-        {#{% if arPedido.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}#}
-    {#</div>#}
-    <br /><br />
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arPedido.codigoPedidoPk }}</td>
-            <td class="titulo">USUARIO:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arPedido.usuario }}</td>
-            <td class="titulo" >SUBTOTAL:</td>
-            <td align="right">{{ arPedido.vrSubtotal | number_format(0, '.', ',')}}</td>
+            <td class="td-in-well">{{ arPrecio.codigoPrecioPk }}</td>
+            <td class="titulo">FECHA VENCE:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arPrecio.fechaVence | date('Y-m-d') }}</td>
         </tr>
         <tr>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arPedido.numero }}</td>
-            <td class="titulo">FECHA:</td>
-            <td class="td-in-well">{{ arPedido.fecha | date('Y-m-d') }}</td>
-            <td class="titulo" >IVA:</td>
-            <td align="right">{{ arPedido.vrIva | number_format(0, '.', ',')}}</td>
-        </tr>
-        <tr>
-            <td class="titulo" >SOPORTE:</td>
-            <td class="td-in-well">{{ arPedido.soporte }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo" >NETO:</td>
-            <td align="right">{{ arPedido.vrNeto | number_format(0, '.', ',')}}</td>
-        </tr>
-        <tr>
-            <td class="titulo" ></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo" >TOTAL:</td>
-            <td align="right">{{ arPedido.vrTotal | number_format(0, '.', ',')}}</td>
-        </tr>
-        <tr>
-            <td class="titulo" >COMENTARIO: </td>
-            <td class="td-in-well" colspan="5">{{ arPedido.comentario }}</td>
+            <td class="titulo">COMPRA:</td>
+            {{ validarTipo(arPrecio.compra) }}
+            <td class="titulo">VENTA:</td>
+            {{ validarTipo(arPrecio.venta) }}
         </tr>
     </table>
     <ul class="nav nav-tabs">
@@ -77,42 +29,37 @@
                             <th>ID</th>
                             <th>ITEM</th>
                             <th>MARCA</th>
-                            <th>CAN</th>
                             <th>PRECIO</th>
-                            <th>IVA</th>
-                            <th>SUBOTAL</th>
-                            <th>PEN</th>
+                            <th>% IVA</th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for arPedidoDetalle in arPedidoDetalles %}
+                        {% for arPrecioDetalle in arPrecioDetalles %}
                             <tr>
-                                <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
-                                <td>{{ arPedidoDetalle.itemNombre | default('') }}</td>
-                                <td>{{ arPedidoDetalle.itemMarcaNombre | default('') }}</td>
-                                <td class="numero">{{ arPedidoDetalle.cantidad }}</td>
-                                <td class="numero">{{ arPedidoDetalle.vrPrecio }}</td>
-                                <td class="numero">{{ arPedidoDetalle.porcentajeIva }}</td>
-                                <td class="numero">{{ arPedidoDetalle.vrSubtotal }}</td>
-                                <td class="numero">{{ arPedidoDetalle.cantidadPendiente }}</td>
-                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk }}" /></td>
+                                <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
+                                <td>{{ arPrecioDetalle.nombre }}</td>
+                                <td>{{ arPrecioDetalle.marca }}</td>
+                                <td class="numero">{{ arPrecioDetalle.vrPrecio | number_format }}</td>
+                                <td class="numero">{{ arPrecioDetalle.porcentajeIva }}</td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPrecioDetalle.codigoPrecioDetallePk }}" /></td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
                 {#<div class="separador-1"></div>#}
-                <div class="btn-toolbar" style="float: right">
-                    <div class="btn-group">
-                        {% if arPedido.estadoAutorizado == true %}
-                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled" value="Nuevo"/>
-                        {% else %}
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_pedido_detalle_nuevo', {'codigoDetalle': 0,'id':arPedido.codigoPedidoPk }) }}', 'PedidoAdicionarDetalle', 600, 900)">Nuevo</a>
-                        {% endif %}
+                    <div class="btn-toolbar" style="float: right">
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('inventario_administracion_general_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': 0 }) }}', 'precioDetalles', 600, 900)">Nuevo</a>
+                        </div>
+                        <div class="btn-group">
+                            {{ form_widget(form.btnEliminarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                        </div>
                     </div>
                     <div class="btn-group">
-                        {{ form_widget(form.btnEliminar) }}
+                        {#{{ form_widget(form.btnEliminar) }}#}
                     </div>
                 </div>
             </div>

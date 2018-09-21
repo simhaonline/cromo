@@ -158,27 +158,18 @@ class InvItem
     /**
      * @ORM\ManyToOne(targetEntity="InvGrupo", inversedBy="itemsGrupoRel")
      * @ORM\JoinColumn(name="codigo_grupo_fk",referencedColumnName="codigo_grupo_pk")
-     * @Assert\NotBlank(
-     *     message="El campo no puede estar vacio"
-     * )
      */
     protected $grupoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvSubgrupo", inversedBy="subgrupoItemsRel")
      * @ORM\JoinColumn(name="codigo_subgrupo_fk",referencedColumnName="codigo_subgrupo_pk")
-     * @Assert\NotBlank(
-     *     message="El campo no puede estar vacio"
-     * )
      */
     protected $subgrupoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvLinea", inversedBy="itemsLineaRel")
      * @ORM\JoinColumn(name="codigo_linea_fk",referencedColumnName="codigo_linea_pk")
-     * @Assert\NotBlank(
-     *     message="El campo no puede estar vacio"
-     * )
      */
     protected $lineaRel;
 

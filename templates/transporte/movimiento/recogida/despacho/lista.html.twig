@@ -14,6 +14,28 @@
                     {{ form_widget(form.choEstado) }}
                 </div>
             </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Desde:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.filtrarFecha) }}
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
             {{ form_widget(form.btnFiltrar) }}
@@ -34,7 +56,9 @@
             <th>PES</th>
             <th>VOL</th>
             <th>PAGO</th>
-            <th>DE</th>
+            <th>AUT</th>
+            <th>APR</th>
+            <th>ANU</th>
             <th></th>
             <th></th>
             <th></th>
@@ -55,7 +79,9 @@
                 <td style="text-align: right">{{ arDespachoRecogida.pesoReal }}</td>
                 <td style="text-align: right">{{ arDespachoRecogida.pesoVolumen }}</td>
                 <td style="text-align: right">{{ arDespachoRecogida.vrFletePago }}</td>
-                <td style="text-align: center">{{ arDespachoRecogida.estadoDescargado?'SI':'NO' }}</td>
+                <td class="estado">{{ arDespachoRecogida.estadoAutorizado?'SI':'NO' }}</td>
+                <td class="estado">{{ arDespachoRecogida.estadoAprobado?'SI':'NO' }}</td>
+                <td class="estado">{{ arDespachoRecogida.estadoAnulado?'SI':'NO' }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('transporte_movimiento_recogida_despacho_nuevo', { 'id': arDespachoRecogida.codigoDespachoRecogidaPk }) }}">
                         <i class="fa fa-edit" style="font-size: large;color: black;">

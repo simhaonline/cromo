@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Validator\Constraints\Count;
 
 class DespachoRecogidaController extends Controller
@@ -99,16 +101,22 @@ class DespachoRecogidaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtVehiculo', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control'], 'data' => $session->get('filtroTteDespachoVehiculoCodigo')])
-            ->add('choEstado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false,'data' => $session->get('filtroTteDespachoEstadoAprobado')])
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTteDespachoRecogidaFiltroFecha')))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteDespachoRecogidaFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteDespachoRecogidaFechaHasta'))])
+            ->add('txtVehiculo', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control'], 'data' => $session->get('filtroTteDespachoRecogidaVehiculoCodigo')])
+            ->add('choEstado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false,'data' => $session->get('filtroTteDespachoRecogidaEstadoAprobado')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroTteDespachoVehiculoCodigo', $form->get('txtVehiculo')->getData());
-                $session->set('filtroTteDespachoEstadoAprobado', $form->get('choEstado')->getData());
+                $session->set('filtroTteDespachoRecogidaFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroTteDespachoRecogidaFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                $session->set('filtroTteDespachoRecogidaFiltroFecha', $form->get('filtrarFecha')->getData());
+                $session->set('filtroTteDespachoRecogidaVehiculoCodigo', $form->get('txtVehiculo')->getData());
+                $session->set('filtroTteDespachoRecogidaEstadoAprobado', $form->get('choEstado')->getData());
             }
             if($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionados');

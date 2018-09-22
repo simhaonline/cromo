@@ -36,8 +36,10 @@ class TtePoseedorRepository extends ServiceEntityRepository
         p.telefono,
         p.movil,
         p.direccion, 
-        c.codigoInterface AS codigoCiudad
-        FROM App\Entity\Transporte\TtePoseedor p          
+        c.codigoInterface AS codigoCiudad,
+        i.codigoInterface AS tipoIdentificacion
+        FROM App\Entity\Transporte\TtePoseedor p
+        LEFT JOIN p.identificacionRel i         
         LEFT JOIN p.ciudadRel c     
         WHERE p.codigoPoseedorPk = :codigoPoseedor OR p.codigoPoseedorPk = :codigoPropietario'
         )->setParameter('codigoPoseedor', $codigoPoseedor)
@@ -53,8 +55,10 @@ class TtePoseedorRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT 
         p.codigoIdentificacionFk,
-        p.numeroIdentificacion
-        FROM App\Entity\Transporte\TtePoseedor p              
+        p.numeroIdentificacion,
+        pi.codigoInterface AS tipoIdentificacion
+        FROM App\Entity\Transporte\TtePoseedor p   
+        LEFT JOIN p.identificacionRel pi           
         WHERE p.codigoPoseedorPk = :codigoPoseedor'
         )->setParameter('codigoPoseedor', $codigoPoseedor);
         $arPoseedor =  $query->getSingleResult();

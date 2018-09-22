@@ -506,7 +506,7 @@ class TteDespachoRepository extends ServiceEntityRepository
 
         $arrTercerosPoseedores = $em->getRepository(TtePoseedor::class)->dqlRndc($arrDespacho['codigoPoseedorFk'], $arrDespacho['codigoPropietarioFk']);
         foreach ($arrTercerosPoseedores as $arTerceroPoseedor) {
-            $arrTerceros[] = array('identificacionTipo' => $arTerceroPoseedor['codigoIdentificacionFk'],
+            $arrTerceros[] = array('identificacionTipo' => $arTerceroPoseedor['tipoIdentificacion'],
                 'identificacion' => $arTerceroPoseedor['numeroIdentificacion'],
                 'nombre1' => utf8_decode($arTerceroPoseedor['nombre1']),
                 'apellido1' => utf8_decode($arTerceroPoseedor['apellido1']),
@@ -521,7 +521,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         }
 
         $arrConductor = $em->getRepository(TteConductor::class)->dqlRndc($arrDespacho['codigoConductorFk']);
-        $arrTerceros[] = array('identificacionTipo' => $arrConductor['codigoIdentificacionFk'],
+        $arrTerceros[] = array('identificacionTipo' => $arrConductor['tipoIdentificacion'],
             'identificacion' => $arrConductor['numeroIdentificacion'],
             'nombre1' => utf8_decode($arrConductor['nombre1']),
             'apellido1' => utf8_decode($arrConductor['apellido1']),
@@ -768,10 +768,10 @@ class TteDespachoRepository extends ServiceEntityRepository
                                                 <FECHAEXPEDICIONMANIFIESTO>" . $arrDespacho['fechaSalida']->format('d/m/Y') . "</FECHAEXPEDICIONMANIFIESTO>
                                                 <CODMUNICIPIOORIGENMANIFIESTO>" . $arrDespacho['codigoCiudadOrigen'] . "</CODMUNICIPIOORIGENMANIFIESTO>
                                                 <CODMUNICIPIODESTINOMANIFIESTO>" . $arrDespacho['codigoCiudadDestino'] . "</CODMUNICIPIODESTINOMANIFIESTO>
-                                                <CODIDTITULARMANIFIESTO>" . $arrPoseedor['codigoIdentificacionFk'] . "</CODIDTITULARMANIFIESTO>
+                                                <CODIDTITULARMANIFIESTO>" . $arrPoseedor['tipoIdentificacion'] . "</CODIDTITULARMANIFIESTO>
                                                 <NUMIDTITULARMANIFIESTO>" . $arrPoseedor['numeroIdentificacion'] . "</NUMIDTITULARMANIFIESTO>
                                                 <NUMPLACA>" . $arrDespacho['codigoVehiculoFk'] . "</NUMPLACA>
-                                                <CODIDCONDUCTOR>" . $arrConductor['codigoIdentificacionFk'] . "</CODIDCONDUCTOR>
+                                                <CODIDCONDUCTOR>" . $arrConductor['tipoIdentificacion'] . "</CODIDCONDUCTOR>
                                                 <NUMIDCONDUCTOR>" . $arrConductor['numeroIdentificacion'] . "</NUMIDCONDUCTOR>
                                                 <VALORFLETEPACTADOVIAJE>" . $arrDespacho['vrFletePago'] . "</VALORFLETEPACTADOVIAJE>
                                                 <RETENCIONFUENTEMANIFIESTO>" . $arrDespacho['vrRetencionFuente'] . "</RETENCIONFUENTEMANIFIESTO>

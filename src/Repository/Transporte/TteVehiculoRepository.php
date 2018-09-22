@@ -73,9 +73,9 @@ class TteVehiculoRepository extends ServiceEntityRepository
         v.codigoTipoCarroceriaFk as tipoCarroceria,
         v.pesoVacio,
         v.modelo,
-        p.codigoIdentificacionFk as tipoIdentificacionPropietario,
+        pi.codigoInterface as tipoIdentificacionPropietario,
         p.numeroIdentificacion as numeroIdentificacionPropietario,
-        ps.codigoIdentificacionFk as tipoIdentificacionPoseedor,
+        psi.codigoInterface as tipoIdentificacionPoseedor,
         ps.numeroIdentificacion as numeroIdentificacionPoseedor, 
         v.numeroPoliza,
         v.fechaVencePoliza,
@@ -85,7 +85,9 @@ class TteVehiculoRepository extends ServiceEntityRepository
         LEFT JOIN v.marcaRel m 
         LEFT JOIN v.lineaRel l
         LEFT JOIN v.propietarioRel p
+        LEFT JOIN p.identificacionRel pi
         LEFT JOIN v.poseedorRel ps
+        LEFT JOIN ps.identificacionRel psi
         LEFT JOIN v.aseguradoraRel a 
         WHERE v.codigoVehiculoPk = :codigoVehiculo'
         )->setParameter('codigoVehiculo', $codigoVehiculo);

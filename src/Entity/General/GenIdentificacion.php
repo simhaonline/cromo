@@ -22,6 +22,11 @@ class GenIdentificacion
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_interface", type="string", length=10, nullable=true)
+     */
+    private $codigoInterface;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TtePoseedor", mappedBy="identificacionRel")
      */
     protected $ttePoseedoresIdentificacionRel;
@@ -245,6 +250,38 @@ class GenIdentificacion
     public function setTteDestinatariosIdentificacionRel($tteDestinatariosIdentificacionRel): void
     {
         $this->tteDestinatariosIdentificacionRel = $tteDestinatariosIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoInterface()
+    {
+        return $this->codigoInterface;
+    }
+
+    /**
+     * @param mixed $codigoInterface
+     */
+    public function setCodigoInterface($codigoInterface): void
+    {
+        $this->codigoInterface = $codigoInterface;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCtbTercerosIdentificacionRel()
+    {
+        return $this->ctbTercerosIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $ctbTercerosIdentificacionRel
+     */
+    public function setCtbTercerosIdentificacionRel($ctbTercerosIdentificacionRel): void
+    {
+        $this->ctbTercerosIdentificacionRel = $ctbTercerosIdentificacionRel;
     }
 
 

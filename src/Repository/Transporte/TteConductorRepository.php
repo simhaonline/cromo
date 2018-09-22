@@ -77,8 +77,10 @@ class TteConductorRepository extends ServiceEntityRepository
         c.fechaVenceLicencia,
         c.numeroLicencia,
         c.categoriaLicencia,
-        cd.codigoInterface AS codigoCiudad
-        FROM App\Entity\Transporte\TteConductor c          
+        cd.codigoInterface AS codigoCiudad,
+        i.codigoInterface AS tipoIdentificacion
+        FROM App\Entity\Transporte\TteConductor c   
+        LEFT JOIN c.identificacionRel i        
         LEFT JOIN c.ciudadRel cd 
         WHERE c.codigoConductorPk = :codigoConductor'
         )->setParameter('codigoConductor', $codigoConductor);
@@ -93,8 +95,10 @@ class TteConductorRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT 
         c.codigoIdentificacionFk,
-        c.numeroIdentificacion
-        FROM App\Entity\Transporte\TteConductor c          
+        c.numeroIdentificacion,
+        i.codigoInterface AS tipoIdentificacion
+        FROM App\Entity\Transporte\TteConductor c
+        LEFT JOIN c.identificacionRel i          
         WHERE c.codigoConductorPk = :codigoConductor'
         )->setParameter('codigoConductor', $codigoConductor);
         $arConductor =  $query->getSingleResult();

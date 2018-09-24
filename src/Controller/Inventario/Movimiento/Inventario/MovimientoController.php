@@ -355,7 +355,7 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle->setItemRel($arItem);
                                     $arMovimientoDetalle->setCantidad($cantidad);
                                     $arMovimientoDetalle->setVrPrecio($arOrdenCompraDetalle->getVrPrecio());
-                                    $arMovimientoDetalle->setPorcentajeDescuento($arOrdenCompraDetalle->getPorDescuento());
+                                    $arMovimientoDetalle->setPorcentajeDescuento($arOrdenCompraDetalle->getPorcentajeDescuento());
                                     $arMovimientoDetalle->setVrDescuento($arOrdenCompraDetalle->getVrDescuento());
                                     $arMovimientoDetalle->setOrdenCompraDetalleRel($arOrdenCompraDetalle);
                                     $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() - $cantidad);

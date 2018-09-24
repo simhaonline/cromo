@@ -10,6 +10,7 @@ use App\Entity\Inventario\InvTercero;
 use App\Formato\Inventario\Pedido;
 use App\General\General;
 use App\Utilidades\Estandares;
+use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,9 +80,11 @@ class PedidoController extends Controller
                             $arPedido->setUsuario($this->getUser()->getUserName());
                         }
                         $em->persist($arPedido);
-                        $em->flush($arPedido);
+                        $em->flush();
                         return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $arPedido->getCodigoPedidoPk()]));
                     }
+                } else {
+                    Mensajes::error('Debe seleccionar un tercero');
                 }
             }
         }
@@ -211,17 +214,4 @@ class PedidoController extends Controller
         ]);
     }
 
-    /**
-     * @param $arPedido InvPedido
-     * @param $arrPrecio
-     * @param $arrCantidad
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    private function actualizarDetalles($arPedido ,$arrPrecio, $arrCantidad)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $em->getRepository(InvPedido::class)->liquidar($arPedido->getCodigoPedidoPk());
-    }
 }

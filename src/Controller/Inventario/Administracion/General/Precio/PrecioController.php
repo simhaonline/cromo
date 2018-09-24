@@ -157,7 +157,7 @@ class PrecioController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $itemRel = $form->get('itemRel')->getData();
             $arItemExistente = $em->getRepository(InvPrecioDetalle::class)
-                ->findBy(['itemRel' => $itemRel]);
+                ->findBy(['itemRel' => $itemRel, 'codigoPrecioFk' => $codigoPrecio]);
             if (!$arItemExistente) {
                 if ($form->get('guardar')->isClicked()) {
                     $arPrecioDetalle->setItemRel($itemRel);

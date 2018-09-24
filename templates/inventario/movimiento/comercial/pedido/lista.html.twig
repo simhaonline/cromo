@@ -52,10 +52,10 @@
                 <td>{{ arPedido.numero }}</td>
                 <td>{{ arPedido.fecha | date('Y-m-d') }}</td>
                 <td>{{ arPedido.terceroNombreCorto }}</td>
-                <td class="numero">{{ arPedido.vrSubtotal }}</td>
-                <td class="numero">{{ arPedido.vrIva }}</td>
-                <td class="numero">{{ arPedido.vrNeto }}</td>
-                <td class="numero">{{ arPedido.vrTotal }}</td>
+                <td class="numero">{{ arPedido.vrSubtotal | number_format}}</td>
+                <td class="numero">{{ arPedido.vrIva | number_format }}</td>
+                <td class="numero">{{ arPedido.vrNeto | number_format }}</td>
+                <td class="numero">{{ arPedido.vrTotal | number_format }}</td>
                 <td class="estado">{{ arPedido.estadoAutorizado?'SI':'NO' }}</td>
                 <td class="estado">{{ arPedido.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arPedido.estadoAnulado?'SI':'NO' }}</td>

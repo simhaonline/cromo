@@ -107,6 +107,16 @@ class InvTercero
     private $retencionFuenteSinBase = false;
 
     /**
+     * @ORM\Column(name="cliente", type="boolean", options={"default" : false})
+     */
+    private $cliente = false;
+
+    /**
+     * @ORM\Column(name="proveedor", type="boolean", options={"default" : false})
+     */
+    private $proveedor = false;
+
+    /**
      * @ORM\Column(name="codigo_precio_venta_fk", type="integer", nullable=true)
      */
     private $codigoPrecioVentaFk;
@@ -622,6 +632,38 @@ class InvTercero
     public function setSucursalesTerceroRel($sucursalesTerceroRel): void
     {
         $this->sucursalesTerceroRel = $sucursalesTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCliente()
+    {
+        return $this->cliente;
+    }
+
+    /**
+     * @param mixed $cliente
+     */
+    public function setCliente($cliente): void
+    {
+        $this->cliente = $cliente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProveedor()
+    {
+        return $this->proveedor;
+    }
+
+    /**
+     * @param mixed $proveedor
+     */
+    public function setProveedor($proveedor): void
+    {
+        $this->proveedor = $proveedor;
     }
 
 

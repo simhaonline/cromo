@@ -6,6 +6,7 @@ use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvOrdenCompra;
 use App\Entity\Inventario\InvPrecioDetalle;
 use App\Entity\Inventario\InvSolicitudDetalle;
+use App\Form\Type\Inventario\OrdenCompraType;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
@@ -19,6 +20,35 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class OrdenCompraController extends Controller
 {
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/movimiento/inventario/ordenCompra/nuevo/{id}",name="inventario_movimiento_inventario_ordenCompra_nuevo")
+     */
+    public function nuevo(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arOrdenCompra = new InvOrdenCompra();
+        if ($id != 0) {
+            $arOrdenCompra = $em->getRepository(InvOrdenCompra::class)->find($id);
+        }
+        $form = $this->createForm(OrdenCompraType::class, $arOrdenCompra);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $em->persist($arOrdenCompra);
+                $em->flush();
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $arOrdenCompra->getCodigoOrdenCompraPk()]));
+            }
+        }
+        return $this->render('inventario/movimiento/compra/ordenCompra/nuevo.html.twig', [
+            'arOrdenCompra' => $arOrdenCompra,
+            'form' => $form->createView()
+        ]);
+    }
+
     /**
      * @param Request $request
      * @param $id

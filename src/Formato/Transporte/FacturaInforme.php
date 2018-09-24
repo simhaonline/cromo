@@ -19,10 +19,12 @@ class FacturaInforme extends \FPDF {
         $this->Body($pdf);
         $pdf->Output("FacturaInforme.pdf", 'D');
     }
+
     public function Header() {
         Estandares::generarEncabezado($this,'FACTURTA INFORME');
         $this->EncabezadoDetalles();
     }
+
     public function EncabezadoDetalles() {
         $this->Ln(12);
         $header = array('TIPO', 'NUMERO', 'FECHA','CLIENTE', 'CANT', 'FLETE', 'MANEJO', 'SUBTOTAL', 'TOTAL');
@@ -44,9 +46,10 @@ class FacturaInforme extends \FPDF {
         $this->SetFont('');
         $this->Ln(4);
     }
+
     public function Body($pdf) {
         $em = BaseDatos::getEm();
-        $arFacturas = $em->getRepository(TteFactura::class)->listaInforme();
+        $arFacturas = $em->getRepository(TteFactura::class)->listaInforme()->getQuery()->getResult();
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         $unidades = 0;

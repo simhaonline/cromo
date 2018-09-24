@@ -6,6 +6,7 @@ use App\Entity\Inventario\InvOrdenCompra;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -18,15 +19,6 @@ class OrdenCompraType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('terceroRel',EntityType::class,[
-                'class' => 'App\Entity\Inventario\InvTercero',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('e')
-                        ->orderBy('e.nombreCorto','DESC');
-                },
-                'choice_label' => 'nombreCorto',
-                'label' => 'Tercero:'
-            ])
             ->add('ordenCompraTipoRel',EntityType::class,[
                 'class' => 'App\Entity\Inventario\InvOrdenCompraTipo',
                 'query_builder' => function (EntityRepository $er) {

@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Buscar;
 
 use App\Entity\Inventario\InvTercero;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,25 +21,29 @@ class TerceroController extends Controller
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
+        $terceroTipo = $request->query->get('terceroTipo');
         $form = $this->createFormBuilder()
-            ->add('TxtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarTerceroNombre')])
-            ->add('TxtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarTerceroCodigo')])
-            ->add('TxtNit', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarTerceroIdentificacion')])
+            ->add('terceroTipo', ChoiceType::class, array('choices'   => array('TODOS' => '0', 'CLIENTE' => '1', 'PROVEEDOR' => '2')))
+            ->add('TxtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroInvTerceroNombre')])
+            ->add('TxtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroInvTerceroCodigo')])
+            ->add('TxtNit', TextType::class, ['required'  => false,'data' => $session->get('filtroInvTerceroIdentificacion')])
             ->add('BtnFiltrar', SubmitType::class, ['label'  => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('BtnFiltrar')->isClicked()) {
-                $session->set('filtroInvBuscarTerceroCodigo',$form->get('TxtCodigo')->getData());
-                $session->set('filtroInvBuscarTerceroNombre',$form->get('TxtNombre')->getData());
-                $session->set('filtroInvBuscarTerceroIdentificacion',$form->get('TxtNit')->getData());
+                $session->set('filtroInvTerceroCodigo',$form->get('TxtCodigo')->getData());
+                $session->set('filtroInvTerceroNombre',$form->get('TxtNombre')->getData());
+                $session->set('filtroInvTerceroIdentificacion',$form->get('TxtNit')->getData());
+                $session->set('filtroInvTerceroTipo',$form->get('terceroTipo')->getData());
             }
         }
-        $arTerceros = $paginator->paginate($em->getRepository(InvTercero::class)->lista(0), $request->query->get('page', 1), 20);
+        $arTerceros = $paginator->paginate($em->getRepository(InvTercero::class)->lista($terceroTipo), $request->query->get('page', 1), 20);
         return $this->render('inventario/buscar/tercero.html.twig', array(
             'arTerceros' => $arTerceros,
             'campoCodigo' => $campoCodigo,
             'campoNombre' => $campoNombre,
+            'terceroTipo' => $terceroTipo,
             'form' => $form->createView()
         ));
     }

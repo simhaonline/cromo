@@ -32,10 +32,9 @@ class InvTerceroRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $tipo  integer
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function lista($tipo)
+    public function lista($terceroTipo)
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvTercero::class, 't')
@@ -45,7 +44,6 @@ class InvTerceroRepository extends ServiceEntityRepository
             ->addSelect('t.numeroIdentificacion')
             ->addSelect('t.direccion')
             ->where('t.codigoTerceroPk <> 0');
-        if ($tipo == 1) {
             if ($session->get('filtroInvTerceroCodigo') != '') {
                 $queryBuilder->andWhere("t.codigoTerceroPk = {$session->get('filtroInvTerceroCodigo')}");
             }
@@ -55,17 +53,25 @@ class InvTerceroRepository extends ServiceEntityRepository
             if ($session->get('filtroInvTerceroIdentificacion') != '') {
                 $queryBuilder->andWhere("t.numeroIdentificacion = {$session->get('filtroInvTerceroIdentificacion')}");
             }
-        } elseif ($tipo == 0) {
-            if ($session->get('filtroInvBuscarTerceroCodigo') != '') {
-                $queryBuilder->andWhere("t.codigoTerceroPk = {$session->get('filtroInvBuscarTerceroCodigo')}");
+            if($terceroTipo == null){
+                switch ($session->get('filtroInvTerceroTipo')) {
+                    case '1':
+                        $queryBuilder->andWhere("t.cliente = 1");
+                        break;
+                    case '2':
+                        $queryBuilder->andWhere("t.proveedor = 1");
+                        break;
+                }
+            } else {
+                switch ($terceroTipo) {
+                    case '1':
+                        $queryBuilder->andWhere("t.cliente = 1");
+                        break;
+                    case '2':
+                        $queryBuilder->andWhere("t.proveedor = 1");
+                        break;
+                }
             }
-            if ($session->get('filtroInvBuscarTerceroNombre') != '') {
-                $queryBuilder->andWhere("t.nombreCorto LIKE '%{$session->get('filtroInvBuscarTerceroNombre')}%'");
-            }
-            if ($session->get('filtroInvBuscarTerceroIdentificacion') != '') {
-                $queryBuilder->andWhere("t.numeroIdentificacion = {$session->get('filtroInvBuscarTerceroIdentificacion')}");
-            }
-        }
         return $queryBuilder;
     }
 }

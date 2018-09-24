@@ -198,7 +198,7 @@ class OrdenCompra extends \FPDF
         $pdf->Ln();
         $pdf->Cell(145, 4, "", 0, 0, 'R');
         $pdf->Cell(20, 4, "NETO PAGAR", 1, 0, 'R', true);
-        $pdf->Cell(25, 4, number_format($arOrdenCompra->getVrNeto(), 0, '.', ','), 1, 0, 'R');
+        $pdf->Cell(25, 4, number_format($arOrdenCompra->getVrTotal(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln(-8);
     }
 

@@ -5,11 +5,11 @@
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Numero:</label>
+                <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-4">
                     
                 </div>
-                <label class="col-sm-2 control-label">Aprobado:</label>
+                <label class="col-sm-2 control-label"></label>
                 <div class="col-sm-4">
 
                 </div>
@@ -24,12 +24,22 @@
             <thead>
             <tr>
                 <th>ITEM</th>
+                <th>NOMBRE</th>
+                <th>BOD</th>
+                <th>LOTE</th>
+                <th>EX</th>
+                <th>DS</th>
             </tr>
             </thead>
             <tbody>
             {% for arLote in arLotes %}
                 <tr>
                     <td>{{ arLote.codigoItemFk }}</td>
+                    <td>{{ arLote.itemNombre }}</td>
+                    <td>{{ arLote.codigoBodegaFk }}</td>
+                    <td>{{ arLote.loteFk }}</td>
+                    <td class="numero">{{ arLote.cantidadExistencia | number_format(0, '.', ',') }}</td>
+                    <td class="numero">{{ arLote.cantidadDisponible | number_format(0, '.', ',') }}</td>
                 </tr>
             {% endfor %}
             </tbody>

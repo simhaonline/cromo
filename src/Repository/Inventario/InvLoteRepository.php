@@ -87,7 +87,13 @@ class InvLoteRepository extends ServiceEntityRepository
             ->select('l.codigoItemFk')
             ->addSelect('l.codigoBodegaFk')
             ->addSelect('l.loteFk')
-            ->where('l.cantidadDisponible > 0');
+            ->addSelect('l.cantidadExistencia')
+            ->addSelect('l.cantidadDisponible')
+            ->addSelect('i.nombre AS itemNombre')
+            ->leftJoin('l.itemRel', 'i')
+            ->where('l.cantidadExistencia > 0')
+        ->orderBy('l.codigoBodegaFk', "ASC")
+        ->addOrderBy('l.codigoItemFk', "ASC");
         return $queryBuilder;
     }
 

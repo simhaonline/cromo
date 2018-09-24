@@ -28,18 +28,14 @@ class ExistenciaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvSolicitudNumero', $form->get('txtNumero')->getData());
+                /*$session->set('filtroInvSolicitudNumero', $form->get('txtNumero')->getData());
                 $session->set('filtroInvSolicitudEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
                 $solicitudTipo = $form->get('cboSolicitudTipoRel')->getData();
                 if($solicitudTipo != ''){
                     $session->set('filtroInvSolicitudCodigoSolicitudTipo', $form->get('cboSolicitudTipoRel')->getData()->getCodigoSolicitudTipoPk());
                 } else {
                     $session->set('filtroInvSolicitudCodigoSolicitudTipo', null);
-                }
-            }
-            if($form->get('btnEliminar')->isClicked()){
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(InvSolicitud::class)->eliminar($arrSeleccionados);
+                }*/
             }
         }
         $arLotes = $paginator->paginate($em->getRepository(InvLote::class)->existencia(), $request->query->getInt('page', 1), 30);

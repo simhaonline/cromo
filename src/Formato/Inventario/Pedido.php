@@ -173,7 +173,7 @@ class Pedido extends \FPDF
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->Cell(20, 4, "NETO PAGAR", 1, 0, 'R', true);
         $pdf->SetFont('Arial', '', 7);
-        $pdf->Cell(25, 4, number_format($arPedido->getVrNeto(), 0, '.', ','), 1, 0, 'R');
+        $pdf->Cell(25, 4, number_format($arPedido->getVrTotal(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln(-8);
     }
 

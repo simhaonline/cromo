@@ -106,9 +106,6 @@ class InvOrdenCompra
     /**
      * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="ordenesComprasTerceroRel")
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
-     * @Assert\NotNull(
-     *     message="Debe seleccionar un tercero"
-     * )
      */
     protected $terceroRel;
 

@@ -6,6 +6,7 @@ use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvOrdenCompra;
 use App\Entity\Inventario\InvPrecioDetalle;
 use App\Entity\Inventario\InvSolicitudDetalle;
+use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\OrdenCompraType;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -38,9 +39,19 @@ class OrdenCompraController extends Controller
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $em->persist($arOrdenCompra);
-                $em->flush();
-                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $arOrdenCompra->getCodigoOrdenCompraPk()]));
+                $txtCodigoTercero = $request->request->get('txtCodigoTercero');
+                if ($txtCodigoTercero != '') {
+                    $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
+                    if($arTercero){
+                        $arOrdenCompra->setTerceroRel($arTercero);
+                        $arOrdenCompra->setFecha(new \DateTime('now'));
+                        $em->persist($arOrdenCompra);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $arOrdenCompra->getCodigoOrdenCompraPk()]));
+                    }
+                }
+            } else {
+                Mensajes::error('Debes seleccionar un tercero');
             }
         }
         return $this->render('inventario/movimiento/compra/ordenCompra/nuevo.html.twig', [

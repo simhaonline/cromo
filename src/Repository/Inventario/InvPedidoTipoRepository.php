@@ -5,8 +5,10 @@ namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvPedidoTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+
 class InvPedidoTipoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -45,6 +47,30 @@ class InvPedidoTipoRepository extends ServiceEntityRepository
             ->addSelect('ioct.nombre AS NOMBRE');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
+    }
+
+    /**
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function llenarCombo()
+    {
+        $session = new Session();
+        $array = [
+            'class' => 'App:Inventario\InvPedidoTipo',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('pt')
+                    ->orderBy('pt.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""];
+        if ($session->get('filtroInvPedidoTipo')) {
+            $array['data'] = $this->getEntityManager()->getReference(InvPedidoTipo::class, $session->get('filtroInvPedidoTipo'));
+        }
+        return $array;
     }
 
 }

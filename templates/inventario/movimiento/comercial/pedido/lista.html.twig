@@ -6,17 +6,13 @@
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_TxtCodigo" class="col-sm-2 control-label"></label>
+                <label for="form_TxtCodigo" class="col-sm-2 control-label">Tipo:</label>
                 <div class="col-sm-4">
-
+                    {{ form_widget(form.cboPedidoTipo, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label for="form_estadoAutorizado" class="col-sm-1 control-label">Numero:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     {{ form_widget(form.numero, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label for="form_estadoAutorizado" class="col-sm-1 control-label"></label>
-                <div class="col-sm-2">
-
                 </div>
             </div>
 
@@ -31,6 +27,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>TIPO</th>
             <th>NUMERO</th>
             <th>FECHA</th>
             <th>TERCERO</th>
@@ -49,6 +46,7 @@
         {% for arPedido in arPedidos %}
             <tr>
                 <td>{{ arPedido.codigoPedidoPk }}</td>
+                <td>{{ arPedido.nombre }}</td>
                 <td>{{ arPedido.numero }}</td>
                 <td>{{ arPedido.fecha | date('Y-m-d') }}</td>
                 <td>{{ arPedido.terceroNombreCorto }}</td>

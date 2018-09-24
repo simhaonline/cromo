@@ -5,12 +5,14 @@ namespace App\Controller\Inventario\Movimiento\Comercial;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
+use App\Entity\Inventario\InvPedidoTipo;
 use App\Entity\Inventario\InvPrecioDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Formato\Inventario\Pedido;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,16 +23,20 @@ use App\Form\Type\Inventario\PedidoType;
 
 class PedidoController extends Controller
 {
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
      * @Route("/inventario/movimiento/comercial/pedido/lista", name="inventario_movimiento_comercial_pedido_lista")
      */
     public function lista(Request $request)
     {
         $session = new Session();
+        $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('cboPedidoTipo', EntityType::class, $em->getRepository(InvPedidoTipo::class)->llenarCombo())
             ->add('numero', TextType::class, array('data' => $session->get('filtroInvPedidoPedidoNumero')))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
@@ -40,6 +46,12 @@ class PedidoController extends Controller
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
                     $session->set('filtroInvPedidoPedidoNumero', $form->get('numero')->getData());
+                    $pedidoTipo = $form->get('cboPedidoTipo')->getData();
+                    if($pedidoTipo != ''){
+                        $session->set('filtroInvPedidoTipo', $form->get('cboPedidoTipo')->getData()->getCodigoPedidoTipoPk());
+                    } else {
+                        $session->set('filtroInvPedidoTipo', null);
+                    }
                 }
                 if ($form->get('btnExcel')->isClicked()) {
                     General::get()->setExportar($this->getDoctrine()->getRepository(InvPedido::class)->lista(), "Pedidos");

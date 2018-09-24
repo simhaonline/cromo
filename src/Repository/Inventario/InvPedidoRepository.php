@@ -17,11 +17,12 @@ class InvPedidoRepository extends ServiceEntityRepository
         parent::__construct($registry, InvPedido::class);
     }
 
-    public function lista(): array
+    public function lista()
     {
         $session = new Session();
-        $qb = $this->getEntityManager()->createQueryBuilder()->from(InvPedido::class,'p')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPedido::class,'p')
             ->leftJoin('p.terceroRel', 't')
+            ->leftJoin('p.pedidoTipoRel', 'pt')
             ->select('p.codigoPedidoPk')
             ->addSelect('p.numero')
             ->addSelect('p.fecha')
@@ -29,6 +30,7 @@ class InvPedidoRepository extends ServiceEntityRepository
             ->addSelect('p.vrIva')
             ->addSelect('p.vrNeto')
             ->addSelect('p.vrTotal')
+            ->addSelect('pt.nombre')
             ->addSelect('p.estadoAutorizado')
             ->addSelect('p.estadoAprobado')
             ->addSelect('p.estadoAnulado')
@@ -36,10 +38,13 @@ class InvPedidoRepository extends ServiceEntityRepository
             ->where('p.codigoPedidoPk <> 0')
             ->orderBy('p.codigoPedidoPk','DESC');
         if($session->get('filtroInvNumeroPedido')) {
-            $qb->andWhere("p.numero = {$session->get('filtroInvNumeroPedido')}");
+            $queryBuilder->andWhere("p.numero = {$session->get('filtroInvNumeroPedido')}");
         }
-        $dql = $this->getEntityManager()->createQuery($qb->getDQL());
-        return $dql->execute();
+        if($session->get('filtroInvPedidoTipo')) {
+            $queryBuilder->andWhere("p.codigoPedidoTipoFk = '{$session->get('filtroInvPedidoTipo')}'");
+        }
+
+        return $queryBuilder;
 
     }
 

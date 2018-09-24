@@ -109,7 +109,7 @@ class PedidoController extends Controller
         $form = Estandares::botonera($arPedido->getEstadoAutorizado(), $arPedido->getEstadoAprobado(), $arPedido->getEstadoAnulado());
         $arrBtnActualizarDetalle = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-        if($arPedido->getEstadoAutorizado()){
+        if ($arPedido->getEstadoAutorizado()) {
             $arrBtnActualizarDetalle['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
         }
@@ -117,8 +117,9 @@ class PedidoController extends Controller
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $arrControles = $request->request->all();
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository(InvPedido::class)->liquidar($id);
+                $em->getRepository(InvPedido::class)->actualizarDetalles($id, $arrControles);
                 $em->getRepository(InvPedido::class)->autorizar($arPedido);
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
@@ -140,7 +141,7 @@ class PedidoController extends Controller
                 $em->getRepository(InvPedido::class)->liquidar($id);
             }
             if ($form->get('btnActualizarDetalle')->isClicked()) {
-                $em->getRepository(InvPedido::class)->liquidar($id);
+                $em->getRepository(InvPedido::class)->actualizarDetalles($id, $arrControles);
             }
             return $this->redirect($this->generateUrl('inventario_movimiento_comercial_pedido_detalle', ['id' => $id]));
         }
@@ -160,9 +161,9 @@ class PedidoController extends Controller
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @Route("/inventario/movimiento/comercial/pedido/detalle/nuevo/{codigoPedido}/{id}", name="inventario_movimiento_comercial_pedido_detalle_nuevo")
+     * @Route("/inventario/movimiento/comercial/pedido/detalle/nuevo/{codigoPedido}", name="inventario_movimiento_comercial_pedido_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $codigoPedido, $id)
+    public function detalleNuevo(Request $request, $codigoPedido)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
@@ -208,5 +209,19 @@ class PedidoController extends Controller
             'form' => $form->createView(),
             'arItems' => $arItems
         ]);
+    }
+
+    /**
+     * @param $arPedido InvPedido
+     * @param $arrPrecio
+     * @param $arrCantidad
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function actualizarDetalles($arPedido ,$arrPrecio, $arrCantidad)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $em->getRepository(InvPedido::class)->liquidar($arPedido->getCodigoPedidoPk());
     }
 }

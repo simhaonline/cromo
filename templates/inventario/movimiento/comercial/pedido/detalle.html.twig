@@ -40,7 +40,7 @@
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo">NETO:</td>
-            <td align="right">{{ arPedido.vrNeto | number_format(0, '.', ',') }}</td>
+            <td align="right">{{ arPedido.vrTotal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
@@ -81,16 +81,30 @@
                         <tbody>
                         {% for arPedidoDetalle in arPedidoDetalles %}
                             <tr>
-                                <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
+                                <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}<input type="hidden"
+                                                                                      name="TxtCodigo[]"
+                                                                                      value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"></td>
                                 <td>{{ arPedidoDetalle.itemNombre | default('') }}</td>
                                 <td>{{ arPedidoDetalle.itemMarcaNombre | default('') }}</td>
-                                <td class="numero">{{ arPedidoDetalle.cantidad }}</td>
-                                <td class="numero">{{ arPedidoDetalle.vrPrecio | number_format(0, '.', ',') }}</td>
+                                <td class="numero">
+                                    {% if not arPedido.estadoAutorizado %}
+                                        <input style="text-align: right;" type="text" name="TxtCantidad[{{ arPedidoDetalle.codigoPedidoDetallePk  }}]" value="{{ arPedidoDetalle.cantidad }}">
+                                    {% else %}
+                                        {{ arPedidoDetalle.cantidad }}
+                                    {% endif %}
+                                </td>
+                                <td style="text-align: center;">
+                                    {% if not arPedido.estadoAutorizado %}
+                                        <input style="text-align: right;" type="text" name="TxtPrecio[{{ arPedidoDetalle.codigoPedidoDetallePk }}]" value="{{ arPedidoDetalle.vrPrecio }}">
+                                    {% else %}
+                                        {{ arPedidoDetalle.vrPrecio | number_format(0, '.', ',') }}
+                                    {% endif %}
+                                </td>
                                 <td class="numero">{{ arPedidoDetalle.porcentajeIva }}</td>
                                 <td class="numero">{{ arPedidoDetalle.vrIva | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arPedidoDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arPedidoDetalle.vrTotal | number_format(0, '.', ',') }}</td>
-                                <td class="numero">{{ arPedidoDetalle.cantidadPendiente }}</td>
+                                <td style="text-align: center;">{{ arPedidoDetalle.cantidadPendiente }}</td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                                        value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"/>
                                 </td>
@@ -106,7 +120,7 @@
                                    value="Nuevo"/>
                         {% else %}
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_pedido_detalle_nuevo', {'id': 0,'codigoPedido':arPedido.codigoPedidoPk }) }}', 'PedidoAdicionarDetalle', 600, 900)">Nuevo</a>
+                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_pedido_detalle_nuevo', {'codigoPedido':arPedido.codigoPedidoPk }) }}', 'PedidoAdicionarDetalle', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">

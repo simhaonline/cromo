@@ -114,17 +114,21 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $codigPrecio integer
+     * @param $codigoPrecio integer
      * @param $codigoItem integer
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function obtenerPrecio($codigPrecio, $codigoItem)
+    public function obtenerPrecio($codigoPrecio, $codigoItem)
     {
-        $qb = $this->getEntityManager()->createQueryBuilder()->from(InvPrecioDetalle::class, 'pd')
-            ->select('pd.vrPrecio as precio')
-            ->where("pd.codigoPrecioFk = {$codigPrecio}")
-            ->andWhere("pd.codigoItemFk = {$codigoItem}");
-        return $qb->getQuery()->getOneOrNullResult();
+        if ($codigoPrecio) {
+            $qb = $this->getEntityManager()->createQueryBuilder()->from(InvPrecioDetalle::class, 'pd')
+                ->select('pd.vrPrecio as precio')
+                ->where("pd.codigoPrecioFk = {$codigoPrecio}")
+                ->andWhere("pd.codigoItemFk = {$codigoItem}");
+            return $qb->getQuery()->getOneOrNullResult();
+        } else{
+            return null;
+        }
     }
 }

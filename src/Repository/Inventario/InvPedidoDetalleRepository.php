@@ -67,4 +67,22 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
         }
     }
 
+    public function pendientes(){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPedidoDetalle::class,'pd')
+            ->select('pd.codigoPedidoDetallePk')
+            ->addSelect('pd.codigoPedidoFk')
+            ->addSelect('pd.codigoItemFk')
+            ->addSelect('pd.cantidadPendiente')
+            ->addSelect('i.nombre')
+            ->addSelect('p.numero')
+            ->addSelect('pt.nombre as pedidoTipo')
+            ->leftJoin('pd.itemRel','i')
+            ->leftJoin('pd.pedidoRel','p')
+            ->leftJoin('p.pedidoTipoRel','pt')
+            ->where('p.estadoAprobado = 1')
+            ->andWhere('pd.cantidadPendiente > 0');
+        return $queryBuilder->getQuery();
+    }
+
+
 }

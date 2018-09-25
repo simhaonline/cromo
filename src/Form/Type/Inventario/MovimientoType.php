@@ -15,15 +15,6 @@ class MovimientoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('terceroRel',EntityType::class,[
-                'class' => 'App\Entity\Inventario\InvTercero',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('e')
-                        ->orderBy('e.nombreCorto','DESC');
-                },
-                'choice_label' => 'nombreCorto',
-               'label' => 'Tercero:'
-            ])
             ->add('soporte')
             ->add('comentarios')
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])

@@ -27,7 +27,7 @@ class GenConfiguracionEntidad extends Fixture
             'ordenCompraTipo,admin,general,0,0',
             'documentoTipo,admin,general,0,0',
             'tercero,admin,general,0,0',
-            'ordenCompra,movimiento,inventario,0,1',
+            'ordenCompra,movimiento,inventario,1,1',
             'movimiento,movimiento,inventario,0,1',
             'marca,admin,general,0,0',
             'pedido,movimiento,comercial,0,1',

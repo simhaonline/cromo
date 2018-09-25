@@ -4,8 +4,10 @@ namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvConfiguracion;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvConfiguracionRepository extends ServiceEntityRepository
 {
@@ -26,18 +28,22 @@ class InvConfiguracionRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function liquidarMovimiento(): array
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function liquidarMovimiento()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT c.vrBaseRetencionFuenteVenta,
-        c.vrBaseRetencionIvaVenta, 
-        c.porcentajeRetencionFuente, 
-        c.porcentajeRetencionIva
-        FROM App\Entity\Inventario\InvConfiguracion c 
-        WHERE c.codigoConfiguracionPk = :codigoConfiguracion'
-        )->setParameter('codigoConfiguracion', 1);
-        return $query->getSingleResult();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvConfiguracion::class, 'c')
+            ->select('c.vrBaseRetencionFuenteVenta')
+            ->addSelect('c.vrBaseRetencionIvaVenta')
+            ->addSelect('c.porcentajeRetencionFuente')
+            ->addSelect('c.porcentajeRetencionIva')
+            ->where('c.codigoConfiguracionPk = 1');
+
+        return $queryBuilder->getQuery()->getSingleResult();
     }
 
 }

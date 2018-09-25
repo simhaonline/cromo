@@ -85,15 +85,26 @@ class InvLoteRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvLote::class, 'l')
             ->select('l.codigoItemFk')
+            ->addSelect('i.nombre AS itemNombre')
+            ->addSelect('m.nombre AS marca')
             ->addSelect('l.codigoBodegaFk')
             ->addSelect('l.loteFk')
             ->addSelect('l.cantidadExistencia')
             ->addSelect('l.cantidadDisponible')
-            ->addSelect('i.nombre AS itemNombre')
             ->leftJoin('l.itemRel', 'i')
+            ->leftJoin('i.marcaRel', 'm')
             ->where('l.cantidadExistencia > 0')
         ->orderBy('l.codigoBodegaFk', "ASC")
         ->addOrderBy('l.codigoItemFk', "ASC");
+        if ($session->get('filtroInvLoteItem') != '') {
+            $queryBuilder->andWhere("i.nombre LIKE '%{$session->get('filtroInvLoteItem')}%' ");
+        }
+        if ($session->get('filtroInvLote') != '') {
+            $queryBuilder->andWhere("l.loteFk = '{$session->get('filtroInvLote')}' ");
+        }
+        if ($session->get('filtroInvLoteBodega') != '') {
+            $queryBuilder->andWhere("l.codigoBodegaFk = '{$session->get('filtroInvLoteBodega')}' ");
+        }
         return $queryBuilder;
     }
 

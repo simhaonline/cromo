@@ -53,7 +53,7 @@ class TerceroController extends Controller
                 }
             }
         }
-        $arTerceros = $paginator->paginate($em->getRepository(InvTercero::class)->lista(1), $request->query->getInt('page', 1), 30);
+        $arTerceros = $paginator->paginate($em->getRepository(InvTercero::class)->lista(null), $request->query->getInt('page', 1), 30);
         return $this->render('inventario/administracion/general/tercero/lista.html.twig', [
             'arTerceros' => $arTerceros,
             'form' => $form->createView()

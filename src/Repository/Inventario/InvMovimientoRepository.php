@@ -138,9 +138,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
 
             $this->getEntityManager()->persist($arMovimientoDetalle);
         }
-        $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->liquidarMovimiento();
         //Calcular retenciones en Ventas
         if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC') {
+            $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->liquidarMovimiento();
             //Retencion en la fuente
             if ($arMovimiento->getTerceroRel()->getRetencionFuente()) {
                 if ($vrTotalBrutoGlobal >= $arrConfiguracion['vrBaseRetencionFuenteVenta'] || $arMovimiento->getTerceroRel()->getRetencionFuenteSinBase()) {

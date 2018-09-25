@@ -52,6 +52,8 @@ class MovimientoController extends Controller
      * @param $codigoDocumento
      * @param $tipoDocumento
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/movimiento/inventario/movimiento/lista/movimientos/{tipoDocumento}/{codigoDocumento}", name="inventario_movimiento_inventario_movimiento_lista")
      */
     public function listaMovimientos(Request $request, $codigoDocumento, $tipoDocumento)

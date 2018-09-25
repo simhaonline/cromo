@@ -290,7 +290,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             if ($arMovimientoDetalle->getItemRel()->getAfectaInventario()) {
                 if (!$arMovimientoDetalle->getCodigoBodegaFk() || $arMovimientoDetalle->getCodigoBodegaFk() == '') {
-                    $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoBodegaFk() . ' no tiene asociada una bodega.';
+                    $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' no tiene asociada una bodega.';
                 } else {
                     $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle->getCodigoBodegaFk());
                     if (!$arBodega) {
@@ -299,7 +299,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 }
                 if ($this->getEntityManager()->getRepository(InvMovimiento::class)->find($codigoMovimiento)->getDocumentoRel()->getOperacionInventario() == -1) {
                     if (!$arMovimientoDetalle->getLoteFk() || $arMovimientoDetalle->getLoteFk() == '') {
-                        $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoBodegaFk() . ' no tiene asociada una bodega.';
+                        $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' no tiene asociada una bodega.';
                     }
                 }
             }

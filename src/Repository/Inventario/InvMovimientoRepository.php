@@ -83,7 +83,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             }
         } else {
             if ($this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
-                //$this->afectar($arMovimiento, 1);
+                $this->afectar($arMovimiento, 1);
                 $arMovimiento->setEstadoAutorizado(1);
                 $this->getEntityManager()->persist($arMovimiento);
                 $this->getEntityManager()->flush();
@@ -180,7 +180,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
     public function desautorizar($arMovimiento)
     {
         if ($arMovimiento->getEstadoAutorizado() == 1 && $arMovimiento->getEstadoAprobado() == 0) {
-            //$this->afectar($arMovimiento, -1);
+            $this->afectar($arMovimiento, -1);
             $arMovimiento->setEstadoAutorizado(0);
             $this->getEntityManager()->persist($arMovimiento);
             $this->getEntityManager()->flush();
@@ -299,7 +299,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 }
                 if ($this->getEntityManager()->getRepository(InvMovimiento::class)->find($codigoMovimiento)->getDocumentoRel()->getOperacionInventario() == -1) {
                     if (!$arMovimientoDetalle->getLoteFk() || $arMovimientoDetalle->getLoteFk() == '') {
-                        $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' no tiene asociada una bodega.';
+                        $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' no tiene asociado un lote.';
                     }
                 }
             }

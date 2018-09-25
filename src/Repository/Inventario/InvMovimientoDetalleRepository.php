@@ -23,8 +23,9 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arMovimiento InvMovimiento
-     * @param $arrSeleccionados array
+     * @param $arMovimiento
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
      */
     public function eliminar($arMovimiento, $arrSeleccionados)
     {

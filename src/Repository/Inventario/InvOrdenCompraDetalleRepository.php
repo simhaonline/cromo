@@ -8,6 +8,7 @@ use App\Entity\Inventario\InvOrdenCompra;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
 {
@@ -63,10 +64,10 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
         }
     }
 
-    public function listarDetallesPendientes($nombreItem = '', $codigoItem = '', $codigoOrdenCompra = '')
+    public function listarDetallesPendientes()
     {
-        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvOrdenCompraDetalle', 'iocd');
-        $qb
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvOrdenCompraDetalle::class, 'iocd')
             ->select('iocd.codigoOrdenCompraDetallePk')
             ->join('iocd.itemRel', 'it')
             ->join('iocd.ordenCompraRel', 'oc')
@@ -76,20 +77,21 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
             ->addSelect('iocd.cantidadPendiente')
             ->addSelect('it.stockMinimo')
             ->addSelect('it.stockMaximo')
+            ->addSelect('oc.numero AS ordenCompra')
             ->where('oc.estadoAprobado = true')
             ->where('oc.estadoAnulado = false')
-            ->andWhere('iocd.cantidadPendiente > 0');
-        if ($nombreItem != '') {
-            $qb->andWhere("it.nombre LIKE '%{$nombreItem}%'");
+            ->andWhere('iocd.cantidadPendiente > 0')
+        ->orderBy('iocd.codigoOrdenCompraDetallePk', 'ASC');
+        if ($session->get('filtroInvCodigoItem') != '') {
+            $queryBuilder->andWhere("iocd.codigoItemFk = {$session->get('filtroInvCodigoItem')}");
         }
-        if ($codigoItem != '') {
-            $qb->andWhere("iocd.codigoItemFk = {$codigoItem}");
+        if ($session->get('filtroInvItem') != '') {
+            $queryBuilder->andWhere("it.nombre LIKE '%{$session->get('filtroInvItem')}%'");
         }
-        if ($codigoOrdenCompra != '') {
-            $qb->andWhere("iocd.codigoOrdenCompraFk = {$codigoOrdenCompra} ");
+        if ($session->get('filtroInvNumeroOrdenCompra') != '') {
+            $queryBuilder->andWhere("oc.numero = {$session->get('filtroInvNumeroOrdenCompra')}");
         }
-        $qb->orderBy('iocd.codigoOrdenCompraDetallePk', 'ASC');
-        $query = $this->_em->createQuery($qb->getDQL());
+        $query = $this->_em->createQuery($queryBuilder->getDQL());
         return $query->execute();
     }
 

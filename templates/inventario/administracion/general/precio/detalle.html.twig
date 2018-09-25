@@ -61,7 +61,7 @@
                                 <td style="width: 100px;">{{ arPrecioDetalle.diasPromedioEntrega }}</td>
                                 <td class="numero">{{ arPrecioDetalle.vrPrecio | number_format }}</td>
                                 <td class="numero">{{ arPrecioDetalle.porcentajeIva }}</td>
-                                <td style="text-align: center;"><a href="javascript:abrirVentana3('{{ path('inventario_administracion_general_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': arPrecioDetalle.codigoPrecioDetallePk }) }}', 'precioDetalles', 600, 900)"><i class="fa fa-edit" style="font-size: large; color: black;" t></i></a>
+                                <td style="text-align: center;"><a href="javascript:abrirVentana3('{{ path('inventario_administracion_general_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': arPrecioDetalle.codigoPrecioDetallePk }) }}', 'precioDetalles', 600, 900)"><i class="fa fa-edit" style="font-size: large; color: black;"></i></a>
                                 </td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPrecioDetalle.codigoPrecioDetallePk }}" /></td>
                             </tr>

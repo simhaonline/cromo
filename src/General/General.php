@@ -2,13 +2,15 @@
 
 namespace App\General;
 
+use App\Utilidades\Mensajes;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-final class General {
+final class General
+{
     private $container;
     private $edad = 25;
 
-    private function __construct() 
+    private function __construct()
     {
         /**
          * Lógica para inicializar utilidades...
@@ -23,12 +25,18 @@ final class General {
     public static function get()
     {
         static $instance = null;
-        if(!$instance) {
+        if (!$instance) {
             $instance = new General();
         }
         return $instance;
     }
 
+    /**
+     * @param $arrDatos array
+     * @param $nombre string
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function setExportar($arrDatos, $nombre)
     {
         if (count($arrDatos) > 0) {
@@ -38,9 +46,9 @@ final class General {
             //Se obtienen las columnas del archivo
             $arrColumnas = array_keys($arrDatos[0]);
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $sheet->getColumnDimension($i)->setAutoSize(true);
+                $sheet->getStyle(1)->getFont()->setBold(true);
                 $sheet->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
-                $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
-                $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
                 $j++;
             }
             $j = 1;
@@ -64,7 +72,7 @@ final class General {
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
             $writer->save('php://output');
         } else {
-            $this->Mensaje('error', 'El listado esta vacío, no hay nada que exportar');
+            Mensajes::error('El listado esta vacío, no hay nada que exportar');
         }
     }
 }

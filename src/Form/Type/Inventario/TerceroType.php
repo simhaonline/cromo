@@ -19,20 +19,20 @@ class TerceroType extends AbstractType
         $builder
             ->add('precioCompraRel', EntityType::class, [
                 'class' => 'App\Entity\Inventario\InvPrecio',
-                'query_builder' => function (EntityRepository $er){
-                return $er->createQueryBuilder('pc')
-                    ->where('pc.compra = 1')
-                    ->orderBy('pc.nombre');
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('pc')
+                        ->where('pc.compra = 1')
+                        ->orderBy('pc.nombre');
                 },
                 'choice_label' => 'nombre',
                 'required' => false
             ])
             ->add('precioVentaRel', EntityType::class, [
                 'class' => 'App\Entity\Inventario\InvPrecio',
-                'query_builder' => function (EntityRepository $er){
-                return $er->createQueryBuilder('pv')
-                    ->where('pv.venta = 1')
-                    ->orderBy('pv.nombre');
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('pv')
+                        ->where('pv.venta = 1')
+                        ->orderBy('pv.nombre');
                 },
                 'choice_label' => 'nombre',
                 'required' => false
@@ -48,6 +48,8 @@ class TerceroType extends AbstractType
             ->add('telefono', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
             ->add('celular', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('email', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
+            ->add('cliente', CheckboxType::class, ['required' => false, 'label' => ' '])
+            ->add('proveedor', CheckboxType::class, ['required' => false, 'label' => ' '])
             ->add('retencionIva', CheckboxType::class, ['required' => false])
             ->add('retencionFuente', CheckboxType::class, ['required' => false])
             ->add('retencionFuenteSinBase', CheckboxType::class, ['required' => false])

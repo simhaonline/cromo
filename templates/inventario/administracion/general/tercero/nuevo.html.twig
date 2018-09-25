@@ -30,6 +30,16 @@
                     {{ form_widget(form.nombres) }}
                     {{ form_errors(form.nombres) }}
                 </div>
+                <label for="form_nombre" class="col-sm-2 control-label">Cliente</label>
+                <div class="col-sm-1">
+                    {{ form_widget(form.cliente) }}
+                    {{ form_errors(form.cliente) }}
+                </div>
+                <label for="form_nombre" class="col-sm-1 control-label">Proveedor</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.proveedor) }}
+                    {{ form_errors(form.proveedor) }}
+                </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_fechaVence" class="col-sm-2 control-label">Primer apellido:</label>

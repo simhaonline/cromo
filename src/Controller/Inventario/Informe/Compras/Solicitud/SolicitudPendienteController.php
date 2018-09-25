@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Informe\Compras\Solicitud;
 
 use App\Entity\Inventario\InvSolicitud;
+use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Entity\Inventario\InvSolicitudTipo;
 use App\General\General;
 use Doctrine\ORM\EntityRepository;
@@ -55,11 +56,11 @@ class SolicitudPendienteController extends Controller
                 $session->set('filtroInvInformeSolicitudSolicitudTipo', $arSolicitudTipo);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(InvSolicitud::class)->pendientes()->execute(), "Informe solicitudes pendientes");
+                General::get()->setExportar($em->getRepository(InvSolicitudDetalle::class)->pendientes()->execute(), "Informe solicitudes pendientes");
             }
         }
-        $arSolicitudDetalles = $paginator->paginate($em->getRepository(InvSolicitud::class)->pendientes(), $request->query->getInt('page', 1), 30);
-        return $this->render('inventario/informe/inventario/solicitud/lista.html.twig', [
+        $arSolicitudDetalles = $paginator->paginate($em->getRepository(InvSolicitudDetalle::class)->pendientes(), $request->query->getInt('page', 1), 30);
+        return $this->render('inventario/informe/inventario/solicitud/solicitudesPendientes.html.twig', [
             'arSolicitudDetalles' => $arSolicitudDetalles,
             'form' => $form->createView()
         ]);

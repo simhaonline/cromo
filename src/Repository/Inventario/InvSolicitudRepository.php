@@ -219,28 +219,5 @@ class InvSolicitudRepository extends ServiceEntityRepository
         return $resultado[1];
     }
 
-    /**
-     * @return \Doctrine\ORM\Query
-     */
-    public function pendientes(){
-        $session = new Session();
-        $em = $this->getEntityManager();
-        $queryBuilder = $em->createQueryBuilder()->from(InvSolicitudDetalle::class,'sd')
-            ->select('sd.codigoSolicitudDetallePk')
-            ->addSelect('s.numero')
-            ->addSelect('sd.codigoSolicitudFk')
-            ->addSelect('sd.cantidadPendiente')
-            ->addSelect('sd.codigoItemFk')
-            ->addSelect('it.nombre')
-            ->addSelect('st.nombre as tipo')
-            ->leftJoin('sd.solicitudRel', 's')
-            ->leftJoin('s.solicitudTipoRel', 'st')
-            ->leftJoin('sd.itemRel', 'it')
-            ->where('s.estadoAprobado = 1')
-            ->andWhere('sd.cantidadPendiente > 0');
-        if($session->get('filtroInvInformeSolicitudSolicitudTipo') != null){
-            $queryBuilder->andWhere("s.codigoSolicitudTipoFk = '{$session->get('filtroInvInformeSolicitudSolicitudTipo')}'");
-        }
-        return $queryBuilder->getQuery();
-    }
+
 }

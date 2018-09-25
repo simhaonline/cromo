@@ -117,13 +117,22 @@ class MovimientoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arMovimiento->setFecha(new \DateTime('now'));
-                $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
-                $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
-                $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
-                $em->persist($arMovimiento);
-                $em->flush();
-                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));
+                $txtCodigoTercero = $request->request->get('txtCodigoTercero');
+                if ($txtCodigoTercero != '') {
+                    $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
+                    if($arTercero) {
+                        $arMovimiento->setFecha(new \DateTime('now'));
+                        $arMovimiento->setTerceroRel($arTercero);
+                        $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
+                        $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
+                        $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
+                        $em->persist($arMovimiento);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));
+                    }
+                }
+            } else {
+                Mensajes::error('Debes seleccionar un tercero');
             }
         }
         return $this->render('inventario/movimiento/inventario/nuevo.html.twig', [

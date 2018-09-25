@@ -1,0 +1,65 @@
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Filtros
+        </div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_solicitudTipoRel" class="col-sm-2 control-label">Solicitud tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.solicitudTipoRel) }}
+                    {{ form_errors(form.solicitudTipoRel) }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="btn-group">
+                {{ form_widget(form.btnFiltrar) }}
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th title="Numero solicitud">NUMERO</th>
+                <th title="Codigo solicitud">SOLICITUD</th>
+                <th title="Tipo de solicitud">TIPO</th>
+                <th>PENDIENTE</th>
+                <th>ID ITEM</th>
+                <th>ITEM</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arSolicitudDetalle in arSolicitudDetalles %}
+                <tr>
+                    <td>{{ arSolicitudDetalle.codigoSolicitudDetallePk }}</td>
+                    <td>{{ arSolicitudDetalle.numero }}</td>
+                    <td>{{ arSolicitudDetalle.codigoSolicitudFk }}</td>
+                    <td>{{ arSolicitudDetalle.tipo }}</td>
+                    <td>{{ arSolicitudDetalle.cantidadPendiente }}</td>
+                    <td>{{ arSolicitudDetalle.codigoItemFk }}</td>
+                    <td>{{ arSolicitudDetalle.nombre }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-toolbar" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span
+                        class="badge">{{ arSolicitudDetalles.getTotalItemCount }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group" style="float: right;">
+        {{ form_widget(form.btnExcel) }}
+    </div>
+    <div class="btn-group btn-xs">
+        {{ knp_pagination_render(arSolicitudDetalles) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

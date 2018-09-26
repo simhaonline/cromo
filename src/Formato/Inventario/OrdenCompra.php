@@ -176,9 +176,9 @@ class OrdenCompra extends \FPDF
             $pdf->Cell(80, 4, utf8_decode($arOrdenCompraDetalle->getItemRel()->getNombre()), 1, 0, 'L');
             $pdf->Cell(15, 4, $arOrdenCompraDetalle->getCantidad(), 1, 0, 'C');
             $pdf->Cell(20, 4, $arOrdenCompraDetalle->getPorcentajeIva(), 1, 0, 'C');
-            $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'C');
-            $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrIva(), 0, '.', ','), 1, 0, 'C');
-            $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'C');
+            $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrIva(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

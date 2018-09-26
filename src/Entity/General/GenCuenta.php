@@ -17,7 +17,7 @@ class GenCuenta
     private $codigoCuentaPk;
 
     /**
-     * @ORM\Column(name="codigo_banco_fk", type="string")
+     * @ORM\Column(name="codigo_banco_fk", type="string", length=10, nullable=true)
      */
     private $codigoBancoFk;
 
@@ -135,6 +135,22 @@ class GenCuenta
     /**
      * @return mixed
      */
+    public function getCodigoCuentaContableFk()
+    {
+        return $this->codigoCuentaContableFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaContableFk
+     */
+    public function setCodigoCuentaContableFk($codigoCuentaContableFk): void
+    {
+        $this->codigoCuentaContableFk = $codigoCuentaContableFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getBancoRel()
     {
         return $this->bancoRel;
@@ -162,22 +178,6 @@ class GenCuenta
     public function setRecibosCuentaRel($recibosCuentaRel): void
     {
         $this->recibosCuentaRel = $recibosCuentaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaContableFk()
-    {
-        return $this->codigoCuentaContableFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaContableFk
-     */
-    public function setCodigoCuentaContableFk($codigoCuentaContableFk): void
-    {
-        $this->codigoCuentaContableFk = $codigoCuentaContableFk;
     }
 
 

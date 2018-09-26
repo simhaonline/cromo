@@ -95,6 +95,7 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
             ->addSelect('s.numero')
             ->addSelect('sd.codigoSolicitudFk')
             ->addSelect('sd.cantidadPendiente')
+            ->addSelect('sd.cantidad')
             ->addSelect('sd.codigoItemFk')
             ->addSelect('it.nombre')
             ->addSelect('st.nombre as tipo')
@@ -103,8 +104,8 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
             ->leftJoin('sd.itemRel', 'it')
             ->where('s.estadoAprobado = 1')
             ->andWhere('sd.cantidadPendiente > 0');
-        if($session->get('filtroInvInformeSolicitudSolicitudTipo') != null){
-            $queryBuilder->andWhere("s.codigoSolicitudTipoFk = '{$session->get('filtroInvInformeSolicitudSolicitudTipo')}'");
+        if($session->get('filtroInvCodigoSolicitudTipo') != null){
+            $queryBuilder->andWhere("s.codigoSolicitudTipoFk = '{$session->get('filtroInvCodigoSolicitudTipo')}'");
         }
         return $queryBuilder->getQuery();
     }

@@ -28,9 +28,10 @@
                 <th title="Numero solicitud">NUMERO</th>
                 <th title="Codigo solicitud">SOLICITUD</th>
                 <th title="Tipo de solicitud">TIPO</th>
-                <th>PENDIENTE</th>
                 <th>ID ITEM</th>
                 <th>ITEM</th>
+                <th>CANTIDAD</th>
+                <th>PENDIENTE</th>
             </tr>
             </thead>
             <tbody>
@@ -40,9 +41,10 @@
                     <td>{{ arSolicitudDetalle.numero }}</td>
                     <td>{{ arSolicitudDetalle.codigoSolicitudFk }}</td>
                     <td>{{ arSolicitudDetalle.tipo }}</td>
-                    <td>{{ arSolicitudDetalle.cantidadPendiente }}</td>
                     <td>{{ arSolicitudDetalle.codigoItemFk }}</td>
                     <td>{{ arSolicitudDetalle.nombre }}</td>
+                    <td>{{ arSolicitudDetalle.cantidad }}</td>
+                    <td>{{ arSolicitudDetalle.cantidadPendiente }}</td>
                 </tr>
             {% endfor %}
             </tbody>

@@ -20,6 +20,7 @@ class SolicitudPendienteController extends Controller
     /**
      * @param Request $request
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/compras/solicitudPendientes", name="inventario_informe_inventario_compras_solicitudPendientes")
@@ -30,18 +31,7 @@ class SolicitudPendienteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('solicitudTipoRel',EntityType::class,[
-                'class' => 'App\Entity\Inventario\InvSolicitudTipo',
-                'query_builder' => function(EntityRepository $er){
-                    return $er->createQueryBuilder('e')
-                        ->orderBy('e.codigoSolicitudTipoPk');
-                },
-                'choice_label' => 'nombre',
-                'required' => false,
-                'data' => '',
-                'empty_data' => '',
-                'placeholder' => 'TODOS'
-            ])
+            ->add('solicitudTipoRel',EntityType::class,$em->getRepository(InvSolicitudTipo::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel','attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -53,7 +43,7 @@ class SolicitudPendienteController extends Controller
                     /** @var  $arSolicitudTipo InvSolicitudTipo */
                     $arSolicitudTipo = $arSolicitudTipo->getCodigoSolicitudTipoPk();
                 }
-                $session->set('filtroInvInformeSolicitudSolicitudTipo', $arSolicitudTipo);
+                $session->set('filtroInvCodigoSolicitudTipo', $arSolicitudTipo);
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(InvSolicitudDetalle::class)->pendientes()->execute(), "Informe solicitudes pendientes");

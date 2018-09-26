@@ -59,18 +59,20 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $id
      * @return \Doctrine\ORM\QueryBuilder
      */
     public function informePrecioDetalle()
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPrecioDetalle::class, 'pd');
-        $queryBuilder
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPrecioDetalle::class, 'pd')
             ->select('pd.codigoPrecioDetallePk')
             ->addSelect('p.nombre AS precio')
             ->addSelect('m.nombre AS marca')
             ->addSelect('i.nombre')
+            ->addSelect('pd.codigoItemFk')
+            ->addSelect('p.compra')
+            ->addSelect('p.venta')
+            ->addSelect('pd.codigoItemFk')
             ->addSelect('i.porcentajeIva')
             ->addSelect('pd.vrPrecio')
             ->addSelect('pd.diasPromedioEntrega')
@@ -78,13 +80,12 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
             ->leftJoin('pd.itemRel', 'i')
             ->leftJoin('i.marcaRel', 'm')
             ->leftJoin('pd.precioRel', 'p');
-        if ($session->get('filtroInvItem') != '') {
-            $queryBuilder->andWhere("i.nombre LIKE '%{$session->get('filtroInvItem')}%' ");
+        if ($session->get('filtroInvInformeItemCodigo') != '') {
+            $queryBuilder->andWhere("i.codigoItemPk = '{$session->get('filtroInvInformeItemCodigo')}' ");
         }
-        if ($session->get('filtroInvNombreListPrecio') != '') {
-            $queryBuilder->andWhere("p.nombre LIKE '%{$session->get('filtroInvNombreListPrecio')}%' ");
+        if ($session->get('filtroInvInformeNombreListaPrecio') != '') {
+            $queryBuilder->andWhere("p.nombre = '{$session->get('filtroInvInformeNombreListaPrecio')}' ");
         }
-
         return $queryBuilder;
     }
 

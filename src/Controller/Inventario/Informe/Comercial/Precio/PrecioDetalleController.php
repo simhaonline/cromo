@@ -17,24 +17,30 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class PrecioDetalleController extends Controller
 {
-   /**
-    * @Route("/inventario/informe/inventario/comercial/precio/precioDetalle", name="inventario_informe_inventario_comercial_precio_detalle")
-    */
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/inventario/informe/inventario/comercial/precio/precioDetalle", name="inventario_informe_inventario_comercial_precio_detalle")
+     */
     public function lista(Request $request)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtItem', TextType::class, ['required' => false, 'data' => $session->get('filtroInvItem')])
-            ->add('txtNombreListaPrecio', TextType::class, ['required' => false, 'data' => $session->get('filtroInvNombreListPrecio')])
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('txtItemCodigo', TextType::class, array('data' => $session->get('filtroInvInformeItemCodigo'), 'required' => false))
+            ->add('txtItemNombre', TextType::class, array('data' => $session->get('filtroInvInformeItemNombre'), 'required' => false , 'attr' => ['readonly' => 'readonly']))
+            ->add('txtNombreListaPrecio', TextType::class, ['required' => false, 'data' => $session->get('filtroInvInformeNombreListaPrecio')])
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvItem', $form->get('txtItem')->getData());
+                $session->set('filtroInvInformeItemCodigo', $form->get('txtItemCodigo')->getData());
+                $session->set('filtroInvInformeItemNombre', $form->get('txtItemNombre')->getData());
                 $session->set('filtroInvNombreListPrecio', $form->get('txtNombreListaPrecio')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {

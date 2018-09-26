@@ -5,13 +5,30 @@
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
+                <label for="txtNit" class="col-sm-2 control-label">Item:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtItemCodigo,{'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="input-group">
+                                {{ form_widget(form.txtItemNombre,{'attr':{'class':'form-control'}}) }}
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('inventario_buscar_item', { 'campoCodigo': 'form_txtItemCodigo', 'campoNombre': 'form_txtItemNombre'}) }}', 'buscarItem', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Lista precio:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtNombreListaPrecio, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-1 control-label">Item:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtItem, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
         </div>
@@ -25,7 +42,9 @@
             <tr>
                 <th>ID</th>
                 <th>LISTA PRECIO</th>
+                <th title="Indica si la lista contiene precios de venta o de compra">TIPO</th>
                 <th>MARCA</th>
+                <th title="Codigo del item">CODIGO</th>
                 <th>ITEM</th>
                 <th>PRECIO</th>
                 <th title="DIAS PROMEDIO ENTREGA">DIAS PROM ENT</th>
@@ -36,7 +55,13 @@
                 <tr>
                     <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
                     <td>{{ arPrecioDetalle.precio }}</td>
+                    {% if arPrecioDetalle.compra %}
+                        <td>COMPRA</td>
+                    {% else %}
+                        <td>VENTA</td>
+                    {% endif %}
                     <td>{{ arPrecioDetalle.marca }}</td>
+                    <td>{{ arPrecioDetalle.codigoItemFk }}</td>
                     <td>{{ arPrecioDetalle.nombre }}</td>
                     <td class="numero">{{ arPrecioDetalle.vrPrecio | number_format }}</td>
                     <td class="numero">{{ arPrecioDetalle.diasPromedioEntrega }}</td>
@@ -54,7 +79,7 @@
     </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
-            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnExcel) }}
         </div>
     </div>
     <div class="btn-group btn-xs">

@@ -96,8 +96,8 @@ class InvLoteRepository extends ServiceEntityRepository
             ->where('l.cantidadExistencia > 0')
         ->orderBy('l.codigoBodegaFk', "ASC")
         ->addOrderBy('l.codigoItemFk', "ASC");
-        if ($session->get('filtroInvLoteItem') != '') {
-            $queryBuilder->andWhere("i.nombre LIKE '%{$session->get('filtroInvLoteItem')}%' ");
+        if ($session->get('filtroInvInformeItemCodigo') != '') {
+            $queryBuilder->andWhere("l.codigoItemFk = {$session->get('filtroInvInformeItemCodigo')}");
         }
         if ($session->get('filtroInvLote') != '') {
             $queryBuilder->andWhere("l.loteFk = '{$session->get('filtroInvLote')}' ");

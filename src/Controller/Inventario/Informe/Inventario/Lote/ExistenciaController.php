@@ -31,7 +31,8 @@ class ExistenciaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtItem', TextType::class, ['required' => false, 'data' => $session->get('filtroInvLoteItem')])
+            ->add('txtCodigoItem', TextType::class, array('data' => $session->get('filtroInvInformeItemCodigo'), 'required' => false))
+            ->add('txtNombreItem', TextType::class, array('data' => $session->get('filtroInvInformeItemNombre'), 'required' => false , 'attr' => ['readonly' => 'readonly']))
             ->add('txtLote', TextType::class, ['required' => false, 'data' => $session->get('filtroInvLote')])
             ->add('txtBodega', TextType::class, ['required' => false, 'data' => $session->get('filtroInvLoteBodega')])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
@@ -41,7 +42,7 @@ class ExistenciaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvLoteItem', $form->get('txtItem')->getData());
+                $session->set('filtroInvInformeItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvLote', $form->get('txtLote')->getData());
                 $session->set('filtroInvLoteBodega', $form->get('txtBodega')->getData());
             }

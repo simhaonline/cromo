@@ -71,6 +71,7 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
             ->select('iocd.codigoOrdenCompraDetallePk')
             ->join('iocd.itemRel', 'it')
             ->join('iocd.ordenCompraRel', 'oc')
+            ->addSelect('it.codigoItemPk AS codigoItem')
             ->addSelect('it.nombre')
             ->addSelect('it.cantidadExistencia')
             ->addSelect('iocd.cantidad')
@@ -82,11 +83,8 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
             ->where('oc.estadoAnulado = false')
             ->andWhere('iocd.cantidadPendiente > 0')
         ->orderBy('iocd.codigoOrdenCompraDetallePk', 'ASC');
-        if ($session->get('filtroInvCodigoItem') != '') {
-            $queryBuilder->andWhere("iocd.codigoItemFk = {$session->get('filtroInvCodigoItem')}");
-        }
-        if ($session->get('filtroInvItem') != '') {
-            $queryBuilder->andWhere("it.nombre LIKE '%{$session->get('filtroInvItem')}%'");
+        if ($session->get('filtroInvMovimientoItemCodigo') != '') {
+            $queryBuilder->andWhere("iocd.codigoItemFk = {$session->get('filtroInvMovimientoItemCodigo')}");
         }
         if ($session->get('filtroInvNumeroOrdenCompra') != '') {
             $queryBuilder->andWhere("oc.numero = {$session->get('filtroInvNumeroOrdenCompra')}");

@@ -1,15 +1,33 @@
 {% extends 'base_inventario.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Filtros
+            <i class="fa fa-info-circle" style="color: black;font-size: large;float: right;" title="Los pedidos pendientes, son aquellos que estando aprobados, aun no han sido facturados"></i>
+        </div>
+    <div class="panel-body">
+        <div class="form-group form-group-sm">
+            <label for="form_pedidoTipoRel" class="col-sm-2 control-label">Pedido tipo:</label>
+            <div class="col-sm-4">
+                {{ form_widget(form.pedidoTipoRel) }}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.btnFiltrar) }}
+    </div>
+    </div>
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover">
             <thead>
             <tr>
                 <th>ID</th>
                 <th title="Numero pedido">NUMERO</th>
-                <th title="Codigo pedido">SOLICITUD</th>
-                <th title="Tipo de solicitud">TIPO</th>
-                <th>PENDIENTE</th>
+                <th title="Codigo pedido">PEDIDO</th>
+                <th title="Tipo de pedido">TIPO</th>
+                <th title="Cantidad a facturar">CANTIDAD</th>
+                <th title="Cantidad pendiente por facturar">PENDIENTE</th>
                 <th>ID ITEM</th>
                 <th>ITEM</th>
             </tr>
@@ -21,6 +39,7 @@
                     <td>{{ arPedidoDetalle.numero }}</td>
                     <td>{{ arPedidoDetalle.codigoPedidoFk }}</td>
                     <td>{{ arPedidoDetalle.pedidoTipo }}</td>
+                    <td>{{ arPedidoDetalle.cantidad }}</td>
                     <td>{{ arPedidoDetalle.cantidadPendiente }}</td>
                     <td>{{ arPedidoDetalle.codigoItemFk }}</td>
                     <td>{{ arPedidoDetalle.nombre }}</td>

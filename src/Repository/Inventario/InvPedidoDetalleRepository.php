@@ -8,6 +8,8 @@ use App\Entity\Inventario\InvPedidoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use App\Utilidades\Mensajes;
+use Symfony\Component\HttpFoundation\Session\Session;
+
 class InvPedidoDetalleRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -68,11 +70,13 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
     }
 
     public function pendientes(){
+        $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPedidoDetalle::class,'pd')
             ->select('pd.codigoPedidoDetallePk')
             ->addSelect('pd.codigoPedidoFk')
             ->addSelect('pd.codigoItemFk')
             ->addSelect('pd.cantidadPendiente')
+            ->addSelect('pd.cantidad')
             ->addSelect('i.nombre')
             ->addSelect('p.numero')
             ->addSelect('pt.nombre as pedidoTipo')
@@ -81,6 +85,9 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('p.pedidoTipoRel','pt')
             ->where('p.estadoAprobado = 1')
             ->andWhere('pd.cantidadPendiente > 0');
+        if($session->get('filtroInvPedidoTipo')){
+            $queryBuilder->andWhere("p.codigoPedidoTipoFk = '{$session->get('filtroInvPedidoTipo')}'");
+        }
         return $queryBuilder->getQuery();
     }
 

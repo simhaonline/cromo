@@ -343,8 +343,8 @@ class MovimientoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtCodigoItem', TextType::class, array('data' => $session->get('filtroInvCodigoItem'), 'required' => false))
-            ->add('txtNombreItem', TextType::class, array('data' => $session->get('filtroInvItem'), 'required' => false))
+            ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoItemCodigo'), 'required' => false))
+            ->add('txtNombre', TextType::class, array('data' => $session->get('filtroInvMovimientoItemNombre'), 'required' => false , 'attr' => ['readonly' => 'readonly']))
             ->add('txtNumeroOrdenCompra', TextType::class, array('data' => $session->get('filtroInvNumeroOrdenCompra'), 'required' => false))
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -354,8 +354,7 @@ class MovimientoController extends Controller
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvCodigoItem', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvItem', $form->get('txtNombreItem')->getData());
+                $session->set('filtroInvMovimientoItemCodigo', $form->get('txtCodigo')->getData());
                 $session->set('filtroInvNumeroOrdenCompra', $form->get('txtNumeroOrdenCompra')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {

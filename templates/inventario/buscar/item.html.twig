@@ -16,19 +16,13 @@
         <div class="panel-body">
 
             <div class="form-group form-group-sm">
-                <label for="form_TxtNombre" class="col-sm-2 control-label">Nombre:</label>
-                <div class="col-sm-10">
-                    {{ form_widget(form.TxtNombre , { 'attr': {'class': 'form-control','autofocus':true, 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_TxtNombre" class="col-sm-2 control-label">Nit:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.TxtNit , { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
-                </div>
                 <label for="form_TxtCodigo" class="col-sm-2 control-label">Codigo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.TxtCodigo, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.txtCodigo, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_TxtNombre" class="col-sm-2 control-label">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtNombre , { 'attr': {'class': 'form-control','autofocus':true, 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -40,9 +34,9 @@
     </div>
     <table  class="table table-striped table-bordered table-condensed table-hover">
         <tr>
-            <th>{{ knp_pagination_sortable(arItemes, 'CÓDIGO', 'e.codigoItemPk') }}</th>
+            <th>{{ knp_pagination_sortable(arItemes, 'CÓDIGO', 'ii.codigoItemPk') }}</th>
             <th>NIT</th>
-            <th>{{ knp_pagination_sortable(arItemes, 'NOMBRE', 'e.nombre') }}</th>
+            <th>{{ knp_pagination_sortable(arItemes, 'NOMBRE', 'ii.nombre') }}</th>
             <th></th>
         </tr>
         {% for arItem in arItemes %}

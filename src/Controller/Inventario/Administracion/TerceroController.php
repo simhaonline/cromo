@@ -2,7 +2,9 @@
 
 namespace App\Controller\Inventario\Administracion;
 
+use App\Entity\Inventario\InvSucursal;
 use App\Entity\Inventario\InvTercero;
+use App\Form\Type\Inventario\SucursalType;
 use App\Form\Type\Inventario\TerceroType;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -15,6 +17,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class TerceroController extends Controller
 {
     /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/inventario/administracion/general/tercero/lista",name="inventario_administracion_general_tercero_lista")
      */
     public function lista(Request $request)
@@ -23,32 +27,32 @@ class TerceroController extends Controller
         $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('txtCodigo',TextType::class,['required' => false,'data' => $session->get('filtroInvTerceroCodigo'),'attr' => ['class' => 'form-control']])
-            ->add('txtNombre',TextType::class,['required' => false,'data' => $session->get('filtroInvTerceroNombre'),'attr' => ['class' => 'form-control','readonly' => 'readonly']])
-            ->add('btnFiltrar',SubmitType::class,['label' => 'Filtrar','attr' => ['class' => 'btn btn-default btn-sm']])
-            ->add('btnEliminar',SubmitType::class,['label' => 'Eliminar','attr' => ['class' => 'btn btn-danger btn-sm', 'style' => 'float:right']])
+            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroInvTerceroCodigo'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroInvTerceroNombre'), 'attr' => ['class' => 'form-control', 'readonly' => 'readonly']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-default btn-sm']])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-danger btn-sm', 'style' => 'float:right']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvTerceroCodigo',$form->get('txtCodigo')->getData());
-                if($session->get('filtroInvTerceroCodigo') != ''){
-                    $session->set('filtroInvTerceroNombre',$form->get('txtNombre')->getData());
+                $session->set('filtroInvTerceroCodigo', $form->get('txtCodigo')->getData());
+                if ($session->get('filtroInvTerceroCodigo') != '') {
+                    $session->set('filtroInvTerceroNombre', $form->get('txtNombre')->getData());
                 } else {
-                    $session->set('filtroInvTerceroNombre','');
+                    $session->set('filtroInvTerceroNombre', '');
                 }
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                foreach ($arrSeleccionados as $codigoTercero){
+                foreach ($arrSeleccionados as $codigoTercero) {
                     $arTercero = $em->getRepository(InvTercero::class)->find($codigoTercero);
-                    if($arTercero){
+                    if ($arTercero) {
                         $em->remove($arTercero);
                     }
                 }
-                try{
+                try {
                     $em->flush();
-                }catch (\Exception $e){
+                } catch (\Exception $e) {
                     Mensajes::error('No se puede eliminar, el tercero esta siendo utilizado en el sistema.');
                 }
             }
@@ -57,6 +61,23 @@ class TerceroController extends Controller
         return $this->render('inventario/administracion/general/tercero/lista.html.twig', [
             'arTerceros' => $arTerceros,
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/administracion/general/tercero/detalle/{id}",name="inventario_administracion_general_tercero_detalle")
+     */
+    public function detalle(Request $request, $id)
+    {
+        $paginator = $this->get('knp_paginator');
+        $em = $this->getDoctrine()->getManager();
+        $arTercero = $em->getRepository(InvTercero::class)->find($id);
+        $arSucursales = $paginator->paginate($em->getRepository(InvSucursal::class)->listaSucursal($id), $request->query->getInt('page', 1), 30);
+        return $this->render('inventario/administracion/general/tercero/detalle.html.twig', [
+            'arSucursales' => $arSucursales,
+            'arTercero' => $arTercero
         ]);
     }
 
@@ -87,6 +108,36 @@ class TerceroController extends Controller
         }
         return $this->render('inventario/administracion/general/tercero/nuevo.html.twig', [
             'arTercero' => $arTercero,
+            'form' => $form->createView()
+        ]);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param $codigoTercero
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/administracion/general/tercero/sucursal/{codigoTercero}/{id}",name="inventario_administracion_general_tercero_sucursal")
+     */
+    public function nuevoSucursal(Request $request,$codigoTercero ,$id){
+        $em = $this->getDoctrine()->getManager();
+        $arSucursal = new InvSucursal();
+        $arTercero = $em->getRepository(InvTercero::class)->find($codigoTercero);
+        if($id != '0'){
+            $arSucursal = $this->getDoctrine()->getManager()->getRepository(InvSucursal::class)->find($id);
+        }
+        $form = $this->createForm(SucursalType::class, $arSucursal);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            if($form->get('guardar')->isClicked()){
+                $arSucursal->setTerceroRel($arTercero);
+                $em->persist($arSucursal);
+                $em->flush();
+            }
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        return $this->render('inventario/administracion/general/tercero/nuevoSucursal.html.twig',[
             'form' => $form->createView()
         ]);
     }

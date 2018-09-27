@@ -44,6 +44,7 @@
             <th>DIRECCION</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -55,6 +56,13 @@
                 <td>{{ arTercero.direccion }}</td>
                 <td style="text-align: center;"><a href="{{ path('inventario_administracion_general_tercero_nuevo',{'id' : arTercero.codigoTerceroPk }) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td style="text-align: center;">
+                    <a href="{{ path('inventario_administracion_general_tercero_detalle',{'id' : arTercero.codigoTerceroPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+
                         </i>
                     </a>
                 </td>
@@ -75,7 +83,7 @@
     </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('inventario_administracion_general_tercero_nuevo', {'id': 0}) }}">Nuevo</a>
+            <a class="btn btn-default btn-sm" href="{{ path('inventario_administracion_general_tercero_sucursal', {'id': 0}) }}">Nuevo</a>
         </div>
         <div class="btn-group">
             {{ form_widget(form.btnEliminar) }}

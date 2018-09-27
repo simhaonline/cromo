@@ -24,7 +24,7 @@ class InvTercero
     private $codigoTerceroPk;
 
     /**
-     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=1, nullable=true)
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=3, nullable=true)
      */
     private $codigoIdentificacionFk;
 
@@ -483,6 +483,38 @@ class InvTercero
     /**
      * @return mixed
      */
+    public function getCliente()
+    {
+        return $this->cliente;
+    }
+
+    /**
+     * @param mixed $cliente
+     */
+    public function setCliente($cliente): void
+    {
+        $this->cliente = $cliente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProveedor()
+    {
+        return $this->proveedor;
+    }
+
+    /**
+     * @param mixed $proveedor
+     */
+    public function setProveedor($proveedor): void
+    {
+        $this->proveedor = $proveedor;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoPrecioVentaFk()
     {
         return $this->codigoPrecioVentaFk;
@@ -639,40 +671,5 @@ class InvTercero
     {
         $this->sucursalesTerceroRel = $sucursalesTerceroRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCliente()
-    {
-        return $this->cliente;
-    }
-
-    /**
-     * @param mixed $cliente
-     */
-    public function setCliente($cliente): void
-    {
-        $this->cliente = $cliente;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProveedor()
-    {
-        return $this->proveedor;
-    }
-
-    /**
-     * @param mixed $proveedor
-     */
-    public function setProveedor($proveedor): void
-    {
-        $this->proveedor = $proveedor;
-    }
-
-
-
 }
 

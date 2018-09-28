@@ -18,7 +18,6 @@ class SucursalController extends Controller
     public function lista(Request $request, $campoCodigo, $campoDireccion, $codigoTercero)
     {
         $session = new Session();
-        $session->set('filtroInvBuscarSucursalCodigoTercero',$codigoTercero);
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
@@ -33,7 +32,7 @@ class SucursalController extends Controller
                 $session->set('filtroInvBuscarSucursalContacto',$form->get('TxtContacto')->getData());
             }
         }
-        $arSucursales = $paginator->paginate($em->getRepository(InvSucursal::class)->lista(), $request->query->get('page', 1), 20);
+        $arSucursales = $paginator->paginate($em->getRepository(InvSucursal::class)->listaTercero($codigoTercero), $request->query->get('page', 1), 20);
         return $this->render('inventario/buscar/sucursal.html.twig', array(
             'arSucursales' => $arSucursales,
             'campoCodigo' => $campoCodigo,

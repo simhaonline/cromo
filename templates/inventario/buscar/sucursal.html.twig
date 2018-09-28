@@ -36,11 +36,8 @@
     </div>
     <table  class="table table-striped table-bordered table-condensed table-hover">
         <tr>
-            {#->addSelect('s.nombre')#}
-            {#->addSelect('s.direccion')#}
-            {#->addSelect('s.contacto')#}
-            {#->addSelect('c.nombre AS ciudad')#}
             <th>{{ knp_pagination_sortable(arSucursales, 'CÓDIGO', 's.codigoSucursalPk') }}</th>
+            <th>TERCERO</th>
             <th>NOMBRE</th>
             <th>DIRECCION</th>
             <th>CONTACTO</th>
@@ -50,6 +47,7 @@
         {% for arSucursal in arSucursales %}
             <tr>
                 <td>{{ arSucursal.codigoSucursalPk }}</td>
+                <td>{{ arSucursal.terceroNombreCorto }}</td>
                 <td>{{ arSucursal.nombre }}</td>
                 <td>{{ arSucursal.direccion }}</td>
                 <td>{{ arSucursal.contacto }}</td>

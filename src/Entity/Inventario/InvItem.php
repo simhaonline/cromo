@@ -93,34 +93,39 @@ class InvItem
     private $modelo;
 
     /**
-     * @ORM\Column(name="cantidad_existencia", type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_existencia", type="integer", nullable=true, options={"default" : 0})
      */
     private $cantidadExistencia = 0;
 
     /**
-     * @ORM\Column(name="cantidad_remisionada", type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_remisionada", type="integer", nullable=true, options={"default" : 0})
      */
     private $cantidadRemisionada = 0;
 
     /**
-     * @ORM\Column(name="cantidad_reservada", type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_reservada", type="integer", nullable=true, options={"default" : 0})
      */
     private $cantidadReservada = 0;
 
     /**
-     * @ORM\Column(name="cantidad_disponible", type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_disponible", type="integer", nullable=true, options={"default" : 0})
      */
     private $cantidadDisponible = 0;
 
     /**
-     * @ORM\Column(name="cantidad_orden_compra", type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_orden_compra", type="integer", nullable=true, options={"default" : 0})
      */
     private $cantidadOrdenCompra = 0;
 
     /**
-     * @ORM\Column(name="cantidad_solicitud", type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_solicitud", type="integer", nullable=true, options={"default" : 0})
      */
     private $cantidadSolicitud = 0;
+
+    /**
+     * @ORM\Column(name="cantidad_pedido", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $cantidadPedido = 0;
 
     /**
      * @ORM\Column(name="afecta_inventario", type="boolean", nullable=true)
@@ -547,6 +552,22 @@ class InvItem
     /**
      * @return mixed
      */
+    public function getCantidadPedido()
+    {
+        return $this->cantidadPedido;
+    }
+
+    /**
+     * @param mixed $cantidadPedido
+     */
+    public function setCantidadPedido($cantidadPedido): void
+    {
+        $this->cantidadPedido = $cantidadPedido;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getAfectaInventario()
     {
         return $this->afectaInventario;
@@ -783,6 +804,7 @@ class InvItem
     {
         $this->inventariosValorizadosItemRel = $inventariosValorizadosItemRel;
     }
+
 
 
 }

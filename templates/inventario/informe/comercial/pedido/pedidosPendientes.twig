@@ -23,26 +23,28 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th title="Numero pedido">NUMERO</th>
-                <th title="Codigo pedido">PEDIDO</th>
                 <th title="Tipo de pedido">TIPO</th>
-                <th title="Cantidad a facturar">CANTIDAD</th>
-                <th title="Cantidad pendiente por facturar">PENDIENTE</th>
-                <th>ID ITEM</th>
+                <th title="Numero pedido">NUMERO</th>
+                <th>FECHA</th>
+                <th>TERCERO</th>
                 <th>ITEM</th>
+                <th>NOMBRE</th>
+                <th title="Cantidad a pedida">CAN</th>
+                <th title="Cantidad pendiente">PEN</th>
             </tr>
             </thead>
             <tbody>
             {% for arPedidoDetalle in arPedidoDetalles %}
                 <tr>
                     <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
-                    <td>{{ arPedidoDetalle.numero }}</td>
-                    <td>{{ arPedidoDetalle.codigoPedidoFk }}</td>
                     <td>{{ arPedidoDetalle.pedidoTipo }}</td>
-                    <td>{{ arPedidoDetalle.cantidad }}</td>
-                    <td>{{ arPedidoDetalle.cantidadPendiente }}</td>
+                    <td>{{ arPedidoDetalle.numero }}</td>
+                    <td>{{ arPedidoDetalle.fechaPedido | date('Y-m-d') }}</td>
+                    <td>{{ arPedidoDetalle.terceroNombreCorto }}</td>
                     <td>{{ arPedidoDetalle.codigoItemFk }}</td>
                     <td>{{ arPedidoDetalle.nombre }}</td>
+                    <td>{{ arPedidoDetalle.cantidad }}</td>
+                    <td>{{ arPedidoDetalle.cantidadPendiente }}</td>
                 </tr>
             {% endfor %}
             </tbody>

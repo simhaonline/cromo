@@ -37,8 +37,7 @@
                                     value="{{ arMovimiento.terceroRel.nombreCorto }}"
                                         {% endif %}>
                                 <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm"
-                                           href="javascript:abrirVentana3('{{ path('inventario_bus_tercero', { 'campoCodigo': 'factura_codigoTerceroFk', 'campoNombre': 'form_txtNombreTercero' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_bus_tercero', { 'campoCodigo': 'factura_codigoTerceroFk', 'campoNombre': 'form_txtNombreTercero', 'tipo': 'C' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>
@@ -91,14 +90,9 @@
             </div>
         </div>
     </div>
-    <div style="float: right;">
-        <div class="btn-group">
-            {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
-        </div>
-    </div>
-    <div class="btn-group">
-        <a class="btn btn-sm btn-default"
-           href="{{ path('inventario_movimiento_inventario_movimiento_lista',{'tipoDocumento': tipoDocumento,'codigoDocumento': arMovimiento.documentoRel.codigoDocumentoPk }) }}">Cancelar</a>
+    <div class="modal-footer">
+        <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_inventario_movimiento_lista',{'tipoDocumento': tipoDocumento,'codigoDocumento': arMovimiento.documentoRel.codigoDocumentoPk }) }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}

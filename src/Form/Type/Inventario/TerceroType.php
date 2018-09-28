@@ -37,6 +37,15 @@ class TerceroType extends AbstractType
                 'choice_label' => 'nombre',
                 'required' => false
             ])
+            ->add('formaPagoRel', EntityType::class, [
+                'class' => 'App\Entity\General\GenFormaPago',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('fp')
+                        ->orderBy('fp.nombre');
+                },
+                'choice_label' => 'nombre',
+                'required' => true
+            ])
             ->add('digitoVerificacion', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('numeroIdentificacion', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
             ->add('nombreCorto', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])

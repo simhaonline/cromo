@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumentoTipo;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -31,6 +32,13 @@ class CargaInicial extends Fixture
             $arDocumentoTipo->setCodigoDocumentoTipoPk('FAC');
             $arDocumentoTipo->setNombre('FACTURA');
             $manager->persist($arDocumentoTipo);
+        }
+        $arInvConfiguracion = $manager->getRepository('App:Inventario\InvConfiguracion')->find(1);
+        if(!$arInvConfiguracion){
+            $arInvConfiguracion = new InvConfiguracion();
+            $arInvConfiguracion->setCodigoConfiguracionPk(1);
+            $arInvConfiguracion->setCodigoFormatoMovimiento(1);
+            $manager->persist($arInvConfiguracion);
         }
         $manager->flush();
     }

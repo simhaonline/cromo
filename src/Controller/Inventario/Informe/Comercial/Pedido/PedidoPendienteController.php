@@ -48,7 +48,7 @@ class PedidoPendienteController extends Controller
             }
         }
         $arPedidoDetalles = $paginator->paginate($em->getRepository(InvPedidoDetalle::class)->pendientes(), $request->query->getInt('page', 1), 30);
-        return $this->render('inventario/informe/inventario/pedido/pedidosPendientes.twig', [
+        return $this->render('inventario/informe/comercial/pedido/pedidosPendientes.twig', [
             'arPedidoDetalles' => $arPedidoDetalles,
             'form' => $form->createView()
         ]);

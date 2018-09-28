@@ -61,21 +61,26 @@ class InvItemRepository extends ServiceEntityRepository
     public function lista()
     {
         $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(InvItem::class, 'ii')
-            ->select('ii.codigoItemPk')
-            ->addSelect('ii.nombre')
-            ->addSelect('ii.cantidadExistencia')
-            ->addSelect('ii.cantidadOrdenCompra')
-            ->addSelect('ii.cantidadSolicitud')
-            ->addSelect('ii.stockMinimo')
-            ->addSelect('ii.stockMaximo')
-            ->where('ii.codigoItemPk <> 0')
-        ->addOrderBy('ii.codigoItemPk', 'ASC');
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvItem::class, 'i')
+            ->select('i.codigoItemPk')
+            ->addSelect('i.nombre')
+            ->addSelect('i.cantidadExistencia')
+            ->addSelect('i.cantidadOrdenCompra')
+            ->addSelect('i.cantidadSolicitud')
+            ->addSelect('i.cantidadRemisionada')
+            ->addSelect('i.cantidadPedido')
+            ->addSelect('i.cantidadDisponible')
+            ->addSelect('i.stockMinimo')
+            ->addSelect('i.stockMaximo')
+            ->addSelect('m.nombre AS marcaNombre')
+            ->where('i.codigoItemPk <> 0')
+            ->leftJoin('i.marcaRel', 'm')
+        ->addOrderBy('i.codigoItemPk', 'ASC');
         if ($session->get('filtroInvBucarItemCodigo') != '') {
-            $queryBuilder->andWhere("ii.codigoItemPk = {$session->get('filtroInvBucarItemCodigo')}");
+            $queryBuilder->andWhere("i.codigoItemPk = {$session->get('filtroInvBucarItemCodigo')}");
         }
         if ($session->get('filtroInvBuscarItemNombre') != '') {
-            $queryBuilder->andWhere("ii.nombre LIKE '%{$session->get('filtroInvBuscarItemNombre')}%'");
+            $queryBuilder->andWhere("i.nombre LIKE '%{$session->get('filtroInvBuscarItemNombre')}%'");
         }
 
         return $queryBuilder;

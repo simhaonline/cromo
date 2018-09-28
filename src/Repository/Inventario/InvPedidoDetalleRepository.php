@@ -79,10 +79,13 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.cantidad')
             ->addSelect('i.nombre')
             ->addSelect('p.numero')
+            ->addSelect('p.fecha as fechaPedido')
             ->addSelect('pt.nombre as pedidoTipo')
+            ->addSelect('t.nombreCorto as terceroNombreCorto')
             ->leftJoin('pd.itemRel','i')
             ->leftJoin('pd.pedidoRel','p')
             ->leftJoin('p.pedidoTipoRel','pt')
+            ->leftJoin('p.terceroRel', 't')
             ->where('p.estadoAprobado = 1')
             ->andWhere('pd.cantidadPendiente > 0');
         if($session->get('filtroInvPedidoTipo')){

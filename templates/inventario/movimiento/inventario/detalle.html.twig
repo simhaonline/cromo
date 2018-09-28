@@ -96,16 +96,16 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>ID ITEM</th>
                             <th>ITEM</th>
+                            <th>NOMBRE</th>
                             <th>LOTE</th>
                             <th>BODEGA</th>
-                            <th>CANTIDAD</th>
+                            <th>CAN</th>
                             <th title="Precio por unidad">PRECIO</th>
                             <th>SUBTOTAL</th>
-                            <th>% DECUENTO</th>
+                            <th>%D</th>
                             <th>DESCUENTO</th>
-                            <th>% IVA</th>
+                            <th>%IVA</th>
                             <th>IVA</th>
                             <th>TOTAL</th>
                             <th></th>
@@ -114,9 +114,7 @@
                         <tbody>
                         {% for arMovimientoDetalle in arMovimientoDetalles %}
                             <tr>
-                                {{ validarTipo(arMovimientoDetalle.codigoMovimientoDetallePk) }}<input type="hidden"
-                                                                                                       name="arrCodigo[]"
-                                                                                                       value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}">
+                                {{ validarTipo(arMovimientoDetalle.codigoMovimientoDetallePk) }}<input type="hidden" name="arrCodigo[]" value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}">
                                 {{ validarTipo(arMovimientoDetalle.codigoItemFk) }}
                                 {{ validarTipo(arMovimientoDetalle.itemRel.nombre) }}
 
@@ -126,26 +124,14 @@
                                     {{ validarTipo(arMovimientoDetalle.cantidad) }}
                                 {% else %}
                                     <td style="text-align: center;">
-                                        <input type="text" style="text-align: left;width: 50%;"
-                                               name="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                               id="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                               value="{{ arMovimientoDetalle.loteFk }}">
-                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoBodega' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','codigoItem' : arMovimientoDetalle.codigoItemFk }) }}','BuscarLote',600,900)"
-                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                        <input type="text" style="text-align: left;width: 50%;" name="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" id="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.loteFk }}">
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoBodega' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','codigoItem' : arMovimientoDetalle.codigoItemFk }) }}','BuscarLote',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
                                     <td style="text-align: center;">
-                                        <input type="text" style="text-align: left;width: 50%;"
-                                               name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                               id="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                               value="{{ arMovimientoDetalle.codigoBodegaFk }}">
-                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBodega',600,900)"
-                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                        <input type="text" style="text-align: left;width: 50%;" name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" id="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.codigoBodegaFk }}">
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBodega',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
-                                    <td style="text-align: center;"><input type="number"
-                                                                           style="text-align: right; width: 50%;"
-                                                                           name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                                                           value="{{ arMovimientoDetalle.cantidad }}">
-                                    </td>
+                                    <td style="text-align: center;"><input type="number" style="text-align: right; width: 50%;" name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.cantidad }}"></td>
                                 {% endif %}
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td style="text-align: right;">{{ arMovimientoDetalle.vrPrecio | number_format(0,'.',',') }}</td>

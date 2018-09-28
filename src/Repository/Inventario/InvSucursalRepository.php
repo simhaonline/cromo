@@ -52,6 +52,30 @@ class InvSucursalRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function listaTercero($codigoTercero)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvSucursal::class,'s')
+            ->select('s.codigoSucursalPk')
+            ->leftJoin('s.ciudadRel','c')
+            ->addSelect('s.direccion')
+            ->addSelect('s.contacto')
+            ->addSelect('c.nombre AS ciudad')
+            ->addSelect('s.nombre')
+            ->addSelect('t.nombreCorto AS terceroNombreCorto')
+            ->where("s.codigoTerceroFk = $codigoTercero")
+            ->join('s.terceroRel', 't');
+        if($session->get('filtroInvBuscarSucursalDireccion')){
+            $queryBuilder->andWhere("s.direccion LIKE '%{$session->get('filtroInvBuscarSucursalDireccion')}%'");
+            $session->set('filtroInvBuscarSucursalDireccion',null);
+        }
+        if($session->get('filtroInvBuscarSucursalContacto')){
+            $queryBuilder->andWhere("s.contacto LIKE '%{$session->get('filtroInvBuscarSucursalContacto')}%'");
+            $session->set('filtroInvBuscarSucursalContacto',null);
+        }
+        return $queryBuilder;
+    }
+
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
             ->from(InvSucursal::class,'s')

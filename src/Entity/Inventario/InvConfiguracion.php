@@ -42,32 +42,32 @@ class InvConfiguracion
     private $codigoFormatoMovimiento = 0;
 
     /**
-     * @ORM\Column(name="codigo_documento_movimientos_salida_bodega", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_documento_movimientos_salida_bodega", type="integer", nullable=true, options={"default" : 0})
      */
     private $codigoDocumentoMovimientosSalidaBodega = 0;
 
     /**
-     * @ORM\Column(name="codigo_documento_movimientos_entrada_bodega", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_documento_movimientos_entrada_bodega", type="integer", nullable=true, options={"default" : 0})
      */
     private $codigoDocumentoMovimientosEntradaBodega = 0;
 
     /**
-     * @ORM\Column(name="vr_base_retencion_fuente_venta", type="float", nullable=true)
+     * @ORM\Column(name="vr_base_retencion_fuente_venta", type="float", nullable=true, options={"default" : 0})
      */
     private $vrBaseRetencionFuenteVenta = 0;
 
     /**
-     * @ORM\Column(name="porcentaje_retencion_fuente", type="float", nullable=true)
+     * @ORM\Column(name="porcentaje_retencion_fuente", type="float", nullable=true, options={"default" : 0})
      */
     private $porcentajeRetencionFuente = 0;
 
     /**
-     * @ORM\Column(name="vr_base_retencion_iva_venta", type="float", nullable=true)
+     * @ORM\Column(name="vr_base_retencion_iva_venta", type="float", nullable=true, options={"default" : 0})
      */
     private $vrBaseRetencionIvaVenta = 0;
 
     /**
-     * @ORM\Column(name="porcentaje_retencion_iva", type="float", nullable=true)
+     * @ORM\Column(name="porcentaje_retencion_iva", type="float", nullable=true, options={"default" : 0})
      */
     private $porcentajeRetencionIva = 0;
 

@@ -1,6 +1,12 @@
 {% extends 'base_inventario.html.twig' %}
 {% block content %}
     {{ notificar()|raw }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="form-group form-group-sm">
+            <a class="btn btn-default btn-sm" href="{{ path('inventario_administracion_general_tercero_lista') }}">Volver</a>
+        </div>
+    </div>
+    <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">NOMBRE:</td>
@@ -82,5 +88,4 @@
         </div>
     </div>
     {#{{ form_end(form) }}#}
-    <a class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Volver</a>
 {% endblock %}

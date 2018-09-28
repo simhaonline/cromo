@@ -31,19 +31,6 @@
                     {{ form_widget(form.TxtCodigo, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
-            {% if terceroTipo is null %}
-            <div class="form-group form-group-sm">
-                <label for="form_TxtNombre" class="col-sm-2 control-label">Tipo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.terceroTipo , { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
-                </div>
-                <label for="form_TxtCodigo" class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-                </div>
-            </div>
-            {% else %}
-                {{ form_widget(form.terceroTipo , { 'attr': {'class': 'hidden'} }) }}
-            {% endif %}
             <div class="form-group form-group-sm">
                 <div class="col-sm-offset-2 col-sm-10">
                     {{ form_widget(form.BtnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}

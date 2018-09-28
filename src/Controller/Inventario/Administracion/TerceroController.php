@@ -6,6 +6,7 @@ use App\Entity\Inventario\InvSucursal;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\SucursalType;
 use App\Form\Type\Inventario\TerceroType;
+use App\General\General;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -30,6 +31,7 @@ class TerceroController extends Controller
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroInvTerceroCodigo'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroInvTerceroNombre'), 'attr' => ['class' => 'form-control', 'readonly' => 'readonly']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-default btn-sm']])
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-danger btn-sm', 'style' => 'float:right']])
             ->getForm();
         $form->handleRequest($request);
@@ -55,6 +57,9 @@ class TerceroController extends Controller
                 } catch (\Exception $e) {
                     Mensajes::error('No se puede eliminar, el tercero esta siendo utilizado en el sistema.');
                 }
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($em->getRepository(InvTercero::class)->lista(null))->execute(), "Movimientos");
             }
         }
         $arTerceros = $paginator->paginate($em->getRepository(InvTercero::class)->lista(null), $request->query->getInt('page', 1), 30);

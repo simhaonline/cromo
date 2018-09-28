@@ -36,6 +36,7 @@ class PedidoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('cboPedidoTipo', EntityType::class, $em->getRepository(InvPedidoTipo::class)->llenarCombo())
             ->add('numero', TextType::class, array('data' => $session->get('filtroInvPedidoPedidoNumero')))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
@@ -46,6 +47,7 @@ class PedidoController extends Controller
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
                     $session->set('filtroInvPedidoPedidoNumero', $form->get('numero')->getData());
+                    $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
                     $pedidoTipo = $form->get('cboPedidoTipo')->getData();
                     if($pedidoTipo != ''){
                         $session->set('filtroInvPedidoTipo', $form->get('cboPedidoTipo')->getData()->getCodigoPedidoTipoPk());
@@ -54,7 +56,7 @@ class PedidoController extends Controller
                     }
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    General::get()->setExportar($this->getDoctrine()->getRepository(InvPedido::class)->lista(), "Pedidos");
+                    General::get()->setExportar($em->createQuery($em->getRepository(InvPedido::class)->lista())->execute(), "Movimientos");
                 }
             }
         }

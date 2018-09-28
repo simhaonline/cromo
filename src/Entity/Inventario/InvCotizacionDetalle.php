@@ -6,26 +6,21 @@ namespace App\Entity\Inventario;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvPedidoDetalleRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvCotizacionDetalleRepository")
  */
-class InvPedidoDetalle
+class InvCotizacionDetalle
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="codigo_cotizacion_detalle_pk")
      */
-    private $codigoPedidoDetallePk;
+    private $codigoCotizacionDetallePk;
 
     /**
-     * @ORM\Column(name="codigo_pedido_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_cotizacion_fk", type="integer", nullable=true)
      */
-    private $codigoPedidoFk;
-
-    /**
-     * @ORM\Column(name="codigo_cotizacion_detalle_fk", type="integer", nullable=true)
-     */
-    private $codigoCotizacionDetalleFK;
+    private $codigoCotizacionFk;
 
     /**
      * @ORM\Column(name="codigo_item_fk", type="integer")
@@ -38,32 +33,42 @@ class InvPedidoDetalle
     private $cantidad = 0;
 
     /**
-     * @ORM\Column(name="vr_precio",options={"default" : 0}, type="float")
+     * @ORM\Column(name="vr_precio", type="float", nullable=true)
      */
     private $vrPrecio = 0;
 
     /**
-     * @ORM\Column(name="vr_subtotal", type="float", options={"default" : 0}, nullable=true)
+     * @ORM\Column(name="porcentaje_descuento", type="float", nullable=true)
+     */
+    private $porcentajeDescuento = 0;
+
+    /**
+     * @ORM\Column(name="vr_descuento", type="float", nullable=true)
+     */
+    private $vrDescuento = 0;
+
+    /**
+     * @ORM\Column(name="vr_subtotal", type="float", nullable=true)
      */
     private $vrSubtotal = 0;
 
     /**
-     * @ORM\Column(name="porcentaje_iva", type="float", options={"default" : 0}, nullable=true)
+     * @ORM\Column(name="porcentaje_iva", type="integer", nullable=true)
      */
     private $porcentajeIva = 0;
 
     /**
-     * @ORM\Column(name="vr_iva", type="float", options={"default" : 0}, nullable=true)
+     * @ORM\Column(name="vr_iva", type="float", nullable=true)
      */
     private $vrIva = 0;
 
     /**
-     * @ORM\Column(name="vr_neto", type="float", options={"default" : 0},)
+     * @ORM\Column(name="vr_neto", type="float")
      */
     private $vrNeto = 0;
 
     /**
-     * @ORM\Column(name="vr_total", type="float", options={"default" : 0}, nullable=true)
+     * @ORM\Column(name="vr_total", type="float", nullable=true)
      */
     private $vrTotal = 0;
 
@@ -73,69 +78,52 @@ class InvPedidoDetalle
     private $cantidadPendiente = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvPedido", inversedBy="pedidosDetallesPedidoRel")
-     * @ORM\JoinColumn(name="codigo_pedido_fk", referencedColumnName="codigo_pedido_pk")
+     * @ORM\ManyToOne(targetEntity="InvCotizacion", inversedBy="cotizacionesCotizacionDetalleRel")
+     * @ORM\JoinColumn(name="codigo_cotizacion_fk", referencedColumnName="codigo_cotizacion_pk")
      */
-    protected $pedidoRel;
+    protected $cotizacionRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="pedidosDetallesItemRel")
+     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="cotizacionesDetallesItemRel")
      * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
     protected $itemRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvCotizacionDetalle", inversedBy="pedidosDetallesCotizacionDetalleRel")
-     * @ORM\JoinColumn(name="codigo_cotizacion_detalle_fk", referencedColumnName="codigo_cotizacion_detalle_pk")
+     * @ORM\OneToMany(targetEntity="InvPedidoDetalle", mappedBy="cotizacionDetalleRel")
      */
-    protected $cotizacionDetalleRel;
+    protected $pedidosDetallesCotizacionDetalleRel;
 
     /**
      * @return mixed
      */
-    public function getCodigoPedidoDetallePk()
+    public function getCodigoCotizacionDetallePk()
     {
-        return $this->codigoPedidoDetallePk;
+        return $this->codigoCotizacionDetallePk;
     }
 
     /**
-     * @param mixed $codigoPedidoDetallePk
+     * @param mixed $codigoCotizacionDetallePk
      */
-    public function setCodigoPedidoDetallePk($codigoPedidoDetallePk): void
+    public function setCodigoCotizacionDetallePk($codigoCotizacionDetallePk): void
     {
-        $this->codigoPedidoDetallePk = $codigoPedidoDetallePk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoPedidoFk()
-    {
-        return $this->codigoPedidoFk;
-    }
-
-    /**
-     * @param mixed $codigoPedidoFk
-     */
-    public function setCodigoPedidoFk($codigoPedidoFk): void
-    {
-        $this->codigoPedidoFk = $codigoPedidoFk;
+        $this->codigoCotizacionDetallePk = $codigoCotizacionDetallePk;
     }
 
     /**
      * @return mixed
      */
-    public function getCodigoCotizacionDetalleFK()
+    public function getCodigoCotizacionFk()
     {
-        return $this->codigoCotizacionDetalleFK;
+        return $this->codigoCotizacionFk;
     }
 
     /**
-     * @param mixed $codigoCotizacionDetalleFK
+     * @param mixed $codigoCotizacionFk
      */
-    public function setCodigoCotizacionDetalleFK($codigoCotizacionDetalleFK): void
+    public function setCodigoCotizacionFk($codigoCotizacionFk): void
     {
-        $this->codigoCotizacionDetalleFK = $codigoCotizacionDetalleFK;
+        $this->codigoCotizacionFk = $codigoCotizacionFk;
     }
 
     /**
@@ -184,6 +172,38 @@ class InvPedidoDetalle
     public function setVrPrecio($vrPrecio): void
     {
         $this->vrPrecio = $vrPrecio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeDescuento()
+    {
+        return $this->porcentajeDescuento;
+    }
+
+    /**
+     * @param mixed $porcentajeDescuento
+     */
+    public function setPorcentajeDescuento($porcentajeDescuento): void
+    {
+        $this->porcentajeDescuento = $porcentajeDescuento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescuento()
+    {
+        return $this->vrDescuento;
+    }
+
+    /**
+     * @param mixed $vrDescuento
+     */
+    public function setVrDescuento($vrDescuento): void
+    {
+        $this->vrDescuento = $vrDescuento;
     }
 
     /**
@@ -285,17 +305,17 @@ class InvPedidoDetalle
     /**
      * @return mixed
      */
-    public function getPedidoRel()
+    public function getCotizacionRel()
     {
-        return $this->pedidoRel;
+        return $this->cotizacionRel;
     }
 
     /**
-     * @param mixed $pedidoRel
+     * @param mixed $cotizacionRel
      */
-    public function setPedidoRel($pedidoRel): void
+    public function setCotizacionRel($cotizacionRel): void
     {
-        $this->pedidoRel = $pedidoRel;
+        $this->cotizacionRel = $cotizacionRel;
     }
 
     /**
@@ -317,17 +337,17 @@ class InvPedidoDetalle
     /**
      * @return mixed
      */
-    public function getCotizacionDetalleRel()
+    public function getPedidosDetallesCotizacionDetalleRel()
     {
-        return $this->cotizacionDetalleRel;
+        return $this->pedidosDetallesCotizacionDetalleRel;
     }
 
     /**
-     * @param mixed $cotizacionDetalleRel
+     * @param mixed $pedidosDetallesCotizacionDetalleRel
      */
-    public function setCotizacionDetalleRel($cotizacionDetalleRel): void
+    public function setPedidosDetallesCotizacionDetalleRel($pedidosDetallesCotizacionDetalleRel): void
     {
-        $this->cotizacionDetalleRel = $cotizacionDetalleRel;
+        $this->pedidosDetallesCotizacionDetalleRel = $pedidosDetallesCotizacionDetalleRel;
     }
 }
 

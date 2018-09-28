@@ -6,12 +6,32 @@
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_TxtCodigo" class="col-sm-2 control-label">Tipo:</label>
-                <div class="col-sm-4">
+                <label for="txtCodigoConductor" class="col-sm-1 control-label">Tercero:</label>
+                <div class="col-sm-11">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtCodigoTercero) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="" readOnly="ReadOnly" />
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_bus_tercero', { 'campoCodigo': 'form_txtCodigoTercero', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Tipo:</label>
+                <div class="col-sm-5">
                     {{ form_widget(form.cboPedidoTipo, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label for="form_estadoAutorizado" class="col-sm-1 control-label">Numero:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     {{ form_widget(form.numero, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
@@ -40,6 +60,7 @@
             <th>ANU</th>
             <th></th>
             <th></th>
+            <th><input type="checkbox" name="ChkSeleccionar" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
         <tbody>
@@ -69,6 +90,7 @@
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i>
                     </a>
                 </td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedido.codigoPedidoPk }}"></td>
             </tr>
         {% endfor %}
         </tbody>

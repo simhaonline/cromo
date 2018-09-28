@@ -43,6 +43,8 @@ class InvTerceroRepository extends ServiceEntityRepository
             ->addSelect('t.nombreCorto')
             ->addSelect('t.numeroIdentificacion')
             ->addSelect('t.direccion')
+            ->addSelect('t.cliente')
+            ->addSelect('t.proveedor')
             ->where('t.codigoTerceroPk <> 0');
             if ($session->get('filtroInvTerceroCodigo') != '') {
                 $queryBuilder->andWhere("t.codigoTerceroPk = {$session->get('filtroInvTerceroCodigo')}");
@@ -53,24 +55,15 @@ class InvTerceroRepository extends ServiceEntityRepository
             if ($session->get('filtroInvTerceroIdentificacion') != '') {
                 $queryBuilder->andWhere("t.numeroIdentificacion = {$session->get('filtroInvTerceroIdentificacion')}");
             }
-            if($terceroTipo == null){
-                switch ($session->get('filtroInvTerceroTipo')) {
-                    case '1':
-                        $queryBuilder->andWhere("t.cliente = 1");
-                        break;
-                    case '2':
-                        $queryBuilder->andWhere("t.proveedor = 1");
-                        break;
-                }
-            } else {
-                switch ($terceroTipo) {
-                    case '1':
-                        $queryBuilder->andWhere("t.cliente = 1");
-                        break;
-                    case '2':
-                        $queryBuilder->andWhere("t.proveedor = 1");
-                        break;
-                }
+
+            switch ($terceroTipo) {
+                case 'C':
+                    $queryBuilder->andWhere("t.cliente = 1");
+                    break;
+
+                case 'P':
+                    $queryBuilder->andWhere("t.proveedor = 1");
+                    break;
             }
         return $queryBuilder;
     }

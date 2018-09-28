@@ -43,7 +43,9 @@ class InvPedidoRepository extends ServiceEntityRepository
         if($session->get('filtroInvPedidoTipo')) {
             $queryBuilder->andWhere("p.codigoPedidoTipoFk = '{$session->get('filtroInvPedidoTipo')}'");
         }
-
+        if($session->get('filtroInvCodigoTercero')){
+            $queryBuilder->andWhere("p.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
+        }
         return $queryBuilder;
 
     }

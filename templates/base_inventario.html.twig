@@ -118,10 +118,8 @@
                             <li>
                                 <a href="#">Comercial <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li>
-                                    <li><a href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Pedido</a>
-                                    </li>
-                                    </li>
+                                    <li><a href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Pedido</a></li>
+                                    <li><a href="{{ path('inventario_movimiento_comercial_cotizacion_lista') }}">Cotización</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -196,8 +194,10 @@
                                 <a href="#">Comercial <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li>
-                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad' : 'pedidoTipo'}) }}">
-                                            Pedido tipo</a>
+                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad' : 'pedidoTipo'}) }}">Pedido tipo</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad' : 'cotizacionTipo'}) }}">Cotización tipo</a>
                                     </li>
                                 </ul>
                             </li>

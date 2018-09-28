@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Movimiento\Inventario;
 
 use App\Entity\Inventario\InvConfiguracion;
+use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\FacturaType;
 use App\Formato\Inventario\FormatoMovimiento;
@@ -396,6 +397,68 @@ class MovimientoController extends Controller
         return $this->render('inventario/movimiento/inventario/detalleNuevoOrdenCompra.html.twig', [
             'form' => $form->createView(),
             'arOrdenCompraDetalles' => $arOrdenCompraDetalles
+        ]);
+    }
+
+    /**
+     * @Route("/inventario/movimiento/inventario/movimiento/detalle/pedido/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_pedido_detalle_nuevo")
+     */
+    public function detalleNuevoPedido(Request $request, $id)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtNumero', TextType::class, array('required' => false))
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvMovimientoItemCodigo', $form->get('txtCodigo')->getData());
+                $session->set('filtroInvNumeroOrdenCompra', $form->get('txtNumeroOrdenCompra')->getData());
+            }
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrOrdenCompraDetalles = $request->request->get('itemCantidad');
+                if ($arrOrdenCompraDetalles) {
+                    if (count($arrOrdenCompraDetalles) > 0) {
+                        foreach ($arrOrdenCompraDetalles as $codigoOrdenCompraDetalle => $cantidad) {
+                            if ($cantidad != '' && $cantidad != 0) {
+                                $arOrdenCompraDetalle = $em->getRepository(InvOrdenCompraDetalle::class)->find($codigoOrdenCompraDetalle);
+                                if ($cantidad <= $arOrdenCompraDetalle->getCantidadPendiente()) {
+                                    $arItem = $em->getRepository(InvItem::class)->find($arOrdenCompraDetalle->getCodigoItemFk());
+                                    $arMovimientoDetalle = new InvMovimientoDetalle();
+                                    $arMovimientoDetalle->setMovimientoRel($arMovimiento);
+                                    $arMovimientoDetalle->setItemRel($arItem);
+                                    $arMovimientoDetalle->setCantidad($cantidad);
+                                    $arMovimientoDetalle->setVrPrecio($arOrdenCompraDetalle->getVrPrecio());
+                                    $arMovimientoDetalle->setPorcentajeDescuento($arOrdenCompraDetalle->getPorcentajeDescuento());
+                                    $arMovimientoDetalle->setVrDescuento($arOrdenCompraDetalle->getVrDescuento());
+                                    $arMovimientoDetalle->setOrdenCompraDetalleRel($arOrdenCompraDetalle);
+                                    $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() - $cantidad);
+                                    $em->persist($arMovimientoDetalle);
+                                    $em->persist($arOrdenCompraDetalle);
+                                } else {
+                                    $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada.";
+                                }
+                            }
+                        }
+                        if ($respuesta != '') {
+                            Mensajes::error($respuesta);
+                        } else {
+                            $em->flush();
+                            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                        }
+                    }
+                }
+            }
+        }
+        $arPedidoDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvPedidoDetalle::class)->listarDetallesPendientes($arMovimiento->getCodigoTerceroFk()), $request->query->getInt('page', 1), 10);
+        return $this->render('inventario/movimiento/inventario/detalleNuevoPedido.html.twig', [
+            'form' => $form->createView(),
+            'arPedidoDetalles' => $arPedidoDetalles
         ]);
     }
 }

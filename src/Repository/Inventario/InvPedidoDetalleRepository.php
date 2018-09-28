@@ -94,5 +94,24 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery();
     }
 
+    public function listarDetallesPendientes()
+    {
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvPedidoDetalle::class, 'pd')
+            ->select('pd.codigoPedidoDetallePk')
+            ->addSelect('pd.codigoItemFk')
+            ->addSelect('pd.cantidad')
+            ->addSelect('pd.cantidadPendiente')
+            ->addSelect('i.nombre AS itemNombre')
+            ->addSelect('p.numero')
+            ->leftJoin('pd.itemRel', 'i')
+            ->leftJoin('pd.pedidoRel', 'p')
+            ->where('p.estadoAprobado = 1')
+            ->andWhere('p.estadoAnulado = 0')
+            ->andWhere('pd.cantidadPendiente > 0')
+            ->orderBy('pd.codigoPedidoDetallePk', 'DESC');
+        $query = $this->_em->createQuery($queryBuilder->getDQL());
+        return $query->execute();
+    }
 
 }

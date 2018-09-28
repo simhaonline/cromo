@@ -113,4 +113,33 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
             ->where("iocd.codigoOrdenCompraFk = {$codigoOrdenCompra}");
         return $queryBuilder;
     }
+
+    public function informeOrdenCompraPendientes(){
+
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvOrdenCompraDetalle::class, 'iocd')
+            ->select('iocd.codigoOrdenCompraDetallePk')
+            ->join('iocd.itemRel', 'it')
+            ->join('iocd.ordenCompraRel', 'oc')
+            ->addSelect('it.codigoItemPk AS codigoItem')
+            ->addSelect('oc.numero AS ordenCompra')
+            ->addSelect('it.nombre')
+            ->addSelect('it.cantidadExistencia')
+            ->addSelect('iocd.cantidad')
+            ->addSelect('iocd.cantidadPendiente')
+            ->addSelect('it.stockMinimo')
+            ->addSelect('it.stockMaximo')
+            ->where('oc.estadoAprobado = true')
+            ->where('oc.estadoAnulado = false')
+            ->andWhere('iocd.cantidadPendiente > 0')
+            ->orderBy('iocd.codigoOrdenCompraDetallePk', 'ASC');
+        if ($session->get('filtroInvCodigoOrdenCompraTipo') != null) {
+            $queryBuilder->andWhere("oc.codigoOrdenCompraTipoFk = '{$session->get('filtroInvCodigoOrdenCompraTipo')}'");
+        }
+        if ($session->get('filtroInvOrdenCompraNumero') != '') {
+            $queryBuilder->andWhere("oc.numero = {$session->get('filtroInvOrdenCompraNumero')}");
+        }
+
+        return $queryBuilder;
+    }
 }

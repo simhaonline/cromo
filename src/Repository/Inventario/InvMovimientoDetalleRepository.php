@@ -3,6 +3,7 @@
 namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvItem;
+use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvSucursal;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;
@@ -29,6 +30,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
      */
     public function eliminar($arMovimiento, $arrSeleccionados)
     {
+        $em = $this->getEntityManager();
         if (count($arrSeleccionados) > 0) {
             foreach ($arrSeleccionados as $codigoMovimientoDetalle) {
                 $arMovimientoDetalle = $this->_em->getRepository('App:Inventario\InvMovimientoDetalle')->find($codigoMovimientoDetalle);
@@ -40,10 +42,17 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                             $this->_em->persist($arOrdenCompraDetalle);
                         }
                     }
-                    $this->_em->remove($arMovimientoDetalle);
+                    //Si el detalle tiene un pedido detalle relacionado
+                    if($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
+                        $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
+                        $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
+                        $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
+                        $em->persist($arPedidoDetalle);
+                    }
+                    $em->remove($arMovimientoDetalle);
                 }
             }
-            $this->_em->flush();
+            $em->flush();
         }
     }
 
@@ -78,6 +87,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
      */
     public function actualizarDetalles($arrControles, $form, $arMovimiento)
     {
+        $em = $this->getEntityManager();
         $this->getEntityManager()->persist($arMovimiento);
         if ($this->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
             $arrBodega = $arrControles['arrBodega'];
@@ -87,8 +97,11 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             $arrPorcentajeDescuento = $arrControles['arrDescuento'];
             $arrPorcentajeIva = $arrControles['arrIva'];
             $arrCodigo = $arrControles['arrCodigo'];
+            $mensajeError = "";
             foreach ($arrCodigo as $codigoMovimientoDetalle) {
                 $arMovimientoDetalle = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->find($codigoMovimientoDetalle);
+                $cantidadAnterior = $arMovimientoDetalle->getCantidad();
+                $cantidadNueva = $arrCantidad[$codigoMovimientoDetalle];
                 $arMovimientoDetalle->setCodigoBodegaFk($arrBodega[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setLoteFk($arrLote[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setCantidad($arrCantidad[$codigoMovimientoDetalle]);
@@ -99,10 +112,29 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                 $arMovimientoDetalle->setPorcentajeDescuento($arrPorcentajeDescuento[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoMovimientoDetalle]);
                 $this->getEntityManager()->persist($arMovimientoDetalle);
+                if($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
+                    $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
+                    if($cantidadAfectar != 0) {
+                        $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
+                        if($cantidadAfectar <= $arPedidoDetalle->getCantidadPendiente()) {
+                            $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $cantidadAfectar);
+                            $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad()- $arPedidoDetalle->getCantidadAfectada());
+                            $em->persist($arPedidoDetalle);
+                        } else {
+                            $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
+                            break;
+                        }
+                    }
+                }
             }
-            $this->getEntityManager()->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
+            if($mensajeError == "") {
+                $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
+                $this->getEntityManager()->flush();
+            } else {
+                Mensajes::error($mensajeError);
+            }
         }
-        $this->getEntityManager()->flush();
+
     }
 
     /**
@@ -270,6 +302,19 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->setMaxResults(1);
         $resultado = $queryBuilder->getQuery()->getResult();
         return $resultado;
+    }
+
+    public function cantidadAfectaPedido($codigoPedidoDetalle)
+    {
+        $cantidad = 0;
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select("SUM(md.cantidad)")
+            ->where("md.codigoPedidoDetalleFk = {$codigoPedidoDetalle} ");
+        $resultado = $queryBuilder->getQuery()->getSingleResult();
+        if($resultado[1]) {
+            $cantidad = $resultado[1];
+        }
+        return $cantidad;
     }
 
 }

@@ -86,16 +86,16 @@
                                                                                       value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"></td>
                                 <td>{{ arPedidoDetalle.itemNombre | default('') }}</td>
                                 <td>{{ arPedidoDetalle.itemMarcaNombre | default('') }}</td>
-                                <td class="numero">
+                                <td style="text-align: center;">
                                     {% if not arPedido.estadoAutorizado %}
-                                        <input style="text-align: right;" type="text" name="TxtCantidad[{{ arPedidoDetalle.codigoPedidoDetallePk  }}]" value="{{ arPedidoDetalle.cantidad }}">
+                                        <input style="text-align: right;" type="text" name="TxtCantidad[{{ arPedidoDetalle.codigoPedidoDetallePk  }}]" value="{{ arPedidoDetalle.cantidad }}" size="10" style="width:70px">
                                     {% else %}
                                         {{ arPedidoDetalle.cantidad }}
                                     {% endif %}
                                 </td>
                                 <td style="text-align: center;">
                                     {% if not arPedido.estadoAutorizado %}
-                                        <input style="text-align: right;" type="text" name="TxtPrecio[{{ arPedidoDetalle.codigoPedidoDetallePk }}]" value="{{ arPedidoDetalle.vrPrecio }}">
+                                        <input style="text-align: right;" type="text" name="TxtPrecio[{{ arPedidoDetalle.codigoPedidoDetallePk }}]" value="{{ arPedidoDetalle.vrPrecio }}" size="10" style="width:70px">
                                     {% else %}
                                         {{ arPedidoDetalle.vrPrecio | number_format(0, '.', ',') }}
                                     {% endif %}
@@ -105,8 +105,7 @@
                                 <td class="numero">{{ arPedidoDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arPedidoDetalle.vrTotal | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;">{{ arPedidoDetalle.cantidadPendiente }}</td>
-                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
-                                                                       value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"/>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"/>
                                 </td>
                             </tr>
                         {% endfor %}

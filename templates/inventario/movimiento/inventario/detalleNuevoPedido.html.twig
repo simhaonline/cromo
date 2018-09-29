@@ -43,7 +43,7 @@
                     <td style="text-align: left;">{{ arPedidoDetalle.itemNombre }}</td>
                     <td style="text-align: right;">{{ arPedidoDetalle.cantidad }}</td>
                     <td style="text-align: right;">{{ arPedidoDetalle.cantidadPendiente }}</td>
-                    <td style="text-align: center;"><input type="number" name="itemCantidad[{{ arPedidoDetalle.codigoPedidoDetallePk }}]" style="text-align: right;" value="0"></td>
+                    <td style="text-align: center;"><input type="number" name="itemCantidad[{{ arPedidoDetalle.codigoPedidoDetallePk }}]" style="text-align: right; width:70px" size="10" value="0"></td>
                 </tr>
             {% endfor %}
             </tbody>

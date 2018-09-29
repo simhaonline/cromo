@@ -417,31 +417,32 @@ class MovimientoController extends Controller
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvMovimientoItemCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroInvNumeroOrdenCompra', $form->get('txtNumeroOrdenCompra')->getData());
+                $session->set('filtroInvPedidoNumero', $form->get('txtNumero')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
-                $arrOrdenCompraDetalles = $request->request->get('itemCantidad');
-                if ($arrOrdenCompraDetalles) {
-                    if (count($arrOrdenCompraDetalles) > 0) {
-                        foreach ($arrOrdenCompraDetalles as $codigoOrdenCompraDetalle => $cantidad) {
+                $arrDetalles = $request->request->get('itemCantidad');
+                if ($arrDetalles) {
+                    if (count($arrDetalles) > 0) {
+                        $respuesta = "";
+                        foreach ($arrDetalles as $codigo => $cantidad) {
                             if ($cantidad != '' && $cantidad != 0) {
-                                $arOrdenCompraDetalle = $em->getRepository(InvOrdenCompraDetalle::class)->find($codigoOrdenCompraDetalle);
-                                if ($cantidad <= $arOrdenCompraDetalle->getCantidadPendiente()) {
-                                    $arItem = $em->getRepository(InvItem::class)->find($arOrdenCompraDetalle->getCodigoItemFk());
+                                $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($codigo);
+                                if ($cantidad <= $arPedidoDetalle->getCantidadPendiente()) {
+                                    //$arItem = $em->getRepository(InvItem::class)->find($arOrdenCompraDetalle->getCodigoItemFk());
                                     $arMovimientoDetalle = new InvMovimientoDetalle();
                                     $arMovimientoDetalle->setMovimientoRel($arMovimiento);
-                                    $arMovimientoDetalle->setItemRel($arItem);
+                                    $arMovimientoDetalle->setItemRel($arPedidoDetalle->getItemRel());
                                     $arMovimientoDetalle->setCantidad($cantidad);
-                                    $arMovimientoDetalle->setVrPrecio($arOrdenCompraDetalle->getVrPrecio());
-                                    $arMovimientoDetalle->setPorcentajeDescuento($arOrdenCompraDetalle->getPorcentajeDescuento());
-                                    $arMovimientoDetalle->setVrDescuento($arOrdenCompraDetalle->getVrDescuento());
-                                    $arMovimientoDetalle->setOrdenCompraDetalleRel($arOrdenCompraDetalle);
-                                    $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() - $cantidad);
+                                    $arMovimientoDetalle->setVrPrecio($arPedidoDetalle->getVrPrecio());
+                                    //$arMovimientoDetalle->setPorcentajeDescuento($arPedidoDetalle->getPorcentajeDescuento());
+                                    $arMovimientoDetalle->setPorcentajeIva($arPedidoDetalle->getPorcentajeIva());
+                                    $arMovimientoDetalle->setPedidoDetalleRel($arPedidoDetalle);
                                     $em->persist($arMovimientoDetalle);
-                                    $em->persist($arOrdenCompraDetalle);
+                                    $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada()+$cantidad);
+                                    $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad()-$arPedidoDetalle->getCantidadAfectada());
+                                    $em->persist($arPedidoDetalle);
                                 } else {
-                                    $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada.";
+                                    $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada en el id " . $codigo;
                                 }
                             }
                         }
@@ -449,6 +450,7 @@ class MovimientoController extends Controller
                             Mensajes::error($respuesta);
                         } else {
                             $em->flush();
+                            $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
                             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                         }
                     }

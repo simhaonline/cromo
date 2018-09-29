@@ -68,6 +68,11 @@ class InvPedidoDetalle
     private $vrTotal = 0;
 
     /**
+     * @ORM\Column(name="cantidad_afectada",options={"default" : 0}, type="integer", nullable=true)
+     */
+    private $cantidadAfectada = 0;
+
+    /**
      * @ORM\Column(name="cantidad_pendiente",options={"default" : 0}, type="integer", nullable=true)
      */
     private $cantidadPendiente = 0;
@@ -89,6 +94,11 @@ class InvPedidoDetalle
      * @ORM\JoinColumn(name="codigo_cotizacion_detalle_fk", referencedColumnName="codigo_cotizacion_detalle_pk")
      */
     protected $cotizacionDetalleRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimientoDetalle", mappedBy="pedidoDetalleRel")
+     */
+    protected $movimientosDetallesPedidoDetalleRel;
 
     /**
      * @return mixed
@@ -329,5 +339,40 @@ class InvPedidoDetalle
     {
         $this->cotizacionDetalleRel = $cotizacionDetalleRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosDetallesPedidoDetalleRel()
+    {
+        return $this->movimientosDetallesPedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $movimientosDetallesPedidoDetalleRel
+     */
+    public function setMovimientosDetallesPedidoDetalleRel($movimientosDetallesPedidoDetalleRel): void
+    {
+        $this->movimientosDetallesPedidoDetalleRel = $movimientosDetallesPedidoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadAfectada()
+    {
+        return $this->cantidadAfectada;
+    }
+
+    /**
+     * @param mixed $cantidadAfectada
+     */
+    public function setCantidadAfectada($cantidadAfectada): void
+    {
+        $this->cantidadAfectada = $cantidadAfectada;
+    }
+
+
+
 }
 

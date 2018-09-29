@@ -3,6 +3,7 @@
 namespace App\Repository\Inventario;
 
 
+use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -112,6 +113,35 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
             ->orderBy('pd.codigoPedidoDetallePk', 'DESC');
         $query = $this->_em->createQuery($queryBuilder->getDQL());
         return $query->execute();
+    }
+
+    public function listaRegenerarCantidadAfectada()
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvPedidoDetalle::class, 'pd')
+            ->select('pd.codigoPedidoDetallePk')
+            ->addSelect('pd.cantidad')
+            ->addSelect('pd.cantidadAfectada')
+            ->addSelect('pd.cantidadPendiente');
+        $arrPedidosDetalles = $queryBuilder->getQuery()->getResult();
+        return $arrPedidosDetalles;
+    }
+
+    public function regenerarCantidadAfectada() {
+        $em = $this->getEntityManager();
+        $arPedidosDetalles = $em->getRepository(InvPedidoDetalle::class)->listaRegenerarCantidadAfectada();
+        foreach ($arPedidosDetalles as $arPedidoDetalle) {
+            $cantidad = $arPedidoDetalle['cantidad'];
+            $cantidadAfectada = $em->getRepository(InvMovimientoDetalle::class)->cantidadAfectaPedido($arPedidoDetalle['codigoPedidoDetallePk']);
+            $cantidadPendiente = $cantidad - $cantidadAfectada;
+            if($cantidadAfectada != $arPedidoDetalle['cantidadAfectada'] || $cantidadPendiente != $arPedidoDetalle['cantidadPendiente']) {
+                $arPedidoDetalleAct = $em->getRepository(InvPedidoDetalle::class)->find($arPedidoDetalle['codigoPedidoDetallePk']);
+                $arPedidoDetalleAct->setCantidadAfectada($cantidadAfectada);
+                $arPedidoDetalleAct->setCantidadPendiente($cantidadPendiente);
+                $em->persist($arPedidoDetalleAct);
+            }
+        }
+        $em->flush();
     }
 
 }

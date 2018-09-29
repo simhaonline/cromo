@@ -23,11 +23,6 @@ class InvMovimientoDetalle
     private $codigoMovimientoFk;
 
     /**
-     * @ORM\Column(name="codigo_orden_compra_detalle_fk", type="integer", nullable=true)
-     */
-    private $codigoOrdenCompraDetalleFk;
-
-    /**
      * @ORM\Column(name="fecha", type="datetime", nullable=true)
      */
     private $fecha;
@@ -113,6 +108,16 @@ class InvMovimientoDetalle
     private $operacionInventario = 0;
 
     /**
+     * @ORM\Column(name="codigo_orden_compra_detalle_fk", type="integer", nullable=true)
+     */
+    private $codigoOrdenCompraDetalleFk;
+
+    /**
+     * @ORM\Column(name="codigo_pedido_detalle_fk", type="integer", nullable=true)
+     */
+    private $codigoPedidoDetalleFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvMovimiento", inversedBy="movimientosDetallesMovimientoRel")
      * @ORM\JoinColumn(name="codigo_movimiento_fk", referencedColumnName="codigo_movimiento_pk")
      */
@@ -129,6 +134,12 @@ class InvMovimientoDetalle
      * @ORM\JoinColumn(name="codigo_orden_compra_detalle_fk", referencedColumnName="codigo_orden_compra_detalle_pk")
      */
     protected $ordenCompraDetalleRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inventario\InvPedidoDetalle", inversedBy="movimientosDetallesPedidoDetalleRel")
+     * @ORM\JoinColumn(name="codigo_pedido_detalle_fk", referencedColumnName="codigo_pedido_detalle_pk")
+     */
+    protected $pedidoDetalleRel;
 
     /**
      * @return mixed
@@ -160,22 +171,6 @@ class InvMovimientoDetalle
     public function setCodigoMovimientoFk($codigoMovimientoFk): void
     {
         $this->codigoMovimientoFk = $codigoMovimientoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoOrdenCompraDetalleFk()
-    {
-        return $this->codigoOrdenCompraDetalleFk;
-    }
-
-    /**
-     * @param mixed $codigoOrdenCompraDetalleFk
-     */
-    public function setCodigoOrdenCompraDetalleFk($codigoOrdenCompraDetalleFk): void
-    {
-        $this->codigoOrdenCompraDetalleFk = $codigoOrdenCompraDetalleFk;
     }
 
     /**
@@ -256,6 +251,38 @@ class InvMovimientoDetalle
     public function setCantidad($cantidad): void
     {
         $this->cantidad = $cantidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadOperada()
+    {
+        return $this->cantidadOperada;
+    }
+
+    /**
+     * @param mixed $cantidadOperada
+     */
+    public function setCantidadOperada($cantidadOperada): void
+    {
+        $this->cantidadOperada = $cantidadOperada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadSaldo()
+    {
+        return $this->cantidadSaldo;
+    }
+
+    /**
+     * @param mixed $cantidadSaldo
+     */
+    public function setCantidadSaldo($cantidadSaldo): void
+    {
+        $this->cantidadSaldo = $cantidadSaldo;
     }
 
     /**
@@ -421,6 +448,38 @@ class InvMovimientoDetalle
     /**
      * @return mixed
      */
+    public function getCodigoOrdenCompraDetalleFk()
+    {
+        return $this->codigoOrdenCompraDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoOrdenCompraDetalleFk
+     */
+    public function setCodigoOrdenCompraDetalleFk($codigoOrdenCompraDetalleFk): void
+    {
+        $this->codigoOrdenCompraDetalleFk = $codigoOrdenCompraDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPedidoDetalleFk()
+    {
+        return $this->codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoPedidoDetalleFk
+     */
+    public function setCodigoPedidoDetalleFk($codigoPedidoDetalleFk): void
+    {
+        $this->codigoPedidoDetalleFk = $codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getMovimientoRel()
     {
         return $this->movimientoRel;
@@ -469,33 +528,17 @@ class InvMovimientoDetalle
     /**
      * @return mixed
      */
-    public function getCantidadOperada()
+    public function getPedidoDetalleRel()
     {
-        return $this->cantidadOperada;
+        return $this->pedidoDetalleRel;
     }
 
     /**
-     * @param mixed $cantidadOperada
+     * @param mixed $pedidoDetalleRel
      */
-    public function setCantidadOperada($cantidadOperada): void
+    public function setPedidoDetalleRel($pedidoDetalleRel): void
     {
-        $this->cantidadOperada = $cantidadOperada;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCantidadSaldo()
-    {
-        return $this->cantidadSaldo;
-    }
-
-    /**
-     * @param mixed $cantidadSaldo
-     */
-    public function setCantidadSaldo($cantidadSaldo): void
-    {
-        $this->cantidadSaldo = $cantidadSaldo;
+        $this->pedidoDetalleRel = $pedidoDetalleRel;
     }
 
 

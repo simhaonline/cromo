@@ -323,6 +323,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
             ->select('dd.codigoDespachoDetallePk')
+            ->addSelect('dd.codigoGuiaFk')
             ->addSelect('g.codigoGuiaTipoFk')
             ->addSelect('g.numero')
             ->addSelect('g.fechaIngreso')

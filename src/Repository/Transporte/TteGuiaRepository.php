@@ -321,8 +321,8 @@ class TteGuiaRepository extends ServiceEntityRepository
     public function despachoCobroEntrega($codigoDespacho)
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
-            ->select('g.codigoGuiaPk')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
+            ->select('dd.codigoDespachoDetallePk')
             ->addSelect('g.codigoGuiaTipoFk')
             ->addSelect('g.numero')
             ->addSelect('g.fechaIngreso')
@@ -336,18 +336,19 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.direccionDestinatario')
             ->addSelect('g.codigoProductoFk')
             ->addSelect('g.empaqueReferencia')
-            ->addSelect('g.vrCobroEntrega')
-            ->addSelect('g.vrFlete')
-            ->addSelect('g.vrManejo')
+            ->addSelect('dd.vrCobroEntrega')
+            ->addSelect('dd.vrFlete')
+            ->addSelect('dd.vrManejo')
             ->addSelect('g.vrAbono')
-            ->addSelect('g.vrRecaudo')
+            ->addSelect('dd.vrRecaudo')
             ->addSelect('g.factura')
             ->addSelect('gt.generaCobroEntrega')
+            ->leftJoin('dd.guiaRel', 'g')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->leftJoin('g.guiaTipoRel', 'gt')
             ->where('g.codigoDespachoFk = '. $codigoDespacho)
-            ->andWhere('g.vrCobroEntrega > 0')
+            ->andWhere('dd.vrCobroEntrega > 0')
             ->orderBy('g.codigoCiudadDestinoFk')
             ->addOrderBy('g.ordenRuta');
 
@@ -1490,6 +1491,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
                 $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
                 $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
+                $arDespachoDetalle->setVrCobroEntrega($arGuia->getVrCobroEntrega());
                 $arDespachoDetalle->setUnidades($arGuia->getUnidades());
                 $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
                 $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());

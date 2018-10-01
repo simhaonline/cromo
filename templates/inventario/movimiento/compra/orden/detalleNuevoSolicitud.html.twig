@@ -33,12 +33,9 @@
             <tr>
                 <th>ID</th>
                 <th>NOMBRE</th>
-                <th>EXISTENCIAS</th>
-                <th>STOCK_MIN</th>
-                <th>STOCK_MAX</th>
-                <th>CANTIDAD SOLICITADA</th>
-                <th>CANTIDAD PENDIENTE</th>
-                <th>CANTIDAD A ORDENAR</th>
+                <th>CAN</th>
+                <th>PEN</th>
+                <th>CAN</th>
             </tr>
             </thead>
             <tbody>
@@ -46,9 +43,6 @@
                 <tr>
                     <td style="text-align: right;">{{ arSolicitudDetalle.codigoSolicitudDetallePk }}</td>
                     <td style="text-align: left;">{{ arSolicitudDetalle.nombre }}</td>
-                    <td style="text-align: right;">{{ arSolicitudDetalle.cantidadExistencia }}</td>
-                    <td style="text-align: right;">{{ arSolicitudDetalle.stockMinimo }}</td>
-                    <td style="text-align: right;">{{ arSolicitudDetalle.stockMaximo }}</td>
                     <td style="text-align: right;">{{ arSolicitudDetalle.cantidad }}</td>
                     <td style="text-align: right;">{{ arSolicitudDetalle.cantidadPendiente }}</td>
                     <td style="text-align: center;"><input type="number" name="itemCantidad[{{ arSolicitudDetalle.codigoSolicitudDetallePk }}]" style="text-align: right;" value="{{ arSolicitudDetalle.cantidadPendiente }}"></td>

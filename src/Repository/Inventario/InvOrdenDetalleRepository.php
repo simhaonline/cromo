@@ -39,23 +39,24 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
      */
     public function eliminar($arOrdenCompra, $arrDetallesSeleccionados)
     {
+        $em = $this->getEntityManager();
         if ($arOrdenCompra->getEstadoAutorizado() == 0) {
             if (count($arrDetallesSeleccionados)) {
-                foreach ($arrDetallesSeleccionados as $codigoOrdenCompraDetalle) {
-                    $arOrdenCompraDetalle = $this->_em->getRepository(InvOrdenCompraDetalle::class)->find($codigoOrdenCompraDetalle);
-                    if ($arOrdenCompraDetalle) {
-                        if ($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk() != '') {
-                            $arSolicitudDetalle = $this->_em->getRepository(InvSolicitudDetalle::class)->find($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk());
+                foreach ($arrDetallesSeleccionados as $codigoOrdenDetalle) {
+                    $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($codigoOrdenDetalle);
+                    if ($arOrdenDetalle) {
+                        if ($arOrdenDetalle->getCodigoSolicitudDetalleFk() != '') {
+                            $arSolicitudDetalle = $em->getRepository(InvSolicitudDetalle::class)->find($arOrdenDetalle->getCodigoSolicitudDetalleFk());
                             if ($arSolicitudDetalle) {
-                                $arSolicitudDetalle->setCantidadPendiente($arSolicitudDetalle->getCantidadPendiente() + $arOrdenCompraDetalle->getCantidad());
-                                $this->_em->persist($arSolicitudDetalle);
+                                $arSolicitudDetalle->setCantidadPendiente($arSolicitudDetalle->getCantidadPendiente() + $arOrdenDetalle->getCantidad());
+                                $em->persist($arSolicitudDetalle);
                             }
                         }
-                        $this->_em->remove($arOrdenCompraDetalle);
+                        $em->remove($arOrdenDetalle);
                     }
                 }
                 try {
-                    $this->_em->flush();
+                    $em->flush();
                 } catch (\Exception $e) {
                     Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
                 }
@@ -101,8 +102,8 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
     public function lista($codigoOrden){
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvOrdenDetalle::class,'od')
             ->select('od.codigoOrdenDetallePk')
+            ->addSelect('od.codigoItemFk')
             ->addSelect('i.nombre')
-            ->join('od.itemRel','i')
             ->addSelect('od.cantidad')
             ->addSelect('od.vrPrecio')
             ->addSelect('od.vrSubtotal')
@@ -111,6 +112,7 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
             ->addSelect('od.porcentajeIva')
             ->addSelect('od.vrIva')
             ->addSelect('od.vrTotal')
+            ->join('od.itemRel','i')
             ->where("od.codigoOrdenFk = {$codigoOrden}");
         return $queryBuilder;
     }

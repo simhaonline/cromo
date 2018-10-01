@@ -66,6 +66,40 @@ class InvOrdenRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $codigoOrden
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function liquidar($codigoOrden)
+    {
+        $em = $this->getEntityManager();
+        $arOrden = $em->getRepository(InvOrden::class)->find($codigoOrden);
+        $arOrdenDetalles = $em->getRepository(InvOrdenDetalle::class)->findBy(['codigoOrdenFk' => $codigoOrden]);
+        $subtotalGeneral = 0;
+        $ivaGeneral = 0;
+        $totalGeneral = 0;
+        foreach ($arOrdenDetalles as $arOrdenDetalle) {
+            $arOrdenDetalleAct = $em->getRepository(InvOrdenDetalle::class)->find($arOrdenDetalle->getCodigoOrdenDetallePk());
+            $subtotal = $arOrdenDetalle->getCantidad() * $arOrdenDetalle->getVrPrecio();
+            $porcentajeIva = $arOrdenDetalle->getPorcentajeIva();
+            $iva = $subtotal * $porcentajeIva / 100;
+            $subtotalGeneral += $subtotal;
+            $ivaGeneral += $iva;
+            $total = $subtotal + $iva;
+            $totalGeneral += $total;
+            $arOrdenDetalleAct->setVrSubtotal($subtotal);
+            $arOrdenDetalleAct->setVrIva($iva);
+            $arOrdenDetalleAct->setVrTotal($total);
+            $em->persist($arOrdenDetalleAct);
+        }
+        $arOrden->setVrSubtotal($subtotalGeneral);
+        $arOrden->setVrIva($ivaGeneral);
+        $arOrden->setVrTotal($totalGeneral);
+        $em->persist($arOrden);
+        $em->flush();
+    }    
+    
+    /**
      * @param $arOrdenCompra InvOrdenCompra
      */
     public function aprobar($arOrdenCompra)
@@ -151,61 +185,57 @@ class InvOrdenRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arOrdenCompra InvOrdenCompra
-     * @param $arrValor
-     * @param $arrCantidad
-     * @param $arrIva
-     * @param $arrDescuento
+     * @param $arrControles array
+     * @param $arMovimiento InvOrden
+     * @param $form FormInterface
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function actualizar($arOrdenCompra, $arrValor, $arrCantidad, $arrIva, $arrDescuento)
+    public function actualizarDetalles($arrControles, $arOrden)
     {
-        $vrTotalGlobal = 0;
-        $vrIvaGlobal = 0;
-        $vrSubtotalGlobal = 0;
-        $vrDctoGlobal = 0;
-        $arOrdenCompraDetalles = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(['codigoOrdenCompraFk' => $arOrdenCompra->getCodigoOrdenCompraPk()]);
-        if (count($arOrdenCompraDetalles) > 0) {
-            foreach ($arOrdenCompraDetalles as $arOrdenCompraDetalle) {
-                $id = $arOrdenCompraDetalle->getCodigoOrdenCompraDetallePk();
-                $cantidad = $arrCantidad[$id] != '' ? $arrCantidad[$id] : 0;
-                $vrUnitario = $arrValor[$id] != '' ? $arrValor[$id] : 0;
-                $porDcto = $arrDescuento[$id] != '' ? $arrDescuento[$id] : 0;
-                $porIva = $arrIva[$id] != '' ? $arrIva[$id] : 0;
-
-                $vrSubtotal = $vrUnitario * $cantidad;
-                $vrIva = $vrSubtotal * ($porIva / 100);
-                $vrDcto = $vrSubtotal * ($porDcto / 100);
-                $vrTotal = $vrSubtotal + $vrIva- $vrDcto;
-
-                $vrTotalGlobal += $vrTotal;
-                $vrIvaGlobal += $vrIva;
-                $vrSubtotalGlobal += $vrSubtotal;
-                $vrDctoGlobal += $vrDcto;
-
-                $arOrdenCompraDetalle->setPorcentajeIva($porIva);
-                $arOrdenCompraDetalle->setPorcentajeDescuento($porDcto);
-                $arOrdenCompraDetalle->setVrDescuento($vrDcto);
-                $arOrdenCompraDetalle->setCantidad($cantidad);
-                $arOrdenCompraDetalle->setVrPrecio($vrUnitario);
-                $arOrdenCompraDetalle->setVrSubtotal($vrSubtotal);
-                $arOrdenCompraDetalle->setVrIva($vrIva);
-                $arOrdenCompraDetalle->setVrTotal($vrTotal);
-                $this->_em->persist($arOrdenCompraDetalle);
+        $em = $this->getEntityManager();
+        $this->getEntityManager()->persist($arOrden);
+        $mensajeError = "";
+        if(isset($arrControles['arrCodigo'])) {
+            $arrCantidad = $arrControles['arrCantidad'];
+            $arrPrecio = $arrControles['arrValor'];
+            $arrPorcentajeDescuento = $arrControles['arrDescuento'];
+            $arrPorcentajeIva = $arrControles['arrIva'];
+            $arrCodigo = $arrControles['arrCodigo'];
+            foreach ($arrCodigo as $codigoOrdenDetalle) {
+                $arOrdenDetalle = $this->getEntityManager()->getRepository(InvOrdenDetalle::class)->find($codigoOrdenDetalle);
+                $cantidadAnterior = $arOrdenDetalle->getCantidad();
+                $cantidadNueva = $arrCantidad[$codigoOrdenDetalle];
+                $arOrdenDetalle->setCantidad($arrCantidad[$codigoOrdenDetalle]);
+                $arOrdenDetalle->setVrPrecio($arrPrecio[$codigoOrdenDetalle]);
+                $arOrdenDetalle->setPorcentajeDescuento($arrPorcentajeDescuento[$codigoOrdenDetalle]);
+                $arOrdenDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoOrdenDetalle]);
+                $em->persist($arOrdenDetalle);
+                /*if ($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
+                    $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
+                    if ($cantidadAfectar != 0) {
+                        $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
+                        if ($cantidadAfectar <= $arPedidoDetalle->getCantidadPendiente()) {
+                            $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $cantidadAfectar);
+                            $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
+                            $em->persist($arPedidoDetalle);
+                        } else {
+                            $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
+                            break;
+                        }
+                    }
+                }*/
             }
-
-            $arOrdenCompra->setVrDescuento($vrDctoGlobal);
-            $arOrdenCompra->setVrIva($vrIvaGlobal);
-            $arOrdenCompra->setVrSubtotal($vrSubtotalGlobal);
-            $arOrdenCompra->setVrTotal($vrTotalGlobal);
-            $this->_em->persist($arOrdenCompra);
-        } else {
-            $arOrdenCompra->setVrDescuento(0);
-            $arOrdenCompra->setVrIva(0);
-            $arOrdenCompra->setVrSubtotal(0);
-            $arOrdenCompra->setVrTotal(0);
-            $this->_em->persist($arOrdenCompra);
         }
-        $this->_em->flush();
+
+        if ($mensajeError == "") {
+            $em->getRepository(InvOrden::class)->liquidar($arOrden);
+            $em->flush();
+        } else {
+            Mensajes::error($mensajeError);
+        }
+
+
     }
 
     private function validarDetalleEnuso($codigoOrdenCompraDetalle)

@@ -10,6 +10,7 @@ use App\Formato\Inventario\Solicitud;
 use App\Utilidades\BaseDatos;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use App\General\General;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -38,6 +39,7 @@ class SolicitudController extends Controller
             ->add('txtNumero', NumberType::class, ['required' => false, 'data' => $session->get('filtroInvSolicitudNumero')])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvSolicitudEstadoAprobado'), 'required' => false])
             ->add('cboSolicitudTipoRel', EntityType::class, $em->getRepository(InvSolicitudTipo::class)->llenarCombo())
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();
@@ -56,6 +58,9 @@ class SolicitudController extends Controller
             if($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(InvSolicitud::class)->eliminar($arrSeleccionados);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($em->getRepository(InvSolicitud::class)->lista())->execute(), "Solicitudes");
             }
         }
         $arSolicitudes = $paginator->paginate($em->getRepository(InvSolicitud::class)->lista(), $request->query->getInt('page', 1), 30);
@@ -181,8 +186,8 @@ class SolicitudController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvItemNombre', $form->get('txtNombreItem')->getData());
+                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
+                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');

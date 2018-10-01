@@ -5,17 +5,17 @@ namespace App\Repository\Inventario;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Utilidades\Mensajes;
-use App\Entity\Inventario\InvOrdenCompra;
-use App\Entity\Inventario\InvOrdenCompraDetalle;
+use App\Entity\Inventario\InvOrden;
+use App\Entity\Inventario\InvOrdenDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
+class InvOrdenDetalleRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, InvOrdenCompraDetalle::class);
+        parent::__construct($registry, InvOrdenDetalle::class);
     }
 
     public function camposPredeterminados()

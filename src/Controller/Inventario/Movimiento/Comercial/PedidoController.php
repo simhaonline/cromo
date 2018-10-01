@@ -56,7 +56,7 @@ class PedidoController extends Controller
                     }
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    General::get()->setExportar($em->createQuery($em->getRepository(InvPedido::class)->lista())->execute(), "Movimientos");
+                    General::get()->setExportar($em->createQuery($em->getRepository(InvPedido::class)->lista())->execute(), "Pedidos");
                 }
             }
         }

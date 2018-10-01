@@ -157,9 +157,9 @@ class InvTercero
     private $formaPagoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="InvOrdenCompra",mappedBy="terceroRel")
+     * @ORM\OneToMany(targetEntity="InvOrden",mappedBy="terceroRel")
      */
-    protected $ordenesComprasTerceroRel;
+    protected $ordenesTerceroRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvMovimiento",mappedBy="terceroRel")
@@ -611,17 +611,17 @@ class InvTercero
     /**
      * @return mixed
      */
-    public function getOrdenesComprasTerceroRel()
+    public function getOrdenesTerceroRel()
     {
-        return $this->ordenesComprasTerceroRel;
+        return $this->ordenesTerceroRel;
     }
 
     /**
-     * @param mixed $ordenesComprasTerceroRel
+     * @param mixed $ordenesTerceroRel
      */
-    public function setOrdenesComprasTerceroRel($ordenesComprasTerceroRel): void
+    public function setOrdenesTerceroRel($ordenesTerceroRel): void
     {
-        $this->ordenesComprasTerceroRel = $ordenesComprasTerceroRel;
+        $this->ordenesTerceroRel = $ordenesTerceroRel;
     }
 
     /**
@@ -671,5 +671,8 @@ class InvTercero
     {
         $this->sucursalesTerceroRel = $sucursalesTerceroRel;
     }
+
+
+
 }
 

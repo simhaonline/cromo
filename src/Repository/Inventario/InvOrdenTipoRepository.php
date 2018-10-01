@@ -2,26 +2,25 @@
 
 namespace App\Repository\Inventario;
 
-use App\Entity\Inventario\InvFacturaTipo;
-use App\Entity\Inventario\InvOrdenCompraTipo;
+use App\Entity\Inventario\InvOrdenTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class InvOrdenCompraTipoRepository extends ServiceEntityRepository
+class InvOrdenTipoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, InvOrdenCompraTipo::class);
+        parent::__construct($registry, InvOrdenTipo::class);
     }
 
     public function camposPredeterminados(){
-        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvOrdenCompraTipo','ioct');
+        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvOrdenCompraTipo','ot');
         $qb
-            ->select('ioct.codigoOrdenCompraTipoPk AS ID')
-            ->addSelect('ioct.nombre AS NOMBRE')
-            ->addSelect('ioct.consecutivo AS CONSECUTIVO');
+            ->select('ot.codigoOrdenTipoPk AS ID')
+            ->addSelect('ot.nombre AS NOMBRE')
+            ->addSelect('ot.consecutivo AS CONSECUTIVO');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }

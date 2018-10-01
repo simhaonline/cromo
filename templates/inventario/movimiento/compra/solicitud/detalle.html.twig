@@ -23,19 +23,27 @@
         <tr>
             <td class="titulo">CODIGO:</td>
             <td class="td-in-well">{{ arSolicitud.codigoSolicitudPk }}</td>
-            <td class="titulo">USUARIO:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arSolicitud.usuario }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well" style="text-transform: uppercase;"></td>
 
         </tr>
         <tr>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arSolicitud.numero }}</td>
+            <td class="titulo">TIPO:</td>
+            <td class="td-in-well">{{ arSolicitud.solicitudTipoRel.nombre }}</td>
+        </tr>
+        <tr>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arSolicitud.fecha | date('Y-m-d') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
         </tr>
         <tr>
             <td class="titulo">SOPORTE:</td>
-            <td class="td-in-well" colspan="5">{{ arSolicitud.soporte }}</td>
+            <td class="td-in-well">{{ arSolicitud.soporte }}</td>
+            <td class="titulo">USUARIO:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arSolicitud.usuario }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
@@ -53,10 +61,10 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th title="Codigo de item">COD</th>
-                            <th>ITEM</th>
-                            <th title="Cantidad">CANT</th>
-                            <th title="Cantidad pendiente">PEND</th>
+                            <th title="Codigo de item">ITEM</th>
+                            <th>NOMBRE</th>
+                            <th title="Cantidad">CAN</th>
+                            <th title="Cantidad pendiente">PEN</th>
                             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>

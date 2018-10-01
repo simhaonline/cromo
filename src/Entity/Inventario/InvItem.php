@@ -113,9 +113,9 @@ class InvItem
     private $cantidadDisponible = 0;
 
     /**
-     * @ORM\Column(name="cantidad_orden_compra", type="integer", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="cantidad_orden", type="integer", nullable=true, options={"default" : 0})
      */
-    private $cantidadOrdenCompra = 0;
+    private $cantidadOrden = 0;
 
     /**
      * @ORM\Column(name="cantidad_solicitud", type="integer", nullable=true, options={"default" : 0})
@@ -184,9 +184,9 @@ class InvItem
     private $solicitudesDetallesItemRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="InvOrdenCompraDetalle", mappedBy="itemRel")
+     * @ORM\OneToMany(targetEntity="InvOrdenDetalle", mappedBy="itemRel")
      */
-    protected $ordenesComprasDetallesItemRel;
+    protected $ordenesDetallesItemRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="itemRel")
@@ -520,17 +520,17 @@ class InvItem
     /**
      * @return mixed
      */
-    public function getCantidadOrdenCompra()
+    public function getCantidadOrden()
     {
-        return $this->cantidadOrdenCompra;
+        return $this->cantidadOrden;
     }
 
     /**
-     * @param mixed $cantidadOrdenCompra
+     * @param mixed $cantidadOrden
      */
-    public function setCantidadOrdenCompra($cantidadOrdenCompra): void
+    public function setCantidadOrden($cantidadOrden): void
     {
-        $this->cantidadOrdenCompra = $cantidadOrdenCompra;
+        $this->cantidadOrden = $cantidadOrden;
     }
 
     /**
@@ -712,17 +712,17 @@ class InvItem
     /**
      * @return mixed
      */
-    public function getOrdenesComprasDetallesItemRel()
+    public function getOrdenesDetallesItemRel()
     {
-        return $this->ordenesComprasDetallesItemRel;
+        return $this->ordenesDetallesItemRel;
     }
 
     /**
-     * @param mixed $ordenesComprasDetallesItemRel
+     * @param mixed $ordenesDetallesItemRel
      */
-    public function setOrdenesComprasDetallesItemRel($ordenesComprasDetallesItemRel): void
+    public function setOrdenesDetallesItemRel($ordenesDetallesItemRel): void
     {
-        $this->ordenesComprasDetallesItemRel = $ordenesComprasDetallesItemRel;
+        $this->ordenesDetallesItemRel = $ordenesDetallesItemRel;
     }
 
     /**

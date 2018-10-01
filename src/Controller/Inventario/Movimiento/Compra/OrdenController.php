@@ -3,60 +3,74 @@
 namespace App\Controller\Inventario\Movimiento\Compra;
 
 use App\Entity\Inventario\InvItem;
+use App\Entity\Inventario\InvOrden;
 use App\Entity\Inventario\InvOrdenCompra;
+use App\Entity\Inventario\InvOrdenDetalle;
+use App\Entity\Inventario\InvOrdenTipo;
 use App\Entity\Inventario\InvPrecioDetalle;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Entity\Inventario\InvTercero;
-use App\Form\Type\Inventario\OrdenCompraType;
+use App\Form\Type\Inventario\OrdenType;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use App\General\General;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
 use App\Formato\Inventario\OrdenCompra;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class OrdenCompraController extends Controller
+class OrdenController extends Controller
 {
-
 
     /**
      * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/inventario/movimiento/inventario/ordenCompra/nuevo/{id}",name="inventario_movimiento_inventario_ordenCompra_nuevo")
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @Route("/inventario/movimiento/compra/orden/lista", name="inventario_movimiento_compra_orden_lista")
      */
-    public function nuevo(Request $request, $id)
+    public function lista(Request $request)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $arOrdenCompra = new InvOrdenCompra();
-        if ($id != 0) {
-            $arOrdenCompra = $em->getRepository(InvOrdenCompra::class)->find($id);
-        }
-        $form = $this->createForm(OrdenCompraType::class, $arOrdenCompra);
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtNumero', NumberType::class, ['required' => false, 'data' => $session->get('filtroInvSolicitudNumero')])
+            ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvSolicitudEstadoAprobado'), 'required' => false])
+            ->add('cboOrdenTipoRel', EntityType::class, $em->getRepository(InvOrdenTipo::class)->llenarCombo())
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
-                $txtCodigoTercero = $request->request->get('txtCodigoTercero');
-                if ($txtCodigoTercero != '') {
-                    $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
-                    if ($arTercero) {
-                        $arOrdenCompra->setTerceroRel($arTercero);
-                        $arOrdenCompra->setFecha(new \DateTime('now'));
-                        $em->persist($arOrdenCompra);
-                        $em->flush();
-                        return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $arOrdenCompra->getCodigoOrdenCompraPk()]));
-                    }
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvOrdenNumero', $form->get('txtNumero')->getData());
+                $session->set('filtroInvOrdenEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
+                $solicitudTipo = $form->get('cboOrdenTipoRel')->getData();
+                if($solicitudTipo != ''){
+                    $session->set('filtroInvOrdenCodigoOrdenTipo', $form->get('cboOrdenTipoRel')->getData()->getCodigoOrdenTipoPk());
+                } else {
+                    $session->set('filtroInvOrdenCodigoOrdenTipo', null);
                 }
-            } else {
-                Mensajes::error('Debes seleccionar un tercero');
+            }
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(InvOrden::class)->eliminar($arrSeleccionados);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($em->getRepository(InvOrden::class)->lista())->execute(), "Ordenes");
             }
         }
-        return $this->render('inventario/movimiento/compra/ordenCompra/nuevo.html.twig', [
-            'arOrdenCompra' => $arOrdenCompra,
+        $arOrdenes = $paginator->paginate($em->getRepository(InvOrden::class)->lista(), $request->query->getInt('page', 1), 30);
+        return $this->render('inventario/movimiento/compra/orden/lista.html.twig', [
+            'arOrdenes' => $arOrdenes,
             'form' => $form->createView()
         ]);
     }
@@ -65,17 +79,55 @@ class OrdenCompraController extends Controller
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/inventario/movimiento/inventario/ordencompra/detalle/{id}", name="inventario_movimiento_inventario_ordenCompra_detalle")
+     * @Route("/inventario/movimiento/compra/orden/nuevo/{id}",name="inventario_movimiento_compra_orden_nuevo")
+     */
+    public function nuevo(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arOrden = new InvOrden();
+        if ($id != 0) {
+            $arOrden = $em->getRepository(InvOrden::class)->find($id);
+        }
+        $form = $this->createForm(OrdenType::class, $arOrden);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $txtCodigoTercero = $request->request->get('txtCodigoTercero');
+                if ($txtCodigoTercero != '') {
+                    $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
+                    if ($arTercero) {
+                        $arOrden->setTerceroRel($arTercero);
+                        $arOrden->setFecha(new \DateTime('now'));
+                        $em->persist($arOrden);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('inventario_movimiento_compra_orden_detalle', ['id' => $arOrden->getCodigoOrdenPk()]));
+                    }
+                }
+            } else {
+                Mensajes::error('Debes seleccionar un tercero');
+            }
+        }
+        return $this->render('inventario/movimiento/compra/orden/nuevo.html.twig', [
+            'arOrden' => $arOrden,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/movimiento/compra/orden/detalle/{id}", name="inventario_movimiento_compra_orden_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $arOrdenCompra = $em->getRepository(InvOrdenCompra::class)->find($id);
-        $form = Estandares::botonera($arOrdenCompra->getEstadoAutorizado(), $arOrdenCompra->getEstadoAprobado(), $arOrdenCompra->getEstadoAnulado());
+        $arOrden = $em->getRepository(InvOrden::class)->find($id);
+        $form = Estandares::botonera($arOrden->getEstadoAutorizado(), $arOrden->getEstadoAprobado(), $arOrden->getEstadoAnulado());
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        if ($arOrdenCompra->getEstadoAutorizado()) {
+        if ($arOrden->getEstadoAutorizado()) {
             $arrBtnEliminar['disabled'] = true;
             $arrBtnActualizar['disabled'] = true;
         }
@@ -88,20 +140,20 @@ class OrdenCompraController extends Controller
             $arrCantidad = $request->request->get('arrCantidad');
             $arrDescuento = $request->request->get('arrDescuento');
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository(InvOrdenCompra::class)->actualizar($arOrdenCompra, $arrValor, $arrCantidad, $arrIva, $arrDescuento);
-                $em->getRepository(InvOrdenCompra::class)->autorizar($arOrdenCompra);
+                $em->getRepository(InvOrdenCompra::class)->actualizar($arOrden, $arrValor, $arrCantidad, $arrIva, $arrDescuento);
+                $em->getRepository(InvOrdenCompra::class)->autorizar($arOrden);
                 return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository(InvOrdenCompra::class)->desautorizar($arOrdenCompra);
+                $em->getRepository(InvOrdenCompra::class)->desautorizar($arOrden);
                 return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository(InvOrdenCompra::class)->aprobar($arOrdenCompra);
+                $em->getRepository(InvOrdenCompra::class)->aprobar($arOrden);
                 return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if ($form->get('btnActualizar')->isClicked()) {
-                $em->getRepository(InvOrdenCompra::class)->actualizar($arOrdenCompra, $arrValor, $arrCantidad, $arrIva, $arrDescuento);
+                $em->getRepository(InvOrdenCompra::class)->actualizar($arOrden, $arrValor, $arrCantidad, $arrIva, $arrDescuento);
                 return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
@@ -109,7 +161,7 @@ class OrdenCompraController extends Controller
                 $objFormatoOrdenCompra->Generar($em, $id);
             }
             if ($form->get('btnAnular')->isClicked()) {
-                $respuesta = $em->getRepository(InvOrdenCompra::class)->anular($arOrdenCompra);
+                $respuesta = $em->getRepository(InvOrdenCompra::class)->anular($arOrden);
                 if (count($respuesta) > 0) {
                     foreach ($respuesta as $error) {
                         Mensajes::error($error);
@@ -120,16 +172,16 @@ class OrdenCompraController extends Controller
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 if ($arrDetallesSeleccionados) {
-                    $em->getRepository(InvOrdenCompraDetalle::class)->eliminar($arOrdenCompra, $arrDetallesSeleccionados);
+                    $em->getRepository(InvOrdenCompraDetalle::class)->eliminar($arOrden, $arrDetallesSeleccionados);
                     return $this->redirect($this->generateUrl('inventario_movimiento_inventario_ordenCompra_detalle', ['id' => $id]));
                 }
             }
         }
-        $arOrdenCompraDetalles = $paginator->paginate($em->getRepository(InvOrdenCompraDetalle::class)->lista($arOrdenCompra->getCodigoOrdenCompraPk()), $request->query->getInt('page', 1), 30);
-        return $this->render('inventario/movimiento/compra/ordenCompra/detalle.html.twig', [
+        $arOrdenDetalles = $paginator->paginate($em->getRepository(InvOrdenDetalle::class)->lista($arOrden->getCodigoOrdenPk()), $request->query->getInt('page', 1), 30);
+        return $this->render('inventario/movimiento/compra/orden/detalle.html.twig', [
             'form' => $form->createView(),
-            'arOrdenCompraDetalles' => $arOrdenCompraDetalles,
-            'arOrdenCompra' => $arOrdenCompra
+            'arOrdenDetalles' => $arOrdenDetalles,
+            'arOrden' => $arOrden
         ]);
     }
 
@@ -139,14 +191,14 @@ class OrdenCompraController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\NonUniqueResultException
-     * @Route("/inventario/movimiento/inventario/ordencompra/detalle/nuevo/{id}", name="inventario_movimiento_inventario_ordenCompra_detalle_nuevo")
+     * @Route("/inventario/movimiento/compra/orden/detalle/nuevo/{id}", name="inventario_movimiento_compra_orden_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $arOrdenCompra = $em->getRepository(InvOrdenCompra::class)->find($id);
+        $arOrden = $em->getRepository(InvOrden::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
@@ -156,8 +208,8 @@ class OrdenCompraController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvItemNombre', $form->get('txtNombreItem')->getData());
+                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
+                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -165,15 +217,15 @@ class OrdenCompraController extends Controller
                     foreach ($arrItems as $codigoItem => $cantidad) {
                         if ($cantidad != '' && $cantidad != 0) {
                             $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
-                            $arOrdenCompraDetalle = new InvOrdenCompraDetalle();
-                            $precioVenta = $em->getRepository(InvPrecioDetalle::class)->obtenerPrecio($arOrdenCompra->getTerceroRel()->getCodigoPrecioCompraFk(), $codigoItem);
-                            $arOrdenCompraDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
-                            $arOrdenCompraDetalle->setOrdenCompraRel($arOrdenCompra);
-                            $arOrdenCompraDetalle->setItemRel($arItem);
-                            $arOrdenCompraDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
-                            $arOrdenCompraDetalle->setCantidad($cantidad);
-                            $arOrdenCompraDetalle->setCantidadPendiente($cantidad);
-                            $em->persist($arOrdenCompraDetalle);
+                            $arOrdenDetalle = new InvOrdenDetalle();
+                            $precioVenta = $em->getRepository(InvPrecioDetalle::class)->obtenerPrecio($arOrden->getTerceroRel()->getCodigoPrecioCompraFk(), $codigoItem);
+                            $arOrdenDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
+                            $arOrdenDetalle->setOrdenRel($arOrden);
+                            $arOrdenDetalle->setItemRel($arItem);
+                            $arOrdenDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
+                            $arOrdenDetalle->setCantidad($cantidad);
+                            $arOrdenDetalle->setCantidadPendiente($cantidad);
+                            $em->persist($arOrdenDetalle);
                         }
                     }
                     $em->flush();
@@ -182,7 +234,7 @@ class OrdenCompraController extends Controller
             }
         }
         $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 10);
-        return $this->render('inventario/movimiento/compra/ordenCompra/detalleNuevo.html.twig', [
+        return $this->render('inventario/movimiento/compra/orden/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems
         ]);
@@ -193,7 +245,7 @@ class OrdenCompraController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\NonUniqueResultException
-     * @Route("/inventario/movimiento/inventario/ordencompra/solicitud/detalle/nuevo/{id}", name="inventario_movimiento_inventario_ordenCompra_solicitud_detalle_nuevo")
+     * @Route("/inventario/movimiento/compra/orden/solicitud/detalle/nuevo/{id}", name="inventario_movimiento_compra_orden_solicitud_detalle_nuevo")
      */
     public function detalleNuevoSolicitud(Request $request, $id)
     {

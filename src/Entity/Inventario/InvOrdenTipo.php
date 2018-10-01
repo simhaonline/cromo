@@ -7,16 +7,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvOrdenCompraTipoRepository")
- * @DoctrineAssert\UniqueEntity(fields={"codigoOrdenCompraTipoPk"},message="Ya existe el código del tipo")
+ * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvOrdenTipoRepository")
+ * @DoctrineAssert\UniqueEntity(fields={"codigoOrdenTipoPk"},message="Ya existe el código del tipo")
  */
-class InvOrdenCompraTipo
+class InvOrdenTipo
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_orden_compra_tipo_pk",type="string",length=10)
+     * @ORM\Column(name="codigo_orden_tipo_pk",type="string",length=10)
      */
-    private $codigoOrdenCompraTipoPk;
+    private $codigoOrdenTipoPk;
 
     /**
      * @ORM\Column(name="nombre", type="string", length=255)
@@ -29,24 +29,24 @@ class InvOrdenCompraTipo
     private $consecutivo = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity="InvOrdenCompra", mappedBy="ordenCompraTipoRel")
+     * @ORM\OneToMany(targetEntity="InvOrden", mappedBy="ordenTipoRel")
      */
-    protected $ordenesComprasOrdenCompraTipoRel;
+    protected $ordenesOrdenTipoRel;
 
     /**
      * @return mixed
      */
-    public function getCodigoOrdenCompraTipoPk()
+    public function getCodigoOrdenTipoPk()
     {
-        return $this->codigoOrdenCompraTipoPk;
+        return $this->codigoOrdenTipoPk;
     }
 
     /**
-     * @param mixed $codigoOrdenCompraTipoPk
+     * @param mixed $codigoOrdenTipoPk
      */
-    public function setCodigoOrdenCompraTipoPk($codigoOrdenCompraTipoPk): void
+    public function setCodigoOrdenTipoPk($codigoOrdenTipoPk): void
     {
-        $this->codigoOrdenCompraTipoPk = $codigoOrdenCompraTipoPk;
+        $this->codigoOrdenTipoPk = $codigoOrdenTipoPk;
     }
 
     /**
@@ -84,17 +84,20 @@ class InvOrdenCompraTipo
     /**
      * @return mixed
      */
-    public function getOrdenesComprasOrdenCompraTipoRel()
+    public function getOrdenesOrdenTipoRel()
     {
-        return $this->ordenesComprasOrdenCompraTipoRel;
+        return $this->ordenesOrdenTipoRel;
     }
 
     /**
-     * @param mixed $ordenesComprasOrdenCompraTipoRel
+     * @param mixed $ordenesOrdenTipoRel
      */
-    public function setOrdenesComprasOrdenCompraTipoRel($ordenesComprasOrdenCompraTipoRel): void
+    public function setOrdenesOrdenTipoRel($ordenesOrdenTipoRel): void
     {
-        $this->ordenesComprasOrdenCompraTipoRel = $ordenesComprasOrdenCompraTipoRel;
+        $this->ordenesOrdenTipoRel = $ordenesOrdenTipoRel;
     }
+
+
+
 }
 

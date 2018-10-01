@@ -55,9 +55,9 @@ class InvSolicitudDetalle
     protected $itemRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="InvOrdenCompraDetalle", mappedBy="solicitudDetalleRel")
+     * @ORM\OneToMany(targetEntity="InvOrdenDetalle", mappedBy="solicitudDetalleRel")
      */
-    protected $ordenesComprasDetallesSolicitudDetalleRel;
+    protected $ordenesDetallesSolicitudDetalleRel;
 
     /**
      * @return mixed
@@ -142,22 +142,6 @@ class InvSolicitudDetalle
     /**
      * @return mixed
      */
-    public function getSolicitudRel()
-    {
-        return $this->solicitudRel;
-    }
-
-    /**
-     * @param mixed $solicitudRel
-     */
-    public function setSolicitudRel($solicitudRel): void
-    {
-        $this->solicitudRel = $solicitudRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCantidadAfectada()
     {
         return $this->cantidadAfectada;
@@ -169,6 +153,22 @@ class InvSolicitudDetalle
     public function setCantidadAfectada($cantidadAfectada): void
     {
         $this->cantidadAfectada = $cantidadAfectada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudRel()
+    {
+        return $this->solicitudRel;
+    }
+
+    /**
+     * @param mixed $solicitudRel
+     */
+    public function setSolicitudRel($solicitudRel): void
+    {
+        $this->solicitudRel = $solicitudRel;
     }
 
     /**
@@ -190,17 +190,20 @@ class InvSolicitudDetalle
     /**
      * @return mixed
      */
-    public function getOrdenesComprasDetallesSolicitudDetalleRel()
+    public function getOrdenesDetallesSolicitudDetalleRel()
     {
-        return $this->ordenesComprasDetallesSolicitudDetalleRel;
+        return $this->ordenesDetallesSolicitudDetalleRel;
     }
 
     /**
-     * @param mixed $ordenesComprasDetallesSolicitudDetalleRel
+     * @param mixed $ordenesDetallesSolicitudDetalleRel
      */
-    public function setOrdenesComprasDetallesSolicitudDetalleRel($ordenesComprasDetallesSolicitudDetalleRel): void
+    public function setOrdenesDetallesSolicitudDetalleRel($ordenesDetallesSolicitudDetalleRel): void
     {
-        $this->ordenesComprasDetallesSolicitudDetalleRel = $ordenesComprasDetallesSolicitudDetalleRel;
+        $this->ordenesDetallesSolicitudDetalleRel = $ordenesDetallesSolicitudDetalleRel;
     }
+
+
+
 }
 

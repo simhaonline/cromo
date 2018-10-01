@@ -108,9 +108,9 @@ class InvMovimientoDetalle
     private $operacionInventario = 0;
 
     /**
-     * @ORM\Column(name="codigo_orden_compra_detalle_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_orden_detalle_fk", type="integer", nullable=true)
      */
-    private $codigoOrdenCompraDetalleFk;
+    private $codigoOrdenDetalleFk;
 
     /**
      * @ORM\Column(name="codigo_pedido_detalle_fk", type="integer", nullable=true)
@@ -130,10 +130,10 @@ class InvMovimientoDetalle
     protected $itemRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvOrdenCompraDetalle", inversedBy="movimientosDetallesOrdenCompraDetalleRel")
-     * @ORM\JoinColumn(name="codigo_orden_compra_detalle_fk", referencedColumnName="codigo_orden_compra_detalle_pk")
+     * @ORM\ManyToOne(targetEntity="InvOrdenDetalle", inversedBy="movimientosDetallesOrdenDetalleRel")
+     * @ORM\JoinColumn(name="codigo_orden_detalle_fk", referencedColumnName="codigo_orden_detalle_pk")
      */
-    protected $ordenCompraDetalleRel;
+    protected $ordenDetalleRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Inventario\InvPedidoDetalle", inversedBy="movimientosDetallesPedidoDetalleRel")
@@ -448,17 +448,17 @@ class InvMovimientoDetalle
     /**
      * @return mixed
      */
-    public function getCodigoOrdenCompraDetalleFk()
+    public function getCodigoOrdenDetalleFk()
     {
-        return $this->codigoOrdenCompraDetalleFk;
+        return $this->codigoOrdenDetalleFk;
     }
 
     /**
-     * @param mixed $codigoOrdenCompraDetalleFk
+     * @param mixed $codigoOrdenDetalleFk
      */
-    public function setCodigoOrdenCompraDetalleFk($codigoOrdenCompraDetalleFk): void
+    public function setCodigoOrdenDetalleFk($codigoOrdenDetalleFk): void
     {
-        $this->codigoOrdenCompraDetalleFk = $codigoOrdenCompraDetalleFk;
+        $this->codigoOrdenDetalleFk = $codigoOrdenDetalleFk;
     }
 
     /**
@@ -512,17 +512,17 @@ class InvMovimientoDetalle
     /**
      * @return mixed
      */
-    public function getOrdenCompraDetalleRel()
+    public function getOrdenDetalleRel()
     {
-        return $this->ordenCompraDetalleRel;
+        return $this->ordenDetalleRel;
     }
 
     /**
-     * @param mixed $ordenCompraDetalleRel
+     * @param mixed $ordenDetalleRel
      */
-    public function setOrdenCompraDetalleRel($ordenCompraDetalleRel): void
+    public function setOrdenDetalleRel($ordenDetalleRel): void
     {
-        $this->ordenCompraDetalleRel = $ordenCompraDetalleRel;
+        $this->ordenDetalleRel = $ordenDetalleRel;
     }
 
     /**

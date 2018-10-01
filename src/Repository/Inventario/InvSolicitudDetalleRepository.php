@@ -95,15 +95,16 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $em->createQueryBuilder()->from(InvSolicitudDetalle::class,'sd')
             ->select('sd.codigoSolicitudDetallePk')
             ->addSelect('s.numero')
+            ->addSelect('s.fecha')
             ->addSelect('sd.codigoSolicitudFk')
             ->addSelect('sd.cantidadPendiente')
             ->addSelect('sd.cantidad')
             ->addSelect('sd.codigoItemFk')
-            ->addSelect('it.nombre')
+            ->addSelect('i.nombre')
             ->addSelect('st.nombre as tipo')
             ->leftJoin('sd.solicitudRel', 's')
             ->leftJoin('s.solicitudTipoRel', 'st')
-            ->leftJoin('sd.itemRel', 'it')
+            ->leftJoin('sd.itemRel', 'i')
             ->where('s.estadoAprobado = 1')
             ->andWhere('sd.cantidadPendiente > 0');
         if($session->get('filtroInvCodigoSolicitudTipo') != null){

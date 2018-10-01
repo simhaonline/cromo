@@ -25,22 +25,22 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th title="Numero solicitud">NUMERO</th>
-                <th title="Codigo solicitud">SOLICITUD</th>
                 <th title="Tipo de solicitud">TIPO</th>
-                <th>ID ITEM</th>
+                <th title="Numero solicitud">NUMERO</th>
+                <th title="Numero solicitud">FECHA</th>
                 <th>ITEM</th>
-                <th>CANTIDAD</th>
-                <th>PENDIENTE</th>
+                <th>NOMBRE</th>
+                <th>CAN</th>
+                <th>PEN</th>
             </tr>
             </thead>
             <tbody>
             {% for arSolicitudDetalle in arSolicitudDetalles %}
                 <tr>
                     <td>{{ arSolicitudDetalle.codigoSolicitudDetallePk }}</td>
-                    <td>{{ arSolicitudDetalle.numero }}</td>
-                    <td>{{ arSolicitudDetalle.codigoSolicitudFk }}</td>
                     <td>{{ arSolicitudDetalle.tipo }}</td>
+                    <td>{{ arSolicitudDetalle.numero }}</td>
+                    <td>{{ arSolicitudDetalle.fecha | date('Y-m-d') }}</td>
                     <td>{{ arSolicitudDetalle.codigoItemFk }}</td>
                     <td>{{ arSolicitudDetalle.nombre }}</td>
                     <td>{{ arSolicitudDetalle.cantidad }}</td>

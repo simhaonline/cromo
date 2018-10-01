@@ -22,6 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class OrdenCompraController extends Controller
 {
 
+
     /**
      * @param Request $request
      * @param $id

@@ -6,16 +6,16 @@ namespace App\Entity\Inventario;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvOrdenCompraDetalleRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvOrdenDetalleRepository")
  */
-class InvOrdenCompraDetalle
+class InvOrdenDetalle
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(name="codigo_orden_compra_detalle_pk",type="integer")
+     * @ORM\Column(name="codigo_orden_detalle_pk",type="integer")
      */
-    private $codigoOrdenCompraDetallePk;
+    private $codigoOrdenDetallePk;
 
     /**
      * @ORM\Column(name="codigo_solicitud_detalle_fk", type="integer", nullable=true)
@@ -23,9 +23,9 @@ class InvOrdenCompraDetalle
     private $codigoSolicitudDetalleFk;
 
     /**
-     * @ORM\Column(name="codigo_orden_compra_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_orden_fk", type="integer", nullable=true)
      */
-    private $codigoOrdenCompraFk;
+    private $codigoOrdenFk;
 
     /**
      * @ORM\Column(name="codigo_item_fk", type="integer", nullable=true)
@@ -88,42 +88,42 @@ class InvOrdenCompraDetalle
     private $cantidadAfectada = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="ordenesComprasDetallesItemRel")
+     * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="ordenesDetallesItemRel")
      * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
     protected $itemRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvOrdenCompra", inversedBy="ordenesComprasDetallesOrdenCompraRel")
-     * @ORM\JoinColumn(name="codigo_orden_compra_fk", referencedColumnName="codigo_orden_compra_pk")
+     * @ORM\ManyToOne(targetEntity="InvOrden", inversedBy="ordenesDetallesOrdenRel")
+     * @ORM\JoinColumn(name="codigo_orden_fk", referencedColumnName="codigo_orden_pk")
      */
-    protected $ordenCompraRel;
+    protected $ordenRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvSolicitudDetalle", inversedBy="ordenesComprasDetallesSolicitudDetalleRel")
+     * @ORM\ManyToOne(targetEntity="InvSolicitudDetalle", inversedBy="ordenesDetallesSolicitudDetalleRel")
      * @ORM\JoinColumn(name="codigo_solicitud_detalle_fk", referencedColumnName="codigo_solicitud_detalle_pk")
      */
     protected $solicitudDetalleRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="ordenCompraDetalleRel")
+     * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="ordenDetalleRel")
      */
-    protected $movimientosDetallesOrdenCompraDetalleRel;
+    protected $movimientosDetallesOrdenDetalleRel;
 
     /**
      * @return mixed
      */
-    public function getCodigoOrdenCompraDetallePk()
+    public function getCodigoOrdenDetallePk()
     {
-        return $this->codigoOrdenCompraDetallePk;
+        return $this->codigoOrdenDetallePk;
     }
 
     /**
-     * @param mixed $codigoOrdenCompraDetallePk
+     * @param mixed $codigoOrdenDetallePk
      */
-    public function setCodigoOrdenCompraDetallePk($codigoOrdenCompraDetallePk): void
+    public function setCodigoOrdenDetallePk($codigoOrdenDetallePk): void
     {
-        $this->codigoOrdenCompraDetallePk = $codigoOrdenCompraDetallePk;
+        $this->codigoOrdenDetallePk = $codigoOrdenDetallePk;
     }
 
     /**
@@ -145,17 +145,17 @@ class InvOrdenCompraDetalle
     /**
      * @return mixed
      */
-    public function getCodigoOrdenCompraFk()
+    public function getCodigoOrdenFk()
     {
-        return $this->codigoOrdenCompraFk;
+        return $this->codigoOrdenFk;
     }
 
     /**
-     * @param mixed $codigoOrdenCompraFk
+     * @param mixed $codigoOrdenFk
      */
-    public function setCodigoOrdenCompraFk($codigoOrdenCompraFk): void
+    public function setCodigoOrdenFk($codigoOrdenFk): void
     {
-        $this->codigoOrdenCompraFk = $codigoOrdenCompraFk;
+        $this->codigoOrdenFk = $codigoOrdenFk;
     }
 
     /**
@@ -369,17 +369,17 @@ class InvOrdenCompraDetalle
     /**
      * @return mixed
      */
-    public function getOrdenCompraRel()
+    public function getOrdenRel()
     {
-        return $this->ordenCompraRel;
+        return $this->ordenRel;
     }
 
     /**
-     * @param mixed $ordenCompraRel
+     * @param mixed $ordenRel
      */
-    public function setOrdenCompraRel($ordenCompraRel): void
+    public function setOrdenRel($ordenRel): void
     {
-        $this->ordenCompraRel = $ordenCompraRel;
+        $this->ordenRel = $ordenRel;
     }
 
     /**
@@ -401,17 +401,20 @@ class InvOrdenCompraDetalle
     /**
      * @return mixed
      */
-    public function getMovimientosDetallesOrdenCompraDetalleRel()
+    public function getMovimientosDetallesOrdenDetalleRel()
     {
-        return $this->movimientosDetallesOrdenCompraDetalleRel;
+        return $this->movimientosDetallesOrdenDetalleRel;
     }
 
     /**
-     * @param mixed $movimientosDetallesOrdenCompraDetalleRel
+     * @param mixed $movimientosDetallesOrdenDetalleRel
      */
-    public function setMovimientosDetallesOrdenCompraDetalleRel($movimientosDetallesOrdenCompraDetalleRel): void
+    public function setMovimientosDetallesOrdenDetalleRel($movimientosDetallesOrdenDetalleRel): void
     {
-        $this->movimientosDetallesOrdenCompraDetalleRel = $movimientosDetallesOrdenCompraDetalleRel;
+        $this->movimientosDetallesOrdenDetalleRel = $movimientosDetallesOrdenDetalleRel;
     }
+
+
+
 }
 

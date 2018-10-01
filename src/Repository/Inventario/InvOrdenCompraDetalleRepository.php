@@ -2,6 +2,7 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvOrdenCompra;
@@ -141,5 +142,55 @@ class InvOrdenCompraDetalleRepository extends ServiceEntityRepository
         }
 
         return $queryBuilder;
+    }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function regenerarCantidadAfectada() {
+        $em = $this->getEntityManager();
+        $arDetalles = $this->listaRegenerarCantidadAfectada();
+        foreach ($arDetalles as $arDetalle) {
+            $cantidad = $arDetalle['cantidad'];
+            $cantidadAfectada = $em->getRepository(InvMovimientoDetalle::class)->cantidadAfectaOrdenCompra($arDetalle['codigoOrdenCompraDetallePk']);
+            $cantidadPendiente = $cantidad - $cantidadAfectada;
+            if($cantidadAfectada != $arDetalle['cantidadAfectada'] || $cantidadPendiente != $arDetalle['cantidadPendiente']) {
+                $arDetalleAct = $em->getRepository(InvOrdenCompraDetalle::class)->find($arDetalle['codigoOrdenCompraDetallePk']);
+                $arDetalleAct->setCantidadAfectada($cantidadAfectada);
+                $arDetalleAct->setCantidadPendiente($cantidadPendiente);
+                $em->persist($arDetalleAct);
+            }
+        }
+        $em->flush();
+    }
+
+    private function listaRegenerarCantidadAfectada()
+    {
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvOrdenCompraDetalle::class, 'ocd')
+            ->select('ocd.codigoOrdenCompraDetallePk')
+            ->addSelect('ocd.cantidad')
+            ->addSelect('ocd.cantidadAfectada')
+            ->addSelect('ocd.cantidadPendiente');
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param $arCodigo
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function cantidadAfecta($arCodigo)
+    {
+        $cantidad = 0;
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvOrdenCompraDetalle::class, 'r')
+            ->select("SUM(r.cantidad)")
+            ->where("r.codigoSolicitudDetalleFk = {$arCodigo} ");
+        $resultado = $queryBuilder->getQuery()->getSingleResult();
+        if ($resultado[1]) {
+            $cantidad = $resultado[1];
+        }
+        return $cantidad;
     }
 }

@@ -127,6 +127,10 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
         return $arrPedidosDetalles;
     }
 
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function regenerarCantidadAfectada() {
         $em = $this->getEntityManager();
         $arPedidosDetalles = $em->getRepository(InvPedidoDetalle::class)->listaRegenerarCantidadAfectada();

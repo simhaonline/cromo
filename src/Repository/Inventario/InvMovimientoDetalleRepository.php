@@ -43,7 +43,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                         }
                     }
                     //Si el detalle tiene un pedido detalle relacionado
-                    if($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
+                    if ($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
                         $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
                         $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
                         $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
@@ -106,19 +106,19 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                 $arMovimientoDetalle->setLoteFk($arrLote[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setCantidad($arrCantidad[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setVrPrecio($arrPrecio[$codigoMovimientoDetalle]);
-                if($arMovimiento->getGeneraCostoPromedio()) {
+                if ($arMovimiento->getGeneraCostoPromedio()) {
                     $arMovimientoDetalle->setVrCosto($arrPrecio[$codigoMovimientoDetalle]);
                 }
                 $arMovimientoDetalle->setPorcentajeDescuento($arrPorcentajeDescuento[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoMovimientoDetalle]);
                 $this->getEntityManager()->persist($arMovimientoDetalle);
-                if($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
+                if ($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
                     $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
-                    if($cantidadAfectar != 0) {
+                    if ($cantidadAfectar != 0) {
                         $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
-                        if($cantidadAfectar <= $arPedidoDetalle->getCantidadPendiente()) {
+                        if ($cantidadAfectar <= $arPedidoDetalle->getCantidadPendiente()) {
                             $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $cantidadAfectar);
-                            $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad()- $arPedidoDetalle->getCantidadAfectada());
+                            $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
                             $em->persist($arPedidoDetalle);
                         } else {
                             $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
@@ -127,7 +127,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                     }
                 }
             }
-            if($mensajeError == "") {
+            if ($mensajeError == "") {
                 $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
                 $this->getEntityManager()->flush();
             } else {
@@ -152,16 +152,17 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $resultado[1];
     }
 
-    public function informacionRegenerarKardex($codigoItem){
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class,'md')
+    public function informacionRegenerarKardex($codigoItem)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
             ->select('(md.cantidad * d.operacionInventario) AS cantidadOperada')
             ->addSelect('md.codigoBodegaFk')
             ->addSelect('md.loteFk')
-            ->leftJoin('md.movimientoRel','m')
-            ->leftJoin('m.documentoRel','d')
+            ->leftJoin('md.movimientoRel', 'm')
+            ->leftJoin('m.documentoRel', 'd')
             ->where('m.estadoAutorizado = 1')
             ->andWhere('d.operacionInventario != 0')
-            ->andWhere('md.codigoItemFk = '.$codigoItem);
+            ->andWhere('md.codigoItemFk = ' . $codigoItem);
         return $queryBuilder->getQuery()->execute();
     }
 
@@ -202,8 +203,9 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         }
     }
 
-    public function listaRegenerarCostos($codigoItem){
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class,'md')
+    public function listaRegenerarCostos($codigoItem)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
             ->select('md.codigoMovimientoDetallePk')
             ->addSelect('md.cantidad')
             ->addSelect('md.cantidadOperada')
@@ -211,13 +213,14 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.vrPrecio')
             ->addSelect('md.porcentajeDescuento')
             ->addSelect('m.generaCostoPromedio')
-            ->leftJoin('md.movimientoRel','m')
+            ->leftJoin('md.movimientoRel', 'm')
             ->where('m.estadoAprobado = 1')
-            ->andWhere('md.codigoItemFk = '.$codigoItem);
+            ->andWhere('md.codigoItemFk = ' . $codigoItem);
         return $queryBuilder->getQuery()->execute();
     }
 
-    public function regenerarCosto() {
+    public function regenerarCosto()
+    {
         $em = $this->getEntityManager();
         $arItemes = $em->getRepository(InvItem::class)->listaRegenerar();
         foreach ($arItemes as $arItem) {
@@ -226,13 +229,13 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             $arMovimientosDetalles = $em->getRepository(InvMovimientoDetalle::class)->listaRegenerarCostos($arItem['codigoItemPk']);
             foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
                 $arMovimientoDetalleAct = $em->getRepository(InvMovimientoDetalle::class)->find($arMovimientoDetalle['codigoMovimientoDetallePk']);
-                if($arMovimientoDetalle['generaCostoPromedio']) {
-                    if($existenciaAnterior != 0) {
+                if ($arMovimientoDetalle['generaCostoPromedio']) {
+                    if ($existenciaAnterior != 0) {
                         $existenciaTotal = $existenciaAnterior + $arMovimientoDetalle['cantidad'];
                         $costoPromedio = (($existenciaAnterior * $costoPromedio) + (($arMovimientoDetalle['cantidad'] * $arMovimientoDetalle['vrCosto']))) / $existenciaTotal;
                     } else {
                         $precioBruto = $arMovimientoDetalle['vrPrecio'] - (($arMovimientoDetalle['vrPrecio'] * $arMovimientoDetalle['porcentajeDescuento']) / 100);
-                        if($arMovimientoDetalle['vrCosto'] != $precioBruto) {
+                        if ($arMovimientoDetalle['vrCosto'] != $precioBruto) {
                             $arMovimientoDetalleAct->setVrCosto($precioBruto);
                             $costoPromedio = $precioBruto;
                         } else {
@@ -276,7 +279,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->where('md.codigoMovimientoDetallePk != 0')
             ->andWhere('m.estadoAprobado = 1')
             ->andWhere('m.estadoAnulado = 0')
-        ->orderBy('m.fecha', 'ASC');
+            ->orderBy('m.fecha', 'ASC');
 
         if ($session->get('filtroInvItemCodigo')) {
             $queryBuilder->andWhere("md.codigoItemFk = '{$session->get('filtroInvItemCodigo')}'");
@@ -304,6 +307,12 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $resultado;
     }
 
+    /**
+     * @param $codigoPedidoDetalle
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function cantidadAfectaPedido($codigoPedidoDetalle)
     {
         $cantidad = 0;
@@ -311,7 +320,26 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->select("SUM(md.cantidad)")
             ->where("md.codigoPedidoDetalleFk = {$codigoPedidoDetalle} ");
         $resultado = $queryBuilder->getQuery()->getSingleResult();
-        if($resultado[1]) {
+        if ($resultado[1]) {
+            $cantidad = $resultado[1];
+        }
+        return $cantidad;
+    }
+
+    /**
+     * @param $codigoOrdenCompraDetalle
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function cantidadAfectaOrdenCompra($codigoOrdenCompraDetalle)
+    {
+        $cantidad = 0;
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'r')
+            ->select("SUM(r.cantidad)")
+            ->where("r.codigoOrdenCompraDetalleFk = {$codigoOrdenCompraDetalle} ");
+        $resultado = $queryBuilder->getQuery()->getSingleResult();
+        if ($resultado[1]) {
             $cantidad = $resultado[1];
         }
         return $cantidad;

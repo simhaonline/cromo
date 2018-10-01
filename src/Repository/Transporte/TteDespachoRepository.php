@@ -178,10 +178,10 @@ class TteDespachoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT COUNT(g.codigoGuiaPk) as cantidad, SUM(g.unidades+0) as unidades, SUM(g.pesoReal+0) as pesoReal, SUM(g.pesoVolumen+0) as pesoVolumen,
-                  SUM(g.vrFlete) as vrFlete, SUM(g.vrManejo) as vrManejo, SUM(g.vrCobroEntrega) as vrCobroEntrega 
-        FROM App\Entity\Transporte\TteGuia g
-        WHERE g.codigoDespachoFk = :codigoDespacho')
+            'SELECT COUNT(dd.codigoGuiaFk) as cantidad, SUM(dd.unidades+0) as unidades, SUM(dd.pesoReal+0) as pesoReal, SUM(dd.pesoVolumen+0) as pesoVolumen,
+                  SUM(dd.vrFlete) as vrFlete, SUM(dd.vrManejo) as vrManejo, SUM(dd.vrCobroEntrega) as vrCobroEntrega 
+        FROM App\Entity\Transporte\TteDespachoDetalle dd
+        WHERE dd.codigoDespachoFk = :codigoDespacho')
             ->setParameter('codigoDespacho', $codigoDespacho);
         $arrGuias = $query->getSingleResult();
         $total = intval($arrGuias['vrFlete']) + intval($arrGuias['vrManejo']);

@@ -202,7 +202,7 @@ class OrdenController extends Controller
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
@@ -229,6 +229,7 @@ class OrdenController extends Controller
                         }
                     }
                     $em->flush();
+                    $em->getRepository(InvOrden::class)->liquidar($id);
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
             }

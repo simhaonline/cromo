@@ -284,15 +284,15 @@ class MovimientoController extends Controller
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvItemNombre', $form->get('txtNombreItem')->getData());
+                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
+                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');

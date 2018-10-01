@@ -77,9 +77,9 @@
                         <tbody>
                         {% for arOrdenDetalle in arOrdenDetalles %}
                             <tr>
-                                <td>{{ arOrdenDetalle.codigoOrdenDetallePk }}</td>
-                                <td>{{ arOrdenDetalle.codigoItemFk | default('') }}</td>
-                                <td>{{ arOrdenDetalle.nombre | default('') }}</td>
+                                <td>{{ arOrdenDetalle.codigoOrdenDetallePk }}<input type="hidden" name="arrCodigo[]" value="{{ arOrdenDetalle.codigoOrdenDetallePk }}"></td>
+                                <td>{{ arOrdenDetalle.codigoItemFk }}</td>
+                                <td>{{ arOrdenDetalle.nombre }}</td>
                                 {% if arOrden.estadoAutorizado == false %}
                                     <td style="text-align: center"><input class="input-valor" type="number" placeholder="Cantidad" name="arrCantidad[{{ arOrdenDetalle.codigoOrdenDetallePk }}]" value="{{ arOrdenDetalle.cantidad }}" style="text-align: right; width:60px" size="10"/></td>
                                     <td style="text-align: center"><input class="input-valor" type="number" placeholder="Valor unitario" name="arrValor[{{ arOrdenDetalle.codigoOrdenDetallePk }}]" value="{{ arOrdenDetalle.vrPrecio }}" style="text-align: right; width:90px" size="10"/></td>

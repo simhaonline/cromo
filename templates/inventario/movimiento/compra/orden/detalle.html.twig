@@ -62,12 +62,13 @@
                         <tr>
                             <th>ID</th>
                             <th>ITEM</th>
-                            <th>CANTIDAD</th>
+                            <th>NOMBRE</th>
+                            <th>CAN</th>
                             <th title="Valor unitario" style="width: 12%;">PRECIO</th>
                             <th style="width: 12%;">SUBTOTAL</th>
-                            <th title="Porcentaje IVA" style="width: 12%;">% DESCUENTO</th>
+                            <th title="Porcentaje IVA" style="width: 12%;">%D</th>
                             <th title="Valor IVA" style="width: 10%;">DESCUENTO</th>
-                            <th title="Porcentaje IVA" style="width: 12%;">% IVA</th>
+                            <th title="Porcentaje IVA" style="width: 12%;">%IVA</th>
                             <th title="Valor IVA" style="width: 10%;">IVA</th>
                             <th style="width: 15%;">TOTAL</th>
                             <th></th>
@@ -77,57 +78,24 @@
                         {% for arOrdenDetalle in arOrdenDetalles %}
                             <tr>
                                 <td>{{ arOrdenDetalle.codigoOrdenDetallePk }}</td>
+                                <td>{{ arOrdenDetalle.codigoItemFk | default('') }}</td>
                                 <td>{{ arOrdenDetalle.nombre | default('') }}</td>
                                 {% if arOrden.estadoAutorizado == false %}
-                                    <td style="text-align: center">
-                                        <input class="input-valor" type="number" placeholder="Cantidad"
-                                               name="arrCantidad[{{ arOrdenDetalle.codigoOrdenDetallePk }}]"
-                                               value="{{ arOrdenDetalle.cantidad }}"/>
-                                    </td>
-                                    <td style="text-align: center">
-                                        <input class="input-valor" type="number" placeholder="Valor unitario"
-                                               name="arrValor[{{ arOrdenDetalle.codigoOrdenDetallePk }}]"
-                                               value="{{ arOrdenDetalle.vrPrecio }}"/>
-                                    </td>
-                                    <td style="text-align: right">
-                                        {{ arOrdenDetalle.vrSubtotal | number_format(0, '.', ',') }}
-                                    </td>
-                                    <td style="text-align: center">
-                                        <input class="input-valor" type="number" placeholder="% DESCUENTO"
-                                               name="arrDescuento[{{ arOrdenDetalle.codigoOrdenDetallePk }}]"
-                                               value="{{ arOrdenDetalle.porcentajeDescuento }}"/>
-                                    </td>
-                                    <td style="text-align: right">
-                                        {{ arOrdenDetalle.vrDescuento | number_format(0, '.', ',') }}
-                                    </td>
-                                    <td style="text-align: center">
-                                        <input class="input-valor" type="number" placeholder="% IVA"
-                                               name="arrIva[{{ arOrdenDetalle.codigoOrdenDetallePk }}]"
-                                               value="{{ arOrdenDetalle.porcentajeIva }}"/>
-                                    </td>
-                                    <td style="text-align: right">
-                                        {{ arOrdenDetalle.vrIva | number_format(0, '.', ',') }}
-                                    </td>
+                                    <td style="text-align: center"><input class="input-valor" type="number" placeholder="Cantidad" name="arrCantidad[{{ arOrdenDetalle.codigoOrdenDetallePk }}]" value="{{ arOrdenDetalle.cantidad }}" style="text-align: right; width:60px" size="10"/></td>
+                                    <td style="text-align: center"><input class="input-valor" type="number" placeholder="Valor unitario" name="arrValor[{{ arOrdenDetalle.codigoOrdenDetallePk }}]" value="{{ arOrdenDetalle.vrPrecio }}" style="text-align: right; width:90px" size="10"/></td>
+                                    <td style="text-align: right">{{ arOrdenDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: center"><input class="input-valor" type="number" placeholder="% DESCUENTO" name="arrDescuento[{{ arOrdenDetalle.codigoOrdenDetallePk }}]" value="{{ arOrdenDetalle.porcentajeDescuento }}" style="text-align: right; width:40px" size="10"/></td>
+                                    <td style="text-align: right">{{ arOrdenDetalle.vrDescuento | number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: center"><input class="input-valor" type="number" placeholder="% IVA" name="arrIva[{{ arOrdenDetalle.codigoOrdenDetallePk }}]" value="{{ arOrdenDetalle.porcentajeIva }}" style="text-align: right; width:40px" size="10"/></td>
+                                    <td style="text-align: right">{{ arOrdenDetalle.vrIva | number_format(0, '.', ',') }}</td>
                                 {% else %}
                                     <td style="text-align: right;">{{ arOrdenDetalle.cantidad }}</td>
-                                    <td style="text-align: right">
-                                        {{ arOrdenDetalle.vrPrecio |number_format(0, '.', ',') }}
-                                    </td>
-                                    <td style="text-align: right">
-                                        {{ arOrdenDetalle.vrSubtotal | number_format(0, '.', ',') }}
-                                    </td>
-                                    <td style="text-align: right">
-                                        {{ arOrdenDetalle.porcentajeDescuento }}
-                                    </td>
-                                    <td style="text-align: right">
-                                        {{ arOrdenDetalle.vrDescuento | number_format(0, '.', ',') }}
-                                    </td>
-                                    <td style="text-align: right">
-                                        {{ arOrdenDetalle.porcentajeIva }}
-                                    </td>
-                                    <td style="text-align: right">
-                                        {{ arOrdenDetalle.vrIva }}
-                                    </td>
+                                    <td style="text-align: right">{{ arOrdenDetalle.vrPrecio |number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: right">{{ arOrdenDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: right">{{ arOrdenDetalle.porcentajeDescuento }}</td>
+                                    <td style="text-align: right">{{ arOrdenDetalle.vrDescuento | number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: right">{{ arOrdenDetalle.porcentajeIva }}</td>
+                                    <td style="text-align: right">{{ arOrdenDetalle.vrIva }}</td>
                                 {% endif %}
                                 <td style="text-align: right">
                                     {{ arOrdenDetalle.vrTotal | number_format(0, '.', ',') }}
@@ -157,13 +125,10 @@
             </div>
         {% else %}
             <div class="btn-group">
-                <a class="btn btn-default btn-sm"
-                   href="javascript:abrirVentana3('{{ path('inventario_movimiento_compra_orden_solicitud_detalle_nuevo', {'id':arOrden.codigoOrdenPk }) }}', 'OrdenNuevoDetalle', 600, 900)">Nuevo
-                    desde solicitud</a>
+                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_compra_orden_solicitud_detalle_nuevo', {'id':arOrden.codigoOrdenPk }) }}', 'OrdenNuevoDetalle', 600, 900)">Nuevo desde solicitud</a>
             </div>
             <div class="btn-group">
-                <a class="btn btn-default btn-sm"
-                   href="javascript:abrirVentana3('{{ path('inventario_movimiento_compra_orden_detalle_nuevo', {'id':arOrden.codigoOrdenPk }) }}', 'OrdenNuevoDetalle', 600, 900)">Nuevo</a>
+                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_compra_orden_detalle_nuevo', {'id':arOrden.codigoOrdenPk }) }}', 'OrdenNuevoDetalle', 600, 900)">Nuevo</a>
             </div>
         {% endif %}
         <div class="btn-group">

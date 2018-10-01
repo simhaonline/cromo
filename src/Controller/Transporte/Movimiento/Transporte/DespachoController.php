@@ -345,6 +345,7 @@ class DespachoController extends Controller
                                 $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
                                 $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
                                 $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
+                                $arDespachoDetalle->setVrCobroEntrega($arGuia->getVrCobroEntrega());
                                 $arDespachoDetalle->setUnidades($arGuia->getUnidades());
                                 $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
                                 $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());

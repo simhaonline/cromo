@@ -2,6 +2,8 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Inventario\InvMovimientoDetalle;
+use App\Entity\Inventario\InvOrdenCompraDetalle;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -108,5 +110,36 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("s.codigoSolicitudTipoFk = '{$session->get('filtroInvCodigoSolicitudTipo')}'");
         }
         return $queryBuilder->getQuery();
+    }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function regenerarCantidadAfectada() {
+        $em = $this->getEntityManager();
+        $arDetalles = $this->listaRegenerarCantidadAfectada();
+        foreach ($arDetalles as $arDetalle) {
+            $cantidad = $arDetalle['cantidad'];
+            $cantidadAfectada = $em->getRepository(InvOrdenCompraDetalle::class)->cantidadAfecta($arDetalle['codigoSolicitudDetallePk']);
+            $cantidadPendiente = $cantidad - $cantidadAfectada;
+            if($cantidadAfectada != $arDetalle['cantidadAfectada'] || $cantidadPendiente != $arDetalle['cantidadPendiente']) {
+                $arDetalleAct = $em->getRepository(InvSolicitudDetalle::class)->find($arDetalle['codigoSolicitudDetallePk']);
+                $arDetalleAct->setCantidadAfectada($cantidadAfectada);
+                $arDetalleAct->setCantidadPendiente($cantidadPendiente);
+                $em->persist($arDetalleAct);
+            }
+        }
+        $em->flush();
+    }
+
+    private function listaRegenerarCantidadAfectada()
+    {
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvSolicitudDetalle::class, 'ocd')
+            ->select('ocd.codigoSolicitudDetallePk')
+            ->addSelect('ocd.cantidad')
+            ->addSelect('ocd.cantidadAfectada')
+            ->addSelect('ocd.cantidadPendiente');
+        return $queryBuilder->getQuery()->getResult();
     }
 }

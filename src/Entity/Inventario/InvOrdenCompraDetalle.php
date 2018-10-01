@@ -83,6 +83,11 @@ class InvOrdenCompraDetalle
     private $cantidadPendiente = 0;
 
     /**
+     * @ORM\Column(name="cantidad_afectada", type="integer", nullable=true)
+     */
+    private $cantidadAfectada = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="ordenesComprasDetallesItemRel")
      * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
@@ -327,6 +332,22 @@ class InvOrdenCompraDetalle
     public function setCantidadPendiente($cantidadPendiente): void
     {
         $this->cantidadPendiente = $cantidadPendiente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadAfectada()
+    {
+        return $this->cantidadAfectada;
+    }
+
+    /**
+     * @param mixed $cantidadAfectada
+     */
+    public function setCantidadAfectada($cantidadAfectada): void
+    {
+        $this->cantidadAfectada = $cantidadAfectada;
     }
 
     /**

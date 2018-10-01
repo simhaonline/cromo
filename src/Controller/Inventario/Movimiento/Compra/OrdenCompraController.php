@@ -37,12 +37,12 @@ class OrdenCompraController extends Controller
         }
         $form = $this->createForm(OrdenCompraType::class, $arOrdenCompra);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $txtCodigoTercero = $request->request->get('txtCodigoTercero');
                 if ($txtCodigoTercero != '') {
                     $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
-                    if($arTercero){
+                    if ($arTercero) {
                         $arOrdenCompra->setTerceroRel($arTercero);
                         $arOrdenCompra->setFecha(new \DateTime('now'));
                         $em->persist($arOrdenCompra);
@@ -202,7 +202,7 @@ class OrdenCompraController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('filtroInvItemCodigo')])
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvItemNombre')])
-            ->add('txtCodigoSolicitud', TextType::class, ['label' => 'Codigo solicitud: ', 'required' => false,'data' => $session->get('filtroInvSolicitudCodigo')])
+            ->add('txtCodigoSolicitud', TextType::class, ['label' => 'Codigo solicitud: ', 'required' => false, 'data' => $session->get('filtroInvSolicitudCodigo')])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -234,33 +234,31 @@ class OrdenCompraController extends Controller
                                 } else {
                                     $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada.";
                                 }
-                            } else {
-                                $respuesta = "La cantidad ingresada no es valida por favor verifique.";
                             }
-                        }
-                        if ($respuesta != '') {
-                            Mensajes::error($respuesta);
-                        } else {
-                            $em->flush();
-                            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                            if ($respuesta != '') {
+                                Mensajes::error($respuesta);
+                            } else {
+                                $em->flush();
+                                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                            }
                         }
                     }
                 }
+                if ($form->get('btnFiltrar')->isClicked()) {
+                    $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
+                    $session->set('filtroInvItemNombre', $form->get('txtNombreItem')->getData());
+                    $session->set('filtroInvSolicitudCodigo', $form->get('txtCodigoSolicitud')->getData());
+                }
             }
-            if($form->get('btnFiltrar')->isClicked()){
-                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvItemNombre', $form->get('txtNombreItem')->getData());
-                $session->set('filtroInvSolicitudCodigo', $form->get('txtCodigoSolicitud')->getData());
+            $arSolicitudesDetalles = $paginator->paginate($em->getRepository(InvSolicitudDetalle::class)->listarDetallesPendientes(), $request->query->getInt('page', 1), 10);
+            if (count($arSolicitudesDetalles) == 0) {
+                Mensajes::error('No hay solicitudes pendientes o no se encuentran aprobadas');
             }
+            return $this->render('inventario/movimiento/compra/ordenCompra/detalleNuevoSolicitud.html.twig', [
+                'form' => $form->createView(),
+                'arSolicitudesDetalles' => $arSolicitudesDetalles
+            ]);
         }
-        $arSolicitudesDetalles = $paginator->paginate($em->getRepository(InvSolicitudDetalle::class)->listarDetallesPendientes(), $request->query->getInt('page', 1), 10);
-        if(count($arSolicitudesDetalles) == 0){
-            Mensajes::error('No hay solicitudes pendientes o no se encuentran aprobadas');
-        }
-        return $this->render('inventario/movimiento/compra/ordenCompra/detalleNuevoSolicitud.html.twig', [
-            'form' => $form->createView(),
-            'arSolicitudesDetalles' => $arSolicitudesDetalles
-        ]);
-    }
 
+    }
 }

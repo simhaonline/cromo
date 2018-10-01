@@ -38,6 +38,11 @@ class InvSolicitudDetalle
     private $cantidadPendiente = 0;
 
     /**
+     * @ORM\Column(name="cantidad_afectada", options={"default" : 0}, type="integer", nullable=true)
+     */
+    private $cantidadAfectada = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvSolicitud", inversedBy="solicitudesDetallesSolicitudRel")
      * @ORM\JoinColumn(name="codigo_solicitud_fk", referencedColumnName="codigo_solicitud_pk")
      */
@@ -148,6 +153,22 @@ class InvSolicitudDetalle
     public function setSolicitudRel($solicitudRel): void
     {
         $this->solicitudRel = $solicitudRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadAfectada()
+    {
+        return $this->cantidadAfectada;
+    }
+
+    /**
+     * @param mixed $cantidadAfectada
+     */
+    public function setCantidadAfectada($cantidadAfectada): void
+    {
+        $this->cantidadAfectada = $cantidadAfectada;
     }
 
     /**

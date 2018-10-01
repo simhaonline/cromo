@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\General\GenFormaPago;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumentoTipo;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -39,6 +40,20 @@ class CargaInicial extends Fixture
             $arInvConfiguracion->setCodigoConfiguracionPk(1);
             $arInvConfiguracion->setCodigoFormatoMovimiento(1);
             $manager->persist($arInvConfiguracion);
+        }
+        $arGenFormaPago = $manager->getRepository('App:General\GenFormaPago')->find('CON');
+        if(!$arGenFormaPago){
+            $arGenFormaPago = new GenFormaPago();
+            $arGenFormaPago->setCodigoFormaPagoPk('CON');
+            $arGenFormaPago->setNombre('CONTADO');
+            $manager->persist($arGenFormaPago);
+        }
+        $arGenFormaPago = $manager->getRepository('App:General\GenFormaPago')->find('CRE');
+        if(!$arGenFormaPago){
+            $arGenFormaPago = new GenFormaPago();
+            $arGenFormaPago->setCodigoFormaPagoPk('CRE');
+            $arGenFormaPago->setNombre('CREDITO');
+            $manager->persist($arGenFormaPago);
         }
         $manager->flush();
     }

@@ -10,12 +10,12 @@
                     <div class="row">
                         <div class="col-lg-2">
                             <div class="input-group">
-                                <input id="txtCodigoTercero"  name="txtCodigoTercero"  type="text" class="form-control" value="{{ arOrdenCompra.codigoTerceroFk |default('') }}"/>
+                                <input id="txtCodigoTercero"  name="txtCodigoTercero"  type="text" class="form-control" value="{{ arOrden.codigoTerceroFk |default('') }}"/>
                             </div>
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="{{ arOrdenCompra.terceroRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
+                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="{{ arOrden.terceroRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
                                 <span class="input-group-btn">
                                         <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_bus_tercero', { 'campoCodigo': 'txtCodigoTercero', 'campoNombre': 'txtNombreCorto', 'tipo': 'P' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
                                     </span>
@@ -27,8 +27,8 @@
             <div class="form-group form-group-sm">
                 <label for="form_nombre" class="col-sm-2 control-label">Tipo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.ordenCompraTipoRel,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.ordenCompraTipoRel) }}
+                    {{ form_widget(form.ordenTipoRel,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.ordenTipoRel) }}
                 </div>
                 <label for="form_codigoBarras" class="col-sm-2 control-label">Soporte:</label>
                 <div class="col-sm-4">
@@ -45,7 +45,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'ordenCompra'}) }}">Cancelar</a>
+        <a class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_compra_orden_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
         {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>

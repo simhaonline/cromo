@@ -33,18 +33,18 @@ class InvOrdenTipoRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $array = [
-            'class' => 'App:Inventario\InvOrdenCompraTipo',
+            'class' => 'App:Inventario\InvOrdenTipo',
             'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('oct')
-                    ->orderBy('oct.nombre', 'ASC');
+                return $er->createQueryBuilder('ot')
+                    ->orderBy('ot.nombre', 'ASC');
             },
             'choice_label' => 'nombre',
             'required' => false,
             'empty_data' => "",
             'placeholder' => "TODOS",
             'data' => ""];
-        if ($session->get('filtroInvCodigoOrdenCompraTipo')) {
-            $array['data'] = $this->getEntityManager()->getReference(InvOrdenCompraTipo::class, $session->get('filtroInvCodigoOrdenCompraTipo'));
+        if ($session->get('filtroInvOrdenCodigoOrdenTipo')) {
+            $array['data'] = $this->getEntityManager()->getReference(InvOrdenTipo::class, $session->get('filtroInvOrdenCodigoOrdenTipo'));
         }
         return $array;
     }

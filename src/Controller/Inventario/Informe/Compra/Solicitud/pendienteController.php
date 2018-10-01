@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Inventario\Informe\Compras\Solicitud;
+namespace App\Controller\Inventario\Informe\Compra\Solicitud;
 
 use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class SolicitudPendienteController extends Controller
+class pendienteController extends Controller
 {
     /**
      * @param Request $request
@@ -23,7 +23,7 @@ class SolicitudPendienteController extends Controller
      * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/inventario/informe/inventario/compras/solicitudPendientes", name="inventario_informe_inventario_compras_solicitudPendientes")
+     * @Route("/inventario/informe/inventario/compra/solicitud/pendientes", name="inventario_informe_inventario_compra_solicitud_pendiente")
      */
     public function lista(Request $request)
     {

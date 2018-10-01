@@ -81,17 +81,23 @@
             </div>
         </div>
     </div>
-    <div class="btn-toolbar">
-        <div class="btn-group" style="float: right;">
-            {{ form_widget(form.btnEliminar) }}
-        </div>
-        <div class="btn-group" style="float: right;">
-            <a class="btn btn-sm btn-default"
-            href="{{ path('inventario_movimiento_compra_solicitud_nuevo',{'id' : 0}) }}">Nuevo</a>
-        </div>
-    </div>
-    <div class="btn-group btn-xs">
+
+
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
         {{ knp_pagination_render(arSolicitudes) }}
     </div>
+
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_compra_solicitud_nuevo',{'id' : 0}) }}">Nuevo</a>
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnEliminar) }}
+        </div>
+    </div>
+
     {{ form_end(form) }}
 {% endblock %}

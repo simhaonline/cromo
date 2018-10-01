@@ -65,7 +65,7 @@ class InvItemRepository extends ServiceEntityRepository
             ->select('i.codigoItemPk')
             ->addSelect('i.nombre')
             ->addSelect('i.cantidadExistencia')
-            ->addSelect('i.cantidadOrdenCompra')
+            ->addSelect('i.cantidadOrden')
             ->addSelect('i.cantidadSolicitud')
             ->addSelect('i.cantidadRemisionada')
             ->addSelect('i.cantidadPedido')

@@ -106,20 +106,16 @@
                             <li>
                                 <a href="#">Compra <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('inventario_movimiento_compra_solicitud_lista') }}">Solicitud</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'ordenCompra'}) }}">Orden
-                                            compra</a>
+                                    <li><a href="{{ path('inventario_movimiento_compra_solicitud_lista') }}">Solicitud</a></li>
+                                    <li><a href="{{ path('inventario_movimiento_compra_orden_lista') }}">Orden</a></li>
                                     </li>
                                 </ul>
                             </li>
                             <li>
                                 <a href="#">Comercial <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Pedido</a></li>
                                     <li><a href="{{ path('inventario_movimiento_comercial_cotizacion_lista') }}">Cotización</a></li>
+                                    <li><a href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Pedido</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -266,8 +262,8 @@
                             <li>
                                 <a href="#">Compras <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('inventario_informe_inventario_compras_solicitudPendientes') }}">Solicitudes pendientes</a></li>
-                                    <li><a href="{{ path('inventario_informe_inventario_compras_ordenCompraPendientes') }}">Ordenes de compra pendientes</a>
+                                    <li><a href="{{ path('inventario_informe_inventario_compra_solicitud_pendiente') }}">Solicitud pendiente</a></li>
+                                    <li><a href="{{ path('inventario_informe_inventario_compra_orden_pendiente') }}">Orden pendientes</a>
                                 </ul>
                                 <!-- /.nav-third-level -->
                             </li>

@@ -17,7 +17,7 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Tipo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.cboSolicitudTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.cboOrdenTipoRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label class="col-sm-2 control-label"></label>
                 <div class="col-sm-4">
@@ -45,30 +45,30 @@
             </tr>
             </thead>
             <tbody>
-            {% for arSolicitud in arSolicitudes %}
+            {% for arOrden in arOrdenes %}
                 <tr>
-                    <td>{{ arSolicitud.codigoSolicitudPk }}</td>
-                    <td>{{ arSolicitud.numero }}</td>
-                    <td>{{ arSolicitud.nombreTipo }}</td>
-                    <td>{{ arSolicitud.fecha |date('Y-m-d') }}</td>
-                    {{ validarTipo(arSolicitud.estadoAutorizado) }}
-                    {{ validarTipo(arSolicitud.estadoAprobado) }}
-                    {{ validarTipo(arSolicitud.estadoAnulado) }}
+                    <td>{{ arOrden.codigoOrdenPk }}</td>
+                    <td>{{ arOrden.numero }}</td>
+                    <td>{{ arOrden.nombreTipo }}</td>
+                    <td>{{ arOrden.fecha |date('Y-m-d') }}</td>
+                    {{ validarTipo(arOrden.estadoAutorizado) }}
+                    {{ validarTipo(arOrden.estadoAprobado) }}
+                    {{ validarTipo(arOrden.estadoAnulado) }}
                     <td style="text-align: center;">
-                        {% if not arSolicitud.estadoAutorizado %}
-                            <a href="{{ path('inventario_movimiento_compra_solicitud_nuevo',{'id' : arSolicitud.codigoSolicitudPk}) }}">
+                        {% if not arOrden.estadoAutorizado %}
+                            <a href="{{ path('inventario_movimiento_compra_orden_nuevo',{'id' : arOrden.codigoOrdenPk}) }}">
                                 <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
                                 </i>
                             </a>
                         {% endif %}
                     </td>
                     <td style="text-align: center;">
-                        <a href="{{ path('inventario_movimiento_compra_solicitud_detalle',{'id' : arSolicitud.codigoSolicitudPk}) }}">
+                        <a href="{{ path('inventario_movimiento_compra_orden_detalle',{'id' : arOrden.codigoOrdenPk}) }}">
                             <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                             </i>
                         </a>
                     </td>
-                    <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arSolicitud.codigoSolicitudPk }}" /></td>
+                    <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arOrden.codigoOrdenPk }}" /></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -77,21 +77,25 @@
     <div class="btn-group" style="float: left">
         <div class="btn-group" style="float: left">
             <div class="btn btn-default btn-sm">Registros <span
-                        class="badge">{{ arSolicitudes.getTotalItemCount }}</span>
+                        class="badge">{{ arOrdenes.getTotalItemCount }}</span>
             </div>
         </div>
     </div>
-    <div class="btn-toolbar">
-        <div class="btn-group" style="float: right;">
+
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arOrdenes) }}
+    </div>
+
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_compra_orden_nuevo',{'id' : 0}) }}">Nuevo</a>
+        </div>
+        <div class="btn-group">
             {{ form_widget(form.btnEliminar) }}
         </div>
-        <div class="btn-group" style="float: right;">
-            <a class="btn btn-sm btn-default"
-            href="{{ path('inventario_movimiento_compra_solicitud_nuevo',{'id' : 0}) }}">Nuevo</a>
-        </div>
-    </div>
-    <div class="btn-group btn-xs">
-        {{ knp_pagination_render(arSolicitudes) }}
     </div>
     {{ form_end(form) }}
 {% endblock %}

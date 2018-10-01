@@ -2,11 +2,12 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Inventario\InvOrdenDetalle;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvOrden;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-
+use Symfony\Component\HttpFoundation\Session\Session;
 class InvOrdenRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -29,6 +30,39 @@ class InvOrdenRepository extends ServiceEntityRepository
             ->addSelect('ioc.estadoAnulado as ANULADO');
         $dql = $this->getEntityManager()->createQuery($qb->getDQL());
         return $dql->execute();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvOrden::class, 'o')
+            ->select('o.codigoOrdenPk')
+            ->addSelect('o.numero')
+            ->addSelect('ot.nombre as nombreTipo')
+            ->addSelect('o.fecha')
+            ->addSelect('o.estadoAutorizado')
+            ->addSelect('o.estadoAprobado')
+            ->addSelect('o.estadoAnulado')
+            ->join('o.ordenTipoRel', 'ot')
+            ->where('o.codigoOrdenPk <> 0');
+        if ($session->get('filtroInvOrdenNumero') != '') {
+            $queryBuilder->andWhere("o.numero = {$session->get('filtroInvOrdenNumero')}");
+        }
+        switch ($session->get('filtroInvOrdenEstadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("o.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("o.estadoAprobado = 1");
+                break;
+        }
+        if ($session->get('filtroInvOrdenCodigoOrdenTipo')) {
+            $queryBuilder->andWhere("o.codigoOrdenTipoFk = '{$session->get('filtroInvOrdenCodigoOrdenTipo')}'");
+        }
+        return $queryBuilder;
     }
 
     /**
@@ -191,5 +225,42 @@ class InvOrdenRepository extends ServiceEntityRepository
             }
         }
         return $respuesta;
+    }
+
+    /**
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        /**
+         * @var $arOrden InvOrden
+         */
+        $respuesta = '';
+        if (count($arrSeleccionados) > 0) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(InvOrden::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            if (count($this->getEntityManager()->getRepository(InvOrdenDetalle::class)->findBy(['codigoOrdenFk' => $arRegistro->getCodigoOrdenPk()])) <= 0) {
+                                $this->getEntityManager()->remove($arRegistro);
+                            } else {
+                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                            }
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                }
+                if($respuesta != ''){
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
     }
 }

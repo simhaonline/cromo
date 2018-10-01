@@ -95,23 +95,23 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $codigoOrdenCompra
+     * @param $codigoOrden
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function lista($codigoOrdenCompra){
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvOrdenCompraDetalle::class,'iocd')
-            ->select('iocd.codigoOrdenCompraDetallePk')
+    public function lista($codigoOrden){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvOrdenDetalle::class,'od')
+            ->select('od.codigoOrdenDetallePk')
             ->addSelect('i.nombre')
-            ->join('iocd.itemRel','i')
-            ->addSelect('iocd.cantidad')
-            ->addSelect('iocd.vrPrecio')
-            ->addSelect('iocd.vrSubtotal')
-            ->addSelect('iocd.porcentajeDescuento')
-            ->addSelect('iocd.vrDescuento')
-            ->addSelect('iocd.porcentajeIva')
-            ->addSelect('iocd.vrIva')
-            ->addSelect('iocd.vrTotal')
-            ->where("iocd.codigoOrdenCompraFk = {$codigoOrdenCompra}");
+            ->join('od.itemRel','i')
+            ->addSelect('od.cantidad')
+            ->addSelect('od.vrPrecio')
+            ->addSelect('od.vrSubtotal')
+            ->addSelect('od.porcentajeDescuento')
+            ->addSelect('od.vrDescuento')
+            ->addSelect('od.porcentajeIva')
+            ->addSelect('od.vrIva')
+            ->addSelect('od.vrTotal')
+            ->where("od.codigoOrdenFk = {$codigoOrden}");
         return $queryBuilder;
     }
 

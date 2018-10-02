@@ -1,0 +1,27 @@
+{% extends 'base_transporte.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading"></div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Guia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtCodigo, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="btn-toolbar" style="float: right">
+            <div class="btn-group">
+                {{ form_widget(form.btnCortesia, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            </div>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+    <br /><br />
+{% endblock %}
+

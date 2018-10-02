@@ -28,13 +28,25 @@ class RhuEmbargoRepository extends ServiceEntityRepository
      * @return array
      */
     public function parametrosLista(){
+        $arEmbargo = new RhuEmbargo();
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
             ->select('re.codigoEmbargoPk')
             ->addSelect('re.fecha')
             ->where('re.codigoEmbargoPk <> 0');
         $arrOpciones = ['json' =>'[{"campo":"codigoEmbargoPk","ayuda":"Codigo del embargo","titulo":"ID","tipo":"string"},
         {"campo":"fecha","ayuda":"Fecha de registro","titulo":"FECHA","tipo":"date"}]',
-            'query' => $queryBuilder];
+            'query' => $queryBuilder,'ruta' => $arEmbargo->getRuta()];
         return $arrOpciones;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function parametrosExcel(){
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
+            ->select('re.codigoEmbargoPk')
+            ->addSelect('re.fecha')
+            ->where('re.codigoEmbargoPk <> 0');
+        return $queryBuilder->getQuery()->execute();
     }
 }

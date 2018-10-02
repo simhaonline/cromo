@@ -32,6 +32,11 @@ class CarReciboTipo
     private $codigoComprobanteFk;
 
     /**
+     * @ORM\OneToMany(targetEntity="CarRecibo", mappedBy="reciboTipoRel")
+     */
+    protected $recibosReciboTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoReciboTipoPk()
@@ -94,6 +99,23 @@ class CarReciboTipo
     {
         $this->codigoComprobanteFk = $codigoComprobanteFk;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRecibosReciboTipoRel()
+    {
+        return $this->recibosReciboTipoRel;
+    }
+
+    /**
+     * @param mixed $recibosReciboTipoRel
+     */
+    public function setRecibosReciboTipoRel($recibosReciboTipoRel): void
+    {
+        $this->recibosReciboTipoRel = $recibosReciboTipoRel;
+    }
+
 
 
 }

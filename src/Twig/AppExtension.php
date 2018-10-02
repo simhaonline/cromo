@@ -184,6 +184,12 @@ class AppExtension extends AbstractExtension
         }
     }
 
+    /**
+     * @author Andres Acevedo
+     * @param $arrOpciones
+     * @param $request
+     * @return \Knp\Component\Pager\Pagination\PaginationInterface
+     */
     public function generarArrRegistros($arrOpciones, $request)
     {
         global $kernel;
@@ -191,6 +197,11 @@ class AppExtension extends AbstractExtension
         return $paginator->paginate($arrOpciones['query'], $request->query->getInt('page', 1), 3);
     }
 
+    /**
+     * @author Andres Acevedo
+     * @param $arrOpciones
+     * @param $check
+     */
     public function crearEncabezadoTabla($arrOpciones, $check)
     {
         $campos = json_decode($arrOpciones['json']);
@@ -200,6 +211,7 @@ class AppExtension extends AbstractExtension
             $arrTipos[$campo->campo] = $campo->tipo;
             $header .= "<th title='" . $campo->ayuda . "'>" . $campo->titulo . "</th>";
         }
+        $header .= "<th></th><th></th>";
         if ($check) {
             $header .= "<th></th>";
         }
@@ -209,23 +221,27 @@ class AppExtension extends AbstractExtension
 
     public function crearCuerpoTabla($arrOpciones, $check, $request)
     {
+        global $kernel;
+        $router = $kernel->getContainer()->get('router');
         $pk = 0;
         $arRegistros = $this->generarArrRegistros($arrOpciones, $request);
-        $tabla = '';
+        $body = '';
         foreach ($arRegistros as $arRegistro) {
-            $tabla .= "<tr>";
+            $body .= "<tr>";
             foreach ($arRegistro as $key => $dato) {
-                $tabla = $this->validarTipo($dato, $tabla);
+                $body = $this->validarTipo($dato, $body);
                 if (strpos($key, 'Pk')) {
                     $pk = $dato;
                 }
             }
+            $body .= "<td style='text-align: center;'><a href='". $router->generate($arrOpciones['ruta'].'nuevo',['id'=> $pk ]) ."'><i class='fa fa-edit' style='font-size: large;color: black;'></i></a></td>";
+            $body .= "<td style='text-align: center;'><a href='". $router->generate($arrOpciones['ruta'].'detalle',['id'=> $pk ]) ."'><i class='fa fa-share-square-o' style='font-size: large;color: black;'></i></a></td>";
             if ($check) {
-                $tabla .= "<td style='text-align: center;'><input type='checkbox' name='ChkSeleccionar[]' value='" . $pk . "'></td>";
+                $body .= "<td style='text-align: center;'><input type='checkbox' name='ChkSeleccionar[]' value='" . $pk . "'></td>";
             }
-            $tabla .= "</tr>";
+            $body .= "</tr>";
         }
-        echo $tabla;
+        echo $body;
     }
 
     public function llenarArray($array, $alias, $dato)

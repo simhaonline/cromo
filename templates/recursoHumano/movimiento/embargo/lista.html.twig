@@ -3,17 +3,7 @@
     <br>
     <br>
     {% include 'estructura/movimiento/tablaLista.html.twig' with {'arrParametrosLista' : arrParametrosLista} %}
-
-    <div class="btn-toolbar" style="float: right">
-        <div class="btn-group">
-            <a class="btn btn-sm btn-default" href="#">Nuevo</a>
-        </div>
-
-        <div class="btn-group">
-            {{ form_widget(formBotonera.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
-        </div>
-        <div class="btn-group">
-            {{ form_widget(formBotonera.btnEliminar) }}
-        </div>
-    </div>
+    {{ form_start(formBotonera) }}
+    {% include 'estructura/movimiento/botoneraLista.html.twig' with {'formBotonera' : formBotonera,'ruta' : arrParametrosLista.ruta } %}
+    {{ form_end(formBotonera) }}
 {% endblock %}

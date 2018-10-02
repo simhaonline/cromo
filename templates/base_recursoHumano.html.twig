@@ -135,6 +135,21 @@
     </nav>
     {% block body %}
         <div id="page-wrapper">
+            {% set arrRuta = app.request.attributes.get('_route')|split('_') %}
+            {% if arrRuta.0 != 'admin' %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h3 class='page-header'>
+                            {{ arrRuta.0 | capitalize }} {{ arrRuta.1 | capitalize }}
+                            <small style="font-size: 20px">{{ arrRuta.2 | capitalize }}
+                                : {{ arrRuta.3 }} {{ arrRuta.4 }}</small>
+                        </h3>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+            {% endif %}
+            {{ notificar()|raw }}
+            <br>
             {% block content %}
 
             {% endblock %}

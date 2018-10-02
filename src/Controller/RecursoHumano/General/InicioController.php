@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 class InicioController extends Controller
 {
    /**
-    * @Route("/rhu/general/inicio", name="recursohumano_general_inicio")
+    * @Route("/recursohumano/general/inicio", name="recursohumano_general_general_inicio_ver")
     */    
     public function inicio(Request $request)
     {

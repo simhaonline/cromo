@@ -4,6 +4,7 @@ namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
+use App\Entity\Inventario\InvOrdenDetalle;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -59,30 +60,29 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
     public function listarDetallesPendientes()
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvSolicitudDetalle::class, 'isd');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvSolicitudDetalle::class, 'sd');
         $queryBuilder
-            ->select('isd.codigoSolicitudDetallePk')
-            ->join('isd.itemRel', 'it')
-            ->join('isd.solicitudRel', 's')
-            ->addSelect('it.nombre')
-            ->addSelect('it.cantidadExistencia')
-            ->addSelect('isd.cantidad')
-            ->addSelect('isd.cantidadPendiente')
-            ->addSelect('it.stockMinimo')
-            ->addSelect('it.stockMaximo')
+            ->select('sd.codigoSolicitudDetallePk')
+            ->addSelect('sd.codigoItemFk')
+            ->addSelect('i.nombre')
+            ->addSelect('i.cantidadExistencia')
+            ->addSelect('sd.cantidad')
+            ->addSelect('sd.cantidadPendiente')
+            ->join('sd.itemRel', 'i')
+            ->join('sd.solicitudRel', 's')
             ->where('s.estadoAprobado = true')
             ->andWhere('s.estadoAnulado = false')
-            ->andWhere('isd.cantidadPendiente > 0');
-        if ($session->get('filtroInvItemNombre') != '') {
-            $queryBuilder->andWhere("it.nombre LIKE '%{$session->get('filtroInvItemNombre')}%'");
+            ->andWhere('sd.cantidadPendiente > 0');
+        if ($session->get('filtroInvBuscarItemNombre') != '') {
+            $queryBuilder->andWhere("i.nombre LIKE '%{$session->get('filtroInvBuscarItemNombre')}%'");
         }
-        if ($session->get('filtroInvItemCodigo') != '') {
-            $queryBuilder->andWhere("isd.codigoItemFk = {$session->get('filtroInvItemCodigo')}");
+        if ($session->get('filtroInvBucarItemCodigo') != '') {
+            $queryBuilder->andWhere("sd.codigoItemFk = {$session->get('filtroInvBucarItemCodigo')}");
         }
         if ($session->get('filtroInvSolicitudCodigo') != '') {
-            $queryBuilder->andWhere("isd.codigoSolicitudFk = {$session->get('filtroInvSolicitudCodigo')} ");
+            $queryBuilder->andWhere("sd.codigoSolicitudFk = {$session->get('filtroInvSolicitudCodigo')} ");
         }
-        $queryBuilder->orderBy('isd.codigoSolicitudDetallePk', 'ASC');
+        $queryBuilder->orderBy('sd.codigoSolicitudDetallePk', 'ASC');
         return $queryBuilder;
     }
 
@@ -122,7 +122,7 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
         $arDetalles = $this->listaRegenerarCantidadAfectada();
         foreach ($arDetalles as $arDetalle) {
             $cantidad = $arDetalle['cantidad'];
-            $cantidadAfectada = $em->getRepository(InvOrdenCompraDetalle::class)->cantidadAfecta($arDetalle['codigoSolicitudDetallePk']);
+            $cantidadAfectada = $em->getRepository(InvOrdenDetalle::class)->cantidadAfectaSolicitud($arDetalle['codigoSolicitudDetallePk']);
             $cantidadPendiente = $cantidad - $cantidadAfectada;
             if($cantidadAfectada != $arDetalle['cantidadAfectada'] || $cantidadPendiente != $arDetalle['cantidadPendiente']) {
                 $arDetalleAct = $em->getRepository(InvSolicitudDetalle::class)->find($arDetalle['codigoSolicitudDetallePk']);

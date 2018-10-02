@@ -128,7 +128,7 @@
                                         <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoBodega' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','codigoItem' : arMovimientoDetalle.codigoItemFk }) }}','BuscarLote',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
                                     <td style="text-align: center;">
-                                        <input type="text" name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" id="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.codigoBodegaFk }}" style="text-align: right; width:40px" size="10">
+                                        <input type="text" name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" id="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.codigoBodegaFk }}" style="text-align: left; width:40px" size="10">
                                         <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBodega',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
                                     <td style="text-align: center;"><input type="number" name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.cantidad }}"  style="text-align: right; width:60px" size="10"></td>
@@ -155,10 +155,7 @@
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td></td>
                                 {% else %}
-                                    <td style="text-align: center;"><input type="checkbox" style="text-align: right;"
-                                                                           name="ChkSeleccionar[]"
-                                                                           value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/>
-                                    </td>
+                                    <td style="text-align: center;"><input type="checkbox" style="text-align: right;" name="ChkSeleccionar[]" value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/></td>
                                 {% endif %}
                             </tr>
                         {% endfor %}
@@ -185,7 +182,7 @@
                         </div>
                         {% if arMovimiento.documentoRel.operacionInventario == 1 %}
                             <div class="btn-group">
-                                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_ordencompra_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde orden compra</a>
+                                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_orden_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde orden</a>
                             </div>
                         {% endif %}
                         {% if arMovimiento.codigoDocumentoTipoFk == 'FAC' %}

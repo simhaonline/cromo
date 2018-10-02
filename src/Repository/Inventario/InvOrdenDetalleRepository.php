@@ -52,6 +52,14 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
                                 $em->persist($arSolicitudDetalle);
                             }
                         }
+                        //Si el detalle tiene una solicitud detalle relacionado
+                        if ($arOrdenDetalle->getCodigoSolicitudDetalleFk()) {
+                            $arSolicitudDetalle = $em->getRepository(InvSolicitudDetalle::class)->find($arOrdenDetalle->getCodigoSolicitudDetalleFk());
+                            $arSolicitudDetalle->setCantidadAfectada($arSolicitudDetalle->getCantidadAfectada() - $arOrdenDetalle->getCantidad());
+                            $arSolicitudDetalle->setCantidadPendiente($arSolicitudDetalle->getCantidad() - $arSolicitudDetalle->getCantidadAfectada());
+                            $em->persist($arSolicitudDetalle);
+                        }
+
                         $em->remove($arOrdenDetalle);
                     }
                 }
@@ -68,30 +76,31 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
 
     public function listarDetallesPendientes()
     {
+        $em = $this->getEntityManager();
         $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(InvOrdenCompraDetalle::class, 'iocd')
-            ->select('iocd.codigoOrdenCompraDetallePk')
-            ->join('iocd.itemRel', 'it')
-            ->join('iocd.ordenCompraRel', 'oc')
+        $queryBuilder = $em->createQueryBuilder()->from(InvOrdenDetalle::class, 'od')
+            ->select('od.codigoOrdenDetallePk')
             ->addSelect('it.codigoItemPk AS codigoItem')
             ->addSelect('it.nombre')
             ->addSelect('it.cantidadExistencia')
-            ->addSelect('iocd.cantidad')
-            ->addSelect('iocd.cantidadPendiente')
+            ->addSelect('od.cantidad')
+            ->addSelect('od.cantidadPendiente')
             ->addSelect('it.stockMinimo')
             ->addSelect('it.stockMaximo')
-            ->addSelect('oc.numero AS ordenCompra')
-            ->where('oc.estadoAprobado = true')
-            ->where('oc.estadoAnulado = false')
-            ->andWhere('iocd.cantidadPendiente > 0')
-        ->orderBy('iocd.codigoOrdenCompraDetallePk', 'ASC');
+            ->addSelect('o.numero AS ordenCompra')
+            ->join('od.itemRel', 'it')
+            ->join('od.ordenRel', 'o')
+            ->where('o.estadoAprobado = 1')
+            ->where('o.estadoAnulado = 0')
+            ->andWhere('od.cantidadPendiente > 0')
+        ->orderBy('od.codigoOrdenDetallePk', 'ASC');
         if ($session->get('filtroInvMovimientoItemCodigo') != '') {
-            $queryBuilder->andWhere("iocd.codigoItemFk = {$session->get('filtroInvMovimientoItemCodigo')}");
+            $queryBuilder->andWhere("od.codigoItemFk = {$session->get('filtroInvMovimientoItemCodigo')}");
         }
-        if ($session->get('filtroInvNumeroOrdenCompra') != '') {
-            $queryBuilder->andWhere("oc.numero = {$session->get('filtroInvNumeroOrdenCompra')}");
+        if ($session->get('filtroInvNumeroOrden') != '') {
+            $queryBuilder->andWhere("o.numero = {$session->get('filtroInvNumeroOrden')}");
         }
-        $query = $this->_em->createQuery($queryBuilder->getDQL());
+        $query = $em->createQuery($queryBuilder->getDQL());
         return $query->execute();
     }
 
@@ -117,30 +126,88 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function informeOrdenCompraPendientes(){
-
-        $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(InvOrdenCompraDetalle::class, 'iocd')
-            ->select('iocd.codigoOrdenCompraDetallePk')
-            ->join('iocd.itemRel', 'it')
-            ->join('iocd.ordenCompraRel', 'oc')
-            ->addSelect('it.codigoItemPk AS codigoItem')
-            ->addSelect('oc.numero AS ordenCompra')
-            ->addSelect('it.nombre')
-            ->addSelect('it.cantidadExistencia')
-            ->addSelect('iocd.cantidad')
-            ->addSelect('iocd.cantidadPendiente')
-            ->addSelect('it.stockMinimo')
-            ->addSelect('it.stockMaximo')
-            ->where('oc.estadoAprobado = true')
-            ->where('oc.estadoAnulado = false')
-            ->andWhere('iocd.cantidadPendiente > 0')
-            ->orderBy('iocd.codigoOrdenCompraDetallePk', 'ASC');
-        if ($session->get('filtroInvCodigoOrdenCompraTipo') != null) {
-            $queryBuilder->andWhere("oc.codigoOrdenCompraTipoFk = '{$session->get('filtroInvCodigoOrdenCompraTipo')}'");
+    /**
+     * @param $arrControles array
+     * @param $arMovimiento InvOrden
+     * @param $form FormInterface
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function actualizarDetalles($arrControles, $arOrden)
+    {
+        $em = $this->getEntityManager();
+        $this->getEntityManager()->persist($arOrden);
+        $mensajeError = "";
+        if(isset($arrControles['arrCodigo'])) {
+            $arrCantidad = $arrControles['arrCantidad'];
+            $arrPrecio = $arrControles['arrValor'];
+            $arrPorcentajeDescuento = $arrControles['arrDescuento'];
+            $arrPorcentajeIva = $arrControles['arrIva'];
+            $arrCodigo = $arrControles['arrCodigo'];
+            foreach ($arrCodigo as $codigoOrdenDetalle) {
+                $arOrdenDetalle = $this->getEntityManager()->getRepository(InvOrdenDetalle::class)->find($codigoOrdenDetalle);
+                $cantidadAnterior = $arOrdenDetalle->getCantidad();
+                $cantidadNueva = $arrCantidad[$codigoOrdenDetalle];
+                $arOrdenDetalle->setCantidad($arrCantidad[$codigoOrdenDetalle]);
+                $arOrdenDetalle->setCantidadPendiente($arrCantidad[$codigoOrdenDetalle]);
+                $arOrdenDetalle->setVrPrecio($arrPrecio[$codigoOrdenDetalle]);
+                $arOrdenDetalle->setPorcentajeDescuento($arrPorcentajeDescuento[$codigoOrdenDetalle]);
+                $arOrdenDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoOrdenDetalle]);
+                $em->persist($arOrdenDetalle);
+                //Si tiene pedido enlazado
+                if ($arOrdenDetalle->getCodigoSolicitudDetalleFk()) {
+                    $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
+                    if ($cantidadAfectar != 0) {
+                        $arSolicitudDetalle = $em->getRepository(InvSolicitudDetalle::class)->find($arOrdenDetalle->getCodigoSolicitudDetalleFk());
+                        if ($cantidadAfectar <= $arSolicitudDetalle->getCantidadPendiente()) {
+                            $arSolicitudDetalle->setCantidadAfectada($arSolicitudDetalle->getCantidadAfectada() + $cantidadAfectar);
+                            $arSolicitudDetalle->setCantidadPendiente($arSolicitudDetalle->getCantidad() - $arSolicitudDetalle->getCantidadAfectada());
+                            $em->persist($arSolicitudDetalle);
+                        } else {
+                            $mensajeError = "El id " . $codigoOrdenDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
+                            break;
+                        }
+                    }
+                }
+            }
         }
-        if ($session->get('filtroInvOrdenCompraNumero') != '') {
-            $queryBuilder->andWhere("oc.numero = {$session->get('filtroInvOrdenCompraNumero')}");
+
+        if ($mensajeError == "") {
+            $em->flush();
+            $em->getRepository(InvOrden::class)->liquidar($arOrden);
+
+        } else {
+            Mensajes::error($mensajeError);
+        }
+
+
+    }
+
+    public function informeOrdenCompraPendientes()
+    {
+        $em = $this->getEntityManager();
+        $session = new Session();
+        $queryBuilder = $em->createQueryBuilder()->from(InvOrdenDetalle::class, 'od')
+            ->select('od.codigoOrdenDetallePk')
+            ->addSelect('i.codigoItemPk AS codigoItem')
+            ->addSelect('o.numero')
+            ->addSelect('i.nombre')
+            ->addSelect('i.cantidadExistencia')
+            ->addSelect('od.cantidad')
+            ->addSelect('od.cantidadPendiente')
+            ->addSelect('i.stockMinimo')
+            ->addSelect('i.stockMaximo')
+            ->join('od.itemRel', 'i')
+            ->join('od.ordenRel', 'o')
+            ->where('o.estadoAprobado = 1')
+            ->where('o.estadoAnulado = 0')
+            ->andWhere('od.cantidadPendiente > 0')
+            ->orderBy('od.codigoOrdenDetallePk', 'ASC');
+        if ($session->get('filtroInvCodigoOrdenTipo') != null) {
+            $queryBuilder->andWhere("o.codigoOrdenTipoFk = '{$session->get('filtroInvCodigoOrdenTipo')}'");
+        }
+        if ($session->get('filtroInvOrdenNumero') != '') {
+            $queryBuilder->andWhere("o.numero = {$session->get('filtroInvOrdenNumero')}");
         }
 
         return $queryBuilder;
@@ -155,10 +222,10 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
         $arDetalles = $this->listaRegenerarCantidadAfectada();
         foreach ($arDetalles as $arDetalle) {
             $cantidad = $arDetalle['cantidad'];
-            $cantidadAfectada = $em->getRepository(InvMovimientoDetalle::class)->cantidadAfectaOrdenCompra($arDetalle['codigoOrdenCompraDetallePk']);
+            $cantidadAfectada = $em->getRepository(InvMovimientoDetalle::class)->cantidadAfectaOrden($arDetalle['codigoOrdenDetallePk']);
             $cantidadPendiente = $cantidad - $cantidadAfectada;
             if($cantidadAfectada != $arDetalle['cantidadAfectada'] || $cantidadPendiente != $arDetalle['cantidadPendiente']) {
-                $arDetalleAct = $em->getRepository(InvOrdenCompraDetalle::class)->find($arDetalle['codigoOrdenCompraDetallePk']);
+                $arDetalleAct = $em->getRepository(InvOrdenDetalle::class)->find($arDetalle['codigoOrdenDetallePk']);
                 $arDetalleAct->setCantidadAfectada($cantidadAfectada);
                 $arDetalleAct->setCantidadPendiente($cantidadPendiente);
                 $em->persist($arDetalleAct);
@@ -169,11 +236,12 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
 
     private function listaRegenerarCantidadAfectada()
     {
-        $queryBuilder = $this->_em->createQueryBuilder()->from(InvOrdenCompraDetalle::class, 'ocd')
-            ->select('ocd.codigoOrdenCompraDetallePk')
-            ->addSelect('ocd.cantidad')
-            ->addSelect('ocd.cantidadAfectada')
-            ->addSelect('ocd.cantidadPendiente');
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(InvOrdenDetalle::class, 'od')
+            ->select('od.codigoOrdenDetallePk')
+            ->addSelect('od.cantidad')
+            ->addSelect('od.cantidadAfectada')
+            ->addSelect('od.cantidadPendiente');
         return $queryBuilder->getQuery()->getResult();
     }
 
@@ -183,10 +251,10 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function cantidadAfecta($arCodigo)
+    public function cantidadAfectaSolicitud($arCodigo)
     {
         $cantidad = 0;
-        $queryBuilder = $this->_em->createQueryBuilder()->from(InvOrdenCompraDetalle::class, 'r')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvOrdenDetalle::class, 'r')
             ->select("SUM(r.cantidad)")
             ->where("r.codigoSolicitudDetalleFk = {$arCodigo} ");
         $resultado = $queryBuilder->getQuery()->getSingleResult();

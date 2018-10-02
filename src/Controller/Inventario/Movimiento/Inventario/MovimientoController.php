@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Movimiento\Inventario;
 
 use App\Entity\Inventario\InvConfiguracion;
+use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\FacturaType;
@@ -336,9 +337,9 @@ class MovimientoController extends Controller
     }
 
     /**
-     * @Route("/inventario/movimiento/inventario/movimiento/detalle/ordencompra/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_ordencompra_detalle_nuevo")
+     * @Route("/inventario/movimiento/inventario/movimiento/detalle/orden/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_orden_detalle_nuevo")
      */
-    public function detalleNuevoOrdenCompra(Request $request, $id)
+    public function detalleNuevoOrden(Request $request, $id)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
@@ -346,7 +347,7 @@ class MovimientoController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoItemCodigo'), 'required' => false))
             ->add('txtNombre', TextType::class, array('data' => $session->get('filtroInvMovimientoItemNombre'), 'required' => false , 'attr' => ['readonly' => 'readonly']))
-            ->add('txtNumeroOrdenCompra', TextType::class, array('data' => $session->get('filtroInvNumeroOrdenCompra'), 'required' => false))
+            ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvNumeroOrdenCompra'), 'required' => false))
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -356,28 +357,28 @@ class MovimientoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvMovimientoItemCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroInvNumeroOrdenCompra', $form->get('txtNumeroOrdenCompra')->getData());
+                $session->set('filtroInvNumeroOrden', $form->get('txtNumero')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
-                $arrOrdenCompraDetalles = $request->request->get('itemCantidad');
-                if ($arrOrdenCompraDetalles) {
-                    if (count($arrOrdenCompraDetalles) > 0) {
-                        foreach ($arrOrdenCompraDetalles as $codigoOrdenCompraDetalle => $cantidad) {
+                $arrOrdenDetalles = $request->request->get('itemCantidad');
+                if ($arrOrdenDetalles) {
+                    if (count($arrOrdenDetalles) > 0) {
+                        foreach ($arrOrdenDetalles as $codigoOrdenDetalle => $cantidad) {
                             if ($cantidad != '' && $cantidad != 0) {
-                                $arOrdenCompraDetalle = $em->getRepository(InvOrdenCompraDetalle::class)->find($codigoOrdenCompraDetalle);
-                                if ($cantidad <= $arOrdenCompraDetalle->getCantidadPendiente()) {
-                                    $arItem = $em->getRepository(InvItem::class)->find($arOrdenCompraDetalle->getCodigoItemFk());
+                                $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($codigoOrdenDetalle);
+                                if ($cantidad <= $arOrdenDetalle->getCantidadPendiente()) {
                                     $arMovimientoDetalle = new InvMovimientoDetalle();
                                     $arMovimientoDetalle->setMovimientoRel($arMovimiento);
-                                    $arMovimientoDetalle->setItemRel($arItem);
+                                    $arMovimientoDetalle->setItemRel($arOrdenDetalle->getItemRel());
                                     $arMovimientoDetalle->setCantidad($cantidad);
-                                    $arMovimientoDetalle->setVrPrecio($arOrdenCompraDetalle->getVrPrecio());
-                                    $arMovimientoDetalle->setPorcentajeDescuento($arOrdenCompraDetalle->getPorcentajeDescuento());
-                                    $arMovimientoDetalle->setVrDescuento($arOrdenCompraDetalle->getVrDescuento());
-                                    $arMovimientoDetalle->setOrdenCompraDetalleRel($arOrdenCompraDetalle);
-                                    $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() - $cantidad);
+                                    $arMovimientoDetalle->setVrPrecio($arOrdenDetalle->getVrPrecio());
+                                    $arMovimientoDetalle->setPorcentajeDescuento($arOrdenDetalle->getPorcentajeDescuento());
+                                    $arMovimientoDetalle->setPorcentajeIva($arOrdenDetalle->getPorcentajeIva());
+                                    $arMovimientoDetalle->setOrdenDetalleRel($arOrdenDetalle);
                                     $em->persist($arMovimientoDetalle);
-                                    $em->persist($arOrdenCompraDetalle);
+                                    $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada()+$cantidad);
+                                    $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad()-$arOrdenDetalle->getCantidadAfectada());
+                                    $em->persist($arOrdenDetalle);
                                 } else {
                                     $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada.";
                                 }
@@ -387,16 +388,17 @@ class MovimientoController extends Controller
                             Mensajes::error($respuesta);
                         } else {
                             $em->flush();
+                            $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
                             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                         }
                     }
                 }
             }
         }
-        $arOrdenCompraDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvOrdenCompraDetalle::class)->listarDetallesPendientes(), $request->query->getInt('page', 1), 10);
-        return $this->render('inventario/movimiento/inventario/detalleNuevoOrdenCompra.html.twig', [
+        $arOrdenDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvOrdenDetalle::class)->listarDetallesPendientes(), $request->query->getInt('page', 1), 10);
+        return $this->render('inventario/movimiento/inventario/detalleNuevoOrden.html.twig', [
             'form' => $form->createView(),
-            'arOrdenCompraDetalles' => $arOrdenCompraDetalles
+            'arOrdenDetalles' => $arOrdenDetalles
         ]);
     }
 

@@ -2,7 +2,10 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvOrdenDetalle;
+use App\Entity\Inventario\InvOrdenTipo;
+use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvOrden;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -100,28 +103,26 @@ class InvOrdenRepository extends ServiceEntityRepository
     }    
     
     /**
-     * @param $arOrdenCompra InvOrdenCompra
+     * @param $arOrden InvOrden
      */
-    public function aprobar($arOrdenCompra)
+    public function aprobar($arOrden)
     {
-        $arOrdenCompraTipo = $this->_em->getRepository('App:Inventario\InvOrdenCompraTipo')->find($arOrdenCompra->getCodigoOrdenCompraTipoFk());
-        if (!$arOrdenCompra->getEstadoAprobado()) {
-            $arOrdenCompraTipo->setConsecutivo($arOrdenCompraTipo->getConsecutivo() + 1);
-            $arOrdenCompra->setEstadoAprobado(1);
-            $arOrdenCompra->setNumero($arOrdenCompraTipo->getConsecutivo());
-            $this->_em->persist($arOrdenCompraTipo);
-            $this->_em->persist($arOrdenCompra);
+        $em = $this->getEntityManager();
+        $arOrdenTipo = $em->getRepository(InvOrdenTipo::class)->find($arOrden->getCodigoOrdenTipoFk());
+        if (!$arOrden->getEstadoAprobado()) {
+            $arOrdenTipo->setConsecutivo($arOrdenTipo->getConsecutivo() + 1);
+            $em->persist($arOrdenTipo);
+            $arOrden->setEstadoAprobado(1);
+            $arOrden->setNumero($arOrdenTipo->getConsecutivo());
+            $em->persist($arOrden);
 
-            $arOrdenCompraDetalles = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(['codigoOrdenCompraFk' => $arOrdenCompra->getCodigoOrdenCompraPk()]);
-            foreach ($arOrdenCompraDetalles as $arOrdenCompraDetalle) {
-                $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arOrdenCompraDetalle->getCodigoItemFk()]);
-                if ($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk()) {
-                    $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() - $arOrdenCompraDetalle->getCantidad());
-                }
-                $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() + $arOrdenCompraDetalle->getCantidad());
-                $this->_em->persist($arItem);
+            $arOrdenDetalles = $em->getRepository(InvOrdenDetalle::class)->findBy(['codigoOrdenFk' => $arOrden->getCodigoOrdenPk()]);
+            foreach ($arOrdenDetalles as $arOrdenDetalle) {
+                $arItem = $em->getRepository(InvItem::class)->find($arOrdenDetalle->getCodigoItemFk());
+                $arItem->setCantidadOrden($arItem->getCantidadOrden() + $arOrdenDetalle->getCantidad());
+                $em->persist($arItem);
             }
-            $this->_em->flush();
+            $em->flush();
         }
     }
 
@@ -171,71 +172,18 @@ class InvOrdenRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arOrdenCompra InvOrdenCompra
+     * @param $arOrden InvOrden
      */
-    public function autorizar($arOrdenCompra)
+    public function autorizar($arOrden)
     {
-        if (count($this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(['codigoOrdenCompraFk' => $arOrdenCompra->getCodigoOrdenCompraPk()])) > 0) {
-            $arOrdenCompra->setEstadoAutorizado(1);
-            $this->_em->persist($arOrdenCompra);
-            $this->_em->flush();
+        $em = $this->getEntityManager();
+        if (count($em->getRepository(InvOrdenDetalle::class)->findBy(['codigoOrdenFk' => $arOrden->getCodigoOrdenPk()])) > 0) {
+            $arOrden->setEstadoAutorizado(1);
+            $em->persist($arOrden);
+            $em->flush();
         } else {
             Mensajes::error('No se puede autorizar, el registro no tiene detalles');
         }
-    }
-
-    /**
-     * @param $arrControles array
-     * @param $arMovimiento InvOrden
-     * @param $form FormInterface
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function actualizarDetalles($arrControles, $arOrden)
-    {
-        $em = $this->getEntityManager();
-        $this->getEntityManager()->persist($arOrden);
-        $mensajeError = "";
-        if(isset($arrControles['arrCodigo'])) {
-            $arrCantidad = $arrControles['arrCantidad'];
-            $arrPrecio = $arrControles['arrValor'];
-            $arrPorcentajeDescuento = $arrControles['arrDescuento'];
-            $arrPorcentajeIva = $arrControles['arrIva'];
-            $arrCodigo = $arrControles['arrCodigo'];
-            foreach ($arrCodigo as $codigoOrdenDetalle) {
-                $arOrdenDetalle = $this->getEntityManager()->getRepository(InvOrdenDetalle::class)->find($codigoOrdenDetalle);
-                $cantidadAnterior = $arOrdenDetalle->getCantidad();
-                $cantidadNueva = $arrCantidad[$codigoOrdenDetalle];
-                $arOrdenDetalle->setCantidad($arrCantidad[$codigoOrdenDetalle]);
-                $arOrdenDetalle->setVrPrecio($arrPrecio[$codigoOrdenDetalle]);
-                $arOrdenDetalle->setPorcentajeDescuento($arrPorcentajeDescuento[$codigoOrdenDetalle]);
-                $arOrdenDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoOrdenDetalle]);
-                $em->persist($arOrdenDetalle);
-                /*if ($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
-                    $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
-                    if ($cantidadAfectar != 0) {
-                        $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
-                        if ($cantidadAfectar <= $arPedidoDetalle->getCantidadPendiente()) {
-                            $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $cantidadAfectar);
-                            $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
-                            $em->persist($arPedidoDetalle);
-                        } else {
-                            $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
-                            break;
-                        }
-                    }
-                }*/
-            }
-        }
-
-        if ($mensajeError == "") {
-            $em->getRepository(InvOrden::class)->liquidar($arOrden);
-            $em->flush();
-        } else {
-            Mensajes::error($mensajeError);
-        }
-
-
     }
 
     private function validarDetalleEnuso($codigoOrdenCompraDetalle)

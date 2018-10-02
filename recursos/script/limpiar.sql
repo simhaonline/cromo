@@ -18,4 +18,4 @@ DELETE FROM inv_orden_detalle;
 DELETE FROM inv_orden;
 DELETE FROM inv_solicitud_detalle;
 DELETE FROM inv_solicitud;
-UPDATE inv_item SET cantidad_disponible = 0, cantidad_existencia = 0, cantidad_orden_compra = 0, cantidad_remisionada = 0, cantidad_pedido = 0;
+UPDATE inv_item SET cantidad_disponible = 0, cantidad_existencia = 0, cantidad_orden = 0, cantidad_remisionada = 0, cantidad_pedido = 0;

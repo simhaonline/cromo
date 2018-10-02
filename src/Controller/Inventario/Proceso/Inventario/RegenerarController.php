@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Proceso\Inventario;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
+use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -29,7 +30,7 @@ class RegenerarController extends Controller
             ->add('btnRegenerarCostos', SubmitType::class, ['label' => 'Costos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnRegenerarPedidos', SubmitType::class, ['label' => 'Pedidos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnRegenerarSolicitudes', SubmitType::class, ['label' => 'Solicitudes', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnRegenerarOrdenesCompra', SubmitType::class, ['label' => 'Ordenes de compra', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnRegenerarOrdenes', SubmitType::class, ['label' => 'Ordenes', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -45,8 +46,8 @@ class RegenerarController extends Controller
             if ($form->get('btnRegenerarSolicitudes')->isClicked()) {
                 $em->getRepository(InvSolicitudDetalle::class)->regenerarCantidadAfectada();
             }
-            if ($form->get('btnRegenerarOrdenesCompra')->isClicked()) {
-                $em->getRepository(InvOrdenCompraDetalle::class)->regenerarCantidadAfectada();
+            if ($form->get('btnRegenerarOrdenes')->isClicked()) {
+                $em->getRepository(InvOrdenDetalle::class)->regenerarCantidadAfectada();
             }
         }
         return $this->render('inventario/proceso/regenerar.html.twig', [

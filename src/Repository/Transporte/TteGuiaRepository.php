@@ -1368,6 +1368,31 @@ class TteGuiaRepository extends ServiceEntityRepository
         return true;
     }
 
+    public function cortesia($codigoGuia): bool
+    {
+        $em = $this->getEntityManager();
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        if($arGuia) {
+            if($arGuia->getCortesia() == 0 && $arGuia->getFactura() == 0 && $arGuia->getEstadoAnulado() == 0 ) {
+                if($arGuia->getCodigoFacturaFk() == null) {
+                    $arGuia->setVrFlete(0);
+                    $arGuia->setVrManejo(0);
+                    $arGuia->setCortesia(1);
+                    $em->persist($arGuia);
+                    $em->flush();
+                    Mensajes::success("La guia se genero como una cortesia");
+                } else {
+                    Mensajes::error("La guia no puede estar en una factura");
+                }
+            } else {
+                Mensajes::error("La guia no puede ser una cortesia ni una factura ni estar anulada");
+            }
+        } else {
+            Mensajes::error("No existe la guia");
+        }
+        return true;
+    }
+
     /**
      * @param $codigoGuia
      * @return array

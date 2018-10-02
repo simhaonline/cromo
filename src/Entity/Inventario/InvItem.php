@@ -204,6 +204,11 @@ class InvItem
     private $pedidosDetallesItemRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvRemisionDetalle", mappedBy="itemRel")
+     */
+    private $remisionesDetallesItemRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvPrecioDetalle", mappedBy="itemRel")
      */
     private $preciosDetallesItemRel;
@@ -803,6 +808,22 @@ class InvItem
     public function setInventariosValorizadosItemRel($inventariosValorizadosItemRel): void
     {
         $this->inventariosValorizadosItemRel = $inventariosValorizadosItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemisionesDetallesItemRel()
+    {
+        return $this->remisionesDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $remisionesDetallesItemRel
+     */
+    public function setRemisionesDetallesItemRel($remisionesDetallesItemRel): void
+    {
+        $this->remisionesDetallesItemRel = $remisionesDetallesItemRel;
     }
 
 

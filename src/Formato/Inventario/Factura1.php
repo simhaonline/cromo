@@ -149,13 +149,13 @@ class Factura1 extends \FPDF
     {
         $this->Ln(6);
         $this->SetX(19.5);
-        $header = array('ITEM', 'DESCRIPCION', 'BOD', 'UNIDAD', 'CANT', 'PRECIO', 'IVA', 'DCTO', 'TOTAL');
+        $header = array('ITEM', 'COD PED' ,'COD REM' ,  'DESCRIPCION', 'BOD', 'UNIDAD', 'CANT', 'PRECIO', 'IVA', 'DCTO', 'TOTAL');
         $this->SetFillColor(225, 225, 225);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 6);
 
         //creamos la cabecera de la tabla.
-        $w = array(10, 94, 6, 11, 10, 18, 7, 7.4, 21);
+        $w = array(10, 12, 12, 70, 6, 11, 10, 18, 7, 7.4, 21);
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
         }
@@ -183,7 +183,9 @@ class Factura1 extends \FPDF
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $pdf->SetX(19.5);
             $pdf->Cell(10, 6, $arMovimientoDetalle->getCodigoItemFk(), 1, 0, 'L');
-            $pdf->Cell(94, 6, utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()), 1, 0, 'L');
+            $pdf->Cell(12, 6, $arMovimientoDetalle->getPedidoDetalleRel() ? $arMovimientoDetalle->getPedidoDetalleRel()->getCodigoPedidoFk() : '0', 1, 0, 'L');
+            $pdf->Cell(12, 6, $arMovimientoDetalle->getRemisionDetalleRel() ? $arMovimientoDetalle->getRemisionDetalleRel()->getCodigoRemisionFk() : '0', 1, 0, 'L');
+            $pdf->Cell(70, 6, utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()), 1, 0, 'L');
             $pdf->Cell(6, 6, substr($arMovimientoDetalle->getCodigoBodegaFk(), 0, 3), 1, 0, 'R');
             $pdf->Cell(11, 6, 'UNIDAD', 1, 0, 'C');
             $pdf->Cell(10, 6, $arMovimientoDetalle->getCantidad(), 1, 0, 'R');

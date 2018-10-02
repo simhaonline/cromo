@@ -171,6 +171,11 @@ class InvTercero
     protected $sucursalesTerceroRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvRemision",mappedBy="terceroRel")
+     */
+    protected $remisionesTerceroRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoTerceroPk()
@@ -664,6 +669,22 @@ class InvTercero
     public function setSucursalesTerceroRel($sucursalesTerceroRel): void
     {
         $this->sucursalesTerceroRel = $sucursalesTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemisionesTerceroRel()
+    {
+        return $this->remisionesTerceroRel;
+    }
+
+    /**
+     * @param mixed $remisionesTerceroRel
+     */
+    public function setRemisionesTerceroRel($remisionesTerceroRel): void
+    {
+        $this->remisionesTerceroRel = $remisionesTerceroRel;
     }
 
 

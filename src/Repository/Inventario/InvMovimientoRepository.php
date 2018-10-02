@@ -10,6 +10,7 @@ use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvMovimientoDetalle;
+use App\Entity\Inventario\InvOrdenDetalle;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimiento;
@@ -214,8 +215,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $arLote->setFechaVencimiento($arMovimientoDetalle->getFecha());
                     $this->getEntityManager()->persist($arLote);
                 }
-                if ($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk()) {
-                    $arOrdenCompraDetalle = $this->getEntityManager()->getRepository(InvOrdenCompraDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk());
+                if ($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
+                    $arOrdenCompraDetalle = $this->getEntityManager()->getRepository(InvOrdenDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenDetalleFk());
                     if ($arOrdenCompraDetalle) {
                         $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() + $arMovimientoDetalle->getCantidad() * $tipo);
                         $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() + $arMovimientoDetalle->getCantidad() * $tipo);

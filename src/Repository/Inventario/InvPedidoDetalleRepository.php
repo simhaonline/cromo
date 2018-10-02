@@ -88,6 +88,7 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('p.pedidoTipoRel','pt')
             ->leftJoin('p.terceroRel', 't')
             ->where('p.estadoAprobado = 1')
+            ->andWhere('p.estadoAnulado = 0')
             ->andWhere('pd.cantidadPendiente > 0');
         if($session->get('filtroInvPedidoTipo')){
             $queryBuilder->andWhere("p.codigoPedidoTipoFk = '{$session->get('filtroInvPedidoTipo')}'");
@@ -111,6 +112,9 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
             ->andWhere('p.estadoAnulado = 0')
             ->andWhere('pd.cantidadPendiente > 0')
             ->orderBy('pd.codigoPedidoDetallePk', 'DESC');
+        if($session->get('filtroInvPedidoNumero')){
+            $queryBuilder->andWhere("p.numero = '{$session->get('filtroInvPedidoNumero')}'");
+        }
         $query = $this->_em->createQuery($queryBuilder->getDQL());
         return $query->execute();
     }

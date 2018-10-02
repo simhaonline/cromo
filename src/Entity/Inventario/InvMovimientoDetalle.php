@@ -118,6 +118,11 @@ class InvMovimientoDetalle
     private $codigoPedidoDetalleFk;
 
     /**
+     * @ORM\Column(name="codigo_remision_detalle_fk", type="integer", nullable=true)
+     */
+    private $codigoRemisionDetalleFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvMovimiento", inversedBy="movimientosDetallesMovimientoRel")
      * @ORM\JoinColumn(name="codigo_movimiento_fk", referencedColumnName="codigo_movimiento_pk")
      */
@@ -134,6 +139,12 @@ class InvMovimientoDetalle
      * @ORM\JoinColumn(name="codigo_orden_detalle_fk", referencedColumnName="codigo_orden_detalle_pk")
      */
     protected $ordenDetalleRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inventario\InvRemisionDetalle", inversedBy="movimientosDetallesRemisionDetalleRel")
+     * @ORM\JoinColumn(name="codigo_remision_detalle_fk", referencedColumnName="codigo_remision_detalle_pk")
+     */
+    protected $remisionDetalleRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Inventario\InvPedidoDetalle", inversedBy="movimientosDetallesPedidoDetalleRel")
@@ -539,6 +550,38 @@ class InvMovimientoDetalle
     public function setPedidoDetalleRel($pedidoDetalleRel): void
     {
         $this->pedidoDetalleRel = $pedidoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRemisionDetalleFk()
+    {
+        return $this->codigoRemisionDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoRemisionDetalleFk
+     */
+    public function setCodigoRemisionDetalleFk($codigoRemisionDetalleFk): void
+    {
+        $this->codigoRemisionDetalleFk = $codigoRemisionDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemisionDetalleRel()
+    {
+        return $this->remisionDetalleRel;
+    }
+
+    /**
+     * @param mixed $remisionDetalleRel
+     */
+    public function setRemisionDetalleRel($remisionDetalleRel): void
+    {
+        $this->remisionDetalleRel = $remisionDetalleRel;
     }
 
 

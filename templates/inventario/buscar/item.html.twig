@@ -44,7 +44,7 @@
                 <td><input type="hidden" name="LblCodigo[]" value="{{ arItem.codigoItemPk }}">{{ arItem.codigoItemPk }} </td>
                 <td>{{ arItem.codigoItemPk  }}</td>
                 <td>{{ arItem.nombre }}</td>
-                <td style="text-align: center"><a href="javascript:selTercero('{{ arItem.codigoItemPk }}','{{ arItem.nombre }}','{{ campoCodigo }}','{{ campoNombre }}')" ><img src="{{ asset('../public/img/bootstrap/glyphicons_198_ok.png') }}" width=20 height=20></a></td>
+                <td style="text-align: center"><a href="javascript:selTercero('{{ arItem.codigoItemPk }}','{{ arItem.nombre }}','{{ campoCodigo }}','{{ campoNombre }}')" ><i class="fa fa-check-circle-o" style="font-size: large;color: black;"></i></a></td>
             </tr>
         {% endfor %}
     </table>

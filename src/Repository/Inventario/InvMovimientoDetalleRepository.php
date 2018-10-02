@@ -6,6 +6,7 @@ use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
+use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvSucursal;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;
@@ -50,6 +51,13 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                         $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
                         $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
                         $em->persist($arPedidoDetalle);
+                    }
+                    //Si el detalle tiene una remision detalle relacionado
+                    if ($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
+                        $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($arMovimientoDetalle->getCodigoRemisionDetalleFk());
+                        $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
+                        $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad() - $arRemisionDetalle->getCantidadAfectada());
+                        $em->persist($arRemisionDetalle);
                     }
                     $em->remove($arMovimientoDetalle);
                 }
@@ -116,32 +124,59 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                 $em->persist($arMovimientoDetalle);
                 //Si tiene orden enlazada
                 if ($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
-                    $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
-                    if ($cantidadAfectar != 0) {
-                        $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenDetalleFk());
-                        if ($cantidadAfectar <= $arOrdenDetalle->getCantidadPendiente()) {
-                            $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() + $cantidadAfectar);
-                            $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
-                            $em->persist($arOrdenDetalle);
-                        } else {
-                            $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
-                            break;
+                    if($cantidadNueva) {
+                        $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
+                        if ($cantidadAfectar != 0) {
+                            $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenDetalleFk());
+                            if ($cantidadAfectar <= $arOrdenDetalle->getCantidadPendiente()) {
+                                $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() + $cantidadAfectar);
+                                $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
+                                $em->persist($arOrdenDetalle);
+                            } else {
+                                $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
+                                break;
+                            }
                         }
+                    } else {
+                        $mensajeError = "No se permiten cantidades negativas";
                     }
                 }
                 //Si tiene pedido enlazado
                 if ($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
-                    $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
-                    if ($cantidadAfectar != 0) {
-                        $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
-                        if ($cantidadAfectar <= $arPedidoDetalle->getCantidadPendiente()) {
-                            $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $cantidadAfectar);
-                            $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
-                            $em->persist($arPedidoDetalle);
-                        } else {
-                            $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
-                            break;
+                    if($cantidadNueva > 0) {
+                        $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
+                        if ($cantidadAfectar != 0) {
+                            $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
+                            if ($cantidadAfectar <= $arPedidoDetalle->getCantidadPendiente()) {
+                                $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $cantidadAfectar);
+                                $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
+                                $em->persist($arPedidoDetalle);
+                            } else {
+                                $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
+                                break;
+                            }
                         }
+                    } else {
+                        $mensajeError = "No se permiten cantidades negativas";
+                    }
+                }
+                //Si tiene remision enlazado
+                if ($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
+                    if($cantidadNueva > 0) {
+                        $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
+                        if ($cantidadAfectar != 0) {
+                            $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($arMovimientoDetalle->getCodigoRemisionDetalleFk());
+                            if ($cantidadAfectar <= $arRemisionDetalle->getCantidadPendiente()) {
+                                $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada() + $cantidadAfectar);
+                                $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad() - $arRemisionDetalle->getCantidadAfectada());
+                                $em->persist($arRemisionDetalle);
+                            } else {
+                                $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
+                                break;
+                            }
+                        }
+                    } else {
+                        $mensajeError = "No se permiten cantidades negativas";
                     }
                 }
             }

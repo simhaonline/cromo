@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Inventario;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
+use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\FacturaType;
 use App\Formato\Inventario\FormatoMovimiento;
@@ -259,6 +260,7 @@ class MovimientoController extends Controller
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(InvMovimientoDetalle::class)->eliminar($arMovimiento, $arrDetallesSeleccionados);
+                $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
             }
 
             return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $id]));
@@ -463,6 +465,68 @@ class MovimientoController extends Controller
         return $this->render('inventario/movimiento/inventario/detalleNuevoPedido.html.twig', [
             'form' => $form->createView(),
             'arPedidoDetalles' => $arPedidoDetalles
+        ]);
+    }
+
+    /**
+     * @Route("/inventario/movimiento/inventario/movimiento/detalle/remision/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_remision_detalle_nuevo")
+     */
+    public function detalleNuevoRemision(Request $request, $id)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtNumero', TextType::class, array('required' => false))
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvRemisionNumero', $form->get('txtNumero')->getData());
+            }
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrDetalles = $request->request->get('itemCantidad');
+                if ($arrDetalles) {
+                    if (count($arrDetalles) > 0) {
+                        $respuesta = "";
+                        foreach ($arrDetalles as $codigo => $cantidad) {
+                            if ($cantidad != '' && $cantidad != 0) {
+                                $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($codigo);
+                                if ($cantidad <= $arRemisionDetalle->getCantidadPendiente()) {
+                                    $arMovimientoDetalle = new InvMovimientoDetalle();
+                                    $arMovimientoDetalle->setMovimientoRel($arMovimiento);
+                                    $arMovimientoDetalle->setItemRel($arRemisionDetalle->getItemRel());
+                                    $arMovimientoDetalle->setCantidad($cantidad);
+                                    $arMovimientoDetalle->setVrPrecio($arRemisionDetalle->getVrPrecio());
+                                    $arMovimientoDetalle->setPorcentajeIva($arRemisionDetalle->getPorcentajeIva());
+                                    $arMovimientoDetalle->setRemisionDetalleRel($arRemisionDetalle);
+                                    $em->persist($arMovimientoDetalle);
+                                    $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada()+$cantidad);
+                                    $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad()-$arRemisionDetalle->getCantidadAfectada());
+                                    $em->persist($arRemisionDetalle);
+                                } else {
+                                    $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada en el id " . $codigo;
+                                }
+                            }
+                        }
+                        if ($respuesta != '') {
+                            Mensajes::error($respuesta);
+                        } else {
+                            $em->flush();
+                            $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
+                            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                        }
+                    }
+                }
+            }
+        }
+        $arRemisionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvRemisionDetalle::class)->listarDetallesPendientes($arMovimiento->getCodigoTerceroFk()), $request->query->getInt('page', 1), 10);
+        return $this->render('inventario/movimiento/inventario/detalleNuevoRemision.html.twig', [
+            'form' => $form->createView(),
+            'arRemisionDetalles' => $arRemisionDetalles
         ]);
     }
 }

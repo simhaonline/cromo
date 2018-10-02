@@ -131,7 +131,7 @@
                                         <input type="text" name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" id="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.codigoBodegaFk }}" style="text-align: left; width:40px" size="10">
                                         <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBodega',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
-                                    <td style="text-align: center;"><input type="number" name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.cantidad }}"  style="text-align: right; width:60px" size="10"></td>
+                                    <td style="text-align: center;"><input type="number" name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.cantidad }}"  style="text-align: right; width:60px" size="10" ></td>
                                 {% endif %}
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td style="text-align: right;">{{ arMovimientoDetalle.vrPrecio | number_format(0,'.',',') }}</td>
@@ -188,6 +188,9 @@
                         {% if arMovimiento.codigoDocumentoTipoFk == 'FAC' %}
                             <div class="btn-group">
                                 <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_pedido_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde pedido</a>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_remision_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde remision</a>
                             </div>
                         {% endif %}
                     {% endif %}

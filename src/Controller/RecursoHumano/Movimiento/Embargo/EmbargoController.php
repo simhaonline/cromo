@@ -17,8 +17,10 @@ class EmbargoController extends Controller
      */
     public function lista(Request $request)
     {
+        $clase = RhuEmbargo::class;
         $em = $this->getDoctrine()->getManager();
-        $arrOpciones = $em->getRepository(RhuEmbargo::class)->opcionesTabla();
+
+        $arrOpciones = $em->getRepository($clase)->parametrosLista();
         $form = Estandares::botoneraLista();
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){

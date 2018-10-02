@@ -1424,6 +1424,20 @@ class TteGuiaRepository extends ServiceEntityRepository
      * @return array
      * @throws \Doctrine\ORM\ORMException
      */
+    public function apiDespacho($codigoDespacho) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TteGuia::class, 'g');
+        $queryBuilder
+            ->select('g.codigoGuiaPk')
+            ->where("g.codigoDespachoFk = " . $codigoDespacho);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param $codigoGuia
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function apiEntrega($codigoGuia, $fecha, $hora, $soporte) {
         $em = $this->getEntityManager();
         $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);

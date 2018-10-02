@@ -39,6 +39,33 @@ class ApiGuiaController extends FOSRestController
 
     /**
      * @param Request $request
+     * @param int $codigoDespacho
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     * @Rest\Get("/transporte/api/guia/despacho/{codigoDespacho}")
+     */
+    public function listaDespacho(Request $request, $codigoDespacho = 0) {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $arGuia = $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiDespacho($codigoDespacho);
+        if($arGuia) {
+            return [
+                'error' => false,
+                'mensaje' => "Guia encontrada",
+                'guias' => $arGuia,
+            ];
+        } else {
+            return [
+                'error' => true,
+                'mensaje' => "No se encontraron guias",
+                'guias' => null,
+            ];
+        }
+        //return ;
+    }
+
+    /**
+     * @param Request $request
      * @param int $codigoGuia
      * @return array
      * @throws \Doctrine\ORM\ORMException

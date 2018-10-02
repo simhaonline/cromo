@@ -19,17 +19,16 @@ class EmbargoController extends Controller
     {
         $clase = RhuEmbargo::class;
         $em = $this->getDoctrine()->getManager();
-
-        $arrOpciones = $em->getRepository($clase)->parametrosLista();
-        $form = Estandares::botoneraLista();
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        $arrParametrosLista = $em->getRepository($clase)->parametrosLista();
+        $formBotonera = Estandares::botoneraLista();
+        $formBotonera->handleRequest($request);
+        if($formBotonera->isSubmitted() && $formBotonera->isValid()){
 
         }
         return $this->render('recursoHumano/movimiento/embargo/lista.html.twig', [
-            'arrOpciones' => $arrOpciones,
+            'arrParametrosLista' => $arrParametrosLista,
             'request' => $request,
-            'form' => $form->createView()
+            'formBotonera' => $formBotonera->createView()
         ]);
     }
 

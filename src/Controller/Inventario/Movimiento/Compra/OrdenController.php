@@ -137,7 +137,7 @@ class OrdenController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository(InvOrden::class)->actualizarDetalles($arrControles, $arOrden);
+                $em->getRepository(InvOrdenDetalle::class)->actualizarDetalles($arrControles, $arOrden);
                 $em->getRepository(InvOrden::class)->autorizar($arOrden);
                 return $this->redirect($this->generateUrl('inventario_movimiento_compra_orden_detalle', ['id' => $id]));
             }
@@ -150,7 +150,7 @@ class OrdenController extends Controller
                 return $this->redirect($this->generateUrl('inventario_movimiento_compra_orden_detalle', ['id' => $id]));
             }
             if ($form->get('btnActualizar')->isClicked()) {
-                $em->getRepository(InvOrden::class)->actualizarDetalles($arrControles, $arOrden);
+                $em->getRepository(InvOrdenDetalle::class)->actualizarDetalles($arrControles, $arOrden);
                 return $this->redirect($this->generateUrl('inventario_movimiento_compra_orden_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
@@ -252,8 +252,8 @@ class OrdenController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('filtroInvItemCodigo')])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvItemNombre')])
+            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('filtroInvBucarItemCodigo')])
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
             ->add('txtCodigoSolicitud', TextType::class, ['label' => 'Codigo solicitud: ', 'required' => false, 'data' => $session->get('filtroInvSolicitudCodigo')])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -271,10 +271,10 @@ class OrdenController extends Controller
                                 $arSolicitudDetalle = $em->getRepository(InvSolicitudDetalle::class)->find($codigoSolicitudDetalle);
                                 if ($cantidad <= $arSolicitudDetalle->getCantidadPendiente()) {
                                     $arItem = $em->getRepository('App:Inventario\InvItem')->find($arSolicitudDetalle->getCodigoItemFk());
-                                    $arOrdenDetalle = new InvOrdenCompraDetalle();
+                                    $arOrdenDetalle = new InvOrdenDetalle();
                                     $precioVenta = $em->getRepository(InvPrecioDetalle::class)->obtenerPrecio($arOrden->getTerceroRel()->getCodigoPrecioCompraFk(), $arItem->getCodigoItemPk());
                                     $arOrdenDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
-                                    $arOrdenDetalle->setOrdenCompraRel($arOrden);
+                                    $arOrdenDetalle->setOrdenRel($arOrden);
                                     $arOrdenDetalle->setItemRel($arItem);
                                     $arOrdenDetalle->setCantidadPendiente($cantidad);
                                     $arOrdenDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
@@ -291,16 +291,17 @@ class OrdenController extends Controller
                                 Mensajes::error($respuesta);
                             } else {
                                 $em->flush();
+                                $em->getRepository(InvOrden::class)->liquidar($id);
                                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                             }
                         }
                     }
                 }
-                if ($form->get('btnFiltrar')->isClicked()) {
-                    $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
-                    $session->set('filtroInvItemNombre', $form->get('txtNombreItem')->getData());
-                    $session->set('filtroInvSolicitudCodigo', $form->get('txtCodigoSolicitud')->getData());
-                }
+            }
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
+                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
+                $session->set('filtroInvSolicitudCodigo', $form->get('txtCodigoSolicitud')->getData());
             }
         }
 

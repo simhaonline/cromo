@@ -3,6 +3,8 @@
 namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvItem;
+use App\Entity\Inventario\InvLote;
+use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvSucursal;
 use App\Utilidades\Mensajes;
@@ -33,14 +35,14 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if (count($arrSeleccionados) > 0) {
             foreach ($arrSeleccionados as $codigoMovimientoDetalle) {
-                $arMovimientoDetalle = $this->_em->getRepository('App:Inventario\InvMovimientoDetalle')->find($codigoMovimientoDetalle);
+                $arMovimientoDetalle = $em->getRepository(InvMovimientoDetalle::class)->find($codigoMovimientoDetalle);
                 if ($arMovimientoDetalle) {
-                    if ($arMovimientoDetalle->getCodigoOrdenCompraDetalleFk()) {
-                        $arOrdenCompraDetalle = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findOneBy(['codigoOrdenCompraDetallePk' => $arMovimientoDetalle->getCodigoOrdenCompraDetalleFk()]);
-                        if ($arOrdenCompraDetalle) {
-                            $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() + $arMovimientoDetalle->getCantidad());
-                            $this->_em->persist($arOrdenCompraDetalle);
-                        }
+                    //Si el detalle tiene una orden detalle relacionado
+                    if ($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
+                        $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenDetalleFk());
+                        $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
+                        $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
+                        $em->persist($arOrdenDetalle);
                     }
                     //Si el detalle tiene un pedido detalle relacionado
                     if ($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
@@ -111,7 +113,23 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                 }
                 $arMovimientoDetalle->setPorcentajeDescuento($arrPorcentajeDescuento[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoMovimientoDetalle]);
-                $this->getEntityManager()->persist($arMovimientoDetalle);
+                $em->persist($arMovimientoDetalle);
+                //Si tiene orden enlazada
+                if ($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
+                    $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
+                    if ($cantidadAfectar != 0) {
+                        $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenDetalleFk());
+                        if ($cantidadAfectar <= $arOrdenDetalle->getCantidadPendiente()) {
+                            $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() + $cantidadAfectar);
+                            $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
+                            $em->persist($arOrdenDetalle);
+                        } else {
+                            $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
+                            break;
+                        }
+                    }
+                }
+                //Si tiene pedido enlazado
                 if ($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
                     $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
                     if ($cantidadAfectar != 0) {
@@ -155,23 +173,40 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
     public function informacionRegenerarKardex($codigoItem)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
-            ->select('(md.cantidad * d.operacionInventario) AS cantidadOperada')
+            ->select('md.cantidadOperada')
             ->addSelect('md.codigoBodegaFk')
             ->addSelect('md.loteFk')
             ->leftJoin('md.movimientoRel', 'm')
-            ->leftJoin('m.documentoRel', 'd')
             ->where('m.estadoAutorizado = 1')
-            ->andWhere('d.operacionInventario != 0')
+            ->andWhere('md.operacionInventario != 0')
             ->andWhere('md.codigoItemFk = ' . $codigoItem);
         return $queryBuilder->getQuery()->execute();
     }
 
+    public function listaRegenerarExistencia(){
+        $cantidad = 0;
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoItemFk')
+            ->addSelect('md.loteFk')
+            ->addSelect('md.codigoBodegaFk')
+            ->addSelect("SUM(md.cantidadOperada)")
+            ->leftJoin('md.itemRel', 'i')
+            ->leftJoin('md.movimientoRel', 'm')
+            ->where('i.afectaInventario = 1')
+            ->andWhere('md.operacionInventario <> 0')
+            ->andWhere('m.estadoAutorizado = 1')
+            ->groupBy('md.codigoItemFk')
+            ->addGroupBy('md.loteFk')
+            ->addGroupBy('md.codigoBodegaFk');
+        $arrExistencias = $queryBuilder->getQuery()->getResult();
+        return $arrExistencias;
+    }
     /**
      * @throws \Doctrine\ORM\ORMException
      */
     public function regenerarExistencia()
     {
-        $arLote = new InvLote();
+        $em = $this->getEntityManager();
         //Se limpian las existencias en los lotes y en el inventario
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->update(InvLote::class, 'l')
@@ -181,25 +216,23 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->update(InvItem::class, 'i')
-            ->set('l.cantidadExistencia', 0);
+            ->set('i.cantidadExistencia', 0)
+            ->set('i.cantidadDisponible', 0);
         $queryBuilder->getQuery()->execute();
-        $arItems = $this->getEntityManager()->getRepository(InvItem::class)->informacionRegenerarKardex();
-        foreach ($arItems as $arItem) {
-            $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->informacionRegenerarKardex($arItem['codigoItemPk']);
-            if (count($arMovimientoDetalles) > 0) {
-                foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-                    if ($arLote->getCodigoBodegaFk() != $arMovimientoDetalle['codigoBodegaFk']
-                        && $arLote->getCodigoItemFk() != $arMovimientoDetalle['codigoItemFk']
-                        && $arLote->getLoteFk() != $arMovimientoDetalle['loteFk']) {
-                        $arLote = $this->getEntityManager()->getRepository(InvLote::class)
-                            ->findOneBy(['codigoItemFk' => $arItem['codigoItemPk'], 'codigoBodegaFk' => $arMovimientoDetalle['codigoBodegaFk'], 'codigoLotePk' => $arMovimientoDetalle['lotePk']]);
-                    }
-                    if ($arLote) {
-                        $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + $arMovimientoDetalle['cantiadadOperada']);
-                        $this->getEntityManager()->persist($arLote);
-                    }
-                }
+        $mensajesError = "";
+        $arMovimientosDetalles = $this->listaRegenerarExistencia();
+        foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
+            $arLote = $em->getRepository(InvLote::class)->findOneBy(array('codigoItemFk' => $arMovimientoDetalle['codigoItemFk'],
+                'loteFk' => $arMovimientoDetalle['loteFk'], 'codigoBodegaFk' => $arMovimientoDetalle['codigoBodegaFk']));
+            if($arLote) {
+                echo "hola";
+            } else {
+                Mensajes::error('Misteriosamente un lote no esta creado' . $arMovimientoDetalle['codigoItemFk'] . " " . $arMovimientoDetalle['loteFk'] . " " . $arMovimientoDetalle['codigoBodegaFk']);
+                break;
             }
+        }
+        if($mensajesError == "") {
+            $em->flush();
         }
     }
 
@@ -327,17 +360,18 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $codigoOrdenCompraDetalle
+     * @param $codigoOrdenDetalle
      * @return int
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function cantidadAfectaOrdenCompra($codigoOrdenCompraDetalle)
+    public function cantidadAfectaOrden($codigoOrdenDetalle)
     {
+        $em = $this->getEntityManager();
         $cantidad = 0;
-        $queryBuilder = $this->_em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'r')
+        $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'r')
             ->select("SUM(r.cantidad)")
-            ->where("r.codigoOrdenCompraDetalleFk = {$codigoOrdenCompraDetalle} ");
+            ->where("r.codigoOrdenDetalleFk = {$codigoOrdenDetalle} ");
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         if ($resultado[1]) {
             $cantidad = $resultado[1];

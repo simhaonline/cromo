@@ -4,6 +4,8 @@ namespace App\Controller\Inventario\Informe\Compra\Orden;
 
 use App\Entity\Inventario\InvOrdenCompraDetalle;
 use App\Entity\Inventario\InvOrdenCompraTipo;
+use App\Entity\Inventario\InvOrdenDetalle;
+use App\Entity\Inventario\InvOrdenTipo;
 use App\General\General;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -31,27 +33,27 @@ class pendienteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtNumeroOrdenCompra', NumberType::class, ['required' => false, 'data' => $session->get('filtroInvOrdenCompraNumero')])
-            ->add('ordenCompraTipoRel',EntityType::class,$em->getRepository(InvOrdenCompraTipo::class)->llenarCombo())
+            ->add('txtNumero', NumberType::class, ['required' => false, 'data' => $session->get('filtroInvOrdenNumero')])
+            ->add('ordenTipoRel',EntityType::class,$em->getRepository(InvOrdenTipo::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel','attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $arOrdenCompraTipo = $form->get('ordenCompraTipoRel')->getData();
+                $arOrdenCompraTipo = $form->get('ordenTipoRel')->getData();
                 if($arOrdenCompraTipo){
                     $arOrdenCompraTipo = $arOrdenCompraTipo->getCodigoOrdenCompraTipoPk();
                 }
-                $session->set('filtroInvCodigoOrdenCompraTipo', $arOrdenCompraTipo);
-                $session->set('filtroInvOrdenCompraNumero', $form->get('txtNumeroOrdenCompra')->getData());
+                $session->set('filtroInvCodigoOrdenTipo', $arOrdenCompraTipo);
+                $session->set('filtroInvOrdenNumero', $form->get('txtNumero')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(InvOrdenCompraDetalle::class)->informeOrdenCompraPendientes()->getQuery()->getResult(), "Informe ordenes de compra pendientes");
             }
         }
-        $arOrdenCompraDetalles = $paginator->paginate($em->getRepository(InvOrdenCompraDetalle::class)->informeOrdenCompraPendientes(), $request->query->getInt('page', 1), 30);
-        return $this->render('inventario/informe/inventario/ordenCompra/ordenCompraPendientes.html.twig', [
+        $arOrdenCompraDetalles = $paginator->paginate($em->getRepository(InvOrdenDetalle::class)->informeOrdenCompraPendientes(), $request->query->getInt('page', 1), 30);
+        return $this->render('inventario/informe/compra/pendiente.html.twig', [
             'arOrdenCompraDetalles' => $arOrdenCompraDetalles,
             'form' => $form->createView()
         ]);

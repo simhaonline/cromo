@@ -166,7 +166,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $arMovimiento->setVrRetencionIva($vrRetencionIvaGlobal);
         $this->getEntityManager()->persist($arMovimiento);
         if ($respuesta == '') {
-            $this->getEntityManager()->flush();
+            $em->flush();
         } else {
             Mensajes::error($respuesta);
         }

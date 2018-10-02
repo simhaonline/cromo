@@ -71,6 +71,13 @@ final class Estandares
             ->getForm();
     }
 
+    public static function botoneraLista(){
+        return self::getForm()->createBuilder()
+            ->add('btnEliminar',SubmitType::class,['label' => 'Eliminar','attr' => ['class' => 'btn-sm btn btn-danger']])
+            ->add('btnExcel',SubmitType::class,['label' => 'Excel','attr' => ['class' => 'btn-sm btn btn-deafult']])
+            ->getForm();
+    }
+
     /**
      * @param $pdf
      * @param string $titulo

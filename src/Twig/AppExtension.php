@@ -29,27 +29,49 @@ class AppExtension extends AbstractExtension
             new \Twig_Function('encriptar', [$this, 'encriptar']),
             new \Twig_Function('env', [$this, "getEnv"]),
             new \Twig_Function('mesATexto', [$this, "mesATexto"]),
+            new \Twig_Function('crearEncabezadoTabla', [$this, "crearEncabezadoTabla"]),
+            new \Twig_Function('crearCuerpoTabla', [$this, "crearCuerpoTabla"]),
+            new \Twig_Function('generarArrRegistros', [$this, "generarArrRegistros"]),
         ];
     }
 
     /**
      * @author Andres Acevedo
      * @param $dato
+     * @param string $tabla
+     * @return string
      */
-    public function validarTipo($dato)
+    public function validarTipo($dato, $tabla = "")
     {
-        if ($this->esFecha($dato)) {
-            echo "<td style='text-align: left;'>" . $dato->format('Y-m-d') . "</td>";
-        } elseif ($this->esBooleano($dato)) {
-            if ($dato) {
-                echo "<td style='text-align: left;'>" . 'SI' . "</td>";
+        if ($tabla != '') {
+            if ($this->esFecha($dato)) {
+                $tabla .= "<td style='text-align: left;'>" . $dato->format('Y-m-d') . "</td>";
+            } elseif ($this->esBooleano($dato)) {
+                if ($dato) {
+                    $tabla .= "<td style='text-align: left;'>" . 'SI' . "</td>";
+                } else {
+                    $tabla .= "<td style='text-align: left;'>" . 'NO' . "</td>";
+                }
+            } elseif (is_numeric($dato)) {
+                $tabla .= "<td style='text-align: right;'>" . $dato . "</td>";
             } else {
-                echo "<td style='text-align: left;'>" . 'NO' . "</td>";
+                $tabla .= "<td style='text-align: left;'>" . $dato . "</td>";
             }
-        } elseif (is_numeric($dato)) {
-            echo "<td style='text-align: right;'>" . $dato . "</td>";
+            return $tabla;
         } else {
-            echo "<td style='text-align: left;'>" . $dato . "</td>";
+            if ($this->esFecha($dato)) {
+                echo "<td style='text-align: left;'>" . $dato->format('Y-m-d') . "</td>";
+            } elseif ($this->esBooleano($dato)) {
+                if ($dato) {
+                    echo "<td style='text-align: left;'>" . 'SI' . "</td>";
+                } else {
+                    echo "<td style='text-align: left;'>" . 'NO' . "</td>";
+                }
+            } elseif (is_numeric($dato)) {
+                echo "<td style='text-align: right;'>" . $dato . "</td>";
+            } else {
+                echo "<td style='text-align: left;'>" . $dato . "</td>";
+            }
         }
     }
 
@@ -105,8 +127,9 @@ class AppExtension extends AbstractExtension
      * @param $dato
      * @return mixed
      */
-    public function mesATexto($dato){
-        $meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+    public function mesATexto($dato)
+    {
+        $meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
         return $meses[$dato - 1];
     }
 
@@ -125,17 +148,19 @@ class AppExtension extends AbstractExtension
 
     }
 
-    public function encriptar($dato){
-        return str_replace('/','&',password_hash($dato,PASSWORD_BCRYPT));
+    public function encriptar($dato)
+    {
+        return str_replace('/', '&', password_hash($dato, PASSWORD_BCRYPT));
     }
 
-    public function esEstado($dato){
-        if(preg_match('/estado/',$dato)){
-            if(preg_match('/Anulado/',$dato)){
+    public function esEstado($dato)
+    {
+        if (preg_match('/estado/', $dato)) {
+            if (preg_match('/Anulado/', $dato)) {
                 return true;
-            } elseif(preg_match('/Aprobado/',$dato)){
+            } elseif (preg_match('/Aprobado/', $dato)) {
                 return true;
-            } elseif(preg_match('/Autorizado/',$dato)) {
+            } elseif (preg_match('/Autorizado/', $dato)) {
                 return true;
             }
         } else {
@@ -159,6 +184,50 @@ class AppExtension extends AbstractExtension
         }
     }
 
+    public function generarArrRegistros($arrOpciones, $request)
+    {
+        global $kernel;
+        $paginator = $kernel->getContainer()->get('knp_paginator');
+        return $paginator->paginate($arrOpciones['query'], $request->query->getInt('page', 1), 3);
+    }
+
+    public function crearEncabezadoTabla($arrOpciones, $check)
+    {
+        $campos = json_decode($arrOpciones['json']);
+        $arrTipos = [];
+        $header = '';
+        foreach ($campos as $campo) {
+            $arrTipos[$campo->campo] = $campo->tipo;
+            $header .= "<th title='" . $campo->ayuda . "'>" . $campo->titulo . "</th>";
+        }
+        if ($check) {
+            $header .= "<th></th>";
+        }
+        $header .= "</tr>";
+        echo $header;
+    }
+
+    public function crearCuerpoTabla($arrOpciones, $check, $request)
+    {
+        $pk = 0;
+        $arRegistros = $this->generarArrRegistros($arrOpciones, $request);
+        $tabla = '';
+        foreach ($arRegistros as $arRegistro) {
+            $tabla .= "<tr>";
+            foreach ($arRegistro as $key => $dato) {
+                $tabla = $this->validarTipo($dato, $tabla);
+                if (strpos($key, 'Pk')) {
+                    $pk = $dato;
+                }
+            }
+            if ($check) {
+                $tabla .= "<td style='text-align: center;'><input type='checkbox' name='ChkSeleccionar[]' value='" . $pk . "'></td>";
+            }
+            $tabla .= "</tr>";
+        }
+        echo $tabla;
+    }
+
     public function llenarArray($array, $alias, $dato)
     {
         $array[$alias] = $dato;
@@ -169,13 +238,14 @@ class AppExtension extends AbstractExtension
      * Esta función se encarga de imprimir las notificaciones para usuario (Mensajes).
      * @return string
      */
-    public function getNotifies() {
+    public function getNotifies()
+    {
         $session = new Session();
         $flashes = $session->getFlashBag()->all();
         $html = [];
-        foreach($flashes as $type=>$messages) {
-            foreach($messages AS $message) {
-                $span = $this->createTag("span", "&times;", ['aria-hidden'=>'true']);
+        foreach ($flashes as $type => $messages) {
+            foreach ($messages AS $message) {
+                $span = $this->createTag("span", "&times;", ['aria-hidden' => 'true']);
                 $button = $this->createTag("button", $span, ['class' => 'close', 'data-dismiss' => 'alert', 'aria-label' => 'Close']);
                 $alert = $this->createTag("div", $button . $message, ['class' => "alert alert-{$type}", 'data']);
                 $html[] = $alert;
@@ -194,8 +264,10 @@ class AppExtension extends AbstractExtension
      */
     private function createTag($tag, $content = '', $attrs = [])
     {
-        $attrs = implode(" ", array_map(function($attr, $value){ return "{$attr}=\"{$value}\""; }, array_keys($attrs), $attrs));
-        return "<{$tag}" . ($attrs? " {$attrs}" : "") . ">{$content}</{$tag}>";
+        $attrs = implode(" ", array_map(function ($attr, $value) {
+            return "{$attr}=\"{$value}\"";
+        }, array_keys($attrs), $attrs));
+        return "<{$tag}" . ($attrs ? " {$attrs}" : "") . ">{$content}</{$tag}>";
     }
 
     private function esFecha($dato)

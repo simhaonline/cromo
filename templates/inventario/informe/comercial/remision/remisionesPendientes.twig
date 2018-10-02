@@ -1,0 +1,67 @@
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Filtros
+            <i class="fa fa-info-circle" style="color: black;font-size: large;float: right;" title="Las remisiones pendientes, son aquellas que estando aprobados y que aun no han sido facturados"></i>
+        </div>
+    <div class="panel-body">
+        <div class="form-group form-group-sm">
+            <label for="form_remisionTipoRel" class="col-sm-2 control-label">Remision tipo:</label>
+            <div class="col-sm-4">
+                {{ form_widget(form.remisionTipoRel) }}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.btnFiltrar) }}
+    </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th title="Tipo de pedido">TIPO</th>
+                <th title="Numero pedido">NUMERO</th>
+                <th>FECHA</th>
+                <th>TERCERO</th>
+                <th>ITEM</th>
+                <th>NOMBRE</th>
+                <th title="Cantidad a pedida">CAN</th>
+                <th title="Cantidad pendiente">PEN</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arRemisionDetalle in arRemisionDetalles %}
+                <tr>
+                    <td>{{ arRemisionDetalle.codigoRemisionDetallePk }}</td>
+                    <td>{{ arRemisionDetalle.pedidoTipo }}</td>
+                    <td>{{ arRemisionDetalle.numero }}</td>
+                    <td>{{ arRemisionDetalle.fechaPedido | date('Y-m-d') }}</td>
+                    <td>{{ arRemisionDetalle.terceroNombreCorto }}</td>
+                    <td>{{ arRemisionDetalle.codigoItemFk }}</td>
+                    <td>{{ arRemisionDetalle.nombre }}</td>
+                    <td>{{ arRemisionDetalle.cantidad }}</td>
+                    <td>{{ arRemisionDetalle.cantidadPendiente }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-toolbar" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span
+                        class="badge">{{ arRemisionDetalles.getTotalItemCount }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group" style="float: right;">
+        {{ form_widget(form.btnExcel) }}
+    </div>
+    <div class="btn-group btn-xs">
+        {{ knp_pagination_render(arRemisionDetalles) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

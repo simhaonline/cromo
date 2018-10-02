@@ -116,6 +116,7 @@
                                 <ul class="nav nav-third-level">
                                     <li><a href="{{ path('inventario_movimiento_comercial_cotizacion_lista') }}">Cotización</a></li>
                                     <li><a href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Pedido</a></li>
+                                    <li><a href="{{ path('inventario_movimiento_comercial_remision_lista') }}">Remision</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -193,6 +194,9 @@
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad' : 'pedidoTipo'}) }}">Pedido tipo</a>
                                     </li>
                                     <li>
+                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad' : 'remisionTipo'}) }}">Remision tipo</a>
+                                    </li>
+                                    <li>
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario','entidad' : 'cotizacionTipo'}) }}">Cotización tipo</a>
                                     </li>
                                 </ul>
@@ -256,6 +260,7 @@
                                 <ul class="nav nav-third-level">
                                     <li><a href="{{ path('inventario_informe_inventario_comercial_precio_detalle') }}">Precio detalle</a></li>
                                     <li><a href="{{ path('inventario_informe_inventario_comercial_pedido_pendiente') }}">Pedidos pendientes</a></li>
+                                    <li><a href="{{ path('inventario_informe_inventario_comercial_remision_pendiente') }}">Remisiones pendientes</a></li>
                                 </ul>
                                 <!-- /.nav-third-level -->
                             </li>
@@ -312,3 +317,4 @@
 {% endblock %}
 </body>
 </html>
+

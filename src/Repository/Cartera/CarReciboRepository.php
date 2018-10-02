@@ -567,4 +567,76 @@ class CarReciboRepository extends ServiceEntityRepository
         return true;
     }
 
+    public function informe()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarRecibo::class, 'r')
+            ->select('r.codigoReciboPk')
+            ->addSelect('r.numero')
+            ->addSelect('rt.nombre AS tipo')
+            ->addSelect('r.fecha')
+            ->addSelect('r.fechaPago')
+            ->addSelect('cr.numeroIdentificacion AS nit')
+            ->addSelect('cr.nombreCorto AS clienteNombre')
+            ->addSelect('r.codigoCuentaFk')
+            ->addSelect('r.usuario')
+            ->addSelect('r.vrPagoTotal')
+            ->addSelect('r.estadoAutorizado')
+            ->addSelect('r.estadoAnulado')
+            ->addSelect('r.estadoImpreso')
+            ->addSelect('r.estadoAprobado')
+            ->leftJoin('r.clienteRel','cr')
+            ->leftJoin('r.reciboTipoRel', 'rt')
+            ->where('r.codigoReciboPk <> 0')
+            ->orderBy('r.estadoAprobado', 'ASC')
+            ->addOrderBy('r.fecha', 'DESC');
+        $fecha =  new \DateTime('now');
+        if ($session->get('filtroCarInformeReciboTipo') != "") {
+            $queryBuilder->andWhere("r.codigoReciboTipoFk = '" . $session->get('filtroCarInformeReciboTipo')."'");
+        }
+        if ($session->get('filtroCarReciboNumero')) {
+            $queryBuilder->andWhere("r.numero = '{$session->get('filtroCarReciboNumero')}'");
+        }
+        if($session->get('filtroCarCodigoCliente')){
+            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroInformeReciboFechaDesde') != null) {
+                $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroInformeReciboFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("r.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroInformeReciboFechaHasta') != null) {
+                $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroInformeReciboFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("r.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        switch ($session->get('filtroCarInformeReciboEstadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoAprobado = 1");
+                break;
+        }
+        switch ($session->get('filtroCarInformeReciboEstadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoAnulado = 1");
+                break;
+        }
+        switch ($session->get('filtroCarInformeReciboEstadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoAutorizado = 1");
+                break;
+        }
+        return $queryBuilder;
+    }
+
 }

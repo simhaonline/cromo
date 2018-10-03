@@ -235,12 +235,6 @@ class RhuSeleccion
     protected $estadoCivilRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuGrupoPago", inversedBy="seleccionesGrupoPagoRel")
-     * @ORM\JoinColumn(name="codigo_grupo_pago_fk",referencedColumnName="codigo_grupo_pago_pk")
-     */
-    protected $grupoPagoRel;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuSeleccionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -878,22 +872,6 @@ class RhuSeleccion
     public function setEstadoCivilRel($estadoCivilRel): void
     {
         $this->estadoCivilRel = $estadoCivilRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGrupoPagoRel()
-    {
-        return $this->grupoPagoRel;
-    }
-
-    /**
-     * @param mixed $grupoPagoRel
-     */
-    public function setGrupoPagoRel($grupoPagoRel): void
-    {
-        $this->grupoPagoRel = $grupoPagoRel;
     }
 
     /**

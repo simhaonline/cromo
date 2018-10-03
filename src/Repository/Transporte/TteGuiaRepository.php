@@ -348,7 +348,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->leftJoin('g.guiaTipoRel', 'gt')
-            ->where('g.codigoDespachoFk = '. $codigoDespacho)
+            ->where('dd.codigoDespachoFk = '. $codigoDespacho)
             ->andWhere('dd.vrCobroEntrega > 0')
             ->orderBy('g.codigoCiudadDestinoFk')
             ->addOrderBy('g.ordenRuta');

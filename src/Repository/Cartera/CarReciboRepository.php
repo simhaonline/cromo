@@ -254,6 +254,7 @@ class CarReciboRepository extends ServiceEntityRepository
             ->addSelect('r.codigoClienteFk')
             ->addSelect('r.estadoAprobado')
             ->addSelect('r.estadoContabilizado')
+            ->addSelect('r.numeroDocumento')
             ->addSelect('rt.codigoComprobanteFk')
             ->addSelect('c.codigoCuentaContableFk')
             ->leftJoin('r.reciboTipoRel', 'rt')
@@ -530,7 +531,9 @@ class CarReciboRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }*/
                             $arRegistro->setNumero($arRecibo['numero']);
-
+                            if($arRecibo['numeroDocumento']) {
+                                $arRegistro->setNumeroReferencia($arRecibo['numeroDocumento']);
+                            }
                             $arRegistro->setFecha($arRecibo['fecha']);
                             $naturaleza = "D";
                             if($naturaleza == 'D') {

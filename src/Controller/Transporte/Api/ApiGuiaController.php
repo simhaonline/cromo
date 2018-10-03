@@ -15,7 +15,7 @@ class ApiGuiaController extends FOSRestController
      * @param int $codigoGuia
      * @return array
      * @throws \Doctrine\ORM\ORMException
-     * @Rest\Get("/transporte/api/guia/consulta/{codigoGuia}")
+     * @Rest\Get("/transporte/api/app/guia/consulta/{codigoGuia}")
      */
     public function consulta(Request $request, $codigoGuia = 0) {
         set_time_limit(0);
@@ -42,7 +42,7 @@ class ApiGuiaController extends FOSRestController
      * @param int $codigoDespacho
      * @return array
      * @throws \Doctrine\ORM\ORMException
-     * @Rest\Get("/transporte/api/guia/despacho/{codigoDespacho}")
+     * @Rest\Get("/transporte/api/app/guia/despacho/{codigoDespacho}")
      */
     public function listaDespacho(Request $request, $codigoDespacho = 0) {
         set_time_limit(0);
@@ -63,6 +63,47 @@ class ApiGuiaController extends FOSRestController
         }
         //return ;
     }
+
+    /**
+     * @param Request $request
+     * @param int $codigoDespacho
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     * @Rest\Get("/transporte/api/app/guia/entrega/{codigoGuia}/{fecha}/{hora}/{usuario}")
+     */
+    public function entregaApp(Request $request, $codigoGuia = 0, $fecha, $hora, $usuario="") {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $em = $this->getDoctrine()->getManager();
+        $error = false;
+        $mensaje = "";
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        if($arGuia) {
+            if($arGuia->getEstadoDespachado() == 1) {
+                if($arGuia->getEstadoEntregado() == 0) {
+                    $fechaHora = date_create($fecha . " " . $hora);
+                    $arGuia->setFechaEntrega($fechaHora);
+                    $arGuia->setEstadoEntregado(1);
+                    $em->persist($arGuia);
+                    $em->flush();
+                } else {
+                    $error = true;
+                    $mensaje = "La guia ya fue marcada como entregada";
+                }
+            } else {
+                $error = true;
+                $mensaje = "La guia no se ha despachado";
+            }
+        } else {
+            $error = true;
+            $mensaje = "No se encontro la guia";
+        }
+        return [
+            'error' => $error,
+            'mensaje' => $mensaje
+        ];
+    }
+
 
     /**
      * @param Request $request

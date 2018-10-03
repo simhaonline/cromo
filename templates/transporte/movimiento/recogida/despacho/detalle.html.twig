@@ -27,7 +27,7 @@
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arDespachoRecogida.fecha |date("Y/m/d") }}</td>
             <td class="titulo">FLETE:</td>
-            <td align="right">{{ arDespachoRecogida.cantidad }}</td>
+            <td align="right">{{ arDespachoRecogida.vrFletePago | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">VEHICULO:</td>

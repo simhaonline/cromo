@@ -108,7 +108,7 @@ class TerceroController extends Controller
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arTercero);
                 $em->flush();
-                return $this->redirect($this->generateUrl('inventario_administracion_general_tercero_lista'));
+                return $this->redirect($this->generateUrl('inventario_administracion_general_tercero_detalle', ['id' => $arTercero->getCodigoTerceroPk()]));
             }
         }
         return $this->render('inventario/administracion/general/tercero/nuevo.html.twig', [

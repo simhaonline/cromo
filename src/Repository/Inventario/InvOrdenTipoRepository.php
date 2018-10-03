@@ -16,7 +16,7 @@ class InvOrdenTipoRepository extends ServiceEntityRepository
     }
 
     public function camposPredeterminados(){
-        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvOrdenCompraTipo','ot');
+        $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvOrdenTipo','ot');
         $qb
             ->select('ot.codigoOrdenTipoPk AS ID')
             ->addSelect('ot.nombre AS NOMBRE')

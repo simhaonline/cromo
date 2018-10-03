@@ -82,11 +82,11 @@
                 <td class="estado">{{ arDespachoRecogida.estadoAutorizado?'SI':'NO' }}</td>
                 <td class="estado">{{ arDespachoRecogida.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arDespachoRecogida.estadoAnulado?'SI':'NO' }}</td>
-                <td style="text-align: center;">
-                    <a href="{{ path('transporte_movimiento_recogida_despacho_nuevo', { 'id': arDespachoRecogida.codigoDespachoRecogidaPk }) }}">
-                        <i class="fa fa-edit" style="font-size: large;color: black;">
-                        </i>
-                    </a>
+                {% if arDespachoRecogida.estadoAutorizado == false %}
+                <td style="text-align: center;"><a href="{{ path('transporte_movimiento_recogida_despacho_nuevo', { 'id': arDespachoRecogida.codigoDespachoRecogidaPk }) }}"><i class="fa fa-edit" style="font-size: large;color: black;"></i></a>
+                    {% else %}
+                        <td></td>
+                        {% endif %}
                 </td>
                 <td style="text-align: center">
                     <a href="{{ path('transporte_movimiento_recogida_despacho_detalle', { 'id': arDespachoRecogida.codigoDespachoRecogidaPk }) }}">

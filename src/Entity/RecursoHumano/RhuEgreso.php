@@ -10,5 +10,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class RhuEgreso
 {
+    /**
+     * @ORM\Id
+     * @ORM\Column(name="codigo_egreso_pk", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $codigoEgresoPk;
+
 
 }

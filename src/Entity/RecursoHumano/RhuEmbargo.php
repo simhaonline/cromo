@@ -10,8 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class RhuEmbargo
 {
-    private $ruta = 'recursohumano_movimiento_embargo_embargo_';
-
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_embargo_pk", type="integer")
@@ -55,14 +53,4 @@ class RhuEmbargo
     {
         $this->fecha = $fecha;
     }
-
-    /**
-     * @return string
-     */
-    public function getRuta(): string
-    {
-        return $this->ruta;
-    }
-
-
 }

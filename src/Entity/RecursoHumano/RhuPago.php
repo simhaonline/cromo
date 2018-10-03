@@ -10,5 +10,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class RhuPago
 {
-
+    /**
+     * @ORM\Id
+     * @ORM\Column(name="codigo_pago_pk", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $codigoPagoPk;
 }

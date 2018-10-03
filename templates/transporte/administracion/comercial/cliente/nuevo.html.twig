@@ -51,33 +51,42 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_direccion" class="col-sm-2 control-label">Direccion:</label>
+                <label for="form_direccion" class="col-sm-2 control-label">Ciudad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ciudadRel,  { 'attr': {'class': 'form-control to-select-2'} }) }}
+                </div>
+                <label for="form_telefono" class="col-sm-2 control-label">Direccion:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.direccion, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                 </div>
-                <label for="form_telefono" class="col-sm-2 control-label">Telefono:</label>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_movil" class="col-sm-2 control-label">Telefono:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.telefono, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                 </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_movil" class="col-sm-2 control-label">Celular:</label>
+                <label for="form_correo" class="col-sm-2 control-label">Celular:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.movil, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                 </div>
-                <label for="form_correo" class="col-sm-2 control-label">Correo:</label>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_plazoPago" class="col-sm-2 control-label">Correo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.correo, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                 </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_plazoPago" class="col-sm-2 control-label">Plazo pago:</label>
+                <label class="col-sm-2 control-label">Plazo pago:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.plazoPago, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label"></label>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_plazoPago" class="col-sm-2 control-label">Inactivo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.estadoInactivo) }}
+                </div>
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
                 </div>
             </div>
             <div class="form-group">

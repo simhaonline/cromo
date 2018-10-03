@@ -181,7 +181,7 @@ class Recogida extends \FPDF {
         $this->Cell(30, 4, "MARCA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, utf8_decode($arRecogida->getVehiculoRel() ? $arRecogida->getVehiculoRel()->getMarcaRel()->getCodigoMarcaPk(): ''), 1, 0, 'L', 1);
+        $this->Cell(65, 4, utf8_decode($arRecogida->getVehiculoRel()->getMarcaRel() ? $arRecogida->getVehiculoRel()->getMarcaRel()->getCodigoMarcaPk(): ''), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, 'COLOR', 1, 0, 'L', 1);

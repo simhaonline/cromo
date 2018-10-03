@@ -190,12 +190,6 @@ class RhuSolicitud
     private $codigoUsuario;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuGrupoPago", inversedBy="solicitudesGrupoPagoRel")
-     * @ORM\JoinColumn(name="codigo_grupo_pago_fk",referencedColumnName="codigo_grupo_pago_pk")
-     */
-    protected $grupoPagoRel;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCargo", inversedBy="solicitudesCargoRel")
      * @ORM\JoinColumn(name="codigo_cargo_fk",referencedColumnName="codigo_cargo_pk")
      */
@@ -801,22 +795,6 @@ class RhuSolicitud
     /**
      * @return mixed
      */
-    public function getGrupoPagoRel()
-    {
-        return $this->grupoPagoRel;
-    }
-
-    /**
-     * @param mixed $grupoPagoRel
-     */
-    public function setGrupoPagoRel($grupoPagoRel): void
-    {
-        $this->grupoPagoRel = $grupoPagoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCargoRel()
     {
         return $this->cargoRel;
@@ -973,6 +951,7 @@ class RhuSolicitud
     {
         $this->religionRel = $religionRel;
     }
+
 
 
 }

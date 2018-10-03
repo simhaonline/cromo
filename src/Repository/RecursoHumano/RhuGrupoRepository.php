@@ -2,15 +2,15 @@
 
 namespace App\Repository\RecursoHumano;
 
-use App\Entity\RecursoHumano\RhuGrupoPago;
+use App\Entity\RecursoHumano\RhuGrupo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class RhuGrupoPagoRepository extends ServiceEntityRepository
+class RhuGrupoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, RhuGrupoPago::class);
+        parent::__construct($registry, RhuGrupo::class);
     }
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()

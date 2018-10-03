@@ -23,6 +23,11 @@ class TteCliente
     private $codigoIdentificacionFk;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
+     */
+    private $codigoCiudadFk;
+
+    /**
      * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=true)
      */
     private $numeroIdentificacion;
@@ -164,6 +169,12 @@ class TteCliente
      * @ORM\OneToMany(targetEntity="TteClienteCondicion", mappedBy="clienteRel")
      */
     protected $clientesCondicionesClienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="tteClientesCiudadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
 
     /**
      * @return mixed
@@ -645,8 +656,37 @@ class TteCliente
         $this->nombreExtendido = $nombreExtendido;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadFk()
+    {
+        return $this->codigoCiudadFk;
+    }
 
+    /**
+     * @param mixed $codigoCiudadFk
+     */
+    public function setCodigoCiudadFk($codigoCiudadFk): void
+    {
+        $this->codigoCiudadFk = $codigoCiudadFk;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
+    }
 
 }
 

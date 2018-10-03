@@ -44,6 +44,11 @@ class GenCiudad
     protected $carClientesCiudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteCliente", mappedBy="ciudadRel")
+     */
+    protected $tteClientesCiudadRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Contabilidad\CtbTercero", mappedBy="ciudadRel")
      */
     protected $ctbTercerosCiudadRel;
@@ -369,5 +374,23 @@ class GenCiudad
     {
         $this->invSucursalesCiuidadRel = $invSucursalesCiuidadRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTteClientesCiudadRel()
+    {
+        return $this->tteClientesCiudadRel;
+    }
+
+    /**
+     * @param mixed $tteClientesCiudadRel
+     */
+    public function setTteClientesCiudadRel($tteClientesCiudadRel): void
+    {
+        $this->tteClientesCiudadRel = $tteClientesCiudadRel;
+    }
+
+
 }
 

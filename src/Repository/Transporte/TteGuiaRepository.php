@@ -1429,7 +1429,12 @@ class TteGuiaRepository extends ServiceEntityRepository
         $queryBuilder = $em->createQueryBuilder()->from(TteGuia::class, 'g');
         $queryBuilder
             ->select('g.codigoGuiaPk')
-            ->where("g.codigoDespachoFk = " . $codigoDespacho);
+            ->addSelect('g.nombreDestinatario AS destinatario')
+            ->addSelect('cd.nombre AS destino')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where("g.codigoDespachoFk = " . $codigoDespacho)
+            ->andWhere('g.estadoEntregado = 0')
+            ->orderBy('g.ordenRuta');
         return $queryBuilder->getQuery()->getResult();
     }
 

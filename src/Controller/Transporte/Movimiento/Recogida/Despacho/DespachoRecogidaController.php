@@ -107,6 +107,8 @@ class DespachoRecogidaController extends Controller
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteDespachoRecogidaFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteDespachoRecogidaFechaHasta'))])
             ->add('txtVehiculo', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control'], 'data' => $session->get('filtroTteDespachoRecogidaVehiculoCodigo')])
+            ->add('txtCodigoDespachoRecogida', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control'], 'data' => $session->get('filtroTteCodigoDespachoRecogida')])
+            ->add('txtNumeroDespachoRecogida', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control'], 'data' => $session->get('filtroTteNumeroDespachoRecogida')])
             ->add('choEstado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false,'data' => $session->get('filtroTteDespachoRecogidaEstadoAprobado')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
@@ -118,6 +120,8 @@ class DespachoRecogidaController extends Controller
                 $session->set('filtroTteDespachoRecogidaFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroTteDespachoRecogidaFiltroFecha', $form->get('filtrarFecha')->getData());
                 $session->set('filtroTteDespachoRecogidaVehiculoCodigo', $form->get('txtVehiculo')->getData());
+                $session->set('filtroTteCodigoDespachoRecogida', $form->get('txtCodigoDespachoRecogida')->getData());
+                $session->set('filtroTteNumeroDespachoRecogida', $form->get('txtNumeroDespachoRecogida')->getData());
                 $session->set('filtroTteDespachoRecogidaEstadoAprobado', $form->get('choEstado')->getData());
             }
             if($form->get('btnEliminar')->isClicked()){

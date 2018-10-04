@@ -61,7 +61,12 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("dr.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
         }
-
+        if($session->get('filtroTteCodigoDespachoRecogida') != ''){
+            $queryBuilder->andWhere("dr.codigoDespachoRecogidaPk = '{$session->get('filtroTteCodigoDespachoRecogida')}'");
+        }
+        if($session->get('filtroTteNumeroDespachoRecogida') != ''){
+            $queryBuilder->andWhere("dr.numero = '{$session->get('filtroTteNumeroDespachoRecogida')}'");
+        }
         if($session->get('filtroTteDespachoRecogidaVehiculoCodigo') != ''){
             $queryBuilder->andWhere("dr.codigoVehiculoFk = '{$session->get('filtroTteDespachoRecogidaVehiculoCodigo')}'");
         }

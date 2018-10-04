@@ -414,4 +414,19 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $cantidad;
     }
 
+    public function validarDetalles($codigoMovimiento){
+        $cantidad = 0;
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoMovimientoDetallePk')
+            ->addSelect('md.codigoItemFk')
+            ->addSelect('md.loteFk')
+            ->addSelect('md.codigoBodegaFk')
+            ->addSelect('md.cantidad')
+            ->addSelect('i.afectaInventario')
+            ->leftJoin('md.itemRel', 'i')
+            ->where('md.codigoMovimientoFk=' . $codigoMovimiento);
+        $arrDetalles = $queryBuilder->getQuery()->getResult();
+        return $arrDetalles;
+    }
+
 }

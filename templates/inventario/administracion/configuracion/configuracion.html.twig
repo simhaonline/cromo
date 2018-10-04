@@ -1,0 +1,52 @@
+{% extends 'base_transporte.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Configuracion transporte</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_informacionLegalMovimiento" class="col-sm-2 control-label">Informacion legal movimiento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.informacionLegalMovimiento, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+                <label for="form_informacionPagoMovimiento" class="col-sm-2 control-label">Informacion pago movimiento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.informacionPagoMovimiento) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_informacionContactoMovimiento" class="col-sm-2 control-label">Informacion contacto movimiento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.informacionContactoMovimiento) }}
+                </div>
+                <label for="form_informacionResolucionDianMovimiento" class="col-sm-2 control-label">Resolucion DIAN:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.informacionResolucionDianMovimiento) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_codigoFormatoMovimiento" class="col-sm-2 control-label">Codigo formato movimiento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoFormatoMovimiento) }}
+                </div>
+                <label for="form_codigoDocumentoMovimientosSalidaBodega" class="col-sm-2 control-label">Codigo documento movimiento salida bodega:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoDocumentoMovimientosSalidaBodega) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_codigoDocumentoMovimientosEntradaBodega" class="col-sm-2 control-label">Codigo documento movimiento entrada bodega:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoDocumentoMovimientosEntradaBodega) }}
+                </div>
+                <label for="form_porcentajeRetencionFuente" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

@@ -287,8 +287,10 @@
                                     <li>
                                         <a href="{{ path('transporte_proceso_recogida_recogida_programada') }}">Programada</a>
                                     </li>
-                                    <li><a href="{{ path('transporte_proceso_recogida_recogida_recoge') }}">Recoge</a></li>
-                                    <li><a href="{{ path('transporte_proceso_recogida_recogida_descarga') }}">Descarga</a>
+                                    <li><a href="{{ path('transporte_proceso_recogida_recogida_recoge') }}">Recoge</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('transporte_proceso_recogida_recogida_descarga') }}">Descarga</a>
                                     </li>
                                 </ul>
                             </li>
@@ -298,12 +300,20 @@
                                     <li>
                                         <a href="#">Guia <span class="fa arrow"></span></a>
                                         <ul class="nav nav-four-level">
-                                            <li><a href="{{ path('transporte_proceso_transporte_guia_entrega') }}">Entrega guia</a></li>
-                                            <li><a href="{{ path('transporte_proceso_transporte_guia_soporte') }}">Soporte guia</a></li>
-                                            <li><a href="{{ path('transporte_pro_transporte_general_cierre') }}">Cierre</a></li>
-                                            <li><a href="{{ path('transporte_proceso_transporte_guia_redespacho') }}">Re-despacho</a></li>
-                                            <li><a href="{{ path('transporte_proceso_transporte_guia_cortesia') }}">Cortesia</a></li>
-                                            <li><a href="{{ path('transporte_proceso_transporte_guia_generarfactura') }}">Generar factura</a></li>
+                                            <li><a href="{{ path('transporte_proceso_transporte_guia_entrega') }}">Entrega
+                                                    guia</a></li>
+                                            <li><a href="{{ path('transporte_proceso_transporte_guia_soporte') }}">Soporte
+                                                    guia</a></li>
+                                            <li>
+                                                <a href="{{ path('transporte_pro_transporte_general_cierre') }}">Cierre</a>
+                                            </li>
+                                            <li><a href="{{ path('transporte_proceso_transporte_guia_redespacho') }}">Re-despacho</a>
+                                            </li>
+                                            <li><a href="{{ path('transporte_proceso_transporte_guia_cortesia') }}">Cortesia</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ path('transporte_proceso_transporte_guia_generarfactura') }}">Generar
+                                                    factura</a></li>
                                         </ul>
                                     </li>
                                     <li>
@@ -328,7 +338,8 @@
                                         <a href="{{ path('transporte_proceso_contabilidad_despacho_lista') }}">Despacho</a>
                                     </li>
                                     <li>
-                                        <a href="{{ path('transporte_proceso_contabilidad_despachorecogida_lista') }}">Despacho recogida</a>
+                                        <a href="{{ path('transporte_proceso_contabilidad_despachorecogida_lista') }}">Despacho
+                                            recogida</a>
                                     </li>
                                     <li>
                                         <a href="{{ path('transporte_proceso_contabilidad_recaudo_lista') }}">Recaudo</a>
@@ -443,10 +454,16 @@
                             <li>
                                 <a href="#">Comercial <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_informe_comercial_guia_produccion') }}">Produccion (cliente)</a></li>
-                                    <li><a href="{{ path('transporte_informe_comercial_facturacion_factura') }}">Factura</a></li>
-                                    <li><a href="{{ path('transporte_informe_comercial_facturacion_detalle') }}">Factura detalle</a></li>
-                                    <li><a href="{{ path('transporte_informe_comercial_facturacion_pendienteFactura') }}">Pendiente facturar</a></li>
+                                    <li><a href="{{ path('transporte_informe_comercial_guia_produccion') }}">Produccion
+                                            (cliente)</a></li>
+                                    <li>
+                                        <a href="{{ path('transporte_informe_comercial_facturacion_factura') }}">Factura</a>
+                                    </li>
+                                    <li><a href="{{ path('transporte_informe_comercial_facturacion_detalle') }}">Factura
+                                            detalle</a></li>
+                                    <li>
+                                        <a href="{{ path('transporte_informe_comercial_facturacion_pendienteFactura') }}">Pendiente
+                                            facturar</a></li>
                                 </ul>
                                 <!-- /.nav-third-level -->
                             </li>
@@ -503,12 +520,23 @@
                                     <li>
                                         <a href="#">Despacho <span class="fa arrow"></span></a>
                                         <ul class="nav nav-four-level">
-                                            <li><a href="{{ path('transporte_tablero_transporte_despacho_mes') }}" >Despacho por mes</a></li>
+                                            <li><a href="{{ path('transporte_tablero_transporte_despacho_mes') }}">Despacho
+                                                    por mes</a></li>
                                         </ul>
                                     </li>
                                 </ul>
                                 <!-- /.nav-third-level -->
                             </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-cogs"></i> Configuracion<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="{{ path('transporte_administracion_configuracion_configuracion_lista', {'id': 1}) }}">Configuracion</a>
+                            <li>
+
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>

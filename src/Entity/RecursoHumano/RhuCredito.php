@@ -157,9 +157,9 @@ class RhuCredito
     private $numeroLibranza;
 
     /**
-     * @ORM\Column(name="codigo_usuario", type="string", length=50, nullable=true)
+     * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
      */
-    private $codigoUsuario;
+    private $usuario;
 
     /**
      * @ORM\Column(name="total_pagos",options={"default": 0}, type="float")
@@ -632,22 +632,6 @@ class RhuCredito
     /**
      * @return mixed
      */
-    public function getCodigoUsuario()
-    {
-        return $this->codigoUsuario;
-    }
-
-    /**
-     * @param mixed $codigoUsuario
-     */
-    public function setCodigoUsuario($codigoUsuario): void
-    {
-        $this->codigoUsuario = $codigoUsuario;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getTotalPagos()
     {
         return $this->totalPagos;
@@ -709,5 +693,20 @@ class RhuCredito
         $this->aplicarCuotaCesantia = $aplicarCuotaCesantia;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
 
 }

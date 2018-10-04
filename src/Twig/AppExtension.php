@@ -205,10 +205,8 @@ class AppExtension extends AbstractExtension
     public function crearEncabezadoTabla($arrOpciones, $check)
     {
         $campos = json_decode($arrOpciones['json']);
-        $arrTipos = [];
         $header = '';
         foreach ($campos as $campo) {
-            $arrTipos[$campo->campo] = $campo->tipo;
             $header .= "<th title='" . $campo->ayuda . "'>" . $campo->titulo . "</th>";
         }
         $header .= "<th></th><th></th>";

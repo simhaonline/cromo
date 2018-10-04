@@ -2,23 +2,25 @@
 
 namespace App\Repository\RecursoHumano;
 
-use App\Entity\RecursoHumano\RhuEmbargo;
+use App\Entity\RecursoHumano\RhuCredito;
+use App\Entity\RecursoHumano\RhuEgreso;
+use App\Entity\RecursoHumano\RhuProgramacion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class RhuEmbargoRepository extends ServiceEntityRepository
+class RhuProgramacionRepository extends ServiceEntityRepository
 {
 
     /**
      * @return string
      */
     public function getRuta(){
-        return 'recursohumano_movimiento_embargo_embargo_';
+        return 'recursohumano_movimiento_credito_credito_';
     }
 
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, RhuEmbargo::class);
+        parent::__construct($registry, RhuProgramacion::class);
     }
 
     /**
@@ -26,9 +28,9 @@ class RhuEmbargoRepository extends ServiceEntityRepository
      */
     public function lista()
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuEmbargo::class, 'e');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuCredito::class, 'e');
         $queryBuilder
-            ->select('e.codigoEmbargoPk');
+            ->select('e.codigoCreditoPk');
         return $queryBuilder;
     }
 

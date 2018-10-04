@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\General\GenFormaPago;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumentoTipo;
+use App\Entity\Transporte\TteConfiguracion;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
@@ -40,6 +41,16 @@ class CargaInicial extends Fixture
             $arInvConfiguracion->setCodigoConfiguracionPk(1);
             $arInvConfiguracion->setCodigoFormatoMovimiento(1);
             $manager->persist($arInvConfiguracion);
+        }
+        $arTteConfiguracion= $manager->getRepository('App:Transporte\TteConfiguracion')->find(1);
+        if(!$arTteConfiguracion){
+            $arTteConfiguracion = new TteConfiguracion();
+            $arTteConfiguracion->setCodigoConfiguracionPk(1);
+            $arTteConfiguracion->setUsuarioRndc('PENDIENTE');
+            $arTteConfiguracion->setEmpresaRndc('PENDIENTE');
+            $arTteConfiguracion->setNumeroPoliza(1);
+            $arTteConfiguracion->setNumeroIdentificacionAseguradora(1);
+            $manager->persist($arTteConfiguracion);
         }
         $arGenFormaPago = $manager->getRepository('App:General\GenFormaPago')->find('CON');
         if(!$arGenFormaPago){

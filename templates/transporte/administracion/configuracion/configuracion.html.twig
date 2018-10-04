@@ -1,0 +1,63 @@
+{% extends 'base_transporte.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Configuracion transporte</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_usuarioRndc" class="col-sm-2 control-label">Usuario RNDC:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.usuarioRndc, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+                <label for="form_claveRndc" class="col-sm-2 control-label">Contraseña:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.claveRndc) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_empresaRndc" class="col-sm-2 control-label">Empresa RNDC:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.empresaRndc) }}
+                </div>
+                <label for="form_numeroPoliza" class="col-sm-2 control-label">Numero poliza:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroPoliza) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaVencePoliza" class="col-sm-2 control-label">Identificacion aseguradora:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroIdentificacionAseguradora) }}
+                </div>
+                <label for="form_numeroIdentificacionAseguradora" class="col-sm-2 control-label">Fecha vencimiento poliza:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaVencePoliza) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_vrBaseRetencionFuente" class="col-sm-2 control-label">Base retencion fuente:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrBaseRetencionFuente) }}
+                </div>
+                <label for="form_porcentajeRetencionFuente" class="col-sm-2 control-label">Porcentaje retencion fuente:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.porcentajeRetencionFuente) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_vrBaseRetencionFuente" class="col-sm-2 control-label">Porcentaje industria y comercio:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.porcentajeIndustriaComercio) }}
+                </div>
+                <label for="form_porcentajeIndustriaComercio" class="col-sm-2 control-label">Codigo precio general:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoPrecioGeneralFk) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

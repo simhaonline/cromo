@@ -3,22 +3,24 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuEmbargo;
+use App\Entity\RecursoHumano\RhuRecaudo;
+use App\Entity\RecursoHumano\RhuReclamo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class RhuEmbargoRepository extends ServiceEntityRepository
+class RhuRecaudoRepository extends ServiceEntityRepository
 {
 
     /**
      * @return string
      */
     public function getRuta(){
-        return 'recursohumano_movimiento_embargo_embargo_';
+        return 'recursohumano_movimiento_reclamo_reclamo_';
     }
 
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, RhuEmbargo::class);
+        parent::__construct($registry, RhuRecaudo::class);
     }
 
     /**
@@ -26,7 +28,7 @@ class RhuEmbargoRepository extends ServiceEntityRepository
      */
     public function lista()
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuEmbargo::class, 'e');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuReclamo::class, 'e');
         $queryBuilder
             ->select('e.codigoEmbargoPk');
         return $queryBuilder;

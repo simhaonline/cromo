@@ -31,24 +31,25 @@ class TteGuiaCargaRepository extends ServiceEntityRepository
 
     public function lista(){
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from('App:Transporte\TteGuiaCarga','tgc')
-            ->select('tgc.codigoGuiaCargaPk')
-            ->addSelect('tgc.fechaRegistro')
-            ->addSelect('tgc.numero')
-            ->addSelect('tgc.cliente')
-            ->addSelect('tgc.remitente')
-            ->addSelect('tgc.relacionCliente')
-            ->addSelect('tgc.documentoCliente')
-            ->addSelect('tgc.nombreDestinatario')
-            ->addSelect('tgc.direccionDestinatario')
-            ->addSelect('tgc.telefonoDestinatario')
-            ->addSelect('tgc.codigoCiudadOrigenFk')
-            ->addSelect('tgc.codigoCiudadDestinoFk')
-            ->addSelect('tgc.comentario')
-            ->addSelect('tgc.vrDeclarado')
-            ->where('tgc.codigoGuiaCargaPk <> 0');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from('App:Transporte\TteGuiaCarga','gc')
+            ->select('gc.codigoGuiaCargaPk')
+            ->addSelect('gc.fechaRegistro')
+            ->addSelect('gc.numero')
+            ->addSelect('gc.cliente')
+            ->addSelect('gc.remitente')
+            ->addSelect('gc.relacionCliente')
+            ->addSelect('gc.documentoCliente')
+            ->addSelect('gc.nombreDestinatario')
+            ->addSelect('gc.direccionDestinatario')
+            ->addSelect('gc.telefonoDestinatario')
+            ->addSelect('gc.codigoCiudadOrigenFk')
+            ->addSelect('gc.codigoCiudadDestinoFk')
+            ->addSelect('gc.comentario')
+            ->addSelect('gc.vrDeclarado')
+            ->where('gc.codigoGuiaCargaPk <> 0')
+        ->orderBy('gc.fechaRegistro', 'DESC');
         if($session->get('filtroTteGuiaCargaCliente') != ''){
-            $queryBuilder->andWhere("tgc.cliente LIKE '%{$session->get('filtroTteGuiaCargaCliente')}%' ");
+            $queryBuilder->andWhere("gc.cliente LIKE '%{$session->get('filtroTteGuiaCargaCliente')}%' ");
         }
         return $queryBuilder;
     }

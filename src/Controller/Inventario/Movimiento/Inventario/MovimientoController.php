@@ -371,6 +371,7 @@ class MovimientoController extends Controller
                                 if ($cantidad <= $arOrdenDetalle->getCantidadPendiente()) {
                                     $arMovimientoDetalle = new InvMovimientoDetalle();
                                     $arMovimientoDetalle->setMovimientoRel($arMovimiento);
+                                    $arMovimientoDetalle->setOperacionInventario($arMovimiento->getOperacionInventario());
                                     $arMovimientoDetalle->setItemRel($arOrdenDetalle->getItemRel());
                                     $arMovimientoDetalle->setCantidad($cantidad);
                                     $arMovimientoDetalle->setVrPrecio($arOrdenDetalle->getVrPrecio());

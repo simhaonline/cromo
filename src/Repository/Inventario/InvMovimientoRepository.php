@@ -78,10 +78,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
     public function autorizar($arMovimiento)
     {
         $respuesta = $this->validarDetalles($arMovimiento->getCodigoMovimientoPk());
-        if (count($respuesta)) {
-            foreach ($respuesta as $error) {
-                Mensajes::error($error);
-            }
+        if ($respuesta) {
+            Mensajes::error($respuesta);
         } else {
             if ($this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
                 $this->afectar($arMovimiento, 1);
@@ -197,9 +195,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
      */
     public function afectar($arMovimiento, $tipo)
     {
+        $em = $this->getEntityManager();
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-
             $arItem = $this->getEntityManager()->getRepository(InvItem::class)->find($arMovimientoDetalle->getCodigoItemFk());
             if($arItem->getAfectaInventario() == 1) {
                 $arLote = $this->getEntityManager()->getRepository(InvLote::class)
@@ -213,39 +211,35 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $arLote->setBodegaRel($arBodega);
                     $arLote->setLoteFk($arMovimientoDetalle->getLoteFk());
                     $arLote->setFechaVencimiento($arMovimientoDetalle->getFecha());
-                    $this->getEntityManager()->persist($arLote);
-                }
-                if ($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
-                    $arOrdenCompraDetalle = $this->getEntityManager()->getRepository(InvOrdenDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenDetalleFk());
-                    if ($arOrdenCompraDetalle) {
-                        $arOrdenCompraDetalle->setCantidadPendiente($arOrdenCompraDetalle->getCantidadPendiente() + $arMovimientoDetalle->getCantidad() * $tipo);
-                        $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() + $arMovimientoDetalle->getCantidad() * $tipo);
-                        $this->getEntityManager()->persist($arOrdenCompraDetalle);
-                    }
+                    $em->persist($arLote);
                 }
                 $existenciaAnterior = $arItem->getCantidadExistencia();
                 $costoPromedio = $arItem->getVrCostoPromedio();
                 $cantidadSaldo = $arItem->getCantidadExistencia() + ($arMovimientoDetalle->getCantidadOperada() * $tipo);
-                $cantidadOperada = $arMovimientoDetalle->getCantidad() * $arMovimiento->getOperacionInventario();
-                $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + ($arMovimientoDetalle->getCantidad() * $arMovimiento->getOperacionInventario()) * $tipo);
-                $arLote->setCantidadDisponible($arLote->getCantidadDisponible() + $arMovimientoDetalle->getCantidadOperada() * $tipo);
-
+                $cantidadOperada = $arMovimientoDetalle->getCantidad() * $arMovimientoDetalle->getOperacionInventario();
+                $cantidadAfectar = ($arMovimientoDetalle->getCantidad() * $arMovimientoDetalle->getOperacionInventario()) * $tipo;
+                $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + $cantidadAfectar);
+                $arLote->setCantidadDisponible($arLote->getCantidadExistencia());
+                $em->persist($arLote);
                 $arMovimientoDetalle->setCantidadSaldo($cantidadSaldo);
                 $arMovimientoDetalle->setCantidadOperada($cantidadOperada);
                 if($tipo == 1) {
                     if($arMovimiento->getGeneraCostoPromedio()) {
                         if($existenciaAnterior != 0) {
                             $precioBruto = $arMovimientoDetalle->getVrPrecio() - (($arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getPorcentajeDescuento()) / 100);
-                            $costoPromedio = (($existenciaAnterior * $costoPromedio) + (($arMovimientoDetalle->getCantidad() * $precioBruto))) / $cantidadSaldo;
+                            if($cantidadSaldo != 0) {
+                                $costoPromedio = (($existenciaAnterior * $costoPromedio) + (($arMovimientoDetalle->getCantidad() * $precioBruto))) / $cantidadSaldo;
+                            }
                         } else {
                             $costoPromedio = $arMovimientoDetalle->getVrCosto();
                         }
                     }
                     $arMovimientoDetalle->setVrCosto($costoPromedio);
                 }
+                $em->persist($arMovimientoDetalle);
                 $arItem->setCantidadExistencia($cantidadSaldo);
                 $arItem->setVrCostoPromedio($costoPromedio);
-                $this->getEntityManager()->persist($arItem, $arLote, $arMovimientoDetalle);
+                $em->persist($arItem);
             }
         }
     }
@@ -285,27 +279,26 @@ class InvMovimientoRepository extends ServiceEntityRepository
      */
     public function validarDetalles($codigoMovimiento)
     {
-        $respuesta = [];
-        $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $codigoMovimiento]);
+        $respuesta = "";
+        $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->validarDetalles($codigoMovimiento);
+
         /** @var  $arMovimientoDetalle InvMovimientoDetalle */
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-            if ($arMovimientoDetalle->getItemRel()->getAfectaInventario()) {
-                if (!$arMovimientoDetalle->getCodigoBodegaFk() || $arMovimientoDetalle->getCodigoBodegaFk() == '') {
-                    $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' no tiene asociada una bodega.';
+            if ($arMovimientoDetalle['afectaInventario']) {
+                if($arMovimientoDetalle['codigoBodegaFk'] == "" || $arMovimientoDetalle['loteFk'] == "") {
+                      $respuesta = "El detalle con id " . $arMovimientoDetalle['codigoMovimientoDetallePk'] . " no tiene bodega o lote";
+                      break;
                 } else {
-                    $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle->getCodigoBodegaFk());
+                    $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle['codigoBodegaFk']);
                     if (!$arBodega) {
-                        $respuesta[] = 'La bodega ingresada en el detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ', no existe.';
-                    }
-                }
-                if ($this->getEntityManager()->getRepository(InvMovimiento::class)->find($codigoMovimiento)->getDocumentoRel()->getOperacionInventario() == -1) {
-                    if (!$arMovimientoDetalle->getLoteFk() || $arMovimientoDetalle->getLoteFk() == '') {
-                        $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' no tiene asociado un lote.';
+                        $respuesta = 'La bodega ingresada en el detalle con id ' . $arMovimientoDetalle['codigoMovimientoDetallePk'] . ', no existe.';
+                        break;
                     }
                 }
             }
-            if ($arMovimientoDetalle->getCantidad() == 0) {
+            if ($arMovimientoDetalle['cantidad'] == 0) {
                 $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' tiene cantidad 0.';
+                break;
             }
         }
         return $respuesta;

@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Documental\DocConfiguracion;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenFormaPago;
 use App\Entity\Inventario\InvConfiguracion;
@@ -64,6 +65,14 @@ class CargaInicial extends Fixture
             $arGenConfiguracion->setDireccion('PENDIENTE');
             $arGenConfiguracion->setRutaTemporal('PENDIENTE');
             $manager->persist($arGenConfiguracion);
+        }
+        $arDocConfiguracion= $manager->getRepository('App:Documental\DocConfiguracion')->find(1);
+        if(!$arDocConfiguracion){
+            $arDocConfiguracion = new DocConfiguracion();
+            $arDocConfiguracion->setCodigoConfiguracionPk(1);
+            $arDocConfiguracion->setRutaBandeja('PENDIENTE');
+            $arDocConfiguracion->setRutaAlmacenamiento('PENDIENTE');
+            $manager->persist($arDocConfiguracion);
         }
         $arGenFormaPago = $manager->getRepository('App:General\GenFormaPago')->find('CON');
         if(!$arGenFormaPago){

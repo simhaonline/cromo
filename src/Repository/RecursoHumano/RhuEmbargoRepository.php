@@ -36,7 +36,6 @@ class RhuEmbargoRepository extends ServiceEntityRepository
      * @return array
      */
     public function parametrosLista(){
-        $arEmbargo = new RhuEmbargo();
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
             ->select('re.codigoEmbargoPk')
             ->addSelect('re.fecha')

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\RecursoHumano\Movimiento\Embargo;
+namespace App\Controller\RecursoHumano\Movimiento\Nomina\Embargo;
 
 use App\Entity\RecursoHumano\RhuEmbargo;
 use App\Form\Type\RecursoHumano\EmbargoType;
@@ -17,7 +17,7 @@ class EmbargoController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/recursohumano/movimiento/embargo/embargo/lista", name="recursohumano_movimiento_embargo_embargo_lista")
+     * @Route("/recursohumano/movimiento/nomina/embargo/lista", name="recursohumano_movimiento_nomina_embargo_lista")
      */
     public function lista(Request $request)
     {
@@ -34,7 +34,7 @@ class EmbargoController extends Controller
 
             }
         }
-        return $this->render('recursoHumano/movimiento/embargo/lista.html.twig', [
+        return $this->render('recursoHumano/movimiento/nomina/embargo/lista.html.twig', [
             'arrParametrosLista' => $arrParametrosLista,
             'request' => $request,
             'formBotonera' => $formBotonera->createView()
@@ -64,7 +64,7 @@ class EmbargoController extends Controller
                 $em->flush();
             }
         }
-        return $this->render('recursoHumano/movimiento/embargo/nuevo.html.twig', [
+        return $this->render('recursoHumano/movimiento/nomina/embargo/nuevo.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -80,9 +80,9 @@ class EmbargoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arEmbargo = $em->getRepository(RhuEmbargo::class)->find($id);
         if(!$arEmbargo){
-            return $this->redirect($this->generateUrl('recursohumano_movimiento_embargo_embargo_lista'));
+            return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_lista'));
         }
-        return $this->render('recursoHumano/movimiento/embargo/detalle.html.twig',[
+        return $this->render('recursoHumano/movimiento/nomina/embargo/detalle.html.twig',[
             'arEmbargo' => $arEmbargo
         ]);
     }

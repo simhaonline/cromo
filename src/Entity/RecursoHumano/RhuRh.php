@@ -12,8 +12,7 @@ class RhuRh
     
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_rh_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_rh_pk", type="string", length=10)
      */        
     private $codigoRhPk;
 
@@ -30,7 +29,12 @@ class RhuRh
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="rhRel")
      */
-    protected $rhuSeleccionRhRel;
+    protected $rhuSeleccionesRhRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="rhRel")
+     */
+    protected $rhuEmpleadosRhRel;
 
     /**
      * @return mixed
@@ -83,18 +87,32 @@ class RhuRh
     /**
      * @return mixed
      */
-    public function getRhuSeleccionRhRel()
+    public function getRhuSeleccionesRhRel()
     {
-        return $this->rhuSeleccionRhRel;
+        return $this->rhuSeleccionesRhRel;
     }
 
     /**
-     * @param mixed $rhuSeleccionRhRel
+     * @param mixed $rhuSeleccionesRhRel
      */
-    public function setRhuSeleccionRhRel($rhuSeleccionRhRel): void
+    public function setRhuSeleccionesRhRel($rhuSeleccionesRhRel): void
     {
-        $this->rhuSeleccionRhRel = $rhuSeleccionRhRel;
+        $this->rhuSeleccionesRhRel = $rhuSeleccionesRhRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRhuEmpleadosRhRel()
+    {
+        return $this->rhuEmpleadosRhRel;
+    }
 
+    /**
+     * @param mixed $rhuEmpleadosRhRel
+     */
+    public function setRhuEmpleadosRhRel($rhuEmpleadosRhRel): void
+    {
+        $this->rhuEmpleadosRhRel = $rhuEmpleadosRhRel;
+    }
 }

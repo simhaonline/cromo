@@ -44,7 +44,7 @@ class RhuAspirante
     private $codigoSexoFk;
 
     /**
-     * @ORM\Column(name="codigo_rh_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_rh_fk",type="string", length=10, nullable=true)
      */
     private $codigoRhFk;
 
@@ -195,7 +195,7 @@ class RhuAspirante
     private $reintegro = false;
 
     /**
-     * @ORM\Column(name="codigo_cargo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_cargo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCargoFk;
 
@@ -906,6 +906,4 @@ class RhuAspirante
     {
         $this->cargoRel = $cargoRel;
     }
-
-
 }

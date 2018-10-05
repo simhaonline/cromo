@@ -6,9 +6,9 @@ use App\Entity\RecursoHumano\RhuEmpleado;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -88,24 +88,34 @@ class EmpleadoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Cargo interno:'
             ])
+            ->add('rhRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\RecursoHumano\RhuRh',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('ac')
+                        ->orderBy('ac.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Rh:'
+            ])
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'numero identificacion:'])
+            ->add('nombreCorto',TextType::class,['required' => false,'label' => 'Nombre corto:'])
             ->add('nombre1',TextType::class,['required' => true,'label' => 'Primer nombre:'])
-            ->add('nombre2', TextType::class,['required' => true,'label' => 'Segundo nombre:'])
+            ->add('nombre2', TextType::class,['required' => false,'label' => 'Segundo nombre:'])
             ->add('apellido1', TextType::class,['required' => true,'label' => 'Primer apellido:'])
-            ->add('apellido2', TextType::class,['required' => true,'label' => 'Segundo apellido:'])
-            ->add('telefono',NumberType::class,['required' => true,'label' => 'Telefono:'])
-            ->add('celular',NumberType::class,['required' => true,'label' => 'Celular:'])
-            ->add('direccion',TextType::class,['required' => true,'label' => 'Direccion:'])
+            ->add('apellido2', TextType::class,['required' => false,'label' => 'Segundo apellido:'])
+            ->add('telefono',NumberType::class,['required' => false,'label' => 'Telefono:'])
+            ->add('peso',NumberType::class,['required' => false,'label' => 'Peso:'])
+            ->add('estatura',NumberType::class,['required' => false,'label' => 'Estatura:'])
+            ->add('celular',NumberType::class,['required' => false,'label' => 'Celular:'])
+            ->add('direccion',TextType::class,['required' => false,'label' => 'Direccion:'])
             ->add('fechaExpedicionIdentificacion', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
-            ->add('barrio',TextType::class,['required' => true,'label' => 'Barrio:'])
-            ->add('correo',TextType::class,['required' => true,'label' => 'Correo:'])
+            ->add('barrio',TextType::class,['required' => false,'label' => 'Barrio:'])
+            ->add('correo',TextType::class,['required' => false,'label' => 'Correo:'])
             ->add('fechaNacimiento', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
-            ->add('cuenta',TextType::class,['required' => true,'label' => 'Cuenta:'])
-            ->add('peso',TextType::class,['required' => true,'label' => 'Peso:'])
-            ->add('estatura',TextType::class,['required' => true,'label' => 'Estatura:'])
-            ->add('cargoDescripcion',TextType::class,['required' => true,'label' => 'Descripcion cargo:'])
-            ->add('auxilioTransporte', CheckboxType::class, array('required'  => false))
-            ->add('VrSalario',NumberType::class,['required' => true,'label' => 'Salario:'])
+            ->add('cuenta',TextType::class,['required' => false,'label' => 'Cuenta:'])
+            ->add('vrSalario',NumberType::class,['required' => true,'label' => 'Salario:'])
+            ->add('guardar',SubmitType::class,['attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 

@@ -104,6 +104,11 @@ class GenCiudad
     protected $invSucursalesCiuidadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="ciudadNacimientoRel")
+     */
+    protected $rhuEmpleadosCiudadNacimientoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -197,6 +202,22 @@ class GenCiudad
     public function setCarClientesCiudadRel($carClientesCiudadRel): void
     {
         $this->carClientesCiudadRel = $carClientesCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTteClientesCiudadRel()
+    {
+        return $this->tteClientesCiudadRel;
+    }
+
+    /**
+     * @param mixed $tteClientesCiudadRel
+     */
+    public function setTteClientesCiudadRel($tteClientesCiudadRel): void
+    {
+        $this->tteClientesCiudadRel = $tteClientesCiudadRel;
     }
 
     /**
@@ -378,17 +399,17 @@ class GenCiudad
     /**
      * @return mixed
      */
-    public function getTteClientesCiudadRel()
+    public function getRhuEmpleadosCiudadNacimientoRel()
     {
-        return $this->tteClientesCiudadRel;
+        return $this->rhuEmpleadosCiudadNacimientoRel;
     }
 
     /**
-     * @param mixed $tteClientesCiudadRel
+     * @param mixed $rhuEmpleadosCiudadNacimientoRel
      */
-    public function setTteClientesCiudadRel($tteClientesCiudadRel): void
+    public function setRhuEmpleadosCiudadNacimientoRel($rhuEmpleadosCiudadNacimientoRel): void
     {
-        $this->tteClientesCiudadRel = $tteClientesCiudadRel;
+        $this->rhuEmpleadosCiudadNacimientoRel = $rhuEmpleadosCiudadNacimientoRel;
     }
 
 

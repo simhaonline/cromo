@@ -27,6 +27,11 @@ class GenEstadoCivil
     protected $rhuAspirantesEstadoCivilRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="estadoCivilRel")
+     */
+    protected $rhuEmpleadosEstadoCivilRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="estadoCivilRel")
      */
     protected $rhuSolicitudesEstadoCivilRel;
@@ -87,6 +92,22 @@ class GenEstadoCivil
     /**
      * @return mixed
      */
+    public function getRhuEmpleadosEstadoCivilRel()
+    {
+        return $this->rhuEmpleadosEstadoCivilRel;
+    }
+
+    /**
+     * @param mixed $rhuEmpleadosEstadoCivilRel
+     */
+    public function setRhuEmpleadosEstadoCivilRel($rhuEmpleadosEstadoCivilRel): void
+    {
+        $this->rhuEmpleadosEstadoCivilRel = $rhuEmpleadosEstadoCivilRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getRhuSolicitudesEstadoCivilRel()
     {
         return $this->rhuSolicitudesEstadoCivilRel;
@@ -103,20 +124,17 @@ class GenEstadoCivil
     /**
      * @return mixed
      */
-    public function getRhuSeleccionEstadoCivilRel()
+    public function getRhuSeleccionesEstadoCivilRel()
     {
-        return $this->rhuSeleccionEstadoCivilRel;
+        return $this->rhuSeleccionesEstadoCivilRel;
     }
 
     /**
-     * @param mixed $rhuSeleccionEstadoCivilRel
+     * @param mixed $rhuSeleccionesEstadoCivilRel
      */
-    public function setRhuSeleccionEstadoCivilRel($rhuSeleccionEstadoCivilRel): void
+    public function setRhuSeleccionesEstadoCivilRel($rhuSeleccionesEstadoCivilRel): void
     {
-        $this->rhuSeleccionEstadoCivilRel = $rhuSeleccionEstadoCivilRel;
+        $this->rhuSeleccionesEstadoCivilRel = $rhuSeleccionesEstadoCivilRel;
     }
-
-
-
 }
 

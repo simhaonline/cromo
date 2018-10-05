@@ -12,8 +12,7 @@ class RhuCargo
     
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_cargo_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_cargo_pk", type="string", length=10)
      */        
     private $codigoCargoPk;
 
@@ -36,6 +35,11 @@ class RhuCargo
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="cargoRel")
      */
     protected $rhuAspirantesCargoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="cargoRel")
+     */
+    protected $rhuEmpleadosCargoRel;
 
     /**
      * @return mixed
@@ -117,5 +121,19 @@ class RhuCargo
         $this->rhuAspirantesCargoRel = $rhuAspirantesCargoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRhuEmpleadosCargoRel()
+    {
+        return $this->rhuEmpleadosCargoRel;
+    }
 
+    /**
+     * @param mixed $rhuEmpleadosCargoRel
+     */
+    public function setRhuEmpleadosCargoRel($rhuEmpleadosCargoRel): void
+    {
+        $this->rhuEmpleadosCargoRel = $rhuEmpleadosCargoRel;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenFormaPago;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumentoTipo;
@@ -51,6 +52,18 @@ class CargaInicial extends Fixture
             $arTteConfiguracion->setNumeroPoliza(1);
             $arTteConfiguracion->setNumeroIdentificacionAseguradora(1);
             $manager->persist($arTteConfiguracion);
+        }
+        $arGenConfiguracion= $manager->getRepository('App:General\GenConfiguracion')->find(1);
+        if(!$arGenConfiguracion){
+            $arGenConfiguracion = new GenConfiguracion();
+            $arGenConfiguracion->setCodigoConfiguracionPk(1);
+            $arGenConfiguracion->setNit(1);
+            $arGenConfiguracion->setDigitoVerificacion(1);
+            $arGenConfiguracion->setNombre('PENDIENTE');
+            $arGenConfiguracion->setTelefono(1);
+            $arGenConfiguracion->setDireccion('PENDIENTE');
+            $arGenConfiguracion->setRutaTemporal('PENDIENTE');
+            $manager->persist($arGenConfiguracion);
         }
         $arGenFormaPago = $manager->getRepository('App:General\GenFormaPago')->find('CON');
         if(!$arGenFormaPago){

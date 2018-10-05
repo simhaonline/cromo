@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Transporte\Informe\Transporte\Recogida;
+namespace App\Controller\Transporte\Informe\Recogida;
 
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteRecogida;
@@ -21,7 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class PendienteProgramarController extends Controller
 {
    /**
-    * @Route("/transporte/informe/transporte/recogida/pendiente/programar", name="transporte_informe_transporte_recogida_pendiente_programar")
+    * @Route("/transporte/informe/recogida/recogida/pendiente/programar", name="transporte_informe_recogida_recogida_pendiente_programar")
     */    
     public function lista(Request $request)
     {
@@ -48,7 +48,7 @@ class PendienteProgramarController extends Controller
             General::get()->setExportar($em->getRepository(TteRecogida::class)->pendienteProgramar()->getQuery()->getResult(), "Pendiente programar");
         }
         $arRecogidas = $paginator->paginate($em->getRepository(TteRecogida::class)->pendienteProgramar(), $request->query->getInt('page', 1), 40);
-        return $this->render('transporte/informe/transporte/recogida/pendienteProgramar.html.twig', [
+        return $this->render('transporte/informe/recogida/recogida/pendienteProgramar.html.twig', [
             'arRecogidas' => $arRecogidas,
             'form' => $form->createView()]);
     }

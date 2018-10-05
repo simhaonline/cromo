@@ -102,7 +102,8 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->leftJoin('r.clienteRel', 'c')
             ->leftJoin('r.ciudadRel', 'co')
             ->where('r.estadoProgramado = 0')
-            ->andWhere('r.estadoAnulado = 0');
+            ->andWhere('r.estadoAnulado = 0')
+            ->andWhere('r.estadoAprobado = 1');
         if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }
@@ -183,7 +184,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
         FROM App\Entity\Transporte\TteRecogida r 
         LEFT JOIN r.clienteRel c
         LEFT JOIN r.ciudadRel co
-        WHERE r.estadoProgramado = 0 AND r.estadoAutorizado = 1 AND r.estadoAprobado = 1 AND r.fecha BETWEEN :fechaDesde AND :fechaHasta'
+        WHERE r.estadoProgramado = 0 AND r.estadoAprobado = 1 AND r.fecha BETWEEN :fechaDesde AND :fechaHasta'
         )->setParameter('fechaDesde', $fechaDesde)
             ->setParameter('fechaHasta', $fechaHasta);
         return $query->execute();

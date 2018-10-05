@@ -55,8 +55,12 @@
             <th>UND</th>
             <th>PES</th>
             <th>VOL</th>
-            <th>P</th>
-            <th>R</th>
+            <th title>AUT</th>
+            <th title="APROBADO">APR</th>
+            <th>ANU</th>
+            <th>PRO</th>
+            <th>REC</th>
+            <th>DES</th>
             <th></th>
             <th></th>
             <th></th>
@@ -78,8 +82,12 @@
                 <td style="text-align: right">{{ arRecogida.unidades }}</td>
                 <td style="text-align: right">{{ arRecogida.pesoReal }}</td>
                 <td style="text-align: right">{{ arRecogida.pesoVolumen }}</td>
+                <td style="text-align: center">{{ arRecogida.estadoAutorizado?'SI':'NO' }}</td>
+                <td style="text-align: center">{{ arRecogida.estadoAprobado?'SI':'NO' }}</td>
+                <td style="text-align: center">{{ arRecogida.estadoAnulado?'SI':'NO' }}</td>
                 <td style="text-align: center">{{ arRecogida.estadoProgramado?'SI':'NO' }}</td>
                 <td style="text-align: center">{{ arRecogida.estadoRecogido?'SI':'NO' }}</td>
+                <td style="text-align: center">{{ arRecogida.estadoDescargado?'SI':'NO' }}</td>
                 <td style="text-align: center;">
                     {% if arRecogida.estadoAutorizado == 0 %}
                     <a href="{{ path('transporte_movimiento_recogida_recogida_nuevo',{'id' : arRecogida.codigoRecogidaPk}) }}">
@@ -107,8 +115,12 @@
             {{ form_widget(form.btnEliminar) }}
         </div>
         <div class="btn-group">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+        <div class="btn-group">
             <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_recogida_recogida_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>
     </div>
     {{ form_end(form) }}
 {% endblock %}
+

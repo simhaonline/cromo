@@ -1,6 +1,12 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="btn-toolbar" style="float: left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('transporte_movimiento_recogida_recogida_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             {{ form_widget(form.btnAutorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
@@ -63,5 +69,4 @@
         </tr>
     </table>
     {{ form_end(form) }}
-    <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_recogida_recogida_lista') }}">Volver</a>
 {% endblock %}

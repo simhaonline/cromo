@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Entity\Transporte\TteRecogida;
 use App\Form\Type\Transporte\RecogidaType;
 use App\Formato\Transporte\Recogida;
+use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -21,15 +22,20 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RecogidaController extends Controller
 {
-   /**
-    * @Route("/transporte/movimiento/recogida/recogida/lista", name="transporte_movimiento_recogida_recogida_lista")
-    */    
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/transporte/movimiento/recogida/recogida/lista", name="transporte_movimiento_recogida_recogida_lista")
+     */
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $session = new Session();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteRecogidaCodigo')])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
@@ -49,6 +55,9 @@ class RecogidaController extends Controller
                 if($form->get('btnEliminar')->isClicked()){
                     $arrSeleccionados = $request->request->get('ChkSeleccionar');
                     $em->getRepository(TteRecogida::class)->eliminar($arrSeleccionados);
+                }
+                if ($form->get('btnExcel')->isClicked()) {
+                    General::get()->setExportar($em->createQuery($em->getRepository(TteRecogida::class)->lista())->execute(), "Recogida");
                 }
             }
         }

@@ -6,6 +6,8 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
+use App\Entity\General\GenFormaPago;
+use App\Entity\General\GenIdentificacion;
 use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
@@ -862,7 +864,35 @@ class TteGuiaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arrGuias) {
             if ($arrGuias) {
-                $objFunciones = new FuncionesController();
+                //Verificar tercero, esto para evitar que se dupliquen los tercero ya que cuando no existen
+                //se crean varias veces porque no se hace flush y tiene varias facturas del mismo cliente
+                //Mario Estrada
+
+                foreach ($arrGuias AS $codigoGuia) {
+                    $arGuia = $em->getRepository(TteGuia::class)->guiaCliente($codigoGuia);
+                    if($arGuia) {
+                        $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arGuia['codigoIdentificacionFk'],'numeroIdentificacion' => $arGuia['numeroIdentificacion']]);
+                        if (!$arClienteCartera) {
+                            $arClienteCartera = new CarCliente();
+                            if($arGuia['codigoFormaPagoFk']) {
+                                $arFormaPago = $em->getRepository(GenFormaPago::class)->find($arGuia['codigoFormaPagoFk']);
+                                $arClienteCartera->setFormaPagoRel($arFormaPago);
+                            }
+                            $arIdentificacion = $em->getRepository(GenIdentificacion::class)->find($arGuia['codigoIdentificacionFk']);
+                            $arClienteCartera->setIdentificacionRel($arIdentificacion);
+                            $arClienteCartera->setNumeroIdentificacion($arGuia['numeroIdentificacion']);
+                            $arClienteCartera->setDigitoVerificacion($arGuia['digitoVerificacion']);
+                            $arClienteCartera->setNombreCorto($arGuia['nombreCorto']);
+                            $arClienteCartera->setPlazoPago($arGuia['plazoPago']);
+                            $arClienteCartera->setDireccion($arGuia['direccion']);
+                            $arClienteCartera->setTelefono($arGuia['telefono']);
+                            $arClienteCartera->setCorreo($arGuia['correo']);
+                            $em->persist($arClienteCartera);
+                            $em->flush();
+                        }
+                    }
+                }
+
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
                     if(!$arGuia->getEstadoFacturaExportado()) {
@@ -872,6 +902,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arGuia->setEstadoFacturado(1);
                         $arGuia->setFechaFactura($fechaActual);
                         $em->persist($arGuia);
+
                         $arFactura = new TteFactura();
                         $arFactura->setFacturaTipoRel($arGuia->getGuiaTipoRel()->getFacturaTipoRel());
                         $arFactura->setCodigoFacturaClaseFk('FA');
@@ -902,23 +933,9 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arFacturaDetalle->setVrDeclara($arGuia->getVrDeclara());
                         $em->persist($arFacturaDetalle);
 
-                        $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arFactura->getClienteRel()->getCodigoIdentificacionFk(),'numeroIdentificacion' => $arFactura->getClienteRel()->getNumeroIdentificacion()]);
-                        if (!$arClienteCartera) {
-                            $arClienteCartera = new CarCliente();
-                            $arClienteCartera->setFormaPagoRel($arFactura->getClienteRel()->getFormaPagoRel());
-                            $arClienteCartera->setIdentificacionRel($arFactura->getClienteRel()->getIdentificacionRel());
-                            $arClienteCartera->setNumeroIdentificacion($arFactura->getClienteRel()->getNumeroIdentificacion());
-                            $arClienteCartera->setDigitoVerificacion($arFactura->getClienteRel()->getDigitoVerificacion());
-                            $arClienteCartera->setNombreCorto($arFactura->getClienteRel()->getNombreCorto());
-                            $arClienteCartera->setPlazoPago($arFactura->getClienteRel()->getPlazoPago());
-                            $arClienteCartera->setDireccion($arFactura->getClienteRel()->getDireccion());
-                            $arClienteCartera->setTelefono($arFactura->getClienteRel()->getTelefono());
-                            $arClienteCartera->setCorreo($arFactura->getClienteRel()->getCorreo());
-                            $em->persist($arClienteCartera);
-                        }
-
                         $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arFactura->getFacturaTipoRel()->getCodigoCuentaCobrarTipoFk());
                         $arCuentaCobrar = new CarCuentaCobrar();
+                        $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arGuia->getClienteRel()->getCodigoIdentificacionFk(),'numeroIdentificacion' => $arGuia->getClienteRel()->getNumeroIdentificacion()]);
                         $arCuentaCobrar->setClienteRel($arClienteCartera);
                         $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
                         $arCuentaCobrar->setFecha($arFactura->getFecha());
@@ -2113,6 +2130,29 @@ class TteGuiaRepository extends ServiceEntityRepository
             }
         }
         return $queryBuilder;
+    }
+
+    /**
+     * @param $codigoGuia
+     * @return array
+     */
+    public function guiaCliente($codigoGuia)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('c.codigoIdentificacionFk')
+            ->addSelect('c.numeroIdentificacion')
+            ->addSelect('c.codigoFormaPagoFk')
+            ->addSelect('c.digitoVerificacion')
+            ->addSelect('c.nombreCorto')
+            ->addSelect('c.plazoPago')
+            ->addSelect('c.direccion')
+            ->addSelect('c.telefono')
+            ->addSelect('c.correo')
+            ->leftJoin('g.clienteRel', 'c')
+            ->where('g.codigoGuiaPk = ' . $codigoGuia);
+        return $queryBuilder->getQuery()->getSingleResult();
     }
 
 }

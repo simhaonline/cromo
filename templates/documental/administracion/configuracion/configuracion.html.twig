@@ -1,0 +1,23 @@
+{% extends 'base_documental.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Configuracion documental</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_rutaBandeja" class="col-sm-2 control-label">Ruta bandeja:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.rutaBandeja) }}
+                </div>
+                <label for="form_rutaAlmacenamiento" class="col-sm-2 control-label">Ruta almacenamiento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.rutaAlmacenamiento) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

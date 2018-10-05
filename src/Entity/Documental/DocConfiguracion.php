@@ -43,6 +43,38 @@ class DocConfiguracion
         $this->codigoConfiguracionPk = $codigoConfiguracionPk;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRutaBandeja()
+    {
+        return $this->rutaBandeja;
+    }
+
+    /**
+     * @param mixed $rutaBandeja
+     */
+    public function setRutaBandeja($rutaBandeja): void
+    {
+        $this->rutaBandeja = $rutaBandeja;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRutaAlmacenamiento()
+    {
+        return $this->rutaAlmacenamiento;
+    }
+
+    /**
+     * @param mixed $rutaAlmacenamiento
+     */
+    public function setRutaAlmacenamiento($rutaAlmacenamiento): void
+    {
+        $this->rutaAlmacenamiento = $rutaAlmacenamiento;
+    }
+
 
 
 }

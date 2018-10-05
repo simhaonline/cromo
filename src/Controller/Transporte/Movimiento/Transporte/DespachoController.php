@@ -11,6 +11,7 @@ use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteNovedad;
+use App\Entity\Transporte\TteOperacion;
 use App\Entity\Transporte\TteRuta;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoLiquidarType;
@@ -58,6 +59,7 @@ class DespachoController extends Controller
             ->add('txtVehiculo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigoVehiculo')])
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigo')])
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoNumero')])
+            ->add('cboOperacion', EntityType::class, $em->getRepository(TteOperacion::class)->llenarCombo())
             ->add('cboCiudadOrigenRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo('origen'))
             ->add('cboCiudadDestinoRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo('destino'))
             ->add('cboDespachoTipoRel', EntityType::class, $em->getRepository(TteDespachoTipo::class)->llenarCombo('destino'))
@@ -91,6 +93,11 @@ class DespachoController extends Controller
                     $session->set('filtroTteDespachoTipo', $form->get('cboDespachoTipoRel')->getData()->getCodigoDespachoTipoPk());
                 } else {
                     $session->set('filtroTteDespachoTipo', null);
+                }
+                if ($form->get('cboOperacion')->getData() != '') {
+                    $session->set('filtroTteDespachoOperacion', $form->get('cboOperacion')->getData()->getCodigoOperacionPk());
+                } else {
+                    $session->set('filtroTteDespachoOperacion', null);
                 }
                 if ($form->get('txtCodigoConductor')->getData() != '') {
                     $session->set('filtroTteDespachoCodigoConductor', $form->get('txtCodigoConductor')->getData());

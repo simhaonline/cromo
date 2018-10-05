@@ -23,29 +23,29 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
         parent::__construct($registry, TteDespachoRecogida::class);
     }
 
+
     /**
-     * @return \Doctrine\ORM\Query
+     * @return \Doctrine\ORM\QueryBuilder
      */
     public function lista()
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'dr')
             ->select('dr.codigoDespachoRecogidaPk')
-            ->addSelect('dr.fecha')
             ->addSelect('dr.numero')
+            ->addSelect('dr.fecha')
             ->addSelect('dr.codigoOperacionFk')
             ->addSelect('dr.codigoVehiculoFk')
+            ->addSelect('cond.nombreCorto AS conductorNombreCorto')
             ->addSelect('dr.codigoRutaRecogidaFk')
             ->addSelect('dr.cantidad')
             ->addSelect('dr.unidades')
             ->addSelect('dr.pesoReal')
             ->addSelect('dr.pesoVolumen')
+            ->addSelect('dr.vrFletePago')
             ->addSelect('dr.estadoAutorizado')
             ->addSelect('dr.estadoAprobado')
             ->addSelect('dr.estadoAnulado')
-            ->addSelect('dr.estadoDescargado')
-            ->addSelect('dr.vrFletePago')
-            ->addSelect('cond.nombreCorto AS conductorNombreCorto')
             ->where('dr.codigoDespachoRecogidaPk <> 0')
         ->leftJoin('dr.conductorRel', 'cond');
         $fecha = new \DateTime('now');
@@ -61,6 +61,9 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("dr.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
         }
+        if($session->get('filtroTteOperacion') != ''){
+            $queryBuilder->andWhere("dr.codigoOperacionFk = '{$session->get('filtroTteOperacion')}'");
+        }
         if($session->get('filtroTteCodigoDespachoRecogida') != ''){
             $queryBuilder->andWhere("dr.codigoDespachoRecogidaPk = '{$session->get('filtroTteCodigoDespachoRecogida')}'");
         }
@@ -73,8 +76,12 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
         if($session->get('filtroTteDespachoRecogidaEstadoAprobado') != ''){
             $queryBuilder->andWhere("dr.estadoAprobado = {$session->get('filtroTteDespachoRecogidaEstadoAprobado')}");
         }
+        if($session->get('filtroTteDespachoRecogidaEstadoAutorizado') != ''){
+            $queryBuilder->andWhere("dr.estadoAutorizado = {$session->get('filtroTteDespachoRecogidaEstadoAutorizado')}");
+        }
         $queryBuilder->orderBy('dr.fecha', 'DESC');
-        return $queryBuilder->getQuery();
+
+        return $queryBuilder;
     }
 
     public function eliminar($arrSeleccionados)

@@ -5,47 +5,49 @@
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_nombre" class="col-sm-1 control-label">Vehiculo:</label>
+                <label for="form_txtVehiculo" class="col-sm-1 control-label">Vehiculo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtVehiculo) }}
                 </div>
-                <label for="form_nombre" class="col-sm-2 control-label">Aprobado:</label>
+                <label for="form_choEstadoAutorizado" class="col-sm-2 control-label">Autorizado:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.choEstado) }}
+                    {{ form_widget(form.choEstadoAutorizado) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Codigo:</label>
+                <label for="form_txtCodigoDespachoRecogida" class="col-sm-1 control-label">Codigo:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.txtCodigoDespachoRecogida) }}
                 </div>
-                <label class="col-sm-1 control-label">Numero:</label>
+                <label for="" class="col-sm-offset-3 col-sm-1 control-label">Aprobado:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.choEstadoAprobado) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_txtNumeroDespachoRecogida" class="col-sm-1 control-label">Numero:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.txtNumeroDespachoRecogida) }}
                 </div>
-                <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-3">
-
+                <label for="form_cboOperacion" class="col-sm-offset-3 col-sm-1 control-label">Operacion:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cboOperacion) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Desde:</label>
+                <label for="form_fechaDesde" class="col-sm-1 control-label">Desde:</label>
                 <div class="col-sm-5">
                     {{ form_widget(form.fechaDesde) }}
                 </div>
-                <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-5">
-
-                </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Hasta:</label>
+                <label for="form_fechaHasta" class="col-sm-1 control-label">Hasta:</label>
                 <div class="col-sm-5">
                     {{ form_widget(form.fechaHasta) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label"></label>
+                <label for="form_filtrarFecha" class="col-sm-1 control-label"></label>
                 <div class="col-sm-5">
                     {{ form_widget(form.filtrarFecha) }}
                 </div>
@@ -70,9 +72,9 @@
             <th>PES</th>
             <th>VOL</th>
             <th>PAGO</th>
-            <th>AUT</th>
-            <th>APR</th>
-            <th>ANU</th>
+            <th title="AUTORIZADO">AUT</th>
+            <th title="APROBADO">APR</th>
+            <th title="ANULADO">ANU</th>
             <th></th>
             <th></th>
             <th></th>
@@ -125,6 +127,9 @@
     </div>
 
     <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
         <div class="btn-group">
             <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_recogida_despacho_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>

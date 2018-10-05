@@ -407,15 +407,37 @@ class DespachoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+            $arDespacho->setEstadoNovedad(true);
+            $em->persist($arDespacho);
+
             $arNovedad->setDespachoRel($arDespacho);
             if ($id == 0) {
                 $arNovedad->setFechaRegistro(new \DateTime('now'));
                 $arNovedad->setFechaAtencion(new \DateTime('now'));
                 $arNovedad->setFechaSolucion(new \DateTime('now'));
             }
-            $arDespacho->setEstadoNovedad(true);
-            $em->persist($arDespacho);
             $em->persist($arNovedad);
+
+            if($arNovedad->getAplicaGuia()) {
+                $arGuias = $em->getRepository(TteGuia::class)->findBy(array('codigoDespachoFk' => $codigoDespacho));
+                foreach ($arGuias as $arGuia) {
+                    $arNovedadGuia = new TteNovedad();
+                    $arNovedadGuia->setCodigoDespachoReferenciaFk($codigoDespacho);
+                    $arNovedadGuia->setGuiaRel($arGuia);
+                    $arNovedadGuia->setFechaRegistro(new \DateTime('now'));
+                    $arNovedadGuia->setFechaAtencion(new \DateTime('now'));
+                    $arNovedadGuia->setFechaSolucion(new \DateTime('now'));
+                    $arNovedadGuia->setDescripcion($arNovedad->getDescripcion());
+                    $arNovedadGuia->setFecha($arNovedad->getFecha());
+                    $arNovedadGuia->setFechaReporte($arNovedad->getFechaReporte());
+                    $arNovedadGuia->setNovedadTipoRel($arNovedad->getNovedadTipoRel());
+                    $arNovedadGuia->setEstadoAtendido($arNovedad->getEstadoAtendido());
+                    $em->persist($arNovedadGuia);
+                    $arGuia->setEstadoNovedad(1);
+                    $em->persist($arGuia);
+                }
+            }
+
             $em->flush();
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
@@ -457,6 +479,7 @@ class DespachoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arNovedad = $em->getRepository(TteNovedad::class)->find($codigoNovedad);
         $form = $this->createFormBuilder()
+            ->add('aplicaSolucionGuias', CheckboxType::class, array('required' => false))
             ->add('solucion', TextareaType::class, array('label' => 'Solucion'))
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();
@@ -465,15 +488,33 @@ class DespachoController extends Controller
             $arNovedad->setEstadoSolucion(1);
             $arNovedad->setSolucion($form->get('solucion')->getData());
             $arNovedad->setFechaSolucion(new \DateTime('now'));
+            $em->persist($arNovedad);
+
             $arDespacho = $em->getRepository(TteDespacho::class)->find($arNovedad->getCodigoDespachoFk());
             $arDespacho->setEstadoNovedad(0);
             $arDespacho->setEstadoNovedadSolucion(1);
-            $em->persist($arNovedad);
             $em->persist($arDespacho);
+
+            if($form->get('aplicaSolucionGuias')->getData()) {
+                $arNovedades = $em->getRepository(TteNovedad::class)->findBy(array('codigoDespachoReferenciaFk' => $arNovedad->getCodigoDespachoFk(), 'estadoSolucion' => 0));
+                foreach ($arNovedades as $arNovedadGuia) {
+                    $arNovedadGuia->setEstadoSolucion(1);
+                    $arNovedadGuia->setSolucion($form->get('solucion')->getData());
+                    $arNovedadGuia->setFechaSolucion(new \DateTime('now'));
+                    $em->persist($arNovedadGuia);
+
+                    $arGuia = $em->getRepository(TteGuia::class)->find($arNovedadGuia->getGuiaRel()->getCodigoGuiaPk());
+                    $arGuia->setEstadoNovedad(0);
+                    $arGuia->setEstadoNovedadSolucion(1);
+                    $em->persist($arGuia);
+                }
+            }
+
             $em->flush();
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         return $this->render('transporte/movimiento/transporte/despacho/novedadSolucion.html.twig', array (
             'form' => $form->createView()));
     }
+
 }

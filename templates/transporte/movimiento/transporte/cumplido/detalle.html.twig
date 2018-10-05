@@ -54,8 +54,10 @@
                 <table class="table table-striped table-bordered table-hover">
                     <thead>
                     <tr>
-                        <th>ID</th>
                         <th>GUIA</th>
+                        <th>NUMERO</th>
+                        <th>TIPO</th>
+                        <th>SERVICIO</th>
                         <th>DOCUMENTO</th>
                         <th>DESTINATARIO</th>
                         <th>DESTINO</th>
@@ -74,6 +76,8 @@
                         <tr>
                             <td>{{ arGuia.codigoGuiaPk }}</td>
                             <td>{{ arGuia.numero }}</td>
+                            <td>{{ arGuia.codigoGuiaTipoFk }}</td>
+                            <td>{{ arGuia.codigoServicioFk }}</td>
                             <td>{{ arGuia.documentoCliente }}</td>
                             <td>{{ arGuia.nombreDestinatario }}</td>
                             <td>{{ arGuia.ciudadDestino }}</td>

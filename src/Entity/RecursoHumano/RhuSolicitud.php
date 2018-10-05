@@ -24,9 +24,9 @@ class RhuSolicitud
     private $codigoGrupoPagoFk;
 
     /**
-     * @ORM\Column(name="codigo_cargo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_cargo_fk", type="string", length=10, nullable=true)
      */
-    private $codigoCodigoCargoFk;
+    private $codigoCargoFk;
 
     /**
      * @ORM\Column(name="codigo_solicitud_motivo_fk", type="integer", nullable=true)
@@ -283,17 +283,17 @@ class RhuSolicitud
     /**
      * @return mixed
      */
-    public function getCodigoCodigoCargoFk()
+    public function getCodigoCargoFk()
     {
-        return $this->codigoCodigoCargoFk;
+        return $this->codigoCargoFk;
     }
 
     /**
-     * @param mixed $codigoCodigoCargoFk
+     * @param mixed $codigoCargoFk
      */
-    public function setCodigoCodigoCargoFk($codigoCodigoCargoFk): void
+    public function setCodigoCargoFk($codigoCargoFk): void
     {
-        $this->codigoCodigoCargoFk = $codigoCodigoCargoFk;
+        $this->codigoCargoFk = $codigoCargoFk;
     }
 
     /**
@@ -951,7 +951,4 @@ class RhuSolicitud
     {
         $this->religionRel = $religionRel;
     }
-
-
-
 }

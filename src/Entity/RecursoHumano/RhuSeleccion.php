@@ -54,7 +54,7 @@ class RhuSeleccion
     private $codigoCiudadExpedicionFk;
 
     /**
-     * @ORM\Column(name="codigo_rh_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_rh_fk", type="string", length=10, nullable=true)
      */
     private $codigoRhFk;
 
@@ -64,7 +64,7 @@ class RhuSeleccion
     private $codigoSolicitudFk;
 
     /**
-     * @ORM\Column(name="codigo_cargo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_cargo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCargoFk;
 
@@ -253,7 +253,7 @@ class RhuSeleccion
     protected $ciudadNacimientoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuRh", inversedBy="rhuSeleccionesRhRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuRh", inversedBy="rhuEmpleadosRhRel")
      * @ORM\JoinColumn(name="codigo_rh_fk", referencedColumnName="codigo_rh_pk")
      */
     protected $rhRel;
@@ -1001,6 +1001,4 @@ class RhuSeleccion
     {
         $this->sexoRel = $sexoRel;
     }
-
-
 }

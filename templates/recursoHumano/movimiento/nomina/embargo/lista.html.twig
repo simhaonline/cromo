@@ -1,0 +1,9 @@
+{% extends 'base_recursoHumano.html.twig' %}
+{% block content %}
+    <br>
+    <br>
+    {% include 'estructura/movimiento/tablaLista.html.twig' with {'arrParametrosLista' : arrParametrosLista} %}
+    {{ form_start(formBotonera) }}
+    {% include 'estructura/movimiento/botoneraLista.html.twig' with {'formBotonera' : formBotonera,'ruta' : arrParametrosLista.ruta } %}
+    {{ form_end(formBotonera) }}
+{% endblock %}

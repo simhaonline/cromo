@@ -73,6 +73,11 @@ class TteNovedad
     private $estadoSolucion = false;
 
     /**
+     * @ORM\Column(name="aplica_guia", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $aplicaGuia = false;
+
+    /**
      * @ORM\Column(name="codigo_guia_fk", type="integer", nullable=true)
      */
     private $codigoGuiaFk;
@@ -81,6 +86,11 @@ class TteNovedad
      * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
      */
     private $codigoDespachoFk;
+
+    /**
+     * @ORM\Column(name="codigo_despacho_referencia_fk", type="integer", nullable=true)
+     */
+    private $codigoDespachoReferenciaFk;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteNovedadTipo", inversedBy="novedadesNovedadTipoRel")
@@ -295,6 +305,22 @@ class TteNovedad
     /**
      * @return mixed
      */
+    public function getAplicaGuia()
+    {
+        return $this->aplicaGuia;
+    }
+
+    /**
+     * @param mixed $aplicaGuia
+     */
+    public function setAplicaGuia($aplicaGuia): void
+    {
+        $this->aplicaGuia = $aplicaGuia;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoGuiaFk()
     {
         return $this->codigoGuiaFk;
@@ -322,6 +348,22 @@ class TteNovedad
     public function setCodigoDespachoFk($codigoDespachoFk): void
     {
         $this->codigoDespachoFk = $codigoDespachoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoReferenciaFk()
+    {
+        return $this->codigoDespachoReferenciaFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoReferenciaFk
+     */
+    public function setCodigoDespachoReferenciaFk($codigoDespachoReferenciaFk): void
+    {
+        $this->codigoDespachoReferenciaFk = $codigoDespachoReferenciaFk;
     }
 
     /**
@@ -371,6 +413,8 @@ class TteNovedad
     {
         $this->despachoRel = $despachoRel;
     }
+
+
 
 
 }

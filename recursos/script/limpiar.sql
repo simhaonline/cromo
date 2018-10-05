@@ -10,6 +10,7 @@ DELETE FROM tte_guia;
 DELETE FROM tte_despacho;
 DELETE FROM tte_factura;
 DELETE FROM tte_recibo;
+DELETE FROM tte_cumplido;
 DELETE FROM ctb_registro;
 DELETE FROM car_recibo_detalle;
 DELETE FROM car_recibo;

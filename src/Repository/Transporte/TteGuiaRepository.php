@@ -137,6 +137,9 @@ class TteGuiaRepository extends ServiceEntityRepository
         if($session->get('filtroTteCodigoCliente')){
             $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
         }
+        if ($session->get('filtroTteGuiaOperacion')) {
+            $queryBuilder->andWhere("tg.codigoOperacionCargoFk = '" . $session->get('filtroTteGuiaOperacion') . "'");
+        }
         if($session->get('filtroFecha') == true){
             if ($session->get('filtroFechaDesde') != null) {
                 $queryBuilder->andWhere("tg.fechaIngreso >= '{$session->get('filtroFechaDesde')} 00:00:00'");

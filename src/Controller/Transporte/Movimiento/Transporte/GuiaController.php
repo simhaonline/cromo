@@ -8,6 +8,7 @@ use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteNovedad;
+use App\Entity\Transporte\TteOperacion;
 use App\Entity\Transporte\TteServicio;
 use App\Form\Type\Transporte\GuiaType;
 use App\Form\Type\Transporte\NovedadType;
@@ -33,6 +34,8 @@ class GuiaController extends Controller
      * @param Request $request
      * @return Response
      * @throws \Doctrine\ORM\ORMException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/movimiento/transporte/guia/lista", name="transporte_movimiento_transporte_guia_lista")
      */
     public function lista(Request $request)
@@ -56,6 +59,7 @@ class GuiaController extends Controller
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
             ->add('cboServicioRel', EntityType::class, $em->getRepository(TteServicio::class)->llenarCombo())
+            ->add('cboOperacionCargoRel', EntityType::class, $em->getRepository(TteOperacion::class)->llenarCombo())
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroTteGuiaCodigo')))
             ->add('txtDocumento', TextType::class, array('data' => $session->get('filtroTteGuiaDocumento')))
             ->add('txtCodigoFactura', TextType::class, array('data' => $session->get('filtroTteFacturaCodigo')))
@@ -80,6 +84,11 @@ class GuiaController extends Controller
                         $session->set('filtroTteGuiaCodigoServicio', $arServicio->getCodigoServicioPk());
                     } else {
                         $session->set('filtroTteGuiaCodigoServicio', null);
+                    }
+                    if ($form->get('cboOperacionCargoRel')->getData() != '') {
+                        $session->set('filtroTteGuiaOperacion', $form->get('cboOperacionCargoRel')->getData()->getCodigoOperacionPk());
+                    } else {
+                        $session->set('filtroTteGuiaOperacion', null);
                     }
                     $session->set('filtroTteGuiaRemitente', $form->get('txtRemitente')->getData());
                     $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));

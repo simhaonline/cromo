@@ -38,6 +38,16 @@ class TteCosto
     private $codigoGuiaFk;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_destino_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCiudadDestinoFk;
+
+    /**
+     * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
+     */
+    private $codigoClienteFk;
+
+    /**
      * @ORM\Column(name="vr_costo_unidad", type="float", nullable=true)
      */
     private $vrCostoUnidad = 0;
@@ -78,6 +88,18 @@ class TteCosto
      * @ORM\JoinColumn(name="codigo_guia_fk", referencedColumnName="codigo_guia_pk")
      */
     private $guiaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="costosCiudadDestinoRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_destino_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    private $ciudadDestinoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteCliente", inversedBy="costosClienteRel")
+     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+     */
+    private $clienteRel;
 
     /**
      * @return mixed

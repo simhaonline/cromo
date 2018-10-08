@@ -103,6 +103,11 @@ class TteCiudad
     protected $despachosCiudadDestinoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteCosto", mappedBy="ciudadDestinoRel")
+     */
+    protected $costosCiudadDestinoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteRecogida", mappedBy="ciudadRel")
      */
     protected $recogidasCiudadRel;

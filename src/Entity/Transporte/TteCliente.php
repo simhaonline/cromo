@@ -177,6 +177,11 @@ class TteCliente
     protected $ciudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteCosto", mappedBy="clienteRel")
+     */
+    protected $costosClienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoClientePk()

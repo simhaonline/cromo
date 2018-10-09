@@ -304,9 +304,6 @@
                                                     guia</a></li>
                                             <li><a href="{{ path('transporte_proceso_transporte_guia_soporte') }}">Soporte
                                                     guia</a></li>
-                                            <li>
-                                                <a href="{{ path('transporte_pro_transporte_general_cierre') }}">Cierre</a>
-                                            </li>
                                             <li><a href="{{ path('transporte_proceso_transporte_guia_redespacho') }}">Re-despacho</a>
                                             </li>
                                             <li><a href="{{ path('transporte_proceso_transporte_guia_cortesia') }}">Cortesia</a>
@@ -326,6 +323,14 @@
                                     </li>
                                 </ul>
                                 <!-- /.nav-third-level -->
+                            </li>
+                            <li>
+                                <a href="#">General <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="{{ path('transporte_proceso_transporte_general_cierre') }}">Cierre</a>
+                                    </li>
+                                </ul>
                             </li>
                             <li>
                                 <a href="#">Contabilidad <span class="fa arrow"></span></a>
@@ -475,6 +480,7 @@
                                 <ul class="nav nav-third-level">
                                     <li><a href="{{ path('transporte_informe_financiero_despacho_rentabilidad') }}">Rentabilidad
                                             (despacho)</a></li>
+                                    <li><a href="{{ path('transporte_informe_financiero_general_costos') }}">Costos</a></li>
                                 </ul>
                                 <!-- /.nav-third-level -->
                             </li>

@@ -78,6 +78,11 @@ class TteCosto
     private $vrRentabilidad = 0;
 
     /**
+     * @ORM\Column(name="porcentaje_rentabilidad", type="float", nullable=true)
+     */
+    private $porcentajeRentabilidad = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteCierre", inversedBy="costosCierreRel")
      * @ORM\JoinColumn(name="codigo_cierre_fk", referencedColumnName="codigo_cierre_pk")
      */
@@ -307,6 +312,86 @@ class TteCosto
     public function setVrRentabilidad($vrRentabilidad): void
     {
         $this->vrRentabilidad = $vrRentabilidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadDestinoFk()
+    {
+        return $this->codigoCiudadDestinoFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadDestinoFk
+     */
+    public function setCodigoCiudadDestinoFk($codigoCiudadDestinoFk): void
+    {
+        $this->codigoCiudadDestinoFk = $codigoCiudadDestinoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoClienteFk()
+    {
+        return $this->codigoClienteFk;
+    }
+
+    /**
+     * @param mixed $codigoClienteFk
+     */
+    public function setCodigoClienteFk($codigoClienteFk): void
+    {
+        $this->codigoClienteFk = $codigoClienteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeRentabilidad()
+    {
+        return $this->porcentajeRentabilidad;
+    }
+
+    /**
+     * @param mixed $porcentajeRentabilidad
+     */
+    public function setPorcentajeRentabilidad($porcentajeRentabilidad): void
+    {
+        $this->porcentajeRentabilidad = $porcentajeRentabilidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadDestinoRel()
+    {
+        return $this->ciudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $ciudadDestinoRel
+     */
+    public function setCiudadDestinoRel($ciudadDestinoRel): void
+    {
+        $this->ciudadDestinoRel = $ciudadDestinoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
     }
 
 

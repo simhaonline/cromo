@@ -48,7 +48,7 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
 
     }
 
-    public function guiaCosto($codigoGuia): array
+    /*public function guiaCosto($codigoGuia): array
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
@@ -63,6 +63,19 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         ORDER BY dd.codigoGuiaFk DESC '
         )->setParameter('guia', $codigoGuia);
         return $query->execute();
+    }*/
+
+    public function guiaCosto($codigoGuia)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd');
+        $queryBuilder
+            ->select('SUM(dd.vrCosto) AS vrCosto')
+            ->addSelect('SUM(dd.vrCostoPeso) AS vrCostoPeso')
+            ->addSelect('SUM(dd.vrCostoVolumen) AS vrCostoVolumen')
+            ->addSelect('SUM(dd.vrCostoUnidad) AS vrCostoUnidad')
+            ->where("dd.codigoGuiaFk = " . $codigoGuia);
+        return $queryBuilder->getQuery()->getSingleResult();
     }
 
     public function guia($codigoGuia): array

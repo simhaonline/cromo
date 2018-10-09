@@ -290,7 +290,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             $costoUnidad = $costoUnidadTotal * $arDespachoDetalle['unidades'];
             $costoPeso = $costoPesoTotal * $arDespachoDetalle['pesoReal'];
             $costoVolumen = $costoVolumenTotal * $arDespachoDetalle['pesoVolumen'];
-            $costo = ($costoPeso + $costoVolumen) / 2;
+            $costo = ($costoPeso + $costoVolumen + $costoUnidad) / 3;
             $arDespachoDetalleActualizar->setVrCostoUnidad($costoUnidad);
             $arDespachoDetalleActualizar->setVrCostoPeso($costoPeso);
             $arDespachoDetalleActualizar->setVrCostoVolumen($costoVolumen);

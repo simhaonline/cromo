@@ -33,14 +33,20 @@
         {% endfor %}
         </tbody>
     </table>
-
     <div class="btn-group" style="float: left">
-        <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCierres.getTotalItemCount }}</span></div>
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCierres.getTotalItemCount }}</span></div>
+        </div>
     </div>
-
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
         {{ knp_pagination_render(arCierres) }}
     </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('transporte_proceso_transporte_general_cierre_nuevo', {'id': 0}) }}">Nuevo</a>
+        </div>
+    </div>
+
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

@@ -36,6 +36,33 @@ class TteCostoRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function listaInforme($anio, $mes)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCosto::class, 'c')
+            ->select('c.codigoCostoPk')
+            ->addSelect('c.anio')
+            ->addSelect('c.mes')
+            ->addSelect('c.vrCosto')
+            ->addSelect('c.vrCostoPeso')
+            ->addSelect('c.vrCostoVolumen')
+            ->addSelect('c.vrCostoUnidad')
+            ->addSelect('c.vrPrecio')
+            ->addSelect('c.vrRentabilidad')
+            ->addSelect('c.porcentajeRentabilidad')
+            ->addSelect('cl.nombreCorto AS nombreCliente')
+            ->addSelect('cd.nombre AS destino')
+            ->leftJoin('c.clienteRel', 'cl')
+            ->leftJoin('c.ciudadDestinoRel', 'cd')
+            ->where('c.anio =' . $anio)
+            ->andWhere('c.mes =' . $mes);
+        return $queryBuilder;
+
+    }
+
+    /**
      * @return array|\Doctrine\ORM\QueryBuilder|mixed
      */
     public function costosPorMes($tipo)

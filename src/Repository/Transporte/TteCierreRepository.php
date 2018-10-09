@@ -5,6 +5,7 @@ namespace App\Repository\Transporte;
 use App\Entity\Transporte\TteCierre;
 use App\Entity\Transporte\TteCosto;
 use App\Entity\Transporte\TteDespachoDetalle;
+use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -37,27 +38,45 @@ class TteCierreRepository extends ServiceEntityRepository
         $arCierre = $em->getRepository(TteCierre::class)->find($codigoCierre);
         $arGuias = $em->getRepository(TteGuia::class)->periodoCierre($arCierre->getAnio(), $arCierre->getMes());
         foreach ($arGuias as $arGuia) {
-            $arDespachoDetalles = $em->getRepository(TteDespachoDetalle::class)->guiaCosto($arGuia['codigoGuiaPk']);
-            if($arDespachoDetalles) {
-                $numeroDespachos = count($arDespachoDetalles);
-                $precioPorDespacho = $arGuia['vrFlete'] / $numeroDespachos;
-                $arGuiaObjeto = $em->getRepository(TteGuia::class)->find($arGuia['codigoGuiaPk']);
-                foreach ($arDespachoDetalles as $arDespachoDetalle) {
-                    $arCosto = new TteCosto();
-                    $arCosto->setCierreRel($arCierre);
-                    $arCosto->setGuiaRel($arGuiaObjeto);
-                    $arCosto->setAnio($arCierre->getAnio());
-                    $arCosto->setMes($arCierre->getMes());
-                    $arCosto->setVrCostoUnidad($arDespachoDetalle['vrCostoUnidad']);
-                    $arCosto->setVrCostoPeso($arDespachoDetalle['vrCostoPeso']);
-                    $arCosto->setVrCostoVolumen($arDespachoDetalle['vrCostoVolumen']);
-                    $arCosto->setVrCosto($arDespachoDetalle['vrCosto']);
-                    $arCosto->setVrPrecio($precioPorDespacho);
-                    $rentabilidad = $precioPorDespacho - $arDespachoDetalle['vrCosto'];
-                    $arCosto->setVrRentabilidad($rentabilidad);
-                    $em->persist($arCosto);
-                }
+            $arGuiaObjeto = $em->getRepository(TteGuia::class)->find($arGuia['codigoGuiaPk']);
+            $costo = 0;
+            $costoPeso = 0;
+            $costoVolumen = 0;
+            $costoUnidad = 0;
+            $arrCostos = $em->getRepository(TteDespachoDetalle::class)->guiaCosto($arGuia['codigoGuiaPk']);
+            if($arrCostos && $arrCostos != null) {
+                $costo = $arrCostos['vrCosto']+0;
+                $costoPeso = $arrCostos['vrCostoPeso']+0;
+                $costoVolumen = $arrCostos['vrCostoVolumen']+0;
+                $costoUnidad = $arrCostos['vrCostoUnidad']+0;
             }
+            $precio = 0;
+            $arrPrecios = $em->getRepository(TteFacturaDetalle::class)->guiaPrecio($arGuia['codigoGuiaPk']);
+            if($arrPrecios && $arrPrecios != null) {
+                $precio = $arrPrecios['vrFlete']+0;
+            }
+            $arCosto = new TteCosto();
+            $arCosto->setCierreRel($arCierre);
+            $arCosto->setGuiaRel($arGuiaObjeto);
+            $arCosto->setCiudadDestinoRel($arGuiaObjeto->getCiudadDestinoRel());
+            $arCosto->setClienteRel($arGuiaObjeto->getClienteRel());
+            $arCosto->setAnio($arCierre->getAnio());
+            $arCosto->setMes($arCierre->getMes());
+            $arCosto->setVrCosto($costo);
+            $arCosto->setVrCostoPeso($costoPeso);
+            $arCosto->setVrCostoVolumen($costoVolumen);
+            $arCosto->setVrCostoUnidad($costoUnidad);
+            $arCosto->setVrPrecio($precio);
+            $rentabilidad = $precio - $costo;
+            $arCosto->setVrRentabilidad($rentabilidad);
+            $porcentajeRentabilidad = 0;
+            if ($precio > 0) {
+                $porcentajeRentabilidad = ($rentabilidad / $precio) * 100;
+            }
+
+            $arCosto->setPorcentajeRentabilidad($porcentajeRentabilidad);
+            $em->persist($arCosto);
+
         }
         $arCierre->setEstadoGenerado(1);
         $em->flush();

@@ -203,4 +203,14 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
 
     }
 
+    public function guiaPrecio($codigoGuia)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFacturaDetalle::class, 'fd');
+        $queryBuilder
+            ->select('SUM(fd.vrFlete)+0 AS vrFlete')
+            ->where("fd.codigoGuiaFk = " . $codigoGuia);
+        return $queryBuilder->getQuery()->getSingleResult();
+    }
+
 }

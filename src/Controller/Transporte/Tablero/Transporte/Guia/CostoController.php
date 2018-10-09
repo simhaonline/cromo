@@ -8,6 +8,7 @@ use App\Entity\Transporte\TteGuia;
 use Ob\HighchartsBundle\Highcharts\Highchart;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,13 +25,15 @@ class CostoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $session = new Session();
         $form = $this->createFormBuilder()
-            ->add('chkMes', ChoiceType::class, ['choices' => ['ENERO' => '1', 'FEBRERO' => '2', 'MARZO' => '3', 'ABRIL' => '4', 'MAYO' => '5', 'JUNIO' => '6', 'JULIO' => '7', 'AGOSTO' => '8', 'SEPTIEMBRE' => '9', 'OCTUBRE' => '10', 'NOVIEMBRE' => '11', 'DICIEMBRE' => '12'], 'data' => $session->get('filtroTteInformeCostoMes'), 'required' => true])
+            ->add('chkMes', ChoiceType::class, ['choices' => ['ENERO' => '1', 'FEBRERO' => '2', 'MARZO' => '3', 'ABRIL' => '4', 'MAYO' => '5', 'JUNIO' => '6', 'JULIO' => '7', 'AGOSTO' => '8', 'SEPTIEMBRE' => '9', 'OCTUBRE' => '10', 'NOVIEMBRE' => '11', 'DICIEMBRE' => '12'], 'data' => $session->get('filtroTteTableroCostoMes'), 'required' => true])
+            ->add('txtAnio', TextType::class, ['data' => $session->get('filtroTteTableroCostoAnio') , 'required' => true])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             if($form->get('btnFiltrar')->isClicked()){
-                $session->set('filtroTteInformeCostoMes', $form->get('chkMes')->getData());
+                $session->set('filtroTteTableroCostoMes', $form->get('chkMes')->getData());
+                $session->set('filtroTteTableroCostoAnio', $form->get('txtAnio')->getData());
             }
         }
         $arrCostoMesCliente = $em->getRepository(TteCosto::class)->costosPorMes(1);

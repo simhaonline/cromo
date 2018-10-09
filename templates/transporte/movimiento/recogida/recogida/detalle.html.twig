@@ -12,7 +12,7 @@
             {{ form_widget(form.btnAutorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnDesautorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnAprobar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnAnular, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnAnular,  { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular el registro?")'} }) }}
             {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
     {% if arRecogida.codigoDespachoRecogidaFk is null %}

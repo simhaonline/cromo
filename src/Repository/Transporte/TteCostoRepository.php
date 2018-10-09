@@ -69,12 +69,13 @@ class TteCostoRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $queryBuilder = [];
-        if ($session->get('filtroTteInformeCostoMes')) {
+        if ($session->get('filtroTteTableroCostoMes') && $session->get('filtroTteTableroCostoAnio')) {
             $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCosto::class, 'c')
                 ->select('c.mes')
                 ->addSelect('SUM(c.vrCosto) as vrCosto')
                 ->addSelect('SUM(c.vrPrecio) as vrPrecio')
-                ->where("c.mes = {$session->get('filtroTteInformeCostoMes')} ")
+                ->where("c.mes = {$session->get('filtroTteTableroCostoMes')} ")
+                ->andWhere("c.anio = {$session->get('filtroTteTableroCostoAnio')}")
                 ->groupBy('c.mes');
             if ($tipo == 1) {
                 $queryBuilder->leftJoin('c.clienteRel', 'cl')

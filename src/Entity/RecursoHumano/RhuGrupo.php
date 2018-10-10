@@ -12,8 +12,7 @@ class RhuGrupo
     
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_grupo_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_grupo_pk", type="string", length=10)
      */        
     private $codigoGrupoPk;
 
@@ -21,6 +20,11 @@ class RhuGrupo
      * @ORM\Column(name="nombre", type="string", length=80)
      */
     private $nombre;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="grupoRel")
+     */
+    protected $contratosGrupoRel;
 
     /**
      * @return mixed
@@ -54,5 +58,19 @@ class RhuGrupo
         $this->nombre = $nombre;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getContratosGrupoRel()
+    {
+        return $this->contratosGrupoRel;
+    }
 
+    /**
+     * @param mixed $contratosGrupoRel
+     */
+    public function setContratosGrupoRel($contratosGrupoRel): void
+    {
+        $this->contratosGrupoRel = $contratosGrupoRel;
+    }
 }

@@ -109,6 +109,16 @@ class GenCiudad
     protected $rhuEmpleadosCiudadNacimientoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuContrato", mappedBy="ciudadContratoRel")
+     */
+    protected $rhuContratosCiudadContratoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuContrato", mappedBy="ciudadLaboraRel")
+     */
+    protected $rhuContratosCiudadLaboraRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -412,6 +422,36 @@ class GenCiudad
         $this->rhuEmpleadosCiudadNacimientoRel = $rhuEmpleadosCiudadNacimientoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRhuContratosCiudadContratoRel()
+    {
+        return $this->rhuContratosCiudadContratoRel;
+    }
 
+    /**
+     * @param mixed $rhuContratosCiudadContratoRel
+     */
+    public function setRhuContratosCiudadContratoRel($rhuContratosCiudadContratoRel): void
+    {
+        $this->rhuContratosCiudadContratoRel = $rhuContratosCiudadContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuContratosCiudadLaboraRel()
+    {
+        return $this->rhuContratosCiudadLaboraRel;
+    }
+
+    /**
+     * @param mixed $rhuContratosCiudadLaboraRel
+     */
+    public function setRhuContratosCiudadLaboraRel($rhuContratosCiudadLaboraRel): void
+    {
+        $this->rhuContratosCiudadLaboraRel = $rhuContratosCiudadLaboraRel;
+    }
 }
 

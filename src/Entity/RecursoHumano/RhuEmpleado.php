@@ -29,6 +29,16 @@ class RhuEmpleado
     private $codigoIdentificacionFk;
 
     /**
+     * @ORM\Column(name="codigo_contrato_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoContratoFk;
+
+    /**
+     * @ORM\Column(name="codigo_contrato_ultimo_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoContratoUltimoFk;
+
+    /**
      * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=false, unique=true)
      */
     private $numeroIdentificacion;
@@ -230,16 +240,21 @@ class RhuEmpleado
     protected $estadoCivilRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuCargo", inversedBy="rhuEmpleadosCargoRel")
+     * @ORM\ManyToOne(targetEntity="RhuCargo", inversedBy="empleadosCargoRel")
      * @ORM\JoinColumn(name="codigo_cargo_fk",referencedColumnName="codigo_cargo_pk")
      */
     protected $cargoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuRh", inversedBy="rhuEmpleadosRhRel")
+     * @ORM\ManyToOne(targetEntity="RhuRh", inversedBy="empleadosRhRel")
      * @ORM\JoinColumn(name="codigo_rh_fk",referencedColumnName="codigo_rh_pk")
      */
     protected $rhRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="empleadoRel")
+     */
+    protected $contratosEmpleadoRel;
 
     /**
      * @return mixed
@@ -287,6 +302,38 @@ class RhuEmpleado
     public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
     {
         $this->codigoIdentificacionFk = $codigoIdentificacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoFk()
+    {
+        return $this->codigoContratoFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoFk
+     */
+    public function setCodigoContratoFk($codigoContratoFk): void
+    {
+        $this->codigoContratoFk = $codigoContratoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoUltimoFk()
+    {
+        return $this->codigoContratoUltimoFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoUltimoFk
+     */
+    public function setCodigoContratoUltimoFk($codigoContratoUltimoFk): void
+    {
+        $this->codigoContratoUltimoFk = $codigoContratoUltimoFk;
     }
 
     /**
@@ -815,5 +862,21 @@ class RhuEmpleado
     public function setRhRel($rhRel): void
     {
         $this->rhRel = $rhRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratosEmpleadoRel()
+    {
+        return $this->contratosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $contratosEmpleadoRel
+     */
+    public function setContratosEmpleadoRel($contratosEmpleadoRel): void
+    {
+        $this->contratosEmpleadoRel = $contratosEmpleadoRel;
     }
 }

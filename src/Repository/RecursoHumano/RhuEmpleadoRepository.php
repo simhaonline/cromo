@@ -2,6 +2,7 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -39,6 +40,7 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->select('re.codigoEmpleadoPk')
             ->addSelect('re.numeroIdentificacion')
             ->addSelect('re.nombreCorto')
+            ->addSelect('re.codigoContratoFk')
             ->addSelect('re.telefono')
             ->addSelect('re.correo')
             ->addSelect('re.direccion')
@@ -47,7 +49,9 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         {"campo":"codigoEmpleadoPk","ayuda":"Codigo del empleado","titulo":"ID"},
         {"campo":"numeroIdentificacion","ayuda":"Numero de identificacion del empleado","titulo":"IDENTIFICACION"},
         {"campo":"nombreCorto","ayuda":"Nombre del empleado","titulo":"NOMBRE"},
-        {"campo":"telefono","ayuda":"Correo del empleado","titulo":"CORREO"},
+        {"campo":"codigoContratoFk","ayuda":"Codigo del contrato","titulo":"CONTRATO"},
+        {"campo":"telefono","ayuda":"Telefono del empleado","titulo":"TELEFONO"},
+        {"campo":"correo","ayuda":"Correo del empleado","titulo":"CORREO"},
         {"campo":"direccion","ayuda":"Direccion de residencia del empleado","titulo":"DIRECCION"}]',
             'query' => $queryBuilder, 'ruta' => $this->getRuta()];
         return $arrOpciones;
@@ -58,10 +62,14 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
      */
     public function parametrosExcel()
     {
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class, 're')
-            ->select('re.codigoEmbargoPk')
-            ->addSelect('re.fecha')
-            ->where('re.codigoEmbargoPk <> 0');
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class, 're')
+            ->select('re.codigoEmpleadoPk')
+            ->addSelect('re.numeroIdentificacion')
+            ->addSelect('re.nombreCorto')
+            ->addSelect('re.telefono')
+            ->addSelect('re.correo')
+            ->addSelect('re.direccion')
+            ->where('re.codigoEmpleadoPk <> 0');
         return $queryBuilder->getQuery()->execute();
     }
 

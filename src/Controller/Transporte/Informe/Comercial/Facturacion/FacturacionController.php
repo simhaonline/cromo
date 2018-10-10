@@ -22,6 +22,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class FacturacionController extends Controller
 {
     /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/comercial/facturacion/factura", name="transporte_informe_comercial_facturacion_factura")
      */
     public function lista(Request $request)
@@ -74,7 +79,7 @@ class FacturacionController extends Controller
                 $formato->Generar($em);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(TteFactura::class)->listaInforme())->execute(), "Guias");
+                General::get()->setExportar($em->createQuery($em->getRepository(TteFactura::class)->listaInforme())->execute(), "Facturas");
             }
         }
         $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->listaInforme(), $request->query->getInt('page', 1), 500);

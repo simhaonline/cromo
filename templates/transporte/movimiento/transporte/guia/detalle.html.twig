@@ -2,6 +2,7 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
+        <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_guia_lista') }}">Volver</a>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
         </div>
@@ -23,7 +24,7 @@
             <td class="titulo">ID:</td>
             <td class="td-in-well">{{ arGuia.codigoGuiaPk }}</td>
             <td class="titulo">INGRESO:</td>
-            <td class="td-in-well">{{ arGuia.fechaIngreso |date("Y/m/d") }}</td>
+            <td class="td-in-well">{{ arGuia.fechaIngreso |date("Y-m-d H:i:s") }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo" >UNIDADES:</td>
@@ -33,7 +34,7 @@
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arGuia.numero }}</td>
             <td class="titulo">DESPACHO:</td>
-            <td class="td-in-well">{{ arGuia.fechaDespacho |date("Y/m/d") }}</td>
+            <td class="td-in-well">{{ arGuia.fechaDespacho |date("Y-m-d H:i:s") }}</td>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arGuia.codigoDespachoFk }}</td>
             <td class="titulo" >PESO:</td>
@@ -43,7 +44,7 @@
             <td class="titulo">TIPO:</td>
             <td class="td-in-well">{{ arGuia.guiaTipoRel.nombre }}</td>
             <td class="titulo">ENTREGA:</td>
-            <td class="td-in-well">{{ arGuia.fechaEntrega |date("Y/m/d") }}</td>
+            <td class="td-in-well">{{ arGuia.fechaEntrega |date("Y-m-d H:i:s") }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo" >VOLUMEN:</td>
@@ -53,7 +54,7 @@
             <td class="titulo">OPERACION(ING)</td>
             <td class="td-in-well">{{ arGuia.operacionIngresoRel.nombre | default('') }}</td>
             <td class="titulo">CUMPLIDO:</td>
-            <td class="td-in-well">{{ arGuia.fechaCumplido |date("Y/m/d") }}</td>
+            <td class="td-in-well">{{ arGuia.fechaCumplido |date("Y-m-d H:i:s") }}</td>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arGuia.codigoCumplidoFk }}</td></td>
             <td class="titulo" >PESO(FAC):</td>
@@ -63,7 +64,7 @@
             <td class="titulo">OPERACION(CAR)</td>
             <td class="td-in-well">{{ arGuia.operacionCargoRel.nombre | default('') }}</td>
             <td class="titulo">SOPORTE:</td>
-            <td class="td-in-well">{{ arGuia.fechaSoporte |date("Y/m/d") }}</td>
+            <td class="td-in-well">{{ arGuia.fechaSoporte |date("Y-m-d H:i:s") }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo" >FLETE:</td>
@@ -73,7 +74,7 @@
             <td class="titulo">CLIENTE:</td>
             <td class="td-in-well">{{ arGuia.clienteRel.nombreCorto }}</td>
             <td class="titulo">FACTURA:</td>
-            <td class="td-in-well">{{ arGuia.fechaFactura |date("Y/m/d") }}</td>
+            <td class="td-in-well">{{ arGuia.fechaFactura |date("Y-m-d H:i:s") }}</td>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arGuia.codigoFacturaFk }}</td>
             <td class="titulo" >DECLARADO:</td>
@@ -311,5 +312,4 @@
         </div>
     </div>
     {{ form_end(form) }}
-    <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_guia_lista') }}">Volver</a>
 {% endblock %}

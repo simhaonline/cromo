@@ -4,6 +4,7 @@ namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
 use App\Entity\Transporte\TteGuia;
 use App\Formato\Transporte\PendienteDespachoRuta;
+use App\General\General;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,9 +18,13 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class PendienteDespachoRutaController extends Controller
 {
-   /**
-    * @Route("/transporte/inf/transporte/guia/pendientedespachoruta", name="transporte_inf_transporte_guia_pendiente_despacho_ruta")
-    */    
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/transporte/inf/transporte/guia/pendientedespachoruta", name="transporte_inf_transporte_guia_pendiente_despacho_ruta")
+     */
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -31,9 +36,12 @@ class PendienteDespachoRutaController extends Controller
                     $this->filtrar($form);
                     $form = $this->formularioFiltro();
                 }
-                if ($form->get('BtnPdf')->isClicked()) {
+                if ($form->get('btnPdf')->isClicked()) {
                     $formato = new PendienteDespachoRuta();
                     $formato->Generar($em);
+                }
+                if ($form->get('btnExcel')->isClicked()) {
+                    General::get()->setExportar($em->getRepository(TteGuia::class)->informeDespachoPendienteRuta(), "Pendiente despacho ruta");
                 }
             }
         }
@@ -108,7 +116,8 @@ class PendienteDespachoRutaController extends Controller
             ->add('ChkMostrarDevoluciones', CheckboxType::class, array('label' => false, 'required' => false, 'data' => $session->get('filtroTteMostrarDevoluciones')))
             ->add('rutaRel', EntityType::class, $arrayPropiedadesRuta)
             ->add('servicioRel', EntityType::class, $arrayPropiedadesServicio)
-            ->add('BtnPdf', SubmitType::class, array('label' => 'Pdf'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('BtnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         return $form;

@@ -17,6 +17,7 @@ use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
 use App\Formato\Transporte\ListaFactura;
+use App\Formato\Transporte\NotaCredito;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -126,8 +127,13 @@ class FacturaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-                $formato = new Factura();
-                $formato->Generar($em, $id);
+                if($arFactura->getCodigoFacturaTipoFk() == 'NC'){
+                    $formato = new NotaCredito();
+                    $formato->Generar($em, $id);
+                } else {
+                    $formato = new Factura();
+                    $formato->Generar($em, $id);
+                }
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteFactura::class)->autorizar($arFactura);
@@ -164,8 +170,6 @@ class FacturaController extends Controller
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TteFacturaDetalle::class)->factura($id), "Facturas $id");
             }
-
-
         }
         $query = $this->getDoctrine()->getRepository(TteFacturaPlanilla::class)->listaFacturaDetalle($id);
         $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1),50);

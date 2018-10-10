@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteRelacionCaja;
 use App\Form\Type\Transporte\DespachoType;
 use App\Form\Type\Transporte\RelacionCajaType;
 use App\Formato\Transporte\RelacionCaja;
+use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -18,18 +19,32 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class RelacionCajaController extends Controller
 {
-   /**
-    * @Route("/transporte/movimiento/control/relacioncaja/lista", name="transporte_movimiento_control_relacioncaja_lista")
-    */    
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/transporte/movimiento/control/relacioncaja/lista", name="transporte_movimiento_control_relacioncaja_lista")
+     */
     public function lista(Request $request)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TteRelacionCaja::class)->lista()->getQuery()->getResult(), "Relacion caja");
+            }
+        }
         $arRelacionesCaja = $paginator->paginate($em->getRepository(TteRelacionCaja::class)->lista(), $request->query->getInt('page', 1), 30);
 
         return $this->render('transporte/movimiento/control/relacioncaja/lista.html.twig', [
-            'arRelacionesCaja' => $arRelacionesCaja]);
+            'arRelacionesCaja' => $arRelacionesCaja,
+            'form' => $form->createView()]);
     }
 
     /**
@@ -63,6 +78,11 @@ class RelacionCajaController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param $codigoRelacionCaja
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/movimiento/control/relacioncaja/detalle/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_detalle")
      */
     public function detalle(Request $request, $codigoRelacionCaja)
@@ -73,12 +93,12 @@ class RelacionCajaController extends Controller
 
         //Controles para el formulario
         $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-
         if ($arRelacionCaja->getEstadoAutorizado()) {
             $arrBtnRetirar['disabled'] = true;
         }
         $form
-            ->add('btnRetirarRecibo', SubmitType::class, $arrBtnRetirar);
+            ->add('btnRetirarRecibo', SubmitType::class, $arrBtnRetirar)
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
@@ -105,6 +125,9 @@ class RelacionCajaController extends Controller
                     $this->getDoctrine()->getRepository(TteRelacionCaja::class)->liquidar($codigoRelacionCaja);
                 }
                 return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', array('codigoRelacionCaja' => $codigoRelacionCaja)));
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TteRecibo::class)->relacionCaja($codigoRelacionCaja), "Relacion caja detalle");
             }
         }
 

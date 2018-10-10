@@ -26,6 +26,9 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
         $queryBuilder
             ->select('rc.codigoRelacionCajaPk')
             ->addSelect('rc.fecha')
+            ->addSelect('rc.cantidad')
+            ->addSelect('rc.vrFlete')
+            ->addSelect('rc.vrManejo')
             ->addSelect('rc.vrTotal')
             ->where('rc.codigoRelacionCajaPk <> 0');
         if ($session->get('filtroTteReciboCajaCodigo') != "") {

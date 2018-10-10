@@ -3,6 +3,10 @@
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('transporte_movimiento_control_relacioncaja_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
             {{ form_widget(form.btnAutorizar) }}
             {{ form_widget(form.btnDesautorizar) }}
             {{ form_widget(form.btnImprimir) }}
@@ -22,7 +26,7 @@
             <td class="td-in-well">{{ arRelacionCaja.codigoRelacionCajaPk }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arRelacionCaja.fecha |date("Y/m/d") }}</td>
-            <td class="titulo" >CANTIDAD:</td>
+            <td class="titulo">CANTIDAD:</td>
             <td align="right">{{ arRelacionCaja.cantidad }}</td>
         </tr>
         <tr>
@@ -30,27 +34,27 @@
             <td class="td-in-well"></td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo" >FLETE:</td>
-            <td align="right">{{ arRelacionCaja.vrFlete }}</td>
+            <td class="titulo">FLETE:</td>
+            <td align="right">{{ arRelacionCaja.vrFlete | number_format }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo" >MANEJO:</td>
-            <td align="right">{{ arRelacionCaja.vrManejo }}</td>
+            <td class="titulo">MANEJO:</td>
+            <td align="right">{{ arRelacionCaja.vrManejo | number_format }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo" >TOTAL:</td>
-            <td align="right">{{ arRelacionCaja.vrTotal }}</td>
+            <td class="titulo">TOTAL:</td>
+            <td align="right">{{ arRelacionCaja.vrTotal | number_format }}</td>
         </tr>
         <tr>
-            <td class="titulo" >COMENTARIO: </td>
+            <td class="titulo">COMENTARIO:</td>
             <td class="td-in-well" colspan="5">{{ arRelacionCaja.comentario }}</td>
         </tr>
     </table>
@@ -89,10 +93,11 @@
                                 <td>{{ arRecibo.guiaNumero }}</td>
                                 <td>{{ arRecibo.clienteNombre }}</td>
                                 <td>{{ arRecibo.documentoCliente }}</td>
-                                <td class="numero">{{ arRecibo.vrFlete }}</td>
-                                <td class="numero">{{ arRecibo.vrManejo }}</td>
-                                <td class="numero">{{ arRecibo.vrTotal }}</td>
-                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecibo.codigoReciboPk }}" /></td>
+                                <td class="numero">{{ arRecibo.vrFlete | number_format }}</td>
+                                <td class="numero">{{ arRecibo.vrManejo | number_format }}</td>
+                                <td class="numero">{{ arRecibo.vrTotal | number_format }}</td>
+                                <td><input type="checkbox" name="ChkSeleccionar[]"
+                                           value="{{ arRecibo.codigoReciboPk }}"/></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -100,10 +105,14 @@
                 </div>
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
-                    {% if arRelacionCaja.estadoAutorizado == 0%}
-                    <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_control_relacioncaja_detalle_adicionar_recibo', {'codigoRelacionCaja': arRelacionCaja.codigoRelacionCajaPk }) }}', 'RelacionCajaAdicionaRecibo', 600, 900)">Adicionar</a>
-                    </div>
+                    {% if arRelacionCaja.estadoAutorizado == 0 %}
+                        <div class="btn-group">
+                            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('transporte_movimiento_control_relacioncaja_detalle_adicionar_recibo', {'codigoRelacionCaja': arRelacionCaja.codigoRelacionCajaPk }) }}', 'RelacionCajaAdicionaRecibo', 600, 900)">Adicionar</a>
+                        </div>
                     {% endif %}
                     <div class="btn-group">
                         {{ form_widget(form.btnRetirarRecibo, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
@@ -122,9 +131,7 @@
         </div>
     </div>
     <div class="btn-toolbar" style="float: left">
-        <div class="btn-group">
-            <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_control_relacioncaja_lista') }}">Volver</a>
-        </div>
+
     </div>
 
     {{ form_end(form) }}

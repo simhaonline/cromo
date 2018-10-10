@@ -18,17 +18,17 @@ class RhuContrato
     private $codigoContratoPk;
 
     /**
-     * @ORM\Column(name="codigo_contrato_tipo_fk", type="integer")
+     * @ORM\Column(name="codigo_contrato_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoContratoTipoFk;
 
     /**
-     * @ORM\Column(name="codigo_contrato_clase_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_contrato_clase_fk", type="string", length=10, nullable=true)
      */
     private $codigoContratoClaseFk;
 
     /**
-     * @ORM\Column(name="codigo_clasificacion_riesgo_fk", type="integer")
+     * @ORM\Column(name="codigo_clasificacion_riesgo_fk", type="string", length=10, nullable=true)
      */
     private $codigoClasificacionRiesgoFk;
 
@@ -48,14 +48,14 @@ class RhuContrato
     private $codigoTiempoFk;
 
     /**
-     * @ORM\Column(name="codigo_tipo_pension_fk", type="integer")
+     * @ORM\Column(name="codigo_pension_fk", type="string", length=10, nullable=true)
      */
-    private $codigoTipoPensionFk;
+    private $codigoPensionFk;
 
     /**
-     * @ORM\Column(name="codigo_tipo_salud_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_salud_fk", type="string", length=10, nullable=true)
      */
-    private $codigoTipoSaludFk;
+    private $codigoSaludFk;
 
     /**
      * @ORM\Column(name="codigo_empleado_fk", type="integer")
@@ -78,7 +78,7 @@ class RhuContrato
     private $numero;
 
     /**
-     * @ORM\Column(name="codigo_cargo_fk", type="string", length=10)
+     * @ORM\Column(name="codigo_cargo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCargoFk;
 
@@ -90,12 +90,12 @@ class RhuContrato
     /**
      * @ORM\Column(name="vr_salario", type="float")
      */
-    private $VrSalario = 0;
+    private $vrSalario = 0;
 
     /**
      * @ORM\Column(name="estado_terminado", type="boolean")
      */
-    private $estadoActivo = 0;
+    private $estadoActivo = false;
 
     /**
      * @ORM\Column(name="comentario_terminacion", type="string", length=2000, nullable=true)
@@ -103,7 +103,7 @@ class RhuContrato
     private $comentarioTerminacion;
 
     /**
-     * @ORM\Column(name="codigo_grupo_fk", type="integer")
+     * @ORM\Column(name="codigo_grupo_fk", type="string", length=10, nullable=true)
      */
     private $codigoGrupoFk;
 
@@ -127,14 +127,13 @@ class RhuContrato
      */
     private $fechaUltimoPago;
 
-
     /**
-     * @ORM\Column(name="codigo_tipo_cotizante_fk", type="integer", nullable=false)
+     * @ORM\Column(name="codigo_tipo_cotizante_fk", type="string", length=10, nullable=true)
      */
     private $codigoTipoCotizanteFk;
 
     /**
-     * @ORM\Column(name="codigo_subtipo_cotizante_fk", type="integer", nullable=false)
+     * @ORM\Column(name="codigo_subtipo_cotizante_fk", type="string", length=10, nullable=true)
      */
     private $codigoSubtipoCotizanteFk;
 
@@ -174,7 +173,7 @@ class RhuContrato
     private $codigoCiudadLaboraFk;
 
     /**
-     * @ORM\Column(name="codigo_centro_trabajo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_centro_trabajo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCentroTrabajoFk;
 
@@ -189,18 +188,1002 @@ class RhuContrato
     private $auxilioTransporte = false;
 
     /**
-     * @ORM\Column(name="centro_costo_fijo", type="boolean", nullable=true)
+     * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="contratosEmpleadoRel")
+     * @ORM\JoinColumn(name="codigo_empleado_fk",referencedColumnName="codigo_empleado_pk")
      */
-    private $centroCostoFijo = false;
+    protected $empleadoRel;
 
     /**
-     * @ORM\Column(name="centro_costo_distribuido", type="boolean", nullable=true)
+     * @ORM\ManyToOne(targetEntity="RhuContratoTipo", inversedBy="contratosContratoTipoRel")
+     * @ORM\JoinColumn(name="codigo_contrato_tipo_fk",referencedColumnName="codigo_contrato_tipo_pk")
      */
-    private $centroCostoDistribuido = false;
+    protected $contratoTipoRel;
 
     /**
-     * @ORM\Column(name="centro_costo_determinado", type="boolean", nullable=true)
+     * @ORM\ManyToOne(targetEntity="RhuContratoClase", inversedBy="contratosContratoClaseRel")
+     * @ORM\JoinColumn(name="codigo_contrato_clase_fk",referencedColumnName="codigo_contrato_clase_pk")
      */
-    private $centroCostoDeterminado = false;
+    protected $contratoClaseRel;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuClasificacionRiesgo", inversedBy="contratosClasificacionRiesgoRel")
+     * @ORM\JoinColumn(name="codigo_clasificacion_riesgo_fk",referencedColumnName="codigo_clasificacion_riesgo_pk")
+     */
+    protected $clasificacionRiesgoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuContratoMotivo", inversedBy="contratosContratoMotivoRel")
+     * @ORM\JoinColumn(name="codigo_contrato_motivo_fk",referencedColumnName="codigo_contrato_motivo_pk")
+     */
+    protected $contratoMotivoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuTiempo", inversedBy="contratosTiempoRel")
+     * @ORM\JoinColumn(name="codigo_tiempo_fk",referencedColumnName="codigo_tiempo_pk")
+     */
+    protected $tiempoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuPension", inversedBy="contratosPensionRel")
+     * @ORM\JoinColumn(name="codigo_pension_fk",referencedColumnName="codigo_pension_pk")
+     */
+    protected $pensionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuSalud", inversedBy="contratosSaludRel")
+     * @ORM\JoinColumn(name="codigo_salud_fk",referencedColumnName="codigo_salud_pk")
+     */
+    protected $saludRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuCargo", inversedBy="contratosCargoRel")
+     * @ORM\JoinColumn(name="codigo_cargo_fk",referencedColumnName="codigo_cargo_pk")
+     */
+    protected $cargoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuGrupo", inversedBy="contratosGrupoRel")
+     * @ORM\JoinColumn(name="codigo_grupo_fk",referencedColumnName="codigo_grupo_pk")
+     */
+    protected $grupoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuTipoCotizante", inversedBy="contratosTipoCotizanteRel")
+     * @ORM\JoinColumn(name="codigo_tipo_cotizante_fk",referencedColumnName="codigo_tipo_cotizante_pk")
+     */
+    protected $tipoCotizanteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuSubtipoCotizante", inversedBy="contratosSubtipoCotizanteRel")
+     * @ORM\JoinColumn(name="codigo_subtipo_cotizante_fk",referencedColumnName="codigo_subtipo_cotizante_pk")
+     */
+    protected $subtipoCotizanteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="contratosEntidadSaludRel")
+     * @ORM\JoinColumn(name="codigo_entidad_salud_fk",referencedColumnName="codigo_entidad_pk")
+     */
+    protected $entidadSaludRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="contratosEntidadPensionRel")
+     * @ORM\JoinColumn(name="codigo_entidad_pension_fk",referencedColumnName="codigo_entidad_pk")
+     */
+    protected $entidadPensionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="contratosEntidadCesantiaRel")
+     * @ORM\JoinColumn(name="codigo_entidad_censantia_fk",referencedColumnName="codigo_entidad_pk")
+     */
+    protected $entidadCesantiaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="contratosEntidadCajaRel")
+     * @ORM\JoinColumn(name="codigo_entidad_caja_fk",referencedColumnName="codigo_entidad_pk")
+     */
+    protected $entidadCajaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuContratosCiudadContratoRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_contrato_fk",referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadContratoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuContratosCiudadLaboraRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_labora_fk",referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadLaboraRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuCentroTrabajo", inversedBy="contratosCentroTrabajoRel")
+     * @ORM\JoinColumn(name="codigo_centro_trabajo_fk",referencedColumnName="codigo_centro_trabajo_pk")
+     */
+    protected $centroTrabajoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuSucursal", inversedBy="contratosSucursalRel")
+     * @ORM\JoinColumn(name="codigo_sucursal_fk",referencedColumnName="codigo_sucursal_pk")
+     */
+    protected $sucursalRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoPk()
+    {
+        return $this->codigoContratoPk;
+    }
+
+    /**
+     * @param mixed $codigoContratoPk
+     */
+    public function setCodigoContratoPk($codigoContratoPk): void
+    {
+        $this->codigoContratoPk = $codigoContratoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoTipoFk()
+    {
+        return $this->codigoContratoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoTipoFk
+     */
+    public function setCodigoContratoTipoFk($codigoContratoTipoFk): void
+    {
+        $this->codigoContratoTipoFk = $codigoContratoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoClaseFk()
+    {
+        return $this->codigoContratoClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoClaseFk
+     */
+    public function setCodigoContratoClaseFk($codigoContratoClaseFk): void
+    {
+        $this->codigoContratoClaseFk = $codigoContratoClaseFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoClasificacionRiesgoFk()
+    {
+        return $this->codigoClasificacionRiesgoFk;
+    }
+
+    /**
+     * @param mixed $codigoClasificacionRiesgoFk
+     */
+    public function setCodigoClasificacionRiesgoFk($codigoClasificacionRiesgoFk): void
+    {
+        $this->codigoClasificacionRiesgoFk = $codigoClasificacionRiesgoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoMotivoFk()
+    {
+        return $this->codigoContratoMotivoFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoMotivoFk
+     */
+    public function setCodigoContratoMotivoFk($codigoContratoMotivoFk): void
+    {
+        $this->codigoContratoMotivoFk = $codigoContratoMotivoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTiempoFk()
+    {
+        return $this->codigoTiempoFk;
+    }
+
+    /**
+     * @param mixed $codigoTiempoFk
+     */
+    public function setCodigoTiempoFk($codigoTiempoFk): void
+    {
+        $this->codigoTiempoFk = $codigoTiempoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPensionFk()
+    {
+        return $this->codigoPensionFk;
+    }
+
+    /**
+     * @param mixed $codigoPensionFk
+     */
+    public function setCodigoPensionFk($codigoPensionFk): void
+    {
+        $this->codigoPensionFk = $codigoPensionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSaludFk()
+    {
+        return $this->codigoSaludFk;
+    }
+
+    /**
+     * @param mixed $codigoSaludFk
+     */
+    public function setCodigoSaludFk($codigoSaludFk): void
+    {
+        $this->codigoSaludFk = $codigoSaludFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpleadoFk()
+    {
+        return $this->codigoEmpleadoFk;
+    }
+
+    /**
+     * @param mixed $codigoEmpleadoFk
+     */
+    public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
+    {
+        $this->codigoEmpleadoFk = $codigoEmpleadoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDesde()
+    {
+        return $this->fechaDesde;
+    }
+
+    /**
+     * @param mixed $fechaDesde
+     */
+    public function setFechaDesde($fechaDesde): void
+    {
+        $this->fechaDesde = $fechaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHasta()
+    {
+        return $this->fechaHasta;
+    }
+
+    /**
+     * @param mixed $fechaHasta
+     */
+    public function setFechaHasta($fechaHasta): void
+    {
+        $this->fechaHasta = $fechaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero($numero): void
+    {
+        $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCargoFk()
+    {
+        return $this->codigoCargoFk;
+    }
+
+    /**
+     * @param mixed $codigoCargoFk
+     */
+    public function setCodigoCargoFk($codigoCargoFk): void
+    {
+        $this->codigoCargoFk = $codigoCargoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargoDescripcion()
+    {
+        return $this->cargoDescripcion;
+    }
+
+    /**
+     * @param mixed $cargoDescripcion
+     */
+    public function setCargoDescripcion($cargoDescripcion): void
+    {
+        $this->cargoDescripcion = $cargoDescripcion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSalario()
+    {
+        return $this->vrSalario;
+    }
+
+    /**
+     * @param mixed $vrSalario
+     */
+    public function setVrSalario($vrSalario): void
+    {
+        $this->vrSalario = $vrSalario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoActivo()
+    {
+        return $this->estadoActivo;
+    }
+
+    /**
+     * @param mixed $estadoActivo
+     */
+    public function setEstadoActivo($estadoActivo): void
+    {
+        $this->estadoActivo = $estadoActivo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarioTerminacion()
+    {
+        return $this->comentarioTerminacion;
+    }
+
+    /**
+     * @param mixed $comentarioTerminacion
+     */
+    public function setComentarioTerminacion($comentarioTerminacion): void
+    {
+        $this->comentarioTerminacion = $comentarioTerminacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaUltimoPagoCesantias()
+    {
+        return $this->fechaUltimoPagoCesantias;
+    }
+
+    /**
+     * @param mixed $fechaUltimoPagoCesantias
+     */
+    public function setFechaUltimoPagoCesantias($fechaUltimoPagoCesantias): void
+    {
+        $this->fechaUltimoPagoCesantias = $fechaUltimoPagoCesantias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaUltimoPagoVacaciones()
+    {
+        return $this->fechaUltimoPagoVacaciones;
+    }
+
+    /**
+     * @param mixed $fechaUltimoPagoVacaciones
+     */
+    public function setFechaUltimoPagoVacaciones($fechaUltimoPagoVacaciones): void
+    {
+        $this->fechaUltimoPagoVacaciones = $fechaUltimoPagoVacaciones;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaUltimoPagoPrimas()
+    {
+        return $this->fechaUltimoPagoPrimas;
+    }
+
+    /**
+     * @param mixed $fechaUltimoPagoPrimas
+     */
+    public function setFechaUltimoPagoPrimas($fechaUltimoPagoPrimas): void
+    {
+        $this->fechaUltimoPagoPrimas = $fechaUltimoPagoPrimas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaUltimoPago()
+    {
+        return $this->fechaUltimoPago;
+    }
+
+    /**
+     * @param mixed $fechaUltimoPago
+     */
+    public function setFechaUltimoPago($fechaUltimoPago): void
+    {
+        $this->fechaUltimoPago = $fechaUltimoPago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTipoCotizanteFk()
+    {
+        return $this->codigoTipoCotizanteFk;
+    }
+
+    /**
+     * @param mixed $codigoTipoCotizanteFk
+     */
+    public function setCodigoTipoCotizanteFk($codigoTipoCotizanteFk): void
+    {
+        $this->codigoTipoCotizanteFk = $codigoTipoCotizanteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSubtipoCotizanteFk()
+    {
+        return $this->codigoSubtipoCotizanteFk;
+    }
+
+    /**
+     * @param mixed $codigoSubtipoCotizanteFk
+     */
+    public function setCodigoSubtipoCotizanteFk($codigoSubtipoCotizanteFk): void
+    {
+        $this->codigoSubtipoCotizanteFk = $codigoSubtipoCotizanteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSalarioIntegral()
+    {
+        return $this->salarioIntegral;
+    }
+
+    /**
+     * @param mixed $salarioIntegral
+     */
+    public function setSalarioIntegral($salarioIntegral): void
+    {
+        $this->salarioIntegral = $salarioIntegral;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidadSaludFk()
+    {
+        return $this->codigoEntidadSaludFk;
+    }
+
+    /**
+     * @param mixed $codigoEntidadSaludFk
+     */
+    public function setCodigoEntidadSaludFk($codigoEntidadSaludFk): void
+    {
+        $this->codigoEntidadSaludFk = $codigoEntidadSaludFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidadPensionFk()
+    {
+        return $this->codigoEntidadPensionFk;
+    }
+
+    /**
+     * @param mixed $codigoEntidadPensionFk
+     */
+    public function setCodigoEntidadPensionFk($codigoEntidadPensionFk): void
+    {
+        $this->codigoEntidadPensionFk = $codigoEntidadPensionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidadCesantiaFk()
+    {
+        return $this->codigoEntidadCesantiaFk;
+    }
+
+    /**
+     * @param mixed $codigoEntidadCesantiaFk
+     */
+    public function setCodigoEntidadCesantiaFk($codigoEntidadCesantiaFk): void
+    {
+        $this->codigoEntidadCesantiaFk = $codigoEntidadCesantiaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidadCajaFk()
+    {
+        return $this->codigoEntidadCajaFk;
+    }
+
+    /**
+     * @param mixed $codigoEntidadCajaFk
+     */
+    public function setCodigoEntidadCajaFk($codigoEntidadCajaFk): void
+    {
+        $this->codigoEntidadCajaFk = $codigoEntidadCajaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadContratoFk()
+    {
+        return $this->codigoCiudadContratoFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadContratoFk
+     */
+    public function setCodigoCiudadContratoFk($codigoCiudadContratoFk): void
+    {
+        $this->codigoCiudadContratoFk = $codigoCiudadContratoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadLaboraFk()
+    {
+        return $this->codigoCiudadLaboraFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadLaboraFk
+     */
+    public function setCodigoCiudadLaboraFk($codigoCiudadLaboraFk): void
+    {
+        $this->codigoCiudadLaboraFk = $codigoCiudadLaboraFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCentroTrabajoFk()
+    {
+        return $this->codigoCentroTrabajoFk;
+    }
+
+    /**
+     * @param mixed $codigoCentroTrabajoFk
+     */
+    public function setCodigoCentroTrabajoFk($codigoCentroTrabajoFk): void
+    {
+        $this->codigoCentroTrabajoFk = $codigoCentroTrabajoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSucursalFk()
+    {
+        return $this->codigoSucursalFk;
+    }
+
+    /**
+     * @param mixed $codigoSucursalFk
+     */
+    public function setCodigoSucursalFk($codigoSucursalFk): void
+    {
+        $this->codigoSucursalFk = $codigoSucursalFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuxilioTransporte()
+    {
+        return $this->auxilioTransporte;
+    }
+
+    /**
+     * @param mixed $auxilioTransporte
+     */
+    public function setAuxilioTransporte($auxilioTransporte): void
+    {
+        $this->auxilioTransporte = $auxilioTransporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadoRel()
+    {
+        return $this->empleadoRel;
+    }
+
+    /**
+     * @param mixed $empleadoRel
+     */
+    public function setEmpleadoRel($empleadoRel): void
+    {
+        $this->empleadoRel = $empleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoTipoRel()
+    {
+        return $this->contratoTipoRel;
+    }
+
+    /**
+     * @param mixed $contratoTipoRel
+     */
+    public function setContratoTipoRel($contratoTipoRel): void
+    {
+        $this->contratoTipoRel = $contratoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoClaseRel()
+    {
+        return $this->contratoClaseRel;
+    }
+
+    /**
+     * @param mixed $contratoClaseRel
+     */
+    public function setContratoClaseRel($contratoClaseRel): void
+    {
+        $this->contratoClaseRel = $contratoClaseRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClasificacionRiesgoRel()
+    {
+        return $this->clasificacionRiesgoRel;
+    }
+
+    /**
+     * @param mixed $clasificacionRiesgoRel
+     */
+    public function setClasificacionRiesgoRel($clasificacionRiesgoRel): void
+    {
+        $this->clasificacionRiesgoRel = $clasificacionRiesgoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoMotivoRel()
+    {
+        return $this->contratoMotivoRel;
+    }
+
+    /**
+     * @param mixed $contratoMotivoRel
+     */
+    public function setContratoMotivoRel($contratoMotivoRel): void
+    {
+        $this->contratoMotivoRel = $contratoMotivoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTiempoRel()
+    {
+        return $this->tiempoRel;
+    }
+
+    /**
+     * @param mixed $tiempoRel
+     */
+    public function setTiempoRel($tiempoRel): void
+    {
+        $this->tiempoRel = $tiempoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPensionRel()
+    {
+        return $this->pensionRel;
+    }
+
+    /**
+     * @param mixed $pensionRel
+     */
+    public function setPensionRel($pensionRel): void
+    {
+        $this->pensionRel = $pensionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSaludRel()
+    {
+        return $this->saludRel;
+    }
+
+    /**
+     * @param mixed $saludRel
+     */
+    public function setSaludRel($saludRel): void
+    {
+        $this->saludRel = $saludRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargoRel()
+    {
+        return $this->cargoRel;
+    }
+
+    /**
+     * @param mixed $cargoRel
+     */
+    public function setCargoRel($cargoRel): void
+    {
+        $this->cargoRel = $cargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTipoCotizanteRel()
+    {
+        return $this->tipoCotizanteRel;
+    }
+
+    /**
+     * @param mixed $tipoCotizanteRel
+     */
+    public function setTipoCotizanteRel($tipoCotizanteRel): void
+    {
+        $this->tipoCotizanteRel = $tipoCotizanteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubtipoCotizanteRel()
+    {
+        return $this->subtipoCotizanteRel;
+    }
+
+    /**
+     * @param mixed $subtipoCotizanteRel
+     */
+    public function setSubtipoCotizanteRel($subtipoCotizanteRel): void
+    {
+        $this->subtipoCotizanteRel = $subtipoCotizanteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadSaludRel()
+    {
+        return $this->entidadSaludRel;
+    }
+
+    /**
+     * @param mixed $entidadSaludRel
+     */
+    public function setEntidadSaludRel($entidadSaludRel): void
+    {
+        $this->entidadSaludRel = $entidadSaludRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadPensionRel()
+    {
+        return $this->entidadPensionRel;
+    }
+
+    /**
+     * @param mixed $entidadPensionRel
+     */
+    public function setEntidadPensionRel($entidadPensionRel): void
+    {
+        $this->entidadPensionRel = $entidadPensionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadCesantiaRel()
+    {
+        return $this->entidadCesantiaRel;
+    }
+
+    /**
+     * @param mixed $entidadCesantiaRel
+     */
+    public function setEntidadCesantiaRel($entidadCesantiaRel): void
+    {
+        $this->entidadCesantiaRel = $entidadCesantiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadCajaRel()
+    {
+        return $this->entidadCajaRel;
+    }
+
+    /**
+     * @param mixed $entidadCajaRel
+     */
+    public function setEntidadCajaRel($entidadCajaRel): void
+    {
+        $this->entidadCajaRel = $entidadCajaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadContratoRel()
+    {
+        return $this->ciudadContratoRel;
+    }
+
+    /**
+     * @param mixed $ciudadContratoRel
+     */
+    public function setCiudadContratoRel($ciudadContratoRel): void
+    {
+        $this->ciudadContratoRel = $ciudadContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadLaboraRel()
+    {
+        return $this->ciudadLaboraRel;
+    }
+
+    /**
+     * @param mixed $ciudadLaboraRel
+     */
+    public function setCiudadLaboraRel($ciudadLaboraRel): void
+    {
+        $this->ciudadLaboraRel = $ciudadLaboraRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCentroTrabajoRel()
+    {
+        return $this->centroTrabajoRel;
+    }
+
+    /**
+     * @param mixed $centroTrabajoRel
+     */
+    public function setCentroTrabajoRel($centroTrabajoRel): void
+    {
+        $this->centroTrabajoRel = $centroTrabajoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSucursalRel()
+    {
+        return $this->sucursalRel;
+    }
+
+    /**
+     * @param mixed $sucursalRel
+     */
+    public function setSucursalRel($sucursalRel): void
+    {
+        $this->sucursalRel = $sucursalRel;
+    }
 }

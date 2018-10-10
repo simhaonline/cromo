@@ -37,9 +37,14 @@ class RhuCargo
     protected $rhuAspirantesCargoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="cargoRel")
+     * @ORM\OneToMany(targetEntity="RhuEmpleado", mappedBy="cargoRel")
      */
-    protected $rhuEmpleadosCargoRel;
+    protected $empleadosCargoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="cargoRel")
+     */
+    protected $contratosCargoRel;
 
     /**
      * @return mixed
@@ -124,16 +129,32 @@ class RhuCargo
     /**
      * @return mixed
      */
-    public function getRhuEmpleadosCargoRel()
+    public function getEmpleadosCargoRel()
     {
-        return $this->rhuEmpleadosCargoRel;
+        return $this->empleadosCargoRel;
     }
 
     /**
-     * @param mixed $rhuEmpleadosCargoRel
+     * @param mixed $empleadosCargoRel
      */
-    public function setRhuEmpleadosCargoRel($rhuEmpleadosCargoRel): void
+    public function setEmpleadosCargoRel($empleadosCargoRel): void
     {
-        $this->rhuEmpleadosCargoRel = $rhuEmpleadosCargoRel;
+        $this->empleadosCargoRel = $empleadosCargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratosCargoRel()
+    {
+        return $this->contratosCargoRel;
+    }
+
+    /**
+     * @param mixed $contratosCargoRel
+     */
+    public function setContratosCargoRel($contratosCargoRel): void
+    {
+        $this->contratosCargoRel = $contratosCargoRel;
     }
 }

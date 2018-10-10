@@ -40,6 +40,7 @@ final class General
     public function setExportar($arrDatos, $nombre)
     {
         if (count($arrDatos) > 0) {
+            $campo = '';
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             $j = 0;
@@ -48,7 +49,8 @@ final class General
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $sheet->getColumnDimension($i)->setAutoSize(true);
                 $sheet->getStyle(1)->getFont()->setBold(true);
-                $sheet->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $campo = strpos($arrColumnas[$j], 'Pk') !== false ? 'ID' : $arrColumnas[$j];
+                $sheet->setCellValue($i . '1', strtoupper($campo));
                 $j++;
             }
             $j = 1;

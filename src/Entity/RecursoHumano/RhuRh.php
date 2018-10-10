@@ -34,7 +34,7 @@ class RhuRh
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="rhRel")
      */
-    protected $rhuEmpleadosRhRel;
+    protected $empleadosRhRel;
 
     /**
      * @return mixed
@@ -103,16 +103,16 @@ class RhuRh
     /**
      * @return mixed
      */
-    public function getRhuEmpleadosRhRel()
+    public function getEmpleadosRhRel()
     {
-        return $this->rhuEmpleadosRhRel;
+        return $this->empleadosRhRel;
     }
 
     /**
-     * @param mixed $rhuEmpleadosRhRel
+     * @param mixed $empleadosRhRel
      */
-    public function setRhuEmpleadosRhRel($rhuEmpleadosRhRel): void
+    public function setEmpleadosRhRel($empleadosRhRel): void
     {
-        $this->rhuEmpleadosRhRel = $rhuEmpleadosRhRel;
+        $this->empleadosRhRel = $empleadosRhRel;
     }
 }

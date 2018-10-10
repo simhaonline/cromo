@@ -54,7 +54,7 @@ class RhuSolicitud
     private $codigoEstudioTipoFk;
 
     /**
-     * @ORM\Column(name="codigo_clasificacion_riesgo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_clasificacion_riesgo_fk", type="string", length=10, nullable=true)
      */
     private $codigoClasificacionRiesgoFk;
 
@@ -190,19 +190,19 @@ class RhuSolicitud
     private $codigoUsuario;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCargo", inversedBy="solicitudesCargoRel")
+     * @ORM\ManyToOne(targetEntity="RhuCargo", inversedBy="solicitudesCargoRel")
      * @ORM\JoinColumn(name="codigo_cargo_fk",referencedColumnName="codigo_cargo_pk")
      */
     protected $cargoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuSolicitudMotivo", inversedBy="solicitudesMotivosRel")
+     * @ORM\ManyToOne(targetEntity="RhuSolicitudMotivo", inversedBy="solicitudesMotivosRel")
      * @ORM\JoinColumn(name="codigo_solicitud_motivo_fk",referencedColumnName="codigo_solicitud_motivo_pk")
      */
     protected $solicitudMotivoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuSolicitudExperiencia", inversedBy="solicitudesExperienciasRel")
+     * @ORM\ManyToOne(targetEntity="RhuSolicitudExperiencia", inversedBy="solicitudesExperienciasRel")
      * @ORM\JoinColumn(name="codigo_solicitud_experiencia_fk",referencedColumnName="codigo_solicitud_experiencia_pk")
      */
     protected $solicitudExperienciaRel;
@@ -226,13 +226,13 @@ class RhuSolicitud
     protected $estudioTipoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuClasificacionRiesgo", inversedBy="solicitudesClasificacionRiesgoRel")
+     * @ORM\ManyToOne(targetEntity="RhuClasificacionRiesgo", inversedBy="solicitudesClasificacionRiesgoRel")
      * @ORM\JoinColumn(name="codigo_clasificacion_riesgo_fk",referencedColumnName="codigo_clasificacion_riesgo_pk")
      */
     protected $clasificacionRiesgoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="solicitudRel")
+     * @ORM\OneToMany(targetEntity="RhuSeleccion", mappedBy="solicitudRel")
      */
     protected $rhuSeleccionSolicitudRel;
 
@@ -257,27 +257,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $codigoSolicitudPk
-     */
-    public function setCodigoSolicitudPk($codigoSolicitudPk): void
-    {
-        $this->codigoSolicitudPk = $codigoSolicitudPk;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoGrupoPagoFk()
     {
         return $this->codigoGrupoPagoFk;
-    }
-
-    /**
-     * @param mixed $codigoGrupoPagoFk
-     */
-    public function setCodigoGrupoPagoFk($codigoGrupoPagoFk): void
-    {
-        $this->codigoGrupoPagoFk = $codigoGrupoPagoFk;
     }
 
     /**
@@ -289,27 +273,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $codigoCargoFk
-     */
-    public function setCodigoCargoFk($codigoCargoFk): void
-    {
-        $this->codigoCargoFk = $codigoCargoFk;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoSolicitudMotivoFk()
     {
         return $this->codigoSolicitudMotivoFk;
-    }
-
-    /**
-     * @param mixed $codigoSolicitudMotivoFk
-     */
-    public function setCodigoSolicitudMotivoFk($codigoSolicitudMotivoFk): void
-    {
-        $this->codigoSolicitudMotivoFk = $codigoSolicitudMotivoFk;
     }
 
     /**
@@ -321,27 +289,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $codigoExperienciaSolicitudFk
-     */
-    public function setCodigoExperienciaSolicitudFk($codigoExperienciaSolicitudFk): void
-    {
-        $this->codigoExperienciaSolicitudFk = $codigoExperienciaSolicitudFk;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoEstadoCivilFk()
     {
         return $this->codigoEstadoCivilFk;
-    }
-
-    /**
-     * @param mixed $codigoEstadoCivilFk
-     */
-    public function setCodigoEstadoCivilFk($codigoEstadoCivilFk): void
-    {
-        $this->codigoEstadoCivilFk = $codigoEstadoCivilFk;
     }
 
     /**
@@ -353,27 +305,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $codigoCiudadFk
-     */
-    public function setCodigoCiudadFk($codigoCiudadFk): void
-    {
-        $this->codigoCiudadFk = $codigoCiudadFk;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoEstudioTipoFk()
     {
         return $this->codigoEstudioTipoFk;
-    }
-
-    /**
-     * @param mixed $codigoEstudioTipoFk
-     */
-    public function setCodigoEstudioTipoFk($codigoEstudioTipoFk): void
-    {
-        $this->codigoEstudioTipoFk = $codigoEstudioTipoFk;
     }
 
     /**
@@ -385,27 +321,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $codigoClasificacionRiesgoFk
-     */
-    public function setCodigoClasificacionRiesgoFk($codigoClasificacionRiesgoFk): void
-    {
-        $this->codigoClasificacionRiesgoFk = $codigoClasificacionRiesgoFk;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoSexoFk()
     {
         return $this->codigoSexoFk;
-    }
-
-    /**
-     * @param mixed $codigoSexoFk
-     */
-    public function setCodigoSexoFk($codigoSexoFk): void
-    {
-        $this->codigoSexoFk = $codigoSexoFk;
     }
 
     /**
@@ -417,27 +337,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $codigoReligionFk
-     */
-    public function setCodigoReligionFk($codigoReligionFk): void
-    {
-        $this->codigoReligionFk = $codigoReligionFk;
-    }
-
-    /**
      * @return mixed
      */
     public function getDisponbilidad()
     {
         return $this->disponbilidad;
-    }
-
-    /**
-     * @param mixed $disponbilidad
-     */
-    public function setDisponbilidad($disponbilidad): void
-    {
-        $this->disponbilidad = $disponbilidad;
     }
 
     /**
@@ -449,27 +353,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $fecha
-     */
-    public function setFecha($fecha): void
-    {
-        $this->fecha = $fecha;
-    }
-
-    /**
      * @return mixed
      */
     public function getFechaContratacion()
     {
         return $this->fechaContratacion;
-    }
-
-    /**
-     * @param mixed $fechaContratacion
-     */
-    public function setFechaContratacion($fechaContratacion): void
-    {
-        $this->fechaContratacion = $fechaContratacion;
     }
 
     /**
@@ -481,27 +369,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $fechaVencimiento
-     */
-    public function setFechaVencimiento($fechaVencimiento): void
-    {
-        $this->fechaVencimiento = $fechaVencimiento;
-    }
-
-    /**
      * @return mixed
      */
     public function getNombre()
     {
         return $this->nombre;
-    }
-
-    /**
-     * @param mixed $nombre
-     */
-    public function setNombre($nombre): void
-    {
-        $this->nombre = $nombre;
     }
 
     /**
@@ -513,27 +385,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $cantidadSolicitada
-     */
-    public function setCantidadSolicitada($cantidadSolicitada): void
-    {
-        $this->cantidadSolicitada = $cantidadSolicitada;
-    }
-
-    /**
      * @return mixed
      */
     public function getVrSalario()
     {
         return $this->VrSalario;
-    }
-
-    /**
-     * @param mixed $VrSalario
-     */
-    public function setVrSalario($VrSalario): void
-    {
-        $this->VrSalario = $VrSalario;
     }
 
     /**
@@ -545,27 +401,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $VrNoSalarial
-     */
-    public function setVrNoSalarial($VrNoSalarial): void
-    {
-        $this->VrNoSalarial = $VrNoSalarial;
-    }
-
-    /**
      * @return mixed
      */
     public function getSalarioFijo()
     {
         return $this->salarioFijo;
-    }
-
-    /**
-     * @param mixed $salarioFijo
-     */
-    public function setSalarioFijo($salarioFijo): void
-    {
-        $this->salarioFijo = $salarioFijo;
     }
 
     /**
@@ -577,27 +417,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $salarioVariable
-     */
-    public function setSalarioVariable($salarioVariable): void
-    {
-        $this->salarioVariable = $salarioVariable;
-    }
-
-    /**
      * @return mixed
      */
     public function getFechaPruebas()
     {
         return $this->fechaPruebas;
-    }
-
-    /**
-     * @param mixed $fechaPruebas
-     */
-    public function setFechaPruebas($fechaPruebas): void
-    {
-        $this->fechaPruebas = $fechaPruebas;
     }
 
     /**
@@ -609,27 +433,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $edadMinima
-     */
-    public function setEdadMinima($edadMinima): void
-    {
-        $this->edadMinima = $edadMinima;
-    }
-
-    /**
      * @return mixed
      */
     public function getEdadMaxima()
     {
         return $this->edadMaxima;
-    }
-
-    /**
-     * @param mixed $edadMaxima
-     */
-    public function setEdadMaxima($edadMaxima): void
-    {
-        $this->edadMaxima = $edadMaxima;
     }
 
     /**
@@ -641,27 +449,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $numeroHijos
-     */
-    public function setNumeroHijos($numeroHijos): void
-    {
-        $this->numeroHijos = $numeroHijos;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoTipoVehiculoFk()
     {
         return $this->codigoTipoVehiculoFk;
-    }
-
-    /**
-     * @param mixed $codigoTipoVehiculoFk
-     */
-    public function setCodigoTipoVehiculoFk($codigoTipoVehiculoFk): void
-    {
-        $this->codigoTipoVehiculoFk = $codigoTipoVehiculoFk;
     }
 
     /**
@@ -673,27 +465,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $codigoLicenciaCarroFk
-     */
-    public function setCodigoLicenciaCarroFk($codigoLicenciaCarroFk): void
-    {
-        $this->codigoLicenciaCarroFk = $codigoLicenciaCarroFk;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoLicenciaMotoFk()
     {
         return $this->codigoLicenciaMotoFk;
-    }
-
-    /**
-     * @param mixed $codigoLicenciaMotoFk
-     */
-    public function setCodigoLicenciaMotoFk($codigoLicenciaMotoFk): void
-    {
-        $this->codigoLicenciaMotoFk = $codigoLicenciaMotoFk;
     }
 
     /**
@@ -705,27 +481,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $experienciaSolicitud
-     */
-    public function setExperienciaSolicitud($experienciaSolicitud): void
-    {
-        $this->experienciaSolicitud = $experienciaSolicitud;
-    }
-
-    /**
      * @return mixed
      */
     public function getComentarios()
     {
         return $this->comentarios;
-    }
-
-    /**
-     * @param mixed $comentarios
-     */
-    public function setComentarios($comentarios): void
-    {
-        $this->comentarios = $comentarios;
     }
 
     /**
@@ -737,27 +497,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $estadoAutorizado
-     */
-    public function setEstadoAutorizado($estadoAutorizado): void
-    {
-        $this->estadoAutorizado = $estadoAutorizado;
-    }
-
-    /**
      * @return mixed
      */
     public function getEstadoAprobado()
     {
         return $this->estadoAprobado;
-    }
-
-    /**
-     * @param mixed $estadoAprobado
-     */
-    public function setEstadoAprobado($estadoAprobado): void
-    {
-        $this->estadoAprobado = $estadoAprobado;
     }
 
     /**
@@ -769,27 +513,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $estadoCerrado
-     */
-    public function setEstadoCerrado($estadoCerrado): void
-    {
-        $this->estadoCerrado = $estadoCerrado;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoUsuario()
     {
         return $this->codigoUsuario;
-    }
-
-    /**
-     * @param mixed $codigoUsuario
-     */
-    public function setCodigoUsuario($codigoUsuario): void
-    {
-        $this->codigoUsuario = $codigoUsuario;
     }
 
     /**
@@ -801,27 +529,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $cargoRel
-     */
-    public function setCargoRel($cargoRel): void
-    {
-        $this->cargoRel = $cargoRel;
-    }
-
-    /**
      * @return mixed
      */
     public function getSolicitudMotivoRel()
     {
         return $this->solicitudMotivoRel;
-    }
-
-    /**
-     * @param mixed $solicitudMotivoRel
-     */
-    public function setSolicitudMotivoRel($solicitudMotivoRel): void
-    {
-        $this->solicitudMotivoRel = $solicitudMotivoRel;
     }
 
     /**
@@ -833,27 +545,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $solicitudExperienciaRel
-     */
-    public function setSolicitudExperienciaRel($solicitudExperienciaRel): void
-    {
-        $this->solicitudExperienciaRel = $solicitudExperienciaRel;
-    }
-
-    /**
      * @return mixed
      */
     public function getEstadoCivilRel()
     {
         return $this->estadoCivilRel;
-    }
-
-    /**
-     * @param mixed $estadoCivilRel
-     */
-    public function setEstadoCivilRel($estadoCivilRel): void
-    {
-        $this->estadoCivilRel = $estadoCivilRel;
     }
 
     /**
@@ -865,27 +561,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $ciudadRel
-     */
-    public function setCiudadRel($ciudadRel): void
-    {
-        $this->ciudadRel = $ciudadRel;
-    }
-
-    /**
      * @return mixed
      */
     public function getEstudioTipoRel()
     {
         return $this->estudioTipoRel;
-    }
-
-    /**
-     * @param mixed $estudioTipoRel
-     */
-    public function setEstudioTipoRel($estudioTipoRel): void
-    {
-        $this->estudioTipoRel = $estudioTipoRel;
     }
 
     /**
@@ -897,27 +577,11 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $clasificacionRiesgoRel
-     */
-    public function setClasificacionRiesgoRel($clasificacionRiesgoRel): void
-    {
-        $this->clasificacionRiesgoRel = $clasificacionRiesgoRel;
-    }
-
-    /**
      * @return mixed
      */
     public function getRhuSeleccionSolicitudRel()
     {
         return $this->rhuSeleccionSolicitudRel;
-    }
-
-    /**
-     * @param mixed $rhuSeleccionSolicitudRel
-     */
-    public function setRhuSeleccionSolicitudRel($rhuSeleccionSolicitudRel): void
-    {
-        $this->rhuSeleccionSolicitudRel = $rhuSeleccionSolicitudRel;
     }
 
     /**
@@ -929,26 +593,10 @@ class RhuSolicitud
     }
 
     /**
-     * @param mixed $sexoRel
-     */
-    public function setSexoRel($sexoRel): void
-    {
-        $this->sexoRel = $sexoRel;
-    }
-
-    /**
      * @return mixed
      */
     public function getReligionRel()
     {
         return $this->religionRel;
-    }
-
-    /**
-     * @param mixed $religionRel
-     */
-    public function setReligionRel($religionRel): void
-    {
-        $this->religionRel = $religionRel;
     }
 }

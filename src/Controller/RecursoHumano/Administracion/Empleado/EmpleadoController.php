@@ -95,7 +95,7 @@ class EmpleadoController extends Controller
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arEmpleado);
                 $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_detalle'));
+                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_detalle',['id' => $arEmpleado->getCodigoEmpleadoPk()]));
             }
         }
         return $this->render('recursoHumano/administracion/empleado/nuevo.html.twig', [

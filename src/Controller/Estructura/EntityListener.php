@@ -9,13 +9,15 @@
 namespace  App\Controller\Estructura;
 
 use App\Entity\General\GenLogExtendido;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use App\Entity\Seguridad\Usuario;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DefaultEntityListenerResolver;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class EntityListener extends DefaultEntityListenerResolver
 {
@@ -65,7 +67,7 @@ class EntityListener extends DefaultEntityListenerResolver
      */
     private $campoPrimary;
     /**
-     * @var User
+     * @var Usuario
      */
     private $usuario;
     /**
@@ -131,12 +133,25 @@ class EntityListener extends DefaultEntityListenerResolver
     private $procesar = true;
     private $arEntidad = null;
 
-    public function __construct(Container $container = null)
-    {
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+    /**
+     * @var RequestContext
+     */
+    private $requestContext;
+
+    private $excepciones = [];
+
+
+    public function __construct(EntityManager $em, RequestContext $request, TokenStorageInterface $ts){
         global $kernel;
         $this->container = $kernel->getContainer();
-        $this->usuario = $this->container->get("security.token_storage")->getToken()->getUser();
-        $this->em = $this->container->get("doctrine.orm.entity_manager");
+        $this->em = $em;
+        $this->requestContext = $request;
+        $this->tokenStorage = $ts;
+        $this->usuario = $this->tokenStorage->getToken()? $this->tokenStorage->getToken()->getUser() : null;
         $this->obtenerRuta();
     }
 
@@ -145,7 +160,7 @@ class EntityListener extends DefaultEntityListenerResolver
      */
     private function obtenerRuta()
     {
-        $request = $this->container->get("router.request_context");
+        $request = $this->requestContext;
         $ruta = $request->getPathInfo();
         $scheme = $request->getScheme();
         $host = $request->getHost();
@@ -233,7 +248,7 @@ class EntityListener extends DefaultEntityListenerResolver
         $this->extraerCampos($entidad);
         $this->codigoEntidadPk = call_user_func_array([$entidad, "get" . ucfirst($this->campoPrimary)], []);
         $this->esNuevo = false;
-        $this->ultimoCambio = $this->em->getRepository("BrasaGeneralBundle:GenLogExtendido")->getCodigoPadre($this->codigoEntidadPk);
+        $this->ultimoCambio = $this->em->getRepository("App:General\GenLogExtendido")->getCodigoPadre($this->codigoEntidadPk);
         # Obtenemos el codigo del padre
         if($this->ultimoCambio && $this->ultimoCambio->getCodigoPadre() != "") {
             $this->codigoPadre =  $this->ultimoCambio->getCodigoPadre();

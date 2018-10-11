@@ -78,6 +78,12 @@ class GenLogExtendido
     private $fecha;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Seguridad\Usuario", inversedBy="logsUsuarioRel")
+     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="id")
+     */
+    protected $usuarioRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoLogExtendidoPk()
@@ -87,10 +93,12 @@ class GenLogExtendido
 
     /**
      * @param mixed $codigoLogExtendidoPk
+     * @return GenLogExtendido
      */
-    public function setCodigoLogExtendidoPk($codigoLogExtendidoPk): void
+    public function setCodigoLogExtendidoPk($codigoLogExtendidoPk)
     {
         $this->codigoLogExtendidoPk = $codigoLogExtendidoPk;
+        return $this;
     }
 
     /**
@@ -103,10 +111,12 @@ class GenLogExtendido
 
     /**
      * @param mixed $codigoRegistroPk
+     * @return GenLogExtendido
      */
-    public function setCodigoRegistroPk($codigoRegistroPk): void
+    public function setCodigoRegistroPk($codigoRegistroPk)
     {
         $this->codigoRegistroPk = $codigoRegistroPk;
+        return $this;
     }
 
     /**
@@ -119,10 +129,12 @@ class GenLogExtendido
 
     /**
      * @param mixed $accion
+     * @return GenLogExtendido
      */
-    public function setAccion($accion): void
+    public function setAccion($accion)
     {
         $this->accion = $accion;
+        return $this;
     }
 
     /**
@@ -135,10 +147,12 @@ class GenLogExtendido
 
     /**
      * @param mixed $codigoUsuarioFk
+     * @return GenLogExtendido
      */
-    public function setCodigoUsuarioFk($codigoUsuarioFk): void
+    public function setCodigoUsuarioFk($codigoUsuarioFk)
     {
         $this->codigoUsuarioFk = $codigoUsuarioFk;
+        return $this;
     }
 
     /**
@@ -151,10 +165,12 @@ class GenLogExtendido
 
     /**
      * @param mixed $camposSeguimiento
+     * @return GenLogExtendido
      */
-    public function setCamposSeguimiento($camposSeguimiento): void
+    public function setCamposSeguimiento($camposSeguimiento)
     {
         $this->camposSeguimiento = $camposSeguimiento;
+        return $this;
     }
 
     /**
@@ -167,10 +183,12 @@ class GenLogExtendido
 
     /**
      * @param mixed $camposSeguimientoMostrar
+     * @return GenLogExtendido
      */
-    public function setCamposSeguimientoMostrar($camposSeguimientoMostrar): void
+    public function setCamposSeguimientoMostrar($camposSeguimientoMostrar)
     {
         $this->camposSeguimientoMostrar = $camposSeguimientoMostrar;
+        return $this;
     }
 
     /**
@@ -183,10 +201,12 @@ class GenLogExtendido
 
     /**
      * @param mixed $nombreEntidad
+     * @return GenLogExtendido
      */
-    public function setNombreEntidad($nombreEntidad): void
+    public function setNombreEntidad($nombreEntidad)
     {
         $this->nombreEntidad = $nombreEntidad;
+        return $this;
     }
 
     /**
@@ -199,10 +219,12 @@ class GenLogExtendido
 
     /**
      * @param mixed $namespaceEntidad
+     * @return GenLogExtendido
      */
-    public function setNamespaceEntidad($namespaceEntidad): void
+    public function setNamespaceEntidad($namespaceEntidad)
     {
         $this->namespaceEntidad = $namespaceEntidad;
+        return $this;
     }
 
     /**
@@ -215,10 +237,12 @@ class GenLogExtendido
 
     /**
      * @param mixed $modulo
+     * @return GenLogExtendido
      */
-    public function setModulo($modulo): void
+    public function setModulo($modulo)
     {
         $this->modulo = $modulo;
+        return $this;
     }
 
     /**
@@ -231,10 +255,12 @@ class GenLogExtendido
 
     /**
      * @param mixed $ruta
+     * @return GenLogExtendido
      */
-    public function setRuta($ruta): void
+    public function setRuta($ruta)
     {
         $this->ruta = $ruta;
+        return $this;
     }
 
     /**
@@ -247,10 +273,12 @@ class GenLogExtendido
 
     /**
      * @param mixed $codigoPadre
+     * @return GenLogExtendido
      */
-    public function setCodigoPadre($codigoPadre): void
+    public function setCodigoPadre($codigoPadre)
     {
         $this->codigoPadre = $codigoPadre;
+        return $this;
     }
 
     /**
@@ -263,18 +291,29 @@ class GenLogExtendido
 
     /**
      * @param mixed $fecha
+     * @return GenLogExtendido
      */
-    public function setFecha($fecha): void
+    public function setFecha($fecha)
     {
         $this->fecha = $fecha;
+        return $this;
     }
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Brasa\SeguridadBundle\Entity\User", inversedBy="logsUsuarioRel")
-//     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="id")
-//     */
-//    protected $usuarioRel;
+    /**
+     * @return mixed
+     */
+    public function getUsuarioRel()
+    {
+        return $this->usuarioRel;
+    }
 
-
-
+    /**
+     * @param mixed $usuarioRel
+     * @return GenLogExtendido
+     */
+    public function setUsuarioRel($usuarioRel)
+    {
+        $this->usuarioRel = $usuarioRel;
+        return $this;
+    }
 }

@@ -7,14 +7,12 @@ use App\Entity\RecursoHumano\RhuCargo;
 use App\Entity\RecursoHumano\RhuCentroTrabajo;
 use App\Entity\RecursoHumano\RhuClasificacionRiesgo;
 use App\Entity\RecursoHumano\RhuContrato;
-use App\Entity\RecursoHumano\RhuContratoClase;
-use App\Entity\RecursoHumano\RhuContratoMotivo;
 use App\Entity\RecursoHumano\RhuContratoTipo;
 use App\Entity\RecursoHumano\RhuEntidad;
+use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuPension;
 use App\Entity\RecursoHumano\RhuSalud;
 use App\Entity\RecursoHumano\RhuSubtipoCotizante;
-use App\Entity\RecursoHumano\RhuSucursal;
 use App\Entity\RecursoHumano\RhuTiempo;
 use App\Entity\RecursoHumano\RhuTipoCotizante;
 use Doctrine\ORM\EntityRepository;
@@ -104,7 +102,7 @@ class ContratoType extends AbstractType
                 'required' => false
             ])
             ->add('grupoRel', EntityType::class, [
-                'class' => RhuCargo::class,
+                'class' => RhuGrupo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
                         ->orderBy('r.nombre', 'ASC');

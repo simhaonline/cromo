@@ -69,7 +69,7 @@ class EmpleadoController extends Controller
         return $this->render('recursoHumano/administracion/empleado/detalle.html.twig', [
             'form' => $form->createView(),
             'arEmpleado' => $arEmpleado,
-            'arContratos' => $arContratos
+            'arContratos' => $arContratos->getQuery()->execute()
         ]);
     }
 
@@ -122,6 +122,7 @@ class EmpleadoController extends Controller
                 $em->persist($arContrato);
                 $em->flush();
             }
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         return $this->render('recursoHumano/administracion/empleado/nuevoContrato.html.twig',[
             'form' => $form->createView()

@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RhuCargo
 {
-    
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_cargo_pk", type="string", length=10)

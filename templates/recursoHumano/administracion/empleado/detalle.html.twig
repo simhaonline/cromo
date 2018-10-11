@@ -53,8 +53,8 @@
                         {% for arContrato in arContratos %}
                             <tr>
                                 <td>{{ arContrato.codigoContratoPk }}</td>
-                                <td>{{ arContrato.fechaDesde }}</td>
-                                <td>{{ arContrato.fechaHasta }}</td>
+                                <td>{{ arContrato.fechaDesde | date('Y-m-d') }}</td>
+                                <td>{{ arContrato.fechaHasta | date('Y-m-d') }}</td>
                                 <td>{{ arContrato.vrSalario }}</td>
                                 <td>{{ arContrato.estadoActivo }}</td>
                             </tr>

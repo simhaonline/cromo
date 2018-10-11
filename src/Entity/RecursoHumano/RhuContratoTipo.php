@@ -22,6 +22,11 @@ class RhuContratoTipo
     private $nombre;
 
     /**
+     * @ORM\Column(name="indefinido", type="boolean", nullable=true)
+     */
+    private $indefinido = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuContrato",mappedBy="contratoTipoRel")
      */
     protected $contratosContratoTipoRel;
@@ -56,6 +61,22 @@ class RhuContratoTipo
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIndefinido()
+    {
+        return $this->indefinido;
+    }
+
+    /**
+     * @param mixed $indefinido
+     */
+    public function setIndefinido($indefinido): void
+    {
+        $this->indefinido = $indefinido;
     }
 
     /**

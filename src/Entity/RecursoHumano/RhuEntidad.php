@@ -23,6 +23,11 @@ class RhuEntidad
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_entiadad_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoEntiadadTipoFk;
+
+    /**
      * @ORM\Column(name="nit", type="string", length=10, nullable=true)
      *   @Assert\Length(
      *     max = 10,
@@ -67,162 +72,8 @@ class RhuEntidad
     protected $contratosEntidadCajaRel;
 
     /**
-     * @return mixed
+     * @ORM\ManyToOne(targetEntity="RhuEntidadTipo", inversedBy="entidadesEntidadTipoRel")
+     * @ORM\JoinColumn(name="codigo_entiadad_tipo_fk", referencedColumnName="codigo_entidad_tipo_pk")
      */
-    public function getCodigoEntidadPk()
-    {
-        return $this->codigoEntidadPk;
-    }
-
-    /**
-     * @param mixed $codigoEntidadPk
-     */
-    public function setCodigoEntidadPk($codigoEntidadPk): void
-    {
-        $this->codigoEntidadPk = $codigoEntidadPk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNombre()
-    {
-        return $this->nombre;
-    }
-
-    /**
-     * @param mixed $nombre
-     */
-    public function setNombre($nombre): void
-    {
-        $this->nombre = $nombre;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNit()
-    {
-        return $this->nit;
-    }
-
-    /**
-     * @param mixed $nit
-     */
-    public function setNit($nit): void
-    {
-        $this->nit = $nit;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDireccion()
-    {
-        return $this->direccion;
-    }
-
-    /**
-     * @param mixed $direccion
-     */
-    public function setDireccion($direccion): void
-    {
-        $this->direccion = $direccion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTelefono()
-    {
-        return $this->telefono;
-    }
-
-    /**
-     * @param mixed $telefono
-     */
-    public function setTelefono($telefono): void
-    {
-        $this->telefono = $telefono;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoInterface()
-    {
-        return $this->codigoInterface;
-    }
-
-    /**
-     * @param mixed $codigoInterface
-     */
-    public function setCodigoInterface($codigoInterface): void
-    {
-        $this->codigoInterface = $codigoInterface;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContratosEntidadSaludRel()
-    {
-        return $this->contratosEntidadSaludRel;
-    }
-
-    /**
-     * @param mixed $contratosEntidadSaludRel
-     */
-    public function setContratosEntidadSaludRel($contratosEntidadSaludRel): void
-    {
-        $this->contratosEntidadSaludRel = $contratosEntidadSaludRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContratosEntidadPensionRel()
-    {
-        return $this->contratosEntidadPensionRel;
-    }
-
-    /**
-     * @param mixed $contratosEntidadPensionRel
-     */
-    public function setContratosEntidadPensionRel($contratosEntidadPensionRel): void
-    {
-        $this->contratosEntidadPensionRel = $contratosEntidadPensionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContratosEntidadCesantiaRel()
-    {
-        return $this->contratosEntidadCesantiaRel;
-    }
-
-    /**
-     * @param mixed $contratosEntidadCesantiaRel
-     */
-    public function setContratosEntidadCesantiaRel($contratosEntidadCesantiaRel): void
-    {
-        $this->contratosEntidadCesantiaRel = $contratosEntidadCesantiaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContratosEntidadCajaRel()
-    {
-        return $this->contratosEntidadCajaRel;
-    }
-
-    /**
-     * @param mixed $contratosEntidadCajaRel
-     */
-    public function setContratosEntidadCajaRel($contratosEntidadCajaRel): void
-    {
-        $this->contratosEntidadCajaRel = $contratosEntidadCajaRel;
-    }
+    protected $entidadTipoRel;
 }

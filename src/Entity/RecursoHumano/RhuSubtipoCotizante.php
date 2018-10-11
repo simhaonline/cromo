@@ -18,15 +18,58 @@ class RhuSubtipoCotizante
     /**
      * @ORM\Column(name="nombre", type="string", length=150, nullable=true)
      */    
-    private $nombre;    
-    
-    /**
-     * @ORM\OneToMany(targetEntity="RhuEmpleado", mappedBy="ssoSubtipoCotizanteRel")
-     */
-    protected $empleadosSsoSubtipoCotizanteRel;     
+    private $nombre;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="subtipoCotizanteRel")
      */
     protected $contratosSubtipoCotizanteRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSubtipoCotizantePk()
+    {
+        return $this->codigoSubtipoCotizantePk;
+    }
+
+    /**
+     * @param mixed $codigoSubtipoCotizantePk
+     */
+    public function setCodigoSubtipoCotizantePk($codigoSubtipoCotizantePk): void
+    {
+        $this->codigoSubtipoCotizantePk = $codigoSubtipoCotizantePk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratosSubtipoCotizanteRel()
+    {
+        return $this->contratosSubtipoCotizanteRel;
+    }
+
+    /**
+     * @param mixed $contratosSubtipoCotizanteRel
+     */
+    public function setContratosSubtipoCotizanteRel($contratosSubtipoCotizanteRel): void
+    {
+        $this->contratosSubtipoCotizanteRel = $contratosSubtipoCotizanteRel;
+    }
 }

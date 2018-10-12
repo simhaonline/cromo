@@ -224,7 +224,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->select('md.codigoItemFk')
             ->addSelect('md.loteFk')
             ->addSelect('md.codigoBodegaFk')
-            ->addSelect("SUM(md.cantidadOperada)")
+            ->addSelect("SUM(md.cantidadOperada) AS cantidad")
             ->leftJoin('md.itemRel', 'i')
             ->leftJoin('md.movimientoRel', 'm')
             ->where('i.afectaInventario = 1')
@@ -260,7 +260,9 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             $arLote = $em->getRepository(InvLote::class)->findOneBy(array('codigoItemFk' => $arMovimientoDetalle['codigoItemFk'],
                 'loteFk' => $arMovimientoDetalle['loteFk'], 'codigoBodegaFk' => $arMovimientoDetalle['codigoBodegaFk']));
             if($arLote) {
-                echo "hola";
+                $arLote->setCantidadExistencia($arMovimientoDetalle['cantidad']);
+                $arLote->setCantidadDisponible($arMovimientoDetalle['cantidad']);
+                $em->persist($arLote);
             } else {
                 Mensajes::error('Misteriosamente un lote no esta creado' . $arMovimientoDetalle['codigoItemFk'] . " " . $arMovimientoDetalle['loteFk'] . " " . $arMovimientoDetalle['codigoBodegaFk']);
                 break;

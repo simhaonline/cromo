@@ -53,6 +53,9 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         if($session->get('filtroCarCodigoCliente')){
             $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
         }
+        if ($session->get('filtroCarCuentaCobrarTipo')) {
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo') . "'");
+        }
         if($session->get('filtroFecha') == true){
             if ($session->get('filtroFechaDesde') != null) {
                 $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");

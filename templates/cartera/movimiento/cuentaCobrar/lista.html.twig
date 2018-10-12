@@ -9,6 +9,10 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.txtNumero, { 'attr': {'class': 'form-control'} }) }}
                 </div>
+                <label class="col-sm-1 control-label">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cboCuentaCobrarTipo, { 'attr': {'class': 'form-control'} }) }}
+                </div>
             </div>
         </div>
         <div class="modal-footer">
@@ -59,6 +63,9 @@
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
         {{ knp_pagination_render(arCuentaCobrar) }}
+    </div>
+    <div class="btn-group" style="float: right">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
     </div>
     {{ form_end(form) }}
 {% endblock %}

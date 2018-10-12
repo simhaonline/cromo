@@ -9,6 +9,7 @@ use App\Form\Type\RecursoHumano\ContratoType;
 use App\Form\Type\RecursoHumano\EmpleadoType;
 use App\General\General;
 use App\Utilidades\Estandares;
+use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,6 +94,7 @@ class EmpleadoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
+                $arEmpleado->setNombreCorto($arEmpleado->getNombre1() . ' ' . $arEmpleado->getApellido1());
                 $em->persist($arEmpleado);
                 $em->flush();
                 return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_detalle', ['id' => $arEmpleado->getCodigoEmpleadoPk()]));
@@ -107,25 +109,25 @@ class EmpleadoController extends Controller
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/administracion/empleado/empleado/nuevo/contrato/{id}", name="recursohumano_administracion_empleado_empleado_nuevo_contrato")
+     * @Route("recursohumano/administracion/empleado/empleado/nuevo/contrato/{codigoEmpleado}/{id}", name="recursohumano_administracion_empleado_empleado_nuevo_contrato")
      */
-    public function nuevoContrato(Request $request, $id)
+    public function nuevoContrato(Request $request, $codigoEmpleado, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($id);
+        $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($codigoEmpleado);
         $arContrato = new RhuContrato();
+        if ($id != 0) {
+            $arContrato = $em->getRepository(RhuContrato::class)->find($id);
+        }
         $form = $this->createForm(ContratoType::class, $arContrato);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')) {
-                if (!$em->getRepository(RhuContrato::class)->findOneBy(['codigoEmpleadoFk' => $id, 'estadoActivo' => true])) {
-                    $arContrato->setEmpleadoRel($arEmpleado);
-                    $arContrato->setFecha(new \DateTime('now'));
-                    $em->persist($arContrato);
-                    $em->flush();
-                } else {
-                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-                }
+                $arContrato->setEmpleadoRel($arEmpleado);
+                $arContrato->setEstadoActivo(true);
+                $arContrato->setFecha(new \DateTime('now'));
+                $em->persist($arContrato);
+                $em->flush();
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }

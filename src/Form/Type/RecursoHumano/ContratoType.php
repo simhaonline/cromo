@@ -35,7 +35,6 @@ class ContratoType extends AbstractType
             ->add('fechaHasta',DateType::class,['data' => new \DateTime('now')])
             ->add('cargoDescripcion',TextType::class,['required' => false])
             ->add('vrSalario',NumberType::class,['required' => true])
-            ->add('estadoActivo',CheckboxType::class,['required' => false, 'label' => 'Activo'])
             ->add('salarioIntegral',CheckboxType::class,['required' => false, 'label' => 'Salario integral'])
             ->add('auxilioTransporte',CheckboxType::class,['required' => false, 'label' => 'Auxilio transporte'])
             ->add('contratoTipoRel', EntityType::class, [

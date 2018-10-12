@@ -41,6 +41,37 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_Modelo" class="col-sm-2 control-label">Modelo:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.modelo,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.modelo)}}
+                </div>
+                <label for="form_lineaRel" class="col-sm-2 control-label">Linea:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.lineaRel,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.lineaRel)}}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_grupoRel" class="col-sm-2 control-label">Grupo:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.grupoRel,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.grupoRel)}}
+                </div>
+                <label for="form_subgrupoRel" class="col-sm-2 control-label">Subgrupo:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.subgrupoRel,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.subgrupoRel)}}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_marca" class="col-sm-2 control-label">Marca:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.marcaRel,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.marcaRel)}}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="form_afectaInventario" class="col-sm-2 control-label">Afecta inventario</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.afectaInventario) }}
@@ -57,7 +88,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('lista',{'entidad' : 'InvItem' }) }}">Cancelar</a>
+        <a class="btn btn-default btn-sm" href="{{ path('inventario_administracion_inventario_item_lista')}}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
         {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>

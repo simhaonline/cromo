@@ -45,7 +45,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
 //            ->add('contratoClaseRel', EntityType::class, [
 //                'class' => RhuContratoClase::class,
@@ -63,7 +63,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('tiempoRel', EntityType::class, [
                 'class' => RhuTiempo::class,
@@ -72,7 +72,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('pensionRel', EntityType::class, [
                 'class' => RhuPension::class,
@@ -81,7 +81,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('saludRel', EntityType::class, [
                 'class' => RhuSalud::class,
@@ -90,7 +90,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('cargoRel', EntityType::class, [
                 'class' => RhuCargo::class,
@@ -108,7 +108,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('tipoCotizanteRel', EntityType::class, [
                 'class' => RhuTipoCotizante::class,
@@ -117,7 +117,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('subtipoCotizanteRel', EntityType::class, [
                 'class' => RhuSubtipoCotizante::class,
@@ -126,12 +126,13 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('entidadSaludRel', EntityType::class, [
                 'class' => RhuEntidad::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
+                        ->where('r.eps = 1')
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
@@ -141,6 +142,7 @@ class ContratoType extends AbstractType
                 'class' => RhuEntidad::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
+                        ->where('r.pen = 1')
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
@@ -150,6 +152,7 @@ class ContratoType extends AbstractType
                 'class' => RhuEntidad::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
+                        ->where('r.ces = 1')
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
@@ -159,6 +162,7 @@ class ContratoType extends AbstractType
                 'class' => RhuEntidad::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
+                        ->where('r.ccf = 1')
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',

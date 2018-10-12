@@ -95,7 +95,7 @@ class EmpleadoController extends Controller
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arEmpleado);
                 $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_detalle',['id' => $arEmpleado->getCodigoEmpleadoPk()]));
+                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_detalle', ['id' => $arEmpleado->getCodigoEmpleadoPk()]));
             }
         }
         return $this->render('recursoHumano/administracion/empleado/nuevo.html.twig', [
@@ -109,22 +109,27 @@ class EmpleadoController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("recursohumano/administracion/empleado/empleado/nuevo/contrato/{id}", name="recursohumano_administracion_empleado_empleado_nuevo_contrato")
      */
-    public function nuevoContrato(Request $request, $id){
+    public function nuevoContrato(Request $request, $id)
+    {
         $em = $this->getDoctrine()->getManager();
         $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($id);
         $arContrato = new RhuContrato();
-        $form = $this->createForm(ContratoType::class,$arContrato);
+        $form = $this->createForm(ContratoType::class, $arContrato);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            if($form->get('guardar')){
-                $arContrato->setEmpleadoRel($arEmpleado);
-                $arContrato->setFecha(new \DateTime('now'));
-                $em->persist($arContrato);
-                $em->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')) {
+                if (!$em->getRepository(RhuContrato::class)->findOneBy(['codigoEmpleadoFk' => $id, 'estadoActivo' => true])) {
+                    $arContrato->setEmpleadoRel($arEmpleado);
+                    $arContrato->setFecha(new \DateTime('now'));
+                    $em->persist($arContrato);
+                    $em->flush();
+                } else {
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                }
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
-        return $this->render('recursoHumano/administracion/empleado/nuevoContrato.html.twig',[
+        return $this->render('recursoHumano/administracion/empleado/nuevoContrato.html.twig', [
             'form' => $form->createView()
         ]);
     }

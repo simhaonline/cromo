@@ -5,7 +5,6 @@ namespace App\Entity\RecursoHumano;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="rhu_tipo_salud")
  * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuSaludRepository")
  */
 class RhuSalud
@@ -35,4 +34,84 @@ class RhuSalud
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="saludRel")
      */
     protected $contratosSaludRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSaludPk()
+    {
+        return $this->codigoSaludPk;
+    }
+
+    /**
+     * @param mixed $codigoSaludPk
+     */
+    public function setCodigoSaludPk($codigoSaludPk): void
+    {
+        $this->codigoSaludPk = $codigoSaludPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeEmpleado()
+    {
+        return $this->porcentajeEmpleado;
+    }
+
+    /**
+     * @param mixed $porcentajeEmpleado
+     */
+    public function setPorcentajeEmpleado($porcentajeEmpleado): void
+    {
+        $this->porcentajeEmpleado = $porcentajeEmpleado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeEmpleador()
+    {
+        return $this->porcentajeEmpleador;
+    }
+
+    /**
+     * @param mixed $porcentajeEmpleador
+     */
+    public function setPorcentajeEmpleador($porcentajeEmpleador): void
+    {
+        $this->porcentajeEmpleador = $porcentajeEmpleador;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratosSaludRel()
+    {
+        return $this->contratosSaludRel;
+    }
+
+    /**
+     * @param mixed $contratosSaludRel
+     */
+    public function setContratosSaludRel($contratosSaludRel): void
+    {
+        $this->contratosSaludRel = $contratosSaludRel;
+    }
 }

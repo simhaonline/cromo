@@ -32,7 +32,7 @@ class ItemController extends Controller
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel'])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroInvNombrePrecio')])
+            ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

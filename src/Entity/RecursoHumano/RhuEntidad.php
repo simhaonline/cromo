@@ -14,6 +14,7 @@ class RhuEntidad
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_entidad_pk", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $codigoEntidadPk;
 

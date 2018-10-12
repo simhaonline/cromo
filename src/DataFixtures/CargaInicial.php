@@ -4,7 +4,9 @@ namespace App\DataFixtures;
 
 use App\Entity\Documental\DocConfiguracion;
 use App\Entity\General\GenConfiguracion;
+use App\Entity\General\GenEstadoCivil;
 use App\Entity\General\GenFormaPago;
+use App\Entity\General\GenSexo;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumentoTipo;
 use App\Entity\RecursoHumano\RhuClasificacionRiesgo;
@@ -76,6 +78,56 @@ class CargaInicial extends Fixture
             $arGenConfiguracion->setRutaTemporal('PENDIENTE');
             $manager->persist($arGenConfiguracion);
         }
+        $arSexo = $manager->getRepository(GenSexo::class)->find('M');
+        if(!$arSexo){
+            $arSexo = new GenSexo();
+            $arSexo->setCodigoSexoPk('M');
+            $arSexo->setNombre('MASCULINO');
+            $manager->persist($arSexo);
+        }
+        $arSexo = $manager->getRepository(GenSexo::class)->find('F');
+        if(!$arSexo){
+            $arSexo = new GenSexo();
+            $arSexo->setCodigoSexoPk('F');
+            $arSexo->setNombre('FEMENINO');
+            $manager->persist($arSexo);
+        }
+        $arEstadoCivil = $manager->getRepository(GenEstadoCivil::class)->find('C');
+        if(!$arEstadoCivil){
+            $arEstadoCivil = new GenEstadoCivil();
+            $arEstadoCivil->setCodigoEstadoCivilPk('C');
+            $arEstadoCivil->setNombre('CASADO');
+            $manager->persist($arEstadoCivil);
+        }
+        $arEstadoCivil = $manager->getRepository(GenEstadoCivil::class)->find('D');
+        if(!$arEstadoCivil){
+            $arEstadoCivil = new GenEstadoCivil();
+            $arEstadoCivil->setCodigoEstadoCivilPk('D');
+            $arEstadoCivil->setNombre('DIVORSIADO');
+            $manager->persist($arEstadoCivil);
+        }
+        $arEstadoCivil = $manager->getRepository(GenEstadoCivil::class)->find('S');
+        if(!$arEstadoCivil){
+            $arEstadoCivil = new GenEstadoCivil();
+            $arEstadoCivil->setCodigoEstadoCivilPk('S');
+            $arEstadoCivil->setNombre('SOLTERO');
+            $manager->persist($arEstadoCivil);
+        }
+        $arEstadoCivil = $manager->getRepository(GenEstadoCivil::class)->find('U');
+        if(!$arEstadoCivil){
+            $arEstadoCivil = new GenEstadoCivil();
+            $arEstadoCivil->setCodigoEstadoCivilPk('U');
+            $arEstadoCivil->setNombre('UNIÓN LIBRE');
+            $manager->persist($arEstadoCivil);
+        }
+        $arEstadoCivil = $manager->getRepository(GenEstadoCivil::class)->find('V');
+        if(!$arEstadoCivil){
+            $arEstadoCivil = new GenEstadoCivil();
+            $arEstadoCivil->setCodigoEstadoCivilPk('V');
+            $arEstadoCivil->setNombre('VIUDO');
+            $manager->persist($arEstadoCivil);
+        }
+
         $arDocConfiguracion= $manager->getRepository('App:Documental\DocConfiguracion')->find(1);
         if(!$arDocConfiguracion){
             $arDocConfiguracion = new DocConfiguracion();

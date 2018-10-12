@@ -19,14 +19,14 @@ class EmpleadoType extends AbstractType
     {
         $builder
             ->add('identificacionRel',EntityType::class,[
-                'required' => false,
                 'class' => 'App\Entity\General\GenIdentificacion',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')
                         ->orderBy('i.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Identificacion tipo:'
+                'label' => 'Identificacion tipo:',
+                'required' => true
             ])
             ->add('ciudadRel',EntityType::class,[
                 'required' => false,
@@ -49,7 +49,7 @@ class EmpleadoType extends AbstractType
                 'label' => 'Ciudad residencia:'
             ])
             ->add('sexoRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\General\GenSexo',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('g')
@@ -69,7 +69,7 @@ class EmpleadoType extends AbstractType
                 'label' => 'Ciudad residencia:'
             ])
             ->add('estadoCivilRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\General\GenEstadoCivil',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('ec')
@@ -99,7 +99,6 @@ class EmpleadoType extends AbstractType
                 'label' => 'Rh:'
             ])
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'numero identificacion:'])
-            ->add('nombreCorto',TextType::class,['required' => false,'label' => 'Nombre corto:'])
             ->add('nombre1',TextType::class,['required' => true,'label' => 'Primer nombre:'])
             ->add('nombre2', TextType::class,['required' => false,'label' => 'Segundo nombre:'])
             ->add('apellido1', TextType::class,['required' => true,'label' => 'Primer apellido:'])

@@ -47,16 +47,28 @@
                             <th>HASTA</th>
                             <th>SALARIO</th>
                             <th>ACTIVO</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
+                        {% set contratoActivo = false %}
                         {% for arContrato in arContratos %}
                             <tr>
                                 <td>{{ arContrato.codigoContratoPk }}</td>
-                                <td>{{ arContrato.fechaDesde | date('Y-m-d') }}</td>
-                                <td>{{ arContrato.fechaHasta | date('Y-m-d') }}</td>
-                                <td>{{ arContrato.vrSalario }}</td>
-                                <td>{{ arContrato.estadoActivo }}</td>
+                                {{ validarTipo(arContrato.fechaDesde) }}
+                                {{ validarTipo(arContrato.fechaHasta) }}
+                                {{ validarTipo(arContrato.vrSalario) }}
+                                {{ validarTipo(arContrato.estadoActivo) }}
+                                <td style="text-align: center;">
+                                    {% if arContrato.estadoActivo == 1 %}
+                                        <a href="javascript:abrirVentana3('{{ path('recursohumano_administracion_empleado_empleado_nuevo_contrato',{'codigoEmpleado' : arEmpleado.codigoEmpleadoPk,'id': arContrato.codigoContratoPk }) }}','agregarContrato',600,950)"><i
+                                                    class="fa fa-edit" style="color: black;font-size: large;"></i>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                {% if arContrato.estadoActivo == 1 %}
+                                    {% set contratoActivo = true %}
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -66,7 +78,10 @@
         </div>
         <div class="btn-toolbar" style="float: right;">
             <div class="btn-group">
-                <a class="btn btn-sm btn-default" href="javascript:abrirVentana3('{{ path('recursohumano_administracion_empleado_empleado_nuevo_contrato',{'id' : arEmpleado.codigoEmpleadoPk }) }}','agregarContrato',600,950)">Nuevo</a>
+                {% if not contratoActivo %}
+                <a class="btn btn-sm btn-default"
+                   href="javascript:abrirVentana3('{{ path('recursohumano_administracion_empleado_empleado_nuevo_contrato',{'codigoEmpleado' : arEmpleado.codigoEmpleadoPk,'id':0 }) }}','agregarContrato',600,950)">Nuevo</a>
+                {% endif %}
             </div>
         </div>
     </div>

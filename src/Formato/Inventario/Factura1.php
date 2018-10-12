@@ -100,9 +100,10 @@ class Factura1 extends \FPDF
         $this->SetX(38);
         $this->Cell(75, 4, '', 0, 0, 'L', 0);
 
+        $this->SetX(128);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(30, 4, 'DIRECCION DE ENVIO', 0, 0, 'L', 0);
-        $this->SetX(158);
+        $this->SetX(170);
         $this->SetFont('Arial', '', 8);
         $this->Cell(30, 4, '', 0, 0, 'L', 0);
 
@@ -112,6 +113,7 @@ class Factura1 extends \FPDF
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
         $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getNombreCorto(), 0, 0, 'L', 0);
+        $this->SetX(128);
         $this->Cell(73, 4, $arMovimiento->getSucursalRel() ? $arMovimiento->getSucursalRel()->getNombre() : '', 0, 0, 'L', 0);
 
         $this->SetXY(19, 54.5);
@@ -120,6 +122,7 @@ class Factura1 extends \FPDF
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
         $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getNumeroIdentificacion(), 0, 0, 'L', 0);
+        $this->SetX(128);
         $this->Cell(73, 4, utf8_decode($arMovimiento->getSucursalRel() ? $arMovimiento->getSucursalRel()->getContacto() : ''), 0, 0, 'L', 0);
 
         $this->SetXY(19, 58);
@@ -133,6 +136,7 @@ class Factura1 extends \FPDF
         } else {
             $direccion = $arMovimiento->getTerceroRel()->getDireccion();
         }
+        $this->SetX(128);
         $this->Cell(73, 4, $direccion, 0, 0, 'L', 0);
 
         $this->SetXY(19, 61.5);
@@ -141,6 +145,7 @@ class Factura1 extends \FPDF
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
         $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getDireccion(), 0, 0, 'L', 0);
+        $this->SetX(128);
         $this->Cell(73, 4, $arMovimiento->getSucursalRel() ? $arMovimiento->getSucursalRel()->getCiudadRel()->getNombre() : '', 0, 0, 'L', 0);
         $this->EncabezadoDetalles();
     }
@@ -155,7 +160,7 @@ class Factura1 extends \FPDF
         $this->SetFont('', 'B', 6);
 
         //creamos la cabecera de la tabla.
-        $w = array(10, 94, 6, 11, 10, 18, 7, 7.4, 21);
+        $w = array(10, 100, 8, 11, 10, 15, 7, 7.4, 15);
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
         }
@@ -185,14 +190,14 @@ class Factura1 extends \FPDF
             $pdf->Cell(10, 6, $arMovimientoDetalle->getCodigoItemFk(), 1, 0, 'L');
 //            $pdf->Cell(12, 6, $arMovimientoDetalle->getPedidoDetalleRel() ? $arMovimientoDetalle->getPedidoDetalleRel()->getCodigoPedidoFk() : '0', 1, 0, 'L');
 //            $pdf->Cell(12, 6, $arMovimientoDetalle->getRemisionDetalleRel() ? $arMovimientoDetalle->getRemisionDetalleRel()->getCodigoRemisionFk() : '0', 1, 0, 'L');
-            $pdf->Cell(94, 6, utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()), 1, 0, 'L');
-            $pdf->Cell(6, 6, substr($arMovimientoDetalle->getCodigoBodegaFk(), 0, 3), 1, 0, 'R');
+            $pdf->Cell(100, 6, utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()), 1, 0, 'L');
+            $pdf->Cell(8, 6, substr($arMovimientoDetalle->getCodigoBodegaFk(), 0, 3), 1, 0, 'R');
             $pdf->Cell(11, 6, 'UNIDAD', 1, 0, 'C');
             $pdf->Cell(10, 6, $arMovimientoDetalle->getCantidad(), 1, 0, 'R');
-            $pdf->Cell(18, 6, number_format($arMovimientoDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(15, 6, number_format($arMovimientoDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(7, 6, number_format($arMovimientoDetalle->getPorcentajeIva(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(7.4, 6, number_format($arMovimientoDetalle->getPorcentajeDescuento(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(21, 6, number_format($arMovimientoDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(15, 6, number_format($arMovimientoDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

@@ -3,9 +3,11 @@
 namespace App\Entity\Cartera;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Cartera\CarReciboTipoRepository")
+ * @DoctrineAssert\UniqueEntity(fields={"orden"},message="El orden ingresado ya existe")
  */
 class CarReciboTipo
 {
@@ -30,6 +32,11 @@ class CarReciboTipo
      * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
      */
     private $codigoComprobanteFk;
+
+    /**
+     * @ORM\Column(name="orden", type="integer", nullable=true, unique=true)
+     */
+    private $orden = 0;
 
     /**
      * @ORM\OneToMany(targetEntity="CarRecibo", mappedBy="reciboTipoRel")
@@ -114,6 +121,22 @@ class CarReciboTipo
     public function setRecibosReciboTipoRel($recibosReciboTipoRel): void
     {
         $this->recibosReciboTipoRel = $recibosReciboTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
     }
 
 

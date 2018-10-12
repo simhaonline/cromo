@@ -20,8 +20,8 @@ class ReciboTipoType extends AbstractType {
         $builder
             ->add('codigoReciboTipoPk', TextType::class, array('required' => true))
             ->add('nombre', TextType::class, array('required' => true))
-            ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
-            ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));
+            ->add('orden', IntegerType::class, array('required' => true))
+            ->add('guardar', SubmitType::class,array('label'=>'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']));
     }
 
     /**

@@ -34,7 +34,7 @@ class ReciboType extends AbstractType
                 'class' => 'App\Entity\Cartera\CarReciboTipo',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('rt')
-                        ->orderBy('rt.nombre', 'ASC');
+                        ->orderBy('rt.orden', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Tipo recibo:',

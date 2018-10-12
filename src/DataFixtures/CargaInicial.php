@@ -6,6 +6,7 @@ use App\Entity\Documental\DocConfiguracion;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenEstadoCivil;
 use App\Entity\General\GenFormaPago;
+use App\Entity\General\GenPais;
 use App\Entity\General\GenSexo;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumentoTipo;
@@ -565,6 +566,13 @@ class CargaInicial extends Fixture
             $arPension->setPorcentajeEmpleado(0);
             $arPension->setPorcentajeEmpleador(0);
             $manager->persist($arPension);
+        }
+        $arPais = $manager->getRepository(GenPais::class)->find(1);
+        if(!$arPais){
+            $arPais = new GenPais();
+            $arPais->setCodigoPaisPk(1);
+            $arPais->setNombre('COLOMBIA');
+            $manager->persist($arPais);
         }
         $manager->flush();
     }

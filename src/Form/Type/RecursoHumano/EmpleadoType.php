@@ -36,7 +36,8 @@ class EmpleadoType extends AbstractType
                         ->orderBy('gc.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Ciudad:'
+                'label' => 'Ciudad:',
+                'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('ciudadExpedicionRel',EntityType::class,[
                 'required' => false,
@@ -46,7 +47,8 @@ class EmpleadoType extends AbstractType
                         ->orderBy('ce.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Ciudad residencia:'
+                'label' => 'Ciudad residencia:',
+                'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('sexoRel',EntityType::class,[
                 'required' => true,
@@ -66,7 +68,8 @@ class EmpleadoType extends AbstractType
                         ->orderBy('ce.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Ciudad residencia:'
+                'label' => 'Ciudad residencia:',
+                'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('estadoCivilRel',EntityType::class,[
                 'required' => true,

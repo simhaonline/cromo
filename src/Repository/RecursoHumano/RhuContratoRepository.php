@@ -39,8 +39,8 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->addSelect('re.vrSalario')
             ->addSelect('re.estadoActivo')
             ->where('re.codigoEmpleadoFk = '.$codigoEmpleado)
-            ->where('re.codigoContratoPk <> 0');
-        return $queryBuilder;
+            ->andWhere('re.codigoContratoPk <> 0');
+        return $queryBuilder->getQuery()->execute();
     }
 
     /**

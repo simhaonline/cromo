@@ -16,6 +16,7 @@ use App\Entity\RecursoHumano\RhuContratoTipo;
 use App\Entity\RecursoHumano\RhuEntidad;
 use App\Entity\RecursoHumano\RhuEntidadTipo;
 use App\Entity\RecursoHumano\RhuPension;
+use App\Entity\RecursoHumano\RhuRh;
 use App\Entity\RecursoHumano\RhuSalud;
 use App\Entity\RecursoHumano\RhuSubtipoCotizante;
 use App\Entity\RecursoHumano\RhuTiempo;
@@ -573,6 +574,64 @@ class CargaInicial extends Fixture
             $arPais->setCodigoPaisPk(1);
             $arPais->setNombre('COLOMBIA');
             $manager->persist($arPais);
+        }
+
+        //--------------------------------------- Rh -----------------------------------------
+        $arRhu = $manager->getRepository(RhuRh::class)->find(1);
+        if(!$arRhu){
+            $arRhu = new RhuRh();
+            $arRhu->setCodigoRhPk(1);
+            $arRhu->setNombre('O-');
+            $manager->persist($arRhu);
+        }
+        $arRhu = $manager->getRepository(RhuRh::class)->find(2);
+        if(!$arRhu){
+            $arRhu = new RhuRh();
+            $arRhu->setCodigoRhPk(2);
+            $arRhu->setNombre('O+');
+            $manager->persist($arRhu);
+        }
+        $arRhu = $manager->getRepository(RhuRh::class)->find(3);
+        if(!$arRhu){
+            $arRhu = new RhuRh();
+            $arRhu->setCodigoRhPk(3);
+            $arRhu->setNombre('A-');
+            $manager->persist($arRhu);
+        }
+        $arRhu = $manager->getRepository(RhuRh::class)->find(4);
+        if(!$arRhu){
+            $arRhu = new RhuRh();
+            $arRhu->setCodigoRhPk(4);
+            $arRhu->setNombre('A+');
+            $manager->persist($arRhu);
+        }
+        $arRhu = $manager->getRepository(RhuRh::class)->find(5);
+        if(!$arRhu){
+            $arRhu = new RhuRh();
+            $arRhu->setCodigoRhPk(5);
+            $arRhu->setNombre('B-');
+            $manager->persist($arRhu);
+        }
+        $arRhu = $manager->getRepository(RhuRh::class)->find(6);
+        if(!$arRhu){
+            $arRhu = new RhuRh();
+            $arRhu->setCodigoRhPk(6);
+            $arRhu->setNombre('B+');
+            $manager->persist($arRhu);
+        }
+        $arRhu = $manager->getRepository(RhuRh::class)->find(7);
+        if(!$arRhu){
+            $arRhu = new RhuRh();
+            $arRhu->setCodigoRhPk(7);
+            $arRhu->setNombre('AB-');
+            $manager->persist($arRhu);
+        }
+        $arRhu = $manager->getRepository(RhuRh::class)->find(8);
+        if(!$arRhu){
+            $arRhu = new RhuRh();
+            $arRhu->setCodigoRhPk(8);
+            $arRhu->setNombre('AB+');
+            $manager->persist($arRhu);
         }
         $manager->flush();
     }

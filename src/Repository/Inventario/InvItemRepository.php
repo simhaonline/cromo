@@ -72,6 +72,9 @@ class InvItemRepository extends ServiceEntityRepository
             ->addSelect('i.cantidadDisponible')
             ->addSelect('i.stockMinimo')
             ->addSelect('i.stockMaximo')
+            ->addSelect('i.afectaInventario')
+            ->addSelect('i.vrCostoPredeterminado')
+            ->addSelect('i.vrPrecioPromedio')
             ->addSelect('m.nombre AS marcaNombre')
             ->where('i.codigoItemPk <> 0')
             ->leftJoin('i.marcaRel', 'm')
@@ -94,3 +97,4 @@ class InvItemRepository extends ServiceEntityRepository
     }
 
 }
+

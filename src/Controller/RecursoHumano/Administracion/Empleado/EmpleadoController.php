@@ -17,6 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 class EmpleadoController extends Controller
 {
     /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/administracion/empleado/empleado/lista", name="recursohumano_administracion_empleado_empleado_lista")
      */
     public function lista(Request $request)
@@ -70,7 +74,7 @@ class EmpleadoController extends Controller
         return $this->render('recursoHumano/administracion/empleado/detalle.html.twig', [
             'form' => $form->createView(),
             'arEmpleado' => $arEmpleado,
-            'arContratos' => $arContratos->getQuery()->execute()
+            'arContratos' => $arContratos
         ]);
     }
 
@@ -107,6 +111,7 @@ class EmpleadoController extends Controller
 
     /**
      * @param Request $request
+     * @param $codigoEmpleado
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("recursohumano/administracion/empleado/empleado/nuevo/contrato/{codigoEmpleado}/{id}", name="recursohumano_administracion_empleado_empleado_nuevo_contrato")
@@ -124,9 +129,11 @@ class EmpleadoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')) {
                 $arContrato->setEmpleadoRel($arEmpleado);
+                $arEmpleado->setCodigoContratoFk($arContrato->getCodigoContratoPk());
                 $arContrato->setEstadoActivo(true);
                 $arContrato->setFecha(new \DateTime('now'));
                 $em->persist($arContrato);
+                $em->persist($arEmpleado);
                 $em->flush();
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

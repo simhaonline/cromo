@@ -12,6 +12,8 @@ use App\Entity\RecursoHumano\RhuContratoMotivo;
 use App\Entity\RecursoHumano\RhuContratoTipo;
 use App\Entity\RecursoHumano\RhuEntidad;
 use App\Entity\RecursoHumano\RhuEntidadTipo;
+use App\Entity\RecursoHumano\RhuPension;
+use App\Entity\RecursoHumano\RhuSalud;
 use App\Entity\RecursoHumano\RhuSubtipoCotizante;
 use App\Entity\RecursoHumano\RhuTiempo;
 use App\Entity\RecursoHumano\RhuTipoCotizante;
@@ -98,36 +100,6 @@ class CargaInicial extends Fixture
         }
 
         //Carga Inicial Recurso Humano
-
-        //--------------------------- Entidad Tipo -------------------------------------------
-        $arEntidadTipo = $manager->getRepository(RhuEntidadTipo::class)->find('CAJ');
-        if(!$arEntidadTipo){
-            $arEntidadTipo = new RhuEntidadTipo();
-            $arEntidadTipo->setCodigoEntidadTipoPk('CAJ');
-            $arEntidadTipo->setNombre('CAJA');
-            $manager->persist($arGenFormaPago);
-        }
-        $arEntidadTipo = $manager->getRepository(RhuEntidadTipo::class)->find('CES');
-        if(!$arEntidadTipo){
-            $arEntidadTipo = new RhuEntidadTipo();
-            $arEntidadTipo->setCodigoEntidadTipoPk('CES');
-            $arEntidadTipo->setNombre('CESANTIAS');
-            $manager->persist($arGenFormaPago);
-        }
-        $arEntidadTipo = $manager->getRepository(RhuEntidadTipo::class)->find('PEN');
-        if(!$arEntidadTipo){
-            $arEntidadTipo = new RhuEntidadTipo();
-            $arEntidadTipo->setCodigoEntidadTipoPk('PEN');
-            $arEntidadTipo->setNombre('PENSION');
-            $manager->persist($arGenFormaPago);
-        }
-        $arEntidadTipo = $manager->getRepository(RhuEntidadTipo::class)->find('SAL');
-        if(!$arEntidadTipo){
-            $arEntidadTipo = new RhuEntidadTipo();
-            $arEntidadTipo->setCodigoEntidadTipoPk('SAL');
-            $arEntidadTipo->setNombre('SALUD');
-            $manager->persist($arGenFormaPago);
-        }
 
         //--------------------------- Tiempo -------------------------------------------------
         $arTiempo = $manager->getRepository(RhuTiempo::class)->find('TCOMP');
@@ -474,6 +446,73 @@ class CargaInicial extends Fixture
             $arClasificacionRiesgo->setNombre('V - 6.960');
             $arClasificacionRiesgo->setPorcentaje(6.96);
             $manager->persist($arClasificacionRiesgo);
+        }
+
+        //--------------------------------------- Salud --------------------------------------
+        $arSalud = $manager->getRepository(RhuSalud::class)->find('EMP');
+        if(!$arSalud){
+            $arSalud = new RhuSalud();
+            $arSalud->setCodigoSaludPk('EMP');
+            $arSalud->setNombre('EMPLEADO');
+            $arSalud->setPorcentajeEmpleado(4);
+            $arSalud->setPorcentajeEmpleador(8.5);
+            $manager->persist($arSalud);
+        }
+        $arSalud = $manager->getRepository(RhuSalud::class)->find('EMR');
+        if(!$arSalud){
+            $arSalud = new RhuSalud();
+            $arSalud->setCodigoSaludPk('EMR');
+            $arSalud->setNombre('EMPLEADOR');
+            $arSalud->setPorcentajeEmpleado(0);
+            $arSalud->setPorcentajeEmpleador(12.5);
+            $manager->persist($arSalud);
+        }
+
+        //--------------------------------------- Pension ------------------------------------
+        $arPension = $manager->getRepository(RhuPension::class)->find('NOR');
+        if(!$arPension){
+            $arPension = new RhuPension();
+            $arPension->setCodigoPensionPk('NOR');
+            $arPension->setNombre('NORMAL');
+            $arPension->setPorcentajeEmpleado(4);
+            $arPension->setPorcentajeEmpleador(12);
+            $manager->persist($arPension);
+        }
+        $arPension = $manager->getRepository(RhuPension::class)->find('ALT');
+        if(!$arPension){
+            $arPension = new RhuPension();
+            $arPension->setCodigoPensionPk('ALT');
+            $arPension->setNombre('ALTO RIESGO');
+            $arPension->setPorcentajeEmpleado(4);
+            $arPension->setPorcentajeEmpleador(22);
+            $manager->persist($arPension);
+        }
+        $arPension = $manager->getRepository(RhuPension::class)->find('EMN');
+        if(!$arPension){
+            $arPension = new RhuPension();
+            $arPension->setCodigoPensionPk('EMN');
+            $arPension->setNombre('EMPLEADOR NORMAL');
+            $arPension->setPorcentajeEmpleado(0);
+            $arPension->setPorcentajeEmpleador(16);
+            $manager->persist($arPension);
+        }
+        $arPension = $manager->getRepository(RhuPension::class)->find('EMA');
+        if(!$arPension){
+            $arPension = new RhuPension();
+            $arPension->setCodigoPensionPk('EMA');
+            $arPension->setNombre('EMPLEADOR ALTO RIESGO');
+            $arPension->setPorcentajeEmpleado(0);
+            $arPension->setPorcentajeEmpleador(26);
+            $manager->persist($arPension);
+        }
+        $arPension = $manager->getRepository(RhuPension::class)->find('PEN');
+        if(!$arPension){
+            $arPension = new RhuPension();
+            $arPension->setCodigoPensionPk('PEN');
+            $arPension->setNombre('PENSIONADO');
+            $arPension->setPorcentajeEmpleado(0);
+            $arPension->setPorcentajeEmpleador(0);
+            $manager->persist($arPension);
         }
         $manager->flush();
     }

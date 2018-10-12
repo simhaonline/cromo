@@ -83,7 +83,7 @@ class CarteraEdadCliente extends \FPDF {
                 $pdf->Ln(4);
             }
             $arrRango = array('0' => 0, '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
-            $arrRango[$arCuentaCobrar['rango']] = $arCuentaCobrar['vrSaldo'];
+            $arrRango[$arCuentaCobrar['rango']] = $arCuentaCobrar['vrSaldoOperado'];
             for($i = 0; $i <= 6; $i++) {
                 $arrTotalesCliente[$i] += $arrRango[$i];
                 $arrTotalesGeneral[$i] += $arrRango[$i];

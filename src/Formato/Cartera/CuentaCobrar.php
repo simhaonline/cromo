@@ -67,7 +67,7 @@ class CuentaCobrar extends \FPDF {
             $pdf->Cell(10, 4, $arCuentaCobrar['plazo'], 'LRB', 0, 'R');
             $pdf->Cell(15, 4, number_format($arCuentaCobrar['vrTotal']), 'LRB', 0, 'R');
             $pdf->Cell(15, 4, number_format($arCuentaCobrar['vrAbono']), 'LRB', 0, 'R');
-            $pdf->Cell(15, 4, number_format($arCuentaCobrar['vrSaldo']), 'LRB', 0, 'R');
+            $pdf->Cell(15, 4, number_format($arCuentaCobrar['vrSaldoOperado']), 'LRB', 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

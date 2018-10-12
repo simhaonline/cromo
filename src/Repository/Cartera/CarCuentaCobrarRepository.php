@@ -36,6 +36,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.vrTotal')
             ->addSelect('cc.vrAbono')
             ->addSelect('cc.vrSaldo')
+            ->addSelect('cc.vrSaldoOperado')
             ->where('cc.codigoCuentaCobrarPk <> 0')
             ->andWhere('cc.vrSaldo > 0')
             ->orderBy('cc.codigoCuentaCobrarPk', 'DESC');
@@ -188,7 +189,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.codigoCuentaCobrarTipoFk')
             ->addSelect('cc.numeroDocumento')
             ->addSelect('cc.vrTotal')
-            ->addSelect('cc.vrSaldo')
+            ->addSelect('cc.vrSaldoOperado')
             ->addSelect('cc.vrAbono')
             ->addSelect('cc.diasVencimiento')
             ->addSelect('cc.plazo')

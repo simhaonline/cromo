@@ -2,7 +2,7 @@
 
 namespace App\Repository\Transporte;
 
-use App\Entity\Contabilidad\CtbTercero;
+use App\Entity\Financiero\FinTercero;
 use App\Entity\Transporte\TteCliente;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -53,15 +53,15 @@ class TteClienteRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function terceroContabilidad($codigo)
+    public function terceroFinanciero($codigo)
     {
         $em = $this->getEntityManager();
         $arTercero = null;
         $arCliente = $em->getRepository(TteCliente::class)->find($codigo);
         if($arCliente) {
-            $arTercero = $em->getRepository(CtbTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arCliente->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arCliente->getNumeroIdentificacion()));
+            $arTercero = $em->getRepository(FinTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arCliente->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arCliente->getNumeroIdentificacion()));
             if(!$arTercero) {
-                $arTercero = new CtbTercero();
+                $arTercero = new FinTercero();
                 $arTercero->setIdentificacionRel($arCliente->getIdentificacionRel());
                 $arTercero->setNumeroIdentificacion($arCliente->getNumeroIdentificacion());
                 $arTercero->setNombreCorto($arCliente->getNombreCorto());

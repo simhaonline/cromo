@@ -49,9 +49,9 @@ class GenCiudad
     protected $tteClientesCiudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Contabilidad\CtbTercero", mappedBy="ciudadRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinTercero", mappedBy="ciudadRel")
      */
-    protected $ctbTercerosCiudadRel;
+    protected $finTercerosCiudadRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="ciudadRel")
@@ -233,17 +233,17 @@ class GenCiudad
     /**
      * @return mixed
      */
-    public function getCtbTercerosCiudadRel()
+    public function getFinTercerosCiudadRel()
     {
-        return $this->ctbTercerosCiudadRel;
+        return $this->finTercerosCiudadRel;
     }
 
     /**
-     * @param mixed $ctbTercerosCiudadRel
+     * @param mixed $finTercerosCiudadRel
      */
-    public function setCtbTercerosCiudadRel($ctbTercerosCiudadRel): void
+    public function setFinTercerosCiudadRel($finTercerosCiudadRel): void
     {
-        $this->ctbTercerosCiudadRel = $ctbTercerosCiudadRel;
+        $this->finTercerosCiudadRel = $finTercerosCiudadRel;
     }
 
     /**
@@ -453,5 +453,7 @@ class GenCiudad
     {
         $this->rhuContratosCiudadLaboraRel = $rhuContratosCiudadLaboraRel;
     }
+
+
 }
 

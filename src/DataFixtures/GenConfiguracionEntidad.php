@@ -129,7 +129,7 @@ class GenConfiguracionEntidad extends Fixture
                 $prefijo = 'car';
                 break;
             case 'contabilidad':
-                $prefijo = 'ctb';
+                $prefijo = 'fin';
                 break;
             case 'transporte':
                 $prefijo = 'tte';

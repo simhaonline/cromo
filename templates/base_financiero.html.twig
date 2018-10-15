@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Cromo{% endblock %}</title>
+    {% block stylesheets %}
+        <!-- Bootstrap Core CSS -->
+        <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/metisMenu/metisMenu.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('dist/css/sb-admin-2.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/morrisjs/morris.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/general.css') }}">
+    {% endblock %}
+</head>
+<body>
+<div id="wrapper">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ path('inicio') }}">Cromo v2.0</a>
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#"><i class="fa fa-user fa-fw"></i> Perfil</a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Configuracion</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href="{{ path('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Salir</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div class="navbar-default sidebar" role="navigation">
+        <div class="sidebar-nav navbar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="sidebar-search">
+                    <div class="input-group custom-search-form">
+                        <input type="text" class="form-control" placeholder="Search...">
+                        <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                    </div>
+                </li>
+                <li>
+                    <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-money fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Registro</a></li>
+                        <li><a href="#">Asiento</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="#">Tercero</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-retweet fa-fw"></i> Utilidad<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="#">Contabilidad <span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li><a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro') }}">Intercambio de datos</a>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-file-text-o fa-fw"></i> Informe<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="#">Contabilidad <span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li><a href="{{ path('financiero_informe_contabilidad_registro_lista') }}">Registro</a>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {% block body %}
+        <div id="page-wrapper">
+            {% set arrRuta = app.request.attributes.get('_route')|split('_') %}
+            {% if arrRuta.0 != 'admin' %}
+                <div class="row">
+                    <br>
+                    {{ notificar()|raw }}
+                    <div class="col-lg-12">
+                        <h3 class='page-header'>
+                            {{ arrRuta.0 | capitalize }} {{ arrRuta.1 | capitalize }}
+                            <small style="font-size: 20px">{{ arrRuta.2 | capitalize }}
+                                : {{ arrRuta.3 }} {{ arrRuta.4 }}</small>
+                        </h3>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+            {% endif %}
+            {% block content %}
+
+            {% endblock %}
+            <br/><br/>
+        </div>
+    {% endblock %}
+</div>
+{% block javascripts %}
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('vendor/metisMenu/metisMenu.min.js') }}"></script>
+    <script src="{{ asset('vendor/raphael/raphael.min.js') }}"></script>
+    <script src="{{ asset('vendor/morrisjs/morris.min.js') }}"></script>
+    <script src="{{ asset('data/morris-data.js') }}"></script>
+    <script src="{{ asset('dist/js/sb-admin-2.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/i18n/es.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.full.js') }}"></script>
+    <script src="{{ asset('js/general.js') }}"></script>
+{% endblock %}
+</body>
+</html>

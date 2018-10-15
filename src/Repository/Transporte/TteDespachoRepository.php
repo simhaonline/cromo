@@ -3,10 +3,10 @@
 namespace App\Repository\Transporte;
 
 use App\Controller\Estructura\FuncionesController;
-use App\Entity\Contabilidad\CtbCentroCosto;
-use App\Entity\Contabilidad\CtbComprobante;
-use App\Entity\Contabilidad\CtbCuenta;
-use App\Entity\Contabilidad\CtbRegistro;
+use App\Entity\Financiero\FinCentroCosto;
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
 use App\Utilidades\Mensajes;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
@@ -1099,23 +1099,23 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $arDespacho = $em->getRepository(TteDespacho::class)->registroContabilizar($codigo);
                 if ($arDespacho) {
                     if ($arDespacho['estadoAprobado'] == 1 && $arDespacho['estadoContabilizado'] == 0) {
-                        $arComprobante = $em->getRepository(CtbComprobante::class)->find($arDespacho['codigoComprobanteFk']);
-                        $arTercero = $em->getRepository(TtePoseedor::class)->terceroContabilidad($arDespacho['codigoPropietarioFk']);
+                        $arComprobante = $em->getRepository(FinComprobante::class)->find($arDespacho['codigoComprobanteFk']);
+                        $arTercero = $em->getRepository(TtePoseedor::class)->terceroFinanciero($arDespacho['codigoPropietarioFk']);
 
                         //Cuenta flete pagado
                         if ($arDespacho['vrFletePago'] > 0) {
                             if ($arDespacho['codigoCuentaFleteFk']) {
-                                $arCuenta = $em->getRepository(CtbCuenta::class)->find($arDespacho['codigoCuentaFleteFk']);
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arDespacho['codigoCuentaFleteFk']);
                                 if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta del flete " . $arDespacho['codigoCuentaFleteFk'];
                                     break;
                                 }
-                                $arRegistro = new CtbRegistro();
+                                $arRegistro = new FinRegistro();
                                 $arRegistro->setTerceroRel($arTercero);
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
                                 $arRegistro->setNumero($arDespacho['numero']);
@@ -1142,17 +1142,17 @@ class TteDespachoRepository extends ServiceEntityRepository
                             $descripcion = "INDUSTRIA COMERCIO";
                             $cuenta = $arDespacho['codigoCuentaIndustriaComercioFk'];
                             if ($cuenta) {
-                                $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                     break;
                                 }
-                                $arRegistro = new CtbRegistro();
+                                $arRegistro = new FinRegistro();
                                 $arRegistro->setTerceroRel($arTercero);
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
                                 $arRegistro->setNumero($arDespacho['numero']);
@@ -1182,17 +1182,17 @@ class TteDespachoRepository extends ServiceEntityRepository
                             $descripcion = "RETENCION FUENTE";
                             $cuenta = $arDespacho['codigoCuentaRetencionFuenteFk'];
                             if ($cuenta) {
-                                $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                     break;
                                 }
-                                $arRegistro = new CtbRegistro();
+                                $arRegistro = new FinRegistro();
                                 $arRegistro->setTerceroRel($arTercero);
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
                                 $arRegistro->setNumero($arDespacho['numero']);
@@ -1222,17 +1222,17 @@ class TteDespachoRepository extends ServiceEntityRepository
                             $descripcion = "DESCUENTO SEGURIDAD";
                             $cuenta = $arDespacho['codigoCuentaSeguridadFk'];
                             if ($cuenta) {
-                                $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                     break;
                                 }
-                                $arRegistro = new CtbRegistro();
+                                $arRegistro = new FinRegistro();
                                 $arRegistro->setTerceroRel($arTercero);
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
                                 $arRegistro->setNumero($arDespacho['numero']);
@@ -1259,17 +1259,17 @@ class TteDespachoRepository extends ServiceEntityRepository
                             $descripcion = "DESCUENTO CARGUE";
                             $cuenta = $arDespacho['codigoCuentaCargueFk'];
                             if ($cuenta) {
-                                $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                     break;
                                 }
-                                $arRegistro = new CtbRegistro();
+                                $arRegistro = new FinRegistro();
                                 $arRegistro->setTerceroRel($arTercero);
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
                                 $arRegistro->setNumero($arDespacho['numero']);
@@ -1296,17 +1296,17 @@ class TteDespachoRepository extends ServiceEntityRepository
                             $descripcion = "DESCUENTO ESTAMPILLA";
                             $cuenta = $arDespacho['codigoCuentaEstampillaFk'];
                             if ($cuenta) {
-                                $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                     break;
                                 }
-                                $arRegistro = new CtbRegistro();
+                                $arRegistro = new FinRegistro();
                                 $arRegistro->setTerceroRel($arTercero);
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
                                 $arRegistro->setNumero($arDespacho['numero']);
@@ -1333,17 +1333,17 @@ class TteDespachoRepository extends ServiceEntityRepository
                             $descripcion = "DESCUENTO PAPELERIA";
                             $cuenta = $arDespacho['codigoCuentaPapeleriaFk'];
                             if ($cuenta) {
-                                $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                     break;
                                 }
-                                $arRegistro = new CtbRegistro();
+                                $arRegistro = new FinRegistro();
                                 $arRegistro->setTerceroRel($arTercero);
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
                                 $arRegistro->setNumero($arDespacho['numero']);
@@ -1370,17 +1370,17 @@ class TteDespachoRepository extends ServiceEntityRepository
                             $descripcion = "ANTICIPO";
                             $cuenta = $arDespacho['codigoCuentaAnticipoFk'];
                             if ($cuenta) {
-                                $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                     break;
                                 }
-                                $arRegistro = new CtbRegistro();
+                                $arRegistro = new FinRegistro();
                                 $arRegistro->setTerceroRel($arTercero);
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
                                 $arRegistro->setNumero($arDespacho['numero']);
@@ -1407,17 +1407,17 @@ class TteDespachoRepository extends ServiceEntityRepository
                             $descripcion = "POR PAGAR";
                             $cuenta = $arDespacho['codigoCuentaPagarFk'];
                             if ($cuenta) {
-                                $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                     break;
                                 }
-                                $arRegistro = new CtbRegistro();
+                                $arRegistro = new FinRegistro();
                                 $arRegistro->setTerceroRel($arTercero);
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
                                 }
                                 $arRegistro->setNumero($arDespacho['numero']);

@@ -72,9 +72,9 @@ class GenIdentificacion
     protected $invTercerosIdentificacionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Contabilidad\CtbTercero", mappedBy="identificacionRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinTercero", mappedBy="identificacionRel")
      */
-    protected $ctbTercerosIdentificacionRel;
+    protected $finTercerosIdentificacionRel;
 
     /**
      * @return mixed
@@ -106,6 +106,22 @@ class GenIdentificacion
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoInterface()
+    {
+        return $this->codigoInterface;
+    }
+
+    /**
+     * @param mixed $codigoInterface
+     */
+    public function setCodigoInterface($codigoInterface): void
+    {
+        $this->codigoInterface = $codigoInterface;
     }
 
     /**
@@ -154,6 +170,22 @@ class GenIdentificacion
     public function setTteClientesIdentificacionRel($tteClientesIdentificacionRel): void
     {
         $this->tteClientesIdentificacionRel = $tteClientesIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTteDestinatariosIdentificacionRel()
+    {
+        return $this->tteDestinatariosIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $tteDestinatariosIdentificacionRel
+     */
+    public function setTteDestinatariosIdentificacionRel($tteDestinatariosIdentificacionRel): void
+    {
+        $this->tteDestinatariosIdentificacionRel = $tteDestinatariosIdentificacionRel;
     }
 
     /**
@@ -239,49 +271,17 @@ class GenIdentificacion
     /**
      * @return mixed
      */
-    public function getTteDestinatariosIdentificacionRel()
+    public function getFinTercerosIdentificacionRel()
     {
-        return $this->tteDestinatariosIdentificacionRel;
+        return $this->finTercerosIdentificacionRel;
     }
 
     /**
-     * @param mixed $tteDestinatariosIdentificacionRel
+     * @param mixed $finTercerosIdentificacionRel
      */
-    public function setTteDestinatariosIdentificacionRel($tteDestinatariosIdentificacionRel): void
+    public function setFinTercerosIdentificacionRel($finTercerosIdentificacionRel): void
     {
-        $this->tteDestinatariosIdentificacionRel = $tteDestinatariosIdentificacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoInterface()
-    {
-        return $this->codigoInterface;
-    }
-
-    /**
-     * @param mixed $codigoInterface
-     */
-    public function setCodigoInterface($codigoInterface): void
-    {
-        $this->codigoInterface = $codigoInterface;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCtbTercerosIdentificacionRel()
-    {
-        return $this->ctbTercerosIdentificacionRel;
-    }
-
-    /**
-     * @param mixed $ctbTercerosIdentificacionRel
-     */
-    public function setCtbTercerosIdentificacionRel($ctbTercerosIdentificacionRel): void
-    {
-        $this->ctbTercerosIdentificacionRel = $ctbTercerosIdentificacionRel;
+        $this->finTercerosIdentificacionRel = $finTercerosIdentificacionRel;
     }
 
 

@@ -6,11 +6,11 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
-use App\Entity\Contabilidad\CtbCentroCosto;
-use App\Entity\Contabilidad\CtbComprobante;
-use App\Entity\Contabilidad\CtbCuenta;
-use App\Entity\Contabilidad\CtbRegistro;
-use App\Entity\Contabilidad\CtbTercero;
+use App\Entity\Financiero\FinCentroCosto;
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
+use App\Entity\Financiero\FinTercero;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaPlanilla;
@@ -621,21 +621,21 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $arFactura = $em->getRepository(TteFactura::class)->registroContabilizar($codigo);
                 if($arFactura) {
                     if($arFactura['estadoAprobado'] == 1 && $arFactura['estadoContabilizado'] == 0) {
-                        $arComprobante = $em->getRepository(CtbComprobante::class)->find($arFactura['codigoComprobanteFk']);
-                        $arTercero = $em->getRepository(TteCliente::class)->terceroContabilidad($arFactura['codigoClienteFk']);
+                        $arComprobante = $em->getRepository(FinComprobante::class)->find($arFactura['codigoComprobanteFk']);
+                        $arTercero = $em->getRepository(TteCliente::class)->terceroFinanciero($arFactura['codigoClienteFk']);
                         //Cuenta del ingreso flete
                         if($arFactura['codigoCuentaIngresoFleteFk']) {
-                            $arCuenta = $em->getRepository(CtbCuenta::class)->find($arFactura['codigoCuentaIngresoFleteFk']);
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arFactura['codigoCuentaIngresoFleteFk']);
                             if(!$arCuenta) {
                                 $error = "No se encuentra la cuenta del flete " . $arFactura['codigoCuentaIngresoFleteFk'];
                                 break;
                             }
-                            $arRegistro = new CtbRegistro();
+                            $arRegistro = new FinRegistro();
                             $arRegistro->setTerceroRel($arTercero);
                             $arRegistro->setCuentaRel($arCuenta);
                             $arRegistro->setComprobanteRel($arComprobante);
                             if($arCuenta->getExigeCentroCosto()) {
-                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
+                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
@@ -659,17 +659,17 @@ class TteFacturaRepository extends ServiceEntityRepository
 
                         //Cuenta del ingreso manejo
                         if($arFactura['codigoCuentaIngresoManejoFk']) {
-                            $arCuenta = $em->getRepository(CtbCuenta::class)->find($arFactura['codigoCuentaIngresoManejoFk']);
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arFactura['codigoCuentaIngresoManejoFk']);
                             if(!$arCuenta) {
                                 $error = "No se encuentra la cuenta del manejo " . $arFactura['codigoCuentaIngresoManejoFk'];
                                 break;
                             }
-                            $arRegistro = new CtbRegistro();
+                            $arRegistro = new FinRegistro();
                             $arRegistro->setTerceroRel($arTercero);
                             $arRegistro->setCuentaRel($arCuenta);
                             $arRegistro->setComprobanteRel($arComprobante);
                             if($arCuenta->getExigeCentroCosto()) {
-                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
+                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
@@ -693,17 +693,17 @@ class TteFacturaRepository extends ServiceEntityRepository
 
                         //Cuenta cliente
                         if($arFactura['codigoCuentaClienteFk']) {
-                            $arCuenta = $em->getRepository(CtbCuenta::class)->find($arFactura['codigoCuentaClienteFk']);
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arFactura['codigoCuentaClienteFk']);
                             if(!$arCuenta) {
                                 $error = "No se encuentra la cuenta cliente " . $arFactura['codigoCuentaClienteFk'];
                                 break;
                             }
-                            $arRegistro = new CtbRegistro();
+                            $arRegistro = new FinRegistro();
                             $arRegistro->setTerceroRel($arTercero);
                             $arRegistro->setCuentaRel($arCuenta);
                             $arRegistro->setComprobanteRel($arComprobante);
                             if($arCuenta->getExigeCentroCosto()) {
-                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
+                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                             }
                             $arRegistro->setNumeroPrefijo($arFactura['prefijo']);

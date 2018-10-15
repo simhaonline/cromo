@@ -8,9 +8,9 @@ use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Cartera\CarReciboTipo;
-use App\Entity\Contabilidad\CtbComprobante;
-use App\Entity\Contabilidad\CtbCuenta;
-use App\Entity\Contabilidad\CtbRegistro;
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
 use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -273,8 +273,8 @@ class CarReciboRepository extends ServiceEntityRepository
                 $arRecibo = $em->getRepository(CarRecibo::class)->registroContabilizar($codigo);
                 if($arRecibo) {
                     if($arRecibo['estadoAprobado'] == 1 && $arRecibo['estadoContabilizado'] == 0) {
-                        $arComprobante = $em->getRepository(CtbComprobante::class)->find($arRecibo['codigoComprobanteFk']);
-                        $arTercero = $em->getRepository(CarCliente::class)->terceroContabilidad($arRecibo['codigoClienteFk']);
+                        $arComprobante = $em->getRepository(FinComprobante::class)->find($arRecibo['codigoComprobanteFk']);
+                        $arTercero = $em->getRepository(CarCliente::class)->terceroFinanciero($arRecibo['codigoClienteFk']);
 
                         $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->listaContabilizar($codigo);
                         foreach ($arReciboDetalles as $arReciboDetalle) {
@@ -283,12 +283,12 @@ class CarReciboRepository extends ServiceEntityRepository
                                 $descripcion = "CLIENTES";
                                 $cuenta = $arReciboDetalle['codigoCuentaClienteFk'];
                                 if($cuenta) {
-                                    $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if(!$arCuenta) {
                                         $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                         break;
                                     }
-                                    $arRegistro = new CtbRegistro();
+                                    $arRegistro = new FinRegistro();
                                     $arRegistro->setTerceroRel($arTercero);
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
@@ -321,12 +321,12 @@ class CarReciboRepository extends ServiceEntityRepository
                                 $descripcion = "RETENCION FUENTE";
                                 $cuenta = $arReciboDetalle['codigoCuentaRetencionFuenteFk'];
                                 if($cuenta) {
-                                    $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if(!$arCuenta) {
                                         $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                         break;
                                     }
-                                    $arRegistro = new CtbRegistro();
+                                    $arRegistro = new FinRegistro();
                                     $arRegistro->setTerceroRel($arTercero);
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
@@ -362,12 +362,12 @@ class CarReciboRepository extends ServiceEntityRepository
                                 $descripcion = "INDUSTRIA COMERCIO";
                                 $cuenta = $arReciboDetalle['codigoCuentaIndustriaComercioFk'];
                                 if($cuenta) {
-                                    $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if(!$arCuenta) {
                                         $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                         break;
                                     }
-                                    $arRegistro = new CtbRegistro();
+                                    $arRegistro = new FinRegistro();
                                     $arRegistro->setTerceroRel($arTercero);
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
@@ -403,12 +403,12 @@ class CarReciboRepository extends ServiceEntityRepository
                                 $descripcion = "RETENCION IVA";
                                 $cuenta = $arReciboDetalle['codigoCuentaRetencionIvaFk'];
                                 if($cuenta) {
-                                    $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if(!$arCuenta) {
                                         $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                         break;
                                     }
-                                    $arRegistro = new CtbRegistro();
+                                    $arRegistro = new FinRegistro();
                                     $arRegistro->setTerceroRel($arTercero);
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
@@ -441,12 +441,12 @@ class CarReciboRepository extends ServiceEntityRepository
                                 $descripcion = "AJUSTE PESO";
                                 $cuenta = $arReciboDetalle['codigoCuentaAjustePesoFk'];
                                 if($cuenta) {
-                                    $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if(!$arCuenta) {
                                         $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                         break;
                                     }
-                                    $arRegistro = new CtbRegistro();
+                                    $arRegistro = new FinRegistro();
                                     $arRegistro->setTerceroRel($arTercero);
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
@@ -479,12 +479,12 @@ class CarReciboRepository extends ServiceEntityRepository
                                 $descripcion = "DESCUENTO";
                                 $cuenta = $arReciboDetalle['codigoCuentaDescuentoFk'];
                                 if($cuenta) {
-                                    $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if(!$arCuenta) {
                                         $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                         break;
                                     }
-                                    $arRegistro = new CtbRegistro();
+                                    $arRegistro = new FinRegistro();
                                     $arRegistro->setTerceroRel($arTercero);
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
@@ -517,12 +517,12 @@ class CarReciboRepository extends ServiceEntityRepository
                         $descripcion = "BANCO/CAJA";
                         $cuenta = $arRecibo['codigoCuentaContableFk'];
                         if($cuenta) {
-                            $arCuenta = $em->getRepository(CtbCuenta::class)->find($cuenta);
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                             if(!$arCuenta) {
                                 $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                 break;
                             }
-                            $arRegistro = new CtbRegistro();
+                            $arRegistro = new FinRegistro();
                             $arRegistro->setTerceroRel($arTercero);
                             $arRegistro->setCuentaRel($arCuenta);
                             $arRegistro->setComprobanteRel($arComprobante);

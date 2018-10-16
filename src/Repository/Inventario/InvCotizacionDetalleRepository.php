@@ -18,11 +18,19 @@ class InvCotizacionDetalleRepository extends ServiceEntityRepository
 
     public function lista($codigoRegistro)
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder->select('sd')
-            ->from(InvCotizacionDetalle::class, 'sd')
-            ->where("sd.codigoCotizacionFk = {$codigoRegistro}")
-            ->orderBy('sd.codigoCotizacionDetallePk', 'DESC');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvCotizacionDetalle::class,'cd')
+                ->select('cd.codigoCotizacionDetallePk')
+                ->leftJoin('cd.itemRel', 'i')
+                ->addSelect('i.nombre as nombreItem')
+            ->addSelect('cd.cantidad')
+            ->addSelect('cd.vrPrecio')
+            ->addSelect('cd.vrSubtotal')
+            ->addSelect('cd.porcentajeDescuento')
+            ->addSelect('cd.vrDescuento')
+            ->addSelect('cd.porcentajeIva')
+            ->addSelect('cd.vrIva')
+            ->addSelect('cd.vrTotal')
+                ->where("cd.codigoCotizacionFk = {$codigoRegistro}");
         return $queryBuilder;
     }
 

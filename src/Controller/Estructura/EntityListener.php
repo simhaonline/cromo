@@ -316,16 +316,24 @@ class EntityListener extends DefaultEntityListenerResolver
         $this->codigoEntidadPk = null;
         $this->codigoPadre = nulL;
         if(property_exists($entidad, 'infoLog')) {
-            $campos = $entidad->infoLog['camposSeguimiento']?? [];
+            $this->campoPrimary = $entidad->infoLog['primaryKey']?? '';
+            $todos = $entidad->infoLog['todos']?? '';
+            if($todos === true){
+                $camposEntidad = $this->em->getClassMetadata(get_class($entidad))->getFieldNames();
+                $campos = $camposEntidad;
+            } else {
+                $campos = $entidad->infoLog['camposSeguimiento']?? [];
+            }
             foreach($campos as $clave => $campo) {
                 if(!is_int($clave)) { # Si se trata de un campo con relaciones.
                     $this->camposSeguimiento[] = $clave;
                     $this->mapeoEntidades[$clave] = $campo;
-                } else {
+                } else if($campo === $this->campoPrimary) {
+                    continue; # No se desea procesar el campo primary key.
+                }  else {
                     $this->camposSeguimiento[] = $campo;
                 }
             }
-            $this->campoPrimary = $entidad->infoLog['primaryKey']?? '';
         }
     }
 
@@ -349,7 +357,7 @@ class EntityListener extends DefaultEntityListenerResolver
                     $valor = $this->convertirValorANumero($valor);
                 }
                 if(is_string($valor)) {
-                    $valores[$nombreCampo] = str_replace('\'', '`', $valor);
+                    $valores[$nombreCampo] = str_replace('"', '', str_replace('\'', '`', $valor));
                 } else {
                     $valores[$nombreCampo] = $valor;
                 }
@@ -485,15 +493,6 @@ class EntityListener extends DefaultEntityListenerResolver
 
     private function hayCambios()
     {
-        if($this->esNuevo) {
-            return true;
-        } else if($this->ultimoCambio) {
-            $seguimientoAnterior = json_decode($this->ultimoCambio->getCamposSeguimiento(), true);
-            $str1 = json_encode($seguimientoAnterior);
-            $str2 = json_encode($this->valoresSeguimiento);
-            return $str1 != $str2;
-        } else {
-            return true;
-        }
+        return true;
     }
 }

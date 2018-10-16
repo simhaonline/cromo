@@ -10,9 +10,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="inv_sucursal")
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvSucursalRepository")
  * @DoctrineAssert\UniqueEntity(fields={"codigoSucursalPk"},message="Ya existe el código de la sucursal")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class InvSucursal
 {
+    public $infoLog = [
+        "primaryKey" => "codigoSucursalPk",
+        "todos"     => true,
+    ];
+
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_sucursal_pk", type="string", length=10)

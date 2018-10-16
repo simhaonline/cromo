@@ -5,6 +5,7 @@ namespace App\Repository\Financiero;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinTercero;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -105,15 +106,16 @@ class FinAsientoRepository extends ServiceEntityRepository
             foreach ($arrCodigo as $codigo) {
                 $arAsientoDetalle = $em->getRepository(FinAsientoDetalle::class)->find($codigo);
                 if($arrTercero[$codigo]) {
-                    $arrTercero = $em->getRepository(FinCuenta::class)->find($arrTercero[$codigo]);
-                    if($arrTercero) {
-                        $arAsientoDetalle->setTerceroRel( $arrTercero);
+                    $arTercero = $em->getRepository(FinTercero::class)->find($arrTercero[$codigo]);
+                    if($arTercero) {
+                        $arAsientoDetalle->setTerceroRel( $arTercero);
                     } else {
                         $arAsientoDetalle->setTerceroRel(null);
                     }
                 } else {
                     $arAsientoDetalle->setTerceroRel(null);
                 }
+
                 if($arrCuenta[$codigo]) {
                     $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCuenta[$codigo]);
                     if($arCuenta) {

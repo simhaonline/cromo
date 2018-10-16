@@ -13,10 +13,7 @@ class InvTercero
 {
     public $infoLog = [
         "primaryKey" => "codigoTerceroPk",
-        "camposSeguimiento" => [
-            'nombres',
-            'nombreCorto'
-        ],
+        "todos"     => true,
     ];
 
     /**

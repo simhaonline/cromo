@@ -15,6 +15,7 @@ class AsientoController extends BaseController
     protected $clase = FinAsiento::class;
     protected $claseNombre = "FinAsiento";
     protected $modulo = "Financiero";
+    protected $funcion = "Movimiento";
     protected $grupo = "Contabilidad";
     protected $nombre = "Asiento";
 

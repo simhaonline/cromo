@@ -88,6 +88,9 @@
         <div class="btn-group" style="float: right;">
             <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_comercial_cotizacion_nuevo',{'id' : 0}) }}">Nuevo</a>
         </div>
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
     </div>
     <div class="btn-group btn-xs">
         {{ knp_pagination_render(arCotizaciones) }}

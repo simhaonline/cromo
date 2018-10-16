@@ -40,7 +40,7 @@ class AsientoType extends AbstractType
             {"campo":"fechaContable",       "tipo":"fecha", "ayuda":"Fecha de contabilidad","titulo":"F_CONT"},
             {"campo":"estadoAutorizado",    "tipo":"bool",  "ayuda":"",                     "titulo":"AUT"},
             {"campo":"estadoAprobado",      "tipo":"bool",  "ayuda":"",                     "titulo":"APR"},
-            {"campo":"estadoAnulado",       "tipo":"bool",  "ayuda":"",                     "titulo":"ANU"}        
+            {"campo":"estadoAnulado",       "tipo":"bool",  "ayuda":"",                     "titulo":"ANU"}                    
         ]';
         return $campos;
     }

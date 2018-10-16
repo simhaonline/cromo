@@ -345,6 +345,8 @@ class EntityListener extends DefaultEntityListenerResolver
                     $valor = 0;
                 } else if (is_numeric($valor)) {
                     $valor = $this->convertirValorANumero($valor);
+                } else if($valor instanceof \DateTime) {
+                    $valor = $valor->format("Y-m-d H:i:s");
                 }
                 if(is_string($valor)) {
                     $valores[$nombreCampo] = str_replace('"', '', str_replace('\'', '`', $valor));

@@ -71,6 +71,7 @@
                         <tr>
                             <th>ID</th>
                             <th>ITEM</th>
+                            <th>NOMBRE</th>
                             <th>CANTIDAD</th>
                             <th title="Valor unitario" style="width: 12%;">PRECIO</th>
                             <th style="width: 12%;">SUBTOTAL</th>
@@ -79,13 +80,14 @@
                             <th title="Porcentaje IVA" style="width: 12%;">% IVA</th>
                             <th title="Valor IVA" style="width: 10%;">IVA</th>
                             <th style="width: 15%;">TOTAL</th>
-                            <th></th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for arCotizacionDetalle in arCotizacionDetalles %}
                             <tr>
                                 <td>{{ arCotizacionDetalle.codigoCotizacionDetallePk }}</td>
+                                <td>{{ arCotizacionDetalle.codigoItemFk }}</td>
                                 <td>{{ arCotizacionDetalle.nombreItem | default('') }}</td>
                                 {% if arCotizacion.estadoAutorizado == false %}
                                     <td style="text-align: center;"><input type="number" name="arrCantidad[{{ arCotizacionDetalle.codigoCotizacionDetallePk }}]" value="{{ arCotizacionDetalle.cantidad }}"  style="text-align: right; width:60px" size="10" ></td>
@@ -178,3 +180,4 @@
     </div>
     {{ form_end(form) }}
 {% endblock %}
+

@@ -22,6 +22,7 @@ class InvCotizacionDetalleRepository extends ServiceEntityRepository
             ->select('cd.codigoCotizacionDetallePk')
             ->leftJoin('cd.itemRel', 'i')
             ->addSelect('i.nombre as nombreItem')
+            ->addSelect('cd.codigoItemFk')
             ->addSelect('cd.cantidad')
             ->addSelect('cd.vrPrecio')
             ->addSelect('cd.vrSubtotal')

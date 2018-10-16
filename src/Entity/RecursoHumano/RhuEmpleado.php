@@ -307,12 +307,6 @@ class RhuEmpleado
     protected $bancoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuEmpleadoTipo", inversedBy="empleadosEmpleadoTipoRel")
-     * @ORM\JoinColumn(name="codigo_empleado_tipo_fk",referencedColumnName="codigo_empleado_tipo_pk")
-     */
-    protected $empleadoTipoRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="empleadoRel")
      */
     protected $contratosEmpleadoRel;
@@ -427,6 +421,22 @@ class RhuEmpleado
     public function setCodigoContratoUltimoFk($codigoContratoUltimoFk): void
     {
         $this->codigoContratoUltimoFk = $codigoContratoUltimoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroIdentificacion()
+    {
+        return $this->numeroIdentificacion;
+    }
+
+    /**
+     * @param mixed $numeroIdentificacion
+     */
+    public function setNumeroIdentificacion($numeroIdentificacion): void
+    {
+        $this->numeroIdentificacion = $numeroIdentificacion;
     }
 
     /**
@@ -768,6 +778,22 @@ class RhuEmpleado
     /**
      * @return mixed
      */
+    public function getCuetaTipo()
+    {
+        return $this->cuetaTipo;
+    }
+
+    /**
+     * @param mixed $cuetaTipo
+     */
+    public function setCuetaTipo($cuetaTipo): void
+    {
+        $this->cuetaTipo = $cuetaTipo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoCiudadNacimientoFk()
     {
         return $this->codigoCiudadNacimientoFk;
@@ -1072,22 +1098,6 @@ class RhuEmpleado
     /**
      * @return mixed
      */
-    public function getEmpleadoTipoRel()
-    {
-        return $this->empleadoTipoRel;
-    }
-
-    /**
-     * @param mixed $empleadoTipoRel
-     */
-    public function setEmpleadoTipoRel($empleadoTipoRel): void
-    {
-        $this->empleadoTipoRel = $empleadoTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getContratosEmpleadoRel()
     {
         return $this->contratosEmpleadoRel;
@@ -1099,37 +1109,5 @@ class RhuEmpleado
     public function setContratosEmpleadoRel($contratosEmpleadoRel): void
     {
         $this->contratosEmpleadoRel = $contratosEmpleadoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumeroIdentificacion()
-    {
-        return $this->numeroIdentificacion;
-    }
-
-    /**
-     * @param mixed $numeroIdentificacion
-     */
-    public function setNumeroIdentificacion($numeroIdentificacion): void
-    {
-        $this->numeroIdentificacion = $numeroIdentificacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuetaTipo()
-    {
-        return $this->cuetaTipo;
-    }
-
-    /**
-     * @param mixed $cuetaTipo
-     */
-    public function setCuetaTipo($cuetaTipo): void
-    {
-        $this->cuetaTipo = $cuetaTipo;
     }
 }

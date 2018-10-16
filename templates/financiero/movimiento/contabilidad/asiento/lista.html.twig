@@ -1,0 +1,9 @@
+{% extends 'base_financiero.html.twig' %}
+{% block content %}
+    <br>
+    <br>
+    {% include 'estructura/movimiento/tablaListaGeneral.html.twig' %}
+    {{ form_start(formBotonera) }}
+    {% include 'estructura/movimiento/botoneraListaGeneral.html.twig' %}
+    {{ form_end(formBotonera) }}
+{% endblock %}

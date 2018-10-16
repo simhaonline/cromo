@@ -109,8 +109,7 @@
 
                 <td style="text-align: center;">
                     {% if arFactura.estadoAutorizado == 0 and arFactura.guias <= 0 %}
-                    <a href="{{ path('transporte_movimiento_comercial_factura_nuevo',{'id' : arFactura.codigoFacturaPk, 'clase' : arFactura.codigoFacturaClaseFk }) }}">
-                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
+                        <a href="{{ path('transporte_movimiento_comercial_factura_nuevo',{'id' : arFactura.codigoFacturaPk, 'clase' : arFactura.codigoFacturaClaseFk }) }}"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
                     {% endif %}
                 </td>
                 <td style="text-align: center"><a href="{{ path('transporte_movimiento_comercial_factura_detalle', { 'id': arFactura.codigoFacturaPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>

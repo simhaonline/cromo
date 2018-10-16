@@ -15,7 +15,7 @@ class CotizacionTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoCotizacionTipoPk',TextType::class,['label' => 'Codigo solicitud tipo:','required' => true])
+            ->add('codigoCotizacionTipoPk',TextType::class,['label' => 'Codigo cotizacion tipo:','required' => true])
             ->add('nombre',TextType::class,['label' => 'Nombre:'])
             ->add('consecutivo',NumberType::class,['label' => 'Consecutivo:'])
             ->add('guardar', SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])

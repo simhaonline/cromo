@@ -79,15 +79,11 @@
                                 <td>{{ arCotizacionDetalle.codigoCotizacionDetallePk }}</td>
                                 <td>{{ arCotizacionDetalle.nombre | default('') }}</td>
                                 {% if arCotizacion.estadoAutorizado == false %}
-                                    <td style="text-align: center">
-                                        <input class="input-valor" type="number" placeholder="Cantidad"
-                                               name="arrCantidad[{{ arCotizacionDetalle.codigoCotizacionDetallePk }}]"
-                                               value="{{ arCotizacionDetalle.cantidad }}"/>
-                                    </td>
+                                    <td style="text-align: center;"><input type="number" name="arrCantidad[{{ arCotizacionDetalle.codigoCotizacionDetallePk }}]" value="{{ arCotizacionDetalle.cantidad }}"  style="text-align: right; width:60px" size="10" ></td>
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="Valor unitario"
                                                name="arrValor[{{ arCotizacionDetalle.codigoCotizacionDetallePk }}]"
-                                               value="{{ arCotizacionDetalle.vrPrecio }}"/>
+                                               value="{{ arCotizacionDetalle.vrPrecio }}" style="text-align: right; width:90px" size="10"/>
                                     </td>
                                     <td style="text-align: right">
                                         {{ arCotizacionDetalle.vrSubtotal | number_format(0, '.', ',') }}
@@ -95,7 +91,7 @@
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="% DESCUENTO"
                                                name="arrDescuento[{{ arCotizacionDetalle.codigoCotizacionDetallePk }}]"
-                                               value="{{ arCotizacionDetalle.porcentajeDescuento }}"/>
+                                               value="{{ arCotizacionDetalle.porcentajeDescuento }}" style="text-align: right; width:40px" size="10"/>
                                     </td>
                                     <td style="text-align: right">
                                         {{ arCotizacionDetalle.vrDescuento | number_format(0, '.', ',') }}
@@ -103,7 +99,7 @@
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="% IVA"
                                                name="arrIva[{{ arCotizacionDetalle.codigoCotizacionDetallePk }}]"
-                                               value="{{ arCotizacionDetalle.porcentajeIva }}"/>
+                                               value="{{ arCotizacionDetalle.porcentajeIva }}" style="text-align: right; width:40px" size="10"/>
                                     </td>
                                     <td style="text-align: right">
                                         {{ arCotizacionDetalle.vrIva | number_format(0, '.', ',') }}

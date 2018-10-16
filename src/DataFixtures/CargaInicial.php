@@ -310,155 +310,155 @@ class CargaInicial extends Fixture
 //        }
 
         //--------------------------- Subtipo cotizante --------------------------------------
-        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('0');
-        if(!$arSubtipoCotizante){
-            $arSubtipoCotizante = new RhuSubtipoCotizante();
-            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('0');
-            $arSubtipoCotizante->setNombre('SIN PENSIONAR');
-            $manager->persist($arSubtipoCotizante);
-        }
-        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('1');
-        if(!$arSubtipoCotizante){
-            $arSubtipoCotizante = new RhuSubtipoCotizante();
-            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('1');
-            $arSubtipoCotizante->setNombre('Dependiente pensionado por vejez activo (SI no es pensionado es = a 00)');
-            $manager->persist($arSubtipoCotizante);
-        }
-        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('2');
-        if(!$arSubtipoCotizante){
-            $arSubtipoCotizante = new RhuSubtipoCotizante();
-            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('2');
-            $arSubtipoCotizante->setNombre('Independiente pensionado por vejez activo');
-            $manager->persist($arSubtipoCotizante);
-        }
-        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('3');
-        if(!$arSubtipoCotizante){
-            $arSubtipoCotizante = new RhuSubtipoCotizante();
-            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('3');
-            $arSubtipoCotizante->setNombre('Cotizante no obligado a cotización a pensiones por edad');
-            $manager->persist($arSubtipoCotizante);
-        }
-        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('4');
-        if(!$arSubtipoCotizante){
-            $arSubtipoCotizante = new RhuSubtipoCotizante();
-            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('4');
-            $arSubtipoCotizante->setNombre('Cotizante con requisitos cumplidos para pensión.');
-            $manager->persist($arSubtipoCotizante);
-        }
-        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('5');
-        if(!$arSubtipoCotizante){
-            $arSubtipoCotizante = new RhuSubtipoCotizante();
-            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('5');
-            $arSubtipoCotizante->setNombre('Cotizante a quien se le ha reconocido indemnización sustitutiva o devolución de saldos');
-            $manager->persist($arSubtipoCotizante);
-        }
-        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('6');
-        if(!$arSubtipoCotizante){
-            $arSubtipoCotizante = new RhuSubtipoCotizante();
-            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('6');
-            $arSubtipoCotizante->setNombre('Cotizante perteneciente a un régimen exceptuado de pensiones o a entidades autorizadas para recibir aportes exclusivamente de un grupo de sus propio');
-            $manager->persist($arSubtipoCotizante);
-        }
+//        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('0');
+//        if(!$arSubtipoCotizante){
+//            $arSubtipoCotizante = new RhuSubtipoCotizante();
+//            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('0');
+//            $arSubtipoCotizante->setNombre('SIN PENSIONAR');
+//            $manager->persist($arSubtipoCotizante);
+//        }
+//        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('1');
+//        if(!$arSubtipoCotizante){
+//            $arSubtipoCotizante = new RhuSubtipoCotizante();
+//            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('1');
+//            $arSubtipoCotizante->setNombre('Dependiente pensionado por vejez activo (SI no es pensionado es = a 00)');
+//            $manager->persist($arSubtipoCotizante);
+//        }
+//        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('2');
+//        if(!$arSubtipoCotizante){
+//            $arSubtipoCotizante = new RhuSubtipoCotizante();
+//            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('2');
+//            $arSubtipoCotizante->setNombre('Independiente pensionado por vejez activo');
+//            $manager->persist($arSubtipoCotizante);
+//        }
+//        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('3');
+//        if(!$arSubtipoCotizante){
+//            $arSubtipoCotizante = new RhuSubtipoCotizante();
+//            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('3');
+//            $arSubtipoCotizante->setNombre('Cotizante no obligado a cotización a pensiones por edad');
+//            $manager->persist($arSubtipoCotizante);
+//        }
+//        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('4');
+//        if(!$arSubtipoCotizante){
+//            $arSubtipoCotizante = new RhuSubtipoCotizante();
+//            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('4');
+//            $arSubtipoCotizante->setNombre('Cotizante con requisitos cumplidos para pensión.');
+//            $manager->persist($arSubtipoCotizante);
+//        }
+//        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('5');
+//        if(!$arSubtipoCotizante){
+//            $arSubtipoCotizante = new RhuSubtipoCotizante();
+//            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('5');
+//            $arSubtipoCotizante->setNombre('Cotizante a quien se le ha reconocido indemnización sustitutiva o devolución de saldos');
+//            $manager->persist($arSubtipoCotizante);
+//        }
+//        $arSubtipoCotizante = $manager->getRepository(RhuSubtipoCotizante::class)->find('6');
+//        if(!$arSubtipoCotizante){
+//            $arSubtipoCotizante = new RhuSubtipoCotizante();
+//            $arSubtipoCotizante->setCodigoSubtipoCotizantePk('6');
+//            $arSubtipoCotizante->setNombre('Cotizante perteneciente a un régimen exceptuado de pensiones o a entidades autorizadas para recibir aportes exclusivamente de un grupo de sus propio');
+//            $manager->persist($arSubtipoCotizante);
+//        }
 
         //--------------------------- Contrato tipo ------------------------------------------
-        $arContratoTipo = $manager->getRepository(RhuContratoTipo::class)->find('OBR');
-        if(!$arContratoTipo){
-            $arContratoTipo = new RhuContratoTipo();
-            $arContratoTipo->setCodigoContratoTipoPk('OBR');
-            $arContratoTipo->setNombre('CONTRATO POR OBRA O LABOR CONTRATADA');
-            $arContratoTipo->setIndefinido(false);
-            $manager->persist($arContratoTipo);
-        }
-        $arContratoTipo = $manager->getRepository(RhuContratoTipo::class)->find('FIJ');
-        if(!$arContratoTipo){
-            $arContratoTipo = new RhuContratoTipo();
-            $arContratoTipo->setCodigoContratoTipoPk('FIJ');
-            $arContratoTipo->setNombre('CONTRATO INDIVIDUAL DE TRABAJO A TERMINO FIJO INFERIOR A UN ANIO');
-            $arContratoTipo->setIndefinido(false);
-            $manager->persist($arContratoTipo);
-        }
-        $arContratoTipo = $manager->getRepository(RhuContratoTipo::class)->find('IND');
-        if(!$arContratoTipo){
-            $arContratoTipo = new RhuContratoTipo();
-            $arContratoTipo->setCodigoContratoTipoPk('IND');
-            $arContratoTipo->setNombre('CONTRATO INDEFINIDO');
-            $arContratoTipo->setIndefinido(false);
-            $manager->persist($arContratoTipo);
-        }
-        $arContratoTipo = $manager->getRepository(RhuContratoTipo::class)->find('APR');
-        if(!$arContratoTipo){
-            $arContratoTipo = new RhuContratoTipo();
-            $arContratoTipo->setCodigoContratoTipoPk('APR');
-            $arContratoTipo->setNombre('CONTRATO POR APRENDIZ DEL SENA');
-            $arContratoTipo->setIndefinido(false);
-            $manager->persist($arContratoTipo);
-        }
-        $arContratoTipo = $manager->getRepository(RhuContratoTipo::class)->find('PRA');
-        if(!$arContratoTipo){
-            $arContratoTipo = new RhuContratoTipo();
-            $arContratoTipo->setCodigoContratoTipoPk('PRA');
-            $arContratoTipo->setNombre('CONTRATO DE PRACTICA ESTUDIANTIL');
-            $arContratoTipo->setIndefinido(false);
-            $manager->persist($arContratoTipo);
-        }
-        $arContratoTipo = $manager->getRepository(RhuContratoTipo::class)->find('PRE');
-        if(!$arContratoTipo){
-            $arContratoTipo = new RhuContratoTipo();
-            $arContratoTipo->setCodigoContratoTipoPk('PRE');
-            $arContratoTipo->setNombre('CONTRATO POR PRESTACIÓN DE SERVICIO');
-            $arContratoTipo->setIndefinido(false);
-            $manager->persist($arContratoTipo);
-        }
+//        $arContratoTipo = $manager->getRepository(RhuContratoTipo::class)->find('OBR');
+//        if(!$arContratoTipo){
+//            $arContratoTipo = new RhuContratoTipo();
+//            $arContratoTipo->setCodigoContratoTipoPk('OBR');
+//            $arContratoTipo->setNombre('CONTRATO POR OBRA O LABOR CONTRATADA');
+//            $arContratoTipo->setIndefinido(false);
+//            $manager->persist($arContratoTipo);
+//        }
+//        $arContratoTipo = $manager->getRepository(RhuContratoTipo::class)->find('FIJ');
+//        if(!$arContratoTipo){
+//            $arContratoTipo = new RhuContratoTipo();
+//            $arContratoTipo->setCodigoContratoTipoPk('FIJ');
+//            $arContratoTipo->setNombre('CONTRATO INDIVIDUAL DE TRABAJO A TERMINO FIJO INFERIOR A UN ANIO');
+//            $arContratoTipo->setIndefinido(false);
+//            $manager->persist($arContratoTipo);
+//        }
+//        $arContratoTipo = $manager->getRepository(RhuContratoTipo::class)->find('IND');
+//        if(!$arContratoTipo){
+//            $arContratoTipo = new RhuContratoTipo();
+//            $arContratoTipo->setCodigoContratoTipoPk('IND');
+//            $arContratoTipo->setNombre('CONTRATO INDEFINIDO');
+//            $arContratoTipo->setIndefinido(false);
+//            $manager->persist($arContratoTipo);
+//        }
+//        $arContratoTipo = $manager->getRepository(RhuContratoTipo::class)->find('APR');
+//        if(!$arContratoTipo){
+//            $arContratoTipo = new RhuContratoTipo();
+//            $arContratoTipo->setCodigoContratoTipoPk('APR');
+//            $arContratoTipo->setNombre('CONTRATO POR APRENDIZ DEL SENA');
+//            $arContratoTipo->setIndefinido(false);
+//            $manager->persist($arContratoTipo);
+//        }
+//        $arContratoTipo = $manager->getRepository(RhuContratoTipo::class)->find('PRA');
+//        if(!$arContratoTipo){
+//            $arContratoTipo = new RhuContratoTipo();
+//            $arContratoTipo->setCodigoContratoTipoPk('PRA');
+//            $arContratoTipo->setNombre('CONTRATO DE PRACTICA ESTUDIANTIL');
+//            $arContratoTipo->setIndefinido(false);
+//            $manager->persist($arContratoTipo);
+//        }
+//        $arContratoTipo = $manager->getRepository(RhuContratoTipo::class)->find('PRE');
+//        if(!$arContratoTipo){
+//            $arContratoTipo = new RhuContratoTipo();
+//            $arContratoTipo->setCodigoContratoTipoPk('PRE');
+//            $arContratoTipo->setNombre('CONTRATO POR PRESTACIÓN DE SERVICIO');
+//            $arContratoTipo->setIndefinido(false);
+//            $manager->persist($arContratoTipo);
+//        }
 
         //--------------------------- Contrato motivo ----------------------------------------
-        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('TCO');
-        if(!$arContratoMotivo){
-            $arContratoMotivo = new RhuContratoMotivo();
-            $arContratoMotivo->setCodigoContratoMotivoPk('TC');
-            $arContratoMotivo->setMotivo('TERMINACIÓN DE CONTRATO');
-        }
-        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('RVO');
-        if(!$arContratoMotivo){
-            $arContratoMotivo = new RhuContratoMotivo();
-            $arContratoMotivo->setCodigoContratoMotivoPk('RV');
-            $arContratoMotivo->setMotivo('RENUNCIA VOLUNTARIA');
-        }
-        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('MAC');
-        if(!$arContratoMotivo){
-            $arContratoMotivo = new RhuContratoMotivo();
-            $arContratoMotivo->setCodigoContratoMotivoPk('MA');
-            $arContratoMotivo->setMotivo('MUTUO ACUERDO');
-        }
-        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('SJC');
-        if(!$arContratoMotivo){
-            $arContratoMotivo = new RhuContratoMotivo();
-            $arContratoMotivo->setCodigoContratoMotivoPk('SJC');
-            $arContratoMotivo->setMotivo('SIN JUSTA CAUSA');
-        }
-        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('CJC');
-        if(!$arContratoMotivo){
-            $arContratoMotivo = new RhuContratoMotivo();
-            $arContratoMotivo->setCodigoContratoMotivoPk('CJC');
-            $arContratoMotivo->setMotivo('CON JUSTA CAUSA');
-        }
-        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('JUB');
-        if(!$arContratoMotivo){
-            $arContratoMotivo = new RhuContratoMotivo();
-            $arContratoMotivo->setCodigoContratoMotivoPk('J');
-            $arContratoMotivo->setMotivo('JUBILACIÓN');
-        }
-        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('MUE');
-        if(!$arContratoMotivo){
-            $arContratoMotivo = new RhuContratoMotivo();
-            $arContratoMotivo->setCodigoContratoMotivoPk('M');
-            $arContratoMotivo->setMotivo('MUERTE');
-        }
-        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('INA');
-        if(!$arContratoMotivo){
-            $arContratoMotivo = new RhuContratoMotivo();
-            $arContratoMotivo->setCodigoContratoMotivoPk('INA');
-            $arContratoMotivo->setMotivo('INACTIVO POR EL USUARIO');
-        }
+//        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('TCO');
+//        if(!$arContratoMotivo){
+//            $arContratoMotivo = new RhuContratoMotivo();
+//            $arContratoMotivo->setCodigoContratoMotivoPk('TC');
+//            $arContratoMotivo->setMotivo('TERMINACIÓN DE CONTRATO');
+//        }
+//        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('RVO');
+//        if(!$arContratoMotivo){
+//            $arContratoMotivo = new RhuContratoMotivo();
+//            $arContratoMotivo->setCodigoContratoMotivoPk('RV');
+//            $arContratoMotivo->setMotivo('RENUNCIA VOLUNTARIA');
+//        }
+//        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('MAC');
+//        if(!$arContratoMotivo){
+//            $arContratoMotivo = new RhuContratoMotivo();
+//            $arContratoMotivo->setCodigoContratoMotivoPk('MA');
+//            $arContratoMotivo->setMotivo('MUTUO ACUERDO');
+//        }
+//        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('SJC');
+//        if(!$arContratoMotivo){
+//            $arContratoMotivo = new RhuContratoMotivo();
+//            $arContratoMotivo->setCodigoContratoMotivoPk('SJC');
+//            $arContratoMotivo->setMotivo('SIN JUSTA CAUSA');
+//        }
+//        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('CJC');
+//        if(!$arContratoMotivo){
+//            $arContratoMotivo = new RhuContratoMotivo();
+//            $arContratoMotivo->setCodigoContratoMotivoPk('CJC');
+//            $arContratoMotivo->setMotivo('CON JUSTA CAUSA');
+//        }
+//        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('JUB');
+//        if(!$arContratoMotivo){
+//            $arContratoMotivo = new RhuContratoMotivo();
+//            $arContratoMotivo->setCodigoContratoMotivoPk('J');
+//            $arContratoMotivo->setMotivo('JUBILACIÓN');
+//        }
+//        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('MUE');
+//        if(!$arContratoMotivo){
+//            $arContratoMotivo = new RhuContratoMotivo();
+//            $arContratoMotivo->setCodigoContratoMotivoPk('M');
+//            $arContratoMotivo->setMotivo('MUERTE');
+//        }
+//        $arContratoMotivo = $manager->getRepository(RhuContratoMotivo::class)->find('INA');
+//        if(!$arContratoMotivo){
+//            $arContratoMotivo = new RhuContratoMotivo();
+//            $arContratoMotivo->setCodigoContratoMotivoPk('INA');
+//            $arContratoMotivo->setMotivo('INACTIVO POR EL USUARIO');
+//        }
 
         //--------------------------- Clasificación de riesgo --------------------------------
         $arClasificacionRiesgo = $manager->getRepository(RhuClasificacionRiesgo::class)->find('I');

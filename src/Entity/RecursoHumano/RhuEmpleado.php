@@ -10,7 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class RhuEmpleado
 {
-    
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_empleado_pk", type="integer")
@@ -29,9 +28,19 @@ class RhuEmpleado
     private $codigoIdentificacionFk;
 
     /**
+     * @ORM\Column(name="codigo_empleado_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoEmpleadoTipoFk;
+
+    /**
      * @ORM\Column(name="codigo_contrato_fk", type="string", length=3, nullable=true)
      */
     private $codigoContratoFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCuentaTipoFk;
 
     /**
      * @ORM\Column(name="codigo_contrato_ultimo_fk", type="string", length=3, nullable=true)
@@ -39,9 +48,34 @@ class RhuEmpleado
     private $codigoContratoUltimoFk;
 
     /**
-     * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=false, unique=true)
+     * @ORM\Column(name="numero_identificacion", type="string", length=20 ,nullable=false)
      */
     private $numeroIdentificacion;
+
+    /**
+     * @ORM\Column(name="discapacidad", type="boolean", nullable=false)
+     */
+    private $discapacidad = false;
+
+    /**
+     * @ORM\Column(name="carro", type="boolean", nullable=false)
+     */
+    private $carro = false;
+
+    /**
+     * @ORM\Column(name="moto", type="boolean", nullable=false)
+     */
+    private $moto = false;
+
+    /**
+     * @ORM\Column(name="padre_familia", type="boolean", nullable=false)
+     */
+    private $padreFamilia = false;
+
+    /**
+     * @ORM\Column(name="cabeza_hogar", type="boolean", nullable=false)
+     */
+    private $cabezaHogar = false;
 
     /**
      * @ORM\Column(name="nombre_corto", type="string", length=80, nullable=true)
@@ -159,6 +193,11 @@ class RhuEmpleado
     private $fechaNacimiento;
 
     /**
+     * @ORM\Column(name="cueta_tipo", type="string", length=10, nullable=true)
+     */
+    private $cuetaTipo;
+
+    /**
      * @ORM\Column(name="codigo_ciudad_nacimiento_fk", type="integer", nullable=true)
      */
     private $codigoCiudadNacimientoFk;
@@ -182,6 +221,21 @@ class RhuEmpleado
      * @ORM\Column(name="codigo_banco_fk", type="string", length=10, nullable=true)
      */
     private $codigoBancoFk;
+
+    /**
+     * @ORM\Column(name="talla_camisa", type="string", length=10,  nullable=true)
+     */
+    private $tallaCamisa;
+
+    /**
+     * @ORM\Column(name="talla_pantalon", type="string", length=10,  nullable=true)
+     */
+    private $tallaPantalon;
+
+    /**
+     * @ORM\Column(name="talla_calzado", type="string", length=10,  nullable=true)
+     */
+    private $tallaCalzado;
 
     /**
      * @ORM\Column(name="estatura", type="integer", nullable=true)
@@ -253,6 +307,12 @@ class RhuEmpleado
     protected $bancoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="RhuEmpleadoTipo", inversedBy="empleadosEmpleadoTipoRel")
+     * @ORM\JoinColumn(name="codigo_empleado_tipo_fk",referencedColumnName="codigo_empleado_tipo_pk")
+     */
+    protected $empleadoTipoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="empleadoRel")
      */
     protected $contratosEmpleadoRel;
@@ -308,6 +368,22 @@ class RhuEmpleado
     /**
      * @return mixed
      */
+    public function getCodigoEmpleadoTipoFk()
+    {
+        return $this->codigoEmpleadoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoEmpleadoTipoFk
+     */
+    public function setCodigoEmpleadoTipoFk($codigoEmpleadoTipoFk): void
+    {
+        $this->codigoEmpleadoTipoFk = $codigoEmpleadoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoContratoFk()
     {
         return $this->codigoContratoFk;
@@ -319,6 +395,22 @@ class RhuEmpleado
     public function setCodigoContratoFk($codigoContratoFk): void
     {
         $this->codigoContratoFk = $codigoContratoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaTipoFk()
+    {
+        return $this->codigoCuentaTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaTipoFk
+     */
+    public function setCodigoCuentaTipoFk($codigoCuentaTipoFk): void
+    {
+        $this->codigoCuentaTipoFk = $codigoCuentaTipoFk;
     }
 
     /**
@@ -340,17 +432,81 @@ class RhuEmpleado
     /**
      * @return mixed
      */
-    public function getNumeroIdentificacion()
+    public function getDiscapacidad()
     {
-        return $this->numeroIdentificacion;
+        return $this->discapacidad;
     }
 
     /**
-     * @param mixed $numeroIdentificacion
+     * @param mixed $discapacidad
      */
-    public function setNumeroIdentificacion($numeroIdentificacion): void
+    public function setDiscapacidad($discapacidad): void
     {
-        $this->numeroIdentificacion = $numeroIdentificacion;
+        $this->discapacidad = $discapacidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCarro()
+    {
+        return $this->carro;
+    }
+
+    /**
+     * @param mixed $carro
+     */
+    public function setCarro($carro): void
+    {
+        $this->carro = $carro;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMoto()
+    {
+        return $this->moto;
+    }
+
+    /**
+     * @param mixed $moto
+     */
+    public function setMoto($moto): void
+    {
+        $this->moto = $moto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPadreFamilia()
+    {
+        return $this->padreFamilia;
+    }
+
+    /**
+     * @param mixed $padreFamilia
+     */
+    public function setPadreFamilia($padreFamilia): void
+    {
+        $this->padreFamilia = $padreFamilia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCabezaHogar()
+    {
+        return $this->cabezaHogar;
+    }
+
+    /**
+     * @param mixed $cabezaHogar
+     */
+    public function setCabezaHogar($cabezaHogar): void
+    {
+        $this->cabezaHogar = $cabezaHogar;
     }
 
     /**
@@ -676,6 +832,54 @@ class RhuEmpleado
     /**
      * @return mixed
      */
+    public function getTallaCamisa()
+    {
+        return $this->tallaCamisa;
+    }
+
+    /**
+     * @param mixed $tallaCamisa
+     */
+    public function setTallaCamisa($tallaCamisa): void
+    {
+        $this->tallaCamisa = $tallaCamisa;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTallaPantalon()
+    {
+        return $this->tallaPantalon;
+    }
+
+    /**
+     * @param mixed $tallaPantalon
+     */
+    public function setTallaPantalon($tallaPantalon): void
+    {
+        $this->tallaPantalon = $tallaPantalon;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTallaCalzado()
+    {
+        return $this->tallaCalzado;
+    }
+
+    /**
+     * @param mixed $tallaCalzado
+     */
+    public function setTallaCalzado($tallaCalzado): void
+    {
+        $this->tallaCalzado = $tallaCalzado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstatura()
     {
         return $this->estatura;
@@ -868,6 +1072,22 @@ class RhuEmpleado
     /**
      * @return mixed
      */
+    public function getEmpleadoTipoRel()
+    {
+        return $this->empleadoTipoRel;
+    }
+
+    /**
+     * @param mixed $empleadoTipoRel
+     */
+    public function setEmpleadoTipoRel($empleadoTipoRel): void
+    {
+        $this->empleadoTipoRel = $empleadoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getContratosEmpleadoRel()
     {
         return $this->contratosEmpleadoRel;
@@ -879,5 +1099,37 @@ class RhuEmpleado
     public function setContratosEmpleadoRel($contratosEmpleadoRel): void
     {
         $this->contratosEmpleadoRel = $contratosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroIdentificacion()
+    {
+        return $this->numeroIdentificacion;
+    }
+
+    /**
+     * @param mixed $numeroIdentificacion
+     */
+    public function setNumeroIdentificacion($numeroIdentificacion): void
+    {
+        $this->numeroIdentificacion = $numeroIdentificacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuetaTipo()
+    {
+        return $this->cuetaTipo;
+    }
+
+    /**
+     * @param mixed $cuetaTipo
+     */
+    public function setCuetaTipo($cuetaTipo): void
+    {
+        $this->cuetaTipo = $cuetaTipo;
     }
 }

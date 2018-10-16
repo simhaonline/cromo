@@ -7,6 +7,8 @@ use App\Entity\RecursoHumano\RhuEmpleado;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -112,6 +114,16 @@ class EmpleadoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Rh:'
             ])
+            ->add('empleadoTipoRel', EntityType::class, [
+                'required' => false,
+                'class' => 'App\Entity\RecursoHumano\RhuEmpleadoTipo',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('ac')
+                        ->orderBy('ac.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Empleado tipo:'
+            ])
             ->add('numeroIdentificacion', NumberType::class, ['required' => true, 'label' => 'numero identificacion:'])
             ->add('nombre1', TextType::class, ['required' => true, 'label' => 'Primer nombre:'])
             ->add('nombre2', TextType::class, ['required' => false, 'label' => 'Segundo nombre:'])
@@ -122,11 +134,20 @@ class EmpleadoType extends AbstractType
             ->add('estatura', NumberType::class, ['required' => false, 'label' => 'Estatura:'])
             ->add('celular', NumberType::class, ['required' => false, 'label' => 'Celular:'])
             ->add('direccion', TextType::class, ['required' => false, 'label' => 'Direccion:'])
+            ->add('tallaCamisa', TextType::class, ['required' => false, 'label' => ''])
+            ->add('tallaPantalon', TextType::class, ['required' => false, 'label' => ''])
+            ->add('tallaCalzado', TextType::class, ['required' => false, 'label' => ''])
+            ->add('codigoCuentaTipoFk', ChoiceType::class, array('choices' => array('AHORRO' => 'S', 'CORRIENTE' => 'D', 'DAVIPLATA' => 'DP')))
             ->add('fechaExpedicionIdentificacion', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('barrio', TextType::class, ['required' => false, 'label' => 'Barrio:'])
             ->add('correo', TextType::class, ['required' => false, 'label' => 'Correo:'])
             ->add('fechaNacimiento', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('cuenta', TextType::class, ['required' => false, 'label' => 'Cuenta:'])
+            ->add('discapacidad', CheckboxType::class, ['required' => false, 'label' => 'Discapacidad'])
+            ->add('carro', CheckboxType::class, ['required' => false, 'label' => 'Carro'])
+            ->add('moto', CheckboxType::class, ['required' => false, 'label' => 'Moto'])
+            ->add('padreFamilia', CheckboxType::class, ['required' => false, 'label' => 'Padre familia'])
+            ->add('cabezaHogar', CheckboxType::class, ['required' => false, 'label' => 'Cabeza hogar'])
             ->add('guardar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

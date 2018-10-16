@@ -133,6 +133,47 @@
                     {{ form_errors(form.celular) }}
                 </div>
             </div>
+            <div class="form-group form-group-sm">
+                <label for="form_tallaCamisa" class="col-sm-2 control-label">Talla camisa:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.tallaCamisa, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.tallaCamisa) }}
+                </div>
+                <label for="form_tallaPantalon" class="col-sm-2 control-label">Talla pantalón:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.tallaPantalon, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.tallaPantalon) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_tallaCalzado" class="col-sm-2 control-label">Talla calzado:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.tallaCalzado, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.tallaCalzado) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-1 col-sm-2">
+                    {{ form_widget(form.discapacidad) }}
+                    {{ form_errors(form.discapacidad) }}
+                </div>
+                <div class=" col-sm-2">
+                    {{ form_widget(form.carro) }}
+                    {{ form_errors(form.carro) }}
+                </div>
+                <div class=" col-sm-2">
+                    {{ form_widget(form.moto) }}
+                    {{ form_errors(form.moto) }}
+                </div>
+                <div class=" col-sm-2">
+                    {{ form_widget(form.padreFamilia) }}
+                    {{ form_errors(form.padreFamilia) }}
+                </div>
+                <div class="col-sm-2">
+                    {{ form_widget(form.cabezaHogar) }}
+                    {{ form_errors(form.cabezaHogar) }}
+                </div>
+            </div>
         </div>
     </div>
     <div class="panel panel-default">
@@ -141,10 +182,22 @@
         </div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_cargoInterno" class="control-label col-sm-2">Cargo:</label>
+                <label for="form_cargoRel" class="control-label col-sm-2">Cargo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.cargoRel, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.celular) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_empleadoTipoRel" class="control-label col-sm-2">Empleado tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.empleadoTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.empleadoTipoRel) }}
+                </div>
+                <label for="form_bancoRel" class="control-label col-sm-2">Banco:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.bancoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.bancoRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -153,19 +206,17 @@
                     {{ form_widget(form.cuenta, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.cuenta) }}
                 </div>
-                <label for="form_bancoRel" class="control-label col-sm-2">Banco:</label>
+                <label for="form_cuenta" class="control-label col-sm-2">Cuenta tipo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.bancoRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.bancoRel) }}
+                    {{ form_widget(form.codigoCuentaTipoFk, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.codigoCuentaTipoFk) }}
                 </div>
             </div>
-
-
         </div>
     </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm"
-           href="{{ path('recursohumano_administracion_empleado_empleado_lista') }}">Cancelar</a>
+           href="{{ path('recursohumano_administracion_recurso_empleado_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}

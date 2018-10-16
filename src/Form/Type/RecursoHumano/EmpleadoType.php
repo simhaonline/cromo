@@ -114,16 +114,6 @@ class EmpleadoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Rh:'
             ])
-            ->add('empleadoTipoRel', EntityType::class, [
-                'required' => false,
-                'class' => 'App\Entity\RecursoHumano\RhuEmpleadoTipo',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('ac')
-                        ->orderBy('ac.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'Empleado tipo:'
-            ])
             ->add('numeroIdentificacion', NumberType::class, ['required' => true, 'label' => 'numero identificacion:'])
             ->add('nombre1', TextType::class, ['required' => true, 'label' => 'Primer nombre:'])
             ->add('nombre2', TextType::class, ['required' => false, 'label' => 'Segundo nombre:'])

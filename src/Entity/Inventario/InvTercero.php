@@ -7,9 +7,18 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvTerceroRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class InvTercero
 {
+    public $infoLog = [
+        "primaryKey" => "codigoTerceroPk",
+        "camposSeguimiento" => [
+            'nombres',
+            'nombreCorto'
+        ],
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

@@ -77,7 +77,7 @@
                         {% for arCotizacionDetalle in arCotizacionDetalles %}
                             <tr>
                                 <td>{{ arCotizacionDetalle.codigoCotizacionDetallePk }}</td>
-                                <td>{{ arCotizacionDetalle.nombre | default('') }}</td>
+                                <td>{{ arCotizacionDetalle.nombreItem | default('') }}</td>
                                 {% if arCotizacion.estadoAutorizado == false %}
                                     <td style="text-align: center;"><input type="number" name="arrCantidad[{{ arCotizacionDetalle.codigoCotizacionDetallePk }}]" value="{{ arCotizacionDetalle.cantidad }}"  style="text-align: right; width:60px" size="10" ></td>
                                     <td style="text-align: center">

@@ -219,6 +219,11 @@ class InvItem
     private $inventariosValorizadosItemRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvCotizacionDetalle", mappedBy="itemRel")
+     */
+    protected $cotizacionesDetallesItemRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoItemPk()
@@ -824,6 +829,22 @@ class InvItem
     public function setRemisionesDetallesItemRel($remisionesDetallesItemRel): void
     {
         $this->remisionesDetallesItemRel = $remisionesDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCotizacionesDetallesItemRel()
+    {
+        return $this->cotizacionesDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $cotizacionesDetallesItemRel
+     */
+    public function setCotizacionesDetallesItemRel($cotizacionesDetallesItemRel): void
+    {
+        $this->cotizacionesDetallesItemRel = $cotizacionesDetallesItemRel;
     }
 
 

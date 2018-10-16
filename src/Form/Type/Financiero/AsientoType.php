@@ -45,16 +45,17 @@ class AsientoType extends AbstractType
 
     public function getEstructuraPropiedadesLista() {
         $campos = '[
-            {"campo":"codigoAsientoPk",     "tipo":"pk",    "ayuda":"Codigo del asiento",   "titulo":"ID"},
-            {"campo":"numero",              "tipo":"entero","ayuda":"",                     "titulo":"NUMERO"},
-            {"campo":"codigoComprobanteFk", "tipo":"texto", "ayuda":"",                     "titulo":"COMP"},
-            {"campo":"fecha",               "tipo":"fecha", "ayuda":"Fecha de registro",    "titulo":"FECHA"},
-            {"campo":"fechaContable",       "tipo":"fecha", "ayuda":"Fecha de contabilidad","titulo":"F_CONT"},
-            {"campo":"fechaDocumento",      "tipo":"fecha", "ayuda":"Fecha de elaboracion", "titulo":"F_DOC"},
-            {"campo":"estadoAutorizado",    "tipo":"bool",  "ayuda":"",                     "titulo":"AUT"},
-            {"campo":"estadoAprobado",      "tipo":"bool",  "ayuda":"",                     "titulo":"APR"},
-            {"campo":"estadoAnulado",       "tipo":"bool",  "ayuda":"",                     "titulo":"ANU"}
-                                
+            {"campo":"codigoAsientoPk",     "tipo":"pk",        "ayuda":"Codigo del asiento",   "titulo":"ID"},
+            {"campo":"numero",              "tipo":"entero",    "ayuda":"",                     "titulo":"NUMERO"},
+            {"campo":"codigoComprobanteFk", "tipo":"texto",     "ayuda":"",                     "titulo":"COMP"},
+            {"campo":"fecha",               "tipo":"fecha",     "ayuda":"Fecha de registro",    "titulo":"FECHA"},
+            {"campo":"fechaContable",       "tipo":"fecha",     "ayuda":"Fecha de contabilidad","titulo":"F_CONT"},
+            {"campo":"fechaDocumento",      "tipo":"fecha",     "ayuda":"Fecha de elaboracion", "titulo":"F_DOC"},
+            {"campo":"vrDebito",            "tipo":"moneda",    "ayuda":"",                     "titulo":"DEBITO"},
+            {"campo":"vrCredito",           "tipo":"moneda",    "ayuda":"",                     "titulo":"CREDITO"},
+            {"campo":"estadoAutorizado",    "tipo":"bool",      "ayuda":"",                     "titulo":"AUT"},
+            {"campo":"estadoAprobado",      "tipo":"bool",      "ayuda":"",                     "titulo":"APR"},
+            {"campo":"estadoAnulado",       "tipo":"bool",      "ayuda":"",                     "titulo":"ANU"}                                
         ]';
         return $campos;
     }

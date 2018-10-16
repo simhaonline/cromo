@@ -14,13 +14,17 @@
         {% for arDato in arrDatosLista.arDatos %}
             <tr>
                 {% for campo in arrDatosLista.arrCampos %}
-                    <td>
+
                         {% if campo.tipo == "fecha" %}
-                            {{ arDato[campo.campo]  | date('Y-m-d') }}
+                            <td>{{ arDato[campo.campo]  | date('Y-m-d') }} </td>
+                        {% elseif campo.tipo == "moneda" %}
+                            <td class="numero">{{ arDato[campo.campo] | number_format(0, '.', ',')}}</td>
+                        {% elseif campo.tipo == "bool" %}
+                            <td class="estado">{{ arDato[campo.campo]?'SI':'NO' }}</td>
                         {% else %}
-                            {{ arDato[campo.campo]  }}
+                            <td>{{ arDato[campo.campo]  }}</td>
                         {% endif %}
-                    </td>
+
                 {% endfor %}
                 <td style="text-align: center;">
                     {% if arDato.estadoAutorizado == 0 %}

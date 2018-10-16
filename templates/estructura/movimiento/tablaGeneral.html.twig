@@ -27,7 +27,11 @@
 
                 {% endfor %}
                 <td style="text-align: center;">
-                    {% if arDato.estadoAutorizado == 0 %}
+                    {% if arDato.estadoAutorizado is defined %}
+                        {% if arDato.estadoAutorizado == 0 %}
+                            <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
+                        {% endif %}
+                    {% else %}
                         <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
                     {% endif %}
                 </td>

@@ -26,6 +26,12 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_TxtMarca" class="col-sm-2 control-label">Marca:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtMarca, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <div class="col-sm-offset-2 col-sm-10">
                     {{ form_widget(form.BtnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
                 </div>
@@ -34,16 +40,16 @@
     </div>
     <table  class="table table-striped table-bordered table-condensed table-hover">
         <tr>
-            <th>{{ knp_pagination_sortable(arItemes, 'CÓDIGO', 'ii.codigoItemPk') }}</th>
-            <th>NIT</th>
-            <th>{{ knp_pagination_sortable(arItemes, 'NOMBRE', 'ii.nombre') }}</th>
+            <th>{{ knp_pagination_sortable(arItemes, 'CÓDIGO', 'i.codigoItemPk') }}</th>
+            <th>{{ knp_pagination_sortable(arItemes, 'NOMBRE', 'i.nombre') }}</th>
+            <th>{{ knp_pagination_sortable(arItemes, 'MARCA', 'm.marcaNombre') }}</th>
             <th></th>
         </tr>
         {% for arItem in arItemes %}
             <tr>
                 <td><input type="hidden" name="LblCodigo[]" value="{{ arItem.codigoItemPk }}">{{ arItem.codigoItemPk }} </td>
-                <td>{{ arItem.codigoItemPk  }}</td>
                 <td>{{ arItem.nombre }}</td>
+                <td>{{ arItem.marcaNombre }}</td>
                 <td style="text-align: center"><a href="javascript:selTercero('{{ arItem.codigoItemPk }}','{{ arItem.nombre }}','{{ campoCodigo }}','{{ campoNombre }}')" ><i class="fa fa-check-circle-o" style="font-size: large;color: black;"></i></a></td>
             </tr>
         {% endfor %}

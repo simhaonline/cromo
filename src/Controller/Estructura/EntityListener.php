@@ -8,7 +8,7 @@
 
 namespace  App\Controller\Estructura;
 
-use App\Entity\General\GenLogExtendido;
+use App\Entity\General\GenLog;
 use App\Entity\Seguridad\Usuario;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
@@ -97,7 +97,7 @@ class EntityListener extends DefaultEntityListenerResolver
     private $codigoPadre = null;
     /**
      * Registro de ultimo cambio.
-     * @var GenLogExtendido
+     * @var GenLog
      */
     private $ultimoCambio = null;
     /**
@@ -179,17 +179,7 @@ class EntityListener extends DefaultEntityListenerResolver
     private function extraerModulo()
     {
         $this->modulo = "Modulo no definido";
-        preg_match("/\\\([A-Z]{1}[A-Za-z]+(Bundle){1})\\\/", $this->namespaceEntidad, $coincidencias);
-        if(!isset($coincidencias[1])) {
-            return false;
-        }
-        $this->nombreEntidad = substr($this->namespaceEntidad, strrpos($this->namespaceEntidad, '\\') + 4);
-        $bundleName = str_replace("Bundle", '', $coincidencias[1]);
-        preg_match_all('/((?:^|[A-Z])[a-z]+)/', $bundleName,$palabras);
-        if(!isset($palabras[1])) {
-            return false;
-        }
-        $this->modulo = implode(' ', $palabras[1]);
+        $this->nombreEntidad = substr($this->namespaceEntidad, strrpos($this->namespaceEntidad, '\\') + 1);
         return true;
     }
 
@@ -248,12 +238,12 @@ class EntityListener extends DefaultEntityListenerResolver
         $this->extraerCampos($entidad);
         $this->codigoEntidadPk = call_user_func_array([$entidad, "get" . ucfirst($this->campoPrimary)], []);
         $this->esNuevo = false;
-        $this->ultimoCambio = $this->em->getRepository("App:General\GenLogExtendido")->getCodigoPadre($this->codigoEntidadPk);
+        $this->ultimoCambio = $this->em->getRepository("App:General\GenLog")->getCodigoPadre($this->codigoEntidadPk);
         # Obtenemos el codigo del padre
         if($this->ultimoCambio && $this->ultimoCambio->getCodigoPadre() != "") {
             $this->codigoPadre =  $this->ultimoCambio->getCodigoPadre();
         } else if($this->ultimoCambio && $this->ultimoCambio->getCodigoPadre() == "") {
-            $this->codigoPadre = $this->ultimoCambio->getCodigoLogExtendidoPk();
+            $this->codigoPadre = $this->ultimoCambio->getCodigoLogPk();
         }
         $this->asignarValores($entidad, $this->camposSeguimiento, $this->valoresSeguimiento);
         $this->asignarValores($entidad, $this->camposSeguimiento, $this->valoresSeguimientoMostrar, true);
@@ -292,12 +282,12 @@ class EntityListener extends DefaultEntityListenerResolver
     public function postDelete()
     {
         if(!$this->procesar) { return false; }
-        $this->ultimoCambio = $this->em->getRepository("BrasaGeneralBundle:GenLogExtendido")->getCodigoPadre($this->codigoEntidadPk);
+        $this->ultimoCambio = $this->em->getRepository("BrasaGeneralBundle:GenLog")->getCodigoPadre($this->codigoEntidadPk);
         # Obtenemos el codigo del padre
         if($this->ultimoCambio && $this->ultimoCambio->getCodigoPadre() != "") {
             $this->codigoPadre =  $this->ultimoCambio->getCodigoPadre();
         } else if($this->ultimoCambio && $this->ultimoCambio->getCodigoPadre() == "") {
-            $this->codigoPadre = $this->ultimoCambio->getCodigoLogExtendidoPk();
+            $this->codigoPadre = $this->ultimoCambio->getCodigoLogPk();
         } else if($this->ultimoCambio) {
             $this->valoresSeguimiento = json_decode($this->ultimoCambio->getCamposSeguimiento(), true);
         }
@@ -430,7 +420,7 @@ class EntityListener extends DefaultEntityListenerResolver
         } else {
             $arrLog = [];
         }
-        $arLog = new GenLogExtendido();
+        $arLog = new GenLog();
         $data = [
             'fecha' => date("Y-m-d H:i:s"),
             'codigoRegistroPk' => $this->codigoEntidadPk,
@@ -440,8 +430,8 @@ class EntityListener extends DefaultEntityListenerResolver
             'ruta' => $this->ruta,
             'accion' => $this->accion,
             'codigoUsuarioFk' => $this->usuario->getId(),
+            'nombreUsuario' => $this->usuario->getUsername(),
             'nombreEntidad' => $this->nombreEntidad,
-            'modulo' => $this->modulo,
             'codigoPadre' => $this->codigoPadre,
         ];
 
@@ -454,7 +444,6 @@ class EntityListener extends DefaultEntityListenerResolver
             ->setUsuarioRel($this->usuario)
             ->setCodigoUsuarioFk($this->usuario->getId())
             ->setNombreEntidad($this->nombreEntidad)
-            ->setModulo($this->modulo)
             ->setCodigoPadre($this->codigoPadre);
 
         $claveLog = $this->accion . $arLog->getCodigoRegistroPk();
@@ -471,7 +460,7 @@ class EntityListener extends DefaultEntityListenerResolver
 
     private function guardarEnDb()
     {
-        $arLog = new GenLogExtendido();
+        $arLog = new GenLog();
         $cambios = $this->hayCambios();
         if(!$this->borrando && !$cambios) {
             return false;
@@ -485,7 +474,6 @@ class EntityListener extends DefaultEntityListenerResolver
             ->setUsuarioRel($this->usuario)
             ->setCodigoUsuarioFk($this->usuario->getId())
             ->setNombreEntidad($this->nombreEntidad)
-            ->setModulo($this->modulo)
             ->setCodigoPadre($this->codigoPadre);
         $this->em->persist($arLog);
         $this->em->flush($arLog);

@@ -50,7 +50,7 @@ class GeneralEntityListener
                 preg_match_all('/((?:^|[A-Z])[a-z]+)/', $campo,$palabras);
                 return strtolower(implode('_', $palabras[1]));
             }, array_keys($dataObj)));
-            $insert = "INSERT INTO gen_log_extendido ({$columnas}) VALUES ";
+            $insert = "INSERT INTO gen_log ({$columnas}) VALUES ";
             foreach ($queries as $valores) {
                 $sql =  $insert . implode(', ', $valores);
                 $statement = $em->getConnection()->prepare($sql);

@@ -18,10 +18,10 @@ class InvCotizacionDetalleRepository extends ServiceEntityRepository
 
     public function lista($codigoRegistro)
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvCotizacionDetalle::class,'cd')
-                ->select('cd.codigoCotizacionDetallePk')
-                ->leftJoin('cd.itemRel', 'i')
-                ->addSelect('i.nombre as nombreItem')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvCotizacionDetalle::class, 'cd')
+            ->select('cd.codigoCotizacionDetallePk')
+            ->leftJoin('cd.itemRel', 'i')
+            ->addSelect('i.nombre as nombreItem')
             ->addSelect('cd.cantidad')
             ->addSelect('cd.vrPrecio')
             ->addSelect('cd.vrSubtotal')
@@ -30,7 +30,7 @@ class InvCotizacionDetalleRepository extends ServiceEntityRepository
             ->addSelect('cd.porcentajeIva')
             ->addSelect('cd.vrIva')
             ->addSelect('cd.vrTotal')
-                ->where("cd.codigoCotizacionFk = {$codigoRegistro}");
+            ->where("cd.codigoCotizacionFk = {$codigoRegistro}");
         return $queryBuilder;
     }
 
@@ -95,10 +95,11 @@ class InvCotizacionDetalleRepository extends ServiceEntityRepository
     /**
      * @return \Doctrine\ORM\Query
      */
-    public function pendientes(){
+    public function pendientes()
+    {
         $session = new Session();
         $em = $this->getEntityManager();
-        $queryBuilder = $em->createQueryBuilder()->from(InvSolicitudDetalle::class,'sd')
+        $queryBuilder = $em->createQueryBuilder()->from(InvSolicitudDetalle::class, 'sd')
             ->select('sd.codigoSolicitudDetallePk')
             ->addSelect('s.numero')
             ->addSelect('sd.codigoSolicitudFk')
@@ -112,7 +113,7 @@ class InvCotizacionDetalleRepository extends ServiceEntityRepository
             ->leftJoin('sd.itemRel', 'it')
             ->where('s.estadoAprobado = 1')
             ->andWhere('sd.cantidadPendiente > 0');
-        if($session->get('filtroInvCodigoSolicitudTipo') != null){
+        if ($session->get('filtroInvCodigoSolicitudTipo') != null) {
             $queryBuilder->andWhere("s.codigoSolicitudTipoFk = '{$session->get('filtroInvCodigoSolicitudTipo')}'");
         }
         return $queryBuilder->getQuery();

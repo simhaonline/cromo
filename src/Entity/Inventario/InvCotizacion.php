@@ -24,6 +24,11 @@ class InvCotizacion
     private $codigoCotizacionTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_tercero_fk", type="integer", nullable=true)
+     */
+    private $codigoTerceroFk;
+
+    /**
      * @ORM\Column(name="fecha", type="date")
      */
     private $fecha;
@@ -109,6 +114,12 @@ class InvCotizacion
      * @ORM\OneToMany(targetEntity="InvCotizacionDetalle", mappedBy="cotizacionRel")
      */
     protected $cotizacionesCotizacionDetalleRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="cotizacionesTerceroRel")
+     * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
+     */
+    protected $terceroRel;
 
     /**
      * @return mixed
@@ -381,5 +392,40 @@ class InvCotizacion
     {
         $this->cotizacionesCotizacionDetalleRel = $cotizacionesCotizacionDetalleRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTerceroFk()
+    {
+        return $this->codigoTerceroFk;
+    }
+
+    /**
+     * @param mixed $codigoTerceroFk
+     */
+    public function setCodigoTerceroFk($codigoTerceroFk): void
+    {
+        $this->codigoTerceroFk = $codigoTerceroFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTerceroRel()
+    {
+        return $this->terceroRel;
+    }
+
+    /**
+     * @param mixed $terceroRel
+     */
+    public function setTerceroRel($terceroRel): void
+    {
+        $this->terceroRel = $terceroRel;
+    }
+
+
+
 }
 

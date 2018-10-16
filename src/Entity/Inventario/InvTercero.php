@@ -172,6 +172,11 @@ class InvTercero
     protected $pedidosTerceroRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvCotizacion",mappedBy="terceroRel")
+     */
+    protected $cotizacionesTerceroRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvSucursal",mappedBy="terceroRel")
      */
     protected $sucursalesTerceroRel;
@@ -691,6 +696,38 @@ class InvTercero
     public function setRemisionesTerceroRel($remisionesTerceroRel): void
     {
         $this->remisionesTerceroRel = $remisionesTerceroRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCotizacionesTerceroRel()
+    {
+        return $this->cotizacionesTerceroRel;
+    }
+
+    /**
+     * @param mixed $cotizacionesTerceroRel
+     */
+    public function setCotizacionesTerceroRel($cotizacionesTerceroRel): void
+    {
+        $this->cotizacionesTerceroRel = $cotizacionesTerceroRel;
     }
 
 

@@ -13,7 +13,7 @@
         <tbody>
         {% for arDato in arrDatosLista.arDatos %}
             <tr>
-                {% for campo in arrDatosLista.campos %}
+                {% for campo in arrDatosLista.arrCampos %}
                     <td>
                         {% if campo.tipo == "fecha" %}
                             {{ arDato[campo.campo]  | date('Y-m-d') }}
@@ -24,11 +24,11 @@
                 {% endfor %}
                 <td style="text-align: center;">
                     {% if arDato.estadoAutorizado == 0 %}
-                        <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.campos[0].campo] }) }}"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
+                        <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
                     {% endif %}
                 </td>
-                <td style="text-align: center"><a href="{{ path(arrDatosLista.ruta ~ '_detalle', { 'id': arDato[arrDatosLista.campos[0].campo] }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
-                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDato[arrDatosLista.campos[0].campo] }}" /></td>
+                <td style="text-align: center"><a href="{{ path(arrDatosLista.ruta ~ '_detalle', { 'id': arDato[arrDatosLista.arrCampos[0].campo] }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDato[arrDatosLista.arrCampos[0].campo] }}" /></td>
             </tr>
         {% endfor %}
         </tbody>

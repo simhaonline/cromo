@@ -350,7 +350,6 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->andWhere('m.estadoAprobado = 1')
             ->andWhere('m.estadoAnulado = 0')
             ->orderBy('m.fecha', 'ASC');
-
         if ($session->get('filtroInvItemCodigo')) {
             $queryBuilder->andWhere("md.codigoItemFk = '{$session->get('filtroInvItemCodigo')}'");
         }

@@ -24,6 +24,7 @@ class ItemController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBucarItemCodigo')])
             ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarItemNombre')])
+            ->add('txtMarca', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarItemMarca')])
             ->add('BtnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
@@ -31,6 +32,7 @@ class ItemController extends Controller
             if($form->get('BtnFiltrar')->isClicked()) {
                 $session->set('filtroInvBucarItemCodigo',$form->get('txtCodigo')->getData());
                 $session->set('filtroInvBuscarItemNombre',$form->get('txtNombre')->getData());
+                $session->set('filtroInvBuscarItemMarca',$form->get('txtMarca')->getData());
             }
         }
         $arItemes = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->get('page', 1), 20);

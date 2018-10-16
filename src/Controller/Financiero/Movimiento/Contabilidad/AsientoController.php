@@ -13,10 +13,12 @@ use Symfony\Component\HttpFoundation\Request;
 class AsientoController extends BaseController
 {
     protected $clase = FinAsiento::class;
+    protected $claseFormulario = AsientoType::class;
+    protected $claseNombre = "FinAsiento";
     protected $modulo = "Financiero";
     protected $grupo = "Contabilidad";
-    protected $claseNombre = "FinAsiento";
-    protected $claseFormulario = "Asiento";
+    protected $nombre = "Asiento";
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -53,17 +55,17 @@ class AsientoController extends BaseController
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arAsiento = new FinAsiento();
+        $ar = new FinAsiento();
         if ($id != 0) {
-            $arAsiento = $em->getRepository(FinAsiento::class)->find($id);
+            $ar = $em->getRepository($this->clase)->find($id);
         } else {
-            $arAsiento->setFecha(new \DateTime('now'));
+            $ar->setFecha(new \DateTime('now'));
         }
-        $form = $this->createForm(AsientoType::class, $arAsiento);
+        $form = $this->createForm($this->claseFormulario, $ar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $em->persist($arAsiento);
+                $em->persist($ar);
                 $em->flush();
             }
         }

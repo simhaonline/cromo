@@ -15,7 +15,7 @@ abstract class BaseController extends Controller
     protected function getDatosLista()
     {
         $nombreRepositorio = "App:{$this->modulo}\\{$this->claseNombre}";
-        $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->claseFormulario}Type";
+        $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
         $campos = $namespaceType::getEstructuraPropiedadesLista();
         $campos = json_decode($campos);
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio,'e')
@@ -28,7 +28,7 @@ abstract class BaseController extends Controller
         $paginator = $this->get('knp_paginator');
         $query = $queryBuilder->getQuery();
         return [
-            'ruta' => strtolower($this->modulo) . "_movimiento_" . strtolower($this->grupo) . "_" . strtolower($this->claseFormulario),
+            'ruta' => strtolower($this->modulo) . "_movimiento_" . strtolower($this->grupo) . "_" . strtolower($this->nombre),
             'arrCampos' => $campos,
             'arDatos' => $paginator->paginate($query, $this->request->query->getInt('page', 1), 30)
         ];

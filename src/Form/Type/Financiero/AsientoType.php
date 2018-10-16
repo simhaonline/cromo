@@ -38,9 +38,11 @@ class AsientoType extends AbstractType
             {"campo":"codigoAsientoPk",     "tipo":"pk",    "ayuda":"Codigo del asiento",   "titulo":"ID"},
             {"campo":"fecha",               "tipo":"fecha", "ayuda":"Fecha de registro",    "titulo":"FECHA"},
             {"campo":"fechaContable",       "tipo":"fecha", "ayuda":"Fecha de contabilidad","titulo":"F_CONT"},
+            {"campo":"fechaDocumento",      "tipo":"fecha", "ayuda":"Fecha de elaboracion", "titulo":"F_DOC"},
             {"campo":"estadoAutorizado",    "tipo":"bool",  "ayuda":"",                     "titulo":"AUT"},
             {"campo":"estadoAprobado",      "tipo":"bool",  "ayuda":"",                     "titulo":"APR"},
-            {"campo":"estadoAnulado",       "tipo":"bool",  "ayuda":"",                     "titulo":"ANU"}                    
+            {"campo":"estadoAnulado",       "tipo":"bool",  "ayuda":"",                     "titulo":"ANU"}
+                                
         ]';
         return $campos;
     }

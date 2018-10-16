@@ -14,6 +14,7 @@ class CargoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('codigoCargoPk',TextType::class,['required' => true, 'label' => 'Codigo cargo:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);

@@ -14,8 +14,8 @@ class RhuGrupoRepository extends ServiceEntityRepository
     }
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
-            ->from('App:RecursoHumano\RhuGrupoPago','gp')
-            ->select('gp.codigoGrupoPagoPk AS ID')
+            ->from(RhuGrupo::class,'gp')
+            ->select('gp.codigoGrupoPk AS ID')
             ->addSelect('gp.nombre AS NOMBRE');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();

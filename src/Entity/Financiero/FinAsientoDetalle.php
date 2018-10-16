@@ -70,6 +70,12 @@ class FinAsientoDetalle
     private $descripcion;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinAsiento", inversedBy="asientosDetallesAsientoRel")
+     * @ORM\JoinColumn(name="codigo_asiento_fk", referencedColumnName="codigo_asiento_pk")
+     */
+    protected $asientoRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinComprobante", inversedBy="asientosDetallesComprobanteRel")
      * @ORM\JoinColumn(name="codigo_comprobante_fk", referencedColumnName="codigo_comprobante_pk")
      */
@@ -331,6 +337,22 @@ class FinAsientoDetalle
     public function setTerceroRel($terceroRel): void
     {
         $this->terceroRel = $terceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsientoRel()
+    {
+        return $this->asientoRel;
+    }
+
+    /**
+     * @param mixed $asientoRel
+     */
+    public function setAsientoRel($asientoRel): void
+    {
+        $this->asientoRel = $asientoRel;
     }
 
 

@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinTercero;
 use App\Form\Type\Financiero\AsientoType;
 use App\General\General;
 use App\Utilidades\Estandares;
@@ -103,21 +104,21 @@ class AsientoController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository(InvPedido::class)->actualizarDetalles($id, $arrControles);
-//                $em->getRepository(InvPedido::class)->autorizar($arPedido);
+                $em->getRepository(FinAsiento::class)->actualizarDetalles($id, $arrControles);
+                $em->getRepository(FinAsiento::class)->autorizar($arAsiento);
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository(InvPedido::class)->desautorizar($arPedido);
+                $em->getRepository(FinAsiento::class)->desautorizar($arAsiento);
             }
             if ($form->get('btnImprimir')->isClicked()) {
 //                $objFormatopedido = new Pedido();
 //                $objFormatopedido->Generar($em, $id);
             }
             if ($form->get('btnAprobar')->isClicked()) {
-//                $em->getRepository(InvPedido::class)->aprobar($arPedido);
+                $em->getRepository(FinAsiento::class)->aprobar($arAsiento);
             }
             if ($form->get('btnAnular')->isClicked()) {
-//                $em->getRepository(InvPedido::class)->anular($arPedido);
+                $em->getRepository(FinAsiento::class)->anular($arAsiento);
             }
             if ($form->get('btnEliminar')->isClicked()) {
 //                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
@@ -125,7 +126,7 @@ class AsientoController extends BaseController
 //                $em->getRepository(InvPedido::class)->liquidar($id);
             }
             if ($form->get('btnActualizarDetalle')->isClicked()) {
-//                $em->getRepository(InvPedido::class)->actualizarDetalles($id, $arrControles);
+                $em->getRepository(FinAsiento::class)->actualizarDetalles($id, $arrControles);
             }
             return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_detalle', ['id' => $id]));
         }
@@ -160,6 +161,34 @@ class AsientoController extends BaseController
         $arCuentas = $paginator->paginate($em->getRepository(FinCuenta::class)->lista(), $request->query->get('page', 1), 20);
         return $this->render('financiero/movimiento/contabilidad/asiento/buscarCuenta.html.twig', array(
             'arCuentas' => $arCuentas,
+            'campoCodigo' => $campoCodigo,
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/financiero/buscar/asiento/tercero/{campoCodigo}", name="financiero_buscar_tercero_asiento")
+     */
+    public function buscarTercero(Request $request, $campoCodigo)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator  = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroFinBuscarCuentaCodigo')])
+            ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroFinBuscarCuentaNombre')])
+            ->add('btnFiltrar', SubmitType::class, ['label'  => 'Filtrar'])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvBuscarBodegaCodigo',$form->get('txtCodigo')->getData());
+                $session->set('filtroInvBuscarBodegaNombre',$form->get('txtNombre')->getData());
+            }
+        }
+        $arTerceros = $paginator->paginate($em->getRepository(FinTercero::class)->lista(), $request->query->get('page', 1), 20);
+        return $this->render('financiero/movimiento/contabilidad/asiento/buscarTercero.html.twig', array(
+            'arTerceros' => $arTerceros,
             'campoCodigo' => $campoCodigo,
             'form' => $form->createView()
         ));

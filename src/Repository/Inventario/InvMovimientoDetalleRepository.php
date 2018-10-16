@@ -236,6 +236,22 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         $arrExistencias = $queryBuilder->getQuery()->getResult();
         return $arrExistencias;
     }
+
+    public function listaRegenerarExistenciaItem(){
+        $cantidad = 0;
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoItemFk')
+            ->addSelect("SUM(md.cantidadOperada) AS cantidad")
+            ->leftJoin('md.itemRel', 'i')
+            ->leftJoin('md.movimientoRel', 'm')
+            ->where('i.afectaInventario = 1')
+            ->andWhere('md.operacionInventario <> 0')
+            ->andWhere('m.estadoAutorizado = 1')
+            ->groupBy('md.codigoItemFk');
+        $arrExistencias = $queryBuilder->getQuery()->getResult();
+        return $arrExistencias;
+    }
+
     /**
      * @throws \Doctrine\ORM\ORMException
      */
@@ -268,6 +284,14 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                 break;
             }
         }
+        $arMovimientosDetalles = $this->listaRegenerarExistenciaItem();
+        foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
+            $arItem = $em->getRepository(InvItem::class)->find($arMovimientoDetalle['codigoItemFk']);
+            $arItem->setCantidadExistencia($arMovimientoDetalle['cantidad']);
+            $arItem->setCantidadDisponible($arMovimientoDetalle['cantidad']);
+            $em->persist($arItem);
+        }
+
         if($mensajesError == "") {
             $em->flush();
         }

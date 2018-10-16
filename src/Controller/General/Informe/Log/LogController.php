@@ -2,8 +2,8 @@
 
 namespace App\Controller\General\Informe\Log;
 
-use App\Entity\General\GenLog;
-use App\Repository\General\GenLogRepository;
+use App\Entity\General\GenLogOld;
+use App\Repository\General\GenLogOldRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +41,7 @@ class LogController extends Controller {
 //            $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
 //            $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
         }
-        $query = $em->createQuery($em->getRepository(GenLog::class)->lista());
+        $query = $em->createQuery($em->getRepository(GenLogOld::class)->lista());
         $arLogs = $paginator->paginate($query, $request->query->get('page', 1), 50);
         return $this->render('general/log/lista.html.twig', [
             'arLogs' => $arLogs,
@@ -79,7 +79,7 @@ class LogController extends Controller {
 //    private function lista() {
 //        $session = new Session;
 //        $em = $this->getDoctrine()->getManager();
-//        $this->strDqlLista = $em->getRepository('BrasaGeneralBundle:GenLog')->listaDql(
+//        $this->strDqlLista = $em->getRepository('BrasaGeneralBundle:GenLogOld')->listaDql(
 //                $session->get('filtroCodigoUsuario'),
 //                $session->get('filtroCodigoDocumento'),
 //                "");

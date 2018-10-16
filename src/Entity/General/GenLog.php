@@ -1,8 +1,13 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: jako
+ * Date: 9/03/18
+ * Time: 10:51 AM
+ */
 
 namespace App\Entity\General;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,41 +23,65 @@ class GenLog
     private $codigoLogPk;
 
     /**
+     * @ORM\Column(name="codigo_registro_pk", type="string", nullable=true)
+     */
+    private $codigoRegistroPk;
+
+    /**
+     * @ORM\Column(name="accion", type="string", length=20, nullable=true)
+     */
+    private $accion;
+
+    /**
      * @ORM\Column(name="codigo_usuario_fk", type="integer")
      */
-    private $codigoUsuarioFk;    
-    
+    private $codigoUsuarioFk;
+
     /**
-     * @ORM\Column(name="codigo_log_accion_fk", type="integer")
+     * @ORM\Column(name="nombre_usuario", type="string")
      */
-    private $codigoLogAccionFk;          
-    
+    private $nombreUsuario;
+
+    /**
+     * @ORM\Column(name="campos_seguimiento", type="text", nullable=true)
+     */
+    private $camposSeguimiento;
+
+    /**
+     * @ORM\Column(name="campos_seguimiento_mostrar", type="text", nullable=true)
+     */
+    private $camposSeguimientoMostrar;
+
+    /**
+     * @ORM\Column(name="nombre_entidad", type="string", length=500, nullable=true)
+     */
+    private $nombreEntidad;
+
+    /**
+     * @ORM\Column(name="namespace_entidad", type="string", length=500, nullable=true)
+     */
+    private $namespaceEntidad;
+
+    /**
+     * @ORM\Column(name="ruta", type="text", nullable=true)
+     */
+    private $ruta;
+
+    /**
+     * @ORM\Column(name="codigo_padre", type="integer", nullable=true)
+     */
+    private $codigoPadre;
+
     /**
      * @ORM\Column(name="fecha", type="datetime")
-     */    
-    private $fecha;  
+     */
+    private $fecha;
 
     /**
-     * @ORM\Column(name="id", type="integer")
-     */
-    private $id;
-
-    /**
-     * @ORM\Column(name="descripcion", type="text", nullable=true)
-     */
-    private $descripcion;
-
-        /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Seguridad\Usuario", inversedBy="logsUsuarioRel")
      * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="id")
      */
     protected $usuarioRel;
-
-        /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenLogAccion", inversedBy="logsLogAccionRel")
-     * @ORM\JoinColumn(name="codigo_log_accion_fk", referencedColumnName="codigo_log_accion_pk")
-     */
-    protected $logAccionRel;
 
     /**
      * @return mixed
@@ -64,10 +93,48 @@ class GenLog
 
     /**
      * @param mixed $codigoLogPk
+     * @return GenLog
      */
-    public function setCodigoLogPk($codigoLogPk): void
+    public function setCodigoLogPk($codigoLogPk)
     {
         $this->codigoLogPk = $codigoLogPk;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRegistroPk()
+    {
+        return $this->codigoRegistroPk;
+    }
+
+    /**
+     * @param mixed $codigoRegistroPk
+     * @return GenLog
+     */
+    public function setCodigoRegistroPk($codigoRegistroPk)
+    {
+        $this->codigoRegistroPk = $codigoRegistroPk;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccion()
+    {
+        return $this->accion;
+    }
+
+    /**
+     * @param mixed $accion
+     * @return GenLog
+     */
+    public function setAccion($accion)
+    {
+        $this->accion = $accion;
+        return $this;
     }
 
     /**
@@ -80,26 +147,120 @@ class GenLog
 
     /**
      * @param mixed $codigoUsuarioFk
+     * @return GenLog
      */
-    public function setCodigoUsuarioFk($codigoUsuarioFk): void
+    public function setCodigoUsuarioFk($codigoUsuarioFk)
     {
         $this->codigoUsuarioFk = $codigoUsuarioFk;
+        return $this;
     }
 
     /**
      * @return mixed
      */
-    public function getCodigoLogAccionFk()
+    public function getCamposSeguimiento()
     {
-        return $this->codigoLogAccionFk;
+        return $this->camposSeguimiento;
     }
 
     /**
-     * @param mixed $codigoLogAccionFk
+     * @param mixed $camposSeguimiento
+     * @return GenLog
      */
-    public function setCodigoLogAccionFk($codigoLogAccionFk): void
+    public function setCamposSeguimiento($camposSeguimiento)
     {
-        $this->codigoLogAccionFk = $codigoLogAccionFk;
+        $this->camposSeguimiento = $camposSeguimiento;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCamposSeguimientoMostrar()
+    {
+        return $this->camposSeguimientoMostrar;
+    }
+
+    /**
+     * @param mixed $camposSeguimientoMostrar
+     * @return GenLog
+     */
+    public function setCamposSeguimientoMostrar($camposSeguimientoMostrar)
+    {
+        $this->camposSeguimientoMostrar = $camposSeguimientoMostrar;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreEntidad()
+    {
+        return $this->nombreEntidad;
+    }
+
+    /**
+     * @param mixed $nombreEntidad
+     * @return GenLog
+     */
+    public function setNombreEntidad($nombreEntidad)
+    {
+        $this->nombreEntidad = $nombreEntidad;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNamespaceEntidad()
+    {
+        return $this->namespaceEntidad;
+    }
+
+    /**
+     * @param mixed $namespaceEntidad
+     * @return GenLog
+     */
+    public function setNamespaceEntidad($namespaceEntidad)
+    {
+        $this->namespaceEntidad = $namespaceEntidad;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRuta()
+    {
+        return $this->ruta;
+    }
+
+    /**
+     * @param mixed $ruta
+     * @return GenLog
+     */
+    public function setRuta($ruta)
+    {
+        $this->ruta = $ruta;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPadre()
+    {
+        return $this->codigoPadre;
+    }
+
+    /**
+     * @param mixed $codigoPadre
+     * @return GenLog
+     */
+    public function setCodigoPadre($codigoPadre)
+    {
+        $this->codigoPadre = $codigoPadre;
+        return $this;
     }
 
     /**
@@ -112,42 +273,12 @@ class GenLog
 
     /**
      * @param mixed $fecha
+     * @return GenLog
      */
-    public function setFecha($fecha): void
+    public function setFecha($fecha)
     {
         $this->fecha = $fecha;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescripcion()
-    {
-        return $this->descripcion;
-    }
-
-    /**
-     * @param mixed $descripcion
-     */
-    public function setDescripcion($descripcion): void
-    {
-        $this->descripcion = $descripcion;
+        return $this;
     }
 
     /**
@@ -160,27 +291,27 @@ class GenLog
 
     /**
      * @param mixed $usuarioRel
+     * @return GenLog
      */
-    public function setUsuarioRel($usuarioRel): void
+    public function setUsuarioRel($usuarioRel)
     {
         $this->usuarioRel = $usuarioRel;
+        return $this;
     }
 
     /**
      * @return mixed
      */
-    public function getLogAccionRel()
+    public function getNombreUsuario()
     {
-        return $this->logAccionRel;
+        return $this->nombreUsuario;
     }
 
     /**
-     * @param mixed $logAccionRel
+     * @param mixed $nombreUsuario
      */
-    public function setLogAccionRel($logAccionRel): void
+    public function setNombreUsuario($nombreUsuario)
     {
-        $this->logAccionRel = $logAccionRel;
+        $this->nombreUsuario = $nombreUsuario;
     }
-
-
 }

@@ -60,7 +60,7 @@ class LogExtendidoController extends Controller
     public function logDetalle($codigoRegistro)
     {
         $em = $this->getDoctrine()->getManager();
-        $detalles = $em->getRepository('BrasaGeneralBundle:GenLogExtendido')->find($codigoRegistro)->getCamposSeguimientoMostrar();
+        $detalles = $em->getRepository('BrasaGeneralBundle:GenLog')->find($codigoRegistro)->getCamposSeguimientoMostrar();
         $detalles = json_decode($detalles, true);
         if (!is_array($detalles)) {
             $detalles = [];
@@ -97,7 +97,7 @@ class LogExtendidoController extends Controller
         $modulo = $sesion->get("filtroModuloLog");
         $fecha = $sesion->get("FiltroFechaLog");
         $filtroHoy = $sesion->get('filtroIngresaronHoy');
-        $this->strDql = $em->getRepository('BrasaGeneralBundle:GenLogExtendido')->listaDql($codigo, $usuario, $accion, $modulo, $fecha, $filtroHoy);
+        $this->strDql = $em->getRepository('BrasaGeneralBundle:GenLog')->listaDql($codigo, $usuario, $accion, $modulo, $fecha, $filtroHoy);
     }
 
     private function generarExcel()

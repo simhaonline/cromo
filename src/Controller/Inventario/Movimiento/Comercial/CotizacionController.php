@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Movimiento\Comercial;
 
 use App\Entity\Inventario\InvCotizacionDetalle;
+use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\CotizacionType;
 use App\General\General;
 use App\Utilidades\Mensajes;
@@ -90,13 +91,22 @@ class CotizacionController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if($id == 0){
-                    $arCotizacion->setFecha(new \DateTime('now'));
+                $txtCodigoTercero = $request->request->get('txtCodigoTercero');
+                if ($txtCodigoTercero != '') {
+                    $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
+                    if($arTercero){
+                        $arCotizacion->setTerceroRel($arTercero);
+                        $arCotizacion->setUsuario($this->getUser()->getUserName());
+                        if($id == 0){
+                            $arCotizacion->setFecha(new \DateTime('now'));
+                        }
+                        $em->persist($arCotizacion);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('inventario_movimiento_comercial_cotizacion_detalle', ['id' => $arCotizacion->getCodigoCotizacionPk()]));
+                    }
+                } else {
+                    Mensajes::error('Debe seleccionar un tercero');
                 }
-                $arCotizacion->setUsuario($this->getUser()->getUserName());
-                $em->persist($arCotizacion);
-                $em->flush();
-                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_cotizacion_detalle', ['id' => $arCotizacion->getCodigoCotizacionPk()]));
             }
         }
         return $this->render('inventario/movimiento/comercial/cotizacion/nuevo.html.twig', [

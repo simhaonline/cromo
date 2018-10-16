@@ -35,6 +35,7 @@
                 <th>ID</th>
                 <th>NUMERO</th>
                 <th>TIPO</th>
+                <th>CLIENTE</th>
                 <th>FECHA</th>
                 <th title="Autorizado">AUT</th>
                 <th title="Aprobado">APR</th>
@@ -50,6 +51,7 @@
                     <td>{{ arCotizacion.codigoCotizacionPk }}</td>
                     <td>{{ arCotizacion.numero }}</td>
                     <td>{{ arCotizacion.nombreTipo }}</td>
+                    <td>{{ arCotizacion.cliente }}</td>
                     <td>{{ arCotizacion.fecha |date('Y-m-d') }}</td>
                     {{ validarTipo(arCotizacion.estadoAutorizado) }}
                     {{ validarTipo(arCotizacion.estadoAprobado) }}

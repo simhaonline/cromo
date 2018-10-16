@@ -35,7 +35,7 @@
                         <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
                     {% endif %}
                 </td>
-                <td style="text-align: center"><a href="{{ path(arrDatosLista.ruta ~ '_detalle', { 'id': arDato[arrDatosLista.arrCampos[0].campo] }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center"><a href="{{ path(arrDatosLista.ruta ~ '_detalle', { 'id': arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i  style="font-size: large;color: black;" class="fa fa-share-square-o"></i></a></td>
                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDato[arrDatosLista.arrCampos[0].campo] }}" /></td>
             </tr>
         {% endfor %}

@@ -2,20 +2,25 @@
 
 namespace App\Controller\RecursoHumano\Administracion\Empleado;
 
-
+use App\Controller\BaseController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\ContratoType;
 use App\Form\Type\RecursoHumano\EmpleadoType;
 use App\General\General;
-use App\Utilidades\Estandares;
-use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class EmpleadoController extends Controller
+class EmpleadoController extends BaseController
 {
+    protected $clase = RhuEmpleado::class;
+    protected $claseFormulario = EmpleadoType::class;
+    protected $claseNombre = "RhuEmpleado";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "administracion";
+    protected $grupo = "Empleado";
+    protected $nombre = "Empleado";
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -25,23 +30,52 @@ class EmpleadoController extends Controller
      */
     public function lista(Request $request)
     {
-        $clase = RhuEmpleado::class;
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $arrParametrosLista = $em->getRepository($clase)->parametrosLista();
-        $formBotonera = Estandares::botoneraLista();
+        $formBotonera = $this->botoneraLista();
         $formBotonera->handleRequest($request);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($clase)->parametrosExcel(), "Embargos");
+            if($formBotonera->get('btnExcel')->isClicked()){
+                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            if($formBotonera->get('btnEliminar')->isClicked()){
 
             }
         }
         return $this->render('recursoHumano/administracion/empleado/lista.html.twig', [
-            'arrParametrosLista' => $arrParametrosLista,
-            'request' => $request,
+            'arrDatosLista' => $this->getDatosLista(),
             'formBotonera' => $formBotonera->createView()
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("recursohumano/administracion/empleado/empleado/nuevo/{id}", name="recursohumano_administracion_empleado_empleado_nuevo")
+     */
+    public function nuevo(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arEmpleado = new RhuEmpleado();
+        if ($id != 0) {
+            $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($id);
+            if (!$arEmpleado) {
+                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_lista'));
+            }
+        }
+        $form = $this->createForm(EmpleadoType::class, $arEmpleado);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arEmpleado->setNombreCorto($arEmpleado->getNombre1() . ' ' . $arEmpleado->getApellido1());
+                $em->persist($arEmpleado);
+                $em->flush();
+                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_detalle', ['id' => $arEmpleado->getCodigoEmpleadoPk()]));
+            }
+        }
+        return $this->render('recursoHumano/administracion/empleado/nuevo.html.twig', [
+            'form' => $form->createView(), 'arEmpleado' => $arEmpleado
         ]);
     }
 
@@ -75,37 +109,6 @@ class EmpleadoController extends Controller
             'form' => $form->createView(),
             'arEmpleado' => $arEmpleado,
             'arContratos' => $arContratos
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/administracion/empleado/empleado/nuevo/{id}", name="recursohumano_administracion_empleado_empleado_nuevo")
-     */
-    public function nuevo(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $arEmpleado = new RhuEmpleado();
-        if ($id != 0) {
-            $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($id);
-            if (!$arEmpleado) {
-                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_lista'));
-            }
-        }
-        $form = $this->createForm(EmpleadoType::class, $arEmpleado);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
-                $arEmpleado->setNombreCorto($arEmpleado->getNombre1() . ' ' . $arEmpleado->getApellido1());
-                $em->persist($arEmpleado);
-                $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_detalle', ['id' => $arEmpleado->getCodigoEmpleadoPk()]));
-            }
-        }
-        return $this->render('recursoHumano/administracion/empleado/nuevo.html.twig', [
-            'form' => $form->createView(), 'arEmpleado' => $arEmpleado
         ]);
     }
 

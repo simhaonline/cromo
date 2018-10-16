@@ -28,7 +28,7 @@ abstract class BaseController extends Controller
         $paginator = $this->get('knp_paginator');
         $query = $queryBuilder->getQuery();
         return [
-            'ruta' => strtolower($this->modulo) . "_" . $this->funcion . "_" . strtolower($this->grupo) . "_" . strtolower($this->nombre),
+            'ruta' => strtolower($this->modulo) . "_" . strtolower($this->funcion) . "_" . strtolower($this->grupo) . "_" . strtolower($this->nombre),
             'arrCampos' => $campos,
             'arDatos' => $paginator->paginate($query, $this->request->query->getInt('page', 1), 30)
         ];

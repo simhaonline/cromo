@@ -85,6 +85,10 @@ class FinAsiento
      */
     protected $comprobanteRel;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinAsientoDetalle", mappedBy="asientoRel")
+     */
+    protected $asientosDetallesAsientoRel;
 
     /**
      * @return mixed
@@ -308,6 +312,22 @@ class FinAsiento
     public function setVrCredito($vrCredito): void
     {
         $this->vrCredito = $vrCredito;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsientosDetallesAsientoRel()
+    {
+        return $this->asientosDetallesAsientoRel;
+    }
+
+    /**
+     * @param mixed $asientosDetallesAsientoRel
+     */
+    public function setAsientosDetallesAsientoRel($asientosDetallesAsientoRel): void
+    {
+        $this->asientosDetallesAsientoRel = $asientosDetallesAsientoRel;
     }
 
 

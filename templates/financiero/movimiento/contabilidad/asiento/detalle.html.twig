@@ -22,6 +22,16 @@
             <td class="td-in-well">{{ arAsiento.codigoAsientoPk }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arAsiento.fecha | date('') }}</td>
+            <td class="titulo">DEBITO:</td>
+            <td align="right">{{ arAsiento.vrDebito | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">COMPROBANTE:</td>
+            <td class="td-in-well">{{ arAsiento.codigoComprobanteFk }}-{{ arAsiento.comprobanteRel.nombre }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="titulo">CREDITO:</td>
+            <td align="right">{{ arAsiento.vrCredito | number_format(0, '.', ',') }}</td>
         </tr>
     </table>
     <ul class="nav nav-tabs">
@@ -35,6 +45,7 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>TERCERO</th>
                             <th>CUENTA</th>
                             <th>DEBITO</th>
                             <th>CREDITO</th>
@@ -45,17 +56,34 @@
                         {% for arAsientoDetalle in arAsientoDetalles %}
                             <tr>
                                 <td>{{ arAsientoDetalle.codigoAsientoDetallePk }}<input type="hidden" name="TxtCodigo[]" value="{{ arAsientoDetalle.codigoAsientoDetallePk }}"></td>
+                                {% if arAsiento.estadoAutorizado == 0 %}
+                                    <td>
+                                        <input type="text" name="arrTercero[{{ arAsientoDetalle.codigoAsientoDetallePk }}]" id="arrTercero[{{ arAsientoDetalle.codigoAsientoDetallePk }}]" value="{{ arAsientoDetalle.codigoTerceroFk }}" style="text-align: left; width:120px" size="20">
+                                        <a href="javascript:abrirVentana3('{{ path('financiero_buscar_tercero_asiento',{'campoCodigo' : 'arrTercero['~ arAsientoDetalle.codigoAsientoDetallePk ~']' }) }}','BuscarTercero',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="arrCuenta[{{ arAsientoDetalle.codigoAsientoDetallePk }}]" id="arrCuenta[{{ arAsientoDetalle.codigoAsientoDetallePk }}]" value="{{ arAsientoDetalle.codigoCuentaFk }}" style="text-align: left; width:120px" size="20">
+                                        <a href="javascript:abrirVentana3('{{ path('financiero_buscar_cuenta_asiento',{'campoCodigo' : 'arrCuenta['~ arAsientoDetalle.codigoAsientoDetallePk ~']' }) }}','BuscarCuenta',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                    </td>
+                                {% else %}
+                                    <td>{{ arAsientoDetalle.codigoCuentaFk }}</td>
+                                    <td>{{ arAsientoDetalle.codigoTerceroFk }}</td>
+                                {% endif %}
 
-                                <td style="text-align: center;">
-                                    <input type="text" name="arrCuenta[{{ arAsientoDetalle.codigoAsientoDetallePk }}]" id="arrCuenta[{{ arAsientoDetalle.codigoAsientoDetallePk }}]" value="{{ arAsientoDetalle.codigoCuentaFk }}" style="text-align: left; width:120px" size="20">
-                                    <a href="javascript:abrirVentana3('{{ path('financiero_buscar_cuenta_asiento',{'campoCodigo' : 'arrCuenta['~ arAsientoDetalle.codigoAsientoDetallePk ~']' }) }}','BuscarCuenta',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
-                                </td>
 
-                                <td style="text-align: center;">
+                                <td style="text-align: right;">
                                     {% if not arAsiento.estadoAutorizado %}
                                         <input style="text-align: right;" type="text" name="TxtDebito[{{ arAsientoDetalle.codigoAsientoDetallePk }}]" value="{{ arAsientoDetalle.vrDebito }}" size="10" style="width:70px">
                                     {% else %}
                                         {{ arAsientoDetalle.vrDebito | number_format(0, '.', ',') }}
+                                    {% endif %}
+                                </td>
+
+                                <td style="text-align: right;">
+                                    {% if not arAsiento.estadoAutorizado %}
+                                        <input style="text-align: right;" type="text" name="TxtCredito[{{ arAsientoDetalle.codigoAsientoDetallePk }}]" value="{{ arAsientoDetalle.vrCredito }}" size="10" style="width:70px">
+                                    {% else %}
+                                        {{ arAsientoDetalle.vrCredito | number_format(0, '.', ',') }}
                                     {% endif %}
                                 </td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arAsientoDetalle.codigoAsientoDetallePk }}"/>

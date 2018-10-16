@@ -4,6 +4,7 @@ namespace App\Repository\Financiero;
 
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
+use App\Entity\Financiero\FinCuenta;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -15,6 +16,76 @@ class FinAsientoRepository extends ServiceEntityRepository
         parent::__construct($registry, FinAsiento::class);
     }
 
+
+    /**
+     * @param $codigoAsiento
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function liquidar($codigoAsiento)
+    {
+        $em = $this->getEntityManager();
+        $arAsiento = $em->getRepository(FinAsiento::class)->find($codigoAsiento);
+        $arAsientoDetalles = $em->getRepository(FinAsientoDetalle::class)->findBy(['codigoAsientoFk' => $codigoAsiento]);
+        $debitoGeneral = 0;
+        $creditoGeneral = 0;
+        foreach ($arAsientoDetalles as $arAsientoDetalle) {
+            //$arAsientoDetalleAct = $em->getRepository(FinAsientoDetalle::class)->find($arAsientoDetalle->getCodigoAsientoDetallePk());
+            $debitoGeneral += $arAsientoDetalle->getVrDebito();
+            $creditoGeneral += $arAsientoDetalle->getVrCredito();
+            //$arAsientoDetalleAct->setVrIva($iva);
+            //$arAsientoDetalleAct->setVrTotal($total);
+            //$em->persist($arAsientoDetalleAct);
+        }
+        $arAsiento->setVrDebito($debitoGeneral);
+        $arAsiento->setVrCredito($creditoGeneral);
+        $em->persist($arAsiento);
+        $em->flush();
+    }
+
+    /**
+     * @param $arPedido InvPedido
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function autorizar($arAsiento)
+    {
+        if(!$arAsiento->getEstadoAutorizado()) {
+            $registros = $this->getEntityManager()->createQueryBuilder()->from(FinAsientoDetalle::class,'ad')
+                ->select('COUNT(ad.codigoAsientoDetallePk) AS registros')
+                ->where('ad.codigoAsientoFk = ' . $arAsiento->getCodigoAsientoPk())
+                ->getQuery()->getSingleResult();
+            if($registros['registros'] > 0) {
+                $arAsiento->setEstadoAutorizado(1);
+                $this->getEntityManager()->persist($arAsiento);
+                $this->getEntityManager()->flush();
+            } else {
+                Mensajes::error("El registro no tiene detalles");
+            }
+        } else {
+            Mensajes::error('El documento ya esta autorizado');
+        }
+    }
+
+    /**
+     * @param $arPedido InvPedido
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function desautorizar($arAsiento)
+    {
+        if($arAsiento->getEstadoAutorizado()) {
+            $arAsiento->setEstadoAutorizado(0);
+            $this->getEntityManager()->persist($arAsiento);
+            $this->getEntityManager()->flush();
+
+        } else {
+            Mensajes::error('El documento no esta autorizado');
+        }
+    }
+
     /**
      * @param $codigoAsiento
      * @param $arrControles
@@ -23,21 +94,43 @@ class FinAsientoRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function actualizarDetalles($codigo, $arrControles){
+    public function actualizarDetalles($codigoAsiento, $arrControles){
         $em = $this->getEntityManager();
-        if($this->contarDetalles($codigo) > 0){
-            $arrCantidad = $arrControles['TxtCantidad'];
-            $arrPrecio = $arrControles['TxtPrecio'];
+        if($this->contarDetalles($codigoAsiento) > 0){
+            $arrCuenta = $arrControles['arrCuenta'];
+            $arrTercero = $arrControles['arrTercero'];
             $arrCodigo = $arrControles['TxtCodigo'];
+            $arrDebito = $arrControles['TxtDebito'];
+            $arrCredito = $arrControles['TxtCredito'];
             foreach ($arrCodigo as $codigo) {
-                $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($codigo);
-                $arPedidoDetalle->setCantidad( $arrCantidad[$codigo] != '' ? $arrCantidad[$codigo] :0 );
-                $arPedidoDetalle->setVrPrecio( $arrPrecio[$codigo] != '' ? $arrPrecio[$codigo] : 0);
-                $em->persist($arPedidoDetalle);
+                $arAsientoDetalle = $em->getRepository(FinAsientoDetalle::class)->find($codigo);
+                if($arrTercero[$codigo]) {
+                    $arrTercero = $em->getRepository(FinCuenta::class)->find($arrTercero[$codigo]);
+                    if($arrTercero) {
+                        $arAsientoDetalle->setTerceroRel( $arrTercero);
+                    } else {
+                        $arAsientoDetalle->setTerceroRel(null);
+                    }
+                } else {
+                    $arAsientoDetalle->setTerceroRel(null);
+                }
+                if($arrCuenta[$codigo]) {
+                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCuenta[$codigo]);
+                    if($arCuenta) {
+                        $arAsientoDetalle->setCuentaRel( $arCuenta);
+                    } else {
+                        $arAsientoDetalle->setCuentaRel(null);
+                    }
+                } else {
+                    $arAsientoDetalle->setCuentaRel(null);
+                }
+                $arAsientoDetalle->setVrDebito( $arrDebito[$codigo] != '' ? $arrDebito[$codigo] : 0);
+                $arAsientoDetalle->setVrCredito( $arrCredito[$codigo] != '' ? $arrCredito[$codigo] : 0);
+                $em->persist($arAsientoDetalle);
             }
         }
         $em->flush();
-        $this->liquidar($codigoPedido);
+        $this->liquidar($codigoAsiento);
     }
 
     /**
@@ -46,11 +139,11 @@ class FinAsientoRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function contarDetalles($codigo)
+    public function contarDetalles($codigoAsiento)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinAsientoDetalle::class, 'ad')
             ->select("COUNT(ad.codigoAsientoDetallePk)")
-            ->where("ad.codigoAsientoFk = {$codigo} ");
+            ->where("ad.codigoAsientoFk = {$codigoAsiento} ");
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         return $resultado[1];
     }

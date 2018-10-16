@@ -216,6 +216,7 @@ class CotizacionController extends Controller
                             $arCotizacionDetalle->setItemRel($arItem);
                             $arCotizacionDetalle->setCantidad($cantidad);
                             $arCotizacionDetalle->setCantidadPendiente($cantidad);
+                            $arCotizacionDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
                             $em->persist($arCotizacionDetalle);
                         }
                     }

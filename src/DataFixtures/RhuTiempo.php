@@ -10,7 +10,7 @@ class RhuTiempo extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $arTiempo = $manager->getRepository(RhuTiempo::class)->find('TCOMP');
+        $arTiempo = $manager->getRepository(\App\Entity\RecursoHumano\RhuTiempo::class)->find('TCOMP');
         if(!$arTiempo){
             $arTiempo = new \App\Entity\RecursoHumano\RhuTiempo();
             $arTiempo->setCodigoTiempoPk('TCOMP');
@@ -18,7 +18,7 @@ class RhuTiempo extends Fixture
             $arTiempo->setAbreviatura('C');
             $manager->persist($arTiempo);
         }
-        $arTiempo = $manager->getRepository(RhuTiempo::class)->find('TMED');
+        $arTiempo = $manager->getRepository(\App\Entity\RecursoHumano\RhuTiempo::class)->find('TMED');
         if(!$arTiempo){
             $arTiempo = new \App\Entity\RecursoHumano\RhuTiempo();
             $arTiempo->setCodigoTiempoPk('TMED');
@@ -26,7 +26,7 @@ class RhuTiempo extends Fixture
             $arTiempo->setAbreviatura('M');
             $manager->persist($arTiempo);
         }
-        $arTiempo = $manager->getRepository(RhuTiempo::class)->find('TSAB');
+        $arTiempo = $manager->getRepository(\App\Entity\RecursoHumano\RhuTiempo::class)->find('TSAB');
         if(!$arTiempo){
             $arTiempo = new \App\Entity\RecursoHumano\RhuTiempo();
             $arTiempo->setCodigoTiempoPk('TSAB');

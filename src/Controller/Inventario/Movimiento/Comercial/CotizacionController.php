@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Comercial;
 use App\Entity\Inventario\InvCotizacionDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\CotizacionType;
+use App\Formato\Inventario\Cotizacion;
 use App\General\General;
 use App\Utilidades\Mensajes;
 use App\Utilidades\Estandares;
@@ -148,12 +149,12 @@ class CotizacionController extends Controller
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(InvCotizacion::class)->desautorizar($arCotizacion);
             }
-            if ($form->get('btnImprimir')->isClicked()) {
-//                $objFormatoSolicitud = new Solicitud();
-//                $objFormatoSolicitud->Generar($em, $id);
-            }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(InvCotizacion::class)->aprobar($arCotizacion);
+            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $objFormatoCotizacion = new Cotizacion();
+                $objFormatoCotizacion->Generar($em, $id);
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $em->getRepository(InvCotizacion::class)->anular($arCotizacion);

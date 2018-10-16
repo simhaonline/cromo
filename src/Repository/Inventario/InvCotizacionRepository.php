@@ -113,6 +113,43 @@ class InvCotizacionRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        /**
+         * @var $arSolicitud InvSolicitud
+         */
+        $respuesta = '';
+        if (count($arrSeleccionados) > 0) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(InvCotizacion::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            if (count($this->getEntityManager()->getRepository(InvCotizacionDetalle::class)->findBy(['codigoCotizacionFk' => $arRegistro->getCodigoCotizacionPk()])) <= 0) {
+                                $this->getEntityManager()->remove($arRegistro);
+                            } else {
+                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                            }
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                }
+                if($respuesta != ''){
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
+    }
+
+    /**
      * @param $arCotizacion InvCotizacion
      * @param $arrValor
      * @param $arrCantidad

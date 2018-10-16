@@ -40,6 +40,11 @@ class FinAsiento
     private $fechaDocumento;
 
     /**
+     * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoComprobanteFk;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoAutorizado = false;
@@ -63,6 +68,13 @@ class FinAsiento
      * @ORM\Column(name="comentario", type="text", nullable=true)
      */
     private $comentario;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinComprobante", inversedBy="asientosComprobanteRel")
+     * @ORM\JoinColumn(name="codigo_comprobante_fk", referencedColumnName="codigo_comprobante_pk")
+     */
+    protected $comprobanteRel;
+
 
     /**
      * @return mixed
@@ -222,6 +234,38 @@ class FinAsiento
     public function setEstadoContabilizado($estadoContabilizado): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteFk()
+    {
+        return $this->codigoComprobanteFk;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteFk
+     */
+    public function setCodigoComprobanteFk($codigoComprobanteFk): void
+    {
+        $this->codigoComprobanteFk = $codigoComprobanteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComprobanteRel()
+    {
+        return $this->comprobanteRel;
+    }
+
+    /**
+     * @param mixed $comprobanteRel
+     */
+    public function setComprobanteRel($comprobanteRel): void
+    {
+        $this->comprobanteRel = $comprobanteRel;
     }
 
 

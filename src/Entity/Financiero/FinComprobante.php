@@ -45,6 +45,16 @@ class FinComprobante
     protected $registrosComprobanteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinAsiento", mappedBy="comprobanteRel")
+     */
+    protected $asientosComprobanteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinAsientoDetalle", mappedBy="comprobanteRel")
+     */
+    protected $asientosDetallesComprobanteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoComprobantePk()
@@ -90,6 +100,38 @@ class FinComprobante
     public function setRegistrosComprobanteRel($registrosComprobanteRel): void
     {
         $this->registrosComprobanteRel = $registrosComprobanteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsientosComprobanteRel()
+    {
+        return $this->asientosComprobanteRel;
+    }
+
+    /**
+     * @param mixed $asientosComprobanteRel
+     */
+    public function setAsientosComprobanteRel($asientosComprobanteRel): void
+    {
+        $this->asientosComprobanteRel = $asientosComprobanteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsientosDetallesComprobanteRel()
+    {
+        return $this->asientosDetallesComprobanteRel;
+    }
+
+    /**
+     * @param mixed $asientosDetallesComprobanteRel
+     */
+    public function setAsientosDetallesComprobanteRel($asientosDetallesComprobanteRel): void
+    {
+        $this->asientosDetallesComprobanteRel = $asientosDetallesComprobanteRel;
     }
 
 

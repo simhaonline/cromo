@@ -50,6 +50,11 @@ class FinCentroCosto
     protected $registrosCentroCostoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinAsientoDetalle", mappedBy="centroCostoRel")
+     */
+    protected $asientosDetallesCentroCostoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCentroCostoPk()
@@ -111,6 +116,22 @@ class FinCentroCosto
     public function setRegistrosCentroCostoRel($registrosCentroCostoRel): void
     {
         $this->registrosCentroCostoRel = $registrosCentroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsientosDetallesCentroCostoRel()
+    {
+        return $this->asientosDetallesCentroCostoRel;
+    }
+
+    /**
+     * @param mixed $asientosDetallesCentroCostoRel
+     */
+    public function setAsientosDetallesCentroCostoRel($asientosDetallesCentroCostoRel): void
+    {
+        $this->asientosDetallesCentroCostoRel = $asientosDetallesCentroCostoRel;
     }
 
 

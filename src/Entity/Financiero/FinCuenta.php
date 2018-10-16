@@ -80,6 +80,11 @@ class FinCuenta
     protected $registrosCuentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinAsientoDetalle", mappedBy="cuentaRel")
+     */
+    protected $asientosDetallesCuentaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaPk()
@@ -237,6 +242,22 @@ class FinCuenta
     public function setRegistrosCuentaRel($registrosCuentaRel): void
     {
         $this->registrosCuentaRel = $registrosCuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsientosDetallesCuentaRel()
+    {
+        return $this->asientosDetallesCuentaRel;
+    }
+
+    /**
+     * @param mixed $asientosDetallesCuentaRel
+     */
+    public function setAsientosDetallesCuentaRel($asientosDetallesCuentaRel): void
+    {
+        $this->asientosDetallesCuentaRel = $asientosDetallesCuentaRel;
     }
 
 

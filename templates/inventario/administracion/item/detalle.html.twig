@@ -1,0 +1,87 @@
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    {{ notificar()|raw }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('inventario_administracion_inventario_item_lista') }}">Volver</a>
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td class="titulo">CODIGO:</td>
+            <td class="td-in-well">{{ arItem.codigoItemPk }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arItem.nombre }}</td>
+            <td class="titulo">LINEA:</td>
+            <td class="td-in-well">{{ arItem.lineaRel.nombre | default('') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">MARCA:</td>
+            <td class="td-in-well">{{ arItem.marcaRel.nombre  }}</td>
+            <td class="titulo">GRUPO:</td>
+            <td class="td-in-well">{{ arItem.grupoRel.nombre | default('') }}</td>
+            <td class="titulo">SUBGRUPO:</td>
+            <td class="td-in-well">{{ arItem.subgrupoRel.nombre | default('') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CODIGO EAN:</td>
+            <td class="td-in-well">{{ arItem.codigoEAN  }}</td>
+            <td class="titulo">CODIGO BARRAS:</td>
+            <td class="td-in-well">{{ arItem.codigoBarras }}</td>
+            <td class="titulo">AFECTA INVENTARIO:</td>
+            {{ validarTipo(arItem.afectaInventario) }}
+        </tr>
+        <tr>
+            <td class="titulo">PORCENTAJE IVA:</td>
+            <td class="td-in-well">{{ arItem.porcentajeIva  }}</td>
+            <td class="titulo">UNIDAD MEDIDA:</td>
+            <td class="td-in-well">{{ arItem.codigoUnidadMedidaFk }}</td>
+            <td class="titulo">MODELO:</td>
+            <td class="td-in-well">{{ arItem.modelo | default('') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">STOCK MINIMO:</td>
+            <td class="td-in-well numero">{{ arItem.stockMinimo | default(0) }}</td>
+            <td class="titulo">STOCK MAXIMO:</td>
+            <td class="td-in-well numero">{{ arItem.stockMaximo | default(0) }}</td>
+            <td class="titulo">COSTO PROMEDIO:</td>
+            <td class="td-in-well numero">{{ arItem.vrCostoPromedio | number_format }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CANTIDAD EXISTENCIA:</td>
+            <td class="td-in-well numero">{{ arItem.cantidadExistencia }}</td>
+            <td class="titulo">CANTIDAD DISPONIBLE:</td>
+            <td class="td-in-well numero">{{ arItem.cantidadDisponible }}</td>
+            <td class="titulo">COSTO PREDETERMINADO:</td>
+            <td class="td-in-well numero">{{ arItem.vrCostoPredeterminado | number_format }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CANTIDAD RESERVADA:</td>
+            <td class="td-in-well numero">{{ arItem.cantidadReservada }}</td>
+            <td class="titulo">CANTIDAD SOLICITUD:</td>
+            <td class="td-in-well numero">{{ arItem.cantidadSolicitud }}</td>
+            <td class="titulo">CANTIDAD PEDIDO:</td>
+            <td class="td-in-well numero">{{ arItem.cantidadPedido }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CANTIDAD REMISIONADA:</td>
+            <td class="td-in-well numero">{{ arItem.cantidadRemisionada }}</td>
+            <td class="titulo">CANTIDAD ORDEN:</td>
+            <td class="td-in-well numero">{{ arItem.cantidadOrden }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well numero"></td>
+        </tr>
+        <tr>
+            <td class="titulo">DESCRIPCION:</td>
+            <td class="td-in-well" colspan="5">{{ arItem.descripcion }}</td>
+        </tr>
+    </table>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+            </div>
+        </div>
+    </div>
+    {#{{ form_end(form) }}#}
+{% endblock %}

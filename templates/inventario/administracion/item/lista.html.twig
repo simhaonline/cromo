@@ -51,9 +51,10 @@
                         </i>
                     </a>
                 </td>
-                <td style="text-align: center">
-                    <a href="{{ path('admin_detalle', { 'modulo':'inventario','entidad': 'item','id': arItem.codigoItemPk}) }}">
-                        <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i>
+                <td style="text-align: center;">
+                    <a href="{{ path('inventario_administracion_inventario_item_detalle',{'id' : arItem.codigoItemPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+
                         </i>
                     </a>
                 </td>

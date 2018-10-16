@@ -68,16 +68,31 @@ class ItemController extends Controller
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arItem);
                 $em->flush();
-                return $this->redirect($this->generateUrl('inventario_administracion_inventario_item_lista'));
+                return $this->redirect($this->generateUrl('inventario_administracion_inventario_item_detalle', ['id' => $arItem->getCodigoItemPk()]));
             }
             if ($form->get('guardarnuevo')->isClicked()) {
                 $em->persist($arItem);
                 $em->flush();
-                return $this->redirect($this->generateUrl('inv_adm_item_nuevo', ['codigoItem' => 0]));
+                return $this->redirect($this->generateUrl('inventario_administracion_inventario_item_nuevo', ['id' => 0]));
             }
         }
         return $this->render('inventario/administracion/item/nuevo.html.twig', [
             'form' => $form->createView(),
+            'arItem' => $arItem
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/administracion/inventario/item/detalle/{id}",name="inventario_administracion_inventario_item_detalle")
+     */
+    public function detalle(Request $request, $id)
+    {
+        $paginator = $this->get('knp_paginator');
+        $em = $this->getDoctrine()->getManager();
+        $arItem = $em->getRepository(InvItem::class)->find($id);
+        return $this->render('inventario/administracion/item/detalle.html.twig', [
             'arItem' => $arItem
         ]);
     }

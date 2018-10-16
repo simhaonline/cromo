@@ -37,7 +37,7 @@ class InvCotizacionDetalleRepository extends ServiceEntityRepository
             if ($arrDetallesSeleccionados) {
                 if (count($arrDetallesSeleccionados)) {
                     foreach ($arrDetallesSeleccionados as $codigo) {
-                        $ar = $this->getEntityManager()->getRepository(InvSolicitudDetalle::class)->find($codigo);
+                        $ar = $this->getEntityManager()->getRepository(InvCotizacionDetalle::class)->find($codigo);
                         if ($ar) {
                             $this->getEntityManager()->remove($ar);
                         }

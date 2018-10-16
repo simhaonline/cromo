@@ -3,6 +3,7 @@
 namespace App\Form\Type\Financiero;
 
 use App\Entity\Financiero\FinAsiento;
+use App\Entity\Financiero\FinComprobante;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -18,12 +19,21 @@ class AsientoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-
+            ->add('comprobanteRel',EntityType::class,[
+                'required' => true,
+                'class' => FinComprobante::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Comprobante:'
+            ])
             ->add('fecha', DateType::class, ['label' => 'Fecha:'])
-            ->add('numero', NumberType::class, ['label' => 'Número:'])
-            ->add('comentario', TextareaType::class, ['label' => 'Comentario:'])
-            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('fechaContable', DateType::class, ['label' => 'Fecha contable:'])
+            ->add('fechaDocumento', DateType::class, ['label' => 'Fecha documento:'])
+            ->add('comentario', TextareaType::class, ['label' => 'Comentario:', 'required' => false])
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

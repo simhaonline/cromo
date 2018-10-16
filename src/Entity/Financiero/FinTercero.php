@@ -173,6 +173,11 @@ class FinTercero
     protected $registrosTerceroRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinAsientoDetalle", mappedBy="terceroRel")
+     */
+    protected $asientosDetallesTerceroRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoTerceroPk()
@@ -474,6 +479,22 @@ class FinTercero
     public function setRegistrosTerceroRel($registrosTerceroRel): void
     {
         $this->registrosTerceroRel = $registrosTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsientosDetallesTerceroRel()
+    {
+        return $this->asientosDetallesTerceroRel;
+    }
+
+    /**
+     * @param mixed $asientosDetallesTerceroRel
+     */
+    public function setAsientosDetallesTerceroRel($asientosDetallesTerceroRel): void
+    {
+        $this->asientosDetallesTerceroRel = $asientosDetallesTerceroRel;
     }
 
 

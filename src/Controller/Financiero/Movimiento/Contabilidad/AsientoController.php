@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 class AsientoController extends BaseController
 {
     protected $clase = FinAsiento::class;
-    protected $claseFormulario = AsientoType::class;
     protected $claseNombre = "FinAsiento";
     protected $modulo = "Financiero";
     protected $grupo = "Contabilidad";
@@ -60,16 +59,19 @@ class AsientoController extends BaseController
             $ar = $em->getRepository($this->clase)->find($id);
         } else {
             $ar->setFecha(new \DateTime('now'));
+            $ar->setFechaContable(new \DateTime('now'));
+            $ar->setFechaDocumento(new \DateTime('now'));
         }
-        $form = $this->createForm($this->claseFormulario, $ar);
+        $form = $this->createForm(AsientoType::class, $ar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($ar);
                 $em->flush();
+                return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_detalle', ['id' => $ar->getCodigoAsientoPk()]));
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/asiento/nuevo.html.twig', [
+        return $this->render('financiero/movimiento/contabilidad/asiento/nuevo.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -85,9 +87,9 @@ class AsientoController extends BaseController
         $em = $this->getDoctrine()->getManager();
         $arAsiento = $em->getRepository(FinAsiento::class)->find($id);
         if(!$arAsiento){
-            return $this->redirect($this->generateUrl('financiero_movimiento_nomina_asiento_lista'));
+            return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_lista'));
         }
-        return $this->render('recursoHumano/movimiento/nomina/asiento/detalle.html.twig',[
+        return $this->render('financiero/movimiento/contabilidad/asiento/detalle.html.twig',[
             'arAsiento' => $arAsiento
         ]);
     }

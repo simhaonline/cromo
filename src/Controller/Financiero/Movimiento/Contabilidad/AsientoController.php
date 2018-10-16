@@ -2,7 +2,7 @@
 
 namespace App\Controller\Financiero\Movimiento\Contabilidad;
 
-use App\Controller\Financiero\BaseController;
+use App\Controller\BaseController;
 use App\Entity\Financiero\FinAsiento;
 use App\Form\Type\Financiero\AsientoType;
 use App\General\General;

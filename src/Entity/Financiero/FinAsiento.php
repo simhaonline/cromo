@@ -45,6 +45,16 @@ class FinAsiento
     private $codigoComprobanteFk;
 
     /**
+     * @ORM\Column(name="vr_debito", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrDebito = 0;
+
+    /**
+     * @ORM\Column(name="vr_credito", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrCredito = 0;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoAutorizado = false;
@@ -266,6 +276,38 @@ class FinAsiento
     public function setComprobanteRel($comprobanteRel): void
     {
         $this->comprobanteRel = $comprobanteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDebito()
+    {
+        return $this->vrDebito;
+    }
+
+    /**
+     * @param mixed $vrDebito
+     */
+    public function setVrDebito($vrDebito): void
+    {
+        $this->vrDebito = $vrDebito;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCredito()
+    {
+        return $this->vrCredito;
+    }
+
+    /**
+     * @param mixed $vrCredito
+     */
+    public function setVrCredito($vrCredito): void
+    {
+        $this->vrCredito = $vrCredito;
     }
 
 

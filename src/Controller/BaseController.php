@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Financiero;
+namespace App\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;

@@ -2,7 +2,7 @@
 {% block content %}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_administracion_empleado_empleado_lista') }}">Volver</a>&nbsp;&nbsp;
+            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_administracion_recurso_empleado_lista') }}">Volver</a>&nbsp;&nbsp;
         </div>
     </div>
     <br/><br/>
@@ -61,7 +61,7 @@
                                 {{ validarTipo(arContrato.estadoActivo) }}
                                 <td style="text-align: center;">
                                     {% if arContrato.estadoActivo == 1 %}
-                                        <a href="javascript:abrirVentana3('{{ path('recursohumano_administracion_empleado_empleado_nuevo_contrato',{'codigoEmpleado' : arEmpleado.codigoEmpleadoPk,'id': arContrato.codigoContratoPk }) }}','agregarContrato',600,950)"><i
+                                        <a href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_empleado_nuevo_contrato',{'codigoEmpleado' : arEmpleado.codigoEmpleadoPk,'id': arContrato.codigoContratoPk }) }}','agregarContrato',600,950)"><i
                                                     class="fa fa-edit" style="color: black;font-size: large;"></i>
                                         </a>
                                     {% endif %}
@@ -80,7 +80,7 @@
             <div class="btn-group">
                 {% if not contratoActivo %}
                 <a class="btn btn-sm btn-default"
-                   href="javascript:abrirVentana3('{{ path('recursohumano_administracion_empleado_empleado_nuevo_contrato',{'codigoEmpleado' : arEmpleado.codigoEmpleadoPk,'id':0 }) }}','agregarContrato',600,950)">Nuevo</a>
+                   href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_empleado_nuevo_contrato',{'codigoEmpleado' : arEmpleado.codigoEmpleadoPk,'id':0 }) }}','agregarContrato',600,950)">Nuevo</a>
                 {% endif %}
             </div>
         </div>

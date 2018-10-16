@@ -18,7 +18,7 @@ class EmpleadoController extends BaseController
     protected $claseNombre = "RhuEmpleado";
     protected $modulo = "RecursoHumano";
     protected $funcion = "administracion";
-    protected $grupo = "Empleado";
+    protected $grupo = "Recurso";
     protected $nombre = "Empleado";
 
     /**
@@ -26,7 +26,7 @@ class EmpleadoController extends BaseController
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("recursohumano/administracion/empleado/empleado/lista", name="recursohumano_administracion_empleado_empleado_lista")
+     * @Route("recursohumano/administracion/recurso/empleado/lista", name="recursohumano_administracion_recurso_empleado_lista")
      */
     public function lista(Request $request)
     {
@@ -52,7 +52,7 @@ class EmpleadoController extends BaseController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/administracion/empleado/empleado/nuevo/{id}", name="recursohumano_administracion_empleado_empleado_nuevo")
+     * @Route("recursohumano/administracion/recurso/empleado/nuevo/{id}", name="recursohumano_administracion_recurso_empleado_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -61,7 +61,7 @@ class EmpleadoController extends BaseController
         if ($id != 0) {
             $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($id);
             if (!$arEmpleado) {
-                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_lista'));
+                return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_empleado_lista'));
             }
         }
         $form = $this->createForm(EmpleadoType::class, $arEmpleado);
@@ -83,7 +83,7 @@ class EmpleadoController extends BaseController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/administracion/empleado/empleado/detalle/{id}", name="recursohumano_administracion_empleado_empleado_detalle")
+     * @Route("recursohumano/administracion/recurso/empleado/detalle/{id}", name="recursohumano_administracion_recurso_empleado_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -92,7 +92,7 @@ class EmpleadoController extends BaseController
         if ($id != 0) {
             $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($id);
             if (!$arEmpleado) {
-                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_lista'));
+                return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_empleado_lista'));
             }
         }
         $form = $this->createForm(EmpleadoType::class, $arEmpleado);
@@ -117,7 +117,7 @@ class EmpleadoController extends BaseController
      * @param $codigoEmpleado
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/administracion/empleado/empleado/nuevo/contrato/{codigoEmpleado}/{id}", name="recursohumano_administracion_empleado_empleado_nuevo_contrato")
+     * @Route("recursohumano/administracion/recurso/empleado/nuevo/contrato/{codigoEmpleado}/{id}", name="recursohumano_administracion_recurso_empleado_nuevo_contrato")
      */
     public function nuevoContrato(Request $request, $codigoEmpleado, $id)
     {

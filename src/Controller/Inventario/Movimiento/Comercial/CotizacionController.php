@@ -4,6 +4,7 @@ namespace App\Controller\Inventario\Movimiento\Comercial;
 
 use App\Entity\Inventario\InvCotizacionDetalle;
 use App\Form\Type\Inventario\CotizacionType;
+use App\General\General;
 use App\Utilidades\Mensajes;
 use App\Utilidades\Estandares;
 use App\Entity\Inventario\InvItem;
@@ -25,6 +26,8 @@ class CotizacionController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/movimiento/comercial/cotizacion/lista", name="inventario_movimiento_comercial_cotizacion_lista")
      */
     public function lista(Request $request)
@@ -33,6 +36,7 @@ class CotizacionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('txtNumero', NumberType::class, ['required' => false, 'data' => $session->get('filtroInvCotizacionNumero')])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvCotizacionEstadoAprobado'), 'required' => false])
             ->add('cboCotizacionTipoRel', EntityType::class, $em->getRepository(InvCotizacionTipo::class)->llenarCombo())
@@ -54,6 +58,9 @@ class CotizacionController extends Controller
             if($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(InvCotizacion::class)->eliminar($arrSeleccionados);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($em->getRepository(InvCotizacion::class)->lista())->execute(), "Cotizacion");
             }
         }
         $arCotizaciones = $paginator->paginate($em->getRepository(InvCotizacion::class)->lista(), $request->query->getInt('page', 1), 30);

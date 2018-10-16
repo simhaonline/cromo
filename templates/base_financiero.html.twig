@@ -59,10 +59,14 @@
                     <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-money fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li><a href="{{ path('admin_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Registro</a></li>
-                        <li><a href="#">Asiento</a></li>
+                        <li>
+                            <a href="#">Contabilidad <span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li><a href="{{ path('financiero_movimiento_contabilidad_asiento_lista') }}">Asiento</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 <li>

@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class BaseController extends Controller
 {
     protected $request = null;
+
     protected function getDatosLista()
     {
         $nombreRepositorio = "App:{$this->modulo}\\{$this->claseNombre}";
@@ -28,7 +29,7 @@ abstract class BaseController extends Controller
         $query = $queryBuilder->getQuery();
         return [
             'ruta' => strtolower($this->modulo) . "_movimiento_" . strtolower($this->grupo) . "_" . strtolower($this->claseFormulario),
-            'campos' => $campos,
+            'arrCampos' => $campos,
             'arDatos' => $paginator->paginate($query, $this->request->query->getInt('page', 1), 30)
         ];
     }

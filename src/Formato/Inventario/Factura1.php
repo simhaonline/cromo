@@ -87,7 +87,7 @@ class Factura1 extends \FPDF
         $this->SetFont('Arial', 'B', 10);
         //Logo
         $this->SetXY(53, 10);
-        $this->Image('../public/img/empresa/logo.jpeg', 20, 13, 50, 30);
+        $this->Image('../public/img/empresa/logo.jpg', 20, 13, 50, 30);
 
         $this->SetFont('Arial', '', 5);
         $date = new \DateTime('now');

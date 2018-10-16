@@ -56,7 +56,7 @@ class FormatoMovimiento extends \FPDF
         //Logo
         $this->SetXY(53, 10);
         try {
-            $this->Image('../public/img/empresa/logo.jpeg', 12, 13, 40, 25);
+            $this->Image('../public/img/empresa/logo.jpg', 12, 13, 40, 25);
         } catch (\Exception $exception) {
         }
 

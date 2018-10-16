@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\RecursoHumano;
 
+use App\Entity\RecursoHumano\RhuBanco;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
@@ -26,6 +27,16 @@ class EmpleadoType extends AbstractType
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Identificacion tipo:',
+                'required' => true
+            ])
+            ->add('bancoRel', EntityType::class, [
+                'class' => RhuBanco::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->orderBy('i.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Banco:',
                 'required' => true
             ])
             ->add('ciudadRel', EntityType::class, [
@@ -116,7 +127,6 @@ class EmpleadoType extends AbstractType
             ->add('correo', TextType::class, ['required' => false, 'label' => 'Correo:'])
             ->add('fechaNacimiento', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('cuenta', TextType::class, ['required' => false, 'label' => 'Cuenta:'])
-            ->add('vrSalario', NumberType::class, ['required' => true, 'label' => 'Salario:'])
             ->add('guardar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

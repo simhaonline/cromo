@@ -179,7 +179,7 @@ class RhuEmpleado
 
     /**
      * Tabla propia de bancos de recurso humano
-     * @ORM\Column(name="codigo_banco_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_banco_fk", type="string", length=10, nullable=true)
      */
     private $codigoBancoFk;
 
@@ -197,11 +197,6 @@ class RhuEmpleado
      * @ORM\Column(name="codigo_cargo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCargoFk;
-
-    /**
-     * @ORM\Column(name="vr_salario", type="float")
-     */
-    private $VrSalario = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuEmpleadosIdentificacionRel")
@@ -250,6 +245,12 @@ class RhuEmpleado
      * @ORM\JoinColumn(name="codigo_rh_fk",referencedColumnName="codigo_rh_pk")
      */
     protected $rhRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuBanco", inversedBy="empleadosBancoRel")
+     * @ORM\JoinColumn(name="codigo_banco_fk",referencedColumnName="codigo_banco_pk")
+     */
+    protected $bancoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="empleadoRel")
@@ -723,22 +724,6 @@ class RhuEmpleado
     /**
      * @return mixed
      */
-    public function getVrSalario()
-    {
-        return $this->VrSalario;
-    }
-
-    /**
-     * @param mixed $VrSalario
-     */
-    public function setVrSalario($VrSalario): void
-    {
-        $this->VrSalario = $VrSalario;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getIdentificacionRel()
     {
         return $this->identificacionRel;
@@ -862,6 +847,22 @@ class RhuEmpleado
     public function setRhRel($rhRel): void
     {
         $this->rhRel = $rhRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBancoRel()
+    {
+        return $this->bancoRel;
+    }
+
+    /**
+     * @param mixed $bancoRel
+     */
+    public function setBancoRel($bancoRel): void
+    {
+        $this->bancoRel = $bancoRel;
     }
 
     /**

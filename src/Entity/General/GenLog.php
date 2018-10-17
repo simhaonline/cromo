@@ -48,11 +48,6 @@ class GenLog
     private $camposSeguimiento;
 
     /**
-     * @ORM\Column(name="campos_seguimiento_mostrar", type="text", nullable=true)
-     */
-    private $camposSeguimientoMostrar;
-
-    /**
      * @ORM\Column(name="nombre_entidad", type="string", length=500, nullable=true)
      */
     private $nombreEntidad;
@@ -66,11 +61,6 @@ class GenLog
      * @ORM\Column(name="ruta", type="text", nullable=true)
      */
     private $ruta;
-
-    /**
-     * @ORM\Column(name="codigo_padre", type="integer", nullable=true)
-     */
-    private $codigoPadre;
 
     /**
      * @ORM\Column(name="fecha", type="datetime")
@@ -176,24 +166,6 @@ class GenLog
     /**
      * @return mixed
      */
-    public function getCamposSeguimientoMostrar()
-    {
-        return $this->camposSeguimientoMostrar;
-    }
-
-    /**
-     * @param mixed $camposSeguimientoMostrar
-     * @return GenLog
-     */
-    public function setCamposSeguimientoMostrar($camposSeguimientoMostrar)
-    {
-        $this->camposSeguimientoMostrar = $camposSeguimientoMostrar;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getNombreEntidad()
     {
         return $this->nombreEntidad;
@@ -242,24 +214,6 @@ class GenLog
     public function setRuta($ruta)
     {
         $this->ruta = $ruta;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoPadre()
-    {
-        return $this->codigoPadre;
-    }
-
-    /**
-     * @param mixed $codigoPadre
-     * @return GenLog
-     */
-    public function setCodigoPadre($codigoPadre)
-    {
-        $this->codigoPadre = $codigoPadre;
         return $this;
     }
 

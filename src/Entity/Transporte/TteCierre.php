@@ -7,9 +7,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Transporte\TteCierreRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class TteCierre
 {
+    public $infoLog = [
+        "primaryKey" => "codigoCierrePk",
+        "todos"     => true,
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

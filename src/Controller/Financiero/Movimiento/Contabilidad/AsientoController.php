@@ -99,6 +99,8 @@ class AsientoController extends BaseController
         $form->add('btnActualizarDetalle', SubmitType::class, ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']]);
         $form->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']]);
         $form->add('btnAdicionarDetalle', SubmitType::class, ['label' => 'add', 'disabled' => false, 'attr' => ['class' => 'btn btn-xs btn-default']]);
+        $form->add('txtCodigoTercero', TextType::class);
+        $form->add('txtCodigoCuenta', TextType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
@@ -117,7 +119,7 @@ class AsientoController extends BaseController
                 $em->getRepository(FinAsiento::class)->aprobar($arAsiento);
             }
             if ($form->get('btnAnular')->isClicked()) {
-                $em->getRepository(FinAsiento::class)->anular($arAsiento);
+                //$em->getRepository(FinAsiento::class)->anular($arAsiento);
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
@@ -126,6 +128,9 @@ class AsientoController extends BaseController
             }
             if ($form->get('btnActualizarDetalle')->isClicked()) {
                 $em->getRepository(FinAsiento::class)->actualizarDetalles($id, $arrControles);
+            }
+            if ($form->get('btnAdicionarDetalle')->isClicked()) {
+                echo "hola mundo";
             }
             return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_detalle', ['id' => $id]));
         }

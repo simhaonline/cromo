@@ -93,12 +93,14 @@
                         <tr>
                             <td></td>
                             <td>
-                                <input type="text" name="txtCodigoCliente" id="txtCodigoCliente" value="" style="text-align: left; width:120px" size="20">
-                                <a href="javascript:abrirVentana3('{{ path('financiero_buscar_tercero_asiento',{'campoCodigo' : 'txtCodigoCliente' }) }}','BuscarTercero',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                {#<input type="text" name="txtCodigoCliente" id="txtCodigoCliente" value="" style="text-align: left; width:120px" size="20">#}
+                                {{ form_widget(form.txtCodigoTercero) }}
+                                <a href="javascript:abrirVentana3('{{ path('financiero_buscar_tercero_asiento',{'campoCodigo' : 'form_txtCodigoTercero' }) }}','BuscarTercero',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
                             </td>
                             <td>
-                                <input type="text" name="txtCodigoCuenta" id="txtCodigoCuenta" value="" style="text-align: left; width:120px" size="20">
-                                <a href="javascript:abrirVentana3('{{ path('financiero_buscar_cuenta_asiento',{'campoCodigo' : 'txtCodigoCuenta' }) }}','BuscarCuenta',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                {#<input type="text" name="txtCodigoCuenta" id="txtCodigoCuenta" value="" style="text-align: left; width:120px" size="20">#}
+                                {{ form_widget(form.txtCodigoCuenta) }}
+                                <a href="javascript:abrirVentana3('{{ path('financiero_buscar_cuenta_asiento',{'campoCodigo' : 'form_txtCodigoCuenta' }) }}','BuscarCuenta',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
                             </td>
                             <td><input style="text-align: right;" type="text" name="TxtDebito" value="" size="10" style="width:70px"></td>
                             <td><input style="text-align: right;" type="text" name="TxtCredito" value="" size="10" style="width:70px"></td>

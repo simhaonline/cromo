@@ -95,11 +95,10 @@ class AsientoController extends BaseController
         $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arAsiento = $em->getRepository(FinAsiento::class)->find($id);
-        $arrBtnActualizarDetalle = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $form = Estandares::botonera($arAsiento->getEstadoAutorizado(), $arAsiento->getEstadoAprobado(), $arAsiento->getEstadoAnulado());
-        $form->add('btnActualizarDetalle', SubmitType::class, $arrBtnActualizarDetalle);
-        $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
+        $form->add('btnActualizarDetalle', SubmitType::class, ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']]);
+        $form->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']]);
+        $form->add('btnAdicionarDetalle', SubmitType::class, ['label' => 'add', 'disabled' => false, 'attr' => ['class' => 'btn btn-xs btn-default']]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();

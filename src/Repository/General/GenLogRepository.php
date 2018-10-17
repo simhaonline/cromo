@@ -14,24 +14,6 @@ class GenLogRepository extends ServiceEntityRepository
         parent::__construct($registry, GenSexo::class);
     }
 
-
-    public function getCodigoPadre($codigoRegistro)
-    {
-        try {
-            $em = $this->getEntityManager();
-            $qb = $em->createQueryBuilder();
-            $qb->from("App:General\GenLog", "le")
-                ->select("le")
-                ->where("le.codigoRegistroPk = '{$codigoRegistro}'")
-                ->orderBy("le.fecha", "desc")
-                ->setMaxResults(1);
-            $resultado = $qb->getQuery()->getOneOrNullResult();
-            return $resultado? $resultado : null;
-        } catch(ORMException $e){
-            return null;
-        }
-    }
-
     public function listaDql($codigo = null, $usuario = null, $accion = null, $modulo = null, $fecha = "", $hoy = false, $fechaHasta = "", $entidad = "")
     {
         $em = $this->getEntityManager();
@@ -70,16 +52,12 @@ class GenLogRepository extends ServiceEntityRepository
     /**
      * @param $arLog GenLog
      */
-    public function listaCambios($arLog)
+    public function listaCambios()
     {
         $em = $this->getEntityManager();
         $qb = $em->createQueryBuilder();
         $qb->from("App:General\GenLog", "le")
             ->select("le");
-        if($arLog->getCodigoPadre() != null) {
-            $qb->where("le.codigoLogPk = '{$arLog->getCodigoPadre()}'")
-                ->orWhere("le.codigoPadre = '{$arLog->getCodigoPadre()}'");
-        }
         $qb->orderBy("le.fecha", "asc");
         return $qb->getQuery()->getDQL();
     }

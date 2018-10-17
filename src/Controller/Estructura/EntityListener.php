@@ -86,21 +86,6 @@ class EntityListener extends DefaultEntityListenerResolver
      */
     private $valoresSeguimiento = [];
     /**
-     * Json de valores de seguimiento que se mostrara en la vista.
-     * @var array
-     */
-    private $valoresSeguimientoMostrar = [];
-    /**
-     * Codigo del registro padre del log, permite agrupar los logs por registros (Genera un arbol).
-     * @var integer
-     */
-    private $codigoPadre = null;
-    /**
-     * Registro de ultimo cambio.
-     * @var GenLog
-     */
-    private $ultimoCambio = null;
-    /**
      * Ruta desde la cual se genero el log.
      * @var string
      */
@@ -214,7 +199,6 @@ class EntityListener extends DefaultEntityListenerResolver
             $this->accion = self::ACCION_NUEVO;
             $this->codigoEntidadPk = call_user_func_array([$entidad, "get" . ucfirst($this->campoPrimary)], []);
             $this->asignarValores($entidad, $this->camposSeguimiento, $this->valoresSeguimiento);
-            $this->asignarValores($entidad, $this->camposSeguimiento, $this->valoresSeguimientoMostrar, true);
             $this->guardarLog();
         } else {
             # TODO: Agregar funcionalidad para cuando haya errores en la entidad.
@@ -238,15 +222,7 @@ class EntityListener extends DefaultEntityListenerResolver
         $this->extraerCampos($entidad);
         $this->codigoEntidadPk = call_user_func_array([$entidad, "get" . ucfirst($this->campoPrimary)], []);
         $this->esNuevo = false;
-        $this->ultimoCambio = $this->em->getRepository("App:General\GenLog")->getCodigoPadre($this->codigoEntidadPk);
-        # Obtenemos el codigo del padre
-        if($this->ultimoCambio && $this->ultimoCambio->getCodigoPadre() != "") {
-            $this->codigoPadre =  $this->ultimoCambio->getCodigoPadre();
-        } else if($this->ultimoCambio && $this->ultimoCambio->getCodigoPadre() == "") {
-            $this->codigoPadre = $this->ultimoCambio->getCodigoLogPk();
-        }
         $this->asignarValores($entidad, $this->camposSeguimiento, $this->valoresSeguimiento);
-        $this->asignarValores($entidad, $this->camposSeguimiento, $this->valoresSeguimientoMostrar, true);
         $cambios = $this->hayCambios();
         if(!$this->borrando && !$cambios) {
             return false;
@@ -282,15 +258,6 @@ class EntityListener extends DefaultEntityListenerResolver
     public function postDelete()
     {
         if(!$this->procesar) { return false; }
-        $this->ultimoCambio = $this->em->getRepository("BrasaGeneralBundle:GenLog")->getCodigoPadre($this->codigoEntidadPk);
-        # Obtenemos el codigo del padre
-        if($this->ultimoCambio && $this->ultimoCambio->getCodigoPadre() != "") {
-            $this->codigoPadre =  $this->ultimoCambio->getCodigoPadre();
-        } else if($this->ultimoCambio && $this->ultimoCambio->getCodigoPadre() == "") {
-            $this->codigoPadre = $this->ultimoCambio->getCodigoLogPk();
-        } else if($this->ultimoCambio) {
-            $this->valoresSeguimiento = json_decode($this->ultimoCambio->getCamposSeguimiento(), true);
-        }
         $this->guardarLog();
     }
 
@@ -304,7 +271,6 @@ class EntityListener extends DefaultEntityListenerResolver
         $this->camposSeguimiento = [];
         $this->valoresSeguimiento = [];
         $this->codigoEntidadPk = null;
-        $this->codigoPadre = nulL;
         if(property_exists($entidad, 'infoLog')) {
             $this->campoPrimary = $entidad->infoLog['primaryKey']?? '';
             $todos = $entidad->infoLog['todos']?? '';
@@ -428,13 +394,11 @@ class EntityListener extends DefaultEntityListenerResolver
             'codigoRegistroPk' => $this->codigoEntidadPk,
             'namespaceEntidad' => $this->namespaceEntidad,
             'camposSeguimiento' => json_encode($this->valoresSeguimiento),
-            'camposSeguimientoMostrar' => json_encode($this->valoresSeguimientoMostrar),
             'ruta' => $this->ruta,
             'accion' => $this->accion,
             'codigoUsuarioFk' => $this->usuario->getId(),
             'nombreUsuario' => $this->usuario->getUsername(),
             'nombreEntidad' => $this->nombreEntidad,
-            'codigoPadre' => $this->codigoPadre,
         ];
 
         $arLog->setFecha(new \DateTime(date("Y-m-d H:i:s")))
@@ -445,8 +409,7 @@ class EntityListener extends DefaultEntityListenerResolver
             ->setAccion($this->accion)
             ->setUsuarioRel($this->usuario)
             ->setCodigoUsuarioFk($this->usuario->getId())
-            ->setNombreEntidad($this->nombreEntidad)
-            ->setCodigoPadre($this->codigoPadre);
+            ->setNombreEntidad($this->nombreEntidad);
 
         $claveLog = $this->accion . $arLog->getCodigoRegistroPk();
         if(key_exists($claveLog, $arrLog)) {
@@ -475,8 +438,7 @@ class EntityListener extends DefaultEntityListenerResolver
             ->setAccion($this->accion)
             ->setUsuarioRel($this->usuario)
             ->setCodigoUsuarioFk($this->usuario->getId())
-            ->setNombreEntidad($this->nombreEntidad)
-            ->setCodigoPadre($this->codigoPadre);
+            ->setNombreEntidad($this->nombreEntidad);
         $this->em->persist($arLog);
         $this->em->flush($arLog);
     }

@@ -33,12 +33,12 @@ class GenLog
     private $accion;
 
     /**
-     * @ORM\Column(name="codigo_usuario_fk", type="integer")
+     * @ORM\Column(name="codigo_usuario_fk", type="integer", nullable=true)
      */
     private $codigoUsuarioFk;
 
     /**
-     * @ORM\Column(name="nombre_usuario", type="string")
+     * @ORM\Column(name="nombre_usuario", type="string", nullable=true)
      */
     private $nombreUsuario;
 

@@ -21,6 +21,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class EntityListener extends DefaultEntityListenerResolver
 {
+    const USUARIO_FIXTURE = 'FIXTURE';
     const GUARDAR_DB = false;
     const ACCION_NUEVO = 'CREACION';
     const ACCION_ACTUALIZAR = 'ACTUALIZACION';
@@ -372,15 +373,6 @@ class EntityListener extends DefaultEntityListenerResolver
      */
     private function guardarLog()
     {
-        if(self::GUARDAR_DB){
-            $this->guardarEnDb();
-        } else {
-            $this->guardarTxt();
-        }
-    }
-
-    private function guardarTxt()
-    {
         $sesion = new Session();
         $clave = "cola-registro-log";
         if($sesion->has($clave)) {
@@ -396,8 +388,8 @@ class EntityListener extends DefaultEntityListenerResolver
             'camposSeguimiento' => json_encode($this->valoresSeguimiento),
             'ruta' => $this->ruta,
             'accion' => $this->accion,
-            'codigoUsuarioFk' => $this->usuario->getId(),
-            'nombreUsuario' => $this->usuario->getUsername(),
+            'codigoUsuarioFk' => $this->usuario? $this->usuario->getId() : null,
+            'nombreUsuario' => $this->usuario? $this->usuario->getUsername() : self::USUARIO_FIXTURE,
             'nombreEntidad' => $this->nombreEntidad,
         ];
 
@@ -408,7 +400,7 @@ class EntityListener extends DefaultEntityListenerResolver
             ->setRuta($this->ruta)
             ->setAccion($this->accion)
             ->setUsuarioRel($this->usuario)
-            ->setCodigoUsuarioFk($this->usuario->getId())
+            ->setCodigoUsuarioFk($this->usuario? $this->usuario->getId():  null)
             ->setNombreEntidad($this->nombreEntidad);
 
         $claveLog = $this->accion . $arLog->getCodigoRegistroPk();
@@ -421,26 +413,7 @@ class EntityListener extends DefaultEntityListenerResolver
             ];
         }
         $sesion->set($clave, $arrLog);
-    }
 
-    private function guardarEnDb()
-    {
-        $arLog = new GenLog();
-        $cambios = $this->hayCambios();
-        if(!$this->borrando && !$cambios) {
-            return false;
-        }
-        $arLog->setFecha(new \DateTime(date("Y-m-d H:i:s")))
-            ->setCodigoRegistroPk($this->codigoEntidadPk)
-            ->setNamespaceEntidad($this->namespaceEntidad)
-            ->setCamposSeguimiento(json_encode($this->valoresSeguimiento))
-            ->setRuta($this->ruta)
-            ->setAccion($this->accion)
-            ->setUsuarioRel($this->usuario)
-            ->setCodigoUsuarioFk($this->usuario->getId())
-            ->setNombreEntidad($this->nombreEntidad);
-        $this->em->persist($arLog);
-        $this->em->flush($arLog);
     }
 
     private function hayCambios()

@@ -8,6 +8,7 @@ use App\Entity\RecursoHumano\RhuCentroTrabajo;
 use App\Entity\RecursoHumano\RhuClasificacionRiesgo;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuContratoTipo;
+use App\Entity\RecursoHumano\RhuCostoClase;
 use App\Entity\RecursoHumano\RhuEntidad;
 use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuPension;
@@ -19,6 +20,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -35,6 +37,8 @@ class ContratoType extends AbstractType
             ->add('fechaHasta',DateType::class,['data' => new \DateTime('now')])
             ->add('cargoDescripcion',TextType::class,['required' => false])
             ->add('vrSalario',NumberType::class,['required' => true])
+            ->add('numero',TextType::class,['required' => false])
+            ->add('codigoCostoTipoFk',ChoiceType::class,['required' => true, 'choices' => ['DISTRIBUIDO' => 'DIS','FIJO' => 'FIJ', 'OPERATIVO' => 'OPE']])
             ->add('salarioIntegral',CheckboxType::class,['required' => false, 'label' => 'Salario integral'])
             ->add('auxilioTransporte',CheckboxType::class,['required' => false, 'label' => 'Auxilio transporte'])
             ->add('contratoTipoRel', EntityType::class, [
@@ -78,6 +82,15 @@ class ContratoType extends AbstractType
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
                         ->orderBy('r.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => true
+            ])
+            ->add('costoClaseRel', EntityType::class, [
+                'class' => RhuCostoClase::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('r')
+                        ->orderBy('r.orden', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true

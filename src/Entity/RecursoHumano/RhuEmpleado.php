@@ -58,6 +58,11 @@ class RhuEmpleado
     private $discapacidad = false;
 
     /**
+     * @ORM\Column(name="estado_contrato", type="boolean", nullable=false)
+     */
+    private $estadoContrato = false;
+
+    /**
      * @ORM\Column(name="carro", type="boolean", nullable=false)
      */
     private $carro = false;
@@ -1109,5 +1114,21 @@ class RhuEmpleado
     public function setContratosEmpleadoRel($contratosEmpleadoRel): void
     {
         $this->contratosEmpleadoRel = $contratosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContrato()
+    {
+        return $this->estadoContrato;
+    }
+
+    /**
+     * @param mixed $estadoContrato
+     */
+    public function setEstadoContrato($estadoContrato): void
+    {
+        $this->estadoContrato = $estadoContrato;
     }
 }

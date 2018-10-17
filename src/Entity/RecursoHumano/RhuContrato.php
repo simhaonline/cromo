@@ -95,7 +95,7 @@ class RhuContrato
     /**
      * @ORM\Column(name="estado_terminado", type="boolean")
      */
-    private $estadoActivo = false;
+    private $estadoTerminado = false;
 
     /**
      * @ORM\Column(name="comentario_terminacion", type="string", length=2000, nullable=true)
@@ -143,6 +143,11 @@ class RhuContrato
     private $salarioIntegral = false;
 
     /**
+     * @ORM\Column(name="costo_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $costoTipoFk = false;
+
+    /**
      * @ORM\Column(name="codigo_entidad_salud_fk", type="integer", nullable=true)
      */
     private $codigoEntidadSaludFk;
@@ -171,6 +176,16 @@ class RhuContrato
      * @ORM\Column(name="codigo_ciudad_labora_fk", type="integer", nullable=true)
      */
     private $codigoCiudadLaboraFk;
+
+    /**
+     * @ORM\Column(name="codigo_costo_clase_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCostoClaseFk;
+
+    /**
+     * @ORM\Column(name="codigo_costo_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCostoTipoFk;
 
     /**
      * @ORM\Column(name="codigo_centro_trabajo_fk", type="string", length=10, nullable=true)
@@ -306,6 +321,12 @@ class RhuContrato
      * @ORM\JoinColumn(name="codigo_sucursal_fk",referencedColumnName="codigo_sucursal_pk")
      */
     protected $sucursalRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuCostoClase", inversedBy="contratosCostoClaseRel")
+     * @ORM\JoinColumn(name="codigo_costo_clase_fk",referencedColumnName="codigo_costo_clase_pk")
+     */
+    protected $costoClaseRel;
 
     /**
      * @return mixed
@@ -566,17 +587,17 @@ class RhuContrato
     /**
      * @return mixed
      */
-    public function getEstadoActivo()
+    public function getEstadoTerminado()
     {
-        return $this->estadoActivo;
+        return $this->estadoTerminado;
     }
 
     /**
-     * @param mixed $estadoActivo
+     * @param mixed $estadoTerminado
      */
-    public function setEstadoActivo($estadoActivo): void
+    public function setEstadoTerminado($estadoTerminado): void
     {
-        $this->estadoActivo = $estadoActivo;
+        $this->estadoTerminado = $estadoTerminado;
     }
 
     /**
@@ -726,6 +747,22 @@ class RhuContrato
     /**
      * @return mixed
      */
+    public function getCostoTipoFk()
+    {
+        return $this->costoTipoFk;
+    }
+
+    /**
+     * @param mixed $costoTipoFk
+     */
+    public function setCostoTipoFk($costoTipoFk): void
+    {
+        $this->costoTipoFk = $costoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoEntidadSaludFk()
     {
         return $this->codigoEntidadSaludFk;
@@ -817,6 +854,38 @@ class RhuContrato
     public function setCodigoCiudadLaboraFk($codigoCiudadLaboraFk): void
     {
         $this->codigoCiudadLaboraFk = $codigoCiudadLaboraFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCostoClaseFk()
+    {
+        return $this->codigoCostoClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoCostoClaseFk
+     */
+    public function setCodigoCostoClaseFk($codigoCostoClaseFk): void
+    {
+        $this->codigoCostoClaseFk = $codigoCostoClaseFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCostoTipoFk()
+    {
+        return $this->codigoCostoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCostoTipoFk
+     */
+    public function setCodigoCostoTipoFk($codigoCostoTipoFk): void
+    {
+        $this->codigoCostoTipoFk = $codigoCostoTipoFk;
     }
 
     /**
@@ -1185,5 +1254,21 @@ class RhuContrato
     public function setSucursalRel($sucursalRel): void
     {
         $this->sucursalRel = $sucursalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostoClaseRel()
+    {
+        return $this->costoClaseRel;
+    }
+
+    /**
+     * @param mixed $costoClaseRel
+     */
+    public function setCostoClaseRel($costoClaseRel): void
+    {
+        $this->costoClaseRel = $costoClaseRel;
     }
 }

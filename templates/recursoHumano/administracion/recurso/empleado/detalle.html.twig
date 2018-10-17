@@ -31,6 +31,54 @@
             <td class="titulo">RH:</td>
             <td class="td-in-well">{{ arEmpleado.rhRel.tipo | default('') }}</td>
         </tr>
+        <tr>
+            <td class="titulo">CABEZA DE HOGAR:</td>
+            <td class="td-in-well">{{ validarBooleano(arEmpleado.cabezaHogar) }}</td>
+            <td class="titulo">DISCAPACIDAD:</td>
+            <td class="td-in-well">{{ validarBooleano(arEmpleado.discapacidad) }}</td>
+            <td class="titulo">CARRO:</td>
+            <td class="td-in-well">{{ validarBooleano(arEmpleado.carro) }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">MOTO:</td>
+            <td class="td-in-well">{{ validarBooleano(arEmpleado.moto) }}</td>
+            <td class="titulo">PADRE DE FAMILIA:</td>
+            <td class="td-in-well">{{ validarBooleano(arEmpleado.padreFamilia) }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo">TALLA CAMISA:</td>
+            <td class="td-in-well">{{ arEmpleado.tallaCamisa }}</td>
+            <td class="titulo">TALLA PANTALON:</td>
+            <td class="td-in-well">{{ arEmpleado.tallaPantalon }}</td>
+            <td class="titulo">TALLA CALZADO</td>
+            <td class="td-in-well">{{ arEmpleado.tallaCalzado }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CIUDAD:</td>
+            <td class="td-in-well">{{ arEmpleado.ciudadRel.nombre | default('') }}</td>
+            <td class="titulo">BARRIO</td>
+            <td class="td-in-well">{{ arEmpleado.barrio }}</td>
+            <td class="titulo">DIRECCIÓN:</td>
+            <td class="td-in-well">{{ arEmpleado.direccion }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CORREO:</td>
+            <td class="td-in-well">{{ arEmpleado.correo }}</td>
+            <td class="titulo">PESO:</td>
+            <td class="td-in-well">{{ arEmpleado.peso }}</td>
+            <td class="titulo">ESTATURA:</td>
+            <td class="td-in-well">{{ arEmpleado.estatura }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">TELEFONO:</td>
+            <td class="td-in-well">{{ arEmpleado.telefono }}</td>
+            <td class="titulo">CELULAR:</td>
+            <td class="td-in-well">{{ arEmpleado.celular }}</td>
+            <td class="titulo">CUENTA:</td>
+            <td class="td-in-well">{{ arEmpleado.cuenta }}</td>
+        </tr>
     </table>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#contratos" data-toggle="tab">Contratos</a></li>
@@ -43,10 +91,16 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>TIPO</th>
+                            <th>NUMERO</th>
+                            <th>GRUPO</th>
+                            <th>NOMBRE</th>
+                            <th>CARGO</th>
+                            <th title="Clasificacion de riesgo">C_RIESGO</th>
                             <th>DESDE</th>
                             <th>HASTA</th>
                             <th>SALARIO</th>
-                            <th>ACTIVO</th>
+                            <th title="Activo">ACT</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -55,18 +109,24 @@
                         {% for arContrato in arContratos %}
                             <tr>
                                 <td>{{ arContrato.codigoContratoPk }}</td>
+                                <td>{{ arContrato.codigoCostoTipoFk }}</td>
+                                <td>{{ arContrato.numero }}</td>
+                                <td>{{ arContrato.codigoGrupoFk }}</td>
+                                <td>{{ arContrato.nombreGrupo }}</td>
+                                <td>{{ arContrato.nombreCargo }}</td>
+                                <td>{{ arContrato.nombre }}</td>
                                 {{ validarTipo(arContrato.fechaDesde) }}
                                 {{ validarTipo(arContrato.fechaHasta) }}
                                 {{ validarTipo(arContrato.vrSalario) }}
-                                {{ validarTipo(arContrato.estadoActivo) }}
+                                {{ validarTipo(arContrato.estadoTerminado) }}
                                 <td style="text-align: center;">
-                                    {% if arContrato.estadoActivo == 1 %}
+                                    {% if arContrato.estadoTerminado == 0 %}
                                         <a href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_empleado_nuevo_contrato',{'codigoEmpleado' : arEmpleado.codigoEmpleadoPk,'id': arContrato.codigoContratoPk }) }}','agregarContrato',600,950)"><i
                                                     class="fa fa-edit" style="color: black;font-size: large;"></i>
                                         </a>
                                     {% endif %}
                                 </td>
-                                {% if arContrato.estadoActivo == 1 %}
+                                {% if arContrato.estadoTerminado == 0 %}
                                     {% set contratoActivo = true %}
                                 {% endif %}
                             </tr>

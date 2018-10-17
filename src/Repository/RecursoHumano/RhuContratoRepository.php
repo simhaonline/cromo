@@ -35,34 +35,23 @@ class RhuContratoRepository extends ServiceEntityRepository
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 're')
             ->select('re.codigoContratoPk')
             ->addSelect('re.fechaDesde')
+            ->addSelect('re.numero')
+            ->addSelect('re.codigoGrupoFk')
+            ->addSelect('re.codigoCargoFk')
+            ->addSelect('re.codigoCostoTipoFk')
+            ->addSelect('re.codigoClasificacionRiesgoFk')
             ->addSelect('re.fechaHasta')
             ->addSelect('re.vrSalario')
-            ->addSelect('re.estadoActivo')
+            ->addSelect('cr.nombre')
+            ->addSelect('cg.nombre as nombreCargo')
+            ->addSelect('gp.nombre as nombreGrupo')
+            ->addSelect('re.estadoTerminado')
+            ->leftJoin('re.clasificacionRiesgoRel','cr')
+            ->leftJoin('re.grupoRel','gp')
+            ->leftJoin('re.cargoRel','cg')
             ->where('re.codigoEmpleadoFk = '.$codigoEmpleado)
             ->andWhere('re.codigoContratoPk <> 0');
         return $queryBuilder->getQuery()->execute();
-    }
-
-    /**
-     * @return array
-     */
-    public function parametrosLista()
-    {
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 're')
-            ->select('re.codigoContratoPk')
-            ->addSelect('re.fechaDesde')
-            ->addSelect('re.fechaHasta')
-            ->addSelect('re.vrSalario')
-            ->addSelect('re.estadoActivo')
-            ->where('re.codigoContratoPk <> 0');
-        $arrOpciones = ['json' => '[
-        {"campo":"codigoContratoPk","ayuda":"Codigo del contrato","titulo":"ID"},
-        {"campo":"fechaDesde","ayuda":"Fecha de inicio del contrato","titulo":"DESDE"},
-        {"campo":"fechaHasta","ayuda":"Fecha de finalizacion del contrato","titulo":"HASTA"},
-        {"campo":"vrSalario","ayuda":"Valor del salario","titulo":"SALARIO"},
-        {"campo":"estadoActivo","ayuda":"Estado del contrato","titulo":"CONTRATO"}]',
-            'query' => $queryBuilder, 'ruta' => $this->getRuta()];
-        return $arrOpciones;
     }
 
     /**

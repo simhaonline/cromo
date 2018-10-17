@@ -32,6 +32,7 @@ class AppExtension extends AbstractExtension
             new \Twig_Function('crearEncabezadoTabla', [$this, "crearEncabezadoTabla"]),
             new \Twig_Function('crearCuerpoTabla', [$this, "crearCuerpoTabla"]),
             new \Twig_Function('generarArrRegistros', [$this, "generarArrRegistros"]),
+            new \Twig_Function('validarBooleano', [$this, "validarBooleano"]),
         ];
     }
 
@@ -93,6 +94,14 @@ class AppExtension extends AbstractExtension
             echo "<td style='text-align: left;'>" . $dato . "</td>";
         } else {
             echo "<td style='text-align: left;'>" . $dato . "</td>";
+        }
+    }
+
+    public function validarBooleano($dato){
+        if($dato == 1){
+            echo 'SI';
+        } else {
+            echo 'NO';
         }
     }
 

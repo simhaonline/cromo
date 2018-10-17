@@ -7,9 +7,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Transporte\TteAseguradoraRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class TteAseguradora
 {
+    public $infoLog = [
+        "primaryKey" => "codigoAseguradoraPk",
+        "todos"     => true,
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

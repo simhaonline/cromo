@@ -7,9 +7,16 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Transporte\TteAuxiliarRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class TteAuxiliar
 {
+
+    public $infoLog = [
+        "primaryKey" => "codigoAuxiliarPk",
+        "todos"     => true,
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

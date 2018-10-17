@@ -135,7 +135,7 @@ class EmpleadoController extends BaseController
         $form = $this->createForm(ContratoType::class, $arContrato);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')) {
+            if ($form->get('guardar')->isClicked()) {
                 $arContrato->setEmpleadoRel($arEmpleado);
                 $arEmpleado->setCodigoContratoFk($arContrato->getCodigoContratoPk());
                 $arEmpleado->setEstadoContrato(true);

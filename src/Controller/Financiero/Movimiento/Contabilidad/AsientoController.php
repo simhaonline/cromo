@@ -121,9 +121,9 @@ class AsientoController extends BaseController
                 $em->getRepository(FinAsiento::class)->anular($arAsiento);
             }
             if ($form->get('btnEliminar')->isClicked()) {
-//                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-//                $em->getRepository(InvPedidoDetalle::class)->eliminar($arPedido, $arrDetallesSeleccionados);
-//                $em->getRepository(InvPedido::class)->liquidar($id);
+                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(FinAsientoDetalle::class)->eliminar($arAsiento, $arrDetallesSeleccionados);
+                $em->getRepository(FinAsiento::class)->liquidar($id);
             }
             if ($form->get('btnActualizarDetalle')->isClicked()) {
                 $em->getRepository(FinAsiento::class)->actualizarDetalles($id, $arrControles);

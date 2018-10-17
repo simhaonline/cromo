@@ -10,6 +10,7 @@ use App\Entity\Financiero\FinTercero;
 use App\Form\Type\Financiero\AsientoType;
 use App\General\General;
 use App\Utilidades\Estandares;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -98,9 +99,11 @@ class AsientoController extends BaseController
         $form = Estandares::botonera($arAsiento->getEstadoAutorizado(), $arAsiento->getEstadoAprobado(), $arAsiento->getEstadoAnulado());
         $form->add('btnActualizarDetalle', SubmitType::class, ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']]);
         $form->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']]);
-        $form->add('btnAdicionarDetalle', SubmitType::class, ['label' => 'add', 'disabled' => false, 'attr' => ['class' => 'btn btn-xs btn-default']]);
-        $form->add('txtCodigoTercero', TextType::class);
-        $form->add('txtCodigoCuenta', TextType::class);
+        $form->add('btnAdicionarDetalle', SubmitType::class, ['label' => 'add', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']]);
+        $form->add('txtCodigoTercero', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
+        $form->add('txtCodigoCuenta', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
+        $form->add('txtDebito', NumberType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
+        $form->add('txtCredito', NumberType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
@@ -130,7 +133,24 @@ class AsientoController extends BaseController
                 $em->getRepository(FinAsiento::class)->actualizarDetalles($id, $arrControles);
             }
             if ($form->get('btnAdicionarDetalle')->isClicked()) {
-                echo "hola mundo";
+                if($arAsiento->getEstadoAutorizado() == 0) {
+                    $codigoTercero = $form->get('txtCodigoTercero')->getData();
+                    $codigoCuenta = $form->get('txtCodigoCuenta')->getData();
+                    $debito = $form->get('txtDebito')->getData();
+                    $credito = $form->get('txtCredito')->getData();
+                    $arTercero = $em->getRepository(FinTercero::class)->find($codigoTercero);
+                    $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuenta);
+
+                    $arAsientoDetalle = new FinAsientoDetalle();
+                    $arAsientoDetalle->setAsientoRel($arAsiento);
+                    $arAsientoDetalle->setTerceroRel($arTercero);
+                    $arAsientoDetalle->setCuentaRel($arCuenta);
+                    $arAsientoDetalle->setVrDebito($debito);
+                    $arAsientoDetalle->setVrCredito($credito);
+                    $em->persist($arAsientoDetalle);
+                    $em->flush();
+                }
+
             }
             return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_detalle', ['id' => $id]));
         }

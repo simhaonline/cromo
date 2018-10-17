@@ -17,6 +17,7 @@ class RhuPension extends Fixture
             $arPension->setNombre('NORMAL');
             $arPension->setPorcentajeEmpleado(4);
             $arPension->setPorcentajeEmpleador(12);
+            $arPension->setOrden(1);
             $manager->persist($arPension);
         }
         $arPension = $manager->getRepository(\App\Entity\RecursoHumano\RhuPension::class)->find('ALT');
@@ -26,6 +27,7 @@ class RhuPension extends Fixture
             $arPension->setNombre('ALTO RIESGO');
             $arPension->setPorcentajeEmpleado(4);
             $arPension->setPorcentajeEmpleador(22);
+            $arPension->setOrden(2);
             $manager->persist($arPension);
         }
         $arPension = $manager->getRepository(\App\Entity\RecursoHumano\RhuPension::class)->find('EMN');
@@ -35,6 +37,7 @@ class RhuPension extends Fixture
             $arPension->setNombre('EMPLEADOR NORMAL');
             $arPension->setPorcentajeEmpleado(0);
             $arPension->setPorcentajeEmpleador(16);
+            $arPension->setOrden(3);
             $manager->persist($arPension);
         }
         $arPension = $manager->getRepository(\App\Entity\RecursoHumano\RhuPension::class)->find('EMA');
@@ -44,6 +47,7 @@ class RhuPension extends Fixture
             $arPension->setNombre('EMPLEADOR ALTO RIESGO');
             $arPension->setPorcentajeEmpleado(0);
             $arPension->setPorcentajeEmpleador(26);
+            $arPension->setOrden(4);
             $manager->persist($arPension);
         }
         $arPension = $manager->getRepository(\App\Entity\RecursoHumano\RhuPension::class)->find('PEN');
@@ -53,6 +57,7 @@ class RhuPension extends Fixture
             $arPension->setNombre('PENSIONADO');
             $arPension->setPorcentajeEmpleado(0);
             $arPension->setPorcentajeEmpleador(0);
+            $arPension->setOrden(5);
             $manager->persist($arPension);
         }
 

@@ -4,6 +4,7 @@ namespace App\Controller\Estructura;
 
 use App\Entity\General\GenEntidad;
 use App\Entity\General\GenCubo;
+use App\General\General;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
@@ -130,10 +131,14 @@ final class AdministracionController extends Controller
     /**
      * @author Andres Acevedo Cartagena
      * @param Request $request
+     * @param $modulo
      * @param $entidad
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+
      * @Route("admin/{modulo}/{entidad}/lista",name="admin_lista")
      */
     public function generarAdminLista(Request $request, $modulo, $entidad)
@@ -170,7 +175,7 @@ final class AdministracionController extends Controller
                     $arrSeleccionados = $request->request->get('ChkSeleccionar');
                     if ($form->get('btnExcel')->isClicked()) {
                         $arRegistrosExcel = $em->getRepository('App:General\GenEntidad')->lista($arEntidad, 1);
-                        $this->generarExcel($arRegistrosExcel, 'Excel');
+                        General::get()->setExportar($arRegistrosExcel, "Excel");
                     }
                     if ($form->get('btnEliminar')->isClicked()) {
                         $em->getRepository('App:General\GenEntidad')->eliminar($arEntidad, $arrSeleccionados);

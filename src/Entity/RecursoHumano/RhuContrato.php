@@ -183,6 +183,11 @@ class RhuContrato
     private $codigoCostoClaseFk;
 
     /**
+     * @ORM\Column(name="codigo_costo_grupo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCostoGrupoFk;
+
+    /**
      * @ORM\Column(name="codigo_costo_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCostoTipoFk;
@@ -327,6 +332,12 @@ class RhuContrato
      * @ORM\JoinColumn(name="codigo_costo_clase_fk",referencedColumnName="codigo_costo_clase_pk")
      */
     protected $costoClaseRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuCostoGrupo", inversedBy="contratosCostoGrupoRel")
+     * @ORM\JoinColumn(name="codigo_costo_grupo_fk",referencedColumnName="codigo_costo_grupo_pk")
+     */
+    protected $costoGrupoRel;
 
     /**
      * @return mixed
@@ -875,6 +886,22 @@ class RhuContrato
     /**
      * @return mixed
      */
+    public function getCodigoCostoGrupoFk()
+    {
+        return $this->codigoCostoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoCostoGrupoFk
+     */
+    public function setCodigoCostoGrupoFk($codigoCostoGrupoFk): void
+    {
+        $this->codigoCostoGrupoFk = $codigoCostoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoCostoTipoFk()
     {
         return $this->codigoCostoTipoFk;
@@ -1270,5 +1297,21 @@ class RhuContrato
     public function setCostoClaseRel($costoClaseRel): void
     {
         $this->costoClaseRel = $costoClaseRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostoGrupoRel()
+    {
+        return $this->costoGrupoRel;
+    }
+
+    /**
+     * @param mixed $costoGrupoRel
+     */
+    public function setCostoGrupoRel($costoGrupoRel): void
+    {
+        $this->costoGrupoRel = $costoGrupoRel;
     }
 }

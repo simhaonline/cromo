@@ -55,6 +55,11 @@ class FinCentroCosto
     protected $asientosDetallesCentroCostoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCostoGrupo", mappedBy="centroCostoRel")
+     */
+    protected $rhuCostosGruposCentroCostoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCentroCostoPk()
@@ -134,7 +139,20 @@ class FinCentroCosto
         $this->asientosDetallesCentroCostoRel = $asientosDetallesCentroCostoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRhuCostosGruposCentroCostoRel()
+    {
+        return $this->rhuCostosGruposCentroCostoRel;
+    }
 
-
+    /**
+     * @param mixed $rhuCostosGruposCentroCostoRel
+     */
+    public function setRhuCostosGruposCentroCostoRel($rhuCostosGruposCentroCostoRel): void
+    {
+        $this->rhuCostosGruposCentroCostoRel = $rhuCostosGruposCentroCostoRel;
+    }
 }
 

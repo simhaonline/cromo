@@ -12,4 +12,13 @@ class RhuCostoClaseRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuCostoClase::class);
     }
+
+    public function camposPredeterminados(){
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuCostoClase::class,'rcc')
+            ->select('rcc.codigoCostoClasePk as ID')
+            ->addSelect('rcc.nombre')
+            ->addSelect('rcc.operativo')
+            ->where('rcc.codigoCostoClasePk IS NOT NULL');
+        return $queryBuilder->getQuery()->execute();
+    }
 }

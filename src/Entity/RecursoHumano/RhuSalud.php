@@ -23,7 +23,12 @@ class RhuSalud
     /**
      * @ORM\Column(name="porcentaje_empleado", type="float")
      */    
-    private $porcentajeEmpleado = 0;        
+    private $porcentajeEmpleado = 0;
+
+    /**
+     * @ORM\Column(name="orden", type="integer", nullable=true)
+     */
+    private $orden = 0;
     
     /**
      * @ORM\Column(name="porcentaje_empleador", type="float")
@@ -97,6 +102,22 @@ class RhuSalud
     public function setPorcentajeEmpleador($porcentajeEmpleador): void
     {
         $this->porcentajeEmpleador = $porcentajeEmpleador;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
     }
 
     /**

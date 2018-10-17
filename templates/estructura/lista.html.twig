@@ -52,7 +52,7 @@
         <tr>
             {% if arRegistros.getTotalItemCount > 0 %}
                 {% for llave,dato in arRegistros[0] %}
-                    <th>{{ llave }}</th>
+                    <th>{{ llave | upper }}</th>
                 {% endfor %}
                 {% if entidadCubo != "" %}
                     <th></th>

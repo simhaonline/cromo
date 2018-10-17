@@ -94,16 +94,6 @@ class EmpleadoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Estado civil:'
             ])
-            ->add('cargoRel', EntityType::class, [
-                'required' => false,
-                'class' => 'App\Entity\RecursoHumano\RhuCargo',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('ac')
-                        ->orderBy('ac.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'Cargo interno:'
-            ])
             ->add('rhRel', EntityType::class, [
                 'required' => false,
                 'class' => 'App\Entity\RecursoHumano\RhuRh',
@@ -151,13 +141,14 @@ class EmpleadoType extends AbstractType
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
-            {"campo":"codigoEmpleadoPk",      "tipo":"pk" ,"ayuda":"Codigo del empleado"                           ,"titulo":"ID"},
-            {"campo":"numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del empleado"    ,"titulo":"IDENTIFICACION"},
-            {"campo":"nombreCorto",           "tipo":"texto"   ,"ayuda":"Nombre del empleado"                      ,"titulo":"NOMBRE"},
-            {"campo":"codigoContratoFk",      "tipo":"texto"   ,"ayuda":"Codigo del contrato"                      ,"titulo":"CONTRATO"},
-            {"campo":"telefono",              "tipo":"texto"   ,"ayuda":"Telefono del empleado"                    ,"titulo":"TELEFONO"},
-            {"campo":"correo",                "tipo":"texto"   ,"ayuda":"Correo del empleado"                      ,"titulo":"CORREO"},
-            {"campo":"direccion",             "tipo":"texto"   ,"ayuda":"Direccion de residencia del empleado"     ,"titulo":"DIRECCION"}                     
+            {"campo":"codigoEmpleadoPk",      "tipo":"pk"      ,"ayuda":"Codigo del empleado"                   ,"titulo":"ID"},
+            {"campo":"numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del empleado" ,"titulo":"IDENTIFICACION"},
+            {"campo":"nombreCorto",           "tipo":"texto"   ,"ayuda":"Nombre del empleado"                   ,"titulo":"NOMBRE"},
+            {"campo":"codigoContratoFk",      "tipo":"texto"   ,"ayuda":"Codigo del contrato"                   ,"titulo":"CONTRATO"},
+            {"campo":"telefono",              "tipo":"texto"   ,"ayuda":"Telefono del empleado"                 ,"titulo":"TELEFONO"},
+            {"campo":"correo",                "tipo":"texto"   ,"ayuda":"Correo del empleado"                   ,"titulo":"CORREO"},
+            {"campo":"direccion",             "tipo":"texto"   ,"ayuda":"Direccion de residencia del empleado"  ,"titulo":"DIRECCION"},                     
+            {"campo":"estadoContrato",        "tipo":"bool"    ,"ayuda":"Posee contrato activo"                 ,"titulo":"E_C"}                     
         ]';
         return $campos;
     }

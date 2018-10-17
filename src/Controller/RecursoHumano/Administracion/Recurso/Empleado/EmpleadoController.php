@@ -8,6 +8,7 @@ use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\ContratoType;
 use App\Form\Type\RecursoHumano\EmpleadoType;
 use App\General\General;
+use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -35,10 +36,10 @@ class EmpleadoController extends BaseController
         $formBotonera = $this->botoneraLista();
         $formBotonera->handleRequest($request);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if($formBotonera->get('btnExcel')->isClicked()){
+            if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
             }
-            if($formBotonera->get('btnEliminar')->isClicked()){
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
 
             }
         }
@@ -68,10 +69,14 @@ class EmpleadoController extends BaseController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arEmpleado->setNombreCorto($arEmpleado->getNombre1() . ' ' . $arEmpleado->getApellido1());
-                $em->persist($arEmpleado);
-                $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_detalle', ['id' => $arEmpleado->getCodigoEmpleadoPk()]));
+                if (!$em->getRepository($this->clase)->findOneBy(['codigoIdentificacionFk' => $arEmpleado->getIdentificacionRel()->getCodigoIdentificacionPk(), 'numeroIdentificacion' => $arEmpleado->getNumeroIdentificacion()])) {
+                    $arEmpleado->setNombreCorto($arEmpleado->getNombre1() . ' ' . $arEmpleado->getApellido1());
+                    $em->persist($arEmpleado);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_empleado_detalle', ['id' => $arEmpleado->getCodigoEmpleadoPk()]));
+                } else {
+                    Mensajes::error('Ya existe un empleado con la identificación ingresada.');
+                }
             }
         }
         return $this->render('recursoHumano/administracion/recurso/empleado/nuevo.html.twig', [
@@ -134,6 +139,7 @@ class EmpleadoController extends BaseController
                 $arContrato->setEmpleadoRel($arEmpleado);
                 $arEmpleado->setCodigoContratoFk($arContrato->getCodigoContratoPk());
                 $arEmpleado->setEstadoContrato(true);
+                $arEmpleado->setCargoRel($arContrato->getCargoRel());
                 $arContrato->setEstadoTerminado(false);
                 $arContrato->setFecha(new \DateTime('now'));
                 $em->persist($arContrato);

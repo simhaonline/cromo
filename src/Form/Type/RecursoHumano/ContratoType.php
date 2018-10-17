@@ -9,6 +9,7 @@ use App\Entity\RecursoHumano\RhuClasificacionRiesgo;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuContratoTipo;
 use App\Entity\RecursoHumano\RhuCostoClase;
+use App\Entity\RecursoHumano\RhuCostoGrupo;
 use App\Entity\RecursoHumano\RhuEntidad;
 use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuPension;
@@ -50,6 +51,15 @@ class ContratoType extends AbstractType
                 'choice_label' => 'nombre',
                 'required' => true
             ])
+            ->add('costoGrupoRel', EntityType::class, [
+                'class' => RhuCostoGrupo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('r')
+                        ->orderBy('r.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => true
+            ])
 //            ->add('contratoClaseRel', EntityType::class, [
 //                'class' => RhuContratoClase::class,
 //                'query_builder' => function (EntityRepository $er) {
@@ -81,7 +91,7 @@ class ContratoType extends AbstractType
                 'class' => RhuPension::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
-                        ->orderBy('r.nombre', 'ASC');
+                        ->orderBy('r.orden', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true
@@ -99,7 +109,7 @@ class ContratoType extends AbstractType
                 'class' => RhuSalud::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
-                        ->orderBy('r.nombre', 'ASC');
+                        ->orderBy('r.orden', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true

@@ -17,6 +17,7 @@ class RhuSalud extends Fixture
             $arSalud->setNombre('EMPLEADO');
             $arSalud->setPorcentajeEmpleado(4);
             $arSalud->setPorcentajeEmpleador(8.5);
+            $arSalud->setOrden(1);
             $manager->persist($arSalud);
         }
         $arSalud = $manager->getRepository(\App\Entity\RecursoHumano\RhuSalud::class)->find('EMR');
@@ -26,6 +27,7 @@ class RhuSalud extends Fixture
             $arSalud->setNombre('EMPLEADOR');
             $arSalud->setPorcentajeEmpleado(0);
             $arSalud->setPorcentajeEmpleador(12.5);
+            $arSalud->setOrden(2);
             $manager->persist($arSalud);
         }
         $manager->flush();

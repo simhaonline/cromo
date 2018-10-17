@@ -14,7 +14,7 @@ class SegUsuario extends Fixture
         $arUsuario = $manager->getRepository(Usuario::class)->findOneBy(array('username' => 'semantica'));
         if(!$arUsuario) {
             $arUsuario = new Usuario();
-            $arUsuario->getNombreCorto('SEMANTICA');
+            $arUsuario->setNombreCorto('SEMANTICA');
             $arUsuario->setUsername('semantica');
             $arUsuario->setIsActive(1);
             $arUsuario->setClaveEscritorio('smt489');

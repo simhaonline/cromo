@@ -5,6 +5,7 @@ namespace App\Repository\Financiero;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -88,6 +89,44 @@ class FinAsientoRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $arPedido InvPedido
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function aprobar($arAsiento)
+    {
+        $em = $this->getEntityManager();
+        if($arAsiento->getEstadoAutorizado() == 1 && $arAsiento->getEstadoAprobado() == 0) {
+            //$arPedidoTipo = $this->getEntityManager()->getRepository(InvPedidoTipo::class)->find($arPedido->getCodigoPedidoTipoFk());
+            //if($arPedidoTipo){
+                //$arPedidoTipo->setConsecutivo($arPedidoTipo->getConsecutivo() + 1);
+                //$arPedido->setNumero($arPedidoTipo->getConsecutivo());
+                //$this->getEntityManager()->persist($arPedidoTipo);
+            //}
+            if($arAsiento->getVrDebito() == $arAsiento->getVrCredito()) {
+                $arAsientoDetalles = $em->getRepository(FinAsientoDetalle::class)->findBy(array('codigoAsientoFk' => $arAsiento->getCodigoAsientoPk()));
+                foreach ($arAsientoDetalles AS $arAsientoDetalle) {
+                    $arRegistro = new FinRegistro();
+                    $arRegistro->setVrDebito($arAsientoDetalle->getVrDebito());
+                    $arRegistro->setVrCredito($arAsientoDetalle->getVrCredito());
+                    $arRegistro->setCuentaRel($arAsientoDetalle->getCuentaRel());
+                    $arRegistro->setTerceroRel($arAsientoDetalle->getTerceroRel());
+                    $em->persist($arRegistro);
+                }
+
+                $arAsiento->setEstadoAprobado(1);
+                $this->getEntityManager()->persist($arAsiento);
+                $this->getEntityManager()->flush();
+            } else {
+                Mensajes::error('El asiento esta descuadrado y no se puede aprobar');
+            }
+
+        } else {
+            Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
+        }
+    }
+
+    /**
      * @param $codigoAsiento
      * @param $arrControles
      * @throws \Doctrine\ORM\NoResultException
@@ -149,5 +188,8 @@ class FinAsientoRepository extends ServiceEntityRepository
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         return $resultado[1];
     }
+
+
+
 
 }

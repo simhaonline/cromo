@@ -8,6 +8,7 @@ use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinTercero;
 use App\Form\Type\Financiero\AsientoType;
+use App\Formato\Financiero\Asiento;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -99,11 +100,16 @@ class AsientoController extends BaseController
         $form = Estandares::botonera($arAsiento->getEstadoAutorizado(), $arAsiento->getEstadoAprobado(), $arAsiento->getEstadoAnulado());
         $form->add('btnActualizarDetalle', SubmitType::class, ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']]);
         $form->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']]);
-        $form->add('btnAdicionarDetalle', SubmitType::class, ['label' => 'add', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']]);
-        $form->add('txtCodigoTercero', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
-        $form->add('txtCodigoCuenta', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
-        $form->add('txtDebito', NumberType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
-        $form->add('txtCredito', NumberType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
+
+        if($arAsiento->getEstadoAutorizado() == 0) {
+            $form->add('btnAdicionarDetalle', SubmitType::class, ['label' => 'add', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']]);
+            $form->add('txtCodigoTercero', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
+            $form->add('txtCodigoCuenta', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
+            $form->add('txtDebito', NumberType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
+            $form->add('txtCredito', NumberType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
+        } else {
+            $form->add('btnAdicionarDetalle', SubmitType::class, ['label' => 'add', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']]);
+        }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
@@ -115,8 +121,8 @@ class AsientoController extends BaseController
                 $em->getRepository(FinAsiento::class)->desautorizar($arAsiento);
             }
             if ($form->get('btnImprimir')->isClicked()) {
-//                $objFormatopedido = new Pedido();
-//                $objFormatopedido->Generar($em, $id);
+                $objFormatopedido = new Asiento();
+                $objFormatopedido->Generar($em, $id);
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(FinAsiento::class)->aprobar($arAsiento);
@@ -149,6 +155,7 @@ class AsientoController extends BaseController
                     $arAsientoDetalle->setVrCredito($credito);
                     $em->persist($arAsientoDetalle);
                     $em->flush();
+
                 }
 
             }

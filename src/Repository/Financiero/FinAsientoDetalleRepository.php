@@ -55,4 +55,18 @@ class FinAsientoDetalleRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param $codigoAsiento
+     * @return mixed
+     */
+    public function formatoAsiento($codigoAsiento)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinAsientoDetalle::class, 'ad')
+            ->select('ad.codigoAsientoDetallePk')
+            ->addSelect('ad.codigoCuentaFk')
+            ->where('ad.codigoAsientoFk = '. $codigoAsiento);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 }

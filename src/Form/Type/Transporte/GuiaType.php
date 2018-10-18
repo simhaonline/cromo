@@ -61,7 +61,6 @@ class GuiaType extends AbstractType {
             ->add('vrDeclara', NumberType::class)
             ->add('vrFlete', NumberType::class)
             ->add('vrManejo', NumberType::class)
-            ->add('vrRecaudo', NumberType::class)
             ->add('comentario',TextareaType::class, array('required' => false))
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

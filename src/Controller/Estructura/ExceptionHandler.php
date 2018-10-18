@@ -199,7 +199,7 @@ class ExceptionHandler
             "url" => $this->url,
             "linea" => $this->linea,
             "usuario" => $this->arUsuario->getUsername(),
-            "nombre_usuario" => $this->arUsuario->getNombreCorto(),
+            "nombre_usuario" => $this->arUsuario->getNombreCorto() == null ? $this->arUsuario->getUsername() : $this->arUsuario->getNombreCorto(),
             "email" => $this->arUsuario->getEmail(),
         ];
         $data = json_encode($campos);

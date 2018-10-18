@@ -157,7 +157,7 @@ class CarReciboRepository extends ServiceEntityRepository
                 $arReciboTipo->setConsecutivo($arReciboTipo->getConsecutivo() + 1);
                 $em->persist($arReciboTipo);
             }
-
+            $arRecibo->setFecha(new \DateTime('now'));
             $arRecibo->setEstadoAprobado(1);
             $this->getEntityManager()->persist($arRecibo);
             $this->getEntityManager()->flush();

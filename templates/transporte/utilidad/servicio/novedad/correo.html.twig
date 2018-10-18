@@ -7,10 +7,11 @@
             <th>FECHA</th>
             <th>GUIA</th>
             <th>DOCUMENTO</th>
+            <th>REMITENTE</th>
             <th>REF</th>
             <th>CAUSAL</th>
             <th>COMENTARIO</th>
-            <th>UNIDADES</th>
+            <th>UND</th>
             <th>PESO</th>
         </tr>
         {% for arNovedad in arNovedades %}
@@ -19,6 +20,7 @@
             <td>{{ arNovedad.fechaIngreso | date('Y-m-d') }}</td>
             <td>{{ arNovedad.codigoGuiaFk }}</td>
             <td>{{ arNovedad.documentoCliente }}</td>
+            <td>{{ arNovedad.remitente }}</td>
             <td>{{ arNovedad.empaqueReferencia }}</td>
             <td>{{ arNovedad.causal }}</td>
             <td>{{ arNovedad.descripcion }}</td>

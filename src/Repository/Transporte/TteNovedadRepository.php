@@ -228,6 +228,7 @@ class TteNovedadRepository extends ServiceEntityRepository
             ->addSelect('g.fechaIngreso')
             ->addSelect('g.empaqueReferencia')
             ->addSelect('g.documentoCliente')
+            ->addSelect('g.remitente')
             ->addSelect('nt.nombre AS causal')
             ->addSelect('n.descripcion')
             ->addSelect('g.pesoReal')

@@ -58,6 +58,7 @@
             <th>NUMERO</th>
             <th>FECHA</th>
             <th>FECHA PAGO</th>
+            <th>TIPO</th>
             <th>NIT</th>
             <th>CLIENTE</th>
             <th>CUENTA</th>
@@ -76,6 +77,7 @@
                 <td>{{ arRecibo.numero }}</td>
                 <td>{{ arRecibo.fecha | date('Y-m-d') }}</td>
                 <td>{{ arRecibo.fechaPago | date('Y-m-d') }}</td>
+                <td>{{ arRecibo.reciboTipo }}</td>
                 <td>{{ arRecibo.numeroIdentificacion }}</td>
                 <td>{{ arRecibo.nombreCorto }}</td>
                 <td>{{ arRecibo.nombre }}</td>

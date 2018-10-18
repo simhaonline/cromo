@@ -216,8 +216,10 @@ class CarReciboRepository extends ServiceEntityRepository
             ->addSelect('r.estadoAnulado')
             ->addSelect('r.estadoImpreso')
             ->addSelect('r.estadoAprobado')
+            ->addSelect('rt.nombre as reciboTipo')
             ->leftJoin('r.clienteRel','cr')
             ->leftJoin('r.cuentaRel','c')
+            ->leftJoin('r.reciboTipoRel', 'rt')
             ->where('r.estadoContabilizado =  0')
             ->andWhere('r.estadoAprobado = 1')
         ->orderBy('r.fecha', 'ASC');
@@ -226,6 +228,9 @@ class CarReciboRepository extends ServiceEntityRepository
         }*/
         if($session->get('filtroCarCodigoCliente')){
             $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        }
+        if ($session->get('filtroCarReciboCodigoReciboTipo') != "") {
+            $queryBuilder->andWhere("r.codigoReciboTipoFk = '" . $session->get('filtroCarReciboCodigoReciboTipo')."'");
         }
         $fecha =  new \DateTime('now');
         if($session->get('filtroCarReciboFiltroFecha') == true){

@@ -52,6 +52,16 @@ class GenConfiguracion
     private $logo;
 
     /**
+     * @ORM\Column(name="web_service_oro_url", type="string", nullable=true)
+     */
+    private $webServiceOroUrl;
+
+    /**
+     * @ORM\Column(name="codigo_cliente_oro", type="integer", nullable=true)
+     */
+    private $codigoClienteOro;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -179,7 +189,37 @@ class GenConfiguracion
         $this->logo = $logo;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getWebServiceOroUrl()
+    {
+        return $this->webServiceOroUrl;
+    }
 
+    /**
+     * @param mixed $webServiceOroUrl
+     */
+    public function setWebServiceOroUrl($webServiceOroUrl): void
+    {
+        $this->webServiceOroUrl = $webServiceOroUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoClienteOro()
+    {
+        return $this->codigoClienteOro;
+    }
+
+    /**
+     * @param mixed $codigoClienteOro
+     */
+    public function setCodigoClienteOro($codigoClienteOro): void
+    {
+        $this->codigoClienteOro = $codigoClienteOro;
+    }
 
 }
 

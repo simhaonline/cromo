@@ -77,6 +77,27 @@ class GenIdentificacion
     protected $finTercerosIdentificacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComProveedor", mappedBy="identificacionRel")
+     */
+    protected $comProveedoresIdentificacionRel;
+
+    /**
+     * @return mixed
+     */
+    public function getComProveedoresIdentificacionRel()
+    {
+        return $this->comProveedoresIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $comProveedoresIdentificacionRel
+     */
+    public function setComProveedoresIdentificacionRel($comProveedoresIdentificacionRel): void
+    {
+        $this->comProveedoresIdentificacionRel = $comProveedoresIdentificacionRel;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoIdentificacionPk()

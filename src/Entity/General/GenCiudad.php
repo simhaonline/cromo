@@ -124,6 +124,27 @@ class GenCiudad
     protected $rhuContratosCiudadLaboraRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComProveedor", mappedBy="ciudadRel")
+     */
+    protected $comProveedoresCiudadRel;
+
+    /**
+     * @return mixed
+     */
+    public function getComProveedoresCiudadRel()
+    {
+        return $this->comProveedoresCiudadRel;
+    }
+
+    /**
+     * @param mixed $comProveedoresCiudadRel
+     */
+    public function setComProveedoresCiudadRel($comProveedoresCiudadRel): void
+    {
+        $this->comProveedoresCiudadRel = $comProveedoresCiudadRel;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()

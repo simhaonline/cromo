@@ -46,6 +46,14 @@ class GenConfiguracionEntidad extends Fixture
         $this->setConfiguracionEntidades($arrModuloCartera, $em, 'cartera');
 //        /////////////////                 FIN ESTRACTURA MODULO DE CARTERA                             ////////////////
 //
+        //        /////////////////              INICIO ESTRACTURA MODULO DE CARTERA                             ////////////////
+        $arrModuloCompra = [
+            'compraTipo,administracion,general,0,0',
+            'conceptoTipo,administracion,general,0,0',
+            'concepto,administracion,general,0,0'];
+        $this->setConfiguracionEntidades($arrModuloCompra, $em, 'compra');
+//        /////////////////                 FIN ESTRACTURA MODULO DE CARTERA                             ////////////////
+
         /////////////////              INICIO ESTRACTURA MODULO DE RECURSO HUMANO                            ////////////////
         $arrModuloRecursoHumano = ['aspirante,movimiento,seleccion,1,1',
             'solicitud,movimiento,seleccion,1,1',
@@ -128,6 +136,9 @@ class GenConfiguracionEntidad extends Fixture
                 break;
             case 'cartera':
                 $prefijo = 'car';
+                break;
+            case 'compra':
+                $prefijo = 'com';
                 break;
             case 'contabilidad':
                 $prefijo = 'fin';

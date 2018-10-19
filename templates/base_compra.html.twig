@@ -62,9 +62,9 @@
                     <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="#">Contabilidad <span class="fa arrow"></span></a>
+                            <a href="#">Compra <span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level">
-                                <li><a href="{{ path('financiero_movimiento_contabilidad_asiento_lista') }}">Asiento</a></li>
+                                <li><a href="{{ path('compra_movimiento_compra_compra_lista') }}">Compra</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -72,7 +72,31 @@
                 <li>
                     <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li><a href="#">Tercero</a></li>
+                        <li>
+                            <a href="#">General <span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li>
+                                    <a href="{{ path('admin_lista',{'modulo':'compra','entidad':'compraTipo'}) }}">Compra
+                                        tipo</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('admin_lista',{'modulo':'compra','entidad':'conceptoTipo'}) }}">Concepto
+                                        tipo</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('admin_lista',{'modulo':'compra','entidad':'concepto'}) }}">Concepto</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Proveedor <span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li>
+                                    <a href="{{ path('compra_administracion_proveedor_proveedor_lista') }}">Proveedor</a>
+                                </li>
+                            </ul>
+
+                        </li>
                     </ul>
                 </li>
                 <li>
@@ -81,7 +105,7 @@
                         <li>
                             <a href="#">Contabilidad <span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level">
-                                <li><a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro') }}">Intercambio de datos</a>
+                                {#<li><a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro') }}">Intercambio de datos</a>#}
                             </ul>
                         </li>
                     </ul>
@@ -92,7 +116,7 @@
                         <li>
                             <a href="#">Contabilidad <span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level">
-                                <li><a href="{{ path('financiero_informe_contabilidad_registro_lista') }}">Registro</a>
+                                {#<li><a href="{{ path('financiero_informe_contabilidad_registro_lista') }}">Registro</a>#}
                             </ul>
                         </li>
                     </ul>

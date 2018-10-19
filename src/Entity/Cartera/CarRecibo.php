@@ -3,6 +3,7 @@
 namespace App\Entity\Cartera;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Cartera\CarReciboRepository")
@@ -49,11 +50,19 @@ class CarRecibo
 
     /**
      * @ORM\Column(name="soporte", type="string", length=20, nullable=true)
+     * @Assert\Length(
+     *     max=30,
+     *     maxMessage="El campo no puede tener mas de 20 caracteres"
+     * )
      */
     private $soporte;
 
     /**
      * @ORM\Column(name="numero_documento", type="string", length=20, nullable=true)
+     * @Assert\Length(
+     *     max=30,
+     *     maxMessage="El campo no puede tener mas de 20 caracteres"
+     * )
      */
     private $numeroDocumento;
 

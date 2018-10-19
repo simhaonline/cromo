@@ -21,6 +21,7 @@ use App\Form\Type\Inventario\MovimientoType;
 use App\Formato\Inventario\Factura1;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -288,6 +289,7 @@ class MovimientoController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
+            ->add('itemConExistencia', CheckboxType::class, array('label' => ' ','required' => false, 'data' => $session->get('itemConExistencia')))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
@@ -296,6 +298,7 @@ class MovimientoController extends Controller
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
+                $session->set('itemConExistencia', $form->get('itemConExistencia')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -331,8 +334,7 @@ class MovimientoController extends Controller
                 }
             }
         }
-        $documentoTipo = ($arMovimiento->getDocumentoTipoRel()->getCodigoDocumentoTipoPk() == 'ENT') ? 0 : 1;
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista($documentoTipo), $request->query->getInt('page', 1), 100);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 100);
         return $this->render('inventario/movimiento/inventario/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems

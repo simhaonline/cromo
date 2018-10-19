@@ -58,7 +58,7 @@ class InvItemRepository extends ServiceEntityRepository
         return $dql->execute();
     }
 
-    public function lista($documentoTipo)
+    public function lista()
     {
         $session = new Session();
         $queryBuilder = $this->_em->createQueryBuilder()->from(InvItem::class, 'i')
@@ -79,8 +79,8 @@ class InvItemRepository extends ServiceEntityRepository
             ->where('i.codigoItemPk <> 0')
             ->leftJoin('i.marcaRel', 'm')
         ->addOrderBy('i.codigoItemPk', 'ASC');
-        if($documentoTipo == 1){
-            $queryBuilder->andWhere('i.cantidadExistencia > 0');
+        if($session->get('itemConExistencia') == true){
+            $queryBuilder->andWhere("i.cantidadExistencia > 0");
         }
         if ($session->get('filtroInvBucarItemCodigo') != '') {
             $queryBuilder->andWhere("i.codigoItemPk = {$session->get('filtroInvBucarItemCodigo')}");

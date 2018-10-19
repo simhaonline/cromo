@@ -7,15 +7,21 @@
             <h4> Filtros de búsqueda</h4>
         </div>
         <div class="panel-body">
-            {{ form_label(form.txtCodigoItem) }}
-            <div class="col-sm-4">
-                {{ form_widget(form.txtCodigoItem) }}
-
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Codigo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtCodigoItem) }}
+                </div>
+                <label class="col-sm-2 control-label">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtNombreItem) }}
+                </div>
             </div>
-            {{ form_label(form.txtNombreItem) }}
-            <div class="col-sm-4">
-
-                {{ form_widget(form.txtNombreItem) }}
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Item con existencia:</label>
+                <div class="col-sm-8">
+                    {{ form_widget(form.itemConExistencia) }}
+                </div>
             </div>
         </div>
         <div class="panel-footer">
@@ -50,7 +56,8 @@
                     <td style="text-align: right;">{{ arItem.cantidadDisponible }}</td>
                     <td style="text-align: right;">{{ arItem.cantidadPedido }}</td>
                     <td style="text-align: right;">{{ arItem.cantidadOrden }}</td>
-                    <td style="text-align: center;"><input type="number" name="itemCantidad[{{ arItem.codigoItemPk }}]" size="10" style="width:70px"></td>
+                    <td style="text-align: center;"><input type="number" name="itemCantidad[{{ arItem.codigoItemPk }}]"
+                                                           size="10" style="width:70px"></td>
 
                 </tr>
             {% endfor %}

@@ -149,7 +149,7 @@ class Recibo extends \FPDF {
         $this->Cell(30, 4, "COMENTARIOS:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->MultiCell(163,4,utf8_decode($arRecibo->getComentarios()),1,'L');
+        $this->MultiCell(161,4,utf8_decode($arRecibo->getComentarios()),1,'L');
 
         $this->EncabezadoDetalles();
 
@@ -186,7 +186,7 @@ class Recibo extends \FPDF {
                 $pdf->Cell(15, 4, $arReciboDetalle['codigoReciboDetallePk'], 1, 0, 'L');
                 $pdf->Cell(35, 4, $arReciboDetalle['cuentaCobrarTipo'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arReciboDetalle['numeroFactura'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arReciboDetalle['fecha']->format('Y-m-d'), 1, 0, 'R');
+                $pdf->Cell(20, 4, $arReciboDetalle['fecha']->format('Y-m-d'), 1, 0, 'L');
                 $pdf->Cell(20, 4, number_format($arReciboDetalle['vrDescuento'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(20, 4, number_format($arReciboDetalle['vrAjustePeso'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(20, 4, number_format($arReciboDetalle['vrRetencionFuente'], 0, '.', ','), 1, 0, 'R');

@@ -28,10 +28,12 @@ class CarReciboRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarRecibo::class, 'r')
             ->select('r.codigoReciboPk')
+            ->leftJoin('r.reciboTipoRel', 'rt')
             ->addSelect('c.nombre')
             ->addSelect('cr.nombreCorto')
             ->addSelect('cr.numeroIdentificacion')
             ->addSelect('r.numero')
+            ->addSelect('rt.nombre AS tipo')
             ->addSelect('r.fecha')
             ->addSelect('r.fechaPago')
             ->addSelect('r.codigoCuentaFk')
@@ -46,11 +48,27 @@ class CarReciboRepository extends ServiceEntityRepository
             ->where('r.codigoReciboPk <> 0')
             ->orderBy('r.estadoAprobado', 'ASC')
         ->addOrderBy('r.fecha', 'DESC');
+        $fecha =  new \DateTime('now');
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("r.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("r.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
         if ($session->get('filtroCarReciboNumero')) {
             $queryBuilder->andWhere("r.numero = '{$session->get('filtroCarReciboNumero')}'");
         }
         if($session->get('filtroCarCodigoCliente')){
             $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        }
+        if ($session->get('filtroCarReciboTipo')) {
+            $queryBuilder->andWhere("r.codigoReciboTipoFk = '" . $session->get('filtroCarReciboTipo') . "'");
         }
         switch ($session->get('filtroCarReciboEstadoAprobado')) {
             case '0':

@@ -6,11 +6,15 @@ use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
+use App\Entity\Cartera\CarReciboTipo;
 use App\Entity\Transporte\TteRecibo;
 use App\Form\Type\Cartera\ReciboType;
 use App\Formato\Cartera\Recibo;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +27,9 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class ReciboController extends Controller
 {
     /**
+     * @param Request $request
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
      * @Route("/cartera/movimiento/recibo/recibo/lista", name="cartera_movimiento_recibo_recibo_lista")
      */
     public function lista(Request $request)
@@ -35,7 +42,11 @@ class ReciboController extends Controller
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroCarNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('txtNumero', NumberType::class, ['label' => 'Numero: ', 'required' => false, 'data' => $session->get('filtroCarReciboNumero')])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroCarReciboEstadoAprobado'), 'required' => false])
+            ->add('cboReciboTipo', EntityType::class, $em->getRepository(CarReciboTipo::class)->llenarCombo())
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -50,6 +61,15 @@ class ReciboController extends Controller
                     $session->set('filtroCarCodigoCliente', null);
                     $session->set('filtroCarNombreCliente', null);
                 }
+                $arReciboTipo = $form->get('cboReciboTipo')->getData();
+                if ($arReciboTipo) {
+                    $session->set('filtroCarReciboTipo', $arReciboTipo->getCodigoReciboTipoPk());
+                } else {
+                    $session->set('filtroCarReciboTipo', null);
+                }
+                $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
             }
             if($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

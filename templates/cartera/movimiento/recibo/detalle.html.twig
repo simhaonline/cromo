@@ -39,7 +39,7 @@
         </tr>
         <tr>
             <td class="titulo"><b>CUENTA:</b></td>
-            <td class="td-in-well">{{ arRecibo.cuentaRel.nombre }}</td>
+            <td class="td-in-well">{{ arRecibo.cuentaRel.nombre | default('') }}</td>
             <td class="titulo"><b>TOTAL AJUSTE PESO:</b></td>
             <td class="td-in-well"  align="right">{{ arRecibo.vrTotalAjustePeso | number_format }}</td>
         </tr>

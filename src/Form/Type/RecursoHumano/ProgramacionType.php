@@ -46,12 +46,12 @@ class ProgramacionType extends AbstractType
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
-            {"campo":"codigoProgramacionPk",  "tipo":"pk"      ,"ayuda":"Codigo del registro"                   ,"titulo":"ID"},
-            {"campo":"codigoGrupoFk",         "tipo":"texto"   ,"ayuda":"Nombre de la programacion"             ,"titulo":"NOMBRE"},
-            {"campo":"fechaDesde",            "tipo":"texto"   ,"ayuda":"Codigo del contrato"                   ,"titulo":"CONTRATO"},
-            {"campo":"fechaHasta",            "tipo":"texto"   ,"ayuda":"Telefono del empleado"                 ,"titulo":"TELEFONO"},
-            {"campo":"nombre",                "tipo":"texto"   ,"ayuda":"Correo del empleado"                   ,"titulo":"CORREO"},
-            {"campo":"dias",                  "tipo":"texto"   ,"ayuda":"Direccion de residencia del empleado"  ,"titulo":"DIRECCION"}                     
+            {"campo":"codigoProgramacionPk",  "tipo":"pk"      ,"ayuda":"Codigo del registro"                    ,"titulo":"ID"},
+            {"campo":"codigoGrupoFk",         "tipo":"texto"   ,"ayuda":"Nombre del grupo"                       ,"titulo":"GRUPO"},
+            {"campo":"fechaDesde",            "tipo":"fecha"   ,"ayuda":"Fecha en que inicia el periodo"         ,"titulo":"DESDE"},
+            {"campo":"fechaHasta",            "tipo":"fecha"   ,"ayuda":"Fecha en que termina el periodo"        ,"titulo":"HASTA"},
+            {"campo":"nombre",                "tipo":"texto"   ,"ayuda":"Nombre de la programacion"              ,"titulo":"NOMBRE"},
+            {"campo":"dias",                  "tipo":"texto"   ,"ayuda":"Numero de dias que compone el perdiodo" ,"titulo":"DIAS"}                     
         ]';
         return $campos;
     }

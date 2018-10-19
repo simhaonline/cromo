@@ -1,0 +1,148 @@
+{% extends 'base_recursoHumano.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_administracion_recurso_empleado_lista') }}">Volver</a>&nbsp;&nbsp;
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td class="titulo">CODIGO:</td>
+            <td class="td-in-well">{{ arEmpleado.codigoEmpleadoPk }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well" style="text-transform: uppercase;"></td>
+        </tr>
+        <tr>
+            <td class="titulo">IDENTIFICACIÓN:</td>
+            <td class="td-in-well">{{ arEmpleado.numeroIdentificacion }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arEmpleado.nombreCorto }}</td>
+            <td class="titulo">TELÉFONO:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arEmpleado.telefono }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">ESTADO CIVIL:</td>
+            <td class="td-in-well">{{ arEmpleado.estadoCivilRel.nombre | default('') }}</td>
+            <td class="titulo">SEXO:</td>
+            <td class="td-in-well">{% if arEmpleado.codigoSexoFk == "M" %} MASCULINO {% else %} FEMENINO{% endif %}</td>
+            <td class="titulo">RH:</td>
+            <td class="td-in-well">{{ arEmpleado.rhRel.tipo | default('') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CABEZA DE HOGAR:</td>
+            <td class="td-in-well">{{ validarBooleano(arEmpleado.cabezaHogar) }}</td>
+            <td class="titulo">DISCAPACIDAD:</td>
+            <td class="td-in-well">{{ validarBooleano(arEmpleado.discapacidad) }}</td>
+            <td class="titulo">CARRO:</td>
+            <td class="td-in-well">{{ validarBooleano(arEmpleado.carro) }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">MOTO:</td>
+            <td class="td-in-well">{{ validarBooleano(arEmpleado.moto) }}</td>
+            <td class="titulo">PADRE DE FAMILIA:</td>
+            <td class="td-in-well">{{ validarBooleano(arEmpleado.padreFamilia) }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo">TALLA CAMISA:</td>
+            <td class="td-in-well">{{ arEmpleado.tallaCamisa }}</td>
+            <td class="titulo">TALLA PANTALON:</td>
+            <td class="td-in-well">{{ arEmpleado.tallaPantalon }}</td>
+            <td class="titulo">TALLA CALZADO</td>
+            <td class="td-in-well">{{ arEmpleado.tallaCalzado }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CIUDAD:</td>
+            <td class="td-in-well">{{ arEmpleado.ciudadRel.nombre | default('') }}</td>
+            <td class="titulo">BARRIO</td>
+            <td class="td-in-well">{{ arEmpleado.barrio }}</td>
+            <td class="titulo">DIRECCIÓN:</td>
+            <td class="td-in-well">{{ arEmpleado.direccion }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CORREO:</td>
+            <td class="td-in-well">{{ arEmpleado.correo }}</td>
+            <td class="titulo">PESO:</td>
+            <td class="td-in-well">{{ arEmpleado.peso }}</td>
+            <td class="titulo">ESTATURA:</td>
+            <td class="td-in-well">{{ arEmpleado.estatura }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">TELEFONO:</td>
+            <td class="td-in-well">{{ arEmpleado.telefono }}</td>
+            <td class="titulo">CELULAR:</td>
+            <td class="td-in-well">{{ arEmpleado.celular }}</td>
+            <td class="titulo">CUENTA:</td>
+            <td class="td-in-well">{{ arEmpleado.cuenta }}</td>
+        </tr>
+    </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#contratos" data-toggle="tab">Contratos</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>TIPO</th>
+                            <th>NUMERO</th>
+                            <th>GRUPO</th>
+                            <th>NOMBRE</th>
+                            <th>CARGO</th>
+                            <th title="Clasificacion de riesgo">C_RIESGO</th>
+                            <th>DESDE</th>
+                            <th>HASTA</th>
+                            <th>SALARIO</th>
+                            <th title="Terminado">TER</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% set contratoActivo = false %}
+                        {% for arContrato in arContratos %}
+                            <tr>
+                                <td>{{ arContrato.codigoContratoPk }}</td>
+                                <td>{{ arContrato.codigoCostoTipoFk }}</td>
+                                <td>{{ arContrato.numero }}</td>
+                                <td>{{ arContrato.codigoGrupoFk }}</td>
+                                <td>{{ arContrato.nombreGrupo }}</td>
+                                <td>{{ arContrato.nombreCargo }}</td>
+                                <td>{{ arContrato.nombre }}</td>
+                                {{ validarTipo(arContrato.fechaDesde) }}
+                                {{ validarTipo(arContrato.fechaHasta) }}
+                                {{ validarTipo(arContrato.vrSalario) }}
+                                {{ validarTipo(arContrato.estadoTerminado) }}
+                                <td style="text-align: center;">
+                                    {% if arContrato.estadoTerminado == 0 %}
+                                        <a href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_empleado_nuevo_contrato',{'codigoEmpleado' : arEmpleado.codigoEmpleadoPk,'id': arContrato.codigoContratoPk }) }}','agregarContrato',600,950)"><i
+                                                    class="fa fa-edit" style="color: black;font-size: large;"></i>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                {% if arContrato.estadoTerminado == 0 %}
+                                    {% set contratoActivo = true %}
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="btn-toolbar" style="float: right;">
+            <div class="btn-group">
+                {% if not contratoActivo %}
+                <a class="btn btn-sm btn-default"
+                   href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_empleado_nuevo_contrato',{'codigoEmpleado' : arEmpleado.codigoEmpleadoPk,'id':0 }) }}','agregarContrato',600,950)">Nuevo</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

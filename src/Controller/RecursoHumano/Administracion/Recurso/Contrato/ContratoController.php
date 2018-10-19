@@ -3,38 +3,46 @@
 namespace App\Controller\RecursoHumano\Administracion\Recurso\Contrato;
 
 
+use App\Controller\BaseController;
 use App\Entity\RecursoHumano\RhuContrato;
-use App\Entity\RecursoHumano\RhuEmpleado;
-use App\Form\Type\RecursoHumano\EmpleadoType;
+use App\Form\Type\RecursoHumano\ContratoType;
 use App\General\General;
-use App\Utilidades\Estandares;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class ContratoController extends Controller
+class ContratoController extends BaseController
 {
+    protected $clase = RhuContrato::class;
+    protected $claseFormulario = ContratoType::class;
+    protected $claseNombre = "RhuContrato";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "administracion";
+    protected $grupo = "Recurso";
+    protected $nombre = "Contrato";
+
     /**
-     * @Route("recursohumano/administracion/contrato/contrato/lista", name="recursohumano_administracion_contrato_contrato_lista")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("recursohumano/administracion/recurso/contrato/lista", name="recursohumano_administracion_recurso_contrato_lista")
      */
     public function lista(Request $request)
     {
-        $clase = RhuContrato::class;
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $arrParametrosLista = $em->getRepository($clase)->parametrosLista();
-        $formBotonera = Estandares::botoneraLista();
+        $formBotonera = $this->botoneraLista();
         $formBotonera->handleRequest($request);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($clase)->parametrosExcel(), "Embargos");
+                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
 
             }
         }
-        return $this->render('recursoHumano/administracion/empleado/lista.html.twig', [
-            'arrParametrosLista' => $arrParametrosLista,
-            'request' => $request,
+        return $this->render('recursoHumano/administracion/recurso/contrato/lista.html.twig', [
+            'arrDatosLista' => $this->getDatosLista(),
             'formBotonera' => $formBotonera->createView()
         ]);
     }
@@ -43,63 +51,22 @@ class ContratoController extends Controller
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/administracion/empleado/empleado/detalle/{id}", name="recursohumano_administracion_empleado_empleado_detalle")
+     * @Route("recursohumano/administracion/recurso/contrato/detalle/{id}", name="recursohumano_administracion_recurso_contrato_detalle")
      */
     public function detalle(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $arEmpleado = new RhuEmpleado();
-        if ($id != 0) {
-            $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($id);
-            if (!$arEmpleado) {
-                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_lista'));
-            }
-        }
-        $form = $this->createForm(EmpleadoType::class, $arEmpleado);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
-                $em->persist($arEmpleado);
-                $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_detalle'));
-            }
-        }
-        $arContratos = $em->getRepository(RhuContrato::class)->contratosEmpleado($arEmpleado->getCodigoEmpleadoPk());
-        return $this->render('recursoHumano/administracion/empleado/detalle.html.twig', [
-            'form' => $form->createView(),
-            'arEmpleado' => $arEmpleado,
-            'arContratos' => $arContratos
-        ]);
+        return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_contrato_lista'));
     }
 
     /**
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/administracion/empleado/empleado/nuevo/{id}", name="recursohumano_administracion_empleado_empleado_nuevo")
+     * @Route("recursohumano/administracion/recurso/contrato/nuevo/{id}", name="recursohumano_administracion_recurso_contrato_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $arEmpleado = new RhuEmpleado();
-        if ($id != 0) {
-            $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($id);
-            if (!$arEmpleado) {
-                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_lista'));
-            }
-        }
-        $form = $this->createForm(EmpleadoType::class, $arEmpleado);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
-                $em->persist($arEmpleado);
-                $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_detalle'));
-            }
-        }
-        return $this->render('recursoHumano/administracion/empleado/nuevo.html.twig', [
-            'form' => $form->createView(), 'arEmpleado' => $arEmpleado
-        ]);
+        return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_contrato_lista'));
     }
 }
 

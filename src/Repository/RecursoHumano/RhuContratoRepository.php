@@ -25,7 +25,8 @@ class RhuContratoRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function contratosEmpleado($codigoEmpleado){
+    public function contratosEmpleado($codigoEmpleado)
+    {
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 're')
             ->select('re.codigoContratoPk')
             ->addSelect('re.fechaDesde')
@@ -40,11 +41,34 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->addSelect('cg.nombre as nombreCargo')
             ->addSelect('gp.nombre as nombreGrupo')
             ->addSelect('re.estadoTerminado')
-            ->leftJoin('re.clasificacionRiesgoRel','cr')
-            ->leftJoin('re.grupoRel','gp')
-            ->leftJoin('re.cargoRel','cg')
-            ->where('re.codigoEmpleadoFk = '.$codigoEmpleado)
+            ->leftJoin('re.clasificacionRiesgoRel', 'cr')
+            ->leftJoin('re.grupoRel', 'gp')
+            ->leftJoin('re.cargoRel', 'cg')
+            ->where('re.codigoEmpleadoFk = ' . $codigoEmpleado)
             ->andWhere('re.codigoContratoPk <> 0');
+        return $queryBuilder->getQuery()->execute();
+    }
+
+    public function parametrosExcel()
+    {
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 're')
+            ->select('re.codigoContratoPk')
+            ->addSelect('re.fechaDesde')
+            ->addSelect('re.numero')
+            ->addSelect('re.codigoGrupoFk')
+            ->addSelect('re.codigoCargoFk')
+            ->addSelect('re.codigoCostoTipoFk')
+            ->addSelect('re.codigoClasificacionRiesgoFk')
+            ->addSelect('re.fechaHasta')
+            ->addSelect('re.vrSalario')
+            ->addSelect('cr.nombre')
+            ->addSelect('cg.nombre as nombreCargo')
+            ->addSelect('gp.nombre as nombreGrupo')
+            ->addSelect('re.estadoTerminado')
+            ->leftJoin('re.clasificacionRiesgoRel', 'cr')
+            ->leftJoin('re.grupoRel', 'gp')
+            ->leftJoin('re.cargoRel', 'cg')
+            ->where('re.codigoContratoPk <> 0');
         return $queryBuilder->getQuery()->execute();
     }
 
@@ -52,10 +76,11 @@ class RhuContratoRepository extends ServiceEntityRepository
      * @param $arProgramacion RhuProgramacion
      * @throws \Doctrine\ORM\ORMException
      */
-    public function cargarContratos($arProgramacion){
-        $arContratos = $this->_em->getRepository(RhuContrato::class)->findBy(['codigoGrupoFk' => $arProgramacion->getCodigoGrupoFk(),'estadoTerminado' => false]);
-        foreach ($arContratos as $arContrato){
-            if(!$this->_em->getRepository(RhuProgramacionDetalle::class)->findBy(['fechaDesde' => $arProgramacion->getFechaDesde(),'fechaHasta' => $arProgramacion->getFechaHasta(),'codigoContratoFk' => $arContrato->getCodigoContratoPk()])){
+    public function cargarContratos($arProgramacion)
+    {
+        $arContratos = $this->_em->getRepository(RhuContrato::class)->findBy(['codigoGrupoFk' => $arProgramacion->getCodigoGrupoFk(), 'estadoTerminado' => false]);
+        foreach ($arContratos as $arContrato) {
+            if (!$this->_em->getRepository(RhuProgramacionDetalle::class)->findBy(['fechaDesde' => $arProgramacion->getFechaDesde(), 'fechaHasta' => $arProgramacion->getFechaHasta(), 'codigoContratoFk' => $arContrato->getCodigoContratoPk()])) {
                 $arProgramacionDetalle = new RhuProgramacionDetalle();
                 $arProgramacionDetalle->setProgramacionRel($arProgramacion);
                 $arProgramacionDetalle->setEmpleadoRel($arContrato->getEmpleadoRel());

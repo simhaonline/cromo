@@ -235,4 +235,21 @@ class ContratoType extends AbstractType
             'data_class' => RhuContrato::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoContratoPk",            "tipo":"pk"      ,"ayuda":"Codigo del contrato"                   ,"titulo":"ID"},
+            {"campo":"fechaDesde",                  "tipo":"fecha"   ,"ayuda":"Fecha de inicio del contrato"          ,"titulo":"IDENTIFICACION"},
+            {"campo":"fechaHasta",                  "tipo":"fecha"   ,"ayuda":"Fecha de terminacion del cotnrato"     ,"titulo":"IDENTIFICACION"},
+            {"campo":"numero",                      "tipo":"texto"   ,"ayuda":"Numero del contrato"                   ,"titulo":"NOMBRE"},
+            {"campo":"codigoGrupoFk",               "tipo":"text"   ,"ayuda":"Codigo del grupo"                       ,"titulo":"CONTRATO"},
+            {"campo":"codigoCargoFk",               "tipo":"texto"   ,"ayuda":"Codigo del cargo"                      ,"titulo":"TELEFONO"},
+            {"campo":"codigoCostoTipoFk",           "tipo":"texto"   ,"ayuda":"Codigo del tipo de costo"              ,"titulo":"CORREO"},
+            {"campo":"codigoClasificacionRiesgoFk", "tipo":"texto"   ,"ayuda":"Codigo de la clasificacion de riesgo"  ,"titulo":"DIRECCION"},                     
+            {"campo":"vrSalario",                   "tipo":"moneda"    ,"ayuda":"Salario actual del empleado"         ,"titulo":"E_C"},
+            {"campo":"estadoTerminado",             "tipo":"bool"    ,"ayuda":"El contrato esta terminado o no"       ,"titulo":"E_C"}                     
+        ]';
+        return $campos;
+    }
 }

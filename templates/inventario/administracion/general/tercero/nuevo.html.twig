@@ -55,15 +55,15 @@
             </div>
             <hr>
             <div class="form-group form-group-sm">
+                <label for="form_fechaVence" class="col-sm-2 control-label">Ciudad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ciudadRel) }}
+                    {{ form_errors(form.ciudadRel) }}
+                </div>
                 <label for="form_fechaVence" class="col-sm-2 control-label">Direccion:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.direccion) }}
                     {{ form_errors(form.direccion) }}
-                </div>
-                <label for="form_fechaVence" class="col-sm-2 control-label">Email:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.email) }}
-                    {{ form_errors(form.email) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -88,6 +88,13 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.plazoPago) }}
                     {{ form_errors(form.plazoPago) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_formaPagoRel" class="col-sm-2 control-label">Email:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.email) }}
+                    {{ form_errors(form.email) }}
                 </div>
             </div>
             <hr>

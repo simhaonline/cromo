@@ -104,6 +104,11 @@ class GenCiudad
     protected $invSucursalesCiuidadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvTercero", mappedBy="ciudadRel")
+     */
+    protected $invTercerosCiuidadRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="ciudadNacimientoRel")
      */
     protected $rhuEmpleadosCiudadNacimientoRel;
@@ -453,6 +458,23 @@ class GenCiudad
     {
         $this->rhuContratosCiudadLaboraRel = $rhuContratosCiudadLaboraRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getInvTercerosCiuidadRel()
+    {
+        return $this->invTercerosCiuidadRel;
+    }
+
+    /**
+     * @param mixed $invTercerosCiuidadRel
+     */
+    public function setInvTercerosCiuidadRel($invTercerosCiuidadRel): void
+    {
+        $this->invTercerosCiuidadRel = $invTercerosCiuidadRel;
+    }
+
 
 
 }

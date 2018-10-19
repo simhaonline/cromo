@@ -34,6 +34,11 @@ class InvTercero
     private $numeroIdentificacion;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
+     */
+    private $codigoCiudadFk;
+
+    /**
      * @ORM\Column(name="digito_verificacion", type="string", length=1, nullable=true)
      */
     private $digitoVerificacion;
@@ -185,6 +190,12 @@ class InvTercero
      * @ORM\OneToMany(targetEntity="InvRemision",mappedBy="terceroRel")
      */
     protected $remisionesTerceroRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad",inversedBy="invTercerosCiuidadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk",referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
 
     /**
      * @return mixed
@@ -728,6 +739,38 @@ class InvTercero
     public function setCotizacionesTerceroRel($cotizacionesTerceroRel): void
     {
         $this->cotizacionesTerceroRel = $cotizacionesTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadFk()
+    {
+        return $this->codigoCiudadFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadFk
+     */
+    public function setCodigoCiudadFk($codigoCiudadFk): void
+    {
+        $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
     }
 
 

@@ -10,7 +10,9 @@
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">NOMBRE:</td>
-            <td class="td-in-well" colspan="5">{{ arTercero.nombreCorto }}</td>
+            <td class="td-in-well" colspan="3">{{ arTercero.nombreCorto }}</td>
+            <td class="titulo">CIUDAD:</td>
+            <td class="td-in-well">{{ arTercero.ciudadRel.nombre | default('') }}</td>
         </tr>
         <tr>
             <td class="titulo">CODIGO:</td>

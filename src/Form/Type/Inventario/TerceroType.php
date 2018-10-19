@@ -17,6 +17,15 @@ class TerceroType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('ciudadRel', EntityType::class, [
+                'class' => 'App\Entity\General\GenCiudad',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre');
+                },
+                'choice_label' => 'nombre',
+                'required' => false
+            ])
             ->add('precioCompraRel', EntityType::class, [
                 'class' => 'App\Entity\Inventario\InvPrecio',
                 'query_builder' => function (EntityRepository $er) {

@@ -123,7 +123,7 @@ class MovimientoController extends Controller
                 $txtCodigoTercero = $request->request->get('txtCodigoTercero');
                 if ($txtCodigoTercero != '') {
                     $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
-                    if($arTercero) {
+                    if ($arTercero) {
                         $arMovimiento->setFecha(new \DateTime('now'));
                         $arMovimiento->setTerceroRel($arTercero);
                         $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
@@ -172,7 +172,7 @@ class MovimientoController extends Controller
                 $arMovimiento->setTerceroRel($em->getRepository(InvTercero::class)->find($arMovimiento->getCodigoTerceroFk()));
                 if ($id == 0) {
                     $arMovimiento->setFecha(new \DateTime('now'));
-                    if($arMovimiento->getPlazoPago() == 0){
+                    if ($arMovimiento->getPlazoPago() == 0) {
                         $arMovimiento->setPlazoPago($arMovimiento->getTerceroRel()->getPlazoPago());
                     }
                 }
@@ -331,7 +331,8 @@ class MovimientoController extends Controller
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 30);
+        $documentoTipo = ($arMovimiento->getDocumentoTipoRel()->getCodigoDocumentoTipoPk() == 'ENT') ? 0 : 1;
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista($documentoTipo), $request->query->getInt('page', 1), 100);
         return $this->render('inventario/movimiento/inventario/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems
@@ -348,7 +349,7 @@ class MovimientoController extends Controller
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoItemCodigo'), 'required' => false))
-            ->add('txtNombre', TextType::class, array('data' => $session->get('filtroInvMovimientoItemNombre'), 'required' => false , 'attr' => ['readonly' => 'readonly']))
+            ->add('txtNombre', TextType::class, array('data' => $session->get('filtroInvMovimientoItemNombre'), 'required' => false, 'attr' => ['readonly' => 'readonly']))
             ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvNumeroOrdenCompra'), 'required' => false))
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -379,8 +380,8 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle->setPorcentajeIva($arOrdenDetalle->getPorcentajeIva());
                                     $arMovimientoDetalle->setOrdenDetalleRel($arOrdenDetalle);
                                     $em->persist($arMovimientoDetalle);
-                                    $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada()+$cantidad);
-                                    $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad()-$arOrdenDetalle->getCantidadAfectada());
+                                    $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() + $cantidad);
+                                    $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
                                     $em->persist($arOrdenDetalle);
                                 } else {
                                     $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada.";
@@ -443,8 +444,8 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle->setPorcentajeIva($arPedidoDetalle->getPorcentajeIva());
                                     $arMovimientoDetalle->setPedidoDetalleRel($arPedidoDetalle);
                                     $em->persist($arMovimientoDetalle);
-                                    $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada()+$cantidad);
-                                    $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad()-$arPedidoDetalle->getCantidadAfectada());
+                                    $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $cantidad);
+                                    $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
                                     $em->persist($arPedidoDetalle);
                                 } else {
                                     $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada en el id " . $codigo;
@@ -505,8 +506,8 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle->setPorcentajeIva($arRemisionDetalle->getPorcentajeIva());
                                     $arMovimientoDetalle->setRemisionDetalleRel($arRemisionDetalle);
                                     $em->persist($arMovimientoDetalle);
-                                    $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada()+$cantidad);
-                                    $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad()-$arRemisionDetalle->getCantidadAfectada());
+                                    $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada() + $cantidad);
+                                    $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad() - $arRemisionDetalle->getCantidadAfectada());
                                     $em->persist($arRemisionDetalle);
                                 } else {
                                     $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada en el id " . $codigo;

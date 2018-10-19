@@ -15,13 +15,17 @@ class CarReciboTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, CarReciboTipo::class);
     }
 
-    public function camposPredeterminados(){
-        $qb = $this-> _em->createQueryBuilder()
-            ->from('App:Cartera\CarReciboTipo','rt')
-            ->select('rt.codigoReciboTipoPk AS ID');
+    public function camposPredeterminados()
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->from('App:Cartera\CarReciboTipo', 'rt')
+            ->select('rt.codigoReciboTipoPk AS ID')
+            ->addSelect('rt.nombre')
+            ->addSelect('rt.orden');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }
+
     /**
      * @throws \Doctrine\ORM\ORMException
      */

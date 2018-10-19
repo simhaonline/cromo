@@ -1,0 +1,17 @@
+{% extends 'base_general.html.twig' %}
+{% block content %}
+    <div class="row">
+        <div align="center">
+            <br><br>
+            <h3 class="text-danger"><i class="fa fa-warning"></i> Oops! Ha ocurrido un error.</h3>
+            <p>
+                El error ha sido reportado al departamento encargado, estamos trabajando para arreglarlo
+                inmediatamente.
+            <p class="text-danger">{{ status_text }}</p>
+            Mientras tanto puede <a href="{{ path('inicio') }}">volver a inicio </a> o buscar otro
+            contenido.
+            </p>
+            <img src="{{ asset('pages/error500.png') }}">
+        </div>
+    </div>
+{% endblock %}

@@ -68,7 +68,7 @@ class Recibo extends \FPDF {
         $this->Cell(30, 6, "FECHA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6,  $arRecibo->getFecha()->format('Y-m-d') , 1, 0, 'R', 1);
+        $this->Cell(65, 6,  $arRecibo->getFecha()->format('Y-m-d') , 1, 0, 'L', 1);
         //linea 3
         $this->SetXY(10, 52);
         $this->SetFillColor(200, 200, 200);
@@ -82,7 +82,7 @@ class Recibo extends \FPDF {
         $this->Cell(30, 6, "FECHA PAGO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6,$arRecibo->getFechaPago()->format('Y-m-d'), 1, 0, 'R', 1);
+        $this->Cell(65, 6,$arRecibo->getFechaPago()->format('Y-m-d'), 1, 0, 'L', 1);
         //linea 4
         $this->SetXY(10, 58);
         $this->SetFillColor(200, 200, 200);
@@ -142,6 +142,14 @@ class Recibo extends \FPDF {
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(65, 6, '', 1, 0, 'R', 1);
+        //linea 8
+        $this->SetXY(10, 82);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "COMENTARIOS:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->MultiCell(163,4,utf8_decode($arRecibo->getComentarios()),1,'L');
 
         $this->EncabezadoDetalles();
 

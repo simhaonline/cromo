@@ -18,7 +18,7 @@ class RhuProgramacion
     private $codigoProgramacionPk;
 
     /**
-     * @ORM\Column(name="codigo_pago_tipo_fk", options={"default": 0}, type="integer", nullable=false)
+     * @ORM\Column(name="codigo_pago_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoPagoTipoFk;
 
@@ -47,7 +47,7 @@ class RhuProgramacion
     private $dias = 0;
 
     /**
-     * @ORM\Column(name="codigo_grupo_fk", options={"default": 0}, type="integer", nullable=true)
+     * @ORM\Column(name="codigo_grupo_fk", type="string", length=10, nullable=true)
      */
     private $codigoGrupoFk;
 
@@ -71,6 +71,244 @@ class RhuProgramacion
      */
     private $estadoAnulado = false;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuGrupo", inversedBy="programacionesGrupoRel")
+     * @ORM\JoinColumn(name="codigo_grupo_fk",referencedColumnName="codigo_grupo_pk")
+     */
+    protected $grupoRel;
 
+    /**
+     * @ORM\OneToMany(targetEntity="RhuProgramacionDetalle", mappedBy="programacionPagoRel")
+     */
+    protected $programacionesDetallesProgramacionRel;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuPagoTipo", inversedBy="programacionesPagoTipoRel")
+     * @ORM\JoinColumn(name="codigo_pago_tipo_fk", referencedColumnName="codigo_pago_tipo_pk")
+     */
+    protected $pagoTipoRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoProgramacionPk()
+    {
+        return $this->codigoProgramacionPk;
+    }
+
+    /**
+     * @param mixed $codigoProgramacionPk
+     */
+    public function setCodigoProgramacionPk($codigoProgramacionPk): void
+    {
+        $this->codigoProgramacionPk = $codigoProgramacionPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPagoTipoFk()
+    {
+        return $this->codigoPagoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoPagoTipoFk
+     */
+    public function setCodigoPagoTipoFk($codigoPagoTipoFk): void
+    {
+        $this->codigoPagoTipoFk = $codigoPagoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDesde()
+    {
+        return $this->fechaDesde;
+    }
+
+    /**
+     * @param mixed $fechaDesde
+     */
+    public function setFechaDesde($fechaDesde): void
+    {
+        $this->fechaDesde = $fechaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHasta()
+    {
+        return $this->fechaHasta;
+    }
+
+    /**
+     * @param mixed $fechaHasta
+     */
+    public function setFechaHasta($fechaHasta): void
+    {
+        $this->fechaHasta = $fechaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDias()
+    {
+        return $this->dias;
+    }
+
+    /**
+     * @param mixed $dias
+     */
+    public function setDias($dias): void
+    {
+        $this->dias = $dias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaPagado()
+    {
+        return $this->fechaPagado;
+    }
+
+    /**
+     * @param mixed $fechaPagado
+     */
+    public function setFechaPagado($fechaPagado): void
+    {
+        $this->fechaPagado = $fechaPagado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProgramacionesDetallesProgramacionRel()
+    {
+        return $this->programacionesDetallesProgramacionRel;
+    }
+
+    /**
+     * @param mixed $programacionesDetallesProgramacionRel
+     */
+    public function setProgramacionesDetallesProgramacionRel($programacionesDetallesProgramacionRel): void
+    {
+        $this->programacionesDetallesProgramacionRel = $programacionesDetallesProgramacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagoTipoRel()
+    {
+        return $this->pagoTipoRel;
+    }
+
+    /**
+     * @param mixed $pagoTipoRel
+     */
+    public function setPagoTipoRel($pagoTipoRel): void
+    {
+        $this->pagoTipoRel = $pagoTipoRel;
+    }
 }

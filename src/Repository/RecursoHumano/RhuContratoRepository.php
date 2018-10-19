@@ -4,6 +4,8 @@ namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuProgramacion;
+use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -12,14 +14,6 @@ class RhuContratoRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, RhuContrato::class);
-    }
-
-    /**
-     * @return string
-     */
-    public function getRuta()
-    {
-        return 'recursohumano_administracion_contrato_contrato_';
     }
 
     public function camposPredeterminados()
@@ -55,17 +49,22 @@ class RhuContratoRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return mixed
+     * @param $arProgramacion RhuProgramacion
+     * @throws \Doctrine\ORM\ORMException
      */
-    public function parametrosExcel()
-    {
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 're')
-            ->select('re.codigoContratoPk')
-            ->addSelect('re.fechaDesde')
-            ->addSelect('re.fechaHasta')
-            ->addSelect('re.vrSalario')
-            ->addSelect('re.estadoActivo')
-            ->where('re.codigoContratoPk <> 0');
-        return $queryBuilder->getQuery()->execute();
+    public function cargarContratos($arProgramacion){
+        $arContratos = $this->_em->getRepository(RhuContrato::class)->findBy(['codigoGrupoFk' => $arProgramacion->getCodigoGrupoFk(),'estadoTerminado' => false]);
+        foreach ($arContratos as $arContrato){
+            if(!$this->_em->getRepository(RhuProgramacionDetalle::class)->findBy(['fechaDesde' => $arProgramacion->getFechaDesde(),'fechaHasta' => $arProgramacion->getFechaHasta(),'codigoContratoFk' => $arContrato->getCodigoContratoPk()])){
+                $arProgramacionDetalle = new RhuProgramacionDetalle();
+                $arProgramacionDetalle->setProgramacionRel($arProgramacion);
+                $arProgramacionDetalle->setEmpleadoRel($arContrato->getEmpleadoRel());
+                $arProgramacionDetalle->setContratoRel($arContrato);
+                $arProgramacionDetalle->setFechaDesde($arProgramacion->getFechaDesde());
+                $arProgramacionDetalle->setFechaHasta($arProgramacion->getFechaHasta());
+                $this->_em->persist($arProgramacionDetalle);
+            }
+        }
+        $this->_em->flush();
     }
 }

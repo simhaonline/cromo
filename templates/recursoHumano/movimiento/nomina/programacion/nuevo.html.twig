@@ -1,0 +1,60 @@
+{% extends 'base_recursoHumano.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_errors(form) }}
+    <br>
+    {#->add('grupoRel',EntityType::class,[#}
+    {#'class' => RhuGrupo::class,#}
+    {#'query_builder' => function (EntityRepository $er){#}
+    {#return $er->createQueryBuilder('er')#}
+    {#->orderBy('er.nombre');#}
+    {#}#}
+    {#])#}
+    {#->add('fechaDesde',DateType::class,['data' => new \DateTime('now')])#}
+    {#->add('fechaHasta',DateType::class,['data' => new \DateTime('now')])#}
+    {#->add('nombre',TextType::class)#}
+    {#->add('dias',IntegerType::class)#}
+    {#->add('fechaPagado',DateType::class)#}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_grupoRel" class="control-label col-sm-2">Grupo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.grupoRel) }}
+                    {{ form_errors(form.grupoRel) }}
+                </div>
+                <label for="form_nombre" class="control-label col-sm-2">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre) }}
+                    {{ form_errors(form.nombre) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_grupoRel" class="control-label col-sm-2">Desde:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaDesde) }}
+                    {{ form_errors(form.fechaDesde) }}
+                </div>
+                <label for="form_nombre" class="control-label col-sm-2">Dias:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.dias) }}
+                    {{ form_errors(form.dias) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="control-label col-sm-2">Hasta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaHasta) }}
+                    {{ form_errors(form.fechaHasta) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_movimiento_nomina_programacion_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

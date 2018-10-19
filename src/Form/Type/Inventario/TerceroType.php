@@ -24,7 +24,8 @@ class TerceroType extends AbstractType
                         ->orderBy('c.nombre');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => false,
+                'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('precioCompraRel', EntityType::class, [
                 'class' => 'App\Entity\Inventario\InvPrecio',

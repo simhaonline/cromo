@@ -66,7 +66,11 @@ class CreditoController extends BaseController
      */
     public function detalle(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_credito_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arRegistro = $em->getRepository($this->clase)->find($id);
+        return $this->render('recursoHumano/movimiento/nomina/credito/detalle.html.twig',[
+            'arRegistro' => $arRegistro
+        ]);
     }
 }
 

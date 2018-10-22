@@ -3,7 +3,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Reclamo;
 
 use App\Controller\BaseController;
-use App\Entity\RecursoHumano\Rhureclamo;
+use App\Entity\RecursoHumano\RhuReclamo;
 use App\Form\Type\RecursoHumano\ReclamoType;
 use App\General\General;
 use App\Utilidades\Mensajes;
@@ -66,7 +66,11 @@ class ReclamoController extends BaseController
      */
     public function detalle(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_reclamo_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arRegistro = $em->getRepository($this->clase)->find($id);
+        return $this->render('recursoHumano/movimiento/nomina/reclamo/detalle.html.twig',[
+            'arRegistro' => $arRegistro
+        ]);
     }
 }
 

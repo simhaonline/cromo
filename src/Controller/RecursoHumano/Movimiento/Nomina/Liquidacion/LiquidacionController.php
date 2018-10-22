@@ -68,7 +68,11 @@ class LiquidacionController extends BaseController
      */
     public function detalle(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arRegistro = $em->getRepository($this->clase)->find($id);
+        return $this->render('recursoHumano/movimiento/nomina/liquidacion/detalle.html.twig',[
+            'arRegistro' => $arRegistro
+        ]);
     }
 }
 

@@ -14,11 +14,11 @@ class AdicionalController extends BaseController
 {
     protected $clase = RhuAdicional::class;
     protected $claseFormulario = AdicionalType::class;
-    protected $claseNombre = "RhuLiquidacion";
+    protected $claseNombre = "RhuAdicional";
     protected $modulo = "RecursoHumano";
     protected $funcion = "movimiento";
     protected $grupo = "Nomina";
-    protected $nombre = "Liquidacion";
+    protected $nombre = "Adicional";
 
     /**
      * @param Request $request
@@ -66,7 +66,11 @@ class AdicionalController extends BaseController
      */
     public function detalle(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicional_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arRegistro = $em->getRepository($this->clase)->find($id);
+        return $this->render('recursoHumano/movimiento/nomina/adicional/detalle.html.twig',[
+            'arRegistro' => $arRegistro
+        ]);
     }
 }
 

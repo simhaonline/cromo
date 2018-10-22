@@ -66,7 +66,11 @@ class EmbargoController extends BaseController
      */
     public function detalle(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arRegistro = $em->getRepository($this->clase)->find($id);
+        return $this->render('recursoHumano/movimiento/nomina/embargo/detalle.html.twig',[
+            'arRegistro' => $arRegistro
+        ]);
     }
 }
 

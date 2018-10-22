@@ -2,16 +2,16 @@
 {% block content %}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_nomina_embargo_lista') }}">Volver</a>&nbsp;&nbsp;
+            <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_recaudo_lista') }}">Volver</a>
         </div>
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arEmbargo.codigoEmbargoPk }}</td>
-            <td class="titulo">FECHA:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arEmbargo.fecha | date('') }}</td>
+            <td class="td-in-well">{{ arRegistro.codigoRecaudoPk }}</td>
         </tr>
     </table>
+    <br>
+    <br>
 {% endblock %}

@@ -3,7 +3,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Vacaciones;
 
 use App\Controller\BaseController;
-use App\Entity\RecursoHumano\Rhuvacacion;
+use App\Entity\RecursoHumano\RhuVacacion;
 use App\Form\Type\RecursoHumano\VacacionType;
 use App\General\General;
 use App\Utilidades\Mensajes;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class VacacionesController extends BaseController
 {
-    protected $clase = Rhuvacacion::class;
+    protected $clase = RhuVacacion::class;
     protected $claseFormulario = VacacionType::class;
     protected $claseNombre = "RhuVacacion";
     protected $modulo = "RecursoHumano";
@@ -66,7 +66,11 @@ class VacacionesController extends BaseController
      */
     public function detalle(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arRegistro = $em->getRepository($this->clase)->find($id);
+        return $this->render('recursoHumano/movimiento/nomina/vacacion/detalle.html.twig',[
+            'arRegistro' => $arRegistro
+        ]);
     }
 }
 

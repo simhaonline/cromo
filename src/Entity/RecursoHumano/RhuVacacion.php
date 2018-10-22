@@ -23,12 +23,12 @@ class RhuVacacion
     private $codigoEmpleadoFk;
 
     /**
-     * @ORM\Column(name="codigo_contrato_fk", type="integer", nullable=false)
+     * @ORM\Column(name="codigo_contrato_fk", type="integer", nullable=true)
      */
     private $codigoContratoFk;
 
     /**
-     * @ORM\Column(name="fecha", type="date")
+     * @ORM\Column(name="fecha", type="date",nullable=true)
      */
     private $fecha;
 
@@ -38,27 +38,27 @@ class RhuVacacion
     private $fechaContabilidad;
 
     /**
-     * @ORM\Column(name="numero",options={"default": 0},type="integer")
+     * @ORM\Column(name="numero",options={"default": 0},type="integer",nullable=true)
      */
     private $numero = 0;
 
     /**
-     * @ORM\Column(name="fecha_desde_periodo", type="date")
+     * @ORM\Column(name="fecha_desde_periodo", type="date",nullable=true)
      */
     private $fechaDesdePeriodo;
 
     /**
-     * @ORM\Column(name="fecha_hasta_periodo", type="date")
+     * @ORM\Column(name="fecha_hasta_periodo", type="date",nullable=true)
      */
     private $fechaHastaPeriodo;
 
     /**
-     * @ORM\Column(name="fecha_desde_disfrute", type="date")
+     * @ORM\Column(name="fecha_desde_disfrute", type="date",nullable=true)
      */
     private $fechaDesdeDisfrute;
 
     /**
-     * @ORM\Column(name="fecha_hasta_disfrute", type="date")
+     * @ORM\Column(name="fecha_hasta_disfrute", type="date",nullable=true)
      */
     private $fechaHastaDisfrute;
 
@@ -68,12 +68,12 @@ class RhuVacacion
     private $fechaInicioLabor;
 
     /**
-     * @ORM\Column(name="vr_salud",options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_salud",options={"default": 0}, type="float",nullable=true)
      */
     private $vrSalud = 0;
 
     /**
-     * @ORM\Column(name="vr_pension",options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_pension",options={"default": 0}, type="float",nullable=true)
      */
     private $vrPension = 0;
 
@@ -83,22 +83,22 @@ class RhuVacacion
     private $vrFondoSolidaridad = 0;
 
     /**
-     * @ORM\Column(name="vr_ibc", options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_ibc", options={"default": 0}, type="float",nullable=true)
      */
     private $vrIbc = 0;
 
     /**
-     * @ORM\Column(name="vr_deduccion",options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_deduccion",options={"default": 0}, type="float",nullable=true)
      */
     private $vrDeduccion = 0;
 
     /**
-     * @ORM\Column(name="vr_bonificacion",options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_bonificacion",options={"default": 0}, type="float",nullable=true)
      */
     private $vrBonificacion = 0;
 
     /**
-     * @ORM\Column(name="vr_vacacion",options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_vacacion",options={"default": 0}, type="float",nullable=true)
      */
     private $vrVacacion = 0;
 
@@ -118,12 +118,12 @@ class RhuVacacion
     private $vrVacacionTotal = 0;
 
     /**
-     * @ORM\Column(name="dias_vacaciones",options={"default": 0}, type="integer")
+     * @ORM\Column(name="dias_vacaciones",options={"default": 0}, type="integer",nullable=true)
      */
     private $diasVacaciones = 0;
 
     /**
-     * @ORM\Column(name="dias_disfrutados", options={"default": 0}, type="integer")
+     * @ORM\Column(name="dias_disfrutados", options={"default": 0}, type="integer",nullable=true)
      */
     private $diasDisfrutados = 0;
 
@@ -133,22 +133,22 @@ class RhuVacacion
     private $diasAusentismo = 0;
 
     /**
-     * @ORM\Column(name="dias_pagados", options={"default": 0}, type="integer")
+     * @ORM\Column(name="dias_pagados", options={"default": 0}, type="integer",nullable=true)
      */
     private $diasPagados = 0;
 
     /**
-     * @ORM\Column(name="dias_disfrutados_reales", options={"default": 0}, type="integer")
+     * @ORM\Column(name="dias_disfrutados_reales", options={"default": 0}, type="integer",nullable=true)
      */
     private $diasDisfrutadosReales = 0;
 
     /**
-     * @ORM\Column(name="dias_periodo", options={"default": 0}, type="integer")
+     * @ORM\Column(name="dias_periodo", options={"default": 0}, type="integer",nullable=true)
      */
     private $diasPeriodo = 0;
 
     /**
-     * @ORM\Column(name="meses_periodo", options={"default": 0}, type="float")
+     * @ORM\Column(name="meses_periodo", options={"default": 0}, type="float",nullable=true)
      */
     private $mesesPeriodo = 0;
 
@@ -163,17 +163,17 @@ class RhuVacacion
     private $codigoCentroCostoFk;
 
     /**
-     * @ORM\Column(name="vr_salario_actual", options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_salario_actual", options={"default": 0}, type="float",nullable=true)
      */
     private $vrSalarioActual = 0;
 
     /**
-     * @ORM\Column(name="vr_salario_promedio", options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_salario_promedio", options={"default": 0}, type="float",nullable=true)
      */
     private $vrSalarioPromedio = 0;
 
     /**
-     * @ORM\Column(name="vr_salario_promedio_propuesto", options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_salario_promedio_propuesto", options={"default": 0}, type="float",nullable=true)
      * @Assert\NotBlank(
      *     message="El campo no puede estar vacio"
      * )
@@ -207,22 +207,22 @@ class RhuVacacion
     private $diasAusentismoPropuesto = 0;
 
     /**
-     * @ORM\Column(name="vr_vacacion_bruto", options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_vacacion_bruto", options={"default": 0}, type="float",nullable=true)
      */
     private $vrVacacionBruto = 0;
 
     /**
-     * @ORM\Column(name="estado_pago_generado", options={"default": false}, type="boolean")
+     * @ORM\Column(name="estado_pago_generado", options={"default": false}, type="boolean",nullable=true)
      */
     private $estadoPagoGenerado = false;
 
     /**
-     * @ORM\Column(name="estado_pago_banco", options={"default": false}, type="boolean")
+     * @ORM\Column(name="estado_pago_banco", options={"default": false}, type="boolean",nullable=true)
      */
     private $estadoPagoBanco = false;
 
     /**
-     * @ORM\Column(name="estado_contabilizado", options={"default": false}, type="boolean")
+     * @ORM\Column(name="estado_contabilizado", options={"default": false}, type="boolean",nullable=true)
      */
     private $estadoContabilizado = false;
 
@@ -237,12 +237,12 @@ class RhuVacacion
     private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="estado_anulado", options={"default": false}, type="boolean")
+     * @ORM\Column(name="estado_anulado", options={"default": false}, type="boolean",nullable=true)
      */
     private $estadoAnulado = false;
 
     /**
-     * @ORM\Column(name="estado_pagado", options={"default": false}, type="boolean")
+     * @ORM\Column(name="estado_pagado", options={"default": false}, type="boolean",nullable=true)
      */
     private $estadoPagado = false;
 
@@ -257,22 +257,22 @@ class RhuVacacion
     private $usuario;
 
     /**
-     * @ORM\Column(name="vr_recargo_nocturno_inicial", options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_recargo_nocturno_inicial", options={"default": 0}, type="float",nullable=true)
      */
     private $vrRecargoNocturnoInicial = 0;
 
     /**
-     * @ORM\Column(name="vr_recargo_nocturno", options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_recargo_nocturno", options={"default": 0}, type="float",nullable=true)
      */
     private $vrRecargoNocturno = 0;
 
     /**
-     * @ORM\Column(name="vr_promedio_recargo_nocturno", options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_promedio_recargo_nocturno", options={"default": 0}, type="float",nullable=true)
      */
     private $vrPromedioRecargoNocturno = 0;
 
     /**
-     * @ORM\Column(name="vr_ibc_promedio", options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_ibc_promedio", options={"default": 0}, type="float",nullable=true)
      */
     private $vrIbcPromedio = 0;
 

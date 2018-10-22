@@ -18,7 +18,7 @@ class RhuPago
     private $codigoPagoPk;
 
     /**
-     * @ORM\Column(name="codigo_pago_tipo_fk", type="integer", nullable=false)
+     * @ORM\Column(name="codigo_pago_tipo_fk", type="integer", nullable=true)
      */
     private $codigoPagoTipoFk;
 

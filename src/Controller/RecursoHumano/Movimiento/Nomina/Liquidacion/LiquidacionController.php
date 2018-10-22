@@ -1,31 +1,33 @@
 <?php
 
-namespace App\Controller\RecursoHumano\Movimiento\Nomina\Embargo;
+namespace App\Controller\RecursoHumano\Movimiento\Nomina\Liquidacion;
 
 use App\Controller\BaseController;
-use App\Entity\RecursoHumano\RhuEmbargo;
-use App\Form\Type\RecursoHumano\EmbargoType;
+use App\Entity\RecursoHumano\RhuLiquidacion;
+use App\Entity\RecursoHumano\RhuPago;
+use App\Form\Type\RecursoHumano\LiquidacionType;
+use App\Form\Type\RecursoHumano\PagoType;
 use App\General\General;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class EmbargoController extends BaseController
+class LiquidacionController extends BaseController
 {
-    protected $clase = RhuEmbargo::class;
-    protected $claseFormulario = EmbargoType::class;
-    protected $claseNombre = "RhuEmbargo";
+    protected $clase = RhuLiquidacion::class;
+    protected $claseFormulario = LiquidacionType::class;
+    protected $claseNombre = "RhuLiquidacion";
     protected $modulo = "RecursoHumano";
     protected $funcion = "movimiento";
     protected $grupo = "Nomina";
-    protected $nombre = "Embargo";
+    protected $nombre = "Liquidacion";
 
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("recursohumano/movimiento/nomina/embargo/lista", name="recursohumano_movimiento_nomina_embargo_lista")
+     * @Route("recursohumano/movimiento/nomina/liquidacion/lista", name="recursohumano_movimiento_nomina_liquidacion_lista")
      */
     public function lista(Request $request)
     {
@@ -41,7 +43,7 @@ class EmbargoController extends BaseController
 
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/embargo/lista.html.twig', [
+        return $this->render('recursoHumano/movimiento/nomina/liquidacion/lista.html.twig', [
             'arrDatosLista' => $this->getDatosLista(),
             'formBotonera' => $formBotonera->createView()
         ]);
@@ -51,22 +53,22 @@ class EmbargoController extends BaseController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/movimiento/nomina/embargo/nuevo/{id}", name="recursohumano_movimiento_nomina_embargo_nuevo")
+     * @Route("recursohumano/movimiento/nomina/liquidacion/nuevo/{id}", name="recursohumano_movimiento_nomina_liquidacion_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_lista'));
+        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_lista'));
     }
 
     /**
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/movimiento/nomina/embargo/detalle/{id}", name="recursohumano_movimiento_nomina_embargo_detalle")
+     * @Route("recursohumano/movimiento/nomina/liquidacion/detalle/{id}", name="recursohumano_movimiento_nomina_liquidacion_detalle")
      */
     public function detalle(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_lista'));
+        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_lista'));
     }
 }
 

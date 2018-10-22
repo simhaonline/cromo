@@ -25,4 +25,13 @@ class EmbargoType extends AbstractType
             'data_class' => RhuEmbargo::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoEmbargoPk","tipo":"pk"     ,"ayuda":"Codigo del registro" ,"titulo":"ID"},
+            {"campo":"fecha",          "tipo":"fecha"  ,"ayuda":"Fecha de registro"   ,"titulo":"FECHA"}                                     
+        ]';
+        return $campos;
+    }
 }

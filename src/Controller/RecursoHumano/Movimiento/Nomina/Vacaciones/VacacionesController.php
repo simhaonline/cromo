@@ -1,31 +1,31 @@
 <?php
 
-namespace App\Controller\RecursoHumano\Movimiento\Nomina\Embargo;
+namespace App\Controller\RecursoHumano\Movimiento\Nomina\Vacaciones;
 
 use App\Controller\BaseController;
-use App\Entity\RecursoHumano\RhuEmbargo;
-use App\Form\Type\RecursoHumano\EmbargoType;
+use App\Entity\RecursoHumano\Rhuvacacion;
+use App\Form\Type\RecursoHumano\VacacionType;
 use App\General\General;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class EmbargoController extends BaseController
+class VacacionesController extends BaseController
 {
-    protected $clase = RhuEmbargo::class;
-    protected $claseFormulario = EmbargoType::class;
-    protected $claseNombre = "RhuEmbargo";
+    protected $clase = Rhuvacacion::class;
+    protected $claseFormulario = VacacionType::class;
+    protected $claseNombre = "RhuVacacion";
     protected $modulo = "RecursoHumano";
     protected $funcion = "movimiento";
     protected $grupo = "Nomina";
-    protected $nombre = "Embargo";
+    protected $nombre = "Vacacion";
 
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("recursohumano/movimiento/nomina/embargo/lista", name="recursohumano_movimiento_nomina_embargo_lista")
+     * @Route("recursohumano/movimiento/nomina/vacacion/lista", name="recursohumano_movimiento_nomina_vacacion_lista")
      */
     public function lista(Request $request)
     {
@@ -41,7 +41,7 @@ class EmbargoController extends BaseController
 
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/embargo/lista.html.twig', [
+        return $this->render('recursoHumano/movimiento/nomina/vacacion/lista.html.twig', [
             'arrDatosLista' => $this->getDatosLista(),
             'formBotonera' => $formBotonera->createView()
         ]);
@@ -51,22 +51,22 @@ class EmbargoController extends BaseController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/movimiento/nomina/embargo/nuevo/{id}", name="recursohumano_movimiento_nomina_embargo_nuevo")
+     * @Route("recursohumano/movimiento/nomina/vacacion/nuevo/{id}", name="recursohumano_movimiento_nomina_vacacion_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_lista'));
+        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_lista'));
     }
 
     /**
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/movimiento/nomina/embargo/detalle/{id}", name="recursohumano_movimiento_nomina_embargo_detalle")
+     * @Route("recursohumano/movimiento/nomina/vacacion/detalle/{id}", name="recursohumano_movimiento_nomina_vacacion_detalle")
      */
     public function detalle(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_lista'));
+        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_lista'));
     }
 }
 

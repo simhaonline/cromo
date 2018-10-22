@@ -142,7 +142,421 @@ class RhuLiquidacion
      */
     private $estadoAnulado = false;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoLiquidacionPk()
+    {
+        return $this->codigoLiquidacionPk;
+    }
 
+    /**
+     * @param mixed $codigoLiquidacionPk
+     */
+    public function setCodigoLiquidacionPk($codigoLiquidacionPk): void
+    {
+        $this->codigoLiquidacionPk = $codigoLiquidacionPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero($numero): void
+    {
+        $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpleadoFk()
+    {
+        return $this->codigoEmpleadoFk;
+    }
+
+    /**
+     * @param mixed $codigoEmpleadoFk
+     */
+    public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
+    {
+        $this->codigoEmpleadoFk = $codigoEmpleadoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoFk()
+    {
+        return $this->codigoContratoFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoFk
+     */
+    public function setCodigoContratoFk($codigoContratoFk): void
+    {
+        $this->codigoContratoFk = $codigoContratoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoMotivoFk()
+    {
+        return $this->codigoContratoMotivoFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoMotivoFk
+     */
+    public function setCodigoContratoMotivoFk($codigoContratoMotivoFk): void
+    {
+        $this->codigoContratoMotivoFk = $codigoContratoMotivoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDesde()
+    {
+        return $this->fechaDesde;
+    }
+
+    /**
+     * @param mixed $fechaDesde
+     */
+    public function setFechaDesde($fechaDesde): void
+    {
+        $this->fechaDesde = $fechaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHasta()
+    {
+        return $this->fechaHasta;
+    }
+
+    /**
+     * @param mixed $fechaHasta
+     */
+    public function setFechaHasta($fechaHasta): void
+    {
+        $this->fechaHasta = $fechaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCesantias()
+    {
+        return $this->vrCesantias;
+    }
+
+    /**
+     * @param mixed $vrCesantias
+     */
+    public function setVrCesantias($vrCesantias): void
+    {
+        $this->vrCesantias = $vrCesantias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrInteresesCesantias()
+    {
+        return $this->vrInteresesCesantias;
+    }
+
+    /**
+     * @param mixed $vrInteresesCesantias
+     */
+    public function setVrInteresesCesantias($vrInteresesCesantias): void
+    {
+        $this->vrInteresesCesantias = $vrInteresesCesantias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPrima()
+    {
+        return $this->vrPrima;
+    }
+
+    /**
+     * @param mixed $vrPrima
+     */
+    public function setVrPrima($vrPrima): void
+    {
+        $this->vrPrima = $vrPrima;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrVacacion()
+    {
+        return $this->vrVacacion;
+    }
+
+    /**
+     * @param mixed $vrVacacion
+     */
+    public function setVrVacacion($vrVacacion): void
+    {
+        $this->vrVacacion = $vrVacacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIndemnizacion()
+    {
+        return $this->vrIndemnizacion;
+    }
+
+    /**
+     * @param mixed $vrIndemnizacion
+     */
+    public function setVrIndemnizacion($vrIndemnizacion): void
+    {
+        $this->vrIndemnizacion = $vrIndemnizacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasCesantias()
+    {
+        return $this->diasCesantias;
+    }
+
+    /**
+     * @param mixed $diasCesantias
+     */
+    public function setDiasCesantias($diasCesantias): void
+    {
+        $this->diasCesantias = $diasCesantias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasCesantiasAusentismo()
+    {
+        return $this->diasCesantiasAusentismo;
+    }
+
+    /**
+     * @param mixed $diasCesantiasAusentismo
+     */
+    public function setDiasCesantiasAusentismo($diasCesantiasAusentismo): void
+    {
+        $this->diasCesantiasAusentismo = $diasCesantiasAusentismo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasVacacion()
+    {
+        return $this->diasVacacion;
+    }
+
+    /**
+     * @param mixed $diasVacacion
+     */
+    public function setDiasVacacion($diasVacacion): void
+    {
+        $this->diasVacacion = $diasVacacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasVacacionAusentismo()
+    {
+        return $this->diasVacacionAusentismo;
+    }
+
+    /**
+     * @param mixed $diasVacacionAusentismo
+     */
+    public function setDiasVacacionAusentismo($diasVacacionAusentismo): void
+    {
+        $this->diasVacacionAusentismo = $diasVacacionAusentismo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasPrima()
+    {
+        return $this->diasPrima;
+    }
+
+    /**
+     * @param mixed $diasPrima
+     */
+    public function setDiasPrima($diasPrima): void
+    {
+        $this->diasPrima = $diasPrima;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasPrimaAusentismo()
+    {
+        return $this->diasPrimaAusentismo;
+    }
+
+    /**
+     * @param mixed $diasPrimaAusentismo
+     */
+    public function setDiasPrimaAusentismo($diasPrimaAusentismo): void
+    {
+        $this->diasPrimaAusentismo = $diasPrimaAusentismo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaUltimoPagoPrima()
+    {
+        return $this->fechaUltimoPagoPrima;
+    }
+
+    /**
+     * @param mixed $fechaUltimoPagoPrima
+     */
+    public function setFechaUltimoPagoPrima($fechaUltimoPagoPrima): void
+    {
+        $this->fechaUltimoPagoPrima = $fechaUltimoPagoPrima;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaUltimoPagoVacacion()
+    {
+        return $this->fechaUltimoPagoVacacion;
+    }
+
+    /**
+     * @param mixed $fechaUltimoPagoVacacion
+     */
+    public function setFechaUltimoPagoVacacion($fechaUltimoPagoVacacion): void
+    {
+        $this->fechaUltimoPagoVacacion = $fechaUltimoPagoVacacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaUltimoPagoCesantias()
+    {
+        return $this->fechaUltimoPagoCesantias;
+    }
+
+    /**
+     * @param mixed $fechaUltimoPagoCesantias
+     */
+    public function setFechaUltimoPagoCesantias($fechaUltimoPagoCesantias): void
+    {
+        $this->fechaUltimoPagoCesantias = $fechaUltimoPagoCesantias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
 }
 
 

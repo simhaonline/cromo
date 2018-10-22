@@ -98,12 +98,18 @@ class ProgramacionController extends BaseController
             }
         }
         $arrBtnCargarContratos = ['attr' => ['class' => 'btn btn-sm btn-default'],'label' => 'Cargar contratos'];
+        $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'],'label' => 'Eliminar'];
         $form = Estandares::botonera($arProgramacion->getEstadoAutorizado(), $arProgramacion->getEstadoAprobado(),$arProgramacion->getEstadoAnulado());
         $form->add('btnCargarContratos',SubmitType::class, $arrBtnCargarContratos);
+        $form->add('btnEliminar',SubmitType::class, $arrBtnEliminar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionados');
             if ($form->get('btnCargarContratos')->isClicked()) {
                 $em->getRepository(RhuContrato::class)->cargarContratos($arProgramacion);
+            }
+            if($form->get('btnEliminar')){
+                $em->getRepository(RhuProgramacionDetalle::class)->eliminar($arrSeleccionados);
             }
         }
         $arProgramacion = $em->getRepository($this->clase)->find($id);

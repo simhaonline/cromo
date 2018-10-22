@@ -336,6 +336,11 @@ class TteGuia
     private $cortesia = false;
 
     /**
+     * @ORM\Column(name="mercancia_peligrosa", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $mercanciaPeligrosa = false;
+
+    /**
      * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
      */
     private $usuario;
@@ -1914,4 +1919,22 @@ class TteGuia
     {
         $this->guiasDetallesGuiaRel = $guiasDetallesGuiaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMercanciaPeligrosa()
+    {
+        return $this->mercanciaPeligrosa;
+    }
+
+    /**
+     * @param mixed $mercanciaPeligrosa
+     */
+    public function setMercanciaPeligrosa($mercanciaPeligrosa): void
+    {
+        $this->mercanciaPeligrosa = $mercanciaPeligrosa;
+    }
+
+
 }

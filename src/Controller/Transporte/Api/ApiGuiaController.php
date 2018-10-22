@@ -3,6 +3,8 @@
 namespace App\Controller\Transporte\Api;
 
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteNovedad;
+use App\Entity\Transporte\TteNovedadTipo;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,6 +106,49 @@ class ApiGuiaController extends FOSRestController
         ];
     }
 
+
+    /**
+     * @param Request $request
+     * @param int $codigoDespacho
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     * @Rest\Get("/transporte/api/app/guia/novedad/{codigoGuia}/{fecha}/{hora}/{usuario}/{codigoNovedad}")
+     */
+    public function novedadApp(Request $request, $codigoGuia = 0, $fecha, $hora, $usuario="", $codigoNovedad = "") {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $em = $this->getDoctrine()->getManager();
+        $error = false;
+        $mensaje = "";
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        if($arGuia) {
+            $arNovedadTipo = $em->getRepository(TteNovedadTipo::class)->find($codigoNovedad);
+            if($arNovedadTipo) {
+                $arNovedad = new TteNovedad();
+                $arNovedad->setGuiaRel($arGuia);
+                $arNovedad->setNovedadTipoRel($arNovedadTipo);
+                $arNovedad->setFechaRegistro(new \DateTime('now'));
+                $arNovedad->setFechaAtencion(new \DateTime('now'));
+                $arNovedad->setFechaSolucion(new \DateTime('now'));
+                $arNovedad->setFechaReporte(new \DateTime('now'));
+                $arNovedad->setFecha(new \DateTime('now'));
+                $arNovedad->setEstadoAtendido(true);
+                $em->persist($arNovedad);
+                $em->flush();
+            } else {
+                $error = true;
+                $mensaje = "No se encontro este tipo novedad";
+            }
+
+        } else {
+            $error = true;
+            $mensaje = "No se encontro la guia";
+        }
+        return [
+            'error' => $error,
+            'mensaje' => $mensaje
+        ];
+    }
 
     /**
      * @param Request $request

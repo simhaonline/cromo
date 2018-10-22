@@ -229,7 +229,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('md.movimientoRel', 'm')
             ->where('i.afectaInventario = 1')
             ->andWhere('md.operacionInventario <> 0')
-            ->andWhere('m.estadoAutorizado = 1')
+            ->andWhere('m.estadoAprobado = 1')
             ->groupBy('md.codigoItemFk')
             ->addGroupBy('md.loteFk')
             ->addGroupBy('md.codigoBodegaFk');

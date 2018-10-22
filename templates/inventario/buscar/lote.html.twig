@@ -30,16 +30,20 @@
     </div>
     <table  class="table table-striped table-bordered table-condensed table-hover">
         <tr>
-            <th>CODIGO</th>
             <th>LOTE</th>
             <th>BODEGA</th>
+            <th>EXI</th>
+            <th>REM</th>
+            <th>DIS</th>
             <th></th>
         </tr>
         {% for arLote in arLotes %}
             <tr>
-                <td>{{ arLote.codigoLotePk }}</td>
                 <td>{{ arLote.loteFk }}</td>
                 <td>{{ arLote.codigoBodegaFk }}</td>
+                <td style="text-align: right;">{{ arLote.cantidadExistencia }}</td>
+                <td style="text-align: right;">{{ arLote.cantidadRemisionada }}</td>
+                <td style="text-align: right;">{{ arLote.cantidadDisponible }}</td>
                 <td style="text-align: center"><a href="javascript:selRegistro('{{ arLote.loteFk }}','{{ arLote.codigoBodegaFk }}','{{ campoCodigo }}','{{ campoBodega }}')" >
                         <i class="fa fa-check-circle-o" style="font-size: large;color: black;"></i>
                     </a>

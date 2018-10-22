@@ -44,9 +44,9 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>DOCUMENTO</th>
-                <th>FECHA</th>
                 <th>NUMERO</th>
+                <th>FECHA</th>
+                <th>DOCUMENTO</th>
                 <th>ITEM</th>
                 <th>DESCRIPCION</th>
                 <th>LOTE</th>
@@ -61,9 +61,9 @@
             {% for arMovimientoDetalle in arMovimientosDetalles %}
                 <tr>
                     <td>{{ arMovimientoDetalle.codigoMovimientoDetallePk }}</td>
-                    <td>{{ arMovimientoDetalle.nombreDocumento }}</td>
-                    <td>{{ arMovimientoDetalle.fecha | date ('Y-m-d H:i')}}</td>
                     <td>{{ arMovimientoDetalle.numeroMovimiento }}</td>
+                    <td>{{ arMovimientoDetalle.fecha | date ('Y-m-d H:i')}}</td>
+                    <td>{{ arMovimientoDetalle.nombreDocumento }}</td>
                     <td>{{ arMovimientoDetalle.codigoItemFk }}</td>
                     <td>{{ arMovimientoDetalle.nombreItem }}</td>
                     <td>{{ arMovimientoDetalle.loteFk }}</td>

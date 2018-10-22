@@ -82,7 +82,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
             Mensajes::error($respuesta);
         } else {
             if ($this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
-                $this->afectar($arMovimiento, 1);
+                //Se define que mueve inventario es al aprobar
+                //$this->afectar($arMovimiento, 1);
                 $arMovimiento->setEstadoAutorizado(1);
                 $this->getEntityManager()->persist($arMovimiento);
                 $this->getEntityManager()->flush();
@@ -179,7 +180,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
     public function desautorizar($arMovimiento)
     {
         if ($arMovimiento->getEstadoAutorizado() == 1 && $arMovimiento->getEstadoAprobado() == 0) {
-            $this->afectar($arMovimiento, -1);
+            //Se define que mueve inventario es al aprobar
+            //$this->afectar($arMovimiento, -1);
             $arMovimiento->setEstadoAutorizado(0);
             $this->getEntityManager()->persist($arMovimiento);
             $this->getEntityManager()->flush();
@@ -196,6 +198,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
     public function afectar($arMovimiento, $tipo)
     {
         $em = $this->getEntityManager();
+        $validacion = true;
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $arItem = $this->getEntityManager()->getRepository(InvItem::class)->find($arMovimientoDetalle->getCodigoItemFk());
@@ -203,6 +206,11 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $arLote = $this->getEntityManager()->getRepository(InvLote::class)
                     ->findOneBy(['loteFk' => $arMovimientoDetalle->getLoteFk(), 'codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $arMovimientoDetalle->getCodigoBodegaFk()]);
                 if (!$arLote) {
+                    if($arMovimientoDetalle->getOperacionInventario() == -1) {
+                        Mensajes::error("El lote especificado en el detalle id " . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " no existe");
+                        $validacion = false;
+                        break;
+                    }
                     $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle->getCodigoBodegaFk());
                     $arLote = new InvLote();
                     $arLote->setCodigoItemFk($arMovimientoDetalle->getCodigoItemFk());
@@ -212,6 +220,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $arLote->setLoteFk($arMovimientoDetalle->getLoteFk());
                     $arLote->setFechaVencimiento($arMovimientoDetalle->getFecha());
                     $em->persist($arLote);
+                }
+
+                if($arMovimientoDetalle->getOperacionInventario() == -1) {
+                    if($arMovimientoDetalle->getCantidad() > $arLote->getCantidadExistencia()) {
+                        Mensajes::error("La cantidad: " . $arMovimientoDetalle->getCantidad() . " del lote: " . $arMovimientoDetalle->getLoteFk() ." en el movimiento con id: " . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " no tiene existencia suficiente");
+                        $validacion = false;
+                        break;
+                    }
                 }
                 $existenciaAnterior = $arItem->getCantidadExistencia();
                 $costoPromedio = $arItem->getVrCostoPromedio();
@@ -242,6 +258,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $em->persist($arItem);
             }
         }
+        return $validacion;
     }
 
     /**
@@ -312,62 +329,64 @@ class InvMovimientoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arDocumento = $this->getEntityManager()->getRepository(InvDocumento::class)->find($arMovimiento->getCodigoDocumentoFk());
-        if (!$arMovimiento->getEstadoAprobado()) {
-            $this->afectar($arMovimiento, 1);
-            $stringFecha = $arMovimiento->getFecha()->format('Y-m-d');
-            $plazo = $arMovimiento->getTerceroRel()->getPlazoPago();
+        if ($arMovimiento->getEstadoAprobado() == 0) {
+            if($this->afectar($arMovimiento, 1)) {
+                $stringFecha = $arMovimiento->getFecha()->format('Y-m-d');
+                $plazo = $arMovimiento->getTerceroRel()->getPlazoPago();
 
-            $fechaVencimiento = date_create($stringFecha);
-            $fechaVencimiento->modify("+ " . (string)$plazo . " day");
-            $arMovimiento->setFechaVence($fechaVencimiento);
-            $arMovimiento->setNumero($arDocumento->getConsecutivo());
-            $arMovimiento->setEstadoAprobado(1);
-            $arMovimiento->setFecha(new \DateTime('now'));
-            $this->getEntityManager()->persist($arMovimiento);
+                $fechaVencimiento = date_create($stringFecha);
+                $fechaVencimiento->modify("+ " . (string)$plazo . " day");
+                $arMovimiento->setFechaVence($fechaVencimiento);
+                $arMovimiento->setNumero($arDocumento->getConsecutivo());
+                $arMovimiento->setEstadoAprobado(1);
+                $arMovimiento->setFecha(new \DateTime('now'));
+                $this->getEntityManager()->persist($arMovimiento);
 
-            $arDocumento->setConsecutivo($arDocumento->getConsecutivo() + 1);
-            $this->getEntityManager()->persist($arDocumento);
+                $arDocumento->setConsecutivo($arDocumento->getConsecutivo() + 1);
+                $this->getEntityManager()->persist($arDocumento);
 
-            if($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
-                $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arMovimiento->getTerceroRel()->getCodigoIdentificacionFk(),'numeroIdentificacion' => $arMovimiento->getTerceroRel()->getNumeroIdentificacion()]);
-                if (!$arClienteCartera) {
-                    $arClienteCartera = new CarCliente();
-                    $arClienteCartera->setFormaPagoRel($arMovimiento->getTerceroRel()->getFormaPagoRel());
-                    $arClienteCartera->setIdentificacionRel($arMovimiento->getTerceroRel()->getIdentificacionRel());
-                    $arClienteCartera->setNumeroIdentificacion($arMovimiento->getTerceroRel()->getNumeroIdentificacion());
-                    $arClienteCartera->setDigitoVerificacion($arMovimiento->getTerceroRel()->getDigitoVerificacion());
-                    $arClienteCartera->setNombreCorto($arMovimiento->getTerceroRel()->getNombreCorto());
-                    $arClienteCartera->setPlazoPago($arMovimiento->getTerceroRel()->getPlazoPago());
-                    $arClienteCartera->setDireccion($arMovimiento->getTerceroRel()->getDireccion());
-                    $arClienteCartera->setTelefono($arMovimiento->getTerceroRel()->getTelefono());
-                    $arClienteCartera->setCorreo($arMovimiento->getTerceroRel()->getEmail());
-                    $em->persist($arClienteCartera);
+                if($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
+                    $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arMovimiento->getTerceroRel()->getCodigoIdentificacionFk(),'numeroIdentificacion' => $arMovimiento->getTerceroRel()->getNumeroIdentificacion()]);
+                    if (!$arClienteCartera) {
+                        $arClienteCartera = new CarCliente();
+                        $arClienteCartera->setFormaPagoRel($arMovimiento->getTerceroRel()->getFormaPagoRel());
+                        $arClienteCartera->setIdentificacionRel($arMovimiento->getTerceroRel()->getIdentificacionRel());
+                        $arClienteCartera->setNumeroIdentificacion($arMovimiento->getTerceroRel()->getNumeroIdentificacion());
+                        $arClienteCartera->setDigitoVerificacion($arMovimiento->getTerceroRel()->getDigitoVerificacion());
+                        $arClienteCartera->setNombreCorto($arMovimiento->getTerceroRel()->getNombreCorto());
+                        $arClienteCartera->setPlazoPago($arMovimiento->getTerceroRel()->getPlazoPago());
+                        $arClienteCartera->setDireccion($arMovimiento->getTerceroRel()->getDireccion());
+                        $arClienteCartera->setTelefono($arMovimiento->getTerceroRel()->getTelefono());
+                        $arClienteCartera->setCorreo($arMovimiento->getTerceroRel()->getEmail());
+                        $em->persist($arClienteCartera);
+                    }
+
+                    $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arMovimiento->getDocumentoRel()->getCodigoCuentaCobrarTipoFk());
+                    $arCuentaCobrar = new CarCuentaCobrar();
+                    $arCuentaCobrar->setClienteRel($arClienteCartera);
+                    $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
+                    $arCuentaCobrar->setFecha($arMovimiento->getFecha());
+                    $arCuentaCobrar->setFechaVence($arMovimiento->getFechaVence());
+                    $arCuentaCobrar->setModulo("INV");
+                    $arCuentaCobrar->setCodigoDocumento($arMovimiento->getCodigoMovimientoPk());
+                    $arCuentaCobrar->setNumeroDocumento($arMovimiento->getNumero());
+                    $arCuentaCobrar->setSoporte($arMovimiento->getSoporte());
+                    $arCuentaCobrar->setVrSubtotal($arMovimiento->getVrSubtotal());
+                    $arCuentaCobrar->setVrIva($arMovimiento->getVrIva());
+                    $arCuentaCobrar->setVrTotal($arMovimiento->getVrTotal());
+                    $arCuentaCobrar->setVrRetencionFuente($arMovimiento->getVrRetencionFuente());
+                    $arCuentaCobrar->setVrRetencionIva($arMovimiento->getVrRetencionIva());
+                    $arCuentaCobrar->setVrSaldo($arMovimiento->getVrTotal());
+                    $arCuentaCobrar->setVrSaldoOperado($arMovimiento->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
+                    $arCuentaCobrar->setPlazo($arMovimiento->getPlazoPago());
+                    $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
+                    $em->persist($arCuentaCobrar);
                 }
 
-                $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arMovimiento->getDocumentoRel()->getCodigoCuentaCobrarTipoFk());
-                $arCuentaCobrar = new CarCuentaCobrar();
-                $arCuentaCobrar->setClienteRel($arClienteCartera);
-                $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
-                $arCuentaCobrar->setFecha($arMovimiento->getFecha());
-                $arCuentaCobrar->setFechaVence($arMovimiento->getFechaVence());
-                $arCuentaCobrar->setModulo("INV");
-                $arCuentaCobrar->setCodigoDocumento($arMovimiento->getCodigoMovimientoPk());
-                $arCuentaCobrar->setNumeroDocumento($arMovimiento->getNumero());
-                $arCuentaCobrar->setSoporte($arMovimiento->getSoporte());
-                $arCuentaCobrar->setVrSubtotal($arMovimiento->getVrSubtotal());
-                $arCuentaCobrar->setVrIva($arMovimiento->getVrIva());
-                $arCuentaCobrar->setVrTotal($arMovimiento->getVrTotal());
-                $arCuentaCobrar->setVrRetencionFuente($arMovimiento->getVrRetencionFuente());
-                $arCuentaCobrar->setVrRetencionIva($arMovimiento->getVrRetencionIva());
-                $arCuentaCobrar->setVrSaldo($arMovimiento->getVrTotal());
-                $arCuentaCobrar->setVrSaldoOperado($arMovimiento->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
-                $arCuentaCobrar->setPlazo($arMovimiento->getPlazoPago());
-                $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
-                $em->persist($arCuentaCobrar);
+                $this->getEntityManager()->flush();
             }
-
-            $this->getEntityManager()->flush();
+        } else {
+           Mensajes::error("El movimiento ya fue aprobado aprobado");
         }
-
     }
 }

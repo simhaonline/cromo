@@ -44,6 +44,11 @@ class InvLote
     private $cantidadExistencia = 0;
 
     /**
+     * @ORM\Column(name="cantidad_remisionada", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $cantidadRemisionada = 0;
+
+    /**
      * @ORM\Column(name="fecha_vencimiento", type="date", nullable=true)
      */            
     private $fechaVencimiento;    
@@ -202,6 +207,22 @@ class InvLote
     public function setBodegaRel($bodegaRel): void
     {
         $this->bodegaRel = $bodegaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadRemisionada()
+    {
+        return $this->cantidadRemisionada;
+    }
+
+    /**
+     * @param mixed $cantidadRemisionada
+     */
+    public function setCantidadRemisionada($cantidadRemisionada): void
+    {
+        $this->cantidadRemisionada = $cantidadRemisionada;
     }
 
 

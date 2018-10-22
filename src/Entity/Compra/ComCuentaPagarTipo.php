@@ -11,7 +11,6 @@ class ComCuentaPagarTipo
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
      * @ORM\Column(name="codigo_cuenta_pagar_tipo_pk",type="string", length=10)
      */
     private $codigoCuentaPagarTipoPk;
@@ -32,9 +31,9 @@ class ComCuentaPagarTipo
     private $prefijo;
 
     /**
-     * @ORM\Column(name="codigo_cuenta_cliente_fk", type="string", length=20, nullable=true)
+     * @ORM\Column(name="codigo_cuenta_proveedor_fk", type="string", length=20, nullable=true)
      */
-    private $codigoCuentaClienteFk;
+    private $codigoCuentaProveedorFk;
 
     /**
      * @ORM\Column(name="codigo_cuenta_retencion_iva_fk", type="string", length=20, nullable=true)
@@ -133,17 +132,17 @@ class ComCuentaPagarTipo
     /**
      * @return mixed
      */
-    public function getCodigoCuentaClienteFk()
+    public function getCodigoCuentaProveedorFk()
     {
-        return $this->codigoCuentaClienteFk;
+        return $this->codigoCuentaProveedorFk;
     }
 
     /**
-     * @param mixed $codigoCuentaClienteFk
+     * @param mixed $codigoCuentaProveedorFk
      */
-    public function setCodigoCuentaClienteFk($codigoCuentaClienteFk): void
+    public function setCodigoCuentaProveedorFk($codigoCuentaProveedorFk): void
     {
-        $this->codigoCuentaClienteFk = $codigoCuentaClienteFk;
+        $this->codigoCuentaProveedorFk = $codigoCuentaProveedorFk;
     }
 
     /**

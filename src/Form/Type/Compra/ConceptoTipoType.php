@@ -14,7 +14,8 @@ class ConceptoTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nombre', TextType::class, ['label' => 'Nombre'])
+            ->add('codigoConceptoTipoPk', TextType::class, ['label' => 'Codigo:'])
+            ->add('nombre', TextType::class, ['label' => 'Nombre:'])
             ->add('guardar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

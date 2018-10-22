@@ -11,7 +11,6 @@ class ComConcepto
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
      * @ORM\Column(name="codigo_concepto_pk", type="string" , length=10)
      */
     private $codigoConceptoPk;

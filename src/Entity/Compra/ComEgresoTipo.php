@@ -11,7 +11,6 @@ class ComEgresoTipo
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
      * @ORM\Column(name="codigo_egreso_tipo_pk", type="string", length=10)
      */
     private $codigoEgresoTipoPk;

@@ -22,7 +22,7 @@ class ComCompraDetalle
     private $codigoCompraFk;
 
     /**
-     * @ORM\Column(name="codigo_concepto_fk" , type="integer")
+     * @ORM\Column(name="codigo_concepto_fk" , type="string" , length=10, nullable=true)
      */
     private $codigoConceptoFk;
 
@@ -87,7 +87,6 @@ class ComCompraDetalle
      * @ORM\JoinColumn(name="codigo_concepto_fk" , referencedColumnName="codigo_concepto_pk")
      */
     private $conceptoRel;
-
 
 
     /**

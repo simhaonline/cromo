@@ -12,7 +12,7 @@ class ComCuentaPagarTipo
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(name="codigo_cuenta_pagar_tipo_pk",type="integer")
+     * @ORM\Column(name="codigo_cuenta_pagar_tipo_pk",type="string", length=10)
      */
     private $codigoCuentaPagarTipoPk;
 

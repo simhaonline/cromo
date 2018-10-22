@@ -43,7 +43,7 @@ class ComCompraTipo
     private $consecutivo = 0;
 
     /**
-     * @ORM\Column(name="codigo_cuenta_pagar_tipo_fk" , type="integer")
+     * @ORM\Column(name="codigo_cuenta_pagar_tipo_fk" , type="string" , length=10, nullable=true)
      */
     private $codigoCuentaPagarTipoFk;
 

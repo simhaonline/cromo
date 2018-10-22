@@ -12,7 +12,7 @@ class ComConceptoTipo
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(name="codigo_concepto_tipo_pk",type="integer")
+     * @ORM\Column(name="codigo_concepto_tipo_pk", type="string" , length=10, nullable=true)
      */
     private $codigoConceptoTipoPk;
 

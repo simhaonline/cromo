@@ -17,7 +17,7 @@ class ComEgreso
     private $codigoEgresoPk;
 
     /**
-     * @ORM\Column(name="codigo_egreso_tipo_fk" , type="integer")
+     * @ORM\Column(name="codigo_egreso_tipo_fk" , type="string" , length=10, nullable=true)
      */
     private $codigoEgresoTipoFk;
 

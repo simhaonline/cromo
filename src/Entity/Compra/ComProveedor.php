@@ -168,9 +168,14 @@ class ComProveedor
     protected $identificacionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComCompra",mappedBy="proveedorRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComCompra" , mappedBy="proveedorRel")
      */
-    private $comprasProveedorRel;
+    protected $comprasProveedorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComEgreso" , mappedBy="proveedorRel")
+     */
+    protected $egresosProveedorRel;
 
     /**
      * @return mixed
@@ -474,6 +479,22 @@ class ComProveedor
     public function setComprasProveedorRel($comprasProveedorRel): void
     {
         $this->comprasProveedorRel = $comprasProveedorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEgresosProveedorRel()
+    {
+        return $this->egresosProveedorRel;
+    }
+
+    /**
+     * @param mixed $egresosProveedorRel
+     */
+    public function setEgresosProveedorRel($egresosProveedorRel): void
+    {
+        $this->egresosProveedorRel = $egresosProveedorRel;
     }
 
 

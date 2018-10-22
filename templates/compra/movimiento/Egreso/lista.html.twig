@@ -1,0 +1,9 @@
+{% extends 'base_compra.html.twig' %}
+{% block content %}
+    <br>
+    <br>
+    {{ form_start(formBotonera) }}
+    {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
+    {% include 'estructura/movimiento/botoneraGeneral.html.twig' %}
+    {{ form_end(formBotonera) }}
+{% endblock %}

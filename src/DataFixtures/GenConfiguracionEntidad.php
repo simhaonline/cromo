@@ -50,7 +50,9 @@ class GenConfiguracionEntidad extends Fixture
         $arrModuloCompra = [
             'compraTipo,administracion,general,0,0',
             'conceptoTipo,administracion,general,0,0',
-            'concepto,administracion,general,0,0'];
+            'concepto,administracion,general,0,0',
+            'cuentaPagarTipo,administracion,general,0,0',
+            'egresoTipo,administracion,general,0,0'];
         $this->setConfiguracionEntidades($arrModuloCompra, $em, 'compra');
 //        /////////////////                 FIN ESTRACTURA MODULO DE CARTERA                             ////////////////
 

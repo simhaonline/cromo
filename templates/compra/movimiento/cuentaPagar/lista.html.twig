@@ -1,0 +1,74 @@
+{% extends 'base_compra.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Numero:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtNumero, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-1 control-label">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cboCuentaPagarTipo, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.btnFiltrar) }}
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>NUMERO</th>
+            <th>TIPO</th>
+            <th>FECHA</th>
+            <th>VENCE</th>
+            <th>NIT</th>
+            <th>CLIENTE</th>
+            <th>PLAZO</th>
+            <th>TOTAL</th>
+            <th>ABONO</th>
+            <th>SALDO</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arCuentaPagar in arCuentaPagar %}
+            <tr>
+                <td>{{ arCuentaPagar.codigoCuentaPagarPk }}</td>
+                <td>{{ arCuentaPagar.numeroDocumento }}</td>
+                <td>{{ arCuentaPagar.tipo }}</td>
+                <td>{{ arCuentaPagar.fecha | date('Y-m-d') }}</td>
+                <td>{{ arCuentaPagar.fechaVence | date('Y-m-d') }}</td>
+                <td>{{ arCuentaPagar.numeroIdentificacion }}</td>
+                <td>{{ arCuentaPagar.nombreCorto }}</td>
+                <td>{{ arCuentaPagar.plazo }}</td>
+                <td class="numero">{{ arCuentaPagar.vrTotal| number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arCuentaPagar.vrAbono| number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arCuentaPagar.vrSaldo| number_format(0, '.', ',') }}</td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                       value="{{ arCuentaPagar.codigoCuentaPagarPk }}"/></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span
+                        class="badge">{{ arCuentaPagar.getTotalItemCount }}</span></div>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arCuentaPagar) }}
+    </div>
+    <div class="btn-group" style="float: right">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+

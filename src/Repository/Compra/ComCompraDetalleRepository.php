@@ -3,6 +3,7 @@
 namespace App\Repository\Compra;
 
 use App\Entity\Compra\ComCompraDetalle;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -30,5 +31,33 @@ class ComCompraDetalleRepository extends ServiceEntityRepository
             ->where("cd.codigoCompraFk = '{$codigoCompra}'");
 
         return $query->getQuery();
+    }
+
+    /**
+     * @param $arCompra
+     * @param $arrDetallesSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function eliminar($arCompra, $arrDetallesSeleccionados)
+    {
+        if ($arCompra->getEstadoAutorizado() == 0) {
+            if ($arrDetallesSeleccionados) {
+                if (count($arrDetallesSeleccionados)) {
+                    foreach ($arrDetallesSeleccionados as $codigo) {
+                        $ar = $this->getEntityManager()->getRepository(ComCompraDetalle::class)->find($codigo);
+                        if ($ar) {
+                            $this->getEntityManager()->remove($ar);
+                        }
+                    }
+                    try {
+                        $this->getEntityManager()->flush();
+                    } catch (\Exception $e) {
+                        Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                    }
+                }
+            }
+        } else {
+            Mensajes::error('No se puede eliminar, el registro se encuentra autorizado');
+        }
     }
 }

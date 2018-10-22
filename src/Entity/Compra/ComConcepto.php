@@ -38,6 +38,11 @@ class ComConcepto
     private $conceptoTipoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComCompraDetalle" , mappedBy="conceptoRel")
+     */
+    private $comprasDetallesConceptoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoConceptoPk()
@@ -117,5 +122,20 @@ class ComConcepto
         $this->conceptoTipoRel = $conceptoTipoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getComprasDetallesConceptoRel()
+    {
+        return $this->comprasDetallesConceptoRel;
+    }
+
+    /**
+     * @param mixed $comprasDetallesConceptoRel
+     */
+    public function setComprasDetallesConceptoRel($comprasDetallesConceptoRel): void
+    {
+        $this->comprasDetallesConceptoRel = $comprasDetallesConceptoRel;
+    }
 
 }

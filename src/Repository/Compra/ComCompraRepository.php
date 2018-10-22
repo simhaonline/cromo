@@ -4,6 +4,10 @@ namespace App\Repository\Compra;
 
 use App\Entity\Compra\ComCompra;
 use App\Entity\Compra\ComCompraDetalle;
+use App\Entity\Compra\ComCompraTipo;
+use App\Entity\Compra\ComCuentaPagar;
+use App\Entity\Compra\ComCuentaPagarTipo;
+use App\Entity\Compra\ComProveedor;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -109,20 +113,97 @@ class ComCompraRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param @param $arCompra ComCompra
+     * @var $arCompra ComCompra
      * @throws \Doctrine\ORM\ORMException
      */
     public function aprobar($arCompra)
     {
-//        $arCotizacionTipo = $this->_em->getRepository(InvCotizacionTipo::class)->find($arCompra->getCodigoCotizacionTipoFk());
-//        if (!$arCompra->getEstadoAprobado()) {
-//            $arCotizacionTipo->setConsecutivo($arCotizacionTipo->getConsecutivo() + 1);
-//            $arCompra->setEstadoAprobado(1);
-//            $arCompra->setNumero($arCotizacionTipo->getConsecutivo());
-//            $this->_em->persist($arCotizacionTipo);
-//            $this->_em->persist($arCompra);
-//            $this->_em->flush();
-//        }
+        $em = $this->getEntityManager();
+        $arCompraTipo = $this->_em->getRepository(ComCompraTipo::class)->find($arCompra->getCodigoCompraTipoFk());
+        if (!$arCompra->getEstadoAprobado()) {
+            $arCompraTipo->setConsecutivo($arCompraTipo->getConsecutivo() + 1);
+            $arCompra->setEstadoAprobado(1);
+            $arCompra->setNumero($arCompraTipo->getConsecutivo());
+            $arProveedor = $em->getRepository(ComProveedor::class)->findOneBy(['codigoProveedorPk' => $arCompra->getProveedorRel()->getCodigoProveedorPk()]);
+            $arCuentaCobrarTipo = $em->getRepository(ComCuentaPagarTipo::class)->find($arCompra->getCompraTipoRel()->getCodigoCuentaPagarTipoFk());
+            $arCuentaPagar = new ComCuentaPagar();
+            $arCuentaPagar->setProveedorRel($arProveedor);
+            $arCuentaPagar->setCuentaPagarTipoRel($arCuentaCobrarTipo);
+            $arCuentaPagar->setFecha($arCompra->getFecha());
+            $arCuentaPagar->setFechaVence($arCompra->getFechaVencimiento());
+//            $arCuentaPagar->setModulo("INV");
+            $arCuentaPagar->setCodigoDocumento($arCompra->getCodigoCompraPk());
+            $arCuentaPagar->setNumeroDocumento($arCompra->getNumero());
+//            $arCuentaPagar->setSoporte($arCompra->getSoporte());
+            $arCuentaPagar->setVrSubtotal($arCompra->getVrSubtotal());
+            $arCuentaPagar->setVrIva($arCompra->getVrIva());
+            $arCuentaPagar->setVrTotal($arCompra->getVrTotal());
+            $arCuentaPagar->setVrRetencionFuente($arCompra->getVrRetencion());
+//            $arCuentaPagar->setVrRetencionIva($arCompra->getVrRetencionIva());
+            $arCuentaPagar->setVrSaldo($arCompra->getVrTotal());
+            $arCuentaPagar->setVrSaldoOperado($arCompra->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
+//            $arCuentaPagar->setPlazo($arCompra->getPlazoPago());
+            $arCuentaPagar->setOperacion($arCuentaCobrarTipo->getOperacion());
+            $em->persist($arCuentaPagar);
+
+            $this->_em->persist($arCompraTipo);
+            $this->_em->persist($arCompra);
+            $this->_em->flush();
+        }
+    }
+
+    /**
+     * @param $arCompra ComCompra
+     * @return array
+     */
+    public function anular($arCompra)
+    {
+        $respuesta = [];
+        if ($arCompra->getEstadoAprobado() == 1) {
+            $arCompra->setEstadoAnulado(1);
+            $this->_em->persist($arCompra);
+            if (count($respuesta) == 0) {
+                $this->_em->flush();
+            }
+            return $respuesta;
+        }
+    }
+
+    /**
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        /**
+         * @var $arCompra ComCompra
+         */
+        $respuesta = '';
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(ComCompra::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            if (count($this->getEntityManager()->getRepository(ComCompraDetalle::class)->findBy(['codigoCompraFk' => $arRegistro->getCodigoCompraPk()])) <= 0) {
+                                $this->getEntityManager()->remove($arRegistro);
+                            } else {
+                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                            }
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                }
+                if ($respuesta != '') {
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
     }
 
 }

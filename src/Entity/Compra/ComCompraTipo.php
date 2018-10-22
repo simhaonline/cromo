@@ -31,7 +31,6 @@ class ComCompraTipo
      */
     private $nombre;
 
-
     /**
      * @ORM\Column(name="operacion" , type="integer")
      *
@@ -39,9 +38,25 @@ class ComCompraTipo
     private $operacion;
 
     /**
+     * @ORM\Column(name="consecutivo" , type="integer")
+     */
+    private $consecutivo = 0;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_pagar_tipo_fk" , type="integer")
+     */
+    private $codigoCuentaPagarTipoFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComCompra", mappedBy="compraTipoRel")
      */
     private $comprasCompraTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Compra\ComCuentaPagarTipo" , inversedBy="comprasTipoCuentaPagarRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_pagar_tipo_fk" , referencedColumnName="codigo_cuenta_pagar_tipo_pk")
+     */
+    private $cuentaPagarTipoRel;
 
     /**
      * @return mixed
@@ -94,6 +109,38 @@ class ComCompraTipo
     /**
      * @return mixed
      */
+    public function getConsecutivo()
+    {
+        return $this->consecutivo;
+    }
+
+    /**
+     * @param mixed $consecutivo
+     */
+    public function setConsecutivo($consecutivo): void
+    {
+        $this->consecutivo = $consecutivo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaPagarTipoFk()
+    {
+        return $this->codigoCuentaPagarTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaPagarTipoFk
+     */
+    public function setCodigoCuentaPagarTipoFk($codigoCuentaPagarTipoFk): void
+    {
+        $this->codigoCuentaPagarTipoFk = $codigoCuentaPagarTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComprasCompraTipoRel()
     {
         return $this->comprasCompraTipoRel;
@@ -107,6 +154,21 @@ class ComCompraTipo
         $this->comprasCompraTipoRel = $comprasCompraTipoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCuentaPagarTipoRel()
+    {
+        return $this->cuentaPagarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaPagarTipoRel
+     */
+    public function setCuentaPagarTipoRel($cuentaPagarTipoRel): void
+    {
+        $this->cuentaPagarTipoRel = $cuentaPagarTipoRel;
+    }
 
 }
 

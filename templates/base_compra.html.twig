@@ -67,6 +67,18 @@
                                 <li><a href="{{ path('compra_movimiento_compra_compra_lista') }}">Compra</a></li>
                             </ul>
                         </li>
+                        <li>
+                            <a href="#">Egreso <span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li><a href="{{ path('compra_movimiento_egreso_egreso_lista') }}">Egreso</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Cuentas por Pagar <span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li><a href="{{ path('compra_movimiento_cuenta_pagar_lista') }}">Cuentas por pagar</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 <li>
@@ -85,6 +97,14 @@
                                 </li>
                                 <li>
                                     <a href="{{ path('admin_lista',{'modulo':'compra','entidad':'concepto'}) }}">Concepto</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('admin_lista',{'modulo':'compra','entidad':'cuentaPagarTipo'}) }}">Cuenta
+                                        pagar tipo</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('admin_lista',{'modulo':'compra','entidad':'egresoTipo'}) }}">Egreso
+                                        Tipo</a>
                                 </li>
                             </ul>
                         </li>

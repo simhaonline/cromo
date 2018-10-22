@@ -88,6 +88,8 @@ class ComCompraDetalle
      */
     private $conceptoRel;
 
+
+
     /**
      * @return mixed
      */

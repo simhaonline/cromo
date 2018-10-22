@@ -5,16 +5,21 @@ namespace App\Entity\Compra;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Compra\ComCompraRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Compra\ComEgresoRepository")
  */
-class ComCompra
+class ComEgreso
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(name="codigo_compra_pk" , type="integer")
+     * @ORM\Column(name="codigo_egreso_pk",type="integer")
      */
-    private $codigoCompraPk;
+    private $codigoEgresoPk;
+
+    /**
+     * @ORM\Column(name="codigo_egreso_tipo_fk" , type="integer")
+     */
+    private $codigoEgresoTipoFk;
 
     /**
      * @ORM\Column(name="codigo_proveedor_fk" , type="integer")
@@ -22,28 +27,17 @@ class ComCompra
     private $codigoProveedorFk;
 
     /**
-     * @ORM\Column(name="codigo_compra_tipo_fk", type="string" , length=10, nullable=true)
-     */
-    private $codigoCompraTipoFk;
-
-    /**
-     * @ORM\Column(name="numero" ,type="integer",nullable=true)
-     */
-    private $numero;
-
-    /**
-     * @ORM\Column(name="fecha" ,type="date" )
+     * @ORM\Column(name="fecha" ,type="date")
      */
     private $fecha;
 
     /**
-     * @ORM\Column(name="fecha_vencimiento", type="date" ,nullable=true)
+     * @ORM\Column(name="numero" , type="integer")
      */
-    private $fechaVencimiento;
+    private $numero = 0;
 
     /**
      * @ORM\Column(name="comentarios" , type="string" ,nullable=true)
-     *
      */
     private $comentarios;
 
@@ -56,21 +50,6 @@ class ComCompra
      * @ORM\Column(name="vr_descuento", type="float")
      */
     private $vrDescuento = 0;
-
-    /**
-     * @ORM\Column(name="vr_subtotal_menos_descuento" , type="float")
-     */
-    private $vrSubtotalMenosDescuento = 0;
-
-    /**
-     * @ORM\Column(name="vr_iva" , type="float")
-     */
-    private $vrIva = 0;
-
-    /**
-     * @ORM\Column(name="vr_retencion", type="float")
-     */
-    private $vrRetencion = 0;
 
     /**
      * @ORM\Column(name="vr_total" ,type="float")
@@ -98,36 +77,52 @@ class ComCompra
     private $estadoContabilizado = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Compra\ComProveedor" , inversedBy="comprasProveedorRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Compra\ComProveedor" , inversedBy="egresosProveedorRel")
      * @ORM\JoinColumn(name="codigo_proveedor_fk" , referencedColumnName="codigo_proveedor_pk")
      */
     private $proveedorRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Compra\ComCompraTipo" , inversedBy="comprasCompraTipoRel")
-     * @ORM\JoinColumn(name="codigo_compra_tipo_fk" , referencedColumnName="codigo_compra_tipo_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Compra\ComEgresoTipo" , inversedBy="egresosEgresoTipoRel")
+     * @ORM\JoinColumn(name="codigo_egreso_tipo_fk" , referencedColumnName="codigo_egreso_tipo_pk")
      */
-    private $compraTipoRel;
+    private $egresoTipoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComCompraDetalle", mappedBy="compraRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComEgresoDetalle", mappedBy="egresoRel")
      */
-    private $compraDetallesCompraRel;
+    private $egresoDetallesEgresoRel;
 
     /**
      * @return mixed
      */
-    public function getCodigoCompraPk()
+    public function getCodigoEgresoPk()
     {
-        return $this->codigoCompraPk;
+        return $this->codigoEgresoPk;
     }
 
     /**
-     * @param mixed $codigoCompraPk
+     * @param mixed $codigoEgresoPk
      */
-    public function setCodigoCompraPk($codigoCompraPk): void
+    public function setCodigoEgresoPk($codigoEgresoPk): void
     {
-        $this->codigoCompraPk = $codigoCompraPk;
+        $this->codigoEgresoPk = $codigoEgresoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEgresoTipoFk()
+    {
+        return $this->codigoEgresoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoEgresoTipoFk
+     */
+    public function setCodigoEgresoTipoFk($codigoEgresoTipoFk): void
+    {
+        $this->codigoEgresoTipoFk = $codigoEgresoTipoFk;
     }
 
     /**
@@ -149,38 +144,6 @@ class ComCompra
     /**
      * @return mixed
      */
-    public function getCodigoCompraTipoFk()
-    {
-        return $this->codigoCompraTipoFk;
-    }
-
-    /**
-     * @param mixed $codigoCompraTipoFk
-     */
-    public function setCodigoCompraTipoFk($codigoCompraTipoFk): void
-    {
-        $this->codigoCompraTipoFk = $codigoCompraTipoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumero()
-    {
-        return $this->numero;
-    }
-
-    /**
-     * @param mixed $numero
-     */
-    public function setNumero($numero): void
-    {
-        $this->numero = $numero;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getFecha()
     {
         return $this->fecha;
@@ -197,17 +160,17 @@ class ComCompra
     /**
      * @return mixed
      */
-    public function getFechaVencimiento()
+    public function getNumero()
     {
-        return $this->fechaVencimiento;
+        return $this->numero;
     }
 
     /**
-     * @param mixed $fechaVencimiento
+     * @param mixed $numero
      */
-    public function setFechaVencimiento($fechaVencimiento): void
+    public function setNumero($numero): void
     {
-        $this->fechaVencimiento = $fechaVencimiento;
+        $this->numero = $numero;
     }
 
     /**
@@ -256,54 +219,6 @@ class ComCompra
     public function setVrDescuento($vrDescuento): void
     {
         $this->vrDescuento = $vrDescuento;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrSubtotalMenosDescuento()
-    {
-        return $this->vrSubtotalMenosDescuento;
-    }
-
-    /**
-     * @param mixed $vrSubtotalMenosDescuento
-     */
-    public function setVrSubtotalMenosDescuento($vrSubtotalMenosDescuento): void
-    {
-        $this->vrSubtotalMenosDescuento = $vrSubtotalMenosDescuento;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrIva()
-    {
-        return $this->vrIva;
-    }
-
-    /**
-     * @param mixed $vrIva
-     */
-    public function setVrIva($vrIva): void
-    {
-        $this->vrIva = $vrIva;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrRetencion()
-    {
-        return $this->vrRetencion;
-    }
-
-    /**
-     * @param mixed $vrRetencion
-     */
-    public function setVrRetencion($vrRetencion): void
-    {
-        $this->vrRetencion = $vrRetencion;
     }
 
     /**
@@ -405,33 +320,17 @@ class ComCompra
     /**
      * @return mixed
      */
-    public function getCompraTipoRel()
+    public function getEgresoTipoRel()
     {
-        return $this->compraTipoRel;
+        return $this->egresoTipoRel;
     }
 
     /**
-     * @param mixed $compraTipoRel
+     * @param mixed $egresoTipoRel
      */
-    public function setCompraTipoRel($compraTipoRel): void
+    public function setEgresoTipoRel($egresoTipoRel): void
     {
-        $this->compraTipoRel = $compraTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCompraDetallesCompraRel()
-    {
-        return $this->compraDetallesCompraRel;
-    }
-
-    /**
-     * @param mixed $compraDetallesCompraRel
-     */
-    public function setCompraDetallesCompraRel($compraDetallesCompraRel): void
-    {
-        $this->compraDetallesCompraRel = $compraDetallesCompraRel;
+        $this->egresoTipoRel = $egresoTipoRel;
     }
 
 

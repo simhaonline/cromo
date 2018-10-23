@@ -96,7 +96,7 @@ class ControlFactura extends \FPDF
             $pdf->Cell(40, 4, utf8_decode($arFacturaTipo['nombre']), 'LRB', 0, 'L');
             $pdf->Cell(20, 4, $arFacturaTipo['desde'], 'LRB', 0, 'L');
             $pdf->Cell(20, 4, $arFacturaTipo['hasta'], 'LRB', 0, 'L');
-            $vrTotal += $arFacturaTipo['vrTotal'];
+            $vrTotal += $arFacturaTipo['vrTotalOperado'];
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }
@@ -134,7 +134,7 @@ class ControlFactura extends \FPDF
             $pdf->Cell(60, 4, utf8_decode($arFactura['nombreCorto']), 'LRB', 0, 'L');
             $pdf->Cell(15, 4, number_format($arFactura['vrFlete']), 'LRB', 0, 'R');
             $pdf->Cell(15, 4, number_format($arFactura['vrManejo']), 'LRB', 0, 'R');
-            $pdf->Cell(15, 4, number_format($arFactura['vrTotal']), 'LRB', 0, 'R');
+            $pdf->Cell(15, 4, number_format($arFactura['vrTotalOperado']), 'LRB', 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
             $registro++;
@@ -196,7 +196,7 @@ class ControlFactura extends \FPDF
         $pdf->SetX(73);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
-        $pdf->Cell(19, 4, number_format($arFacturasTipo[0]['vrTotal']), 1, 0, 'R', 1);
+        $pdf->Cell(19, 4, number_format($arFacturasTipo[0]['vrTotalOperado']), 1, 0, 'R', 1);
         $pdf->SetX(113);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
@@ -223,7 +223,7 @@ class ControlFactura extends \FPDF
         $pdf->SetX(73);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
-        $pdf->Cell(19, 4, number_format($arFacturasTipo[0]['vrTotal']), 1, 0, 'R', 1);
+        $pdf->Cell(19, 4, number_format($arFacturasTipo[0]['vrTotalOperado']), 1, 0, 'R', 1);
         $pdf->SetX(113);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
@@ -250,7 +250,7 @@ class ControlFactura extends \FPDF
         $pdf->SetX(73);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
-        $pdf->Cell(19, 4, number_format($arFacturasTipo[0]['vrTotal']), 1, 0, 'R', 1);
+        $pdf->Cell(19, 4, number_format($arFacturasTipo[0]['vrTotalOperado']), 1, 0, 'R', 1);
         $pdf->SetX(113);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
@@ -535,7 +535,7 @@ class ControlFactura extends \FPDF
         $pdf->SetX(73);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
-        $pdf->Cell(19, 4, number_format($arFacturasTipo[1]['vrTotal']), 1, 0, 'R', 1);
+        $pdf->Cell(19, 4, number_format($arFacturasTipo[1]['vrTotalOperado']), 1, 0, 'R', 1);
         $pdf->SetX(113);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
@@ -562,7 +562,7 @@ class ControlFactura extends \FPDF
         $pdf->SetX(73);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
-        $pdf->Cell(19, 4, number_format($arFacturasTipo[1]['vrTotal']), 1, 0, 'R', 1);
+        $pdf->Cell(19, 4, number_format($arFacturasTipo[1]['vrTotalOperado']), 1, 0, 'R', 1);
         $pdf->SetX(113);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
@@ -589,7 +589,7 @@ class ControlFactura extends \FPDF
         $pdf->SetX(73);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
-        $pdf->Cell(19, 4, number_format($arFacturasTipo[1]['vrTotal']), 1, 0, 'R', 1);
+        $pdf->Cell(19, 4, number_format($arFacturasTipo[1]['vrTotalOperado']), 1, 0, 'R', 1);
         $pdf->SetX(113);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
@@ -648,7 +648,7 @@ class ControlFactura extends \FPDF
         $pdf->SetX(73);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
-        $pdf->Cell(19, 4, number_format($arFacturasTipo[2]['vrTotal']), 1, 0, 'R', 1);
+        $pdf->Cell(19, 4, number_format($arFacturasTipo[2]['vrTotalOperado']), 1, 0, 'R', 1);
         $pdf->SetX(113);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
@@ -675,7 +675,7 @@ class ControlFactura extends \FPDF
         $pdf->SetX(73);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
-        $pdf->Cell(19, 4, number_format($arFacturasTipo[2]['vrTotal']), 1, 0, 'R', 1);
+        $pdf->Cell(19, 4, number_format($arFacturasTipo[2]['vrTotalOperado']), 1, 0, 'R', 1);
         $pdf->SetX(113);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
@@ -702,7 +702,7 @@ class ControlFactura extends \FPDF
         $pdf->SetX(73);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
-        $pdf->Cell(19, 4, number_format($arFacturasTipo[2]['vrTotal']), 1, 0, 'R', 1);
+        $pdf->Cell(19, 4, number_format($arFacturasTipo[2]['vrTotalOperado']), 1, 0, 'R', 1);
         $pdf->SetX(113);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);

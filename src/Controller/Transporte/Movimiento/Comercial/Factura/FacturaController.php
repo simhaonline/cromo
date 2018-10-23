@@ -489,6 +489,7 @@ class FacturaController extends Controller
                     $fecha = new \DateTime('now');
                     $arFactura->setFecha($fecha);
                     $arFactura->setFechaVence($arFactura->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
+                    $arFactura->setOperacionComercial($arFactura->getFacturaTipoRel()->getOperacionComercial());
                     $em->persist($arFactura);
                     $em->flush();
                     return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', array('id' => $arFactura->getCodigoFacturaPk())));

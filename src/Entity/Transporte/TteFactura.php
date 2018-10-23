@@ -83,6 +83,11 @@ class TteFactura
     private $vrTotal = 0;
 
     /**
+     * @ORM\Column(name="vr_total_operado", type="float")
+     */
+    private $vrTotalOperado = 0;
+
+    /**
      * @ORM\Column(name="guias", type="integer", nullable=true)
      */
     private $guias;
@@ -116,6 +121,11 @@ class TteFactura
      * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoOperacionFk;
+
+    /**
+     * @ORM\Column(name="operacion_comercial", type="smallint", nullable=true, options={"default" : 0})
+     */
+    private $operacionComercial = 0;
 
     /**
      * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
@@ -627,6 +637,54 @@ class TteFactura
     public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalOperado()
+    {
+        return $this->vrTotalOperado;
+    }
+
+    /**
+     * @param mixed $vrTotalOperado
+     */
+    public function setVrTotalOperado($vrTotalOperado): void
+    {
+        $this->vrTotalOperado = $vrTotalOperado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionComercial()
+    {
+        return $this->operacionComercial;
+    }
+
+    /**
+     * @param mixed $operacionComercial
+     */
+    public function setOperacionComercial($operacionComercial): void
+    {
+        $this->operacionComercial = $operacionComercial;
     }
 
 

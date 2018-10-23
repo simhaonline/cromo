@@ -69,9 +69,9 @@
                 <td>{{ arFactura.numero }}</td>
                 <td>{{ arFactura.fecha | date('Y-m-d') }}</td>
                 <td>{{ arFactura.nombreCorto }}</td>
-                <td class="numero">{{ arFactura.vrFlete | number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arFactura.vrManejo | number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arFactura.vrTotal | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arFactura.vrFlete * arFactura.operacionComercial | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arFactura.vrManejo * arFactura.operacionComercial | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arFactura.vrTotalOperado | number_format(0, '.', ',') }}</td>
             </tr>
             {% set contador = contador + 1 %}
         {% endfor %}

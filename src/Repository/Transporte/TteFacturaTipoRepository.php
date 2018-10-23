@@ -45,7 +45,7 @@ class TteFacturaTipoRepository extends ServiceEntityRepository
             $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
                 ->select('MIN(f.numero) as desde')
                 ->addSelect('MAX(f.numero) as hasta')
-                ->addSelect('SUM(f.vrTotal) AS vrTotal')
+                ->addSelect('SUM(f.vrTotalOperado) AS vrTotalOperado')
                 ->addSelect('COUNT(f.codigoFacturaPk) AS numeroFacturas')
                 ->where("f.codigoFacturaTipoFk = '" . $arFacturaTipo['codigoFacturaTipoPk'] . "'")
                 ->andWhere("f.fecha >= '$fecha 00:00:00' AND f.fecha <= '$fecha 23:59:59'")
@@ -54,12 +54,12 @@ class TteFacturaTipoRepository extends ServiceEntityRepository
             if ($arFactura['desde']) {
                 $arFacturaTipos[$pos]['desde'] = $arFactura['desde'];
                 $arFacturaTipos[$pos]['hasta'] = $arFactura['hasta'];
-                $arFacturaTipos[$pos]['vrTotal'] = $arFactura['vrTotal'];
+                $arFacturaTipos[$pos]['vrTotalOperado'] = $arFactura['vrTotalOperado'];
                 $arFacturaTipos[$pos]['numeroFacturas'] = $arFactura['numeroFacturas'];
             } else {
                 $arFacturaTipos[$pos]['desde'] = "Sin registros";
                 $arFacturaTipos[$pos]['hasta'] = "Sin registros";
-                $arFacturaTipos[$pos]['vrTotal'] = 0;
+                $arFacturaTipos[$pos]['vrTotalOperado'] = 0;
                 $arFacturaTipos[$pos]['numeroFacturas'] = 0;
             }
             $pos++;

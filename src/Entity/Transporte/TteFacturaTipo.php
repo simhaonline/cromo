@@ -97,6 +97,11 @@ class TteFacturaTipo
     protected $guiasTiposFacturaTipoRel;
 
     /**
+     * @ORM\Column(name="operacion_comercial", type="smallint", nullable=true, options={"default" : 0})
+     */
+    private $operacionComercial = 0;
+
+    /**
      * @return mixed
      */
     public function getCodigoFacturaTipoPk()
@@ -350,6 +355,38 @@ class TteFacturaTipo
     public function setCodigoComprobanteFk($codigoComprobanteFk): void
     {
         $this->codigoComprobanteFk = $codigoComprobanteFk;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionComercial()
+    {
+        return $this->operacionComercial;
+    }
+
+    /**
+     * @param mixed $operacionComercial
+     */
+    public function setOperacionComercial($operacionComercial): void
+    {
+        $this->operacionComercial = $operacionComercial;
     }
 
 

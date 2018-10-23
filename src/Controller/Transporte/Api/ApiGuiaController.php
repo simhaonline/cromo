@@ -106,7 +106,6 @@ class ApiGuiaController extends FOSRestController
         ];
     }
 
-
     /**
      * @param Request $request
      * @param int $codigoDespacho

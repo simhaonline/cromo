@@ -256,6 +256,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                     $arMonitoreo->setFechaRegistro(new \DateTime('now'));
                     $arMonitoreo->setFechaInicio(new \DateTime('now'));
                     $arMonitoreo->setFechaFin(new \DateTime('now'));
+                    $arMonitoreo->setEstadoAutorizado(1);
                     $em->persist($arMonitoreo);
                 }
                 $em->persist($arDespacho);

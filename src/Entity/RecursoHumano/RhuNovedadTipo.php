@@ -3,9 +3,11 @@
 namespace App\Entity\RecursoHumano;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuNovedadTipoRepository")
+ * @DoctrineAssert\UniqueEntity(fields={"codigoNovedadTipoPk"},message="Ya existe el código del tipo")
  */
 class RhuNovedadTipo
 {

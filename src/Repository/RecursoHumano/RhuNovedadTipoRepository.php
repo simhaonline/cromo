@@ -13,4 +13,12 @@ class RhuNovedadTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuNovedadTipo::class);
     }
 
+    public function camposPredeterminados(){
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuNovedadTipo::class,'nt')
+            ->select('nt.codigoNovedadTipoPk AS ID')
+            ->addSelect('nt.nombre')
+            ->where('nt.codigoNovedadTipoPk IS NOT NULL');
+        return $queryBuilder->getQuery()->execute();
+    }
+
 }

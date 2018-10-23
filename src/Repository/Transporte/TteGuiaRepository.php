@@ -1122,6 +1122,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g');
         $queryBuilder
             ->select('g.codigoClienteFk')
+            ->addSelect('g.mercanciaPeligrosa')
             ->addSelect('c.nombreCorto AS clienteNombre')
             ->addSelect('SUM(g.vrFlete) AS vrFlete')
             ->addSelect('SUM(g.vrManejo) AS vrManejo')
@@ -1132,8 +1133,11 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->andWhere("g.fechaIngreso <= '" . $fechaHasta . " 23:59:59'")
             ->groupBy('g.codigoClienteFk')
             ->addGroupBy('c.nombreCorto')
+            ->addGroupBy('g.mercanciaPeligrosa')
             ->orderBy('SUM(g.vrFlete)', 'DESC');
-
+        if($session->get('filtroMercanciaPeligrosa')){
+            $queryBuilder->andWhere("g.mercanciaPeligrosa = 1");
+        }
         return $queryBuilder;
     }
 

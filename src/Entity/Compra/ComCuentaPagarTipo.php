@@ -66,6 +66,11 @@ class ComCuentaPagarTipo
     private $comprasTipoCuentaPagarRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComCuentaPagar" , mappedBy="cuentaPagarTipoRel")
+     */
+    protected $cuentasPagarCuentaPagarTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaPagarTipoPk()

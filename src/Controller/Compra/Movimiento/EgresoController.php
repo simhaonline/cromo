@@ -183,18 +183,16 @@ class EgresoController extends BaseController
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('txtCodigoCuentaPagar', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('')])
-//            ->add('txtNombreCuentaPagar', TextType::class, ['label' => 'Nombre: ', 'required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroComCuentaPagarCodigo', $form->get('txtCodigoItem')->getData());
-//                $session->set('filtroComCuentaPagarNombre', $form->get('txtNombreItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrConceptos = $request->request->get('cuentaPagarValor');
-                if (count($arrConceptos) > 0) {
+                if ($arrConceptos) {
                     foreach ($arrConceptos as $codigoCuentaPagar => $valor) {
                         if ($valor != '' && $valor != 0) {
                             $arCuentaPagar = $em->getRepository(ComCuentaPagar::class)->find($codigoCuentaPagar);
@@ -211,6 +209,8 @@ class EgresoController extends BaseController
             }
         }
         $arCuentasPagar = $paginator->paginate($em->getRepository(ComCuentaPagar::class)->lista(), $request->query->getInt('page', 1), 10);
+//        dump($arCuentasPagar);
+//        exit();
         return $this->render('compra/movimiento/Egreso/detalleNuevo.html.twig', [
             'arCuentasPagar' => $arCuentasPagar,
             'form' => $form->createView()

@@ -178,6 +178,11 @@ class ComProveedor
     protected $egresosProveedorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComCuentaPagar" , mappedBy="proveedorRel")
+     */
+    protected $cuentasPagarProveedorRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoProveedorPk()

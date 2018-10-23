@@ -35,6 +35,7 @@ class ComCuentaPagarRepository extends ServiceEntityRepository
             ->addSelect('cp.fecha')
             ->addSelect('cp.fechaVence')
 //            ->addSelect('cp.soporte')
+            ->addSelect('p.nombreCorto')
             ->addSelect('p.numeroIdentificacion')
             ->addSelect('p.nombreCorto')
             ->addSelect('cp.plazo')

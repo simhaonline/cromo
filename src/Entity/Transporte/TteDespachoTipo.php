@@ -47,6 +47,11 @@ class TteDespachoTipo
     private $generaMonitoreo = false;
 
     /**
+     * @ORM\Column(name="genera_cuenta_pagar", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $generaCuentaPagar = false;
+
+    /**
      * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
      */
     private $codigoComprobanteFk;
@@ -95,6 +100,11 @@ class TteDespachoTipo
      * @ORM\Column(name="codigo_cuenta_pagar_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaPagarFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_pagar_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCuentaPagarTipoFk;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespacho", mappedBy="despachoTipoRel")
@@ -371,6 +381,38 @@ class TteDespachoTipo
     public function setDespachosDespachoTipoRel($despachosDespachoTipoRel): void
     {
         $this->despachosDespachoTipoRel = $despachosDespachoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaPagarTipoFk()
+    {
+        return $this->codigoCuentaPagarTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaPagarTipoFk
+     */
+    public function setCodigoCuentaPagarTipoFk($codigoCuentaPagarTipoFk): void
+    {
+        $this->codigoCuentaPagarTipoFk = $codigoCuentaPagarTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraCuentaPagar()
+    {
+        return $this->generaCuentaPagar;
+    }
+
+    /**
+     * @param mixed $generaCuentaPagar
+     */
+    public function setGeneraCuentaPagar($generaCuentaPagar): void
+    {
+        $this->generaCuentaPagar = $generaCuentaPagar;
     }
 
 

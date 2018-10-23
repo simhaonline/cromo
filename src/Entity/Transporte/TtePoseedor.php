@@ -34,6 +34,11 @@ class TtePoseedor
     private $numeroIdentificacion;
 
     /**
+     * @ORM\Column(name="digito_verificacion", type="string", length=1, nullable=true)
+     */
+    private $digitoVerificacion;
+
+    /**
      * @ORM\Column(name="nombre_corto", type="string", length=150, nullable=true)
      */
     private $nombreCorto;
@@ -77,6 +82,11 @@ class TtePoseedor
      * @ORM\Column(name="movil", type="string", length=30, nullable=true)
      */
     private $movil;
+
+    /**
+     * @ORM\Column(name="correo", type="string", length=1000, nullable=true)
+     */
+    private $correo;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="poseedoresCiudadRel")
@@ -354,6 +364,38 @@ class TtePoseedor
     public function setVehiculosPropietarioRel($vehiculosPropietarioRel): void
     {
         $this->vehiculosPropietarioRel = $vehiculosPropietarioRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDigitoVerificacion()
+    {
+        return $this->digitoVerificacion;
+    }
+
+    /**
+     * @param mixed $digitoVerificacion
+     */
+    public function setDigitoVerificacion($digitoVerificacion): void
+    {
+        $this->digitoVerificacion = $digitoVerificacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCorreo()
+    {
+        return $this->correo;
+    }
+
+    /**
+     * @param mixed $correo
+     */
+    public function setCorreo($correo): void
+    {
+        $this->correo = $correo;
     }
 
 

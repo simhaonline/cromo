@@ -149,6 +149,11 @@ class TteDespacho
     private $vrTotal = 0;
 
     /**
+     * @ORM\Column(name="vr_total_neto", type="float", options={"default" : 0})
+     */
+    private $vrTotalNeto = 0;
+
+    /**
      * @ORM\Column(name="vr_descuento_papeleria", type="float", options={"default" : 0})
      */
     private $vrDescuentoPapeleria = 0;
@@ -1263,5 +1268,23 @@ class TteDespacho
     {
         $this->novedadesDespachoRel = $novedadesDespachoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalNeto()
+    {
+        return $this->vrTotalNeto;
+    }
+
+    /**
+     * @param mixed $vrTotalNeto
+     */
+    public function setVrTotalNeto($vrTotalNeto): void
+    {
+        $this->vrTotalNeto = $vrTotalNeto;
+    }
+
+
 }
 

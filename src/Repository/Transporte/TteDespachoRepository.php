@@ -3,6 +3,9 @@
 namespace App\Repository\Transporte;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Compra\ComCuentaPagar;
+use App\Entity\Compra\ComCuentaPagarTipo;
+use App\Entity\Compra\ComProveedor;
 use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
@@ -213,10 +216,12 @@ class TteDespachoRepository extends ServiceEntityRepository
 
         $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);
         $saldo = ($total + $arDespacho->getVrCobroEntregaRechazado()) - ($descuentos + $arDespacho->getVrCobroEntrega());
+        $totalNeto = $arDespacho->getVrFletePago() - ($retencionFuente + $industriaComercio + $descuentos);
         $arDespacho->setVrIndustriaComercio($industriaComercio);
         $arDespacho->setVrRetencionFuente($retencionFuente);
         $arDespacho->setVrTotal($total);
         $arDespacho->setVrSaldo($saldo);
+        $arDespacho->setVrTotalNeto($totalNeto);
 
         $em->persist($arDespacho);
         $em->flush();
@@ -237,7 +242,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                     ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
                 $query->execute();
                 $arDespacho->setFechaSalida($fechaActual);
-                $arDespacho->setEstadoAprobado(1);
+                //$arDespacho->setEstadoAprobado(1);
                 $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
                 if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
                     $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
@@ -254,6 +259,43 @@ class TteDespachoRepository extends ServiceEntityRepository
                     $em->persist($arMonitoreo);
                 }
                 $em->persist($arDespacho);
+
+                if($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
+                    $arPoseedor = $arDespacho->getVehiculoRel()->getPoseedorRel();
+                    $arProveedor = $em->getRepository(ComProveedor::class)->findOneBy(['codigoIdentificacionFk' => $arPoseedor->getCodigoIdentificacionFk(),'numeroIdentificacion' => $arPoseedor->getNumeroIdentificacion()]);
+                    if (!$arProveedor) {
+                        $arProveedor = new ComProveedor();
+                        //$arProveedor->setFormaPagoRel($arFactura->getClienteRel()->getFormaPagoRel());
+                        $arProveedor->setIdentificacionRel($arPoseedor->getIdentificacionRel());
+                        $arProveedor->setNumeroIdentificacion($arPoseedor->getNumeroIdentificacion());
+                        $arProveedor->setDigitoVerificacion($arPoseedor->getDigitoVerificacion());
+                        $arProveedor->setNombreCorto($arPoseedor->getNombreCorto());
+                        //$arProveedor->setPlazoPago($arPoseedor->getPlazoPago());
+                        $arProveedor->setDireccion($arPoseedor->getDireccion());
+                        $arProveedor->setTelefono($arPoseedor->getTelefono());
+                        $arProveedor->setEmail($arPoseedor->getCorreo());
+                        $em->persist($arProveedor);
+                    }
+
+
+
+                    $arCuentaPagarTipo = $em->getRepository(ComCuentaPagarTipo::class)->find($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoFk());
+                    $arCuentaPagar = new ComCuentaPagar();
+                    $arCuentaPagar->setProveedorRel($arProveedor);
+                    $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
+                    $arCuentaPagar->setFecha($arDespacho->getFechaSalida());
+                    $arCuentaPagar->setFechaVence($arDespacho->getFechaSalida());
+                    $arCuentaPagar->setModulo("TTE");
+                    $arCuentaPagar->setCodigoDocumento($arDespacho->getCodigoDespachoPk());
+                    $arCuentaPagar->setNumeroDocumento($arDespacho->getNumero());
+                    $arCuentaPagar->setVrTotal($arDespacho->getVrTotalNeto());
+                    $arCuentaPagar->setVrSaldo($arDespacho->getVrTotalNeto());
+                    $arCuentaPagar->setVrSaldoOperado($arDespacho->getVrTotalNeto() * $arCuentaPagarTipo->getOperacion());
+                    $arCuentaPagar->setPlazo(0);
+                    $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
+                    $em->persist($arCuentaPagar);
+                }
+
                 $em->flush();
             } else {
                 $respuesta = "El despacho debe tener guias asignadas";

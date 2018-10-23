@@ -117,6 +117,14 @@
             <td class="td-in-well"></td>
             <td class="titulo">COBRO ENTREGA:</td>
             <td class="td-in-well">{{ arDespacho.vrCobroEntrega | number_format(0, '.', ',') }}</td>
+            <td class="titulo" >TOTAL NETO:</td>
+            <td align="right">{{ arDespacho.vrTotalNeto | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
             <td class="titulo" >SALDO:</td>
             <td align="right">{{ arDespacho.vrSaldo | number_format(0, '.', ',') }}</td>
         </tr>

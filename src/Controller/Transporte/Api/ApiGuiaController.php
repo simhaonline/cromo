@@ -132,7 +132,7 @@ class ApiGuiaController extends FOSRestController
                 $arNovedad->setFechaSolucion(new \DateTime('now'));
                 $arNovedad->setFechaReporte(new \DateTime('now'));
                 $arNovedad->setFecha(new \DateTime('now'));
-                $arNovedad->setEstadoAtendido(true);
+                //$arNovedad->setEstadoAtendido(true);
                 $em->persist($arNovedad);
                 $em->flush();
             } else {

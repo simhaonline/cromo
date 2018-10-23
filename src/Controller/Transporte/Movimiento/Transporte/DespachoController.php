@@ -155,10 +155,12 @@ class DespachoController extends Controller
 
                                 $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);
                                 $saldo = $total - $descuentos;
+                                $totalNeto = $arDespacho->getVrFletePago() - ($retencionFuente + $industriaComercio + $descuentos);
                                 $arDespacho->setVrIndustriaComercio($industriaComercio);
                                 $arDespacho->setVrRetencionFuente($retencionFuente);
                                 $arDespacho->setVrTotal($total);
                                 $arDespacho->setVrSaldo($saldo);
+                                $arDespacho->setVrTotalNeto($totalNeto);
                                 if ($id == 0) {
                                     $arDespacho->setFechaRegistro(new \DateTime('now'));
                                     $arDespacho->setFechaSalida(new \DateTime('now'));

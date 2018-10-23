@@ -152,11 +152,11 @@ class EgresoController extends BaseController
 //                $em->getRepository(ComCompra::class)->actualizar($arCompra, $arrValor, $arrCantidad, $arrIva, $arrDescuento);
 //                return $this->redirect($this->generateUrl('compra_movimiento_compra_compra_detalle', ['id' => $id]));
 //            }
-//            if ($form->get('btnEliminar')->isClicked()) {
-//                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-//                $em->getRepository(ComCompraDetalle::class)->eliminar($arCompra, $arrDetallesSeleccionados);
-//            }
-            return $this->redirect($this->generateUrl('compra_movimiento_compra_compra_detalle', ['id' => $id]));
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(ComEgresoDetalle::class)->eliminar($arEgreso, $arrDetallesSeleccionados);
+            }
+            return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
         }
         $arEgresoDetalles = $paginator->paginate($em->getRepository(ComEgresoDetalle::class)->lista($arEgreso->getCodigoEgresoPk()), $request->query->getInt('page', 1), 30);
         return $this->render('compra/movimiento/Egreso/detalle.html.twig', [
@@ -198,7 +198,10 @@ class EgresoController extends BaseController
                             $arCuentaPagar = $em->getRepository(ComCuentaPagar::class)->find($codigoCuentaPagar);
                             $arEgresoDetalle = new ComEgresoDetalle();
                             $arEgresoDetalle->setEgresoRel($arEgreso);
+                            $arEgresoDetalle->setNumeroCompra($arCuentaPagar->getNumeroDocumento());
+                            $arEgresoDetalle->setNumeroDocumentoAplicacion($arCuentaPagar->getNumeroReferencia());
                             $arEgresoDetalle->setCuentaPagarRel($arCuentaPagar);
+                            $arEgresoDetalle->setOperacion($arCuentaPagar->getOperacion());
                             $arEgresoDetalle->setVrPago($valor);
                             $em->persist($arEgresoDetalle);
                         }
@@ -209,8 +212,7 @@ class EgresoController extends BaseController
             }
         }
         $arCuentasPagar = $paginator->paginate($em->getRepository(ComCuentaPagar::class)->lista(), $request->query->getInt('page', 1), 10);
-//        dump($arCuentasPagar);
-//        exit();
+
         return $this->render('compra/movimiento/Egreso/detalleNuevo.html.twig', [
             'arCuentasPagar' => $arCuentasPagar,
             'form' => $form->createView()

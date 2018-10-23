@@ -242,7 +242,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                     ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
                 $query->execute();
                 $arDespacho->setFechaSalida($fechaActual);
-                //$arDespacho->setEstadoAprobado(1);
+                $arDespacho->setEstadoAprobado(1);
                 $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
                 if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
                     $arDespacho->setNumero($arDespachoTipo->getConsecutivo());

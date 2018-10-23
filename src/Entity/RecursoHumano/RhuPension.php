@@ -6,9 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuPensionRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class RhuPension
 {
+    public $infoLog = [
+        "primaryKey" => "codigoPensionPk",
+        "todos"     => true,
+    ];
+
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_pension_pk", type="string", length=10)

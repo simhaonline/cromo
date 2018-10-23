@@ -22,6 +22,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class EntityListener extends DefaultEntityListenerResolver
 {
     const USUARIO_FIXTURE = 'FIXTURE';
+    const USUARIO_API = 'API';
     const GUARDAR_DB = false;
     const ACCION_NUEVO = 'CREACION';
     const ACCION_ACTUALIZAR = 'ACTUALIZACION';
@@ -364,6 +365,17 @@ class EntityListener extends DefaultEntityListenerResolver
         return $valor?? null;
     }
 
+    private function capturarUsuario(&$data) {
+        if($this->usuario !== null && $this->usuario !== "anon.") {
+            $data['codigoUsuarioFk'] = $this->usuario->getId();
+            $data['nombreUsuario'] = $this->usuario->getUsername();
+        } else if($this->usuario === "anon.") {
+            $data['nombreUsuario'] = self::USUARIO_API;
+        } else {
+            $data['nombreUsuario'] = self::USUARIO_FIXTURE;
+        }
+    }
+
     /**
      * Esta funcion es generica para insert, update, delete, y es la encargada de guardar la linea de log para
      * cada registro.
@@ -388,11 +400,9 @@ class EntityListener extends DefaultEntityListenerResolver
             'camposSeguimiento' => json_encode($this->valoresSeguimiento),
             'ruta' => $this->ruta,
             'accion' => $this->accion,
-            'codigoUsuarioFk' => $this->usuario? $this->usuario->getId() : null,
-            'nombreUsuario' => $this->usuario? $this->usuario->getUsername() : self::USUARIO_FIXTURE,
             'nombreEntidad' => $this->nombreEntidad,
         ];
-
+        $this->capturarUsuario($data);
         $arLog->setFecha(new \DateTime(date("Y-m-d H:i:s")))
             ->setCodigoRegistroPk($this->codigoEntidadPk)
             ->setNamespaceEntidad($this->namespaceEntidad)
@@ -400,7 +410,7 @@ class EntityListener extends DefaultEntityListenerResolver
             ->setRuta($this->ruta)
             ->setAccion($this->accion)
             ->setUsuarioRel($this->usuario)
-            ->setCodigoUsuarioFk($this->usuario? $this->usuario->getId():  null)
+            ->setCodigoUsuarioFk(($this->usuario && $this->usuario !== "anon.")? $this->usuario->getId():  null)
             ->setNombreEntidad($this->nombreEntidad);
 
         $claveLog = $this->accion . $arLog->getCodigoRegistroPk();

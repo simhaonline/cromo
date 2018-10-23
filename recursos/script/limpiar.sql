@@ -1,6 +1,7 @@
 DELETE FROM tte_recogida;
 DELETE FROM tte_despacho_recogida;
 DELETE FROM tte_novedad;
+DELETE FROM tte_monitoreo_registro;
 DELETE FROM tte_monitoreo_detalle;
 DELETE FROM tte_monitoreo;
 DELETE FROM tte_factura_detalle;
@@ -25,4 +26,7 @@ DELETE FROM inv_orden;
 DELETE FROM inv_solicitud_detalle;
 DELETE FROM inv_solicitud;
 DELETE FROM inv_lote;
+DELETE FROM com_cuenta_pagar;
+DELETE FROM com_egreso_detalle;
+DELETE FROM com_egreso;
 UPDATE inv_item SET cantidad_disponible = 0, cantidad_existencia = 0, cantidad_orden = 0, cantidad_remisionada = 0, cantidad_pedido = 0;

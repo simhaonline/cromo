@@ -71,20 +71,20 @@ class ComEgresoRepository extends ServiceEntityRepository
                     if ($arEgresoDetalle->getCodigoCuentaPagarFk()) {
                         $arCuentaPagarAplicacion = $em->getRepository(ComCuentaPagar::class)->find($arEgresoDetalle->getCodigoCuentaPagarFk());
                         if ($arCuentaPagarAplicacion->getVrSaldo() >= $arEgresoDetalle->getVrPagoAfectar()) {
-                            $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arEgresoDetalle->getVrPagoAfectar();
+                            $saldo = $arCuentaPagarAplicacion->getVrSaldo() - $arEgresoDetalle->getVrPagoAfectar();
                             $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();
                             $arCuentaPagarAplicacion->setVrSaldo($saldo);
                             $arCuentaPagarAplicacion->setvRSaldoOperado($saldoOperado);
-                            $arCuentaPagarAplicacion->setVrAbono($arCuentaPagarAplicacion->getVrAbono() - $arEgresoDetalle->getVrPagoAfectar());
+                            $arCuentaPagarAplicacion->setVrAbono($arCuentaPagarAplicacion->getVrAbono() + $arEgresoDetalle->getVrPagoAfectar());
                             $em->persist($arCuentaPagarAplicacion);
-                            //Cuenta por cobrar
-                            $arCuentaPagar = $em->getRepository(ComCuentaPagar::class)->find($arEgresoDetalle->getCodigoCuentaPagarFk());
-                            $saldo = $arCuentaPagar->getVrSaldo() - $arEgresoDetalle->getVrPagoAfectar();
-                            $saldoOperado = $saldo * $arCuentaPagar->getOperacion();
-                            $arCuentaPagar->setVrSaldo($saldo);
-                            $arCuentaPagar->setVrSaldoOperado($saldoOperado);
-                            $arCuentaPagar->setVrAbono($arCuentaPagar->getVrAbono() + $arEgresoDetalle->getVrPagoAfectar());
-                            $em->persist($arCuentaPagar);
+                            //Cuenta por pagar
+//                            $arCuentaPagar = $em->getRepository(ComCuentaPagar::class)->find($arEgresoDetalle->getCodigoCuentaPagarFk());
+//                            $saldo = $arCuentaPagar->getVrSaldo() - $arEgresoDetalle->getVrPagoAfectar();
+//                            $saldoOperado = $saldo * $arCuentaPagar->getOperacion();
+//                            $arCuentaPagar->setVrSaldo($saldo);
+//                            $arCuentaPagar->setVrSaldoOperado($saldoOperado);
+//                            $arCuentaPagar->setVrAbono($arCuentaPagar->getVrAbono() + $arEgresoDetalle->getVrPagoAfectar());
+//                            $em->persist($arCuentaPagar);
                         } else {
                             Mensajes::error('El valor a afectar del documento aplicacion ' . $arCuentaPagarAplicacion->getNumeroDocumento() . " supera el saldo desponible: " . $arCuentaPagarAplicacion->getVrSaldo());
                             $error = true;
@@ -116,6 +116,33 @@ class ComEgresoRepository extends ServiceEntityRepository
                 Mensajes::error("No se puede autorizar un recibo sin detalles");
             }
         }
+    }
+
+    public function desAutorizar($arEgreso)
+    {
+        $em = $this->getEntityManager();
+        $arEgresoDetalles = $em->getRepository(ComEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $arEgreso->getCodigoEgresoPk()));
+        foreach ($arEgresoDetalles AS $arEgresoDetalle) {
+            $arCuentaPagar = $em->getRepository(ComCuentaPagar::class)->find($arEgresoDetalle->getCodigoCuentaPagarFk());
+            $saldo = $arCuentaPagar->getVrSaldo() + $arEgresoDetalle->getVrPagoAfectar();
+            $saldoOperado = $saldo * $arCuentaPagar->getOperacion();
+            $arCuentaPagar->setVrSaldo($saldo);
+            $arCuentaPagar->setVrSaldoOperado($saldoOperado);
+            $arCuentaPagar->setVrAbono($arCuentaPagar->getVrAbono() - $arEgresoDetalle->getVrPagoAfectar());
+            $em->persist($arCuentaPagar);
+//            if ($arEgresoDetalle->getCodigoCuentaCobrarAplicacionFk()) {
+//                $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arEgresoDetalle->getCodigoCuentaCobrarAplicacionFk());
+//                $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arEgresoDetalle->getVrPagoAfectar();
+//                $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
+//                $arCuentaCobrarAplicacion->setVrSaldo($saldo);
+//                $arCuentaCobrarAplicacion->setVrSaldoOperado($saldoOperado);
+//                $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() - $arEgresoDetalle->getVrPagoAfectar());
+//                $em->persist($arCuentaCobrarAplicacion);
+//            }
+        }
+        $arEgreso->setEstadoAutorizado(0);
+        $em->persist($arEgreso);
+        $em->flush();
     }
 
 }

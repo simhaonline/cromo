@@ -128,9 +128,14 @@ class EgresoController extends BaseController
                 $em->getRepository(ComEgreso::class)->autorizar($arEgreso);
                 return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
             }
-//            if ($form->get('btnDesautorizar')->isClicked()) {
-//                $em->getRepository(ComCompra::class)->desautorizar($arCompra);
-//            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                if ($arEgreso->getEstadoAutorizado() == 1 && $arEgreso->getEstadoImpreso() == 0) {
+                    $em->getRepository(ComEgreso::class)->desAutorizar($arEgreso);
+                    return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
+                } else {
+                    Mensajes::error("El egreso debe estar autorizado y no puede estar impreso");
+                }
+            }
 //            if ($form->get('btnAprobar')->isClicked()) {
 //                $em->getRepository(ComCompra::class)->aprobar($arCompra);
 //            }

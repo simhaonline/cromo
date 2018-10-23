@@ -102,6 +102,11 @@ class ComEgreso
     private $estadoContabilizado = false;
 
     /**
+     * @ORM\Column(name="estado_impreso", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoImpreso = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Compra\ComProveedor" , inversedBy="egresosProveedorRel")
      * @ORM\JoinColumn(name="codigo_proveedor_fk" , referencedColumnName="codigo_proveedor_pk")
      */
@@ -409,6 +414,22 @@ class ComEgreso
     /**
      * @return mixed
      */
+    public function getEstadoImpreso()
+    {
+        return $this->estadoImpreso;
+    }
+
+    /**
+     * @param mixed $estadoImpreso
+     */
+    public function setEstadoImpreso($estadoImpreso): void
+    {
+        $this->estadoImpreso = $estadoImpreso;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getProveedorRel()
     {
         return $this->proveedorRel;
@@ -453,5 +474,6 @@ class ComEgreso
     {
         $this->egresoDetallesEgresoRel = $egresoDetallesEgresoRel;
     }
+
 
 }

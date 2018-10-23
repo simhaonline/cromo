@@ -872,7 +872,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 </solicitud>
                                 <variables>
                                     <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
-                                    <CONSECUTIVOREMESA>100" . $arDespacho->getNumero() . "</CONSECUTIVOREMESA>
+                                    <CONSECUTIVOREMESA>" . $arDespacho->getNumero() . "</CONSECUTIVOREMESA>
                                     <NUMMANIFIESTOCARGA>" . $arDespacho->getNumero() . "</NUMMANIFIESTOCARGA>
                                     <TIPOCUMPLIDOREMESA>C</TIPOCUMPLIDOREMESA>
                                     <FECHALLEGADACARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHALLEGADACARGUE>
@@ -882,11 +882,11 @@ class TteDespachoRepository extends ServiceEntityRepository
                                     <FECHASALIDACARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHASALIDACARGUE>
                                     <HORASALIDACARGUEREMESA>17:00</HORASALIDACARGUEREMESA>
                                                                         
-                                    <FECHALLEGADADESCARGUE>" . $arDespacho->getFechaSoporte()->format('d/m/Y') . "</FECHALLEGADADESCARGUE>
+                                    <FECHALLEGADADESCARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHALLEGADADESCARGUE>
                                     <HORALLEGADADESCARGUECUMPLIDO>18:00</HORALLEGADADESCARGUECUMPLIDO>
-                                    <FECHAENTRADADESCARGUE>" . $arDespacho->getFechaSoporte()->format('d/m/Y') . "</FECHAENTRADADESCARGUE>
+                                    <FECHAENTRADADESCARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHAENTRADADESCARGUE>
                                     <HORAENTRADADESCARGUECUMPLIDO>19:00</HORAENTRADADESCARGUECUMPLIDO>
-                                    <FECHASALIDADESCARGUE>" . $arDespacho->getFechaSoporte()->format('d/m/Y') . "</FECHASALIDADESCARGUE>
+                                    <FECHASALIDADESCARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHASALIDADESCARGUE>
                                     <HORASALIDADESCARGUECUMPLIDO>20:00</HORASALIDADESCARGUECUMPLIDO>                                    
                                     <CANTIDADENTREGADA>" . $arDespacho->getCantidad() . "</CANTIDADENTREGADA>";
                 $strXML .= "</variables>

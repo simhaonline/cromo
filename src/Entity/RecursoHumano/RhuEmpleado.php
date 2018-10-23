@@ -317,6 +317,11 @@ class RhuEmpleado
     protected $contratosEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuNovedad", mappedBy="empleadoRel")
+     */
+    protected $novedadesEmpleadoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEmpleadoPk()
@@ -458,6 +463,22 @@ class RhuEmpleado
     public function setDiscapacidad($discapacidad): void
     {
         $this->discapacidad = $discapacidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContrato()
+    {
+        return $this->estadoContrato;
+    }
+
+    /**
+     * @param mixed $estadoContrato
+     */
+    public function setEstadoContrato($estadoContrato): void
+    {
+        $this->estadoContrato = $estadoContrato;
     }
 
     /**
@@ -1119,16 +1140,16 @@ class RhuEmpleado
     /**
      * @return mixed
      */
-    public function getEstadoContrato()
+    public function getNovedadesEmpleadoRel()
     {
-        return $this->estadoContrato;
+        return $this->novedadesEmpleadoRel;
     }
 
     /**
-     * @param mixed $estadoContrato
+     * @param mixed $novedadesEmpleadoRel
      */
-    public function setEstadoContrato($estadoContrato): void
+    public function setNovedadesEmpleadoRel($novedadesEmpleadoRel): void
     {
-        $this->estadoContrato = $estadoContrato;
+        $this->novedadesEmpleadoRel = $novedadesEmpleadoRel;
     }
 }

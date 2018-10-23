@@ -18,9 +18,29 @@ class RhuNovedad
     private $codigoNovedadPk;
     
     /**
-     * @ORM\Column(name="codigo_novedad_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_novedad_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoNovedadTipoFk;
+
+    /**
+     * @ORM\Column(name="codigo_empleado_fk", type="integer", nullable=true)
+     */
+    private $codigoEmpleadoFk;
+
+    /**
+     * @ORM\Column(name="codigo_contrato_fk", type="integer", nullable=true)
+     */
+    private $codigoContratoFk;
+
+    /**
+     * @ORM\Column(name="codigo_entidad_fk", type="integer", nullable=true)
+     */
+    private $codigoEntidadFk;
+
+    /**
+     * @ORM\Column(name="codigo_grupo_fk", type="string",length=10, nullable=true)
+     */
+    private $codigoGrupoFk;
 
     /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
@@ -38,24 +58,9 @@ class RhuNovedad
     private $fechaHasta;
 
     /**
-     * @ORM\Column(name="codigo_empleado_fk", type="integer", nullable=true)
+     * @ORM\Column(name="dias", options={"deafult" : 0}, type="float", nullable=true)
      */
-    private $codigoEmpleadoFk;
-
-    /**
-     * @ORM\Column(name="codigo_contrato_fk", type="integer", nullable=true)
-     */
-    private $codigoContratoFk;
-
-    /**
-     * @ORM\Column(name="cantidad", options={"deafult" : 0}, type="float", nullable=true)
-     */
-    private $cantidad = 0;
-
-    /**
-     * @ORM\Column(name="codigo_entidad_fk", type="integer", nullable=true)
-     */
-    private $codigoEntidadFk;
+    private $dias = 0;
 
     /**
      * @ORM\Column(name="comentarios", type="text", nullable=true)
@@ -127,5 +132,497 @@ class RhuNovedad
      */
     private $vrPropuesto = 0;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuNovedadTipo", inversedBy="novedadesNovedadTipoRel")
+     * @ORM\JoinColumn(name="codigo_novedad_tipo_fk", referencedColumnName="codigo_novedad_tipo_pk")
+     */
+    protected $novedadTipoRel;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="novedadesEmpleadoRel")
+     * @ORM\JoinColumn(name="codigo_empleado_fk", referencedColumnName="codigo_empleado_pk")
+     */
+    protected $empleadoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuContrato", inversedBy="novedadesContratoRel")
+     * @ORM\JoinColumn(name="codigo_contrato_fk", referencedColumnName="codigo_contrato_pk")
+     */
+    protected $contratoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="novedadesEntidadRel")
+     * @ORM\JoinColumn(name="codigo_entidad_fk", referencedColumnName="codigo_entidad_pk")
+     */
+    protected $entidadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuGrupo", inversedBy="novedadesGrupoRel")
+     * @ORM\JoinColumn(name="codigo_grupo_fk", referencedColumnName="codigo_grupo_pk")
+     */
+    protected $grupoRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoNovedadPk()
+    {
+        return $this->codigoNovedadPk;
+    }
+
+    /**
+     * @param mixed $codigoNovedadPk
+     */
+    public function setCodigoNovedadPk($codigoNovedadPk): void
+    {
+        $this->codigoNovedadPk = $codigoNovedadPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoNovedadTipoFk()
+    {
+        return $this->codigoNovedadTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoNovedadTipoFk
+     */
+    public function setCodigoNovedadTipoFk($codigoNovedadTipoFk): void
+    {
+        $this->codigoNovedadTipoFk = $codigoNovedadTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpleadoFk()
+    {
+        return $this->codigoEmpleadoFk;
+    }
+
+    /**
+     * @param mixed $codigoEmpleadoFk
+     */
+    public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
+    {
+        $this->codigoEmpleadoFk = $codigoEmpleadoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoFk()
+    {
+        return $this->codigoContratoFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoFk
+     */
+    public function setCodigoContratoFk($codigoContratoFk): void
+    {
+        $this->codigoContratoFk = $codigoContratoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidadFk()
+    {
+        return $this->codigoEntidadFk;
+    }
+
+    /**
+     * @param mixed $codigoEntidadFk
+     */
+    public function setCodigoEntidadFk($codigoEntidadFk): void
+    {
+        $this->codigoEntidadFk = $codigoEntidadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDesde()
+    {
+        return $this->fechaDesde;
+    }
+
+    /**
+     * @param mixed $fechaDesde
+     */
+    public function setFechaDesde($fechaDesde): void
+    {
+        $this->fechaDesde = $fechaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHasta()
+    {
+        return $this->fechaHasta;
+    }
+
+    /**
+     * @param mixed $fechaHasta
+     */
+    public function setFechaHasta($fechaHasta): void
+    {
+        $this->fechaHasta = $fechaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDias()
+    {
+        return $this->dias;
+    }
+
+    /**
+     * @param mixed $dias
+     */
+    public function setDias($dias): void
+    {
+        $this->dias = $dias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarios()
+    {
+        return $this->comentarios;
+    }
+
+    /**
+     * @param mixed $comentarios
+     */
+    public function setComentarios($comentarios): void
+    {
+        $this->comentarios = $comentarios;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProrroga()
+    {
+        return $this->prorroga;
+    }
+
+    /**
+     * @param mixed $prorroga
+     */
+    public function setProrroga($prorroga): void
+    {
+        $this->prorroga = $prorroga;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTranscripcion()
+    {
+        return $this->transcripcion;
+    }
+
+    /**
+     * @param mixed $transcripcion
+     */
+    public function setTranscripcion($transcripcion): void
+    {
+        $this->transcripcion = $transcripcion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLegalizado()
+    {
+        return $this->legalizado;
+    }
+
+    /**
+     * @param mixed $legalizado
+     */
+    public function setLegalizado($legalizado): void
+    {
+        $this->legalizado = $legalizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentaje()
+    {
+        return $this->porcentaje;
+    }
+
+    /**
+     * @param mixed $porcentaje
+     */
+    public function setPorcentaje($porcentaje): void
+    {
+        $this->porcentaje = $porcentaje;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrValor()
+    {
+        return $this->vrValor;
+    }
+
+    /**
+     * @param mixed $vrValor
+     */
+    public function setVrValor($vrValor): void
+    {
+        $this->vrValor = $vrValor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIbc()
+    {
+        return $this->vrIbc;
+    }
+
+    /**
+     * @param mixed $vrIbc
+     */
+    public function setVrIbc($vrIbc): void
+    {
+        $this->vrIbc = $vrIbc;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasIbc()
+    {
+        return $this->diasIbc;
+    }
+
+    /**
+     * @param mixed $diasIbc
+     */
+    public function setDiasIbc($diasIbc): void
+    {
+        $this->diasIbc = $diasIbc;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIbcPropuesto()
+    {
+        return $this->vrIbcPropuesto;
+    }
+
+    /**
+     * @param mixed $vrIbcPropuesto
+     */
+    public function setVrIbcPropuesto($vrIbcPropuesto): void
+    {
+        $this->vrIbcPropuesto = $vrIbcPropuesto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPropuesto()
+    {
+        return $this->vrPropuesto;
+    }
+
+    /**
+     * @param mixed $vrPropuesto
+     */
+    public function setVrPropuesto($vrPropuesto): void
+    {
+        $this->vrPropuesto = $vrPropuesto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNovedadTipoRel()
+    {
+        return $this->novedadTipoRel;
+    }
+
+    /**
+     * @param mixed $novedadTipoRel
+     */
+    public function setNovedadTipoRel($novedadTipoRel): void
+    {
+        $this->novedadTipoRel = $novedadTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadoRel()
+    {
+        return $this->empleadoRel;
+    }
+
+    /**
+     * @param mixed $empleadoRel
+     */
+    public function setEmpleadoRel($empleadoRel): void
+    {
+        $this->empleadoRel = $empleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoRel()
+    {
+        return $this->contratoRel;
+    }
+
+    /**
+     * @param mixed $contratoRel
+     */
+    public function setContratoRel($contratoRel): void
+    {
+        $this->contratoRel = $contratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadRel()
+    {
+        return $this->entidadRel;
+    }
+
+    /**
+     * @param mixed $entidadRel
+     */
+    public function setEntidadRel($entidadRel): void
+    {
+        $this->entidadRel = $entidadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
+    }
 }

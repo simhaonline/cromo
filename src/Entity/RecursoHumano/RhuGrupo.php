@@ -11,7 +11,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  */
 class RhuGrupo
 {
-    
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_grupo_pk", type="string", length=10)
@@ -32,6 +31,11 @@ class RhuGrupo
      * @ORM\OneToMany(targetEntity="RhuProgramacion", mappedBy="grupoRel")
      */
     protected $programacionesGrupoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuNovedad", mappedBy="grupoRel")
+     */
+    protected $novedadesGrupoRel;
 
     /**
      * @return mixed
@@ -95,5 +99,21 @@ class RhuGrupo
     public function setProgramacionesGrupoRel($programacionesGrupoRel): void
     {
         $this->programacionesGrupoRel = $programacionesGrupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNovedadesGrupoRel()
+    {
+        return $this->novedadesGrupoRel;
+    }
+
+    /**
+     * @param mixed $novedadesGrupoRel
+     */
+    public function setNovedadesGrupoRel($novedadesGrupoRel): void
+    {
+        $this->novedadesGrupoRel = $novedadesGrupoRel;
     }
 }

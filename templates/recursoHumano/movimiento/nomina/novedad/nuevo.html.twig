@@ -1,0 +1,98 @@
+{% extends 'base_recursoHumano.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+          Información general
+        </div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-2 control-label">Empleado:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.codigoEmpleadoFk) }}
+                                {{ form_errors(form.codigoEmpleadoFk) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="txtNombreCorto" name="txtNombreCorto" type="text" class="form-control" value=""
+                                       readOnly="ReadOnly"/>
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'novedad_codigoEmpleadoFk', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Novedad tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.novedadTipoRel) }}
+                    {{ form_errors(form.novedadTipoRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Desde:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaDesde) }}
+                    {{ form_errors(form.fechaDesde) }}
+                </div>
+                <label for="" class="control-label col-sm-2">Ibc propuesto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrIbcPropuesto) }}
+                    {{ form_errors(form.vrIbcPropuesto) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Hasta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaHasta) }}
+                    {{ form_errors(form.fechaHasta) }}
+                </div>
+                <label for="" class="control-label col-sm-2">Valor propuesto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrPropuesto) }}
+                    {{ form_errors(form.vrPropuesto) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Prorroga</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.prorroga) }}
+                    {{ form_errors(form.prorroga) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Transcripción:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.transcripcion) }}
+                    {{ form_errors(form.transcripcion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Comentarios:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentarios) }}
+                    {{ form_errors(form.comentarios) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn-toolbar" style="float: right;">
+            {{ form_widget(form.guardar) }}
+        </div>
+        <div class="btn-toolbar" style="float: left;">
+            <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_novedad_lista') }}">Cancelar</a>
+        </div>
+    </div>
+    {{ form_end(form) }}
+    <br>
+    <br>
+{% endblock %}

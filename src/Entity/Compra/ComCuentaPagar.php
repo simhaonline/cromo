@@ -37,6 +37,11 @@ class ComCuentaPagar
     private $numeroDocumento;
 
     /**
+     * @ORM\Column(name="modulo" ,type="string" , nullable=true)
+     */
+    private $modulo;
+
+    /**
      * @ORM\Column(name="numero_referencia", type="string", length=30, nullable=true)
      */
     private $numeroReferencia;
@@ -211,6 +216,22 @@ class ComCuentaPagar
     public function setNumeroDocumento($numeroDocumento): void
     {
         $this->numeroDocumento = $numeroDocumento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModulo()
+    {
+        return $this->modulo;
+    }
+
+    /**
+     * @param mixed $modulo
+     */
+    public function setModulo($modulo): void
+    {
+        $this->modulo = $modulo;
     }
 
     /**

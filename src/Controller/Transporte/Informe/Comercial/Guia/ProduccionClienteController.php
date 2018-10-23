@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Informe\Comercial\Guia;
 
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteGuiaTipo;
 use App\Formato\Transporte\PendienteDespachoRuta;
 use App\Formato\Transporte\ProduccionCliente;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +22,7 @@ class ProduccionClienteController extends Controller
     /**
      * @param Request $request
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/comercial/guia/produccion", name="transporte_informe_comercial_guia_produccion")
@@ -36,6 +38,7 @@ class ProduccionClienteController extends Controller
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $fecha])
             ->add('chkMercanciaPeligrosa', CheckboxType::class, array('label' => ' ','required' => false, 'data' => $session->get('filtroMercanciaPeligrosa')))
+            ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
@@ -44,6 +47,12 @@ class ProduccionClienteController extends Controller
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked()) {
+                    $arGuiaTipo = $form->get('cboGuiaTipoRel')->getData();
+                    if ($arGuiaTipo) {
+                        $session->set('filtroTteGuiaCodigoGuiaTipo', $arGuiaTipo->getCodigoGuiaTipoPk());
+                    } else {
+                        $session->set('filtroTteGuiaCodigoGuiaTipo', null);
+                    }
                     $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
                     $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
                     $session->set('filtroMercanciaPeligrosa', $form->get('chkMercanciaPeligrosa')->getData());

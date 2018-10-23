@@ -1139,6 +1139,9 @@ class TteGuiaRepository extends ServiceEntityRepository
         if($session->get('filtroMercanciaPeligrosa')){
             $queryBuilder->andWhere("g.mercanciaPeligrosa = 1");
         }
+        if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
+            $queryBuilder->andWhere("g.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");
+        }
         return $queryBuilder;
     }
 

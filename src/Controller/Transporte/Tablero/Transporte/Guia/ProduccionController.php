@@ -25,8 +25,10 @@ class ProduccionController extends Controller
         $arrCategoriasAnio = array_column($arrProduccionAnio, "dia");
         $flete = array_map(function($produccion){ return intval($produccion['flete']); }, $arrProduccion);
         $manejo = array_map(function($produccion){ return intval($produccion['manejo']); }, $arrProduccion);
+        $pesoReal = array_map(function($produccion){ return intval($produccion['pesoReal']); }, $arrProduccion);
         $fleteAnio = array_map(function($produccion){ return intval($produccion['flete']); }, $arrProduccionAnio);
         $manejoAnio = array_map(function($produccion){ return intval($produccion['manejo']); }, $arrProduccionAnio);
+        $pesoRealAnio = array_map(function($produccion){ return intval($produccion['pesoReal']); }, $arrProduccionAnio);
         $series = array(
             array(
                 "name" => "flete",
@@ -53,6 +55,18 @@ class ProduccionController extends Controller
                         "fontSize" => "13px",
                         "fontFamily" => "Verdana, sans-serif")
             )),
+            array("name" => "peso real",
+                "data" => $pesoReal,
+                "dataLabels" => array(
+                    "enabled" => true,
+                    "rotation" => -90,
+                    "color" => "#FFFFFF",
+                    "align" => "right",
+                    "y" => 10,
+                    "style" => array(
+                        "fontSize" => "13px",
+                        "fontFamily" => "Verdana, sans-serif")
+                )),
         );
 
         $seriesAnio = array(
@@ -71,6 +85,18 @@ class ProduccionController extends Controller
                 )),
             array("name" => "manejo",
                 "data" => $manejoAnio,
+                "dataLabels" => array(
+                    "enabled" => true,
+                    "rotation" => -90,
+                    "color" => "#FFFFFF",
+                    "align" => "right",
+                    "y" => 10,
+                    "style" => array(
+                        "fontSize" => "13px",
+                        "fontFamily" => "Verdana, sans-serif")
+                )),
+            array("name" => "peso real",
+                "data" => $pesoRealAnio,
                 "dataLabels" => array(
                     "enabled" => true,
                     "rotation" => -90,

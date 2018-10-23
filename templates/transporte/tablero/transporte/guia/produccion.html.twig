@@ -16,28 +16,33 @@
             <thead>
             <tr>
                 <th>DIA</th>
+                <th>PESO REAL</th>
                 <th>FLETE</th>
                 <th>MANEJO</th>
                 <th>TOTAL</th>
             </tr>
             </thead>
             <tbody>
+            {% set totalPesoReal = 0 %}
             {% set totalFlete = 0 %}
             {% set totalManejo = 0 %}
             {% set total = 0 %}
             {% for arrProduccion in arrProducciones %}
                 <tr>
                     <td>{{ arrProduccion.dia }}</td>
+                    <td class="numero">{{ arrProduccion.pesoReal | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arrProduccion.flete | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arrProduccion.manejo | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arrProduccion.total | number_format(0, '.', ',') }}</td>
                 </tr>
+                {% set totalPesoReal = totalPesoReal + arrProduccion.pesoReal %}
                 {% set totalFlete = totalFlete + arrProduccion.flete %}
                 {% set totalManejo = totalManejo + arrProduccion.manejo %}
                 {% set total = total + (arrProduccion.flete + arrProduccion.manejo) %}
             {% endfor %}
             <tr>
                 <td></td>
+                <td class="numero">{{ totalPesoReal | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ totalFlete | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ totalManejo | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ total | number_format(0, '.', ',') }}</td>
@@ -54,28 +59,34 @@
             <thead>
             <tr>
                 <th>MES</th>
+                <th>PESO REAL</th>
                 <th>FLETE</th>
                 <th>MANEJO</th>
                 <th>TOTAL</th>
             </tr>
             </thead>
             <tbody>
+            {% set totalPesoReal = 0 %}
             {% set totalFlete = 0 %}
             {% set totalManejo = 0 %}
             {% set total = 0 %}
             {% for arrProduccion in arrProduccionesAnio %}
                 <tr>
+
                     <td>{{ arrProduccion.dia }}</td>
+                    <td class="numero">{{ arrProduccion.pesoReal | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arrProduccion.flete | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arrProduccion.manejo | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arrProduccion.total | number_format(0, '.', ',') }}</td>
                 </tr>
+                {% set totalPesoReal = totalPesoReal + arrProduccion.pesoReal %}
                 {% set totalFlete = totalFlete + arrProduccion.flete %}
                 {% set totalManejo = totalManejo + arrProduccion.manejo %}
                 {% set total = total + (arrProduccion.flete + arrProduccion.manejo) %}
             {% endfor %}
             <tr>
                 <td></td>
+                <td class="numero">{{ totalPesoReal | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ totalFlete | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ totalManejo | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ total | number_format(0, '.', ',') }}</td>

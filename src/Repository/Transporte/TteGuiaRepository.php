@@ -1127,6 +1127,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('SUM(g.vrFlete) AS vrFlete')
             ->addSelect('SUM(g.vrManejo) AS vrManejo')
             ->addSelect('SUM(g.unidades) AS unidades')
+            ->addSelect('SUM(g.pesoReal) AS pesoReal')
             ->addSelect('SUM(g.vrFlete + g.vrManejo) AS total')
             ->leftJoin('g.clienteRel', 'c')
             ->where("g.fechaIngreso >= '" . $fechaDesde . " 00:00:00'")
@@ -1961,7 +1962,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         $sql = "SELECT DAY(fecha_ingreso) as dia, 
                 SUM(vr_flete) as flete, 
                 SUM(vr_manejo) as manejo, 
-                SUM(vr_flete + vr_manejo) as total 
+                SUM(vr_flete + vr_manejo) as total,
+                SUM(peso_real) as pesoReal 
                 FROM tte_guia 
                 WHERE fecha_ingreso >= '" . $fechaDesde . " 00:00:00' AND fecha_ingreso <='" . $fechaHasta ." 23:59:59'  
                 GROUP BY DAY(fecha_ingreso)";
@@ -1982,7 +1984,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         $sql = "SELECT MONTH(fecha_ingreso) as dia, 
                 SUM(vr_flete) as flete, 
                 SUM(vr_manejo) as manejo, 
-                SUM(vr_flete + vr_manejo) as total 
+                SUM(vr_flete + vr_manejo) as total, 
+                SUM(peso_Real) as pesoReal
                 FROM tte_guia 
                 WHERE fecha_ingreso >= '" . $fechaDesde . " 00:00:00' AND fecha_ingreso <='" . $fechaHasta ." 23:59:59'  
                 GROUP BY MONTH(fecha_ingreso)";

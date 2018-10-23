@@ -23,50 +23,11 @@ class RhuConcepto
      */
     private $nombre;
 
-    /**
-     * @ORM\Column(name="compone_salario", type="boolean")
-     */
-    private $componeSalario = false;
 
     /**
-     * @ORM\Column(name="compone_porcentaje", type="boolean")
+     * @ORM\Column(name="porcentaje", type="float")
      */
-    private $componePorcentaje = false;
-
-    /**
-     * @ORM\Column(name="porcentaje_suplementario", type="float", nullable=true)
-     */
-    private $porcentajeSuplementario = 0;
-
-    /**
-     * @ORM\Column(name="compone_valor", type="boolean")
-     */
-    private $componeValor = false;
-
-    /**
-     * @ORM\Column(name="por_porcentaje", type="float")
-     */
-    private $porPorcentaje = 0;
-
-    /**
-     * @ORM\Column(name="por_porcentaje_tiempo_extra", type="float")
-     */
-    private $porPorcentajeTiempoExtra = 0;
-
-    /**
-     * @ORM\Column(name="porcentaje_vacaciones", type="float", nullable=true)
-     */
-    private $porcentajeVacaciones = 0;
-
-    /**
-     * @ORM\Column(name="aplica_porcentaje_vacacion_suplementario", type="boolean", nullable=true)
-     */
-    private $aplicaPorcentajeVacacionSuplementario = false;
-
-    /**
-     * @ORM\Column(name="prestacional", type="boolean")
-     */
-    private $prestacional = false;
+    private $porcentaje = 0;
 
     /**
      * @ORM\Column(name="genera_ingreso_base_prestacion", type="boolean")
@@ -84,106 +45,60 @@ class RhuConcepto
     private $operacion = 0;
 
     /**
-     * @ORM\Column(name="concepto_adicion", type="boolean")
+     * @ORM\Column(name="adicional", type="boolean")
      */
-    private $conceptoAdicion = false;
+    private $adicional = false;
 
     /**
-     * @ORM\Column(name="concepto_auxilio_transporte", type="boolean")
+     * BON=Bonificacion, DES=Descuento, COM=Comision
+     * @ORM\Column(name="adicional_tipo", type="string", length=3, nullable=true)
      */
-    private $conceptoAuxilioTransporte = false;
+    private $adicionalTipo = 1;
 
     /**
-     * @ORM\Column(name="concepto_incapacidad", type="boolean")
+     * @ORM\Column(name="auxilio_transporte", type="boolean")
      */
-    private $conceptoIncapacidad = false;
+    private $auxilioTransporte = false;
 
     /**
-     * @ORM\Column(name="concepto_incapacidad_entidad", type="boolean", nullable=true)
+     * @ORM\Column(name="incapacidad", type="boolean")
      */
-    private $conceptoIncapacidadEntidad = false;
+    private $incapacidad = false;
 
     /**
-     * @ORM\Column(name="concepto_pension", type="boolean")
+     * @ORM\Column(name="incapacidad_entidad", type="boolean", nullable=true)
      */
-    private $conceptoPension = false;
+    private $incapacidadEntidad = false;
 
     /**
-     * @ORM\Column(name="concepto_salud", type="boolean")
+     * @ORM\Column(name="pension", type="boolean")
      */
-    private $conceptoSalud = false;
+    private $pension = false;
 
     /**
-     * @ORM\Column(name="concepto_vacacion", type="boolean")
+     * @ORM\Column(name="salud", type="boolean")
      */
-    private $conceptoVacacion = false;
+    private $salud = false;
 
     /**
-     * @ORM\Column(name="concepto_comision", type="boolean")
+     * @ORM\Column(name="vacacion", type="boolean")
      */
-    private $conceptoComision = false;
+    private $vacacion = false;
 
     /**
-     * @ORM\Column(name="concepto_cesantia", type="boolean")
+     * @ORM\Column(name="comision", type="boolean")
      */
-    private $conceptoCesantia = false;
+    private $comision = false;
 
     /**
-     * @ORM\Column(name="concepto_retencion", type="boolean")
+     * @ORM\Column(name="cesantia", type="boolean")
      */
-    private $conceptoRetencion = false;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCuentaFk;
-
-    /**
-     * @ORM\Column(name="tipo_cuenta", type="bigint")
-     */
-    private $tipoCuenta = 1;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_operacion_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCuentaOperacionFk;
-
-    /**
-     * @ORM\Column(name="tipo_cuenta_operacion", type="bigint", nullable=true)
-     */
-    private $tipoCuentaOperacion = 1;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_comercial_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCuentaComercialFk;
-
-    /**
-     * @ORM\Column(name="tipo_cuenta_comercial", type="bigint", nullable=true)
-     */
-    private $tipoCuentaComercial = 1;
-
-    /**
-     * @ORM\Column(name="provision_indemnizacion", type="boolean")
-     */
-    private $provisionIndemnizacion = false;
-
-    /**
-     * @ORM\Column(name="provision_vacacion", type="boolean")
-     */
-    private $provisionVacacion = false;
-
-    /**
-     * 1=Bonificacion, 2=Descuento, 3=Comision
-     * @ORM\Column(name="tipo_adicional", type="smallint")
-     */
-    private $tipoAdicional = 1;
+    private $cesantia = false;
 
     /**
      * @ORM\Column(name="codigo_interface", type="string", length=30, nullable=true)
      */
     private $codigoInterface;
-
 
     /**
      * @ORM\Column(name="numero_dian", type="integer", nullable=true)
@@ -196,57 +111,9 @@ class RhuConcepto
     private $recargoNocturno = false;
 
     /**
-     * @ORM\Column(name="recargo", type="boolean", nullable=true)
+     * @ORM\Column(name="fondo_solidaridad_pensional", type="boolean")
      */
-    private $recargo = false;
+    private $fondoSolidaridadPensional = false;
 
-    /**
-     * @ORM\Column(name="hora_extra", type="boolean")
-     */
-    private $horaExtra = false;
 
-    /**
-     * @ORM\Column(name="ajuste_suplementario", type="boolean", nullable=true)
-     */
-    private $ajusteSuplementario = false;
-
-    /**
-     * @ORM\Column(name="vacacion_suplementario", type="boolean", nullable=true)
-     */
-    private $vacacionSuplementario = false;
-
-    /**
-     * @ORM\Column(name="concepto_licencia_entidad", type="boolean", nullable=true)
-     */
-    private $conceptoLicenciaEntidad = false;
-
-    /**
-     * @ORM\Column(name="numero_identificacion_tercero_contabilidad", type="string", length=20, nullable=true)
-     */
-    private $numeroIdentificacionTerceroContabilidad;
-
-    /**
-     * @ORM\Column(name="concepto_fondo_solidaridad_pensional", type="boolean")
-     */
-    private $conceptoFondoSolidaridadPensional = false;
-
-    /**
-     * @ORM\Column(name="ajuste_retencion", type="boolean", nullable=true)
-     */
-    private $ajusteRetencion = false;
-
-    /**
-     * @ORM\Column(name="ocultar_formato", type="boolean", nullable=true)
-     */
-    private $ocultarFormato = false;
-
-    /**
-     * @ORM\Column(name="contabilizar_empleado", type="boolean", nullable=true)
-     */
-    private $contabilizarEmpleado = false;
-
-    /**
-     * @ORM\Column(name="genera_costo_cliente", type="boolean", nullable=true)
-     */
-    private $generaCostoCliente = true;
 }

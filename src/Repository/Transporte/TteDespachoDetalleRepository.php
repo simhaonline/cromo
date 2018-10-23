@@ -170,4 +170,13 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         }
         return $qb;
     }
+
+    public function validarGuiasSoporte($codigoDespacho){
+        $queryBuilder = $this->_em->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
+            ->select('g.estadoSoporte')
+            ->addSelect('dd.codigoGuiaFk')
+            ->where('dd.codigoDespachoFk ='  .$codigoDespacho)
+            ->leftJoin('dd.guiaRel', 'g');
+        return $queryBuilder->getQuery()->execute();
+    }
 }

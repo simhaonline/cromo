@@ -129,6 +129,11 @@ class ComCuentaPagar
     private $cuentaPagarTipoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComEgresoDetalle" , mappedBy="cuentaPagarRel")
+     */
+    private $egresosDetalleCuentasPagarRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaPagarPk()
@@ -495,5 +500,22 @@ class ComCuentaPagar
     {
         $this->cuentaPagarTipoRel = $cuentaPagarTipoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEgresosDetalleCuentasPagarRel()
+    {
+        return $this->egresosDetalleCuentasPagarRel;
+    }
+
+    /**
+     * @param mixed $egresosDetalleCuentasPagarRel
+     */
+    public function setEgresosDetalleCuentasPagarRel($egresosDetalleCuentasPagarRel): void
+    {
+        $this->egresosDetalleCuentasPagarRel = $egresosDetalleCuentasPagarRel;
+    }
+
 
 }

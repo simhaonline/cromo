@@ -181,8 +181,8 @@ class CompraController extends BaseController
         $arCompra = $em->getRepository(ComCompra::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
+            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('filtroInvItemCodigo')])
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvItemNombre')])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);

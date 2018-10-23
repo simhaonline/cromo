@@ -5,6 +5,7 @@ namespace App\Repository\Compra;
 use App\Entity\Compra\ComConcepto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @method ComConcepto|null find($id, $lockMode = null, $lockVersion = null)
@@ -22,12 +23,16 @@ class ComConceptoRepository extends ServiceEntityRepository
     public function lista()
     {
         $em = $this->getEntityManager();
-
+        $session = new Session();
         $query = $em->createQueryBuilder()
             ->select('c')
-            ->from('App:Compra\ComConcepto', 'c')
-            ->where('c.codigoConceptoPk <> 0');
-
+            ->from('App:Compra\ComConcepto', 'c');
+        if ($session->get('filtroInvItemCodigo')) {
+            $query->andWhere("c.codigoConceptoPk = {$session->get('filtroInvItemCodigo')}");
+        }
+        if ($session->get('filtroInvItemNombre')) {
+            $query->andWhere("c.nombre  LIKE '%{$session->get('filtroInvItemNombre')}%'");
+        }
         return $query->getQuery();
 
     }

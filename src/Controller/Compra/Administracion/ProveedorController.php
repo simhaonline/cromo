@@ -59,9 +59,9 @@ class ProveedorController extends BaseController
         $em = $this->getDoctrine()->getManager();
         $arProveedor = new ComProveedor();
         if ($id != 0) {
-            $arCompra = $em->getRepository(ComProveedor::class)->find($id);
-            if (!$arCompra) {
-                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_cotizacion_lista'));
+            $arProveedor = $em->getRepository(ComProveedor::class)->find($id);
+            if (!$arProveedor) {
+                return $this->redirect($this->generateUrl('compra_administracion_proveedor_proveedor_lista'));
             }
         }
         $form = $this->createForm(ProveedorType::class, $arProveedor);
@@ -69,10 +69,6 @@ class ProveedorController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arProveedor = $form->getData();
-//                dump($arProveedor,$arrControles);
-//                exit();
-                $nombreCorto = $form->get('nombre1')->getData();
-                $arProveedor->setNombreCorto($nombreCorto);
                 $em->persist($arProveedor);
                 $em->flush();
                 return $this->redirect($this->generateUrl('compra_administracion_proveedor_proveedor_lista'));

@@ -19,18 +19,18 @@ class ProveedorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('numeroIdentificacion', TextType::class)
-            ->add('digitoVerificacion',TextType::class)
-            ->add('nombre1',TextType::class)
-            ->add('nombre2',TextType::class)
-            ->add('apellido1',TextType::class)
-            ->add('apellido2',TextType::class)
-            ->add('razonSocial',TextType::class)
-            ->add('direccion',TextType::class)
-            ->add('telefono',TextType::class)
-            ->add('celular',TextType::class)
-            ->add('fax',TextType::class)
-            ->add('email',TextType::class)
+            ->add('numeroIdentificacion', TextType::class, ['required' => true])
+            ->add('digitoVerificacion', TextType::class, ['required' => false])
+            ->add('nombre1', TextType::class, ['required' => false])
+            ->add('nombre2', TextType::class,['required' => false])
+            ->add('apellido1', TextType::class,['required' => false])
+            ->add('apellido2', TextType::class,['required' => false])
+            ->add('nombreCorto', TextType::class,['required' => true])
+            ->add('direccion', TextType::class,['required' => true])
+            ->add('telefono', TextType::class,['required' => false])
+            ->add('celular', TextType::class,['required' => false])
+            ->add('fax', TextType::class,['required' => false])
+            ->add('email', TextType::class,['required' => false])
             ->add('ciudadRel', EntityType::class, [
                 'class' => GenCiudad::class,
                 'query_builder' => function (EntityRepository $er) {

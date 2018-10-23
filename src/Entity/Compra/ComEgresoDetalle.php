@@ -22,14 +22,19 @@ class ComEgresoDetalle
     private $codigoEgresoFk;
 
     /**
-     * @ORM\Column(name="vr_subtotal" , type="float" ,nullable=true)
+     * @ORM\Column(name="codigo_cuenta_pagar_fk" , type="integer")
      */
-    private $vrSubtotal = 0;
+    private $codigoCuentaPagarFk;
 
     /**
-     * @ORM\Column(name="por_descuento", type="float", nullable=true)
+     * @ORM\Column(name="numero_factura", type="string", length=30, nullable=true)
      */
-    private $porDescuento = 0;
+    private $numeroCompra;
+
+    /**
+     * @ORM\Column(name="numero_documento_aplicacion", type="integer", nullable=true)
+     */
+    private $numeroDocumentoAplicacion;
 
     /**
      * @ORM\Column(name="vr_descuento", type="float", nullable=true)
@@ -37,20 +42,56 @@ class ComEgresoDetalle
     private $vrDescuento = 0;
 
     /**
-     * @ORM\Column(name="vr_retencion", type="float" ,nullable=true)
+     * @ORM\Column(name="vr_ajuste_peso", type="float", nullable=true)
      */
-    private $vrRetencion = 0;
+    private $vrAjustePeso = 0;
 
     /**
-     * @ORM\Column(name="vr_total" ,type="float" ,nullable=true)
+     * @ORM\Column(name="vr_retencion_ica", type="float", nullable=true)
      */
-    private $vrTotal = 0;
+    private $vrRetencionIca = 0;
+
+    /**
+     * @ORM\Column(name="vr_retencion_iva", type="float", nullable=true)
+     */
+    private $vrRetencionIva = 0;
+
+    /**
+     * @ORM\Column(name="vr_retencion_fuente", type="float", nullable=true)
+     */
+    private $vrRetencionFuente = 0;
+
+    /**
+     * @ORM\Column(name="vr_pago", type="float", nullable=true)
+     */
+    private $vrPago = 0;
+
+    /**
+     * @ORM\Column(name="vr_pago_afectar", type="float", nullable=true)
+     */
+    private $vrPagoAfectar = 0;
+
+    /**
+     * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
+     */
+    private $usuario;
+
+    /**
+     * @ORM\Column(name="operacion", type="integer")
+     */
+    private $operacion = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Compra\ComEgreso" , inversedBy="egresoDetallesEgresoRel")
      * @ORM\JoinColumn(name="codigo_egreso_fk" , referencedColumnName="codigo_egreso_pk")
      */
     private $egresoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Compra\ComCuentaPagar" , inversedBy="egresosDetalleCuentasPagarRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_pagar_fk" , referencedColumnName="codigo_cuenta_pagar_pk")
+     */
+    private $cuentaPagarRel;
 
     /**
      * @return mixed
@@ -87,33 +128,49 @@ class ComEgresoDetalle
     /**
      * @return mixed
      */
-    public function getVrSubtotal()
+    public function getCodigoCuentaPagarFk()
     {
-        return $this->vrSubtotal;
+        return $this->codigoCuentaPagarFk;
     }
 
     /**
-     * @param mixed $vrSubtotal
+     * @param mixed $codigoCuentaPagarFk
      */
-    public function setVrSubtotal($vrSubtotal): void
+    public function setCodigoCuentaPagarFk($codigoCuentaPagarFk): void
     {
-        $this->vrSubtotal = $vrSubtotal;
+        $this->codigoCuentaPagarFk = $codigoCuentaPagarFk;
     }
 
     /**
      * @return mixed
      */
-    public function getPorDescuento()
+    public function getNumeroCompra()
     {
-        return $this->porDescuento;
+        return $this->numeroCompra;
     }
 
     /**
-     * @param mixed $porDescuento
+     * @param mixed $numeroCompra
      */
-    public function setPorDescuento($porDescuento): void
+    public function setNumeroCompra($numeroCompra): void
     {
-        $this->porDescuento = $porDescuento;
+        $this->numeroCompra = $numeroCompra;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroDocumentoAplicacion()
+    {
+        return $this->numeroDocumentoAplicacion;
+    }
+
+    /**
+     * @param mixed $numeroDocumentoAplicacion
+     */
+    public function setNumeroDocumentoAplicacion($numeroDocumentoAplicacion): void
+    {
+        $this->numeroDocumentoAplicacion = $numeroDocumentoAplicacion;
     }
 
     /**
@@ -135,33 +192,129 @@ class ComEgresoDetalle
     /**
      * @return mixed
      */
-    public function getVrRetencion()
+    public function getVrAjustePeso()
     {
-        return $this->vrRetencion;
+        return $this->vrAjustePeso;
     }
 
     /**
-     * @param mixed $vrRetencion
+     * @param mixed $vrAjustePeso
      */
-    public function setVrRetencion($vrRetencion): void
+    public function setVrAjustePeso($vrAjustePeso): void
     {
-        $this->vrRetencion = $vrRetencion;
+        $this->vrAjustePeso = $vrAjustePeso;
     }
 
     /**
      * @return mixed
      */
-    public function getVrTotal()
+    public function getVrRetencionIca()
     {
-        return $this->vrTotal;
+        return $this->vrRetencionIca;
     }
 
     /**
-     * @param mixed $vrTotal
+     * @param mixed $vrRetencionIca
      */
-    public function setVrTotal($vrTotal): void
+    public function setVrRetencionIca($vrRetencionIca): void
     {
-        $this->vrTotal = $vrTotal;
+        $this->vrRetencionIca = $vrRetencionIca;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRetencionIva()
+    {
+        return $this->vrRetencionIva;
+    }
+
+    /**
+     * @param mixed $vrRetencionIva
+     */
+    public function setVrRetencionIva($vrRetencionIva): void
+    {
+        $this->vrRetencionIva = $vrRetencionIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRetencionFuente()
+    {
+        return $this->vrRetencionFuente;
+    }
+
+    /**
+     * @param mixed $vrRetencionFuente
+     */
+    public function setVrRetencionFuente($vrRetencionFuente): void
+    {
+        $this->vrRetencionFuente = $vrRetencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPago()
+    {
+        return $this->vrPago;
+    }
+
+    /**
+     * @param mixed $vrPago
+     */
+    public function setVrPago($vrPago): void
+    {
+        $this->vrPago = $vrPago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPagoAfectar()
+    {
+        return $this->vrPagoAfectar;
+    }
+
+    /**
+     * @param mixed $vrPagoAfectar
+     */
+    public function setVrPagoAfectar($vrPagoAfectar): void
+    {
+        $this->vrPagoAfectar = $vrPagoAfectar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacion()
+    {
+        return $this->operacion;
+    }
+
+    /**
+     * @param mixed $operacion
+     */
+    public function setOperacion($operacion): void
+    {
+        $this->operacion = $operacion;
     }
 
     /**
@@ -178,6 +331,22 @@ class ComEgresoDetalle
     public function setEgresoRel($egresoRel): void
     {
         $this->egresoRel = $egresoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaPagarRel()
+    {
+        return $this->cuentaPagarRel;
+    }
+
+    /**
+     * @param mixed $cuentaPagarRel
+     */
+    public function setCuentaPagarRel($cuentaPagarRel): void
+    {
+        $this->cuentaPagarRel = $cuentaPagarRel;
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\Controller\Compra\Movimiento;
 
 use App\Controller\BaseController;
+use App\Entity\Compra\ComCuentaPagar;
 use App\Entity\Compra\ComEgreso;
 use App\Entity\Compra\ComEgresoDetalle;
 use App\Entity\Compra\ComProveedor;
@@ -176,31 +177,32 @@ class EgresoController extends BaseController
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $arCompra = $em->getRepository(ComCompra::class)->find($id);
+        $arEgreso = $em->getRepository(ComEgreso::class)->find($id);
+        $codigoProveedor = $arEgreso->getProveedorRel()->getCodigoProveedorPk();
+        $session->set('filtroComCodigoProveedor', $codigoProveedor);
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
+            ->add('txtCodigoCuentaPagar', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('')])
+//            ->add('txtNombreCuentaPagar', TextType::class, ['label' => 'Nombre: ', 'required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvItemNombre', $form->get('txtNombreItem')->getData());
+                $session->set('filtroComCuentaPagarCodigo', $form->get('txtCodigoItem')->getData());
+//                $session->set('filtroComCuentaPagarNombre', $form->get('txtNombreItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
-                $arrConceptos = $request->request->get('conceptoCantidad');
+                $arrConceptos = $request->request->get('cuentaPagarValor');
                 if (count($arrConceptos) > 0) {
-                    foreach ($arrConceptos as $codigoConcepto => $cantidad) {
-                        if ($cantidad != '' && $cantidad != 0) {
-                            $arConcepto = $em->getRepository(ComConcepto::class)->find($codigoConcepto);
-                            $arCompraDetalle = new ComCompraDetalle();
-                            $arCompraDetalle->setCompraRel($arCompra);
-                            $arCompraDetalle->setConceptoRel($arConcepto);
-                            $arCompraDetalle->setCantidad($cantidad);
-                            $arCompraDetalle->setPorIva($arConcepto->getPorIva());
-                            $em->persist($arCompraDetalle);
+                    foreach ($arrConceptos as $codigoCuentaPagar => $valor) {
+                        if ($valor != '' && $valor != 0) {
+                            $arCuentaPagar = $em->getRepository(ComCuentaPagar::class)->find($codigoCuentaPagar);
+                            $arEgresoDetalle = new ComEgresoDetalle();
+                            $arEgresoDetalle->setEgresoRel($arEgreso);
+                            $arEgresoDetalle->setCuentaPagarRel($arCuentaPagar);
+                            $arEgresoDetalle->setVrPago($valor);
+                            $em->persist($arEgresoDetalle);
                         }
                     }
                     $em->flush();
@@ -208,9 +210,9 @@ class EgresoController extends BaseController
                 }
             }
         }
-        $arConceptos = $paginator->paginate($em->getRepository(ComConcepto::class)->lista(), $request->query->getInt('page', 1), 10);
-        return $this->render('compra/movimiento/detalleNuevo.html.twig', [
-            'arConceptos' => $arConceptos,
+        $arCuentasPagar = $paginator->paginate($em->getRepository(ComCuentaPagar::class)->lista(), $request->query->getInt('page', 1), 10);
+        return $this->render('compra/movimiento/Egreso/detalleNuevo.html.twig', [
+            'arCuentasPagar' => $arCuentasPagar,
             'form' => $form->createView()
         ]);
     }

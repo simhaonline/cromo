@@ -55,9 +55,9 @@ class ComCuentaPagarRepository extends ServiceEntityRepository
         if ($session->get('filtroComCuentaPagarNumero') != '') {
             $queryBuilder->andWhere("cp.numeroDocumento = {$session->get('filtroComCuentaPagarNumero')}");
         }
-//        if ($session->get('filtroComCodigoProveedor')) {
-//            $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
-//        }
+        if ($session->get('filtroComCodigoProveedor')) {
+            $queryBuilder->andWhere("cp.codigoProveedorFk = {$session->get('filtroComCodigoProveedor')}");
+        }
 //        if ($session->get('filtroCarCuentaCobrarTipo')) {
 //            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo') . "'");
 //        }

@@ -5,10 +5,10 @@
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Razon social</label>
+                <label class="col-sm-2 control-label">Nombre corto</label>
                 <div class="col-sm-10">
-                    {{ form_widget(form.razonSocial,{ 'attr' : {'class' : 'form-control'}}) }}
-                    <div style="color:red;">{{ form_errors(form.razonSocial) }}</div>
+                    {{ form_widget(form.nombreCorto,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.nombreCorto) }}</div>
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Primero Apellido</label>
+                <label class="col-sm-2 control-label">Primer Apellido</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.apellido1,{ 'attr' : {'class' : 'form-control'}}) }}
                     <div style="color:red;">{{ form_errors(form.apellido1) }}</div>

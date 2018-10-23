@@ -333,5 +333,21 @@ class ComEgreso
         $this->egresoTipoRel = $egresoTipoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEgresoDetallesEgresoRel()
+    {
+        return $this->egresoDetallesEgresoRel;
+    }
+
+    /**
+     * @param mixed $egresoDetallesEgresoRel
+     */
+    public function setEgresoDetallesEgresoRel($egresoDetallesEgresoRel): void
+    {
+        $this->egresoDetallesEgresoRel = $egresoDetallesEgresoRel;
+    }
+
 
 }

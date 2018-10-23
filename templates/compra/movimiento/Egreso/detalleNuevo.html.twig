@@ -7,16 +7,16 @@
             <h4> Filtros de búsqueda</h4>
         </div>
         <div class="panel-body">
-            {{ form_label(form.txtCodigoItem) }}
+            {{ form_label(form.txtCodigoCuentaPagar) }}
             <div class="col-sm-4">
-                {{ form_widget(form.txtCodigoItem) }}
+                {{ form_widget(form.txtCodigoCuentaPagar) }}
 
             </div>
-            {{ form_label(form.txtNombreItem) }}
-            <div class="col-sm-4">
+            {#{{ form_label(form.txtNombreItem) }}#}
+            {#<div class="col-sm-4">#}
 
-                {{ form_widget(form.txtNombreItem) }}
-            </div>
+                {#{{ form_widget(form.txtNombreItem) }}#}
+            {#</div>#}
         </div>
         <div class="panel-footer">
             {{ form_widget(form.btnFiltrar,{'attr':{'style':'float: right;'}}) }}
@@ -29,8 +29,8 @@
             <thead>
             <tr>
                 <th>ITEM</th>
-                <th>NOMBRE</th>
-                <th>GRUPO</th>
+                {#<th>NOMBRE</th>#}
+                {#<th>GRUPO</th>#}
                 {#<th>EXI</th>#}
                 {#<th>REM</th>#}
                 {#<th>DIS</th>#}
@@ -40,18 +40,18 @@
             </tr>
             </thead>
             <tbody>
-            {% for arConcepto in arConceptos %}
+            {% for arCuentaPagar in arCuentasPagar %}
                 <tr>
-                    <td style="text-align: right;">{{ arConcepto.codigoConceptoPk }}</td>
-                    <td style="text-align: left;">{{ arConcepto.nombre }}</td>
-                    <td style="text-align: left;">{{ arConcepto.conceptoTipoRel.nombre }}</td>
+                    <td style="text-align: right;">{{ arCuentaPagar.codigoCuentaPagarPk }}</td>
+                    {#<td style="text-align: left;">{{ arCuentaPagar.nombre }}</td>#}
+                    {#<td style="text-align: left;">{{ arCuentaPagar.conceptoTipoRel.nombre }}</td>#}
                     {#<td style="text-align: right;">{{ arConcepto.cantidadExistencia }}</td>#}
                     {#<td style="text-align: right;">{{ arConcepto.cantidadRemisionada }}</td>#}
                     {#<td style="text-align: right;">{{ arConcepto.cantidadDisponible }}</td>#}
                     {#<td style="text-align: right;">{{ arConcepto.cantidadPedido }}</td>#}
                     {#<td style="text-align: right;">{{ arConcepto.cantidadOrden }}</td>#}
                     <td style="text-align: center;">
-                        <input type="number" name="conceptoCantidad[{{ arConcepto.codigoConceptoPk }}]"
+                        <input type="number" name="cuentaPagarValor[{{ arCuentaPagar.codigoCuentaPagarPk }}]"
                                size="10" style="width:70px">
                     </td>
                 </tr>

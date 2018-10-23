@@ -43,7 +43,7 @@ class ComProveedor
     private $numeroIdentificacion;
 
     /**
-     * @ORM\Column(name="digito_verificacion", type="string", length=1, nullable=true, unique=true)
+     * @ORM\Column(name="digito_verificacion", type="string", length=1, nullable=true)
      * @Assert\Length(
      *     max = 1,
      *     maxMessage = "El campo no puede contener mas de {{ limit }} caracteres"
@@ -96,17 +96,17 @@ class ComProveedor
      */
     private $apellido2;
 
-    /**
-     * @ORM\Column(name="razon_social", type="string", length=300, nullable=true)
-     * @Assert\NotBlank(message="Este campo no puede estar vacio")
-     * @Assert\Length(
-     *     min = "1",
-     *     max = 300,
-     *     minMessage = "El campo no puede contener mas de {{ limit }} caracteres",
-     *     maxMessage = "El campo no puede contener mas de {{ limit }} caracteres"
-     * )
-     */
-    private $razonSocial;
+//    /**
+//     * @ORM\Column(name="razon_social", type="string", length=300, nullable=true)
+//     * @Assert\NotBlank(message="Este campo no puede estar vacio")
+//     * @Assert\Length(
+//     *     min = "1",
+//     *     max = 300,
+//     *     minMessage = "El campo no puede contener mas de {{ limit }} caracteres",
+//     *     maxMessage = "El campo no puede contener mas de {{ limit }} caracteres"
+//     * )
+//     */
+//    private $razonSocial;
 
     /**
      * @ORM\Column(name="direccion", type="string", length=120, nullable=true)
@@ -335,22 +335,6 @@ class ComProveedor
     public function setApellido2($apellido2): void
     {
         $this->apellido2 = $apellido2;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRazonSocial()
-    {
-        return $this->razonSocial;
-    }
-
-    /**
-     * @param mixed $razonSocial
-     */
-    public function setRazonSocial($razonSocial): void
-    {
-        $this->razonSocial = $razonSocial;
     }
 
     /**

@@ -180,7 +180,12 @@ class MovimientoController extends Controller
                 $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
                 $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
                 $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
-                $arMovimiento->setSucursalRel($em->getRepository(InvSucursal::class)->find($arMovimiento->getCodigoSucursalFk()));
+                if($arMovimiento->getCodigoSucursalFk()){
+                    $arSucursal = $em->getRepository(InvSucursal::class)->find($arMovimiento->getCodigoSucursalFk());
+                    if($arSucursal){
+                        $arMovimiento->setSucursalRel($arSucursal);
+                    }
+                }
                 $em->persist($arMovimiento);
                 $em->flush();
                 return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));

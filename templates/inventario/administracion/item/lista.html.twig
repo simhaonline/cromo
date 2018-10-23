@@ -6,12 +6,13 @@
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Codigo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtCodigo, { 'attr': {'class': 'form-control'} }) }}
+                </div>
                 <label class="col-sm-2 control-label">Nombre:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtNombre, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
                 </div>
             </div>
         </div>
@@ -24,6 +25,7 @@
         <tr>
             <th>ID</th>
             <th>NOMBRE</th>
+            <th>MARCA</th>
             <th>EXISTENCIA</th>
             <th>AFECTA INVENTARIO</th>
             <th>C_PROMEDIO</th>
@@ -39,6 +41,7 @@
             <tr>
                 <td>{{ arItem.codigoItemPk }}</td>
                 <td>{{ arItem.nombre }}</td>
+                <td>{{ arItem.marcaNombre }}</td>
                 <td>{{ arItem.cantidadExistencia }}</td>
                 {{ validarTipo(arItem.afectaInventario) }}
                 <td class="numero">{{ arItem.vrCostoPredeterminado | number_format }}</td>

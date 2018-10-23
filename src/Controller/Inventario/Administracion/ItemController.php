@@ -33,11 +33,13 @@ class ItemController extends Controller
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel'])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
+            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroInvBucarItemCodigo')])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('btnFiltrar')->isClicked()){
                 $session->set('filtroInvBuscarItemNombre', $form->get('txtNombre')->getData());
+                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigo')->getData());
             }
             if($form->get('btnExcel')->isClicked()){
                 General::get()->setExportar($this->getDoctrine()->getRepository(InvItem::class)->lista()->getQuery()->execute(), 'Items');

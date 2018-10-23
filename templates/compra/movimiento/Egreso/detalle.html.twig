@@ -25,8 +25,8 @@
             <td class="td-in-well">{{ arEgreso.codigoEgresoPk }}</td>
             <td class="titulo">CLIENTE:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arEgreso.proveedorRel.nombreCorto }}</td>
-            <td class="titulo">SUBTOTAL:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arEgreso.vrSubtotal |number_format(0, '.', ',') }}</td>
+            <td class="titulo">Pago:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arEgreso.vrPago |number_format(0, '.', ',') }}</td>
 
         </tr>
         <tr>
@@ -34,8 +34,9 @@
             <td class="td-in-well">{{ arEgreso.numero }}</td>
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-align: right;"></td>
+            <td class="titulo">DESCUENTO:</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arEgreso.vrTotalDescuento|number_format(0, '.', ',') }}</td>
 
         </tr>
         <tr>
@@ -43,9 +44,36 @@
             <td class="td-in-well">{{ arEgreso.fecha | date('Y-m-d') }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo">DESCUENTO:</td>
+            <td class="titulo">AJUSTE AL PESO:</td>
             <td class="td-in-well"
-                style="text-align: right;">{{ arEgreso.vrDescuento |number_format(0, '.', ',') }}</td>
+                style="text-align: right;">{{ arEgreso.vrTotalAjustePeso|number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">ICA:</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arEgreso.vrTotalRetencionIca |number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">RETEIVA:</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arEgreso.vrTotalRetencionIva |number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">RETEFUENTE:</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arEgreso.vrTotalRetencionFuente |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
@@ -53,7 +81,8 @@
             <td class="titulo"></td>
             <td></td>
             <td class="titulo">TOTAL:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arEgreso.vrTotal |number_format(0, '.', ',') }}</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arEgreso.vrPagoTotal |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
@@ -96,39 +125,39 @@
                                 {% if arEgreso.estadoAutorizado == false %}
                                     <td style="text-align: center">
                                         <input type="number"
-                                               name="arrVrDescuento[{{ arEgresoDetalle.codigoEgresoDetallePk }}]"
+                                               name="TxtVrDescuento{{ arEgresoDetalle.codigoEgresoDetallePk }}"
                                                value="{{ arEgresoDetalle.vrDescuento }}"
                                                style="text-align: right; width:90px"
                                                size="10">
                                     </td>
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="Valor unitario"
-                                               name="arrRetencionIca[{{ arEgresoDetalle.codigoEgresoDetallePk }}]"
+                                               name="TxtAjustePeso{{ arEgresoDetalle.codigoEgresoDetallePk }}"
                                                value="{{ arEgresoDetalle.vrAjustePeso }}"
                                                style="text-align: right; width:90px" size="10"/>
                                     </td>
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="Valor unitario"
-                                               name="arrRetencionIca[{{ arEgresoDetalle.codigoEgresoDetallePk }}]"
+                                               name="TxtRetencionIca{{ arEgresoDetalle.codigoEgresoDetallePk }}"
                                                value="{{ arEgresoDetalle.vrRetencionIca }}"
                                                style="text-align: right; width:90px" size="10"/>
                                     </td>
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="Valor unitario"
-                                               name="arrRetencionIca[{{ arEgresoDetalle.codigoEgresoDetallePk }}]"
+                                               name="TxtRetencionIva{{ arEgresoDetalle.codigoEgresoDetallePk }}"
                                                value="{{ arEgresoDetalle.vrRetencionIva }}"
                                                style="text-align: right; width:90px" size="10"/>
                                     </td>
                                     </td>
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="% DESCUENTO"
-                                               name="arrDescuento[{{ arEgresoDetalle.codigoEgresoDetallePk }}]"
+                                               name="TxtRetencionFuente{{ arEgresoDetalle.codigoEgresoDetallePk }}"
                                                value="{{ arEgresoDetalle.vrRetencionFuente }}"
                                                style="text-align: right; width:90px" size="10"/>
                                     </td>
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="% DESCUENTO"
-                                               name="arrDescuento[{{ arEgresoDetalle.codigoEgresoDetallePk }}]"
+                                               name="TxtVrPago{{ arEgresoDetalle.codigoEgresoDetallePk }}"
                                                value="{{ arEgresoDetalle.vrPago }}"
                                                style="text-align: right; width:90px" size="10"/>
                                     </td>

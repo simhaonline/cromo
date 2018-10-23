@@ -42,9 +42,9 @@ class ComEgreso
     private $comentarios;
 
     /**
-     * @ORM\Column(name="vr_subtotal" , type="float")
+     * @ORM\Column(name="vr_pago" , type="float")
      */
-    private $vrSubtotal = 0;
+    private $vrPago = 0;
 
     /**
      * @ORM\Column(name="vr_descuento", type="float")
@@ -52,9 +52,34 @@ class ComEgreso
     private $vrDescuento = 0;
 
     /**
-     * @ORM\Column(name="vr_total" ,type="float")
+     * @ORM\Column(name="vr_pago_total" ,type="float")
      */
-    private $vrTotal = 0;
+    private $vrPagoTotal = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_descuento" ,type="float")
+     */
+    private $vrTotalDescuento = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_ajuste_peso" ,type="float")
+     */
+    private $vrTotalAjustePeso = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_retencion_ica" ,type="float")
+     */
+    private $vrTotalRetencionIca = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_retencion_iva" ,type="float")
+     */
+    private $vrTotalRetencionIva = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_retencion_fuente" ,type="float")
+     */
+    private $vrTotalRetencionFuente = 0;
 
     /**
      * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
@@ -192,17 +217,17 @@ class ComEgreso
     /**
      * @return mixed
      */
-    public function getVrSubtotal()
+    public function getVrPago()
     {
-        return $this->vrSubtotal;
+        return $this->vrPago;
     }
 
     /**
-     * @param mixed $vrSubtotal
+     * @param mixed $vrPago
      */
-    public function setVrSubtotal($vrSubtotal): void
+    public function setVrPago($vrPago): void
     {
-        $this->vrSubtotal = $vrSubtotal;
+        $this->vrPago = $vrPago;
     }
 
     /**
@@ -224,17 +249,97 @@ class ComEgreso
     /**
      * @return mixed
      */
-    public function getVrTotal()
+    public function getVrPagoTotal()
     {
-        return $this->vrTotal;
+        return $this->vrPagoTotal;
     }
 
     /**
-     * @param mixed $vrTotal
+     * @param mixed $vrPagoTotal
      */
-    public function setVrTotal($vrTotal): void
+    public function setVrPagoTotal($vrPagoTotal): void
     {
-        $this->vrTotal = $vrTotal;
+        $this->vrPagoTotal = $vrPagoTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalDescuento()
+    {
+        return $this->vrTotalDescuento;
+    }
+
+    /**
+     * @param mixed $vrTotalDescuento
+     */
+    public function setVrTotalDescuento($vrTotalDescuento): void
+    {
+        $this->vrTotalDescuento = $vrTotalDescuento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalAjustePeso()
+    {
+        return $this->vrTotalAjustePeso;
+    }
+
+    /**
+     * @param mixed $vrTotalAjustePeso
+     */
+    public function setVrTotalAjustePeso($vrTotalAjustePeso): void
+    {
+        $this->vrTotalAjustePeso = $vrTotalAjustePeso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalRetencionIca()
+    {
+        return $this->vrTotalRetencionIca;
+    }
+
+    /**
+     * @param mixed $vrTotalRetencionIca
+     */
+    public function setVrTotalRetencionIca($vrTotalRetencionIca): void
+    {
+        $this->vrTotalRetencionIca = $vrTotalRetencionIca;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalRetencionIva()
+    {
+        return $this->vrTotalRetencionIva;
+    }
+
+    /**
+     * @param mixed $vrTotalRetencionIva
+     */
+    public function setVrTotalRetencionIva($vrTotalRetencionIva): void
+    {
+        $this->vrTotalRetencionIva = $vrTotalRetencionIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalRetencionFuente()
+    {
+        return $this->vrTotalRetencionFuente;
+    }
+
+    /**
+     * @param mixed $vrTotalRetencionFuente
+     */
+    public function setVrTotalRetencionFuente($vrTotalRetencionFuente): void
+    {
+        $this->vrTotalRetencionFuente = $vrTotalRetencionFuente;
     }
 
     /**
@@ -348,6 +453,5 @@ class ComEgreso
     {
         $this->egresoDetallesEgresoRel = $egresoDetallesEgresoRel;
     }
-
 
 }

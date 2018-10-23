@@ -123,13 +123,11 @@ class EgresoController extends BaseController
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arrIva = $request->request->get('arrIva');
-            $arrValor = $request->request->get('arrValor');
-            $arrCantidad = $request->request->get('arrCantidad');
-            $arrDescuento = $request->request->get('arrDescuento');
-//            if ($form->get('btnAutorizar')->isClicked()) {
-//                $em->getRepository(ComCompra::class)->autorizar($arCompra);
-//            }
+
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(ComEgreso::class)->autorizar($arEgreso);
+                return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
+            }
 //            if ($form->get('btnDesautorizar')->isClicked()) {
 //                $em->getRepository(ComCompra::class)->desautorizar($arCompra);
 //            }
@@ -148,10 +146,11 @@ class EgresoController extends BaseController
 //                    }
 //                }
 //            }
-//            if ($form->get('btnActualizar')->isClicked()) {
-//                $em->getRepository(ComCompra::class)->actualizar($arCompra, $arrValor, $arrCantidad, $arrIva, $arrDescuento);
-//                return $this->redirect($this->generateUrl('compra_movimiento_compra_compra_detalle', ['id' => $id]));
-//            }
+            if ($form->get('btnActualizar')->isClicked()) {
+                $arrControles = $request->request->All();
+                $em->getRepository(ComEgresoDetalle::class)->actualizar($arrControles, $id);
+                return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
+            }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(ComEgresoDetalle::class)->eliminar($arEgreso, $arrDetallesSeleccionados);

@@ -8,6 +8,7 @@ use App\Entity\Compra\ComCompraDetalle;
 use App\Entity\Compra\ComConcepto;
 use App\Entity\Compra\ComProveedor;
 use App\Form\Type\Compra\CompraType;
+use App\Formato\Compra\CuentaPagar;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -137,10 +138,10 @@ class CompraController extends BaseController
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(ComCompra::class)->aprobar($arCompra);
             }
-//            if ($form->get('btnImprimir')->isClicked()) {
-//                $objFormatoCotizacion = new Cotizacion();
-//                $objFormatoCotizacion->Generar($em, $id);
-//            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $objFormatoCuentaPagar = new CuentaPagar();
+                $objFormatoCuentaPagar->Generar($em, $id);
+            }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $em->getRepository(ComCompra::class)->anular($arCompra);
                 if (count($respuesta) > 0) {

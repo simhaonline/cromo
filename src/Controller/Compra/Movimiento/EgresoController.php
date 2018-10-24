@@ -7,8 +7,8 @@ use App\Entity\Compra\ComCuentaPagar;
 use App\Entity\Compra\ComEgreso;
 use App\Entity\Compra\ComEgresoDetalle;
 use App\Entity\Compra\ComProveedor;
-use App\Form\Type\Compra\CompraType;
 use App\Form\Type\Compra\EgresoType;
+use App\Formato\Compra\Egreso;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -123,9 +123,10 @@ class EgresoController extends BaseController
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $arrControles = $request->request->All();
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(ComEgreso::class)->autorizar($arEgreso);
+                $em->getRepository(ComEgresoDetalle::class)->actualizar($arrControles, $id);
                 return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
@@ -136,23 +137,25 @@ class EgresoController extends BaseController
                     Mensajes::error("El egreso debe estar autorizado y no puede estar impreso");
                 }
             }
-//            if ($form->get('btnAprobar')->isClicked()) {
-//                $em->getRepository(ComCompra::class)->aprobar($arCompra);
-//            }
-//            if ($form->get('btnImprimir')->isClicked()) {
-//                $objFormatoCotizacion = new Cotizacion();
-//                $objFormatoCotizacion->Generar($em, $id);
-//            }
-//            if ($form->get('btnAnular')->isClicked()) {
-//                $respuesta = $em->getRepository(ComCompra::class)->anular($arCompra);
-//                if (count($respuesta) > 0) {
-//                    foreach ($respuesta as $error) {
-//                        Mensajes::error($error);
-//                    }
-//                }
-//            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(ComEgreso::class)->aprobar($arEgreso);
+            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $formato = new Egreso();
+                $formato->Generar($em, $id);
+                $arEgreso->setEstadoImpreso(1);
+                $em->persist($arEgreso);
+                $em->flush();
+            }
+            if ($form->get('btnAnular')->isClicked()) {
+                $respuesta = $em->getRepository(ComEgreso::class)->anular($arEgreso);
+                if (count($respuesta) > 0) {
+                    foreach ($respuesta as $error) {
+                        Mensajes::error($error);
+                    }
+                }
+            }
             if ($form->get('btnActualizar')->isClicked()) {
-                $arrControles = $request->request->All();
                 $em->getRepository(ComEgresoDetalle::class)->actualizar($arrControles, $id);
                 return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
             }

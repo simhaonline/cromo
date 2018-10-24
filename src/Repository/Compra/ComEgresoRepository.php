@@ -5,6 +5,7 @@ namespace App\Repository\Compra;
 use App\Entity\Compra\ComCuentaPagar;
 use App\Entity\Compra\ComEgreso;
 use App\Entity\Compra\ComEgresoDetalle;
+use App\Entity\Compra\ComEgresoTipo;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -143,6 +144,68 @@ class ComEgresoRepository extends ServiceEntityRepository
         $arEgreso->setEstadoAutorizado(0);
         $em->persist($arEgreso);
         $em->flush();
+    }
+
+    public function aprobar($arEgreso)
+    {
+        $em = $this->getEntityManager();
+        if ($arEgreso->getEstadoAutorizado()) {
+            $arEgresoTipo = $em->getRepository(ComEgresoTipo::class)->find($arEgreso->getCodigoEgresoTipoFk());
+            if ($arEgreso->getNumero() == 0 || $arEgreso->getNumero() == NULL) {
+                $arEgreso->setNumero($arEgresoTipo->getConsecutivo());
+                $arEgresoTipo->setConsecutivo($arEgresoTipo->getConsecutivo() + 1);
+                $em->persist($arEgresoTipo);
+            }
+            $arEgreso->setFecha(new \DateTime('now'));
+            $arEgreso->setEstadoAprobado(1);
+            $this->getEntityManager()->persist($arEgreso);
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    /**
+     * @param $arEgreso ComEgreso
+     * @return array
+     */
+    public function anular($arEgreso)
+    {
+        $em = $this->getEntityManager();
+        $respuesta = [];
+        if ($arEgreso->getEstadoAprobado() == 1) {
+
+            $arEgresosDetalle = $em->getRepository(ComEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $arEgreso->getCodigoEgresoPk()));
+            foreach ($arEgresosDetalle as $arEgresoDetalle) {
+                if ($arEgresoDetalle->getCodigoCuentaPagarFk()) {
+                    $arCuentaPagarAplicacion = $em->getRepository(ComCuentaPagar::class)->find($arEgresoDetalle->getCodigoCuentaPagarFk());
+                    if ($arCuentaPagarAplicacion->getVrSaldo() <= $arEgresoDetalle->getVrPagoAfectar() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
+                        $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arEgresoDetalle->getVrPagoAfectar();
+                        $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();
+                        $arCuentaPagarAplicacion->setVrSaldo($saldo);
+                        $arCuentaPagarAplicacion->setvRSaldoOperado($saldoOperado);
+                        $arCuentaPagarAplicacion->setVrAbono($arCuentaPagarAplicacion->getVrAbono() - $arEgresoDetalle->getVrPagoAfectar());
+                        $em->persist($arCuentaPagarAplicacion);
+                    }
+                }
+                $arEgresoDetalle->setVrDescuento(0);
+                $arEgresoDetalle->setVrAjustePeso(0);
+                $arEgresoDetalle->setVrRetencionIca(0);
+                $arEgresoDetalle->setVrRetencionIva(0);
+                $arEgresoDetalle->setVrRetencionFuente(0);
+                $arEgresoDetalle->setVrPago(0);
+                $arEgresoDetalle->setVrPagoAfectar(0);
+            }
+            $arEgreso->setVrPago(0);
+            $arEgreso->setVrPagoTotal(0);
+            $arEgreso->setVrTotalDescuento(0);
+            $arEgreso->setVrTotalAjustePeso(0);
+            $arEgreso->setVrTotalRetencionIca(0);
+            $arEgreso->setVrTotalRetencionIva(0);
+            $arEgreso->setVrTotalRetencionFuente(0);
+            $arEgreso->setEstadoAnulado(1);
+            $this->_em->persist($arEgreso);
+            $this->_em->flush();
+        }
+        return $respuesta;
     }
 
 }

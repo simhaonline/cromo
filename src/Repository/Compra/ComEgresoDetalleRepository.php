@@ -7,6 +7,7 @@ use App\Entity\Compra\ComEgresoDetalle;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @method ComEgresoDetalle|null find($id, $lockMode = null, $lockVersion = null)
@@ -128,4 +129,30 @@ class ComEgresoDetalleRepository extends ServiceEntityRepository
         $this->liquidar($idEgreso);
 
     }
+
+    public function listaFormato($codigoEgreso)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(ComEgresoDetalle::class, 'ed');
+        $queryBuilder
+            ->select('ed.codigoEgresoDetallePk')
+            ->addSelect('pr.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cpt.nombre AS cuentaPagarTipo')
+            ->addSelect('ed.numeroCompra')
+            ->addSelect('cp.fecha')
+            ->addSelect('ed.vrDescuento')
+            ->addSelect('ed.vrAjustePeso')
+            ->addSelect('ed.vrRetencionFuente')
+            ->addSelect('ed.vrRetencionIca')
+            ->addSelect('ed.vrPagoAfectar')
+            ->leftJoin('ed.egresoRel', 'r')
+            ->leftJoin('r.proveedorRel', 'pr')
+            ->leftJoin('ed.cuentaPagarRel', 'cp')
+            ->leftJoin('cp.cuentaPagarTipoRel', 'cpt')
+            ->where('ed.codigoEgresoFk = ' . $codigoEgreso);
+        $queryBuilder->orderBy('ed.codigoEgresoDetallePk', 'ASC');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 }

@@ -8,6 +8,7 @@ use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuNovedad;
 use App\Form\Type\RecursoHumano\NovedadType;
 use App\General\General;
+use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,7 +60,7 @@ class NovedadController extends BaseController
     {
         $em = $this->getDoctrine()->getManager();
         $arNovedad = new RhuNovedad();
-        if($id){
+        if ($id) {
             $arNovedad = $em->getRepository(RhuNovedad::class)->find($id);
         }
         $form = $this->createForm($this->claseFormulario, $arNovedad);
@@ -75,13 +76,13 @@ class NovedadController extends BaseController
                     } else {
                         $arContrato = null;
                     }
-                    if($arContrato){
+                    if ($arContrato) {
                         $arNovedad->setContratoRel($arContrato);
                         $arNovedad->setEmpleadoRel($arEmpleado);
                         $arNovedad->setGrupoRel($arContrato->getGrupoRel());
                         $em->persist($arNovedad);
                         $em->flush();
-                        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_novedad_lista'));
+                        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_novedad_detalle', ['id' => $arNovedad->getCodigoNovedadPk()]));
                     } else {
                         Mensajes::error('No se ha encontrado un contrato para el empleado seleccionado');
                     }
@@ -104,10 +105,29 @@ class NovedadController extends BaseController
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arRegistro = $em->getRepository($this->clase)->find($id);
+        $arNovedad = $em->getRepository($this->clase)->find($id);
+        $form = Estandares::botonera($arNovedad->getEstadoAutorizado(), $arNovedad->getEstadoAprobado(), $arNovedad->getEstadoAnulado());
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            if($form->get('btnAutorizar')->isClicked()){
+
+            }
+            if($form->get('btnDesautorizar')->isClicked()){
+
+            }
+            if($form->get('btnImprimir')->isClicked()){
+
+            }
+            if($form->get('btnAprobar')->isClicked()){
+
+            }
+            if($form->get('btnAnular')->isClicked()){
+
+            }
+        }
         return $this->render('recursoHumano/movimiento/nomina/novedad/detalle.html.twig', [
-            'arRegistro' => $arRegistro
+            'arNovedad' => $arNovedad,
+            'form' => $form->createView()
         ]);
     }
 }
-

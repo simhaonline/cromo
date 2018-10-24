@@ -497,6 +497,11 @@ class TteGuia
     protected $guiasDetallesGuiaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteRedespacho", mappedBy="redespachoGuiaRel")
+     */
+    protected $redespachosGuiaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoGuiaPk()

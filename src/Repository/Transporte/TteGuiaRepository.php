@@ -16,6 +16,7 @@ use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
+use App\Entity\Transporte\TteRedespacho;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -1372,12 +1373,19 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    /**
+     * @param $codigoGuia
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function redespacho($codigoGuia): bool
     {
         $em = $this->getEntityManager();
         $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
         if($arGuia) {
             if($arGuia->getEstadoDespachado() == 1 && $arGuia->getCodigoDespachoFk() && $arGuia->getEstadoAnulado() == 0 ) {
+                $arRedespacho = New TteRedespacho();
                 $arGuia->setFechaDespacho(NULL);
                 $arGuia->setFechaCumplido(NULL);
                 $arGuia->setFechaEntrega(NULL);
@@ -1385,8 +1393,13 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $arGuia->setEstadoEmbarcado(0);
                 $arGuia->setEstadoEntregado(0);
                 $arGuia->setEstadoSoporte(0);
+                $arRedespacho->setRedespachoDespachoRel($arGuia->getDespachoRel());
                 $arGuia->setCodigoDespachoFk(NULL);
                 $em->persist($arGuia);
+                //Se crea el redespacho;
+                $arRedespacho->setFecha(new \DateTime('now'));
+                $arRedespacho->setRedespachoGuiaRel($arGuia);
+                $em->persist($arRedespacho);
                 $em->flush();
                 Mensajes::success("La guia se activo para redespacho");
             } else {

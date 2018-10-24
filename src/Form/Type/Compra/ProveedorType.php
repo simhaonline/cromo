@@ -9,8 +9,10 @@ use App\Entity\General\GenIdentificacion;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -22,15 +24,16 @@ class ProveedorType extends AbstractType
             ->add('numeroIdentificacion', TextType::class, ['required' => true])
             ->add('digitoVerificacion', TextType::class, ['required' => false])
             ->add('nombre1', TextType::class, ['required' => false])
-            ->add('nombre2', TextType::class,['required' => false])
-            ->add('apellido1', TextType::class,['required' => false])
-            ->add('apellido2', TextType::class,['required' => false])
-            ->add('nombreCorto', TextType::class,['required' => true])
-            ->add('direccion', TextType::class,['required' => true])
-            ->add('telefono', TextType::class,['required' => false])
-            ->add('celular', TextType::class,['required' => false])
-            ->add('fax', TextType::class,['required' => false])
-            ->add('email', TextType::class,['required' => false])
+            ->add('nombre2', TextType::class, ['required' => false])
+            ->add('apellido1', TextType::class, ['required' => false])
+            ->add('apellido2', TextType::class, ['required' => false])
+            ->add('nombreCorto', TextType::class, ['required' => true])
+            ->add('direccion', TextType::class, ['required' => true])
+            ->add('telefono', TextType::class, ['required' => false])
+            ->add('celular', TextType::class, ['required' => false])
+            ->add('fax', TextType::class, ['required' => false])
+            ->add('email', TextType::class, ['required' => false])
+            ->add('plazoPago', IntegerType::class, ['required' => false])
             ->add('ciudadRel', EntityType::class, [
                 'class' => GenCiudad::class,
                 'query_builder' => function (EntityRepository $er) {

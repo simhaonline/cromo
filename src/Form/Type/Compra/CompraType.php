@@ -40,6 +40,8 @@ class CompraType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Comprobante:'
             ])
+            ->add('fecha' , DateType::class)
+            ->add('soporte', TextType::class, ['required' => false])
             ->add('comentarios', TextareaType::class, ['label' => 'Comentario:', 'required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

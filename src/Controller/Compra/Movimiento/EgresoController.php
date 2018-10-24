@@ -126,7 +126,6 @@ class EgresoController extends BaseController
             $arrControles = $request->request->All();
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(ComEgreso::class)->autorizar($arEgreso);
-                $em->getRepository(ComEgresoDetalle::class)->actualizar($arrControles, $id);
                 return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {

@@ -12,6 +12,7 @@ use App\Formato\Compra\CuentaPagar;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,7 +72,10 @@ class CompraController extends BaseController
             if (!$arCompra) {
                 return $this->redirect($this->generateUrl('compra_movimiento_compra_compra_lista'));
             }
+        } else {
+            $arCompra->setFecha(new \DateTime('now'));
         }
+
         $form = $this->createForm(CompraType::class, $arCompra);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -81,11 +85,13 @@ class CompraController extends BaseController
                     $arProveedor = $em->getRepository(ComProveedor::class)->find($txtCodigoProveedor);
                     if ($arProveedor) {
                         $arCompra->setProveedorRel($arProveedor);
-//                        $arCompra->setUsuario($this->getUser()->getUserName());
-                        $arCompra->setFechaVencimiento(new \DateTime('now'));
-                        if ($id == 0) {
-                            $arCompra->setFecha(new \DateTime('now'));
-                        }
+                        $arCompra->setUsuarioCrea($this->getUser()->getUserName());
+                        $plazoPago = $arProveedor->getPlazoPago();
+                        $fecha = $arCompra->getFecha()->format('Y-m-d');
+                        $nuevafecha = strtotime('+' . $plazoPago . 'day', strtotime($fecha));
+                        $fechaVencimiento = new \DateTime(date('Y-m-d', $nuevafecha));
+                        $arCompra->setFechaVencimiento($fechaVencimiento);
+                        $arCompra->setPlazo($plazoPago);
                         $em->persist($arCompra);
                         $em->flush();
                         return $this->redirect($this->generateUrl('compra_movimiento_compra_compra_detalle', ['id' => $arCompra->getCodigoCompraPk()]));

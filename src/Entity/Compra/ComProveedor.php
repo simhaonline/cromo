@@ -154,6 +154,11 @@ class ComProveedor
     private $email;
 
     /**
+     * @ORM\Column(name="plazo_pago" , type="integer" , nullable=true)
+     */
+    private $plazoPago = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="comProveedoresCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      * @Assert\NotNull(message="Este campo no puede estar vacio")
@@ -425,6 +430,22 @@ class ComProveedor
     /**
      * @return mixed
      */
+    public function getPlazoPago()
+    {
+        return $this->plazoPago;
+    }
+
+    /**
+     * @param mixed $plazoPago
+     */
+    public function setPlazoPago($plazoPago): void
+    {
+        $this->plazoPago = $plazoPago;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCiudadRel()
     {
         return $this->ciudadRel;
@@ -484,6 +505,22 @@ class ComProveedor
     public function setEgresosProveedorRel($egresosProveedorRel): void
     {
         $this->egresosProveedorRel = $egresosProveedorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentasPagarProveedorRel()
+    {
+        return $this->cuentasPagarProveedorRel;
+    }
+
+    /**
+     * @param mixed $cuentasPagarProveedorRel
+     */
+    public function setCuentasPagarProveedorRel($cuentasPagarProveedorRel): void
+    {
+        $this->cuentasPagarProveedorRel = $cuentasPagarProveedorRel;
     }
 
 

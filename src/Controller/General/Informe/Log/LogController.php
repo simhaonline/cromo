@@ -85,7 +85,7 @@ class LogController extends Controller {
             ['arGenLog' => $arGenLog,
                 'form' => $form->createView()]);
     }
-//QVMBXCvFHaltPm/ebXycQ7rOvgbgLFfQQvSxZVa/I/FvtsO9Ps9k9B84YP6rC+1aEio86UKY0ZxwsAEV/se7+Q==
+
 
 
 

@@ -73,9 +73,29 @@ class ComCompra
     private $vrRetencion = 0;
 
     /**
+     * @ORM\Column(name="vr_retencion_iva", type="float")
+     */
+    private $vrRetencionIva = 0;
+
+    /**
      * @ORM\Column(name="vr_total" ,type="float")
      */
     private $vrTotal = 0;
+
+    /**
+     * @ORM\Column(name="soporte" , type="string" , nullable=true)
+     */
+    private $soporte;
+
+    /**
+     * @ORM\Column(name="plazo" , type="integer" , nullable=true)
+     */
+    private $plazo = 0;
+
+    /**
+     * @ORM\Column(name="usuario_crea" , type="string" , nullable=true)
+     */
+    private $usuarioCrea;
 
     /**
      * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
@@ -309,6 +329,22 @@ class ComCompra
     /**
      * @return mixed
      */
+    public function getVrRetencionIva()
+    {
+        return $this->vrRetencionIva;
+    }
+
+    /**
+     * @param mixed $vrRetencionIva
+     */
+    public function setVrRetencionIva($vrRetencionIva): void
+    {
+        $this->vrRetencionIva = $vrRetencionIva;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrTotal()
     {
         return $this->vrTotal;
@@ -320,6 +356,54 @@ class ComCompra
     public function setVrTotal($vrTotal): void
     {
         $this->vrTotal = $vrTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoporte()
+    {
+        return $this->soporte;
+    }
+
+    /**
+     * @param mixed $soporte
+     */
+    public function setSoporte($soporte): void
+    {
+        $this->soporte = $soporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlazo()
+    {
+        return $this->plazo;
+    }
+
+    /**
+     * @param mixed $plazo
+     */
+    public function setPlazo($plazo): void
+    {
+        $this->plazo = $plazo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuarioCrea()
+    {
+        return $this->usuarioCrea;
+    }
+
+    /**
+     * @param mixed $usuarioCrea
+     */
+    public function setUsuarioCrea($usuarioCrea): void
+    {
+        $this->usuarioCrea = $usuarioCrea;
     }
 
     /**
@@ -433,6 +517,5 @@ class ComCompra
     {
         $this->compraDetallesCompraRel = $compraDetallesCompraRel;
     }
-
 
 }

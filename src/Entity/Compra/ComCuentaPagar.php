@@ -47,6 +47,11 @@ class ComCuentaPagar
     private $numeroReferencia;
 
     /**
+     * @ORM\Column(name="soporte" ,type="string" , nullable=true)
+     */
+    private $soporte;
+
+    /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
@@ -248,6 +253,22 @@ class ComCuentaPagar
     public function setNumeroReferencia($numeroReferencia): void
     {
         $this->numeroReferencia = $numeroReferencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoporte()
+    {
+        return $this->soporte;
+    }
+
+    /**
+     * @param mixed $soporte
+     */
+    public function setSoporte($soporte): void
+    {
+        $this->soporte = $soporte;
     }
 
     /**

@@ -7,8 +7,8 @@ use App\Entity\Compra\ComCuentaPagar;
 use App\Entity\Compra\ComEgreso;
 use App\Entity\Compra\ComEgresoDetalle;
 use App\Entity\Compra\ComProveedor;
-use App\Form\Type\Compra\CompraType;
 use App\Form\Type\Compra\EgresoType;
+use App\Formato\Compra\Egreso;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -123,40 +123,46 @@ class EgresoController extends BaseController
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arrIva = $request->request->get('arrIva');
-            $arrValor = $request->request->get('arrValor');
-            $arrCantidad = $request->request->get('arrCantidad');
-            $arrDescuento = $request->request->get('arrDescuento');
-//            if ($form->get('btnAutorizar')->isClicked()) {
-//                $em->getRepository(ComCompra::class)->autorizar($arCompra);
-//            }
-//            if ($form->get('btnDesautorizar')->isClicked()) {
-//                $em->getRepository(ComCompra::class)->desautorizar($arCompra);
-//            }
-//            if ($form->get('btnAprobar')->isClicked()) {
-//                $em->getRepository(ComCompra::class)->aprobar($arCompra);
-//            }
-//            if ($form->get('btnImprimir')->isClicked()) {
-//                $objFormatoCotizacion = new Cotizacion();
-//                $objFormatoCotizacion->Generar($em, $id);
-//            }
-//            if ($form->get('btnAnular')->isClicked()) {
-//                $respuesta = $em->getRepository(ComCompra::class)->anular($arCompra);
-//                if (count($respuesta) > 0) {
-//                    foreach ($respuesta as $error) {
-//                        Mensajes::error($error);
-//                    }
-//                }
-//            }
-//            if ($form->get('btnActualizar')->isClicked()) {
-//                $em->getRepository(ComCompra::class)->actualizar($arCompra, $arrValor, $arrCantidad, $arrIva, $arrDescuento);
-//                return $this->redirect($this->generateUrl('compra_movimiento_compra_compra_detalle', ['id' => $id]));
-//            }
-//            if ($form->get('btnEliminar')->isClicked()) {
-//                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-//                $em->getRepository(ComCompraDetalle::class)->eliminar($arCompra, $arrDetallesSeleccionados);
-//            }
-            return $this->redirect($this->generateUrl('compra_movimiento_compra_compra_detalle', ['id' => $id]));
+            $arrControles = $request->request->All();
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(ComEgreso::class)->autorizar($arEgreso);
+                return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                if ($arEgreso->getEstadoAutorizado() == 1 && $arEgreso->getEstadoImpreso() == 0) {
+                    $em->getRepository(ComEgreso::class)->desAutorizar($arEgreso);
+                    return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
+                } else {
+                    Mensajes::error("El egreso debe estar autorizado y no puede estar impreso");
+                }
+            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(ComEgreso::class)->aprobar($arEgreso);
+            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $formato = new Egreso();
+                $formato->Generar($em, $id);
+                $arEgreso->setEstadoImpreso(1);
+                $em->persist($arEgreso);
+                $em->flush();
+            }
+            if ($form->get('btnAnular')->isClicked()) {
+                $respuesta = $em->getRepository(ComEgreso::class)->anular($arEgreso);
+                if (count($respuesta) > 0) {
+                    foreach ($respuesta as $error) {
+                        Mensajes::error($error);
+                    }
+                }
+            }
+            if ($form->get('btnActualizar')->isClicked()) {
+                $em->getRepository(ComEgresoDetalle::class)->actualizar($arrControles, $id);
+                return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(ComEgresoDetalle::class)->eliminar($arEgreso, $arrDetallesSeleccionados);
+            }
+            return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
         }
         $arEgresoDetalles = $paginator->paginate($em->getRepository(ComEgresoDetalle::class)->lista($arEgreso->getCodigoEgresoPk()), $request->query->getInt('page', 1), 30);
         return $this->render('compra/movimiento/Egreso/detalle.html.twig', [
@@ -198,7 +204,10 @@ class EgresoController extends BaseController
                             $arCuentaPagar = $em->getRepository(ComCuentaPagar::class)->find($codigoCuentaPagar);
                             $arEgresoDetalle = new ComEgresoDetalle();
                             $arEgresoDetalle->setEgresoRel($arEgreso);
+                            $arEgresoDetalle->setNumeroCompra($arCuentaPagar->getNumeroDocumento());
+                            $arEgresoDetalle->setNumeroDocumentoAplicacion($arCuentaPagar->getNumeroReferencia());
                             $arEgresoDetalle->setCuentaPagarRel($arCuentaPagar);
+                            $arEgresoDetalle->setOperacion($arCuentaPagar->getOperacion());
                             $arEgresoDetalle->setVrPago($valor);
                             $em->persist($arEgresoDetalle);
                         }
@@ -209,8 +218,7 @@ class EgresoController extends BaseController
             }
         }
         $arCuentasPagar = $paginator->paginate($em->getRepository(ComCuentaPagar::class)->lista(), $request->query->getInt('page', 1), 10);
-//        dump($arCuentasPagar);
-//        exit();
+
         return $this->render('compra/movimiento/Egreso/detalleNuevo.html.twig', [
             'arCuentasPagar' => $arCuentasPagar,
             'form' => $form->createView()

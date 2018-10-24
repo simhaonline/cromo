@@ -40,6 +40,10 @@
             <th>VEHICULO</th>
             <th>SOPORTE</th>
             <th>DESPACHO</th>
+            <th>AUT</th>
+            <th>APR</th>
+            <th>ANU</th>
+            <th>CER</th>
             <th></th>
         </tr>
         </thead>
@@ -52,6 +56,10 @@
                 <td>{{ arMonitoreo.codigoVehiculoFk }}</td>
                 <td>{{ arMonitoreo.soporte }}</td>
                 <td>{{ arMonitoreo.codigoDespachoFk }}</td>
+                <td class="estado">{{ arMonitoreo.estadoAutorizado?'SI':'NO' }}</td>
+                <td class="estado">{{ arMonitoreo.estadoAprobado?'SI':'NO' }}</td>
+                <td class="estado">{{ arMonitoreo.estadoAnulado?'SI':'NO' }}</td>
+                <td class="estado">{{ arMonitoreo.estadoCerrado?'SI':'NO' }}</td>
                 <td style="text-align: center"><a href="{{ path('transporte_movimiento_monitoreo_monitoreo_detalle', { 'codigoMonitoreo': arMonitoreo.codigoMonitoreoPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
             </tr>
         {% endfor %}

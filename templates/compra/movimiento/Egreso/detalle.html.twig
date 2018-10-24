@@ -17,6 +17,7 @@
         {% if arEgreso.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
         {% if arEgreso.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arEgreso.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arEgreso.estadoImpreso == true %}<span class="label label-success">Impreso</span>{% endif %}
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">
@@ -25,8 +26,8 @@
             <td class="td-in-well">{{ arEgreso.codigoEgresoPk }}</td>
             <td class="titulo">CLIENTE:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arEgreso.proveedorRel.nombreCorto }}</td>
-            <td class="titulo">SUBTOTAL:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arEgreso.vrSubtotal |number_format(0, '.', ',') }}</td>
+            <td class="titulo">Pago:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arEgreso.vrPago |number_format(0, '.', ',') }}</td>
 
         </tr>
         <tr>
@@ -34,8 +35,9 @@
             <td class="td-in-well">{{ arEgreso.numero }}</td>
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-align: right;"></td>
+            <td class="titulo">DESCUENTO:</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arEgreso.vrTotalDescuento|number_format(0, '.', ',') }}</td>
 
         </tr>
         <tr>
@@ -43,9 +45,36 @@
             <td class="td-in-well">{{ arEgreso.fecha | date('Y-m-d') }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo">DESCUENTO:</td>
+            <td class="titulo">AJUSTE AL PESO:</td>
             <td class="td-in-well"
-                style="text-align: right;">{{ arEgreso.vrDescuento |number_format(0, '.', ',') }}</td>
+                style="text-align: right;">{{ arEgreso.vrTotalAjustePeso|number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">ICA:</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arEgreso.vrTotalRetencionIca |number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">RETEIVA:</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arEgreso.vrTotalRetencionIva |number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">RETEFUENTE:</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arEgreso.vrTotalRetencionFuente |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
@@ -53,7 +82,8 @@
             <td class="titulo"></td>
             <td></td>
             <td class="titulo">TOTAL:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arEgreso.vrTotal |number_format(0, '.', ',') }}</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arEgreso.vrPagoTotal |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
@@ -71,45 +101,91 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            {#<th>CANTIDAD</th>#}
-                            {#<th style="width: 12%;">SUBTOTAL</th>#}
-                            {#<th title="Porcentaje IVA" style="width: 12%;">% DESCUENTO</th>#}
-                            {#<th title="Valor IVA" style="width: 10%;">DESCUENTO</th>#}
-                            {#<th title="Porcentaje IVA" style="width: 12%;">% IVA</th>#}
-                            {#<th title="Valor IVA" style="width: 10%;">IVA</th>#}
-                            {#<th style="width: 15%;">TOTAL</th>#}
-                            {#<th><input type="checkbox" name="ChkSeleccionarTodosDetalle"#}
-                            {#OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>#}
+                            <th>NUMERO</th>
+                            <th style="width: 12%;">NUMERO APLICA</th>
+                            <th title="Valor Descuento" style="width: 12%;">DESCUENTO</th>
+                            <th title="Valor ajuste peso" style="width: 10%;">AJUSTE PESO</th>
+                            <th title="VALOR RETENCION ICA" style="width: 12%;">ICA</th>
+                            <th title="Valor RETENCION IVA" style="width: 10%;">RETEIVA</th>
+                            <th title="Valor RETENCION FUENTE" style="width: 10%;">RETEFUENTE</th>
+                            <th style="width: 12%;">PAGO</th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
+                                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for arEgresoDetalle in arEgresoDetalles %}
                             <tr>
                                 <td>{{ arEgresoDetalle.codigoEgresoDetallePk }}</td>
-                                {#<td style="text-align: right">#}
-                                {#{{ arCompraDetalle.vrPrecioUnitario |number_format(0, '.', ',') }}#}
-                                {#</td>#}
-                                {#<td style="text-align: right">#}
-                                {#{{ arCompraDetalle.vrSubtotal | number_format(0, '.', ',') }}#}
-                                {#</td>#}
-                                {#<td style="text-align: right">#}
-                                {#{{ arCompraDetalle.porDescuento }}#}
-                                {#</td>#}
-                                {#<td style="text-align: right">#}
-                                {#{{ arCompraDetalle.vrDescuento | number_format(0, '.', ',') }}#}
-                                {#</td>#}
-                                {#<td style="text-align: right">#}
-                                {#{{ arCompraDetalle.porIva }}#}
-                                {#</td>#}
-                                {#<td style="text-align: right">#}
-                                {#{{ arCompraDetalle.vrIva }}#}
-                                {#</td>#}
-                                {#<td style="text-align: right">#}
-                                {#{{ arCompraDetalle.vrTotal | number_format(0, '.', ',') }}#}
-                                {#</td>#}
-                                {#<td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"#}
-                                {#value="{{ arCompraDetalle.codigoCompraDetallePk }}"/>#}
-                                {#</td>#}
+                                <td style="text-align: right">
+                                    {{ arEgresoDetalle.numeroCompra }}
+                                </td>
+                                <td style="text-align: right">
+                                    {{ arEgresoDetalle.numeroDocumentoAplicacion | number_format(0, '.', ',') }}
+                                </td>
+                                {% if arEgreso.estadoAutorizado == false %}
+                                    <td style="text-align: center">
+                                        <input type="number"
+                                               name="TxtVrDescuento{{ arEgresoDetalle.codigoEgresoDetallePk }}"
+                                               value="{{ arEgresoDetalle.vrDescuento }}"
+                                               style="text-align: right; width:90px"
+                                               size="10">
+                                    </td>
+                                    <td style="text-align: center">
+                                        <input class="input-valor" type="number" placeholder="Valor unitario"
+                                               name="TxtAjustePeso{{ arEgresoDetalle.codigoEgresoDetallePk }}"
+                                               value="{{ arEgresoDetalle.vrAjustePeso }}"
+                                               style="text-align: right; width:90px" size="10"/>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <input class="input-valor" type="number" placeholder="Valor unitario"
+                                               name="TxtRetencionIca{{ arEgresoDetalle.codigoEgresoDetallePk }}"
+                                               value="{{ arEgresoDetalle.vrRetencionIca }}"
+                                               style="text-align: right; width:90px" size="10"/>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <input class="input-valor" type="number" placeholder="Valor unitario"
+                                               name="TxtRetencionIva{{ arEgresoDetalle.codigoEgresoDetallePk }}"
+                                               value="{{ arEgresoDetalle.vrRetencionIva }}"
+                                               style="text-align: right; width:90px" size="10"/>
+                                    </td>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <input class="input-valor" type="number" placeholder="% DESCUENTO"
+                                               name="TxtRetencionFuente{{ arEgresoDetalle.codigoEgresoDetallePk }}"
+                                               value="{{ arEgresoDetalle.vrRetencionFuente }}"
+                                               style="text-align: right; width:90px" size="10"/>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <input class="input-valor" type="number" placeholder="% DESCUENTO"
+                                               name="TxtVrPago{{ arEgresoDetalle.codigoEgresoDetallePk }}"
+                                               value="{{ arEgresoDetalle.vrPago }}"
+                                               style="text-align: right; width:90px" size="10"/>
+                                    </td>
+                                {% else %}
+                                    <td style="text-align: right">
+                                        {{ arEgresoDetalle.vrDescuento }}
+                                    </td>
+                                    <td style="text-align: right">
+                                        {{ arEgresoDetalle.vrAjustePeso }}
+                                    </td>
+
+                                    <td style="text-align: right">
+                                        {{ arEgresoDetalle.vrRetencionIca | number_format(0, '.', ',') }}
+                                    </td>
+                                    <td style="text-align: right">
+                                        {{ arEgresoDetalle.vrRetencionIva }}
+                                    </td>
+                                    <td style="text-align: right">
+                                        {{ arEgresoDetalle.vrRetencionFuente }}
+                                    </td>
+                                    <td style="text-align: right">
+                                        {{ arEgresoDetalle.vrPago | number_format(0, '.', ',') }}
+                                    </td>
+                                {% endif %}
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                                       value="{{ arEgresoDetalle.codigoEgresoDetallePk }}"/>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>

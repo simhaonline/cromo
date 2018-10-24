@@ -131,18 +131,18 @@ class ComCompraRepository extends ServiceEntityRepository
             $arCuentaPagar->setCuentaPagarTipoRel($arCuentaCobrarTipo);
             $arCuentaPagar->setFecha($arCompra->getFecha());
             $arCuentaPagar->setFechaVence($arCompra->getFechaVencimiento());
-//            $arCuentaPagar->setModulo("INV");
+            $arCuentaPagar->setModulo("COM");
             $arCuentaPagar->setCodigoDocumento($arCompra->getCodigoCompraPk());
             $arCuentaPagar->setNumeroDocumento($arCompra->getNumero());
-//            $arCuentaPagar->setSoporte($arCompra->getSoporte());
+            $arCuentaPagar->setSoporte($arCompra->getSoporte());
             $arCuentaPagar->setVrSubtotal($arCompra->getVrSubtotal());
             $arCuentaPagar->setVrIva($arCompra->getVrIva());
             $arCuentaPagar->setVrTotal($arCompra->getVrTotal());
             $arCuentaPagar->setVrRetencionFuente($arCompra->getVrRetencion());
-//            $arCuentaPagar->setVrRetencionIva($arCompra->getVrRetencionIva());
+            $arCuentaPagar->setVrRetencionIva($arCompra->getVrRetencionIva());
             $arCuentaPagar->setVrSaldo($arCompra->getVrTotal());
             $arCuentaPagar->setVrSaldoOperado($arCompra->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
-//            $arCuentaPagar->setPlazo($arCompra->getPlazoPago());
+            $arCuentaPagar->setPlazo($arCompra->getPlazo());
             $arCuentaPagar->setOperacion($arCuentaCobrarTipo->getOperacion());
             $em->persist($arCuentaPagar);
 

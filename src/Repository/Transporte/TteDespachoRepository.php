@@ -242,7 +242,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                     ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
                 $query->execute();
                 $arDespacho->setFechaSalida($fechaActual);
-                //$arDespacho->setEstadoAprobado(1);
+                $arDespacho->setEstadoAprobado(1);
                 $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
                 if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
                     $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
@@ -256,13 +256,14 @@ class TteDespachoRepository extends ServiceEntityRepository
                     $arMonitoreo->setFechaRegistro(new \DateTime('now'));
                     $arMonitoreo->setFechaInicio(new \DateTime('now'));
                     $arMonitoreo->setFechaFin(new \DateTime('now'));
+                    $arMonitoreo->setEstadoAutorizado(1);
                     $em->persist($arMonitoreo);
                 }
                 $em->persist($arDespacho);
 
-                if($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
+                if ($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
                     $arPoseedor = $arDespacho->getVehiculoRel()->getPoseedorRel();
-                    $arProveedor = $em->getRepository(ComProveedor::class)->findOneBy(['codigoIdentificacionFk' => $arPoseedor->getCodigoIdentificacionFk(),'numeroIdentificacion' => $arPoseedor->getNumeroIdentificacion()]);
+                    $arProveedor = $em->getRepository(ComProveedor::class)->findOneBy(['codigoIdentificacionFk' => $arPoseedor->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPoseedor->getNumeroIdentificacion()]);
                     if (!$arProveedor) {
                         $arProveedor = new ComProveedor();
                         //$arProveedor->setFormaPagoRel($arFactura->getClienteRel()->getFormaPagoRel());
@@ -276,7 +277,6 @@ class TteDespachoRepository extends ServiceEntityRepository
                         $arProveedor->setEmail($arPoseedor->getCorreo());
                         $em->persist($arProveedor);
                     }
-
 
 
                     $arCuentaPagarTipo = $em->getRepository(ComCuentaPagarTipo::class)->find($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoFk());
@@ -1543,4 +1543,57 @@ class TteDespachoRepository extends ServiceEntityRepository
         return $results;
     }
 
+    public function listaSoporte($codigoDespacho)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
+            ->select('d.codigoDespachoPk')
+            ->addSelect('d.codigoOperacionFk')
+            ->addSelect('co.nombre AS ciudadOrigen')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('d.codigoVehiculoFk')
+            ->addSelect('con.nombreCorto AS conductor')
+            ->addSelect('d.cantidad')
+            ->addSelect('d.unidades')
+            ->addSelect('d.pesoReal')
+            ->addSelect('d.pesoVolumen')
+            ->addSelect('d.fechaRegistro')
+            ->leftJoin('d.ciudadOrigenRel', 'co')
+            ->leftJoin('d.ciudadDestinoRel', 'cd')
+            ->leftJoin('d.conductorRel', 'con')
+            ->where('d.codigoDespachoPk = ' . $codigoDespacho)
+            ->andWhere('d.estadoAprobado = 1')
+            ->andWhere('d.estadoSoporte = 0')
+            ->andWhere('d.estadoAnulado = 0');
+        $queryBuilder->orderBy('d.codigoDespachoPk', 'DESC');
+        return $queryBuilder;
+    }
+
+    /**
+     * @param $codigoDespacho
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function soporte($codigoDespacho)
+    {
+        $em = $this->getEntityManager();
+        $arrDespachoDetalles = $em->getRepository(TteDespachoDetalle::class)->validarGuiasSoporte($codigoDespacho);
+        $arrGuiasSinSoporte = [];
+        foreach ($arrDespachoDetalles AS $arDespachoDetalle) {
+            if ($arDespachoDetalle['estadoSoporte'] == false) {
+                $arrGuiasSinSoporte[] = $arDespachoDetalle['codigoGuiaFk'];
+            }
+        }
+        if (count($arrGuiasSinSoporte) == 0) {
+            $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+            $arDespacho->setFechaSoporte(new \DateTime("now"));
+            $arDespacho->setEstadoSoporte(1);
+            $em->persist($arDespacho);
+            $em->flush();
+        } else {
+            $strErrores = implode('-', $arrGuiasSinSoporte);
+            Mensajes::error('Las siguientes guias no cuentan con soporte: ' . $strErrores);
+        }
+    }
 }
+

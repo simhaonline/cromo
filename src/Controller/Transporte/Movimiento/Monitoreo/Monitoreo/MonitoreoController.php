@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Movimiento\Monitoreo\Monitoreo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TteMonitoreoDetalle;
+use App\Entity\Transporte\TteMonitoreoRegistro;
 use App\Form\Type\Transporte\MonitoreoDetalleType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -66,9 +67,11 @@ class MonitoreoController extends Controller
             }
         }
         $arMonitoreoDetalles = $this->getDoctrine()->getRepository(TteMonitoreoDetalle::class)->monitoreo($codigoMonitoreo);
+        $arMonitoreoRegistros = $this->getDoctrine()->getRepository(TteMonitoreoRegistro::class)->monitoreo($codigoMonitoreo);
         return $this->render('transporte/movimiento/monitoreo/monitoreo/detalle.html.twig', [
             'arMonitoreo' => $arMonitoreo,
             'arMonitoreoDetalles' => $arMonitoreoDetalles,
+            'arMonitoreoRegistros' => $arMonitoreoRegistros,
             'form' => $form->createView()]);
     }
 
@@ -106,27 +109,15 @@ class MonitoreoController extends Controller
     public function verMapa(Request $request, $codigoMonitoreo)
     {
         $em = $this->getDoctrine()->getManager();
-        $arMonitoreo = $em->getRepository(TteMonitoreo::class)->find($codigoMonitoreo);
-        $form = $this->createFormBuilder()
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnImprimir')->isClicked()) {
-                $respuesta = $em->getRepository(TteGuia::class)->imprimir($codigoGuia);
-                if($respuesta) {
-                    $em->flush();
-                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_detalle', array('codigoGuia' => $codigoGuia)));
-                    //$formato = new \App\Formato\TteDespacho();
-                    //$formato->Generar($em, $codigoGuia);
-                }
+        //$googleMapsApiKey = $arConfiguracion->getGoogleMapsApiKey();
+        //$googleMapsApiKey = "AIzaSyBXwGxeTtvba8Uset2XFjuwAxdRmJlkdcY";
+        //Esta es la key de alejandro
+        $googleMapsApiKey = "AIzaSyBEONds48sofQeiVLeOewxouvqo203DfZU";
+        $arrDatos = $em->getRepository(TteMonitoreoRegistro::class)->datosMapa($codigoMonitoreo);
 
-            }
-        }
-        $arMonitoreoDetalles = $this->getDoctrine()->getRepository(TteMonitoreoDetalle::class)->monitoreo($codigoMonitoreo);
-        return $this->render('transporte/movimiento/monitoreo/monitoreo/mapa.html.twig', [
-            'arMonitoreo' => $arMonitoreo,
-            'arMonitoreoDetalles' => $arMonitoreoDetalles,
-            'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/monitoreo/monitoreo/mapaRegistro.html.twig', [
+            'datos' => $arrDatos ?? [],
+            'apikey' => $googleMapsApiKey]);
     }
 
 }

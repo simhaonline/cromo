@@ -53,6 +53,21 @@ class TteMonitoreo
     private $codigoDespachoFk;
 
     /**
+     * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoAutorizado = false;
+
+    /**
+     * @ORM\Column(name="estado_aprobado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoAprobado = false;
+
+    /**
+     * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoAnulado = false;
+
+    /**
      * @ORM\Column(name="estado_cerrado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoCerrado = false;
@@ -78,6 +93,11 @@ class TteMonitoreo
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteMonitoreoDetalle", mappedBy="monitoreoRel")
      */
     protected $monitoreosDetallesMonitoreoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteMonitoreoRegistro", mappedBy="monitoreoRel")
+     */
+    protected $monitoreosRegistrosMonitoreoRel;
 
     /**
      * @return mixed
@@ -269,6 +289,70 @@ class TteMonitoreo
     public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMonitoreosRegistrosMonitoreoRel()
+    {
+        return $this->monitoreosRegistrosMonitoreoRel;
+    }
+
+    /**
+     * @param mixed $monitoreosRegistrosMonitoreoRel
+     */
+    public function setMonitoreosRegistrosMonitoreoRel($monitoreosRegistrosMonitoreoRel): void
+    {
+        $this->monitoreosRegistrosMonitoreoRel = $monitoreosRegistrosMonitoreoRel;
     }
 
 

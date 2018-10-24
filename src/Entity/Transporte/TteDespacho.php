@@ -326,6 +326,11 @@ class TteDespacho
     protected $novedadesDespachoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteRedespacho", mappedBy="redespachoDespachoRel")
+     */
+    protected $redespachosDespachoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoDespachoPk()

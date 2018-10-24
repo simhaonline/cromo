@@ -3,6 +3,8 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Novedad;
 
 use App\Controller\BaseController;
+use App\Entity\RecursoHumano\RhuContrato;
+use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuNovedad;
 use App\Form\Type\RecursoHumano\NovedadType;
 use App\General\General;
@@ -55,7 +57,42 @@ class NovedadController extends BaseController
      */
     public function nuevo(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_novedad_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arNovedad = new RhuNovedad();
+        if($id){
+            $arNovedad = $em->getRepository(RhuNovedad::class)->find($id);
+        }
+        $form = $this->createForm($this->claseFormulario, $arNovedad);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arNovedad->getCodigoEmpleadoFk());
+                if ($arEmpleado) {
+                    if ($arEmpleado->getCodigoContratoFk()) {
+                        $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
+                    } elseif ($arEmpleado->getCodigoContratoUltimoFk()) {
+                        $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoUltimoFk());
+                    } else {
+                        $arContrato = null;
+                    }
+                    if($arContrato){
+                        $arNovedad->setContratoRel($arContrato);
+                        $arNovedad->setEmpleadoRel($arEmpleado);
+                        $arNovedad->setGrupoRel($arContrato->getGrupoRel());
+                        $em->persist($arNovedad);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_novedad_lista'));
+                    } else {
+                        Mensajes::error('No se ha encontrado un contrato para el empleado seleccionado');
+                    }
+                } else {
+                    Mensajes::error('No se ha encontrado un empleado con el codigo ingresado');
+                }
+            }
+        }
+        return $this->render('recursoHumano/movimiento/nomina/novedad/nuevo.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -68,7 +105,7 @@ class NovedadController extends BaseController
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->clase)->find($id);
-        return $this->render('recursoHumano/movimiento/nomina/novedad/detalle.html.twig',[
+        return $this->render('recursoHumano/movimiento/nomina/novedad/detalle.html.twig', [
             'arRegistro' => $arRegistro
         ]);
     }

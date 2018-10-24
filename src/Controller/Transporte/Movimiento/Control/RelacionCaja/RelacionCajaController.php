@@ -4,11 +4,12 @@ namespace App\Controller\Transporte\Movimiento\Control\RelacionCaja;
 
 use App\Entity\Transporte\TteRecibo;
 use App\Entity\Transporte\TteRelacionCaja;
-use App\Form\Type\Transporte\DespachoType;
 use App\Form\Type\Transporte\RelacionCajaType;
 use App\Formato\Transporte\RelacionCaja;
 use App\General\General;
 use App\Utilidades\Estandares;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,10 +33,24 @@ class RelacionCajaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTteRelacionCajaFiltroFecha')))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteRelacionCajaFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteRelacionCajaFechaHasta'))])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTteRelacionCajaFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroTteRelacionCajaFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                $session->set('filtroTteRelacionCajaFiltroFecha', $form->get('filtrarFecha')->getData());
+            }
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteRelacionCaja::class)->eliminar($arrSeleccionados);
+            }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TteRelacionCaja::class)->lista()->getQuery()->getResult(), "Relacion caja");
             }
@@ -57,7 +72,6 @@ class RelacionCajaController extends Controller
         if($codigoRelacionCaja == 0) {
             $arRelacionCaja->setFecha(new \DateTime('now'));
         }
-
         $form = $this->createForm(RelacionCajaType::class, $arRelacionCaja);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -69,10 +83,6 @@ class RelacionCajaController extends Controller
             } else {
                 return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_lista'));
             }
-
-
-
-
         }
         return $this->render('transporte/movimiento/control/relacioncaja/nuevo.html.twig', ['arRelacionCaja' => $arRelacionCaja,'form' => $form->createView()]);
     }

@@ -30,7 +30,23 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
             ->addSelect('rc.vrFlete')
             ->addSelect('rc.vrManejo')
             ->addSelect('rc.vrTotal')
+            ->addSelect('rc.estadoAutorizado')
+            ->addSelect('rc.estadoAprobado')
+            ->addSelect('rc.estadoAnulado')
             ->where('rc.codigoRelacionCajaPk <> 0');
+        $fecha =  new \DateTime('now');
+        if($session->get('filtroTteRelacionCajaFiltroFecha') == true){
+            if ($session->get('filtroTteRelacionCajaFechaDesde') != null) {
+                $queryBuilder->andWhere("rc.fecha >= '{$session->get('filtroTteRelacionCajaFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("rc.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroTteRelacionCajaFechaHasta') != null) {
+                $queryBuilder->andWhere("rc.fecha <= '{$session->get('filtroTteRelacionCajaFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("rc.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
         if ($session->get('filtroTteReciboCajaCodigo') != "") {
             $queryBuilder->andWhere("rc.codigoRelacionCajaPk = " . $session->get('filtroTteReciboCajaCodigo'));
         }
@@ -39,6 +55,35 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(TteRelacionCaja::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            if (count($this->getEntityManager()->getRepository(TteRecibo::class)->findBy(['codigoRelacionCajaFk' => $arRegistro->getCodigoRelacionCajaPk()])) <= 0) {
+                                $this->getEntityManager()->remove($arRegistro);
+                            } else {
+                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                            }
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                }
+                if($respuesta != ''){
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
+    }
 
     public function liquidar($codigoRelacionCaja): bool
     {

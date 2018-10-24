@@ -104,7 +104,7 @@ class ProgramacionController extends BaseController
         $form->add('btnEliminar',SubmitType::class, $arrBtnEliminar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arrSeleccionados = $request->request->get('ChkSeleccionados');
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnCargarContratos')->isClicked()) {
                 $em->getRepository(RhuContrato::class)->cargarContratos($arProgramacion);
             }

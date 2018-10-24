@@ -3,6 +3,7 @@
 namespace App\Form\Type\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuGrupo;
+use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -29,6 +30,16 @@ class ProgramacionType extends AbstractType
                 'choice_label' => 'nombre',
                 'attr' => ['class' => 'form-control']
             ])
+            ->add('pagoTipoRel',EntityType::class,[
+                'class' => RhuPagoTipo::class,
+                'query_builder' => function (EntityRepository $er){
+                    return $er->createQueryBuilder('er')
+                        ->orderBy('er.nombre');
+                },
+                'required' => true,
+                'choice_label' => 'nombre',
+                'attr' => ['class' => 'form-control']
+            ])
             ->add('fechaDesde',DateType::class,['data' => new \DateTime('now')])
             ->add('fechaHasta',DateType::class,['data' => new \DateTime('now')])
             ->add('nombre',TextType::class,['required' => false])
@@ -47,6 +58,7 @@ class ProgramacionType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoProgramacionPk",  "tipo":"pk"      ,"ayuda":"Codigo del registro"                    ,"titulo":"ID"},
+            {"campo":"codigoPagoTipoFk",      "tipo":"texto"   ,"ayuda":"Codigo del tipo de pago"                ,"titulo":"TIPO"},
             {"campo":"codigoGrupoFk",         "tipo":"texto"   ,"ayuda":"Nombre del grupo"                       ,"titulo":"GRUPO"},
             {"campo":"fechaDesde",            "tipo":"fecha"   ,"ayuda":"Fecha en que inicia el periodo"         ,"titulo":"DESDE"},
             {"campo":"fechaHasta",            "tipo":"fecha"   ,"ayuda":"Fecha en que termina el periodo"        ,"titulo":"HASTA"},

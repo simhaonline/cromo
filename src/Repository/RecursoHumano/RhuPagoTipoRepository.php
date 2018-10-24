@@ -13,4 +13,10 @@ class RhuPagoTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuPagoTipo::class);
     }
 
+    public function camposPredeterminados(){
+        return $this->_em->createQueryBuilder()->from(RhuPagoTipo::class,'pt')
+            ->select('pt.codigoPagoTipoPk AS ID')
+            ->addSelect('pt.nombre')
+            ->where('pt.codigoPagoTipoPk IS NOT NULL');
+    }
 }

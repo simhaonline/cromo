@@ -3,7 +3,6 @@
 namespace App\Repository\General;
 
 use App\Entity\General\GenLog;
-use App\Entity\General\GenSexo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -12,7 +11,7 @@ class GenLogRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, GenSexo::class);
+        parent::__construct($registry, GenLog::class);
     }
 
     public function lista(){
@@ -25,6 +24,7 @@ class GenLogRepository extends ServiceEntityRepository
             ->addSelect('gl.accion')
             ->addSelect('gl.ruta')
             ->addSelect('gl.fecha')
+            ->addSelect('gl.nombreEntidad')
 //            ->where('gl.codigoUsuarioFk IS NOT NULL')
             ->orderBy('gl.fecha','DESC');
 

@@ -55,7 +55,9 @@
             <th>USUARIO</th>
             <th>ACCION</th>
             <th>RUTA</th>
+            <th>ENTIDAD</th>
             <th>FECHA</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -66,7 +68,11 @@
                 <td>{{ arGenLog.nombreUsuario }}</td>
                 <td>{{ arGenLog.accion }}</td>
                 <td>{{ arGenLog.ruta }}</td>
-                <td>{{ arGenLog.fecha|date("d/m/Y") }}</td>
+                <td>{{ arGenLog.nombreEntidad }}</td>
+                <td>{{ arGenLog.fecha|date("d/m/Y H:i:s") }}</td>
+                <td><a href="javascript:abrirVentana3('{{ path('general_informe_log_lista_detalle',{codigoRegistro: arGenLog.codigoLogPk }) }}', 'Ver detalles', 500, 400)">
+                        <img src="{{ asset('../public/img/bootstrap/glyphicons_039_notes.png') }}" title="Ver log" width="20px" height="20px">
+                    </a></td>
             </tr>
         {% endfor %}
         </tbody>

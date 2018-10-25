@@ -161,8 +161,8 @@ class LogController extends Controller {
             $detalles = [];
             $detalles['SIN REGISTRAR'] = 'N/A';
         }
-        dump($cabeceras);
-        exit();
+//        dump($cabeceras);
+//        exit();
         return $this->render('general/log/detalleLogComparativo.html.twig', [
             'detalles'      =>  $detalles,
         ]);

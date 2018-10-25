@@ -30,6 +30,7 @@ class CreditoType extends AbstractType
             ->add('numeroCuotas', IntegerType::class, ['required' => true])
             ->add('comentarios', TextareaType::class, ['required' => false])
             ->add('seguro',NumberType::class,['required' => false])
+            ->add('vrPagar',NumberType::class,['required' => false])
             ->add('validarCuotas',CheckboxType::class,['required' => false])
             ->add('aplicarCuotaPrima',CheckboxType::class,['required' => false])
             ->add('aplicarCuotaCesantia',CheckboxType::class,['required' => false])

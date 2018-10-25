@@ -8,6 +8,7 @@ use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\CreditoType;
 use App\General\General;
+use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,6 +78,7 @@ class CreditoController extends BaseController
                             $arCredito->setGrupoRel($arContrato->getGrupoRel());
                             $arCredito->setEmpleadoRel($arEmpleado);
                             $arCredito->setContratoRel($arContrato);
+                            $arCredito->setUsuario($this->getUser()->getUsername());
                             $em->persist($arCredito);
                             $em->flush();
                             return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_credito_detalle',['id' => $arCredito->getCodigoCreditoPk()]));
@@ -106,8 +108,11 @@ class CreditoController extends BaseController
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->clase)->find($id);
+        $form = Estandares::botonera($arRegistro->getEstadoAutorizado(), $arRegistro->getEstadoAprobado(), $arRegistro->getEstadoAnulado());
+        $form->handleRequest($request);
         return $this->render('recursoHumano/movimiento/nomina/credito/detalle.html.twig', [
-            'arRegistro' => $arRegistro
+            'arRegistro' => $arRegistro,
+            'form' => $form->createView()
         ]);
     }
 }

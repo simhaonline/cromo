@@ -38,6 +38,11 @@ class RhuGrupo
     protected $novedadesGrupoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuCredito", mappedBy="grupoRel")
+     */
+    protected $creditosGrupoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoGrupoPk()
@@ -115,5 +120,21 @@ class RhuGrupo
     public function setNovedadesGrupoRel($novedadesGrupoRel): void
     {
         $this->novedadesGrupoRel = $novedadesGrupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreditosGrupoRel()
+    {
+        return $this->creditosGrupoRel;
+    }
+
+    /**
+     * @param mixed $creditosGrupoRel
+     */
+    public function setCreditosGrupoRel($creditosGrupoRel): void
+    {
+        $this->creditosGrupoRel = $creditosGrupoRel;
     }
 }

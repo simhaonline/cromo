@@ -70,7 +70,9 @@ class GenConfiguracionEntidad extends Fixture
             'costoClase,admin,costo,0,0',
             'costoGrupo,admin,costo,0,0',
             'novedadTipo,admin,nomina,0,0',
-            'pagoTipo,admin,nomina,0,0'];
+            'pagoTipo,admin,nomina,0,0',
+            'creditoTipo,admin,nomina,0,0',
+            'concepto,admin,nomina,0,0'];
         $this->setConfiguracionEntidades($arrModuloRecursoHumano, $em, 'recursoHumano');
         /////////////////                 FIN ESTRACTURA MODULO DE RECURSO HUMANO
 //

@@ -21,10 +21,12 @@
                             <td class="numero">{{ arDato[campo.campo] | number_format(0, '.', ',')}}</td>
                         {% elseif campo.tipo == "bool" %}
                             <td class="estado">{{ arDato[campo.campo]?'SI':'NO' }}</td>
+                        {% elseif campo.tipo == 'rel' %}
+                            {% set campoNombre = campo.campo|split('.') %}
+                            <td>{{ arDato[campoNombre[1]] }}</td>
                         {% else %}
                             <td>{{ arDato[campo.campo]  }}</td>
                         {% endif %}
-
                 {% endfor %}
                 <td style="text-align: center;">
                     {% if arDato.estadoAutorizado is defined %}

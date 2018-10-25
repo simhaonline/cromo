@@ -18,14 +18,14 @@ class RhuCredito
     private $codigoCreditoPk;
 
     /**
-     * @ORM\Column(name="codigo_credito_tipo_fk", type="integer", nullable=false)
+     * @ORM\Column(name="codigo_credito_tipo_fk", type="string",length=10, nullable=true)
      */
     private $codigoCreditoTipoFk;
 
     /**
-     * @ORM\Column(name="codigo_credito_tipo_pago_fk", type="integer", nullable=false)
+     * @ORM\Column(name="codigo_credito_pago_fk", type="string", length=10, nullable=false)
      */
-    private $codigoCreditoTipoPagoFk;
+    private $codigoCreditoPagoFk;
 
     /**
      * @ORM\Column(name="codigo_empleado_fk", type="integer", nullable=true)
@@ -33,14 +33,14 @@ class RhuCredito
     private $codigoEmpleadoFk;
 
     /**
-     * @ORM\Column(name="codigo_centro_costo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_contrato_fk", type="integer", nullable=true)
      */
-    private $codigoCentroCostoFk;
+    private $codigoContratoFk;
 
     /**
-     * @ORM\Column(name="codigo_programacion_pago_detalle_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_grupo_fk", type="string", length=10, nullable=true)
      */
-    private $codigoProgramacionDetalleFk;
+    private $codigoGrupoFk;
 
     /**
      * @ORM\Column(name="fecha", type="date")
@@ -152,11 +152,6 @@ class RhuCredito
     private $vrAbonos = 0;
 
     /**
-     * @ORM\Column(name="nro_libranza", type="string", length=50, nullable=true)
-     */
-    private $numeroLibranza;
-
-    /**
      * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
      */
     private $usuario;
@@ -164,7 +159,7 @@ class RhuCredito
     /**
      * @ORM\Column(name="total_pagos",options={"default": 0}, type="float")
      */
-    private $totalPagos = 0;
+    private $vrTotalPagos = 0;
 
     /**
      * @ORM\Column(name="validar_cuotas",options={"default": false}, type="boolean")
@@ -180,6 +175,36 @@ class RhuCredito
      * @ORM\Column(name="aplicar_cuota_cesantia",options={"default": false}, type="boolean")
      */
     private $aplicarCuotaCesantia = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuCreditoTipo", inversedBy="creditosCreditoTipoRel")
+     * @ORM\JoinColumn(name="codigo_credito_tipo_fk", referencedColumnName="codigo_credito_tipo_pk")
+     */
+    protected $creditoTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="creditosEmpleadoRel")
+     * @ORM\JoinColumn(name="codigo_empleado_fk", referencedColumnName="codigo_empleado_pk")
+     */
+    protected $empleadoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuContrato", inversedBy="creditosContratoRel")
+     * @ORM\JoinColumn(name="codigo_contrato_fk", referencedColumnName="codigo_contrato_pk")
+     */
+    protected $contratoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuGrupo", inversedBy="creditosGrupoRel")
+     * @ORM\JoinColumn(name="codigo_grupo_fk", referencedColumnName="codigo_grupo_pk")
+     */
+    protected $grupoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuCreditoPago", inversedBy="creditosCreditoPagoRel")
+     * @ORM\JoinColumn(name="codigo_credito_pago_fk", referencedColumnName="codigo_credito_pago_pk")
+     */
+    protected $creditoPagoRel;
 
     /**
      * @return mixed
@@ -216,17 +241,17 @@ class RhuCredito
     /**
      * @return mixed
      */
-    public function getCodigoCreditoTipoPagoFk()
+    public function getCodigoCreditoPagoFk()
     {
-        return $this->codigoCreditoTipoPagoFk;
+        return $this->codigoCreditoPagoFk;
     }
 
     /**
-     * @param mixed $codigoCreditoTipoPagoFk
+     * @param mixed $codigoCreditoPagoFk
      */
-    public function setCodigoCreditoTipoPagoFk($codigoCreditoTipoPagoFk): void
+    public function setCodigoCreditoPagoFk($codigoCreditoPagoFk): void
     {
-        $this->codigoCreditoTipoPagoFk = $codigoCreditoTipoPagoFk;
+        $this->codigoCreditoPagoFk = $codigoCreditoPagoFk;
     }
 
     /**
@@ -248,33 +273,33 @@ class RhuCredito
     /**
      * @return mixed
      */
-    public function getCodigoCentroCostoFk()
+    public function getCodigoContratoFk()
     {
-        return $this->codigoCentroCostoFk;
+        return $this->codigoContratoFk;
     }
 
     /**
-     * @param mixed $codigoCentroCostoFk
+     * @param mixed $codigoContratoFk
      */
-    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
+    public function setCodigoContratoFk($codigoContratoFk): void
     {
-        $this->codigoCentroCostoFk = $codigoCentroCostoFk;
+        $this->codigoContratoFk = $codigoContratoFk;
     }
 
     /**
      * @return mixed
      */
-    public function getCodigoProgramacionDetalleFk()
+    public function getCodigoGrupoFk()
     {
-        return $this->codigoProgramacionDetalleFk;
+        return $this->codigoGrupoFk;
     }
 
     /**
-     * @param mixed $codigoProgramacionDetalleFk
+     * @param mixed $codigoGrupoFk
      */
-    public function setCodigoProgramacionDetalleFk($codigoProgramacionDetalleFk): void
+    public function setCodigoGrupoFk($codigoGrupoFk): void
     {
-        $this->codigoProgramacionDetalleFk = $codigoProgramacionDetalleFk;
+        $this->codigoGrupoFk = $codigoGrupoFk;
     }
 
     /**
@@ -616,33 +641,33 @@ class RhuCredito
     /**
      * @return mixed
      */
-    public function getNumeroLibranza()
+    public function getUsuario()
     {
-        return $this->numeroLibranza;
+        return $this->usuario;
     }
 
     /**
-     * @param mixed $numeroLibranza
+     * @param mixed $usuario
      */
-    public function setNumeroLibranza($numeroLibranza): void
+    public function setUsuario($usuario): void
     {
-        $this->numeroLibranza = $numeroLibranza;
+        $this->usuario = $usuario;
     }
 
     /**
      * @return mixed
      */
-    public function getTotalPagos()
+    public function getVrTotalPagos()
     {
-        return $this->totalPagos;
+        return $this->vrTotalPagos;
     }
 
     /**
-     * @param mixed $totalPagos
+     * @param mixed $vrTotalPagos
      */
-    public function setTotalPagos($totalPagos): void
+    public function setVrTotalPagos($vrTotalPagos): void
     {
-        $this->totalPagos = $totalPagos;
+        $this->vrTotalPagos = $vrTotalPagos;
     }
 
     /**
@@ -696,17 +721,80 @@ class RhuCredito
     /**
      * @return mixed
      */
-    public function getUsuario()
+    public function getCreditoTipoRel()
     {
-        return $this->usuario;
+        return $this->creditoTipoRel;
     }
 
     /**
-     * @param mixed $usuario
+     * @param mixed $creditoTipoRel
      */
-    public function setUsuario($usuario): void
+    public function setCreditoTipoRel($creditoTipoRel): void
     {
-        $this->usuario = $usuario;
+        $this->creditoTipoRel = $creditoTipoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEmpleadoRel()
+    {
+        return $this->empleadoRel;
+    }
+
+    /**
+     * @param mixed $empleadoRel
+     */
+    public function setEmpleadoRel($empleadoRel): void
+    {
+        $this->empleadoRel = $empleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoRel()
+    {
+        return $this->contratoRel;
+    }
+
+    /**
+     * @param mixed $contratoRel
+     */
+    public function setContratoRel($contratoRel): void
+    {
+        $this->contratoRel = $contratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreditoPagoRel()
+    {
+        return $this->creditoPagoRel;
+    }
+
+    /**
+     * @param mixed $creditoPagoRel
+     */
+    public function setCreditoPagoRel($creditoPagoRel): void
+    {
+        $this->creditoPagoRel = $creditoPagoRel;
+    }
 }

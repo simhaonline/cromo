@@ -3,7 +3,9 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Credito;
 
 use App\Controller\BaseController;
+use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
+use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\CreditoType;
 use App\General\General;
 use App\Utilidades\Mensajes;
@@ -55,7 +57,43 @@ class CreditoController extends BaseController
      */
     public function nuevo(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_credito_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arCredito = new RhuCredito();
+        if($id != 0){
+            $arCredito = $em->getRepository($this->clase)->find($id);
+        }
+        $form = $this->createForm(CreditoType::class, $arCredito);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arCredito->getCodigoEmpleadoFk());
+                if($arEmpleado){
+                    if($arEmpleado->getCodigoContratoFk()){
+                        $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
+                        if($arContrato){
+                            if($id == 0){
+                                $arCredito->setFecha(new \DateTime('now'));
+                            }
+                            $arCredito->setGrupoRel($arContrato->getGrupoRel());
+                            $arCredito->setEmpleadoRel($arEmpleado);
+                            $arCredito->setContratoRel($arContrato);
+                            $em->persist($arCredito);
+                            $em->flush();
+                            return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_credito_detalle',['id' => $arCredito->getCodigoCreditoPk()]));
+                        } else {
+                            Mensajes::error('No se ha encontrado el contrato del empleado');
+                        }
+                    } else {
+                        Mensajes::error('El empleado seleccionado no tiene un contrato activo');
+                    }
+                } else {
+                    Mensajes::error('No se ha encontrado un empleado con el codigo ingresado');
+                }
+            }
+        }
+        return $this->render('recursoHumano/movimiento/nomina/credito/nuevo.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -68,7 +106,7 @@ class CreditoController extends BaseController
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->clase)->find($id);
-        return $this->render('recursoHumano/movimiento/nomina/credito/detalle.html.twig',[
+        return $this->render('recursoHumano/movimiento/nomina/credito/detalle.html.twig', [
             'arRegistro' => $arRegistro
         ]);
     }

@@ -38,6 +38,9 @@ class GenLogRepository extends ServiceEntityRepository
         if($session->get('filtroGenLogAccion')){
             $queryBuilder->andWhere("gl.accion='{$session->get('filtroGenLogAccion')}'");
         }
+        if($session->get('filtroGenLogModelo')){
+            $queryBuilder->andWhere("gl.nombreEntidad='{$session->get('filtroGenLogModelo')}'");
+        }
 
         return $queryBuilder;
     }

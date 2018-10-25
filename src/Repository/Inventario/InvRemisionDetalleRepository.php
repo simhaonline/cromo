@@ -25,12 +25,16 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->addSelect('rd.codigoRemisionFk')
             ->addSelect('rd.cantidad')
             ->addSelect('rd.cantidadPendiente')
+            ->addSelect('i.nombre as itemNombre')
+            ->addSelect('m.nombre as itemMarcaNombre')
             ->addSelect('rd.cantidadAfectada')
             ->addSelect('rd.vrPrecio')
             ->addSelect('rd.porcentajeIva')
             ->addSelect('rd.vrIva')
             ->addSelect('rd.vrSubtotal')
             ->addSelect('rd.vrNeto')
+            ->leftJoin('rd.itemRel','i')
+            ->leftJoin('i.marcaRel','m')
             ->addSelect('rd.vrTotal')
             ->where("rd.codigoRemisionFk = {$codigoRemision}");
 

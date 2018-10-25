@@ -41,6 +41,7 @@ class RhuPension
      */    
     private $porcentajeEmpleador = 0;
 
+
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="pensionRel")
      */

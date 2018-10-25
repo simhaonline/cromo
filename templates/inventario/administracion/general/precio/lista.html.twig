@@ -46,9 +46,13 @@
                         </i>
                     </a>
                 </td>
-                <td style="text-align: center"><a
-                            href="{{ path('inventario_administracion_general_precio_detalle', { 'id': arPrecio.codigoPrecioPk }) }}"><img
-                                src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center;">
+                    <a href="{{ path('inventario_administracion_general_precio_detalle',{'id' : arPrecio.codigoPrecioPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+
+                        </i>
+                    </a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

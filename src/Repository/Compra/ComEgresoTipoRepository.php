@@ -4,7 +4,9 @@ namespace App\Repository\Compra;
 
 use App\Entity\Compra\ComEgresoTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @method ComEgresoTipo|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,6 +21,30 @@ class ComEgresoTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, ComEgresoTipo::class);
     }
 
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function llenarCombo()
+    {
+        $session = new Session();
+        $array = [
+            'class' => ComEgresoTipo::class,
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('et')
+                    ->orderBy('et.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""
+        ];
+        if ($session->get('filtroComEgresoTipo')) {
+            $array['data'] = $this->getEntityManager()->getReference(ComEgresoTipo::class, $session->get('filtroComEgresoTipo'));
+        }
+        return $array;
+    }
 
     public function camposPredeterminados()
     {

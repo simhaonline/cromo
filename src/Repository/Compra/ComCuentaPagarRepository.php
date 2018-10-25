@@ -55,24 +55,20 @@ class ComCuentaPagarRepository extends ServiceEntityRepository
         if ($session->get('filtroComCuentaPagarNumero') != '') {
             $queryBuilder->andWhere("cp.numeroDocumento = {$session->get('filtroComCuentaPagarNumero')}");
         }
-        if ($session->get('filtroComCodigoProveedor')) {
-            $queryBuilder->andWhere("cp.codigoProveedorFk = {$session->get('filtroComCodigoProveedor')}");
-        }
+//        if ($session->get('filtroComCodigoProveedor')) {
+//            $queryBuilder->andWhere("cp.codigoProveedorFk = {$session->get('filtroComCodigoProveedor')}");
+//        }
 //        if ($session->get('filtroCarCuentaCobrarTipo')) {
 //            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo') . "'");
 //        }
-//        if ($session->get('filtroFecha') == true) {
-//            if ($session->get('filtroFechaDesde') != null) {
-//                $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
-//            } else {
-//                $queryBuilder->andWhere("cc.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-//            }
-//            if ($session->get('filtroFechaHasta') != null) {
-//                $queryBuilder->andWhere("cc.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
-//            } else {
-//                $queryBuilder->andWhere("cc.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-//            }
-//        }
+        if ($session->get('filtroComFiltrarPorFecha') == true) {
+            if ($session->get('filtroComFechaDesde') != null) {
+                $queryBuilder->andWhere("cp.fecha >= '{$session->get('filtroComFechaDesde')}'");
+            }
+            if ($session->get('filtroComFechaHasta') != null) {
+                $queryBuilder->andWhere("cp.fecha <= '{$session->get('filtroComFechaHasta')}'");
+            }
+        }
         return $queryBuilder;
     }
 
@@ -104,7 +100,7 @@ class ComCuentaPagarRepository extends ServiceEntityRepository
             ->orderBy('cp.codigoCuentaPagarPk', 'DESC');
         $fecha = new \DateTime('now');
         if ($session->get('filtroComCuentaPagarTipo') != "") {
-            $queryBuilder->andWhere("cp.codigoCuentaPagarTipoFk = '" . $session->get('filtroComCuentaPAgarTipo') . "'");
+            $queryBuilder->andWhere("cp.codigoCuentaPagarTipoFk = '" . $session->get('filtroComCuentaPagarTipo') . "'");
         }
 //        if ($session->get('filtroComNumeroReferencia') != '') {
 //            $queryBuilder->andWhere("cp.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
@@ -112,24 +108,20 @@ class ComCuentaPagarRepository extends ServiceEntityRepository
         if ($session->get('filtroComCuentaPagarNumero') != '') {
             $queryBuilder->andWhere("cp.numeroDocumento = {$session->get('filtroComCuentaPagarNumero')}");
         }
-        if ($session->get('filtroComCodigoProveedor')) {
-            $queryBuilder->andWhere("cp.codigoProveedorFk = {$session->get('filtroComCodigoProveedor')}");
+        if ($session->get('filtroComCodigoProveedorPendiente')) {
+            $queryBuilder->andWhere("cp.codigoProveedorFk = {$session->get('filtroComCodigoProveedorPendiente')}");
         }
 //        if ($session->get('filtroCarCuentaCobrarTipo')) {
 //            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo') . "'");
 //        }
-//        if ($session->get('filtroFecha') == true) {
-//            if ($session->get('filtroFechaDesde') != null) {
-//                $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
-//            } else {
-//                $queryBuilder->andWhere("cc.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-//            }
-//            if ($session->get('filtroFechaHasta') != null) {
-//                $queryBuilder->andWhere("cc.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
-//            } else {
-//                $queryBuilder->andWhere("cc.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-//            }
-//        }
+        if ($session->get('filtroComPendienteFiltrarPorFecha') == true) {
+            if ($session->get('filtroComPendienteFechaDesde') != null) {
+                $queryBuilder->andWhere("cp.fecha >= '{$session->get('filtroComPendienteFechaDesde')}'");
+            }
+            if ($session->get('filtroComPendienteFechaHasta') != null) {
+                $queryBuilder->andWhere("cp.fecha <= '{$session->get('filtroComPendienteFechaHasta')}'");
+            }
+        }
         return $queryBuilder;
     }
 

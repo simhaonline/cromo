@@ -7,16 +7,28 @@
             <h4> Filtros de búsqueda</h4>
         </div>
         <div class="panel-body">
-            {{ form_label(form.txtCodigoCuentaPagar) }}
+            <label class="col-sm-2 control-label">Codigo:</label>
             <div class="col-sm-4">
                 {{ form_widget(form.txtCodigoCuentaPagar) }}
-
             </div>
-            {#{{ form_label(form.txtNombreItem) }}#}
-            {#<div class="col-sm-4">#}
-
-            {#{{ form_widget(form.txtNombreItem) }}#}
-            {#</div>#}
+        </div>
+        <div class="panel-body">
+            <label class="col-sm-2 control-label">Fecha desde:</label>
+            <div class="col-sm-4">
+                {{ form_widget(form.fechaDesde) }}
+            </div>
+        </div>
+        <div class="panel-body">
+            <label class="col-sm-2 control-label">Fecha hasta:</label>
+            <div class="col-sm-4">
+                {{ form_widget(form.fechaHasta) }}
+            </div>
+        </div>
+        <div class="panel-body">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-4">
+                {{ form_widget(form.filtrarPorFecha) }}
+            </div>
         </div>
         <div class="panel-footer">
             {{ form_widget(form.btnFiltrar,{'attr':{'style':'float: right;'}}) }}
@@ -49,8 +61,8 @@
                     <td style="text-align: right;">{{ arCuentaPagar.vrAbono }}</td>
                     <td style="text-align: right;">{{ arCuentaPagar.vrSaldo }}</td>
                     <td style="text-align: center;">
-                        <input type="number" name="cuentaPagarValor[{{ arCuentaPagar.codigoCuentaPagarPk }}]"
-                               size="10" style="width:70px">
+                        <input type="checkbox" name="ChkSeleccionar[]"
+                               size="10" value="{{ arCuentaPagar.codigoCuentaPagarPk }}" style="width:70px">
                     </td>
                 </tr>
             {% endfor %}

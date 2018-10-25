@@ -9,6 +9,7 @@ use App\Entity\Compra\ComEgresoTipo;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @method ComEgreso|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,6 +22,52 @@ class ComEgresoRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, ComEgreso::class);
+    }
+
+    public function lista()
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(ComEgreso::class, 'e')
+            ->select('e.codigoEgresoPk')
+            ->leftJoin('e.proveedorRel', 'p')
+            ->leftJoin('e.egresoTipoRel', 'et')
+            ->addSelect('e.numero')
+            ->addSelect('e.codigoEgresoTipoFk')
+            ->addSelect('et.nombre AS tipo')
+            ->addSelect('e.fecha')
+//            ->addSelect('cp.soporte')
+            ->addSelect('p.nombreCorto')
+            ->addSelect('p.numeroIdentificacion')
+            ->addSelect('p.nombreCorto')
+            ->addSelect('e.vrPagoTotal')
+            ->where('e.codigoEgresoTipoFk <> 0')
+            ->orderBy('e.codigoEgresoTipoFk', 'DESC');
+        $fecha = new \DateTime('now');
+        if ($session->get('filtroComEgresoPagarTipo') != "") {
+            $queryBuilder->andWhere("cp.codigoEgresoPagarTipoFk = '" . $session->get('filtroComEgresoPAgarTipo') . "'");
+        }
+//        if ($session->get('filtroComNumeroReferencia') != '') {
+//            $queryBuilder->andWhere("cp.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
+//        }
+//        if ($session->get('filtroComEgresoPagarNumero') != '') {
+//            $queryBuilder->andWhere("cp.numeroDocumento = {$session->get('filtroComEgresoPagarNumero')}");
+//        }
+//        if ($session->get('filtroComCodigoProveedor')) {
+//            $queryBuilder->andWhere("cp.codigoProveedorFk = {$session->get('filtroComCodigoProveedor')}");
+//        }
+//        if ($session->get('filtroCarEgresoCobrarTipo')) {
+//            $queryBuilder->andWhere("cc.codigoEgresoCobrarTipoFk = '" . $session->get('filtroCarEgresoCobrarTipo') . "'");
+//        }
+        if ($session->get('filtroComFiltrarPorFecha') == true) {
+            if ($session->get('filtroComFechaDesde') != null) {
+                $queryBuilder->andWhere("cp.fecha >= '{$session->get('filtroComFechaDesde')}'");
+            }
+            if ($session->get('filtroComFechaHasta') != null) {
+                $queryBuilder->andWhere("cp.fecha <= '{$session->get('filtroComFechaHasta')}'");
+            }
+        }
+        return $queryBuilder;
     }
 
     /**

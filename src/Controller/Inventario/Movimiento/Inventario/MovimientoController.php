@@ -512,6 +512,8 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle->setVrPrecio($arRemisionDetalle->getVrPrecio());
                                     $arMovimientoDetalle->setPorcentajeIva($arRemisionDetalle->getPorcentajeIva());
                                     $arMovimientoDetalle->setRemisionDetalleRel($arRemisionDetalle);
+                                    $arMovimientoDetalle->setLoteFk($arRemisionDetalle->getLoteFk());
+                                    $arMovimientoDetalle->setCodigoBodegaFk($arRemisionDetalle->getCodigoBodegaFk());
                                     $em->persist($arMovimientoDetalle);
                                     $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada() + $cantidad);
                                     $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad() - $arRemisionDetalle->getCantidadAfectada());

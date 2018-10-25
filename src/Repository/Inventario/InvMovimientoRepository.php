@@ -223,11 +223,15 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 }
 
                 if($arMovimientoDetalle->getOperacionInventario() == -1) {
-                    if($arMovimientoDetalle->getCantidad() > $arLote->getCantidadExistencia()) {
-                        Mensajes::error("La cantidad: " . $arMovimientoDetalle->getCantidad() . " del lote: " . $arMovimientoDetalle->getLoteFk() ." en el movimiento con id: " . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " no tiene existencia suficiente");
+                    if($arMovimientoDetalle->getCantidad() > $arLote->getCantidadDisponible()) {
+                        Mensajes::error("Detalle " . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ": La cantidad disponible [" . $arLote->getCantidadDisponible() . "] del lote: " . $arMovimientoDetalle->getLoteFk() ." es insuficiente para la salida de [" . $arMovimientoDetalle->getCantidad() . "]");
                         $validacion = false;
                         break;
                     }
+                }
+                if($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
+                    $arLote->setCantidadRemisionada($arLote->getCantidadRemisionada() - $arMovimientoDetalle->getCantidad());
+                    $arItem->setCantidadRemisionada($arItem->getCantidadRemisionada() - $arMovimientoDetalle->getCantidad());
                 }
                 $existenciaAnterior = $arItem->getCantidadExistencia();
                 $costoPromedio = $arItem->getVrCostoPromedio();
@@ -235,7 +239,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $cantidadOperada = $arMovimientoDetalle->getCantidad() * $arMovimientoDetalle->getOperacionInventario();
                 $cantidadAfectar = ($arMovimientoDetalle->getCantidad() * $arMovimientoDetalle->getOperacionInventario()) * $tipo;
                 $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + $cantidadAfectar);
-                $arLote->setCantidadDisponible($arLote->getCantidadExistencia());
+                $arLote->setCantidadDisponible($arLote->getCantidadExistencia() - $arLote->getCantidadRemisionada());
                 $em->persist($arLote);
                 $arMovimientoDetalle->setCantidadSaldo($cantidadSaldo);
                 $arMovimientoDetalle->setCantidadOperada($cantidadOperada);
@@ -254,6 +258,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 }
                 $em->persist($arMovimientoDetalle);
                 $arItem->setCantidadExistencia($cantidadSaldo);
+                $arItem->setCantidadDisponible($cantidadSaldo - $arItem->getCantidadRemisionada());
                 $arItem->setVrCostoPromedio($costoPromedio);
                 $em->persist($arItem);
             }

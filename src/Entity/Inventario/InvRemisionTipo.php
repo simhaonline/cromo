@@ -29,6 +29,11 @@ class InvRemisionTipo
     private $consecutivo = 0;
 
     /**
+     * @ORM\Column(name="operacion_inventario", type="smallint", nullable=true, options={"default" : 0})
+     */
+    private $operacionInventario = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvRemision", mappedBy="remisionTipoRel")
      */
     protected $remisionesRemisionTipoRel;
@@ -95,6 +100,22 @@ class InvRemisionTipo
     public function setRemisionesRemisionTipoRel($remisionesRemisionTipoRel): void
     {
         $this->remisionesRemisionTipoRel = $remisionesRemisionTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionInventario()
+    {
+        return $this->operacionInventario;
+    }
+
+    /**
+     * @param mixed $operacionInventario
+     */
+    public function setOperacionInventario( $operacionInventario ): void
+    {
+        $this->operacionInventario = $operacionInventario;
     }
 
 

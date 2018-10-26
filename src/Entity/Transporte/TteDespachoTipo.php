@@ -106,6 +106,7 @@ class TteDespachoTipo
      */
     private $codigoCuentaPagarTipoFk;
 
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespacho", mappedBy="despachoTipoRel")
      */

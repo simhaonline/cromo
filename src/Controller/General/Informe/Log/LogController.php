@@ -144,31 +144,20 @@ class LogController extends Controller {
         $cabeceras=json_decode($detalles[0], true);
         $cabeceras=array_keys($cabeceras);
 
-        if(count($detalles)>0) {
-            foreach ($detalles as $detalle) {
-                $detalle=json_decode($detalle, true);
-                $actualizacionCabeceras = array_keys($detalle);
-                foreach ($actualizacionCabeceras as $actualizacionCabecera){
-                    $aux=0;
-                    foreach ($cabeceras as $key=>$cabecera) {
-                        if($cabecera===$actualizacionCabecera){
-                            $aux=1;
-                        }
-                        elseif($aux===0 && $key===count($cabeceras)-1){
-                            array_push($cabeceras,$actualizacionCabecera);
-                        }
+            for ($i=0;$i<count($detalles);$i++) {
+                $detalles[$i]=json_decode($detalles[$i], true);
+                $actualizacionCabeceras = array_keys($detalles[$i]);
+                $nuevo=array_diff($actualizacionCabeceras, $cabeceras);
+                if(count($nuevo)>0){
+                    foreach ($nuevo as $n){
+                        array_push($cabeceras,$n);
                     }
                 }
             }
-        }
-        if (!is_array($detalles)) {
-            $detalles = [];
-            $detalles['SIN REGISTRAR'] = 'N/A';
-        }
-        dump($cabeceras);
-        exit();
+
         return $this->render('general/log/detalleLogComparativo.html.twig', [
             'detalles'      =>  $detalles,
+            'cabeceras'     =>  $cabeceras,
         ]);
     }
 

@@ -10,11 +10,33 @@
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                 <tr>
-
+                    {% for cabeceras in cabeceras%}
+                        <th>{{ cabeceras }}</th>
+                    {% endfor %}
                 </tr>
                 </thead>
                 <tbody>
+                {% for key, detalle in detalles %}
+                    <tr>
+                        {% for cabeceras in cabeceras%}
+                            <td class="{% if key!=0 and detalle[cabeceras] is defined
+                                and (detalles[key-1][cabeceras] is defined
+                                    and detalles[key][cabeceras]
+                                    and  detalles[key-1][cabeceras]!=detalles[key][cabeceras]) %}
+                                    bg-success
+                            {% endif %}">
 
+                                {% if detalle[cabeceras] is defined %}
+                                    {{ detalle[cabeceras] }}
+                                {% else %}
+                                    {{ "null" }}
+                                {% endif %}
+
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                {% endfor %}
                 </tbody>
             </table>
         </div>

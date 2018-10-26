@@ -98,12 +98,12 @@ class RhuCredito
     private $saldoTotal = 0;
 
     /**
-     * @ORM\Column(name="numero_cuotas",options={"default": 0}, type="integer")
+     * @ORM\Column(name="numero_cuotas",options={"default": 0}, type="integer", nullable=true)
      */
     private $numeroCuotas = 0;
 
     /**
-     * @ORM\Column(name="numero_libranza", type="string", length=10)
+     * @ORM\Column(name="numero_libranza", type="string", length=10,nullable=true)
      */
     private $numeroLibranza;
 

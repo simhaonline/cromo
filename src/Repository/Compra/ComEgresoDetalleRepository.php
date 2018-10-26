@@ -139,7 +139,7 @@ class ComEgresoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pr.nombreCorto AS clienteNombreCorto')
             ->addSelect('cpt.nombre AS cuentaPagarTipo')
             ->addSelect('ed.numeroCompra')
-            ->addSelect('cp.fecha')
+            ->addSelect('cp.fechaFactura')
             ->addSelect('ed.vrDescuento')
             ->addSelect('ed.vrAjustePeso')
             ->addSelect('ed.vrRetencionFuente')

@@ -3,9 +3,12 @@
 namespace App\Entity\Compra;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Compra\ComEgresoTipoRepository")
+ * @DoctrineAssert\UniqueEntity(fields={"codigoEgresoTipoPk"},message="Ya existe un registro con el mismo codigo")
  */
 class ComEgresoTipo
 {

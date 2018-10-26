@@ -3,35 +3,36 @@
 namespace App\Formato\Compra;
 
 
-use App\Entity\Compra\ComEgreso;
-use App\Entity\Compra\ComEgresoDetalle;
+use App\Entity\Compra\ComCompra;
+use App\Entity\Compra\ComCompraDetalle;
+use App\Entity\Compra\ComCuentaPagar;
 use App\Utilidades\Estandares;
 
-class Egreso extends \FPDF
+class Compras extends \FPDF
 {
     public static $em;
-    public static $codigoEgreso;
+    public static $codigoCompra;
 
-    public function Generar($em, $codigoEgreso)
+    public function Generar($em, $codigoCompra)
     {
         ob_clean();
         self::$em = $em;
-        self::$codigoEgreso = $codigoEgreso;
-        $pdf = new Egreso();
+        self::$codigoCompra = $codigoCompra;
+        $pdf = new Compras();
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Arial', '', 40);
-        $arEgreso = $em->getRepository(ComEgreso::class)->find($codigoEgreso);
+        $arCompra = $em->getRepository(ComCompra::class)->find($codigoCompra);
         $pdf->SetTextColor(255, 220, 220);
-        if ($arEgreso->getEstadoAnulado()) {
+        if ($arCompra->getEstadoAnulado()) {
             $pdf->RotatedText(90, 150, 'ANULADO', 45);
-        } elseif (!$arEgreso->getEstadoAprobado()) {
+        } elseif (!$arCompra->getEstadoAprobado()) {
             $pdf->RotatedText(90, 150, 'SIN APROBAR', 45);
         }
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Recibo$codigoEgreso.pdf", 'D');
+        $pdf->Output("Recibo$codigoCompra.pdf", 'D');
     }
 
     public function Header()
@@ -41,8 +42,8 @@ class Egreso extends \FPDF
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this, 'Egreso');
-        $arEgreso = self::$em->getRepository(ComEgreso::class)->find(self::$codigoEgreso);
+        Estandares::generarEncabezado($this, 'Compra');
+        $arCompra = self::$em->getRepository(ComCompra::class)->find(self::$codigoCompra);
         $this->SetFillColor(236, 236, 236);
         $this->SetFont('Arial', 'B', 10);
         //linea 1
@@ -52,13 +53,13 @@ class Egreso extends \FPDF
         $this->Cell(30, 6, utf8_decode("PROVEEDOR:"), 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(66, 6, utf8_decode($arEgreso->getProveedorRel()->getNombreCorto()), 1, 0, 'L', 1);
+        $this->Cell(66, 6, utf8_decode($arCompra->getProveedorRel()->getNombreCorto()), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, 'NUMERO:', 1, 0, 'L', 1);
+        $this->Cell(30, 6, 'NUMERO COMPRA:', 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, $arEgreso->getNumero(), 1, 0, 'R', 1);
+        $this->Cell(65, 6, $arCompra->getNumeroCompra(), 1, 0, 'R', 1);
         //linea 2
         $this->SetXY(10, 46);
         $this->SetFillColor(200, 200, 200);
@@ -66,13 +67,13 @@ class Egreso extends \FPDF
         $this->Cell(30, 6, utf8_decode("IDENTIFICACION:"), 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(66, 6, $arEgreso->getProveedorRel()->getNumeroIdentificacion(), 1, 0, 'L', 1);
+        $this->Cell(66, 6, $arCompra->getProveedorRel()->getNumeroIdentificacion(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "FECHA:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "NUMERO FACTURA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, $arEgreso->getFecha()->format('Y-m-d'), 1, 0, 'L', 1);
+        $this->Cell(65, 6, $arCompra->getNumeroFactura(), 1, 0, 'R', 1);
         //linea 3
         $this->SetXY(10, 52);
         $this->SetFillColor(200, 200, 200);
@@ -80,13 +81,13 @@ class Egreso extends \FPDF
         $this->Cell(30, 6, 'DIRECCION', 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(66, 6, $arEgreso->getProveedorRel()->getDireccion(), 1, 0, 'L', 1);
+        $this->Cell(66, 6, $arCompra->getProveedorRel()->getDireccion(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "FECHA PAGO:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "FECHA FACTURA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, $arEgreso->getFecha()->format('Y-m-d'), 1, 0, 'L', 1);
+        $this->Cell(65, 6, $arCompra->getFechaFactura()->format('Y-m-d'), 1, 0, 'R', 1);
         //linea 4
         $this->SetXY(10, 58);
         $this->SetFillColor(200, 200, 200);
@@ -94,13 +95,13 @@ class Egreso extends \FPDF
         $this->Cell(30, 6, 'TELEFONO', 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(66, 6, $arEgreso->getProveedorRel()->getTelefono(), 1, 0, 'L', 1);
+        $this->Cell(66, 6, $arCompra->getProveedorRel()->getTelefono(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "PAGO:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "FECHA VENCE:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, number_format($arEgreso->getVrPago()), 1, 0, 'R', 1);
+        $this->Cell(65, 6, $arCompra->getFechaVencimiento()->format('Y-m-d'), 1, 0, 'R', 1);
 
         //linea 5
         $this->SetXY(10, 64);
@@ -112,10 +113,10 @@ class Egreso extends \FPDF
         $this->Cell(66, 6, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "TOTAL", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "SUB-TOTAL", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, number_format($arEgreso->getVrPagoTotal()), 1, 0, 'R', 1);
+        $this->Cell(65, 6, number_format($arCompra->getVrSubTotal()), 1, 0, 'R', 1);
 
         //linea 6
         $this->SetXY(10, 70);
@@ -127,33 +128,48 @@ class Egreso extends \FPDF
         $this->Cell(66, 6, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "DESCUENTO", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, '', 1, 0, 'R', 1);
+        $this->Cell(65, 6, number_format($arCompra->getVrDescuento(), 0, ".", ","), 1, 0, 'R', 1);
 
         //linea 7
         $this->SetXY(10, 76);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 6, 'NUM DOCUMENTO', 1, 0, 'L', 1);
+        $this->Cell(30, 6, '', 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(66, 6, $arEgreso->getNumero(), 1, 0, 'L', 1);
+        $this->Cell(66, 6, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "IVA", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, '', 1, 0, 'R', 1);
+        $this->Cell(65, 6, number_format($arCompra->getVrIva(), 0, ".", ","), 1, 0, 'R', 1);
         //linea 8
         $this->SetXY(10, 82);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 6, '', 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(66, 6, "", 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 6, "TOTAL", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 6, number_format($arCompra->getVrTotal(), 0, ".", ","), 1, 0, 'R', 1);
+
+        //linea 9
+        $this->SetXY(10, 88);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, "COMENTARIOS:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->MultiCell(161, 4, utf8_decode($arEgreso->getComentarios()), 1, 'L');
+        $this->MultiCell(161, 4, utf8_decode($arCompra->getComentarios()), 1, 'L');
 
         $this->EncabezadoDetalles();
 
@@ -162,14 +178,14 @@ class Egreso extends \FPDF
     public function EncabezadoDetalles()
     {
         $this->Ln(12);
-        $header = array('ID', 'TIPO', 'NUMERO', 'FECHA', 'DESCUENTO', 'AJUSTE PESO', 'RTE FTE', 'RET ICA', 'VALOR');
+        $header = array('ID', 'CONCEPTO', 'CANT', 'PRECIO', 'SUB-TOTAL', '%DESC', 'DESC', '%IVA', 'IVA', 'TOTAL');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(15, 35, 20, 20, 20, 20, 20, 20, 21, 21);
+        $w = array(10, 40, 10, 20, 20, 10, 20, 20, 20, 20);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -184,20 +200,21 @@ class Egreso extends \FPDF
 
     public function Body($pdf)
     {
-        $arEgresosDetalle = self::$em->getRepository(ComEgresoDetalle::class)->listaFormato(self::$codigoEgreso);
+        $arComprasDetalle = self::$em->getRepository(ComCompraDetalle::class)->listaFormato(self::$codigoCompra);
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
-        if ($arEgresosDetalle) {
-            foreach ($arEgresosDetalle as $arEgresoDetalle) {
-                $pdf->Cell(15, 4, $arEgresoDetalle['codigoEgresoDetallePk'], 1, 0, 'L');
-                $pdf->Cell(35, 4, $arEgresoDetalle['cuentaPagarTipo'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arEgresoDetalle['numeroCompra'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arEgresoDetalle['fechaFactura']->format('Y-m-d'), 1, 0, 'L');
-                $pdf->Cell(20, 4, number_format($arEgresoDetalle['vrDescuento'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(20, 4, number_format($arEgresoDetalle['vrAjustePeso'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(20, 4, number_format($arEgresoDetalle['vrRetencionFuente'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(20, 4, number_format($arEgresoDetalle['vrRetencionIca'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(21, 4, number_format($arEgresoDetalle['vrPagoAfectar'], 0, '.', ','), 1, 0, 'R');
+        if ($arComprasDetalle) {
+            foreach ($arComprasDetalle as $arCompraDetalle) {
+                $pdf->Cell(10, 4, $arCompraDetalle['codigoCompraDetallePk'], 1, 0, 'L');
+                $pdf->Cell(40, 4, $arCompraDetalle['concepto'], 1, 0, 'L');
+                $pdf->Cell(10, 4, $arCompraDetalle['cantidad'], 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arCompraDetalle['vrPrecioUnitario'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arCompraDetalle['vrSubtotal'], 0, '0', ','), 1, 0, 'R');
+                $pdf->Cell(10, 4, number_format($arCompraDetalle['porDescuento'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arCompraDetalle['vrDescuento'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arCompraDetalle['porIva'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arCompraDetalle['vrIva'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arCompraDetalle['vrTotal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 85);
             }

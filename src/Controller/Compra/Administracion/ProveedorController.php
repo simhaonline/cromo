@@ -35,11 +35,13 @@ class ProveedorController extends BaseController
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Compras");
+                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Proveedor");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-
+                $arrSeccion = $request->request->get('ChkSeleccionar');
+                $em->getRepository('App:Compra\ComProveedor')->eliminar($arrSeccion);
             }
         }
         return $this->render('compra/administracion/proveedor/lista.html.twig', [

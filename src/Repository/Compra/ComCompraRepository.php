@@ -123,17 +123,17 @@ class ComCompraRepository extends ServiceEntityRepository
         if (!$arCompra->getEstadoAprobado()) {
             $arCompraTipo->setConsecutivo($arCompraTipo->getConsecutivo() + 1);
             $arCompra->setEstadoAprobado(1);
-            $arCompra->setNumero($arCompraTipo->getConsecutivo());
+            $arCompra->setNumeroCompra($arCompraTipo->getConsecutivo());
             $arProveedor = $em->getRepository(ComProveedor::class)->findOneBy(['codigoProveedorPk' => $arCompra->getProveedorRel()->getCodigoProveedorPk()]);
-            $arCuentaCobrarTipo = $em->getRepository(ComCuentaPagarTipo::class)->find($arCompra->getCompraTipoRel()->getCodigoCuentaPagarTipoFk());
+            $arCuentaPagarTipo = $em->getRepository(ComCuentaPagarTipo::class)->find($arCompra->getCompraTipoRel()->getCodigoCuentaPagarTipoFk());
             $arCuentaPagar = new ComCuentaPagar();
             $arCuentaPagar->setProveedorRel($arProveedor);
-            $arCuentaPagar->setCuentaPagarTipoRel($arCuentaCobrarTipo);
-            $arCuentaPagar->setFecha($arCompra->getFecha());
+            $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
+            $arCuentaPagar->setFechaFactura($arCompra->getFechaFactura());
             $arCuentaPagar->setFechaVence($arCompra->getFechaVencimiento());
             $arCuentaPagar->setModulo("COM");
             $arCuentaPagar->setCodigoDocumento($arCompra->getCodigoCompraPk());
-            $arCuentaPagar->setNumeroDocumento($arCompra->getNumero());
+            $arCuentaPagar->setNumeroDocumento($arCompra->getNumeroCompra());
             $arCuentaPagar->setSoporte($arCompra->getSoporte());
             $arCuentaPagar->setVrSubtotal($arCompra->getVrSubtotal());
             $arCuentaPagar->setVrIva($arCompra->getVrIva());
@@ -141,9 +141,8 @@ class ComCompraRepository extends ServiceEntityRepository
             $arCuentaPagar->setVrRetencionFuente($arCompra->getVrRetencion());
             $arCuentaPagar->setVrRetencionIva($arCompra->getVrRetencionIva());
             $arCuentaPagar->setVrSaldo($arCompra->getVrTotal());
-            $arCuentaPagar->setVrSaldoOperado($arCompra->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
-            $arCuentaPagar->setPlazo($arCompra->getPlazo());
-            $arCuentaPagar->setOperacion($arCuentaCobrarTipo->getOperacion());
+            $arCuentaPagar->setVrSaldoOperado($arCompra->getVrTotal() * $arCuentaPagarTipo->getOperacion());
+            $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
             $em->persist($arCuentaPagar);
 
             $this->_em->persist($arCompraTipo);

@@ -8,11 +8,10 @@ use App\Entity\Compra\ComCompraDetalle;
 use App\Entity\Compra\ComConcepto;
 use App\Entity\Compra\ComProveedor;
 use App\Form\Type\Compra\CompraType;
-use App\Formato\Compra\CuentaPagar;
+use App\Formato\Compra\Compras;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,7 +72,8 @@ class CompraController extends BaseController
                 return $this->redirect($this->generateUrl('compra_movimiento_compra_compra_lista'));
             }
         } else {
-            $arCompra->setFecha(new \DateTime('now'));
+            $arCompra->setFechaFactura(new \DateTime('now'));
+            $arCompra->setFechaVencimiento(new \DateTime('now'));
         }
 
         $form = $this->createForm(CompraType::class, $arCompra);
@@ -86,12 +86,7 @@ class CompraController extends BaseController
                     if ($arProveedor) {
                         $arCompra->setProveedorRel($arProveedor);
                         $arCompra->setUsuarioCrea($this->getUser()->getUserName());
-                        $plazoPago = $arProveedor->getPlazoPago();
-                        $fecha = $arCompra->getFecha()->format('Y-m-d');
-                        $nuevafecha = strtotime('+' . $plazoPago . 'day', strtotime($fecha));
-                        $fechaVencimiento = new \DateTime(date('Y-m-d', $nuevafecha));
-                        $arCompra->setFechaVencimiento($fechaVencimiento);
-                        $arCompra->setPlazo($plazoPago);
+                        $arCompra->setFechaCreacion(new \DateTime('now'));
                         $em->persist($arCompra);
                         $em->flush();
                         return $this->redirect($this->generateUrl('compra_movimiento_compra_compra_detalle', ['id' => $arCompra->getCodigoCompraPk()]));
@@ -145,8 +140,8 @@ class CompraController extends BaseController
                 $em->getRepository(ComCompra::class)->aprobar($arCompra);
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                $objFormatoCuentaPagar = new CuentaPagar();
-                $objFormatoCuentaPagar->Generar($em, $id);
+                $objFormatoCuentaCobrar = new Compras();
+                $objFormatoCuentaCobrar->Generar($em, $id);
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $em->getRepository(ComCompra::class)->anular($arCompra);

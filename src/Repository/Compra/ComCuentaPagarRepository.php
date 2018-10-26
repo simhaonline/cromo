@@ -32,7 +32,7 @@ class ComCuentaPagarRepository extends ServiceEntityRepository
             ->addSelect('cp.codigoCuentaPagarTipoFk')
             ->addSelect('cp.numeroReferencia')
             ->addSelect('cpt.nombre AS tipo')
-            ->addSelect('cp.fecha')
+            ->addSelect('cp.fechaFactura')
             ->addSelect('cp.fechaVence')
 //            ->addSelect('cp.soporte')
             ->addSelect('p.nombreCorto')
@@ -84,7 +84,7 @@ class ComCuentaPagarRepository extends ServiceEntityRepository
             ->addSelect('cp.codigoCuentaPagarTipoFk')
             ->addSelect('cp.numeroReferencia')
             ->addSelect('cpt.nombre AS tipo')
-            ->addSelect('cp.fecha')
+            ->addSelect('cp.fechaFactura')
             ->addSelect('cp.fechaVence')
 //            ->addSelect('cp.soporte')
             ->addSelect('p.nombreCorto')
@@ -116,10 +116,10 @@ class ComCuentaPagarRepository extends ServiceEntityRepository
 //        }
         if ($session->get('filtroComPendienteFiltrarPorFecha') == true) {
             if ($session->get('filtroComPendienteFechaDesde') != null) {
-                $queryBuilder->andWhere("cp.fecha >= '{$session->get('filtroComPendienteFechaDesde')}'");
+                $queryBuilder->andWhere("cp.fechaVence >= '{$session->get('filtroComPendienteFechaDesde')}'");
             }
             if ($session->get('filtroComPendienteFechaHasta') != null) {
-                $queryBuilder->andWhere("cp.fecha <= '{$session->get('filtroComPendienteFechaHasta')}'");
+                $queryBuilder->andWhere("cp.fechaVence <= '{$session->get('filtroComPendienteFechaHasta')}'");
             }
         }
         return $queryBuilder;

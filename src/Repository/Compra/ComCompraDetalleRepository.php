@@ -6,6 +6,7 @@ use App\Entity\Compra\ComCompraDetalle;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @method ComCompraDetalle|null find($id, $lockMode = null, $lockVersion = null)
@@ -59,5 +60,32 @@ class ComCompraDetalleRepository extends ServiceEntityRepository
         } else {
             Mensajes::error('No se puede eliminar, el registro se encuentra autorizado');
         }
+    }
+
+    public function listaFormato($codiigoCompra)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(ComCompraDetalle::class, 'cd');
+        $queryBuilder
+            ->select('cd.codigoCompraDetallePk')
+            ->addSelect('pr.nombreCorto AS clienteNombreCorto')
+            ->addSelect('ct.nombre AS cuentaPagarTipo')
+            ->addSelect('con.nombre AS concepto')
+            ->addSelect('cd.cantidad')
+            ->addSelect('cd.vrPrecioUnitario')
+            ->addSelect('cd.vrSubtotal')
+            ->addSelect('cd.porDescuento')
+            ->addSelect('cd.vrDescuento')
+            ->addSelect('cd.porIva')
+            ->addSelect('cd.vrIva')
+            ->addSelect('cd.vrTotal')
+            ->leftJoin('cd.compraRel', 'c')
+            ->leftJoin('cd.conceptoRel', 'con')
+            ->leftJoin('c.proveedorRel', 'pr')
+            ->leftJoin('c.compraTipoRel', 'ct')
+            ->where('cd.codigoCompraFk = ' . $codiigoCompra);
+        $queryBuilder->orderBy('cd.codigoCompraDetallePk', 'ASC');
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

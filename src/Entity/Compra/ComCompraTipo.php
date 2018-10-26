@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Compra\ComCompraTipoRepository")
- * @DoctrineAssert\UniqueEntity(fields={"codigoCompraTipoPk"},message="Ya existe el código del comprobante")
+ * @DoctrineAssert\UniqueEntity(fields={"codigoCompraTipoPk"},message="Ya existe un registro con el mismo codigo")
  */
 class ComCompraTipo
 {

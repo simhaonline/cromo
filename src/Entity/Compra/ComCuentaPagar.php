@@ -54,7 +54,7 @@ class ComCuentaPagar
     /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
      */
-    private $fecha;
+    private $fechaFactura;
 
     /**
      * @ORM\Column(name="fecha_vence", type="date", nullable=true)
@@ -274,17 +274,17 @@ class ComCuentaPagar
     /**
      * @return mixed
      */
-    public function getFecha()
+    public function getFechaFactura()
     {
-        return $this->fecha;
+        return $this->fechaFactura;
     }
 
     /**
-     * @param mixed $fecha
+     * @param mixed $fechaFactura
      */
-    public function setFecha($fecha): void
+    public function setFechaFactura($fechaFactura): void
     {
-        $this->fecha = $fecha;
+        $this->fechaFactura = $fechaFactura;
     }
 
     /**

@@ -18,9 +18,9 @@ class ConceptoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoConceptoPk', TextType::class, ['label' => 'Codigo:'])
+            ->add('codigoConceptoPk', TextType::class, ['label' => 'Código:'])
             ->add('nombre', TextType::class, ['label' => 'Nombre:'])
-            ->add('porIva', IntegerType::class, ['label' => 'Porcentaje de Iva'])
+            ->add('porIva', IntegerType::class, ['label' => 'Porcentaje de IVA'])
             ->add('conceptoTipoRel', EntityType::class, [
                 'class' => ComConceptoTipo::class,
                 'query_builder' => function (EntityRepository $er) {

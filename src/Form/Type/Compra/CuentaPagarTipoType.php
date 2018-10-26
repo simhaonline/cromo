@@ -15,13 +15,13 @@ class CuentaPagarTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoCuentaPagarTipoPk', TextType::class, ['label' => 'Codigo:'])
+            ->add('codigoCuentaPagarTipoPk', TextType::class, ['label' => 'Código:'])
             ->add('nombre', TextType::class, ['label' => 'Nombre:'])
-            ->add('operacion', ChoiceType::class, ['choices' => ['SUMA' => 1, 'RESTA' => -1]])
+            ->add('operacion', ChoiceType::class, ['label' => 'Operación:', 'choices' => ['SUMA' => 1, 'RESTA' => -1]])
             ->add('prefijo', TextType::class, ['label' => 'Prefijo:', 'required' => false])
             ->add('codigoCuentaProveedorFk', TextType::class, ['label' => 'Cuenta proveedor:', 'required' => false])
-            ->add('codigoCuentaRetencionIvaFk', TextType::class, ['label' => 'Cuenta retencion iva:', 'required' => false])
-            ->add('codigoCuentaRetencionFuenteFk', TextType::class, ['label' => 'Cuenta retencion fuente:', 'required' => false])
+            ->add('codigoCuentaRetencionIvaFk', TextType::class, ['label' => 'Cuenta retención IVA:', 'required' => false])
+            ->add('codigoCuentaRetencionFuenteFk', TextType::class, ['label' => 'Cuenta retención fuente:', 'required' => false])
             ->add('codigoCuentaIndustriaComercioFk', TextType::class, ['label' => 'Cuenta industria y comercio:', 'required' => false])
             ->add('codigoCuentaAjustePesoFk', TextType::class, ['label' => 'Cuenta ajuste peso:', 'required' => false])
             ->add('codigoCuentaDescuentoFk', TextType::class, ['label' => 'Cuenta descuento:', 'required' => false])

@@ -219,7 +219,6 @@ class ComEgresoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $respuesta = [];
         if ($arEgreso->getEstadoAprobado() == 1) {
-
             $arEgresosDetalle = $em->getRepository(ComEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $arEgreso->getCodigoEgresoPk()));
             foreach ($arEgresosDetalle as $arEgresoDetalle) {
                 if ($arEgresoDetalle->getCodigoCuentaPagarFk()) {

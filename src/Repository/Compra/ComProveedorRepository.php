@@ -3,6 +3,7 @@
 namespace App\Repository\Compra;
 
 use App\Entity\Compra\ComProveedor;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -36,5 +37,45 @@ class ComProveedorRepository extends ServiceEntityRepository
 
         return $queryBuilder;
     }
+
+    /**
+     * @return mixed
+     */
+    public function parametrosExcel()
+    {
+        $queryBuilder = $this->_em->createQueryBuilder()->from(ComProveedor::class, 'p')
+            ->select('p.codigoProveedorPk')
+            ->addSelect('p.numeroIdentificacion')
+            ->addSelect('p.nombreCorto')
+            ->addSelect('p.nombre1')
+            ->addSelect('p.nombre2')
+            ->addSelect('p.apellido1')
+            ->addSelect('p.apellido2')
+            ->addSelect('p.telefono')
+            ->addSelect('p.direccion')
+            ->addSelect('p.fax')
+            ->addSelect('p.plazoPago')
+            ->where('p.codigoProveedorPk <> 0');
+        return $queryBuilder->getQuery()->execute();
+    }
+
+    /**
+     *
+     */
+    public function eliminar($arrSeleccion)
+    {
+        $em = $this->getEntityManager();
+        try {
+            foreach ($arrSeleccion as $codigoProveedor) {
+                $arProveedor = $em->getRepository(ComProveedor::class)->find($codigoProveedor);
+                $em->remove($arProveedor);
+                $em->flush();
+            }
+        } catch (\Exception $ex) {
+            Mensajes::error('No se puede eliminar, el registro se encuentra relacionado con algun documento');
+        }
+
+    }
+
 
 }

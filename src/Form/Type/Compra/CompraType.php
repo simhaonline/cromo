@@ -40,8 +40,11 @@ class CompraType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Comprobante:'
             ])
-            ->add('fecha' , DateType::class)
-            ->add('soporte', TextType::class, ['required' => false])
+            ->add('fechaFactura', DateType::class, ['label' => 'Fecha Factura:'])
+            ->add('fechaVencimiento', DateType::class, ['label' => 'Fecha Vencimiento:'])
+            ->add('numeroFactura', TextType::class, ['label' => 'Numero Factura:', 'required' => true])
+            ->add('numeroOrdenCompra', TextType::class, ['label' => 'Numero Orden Compra:'])
+            ->add('soporte', TextType::class, ['label' => 'Soporte', 'required' => false])
             ->add('comentarios', TextareaType::class, ['label' => 'Comentario:', 'required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
@@ -57,9 +60,9 @@ class CompraType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoCompraPk",     "tipo":"pk",        "ayuda":"Codigo de compra",   "titulo":"ID"},
-            {"campo":"numero",              "tipo":"entero",    "ayuda":"",                     "titulo":"NUMERO"},
+            {"campo":"numeroCompra",              "tipo":"entero",    "ayuda":"",                     "titulo":"NUMERO"},
             {"campo":"codigoCompraTipoFk", "tipo":"texto",     "ayuda":"",                     "titulo":"COMP"},
-            {"campo":"fecha",               "tipo":"fecha",     "ayuda":"Fecha de registro",    "titulo":"FECHA"},
+            {"campo":"fechaFactura",               "tipo":"fecha",     "ayuda":"Fecha de registro",    "titulo":"FECHA"},
             {"campo":"estadoAutorizado",    "tipo":"bool",      "ayuda":"",                     "titulo":"AUT"},
             {"campo":"estadoAprobado",      "tipo":"bool",      "ayuda":"",                     "titulo":"APR"},
             {"campo":"estadoAnulado",       "tipo":"bool",      "ayuda":"",                     "titulo":"ANU"}                                

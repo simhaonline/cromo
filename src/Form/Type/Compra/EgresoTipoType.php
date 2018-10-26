@@ -15,7 +15,7 @@ class EgresoTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoEgresoTipoPk', TextType::class, ['label' => 'Codigo:'])
+            ->add('codigoEgresoTipoPk', TextType::class, ['label' => 'Código:'])
             ->add('nombre', TextType::class, ['label' => 'Nombre:'])
             ->add('consecutivo', NumberType::class, ['label' => 'Consecutivo:'])
             ->add('guardar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-primary']]);;

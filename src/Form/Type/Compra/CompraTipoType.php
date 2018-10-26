@@ -18,7 +18,7 @@ class CompraTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoCompraTipoPk', TextType::class, ['label' => 'Codigo Compra Tipo'])
+            ->add('codigoCompraTipoPk', TextType::class, ['label' => 'Código:'])
             ->add('cuentaPagarTipoRel', EntityType::class, [
                 'class' => ComCuentaPagarTipo::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -26,10 +26,10 @@ class CompraTipoType extends AbstractType
                         ->orderBy('cp.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Cuenta pagar tipo'
+                'label' => 'Cuenta pagar tipo:'
             ])
-            ->add('nombre', TextType::class)
-            ->add('operacion', ChoiceType::class, ['choices' => ['SUMA' => 1, 'RESTA' => -1]])
+            ->add('nombre', TextType::class, ['label' => 'Nombre:'])
+            ->add('operacion', ChoiceType::class, ['label' => 'Operación:', 'choices' => ['SUMA' => 1, 'RESTA' => -1]])
             ->add('guardar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

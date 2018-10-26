@@ -27,14 +27,29 @@ class ComCompra
     private $codigoCompraTipoFk;
 
     /**
-     * @ORM\Column(name="numero" ,type="integer",nullable=true)
+     * @ORM\Column(name="numero_compra" ,type="integer",nullable=true)
      */
-    private $numero;
+    private $numeroCompra = 0;
 
     /**
-     * @ORM\Column(name="fecha" ,type="date" )
+     * @ORM\Column(name="numero_orden_compra" ,type="string", nullable=true)
      */
-    private $fecha;
+    private $numeroOrdenCompra = 0;
+
+    /**
+     * @ORM\Column(name="numero_factura" , type="string", nullable=true)
+     */
+    private $numeroFactura = 0;
+
+    /**
+     * @ORM\Column(name="fecha_creacion" ,type="date" )
+     */
+    private $fechaCreacion;
+
+    /**
+     * @ORM\Column(name="fecha_factura" , type="date")
+     */
+    private $fechaFactura;
 
     /**
      * @ORM\Column(name="fecha_vencimiento", type="date" ,nullable=true)
@@ -86,11 +101,6 @@ class ComCompra
      * @ORM\Column(name="soporte" , type="string" , nullable=true)
      */
     private $soporte;
-
-    /**
-     * @ORM\Column(name="plazo" , type="integer" , nullable=true)
-     */
-    private $plazo = 0;
 
     /**
      * @ORM\Column(name="usuario_crea" , type="string" , nullable=true)
@@ -185,33 +195,81 @@ class ComCompra
     /**
      * @return mixed
      */
-    public function getNumero()
+    public function getNumeroCompra()
     {
-        return $this->numero;
+        return $this->numeroCompra;
     }
 
     /**
-     * @param mixed $numero
+     * @param mixed $numeroCompra
      */
-    public function setNumero($numero): void
+    public function setNumeroCompra($numeroCompra): void
     {
-        $this->numero = $numero;
+        $this->numeroCompra = $numeroCompra;
     }
 
     /**
      * @return mixed
      */
-    public function getFecha()
+    public function getNumeroOrdenCompra()
     {
-        return $this->fecha;
+        return $this->numeroOrdenCompra;
     }
 
     /**
-     * @param mixed $fecha
+     * @param mixed $numeroOrdenCompra
      */
-    public function setFecha($fecha): void
+    public function setNumeroOrdenCompra($numeroOrdenCompra): void
     {
-        $this->fecha = $fecha;
+        $this->numeroOrdenCompra = $numeroOrdenCompra;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroFactura()
+    {
+        return $this->numeroFactura;
+    }
+
+    /**
+     * @param mixed $numeroFactura
+     */
+    public function setNumeroFactura($numeroFactura): void
+    {
+        $this->numeroFactura = $numeroFactura;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaCreacion()
+    {
+        return $this->fechaCreacion;
+    }
+
+    /**
+     * @param mixed $fechaCreacion
+     */
+    public function setFechaCreacion($fechaCreacion): void
+    {
+        $this->fechaCreacion = $fechaCreacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaFactura()
+    {
+        return $this->fechaFactura;
+    }
+
+    /**
+     * @param mixed $fechaFactura
+     */
+    public function setFechaFactura($fechaFactura): void
+    {
+        $this->fechaFactura = $fechaFactura;
     }
 
     /**
@@ -372,22 +430,6 @@ class ComCompra
     public function setSoporte($soporte): void
     {
         $this->soporte = $soporte;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPlazo()
-    {
-        return $this->plazo;
-    }
-
-    /**
-     * @param mixed $plazo
-     */
-    public function setPlazo($plazo): void
-    {
-        $this->plazo = $plazo;
     }
 
     /**

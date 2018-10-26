@@ -45,9 +45,10 @@
                 <th>PROVEEDOR</th>
                 <th>NIT</th>
                 <th>FECHA</th>
+                <th>VENCIMIENTO</th>
                 <th>ABONO</th>
                 <th>SALDO</th>
-                <th>VALOR</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -57,9 +58,10 @@
                     <td style="text-align: left;">{{ arCuentaPagar.numeroDocumento }}</td>
                     <td style="text-align: left;">{{ arCuentaPagar.nombreCorto }}</td>
                     <td style="text-align: right;">{{ arCuentaPagar.numeroIdentificacion }}</td>
-                    <td style="text-align: right;">{{ arCuentaPagar.fecha | date('d/m/Y') }}</td>
-                    <td style="text-align: right;">{{ arCuentaPagar.vrAbono }}</td>
-                    <td style="text-align: right;">{{ arCuentaPagar.vrSaldo }}</td>
+                    <td style="text-align: right;">{{ arCuentaPagar.fechaFactura | date('d/m/Y') }}</td>
+                    <td style="text-align: right;">{{ arCuentaPagar.fechaVence | date('d/m/Y') }}</td>
+                    <td style="text-align: right;">{{ arCuentaPagar.vrAbono | number_format(0,'.',',') }}</td>
+                    <td style="text-align: right;">{{ arCuentaPagar.vrSaldo | number_format }}</td>
                     <td style="text-align: center;">
                         <input type="checkbox" name="ChkSeleccionar[]"
                                size="10" value="{{ arCuentaPagar.codigoCuentaPagarPk }}" style="width:70px">

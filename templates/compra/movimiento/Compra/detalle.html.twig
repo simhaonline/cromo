@@ -30,8 +30,8 @@
 
         </tr>
         <tr>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arCompra.numero }}</td>
+            <td class="titulo">NUMERO COMPRA</td>
+            <td class="td-in-well">{{ arCompra.numeroCompra }}</td>
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arCompra.usuarioCrea | default('') }}</td>
             <td class="titulo">IVA:</td>
@@ -39,19 +39,21 @@
 
         </tr>
         <tr>
-            <td class="titulo">FECHA:</td>
-            <td class="td-in-well">{{ arCompra.fecha | date('Y-m-d') }}</td>
+            <td class="titulo">NUMERO FACTURA:</td>
+            <td class="td-in-well">{{ arCompra.numeroFactura }}</td>
+
             <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td></td>
             <td class="titulo">DESCUENTO:</td>
             <td class="td-in-well"
                 style="text-align: right;">{{ arCompra.vrDescuento |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
+            <td class="titulo">FECHA FACTURA:</td>
+            <td class="td-in-well">{{ arCompra.fechaFactura | date('Y-m-d') }}</td>
             <td class="titulo">FECHA VENCIMIENTO</td>
             <td>{{ arCompra.fechaVencimiento | date('Y-m-d') }}</td>
-            <td class="titulo"></td>
-            <td></td>
+
             <td class="titulo">TOTAL:</td>
             <td class="td-in-well" style="text-align: right;">{{ arCompra.vrTotal |number_format(0, '.', ',') }}</td>
         </tr>
@@ -100,7 +102,7 @@
                                                size="10">
                                     </td>
                                     <td style="text-align: center">
-                                        <input class="input-valor" type="number" placeholder="Valor unitario"
+                                        <input class="input-valor" type="number" placeholder="Precio unitario"
                                                name="arrValor[{{ arCompraDetalle.codigoCompraDetallePk }}]"
                                                value="{{ arCompraDetalle.vrPrecioUnitario }}"
                                                style="text-align: right; width:90px" size="10"/>
@@ -144,7 +146,7 @@
                                         {{ arCompraDetalle.porIva }}
                                     </td>
                                     <td style="text-align: right">
-                                        {{ arCompraDetalle.vrIva }}
+                                        {{ arCompraDetalle.vrIva   | number_format(0, '.', ',') }}
                                     </td>
                                 {% endif %}
                                 <td style="text-align: right">

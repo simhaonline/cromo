@@ -33,7 +33,7 @@ class ProveedorType extends AbstractType
             ->add('celular', TextType::class, ['required' => false])
             ->add('fax', TextType::class, ['required' => false])
             ->add('email', TextType::class, ['required' => false])
-            ->add('plazoPago', IntegerType::class, ['required' => false])
+            ->add('plazoPago', IntegerType::class, ['required' => true])
             ->add('ciudadRel', EntityType::class, [
                 'class' => GenCiudad::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -67,7 +67,7 @@ class ProveedorType extends AbstractType
         $campos = '[
             {"campo":"codigoProveedorPk",      "tipo":"pk",        "ayuda":"Codigo de compra",   "titulo":"ID"},
             {"campo":"numeroIdentificacion",   "tipo":"entero",    "ayuda":"",                     "titulo":"Nit"},
-            {"campo":"nombreCorto",            "tipo":"texto",     "ayuda":"",                     "titulo":"COMP"}
+            {"campo":"nombreCorto",            "tipo":"texto",     "ayuda":"",                     "titulo":"Proveedor"}
         ]';
         return $campos;
     }

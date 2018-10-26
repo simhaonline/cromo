@@ -197,9 +197,9 @@ class EgresoController extends BaseController
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('txtCodigoCuentaPagar', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('')])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha Desde', 'data' => new \DateTime($fechaDesde)])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha Hasta', 'data' => new \DateTime($fechaHasta)])
-            ->add('filtrarPorFecha', CheckboxType::class, ['required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Vencimiento Desde', 'data' => new \DateTime($fechaDesde)])
+            ->add('fechaHasta', DateType::class, ['label' => 'Vencimiento Hasta', 'data' => new \DateTime($fechaHasta)])
+            ->add('filtrarPorFecha', CheckboxType::class, ['label' => 'Filtrar por vencimiento','required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);

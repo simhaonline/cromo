@@ -103,6 +103,11 @@ class RhuCredito
     private $numeroCuotas = 0;
 
     /**
+     * @ORM\Column(name="numero_libranza", type="string", length=10)
+     */
+    private $numeroLibranza;
+
+    /**
      * @ORM\Column(name="numero_cuota_actual",options={"default": 0}, type="integer")
      */
     private $numeroCuotaActual = 0;
@@ -117,14 +122,19 @@ class RhuCredito
     private $comentarios;
 
     /**
-     * @ORM\Column(name="seguro",options={"default": 0}, type="integer")
+     * @ORM\Column(name="vr_seguro",options={"default": 0}, type="integer")
      */
-    private $seguro = 0;
+    private $vrSeguro = 0;
 
     /**
      * @ORM\Column(name="estado_suspendido",options={"default": false}, type="boolean", nullable=true)
      */
     private $estadoSuspendido = false;
+
+    /**
+     * @ORM\Column(name="inactivo_periodo",options={"default": false}, type="boolean", nullable=true)
+     */
+    private $inactivoPeriodo = false;
 
     /**
      * @ORM\Column(name="estado_pagado",options={"default": false}, type="boolean", nullable=true)
@@ -157,9 +167,14 @@ class RhuCredito
     private $usuario;
 
     /**
-     * @ORM\Column(name="total_pagos",options={"default": 0}, type="float")
+     * @ORM\Column(name="vr_total_pagos",options={"default": 0}, type="float")
      */
     private $vrTotalPagos = 0;
+
+    /**
+     * @ORM\Column(name="vr_valor_cuota",options={"default": 0}, type="float")
+     */
+    private $vrValorCuota = 0;
 
     /**
      * @ORM\Column(name="validar_cuotas",options={"default": false}, type="boolean")
@@ -497,6 +512,22 @@ class RhuCredito
     /**
      * @return mixed
      */
+    public function getNumeroLibranza()
+    {
+        return $this->numeroLibranza;
+    }
+
+    /**
+     * @param mixed $numeroLibranza
+     */
+    public function setNumeroLibranza($numeroLibranza): void
+    {
+        $this->numeroLibranza = $numeroLibranza;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getNumeroCuotaActual()
     {
         return $this->numeroCuotaActual;
@@ -529,17 +560,17 @@ class RhuCredito
     /**
      * @return mixed
      */
-    public function getSeguro()
+    public function getVrSeguro()
     {
-        return $this->seguro;
+        return $this->vrSeguro;
     }
 
     /**
-     * @param mixed $seguro
+     * @param mixed $vrSeguro
      */
-    public function setSeguro($seguro): void
+    public function setVrSeguro($vrSeguro): void
     {
-        $this->seguro = $seguro;
+        $this->vrSeguro = $vrSeguro;
     }
 
     /**
@@ -556,6 +587,22 @@ class RhuCredito
     public function setEstadoSuspendido($estadoSuspendido): void
     {
         $this->estadoSuspendido = $estadoSuspendido;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInactivoPeriodo()
+    {
+        return $this->inactivoPeriodo;
+    }
+
+    /**
+     * @param mixed $inactivoPeriodo
+     */
+    public function setInactivoPeriodo($inactivoPeriodo): void
+    {
+        $this->inactivoPeriodo = $inactivoPeriodo;
     }
 
     /**
@@ -668,6 +715,22 @@ class RhuCredito
     public function setVrTotalPagos($vrTotalPagos): void
     {
         $this->vrTotalPagos = $vrTotalPagos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrValorCuota()
+    {
+        return $this->vrValorCuota;
+    }
+
+    /**
+     * @param mixed $vrValorCuota
+     */
+    public function setVrValorCuota($vrValorCuota): void
+    {
+        $this->vrValorCuota = $vrValorCuota;
     }
 
     /**

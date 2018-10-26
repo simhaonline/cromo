@@ -34,4 +34,6 @@ DELETE FROM com_compra;
 DELETE FROM com_cuenta_pagar;
 DELETE FROM com_egreso_detalle;
 DELETE FROM com_egreso;
+DELETE FROM rhu_programacion_detalle;
+DELETE FROM rhu_programacion;
 UPDATE inv_item SET cantidad_disponible = 0, cantidad_existencia = 0, cantidad_orden = 0, cantidad_remisionada = 0, cantidad_pedido = 0;

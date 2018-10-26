@@ -29,10 +29,13 @@ class CreditoType extends AbstractType
             ->add('fechaCredito', DateType::class, ['data' => new \DateTime('now'),'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('numeroCuotas', IntegerType::class, ['required' => true])
             ->add('comentarios', TextareaType::class, ['required' => false])
-            ->add('seguro',NumberType::class,['required' => false])
+            ->add('vrSeguro',NumberType::class,['required' => false])
             ->add('vrPagar',NumberType::class,['required' => false])
+            ->add('vrValorCuota',NumberType::class,['required' => false])
+            ->add('numeroCuotaActual',NumberType::class,['required' => false])
             ->add('validarCuotas',CheckboxType::class,['required' => false])
             ->add('aplicarCuotaPrima',CheckboxType::class,['required' => false])
+            ->add('inactivoPeriodo',CheckboxType::class,['required' => false])
             ->add('aplicarCuotaCesantia',CheckboxType::class,['required' => false])
             ->add('creditoPagoRel',EntityType::class,[
                 'class' => RhuCreditoPago::class,
@@ -64,15 +67,17 @@ class CreditoType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoCreditoPk",                 "tipo":"pk"     ,"ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"creditoTipoRel.nombre",           "tipo":"rel"    ,"ayuda":"Tipo de credito",     "titulo":"TIPO"},
-            {"campo":"codigoEmpleadoFk",                "tipo":"texto"  ,"ayuda":"Codigo del empleado", "titulo":"EMPLEADO"},
-            {"campo":"empleadoRel.nombreCorto",         "tipo":"rel"    ,"ayuda":"Codigo del empleado", "titulo":"EMPLEADO"},
-            {"campo":"empleadoRel.numeroIdentificacion","tipo":"rel"    ,"ayuda":"Codigo del empleado", "titulo":"EMPLEADO"},
-            {"campo":"grupoRel.nombre",                 "tipo":"rel"    ,"ayuda":"Nombre del grupo del empleado","titulo":"GRUPO"},
-            {"campo":"fecha",                           "tipo":"fecha"  ,"ayuda":"Fecha",               "titulo":"FECHA"},                     
-            {"campo":"vrCuota",                         "tipo":"moneda" ,"ayuda":"Valor de la cuota",   "titulo":"V.CUOTA"},                     
-            {"campo":"numeroCuotas",                    "tipo":"texto"  ,"ayuda":"Cantidad de cuotas",  "titulo":"CUOTAS"},                     
-            {"campo":"estadoPagado",                    "tipo":"bool"   ,"ayuda":"Estado pagado",       "titulo":"PAG"},                     
+            {"campo":"creditoTipoRel.nombre",           "tipo":"texto"  ,"ayuda":"Tipo de credito",     "titulo":"TIPO", "relacion":"SI"},
+            {"campo":"codigoEmpleadoFk",                "tipo":"texto"  ,"ayuda":"Codigo del empleado", "titulo":"COD.EMPLEADO"},
+            {"campo":"empleadoRel.nombreCorto",         "tipo":"texto"  ,"ayuda":"Nombre del empleado", "titulo":"NOMBRE", "relacion":"SI"},
+            {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto"  ,"ayuda":"Numero de identificacion del empleado", "titulo":"IDENTIFICACION", "relacion":"SI"},
+            {"campo":"empleadoRel.estadoContrato",      "tipo":"bool"   ,"ayuda":"Si el empleado se encuentra contratado","titulo":"CON", "relacion":"SI"},
+            {"campo":"grupoRel.nombre",                 "tipo":"texto"    ,"ayuda":"Nombre del grupo del empleado","titulo":"GRUPO", "relacion":"SI"},
+            {"campo":"fecha",                           "tipo":"fecha"  ,"ayuda":"Fecha",               "titulo":"FECHA"},
+            {"campo":"vrCuota",                         "tipo":"moneda" ,"ayuda":"Valor de la cuota",   "titulo":"V.CUOTA"},
+            {"campo":"numeroCuotaActual",               "tipo":"text"   ,"ayuda":"Numero de la cuota actual",   "titulo":"CUOTA ACTUAL"},
+            {"campo":"numeroCuotas",                    "tipo":"texto"  ,"ayuda":"Cantidad de cuotas",  "titulo":"CUOTAS"},
+            {"campo":"estadoPagado",                    "tipo":"bool"   ,"ayuda":"Estado pagado",       "titulo":"PAG"},
             {"campo":"estadoSuspendido",                "tipo":"bool"   ,"ayuda":"Estado suspendido",   "titulo":"SUS"}                                          
         ]';
         return $campos;

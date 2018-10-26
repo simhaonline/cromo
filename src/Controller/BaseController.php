@@ -24,16 +24,17 @@ abstract class BaseController extends Controller
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio, 'e')
             ->select('e.' . $campos[0]->campo);
         foreach ($campos as $campo) {
-            if ($campo->tipo != "pk" && $campo->tipo != 'rel') {
+            if ($campo->tipo != "pk" && !isset($campo->relacion)) {
                 $queryBuilder->addSelect('e.' . $campo->campo);
-            } elseif ($campo->tipo == 'rel') {
+            } elseif (isset($campo->relacion)) {
                 $arrRel = explode('.', $campo->campo);
+                $alias = substr($arrRel[0], 0,3).'Rel'.$arrRel[1];
                 if (!$this->validarRelacion($arrRelaciones, $arrRel[0])) {
                     $arrRelaciones[] = $arrRel[0];
                     $queryBuilder->leftJoin('e.' . $arrRel[0], $arrRel[0])
-                        ->addSelect($arrRel[0] . '.' . $arrRel[1]);
+                        ->addSelect($arrRel[0] . '.' . $arrRel[1].' AS '.$alias);
                 } else {
-                    $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1]);
+                    $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1].' AS '.$alias);
                 }
             }
         }

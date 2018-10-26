@@ -14,18 +14,21 @@
         {% for arDato in arrDatosLista.arDatos %}
             <tr>
                 {% for campo in arrDatosLista.arrCampos %}
-
+                    {% if campo.relacion is defined %}
+                        {% set campoNombre = (campo.campo|split('.')) %}
+                        {% set alias = campoNombre[0] | slice(0,3) ~ 'Rel' ~ campoNombre[1] %}
+                        {% set dato = arDato[alias] %}
+                    {% else %}
+                        {% set dato = arDato[campo.campo] %}
+                    {% endif %}
                         {% if campo.tipo == "fecha" %}
-                            <td>{{ arDato[campo.campo]  | date('Y-m-d') }} </td>
+                            <td>{{ dato  | date('Y-m-d') }} </td>
                         {% elseif campo.tipo == "moneda" %}
-                            <td class="numero">{{ arDato[campo.campo] | number_format(0, '.', ',')}}</td>
+                            <td class="numero">{{ dato | number_format(0, '.', ',')}}</td>
                         {% elseif campo.tipo == "bool" %}
-                            <td class="estado">{{ arDato[campo.campo]?'SI':'NO' }}</td>
-                        {% elseif campo.tipo == 'rel' %}
-                            {% set campoNombre = campo.campo|split('.') %}
-                            <td>{{ arDato[campoNombre[1]] }}</td>
+                            <td class="estado">{{ dato ?'SI':'NO' }}</td>
                         {% else %}
-                            <td>{{ arDato[campo.campo]  }}</td>
+                            <td>{{ dato  }}</td>
                         {% endif %}
                 {% endfor %}
                 <td style="text-align: center;">

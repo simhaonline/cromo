@@ -29,22 +29,22 @@ class EmpleadoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('')])
+            ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroRhuEmpleadoNombre')])
             ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroRhuEmpleadoCodigo')])
             ->add('txtIdentificacion', TextType::class, ['required'  => false,'data' => $session->get('filtroRhuEmpleadoIdentificacion')])
-            ->add('chkEstadoTerminado', CheckboxType::class, ['label' => ' ','required'  => false,'data' => $session->get('filtroRhuEmpleadoEstadoTerminado')])
+            ->add('chkEstadoContrato', CheckboxType::class, ['label' => ' ','required'  => false,'data' => $session->get('filtroRhuEmpleadoEstadoContrato')])
             ->add('btnFiltrar', SubmitType::class, ['label'  => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($form->get('BtnFiltrar')->isClicked()) {
-                $session->set('filtroRhuEmpleadoCodigo',$form->get('txtNombre')->getData());
-                $session->set('filtroRhuEmpleadoNombre',$form->get('txtCodigo')->getData());
+            if($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroRhuEmpleadoCodigo',$form->get('txtCodigo')->getData());
+                $session->set('filtroRhuEmpleadoNombre',$form->get('txtNombre')->getData());
                 $session->set('filtroRhuEmpleadoIdentificacion',$form->get('txtIdentificacion')->getData());
-                $session->set('filtroRhuEmpleadoEstadoTerminado',$form->get('chkEstadoTerminado')->getData());
+                $session->set('filtroRhuEmpleadoEstadoContrato',$form->get('chkEstadoContrato')->getData());
             }
         }
-        $arEmpleados = $paginator->paginate($em->getRepository(RhuContrato::class)->lista(), $request->query->get('page', 1), 20);
+        $arEmpleados = $paginator->paginate($em->getRepository(RhuEmpleado::class)->lista(), $request->query->get('page', 1), 20);
         return $this->render('recursoHumano/buscar/empleado.html.twig', array(
             'arEmpleados' => $arEmpleados,
             'campoCodigo' => $campoCodigo,

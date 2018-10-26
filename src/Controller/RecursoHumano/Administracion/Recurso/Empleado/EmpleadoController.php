@@ -138,12 +138,14 @@ class EmpleadoController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arContrato->setEmpleadoRel($arEmpleado);
-                $arEmpleado->setCodigoContratoFk($arContrato->getCodigoContratoPk());
-                $arEmpleado->setEstadoContrato(true);
-                $arEmpleado->setCargoRel($arContrato->getCargoRel());
                 $arContrato->setEstadoTerminado(false);
                 $arContrato->setFecha(new \DateTime('now'));
                 $em->persist($arContrato);
+                $em->flush();
+
+                $arEmpleado->setCodigoContratoFk($arContrato->getCodigoContratoPk());
+                $arEmpleado->setEstadoContrato(true);
+                $arEmpleado->setCargoRel($arContrato->getCargoRel());
                 $em->persist($arEmpleado);
                 $em->flush();
             }

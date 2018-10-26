@@ -87,7 +87,7 @@ class CreditoController extends BaseController
                         $em->flush();
                         return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_credito_detalle', ['id' => $arCredito->getCodigoCreditoPk()]));
                     } else {
-                        Mensajes::error('El empelado no tiene contratos en el sistema');
+                        Mensajes::error('El empleado no tiene contratos en el sistema');
                     }
                 } else {
                     Mensajes::error('No se ha encontrado un empleado con el codigo ingresado');

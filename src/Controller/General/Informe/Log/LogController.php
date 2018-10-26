@@ -127,15 +127,10 @@ class LogController extends Controller {
      */
     public function logDetalleComparativo($codigoRegistro, $entidad){
         $em= $this->getDoctrine()->getManager();
-        $encoders = array(new XmlEncoder(), new JsonEncoder());
-        $normalizers = array(new ObjectNormalizer());
-
-        $serializer = new Serializer($normalizers, $encoders);
-        $detalles=$em->getRepository('App:General\GenLog')->findBy(['codigoRegistroPk'=>$codigoRegistro,'nombreEntidad'=>$entidad]);
-        $arLogGenJson = $serializer->serialize($detalles, 'json');
-        $arLogGenJson   = json_decode($arLogGenJson, true);
+        $detalles=$em->getRepository('App:General\GenLog')->getCampoSeguimiento($codigoRegistro, $entidad);
+//        $arLogGenJson   = json_decode($detalles, true);
         $getCampoSeguimiento=[];
-        foreach ($arLogGenJson as $key => $json){
+        foreach ($detalles as $json){
             array_push($getCampoSeguimiento, $json['camposSeguimiento']);
         }
         $detalles = $getCampoSeguimiento;

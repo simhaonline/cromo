@@ -45,6 +45,18 @@ class GenLogRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function getCampoSeguimiento($codigoRegistro, $entidad){
+        $em=$this->getEntityManager();
+        $queryBuilder=$em->createQueryBuilder()
+            ->from('App:General\GenLog','genLog')
+            ->select('genLog.camposSeguimiento')
+            ->where("genLog.codigoRegistroPk='{$codigoRegistro}'")
+            ->andWhere("genLog.nombreEntidad='{$entidad}'")
+            ->getQuery()->getResult();
+
+        return $queryBuilder;
+    }
+
 //    public function listaDql($codigo = null, $usuario = null, $accion = null, $modulo = null, $fecha = "", $hoy = false, $fechaHasta = "", $entidad = "")
 //    {
 //        $em = $this->getEntityManager();

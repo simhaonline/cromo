@@ -38,7 +38,7 @@ class CreditoController extends BaseController
         $formBotonera->handleRequest($request);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
+                $this->getDatosExportar($formBotonera->getClickedButton()->getName(),$this->nombre);
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
 

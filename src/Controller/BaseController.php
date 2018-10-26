@@ -2,48 +2,33 @@
 
 namespace App\Controller;
 
-use Doctrine\ORM\EntityManager;
+use App\Controller\Estructura\AdministracionController;
+use App\Utilidades\Estandares;
+use App\Utilidades\Mensajes;
 use Doctrine\ORM\QueryBuilder;
-use function PHPSTORM_META\elementType;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\HttpFoundation\Request;
 
 abstract class BaseController extends Controller
 {
     protected $request = null;
 
+    /**
+     * @return array
+     */
     protected function getDatosLista()
     {
         $nombreRepositorio = "App:{$this->modulo}\\{$this->claseNombre}";
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
-        $campos = $namespaceType::getEstructuraPropiedadesLista();
-        $campos = json_decode($campos);
-        $arrRelaciones = [];
+        $campos = json_decode($namespaceType::getEstructuraPropiedadesLista());
         /** @var  $queryBuilder QueryBuilder */
-        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio, 'e')
-            ->select('e.' . $campos[0]->campo);
-        foreach ($campos as $campo) {
-            if ($campo->tipo != "pk" && !isset($campo->relacion)) {
-                $queryBuilder->addSelect('e.' . $campo->campo);
-            } elseif (isset($campo->relacion)) {
-                $arrRel = explode('.', $campo->campo);
-                $alias = substr($arrRel[0], 0,3).'Rel'.$arrRel[1];
-                if (!$this->validarRelacion($arrRelaciones, $arrRel[0])) {
-                    $arrRelaciones[] = $arrRel[0];
-                    $queryBuilder->leftJoin('e.' . $arrRel[0], $arrRel[0])
-                        ->addSelect($arrRel[0] . '.' . $arrRel[1].' AS '.$alias);
-                } else {
-                    $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1].' AS '.$alias);
-                }
-            }
-        }
+        $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos);
         $paginator = $this->get('knp_paginator');
-        $query = $queryBuilder->getQuery();
         return [
             'ruta' => strtolower($this->modulo) . "_" . strtolower($this->funcion) . "_" . strtolower($this->grupo) . "_" . strtolower($this->nombre),
             'arrCampos' => $campos,
-            'arDatos' => $paginator->paginate($query, $this->request->query->getInt('page', 1), 30)
+            'arDatos' => $paginator->paginate($queryBuilder->getQuery(), $this->request->query->getInt('page', 1), 30)
         ];
     }
 
@@ -53,6 +38,154 @@ abstract class BaseController extends Controller
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn-sm btn btn-danger']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn-sm btn btn-deafult']])
             ->getForm();
+    }
+
+    /**
+     * @param $submittedButton string
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    protected function getDatosExportar($submittedButton)
+    {
+        $nombreRepositorio = "App:{$this->modulo}\\{$this->claseNombre}";
+        $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
+        $campos = json_decode($namespaceType::getEstructuraPropiedadesLista());
+        /** @var  $queryBuilder QueryBuilder */
+        $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos, true);
+        switch ($submittedButton) {
+            case 'btnExcel':
+                $this->generarExcel($queryBuilder->getQuery()->execute(), $this->nombre);
+                break;
+        }
+    }
+
+    /**
+     * @author Andres Acevedo Cartagena
+     * @param $arrDatos
+     * @param $nombre
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function generarExcel($arrDatos, $nombre)
+    {
+        if (count($arrDatos) > 0) {
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $j = 0;
+            //Se obtienen las columnas del archivo
+            $arrColumnas = array_keys($arrDatos[0]);
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
+                $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
+                $sheet->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 1;
+            foreach ($arrDatos as $datos) {
+                $i = 'A';
+                $j++;
+                for ($col = 0; $col <= sizeof($arrColumnas) - 1; $col++) {
+                    $dato = $datos[$arrColumnas[$col]];
+                    if ($dato instanceof \DateTime) {
+                        $dato = $dato->format('Y-m-d');
+                    }
+                    $spreadsheet->getActiveSheet()->getStyle($i)->getFont()->setBold(false);
+                    $sheet->setCellValue($i . $j, $dato);
+                    $i++;
+                }
+            }
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename='{$nombre}.xls'");
+            header('Cache-Control: max-age=0');
+
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
+            $writer->save('php://output');
+        } else {
+            Mensajes::error('El listado esta vacío, no hay nada que exportar');
+        }
+    }
+
+    /**
+     * @author Juan Felipe Mesa Ocampo
+     * @param $arrDatos
+     * @param $nombre
+     */
+    public function generarCsv($arrDatos, $nombre)
+    {
+        $delimiter = ";";
+        $f = fopen('php://memory', 'w');//crea objeto tipo csv escribible
+        $arrColumnas = array_keys($arrDatos[0]);
+        fputcsv($f, $arrColumnas, $delimiter);//insrta cabeceras
+        foreach ($arrDatos as $datos) {
+            for ($col = 0; $col <= sizeof($arrColumnas) - 1; $col++) {
+                $dato = $datos[$arrColumnas[$col]];
+                if ($dato instanceof \DateTime) {
+                    $datos['fecha'] = $dato->format('Y-m-d');
+                }
+            }
+            fputcsv($f, $datos, $delimiter);//inserta fila en el archivo
+        }
+
+        fseek($f, 0);
+        header('Content-Type: application/csv');
+        header('Content-Disposition: attachment; filename="' . $nombre . '";');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+        // If you're serving to IE over SSL, then the following may be needed
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header('Pragma: public'); // HTTP/1.0
+
+        fpassthru($f);
+        fclose($f);
+        exit();
+    }
+
+    /**
+     * @param $nombreRepositorio
+     * @param $campos
+     * @param bool $validarExcel
+     * @return QueryBuilder
+     */
+    private function getGenerarQuery($nombreRepositorio, $campos, $validarExcel = false)
+    {
+        $arrRelaciones = [];
+        /** @var  $queryBuilder QueryBuilder */
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio, 'e')
+            ->select('e.' . $campos[0]->campo);
+        foreach ($campos as $campo) {
+            if ($campo->tipo != "pk" && !isset($campo->relacion)) {
+                if ($validarExcel) {
+                    if (isset($campo->mostrarExcel)) {
+                        if ($campo->mostrarExcel == 'SI') {
+                            $queryBuilder->addSelect('e.' . $campo->campo);
+                        }
+                    }
+                } else {
+                    $queryBuilder->addSelect('e.' . $campo->campo);
+                }
+            } elseif (isset($campo->relacion)) {
+                $arrRel = explode('.', $campo->campo);
+                $alias = substr($arrRel[0], 0, 3) . 'Rel' . $arrRel[1];
+                if (!$this->validarRelacion($arrRelaciones, $arrRel[0])) {
+                    $arrRelaciones[] = $arrRel[0];
+                    $queryBuilder->leftJoin('e.' . $arrRel[0], $arrRel[0]);
+                }
+                if ($validarExcel) {
+                    if (isset($campo->mostrarExcel)) {
+                        if ($campo->mostrarExcel == 'SI') {
+                            $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
+                        }
+                    }
+                } else {
+                    $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
+                }
+            }
+        }
+
+        return $queryBuilder;
     }
 
     /**

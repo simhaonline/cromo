@@ -19,13 +19,12 @@ class GenLogRepository extends ServiceEntityRepository
         $queryBuilder=$this->getEntityManager()->createQueryBuilder()->from('App:General\GenLog','gl')
             ->select('gl.codigoLogPk')
             ->addSelect('gl.codigoRegistroPk')
-            ->addSelect('gl.codigoUsuarioFk')
+            ->addSelect('gl.nombreEntidad')
+            ->addSelect('gl.fecha')
             ->addSelect('gl.nombreUsuario')
             ->addSelect('gl.accion')
             ->addSelect('gl.ruta')
-            ->addSelect('gl.fecha')
-            ->addSelect('gl.nombreEntidad')
-//            ->where('gl.codigoUsuarioFk IS NOT NULL')
+            ->addSelect('gl.camposSeguimiento')
             ->orderBy('gl.fecha','DESC');
 
         if ($session->get('filtroGenLogCodigoRegistro') != '') {
@@ -47,61 +46,17 @@ class GenLogRepository extends ServiceEntityRepository
 
     public function getCampoSeguimiento($codigoRegistro, $entidad){
         $em=$this->getEntityManager();
-        $queryBuilder=$em->createQueryBuilder()
+        $arGenLog=$em->createQueryBuilder()
             ->from('App:General\GenLog','genLog')
             ->select('genLog.camposSeguimiento')
+            ->addSelect('genLog.fecha')
+            ->addSelect('genLog.accion')
             ->where("genLog.codigoRegistroPk='{$codigoRegistro}'")
             ->andWhere("genLog.nombreEntidad='{$entidad}'")
             ->getQuery()->getResult();
 
-        return $queryBuilder;
+        return $arGenLog;
     }
 
-//    public function listaDql($codigo = null, $usuario = null, $accion = null, $modulo = null, $fecha = "", $hoy = false, $fechaHasta = "", $entidad = "")
-//    {
-//        $em = $this->getEntityManager();
-//        $qb = $em->createQueryBuilder();
-//        $qb->from("App:General\GenLog", "le")
-//            ->select("le");
-//        if(!empty($codigo)) {
-//            $qb->andWhere("le.codigoRegistroPk = '{$codigo}'");
-//        }
-//        if(!empty($usuario)) {
-//            $qb->andWhere("le.codigoUsuarioFk = '{$usuario}'");
-//        }
-//        if(!empty($accion)) {
-//            $qb->andWhere("le.accion LIKE '%{$accion}%'");
-//        }
-//        if(!empty($modulo)) {
-//            $qb->andWhere("le.modulo LIKE '%{$modulo}%'");
-//        }
-//        if($hoy){
-//            $hoy = new \DateTime('now');
-//            $qb->andWhere("le.fecha LIKE '%{$hoy->format('Y-m-d')}%'");
-//        }
-//        if($fecha != ""){
-//            $qb->andWhere("le.fecha >= '{$fecha} 00:00:00'");
-//        }
-//        if($fechaHasta != ""){
-//            $qb->andWhere("le.fecha <= '{$fechaHasta} 23:59:59'");
-//        }
-//        if($entidad != ""){
-//            $qb->andWhere("le.nombreEntidad LIKE '%{$entidad}%'");
-//        }
-//        $qb->orderBy("le.fecha", "desc");
-//        return $qb->getQuery()->getDQL();
-//    }
-//
-//    /**
-//     * @param $arLog GenLog
-//     */
-//    public function listaCambios()
-//    {
-//        $em = $this->getEntityManager();
-//        $qb = $em->createQueryBuilder();
-//        $qb->from("App:General\GenLog", "le")
-//            ->select("le");
-//        $qb->orderBy("le.fecha", "asc");
-//        return $qb->getQuery()->getDQL();
-//    }
+
 }

@@ -1,30 +1,13 @@
 {% extends 'base_transporte.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {% set codigoRuta = '' %}
+    {% set contador = 0 %}
+    {% set numeroGuias = arGuias|length %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
     {{ form_errors(form) }}
     <div class="panel panel-default">
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
-            <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Guia:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtGuia, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Conductor:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtConductor, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Documento cliente:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtDocumentoCliente, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Novedad:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.chkEstadoNovedad) }}
-                </div>
-            </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Desde:</label>
                 <div class="col-sm-4">
@@ -43,9 +26,11 @@
                 <div class="col-sm-4">
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            {{ form_widget(form.btnFiltrar) }}
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                </div>
+            </div>
         </div>
     </div>
     <table class="table table-striped table-bordered table-hover">
@@ -54,22 +39,15 @@
             <th>ID</th>
             <th>OI</th>
             <th>OC</th>
-            <th>DOC CLIENTE</th>
+            <th>NUMERO</th>
             <th>FECHA</th>
-            <th>FECHA DESP</th>
             <th>CLIENTE</th>
             <th>DESTINO</th>
-            <th>DESP</th>
-            <th>MANIFIESTO</th>
-            <th>CELULAR</th>
-            <th>CONDUCTOR</th>
             <th>UND</th>
             <th>PES</th>
             <th>VOL</th>
+            <th>DECLARA</th>
             <th>FLETE</th>
-            <th>NOV</th>
-            <th>N_S</th>
-            <th>CUM</th>
         </tr>
         </thead>
         <tbody>
@@ -78,22 +56,15 @@
                 <td>{{ arGuia.codigoGuiaPk }}</td>
                 <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
-                <td>{{ arGuia.documentoCliente }}</td>
+                <td>{{ arGuia.numero }}</td>
                 <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
-                <td>{{ arGuia.fechaRegistro | date('Y-m-d') }}</td>
                 <td>{{ arGuia.clienteNombreCorto }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
-                <td>{{ arGuia.codigoDespachoFk }}</td>
-                <td>{{ arGuia.manifiesto }}</td>
-                <td>{{ arGuia.movil }}</td>
-                <td>{{ arGuia.conductor }}</td>
                 <td class="numero">{{ arGuia.unidades }}</td>
                 <td class="numero">{{ arGuia.pesoReal }}</td>
                 <td class="numero">{{ arGuia.pesoVolumen }}</td>
+                <td class="numero">{{ arGuia.vrDeclara }}</td>
                 <td class="numero">{{ arGuia.vrFlete }}</td>
-                {{ validarTipo(arGuia.estadoNovedad) }}
-                {{ validarTipo(arGuia.estadoNovedadSolucion) }}
-                {{ validarTipo(arGuia.estadoCumplido) }}
             </tr>
         {% endfor %}
         </tbody>

@@ -19,9 +19,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class PendienteEntregaController extends Controller
 {
-   /**
-    * @Route("/transporte/informe/transporte/guia/pendiente/entrega", name="transporte_informe_transporte_guia_pendiente_entrega")
-    */    
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/transporte/informe/transporte/guia/pendiente/entrega", name="transporte_informe_transporte_guia_pendiente_entrega")
+     */
     public function lista(Request $request)
     {
         $session = new Session();
@@ -29,8 +33,8 @@ class PendienteEntregaController extends Controller
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('chkEstadoNovedad', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteGuiaEstadoNovedad'), 'required' => false])
-            ->add('fechaDesdeEntrega', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => $session->get('filtroFechaDesdeEntrega')])
-            ->add('fechaHastaEntrega', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $session->get('filtroFechaHastaEntrega')])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTtePendienteEntregaFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTtePendienteEntregaFechaHasta'))])
             ->add('txtGuia', NumberType::class, ['label' => 'Guia: ', 'required' => false, 'data' => $session->get('filtroNumeroGuia')])
             ->add('txtConductor', TextType::class, ['label' => 'Conductor: ', 'required' => false, 'data' => $session->get('filtroConductor')])
             ->add('txtDocumentoCliente', TextType::class, ['label' => 'Documento cliente: ', 'required' => false, 'data' => $session->get('filtroDocumentoCliente')])
@@ -39,15 +43,15 @@ class PendienteEntregaController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroFechaDesdeEntrega',  $form->get('fechaDesdeEntrega')->getData());
-            $session->set('filtroFechaHastaEntrega', $form->get('fechaHastaEntrega')->getData());
+            $session->set('filtroTtePendienteEntregaFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+            $session->set('filtroTtePendienteEntregaFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
             $session->set('filtroNumeroGuia', $form->get('txtGuia')->getData());
             $session->set('filtroConductor', $form->get('txtConductor')->getData());
             $session->set('filtroDocumentoCliente', $form->get('txtDocumentoCliente')->getData());
             $session->set('filtroTteGuiaEstadoNovedad', $form->get('chkEstadoNovedad')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->excelPendienteEntrega())->execute(), "Pendiente entrega");
+            General::get()->setExportar($em->getRepository(TteGuia::class)->pendienteEntrega()->getQuery()->execute(), "Pendiente entrega");
         }
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->pendienteEntrega(), $request->query->getInt('page', 1), 40);
         return $this->render('transporte/informe/transporte/guia/pendienteEntrega.html.twig', [

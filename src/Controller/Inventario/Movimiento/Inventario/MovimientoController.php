@@ -19,6 +19,7 @@ use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Form\Type\Inventario\MovimientoType;
 use App\Formato\Inventario\Factura1;
+use App\Formato\Inventario\Factura2;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -243,6 +244,10 @@ class MovimientoController extends Controller
                     $codigoFactura = $em->getRepository(InvConfiguracion::class)->find(1)->getCodigoFormatoMovimiento();
                     if ($codigoFactura == 1) {
                         $objFormato = new Factura1();
+                        $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
+                    }
+                    if ($codigoFactura == 2) {
+                        $objFormato = new Factura2();
                         $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                     }
                 } else {

@@ -1918,6 +1918,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.numero')
             ->addSelect('tg.documentoCliente')
             ->addSelect('tg.fechaIngreso')
+            ->addSelect('dg.fechaRegistro')
             ->addSelect('tg.codigoOperacionIngresoFk')
             ->addSelect('tg.codigoOperacionCargoFk')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
@@ -1930,11 +1931,13 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.vrRecaudo')
             ->addSelect('ct.nombreCorto')
             ->addSelect('ct.movil')
+            ->addSelect('tg.codigoDespachoFk')
             ->addSelect(
                 '(dg.numero) AS manifiesto'
             )
             ->addSelect('tg.estadoNovedad')
             ->addSelect('tg.estadoNovedadSolucion')
+            ->addSelect('tg.estadoCumplido')
             ->leftJoin('tg.clienteRel', 'c')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->leftJoin('tg.despachoRel', 'dg')

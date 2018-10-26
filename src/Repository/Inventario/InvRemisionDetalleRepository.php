@@ -122,5 +122,27 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery();
     }
 
+    public function validarDetalles($codigoRemision){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
+            ->select('rd.codigoRemisionDetallePk')
+            ->addSelect('rd.codigoItemFk')
+            ->addSelect('rd.loteFk')
+            ->addSelect('rd.codigoBodegaFk')
+            ->addSelect('rd.cantidad')
+            ->addSelect('i.afectaInventario')
+            ->leftJoin('rd.itemRel', 'i')
+            ->where('rd.codigoRemisionFk=' . $codigoRemision);
+        $arrDetalles = $queryBuilder->getQuery()->getResult();
+        return $arrDetalles;
+    }
+
+    public function contarDetalles($codigoRemision)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
+            ->select("COUNT(rd.codigoRemisionDetallePk)")
+            ->where("rd.codigoRemisionFk = {$codigoRemision} ");
+        $resultado = $queryBuilder->getQuery()->getSingleResult();
+        return $resultado[1];
+    }
 
 }

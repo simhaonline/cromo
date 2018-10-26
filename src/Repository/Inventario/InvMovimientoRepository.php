@@ -319,7 +319,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 }
             }
             if ($arMovimientoDetalle['cantidad'] == 0) {
-                $respuesta[] = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' tiene cantidad 0.';
+                $respuesta = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' tiene cantidad 0.';
                 break;
             }
         }

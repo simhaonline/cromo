@@ -3,6 +3,7 @@
 namespace App\Repository\Inventario;
 
 
+use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvRemision;
@@ -93,19 +94,20 @@ class InvRemisionRepository extends ServiceEntityRepository
     public function autorizar($arRemision)
     {
         if(!$arRemision->getEstadoAutorizado()) {
-            $registros = $this->getEntityManager()->createQueryBuilder()->from(InvRemisionDetalle::class,'rd')
-                ->select('COUNT(rd.codigoRemisionDetallePk) AS registros')
-                ->where('rd.codigoRemisionFk = ' . $arRemision->getCodigoRemisionPk())
-                ->getQuery()->getSingleResult();
-            if($registros['registros'] > 0) {
-                $arRemision->setEstadoAutorizado(1);
-                $this->getEntityManager()->persist($arRemision);
-                $this->getEntityManager()->flush();
+            $respuesta = $this->validarDetalles($arRemision->getCodigoRemisionPk());
+            if ($respuesta) {
+                Mensajes::error($respuesta);
             } else {
-                Mensajes::error("El registro no tiene detalles");
+                if ($this->getEntityManager()->getRepository(InvRemisionDetalle::class)->contarDetalles($arRemision->getCodigoRemisionPk()) > 0) {
+                    $arRemision->setEstadoAutorizado(1);
+                    $this->getEntityManager()->persist($arRemision);
+                    $this->getEntityManager()->flush();
+                } else {
+                    Mensajes::error("El registro no tiene detalles");
+                }
             }
         } else {
-            Mensajes::error('El documento ya esta autorizado');
+            Mensajes::error('El documento no puede estar autorizado previamente');
         }
     }
 
@@ -249,4 +251,30 @@ class InvRemisionRepository extends ServiceEntityRepository
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         return $resultado[1];
     }
+
+    public function validarDetalles($codigoRemision)
+    {
+        $respuesta = "";
+        $arRemisionDetalles = $this->getEntityManager()->getRepository(InvRemisionDetalle::class)->validarDetalles($codigoRemision);
+        foreach ($arRemisionDetalles as $arRemisionDetalle) {
+            if ($arRemisionDetalle['afectaInventario']) {
+                if($arRemisionDetalle['codigoBodegaFk'] == "" || $arRemisionDetalle['loteFk'] == "") {
+                    $respuesta = "El detalle con id " . $arRemisionDetalle['codigoRemisionDetallePk'] . " no tiene bodega o lote";
+                    break;
+                } else {
+                    $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arRemisionDetalle['codigoBodegaFk']);
+                    if (!$arBodega) {
+                        $respuesta = 'La bodega ingresada en el detalle con id ' . $arRemisionDetalle['codigoRemisionDetallePk'] . ', no existe.';
+                        break;
+                    }
+                }
+            }
+            if ($arRemisionDetalle['cantidad'] == 0) {
+                $respuesta = 'El detalle con id ' . $arRemisionDetalle['codigoRemisionDetallePk'] . ' tiene cantidad 0.';
+                break;
+            }
+        }
+        return $respuesta;
+    }
+
 }

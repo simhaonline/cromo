@@ -246,7 +246,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('md.movimientoRel', 'm')
             ->where('i.afectaInventario = 1')
             ->andWhere('md.operacionInventario <> 0')
-            ->andWhere('m.estadoAutorizado = 1')
+            ->andWhere('m.estadoAprobado = 1')
             ->groupBy('md.codigoItemFk');
         $arrExistencias = $queryBuilder->getQuery()->getResult();
         return $arrExistencias;
@@ -277,7 +277,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                 'loteFk' => $arMovimientoDetalle['loteFk'], 'codigoBodegaFk' => $arMovimientoDetalle['codigoBodegaFk']));
             if($arLote) {
                 $arLote->setCantidadExistencia($arMovimientoDetalle['cantidad']);
-                $arLote->setCantidadDisponible($arMovimientoDetalle['cantidad']);
+                $arLote->setCantidadDisponible($arMovimientoDetalle['cantidad'] - $arLote->getCantidadRemisionada());
                 $em->persist($arLote);
             } else {
                 Mensajes::error('Misteriosamente un lote no esta creado' . $arMovimientoDetalle['codigoItemFk'] . " " . $arMovimientoDetalle['loteFk'] . " " . $arMovimientoDetalle['codigoBodegaFk']);
@@ -288,7 +288,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
             $arItem = $em->getRepository(InvItem::class)->find($arMovimientoDetalle['codigoItemFk']);
             $arItem->setCantidadExistencia($arMovimientoDetalle['cantidad']);
-            $arItem->setCantidadDisponible($arMovimientoDetalle['cantidad']);
+            $arItem->setCantidadDisponible($arMovimientoDetalle['cantidad'] - $arItem->getCantidadRemisionada());
             $em->persist($arItem);
         }
 

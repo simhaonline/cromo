@@ -382,6 +382,7 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle->setOperacionInventario($arMovimiento->getOperacionInventario());
                                     $arMovimientoDetalle->setItemRel($arOrdenDetalle->getItemRel());
                                     $arMovimientoDetalle->setCantidad($cantidad);
+                                    $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
                                     $arMovimientoDetalle->setVrPrecio($arOrdenDetalle->getVrPrecio());
                                     $arMovimientoDetalle->setPorcentajeDescuento($arOrdenDetalle->getPorcentajeDescuento());
                                     $arMovimientoDetalle->setPorcentajeIva($arOrdenDetalle->getPorcentajeIva());
@@ -446,7 +447,9 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle->setMovimientoRel($arMovimiento);
                                     $arMovimientoDetalle->setItemRel($arPedidoDetalle->getItemRel());
                                     $arMovimientoDetalle->setCantidad($cantidad);
+                                    $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
                                     $arMovimientoDetalle->setVrPrecio($arPedidoDetalle->getVrPrecio());
+                                    $arMovimientoDetalle->setOperacionInventario($arMovimiento->getOperacionInventario());
                                     //$arMovimientoDetalle->setPorcentajeDescuento($arPedidoDetalle->getPorcentajeDescuento());
                                     $arMovimientoDetalle->setPorcentajeIva($arPedidoDetalle->getPorcentajeIva());
                                     $arMovimientoDetalle->setPedidoDetalleRel($arPedidoDetalle);
@@ -508,7 +511,9 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle = new InvMovimientoDetalle();
                                     $arMovimientoDetalle->setMovimientoRel($arMovimiento);
                                     $arMovimientoDetalle->setItemRel($arRemisionDetalle->getItemRel());
+                                    $arMovimientoDetalle->setOperacionInventario($arMovimiento->getOperacionInventario());
                                     $arMovimientoDetalle->setCantidad($cantidad);
+                                    $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
                                     $arMovimientoDetalle->setVrPrecio($arRemisionDetalle->getVrPrecio());
                                     $arMovimientoDetalle->setPorcentajeIva($arRemisionDetalle->getPorcentajeIva());
                                     $arMovimientoDetalle->setRemisionDetalleRel($arRemisionDetalle);

@@ -91,10 +91,15 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_formaPagoRel" class="col-sm-2 control-label">Email:</label>
+                <label for="form_email" class="col-sm-2 control-label">Email:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.email) }}
                     {{ form_errors(form.email) }}
+                </div>
+                <label for="form_cupoCompral" class="col-sm-2 control-label">Cupo compra:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cupoCompra) }}
+                    {{ form_errors(form.cupoCompra) }}
                 </div>
             </div>
             <hr>

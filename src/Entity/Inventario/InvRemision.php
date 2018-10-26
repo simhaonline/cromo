@@ -83,6 +83,11 @@ class InvRemision
     private $numero = 0;
 
     /**
+     * @ORM\Column(name="operacion_inventario", type="smallint", nullable=true, options={"default" : 0})
+     */
+    private $operacionInventario = 0;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=500, nullable=true)
      * @Assert\Length(
      *     max=500,
@@ -402,6 +407,22 @@ class InvRemision
     public function setRemisionesDetallesPedidoRel($remisionesDetallesPedidoRel): void
     {
         $this->remisionesDetallesPedidoRel = $remisionesDetallesPedidoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionInventario()
+    {
+        return $this->operacionInventario;
+    }
+
+    /**
+     * @param mixed $operacionInventario
+     */
+    public function setOperacionInventario( $operacionInventario ): void
+    {
+        $this->operacionInventario = $operacionInventario;
     }
 
 

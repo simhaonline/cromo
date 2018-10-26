@@ -31,6 +31,14 @@ class InvDocumentoTipo extends Fixture
             $arDocumentoTipo->setNombre('FACTURA');
             $manager->persist($arDocumentoTipo);
         }
+        $arDocumentoTipo = $manager->getRepository('App:Inventario\InvDocumentoTipo')->find('TRA');
+        if(!$arDocumentoTipo){
+            $arDocumentoTipo = new \App\Entity\Inventario\InvDocumentoTipo();
+            $arDocumentoTipo->setCodigoDocumentoTipoPk('TRA');
+            $arDocumentoTipo->setNombre('TRASLADO');
+            $manager->persist($arDocumentoTipo);
+        }
+
         $manager->flush();
     }
 }

@@ -67,7 +67,10 @@
                         <tr>
                             <th>ID</th>
                             <th>ITEM</th>
+                            <th>NOMBRE</th>
                             <th>MARCA</th>
+                            <th>LOTE</th>
+                            <th>BODEGA</th>
                             <th>CAN</th>
                             <th>PRECIO</th>
                             <th>%IVA</th>
@@ -84,15 +87,25 @@
                                 <td>{{ arRemisionDetalle.codigoRemisionDetallePk }}<input type="hidden"
                                                                                       name="TxtCodigo[]"
                                                                                       value="{{ arRemisionDetalle.codigoRemisionDetallePk }}"></td>
+                                <td>{{ arRemisionDetalle.codigoItemFk }}</td>
                                 <td>{{ arRemisionDetalle.itemNombre | default('') }}</td>
                                 <td>{{ arRemisionDetalle.itemMarcaNombre | default('') }}</td>
-                                <td style="text-align: center;">
-                                    {% if not arRemision.estadoAutorizado %}
-                                        <input style="text-align: right;" type="text" name="TxtCantidad[{{ arRemisionDetalle.codigoRemisionDetallePk  }}]" value="{{ arRemisionDetalle.cantidad }}" size="10" style="width:70px">
-                                    {% else %}
-                                        {{ arRemisionDetalle.cantidad }}
-                                    {% endif %}
-                                </td>
+                                {% if arRemision.estadoAutorizado %}
+                                    <td>{{ arRemisionDetalle.loteFk }}</td>
+                                    <td>{{ arRemisionDetalle.codigoBodegaFk }}</td>
+                                    <td class="numero">{{ arRemisionDetalle.cantidad | number_format(0, '.', ',') }}</td>
+                                {% else %}
+                                    <td style="text-align: center;">
+                                        <input type="text" style="text-align: left;width: 50%;" name="arrLote[{{ arRemisionDetalle.codigoRemisionDetallePk }}]" id="arrLote[{{ arRemisionDetalle.codigoRemisionDetallePk }}]" value="{{ arRemisionDetalle.loteFk }}">
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arRemisionDetalle.codigoRemisionDetallePk ~']','campoBodega' : 'arrBodega['~ arRemisionDetalle.codigoRemisionDetallePk ~']','codigoItem' : arRemisionDetalle.codigoItemFk }) }}','BuscarLote',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <input type="text" name="arrBodega[{{ arRemisionDetalle.codigoRemisionDetallePk }}]" id="arrBodega[{{ arRemisionDetalle.codigoRemisionDetallePk }}]" value="{{ arRemisionDetalle.codigoBodegaFk }}" style="text-align: left; width:40px" size="10">
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodega['~ arRemisionDetalle.codigoRemisionDetallePk ~']' }) }}','BuscarBodega',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                    </td>
+                                    <td style="text-align: center;"><input style="text-align: right;" type="text" name="TxtCantidad[{{ arRemisionDetalle.codigoRemisionDetallePk  }}]" value="{{ arRemisionDetalle.cantidad }}" size="10" style="width:70px"></td>
+                                {% endif %}
+
                                 <td style="text-align: right;">
                                     {% if not arRemision.estadoAutorizado %}
                                         <input style="text-align: right;" type="text" name="TxtPrecio[{{ arRemisionDetalle.codigoRemisionDetallePk }}]" value="{{ arRemisionDetalle.vrPrecio }}" size="10" style="width:70px">

@@ -350,6 +350,11 @@ class RhuContrato
     protected $novedadesContratoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuCredito", mappedBy="contratoRel")
+     */
+    protected $creditosContratoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoContratoPk()
@@ -1355,5 +1360,21 @@ class RhuContrato
     public function setNovedadesContratoRel($novedadesContratoRel): void
     {
         $this->novedadesContratoRel = $novedadesContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreditosContratoRel()
+    {
+        return $this->creditosContratoRel;
+    }
+
+    /**
+     * @param mixed $creditosContratoRel
+     */
+    public function setCreditosContratoRel($creditosContratoRel): void
+    {
+        $this->creditosContratoRel = $creditosContratoRel;
     }
 }

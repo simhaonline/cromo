@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuConceptoRepository")
- * @DoctrineAssert\UniqueEntity(fields={"codigoPagoConceptoPk"},message="Ya existe el código del pago concepto")
+ * @DoctrineAssert\UniqueEntity(fields={"codigoConceptoPk"},message="Ya existe el código del pago concepto")
  */
 class RhuConcepto
 {
@@ -52,7 +52,7 @@ class RhuConcepto
      * BON=Bonificacion, DES=Descuento, COM=Comision
      * @ORM\Column(name="adicional_tipo", type="string", length=3, nullable=true)
      */
-    private $adicionalTipo = 1;
+    private $adicionalTipo;
 
     /**
      * @ORM\Column(name="auxilio_transporte",options={"default":false} , type="boolean", nullable=true)
@@ -95,11 +95,6 @@ class RhuConcepto
     private $cesantia = false;
 
     /**
-     * @ORM\Column(name="codigo_interface", type="string", length=30, nullable=true)
-     */
-    private $codigoInterface;
-
-    /**
      * @ORM\Column(name="numero_dian", type="integer", nullable=true)
      */
     private $numeroDian;
@@ -118,6 +113,11 @@ class RhuConcepto
      * @ORM\OneToMany(targetEntity="RhuNovedadTipo", mappedBy="conceptoRel")
      */
     protected $novedadesConceptoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuCreditoTipo", mappedBy="conceptoRel")
+     */
+    protected $creditosTiposConceptoRel;
 
     /**
      * @return mixed
@@ -378,22 +378,6 @@ class RhuConcepto
     /**
      * @return mixed
      */
-    public function getCodigoInterface()
-    {
-        return $this->codigoInterface;
-    }
-
-    /**
-     * @param mixed $codigoInterface
-     */
-    public function setCodigoInterface($codigoInterface): void
-    {
-        $this->codigoInterface = $codigoInterface;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getNumeroDian()
     {
         return $this->numeroDian;
@@ -453,5 +437,21 @@ class RhuConcepto
     public function setNovedadesConceptoRel($novedadesConceptoRel): void
     {
         $this->novedadesConceptoRel = $novedadesConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreditosTiposConceptoRel()
+    {
+        return $this->creditosTiposConceptoRel;
+    }
+
+    /**
+     * @param mixed $creditosTiposConceptoRel
+     */
+    public function setCreditosTiposConceptoRel($creditosTiposConceptoRel): void
+    {
+        $this->creditosTiposConceptoRel = $creditosTiposConceptoRel;
     }
 }

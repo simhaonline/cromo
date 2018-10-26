@@ -22,11 +22,11 @@ class NovedadType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoEmpleadoFk',TextType::class,['required' => true])
+            ->add('codigoEmpleadoFk', TextType::class, ['required' => true])
             ->add('fechaDesde', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('fechaHasta', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
-            ->add('prorroga',CheckboxType::class,['required' => false,'label' => ' '])
-            ->add('transcripcion',CheckboxType::class,['required' => false, 'label' => ' '])
+            ->add('prorroga', CheckboxType::class, ['required' => false, 'label' => ' '])
+            ->add('transcripcion', CheckboxType::class, ['required' => false, 'label' => ' '])
             ->add('vrIbcPropuesto', NumberType::class, ['required' => false])
             ->add('vrPropuesto', NumberType::class, ['required' => false])
             ->add('comentarios', TextareaType::class, ['required' => false])
@@ -52,14 +52,15 @@ class NovedadType extends AbstractType
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
-            {"campo":"codigoNovedadPk",    "tipo":"pk"    ,"ayuda":"Codigo del registro"       ,"titulo":"ID"},
-            {"campo":"codigoNovedadTipoFk","tipo":"texto" ,"ayuda":"Codigo del tipo de novedad","titulo":"TIPO"},
-            {"campo":"fecha",              "tipo":"fecha" ,"ayuda":"Fecha del registro"        ,"titulo":"FECHA"},
-            {"campo":"codigoEmpleadoFk",   "tipo":"texto" ,"ayuda":"Codigo del empleado"       ,"titulo":"EMPLEADO"},
-            {"campo":"codigoContratoFk",   "tipo":"texto" ,"ayuda":"Codigo del contrato"       ,"titulo":"CONTRATO"},
-            {"campo":"fechaDesde",         "tipo":"fecha" ,"ayuda":"Fecha desde"               ,"titulo":"DESDE"},                     
-            {"campo":"fechaHasta",         "tipo":"fecha" ,"ayuda":"Fecha hasta"               ,"titulo":"HASTA"}
-        ]';
+        {"campo":"codigoNovedadPk",    "tipo":"pk"    ,"ayuda":"Codigo del registro"       ,"titulo":"ID"},
+        {"campo":"codigoNovedadTipoFk","tipo":"texto" ,"ayuda":"Codigo del tipo de novedad","titulo":"TIPO"},
+        {"campo":"fecha",              "tipo":"fecha" ,"ayuda":"Fecha del registro"        ,"titulo":"FECHA"},
+        {"campo":"codigoEmpleadoFk",   "tipo":"texto" ,"ayuda":"Codigo del empleado"       ,"titulo":"EMPLEADO"},
+        {"campo":"empleadoRel.nombreCorto",  "tipo":"rel" ,"ayuda":"Nombre del empleado"   ,"titulo":"NOMBRE"},
+        {"campo":"empleadoRel.numeroIdentificacion",  "tipo":"rel" ,"ayuda":"Identificacion del empleado"   ,"titulo":"IDENTIFICACION"},
+        {"campo":"codigoContratoFk",   "tipo":"texto" ,"ayuda":"Codigo del contrato"       ,"titulo":"CONTRATO"},
+        {"campo":"fechaDesde",         "tipo":"fecha" ,"ayuda":"Fecha desde"               ,"titulo":"DESDE"},                     
+        {"campo":"fechaHasta",         "tipo":"fecha" ,"ayuda":"Fecha hasta"               ,"titulo":"HASTA"}]';
         return $campos;
     }
 }

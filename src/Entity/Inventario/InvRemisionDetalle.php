@@ -33,6 +33,16 @@ class InvRemisionDetalle
     private $cantidad = 0;
 
     /**
+     * @ORM\Column(name="codigo_bodega_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoBodegaFk;
+
+    /**
+     * @ORM\Column(name="lote_fk", type="string", length=40, nullable=true)
+     */
+    private $loteFk;
+
+    /**
      * @ORM\Column(name="vr_precio",options={"default" : 0}, type="float")
      */
     private $vrPrecio = 0;
@@ -71,6 +81,16 @@ class InvRemisionDetalle
      * @ORM\Column(name="cantidad_pendiente",options={"default" : 0}, type="integer", nullable=true)
      */
     private $cantidadPendiente = 0;
+
+    /**
+     * @ORM\Column(name="operacion_inventario", type="smallint", nullable=true, options={"default" : 0})
+     */
+    private $operacionInventario = 0;
+
+    /**
+     * @ORM\Column(name="cantidad_operada", type="integer", options={"default" : 0})
+     */
+    private $cantidadOperada = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvRemision", inversedBy="remisionesDetallesPedidoRel")
@@ -327,6 +347,70 @@ class InvRemisionDetalle
     public function setMovimientosDetallesRemisionDetalleRel($movimientosDetallesRemisionDetalleRel): void
     {
         $this->movimientosDetallesRemisionDetalleRel = $movimientosDetallesRemisionDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoBodegaFk()
+    {
+        return $this->codigoBodegaFk;
+    }
+
+    /**
+     * @param mixed $codigoBodegaFk
+     */
+    public function setCodigoBodegaFk( $codigoBodegaFk ): void
+    {
+        $this->codigoBodegaFk = $codigoBodegaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLoteFk()
+    {
+        return $this->loteFk;
+    }
+
+    /**
+     * @param mixed $loteFk
+     */
+    public function setLoteFk( $loteFk ): void
+    {
+        $this->loteFk = $loteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionInventario()
+    {
+        return $this->operacionInventario;
+    }
+
+    /**
+     * @param mixed $operacionInventario
+     */
+    public function setOperacionInventario( $operacionInventario ): void
+    {
+        $this->operacionInventario = $operacionInventario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadOperada()
+    {
+        return $this->cantidadOperada;
+    }
+
+    /**
+     * @param mixed $cantidadOperada
+     */
+    public function setCantidadOperada( $cantidadOperada ): void
+    {
+        $this->cantidadOperada = $cantidadOperada;
     }
 
 

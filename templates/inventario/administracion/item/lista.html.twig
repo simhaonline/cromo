@@ -26,12 +26,10 @@
             <th>ID</th>
             <th>NOMBRE</th>
             <th>MARCA</th>
-            <th>EXISTENCIA</th>
-            <th>AFECTA INVENTARIO</th>
-            <th>C_PROMEDIO</th>
-            <th>STOCK MINIMO</th>
-            <th>STOCK MAXIMO</th>
-            <th>PRECIO PROMEDIO</th>
+            <th title="Afecta inventario">AI</th>
+            <th>EXI</th>
+            <th>REM</th>
+            <th>DIS</th>
             <th></th>
             <th></th>
         </tr>
@@ -42,12 +40,10 @@
                 <td>{{ arItem.codigoItemPk }}</td>
                 <td>{{ arItem.nombre }}</td>
                 <td>{{ arItem.marcaNombre }}</td>
-                <td>{{ arItem.cantidadExistencia }}</td>
                 {{ validarTipo(arItem.afectaInventario) }}
-                <td class="numero">{{ arItem.vrCostoPredeterminado | number_format }}</td>
-                <td>{{ arItem.stockMinimo }}</td>
-                <td>{{ arItem.stockMinimo }}</td>
-                <td class="numero">{{ arItem.vrPrecioPromedio | number_format }}</td>
+                <td class="numero">{{ arItem.cantidadExistencia | number_format }}</td>
+                <td class="numero">{{ arItem.cantidadRemisionada | number_format }}</td>
+                <td class="numero">{{ arItem.cantidadDisponible | number_format }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('inventario_administracion_inventario_item_nuevo',{'id' : arItem.codigoItemPk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">

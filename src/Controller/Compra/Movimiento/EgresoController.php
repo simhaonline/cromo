@@ -12,6 +12,8 @@ use App\Formato\Compra\Egreso;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -125,6 +127,7 @@ class EgresoController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->All();
             if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(ComEgresoDetalle::class)->actualizar($arrControles, $id);
                 $em->getRepository(ComEgreso::class)->autorizar($arEgreso);
                 return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
             }
@@ -185,40 +188,51 @@ class EgresoController extends BaseController
         $paginator = $this->get('knp_paginator');
         $arEgreso = $em->getRepository(ComEgreso::class)->find($id);
         $codigoProveedor = $arEgreso->getProveedorRel()->getCodigoProveedorPk();
-        $session->set('filtroComCodigoProveedor', $codigoProveedor);
+        $session->set('filtroComCodigoProveedorPendiente', $codigoProveedor);
+        $fechaDesde = (new \DateTime('now'))->format('Y-m-1');
+        $fechaHasta = ((new \DateTime('now'))->modify('last day of this month'))->format('Y-m-d');
+        $session->set('filtroComPendienteFechaDesde', null);
+        $session->set('filtroComPendienteFechaHasta', null);
+        $session->set('filtroComPendienteFiltrarPorFecha', null);
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('txtCodigoCuentaPagar', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('')])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha Desde', 'data' => new \DateTime($fechaDesde)])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha Hasta', 'data' => new \DateTime($fechaHasta)])
+            ->add('filtrarPorFecha', CheckboxType::class, ['required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroComCuentaPagarCodigo', $form->get('txtCodigoItem')->getData());
+                $session->set('filtroComCuentaPagarCodigoPendiente', $form->get('txtCodigoCuentaPagar')->getData());
+                if ($form->get('filtrarPorFecha')->getData() == true) {
+                    $session->set('filtroComPendienteFechaDesde', $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                    $session->set('filtroComPendienteFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                    $session->set('filtroComPendienteFiltrarPorFecha', $form->get('filtrarPorFecha')->getData());
+                }
             }
             if ($form->get('btnGuardar')->isClicked()) {
-                $arrConceptos = $request->request->get('cuentaPagarValor');
-                if ($arrConceptos) {
-                    foreach ($arrConceptos as $codigoCuentaPagar => $valor) {
-                        if ($valor != '' && $valor != 0) {
-                            $arCuentaPagar = $em->getRepository(ComCuentaPagar::class)->find($codigoCuentaPagar);
-                            $arEgresoDetalle = new ComEgresoDetalle();
-                            $arEgresoDetalle->setEgresoRel($arEgreso);
-                            $arEgresoDetalle->setNumeroCompra($arCuentaPagar->getNumeroDocumento());
-                            $arEgresoDetalle->setNumeroDocumentoAplicacion($arCuentaPagar->getNumeroReferencia());
-                            $arEgresoDetalle->setCuentaPagarRel($arCuentaPagar);
-                            $arEgresoDetalle->setOperacion($arCuentaPagar->getOperacion());
-                            $arEgresoDetalle->setVrPago($valor);
-                            $em->persist($arEgresoDetalle);
-                        }
+                $arrCuentasPagar = $request->request->get('ChkSeleccionar');
+                if ($arrCuentasPagar) {
+                    foreach ($arrCuentasPagar as $codigoCuentaPagar) {
+                        $arCuentaPagar = $em->getRepository(ComCuentaPagar::class)->find($codigoCuentaPagar);
+                        $arEgresoDetalle = new ComEgresoDetalle();
+                        $arEgresoDetalle->setEgresoRel($arEgreso);
+                        $arEgresoDetalle->setNumeroCompra($arCuentaPagar->getNumeroDocumento());
+                        $arEgresoDetalle->setNumeroDocumentoAplicacion($arCuentaPagar->getNumeroReferencia());
+                        $arEgresoDetalle->setCuentaPagarRel($arCuentaPagar);
+                        $arEgresoDetalle->setOperacion($arCuentaPagar->getOperacion());
+                        $arEgresoDetalle->setVrPago($arCuentaPagar->getVrSaldo());
+                        $em->persist($arEgresoDetalle);
+
                     }
                     $em->flush();
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
             }
         }
-        $arCuentasPagar = $paginator->paginate($em->getRepository(ComCuentaPagar::class)->lista(), $request->query->getInt('page', 1), 10);
-
+        $arCuentasPagar = $paginator->paginate($em->getRepository(ComCuentaPagar::class)->pendiente(), $request->query->getInt('page', 1), 10);
         return $this->render('compra/movimiento/Egreso/detalleNuevo.html.twig', [
             'arCuentasPagar' => $arCuentasPagar,
             'form' => $form->createView()

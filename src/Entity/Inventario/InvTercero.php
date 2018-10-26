@@ -138,6 +138,11 @@ class InvTercero
     private $codigoPrecioCompraFk;
 
     /**
+     * @ORM\Column(name="cupo_compra", type="float", nullable=true, options={"default" : 0})
+     */
+    private $cupoCompra = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="invTercerosIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
      */
@@ -771,6 +776,22 @@ class InvTercero
     public function setCiudadRel($ciudadRel): void
     {
         $this->ciudadRel = $ciudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCupoCompra()
+    {
+        return $this->cupoCompra;
+    }
+
+    /**
+     * @param mixed $cupoCompra
+     */
+    public function setCupoCompra($cupoCompra): void
+    {
+        $this->cupoCompra = $cupoCompra;
     }
 
 

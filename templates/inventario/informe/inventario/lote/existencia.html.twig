@@ -49,8 +49,9 @@
                 <th>MARCA</th>
                 <th>BOD</th>
                 <th>LOTE</th>
-                <th>EX</th>
-                <th>DS</th>
+                <th>EXI</th>
+                <th>REM</th>
+                <th>DIS</th>
             </tr>
             </thead>
             <tbody>
@@ -62,6 +63,7 @@
                     <td>{{ arLote.codigoBodegaFk }}</td>
                     <td>{{ arLote.loteFk }}</td>
                     <td class="numero">{{ arLote.cantidadExistencia | number_format(0, '.', ',') }}</td>
+                    <td class="numero">{{ arLote.cantidadRemisionada | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arLote.cantidadDisponible | number_format(0, '.', ',') }}</td>
                 </tr>
             {% endfor %}

@@ -29,6 +29,8 @@
                 <th title="NUMERO PEDIDO">NUMERO</th>
                 <th title="CODIGO ITEM">ITEM</th>
                 <th>NOMBRE</th>
+                <th>LOTE</th>
+                <th>BODEGA</th>
                 <th>CANT</th>
                 <th>PEND</th>
                 <th>CANT</th>
@@ -41,9 +43,11 @@
                     <td style="text-align: right;">{{ arRemisionDetalle.numero }}</td>
                     <td style="text-align: right;">{{ arRemisionDetalle.codigoItemFk }}</td>
                     <td style="text-align: left;">{{ arRemisionDetalle.itemNombre }}</td>
+                    <td>{{ arRemisionDetalle.loteFk }}</td>
+                    <td>{{ arRemisionDetalle.codigoBodegaFk }}</td>
                     <td style="text-align: right;">{{ arRemisionDetalle.cantidad }}</td>
                     <td style="text-align: right;">{{ arRemisionDetalle.cantidadPendiente }}</td>
-                    <td style="text-align: center;"><input type="number" name="itemCantidad[{{ arRemisionDetalle.codigoRemisionDetallePk }}]" style="text-align: right; width:70px" size="10" value="0"></td>
+                    <td style="text-align: center;"><input type="number" name="itemCantidad[{{ arRemisionDetalle.codigoRemisionDetallePk }}]" value="{{ arRemisionDetalle.cantidadPendiente }}" style="text-align: right; width:70px" size="10" value="0"></td>
                 </tr>
             {% endfor %}
             </tbody>

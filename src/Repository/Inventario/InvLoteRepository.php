@@ -93,6 +93,7 @@ class InvLoteRepository extends ServiceEntityRepository
             ->addSelect('l.codigoBodegaFk')
             ->addSelect('l.loteFk')
             ->addSelect('l.cantidadExistencia')
+            ->addSelect('l.cantidadRemisionada')
             ->addSelect('l.cantidadDisponible')
             ->leftJoin('l.itemRel', 'i')
             ->leftJoin('i.marcaRel', 'm')

@@ -234,6 +234,7 @@ class TteFacturaRepository extends ServiceEntityRepository
         $arFactura->setVrManejo(intval($arrGuias['vrManejo']));
         $arFactura->setVrSubtotal($vrSubtotal);
         $arFactura->setVrTotal($vrSubtotal);
+        $arFactura->setVrTotalOperado($vrSubtotal * $arFactura->getOperacionComercial());
         $em->persist($arFactura);
 
         $arFacturaPlanillas = $em->getRepository(TteFacturaPlanilla::class)->findBy(array('codigoFacturaFk' => $id));

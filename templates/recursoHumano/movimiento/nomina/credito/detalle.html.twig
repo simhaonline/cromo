@@ -1,8 +1,12 @@
 {% extends 'base_recursoHumano.html.twig' %}
 {% block content %}
+    {{ form_start(form) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_credito_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
     <br/><br/>
@@ -10,8 +14,69 @@
         <tr>
             <td class="titulo">CODIGO:</td>
             <td class="td-in-well">{{ arRegistro.codigoCreditoPk }}</td>
+            <td class="titulo">FECHA CREACIÓN:</td>
+            <td class="td-in-well">{{ arRegistro.fecha | date('Y-m-d') }}</td>
+            <td class="titulo">CUOTA INICIAL:</td>
+            <td class="td-in-well">{{ arRegistro.vrInicial }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">EMPLEADO:</td>
+            <td class="td-in-well">{{ arRegistro.empleadoRel.nombreCorto }}</td>
+            <td class="titulo">CRÉDITO:</td>
+            <td class="td-in-well">{{ arRegistro.creditoTipoRel.nombre }}</td>
+            <td class="titulo">TOTAL CRÉDITO:</td>
+            <td class="td-in-well">{{ arRegistro.vrPagar | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">ENTIDAD BANCARIA:</td>
+            <td class="td-in-well">{{ arRegistro.empleadoRel.bancoRel.nombre | default('')}}</td>
+            <td class="titulo">CUENTA:</td>
+            <td class="td-in-well">{{ arRegistro.empleadoRel.cuenta }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA INICIO:</td>
+            <td class="td-in-well">{{ arRegistro.fechaInicio | date('Y-m-d')}}</td>
+            <td class="titulo">FECHA FINALIZACIÓN:</td>
+            <td class="td-in-well">{{ arRegistro.fechaFinalizacion | date('Y-m-d')}}</td>
+            <td class="titulo">ABONOS:</td>
+            <td class="td-in-well">{{ arRegistro.vrAbonos | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">TIPO PAGO:</td>
+            <td class="td-in-well">{{ arRegistro.creditoTipoRel.nombre }}</td>
+            <td class="titulo">VALIDAR CUOTAS:</td>
+            <td class="td-in-well">{{ arRegistro.validarCuotas ? 'SI' : 'NO'}}</td>
+            <td class="titulo">SALDO:</td>
+            <td class="td-in-well">{{ (arRegistro.vrPagar - arRegistro.vrAbonos) | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">PAGADO:</td>
+            <td class="td-in-well">{{ arRegistro.estadoPagado ? 'SI' : 'NO'}}</td>
+            <td class="titulo">SUSPENDIDO:</td>
+            <td class="td-in-well">{{ arRegistro.estadoSuspendido ? 'SI' : 'NO'}}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo">APLICAR CUOTA PRIMA:</td>
+            <td class="td-in-well">{{ arRegistro.aplicarCuotaPrima ? 'SI' : 'NO'}}</td>
+            <td class="titulo">APLICAR CUOTA CESANTÍA:</td>
+            <td class="td-in-well">{{ arRegistro.aplicarCuotaCesantia ? 'SI' : 'NO'}}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIOS:</td>
+            <td class="td-in-well" colspan="5">{{ arRegistro.comentarios }}</td>
         </tr>
     </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+    </ul>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
     <br>
     <br>
 {% endblock %}

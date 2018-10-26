@@ -108,6 +108,8 @@
                             <th>%IVA</th>
                             <th>IVA</th>
                             <th>TOTAL</th>
+                            <th title="Remision detalle">RD</th>
+                            <th title="Pedido detalle">PD</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -119,7 +121,6 @@
                                 {{ validarTipo(arMovimientoDetalle.itemRel.nombre) }}
 
                                 {% if arMovimiento.estadoAutorizado %}
-
                                     <td>{{ arMovimientoDetalle.loteFk }}</td>
                                     <td>{{ arMovimientoDetalle.codigoBodegaFk }}</td>
                                     <td class="numero">{{ arMovimientoDetalle.cantidad | number_format(0, '.', ',') }}</td>
@@ -153,11 +154,9 @@
                                 {% endif %}
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrIva | number_format(0,'.',',') }}</td>
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrTotal| number_format(0,'.',',') }}</td>
-                                {% if arMovimiento.estadoAutorizado %}
-                                    <td></td>
-                                {% else %}
-                                    <td style="text-align: center;"><input type="checkbox" style="text-align: right;" name="ChkSeleccionar[]" value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/></td>
-                                {% endif %}
+                                <td>{{ arMovimientoDetalle.codigoRemisionDetalleFk }}</td>
+                                <td>{{ arMovimientoDetalle.codigoPedidoDetalleFk }}</td>
+                                <td style="text-align: center;"><input type="checkbox" style="text-align: right;" name="ChkSeleccionar[]" value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/></td>
                             </tr>
                         {% endfor %}
                         </tbody>

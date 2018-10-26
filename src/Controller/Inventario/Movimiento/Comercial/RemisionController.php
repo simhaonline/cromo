@@ -100,6 +100,7 @@ class RemisionController extends Controller
                             $arRemision->setFecha(new \DateTime('now'));
                             $arRemision->setUsuario($this->getUser()->getUserName());
                         }
+                        $arRemision->setOperacionInventario($arRemision->getRemisionTipoRel()->getOperacionInventario());
                         $em->persist($arRemision);
                         $em->flush();
                         return $this->redirect($this->generateUrl('inventario_movimiento_comercial_remision_detalle', ['id' => $arRemision->getCodigoRemisionPk()]));
@@ -216,8 +217,10 @@ class RemisionController extends Controller
                             $arRemisionDetalle->setItemRel($arItem);
                             $arRemisionDetalle->setCantidad($cantidad);
                             $arRemisionDetalle->setCantidadPendiente($cantidad);
+                            $arRemisionDetalle->setCantidadOperada($cantidad * $arRemision->getOperacionInventario());
                             $arRemisionDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
                             $arRemisionDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
+                            $arRemisionDetalle->setOperacionInventario($arRemision->getOperacionInventario());
                             $em->persist($arRemisionDetalle);
                         }
                     }

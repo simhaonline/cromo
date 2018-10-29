@@ -6,6 +6,8 @@ use App\Controller\Estructura\AdministracionController;
 use App\Controller\Estructura\EntityListener;
 use App\Entity\General\GenModelo;
 use App\General\General;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -42,7 +44,7 @@ class LogController extends Controller {
             ->add('dtmFechaHasta', DateType::class, ['format'=>'yyyyMMdd', 'data' => $dateFechaHasta])
             ->add('SelAccion', ChoiceType::class, [
                 'label' => 'Accion', 'data' => $session->get('TxtAccion'),
-                'placeholder' => 'Seleccione una accion',
+                'placeholder' => 'TODO',
                 'choices' => [
                     EntityListener::ACCION_NUEVO => "CREACION",
                     EntityListener::ACCION_ACTUALIZAR => "ACTUALIZACION",
@@ -53,7 +55,7 @@ class LogController extends Controller {
             ->add('SelModelo', EntityType::class, [
                 'class'=>GenModelo::class,
                 'choice_label'=>'codigoModeloPk',
-                'placeholder'=>'Seleccione una entidad',
+                'placeholder'=>'TODO',
                 'required'=>false,
             ])
             ->add('filtrarFecha', CheckboxType::class, ['required'=>false, 'data'=>false])
@@ -118,15 +120,16 @@ class LogController extends Controller {
             $detalles = [];
             $detalles['SIN REGISTRAR'] = 'N/A';
         }
+
         return $this->render('general/log/detalleLog.html.twig', [
-            'detalles' => $detalles
+            'detalles' => $detalles,
         ]);
     }
 
     /**
      * @Route("/general/informe/log/lista/detalle/comparativo/{codigoRegistro}/{entidad}", name="general_informe_log_lista_detalle_comparativo")
      */
-    public function logDetalleComparativo($codigoRegistro, $entidad){
+    public function logDetalleComparativo(Request $request, $codigoRegistro, $entidad){
         $em= $this->getDoctrine()->getManager();
         $detalles=$em->getRepository('App:General\GenLog')->getCampoSeguimiento($codigoRegistro, $entidad);
 //        $arLogGenJson   = json_decode($detalles, true);
@@ -152,10 +155,21 @@ class LogController extends Controller {
                     }
                 }
             }
+        $form = $this->createFormBuilder()
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if($form->get('btnExcel')->isClicked()){
+                ob_clean();
+                $this->generarExcelLogComparativo($detalleSeguimiento,"ExcelDetalleSeguimiento");
+            }
+        }
 
         return $this->render('general/log/detalleLogComparativo.html.twig', [
             'detalles'      =>  $detalleSeguimiento,
             'cabeceras'     =>  $cabeceras,
+            'form' => $form->createView()
         ]);
     }
 
@@ -164,6 +178,65 @@ class LogController extends Controller {
         ob_clean();
         $excel=new AdministracionController();
         $excel->generarExcel($data,$nombre);
+    }
+
+
+    /**
+     * @author Alexander Ceballos Luna
+     * @param $arrDatos
+     * @param $nombre
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function generarExcelLogComparativo($arrDatos, $nombre)
+    {
+        if (count($arrDatos) > 0) {
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $j = 0;
+            //Se obtienen las columnas del archivo
+            $arrColumnas = array_keys($arrDatos[0]);
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $sheet->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
+                $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
+                $j++;
+            }
+            $j = 1;
+            foreach ($arrDatos as $datos) {
+                $i = 'A';
+                $j++;
+                for ($col = 0; $col <= sizeof($arrColumnas) - 1; $col++) {
+                    $dato = $datos[$arrColumnas[$col]];
+                    if ($dato instanceof \DateTime) {
+                        $dato = $dato->format('Y-m-d');
+                    }
+                    $spreadsheet->getActiveSheet()->getStyle($i)->getFont()->setBold(false);
+
+                    $sheet->setCellValue($i . $j, $dato);
+                    if($arrColumnas[$col]==="fecha" || $arrColumnas[$col]==="accion"){
+                        $sheet->getStyle($i . $j)->getFill()
+                            ->setFillType(Fill::FILL_SOLID)
+                            ->getStartColor()->setRGB('337ab7');
+                    }
+                    else if($j>2 && $dato!==$arrDatos[($j-3)][$arrColumnas[$col]]){
+                        $sheet->getStyle($i . $j.":".$i . $j)
+                                ->getFill()
+                                ->setFillType(Fill::FILL_SOLID)
+                                ->getStartColor()->setRGB('4F805D');
+                    }
+                    $i++;
+                }
+            }
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename='{$nombre}.xls'");
+            header('Cache-Control: max-age=0');
+
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
+            $writer->save('php://output');
+        } else {
+            MensajesController::error('El listado esta vacío, no hay nada que exportar');
+        }
     }
 
 

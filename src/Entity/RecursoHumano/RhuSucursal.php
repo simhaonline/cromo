@@ -13,8 +13,7 @@ class RhuSucursal {
 
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_sucursal_pk", type="string", length=10)
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_sucursal_pk", type="string", length=10, )
      */
     private $codigoSucursalPk;
 

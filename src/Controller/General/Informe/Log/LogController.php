@@ -2,30 +2,21 @@
 
 namespace App\Controller\General\Informe\Log;
 
+use App\Controller\Estructura\AdministracionController;
 use App\Controller\Estructura\EntityListener;
-use App\Entity\General\GenLog;
-use App\Entity\General\GenLogOld;
 use App\Entity\General\GenModelo;
-use App\Repository\General\GenLogOldRepository;
+use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class LogController extends Controller {
 
@@ -44,6 +35,7 @@ class LogController extends Controller {
         $strFechaHasta = $dateFecha->format('Y/m/') . $intUltimoDia;
         $dateFechaDesde = date_create($strFechaDesde);
         $dateFechaHasta = date_create($strFechaHasta);
+        $qbGenLog=$em->getRepository('App:General\GenLog')->lista();
         $form = $this->createFormBuilder()
             ->add('txtCodigoRegistro', TextType::class, ['required' => false, 'data' => $session->get('filtroGenLogCodigoRegistro'), 'attr' => ['class' => 'form-control']])
             ->add('dtmFechaDesde', DateType::class, ['format'=>'yyyyMMdd', 'data' => $dateFechaDesde])
@@ -66,6 +58,7 @@ class LogController extends Controller {
             ])
             ->add('filtrarFecha', CheckboxType::class, ['required'=>false, 'data'=>false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
@@ -98,9 +91,17 @@ class LogController extends Controller {
             else{
                 $session->set('filtroGenLogModelo',null);
             }
-
         }
-        $arGenLog= $paginator->paginate($em->getRepository('App:General\GenLog')->lista(),$request->query->getInt('page',1),20);
+        if ($form->isSubmitted() && $form->isValid()) {
+        if($form->get('btnExcel')->isClicked()){
+            $arGenlogExecute=$qbGenLog->getQuery()->getResult();
+            foreach ($arGenlogExecute as $arGenlogEx ){
+                $arGenlogEx['camposSeguimiento']=json_decode($arGenlogEx['camposSeguimiento'],true);
+            }
+            $this->generarExcel($arGenlogExecute,"Excel");
+        }
+        }
+        $arGenLog= $paginator->paginate($qbGenLog,$request->query->getInt('page',1),20);
         return $this->render('general/log/lista.html.twig',
             ['arGenLog' => $arGenLog,
                 'form' => $form->createView()]);
@@ -133,15 +134,17 @@ class LogController extends Controller {
         foreach ($detalles as $json){
             array_push($getCampoSeguimiento, $json['camposSeguimiento']);
         }
-        $detalles = $getCampoSeguimiento;
+        $detalleSeguimiento = $getCampoSeguimiento;
 
 
-        $cabeceras=json_decode($detalles[0], true);
+        $cabeceras=json_decode($detalleSeguimiento[0], true);
         $cabeceras=array_keys($cabeceras);
-
-            for ($i=0;$i<count($detalles);$i++) {
-                $detalles[$i]=json_decode($detalles[$i], true);
-                $actualizacionCabeceras = array_keys($detalles[$i]);
+        array_unshift($cabeceras,"fecha","accion");
+            for ($i=0;$i<count($detalleSeguimiento);$i++) {
+                $detalleSeguimiento[$i]=json_decode($detalleSeguimiento[$i], true);
+                $strFecha=$detalles[$i]['fecha']->format('Y-m-d H:i:s');
+                $detalleSeguimiento[$i]=array("fecha"=>$strFecha,"accion"=>$detalles[$i]['accion'])+$detalleSeguimiento[$i];
+                $actualizacionCabeceras = array_keys($detalleSeguimiento[$i]);
                 $nuevo=array_diff($actualizacionCabeceras, $cabeceras);
                 if(count($nuevo)>0){
                     foreach ($nuevo as $n){
@@ -151,9 +154,16 @@ class LogController extends Controller {
             }
 
         return $this->render('general/log/detalleLogComparativo.html.twig', [
-            'detalles'      =>  $detalles,
+            'detalles'      =>  $detalleSeguimiento,
             'cabeceras'     =>  $cabeceras,
         ]);
+    }
+
+    public function generarExcel($data, $nombre){
+
+        ob_clean();
+        $excel=new AdministracionController();
+        $excel->generarExcel($data,$nombre);
     }
 
 

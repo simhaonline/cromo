@@ -55,7 +55,7 @@ class DocumentoController extends Controller
         if ($id != '0') {
             $arDocumento = $em->getRepository(InvDocumento::class)->find($id);
             if (!$arDocumento) {
-                return $this->redirect($this->generateUrl('inventario_administracion_inventario_inventario_documento_lista'));
+                return $this->redirect($this->generateUrl('inventario_administracion_inventario_documento_lista'));
             }
         }
         $form = $this->createForm(DocumentoType::class, $arDocumento);
@@ -66,7 +66,7 @@ class DocumentoController extends Controller
                     if($arDocumento->getOperacionInventario() == 0){
                         $em->persist($arDocumento);
                         $em->flush();
-                        return $this->redirect($this->generateUrl('inventario_administracion_inventario_inventario_documento_detalle', ['id' => $arDocumento->getCodigoDocumentoPk()]));
+                        return $this->redirect($this->generateUrl('inventario_administracion_inventario_documento_detalle', ['id' => $arDocumento->getCodigoDocumentoPk()]));
                     } else {
                         Mensajes::error('La operacion para el tipo de documento TRASLADO debe ser neutro');
                     }

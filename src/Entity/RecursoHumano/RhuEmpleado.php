@@ -327,6 +327,11 @@ class RhuEmpleado
     protected $creditosEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuEmbargo", mappedBy="empleadoRel")
+     */
+    protected $embargosEmpleadoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEmpleadoPk()
@@ -1172,5 +1177,21 @@ class RhuEmpleado
     public function setCreditosEmpleadoRel($creditosEmpleadoRel): void
     {
         $this->creditosEmpleadoRel = $creditosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmbargosEmpleadoRel()
+    {
+        return $this->embargosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $embargosEmpleadoRel
+     */
+    public function setEmbargosEmpleadoRel($embargosEmpleadoRel): void
+    {
+        $this->embargosEmpleadoRel = $embargosEmpleadoRel;
     }
 }

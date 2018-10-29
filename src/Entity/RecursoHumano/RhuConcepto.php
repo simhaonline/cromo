@@ -120,6 +120,11 @@ class RhuConcepto
     protected $creditosTiposConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuEmbargoTipo", mappedBy="conceptoRel")
+     */
+    protected $embargosTiposConceptoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoConceptoPk()
@@ -453,5 +458,21 @@ class RhuConcepto
     public function setCreditosTiposConceptoRel($creditosTiposConceptoRel): void
     {
         $this->creditosTiposConceptoRel = $creditosTiposConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmbargosTiposConceptoRel()
+    {
+        return $this->embargosTiposConceptoRel;
+    }
+
+    /**
+     * @param mixed $embargosTiposConceptoRel
+     */
+    public function setEmbargosTiposConceptoRel($embargosTiposConceptoRel): void
+    {
+        $this->embargosTiposConceptoRel = $embargosTiposConceptoRel;
     }
 }

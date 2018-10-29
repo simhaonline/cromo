@@ -26,6 +26,32 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, InvMovimientoDetalle::class);
     }
 
+    public function listaDetalle($codigoMovimiento, $tipo){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoMovimientoDetallePk')
+            ->addSelect('md.codigoItemFk')
+            ->addSelect('md.loteFk')
+            ->addSelect('md.codigoBodegaFk')
+            ->addSelect('md.codigoBodegaDestinoFk')
+            ->addSelect('md.cantidad')
+            ->addSelect('md.vrPrecio')
+            ->addSelect('md.vrSubtotal')
+            ->addSelect('md.porcentajeDescuento')
+            ->addSelect('md.vrDescuento')
+            ->addSelect('md.porcentajeIva')
+            ->addSelect('md.vrIva')
+            ->addSelect('md.vrTotal')
+            ->addSelect('md.codigoRemisionDetalleFk')
+            ->addSelect('md.codigoPedidoDetalleFk')
+            ->addSelect('i.nombre AS itemNombre')
+            ->leftJoin('md.itemRel', 'i')
+            ->where('md.codigoMovimientoFk = ' . $codigoMovimiento);
+        if($tipo == "TRA") {
+            $queryBuilder->andWhere('md.operacionInventario = 0');
+        }
+        return $queryBuilder->getQuery()->getResult();
+    }
+
     /**
      * @param $arMovimiento
      * @param $arrSeleccionados
@@ -101,6 +127,11 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         $this->getEntityManager()->persist($arMovimiento);
         if ($this->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
             $arrBodega = $arrControles['arrBodega'];
+            $arrBodegaDestino = [];
+            if($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
+                $arrBodegaDestino = $arrControles['arrBodegaDestino'];
+            }
+
             $arrLote = $arrControles['arrLote'];
             $arrCantidad = $arrControles['arrCantidad'];
             $arrPrecio = $arrControles['arrValor'];
@@ -113,6 +144,9 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                 $cantidadAnterior = $arMovimientoDetalle->getCantidad();
                 $cantidadNueva = $arrCantidad[$codigoMovimientoDetalle];
                 $arMovimientoDetalle->setCodigoBodegaFk($arrBodega[$codigoMovimientoDetalle]);
+                if($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
+                    $arMovimientoDetalle->setCodigoBodegaDestinoFk($arrBodegaDestino[$codigoMovimientoDetalle]);
+                }
                 $arMovimientoDetalle->setLoteFk($arrLote[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setCantidad($arrCantidad[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setVrPrecio($arrPrecio[$codigoMovimientoDetalle]);
@@ -364,6 +398,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.vrCosto')
             ->addSelect('md.vrPrecio')
             ->addSelect('md.loteFk')
+            ->addSelect('md.codigoBodegaFk')
             ->addSelect('m.fecha')
             ->addSelect('m.numero AS numeroMovimiento')
             ->addSelect('d.nombre AS nombreDocumento')
@@ -373,6 +408,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->where('md.codigoMovimientoDetallePk != 0')
             ->andWhere('m.estadoAprobado = 1')
             ->andWhere('m.estadoAnulado = 0')
+            ->andWhere('md.operacionInventario <> 0')
             ->orderBy('m.fecha', 'ASC');
         if ($session->get('filtroInvItemCodigo')) {
             $queryBuilder->andWhere("md.codigoItemFk = '{$session->get('filtroInvItemCodigo')}'");
@@ -446,10 +482,20 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.codigoItemFk')
             ->addSelect('md.loteFk')
             ->addSelect('md.codigoBodegaFk')
+            ->addSelect('md.codigoBodegaDestinoFk')
             ->addSelect('md.cantidad')
             ->addSelect('i.afectaInventario')
             ->leftJoin('md.itemRel', 'i')
             ->where('md.codigoMovimientoFk=' . $codigoMovimiento);
+        $arrDetalles = $queryBuilder->getQuery()->getResult();
+        return $arrDetalles;
+    }
+
+    public function bodegaMovimiento($codigoMovimiento){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoBodegaFk')
+            ->where('md.codigoMovimientoFk=' . $codigoMovimiento)
+            ->groupBy('md.codigoBodegaFk');
         $arrDetalles = $queryBuilder->getQuery()->getResult();
         return $arrDetalles;
     }

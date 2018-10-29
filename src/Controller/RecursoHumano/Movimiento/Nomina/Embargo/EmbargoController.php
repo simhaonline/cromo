@@ -6,7 +6,6 @@ use App\Controller\BaseController;
 use App\Entity\RecursoHumano\RhuEmbargo;
 use App\Form\Type\RecursoHumano\EmbargoType;
 use App\General\General;
-use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -55,7 +54,28 @@ class EmbargoController extends BaseController
      */
     public function nuevo(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arEmbargo = new RhuEmbargo();
+        if($id != 0){
+            $arEmbargo = $em->getRepository(RhuEmbargo::class)->find($id);
+        }
+        $form = $this->createForm(EmbargoType::class, $arEmbargo);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            if($form->get('guardar')->isClicked()){
+                if($id == 0){
+                    $arEmbargo->setEstadoActivo(1);
+                    $arEmbargo->setFecha(new \DateTime('now'));
+                }
+                $em->persist($arEmbargo);
+                $em->flush();
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_lista'));
+            }
+        }
+        return $this->render('recursoHumano/movimiento/nomina/embargo/nuevo.html.twig', [
+            'form' => $form->createView(),
+            'arEmbargo' => $arEmbargo
+        ]);
     }
 
     /**

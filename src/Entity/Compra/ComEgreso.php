@@ -27,6 +27,11 @@ class ComEgreso
     private $codigoProveedorFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_fk", type="string", length=10, nullable=false)
+     */
+    private $codigoCuentaFk;
+
+    /**
      * @ORM\Column(name="fecha" ,type="date")
      */
     private $fecha;
@@ -124,6 +129,12 @@ class ComEgreso
     private $egresoDetallesEgresoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCuenta" , inversedBy="egresosCuentaRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_fk" , referencedColumnName="codigo_cuenta_pk")
+     */
+    private $cuentaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEgresoPk()
@@ -169,6 +180,22 @@ class ComEgreso
     public function setCodigoProveedorFk($codigoProveedorFk): void
     {
         $this->codigoProveedorFk = $codigoProveedorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaFk()
+    {
+        return $this->codigoCuentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaFk
+     */
+    public function setCodigoCuentaFk($codigoCuentaFk): void
+    {
+        $this->codigoCuentaFk = $codigoCuentaFk;
     }
 
     /**
@@ -475,5 +502,20 @@ class ComEgreso
         $this->egresoDetallesEgresoRel = $egresoDetallesEgresoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCuentaRel()
+    {
+        return $this->cuentaRel;
+    }
+
+    /**
+     * @param mixed $cuentaRel
+     */
+    public function setCuentaRel($cuentaRel): void
+    {
+        $this->cuentaRel = $cuentaRel;
+    }
 
 }

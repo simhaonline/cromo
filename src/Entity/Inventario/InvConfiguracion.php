@@ -71,6 +71,11 @@ class InvConfiguracion
      */
     private $porcentajeRetencionIva = 0;
 
+    /**
+     * @ORM\Column(name="validar_bodega_usuario", type="boolean", options={"default" : false})
+     */
+    private $validarBodegaUsuario = false;
+
 
     /**
      * Set codigoConfiguracionPk.
@@ -326,6 +331,22 @@ class InvConfiguracion
     public function setPorcentajeRetencionIva($porcentajeRetencionIva): void
     {
         $this->porcentajeRetencionIva = $porcentajeRetencionIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValidarBodegaUsuario()
+    {
+        return $this->validarBodegaUsuario;
+    }
+
+    /**
+     * @param mixed $validarBodegaUsuario
+     */
+    public function setValidarBodegaUsuario($validarBodegaUsuario): void
+    {
+        $this->validarBodegaUsuario = $validarBodegaUsuario;
     }
 
 

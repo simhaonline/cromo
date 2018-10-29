@@ -34,8 +34,8 @@
             <td class="td-in-well">{{ arCompra.numeroCompra }}</td>
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arCompra.usuarioCrea | default('') }}</td>
-            <td class="titulo">IVA:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arCompra.vrIva |number_format(0, '.', ',') }}</td>
+            <td class="titulo">DESCUENTO:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arCompra.vrDescuento |number_format(0, '.', ',') }}</td>
 
         </tr>
         <tr>
@@ -44,9 +44,9 @@
 
             <td class="titulo"></td>
             <td></td>
-            <td class="titulo">DESCUENTO:</td>
+            <td class="titulo">IVA:</td>
             <td class="td-in-well"
-                style="text-align: right;">{{ arCompra.vrDescuento |number_format(0, '.', ',') }}</td>
+                style="text-align: right;">{{ arCompra.vrIva |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">FECHA FACTURA:</td>

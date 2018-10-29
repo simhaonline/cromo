@@ -53,6 +53,11 @@ class GenCuenta
     protected $recibosCuentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComEgreso" , mappedBy="cuentaRel")
+     */
+    protected $egresosCuentaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaPk()
@@ -180,7 +185,21 @@ class GenCuenta
         $this->recibosCuentaRel = $recibosCuentaRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEgresosCuentaRel()
+    {
+        return $this->egresosCuentaRel;
+    }
 
+    /**
+     * @param mixed $egresosCuentaRel
+     */
+    public function setEgresosCuentaRel($egresosCuentaRel): void
+    {
+        $this->egresosCuentaRel = $egresosCuentaRel;
+    }
 
 }
 

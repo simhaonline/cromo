@@ -111,7 +111,7 @@ class ComEgresoDetalleRepository extends ServiceEntityRepository
             $valorRetencionFte = isset($arrControles['TxtRetencionFuente' . $intCodigo]) && $arrControles['TxtRetencionFuente' . $intCodigo] != '' ? $arrControles['TxtRetencionFuente' . $intCodigo] : 0;
             $valorPagoAfectar =
                 $valorPago
-                - $valorAjustePeso
+                + $valorAjustePeso
                 - $valorDescuento
                 - $valorRetencionIva
                 - $valorRetencionIca
@@ -121,8 +121,8 @@ class ComEgresoDetalleRepository extends ServiceEntityRepository
             $arEgresoDetalle->setVrRetencionIca($valorRetencionIca);
             $arEgresoDetalle->setVrRetencionIva($valorRetencionIva);
             $arEgresoDetalle->setVrRetencionFuente($valorRetencionFte);
-            $arEgresoDetalle->setVrPago($valorPago);
-            $arEgresoDetalle->setVrPagoAfectar($valorPagoAfectar);
+            $arEgresoDetalle->setVrPago($valorPagoAfectar);
+            $arEgresoDetalle->setVrPagoAfectar($valorPago);
             $em->persist($arEgresoDetalle);
         }
         $em->flush();
@@ -147,6 +147,40 @@ class ComEgresoDetalleRepository extends ServiceEntityRepository
             ->addSelect('ed.vrPagoAfectar')
             ->leftJoin('ed.egresoRel', 'r')
             ->leftJoin('r.proveedorRel', 'pr')
+            ->leftJoin('ed.cuentaPagarRel', 'cp')
+            ->leftJoin('cp.cuentaPagarTipoRel', 'cpt')
+            ->where('ed.codigoEgresoFk = ' . $codigoEgreso);
+        $queryBuilder->orderBy('ed.codigoEgresoDetallePk', 'ASC');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function listaContabilizar($codigoEgreso)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(ComEgresoDetalle::class, 'ed');
+        $queryBuilder
+            ->select('ed.codigoEgresoDetallePk')
+            ->addSelect('e.numero')
+            ->addSelect('e.codigoEgresoPk')
+            ->addSelect('e.fecha')
+            ->addSelect('c.codigoCuentaContableFk')
+            ->addSelect('ed.vrDescuento')
+            ->addSelect('ed.vrAjustePeso')
+            ->addSelect('ed.vrRetencionFuente')
+            ->addSelect('ed.vrRetencionIca')
+            ->addSelect('ed.vrRetencionIva')
+            ->addSelect('ed.vrPago')
+            ->addSelect('ed.vrPagoAfectar')
+            ->addSelect('cp.numeroDocumento')
+            ->addSelect('cpt.prefijo')
+            ->addSelect('cpt.codigoCuentaRetencionFuenteFk')
+            ->addSelect('cpt.codigoCuentaIndustriaComercioFk')
+            ->addSelect('cpt.codigoCuentaRetencionIvaFk')
+            ->addSelect('cpt.codigoCuentaDescuentoFk')
+            ->addSelect('cpt.codigoCuentaProveedorFk')
+            ->addSelect('cpt.codigoCuentaAjustePesoFk')
+            ->leftJoin('ed.egresoRel', 'e')
+            ->leftJoin('e.cuentaRel', 'c')
             ->leftJoin('ed.cuentaPagarRel', 'cp')
             ->leftJoin('cp.cuentaPagarTipoRel', 'cpt')
             ->where('ed.codigoEgresoFk = ' . $codigoEgreso);

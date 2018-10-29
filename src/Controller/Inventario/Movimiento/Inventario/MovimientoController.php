@@ -213,7 +213,6 @@ class MovimientoController extends Controller
         $em = $this->getDoctrine()->getManager();
         /** @var  $arMovimiento InvMovimiento */
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
-        $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $id]);
         $form = Estandares::botonera($arMovimiento->getEstadoAutorizado(), $arMovimiento->getEstadoAprobado(), $arMovimiento->getEstadoAnulado());
 
         //Controles para el formulario
@@ -234,7 +233,7 @@ class MovimientoController extends Controller
             $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(InvMovimientoDetalle::class)->actualizarDetalles($arrControles, $form, $arMovimiento);
-                $em->getRepository(InvMovimiento::class)->autorizar($arMovimiento);
+                $em->getRepository(InvMovimiento::class)->autorizar($arMovimiento, $this->getUser()->getUsername());
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(InvMovimiento::class)->desautorizar($arMovimiento);
@@ -276,6 +275,7 @@ class MovimientoController extends Controller
 
             return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $id]));
         }
+        $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->listaDetalle($id, $arMovimiento->getCodigoDocumentoTipoFk());
         return $this->render('inventario/movimiento/inventario/detalle.html.twig', [
             'form' => $form->createView(),
             'arMovimientoDetalles' => $arMovimientoDetalles,

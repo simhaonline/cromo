@@ -49,8 +49,9 @@ class ComCompraRepository extends ServiceEntityRepository
                 $porIva = $arrIva[$id] != '' ? $arrIva[$id] : 0;
 
                 $vrSubtotal = $vrUnitario * $cantidad;
-                $vrIva = $vrSubtotal * ($porIva / 100);
                 $vrDcto = $vrSubtotal * ($porDcto / 100);
+                $vrSubTotalMeenosDesc = $vrSubtotal - $vrDcto;
+                $vrIva = $vrSubTotalMeenosDesc * ($porIva / 100);
                 $vrTotal = $vrSubtotal + $vrIva - $vrDcto;
 
                 $vrTotalGlobal += $vrTotal;

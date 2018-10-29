@@ -223,7 +223,7 @@ class LogController extends Controller {
                         $sheet->getStyle($i . $j.":".$i . $j)
                                 ->getFill()
                                 ->setFillType(Fill::FILL_SOLID)
-                                ->getStartColor()->setRGB('4F805D');
+                                ->getStartColor()->setRGB('dff0d8');
                     }
                     $i++;
                 }

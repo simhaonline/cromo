@@ -6,6 +6,7 @@ use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Inventario\InvBodega;
+use App\Entity\Inventario\InvBodegaUsuario;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
@@ -75,9 +76,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
      * @param $arMovimiento InvMovimiento
      * @throws \Doctrine\ORM\ORMException
      */
-    public function autorizar($arMovimiento)
+    public function autorizar($arMovimiento, $usuario)
     {
-        $respuesta = $this->validarDetalles($arMovimiento);
+        $respuesta = $this->validarDetalles($arMovimiento, $usuario);
         if ($respuesta) {
             Mensajes::error($respuesta);
         } else {
@@ -301,7 +302,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
      * @param $arMovimiento InvMovimiento
      * @return array
      */
-    public function validarDetalles($arMovimiento)
+    public function validarDetalles($arMovimiento, $usuario)
     {
         $em = $this->getEntityManager();
         $respuesta = "";
@@ -335,7 +336,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
         if($respuesta == "") {
             $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->validarDetalles();
             if($arrConfiguracion['validarBodegaUsuario']) {
-
+                $arrBodegas = $em->getRepository(InvMovimientoDetalle::class)->bodegaMovimiento($arMovimiento->getCodigoMovimientoPk());
+                foreach ($arrBodegas as $arrBodega) {
+                    $arBodegaUsuario = $em->getRepository(InvBodegaUsuario::class)->findOneBy(array('codigoBodegaFk' => $arrBodega['codigoBodegaFk'], 'usuario' => $usuario));
+                    if(!$arBodegaUsuario) {
+                        $respuesta = 'El usuario no tiene permiso para mover cantidades de la bodega ' . $arrBodega['codigoBodegaFk'];
+                        break;
+                    }
+                }
             }
         }
         return $respuesta;

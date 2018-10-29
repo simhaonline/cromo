@@ -491,4 +491,13 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $arrDetalles;
     }
 
+    public function bodegaMovimiento($codigoMovimiento){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoBodegaFk')
+            ->where('md.codigoMovimientoFk=' . $codigoMovimiento)
+            ->groupBy('md.codigoBodegaFk');
+        $arrDetalles = $queryBuilder->getQuery()->getResult();
+        return $arrDetalles;
+    }
+
 }

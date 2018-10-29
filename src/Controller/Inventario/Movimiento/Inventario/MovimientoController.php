@@ -233,7 +233,7 @@ class MovimientoController extends Controller
             $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(InvMovimientoDetalle::class)->actualizarDetalles($arrControles, $form, $arMovimiento);
-                $em->getRepository(InvMovimiento::class)->autorizar($arMovimiento);
+                $em->getRepository(InvMovimiento::class)->autorizar($arMovimiento, $this->getUser()->getUsername());
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(InvMovimiento::class)->desautorizar($arMovimiento);

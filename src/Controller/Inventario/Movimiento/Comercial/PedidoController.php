@@ -221,7 +221,7 @@ class PedidoController extends Controller
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 10);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 100);
         return $this->render('inventario/movimiento/comercial/pedido/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems

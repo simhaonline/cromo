@@ -23,4 +23,17 @@ class InvDocumentoRepository extends ServiceEntityRepository
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }
+
+    public function lista()
+    {
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvDocumento::class, 'd')
+            ->select('d.codigoDocumentoPk')
+            ->addSelect('d.abreviatura')
+            ->addSelect('d.nombre')
+            ->addSelect('d.consecutivo')
+            ->addSelect('d.operacionComercial')
+            ->addOrderBy('d.codigoDocumentoPk', 'ASC');
+
+        return $queryBuilder;
+    }
 }

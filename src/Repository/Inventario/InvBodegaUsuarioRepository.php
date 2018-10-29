@@ -13,4 +13,13 @@ class InvBodegaUsuarioRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, InvBodegaUsuario::class);
     }
+
+    public function camposPredeterminados()
+    {
+        return $this->_em->createQueryBuilder()->from(InvBodegaUsuario::class, 'bd')
+            ->select('bd.codigoBodegaUsuarioPk AS ID')
+            ->addSelect('bd.codigoBodegaFk')
+            ->addSelect('bd.usuario')
+            ->where('bd.codigoBodegaUsuarioPk IS NOT NULL');
+    }
 }

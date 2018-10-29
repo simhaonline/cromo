@@ -1,0 +1,30 @@
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="bodega_usuario_usuarioRel" class="control-label col-sm-2">Usuario:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.usuarioRel) }}
+                </div>
+                <label for="bodega_usuario_bodegaRel" class="control-label col-sm-2">Bodega:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.bodegaRel) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(form.guardar) }}
+        </div>
+        <div class="btn-group" style="float: left;">
+            <a class="btn btn-sm btn-default" href="{{ path('admin_lista',{'modulo' : 'inventario' , 'entidad' : 'bodegaUsuario'}) }}">Volver</a>
+        </div>
+    </div>
+    {{ form_widget(form) }}
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

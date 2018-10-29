@@ -3,6 +3,8 @@
 namespace App\Controller\Financiero\Movimiento\Contabilidad;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\ControllerInterface;
+use App\Controller\Estructura\ControllerListener;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinCuenta;
@@ -19,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class AsientoController extends BaseController
+class AsientoController extends ControllerInterface
 {
     protected $clase = FinAsiento::class;
     protected $claseNombre = "FinAsiento";
@@ -225,4 +227,9 @@ class AsientoController extends BaseController
         ));
     }
 
+
+    protected function indexprueba()
+    {
+        // TODO: Implement indexprueba() method.
+    }
 }

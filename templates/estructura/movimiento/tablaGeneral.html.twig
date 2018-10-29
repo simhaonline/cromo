@@ -3,7 +3,11 @@
         <thead>
         <tr>
             {% for campo in arrDatosLista.arrCampos %}
-                <th title="{{ campo.ayuda }}">{{ campo.titulo }}</th>
+                {% if campo.mostrarLista is defined %}
+                    {% if campo.mostrarLista == 'SI' %}
+                        <th title="{{ campo.ayuda }}">{{ campo.titulo }}</th>
+                    {% endif %}
+                {% endif %}
             {% endfor %}
             <th></th>
             <th></th>
@@ -14,34 +18,45 @@
         {% for arDato in arrDatosLista.arDatos %}
             <tr>
                 {% for campo in arrDatosLista.arrCampos %}
-                    {% if campo.relacion is defined %}
-                        {% set campoNombre = (campo.campo|split('.')) %}
-                        {% set alias = campoNombre[0] | slice(0,3) ~ 'Rel' ~ campoNombre[1] %}
-                        {% set dato = arDato[alias] %}
-                    {% else %}
-                        {% set dato = arDato[campo.campo] %}
-                    {% endif %}
-                        {% if campo.tipo == "fecha" %}
-                            <td>{{ dato  | date('Y-m-d') }} </td>
-                        {% elseif campo.tipo == "moneda" %}
-                            <td class="numero">{{ dato | number_format(0, '.', ',')}}</td>
-                        {% elseif campo.tipo == "bool" %}
-                            <td class="estado">{{ dato ?'SI':'NO' }}</td>
-                        {% else %}
-                            <td>{{ dato  }}</td>
+                    {% if campo.mostrarLista is defined %}
+                        {% if campo.mostrarLista == 'SI' %}
+                            {% if campo.relacion is defined %}
+                                {% set campoNombre = (campo.campo|split('.')) %}
+                                {% set alias = campoNombre[0] | slice(0,3) ~ 'Rel' ~ campoNombre[1] %}
+                                {% set dato = arDato[alias] %}
+                            {% else %}
+                                {% set dato = arDato[campo.campo] %}
+                            {% endif %}
+                            {% if campo.tipo == "fecha" %}
+                                <td>{{ dato  | date('Y-m-d') }} </td>
+                            {% elseif campo.tipo == "moneda" %}
+                                <td class="numero">{{ dato | number_format(0, '.', ',') }}</td>
+                            {% elseif campo.tipo == "bool" %}
+                                <td class="estado">{{ dato ?'SI':'NO' }}</td>
+                            {% else %}
+                                <td>{{ dato }}</td>
+                            {% endif %}
                         {% endif %}
+                    {% endif %}
                 {% endfor %}
                 <td style="text-align: center;">
                     {% if arDato.estadoAutorizado is defined %}
                         {% if arDato.estadoAutorizado == 0 %}
-                            <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
+                            <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
+                                        title="Editar el registro" class="fa fa-edit"
+                                        style="font-size: large;color: black;"></i></a>
                         {% endif %}
                     {% else %}
-                        <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
+                        <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
+                                    title="Editar el registro" class="fa fa-edit"
+                                    style="font-size: large;color: black;"></i></a>
                     {% endif %}
                 </td>
-                <td style="text-align: center"><a href="{{ path(arrDatosLista.ruta ~ '_detalle', { 'id': arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i  style="font-size: large;color: black;" class="fa fa-share-square-o"></i></a></td>
-                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDato[arrDatosLista.arrCampos[0].campo] }}" /></td>
+                <td style="text-align: center"><a
+                            href="{{ path(arrDatosLista.ruta ~ '_detalle', { 'id': arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
+                                style="font-size: large;color: black;" class="fa fa-share-square-o"></i></a></td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                       value="{{ arDato[arrDatosLista.arrCampos[0].campo] }}"/></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -49,7 +64,8 @@
 </div>
 <div class="btn-group" style="float: left">
     <div class="btn-group" style="float: left">
-        <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arrDatosLista.arDatos.getTotalItemCount }}</span>
+        <div class="btn btn-default btn-sm">Registros <span
+                    class="badge">{{ arrDatosLista.arDatos.getTotalItemCount }}</span>
         </div>
     </div>
 </div>

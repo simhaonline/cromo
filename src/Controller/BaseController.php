@@ -19,12 +19,12 @@ abstract class BaseController extends Controller
      */
     protected function getDatosLista()
     {
+        $paginator = $this->get('knp_paginator');
         $nombreRepositorio = "App:{$this->modulo}\\{$this->claseNombre}";
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
         $campos = json_decode($namespaceType::getEstructuraPropiedadesLista());
         /** @var  $queryBuilder QueryBuilder */
-        $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos);
-        $paginator = $this->get('knp_paginator');
+        $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos,false,true);
         return [
             'ruta' => strtolower($this->modulo) . "_" . strtolower($this->funcion) . "_" . strtolower($this->grupo) . "_" . strtolower($this->nombre),
             'arrCampos' => $campos,
@@ -54,7 +54,7 @@ abstract class BaseController extends Controller
         $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos, true);
         switch ($submittedButton) {
             case 'btnExcel':
-                $this->generarExcel($queryBuilder->getQuery()->execute(), $this->nombre);
+                $this->generarExcel($campos,$queryBuilder->getQuery()->execute(), $this->nombre);
                 break;
         }
     }
@@ -63,10 +63,11 @@ abstract class BaseController extends Controller
      * @author Andres Acevedo Cartagena
      * @param $arrDatos
      * @param $nombre
+     * @param $campos
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function generarExcel($arrDatos, $nombre)
+    public function generarExcel($campos,$arrDatos, $nombre)
     {
         if (count($arrDatos) > 0) {
             $spreadsheet = new Spreadsheet();
@@ -74,10 +75,14 @@ abstract class BaseController extends Controller
             $j = 0;
             //Se obtienen las columnas del archivo
             $arrColumnas = array_keys($arrDatos[0]);
-            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+            $arrCampos = array_map(function ($campo){
+                return $campo->titulo;
+            }
+                , $campos);
+            for ($i = 'A'; $j <= sizeof($arrCampos) - 1; $i++) {
                 $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
                 $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
-                $sheet->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $sheet->setCellValue($i . '1', strtoupper($arrCampos[$j]));
                 $j++;
             }
             $j = 1;
@@ -88,8 +93,11 @@ abstract class BaseController extends Controller
                     $dato = $datos[$arrColumnas[$col]];
                     if ($dato instanceof \DateTime) {
                         $dato = $dato->format('Y-m-d');
+                    } elseif(is_bool($dato)){
+                        $dato = $dato ? 'SI':'NO';
                     }
                     $spreadsheet->getActiveSheet()->getStyle($i)->getFont()->setBold(false);
+                    $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
                     $sheet->setCellValue($i . $j, $dato);
                     $i++;
                 }
@@ -149,7 +157,7 @@ abstract class BaseController extends Controller
      * @param bool $validarExcel
      * @return QueryBuilder
      */
-    private function getGenerarQuery($nombreRepositorio, $campos, $validarExcel = false)
+    private function getGenerarQuery($nombreRepositorio, $campos, $validarExcel = false, $validarLista = false)
     {
         $arrRelaciones = [];
         /** @var  $queryBuilder QueryBuilder */
@@ -160,6 +168,12 @@ abstract class BaseController extends Controller
                 if ($validarExcel) {
                     if (isset($campo->mostrarExcel)) {
                         if ($campo->mostrarExcel == 'SI') {
+                            $queryBuilder->addSelect('e.' . $campo->campo);
+                        }
+                    }
+                }elseif ($validarLista){
+                    if (isset($campo->mostrarLista)) {
+                        if ($campo->mostrarLista == 'SI') {
                             $queryBuilder->addSelect('e.' . $campo->campo);
                         }
                     }
@@ -176,6 +190,12 @@ abstract class BaseController extends Controller
                 if ($validarExcel) {
                     if (isset($campo->mostrarExcel)) {
                         if ($campo->mostrarExcel == 'SI') {
+                            $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
+                        }
+                    }
+                }elseif ($validarLista){
+                    if(isset($campo->mostrarLista)){
+                        if($campo->mostrarLista == 'SI'){
                             $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
                         }
                     }

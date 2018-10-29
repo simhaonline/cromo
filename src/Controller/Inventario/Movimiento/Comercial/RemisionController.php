@@ -46,6 +46,7 @@ class RemisionController extends Controller
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('cboRemisionTipo', EntityType::class, $em->getRepository(InvRemisionTipo::class)->llenarCombo())
             ->add('numero', TextType::class, array('data' => $session->get('filtroInvPedidoPedidoNumero')))
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
@@ -64,6 +65,10 @@ class RemisionController extends Controller
                 }
                 if ($form->get('btnExcel')->isClicked()) {
                     General::get()->setExportar($em->createQuery($em->getRepository(InvRemision::class)->lista())->execute(), "Remisiones");
+                }
+                if($form->get('btnEliminar')->isClicked()){
+                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                    $em->getRepository(InvRemision::class)->eliminar($arrSeleccionados);
                 }
             }
         }

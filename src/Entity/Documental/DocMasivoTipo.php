@@ -12,7 +12,6 @@ class DocMasivoTipo
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
      * @ORM\Column(type="string", length=20)
      */
     private $codigoMasivoTipoPk;

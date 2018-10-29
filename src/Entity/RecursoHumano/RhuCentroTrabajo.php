@@ -15,7 +15,6 @@ class RhuCentroTrabajo
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_centro_trabajo_pk", type="string", length=10)
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $codigoCentroTrabajoPk;
 

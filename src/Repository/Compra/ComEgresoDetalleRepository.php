@@ -155,4 +155,38 @@ class ComEgresoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function listaContabilizar($codigoEgreso)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(ComEgresoDetalle::class, 'ed');
+        $queryBuilder
+            ->select('ed.codigoEgresoDetallePk')
+            ->addSelect('e.numero')
+            ->addSelect('e.codigoEgresoPk')
+            ->addSelect('e.fecha')
+            ->addSelect('c.codigoCuentaContableFk')
+            ->addSelect('ed.vrDescuento')
+            ->addSelect('ed.vrAjustePeso')
+            ->addSelect('ed.vrRetencionFuente')
+            ->addSelect('ed.vrRetencionIca')
+            ->addSelect('ed.vrRetencionIva')
+            ->addSelect('ed.vrPago')
+            ->addSelect('ed.vrPagoAfectar')
+            ->addSelect('cp.numeroDocumento')
+            ->addSelect('cpt.prefijo')
+            ->addSelect('cpt.codigoCuentaRetencionFuenteFk')
+            ->addSelect('cpt.codigoCuentaIndustriaComercioFk')
+            ->addSelect('cpt.codigoCuentaRetencionIvaFk')
+            ->addSelect('cpt.codigoCuentaDescuentoFk')
+            ->addSelect('cpt.codigoCuentaProveedorFk')
+            ->addSelect('cpt.codigoCuentaAjustePesoFk')
+            ->leftJoin('ed.egresoRel', 'e')
+            ->leftJoin('e.cuentaRel', 'c')
+            ->leftJoin('ed.cuentaPagarRel', 'cp')
+            ->leftJoin('cp.cuentaPagarTipoRel', 'cpt')
+            ->where('ed.codigoEgresoFk = ' . $codigoEgreso);
+        $queryBuilder->orderBy('ed.codigoEgresoDetallePk', 'ASC');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 }

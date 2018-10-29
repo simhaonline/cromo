@@ -21,7 +21,6 @@ class GenConfiguracionEntidad extends Fixture
             'grupo,admin,general,0,0',
             'bodega,admin,general,0,0',
             'configuracion,admin,general,0,0',
-            'documento,admin,general,0,0',
             'solicitudTipo,admin,general,0,0',
             'facturaTipo,admin,general,0,0',
             'ordenTipo,admin,general,0,0',

@@ -199,7 +199,7 @@ class EgresoController extends BaseController
             ->add('txtCodigoCuentaPagar', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('')])
             ->add('fechaDesde', DateType::class, ['label' => 'Vencimiento Desde', 'data' => new \DateTime($fechaDesde)])
             ->add('fechaHasta', DateType::class, ['label' => 'Vencimiento Hasta', 'data' => new \DateTime($fechaHasta)])
-            ->add('filtrarPorFecha', CheckboxType::class, ['label' => 'Filtrar por vencimiento','required' => false])
+            ->add('filtrarPorFecha', CheckboxType::class, ['label' => 'Filtrar por vencimiento', 'required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
@@ -238,4 +238,6 @@ class EgresoController extends BaseController
             'form' => $form->createView()
         ]);
     }
+
+
 }

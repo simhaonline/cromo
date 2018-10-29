@@ -29,6 +29,11 @@ class ComEgresoTipo
     private $consecutivo = 0;
 
     /**
+     * @ORM\Column(name="codigo_comprobante_fk" , type="string" , nullable=true)
+     */
+    private $codigoComprobanteFk = null;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComEgreso" ,mappedBy="egresoTipoRel")
      */
     private $egresosEgresoTipoRel;
@@ -79,6 +84,22 @@ class ComEgresoTipo
     public function setConsecutivo($consecutivo): void
     {
         $this->consecutivo = $consecutivo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteFk()
+    {
+        return $this->codigoComprobanteFk;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteFk
+     */
+    public function setCodigoComprobanteFk($codigoComprobanteFk): void
+    {
+        $this->codigoComprobanteFk = $codigoComprobanteFk;
     }
 
     /**

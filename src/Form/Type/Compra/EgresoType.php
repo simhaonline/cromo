@@ -4,12 +4,12 @@ namespace App\Form\Type\Compra;
 
 use App\Entity\Compra\ComEgreso;
 use App\Entity\Compra\ComEgresoTipo;
+use App\Entity\General\GenCuenta;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,6 +27,14 @@ class EgresoType extends AbstractType
                 },
                 'choice_label' => 'nombre'
 
+            ])
+            ->add('cuentaRel', EntityType::class, [
+                'class' => GenCuenta::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre');
+                },
+                'choice_label' => 'nombre'
             ])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

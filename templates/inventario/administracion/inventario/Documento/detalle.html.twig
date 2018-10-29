@@ -1,0 +1,99 @@
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    {{ notificar()|raw }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('inventario_administracion_inventario_documento_lista') }}">Volver</a>
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td class="titulo">CODIGO:</td>
+            <td class="td-in-well">{{ arDocumento.codigoDocumentoPk }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arDocumento.nombre }}</td>
+            <td class="titulo">DOCUMENTO TIPO:</td>
+            <td class="td-in-well">{{ arDocumento.codigoDocumentoTipoFk }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">ABREVIATURA:</td>
+            <td class="td-in-well">{{ arDocumento.abreviatura }}</td>
+            <td class="titulo">CONSECUTIVO:</td>
+            <td class="td-in-well">{{ arDocumento.consecutivo }}</td>
+            <td class="titulo">OPERACION INVENTARIO:</td>
+            <td class="td-in-well">{{ arDocumento.operacionInventario }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">OPERACION COMERCIAL:</td>
+            <td class="td-in-well">{{ arDocumento.operacionComercial }}</td>
+            <td class="titulo">GENERA CARTERA:</td>
+            <td class="td-in-well">{{ arDocumento.generaCartera? 'SI':'NO' }}</td>
+            <td class="titulo">TIPO ASIENTO CARTERA:</td>
+            <td class="td-in-well">{{ arDocumento.tipoAsientoCartera | default('') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">GENERA TESORERIA:</td>
+            <td class="td-in-well">{{ arDocumento.generaTesoreria? 'SI':'NO' }}</td>
+            <td class="titulo">TIPO ASIENTO TESORERIA:</td>
+            <td class="td-in-well">{{ arDocumento.tipoAsientoTesoreria | default('') }}</td>
+            <td class="titulo">TIPO VALOR:</td>
+            <td class="td-in-well">{{ arDocumento.tipoValor | default('') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">TIPO CUENTA INGRESO:</td>
+            <td class="td-in-well">{{ arDocumento.tipoCuentaIngreso }}</td>
+            <td class="titulo">TIPO CUENTA COSTO:</td>
+            <td class="td-in-well">{{ arDocumento.tipoCuentaCosto }}</td>
+            <td class="titulo">TIPO CUENTA IVA:</td>
+            <td class="td-in-well">{{ arDocumento.tipoCuentaIva}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CODIGO CUENTA IVA:</td>
+            <td class="td-in-well">{{ arDocumento.codigoCuentaIvaFk }}</td>
+            <td class="titulo">TIPO CUENTA RETENCION FUENTE:</td>
+            <td class="td-in-well">{{ arDocumento.tipoCuentaRetencionFuente }}</td>
+            <td class="titulo">CODIGO CUENTA RETENCION FUENTE:</td>
+            <td class="td-in-well">{{ arDocumento.codigoCuentaRetencionFuenteFk}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">TIPO CUENTA RETENCION CREE:</td>
+            <td class="td-in-well">{{ arDocumento.tipoCuentaRetencionCREE }}</td>
+            <td class="titulo">CODIGO CUENTA RETENCION CREE:</td>
+            <td class="td-in-well">{{ arDocumento.codigoCuentaRetencionCREEFk }}</td>
+            <td class="titulo">TIPO CUENTA RETENCION IVA:</td>
+            <td class="td-in-well">{{ arDocumento.tipoCuentaRetencionIva}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CODIGO CUENTA RETENCION IVA:</td>
+            <td class="td-in-well">{{ arDocumento.codigoCuentaRetencionIvaFk }}</td>
+            <td class="titulo">TIPO CUENTA TESORERIA:</td>
+            <td class="td-in-well">{{ arDocumento.tipoCuentaTesoreria }}</td>
+            <td class="titulo">CODIGO CUENTA TESORERIA:</td>
+            <td class="td-in-well">{{ arDocumento.codigoCuentaTesoreriaFk}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">TIPO CUENTA CARTERA:</td>
+            <td class="td-in-well">{{ arDocumento.tipoCuentaCartera }}</td>
+            <td class="titulo">CODIGO CUENTA CARTERA:</td>
+            <td class="td-in-well">{{ arDocumento.codigoCuentaCarteraFk }}</td>
+            <td class="titulo">CODIGO CUENTA COBRAR TIPO:</td>
+            <td class="td-in-well">{{ arDocumento.codigoCuentaCobrarTipoFk}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">GENERA COSTO PROMEDIO:</td>
+            <td class="td-in-well">{{ arDocumento.generaCostoPromedio? 'SI':'NO' }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+    </table>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+            </div>
+        </div>
+    </div>
+    {#{{ form_end(form) }}#}
+{% endblock %}

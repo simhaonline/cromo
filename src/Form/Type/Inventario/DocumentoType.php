@@ -31,10 +31,9 @@ class DocumentoType extends AbstractType
                 'label' => 'Documento tipo:'
             ])
             ->add('abreviatura',TextType::class,['label' => 'Abreviatura: '])
-            ->add('operacionInventario',ChoiceType::class,['choices' => ['SUMA' => '1','RESTA' => '-1']])
+            ->add('operacionInventario',ChoiceType::class,['choices' => ['SUMA' => '1','RESTA' => '-1', 'NEUTRO' => '0']])
             ->add('generaCostoPromedio')
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 

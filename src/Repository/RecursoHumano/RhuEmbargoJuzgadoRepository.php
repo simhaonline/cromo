@@ -33,4 +33,14 @@ class RhuEmbargoJuzgadoRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
+    public function camposPredeterminados(){
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargoJuzgado::class,'ej')
+            ->select('ej.codigoEmbargoJuzgadoPk AS ID')
+            ->addSelect('ej.nombre')
+            ->addSelect('ej.cuenta')
+            ->addSelect('ej.oficina')
+            ->where('ej.codigoEmbargoJuzgadoPk IS NOT NULL');
+        return $queryBuilder;
+    }
 }

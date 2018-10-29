@@ -61,30 +61,30 @@
                 </div>
                 <label class="col-sm-2 control-label">Numero(interno):</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numero, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.numero) }}
                     {{ form_errors(form.embargoTipoRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Oficina destino:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.oficinaDestino, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.oficinaDestino) }}
                     {{ form_errors(form.oficinaDestino) }}
                 </div>
                 <label class="col-sm-2 control-label">Consecutivo(juzgado):</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.consecutivoJuzgado, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.consecutivoJuzgado) }}
                     {{ form_errors(form.consecutivoJuzgado) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Documento demandante:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numeroIdentificacionDemandante, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.numeroIdentificacionDemandante) }}
                 </div>
                 <label class="col-sm-2 control-label">Nombres:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.nombreCortoDemandante, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.nombreCortoDemandante) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -94,23 +94,23 @@
                 </div>
                 <label class="col-sm-2 control-label">Apellidos:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.apellidosDemandante, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.apellidosDemandante) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Documento beneficiario:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numeroIdentificacionBeneficiario, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.numeroIdentificacionBeneficiario) }}
                 </div>
                 <label class="col-sm-2 control-label">Nombre:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.nombreCortoBeneficiario, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.nombreCortoBeneficiario) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Numero radicado:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numeroRadicado, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.numeroRadicado) }}
                 </div>
                 <label class="col-sm-2 control-label">Fecha inicio folio</label>
                 <div class="col-sm-4">
@@ -120,52 +120,52 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Cuenta:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.cuenta, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.cuenta) }}
                 </div>
                 <label class="col-sm-2 control-label">Tipo cuenta:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.tipoCuenta, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.tipoCuenta) }}
                     {{ form_errors(form.tipoCuenta) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Numero expediente:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numeroExpediente, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.numeroExpediente) }}
                 </div>
                 <label class="col-sm-2 control-label">Numero proceso:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numeroProceso, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.numeroProceso) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Oficio:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.oficio, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.oficio) }}
                 </div>
                 <label class="col-sm-2 control-label">Oficio (inactivacion):</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.oficioInactivacion, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.oficioInactivacion) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Codigo instancia:</label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.codigoInstancia, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.codigoInstancia) }}
                     {{ form_errors(form.codigoInstancia) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Monto maximo:</label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.VrMontoMaximo, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.VrMontoMaximo) }}
                 </div>
                 <div class="col-sm-2">
                     {{ form_widget(form.validarMontoMaximo) }}
                 </div>
                 <label class="col-sm-2 control-label">Fecha inactivacion:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.fechaInactivacion, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.fechaInactivacion) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -201,7 +201,7 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Valor:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.valor, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.vrValor) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -218,7 +218,7 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Porcentaje:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.porcentaje, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.vrPorcentaje) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -242,7 +242,7 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Partes:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.partes, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.partes) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -258,6 +258,7 @@
         <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_nomina_embargo_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-sm btn-primary'} }) }}
     </div>
+    {{ form_rest(form) }}
     {{ form_end(form) }}
     <br/><br/><br/><br/>
 {% endblock %}

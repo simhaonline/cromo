@@ -60,7 +60,7 @@ class LogController extends Controller {
             ])
             ->add('filtrarFecha', CheckboxType::class, ['required'=>false, 'data'=>false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']))
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
@@ -100,7 +100,7 @@ class LogController extends Controller {
             foreach ($arGenlogExecute as $arGenlogEx ){
                 $arGenlogEx['camposSeguimiento']=json_decode($arGenlogEx['camposSeguimiento'],true);
             }
-            $this->generarExcel($arGenlogExecute,"Excel");
+            $this->generarExcel($arGenlogExecute,"Log");
         }
         }
         $arGenLog= $paginator->paginate($qbGenLog,$request->query->getInt('page',1),20);
@@ -156,13 +156,13 @@ class LogController extends Controller {
                 }
             }
         $form = $this->createFormBuilder()
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('btnExcel')->isClicked()){
                 ob_clean();
-                $this->generarExcelLogComparativo($detalleSeguimiento,"ExcelDetalleSeguimiento");
+                $this->generarExcelLogComparativo($detalleSeguimiento,"LogExtendido");
             }
         }
 

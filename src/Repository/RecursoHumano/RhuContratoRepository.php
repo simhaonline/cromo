@@ -17,33 +17,6 @@ class RhuContratoRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuContrato::class);
     }
 
-    public function lista(){
-        $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class,'c')
-            ->leftJoin('c.empleadoRel','e')
-            ->leftJoin('c.grupoRel','g')
-            ->select('e.codigoContratoFk')
-            ->addSelect('e.codigoEmpleadoPk')
-            ->addSelect('e.nombreCorto')
-            ->addSelect('e.numeroIdentificacion')
-            ->addSelect('g.nombre')
-            ->addSelect('e.estadoContrato')
-            ->where('c.codigoContratoPk <> 0');
-        if($session->get('filtroRhuEmpleadoCodigo')){
-            $queryBuilder->andWhere("e.codigoEmpleadoFk = {$session->get('filtroRhuEmpleadoCodigo')}");
-        }
-        if($session->get('filtroRhuEmpleadoNombre')){
-            $queryBuilder->andWhere("e.nombre LIKE '%{$session->get('filtroRhuEmpleadoNombre')}%'");
-        }
-        if($session->get('filtroRhuEmpleadoIdentificacion')){
-            $queryBuilder->andWhere("e.numeroIdentificacion LIKE '%{$session->get('filtroRhuEmpleadoIdentificacion')}%'");
-        }
-        if($session->get('filtroRhuEmpleadoEstadoTerminado')){
-            $queryBuilder->andWhere("c.estadoTerminado == 1");
-        }
-        return $queryBuilder;
-    }
-
     public function camposPredeterminados()
     {
         $qb = $this->_em->createQueryBuilder()

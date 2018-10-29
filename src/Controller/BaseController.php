@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Controller\Estructura\AdministracionController;
-use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\QueryBuilder;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -24,7 +22,7 @@ abstract class BaseController extends Controller
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
         $campos = json_decode($namespaceType::getEstructuraPropiedadesLista());
         /** @var  $queryBuilder QueryBuilder */
-        $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos,false,true);
+        $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos);
         return [
             'ruta' => strtolower($this->modulo) . "_" . strtolower($this->funcion) . "_" . strtolower($this->grupo) . "_" . strtolower($this->nombre),
             'arrCampos' => $campos,
@@ -49,9 +47,9 @@ abstract class BaseController extends Controller
     {
         $nombreRepositorio = "App:{$this->modulo}\\{$this->claseNombre}";
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
-        $campos = json_decode($namespaceType::getEstructuraPropiedadesLista());
+        $campos = json_decode($namespaceType::getEstructuraPropiedadesExportar());
         /** @var  $queryBuilder QueryBuilder */
-        $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos, true);
+        $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos);
         switch ($submittedButton) {
             case 'btnExcel':
                 $this->generarExcel($campos,$queryBuilder->getQuery()->execute(), $this->nombre);
@@ -154,10 +152,9 @@ abstract class BaseController extends Controller
     /**
      * @param $nombreRepositorio
      * @param $campos
-     * @param bool $validarExcel
      * @return QueryBuilder
      */
-    private function getGenerarQuery($nombreRepositorio, $campos, $validarExcel = false, $validarLista = false)
+    private function getGenerarQuery($nombreRepositorio, $campos)
     {
         $arrRelaciones = [];
         /** @var  $queryBuilder QueryBuilder */
@@ -165,40 +162,14 @@ abstract class BaseController extends Controller
             ->select('e.' . $campos[0]->campo);
         foreach ($campos as $campo) {
             if ($campo->tipo != "pk" && !isset($campo->relacion)) {
-                if ($validarExcel) {
-                    if (isset($campo->mostrarExcel)) {
-                        if ($campo->mostrarExcel == 'SI') {
-                            $queryBuilder->addSelect('e.' . $campo->campo);
-                        }
-                    }
-                }elseif ($validarLista){
-                    if (isset($campo->mostrarLista)) {
-                        if ($campo->mostrarLista == 'SI') {
-                            $queryBuilder->addSelect('e.' . $campo->campo);
-                        }
-                    }
-                } else {
                     $queryBuilder->addSelect('e.' . $campo->campo);
-                }
             } elseif (isset($campo->relacion)) {
                 $arrRel = explode('.', $campo->campo);
                 $alias = substr($arrRel[0], 0, 3) . 'Rel' . $arrRel[1];
                 if (!$this->validarRelacion($arrRelaciones, $arrRel[0])) {
                     $arrRelaciones[] = $arrRel[0];
                     $queryBuilder->leftJoin('e.' . $arrRel[0], $arrRel[0]);
-                }
-                if ($validarExcel) {
-                    if (isset($campo->mostrarExcel)) {
-                        if ($campo->mostrarExcel == 'SI') {
-                            $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
-                        }
-                    }
-                }elseif ($validarLista){
-                    if(isset($campo->mostrarLista)){
-                        if($campo->mostrarLista == 'SI'){
-                            $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
-                        }
-                    }
+                    $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
                 } else {
                     $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
                 }

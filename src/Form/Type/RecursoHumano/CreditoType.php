@@ -66,20 +66,38 @@ class CreditoType extends AbstractType
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
-            {"campo":"codigoCreditoPk",                 "tipo":"pk"     ,"ayuda":"Codigo del registro", "titulo":"ID",                               "mostrarExcel":"SI", "mostrarLista":"SI"},
-            {"campo":"creditoTipoRel.nombre",           "tipo":"texto"  ,"ayuda":"Tipo de credito",     "titulo":"TIPO",                             "mostrarExcel":"SI", "mostrarLista":"SI", "relacion":"SI"},
-            {"campo":"codigoEmpleadoFk",                "tipo":"texto"  ,"ayuda":"Codigo del empleado", "titulo":"COD.EMPLEADO",                     "mostrarExcel":"SI", "mostrarLista":"SI"},
-            {"campo":"empleadoRel.nombreCorto",         "tipo":"texto"  ,"ayuda":"Nombre del empleado", "titulo":"NOMBRE",                           "mostrarExcel":"SI", "mostrarLista":"SI", "relacion":"SI"},
-            {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto"  ,"ayuda":"Numero de identificacion del empleado", "titulo":"IDENTIFICACION", "mostrarExcel":"SI", "mostrarLista":"SI", "relacion":"SI"},
-            {"campo":"empleadoRel.estadoContrato",      "tipo":"bool"   ,"ayuda":"Si el empleado se encuentra contratado","titulo":"CON",            "mostrarExcel":"SI", "mostrarLista":"SI", "relacion":"SI"},
-            {"campo":"grupoRel.nombre",                 "tipo":"texto"    ,"ayuda":"Nombre del grupo del empleado","titulo":"GRUPO",                 "mostrarExcel":"SI", "mostrarLista":"SI", "relacion":"SI"},
-            {"campo":"fecha",                           "tipo":"fecha"  ,"ayuda":"Fecha",               "titulo":"FECHA",                            "mostrarExcel":"SI", "mostrarLista":"SI"},
-            {"campo":"vrCuota",                         "tipo":"moneda" ,"ayuda":"Valor de la cuota",   "titulo":"V.CUOTA",                          "mostrarExcel":"SI", "mostrarLista":"SI"},
-            {"campo":"numeroCuotaActual",               "tipo":"text"   ,"ayuda":"Numero de la cuota actual",   "titulo":"CUOTA ACTUAL",             "mostrarExcel":"SI", "mostrarLista":"SI"},
-            {"campo":"numeroCuotas",                    "tipo":"texto"  ,"ayuda":"Cantidad de cuotas",  "titulo":"CUOTAS",                           "mostrarExcel":"SI", "mostrarLista":"SI"},
-            {"campo":"estadoPagado",                    "tipo":"bool"   ,"ayuda":"Estado pagado",       "titulo":"PAG",                              "mostrarExcel":"SI", "mostrarLista":"SI"},
-            {"campo":"estadoSuspendido",                "tipo":"bool"   ,"ayuda":"Estado suspendido",   "titulo":"SUS",                              "mostrarExcel":"SI", "mostrarLista":"SI"} 
-        ]';
+            {"campo":"codigoCreditoPk"                 ,"tipo":"pk"     ,"ayuda":"Codigo del registro"                   ,"titulo":"ID"},
+            {"campo":"creditoTipoRel.nombre"           ,"tipo":"texto"  ,"ayuda":"Tipo de credito"                       ,"titulo":"TIPO"           ,"relacion":"SI"},
+            {"campo":"codigoEmpleadoFk"                ,"tipo":"texto"  ,"ayuda":"Codigo del empleado"                   ,"titulo":"COD.EMPLEADO"},
+            {"campo":"empleadoRel.nombreCorto"         ,"tipo":"texto"  ,"ayuda":"Nombre del empleado"                   ,"titulo":"NOMBRE"         ,"relacion":"SI"},
+            {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto"  ,"ayuda":"Numero de identificacion del empleado" ,"titulo":"IDENTIFICACION" ,"relacion":"SI"},
+            {"campo":"empleadoRel.estadoContrato"      ,"tipo":"bool"   ,"ayuda":"Si el empleado se encuentra contratado","titulo":"CON"            ,"relacion":"SI"},
+            {"campo":"grupoRel.nombre"                 ,"tipo":"texto"  ,"ayuda":"Nombre del grupo del empleado"         ,"titulo":"GRUPO"          ,"relacion":"SI"},
+            {"campo":"fecha"                           ,"tipo":"fecha"  ,"ayuda":"Fecha"                                 ,"titulo":"FECHA"},
+            {"campo":"vrCuota"                         ,"tipo":"moneda" ,"ayuda":"Valor de la cuota"                     ,"titulo":"V.CUOTA"},
+            {"campo":"numeroCuotaActual"               ,"tipo":"text"   ,"ayuda":"Numero de la cuota actual"             ,"titulo":"CUOTA ACTUAL"},
+            {"campo":"numeroCuotas"                    ,"tipo":"texto"  ,"ayuda":"Cantidad de cuotas"                    ,"titulo":"CUOTAS"},
+            {"campo":"estadoPagado"                    ,"tipo":"bool"   ,"ayuda":"Estado pagado"                         ,"titulo":"PAG"},
+            {"campo":"estadoSuspendido"                ,"tipo":"bool"   ,"ayuda":"Estado suspendido"                     ,"titulo":"SUS"}]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoCreditoPk"                 ,"tipo":"pk"     ,"ayuda":"Codigo del registro"                   ,"titulo":"ID"},
+            {"campo":"creditoTipoRel.nombre"           ,"tipo":"texto"  ,"ayuda":"Tipo de credito"                       ,"titulo":"TIPO"           ,"relacion":"SI"},
+            {"campo":"codigoEmpleadoFk"                ,"tipo":"texto"  ,"ayuda":"Codigo del empleado"                   ,"titulo":"COD.EMPLEADO"},
+            {"campo":"empleadoRel.nombreCorto"         ,"tipo":"texto"  ,"ayuda":"Nombre del empleado"                   ,"titulo":"NOMBRE"         ,"relacion":"SI"},
+            {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto"  ,"ayuda":"Numero de identificacion del empleado" ,"titulo":"IDENTIFICACION" ,"relacion":"SI"},
+            {"campo":"empleadoRel.estadoContrato"      ,"tipo":"bool"   ,"ayuda":"Si el empleado se encuentra contratado","titulo":"CON"            ,"relacion":"SI"},
+            {"campo":"grupoRel.nombre"                 ,"tipo":"texto"  ,"ayuda":"Nombre del grupo del empleado"         ,"titulo":"GRUPO"          ,"relacion":"SI"},
+            {"campo":"fecha"                           ,"tipo":"fecha"  ,"ayuda":"Fecha"                                 ,"titulo":"FECHA"},
+            {"campo":"vrCuota"                         ,"tipo":"moneda" ,"ayuda":"Valor de la cuota"                     ,"titulo":"V.CUOTA"},
+            {"campo":"numeroCuotaActual"               ,"tipo":"text"   ,"ayuda":"Numero de la cuota actual"             ,"titulo":"CUOTA ACTUAL"},
+            {"campo":"numeroCuotas"                    ,"tipo":"texto"  ,"ayuda":"Cantidad de cuotas"                    ,"titulo":"CUOTAS"},
+            {"campo":"estadoPagado"                    ,"tipo":"bool"   ,"ayuda":"Estado pagado"                         ,"titulo":"PAG"},
+            {"campo":"estadoSuspendido"                ,"tipo":"bool"   ,"ayuda":"Estado suspendido"                     ,"titulo":"SUS"}]';
         return $campos;
     }
 }

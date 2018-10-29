@@ -111,7 +111,7 @@ class ComEgresoDetalleRepository extends ServiceEntityRepository
             $valorRetencionFte = isset($arrControles['TxtRetencionFuente' . $intCodigo]) && $arrControles['TxtRetencionFuente' . $intCodigo] != '' ? $arrControles['TxtRetencionFuente' . $intCodigo] : 0;
             $valorPagoAfectar =
                 $valorPago
-                - $valorAjustePeso
+                + $valorAjustePeso
                 - $valorDescuento
                 - $valorRetencionIva
                 - $valorRetencionIca
@@ -121,8 +121,8 @@ class ComEgresoDetalleRepository extends ServiceEntityRepository
             $arEgresoDetalle->setVrRetencionIca($valorRetencionIca);
             $arEgresoDetalle->setVrRetencionIva($valorRetencionIva);
             $arEgresoDetalle->setVrRetencionFuente($valorRetencionFte);
-            $arEgresoDetalle->setVrPago($valorPago);
-            $arEgresoDetalle->setVrPagoAfectar($valorPagoAfectar);
+            $arEgresoDetalle->setVrPago($valorPagoAfectar);
+            $arEgresoDetalle->setVrPagoAfectar($valorPago);
             $em->persist($arEgresoDetalle);
         }
         $em->flush();

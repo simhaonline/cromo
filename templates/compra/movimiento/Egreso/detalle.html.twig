@@ -27,7 +27,7 @@
             <td class="titulo">CLIENTE:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arEgreso.proveedorRel.nombreCorto }}</td>
             <td class="titulo">Pago:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arEgreso.vrPago |number_format(0, '.', ',') }}</td>
+            <td class="td-in-well" style="text-align: right;">{{ arEgreso.vrPagoTotal |number_format(0, '.', ',') }}</td>
 
         </tr>
         <tr>
@@ -83,7 +83,7 @@
             <td></td>
             <td class="titulo">TOTAL:</td>
             <td class="td-in-well"
-                style="text-align: right;">{{ arEgreso.vrPagoTotal |number_format(0, '.', ',') }}</td>
+                style="text-align: right;">{{ arEgreso.vrPago |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
@@ -103,6 +103,7 @@
                             <th>ID</th>
                             <th>NUMERO</th>
                             <th style="width: 12%;">NUMERO APLICA</th>
+                            <th>SALDO</th>
                             <th title="Valor Descuento" style="width: 12%;">DESCUENTO</th>
                             <th title="Valor ajuste peso" style="width: 10%;">AJUSTE PESO</th>
                             <th title="VALOR RETENCION ICA" style="width: 12%;">ICA</th>
@@ -122,6 +123,9 @@
                                 </td>
                                 <td style="text-align: right">
                                     {{ arEgresoDetalle.numeroDocumentoAplicacion | number_format(0, '.', ',') }}
+                                </td>
+                                <td style="text-align: right">
+                                    {{ arEgresoDetalle.cuentaPagarRel.vrSaldo |number_format(0,'.',',') }}
                                 </td>
                                 {% if arEgreso.estadoAutorizado == false %}
                                     <td style="text-align: center">
@@ -159,7 +163,7 @@
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="% DESCUENTO"
                                                name="TxtVrPago{{ arEgresoDetalle.codigoEgresoDetallePk }}"
-                                               value="{{ arEgresoDetalle.vrPago }}"
+                                               value="{{ arEgresoDetalle.vrPagoAfectar }}"
                                                style="text-align: right; width:90px" size="10"/>
                                     </td>
                                 {% else %}

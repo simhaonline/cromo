@@ -279,8 +279,9 @@ class ComEgresoRepository extends ServiceEntityRepository
 //            ->addSelect('cp.soporte')
             ->addSelect('p.nombreCorto')
             ->addSelect('p.numeroIdentificacion')
-            ->addSelect('e.vrPagoTotal')
+            ->addSelect('e.vrPago')
             ->where('e.estadoContabilizado = 0')
+            ->andWhere('e.estadoAprobado = 1')
             ->orderBy('e.codigoEgresoTipoFk', 'DESC');
         $fecha = new \DateTime('now');
         if ($session->get('filtroComEgresoPagarTipo') != "") {
@@ -408,7 +409,7 @@ class ComEgresoRepository extends ServiceEntityRepository
                                     $arRegistro->setNumeroReferencia($arEgresoDetalle['numeroDocumento']);
                                     $arRegistro->setNumeroReferenciaPrefijo($arEgresoDetalle['prefijo']);
                                     $arRegistro->setFecha($arEgresoDetalle['fecha']);
-                                    $naturaleza = "D";
+                                    $naturaleza = "C";
                                     if ($naturaleza == 'D') {
                                         $arRegistro->setVrDebito($arEgresoDetalle['vrRetencionFuente']);
                                         $arRegistro->setNaturaleza('D');
@@ -449,7 +450,7 @@ class ComEgresoRepository extends ServiceEntityRepository
                                     $arRegistro->setNumeroReferencia($arEgresoDetalle['numeroDocumento']);
                                     $arRegistro->setNumeroReferenciaPrefijo($arEgresoDetalle['prefijo']);
                                     $arRegistro->setFecha($arEgresoDetalle['fecha']);
-                                    $naturaleza = "D";
+                                    $naturaleza = "C";
                                     if ($naturaleza == 'D') {
                                         $arRegistro->setVrDebito($arEgresoDetalle['vrRetencionIca']);
                                         $arRegistro->setNaturaleza('D');
@@ -490,7 +491,7 @@ class ComEgresoRepository extends ServiceEntityRepository
                                     $arRegistro->setNumeroReferencia($arEgresoDetalle['numeroDocumento']);
                                     $arRegistro->setNumeroReferenciaPrefijo($arEgresoDetalle['prefijo']);
                                     $arRegistro->setFecha($arEgresoDetalle['fecha']);
-                                    $naturaleza = "D";
+                                    $naturaleza = "C";
                                     if ($naturaleza == 'D') {
                                         $arRegistro->setVrDebito($arEgresoDetalle['vrRetencionIva']);
                                         $arRegistro->setNaturaleza('D');
@@ -528,12 +529,15 @@ class ComEgresoRepository extends ServiceEntityRepository
                                     $arRegistro->setNumeroReferencia($arEgresoDetalle['numeroDocumento']);
                                     $arRegistro->setNumeroReferenciaPrefijo($arEgresoDetalle['prefijo']);
                                     $arRegistro->setFecha($arEgresoDetalle['fecha']);
-                                    $naturaleza = "D";
+                                    $naturaleza = "C";
+                                    if ($arEgresoDetalle['vrAjustePeso'] > 0) {
+                                        $naturaleza = "D";
+                                    }
                                     if ($naturaleza == 'D') {
                                         $arRegistro->setVrDebito($arEgresoDetalle['vrAjustePeso']);
                                         $arRegistro->setNaturaleza('D');
                                     } else {
-                                        $arRegistro->setVrCredito($arEgresoDetalle['vrAjustePeso']);
+                                        $arRegistro->setVrCredito($arEgresoDetalle['vrAjustePeso'] * -1);
                                         $arRegistro->setNaturaleza('C');
                                     }
                                     $arRegistro->setDescripcion($descripcion);
@@ -566,7 +570,7 @@ class ComEgresoRepository extends ServiceEntityRepository
                                     $arRegistro->setNumeroReferencia($arEgresoDetalle['numeroDocumento']);
                                     $arRegistro->setNumeroReferenciaPrefijo($arEgresoDetalle['prefijo']);
                                     $arRegistro->setFecha($arEgresoDetalle['fecha']);
-                                    $naturaleza = "D";
+                                    $naturaleza = "C";
                                     if ($naturaleza == 'D') {
                                         $arRegistro->setVrDebito($arEgresoDetalle['vrDescuento']);
                                         $arRegistro->setNaturaleza('D');

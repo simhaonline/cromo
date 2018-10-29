@@ -12,11 +12,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ConfiguracionController extends Controller
 {
-
     /**
-     * @Route("/inventario/administracion/configuracion/configuracion/lista/{id}", name="inventario_administracion_configuracion_configuracion_lista")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/administracion/configuracion/configuracion/lista", name="inventario_administracion_configuracion_configuracion_lista")
      */
-    public function nuevo(Request $request, $id)
+    public function nuevo(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $arConfiguracion = $em->getRepository(InvConfiguracion::class)->find(1);
@@ -26,7 +28,7 @@ class ConfiguracionController extends Controller
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arConfiguracion);
                 $em->flush();
-                Mensajes::info('Se guardo la configuracion con exito');
+                Mensajes::info('Se guardo la configuración con éxito');
             }
         }
         return $this->render('inventario/administracion/configuracion/configuracion.html.twig', [

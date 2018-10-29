@@ -5,60 +5,43 @@ namespace App\Entity\RecursoHumano;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * RhuEmbargoPago
- *
- * @ORM\Table(name="rhu_embargo_pago")
  * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuEmbargoPagoRepository")
  */
 class RhuEmbargoPago
 {
     /**
-     * @var int
-     *
      * @ORM\Column(name="codigo_embargo_pago_pk", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    
     private $codigoEmbargoPagoPk;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="codigo_embargo_fk", type="integer", nullable=true)
      */
     private $codigoEmbargoFk;
     
     /**
-     * @var int
-     *
      * @ORM\Column(name="codigo_pago_fk", type="integer", nullable=true)
      */
     private $codigoPagoFk;
 
     /**
-     * @var float
-     *
      * @ORM\Column(name="vr_cuota", type="float", nullable=true)
      */
     private $vrCuota;
 
     /**
-     * @var float
-     *
      * @ORM\Column(name="saldo", type="float", nullable=true)
      */
     private $saldo;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="numero_cuota_actual", type="integer", nullable=true)
      */
     private $numeroCuotaActual;
 
     /**
-     * @var \DateTime
      *
      * @ORM\Column(name="fecha_pago", type="date", nullable=true)
      */
@@ -69,17 +52,9 @@ class RhuEmbargoPago
      * @ORM\JoinColumn(name="codigo_embargo_fk", referencedColumnName="codigo_embargo_pk")
      */
     protected $embargoRel;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="RhuPago", inversedBy="embargoPagosPagoRel")
-     * @ORM\JoinColumn(name="codigo_pago_fk", referencedColumnName="codigo_pago_pk")
-     */
-    protected $pagoRel;
 
     /**
-     * Get codigoEmbargoPagoPk
-     *
-     * @return integer
+     * @return mixed
      */
     public function getCodigoEmbargoPagoPk()
     {
@@ -87,23 +62,15 @@ class RhuEmbargoPago
     }
 
     /**
-     * Set codigoEmbargoFk
-     *
-     * @param integer $codigoEmbargoFk
-     *
-     * @return RhuEmbargoPago
+     * @param mixed $codigoEmbargoPagoPk
      */
-    public function setCodigoEmbargoFk($codigoEmbargoFk)
+    public function setCodigoEmbargoPagoPk($codigoEmbargoPagoPk): void
     {
-        $this->codigoEmbargoFk = $codigoEmbargoFk;
-
-        return $this;
+        $this->codigoEmbargoPagoPk = $codigoEmbargoPagoPk;
     }
 
     /**
-     * Get codigoEmbargoFk
-     *
-     * @return integer
+     * @return mixed
      */
     public function getCodigoEmbargoFk()
     {
@@ -111,23 +78,15 @@ class RhuEmbargoPago
     }
 
     /**
-     * Set codigoPagoFk
-     *
-     * @param integer $codigoPagoFk
-     *
-     * @return RhuEmbargoPago
+     * @param mixed $codigoEmbargoFk
      */
-    public function setCodigoPagoFk($codigoPagoFk)
+    public function setCodigoEmbargoFk($codigoEmbargoFk): void
     {
-        $this->codigoPagoFk = $codigoPagoFk;
-
-        return $this;
+        $this->codigoEmbargoFk = $codigoEmbargoFk;
     }
 
     /**
-     * Get codigoPagoFk
-     *
-     * @return integer
+     * @return mixed
      */
     public function getCodigoPagoFk()
     {
@@ -135,23 +94,15 @@ class RhuEmbargoPago
     }
 
     /**
-     * Set vrCuota
-     *
-     * @param float $vrCuota
-     *
-     * @return RhuEmbargoPago
+     * @param mixed $codigoPagoFk
      */
-    public function setVrCuota($vrCuota)
+    public function setCodigoPagoFk($codigoPagoFk): void
     {
-        $this->vrCuota = $vrCuota;
-
-        return $this;
+        $this->codigoPagoFk = $codigoPagoFk;
     }
 
     /**
-     * Get vrCuota
-     *
-     * @return float
+     * @return mixed
      */
     public function getVrCuota()
     {
@@ -159,23 +110,15 @@ class RhuEmbargoPago
     }
 
     /**
-     * Set saldo
-     *
-     * @param float $saldo
-     *
-     * @return RhuEmbargoPago
+     * @param mixed $vrCuota
      */
-    public function setSaldo($saldo)
+    public function setVrCuota($vrCuota): void
     {
-        $this->saldo = $saldo;
-
-        return $this;
+        $this->vrCuota = $vrCuota;
     }
 
     /**
-     * Get saldo
-     *
-     * @return float
+     * @return mixed
      */
     public function getSaldo()
     {
@@ -183,23 +126,15 @@ class RhuEmbargoPago
     }
 
     /**
-     * Set numeroCuotaActual
-     *
-     * @param integer $numeroCuotaActual
-     *
-     * @return RhuEmbargoPago
+     * @param mixed $saldo
      */
-    public function setNumeroCuotaActual($numeroCuotaActual)
+    public function setSaldo($saldo): void
     {
-        $this->numeroCuotaActual = $numeroCuotaActual;
-
-        return $this;
+        $this->saldo = $saldo;
     }
 
     /**
-     * Get numeroCuotaActual
-     *
-     * @return integer
+     * @return mixed
      */
     public function getNumeroCuotaActual()
     {
@@ -207,23 +142,15 @@ class RhuEmbargoPago
     }
 
     /**
-     * Set fechaPago
-     *
-     * @param \DateTime $fechaPago
-     *
-     * @return RhuEmbargoPago
+     * @param mixed $numeroCuotaActual
      */
-    public function setFechaPago($fechaPago)
+    public function setNumeroCuotaActual($numeroCuotaActual): void
     {
-        $this->fechaPago = $fechaPago;
-
-        return $this;
+        $this->numeroCuotaActual = $numeroCuotaActual;
     }
 
     /**
-     * Get fechaPago
-     *
-     * @return \DateTime
+     * @return mixed
      */
     public function getFechaPago()
     {
@@ -231,23 +158,15 @@ class RhuEmbargoPago
     }
 
     /**
-     * Set embargoRel
-     *
-     * @param \Brasa\RecursoHumanoBundle\Entity\RhuEmbargo $embargoRel
-     *
-     * @return RhuEmbargoPago
+     * @param mixed $fechaPago
      */
-    public function setEmbargoRel(\Brasa\RecursoHumanoBundle\Entity\RhuEmbargo $embargoRel = null)
+    public function setFechaPago($fechaPago): void
     {
-        $this->embargoRel = $embargoRel;
-
-        return $this;
+        $this->fechaPago = $fechaPago;
     }
 
     /**
-     * Get embargoRel
-     *
-     * @return \Brasa\RecursoHumanoBundle\Entity\RhuEmbargo
+     * @return mixed
      */
     public function getEmbargoRel()
     {
@@ -255,26 +174,10 @@ class RhuEmbargoPago
     }
 
     /**
-     * Set pagoRel
-     *
-     * @param \Brasa\RecursoHumanoBundle\Entity\RhuPago $pagoRel
-     *
-     * @return RhuEmbargoPago
+     * @param mixed $embargoRel
      */
-    public function setPagoRel(\Brasa\RecursoHumanoBundle\Entity\RhuPago $pagoRel = null)
+    public function setEmbargoRel($embargoRel): void
     {
-        $this->pagoRel = $pagoRel;
-
-        return $this;
-    }
-
-    /**
-     * Get pagoRel
-     *
-     * @return \Brasa\RecursoHumanoBundle\Entity\RhuPago
-     */
-    public function getPagoRel()
-    {
-        return $this->pagoRel;
+        $this->embargoRel = $embargoRel;
     }
 }

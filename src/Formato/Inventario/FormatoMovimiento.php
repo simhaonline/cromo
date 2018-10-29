@@ -150,28 +150,29 @@ class FormatoMovimiento extends \FPDF
      */
     public function Body($pdf)
     {
-        $arMovimientoDetalles = self::$em->getRepository('App:Inventario\InvMovimientoDetalle')->findBy(['codigoMovimientoFk' => self::$codigoMovimiento]);
+        $arMovimiento = self::$em->getRepository(InvMovimiento::class)->find(self::$codigoMovimiento);
+        $arMovimientoDetalles = self::$em->getRepository('App:Inventario\InvMovimientoDetalle')->listaDetalle(self::$codigoMovimiento, $arMovimiento->getCodigoDocumentoTipoFk());
         self::$numeroRegistros = count($arMovimientoDetalles);
         $pdf->SetFont('Arial', '', 7);
         /** @var  $arMovimientoDetalle InvMovimientoDetalle */
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $pdf->SetX(10);
-            $pdf->Cell(10, 6, $arMovimientoDetalle->getCodigoItemFk(), 1, 0, 'L');
-            $pdf->Cell(99, 6, utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()), 1, 0, 'L');
-            $pdf->Cell(6, 6, substr($arMovimientoDetalle->getCodigoBodegaFk(), 0, 3), 1, 0, 'R');
+            $pdf->Cell(10, 6, $arMovimientoDetalle['codigoItemFk'], 1, 0, 'L');
+            $pdf->Cell(99, 6, utf8_decode($arMovimientoDetalle['itemNombre']), 1, 0, 'L');
+            $pdf->Cell(6, 6, substr($arMovimientoDetalle['codigoBodegaFk'], 0, 3), 1, 0, 'R');
             $pdf->Cell(11, 6, 'UNIDAD', 1, 0, 'C');
-            $pdf->Cell(10, 6, $arMovimientoDetalle->getCantidad(), 1, 0, 'R');
-            $pdf->Cell(18, 6, number_format($arMovimientoDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(7, 6, number_format($arMovimientoDetalle->getPorcentajeIva(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(7.4, 6, number_format($arMovimientoDetalle->getPorcentajeDescuento(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(21, 6, number_format($arMovimientoDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(10, 6, $arMovimientoDetalle['cantidad'], 1, 0, 'R');
+            $pdf->Cell(18, 6, number_format($arMovimientoDetalle['vrPrecio'], 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(7, 6, number_format($arMovimientoDetalle['porcentajeIva'], 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(7.4, 6, number_format($arMovimientoDetalle['porcentajeDescuento'], 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(21, 6, number_format($arMovimientoDetalle['vrTotal'], 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 45);
         }
         $numeroPaginas = ceil(self::$numeroRegistros / 28);
         if ($pdf->PageNo() == $numeroPaginas) {
             /** @var  $arMovimiento InvMovimiento */
-            $arMovimiento = self::$em->getRepository(InvMovimiento::class)->find(self::$codigoMovimiento);
+
             $pdf->SetTextColor(0);
             $pdf->Ln();
             $pdf->Cell(140, 4, "", 0, 0, 'R');

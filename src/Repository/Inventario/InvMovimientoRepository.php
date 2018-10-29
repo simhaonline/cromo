@@ -77,16 +77,17 @@ class InvMovimientoRepository extends ServiceEntityRepository
      */
     public function autorizar($arMovimiento)
     {
-        $respuesta = $this->validarDetalles($arMovimiento->getCodigoMovimientoPk());
+        $respuesta = $this->validarDetalles($arMovimiento);
         if ($respuesta) {
             Mensajes::error($respuesta);
         } else {
             if ($this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
-                //Se define que mueve inventario es al aprobar
-                //$this->afectar($arMovimiento, 1);
                 $arMovimiento->setEstadoAutorizado(1);
                 $this->getEntityManager()->persist($arMovimiento);
                 $this->getEntityManager()->flush();
+                if($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
+                    $this->generarDetallesTraslado($arMovimiento);
+                }
             } else {
                 Mensajes::error('El movimiento no contiene detalles');
             }
@@ -185,6 +186,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $arMovimiento->setEstadoAutorizado(0);
             $this->getEntityManager()->persist($arMovimiento);
             $this->getEntityManager()->flush();
+            $this->eliminarDetallesTraslado($arMovimiento);
         } else {
             Mensajes::error('El registro esta aprobado y no se puede desautorizar');
         }
@@ -296,15 +298,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $codigoMovimiento
+     * @param $arMovimiento InvMovimiento
      * @return array
      */
-    public function validarDetalles($codigoMovimiento)
+    public function validarDetalles($arMovimiento)
     {
+        $em = $this->getEntityManager();
         $respuesta = "";
-        $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->validarDetalles($codigoMovimiento);
-
-        /** @var  $arMovimientoDetalle InvMovimientoDetalle */
+        $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->validarDetalles($arMovimiento->getCodigoMovimientoPk());
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             if ($arMovimientoDetalle['afectaInventario']) {
                 if($arMovimientoDetalle['codigoBodegaFk'] == "" || $arMovimientoDetalle['loteFk'] == "") {
@@ -312,7 +313,15 @@ class InvMovimientoRepository extends ServiceEntityRepository
                       break;
                 } else {
                     $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle['codigoBodegaFk']);
-                    if (!$arBodega) {
+                    if ($arBodega) {
+                        if($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
+                            $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle['codigoBodegaDestinoFk']);
+                            if (!$arBodega) {
+                                $respuesta = 'La bodega destino ingresada en el detalle con id ' . $arMovimientoDetalle['codigoMovimientoDetallePk'] . ', no existe.';
+                                break;
+                            }
+                        }
+                    } else {
                         $respuesta = 'La bodega ingresada en el detalle con id ' . $arMovimientoDetalle['codigoMovimientoDetallePk'] . ', no existe.';
                         break;
                     }
@@ -321,6 +330,12 @@ class InvMovimientoRepository extends ServiceEntityRepository
             if ($arMovimientoDetalle['cantidad'] == 0) {
                 $respuesta = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' tiene cantidad 0.';
                 break;
+            }
+        }
+        if($respuesta == "") {
+            $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->validarDetalles();
+            if($arrConfiguracion['validarBodegaUsuario']) {
+
             }
         }
         return $respuesta;
@@ -394,4 +409,46 @@ class InvMovimientoRepository extends ServiceEntityRepository
            Mensajes::error("El movimiento ya fue aprobado aprobado");
         }
     }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @param $arMovimiento InvMovimiento
+     */
+    public function generarDetallesTraslado($arMovimiento)
+    {
+        $em = $this->getEntityManager();
+        $arMovimientosDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
+        foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
+            $arMovimientoDetalleEntrada = clone $arMovimientoDetalle;
+            $arMovimientoDetalleEntrada->setOperacionInventario(1);
+            $arMovimientoDetalleEntrada->setCantidadOperada($arMovimientoDetalleEntrada->getCantidad());
+            $arMovimientoDetalleEntrada->setCodigoBodegaFk($arMovimientoDetalle->getCodigoBodegaDestinoFk());
+            $arMovimientoDetalleEntrada->setCodigoBodegaDestinoFk(NUll);
+            $em->persist($arMovimientoDetalleEntrada);
+            $arMovimientoDetalleSalida = clone $arMovimientoDetalle;
+            $arMovimientoDetalleSalida->setOperacionInventario(-1);
+            $arMovimientoDetalleSalida->setCantidadOperada($arMovimientoDetalleSalida->getCantidad() * -1);
+            $arMovimientoDetalleSalida->setCodigoBodegaDestinoFk(NUll);
+            $em->persist($arMovimientoDetalleSalida);
+
+        }
+        $em->flush();
+    }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @param $arMovimiento InvMovimiento
+     */
+    public function eliminarDetallesTraslado($arMovimiento)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('DELETE App\Entity\Inventario\InvMovimientoDetalle md WHERE md.operacionInventario <> 0 AND md.codigoMovimientoFk = ' . $arMovimiento->getCodigoMovimientoPk());
+        $query->execute();
+        $em->flush();
+    }
+
+
+
 }

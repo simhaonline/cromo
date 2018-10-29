@@ -92,15 +92,10 @@
                             <li>
                                 <a href="#">Inventario <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'ENT'}) }}">Entrada</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'SAL'}) }}">Salida</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'FAC'}) }}">Factura</a>
-                                    </li>
+                                    <li><a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'ENT'}) }}">Entrada</a></li>
+                                    <li><a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'SAL'}) }}">Salida</a></li>
+                                    <li><a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'TRA'}) }}">Traslado</a></li>
+                                    <li><a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'FAC'}) }}">Factura</a></li>
                                 </ul>
                             </li>
                             <li>

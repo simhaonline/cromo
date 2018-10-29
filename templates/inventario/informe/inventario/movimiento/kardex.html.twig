@@ -49,6 +49,7 @@
                 <th>DOCUMENTO</th>
                 <th>ITEM</th>
                 <th>DESCRIPCION</th>
+                <th>BOD</th>
                 <th>LOTE</th>
                 <th>CAN</th>
                 <th>C_O</th>
@@ -66,6 +67,7 @@
                     <td>{{ arMovimientoDetalle.nombreDocumento }}</td>
                     <td>{{ arMovimientoDetalle.codigoItemFk }}</td>
                     <td>{{ arMovimientoDetalle.nombreItem }}</td>
+                    <td>{{ arMovimientoDetalle.codigoBodegaFk }}</td>
                     <td>{{ arMovimientoDetalle.loteFk }}</td>
                     <td class="numero">{{ arMovimientoDetalle.cantidad | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arMovimientoDetalle.cantidadOperada | number_format(0, '.', ',') }}</td>

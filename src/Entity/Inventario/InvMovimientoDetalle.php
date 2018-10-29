@@ -38,6 +38,11 @@ class InvMovimientoDetalle
     private $codigoBodegaFk;
 
     /**
+     * @ORM\Column(name="codigo_bodega_destino_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoBodegaDestinoFk;
+
+    /**
      * @ORM\Column(name="lote_fk", type="string", length=40, nullable=true)
      */
     private $loteFk;
@@ -582,6 +587,22 @@ class InvMovimientoDetalle
     public function setRemisionDetalleRel($remisionDetalleRel): void
     {
         $this->remisionDetalleRel = $remisionDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoBodegaDestinoFk()
+    {
+        return $this->codigoBodegaDestinoFk;
+    }
+
+    /**
+     * @param mixed $codigoBodegaDestinoFk
+     */
+    public function setCodigoBodegaDestinoFk($codigoBodegaDestinoFk): void
+    {
+        $this->codigoBodegaDestinoFk = $codigoBodegaDestinoFk;
     }
 
 

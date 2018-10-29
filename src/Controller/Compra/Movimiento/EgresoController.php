@@ -223,7 +223,7 @@ class EgresoController extends BaseController
                         $arEgresoDetalle->setNumeroDocumentoAplicacion($arCuentaPagar->getNumeroReferencia());
                         $arEgresoDetalle->setCuentaPagarRel($arCuentaPagar);
                         $arEgresoDetalle->setOperacion($arCuentaPagar->getOperacion());
-                        $arEgresoDetalle->setVrPago($arCuentaPagar->getVrSaldo());
+                        $arEgresoDetalle->setVrPagoAfectar($arCuentaPagar->getVrSaldo());
                         $em->persist($arEgresoDetalle);
 
                     }

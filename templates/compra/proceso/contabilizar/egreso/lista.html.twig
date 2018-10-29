@@ -76,7 +76,7 @@
                 <td>{{ arEgreso.fecha | date('Y-m-d') }}</td>
                 <td>{{ arEgreso.numeroIdentificacion }}</td>
                 <td>{{ arEgreso.nombreCorto }}</td>
-                <td class="numero">{{ arEgreso.vrPagoTotal | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arEgreso.vrPago | number_format(0, '.', ',') }}</td>
                 {#{{ validarTipo(arEgreso.estadoAnulado) }}#}
                 {#{{ validarTipo(arEgreso.estadoAutorizado) }}#}
                 {#{{ validarTipo(arEgreso.estadoAprobado) }}#}

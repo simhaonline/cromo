@@ -58,7 +58,7 @@ class RhuNovedad
     private $fechaHasta;
 
     /**
-     * @ORM\Column(name="dias", options={"deafult" : 0}, type="float", nullable=true)
+     * @ORM\Column(name="dias", options={"default" : 0}, type="float", nullable=true)
      */
     private $dias = 0;
 
@@ -88,47 +88,47 @@ class RhuNovedad
     private $estadoAnulado = false;
 
     /**
-     * @ORM\Column(name="prorroga", options={"deafult" : false}, type="boolean", nullable=true)
+     * @ORM\Column(name="prorroga", options={"default" : false}, type="boolean", nullable=true)
      */
     private $prorroga = false;
 
     /**
-     * @ORM\Column(name="transcripcion", options={"deafult" : false}, type="boolean", nullable=true)
+     * @ORM\Column(name="transcripcion", options={"default" : false}, type="boolean", nullable=true)
      */
     private $transcripcion = false;
 
     /**
-     * @ORM\Column(name="legalizado", options={"deafult" : false}, type="boolean", nullable=true)
+     * @ORM\Column(name="legalizado", options={"default" : false}, type="boolean", nullable=true)
      */
     private $legalizado = false;
 
     /**
-     * @ORM\Column(name="porcentaje", options={"deafult" : 0}, type="float", nullable=true)
+     * @ORM\Column(name="porcentaje", options={"default" : 0}, type="float", nullable=true)
      */
     private $porcentaje = 0;
 
     /**
-     * @ORM\Column(name="vr_valor", options={"deafult" : 0}, type="float", nullable=true)
+     * @ORM\Column(name="vr_valor", options={"default" : 0}, type="float", nullable=true)
      */
     private $vrValor = 0;
 
     /**
-     * @ORM\Column(name="vr_ibc", options={"deafult" : 0}, type="float", nullable=true)
+     * @ORM\Column(name="vr_ibc", options={"default" : 0}, type="float", nullable=true)
      */
     private $vrIbc = 0;
 
     /**
-     * @ORM\Column(name="dias_ibc", options={"deafult" : 0}, type="float", nullable=true)
+     * @ORM\Column(name="dias_ibc", options={"default" : 0}, type="float", nullable=true)
      */
     private $diasIbc = 0;
 
     /**
-     * @ORM\Column(name="vr_ibc_propuesto", options={"deafult" : 0}, type="float", nullable=true)
+     * @ORM\Column(name="vr_ibc_propuesto", options={"default" : 0}, type="float", nullable=true)
      */
     private $vrIbcPropuesto = 0;
 
     /**
-     * @ORM\Column(name="vr_propuesto", options={"deafult" : 0}, type="float", nullable=true)
+     * @ORM\Column(name="vr_propuesto", options={"default" : 0}, type="float", nullable=true)
      */
     private $vrPropuesto = 0;
 

@@ -28,4 +28,54 @@ class RhuCentroTrabajo
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="centroTrabajoRel")
      */
     protected $contratoRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCentroTrabajoPk()
+    {
+        return $this->codigoCentroTrabajoPk;
+    }
+
+    /**
+     * @param mixed $codigoCentroTrabajoPk
+     */
+    public function setCodigoCentroTrabajoPk($codigoCentroTrabajoPk): void
+    {
+        $this->codigoCentroTrabajoPk = $codigoCentroTrabajoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoRel()
+    {
+        return $this->contratoRel;
+    }
+
+    /**
+     * @param mixed $contratoRel
+     */
+    public function setContratoRel($contratoRel): void
+    {
+        $this->contratoRel = $contratoRel;
+    }
+
+
 }

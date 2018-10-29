@@ -226,6 +226,7 @@ class Factura2 extends \FPDF
         $arMovimiento = self::$em->getRepository('App:Inventario\InvMovimiento')->find(self::$codigoMovimiento);
         $this->Ln();
         $this->SetFont('Arial', 'B', 7.5);
+        //Bloque informacion de conformidad
         $this->Text(19.5, 180, utf8_decode('De conformidad a la ley 1231 de 2008 y art. 617 del estatuto tributario se seguirá entregando copia de la factura de venta.'));
         $this->Text(19.5, 184, utf8_decode('Pasados 10 días calendario contados a partir de la fecha de recepción de la factura, si no se ha recibido una reclamación'));
         $this->Text(19.5, 188, utf8_decode('por escrito, esta se entenderá irrevocablemente aceptada. El pago no oportuno causara intereses moratorios a la tasa'));
@@ -234,6 +235,7 @@ class Factura2 extends \FPDF
         $this->Text(19.5, 200, utf8_decode('Se hace constar que la firma de una persona diferente al comprador, Implica que dicha persona se entiende autorizada y'));
         $this->Text(19.5, 204, utf8_decode('facultada tacita y expresamente para aceptar y recibir esta factura. Dando cumplimiento a lo expresado en la ley 1231 del'));
         $this->Text(19.5, 208, utf8_decode('2008 se tomara para domicilio el cumplimiento de la obligación la ciudad de Medellín.'));
+        //Bloque firmas
         $this->Text(24, 216, utf8_decode('ELABORADO POR:'));
         $this->Text(80, 216, utf8_decode('RECIBIDO POR:________________________'));
         $this->Text(140, 216, utf8_decode('ACEPTADO POR:_______________________'));
@@ -243,6 +245,7 @@ class Factura2 extends \FPDF
         $this->Text(24, 228, utf8_decode('__________________________________'));
         $this->Text(80, 228, utf8_decode('FECHA:________________________________'));
         $this->Text(140, 228, utf8_decode('FECHA:________________________________'));
+        //Bloque resolucion facturacion
         $this->SetFont('Arial', '', 6.5);
         $this->Text(188, 265, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }

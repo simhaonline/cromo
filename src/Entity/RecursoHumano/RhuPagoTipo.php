@@ -22,6 +22,11 @@ class RhuPagoTipo
      * @ORM\Column(name="nombre", type="string", length=50, nullable=true)
      */         
     private $nombre;
+
+    /**
+     * @ORM\Column(name="orden", type="integer", nullable=true)
+     */
+    private $orden;
     
     /**
      * @ORM\OneToMany(targetEntity="RhuProgramacion", mappedBy="pagoTipoRel")
@@ -58,6 +63,22 @@ class RhuPagoTipo
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
     }
 
     /**

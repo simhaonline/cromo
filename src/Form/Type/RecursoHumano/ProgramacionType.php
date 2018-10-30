@@ -35,7 +35,7 @@ class ProgramacionType extends AbstractType
                 'class' => RhuPagoTipo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('er')
-                        ->orderBy('er.nombre');
+                        ->orderBy('er.orden','ASC');
                 },
                 'required' => true,
                 'choice_label' => 'nombre',

@@ -48,6 +48,21 @@ class RhuEmbargo
     private $estadoActivo = false;
 
     /**
+     * @ORM\Column(name="estado_autorizado", options={"default" : false}, type="boolean")
+     */
+    private $estadoAutorizado = false;
+
+    /**
+     * @ORM\Column(name="estado_aprobado", options={"default" : false}, type="boolean")
+     */
+    private $estadoAprobado = false;
+
+    /**
+     * @ORM\Column(name="estado_anulado", options={"default" : false}, type="boolean")
+     */
+    private $estadoAnulado = false;
+
+    /**
      * @ORM\Column(name="valor_fijo", type="boolean", nullable=true))
      */
     private $valorFijo = false;
@@ -420,6 +435,54 @@ class RhuEmbargo
     public function setEstadoActivo($estadoActivo): void
     {
         $this->estadoActivo = $estadoActivo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
     }
 
     /**

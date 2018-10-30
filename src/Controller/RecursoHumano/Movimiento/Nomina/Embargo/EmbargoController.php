@@ -8,6 +8,7 @@ use App\Entity\RecursoHumano\RhuEmbargoJuzgado;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\EmbargoType;
 use App\General\General;
+use App\Utilidades\Estandares;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -96,9 +97,11 @@ class EmbargoController extends BaseController
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arRegistro = $em->getRepository($this->clase)->find($id);
+        $arEmbargo = $em->getRepository($this->clase)->find($id);
+        $form = Estandares::botonera($arEmbargo->getEstadoAutorizado(), $arEmbargo->getEstadoAprobado(), $arEmbargo->getEstadoAnulado());
+        $form->handleRequest($request);
         return $this->render('recursoHumano/movimiento/nomina/embargo/detalle.html.twig',[
-            'arRegistro' => $arRegistro
+            'arEmbargo' => $arEmbargo
         ]);
     }
 }

@@ -8,10 +8,61 @@
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
-            <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arRegistro.codigoEmbargoPk }}</td>
+            <td class="titulo">CÓDIGO EMBARGO:</th>
+            <td class="td-in-well">{{ arEmbargo.codigoEmbargoPk }}</td>
+            <td class="titulo">FECHA CREACIÓN:</th>
+            <td class="td-in-well">{{ arEmbargo.fecha |date("Y/m/d") }}</td>
+            <td class="titulo"></th>
+            <td class="td-in-well" align="right"></td>
+        </tr>
+        <tr>
+            <td class="titulo">EMPLEADO:</th>
+            <td class="td-in-well">{{ arEmbargo.empleadoRel.nombreCorto }}</td>
+            <td class="titulo">TIPO:</th>
+            <td class="td-in-well">{{ arEmbargo.embargoTipoRel.nombre | default('') }}</td>
+            <td class="titulo"></th>
+            <td class="td-in-well" align="right"></td>
+        </tr>
+        <tr>
+            <td class="titulo">NÚMERO CUENTA</td>
+            <td class="td-in-well">{{ arEmbargo.empleadoRel.cuenta }}</td>
+            <td class="titulo">ENTIDAD BANCARIA</td>
+            <td class="td-in-well">{{ arEmbargo.empleadoRel.bancoRel.nombre | default('') }}</td>
+            <td class="titulo"></th>
+            <td class="td-in-well" align="right"></td>
+        </tr>
+        <tr>
+            <td class="titulo">INICIO FOLIO</td>
+            <td class="td-label">{{ arEmbargo.fechaInicioFolio |date("Y/m/d") }}</td>
+            <td class="titulo">FECHA INACTIVACION:</th>
+            <td class="td-in-well" >{{ arEmbargo.fechaInactivacion |date("Y/m/d") }}</td>
+            <td class="titulo"></th>
+            <td class="td-in-well" align="right"></td>
+        </tr>
+        <tr>
+            <td class="titulo">JUZGADO:</th>
+            <td class="td-label">{{ arEmbargo.embargoJuzgadoRel.nombre  | default('') }}</td>
+            <td class="titulo"></th>
+            <td class="td-in-well" align="right"></td>
+            <td class="titulo">MONTO MAXIMO:</td>
+            <td class="td-in-well" align="right">{{ arEmbargo.VrMontoMaximo | number_format(0, '.', ',')}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CUENTA</th>
+            <td class="td-label">{{ arEmbargo.cuenta }}</td>
+            <td class="titulo">TIPO CUENTA:</th>
+            <td class="td-in-well" align="right">{{ arEmbargo.tipoCuenta }}</td>
+            <td class="titulo">TOTAL PAGADO:</td>
+            <td class="td-in-well" align="right">{{ arEmbargo.descuento | number_format(0, '.', ',')}}</td>
+        </tr>
+        <tr>
+            <td class="titulo" >COMENTARIOS: </td>
+            <td class="td-in-well" colspan="7">{{ arEmbargo.comentarios }}</td>
         </tr>
     </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+    </ul>
     <br>
     <br>
 {% endblock %}

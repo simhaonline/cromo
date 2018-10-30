@@ -413,6 +413,15 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         if ($session->get('filtroInvItemCodigo')) {
             $queryBuilder->andWhere("md.codigoItemFk = '{$session->get('filtroInvItemCodigo')}'");
         }
+        if ($session->get('filtroInvKardexLote') != '') {
+            $queryBuilder->andWhere("md.loteFk = '{$session->get('filtroInvKardexLote')}' ");
+        }
+        if ($session->get('filtroInvKardexLoteBodega') != '') {
+            $queryBuilder->andWhere("md.codigoBodegaFk = '{$session->get('filtroInvKardexLoteBodega')}' ");
+        }
+        if ($session->get('filtroInvCodigoDocumento')) {
+            $queryBuilder->andWhere("m.codigoDocumentoFk = '{$session->get('filtroInvCodigoDocumento')}'");
+        }
         return $queryBuilder;
     }
 

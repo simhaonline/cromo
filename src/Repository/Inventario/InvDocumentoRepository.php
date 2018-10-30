@@ -2,10 +2,11 @@
 
 namespace App\Repository\Inventario;
 
-use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvDocumento;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvDocumentoRepository extends ServiceEntityRepository
 {
@@ -35,5 +36,29 @@ class InvDocumentoRepository extends ServiceEntityRepository
             ->addOrderBy('d.codigoDocumentoPk', 'ASC');
 
         return $queryBuilder;
+    }
+
+    /**
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function llenarCombo()
+    {
+        $session = new Session();
+        $array = [
+            'class' => 'App:Inventario\InvDocumento',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('dt')
+                    ->orderBy('dt.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""];
+        if ($session->get('filtroInvCodigoDocumento')) {
+            $array['data'] = $this->getEntityManager()->getReference(InvDocumento::class, $session->get('filtroInvCodigoDocumento'));
+        }
+        return $array;
     }
 }

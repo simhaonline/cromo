@@ -3,7 +3,7 @@
 namespace App\Controller\Financiero\Movimiento\Contabilidad;
 
 use App\Controller\BaseController;
-use App\Controller\Estructura\ControllerInterface;
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Controller\Estructura\ControllerListener;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class AsientoController extends ControllerInterface
+class AsientoController extends ControllerListenerPermisosFunciones
 {
     protected $clase = FinAsiento::class;
     protected $claseNombre = "FinAsiento";

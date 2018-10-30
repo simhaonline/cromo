@@ -2,13 +2,12 @@
 
 namespace  App\Controller\Estructura;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
-class ControllerListener{
+class ControllerListener extends Controller {
 
     private $user;
     private $routeActual;
@@ -18,22 +17,20 @@ class ControllerListener{
      */
     public function __construct($user, RequestStack $rs)
     {
-//        dump($rs->getCurrentRequest());
-//        exit();
+
         $this->routeActual=$rs->getCurrentRequest()->headers->get('referer');
         $this->user = $user;
     }
 
 
     public function getPermissionFunction(FilterControllerEvent $event){
+        $url=$this->routeActual;
         $this->routeActual=$event->getRequest()->get('_route');
         $controller = $event->getController();
         $request = $event->getRequest();
         $session = $request->getSession();
-//        $request2->getBaseUrl();
-
-                $url=$this->routeActual;
-        if($controller[0] instanceof ControllerInterface){
+        if($controller[0] instanceof ControllerListenerPermisosFunciones){
+//            dump($controller);
             $validado=false;
             if($validado){
                 $session->set("permiso_denegado",null);
@@ -41,10 +38,10 @@ class ControllerListener{
             }
             else{
                 $session->set("permiso_denegado","No tiene permisos para ingresar a la ruta");
-                $event->setController(function() use ($url) {
+
+                $event->setController(function () use($url){
                     return new RedirectResponse($url);
                 });
-//                return false;
             }
 
         }

@@ -4,8 +4,9 @@ namespace App\Controller\Estructura;
 
 use App\Controller\BaseController;
 
-abstract class ControllerInterface extends BaseController {
+abstract class ControllerListenerPermisosFunciones extends BaseController {
 
     abstract protected function indexprueba();
+
 
 }

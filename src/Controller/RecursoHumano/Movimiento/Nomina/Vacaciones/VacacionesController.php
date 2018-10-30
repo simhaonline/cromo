@@ -8,6 +8,7 @@ use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Form\Type\RecursoHumano\VacacionType;
 use App\General\General;
+use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,9 +99,11 @@ class VacacionesController extends BaseController
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arRegistro = $em->getRepository($this->clase)->find($id);
+        $arVacacion = $em->getRepository($this->clase)->find($id);
+        $form = Estandares::botonera($arVacacion->getEstadoAutorizado(), $arVacacion->getEstadoAprobado(), $arVacacion->getEstadoAnulado());
         return $this->render('recursoHumano/movimiento/nomina/vacacion/detalle.html.twig', [
-            'arRegistro' => $arRegistro
+            'arVacacion' => $arVacacion,
+            'form' => $form->createView()
         ]);
     }
 }

@@ -14,4 +14,14 @@ class FinCentroCostoRepository extends ServiceEntityRepository
         parent::__construct($registry, FinCentroCosto::class);
     }
 
+
+    public function camposPredeterminados()
+    {
+        $queryBuilder = $this->_em->createQueryBuilder()->from(FinCentroCosto::class, 'cc')
+            ->select('cc.codigoCentroCostoPk as ID')
+            ->addSelect('cc.nombre')
+            ->addSelect('cc.estadoInactivo as Estado_inactivo')
+            ->where('cc.codigoCentroCostoPk IS NOT NULL');
+        return $queryBuilder->getQuery()->execute();
+    }
 }

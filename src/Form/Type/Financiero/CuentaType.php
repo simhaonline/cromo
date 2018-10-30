@@ -4,6 +4,7 @@ namespace App\Form\Type\Financiero;
 
 use App\Entity\Financiero\FinCuenta;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,6 +17,9 @@ class CuentaType extends AbstractType
         $builder
             ->add('codigoCuentaPk', TextType::class, ['label' => 'Codigo cuenta:'])
             ->add('nombre', TextType::class, ['label' => 'Nombre:'])
+            ->add('exigeTercero', CheckboxType::class, ['label' => 'Exige tercero:', 'required' => false])
+            ->add('exigeCentroCosto', CheckboxType::class, ['label' => 'Exige centro de costo', 'required' => false])
+            ->add('exigeBase', CheckboxType::class, ['label' => 'Exige centro de costo', 'required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

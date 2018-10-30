@@ -15,7 +15,8 @@ class FinRegistroRepository extends ServiceEntityRepository
         parent::__construct($registry, FinRegistro::class);
     }
 
-    public function registros(){
+    public function registros()
+    {
 
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
@@ -36,30 +37,32 @@ class FinRegistroRepository extends ServiceEntityRepository
             ->addSelect('r.descripcion')
             ->leftJoin('r.terceroRel', 't')
             ->leftJoin('r.comprobanteRel', 'c')
-            ->where('r.codigoRegistroPk <> 0');
-        $fecha =  new \DateTime('now');
-        if($session->get('filtroFinCodigoTercero')){
+            ->where('r.codigoRegistroPk <> 0')
+            ->orderBy('r.numero', 'DESC')
+            ->addOrderBy('r.codigoComprobanteFk', 'DESC');
+        $fecha = new \DateTime('now');
+        if ($session->get('filtroFinCodigoTercero')) {
             $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroFinCodigoTercero')}");
         }
-        if($session->get('filtroFinComprobante') != ''){
+        if ($session->get('filtroFinComprobante') != '') {
             $queryBuilder->andWhere("r.codigoComprobanteFk = {$session->get('filtroFinComprobante')}");
         }
-        if($session->get('filtroFinNumeroDesde') != ''){
+        if ($session->get('filtroFinNumeroDesde') != '') {
             $queryBuilder->andWhere("r.numero >= {$session->get('filtroFinNumeroDesde')}");
         }
-        if($session->get('filtroFinNumeroHasta') != ''){
+        if ($session->get('filtroFinNumeroHasta') != '') {
             $queryBuilder->andWhere("r.numero <= {$session->get('filtroFinNumeroHasta')}");
         }
-        if($session->get('filtroFinCuenta') != ''){
+        if ($session->get('filtroFinCuenta') != '') {
             $queryBuilder->andWhere("r.codigoCuentaFk = {$session->get('filtroFinCuenta')}");
         }
-        if($session->get('filtroFinCentroCosto') != ''){
+        if ($session->get('filtroFinCentroCosto') != '') {
             $queryBuilder->andWhere("r.codigoCentroCostoFk = {$session->get('filtroFinCentroCosto')}");
         }
-        if($session->get('filtroFinNumeroReferencia') != ''){
+        if ($session->get('filtroFinNumeroReferencia') != '') {
             $queryBuilder->andWhere("r.numeroReferencia = {$session->get('filtroFinNumeroReferencia')}");
         }
-        if($session->get('filtroFinRegistroFiltroFecha') == true){
+        if ($session->get('filtroFinRegistroFiltroFecha') == true) {
             if ($session->get('filtroFinRegistroFechaDesde') != null) {
                 $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroFinRegistroFechaDesde')} 00:00:00'");
             } else {
@@ -99,11 +102,11 @@ class FinRegistroRepository extends ServiceEntityRepository
             ->leftJoin('r.terceroRel', 't')
             ->leftJoin('r.comprobanteRel', 'c')
             ->where('r.estadoIntercambio = 0');
-        $fecha =  new \DateTime('now');
-        if($session->get('filtroFinComprobante') != ''){
+        $fecha = new \DateTime('now');
+        if ($session->get('filtroFinComprobante') != '') {
             $queryBuilder->andWhere("r.codigoComprobanteFk = {$session->get('filtroFinComprobante')}");
         }
-        if($session->get('filtroFinRegistroFiltroFecha') == true){
+        if ($session->get('filtroFinRegistroFiltroFecha') == true) {
             if ($session->get('filtroFinRegistroFechaDesde') != null) {
                 $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroFinRegistroFechaDesde')} 00:00:00'");
             } else {
@@ -124,10 +127,10 @@ class FinRegistroRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $dql = "UPDATE App\Entity\Financiero\FinRegistro r set r.estadoIntercambio = 1 
                       WHERE r.estadoIntercambio = 0";
-        if($session->get('filtroFinComprobante') != ''){
+        if ($session->get('filtroFinComprobante') != '') {
             $dql .= " AND r.codigoComprobanteFk = {$session->get('filtroFinComprobante')}";
         }
-        if($session->get('filtroFinRegistroFiltroFecha') == true){
+        if ($session->get('filtroFinRegistroFiltroFecha') == true) {
             if ($session->get('filtroFinRegistroFechaDesde') != null) {
                 $dql .= " AND r.fecha >= '{$session->get('filtroFinRegistroFechaDesde')} 00:00:00'";
             }

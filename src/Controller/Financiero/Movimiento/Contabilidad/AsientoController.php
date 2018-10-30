@@ -11,6 +11,7 @@ use App\Form\Type\Financiero\AsientoType;
 use App\Formato\Financiero\Asiento;
 use App\General\General;
 use App\Utilidades\Estandares;
+use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -42,10 +43,10 @@ class AsientoController extends BaseController
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if($formBotonera->get('btnExcel')->isClicked()){
+            if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Asientos");
             }
-            if($formBotonera->get('btnEliminar')->isClicked()){
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
 
             }
         }
@@ -101,12 +102,12 @@ class AsientoController extends BaseController
         $form->add('btnActualizarDetalle', SubmitType::class, ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']]);
         $form->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']]);
 
-        if($arAsiento->getEstadoAutorizado() == 0) {
+        if ($arAsiento->getEstadoAutorizado() == 0) {
             $form->add('btnAdicionarDetalle', SubmitType::class, ['label' => 'add', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']]);
             $form->add('txtCodigoTercero', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
             $form->add('txtCodigoCuenta', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
-            $form->add('txtDebito', NumberType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
-            $form->add('txtCredito', NumberType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
+            $form->add('txtDebito', NumberType::class, ['required' => false, 'data' => 0, 'attr' => ['class' => 'form-control input-sm']]);
+            $form->add('txtCredito', NumberType::class, ['required' => false, 'data' => 0, 'attr' => ['class' => 'form-control input-sm']]);
         } else {
             $form->add('btnAdicionarDetalle', SubmitType::class, ['label' => 'add', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']]);
         }
@@ -139,30 +140,43 @@ class AsientoController extends BaseController
                 $em->getRepository(FinAsiento::class)->actualizarDetalles($id, $arrControles);
             }
             if ($form->get('btnAdicionarDetalle')->isClicked()) {
-                if($arAsiento->getEstadoAutorizado() == 0) {
+                if ($arAsiento->getEstadoAutorizado() == 0) {
+                    $error = false;
+                    $strMensaje = "";
                     $codigoTercero = $form->get('txtCodigoTercero')->getData();
                     $codigoCuenta = $form->get('txtCodigoCuenta')->getData();
+                    if ($codigoCuenta == "" || $codigoTercero == "") {
+                        $error = true;
+                        $strMensaje = "No pueden existir campos vacios";
+                    }
                     $debito = $form->get('txtDebito')->getData();
                     $credito = $form->get('txtCredito')->getData();
-                    $arTercero = $em->getRepository(FinTercero::class)->find($codigoTercero);
-                    $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuenta);
 
-                    $arAsientoDetalle = new FinAsientoDetalle();
-                    $arAsientoDetalle->setAsientoRel($arAsiento);
-                    $arAsientoDetalle->setTerceroRel($arTercero);
-                    $arAsientoDetalle->setCuentaRel($arCuenta);
-                    $arAsientoDetalle->setVrDebito($debito);
-                    $arAsientoDetalle->setVrCredito($credito);
-                    $em->persist($arAsientoDetalle);
-                    $em->flush();
-
+                    if ($debito > 0 && $credito > 0) {
+                        $error = true;
+                        $strMensaje = "Por cada linea solo el debito o credito puede tener valor mayor a cero";
+                    }
+                    if ($error == false) {
+                        $arTercero = $em->getRepository(FinTercero::class)->find($codigoTercero);
+                        $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuenta);
+                        $arAsientoDetalle = new FinAsientoDetalle();
+                        $arAsientoDetalle->setAsientoRel($arAsiento);
+                        $arAsientoDetalle->setTerceroRel($arTercero);
+                        $arAsientoDetalle->setCuentaRel($arCuenta);
+                        $arAsientoDetalle->setVrDebito($debito);
+                        $arAsientoDetalle->setVrCredito($credito);
+                        $em->persist($arAsientoDetalle);
+                        $em->flush();
+                    } else {
+                        Mensajes::error($strMensaje);
+                    }
                 }
 
             }
             return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_detalle', ['id' => $id]));
         }
         $arAsientoDetalles = $paginator->paginate($em->getRepository(FinAsientoDetalle::class)->asiento($id), $request->query->getInt('page', 1), 1000);
-        return $this->render('financiero/movimiento/contabilidad/asiento/detalle.html.twig',[
+        return $this->render('financiero/movimiento/contabilidad/asiento/detalle.html.twig', [
             'arAsiento' => $arAsiento,
             'arAsientoDetalles' => $arAsientoDetalles,
             'form' => $form->createView()
@@ -176,17 +190,17 @@ class AsientoController extends BaseController
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroFinBuscarCuentaCodigo')])
-            ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroFinBuscarCuentaNombre')])
-            ->add('btnFiltrar', SubmitType::class, ['label'  => 'Filtrar'])
+            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroFinBuscarCuentaCodigo')])
+            ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroFinBuscarCuentaNombre')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvBuscarBodegaCodigo',$form->get('txtCodigo')->getData());
-                $session->set('filtroInvBuscarBodegaNombre',$form->get('txtNombre')->getData());
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvBuscarBodegaCodigo', $form->get('txtCodigo')->getData());
+                $session->set('filtroInvBuscarBodegaNombre', $form->get('txtNombre')->getData());
             }
         }
         $arCuentas = $paginator->paginate($em->getRepository(FinCuenta::class)->lista(), $request->query->get('page', 1), 20);
@@ -204,17 +218,17 @@ class AsientoController extends BaseController
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroFinBuscarCuentaCodigo')])
-            ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroFinBuscarCuentaNombre')])
-            ->add('btnFiltrar', SubmitType::class, ['label'  => 'Filtrar'])
+            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroFinBuscarCuentaCodigo')])
+            ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroFinBuscarCuentaNombre')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvBuscarBodegaCodigo',$form->get('txtCodigo')->getData());
-                $session->set('filtroInvBuscarBodegaNombre',$form->get('txtNombre')->getData());
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvBuscarBodegaCodigo', $form->get('txtCodigo')->getData());
+                $session->set('filtroInvBuscarBodegaNombre', $form->get('txtNombre')->getData());
             }
         }
         $arTerceros = $paginator->paginate($em->getRepository(FinTercero::class)->lista(), $request->query->get('page', 1), 20);

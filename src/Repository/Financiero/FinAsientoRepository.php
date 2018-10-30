@@ -7,6 +7,7 @@ use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -54,18 +55,27 @@ class FinAsientoRepository extends ServiceEntityRepository
      */
     public function autorizar($arAsiento)
     {
-        if(!$arAsiento->getEstadoAutorizado()) {
-            $registros = $this->getEntityManager()->createQueryBuilder()->from(FinAsientoDetalle::class,'ad')
+        if (!$arAsiento->getEstadoAutorizado()) {
+            $registros = $this->getEntityManager()->createQueryBuilder()->from(FinAsientoDetalle::class, 'ad')
                 ->select('COUNT(ad.codigoAsientoDetallePk) AS registros')
+                ->addSelect('SUM(ad.vrDebito) AS debito, SUM(ad.vrCredito) AS credito')
                 ->where('ad.codigoAsientoFk = ' . $arAsiento->getCodigoAsientoPk())
-                ->getQuery()->getSingleResult();
-            if($registros['registros'] > 0) {
-                $arAsiento->setEstadoAutorizado(1);
-                $this->getEntityManager()->persist($arAsiento);
-                $this->getEntityManager()->flush();
+                ->getQuery()->getResult();
+
+
+            if ($registros[0]['registros'] > 0) {
+                if ($registros[0]['debito'] != $registros[0]['credito']) {
+                    Mensajes::error("Debitos y Creditos deben ser iguales");
+                } else {
+                    $arAsiento->setEstadoAutorizado(1);
+                    $this->getEntityManager()->persist($arAsiento);
+                    $this->getEntityManager()->flush();
+                }
             } else {
                 Mensajes::error("El registro no tiene detalles");
             }
+
+
         } else {
             Mensajes::error('El documento ya esta autorizado');
         }
@@ -78,7 +88,7 @@ class FinAsientoRepository extends ServiceEntityRepository
      */
     public function desautorizar($arAsiento)
     {
-        if($arAsiento->getEstadoAutorizado()) {
+        if ($arAsiento->getEstadoAutorizado()) {
             $arAsiento->setEstadoAutorizado(0);
             $this->getEntityManager()->persist($arAsiento);
             $this->getEntityManager()->flush();
@@ -89,27 +99,32 @@ class FinAsientoRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arPedido InvPedido
+     * @param $arAsiento FinAsiento
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function aprobar($arAsiento)
     {
         $em = $this->getEntityManager();
-        if($arAsiento->getEstadoAutorizado() == 1 && $arAsiento->getEstadoAprobado() == 0) {
-            //$arPedidoTipo = $this->getEntityManager()->getRepository(InvPedidoTipo::class)->find($arPedido->getCodigoPedidoTipoFk());
-            //if($arPedidoTipo){
-                //$arPedidoTipo->setConsecutivo($arPedidoTipo->getConsecutivo() + 1);
-                //$arPedido->setNumero($arPedidoTipo->getConsecutivo());
-                //$this->getEntityManager()->persist($arPedidoTipo);
-            //}
-            if($arAsiento->getVrDebito() == $arAsiento->getVrCredito()) {
+        if ($arAsiento->getEstadoAutorizado() == 1 && $arAsiento->getEstadoAprobado() == 0) {
+            if ($arAsiento->getVrDebito() == $arAsiento->getVrCredito()) {
                 $arAsientoDetalles = $em->getRepository(FinAsientoDetalle::class)->findBy(array('codigoAsientoFk' => $arAsiento->getCodigoAsientoPk()));
                 foreach ($arAsientoDetalles AS $arAsientoDetalle) {
                     $arRegistro = new FinRegistro();
+                    $arRegistro->setComprobanteRel($arAsiento->getComprobanteRel());
+                    $arRegistro->setFecha($arAsiento->getFechaContable());
+                    $arRegistro->setNumero($arAsiento->getNumero());
+                    $arRegistro->setNumeroReferencia($arAsiento->getNumero());
                     $arRegistro->setVrDebito($arAsientoDetalle->getVrDebito());
                     $arRegistro->setVrCredito($arAsientoDetalle->getVrCredito());
+                    if ($arAsientoDetalle->getVrDebito() > 0) {
+                        $arRegistro->setNaturaleza("D");
+                    } else {
+                        $arRegistro->setNaturaleza("C");
+                    }
+                    $arRegistro->setVrBase($arAsientoDetalle->getVrBase());
                     $arRegistro->setCuentaRel($arAsientoDetalle->getCuentaRel());
+                    $arRegistro->setDescripcion($arAsientoDetalle->getCuentaRel()->getNombre());
                     $arRegistro->setTerceroRel($arAsientoDetalle->getTerceroRel());
                     $em->persist($arRegistro);
                 }
@@ -134,9 +149,11 @@ class FinAsientoRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function actualizarDetalles($codigoAsiento, $arrControles){
+    public function actualizarDetalles($codigoAsiento, $arrControles)
+    {
         $em = $this->getEntityManager();
-        if($this->contarDetalles($codigoAsiento) > 0){
+        $error = false;
+        if ($this->contarDetalles($codigoAsiento) > 0) {
             $arrCuenta = $arrControles['arrCuenta'];
             $arrTercero = $arrControles['arrTercero'];
             $arrCodigo = $arrControles['TxtCodigo'];
@@ -144,10 +161,10 @@ class FinAsientoRepository extends ServiceEntityRepository
             $arrCredito = $arrControles['TxtCredito'];
             foreach ($arrCodigo as $codigo) {
                 $arAsientoDetalle = $em->getRepository(FinAsientoDetalle::class)->find($codigo);
-                if($arrTercero[$codigo]) {
+                if ($arrTercero[$codigo]) {
                     $arTercero = $em->getRepository(FinTercero::class)->find($arrTercero[$codigo]);
-                    if($arTercero) {
-                        $arAsientoDetalle->setTerceroRel( $arTercero);
+                    if ($arTercero) {
+                        $arAsientoDetalle->setTerceroRel($arTercero);
                     } else {
                         $arAsientoDetalle->setTerceroRel(null);
                     }
@@ -155,23 +172,30 @@ class FinAsientoRepository extends ServiceEntityRepository
                     $arAsientoDetalle->setTerceroRel(null);
                 }
 
-                if($arrCuenta[$codigo]) {
+                if ($arrCuenta[$codigo]) {
                     $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCuenta[$codigo]);
-                    if($arCuenta) {
-                        $arAsientoDetalle->setCuentaRel( $arCuenta);
+                    if ($arCuenta) {
+                        $arAsientoDetalle->setCuentaRel($arCuenta);
                     } else {
                         $arAsientoDetalle->setCuentaRel(null);
                     }
                 } else {
                     $arAsientoDetalle->setCuentaRel(null);
                 }
-                $arAsientoDetalle->setVrDebito( $arrDebito[$codigo] != '' ? $arrDebito[$codigo] : 0);
-                $arAsientoDetalle->setVrCredito( $arrCredito[$codigo] != '' ? $arrCredito[$codigo] : 0);
+                $arAsientoDetalle->setVrDebito($arrDebito[$codigo] != '' ? $arrDebito[$codigo] : 0);
+                $arAsientoDetalle->setVrCredito($arrCredito[$codigo] != '' ? $arrCredito[$codigo] : 0);
+                if ($arrDebito[$codigo] > 0 && $arrCredito[$codigo] > 0) {
+                    $error = true;
+                    Mensajes::error("Por cada linea solo el debito o credito puede tener valor mayor a cero");
+                }
                 $em->persist($arAsientoDetalle);
             }
         }
-        $em->flush();
-        $this->liquidar($codigoAsiento);
+        if ($error == false) {
+            $em->flush();
+            $this->liquidar($codigoAsiento);
+        }
+
     }
 
     /**
@@ -188,8 +212,6 @@ class FinAsientoRepository extends ServiceEntityRepository
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         return $resultado[1];
     }
-
-
 
 
 }

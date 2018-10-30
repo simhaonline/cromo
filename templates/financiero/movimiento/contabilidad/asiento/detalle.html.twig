@@ -53,6 +53,48 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {% if arAsiento.estadoAutorizado == 0 %}
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div class="form-group form-group-sm">
+
+                                        <div class="col-sm-11">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="input-group">
+                                                        {{ form_widget(form.txtCodigoTercero) }}
+                                                        <span class="input-group-btn">
+                                                        <a href="javascript:abrirVentana3('{{ path('financiero_buscar_tercero_asiento',{'campoCodigo' : 'form_txtCodigoTercero' }) }}','BuscarTercero',600,900)" class="btn-sm btn btn-default">...</a>
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group form-group-sm">
+
+                                        <div class="col-sm-11">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="input-group">
+                                                        {{ form_widget(form.txtCodigoCuenta) }}
+                                                        <span class="input-group-btn">
+                                                        <a href="javascript:abrirVentana3('{{ path('financiero_buscar_cuenta_asiento',{'campoCodigo' : 'form_txtCodigoCuenta' }) }}','BuscarCuenta',600,900)" class="btn-sm btn btn-default">..</a>
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ form_widget(form.txtDebito) }}</td>
+                                <td>{{ form_widget(form.txtCredito) }}</td>
+                                <td>{{ form_widget(form.btnAdicionarDetalle) }}</td>
+                            </tr>
+                        {% endif %}
                         {% for arAsientoDetalle in arAsientoDetalles %}
                             <tr>
                                 <td>{{ arAsientoDetalle.codigoAsientoDetallePk }}<input type="hidden" name="TxtCodigo[]" value="{{ arAsientoDetalle.codigoAsientoDetallePk }}"></td>
@@ -90,48 +132,6 @@
                                 </td>
                             </tr>
                         {% endfor %}
-                        {% if arAsiento.estadoAutorizado == 0 %}
-                        <tr>
-                            <td></td>
-                            <td>
-                                <div class="form-group form-group-sm">
-
-                                    <div class="col-sm-11">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="input-group">
-                                                    {{ form_widget(form.txtCodigoTercero) }}
-                                                    <span class="input-group-btn">
-                                                        <a href="javascript:abrirVentana3('{{ path('financiero_buscar_tercero_asiento',{'campoCodigo' : 'form_txtCodigoTercero' }) }}','BuscarTercero',600,900)" class="btn-sm btn btn-default">...</a>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group form-group-sm">
-
-                                    <div class="col-sm-11">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="input-group">
-                                                    {{ form_widget(form.txtCodigoCuenta) }}
-                                                    <span class="input-group-btn">
-                                                        <a href="javascript:abrirVentana3('{{ path('financiero_buscar_cuenta_asiento',{'campoCodigo' : 'form_txtCodigoCuenta' }) }}','BuscarCuenta',600,900)" class="btn-sm btn btn-default">..</a>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>{{ form_widget(form.txtDebito) }}</td>
-                            <td>{{ form_widget(form.txtCredito) }}</td>
-                            <td>{{ form_widget(form.btnAdicionarDetalle) }}</td>
-                        </tr>
-                        {% endif %}
                         </tbody>
                     </table>
                 </div>

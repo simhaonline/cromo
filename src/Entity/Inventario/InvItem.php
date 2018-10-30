@@ -93,6 +93,11 @@ class InvItem
     private $modelo;
 
     /**
+     * @ORM\Column(name="referencia", type="string",length=50, nullable=true)
+     */
+    private $referencia;
+
+    /**
      * @ORM\Column(name="cantidad_existencia", type="integer", nullable=true, options={"default" : 0})
      */
     private $cantidadExistencia = 0;
@@ -845,6 +850,22 @@ class InvItem
     public function setCotizacionesDetallesItemRel($cotizacionesDetallesItemRel): void
     {
         $this->cotizacionesDetallesItemRel = $cotizacionesDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferencia()
+    {
+        return $this->referencia;
+    }
+
+    /**
+     * @param mixed $referencia
+     */
+    public function setReferencia($referencia): void
+    {
+        $this->referencia = $referencia;
     }
 
 

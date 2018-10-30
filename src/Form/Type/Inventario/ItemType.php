@@ -61,6 +61,7 @@ class ItemType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Marca:'
                 , 'required' => true])
+            ->add('referencia', TextType::class, ['required' => false])
             ->add('porcentajeIva', IntegerType::class, ['required' => false])
             ->add('afectaInventario', CheckboxType::class, ['required' => false, 'label' => 'Afecta inventario'])
             ->add('descripcion', TextareaType::class, ['required' => false])

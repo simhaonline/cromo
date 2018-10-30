@@ -68,6 +68,12 @@ class FinAsientoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinAsientoDetalle::class, 'ad')
             ->select('ad.codigoAsientoDetallePk')
             ->addSelect('ad.codigoCuentaFk')
+            ->addSelect('t.numeroIdentificacion')
+            ->addSelect('t.nombreCorto')
+            ->addSelect('ad.vrDebito')
+            ->addSelect('ad.vrCredito')
+            ->addSelect('ad.vrBase')
+            ->join('ad.terceroRel', 't')
             ->where('ad.codigoAsientoFk = ' . $codigoAsiento);
 
         return $queryBuilder->getQuery()->getResult();

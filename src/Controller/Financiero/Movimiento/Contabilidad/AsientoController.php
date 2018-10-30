@@ -110,15 +110,19 @@ class AsientoController extends ControllerListenerPermisosFunciones
             $form->add('txtCodigoCuenta', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control input-sm']]);
             $form->add('txtDebito', NumberType::class, ['required' => false, 'data' => 0, 'attr' => ['class' => 'form-control input-sm']]);
             $form->add('txtCredito', NumberType::class, ['required' => false, 'data' => 0, 'attr' => ['class' => 'form-control input-sm']]);
+            $form->add('txtBase', NumberType::class, ['required' => false, 'data' => 0, 'attr' => ['class' => 'form-control input-sm']]);
         } else {
             $form->add('btnAdicionarDetalle', SubmitType::class, ['label' => 'add', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']]);
         }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
+            $redireccionar = true;
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository(FinAsiento::class)->actualizarDetalles($id, $arrControles);
-                $em->getRepository(FinAsiento::class)->autorizar($arAsiento);
+                $error = $em->getRepository(FinAsiento::class)->actualizarDetalles($id, $arrControles);
+                if ($error == false) {
+                    $em->getRepository(FinAsiento::class)->autorizar($arAsiento, $arrControles);
+                }
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(FinAsiento::class)->desautorizar($arAsiento);
@@ -143,39 +147,70 @@ class AsientoController extends ControllerListenerPermisosFunciones
             }
             if ($form->get('btnAdicionarDetalle')->isClicked()) {
                 if ($arAsiento->getEstadoAutorizado() == 0) {
+                    $redireccionar = false;
                     $error = false;
                     $strMensaje = "";
                     $codigoTercero = $form->get('txtCodigoTercero')->getData();
-                    $codigoCuenta = $form->get('txtCodigoCuenta')->getData();
-                    if ($codigoCuenta == "" || $codigoTercero == "") {
-                        $error = true;
-                        $strMensaje = "No pueden existir campos vacios";
-                    }
                     $debito = $form->get('txtDebito')->getData();
                     $credito = $form->get('txtCredito')->getData();
+                    $codigoCuenta = $form->get('txtCodigoCuenta')->getData();
+                    $base = $form->get('txtBase')->getData();
+                    $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuenta);
 
-                    if ($debito > 0 && $credito > 0) {
-                        $error = true;
-                        $strMensaje = "Por cada linea solo el debito o credito puede tener valor mayor a cero";
-                    }
-                    if ($error == false) {
-                        $arTercero = $em->getRepository(FinTercero::class)->find($codigoTercero);
-                        $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuenta);
-                        $arAsientoDetalle = new FinAsientoDetalle();
-                        $arAsientoDetalle->setAsientoRel($arAsiento);
-                        $arAsientoDetalle->setTerceroRel($arTercero);
-                        $arAsientoDetalle->setCuentaRel($arCuenta);
-                        $arAsientoDetalle->setVrDebito($debito);
-                        $arAsientoDetalle->setVrCredito($credito);
-                        $em->persist($arAsientoDetalle);
-                        $em->flush();
+                    //valida si la cuenta exige movimiento
+                    if ($arCuenta->getPermiteMovimiento()) {
+
+                        // solo debe tener debito o credito por cada linea
+                        if ($debito > 0 && $credito > 0) {
+                            $error = true;
+                            $strMensaje = "Por cada linea solo el debito o credito puede tener valor mayor a cero";
+                        }
+                        // validacion de tercero
+                        if ($arCuenta->getExigeTercero()) {
+                            if ($codigoTercero == "") {
+                                $strMensaje = "La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " exige tercero";
+                                $error = true;
+                            } else {
+                                $arTercero = $em->getRepository(FinTercero::class)->find($codigoTercero);
+                                if (!$arTercero) {
+                                    $strMensaje = "El tercero no existe.";
+                                    $error = true;
+                                }
+                            }
+                        } else {
+                            $arTercero = null;
+                        }
+
+                        $vrBase = 0;
+                        // validacion de base
+                        if ($arCuenta->getExigeBase() && $base == 0) {
+                            $strMensaje = "La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " exige base";
+                            $error = true;
+                        } else {
+                            $vrBase = $base;
+                        }
+                        if ($error == false) {
+                            $arAsientoDetalle = new FinAsientoDetalle();
+                            $arAsientoDetalle->setVrBase($vrBase);
+                            $arAsientoDetalle->setTerceroRel($arTercero);
+                            $arAsientoDetalle->setAsientoRel($arAsiento);
+                            $arAsientoDetalle->setCuentaRel($arCuenta);
+                            $arAsientoDetalle->setVrDebito($debito);
+                            $arAsientoDetalle->setVrCredito($credito);
+                            $em->persist($arAsientoDetalle);
+                            $em->flush();
+                            return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_detalle', ['id' => $id]));
+                        } else {
+                            Mensajes::error($strMensaje);
+                        }
                     } else {
-                        Mensajes::error($strMensaje);
+                        Mensajes::error("La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " no permite movimiento");
                     }
                 }
-
             }
-            return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_detalle', ['id' => $id]));
+            if ($redireccionar == true) {
+                return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_detalle', ['id' => $id]));
+            }
         }
         $arAsientoDetalles = $paginator->paginate($em->getRepository(FinAsientoDetalle::class)->asiento($id), $request->query->getInt('page', 1), 1000);
         return $this->render('financiero/movimiento/contabilidad/asiento/detalle.html.twig', [

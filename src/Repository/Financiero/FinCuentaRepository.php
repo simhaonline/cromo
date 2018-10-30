@@ -36,6 +36,7 @@ class FinCuentaRepository extends ServiceEntityRepository
         $queryBuilder = $this->_em->createQueryBuilder()->from(FinCuenta::class, 'c')
             ->select('c.codigoCuentaPk as ID')
             ->addSelect('c.nombre')
+            ->addSelect('c.permiteMovimiento as Permite_movimientos')
             ->addSelect('c.exigeTercero as Exige_Tercero')
             ->addSelect('c.exigeCentroCosto as Exige_centro_de_costo')
             ->addSelect('c.exigeBase as Exige_base')

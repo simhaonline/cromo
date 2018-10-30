@@ -4,6 +4,8 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina\Embargo;
 
 use App\Controller\BaseController;
 use App\Entity\RecursoHumano\RhuEmbargo;
+use App\Entity\RecursoHumano\RhuEmbargoJuzgado;
+use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\EmbargoType;
 use App\General\General;
 use Symfony\Component\Routing\Annotation\Route;
@@ -66,10 +68,14 @@ class EmbargoController extends BaseController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             if($form->get('guardar')->isClicked()){
+                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arEmbargo->getCodigoEmpleadoFk());
+                $arJuzgado = $em->getRepository(RhuEmbargoJuzgado::class)->find($arEmbargo->getCodigoEmbargoJuzgadoFk());
                 if($id == 0){
                     $arEmbargo->setEstadoActivo(1);
                     $arEmbargo->setFecha(new \DateTime('now'));
                 }
+                $arEmbargo->setEmpleadoRel($arEmpleado);
+                $arEmbargo->setEmbargoJuzgadoRel($arJuzgado);
                 $em->persist($arEmbargo);
                 $em->flush();
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_lista'));

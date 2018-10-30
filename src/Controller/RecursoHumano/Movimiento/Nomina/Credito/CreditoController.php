@@ -26,6 +26,8 @@ class CreditoController extends BaseController
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/movimiento/nomina/credito/lista", name="recursohumano_movimiento_nomina_credito_lista")
@@ -37,11 +39,12 @@ class CreditoController extends BaseController
         $formBotonera = $this->botoneraLista();
         $formBotonera->handleRequest($request);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 $this->getDatosExportar($formBotonera->getClickedButton()->getName(),$this->nombre);
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-
+                $em->getRepository(RhuCredito::class)->eliminar($arrSeleccionados);
             }
         }
         return $this->render('recursoHumano/movimiento/nomina/credito/lista.html.twig', [

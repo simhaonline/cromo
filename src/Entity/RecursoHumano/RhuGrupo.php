@@ -43,6 +43,11 @@ class RhuGrupo
     protected $creditosGrupoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuVacacion", mappedBy="grupoRel")
+     */
+    protected $vacacionesGrupoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoGrupoPk()
@@ -136,5 +141,21 @@ class RhuGrupo
     public function setCreditosGrupoRel($creditosGrupoRel): void
     {
         $this->creditosGrupoRel = $creditosGrupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionesGrupoRel()
+    {
+        return $this->vacacionesGrupoRel;
+    }
+
+    /**
+     * @param mixed $vacacionesGrupoRel
+     */
+    public function setVacacionesGrupoRel($vacacionesGrupoRel): void
+    {
+        $this->vacacionesGrupoRel = $vacacionesGrupoRel;
     }
 }

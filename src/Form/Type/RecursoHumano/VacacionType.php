@@ -4,6 +4,10 @@ namespace App\Form\Type\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuVacacion;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,57 +16,19 @@ class VacacionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoEmpleadoFk')
-            ->add('codigoContratoFk')
-            ->add('fecha')
-            ->add('fechaContabilidad')
-            ->add('numero')
-            ->add('fechaDesdePeriodo')
-            ->add('fechaHastaPeriodo')
-            ->add('fechaDesdeDisfrute')
-            ->add('fechaHastaDisfrute')
-            ->add('fechaInicioLabor')
-            ->add('vrSalud')
-            ->add('vrPension')
-            ->add('vrFondoSolidaridad')
-            ->add('vrIbc')
-            ->add('vrDeduccion')
-            ->add('vrBonificacion')
-            ->add('vrVacacion')
-            ->add('vrVacacionDisfrute')
-            ->add('vrVacacionDinero')
-            ->add('vrVacacionTotal')
-            ->add('diasVacaciones')
-            ->add('diasDisfrutados')
-            ->add('diasAusentismo')
-            ->add('diasPagados')
-            ->add('diasDisfrutadosReales')
-            ->add('diasPeriodo')
-            ->add('mesesPeriodo')
-            ->add('comentarios')
-            ->add('codigoCentroCostoFk')
-            ->add('vrSalarioActual')
-            ->add('vrSalarioPromedio')
-            ->add('vrSalarioPromedioPropuesto')
-            ->add('vrVacacionDisfrutePropuesto')
-            ->add('vrSalarioPromedioPropuestoPagado')
-            ->add('vrSaludPropuesto')
-            ->add('vrPensionPropuesto')
-            ->add('diasAusentismoPropuesto')
-            ->add('vrVacacionBruto')
-            ->add('estadoPagoGenerado')
-            ->add('estadoPagoBanco')
-            ->add('estadoContabilizado')
-            ->add('estadoAutorizado')
-            ->add('estadoAprobado')
-            ->add('estadoAnulado')
-            ->add('estadoPagado')
-            ->add('estadoLiquidado')
-            ->add('usuario')
-            ->add('vrRecargoNocturnoInicial')
-            ->add('vrRecargoNocturno')
-            ->add('vrPromedioRecargoNocturno')
-            ->add('vrIbcPromedio')
+            ->add('codigoEmpleadoFk',TextType::class,['required' => true])
+            ->add('fechaDesdeDisfrute', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',),'data' => new \DateTime('now')))
+            ->add('fechaHastaDisfrute', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',),'data' => new \DateTime('now')))
+            ->add('fechaInicioLabor', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',),'data' => new \DateTime('now')))
+            ->add('diasDisfrutados',TextType::class,['required' => true])
+            ->add('diasPagados',TextType::class,['required' => true])
+            ->add('comentarios',TextareaType::class,['required' => false])
+            ->add('vrSalarioPromedioPropuesto',TextType::class,['required' => true])
+            ->add('vrDisfrutePropuesto',TextType::class,['required' => true])
+            ->add('vrSalarioPromedioPropuestoPagado',TextType::class,['required' => true])
+            ->add('vrSaludPropuesto',TextType::class,['required' => true])
+            ->add('vrPensionPropuesto',TextType::class,['required' => true])
+            ->add('guardar',SubmitType::class,['attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 
@@ -77,14 +43,48 @@ class VacacionType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoVacacionPk",      "tipo":"pk"     ,"ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"codigoEmpleadoFk",      "tipo":"texto"  ,"ayuda":"Codigo del empleado",     "titulo":"EMPLEADO"},
-            {"campo":"fechaDesdePeriodo",     "tipo":"fecha"  ,"ayuda":"Fecha desde periodo",     "titulo":"P.DESDE"},                     
-            {"campo":"fechaHastaPeriodo",     "tipo":"fecha"  ,"ayuda":"Fecha hasta periodo",     "titulo":"P.HASTA"},                     
-            {"campo":"fechaDesdeDisfrute",    "tipo":"fecha"  ,"ayuda":"Fecha desde disfrute",    "titulo":"D.DESDE"},                     
-            {"campo":"fechaHastaDisfrute",    "tipo":"fecha"  ,"ayuda":"Fecha desde disfrute",    "titulo":"D.DESDE"},
-            {"campo":"diasPagados",           "tipo":"fecha"  ,"ayuda":"Dias pagados",            "titulo":"D.P"},
-            {"campo":"diasDisfrutados",       "tipo":"texto"  ,"ayuda":"Dias disfrutados" ,       "titulo":"D.D"},                     
-            {"campo":"diasDisfrutadosReales", "tipo":"moneda" ,"ayuda":"Dias disfrutados reales", "titulo":"D.D.R"}                                          
+            {"campo":"numero",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro","titulo":"NUMERO"},
+            {"campo":"fecha",                 "tipo":"fecha"  ,"ayuda":"Fecha de registro","titulo":"FECHA"},
+            {"campo":"grupoRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre del grupo al cual pertence el mepleado" , "titulo":"GRUPO", "relacion":""},
+            {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto"  ,"ayuda":"Codigo del empleado",    "titulo":"IDENTIFICACION", "relacion":""},
+            {"campo":"empleadoRel.nombreCorto","tipo":"texto"  ,"ayuda":"Codigo del empleado",       "titulo":"EMPLEADO", "relacion":""},
+            {"campo":"fechaDesdePeriodo",     "tipo":"fecha"  ,"ayuda":"Fecha desde periodo",        "titulo":"P.DESDE"},                     
+            {"campo":"fechaHastaPeriodo",     "tipo":"fecha"  ,"ayuda":"Fecha hasta periodo",        "titulo":"P.HASTA"},                     
+            {"campo":"fechaDesdeDisfrute",    "tipo":"fecha"  ,"ayuda":"Fecha desde disfrute",       "titulo":"DESDE"},                     
+            {"campo":"fechaHastaDisfrute",    "tipo":"fecha"  ,"ayuda":"Fecha desde disfrute",       "titulo":"HASTA"},
+            {"campo":"fechaInicioLabor",      "tipo":"fecha"  ,"ayuda":"Fecha inicio labores",       "titulo":"INICIO"},
+            {"campo":"diasPagados",           "tipo":"texto"  ,"ayuda":"Dias pagados",               "titulo":"D.P"},
+            {"campo":"diasDisfrutados",       "tipo":"texto"  ,"ayuda":"Dias disfrutados" ,          "titulo":"D.D"},                     
+            {"campo":"diasDisfrutadosReales", "tipo":"texto"  ,"ayuda":"Dias disfrutados reales",    "titulo":"D.D.R"},                                        
+            {"campo":"vrTotal",               "tipo":"moneda" ,"ayuda":"Valor total de la vacacion", "titulo":"TOTAL"},                                        
+            {"campo":"estadoAutorizado",      "tipo":"bool"   ,"ayuda":"Estado autorizado", "titulo":"AUT"},                                        
+            {"campo":"estadoPagado",          "tipo":"bool"   ,"ayuda":"Estado pagado",     "titulo":"PAG"},                                        
+            {"campo":"estadoAnulado",         "tipo":"bool"   ,"ayuda":"Estado anulado",    "titulo":"ANU"}                                        
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoVacacionPk",      "tipo":"pk"     ,"ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"numero",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro","titulo":"NUMERO"},
+            {"campo":"fecha",                 "tipo":"fecha"  ,"ayuda":"Fecha de registro","titulo":"FECHA"},
+            {"campo":"grupoRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre del grupo al cual pertence el mepleado" , "titulo":"GRUPO", "relacion":""},
+            {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto"  ,"ayuda":"Codigo del empleado",    "titulo":"IDENTIFICACION", "relacion":""},
+            {"campo":"empleadoRel.nombreCorto","tipo":"texto"  ,"ayuda":"Codigo del empleado",       "titulo":"EMPLEADO", "relacion":""},
+            {"campo":"fechaDesdePeriodo",     "tipo":"fecha"  ,"ayuda":"Fecha desde periodo",        "titulo":"P.DESDE"},                     
+            {"campo":"fechaHastaPeriodo",     "tipo":"fecha"  ,"ayuda":"Fecha hasta periodo",        "titulo":"P.HASTA"},                     
+            {"campo":"fechaDesdeDisfrute",    "tipo":"fecha"  ,"ayuda":"Fecha desde disfrute",       "titulo":"DESDE"},                     
+            {"campo":"fechaHastaDisfrute",    "tipo":"fecha"  ,"ayuda":"Fecha desde disfrute",       "titulo":"HASTA"},
+            {"campo":"fechaInicioLabor",      "tipo":"fecha"  ,"ayuda":"Fecha inicio labores",       "titulo":"INICIO"},
+            {"campo":"diasPagados",           "tipo":"texto"  ,"ayuda":"Dias pagados",               "titulo":"D.P"},
+            {"campo":"diasDisfrutados",       "tipo":"texto"  ,"ayuda":"Dias disfrutados" ,          "titulo":"D.D"},                     
+            {"campo":"diasDisfrutadosReales", "tipo":"texto"  ,"ayuda":"Dias disfrutados reales",    "titulo":"D.D.R"},                                        
+            {"campo":"vrTotal",               "tipo":"moneda" ,"ayuda":"Valor total de la vacacion", "titulo":"TOTAL"},                                        
+            {"campo":"estadoAutorizado",      "tipo":"bool"   ,"ayuda":"Estado autorizado", "titulo":"AUT"},                                        
+            {"campo":"estadoPagado",          "tipo":"bool"   ,"ayuda":"Estado pagado",     "titulo":"PAG"},                                        
+            {"campo":"estadoAnulado",         "tipo":"bool"   ,"ayuda":"Estado anulado",    "titulo":"ANU"}                                        
         ]';
         return $campos;
     }

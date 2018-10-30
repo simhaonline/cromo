@@ -3,6 +3,8 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Vacaciones;
 
 use App\Controller\BaseController;
+use App\Entity\RecursoHumano\RhuContrato;
+use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Form\Type\RecursoHumano\VacacionType;
 use App\General\General;
@@ -35,7 +37,7 @@ class VacacionesController extends BaseController
         $formBotonera->handleRequest($request);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
+                $this->getDatosExportar($formBotonera->getClickedButton()->getName(),$this->nombre);
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
 
@@ -55,7 +57,36 @@ class VacacionesController extends BaseController
      */
     public function nuevo(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arVacacion = new RhuVacacion();
+        if ($id != 0) {
+            $arVacacion = $em->getRepository($this->clase)->find($id);
+        }
+        $form = $this->createForm(VacacionType::class, $arVacacion);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arVacacion->getCodigoEmpleadoFk());
+                if ($arEmpleado->getCodigoContratoFk()) {
+                    $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
+                    if($id == 0){
+                        $arVacacion->setFecha(new \DateTime('now'));
+                    }
+                    $arVacacion->setContratoRel($arContrato);
+                    $arVacacion->setGrupoRel($arContrato->getGrupoRel());
+                    $arVacacion->setEmpleadoRel($arEmpleado);
+                    $em->persist($arVacacion);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_detalle',['id' => $arVacacion->getCodigoVacacionPk()]));
+                } else {
+                    Mensajes::error('El empleado no tiene contratos activos en el sistema');
+                }
+            }
+        }
+        return $this->render('recursoHumano/movimiento/nomina/vacacion/nuevo.html.twig', [
+            'form' => $form->createView(),
+            'arVacacion' => $arVacacion
+        ]);
     }
 
     /**
@@ -68,7 +99,7 @@ class VacacionesController extends BaseController
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->clase)->find($id);
-        return $this->render('recursoHumano/movimiento/nomina/vacacion/detalle.html.twig',[
+        return $this->render('recursoHumano/movimiento/nomina/vacacion/detalle.html.twig', [
             'arRegistro' => $arRegistro
         ]);
     }

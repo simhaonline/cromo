@@ -21,10 +21,10 @@ class RhuEmbargoRepository extends ServiceEntityRepository
     public function eliminar($arrSeleccionados)
     {
         if (is_array($arrSeleccionados) && count($arrSeleccionados) > 0) {
-            foreach ($arrSeleccionados as $codigoEmbargo) {
-                $arEmbargo = $this->_em->getRepository(RhuEmbargo::class)->find($codigoEmbargo);
-                if ($arEmbargo) {
-                    $this->_em->remove($arEmbargo);
+            foreach ($arrSeleccionados as $codigoRegistro) {
+                $arRegistro = $this->_em->getRepository(RhuEmbargo::class)->find($codigoRegistro);
+                if ($arRegistro) {
+                    $this->_em->remove($arRegistro);
                 }
             }
             $this->_em->flush();

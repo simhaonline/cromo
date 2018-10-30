@@ -8,55 +8,26 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class RhuCreditoRepository extends ServiceEntityRepository
 {
-
-    /**
-     * @return string
-     */
-    public function getRuta(){
-        return 'recursohumano_movimiento_credito_credito_';
-    }
-
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, RhuCredito::class);
     }
 
     /**
-     * @return \Doctrine\ORM\QueryBuilder
+     * @param $arrSeleccionados array
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function lista()
+    public function eliminar($arrSeleccionados)
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuCredito::class, 'e');
-        $queryBuilder
-            ->select('e.codigoCreditoPk');
-        return $queryBuilder;
+        if (is_array($arrSeleccionados) && count($arrSeleccionados) > 0) {
+            foreach ($arrSeleccionados as $codigoRegistro) {
+                $arRegistro = $this->_em->getRepository(RhuCredito::class)->find($codigoRegistro);
+                if ($arRegistro) {
+                    $this->_em->remove($arRegistro);
+                }
+            }
+            $this->_em->flush();
+        }
     }
-
-    /**
-     * @return array
-     */
-    public function parametrosLista(){
-        $arEmbargo = new RhuEmbargo();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
-            ->select('re.codigoEmbargoPk')
-            ->addSelect('re.fecha')
-            ->where('re.codigoEmbargoPk <> 0');
-        $arrOpciones = ['json' =>'[{"campo":"codigoEmbargoPk","ayuda":"Codigo del embargo","titulo":"ID"},
-        {"campo":"fecha","ayuda":"Fecha de registro","titulo":"FECHA"}]',
-            'query' => $queryBuilder,'ruta' => $this->getRuta()];
-        return $arrOpciones;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function parametrosExcel(){
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
-            ->select('re.codigoEmbargoPk')
-            ->addSelect('re.fecha')
-            ->where('re.codigoEmbargoPk <> 0');
-        return $queryBuilder->getQuery()->execute();
-    }
-
-
 }

@@ -59,17 +59,22 @@ class ProgramacionController extends BaseController
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arProgramacion = new $this->clase;
+        $arProgramacion = new RhuProgramacion();
         if ($id != 0) {
             $arProgramacion = $em->getRepository($this->clase)->find($id);
             if (!$arProgramacion) {
                 return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_empleado_lista'));
             }
+        } else {
+            $arProgramacion->setFechaDesde(new \DateTime('now'));
+            $arProgramacion->setFechaHasta(new \DateTime('now'));
+            $arProgramacion->setFechaHastaPeriodo(new \DateTime('now'));
         }
-        $form = $this->createForm($this->claseFormulario, $arProgramacion);
+        $form = $this->createForm(ProgramacionType::class, $arProgramacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
+                $arProgramacion->setDias(($arProgramacion->getFechaDesde()->diff($arProgramacion->getFechaHasta()))->days+1);
                 $em->persist($arProgramacion);
                 $em->flush();
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $arProgramacion->getCodigoProgramacionPk()]));

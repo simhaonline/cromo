@@ -33,6 +33,11 @@ class RhuProgramacion
     private $fechaHasta;
 
     /**
+     * @ORM\Column(name="fecha_hasta_periodo",  type="date", nullable=true)
+     */
+    private $fechaHastaPeriodo;
+
+    /**
      * @ORM\Column(name="nombre", options={"default": 0}, type="string",length=80, nullable=true)
      * @Assert\Length(
      *      max = 80,
@@ -70,6 +75,11 @@ class RhuProgramacion
      * @ORM\Column(name="estado_anulado", options={"default": false}, type="boolean",options={"default" : false}, nullable=true)
      */
     private $estadoAnulado = false;
+
+    /**
+     * @ORM\Column(name="mensaje_pago", type="text", nullable=true)
+     */
+    private $mensajePago;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuGrupo", inversedBy="programacionesGrupoRel")
@@ -150,6 +160,38 @@ class RhuProgramacion
     public function setFechaHasta($fechaHasta): void
     {
         $this->fechaHasta = $fechaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMensajePago()
+    {
+        return $this->mensajePago;
+    }
+
+    /**
+     * @param mixed $mensajePago
+     */
+    public function setMensajePago($mensajePago): void
+    {
+        $this->mensajePago = $mensajePago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHastaPeriodo()
+    {
+        return $this->fechaHastaPeriodo;
+    }
+
+    /**
+     * @param mixed $fechaHastaPeriodo
+     */
+    public function setFechaHastaPeriodo($fechaHastaPeriodo): void
+    {
+        $this->fechaHastaPeriodo = $fechaHastaPeriodo;
     }
 
     /**

@@ -65,6 +65,10 @@ class CreditoController extends BaseController
         $arCredito = new RhuCredito();
         if ($id != 0) {
             $arCredito = $em->getRepository($this->clase)->find($id);
+        } else {
+            $arCredito->setFechaCredito(new \DateTime('now'));
+            $arCredito->setFechaInicio(new \DateTime('now'));
+            $arCredito->setFechaFinalizacion(new \DateTime('now'));
         }
         $form = $this->createForm(CreditoType::class, $arCredito);
         $form->handleRequest($request);

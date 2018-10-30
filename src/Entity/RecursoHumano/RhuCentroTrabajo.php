@@ -26,7 +26,7 @@ class RhuCentroTrabajo
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="centroTrabajoRel")
      */
-    protected $contratoRel;
+    protected $contratosCentroTrabajoRel;
 
     /**
      * @return mixed

@@ -17,7 +17,7 @@ class CentroCostoType extends AbstractType
         $builder
             ->add('codigoCentroCostoPk', TextType::class, ['label' => 'Codigo centro costo:'])
             ->add('nombre', TextType::class, ['label' => 'Nombre:'])
-            ->add('estadoInactivo', CheckboxType::class, ['label' => 'Estado activo'])
+            ->add('estadoInactivo', CheckboxType::class, ['label' => 'Estado activo', 'required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

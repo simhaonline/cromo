@@ -64,7 +64,8 @@
                         <li>
                             <a href="#">Contabilidad <span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level">
-                                <li><a href="{{ path('financiero_movimiento_contabilidad_asiento_lista') }}">Asiento</a></li>
+                                <li><a href="{{ path('financiero_movimiento_contabilidad_asiento_lista') }}">Asiento</a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -74,20 +75,34 @@
                     <ul class="nav nav-second-level">
                         <li><a href="#">Tercero</a></li>
                     </ul>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="{{ path('admin_lista',{'modulo':'financiero','entidad':'cuenta'}) }}">Cuenta </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('admin_lista',{'modulo':'financiero','entidad':'comprobante'}) }}">Comprobante </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('admin_lista',{'modulo':'financiero','entidad':'centroCosto'}) }}">Centro de costo </a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-retweet fa-fw"></i> Utilidad<span class="fa arrow"></span></a>
+                    <a href=" #"><i class="fa fa-retweet fa-fw"></i> Utilidad<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
                             <a href="#">Contabilidad <span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level">
-                                <li><a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro') }}">Intercambio de datos</a>
+                                <li>
+                                    <a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro') }}">Intercambio
+                                        de datos</a>
                             </ul>
                         </li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-file-text-o fa-fw"></i> Informe<span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-file-text-o fa-fw"></i> Informe<span
+                                class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
                             <a href="#">Contabilidad <span class="fa arrow"></span></a>

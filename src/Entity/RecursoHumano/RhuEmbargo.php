@@ -48,7 +48,7 @@ class RhuEmbargo
     private $estadoActivo = false;
 
     /**
-     * @ORM\Column(name="valor_fijo", type="boolean")
+     * @ORM\Column(name="valor_fijo", type="boolean", nullable=true))
      */
     private $valorFijo = false;
 
@@ -80,52 +80,52 @@ class RhuEmbargo
     private $codigoInstancia;
 
     /**
-     * @ORM\Column(name="porcentaje_devengado", type="boolean")
+     * @ORM\Column(name="porcentaje_devengado", type="boolean", nullable=true))
      */
     private $porcentajeDevengado = false;
 
     /**
-     * @ORM\Column(name="porcentaje_devengado_prestacional", type="boolean")
+     * @ORM\Column(name="porcentaje_devengado_prestacional", type="boolean", nullable=true))
      */
     private $porcentajeDevengadoPrestacional = false;
 
     /**
-     * @ORM\Column(name="porcentaje_devengado_prestacional_menos_descuento_ley", type="boolean")
+     * @ORM\Column(name="porcentaje_devengado_prestacional_menos_descuento_ley", type="boolean", nullable=true))
      */
     private $porcentajeDevengadoPrestacionalMenosDescuentoLey = false;
 
     /**
-     * @ORM\Column(name="porcentaje_devengado_prestacional_menos_descuento_ley_transporte", type="boolean")
+     * @ORM\Column(name="porcentaje_devengado_prestacional_menos_descuento_ley_transporte", type="boolean", nullable=true))
      */
     private $porcentajeDevengadoPrestacionalMenosDescuentoLeyTransporte = false;
 
     /**
-     * @ORM\Column(name="porcentaje_devengado_menos_descuento_ley", type="boolean")
+     * @ORM\Column(name="porcentaje_devengado_menos_descuento_ley", type="boolean", nullable=true))
      */
     private $porcentajeDevengadoMenosDescuentoLey = false;
 
     /**
-     * @ORM\Column(name="porcentaje_devengado_menos_descuento_ley_transporte", type="boolean")
+     * @ORM\Column(name="porcentaje_devengado_menos_descuento_ley_transporte", type="boolean", nullable=true))
      */
     private $porcentajeDevengadoMenosDescuentoLeyTransporte = false;
 
     /**
-     * @ORM\Column(name="porcentajeExcedaSalarioMinimo", type="boolean")
+     * @ORM\Column(name="porcentaje_exceda_salario_minimo", type="boolean", nullable=true))
      */
     private $porcentajeExcedaSalarioMinimo = false;
 
     /**
-     * @ORM\Column(name="porcentaje_salario_minimo", type="boolean", nullable=true)
+     * @ORM\Column(name="porcentaje_salario_minimo", type="boolean", nullable=true, nullable=true))
      */
     private $porcentajeSalarioMinimo = false;
 
     /**
-     * @ORM\Column(name="partesExcedaSalarioMinimo", type="boolean")
+     * @ORM\Column(name="partes_exceda_salario_minimo", type="boolean", nullable=true))
      */
     private $partesExcedaSalarioMinimo = false;
 
     /**
-     * @ORM\Column(name="partesExcedaSalarioMinimoMenosDescuentoLey", type="boolean", nullable=true)
+     * @ORM\Column(name="partes_exceda_salario_minimo_menos_descuento_ley", type="boolean", nullable=true, nullable=true))
      */
     private $partesExcedaSalarioMinimoMenosDescuentoLey = false;
 
@@ -135,14 +135,14 @@ class RhuEmbargo
     private $partes = 0;
 
     /**
-     * @ORM\Column(name="valor", type="float")
+     * @ORM\Column(name="vr_valor", type="float", nullable=true)
      */
-    private $valor = 0;
+    private $vrValor = 0;
 
     /**
-     * @ORM\Column(name="porcentaje", type="float", nullable=true)
+     * @ORM\Column(name="vr_porcentaje", type="float", nullable=true)
      */
-    private $porcentaje = 0;
+    private $vrPorcentaje = 0;
 
     /**
      * @ORM\Column(name="codigo_usuario", type="string", length=50, nullable=true)
@@ -221,7 +221,6 @@ class RhuEmbargo
      */
     private $apellidosDemandante;
 
-
     /**
      *
      * @ORM\Column(name="numero_identificacion_beneficiario", type="string", length=20, nullable=true)
@@ -234,7 +233,6 @@ class RhuEmbargo
     private $oficina;
 
     /**
-     *
      * @ORM\Column(name="vr_monto_maximo", type="float", nullable=true)
      */
     private $VrMontoMaximo;
@@ -246,13 +244,11 @@ class RhuEmbargo
     private $saldo;
 
     /**
-     *
      * @ORM\Column(name="descuento", type="float", nullable=true)
      */
     private $descuento;
 
     /**
-     *
      * @ORM\Column(name="validar_monto_maximo", type="boolean", nullable=true)
      */
     private $validarMontoMaximo = false;
@@ -296,6 +292,9 @@ class RhuEmbargo
     /**
      * @ORM\ManyToOne(targetEntity="RhuEmbargoTipo", inversedBy="embargosEmbargoTipoRel")
      * @ORM\JoinColumn(name="codigo_embargo_tipo_fk", referencedColumnName="codigo_embargo_tipo_pk")
+     * @Assert\NotBlank(
+     *     message="Este campo no puede estar vacio"
+     * )
      */
     protected $embargoTipoRel;
 
@@ -666,33 +665,33 @@ class RhuEmbargo
     /**
      * @return mixed
      */
-    public function getValor()
+    public function getVrValor()
     {
-        return $this->valor;
+        return $this->vrValor;
     }
 
     /**
-     * @param mixed $valor
+     * @param mixed $vrValor
      */
-    public function setValor($valor): void
+    public function setVrValor($vrValor): void
     {
-        $this->valor = $valor;
+        $this->vrValor = $vrValor;
     }
 
     /**
      * @return mixed
      */
-    public function getPorcentaje()
+    public function getVrPorcentaje()
     {
-        return $this->porcentaje;
+        return $this->vrPorcentaje;
     }
 
     /**
-     * @param mixed $porcentaje
+     * @param mixed $vrPorcentaje
      */
-    public function setPorcentaje($porcentaje): void
+    public function setVrPorcentaje($vrPorcentaje): void
     {
-        $this->porcentaje = $porcentaje;
+        $this->vrPorcentaje = $vrPorcentaje;
     }
 
     /**

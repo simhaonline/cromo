@@ -19,22 +19,16 @@ class RhuEmbargoJuzgado
     private $codigoEmbargoJuzgadoPk;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nombre", type="string", length=80)
      */
     private $nombre;    
     
     /**
-     * @var string
-     *
      * @ORM\Column(name="oficina", type="string", length=30, nullable=true)
      */
     private $oficina;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="cuenta", type="string", length=30, nullable=true)
      */
     private $cuenta;
@@ -43,4 +37,84 @@ class RhuEmbargoJuzgado
      * @ORM\OneToMany(targetEntity="RhuEmbargo", mappedBy="embargoJuzgadoRel")
      */
     protected $embargosEmbargoJuzgadoRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmbargoJuzgadoPk()
+    {
+        return $this->codigoEmbargoJuzgadoPk;
+    }
+
+    /**
+     * @param mixed $codigoEmbargoJuzgadoPk
+     */
+    public function setCodigoEmbargoJuzgadoPk($codigoEmbargoJuzgadoPk): void
+    {
+        $this->codigoEmbargoJuzgadoPk = $codigoEmbargoJuzgadoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOficina()
+    {
+        return $this->oficina;
+    }
+
+    /**
+     * @param mixed $oficina
+     */
+    public function setOficina($oficina): void
+    {
+        $this->oficina = $oficina;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuenta()
+    {
+        return $this->cuenta;
+    }
+
+    /**
+     * @param mixed $cuenta
+     */
+    public function setCuenta($cuenta): void
+    {
+        $this->cuenta = $cuenta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmbargosEmbargoJuzgadoRel()
+    {
+        return $this->embargosEmbargoJuzgadoRel;
+    }
+
+    /**
+     * @param mixed $embargosEmbargoJuzgadoRel
+     */
+    public function setEmbargosEmbargoJuzgadoRel($embargosEmbargoJuzgadoRel): void
+    {
+        $this->embargosEmbargoJuzgadoRel = $embargosEmbargoJuzgadoRel;
+    }
 }

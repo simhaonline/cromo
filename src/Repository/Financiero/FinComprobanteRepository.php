@@ -14,4 +14,13 @@ class FinComprobanteRepository extends ServiceEntityRepository
         parent::__construct($registry, FinComprobante::class);
     }
 
+
+    public function camposPredeterminados()
+    {
+        $queryBuilder = $this->_em->createQueryBuilder()->from(FinComprobante::class, 'c')
+            ->select('c.codigoComprobantePk as ID')
+            ->addSelect('c.nombre')
+            ->where('c.codigoComprobantePk IS NOT NULL');
+        return $queryBuilder->getQuery()->execute();
+    }
 }

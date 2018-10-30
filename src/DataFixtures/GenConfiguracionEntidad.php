@@ -72,15 +72,22 @@ class GenConfiguracionEntidad extends Fixture
             'novedadTipo,admin,nomina,0,0',
             'pagoTipo,admin,nomina,0,0',
             'creditoTipo,admin,nomina,0,0',
-            'concepto,admin,nomina,0,0'];
+            'concepto,admin,nomina,0,0',
+            'embargoJuzgado,admin,nomina,0,0',
+            'embargoTipo,admin,nomina,0,0'];
         $this->setConfiguracionEntidades($arrModuloRecursoHumano, $em, 'recursoHumano');
         /////////////////                 FIN ESTRACTURA MODULO DE RECURSO HUMANO
 //
 //        /////////////////              INICIO ESTRACTURA MODULO DE CONTABILIDAD                        ////////////////
-//        $arrModuloContabilidad = ['registro', 'cuenta', 'comprobante', 'centroCosto', 'tercero'];
-//        $this->setConfiguracionEntidades($arrModuloContabilidad, $em, 'contabilidad');
+        $arrModuloContabilidad = [
+            'cuenta,administracion,general,0,0',
+            'comprobante,administracion,general,0,0',
+            'centroCosto,administracion,general,0,0'
+        ];
+        $this->setConfiguracionEntidades($arrModuloContabilidad, $em, 'financiero');
 //        /////////////////                 FIN ESTRACTURA MODULO DE CONTABILIDAD                        ////////////////
-//        ///
+
+
 //        /////////////////              INICIO ESTRACTURA MODULO DE GENERAL SISTEMA                     ////////////////
         $arrModuloGeneral = ['sexo,admin,general,0,0',
             'religion,admin,general,0,0',
@@ -146,7 +153,7 @@ class GenConfiguracionEntidad extends Fixture
             case 'compra':
                 $prefijo = 'com';
                 break;
-            case 'contabilidad':
+            case 'financiero':
                 $prefijo = 'fin';
                 break;
             case 'transporte':

@@ -1,0 +1,106 @@
+{% extends 'base_recursoHumano.html.twig' %}
+{% block content %}
+    <br>
+    <br>
+    {{ form_start(form,{'attr':{'class':'form-horizontal'}}) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Información general
+        </div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_txtNumeroIdentificacion" class="col-sm-2 control-label">Empleado:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.codigoEmpleadoFk) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="form_txtNombreCorto" name="form_txtNombreCorto" type="text"
+                                       class="form-control"
+                                       value="{{ arVacacion.empleadoRel.nombreCorto |default('') }}"
+                                       readOnly="ReadOnly"/>
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'vacacion_codigoEmpleadoFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="vacacion_diasDisfrutados" class="control-label col-sm-2">Dias disfrutados:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.diasDisfrutados) }}
+                </div>
+                <label for="vacacion_diasPagados" class="control-label col-sm-2">Dias reconocidos en dinero:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.diasPagados) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="vacacion_fechaDesdeDisfrute" class="control-label col-sm-2">Desde:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaDesdeDisfrute) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="vacacion_fechaHastaDisfrute" class="control-label col-sm-2">Hasta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaHastaDisfrute) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="vacacion_fechaInicioLabor" class="control-label col-sm-2">Fecha inicia labores:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaInicioLabor) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="vacacion_vrSalarioPromedioPropuesto" class="control-label col-sm-2">Salario promedio (propuesto-disfrute):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrSalarioPromedioPropuesto) }}
+                </div>
+                <label for="vacacion_vrSaludPropuesto" class="control-label col-sm-2">Salud (propuesto):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrSaludPropuesto) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="vacacion_vrSalarioPromedioPropuesto" class="control-label col-sm-2">Salario promedio (propuesto-dinero):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrSalarioPromedioPropuestoPagado) }}
+                </div>
+                <label for="vacacion_vrPensionPropuesto" class="control-label col-sm-2">Pension (propuesto):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrPensionPropuesto) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="vacacion_vrDisfrutePropuesto" class="control-label col-sm-2">Valor disfrute (propuesto):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrDisfrutePropuesto) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="vacacion_comentarios" class="control-label col-sm-2">Comentarios:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentarios) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn-group" style="float: left;">
+            <a href="{{ path('recursohumano_movimiento_nomina_vacacion_lista') }}" class="btn btn-sm btn-default">Cancelar</a>
+        </div>
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(form.guardar) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

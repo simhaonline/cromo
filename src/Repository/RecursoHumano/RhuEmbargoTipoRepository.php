@@ -12,4 +12,12 @@ class RhuEmbargoTipoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuEmbargoTipo::class);
     }
+
+    public function camposPredeterminados(){
+        return $this->_em->createQueryBuilder()->from(RhuEmbargoTipo::class,'et')
+            ->select('et.codigoEmbargoTipoPk AS ID')
+            ->addSelect('et.nombre')
+            ->addSelect('et.codigoConceptoFk')
+            ->where('et.codigoEmbargoTipoPk IS NOT NULL');
+    }
 }

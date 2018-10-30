@@ -4,14 +4,159 @@
         <div class="btn-group">
             <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_vacacion_lista') }}">Volver</a>
         </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
     </div>
     <br/><br/>
+
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
-            <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arRegistro.codigoVacacionPk }}</td>
+            <td class="titulo">NUMERO:</td>
+            <td class="td-in-well">{{ arVacacion.numero }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arVacacion.fecha |date("Y/m/d") }}</td>
+            <td class="titulo">RECARGO NOCTURNO (INICIAL):</td>
+            <td class="td-label"
+                align="right">{{ arVacacion.vrRecargoNocturnoInicial | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">EMPLEADO:</td>
+            <td class="td-in-well">{{ arVacacion.empleadoRel.nombreCorto }}</td>
+            <td class="titulo">IDENTIFICACIÓN:</td>
+            <td class="td-in-well">{{ arVacacion.empleadoRel.numeroIdentificacion }}</td>
+            <td class="titulo">RECARGO NOCTURNO:</td>
+            <td class="td-in-well"
+                align="right">{{ arVacacion.vrRecargoNocturno | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">PERIODO DESDE:</td>
+            <td class="td-in-well">{{ arVacacion.fechaDesdePeriodo |date("Y/m/d") }}</td>
+            <td class="titulo">DÍAS VACACIONES:</td>
+            <td class="td-in-well">{{ arVacacion.dias }}</td>
+            <td class="titulo">PROM. RECARGO NOCTURNO TOTAL ({{ arVacacion.mesesPeriodo }} meses):</td>
+            <td class="td-label"
+                align="right">{{ arVacacion.vrPromedioRecargoNocturno | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">PERIODO HASTA:</td>
+            <td class="td-in-well">{{ arVacacion.fechaHastaPeriodo |date("Y/m/d") }}</td>
+            <td class="titulo">DÍAS PAGADOS:</td>
+            <td class="td-in-well">{{ arVacacion.diasPagados }}</td>
+            <td class="titulo">SALARIO ACTUAL:</td>
+            <td class="td-in-well"
+                align="right">{{ arVacacion.vrSalarioActual | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DISFRUTE DESDE:</td>
+            <td class="td-in-well">{{ arVacacion.fechaDesdeDisfrute |date("Y/m/d") }}</td>
+            <td class="titulo">DÍAS DISFRUTADOS:</td>
+            <td class="td-in-well">{{ arVacacion.diasDisfrutados }}</td>
+            <td class="titulo">SALARIO PROMEDIO:</td>
+            <td class="td-in-well"
+                align="right">{{ arVacacion.vrSalarioPromedio | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DISFRUTE HASTA</td>
+            <td class="td-in-well">{{ arVacacion.fechaHastaDisfrute |date("Y/m/d") }}</td>
+            <td class="titulo">DÍAS DISFRUTADOS (REALES):</td>
+            <td class="td-in-well">{{ arVacacion.diasDisfrutadosReales }}</td>
+            <td class="titulo">VR. SALUD</td>
+            <td class="td-label" align="right">{{ arVacacion.vrSalud | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA INICIO LABOR:</td>
+            <td class="td-in-well">{{ arVacacion.fechaInicioLabor |date("Y/m/d") }}</td>
+            <td class="titulo">USUARIO:</td>
+            <td class="td-in-well">{{ arVacacion.usuario }}</td>
+            <td class="titulo">VR. PENSIÓN:</td>
+            <td class="td-label"
+                align="right">{{ arVacacion.vrPension | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">GRUPO PAGO:</td>
+            <td class="td-in-well">{{ arVacacion.grupoRel.nombre }}</td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">VR. FONDO</td>
+            <td class="td-in-well"
+                align="right">{{ arVacacion.vrFondoSolidaridad | number_format(0, '.', ',') }}</td>
+
+        </tr>
+        <tr>
+            <td class="titulo">TIPO TIEMPO</td>
+            <td class="td-in-well">{{ arVacacion.contratoRel.tipoTiempoRel.nombre | default('') }}</td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">DISFRUTADAS:</td>
+            {% if arVacacion.vrDisfrutePropuesto == 0 %}
+                <td class="td-in-well"
+                    align="right">{{ arVacacion.vrDisfrute | number_format(0, '.', ',') }}</td>
+            {% else %}
+                {% if arVacacion.vrDisfrutePropuesto != 0 %}
+                    <td class="td-in-well"
+                        align="right">{{ arVacacion.vrDisfrutePropuesto | number_format(0, '.', ',') }}</td>
+                {% endif %}
+            {% endif %}
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">EN DINERO:</td>
+            <td class="td-in-well"
+                align="right">{{ arVacacion.vrDinero | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CONTRATO:</td>
+            <td class="td-in-well">{{ arVacacion.codigoContratoFk }}</td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">TOTAL VACACIONES:</td>
+            <td class="td-in-well"
+                align="right">{{ arVacacion.vrBruto | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">OTRAS DEDUCCIONES:</td>
+            <td class="td-in-well"
+                align="right">{{ arVacacion.vrDeduccion | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">BONIFICACIONES:</td>
+            <td class="td-in-well"
+                align="right">{{ arVacacion.vrBonificacion | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td></td>
+            <td class="titulo">A PAGAR:</td>
+            <td class="td-in-well"
+                align="right">{{ arVacacion.vrValor | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIOS:</td>
+            <td class="td-in-well" colspan="7">{{ arVacacion.comentarios }}</td>
         </tr>
     </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles </a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <br/>
+        </div>
+    </div>
     <br>
     <br>
 {% endblock %}

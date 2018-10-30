@@ -351,6 +351,11 @@ class TteGuia
     private $empaqueReferencia;
 
     /**
+     * @ORM\Column(name="tipo_liquidacion", type="string", length=1, nullable=true, options={"default" : "K"})
+     */
+    private $tipoLiquidacion;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -1940,6 +1945,55 @@ class TteGuia
     {
         $this->mercanciaPeligrosa = $mercanciaPeligrosa;
     }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTipoLiquidacion()
+    {
+        return $this->tipoLiquidacion;
+    }
+
+    /**
+     * @param mixed $tipoLiquidacion
+     */
+    public function setTipoLiquidacion($tipoLiquidacion): void
+    {
+        $this->tipoLiquidacion = $tipoLiquidacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRedespachosGuiaRel()
+    {
+        return $this->redespachosGuiaRel;
+    }
+
+    /**
+     * @param mixed $redespachosGuiaRel
+     */
+    public function setRedespachosGuiaRel($redespachosGuiaRel): void
+    {
+        $this->redespachosGuiaRel = $redespachosGuiaRel;
+    }
+
 
 
 }

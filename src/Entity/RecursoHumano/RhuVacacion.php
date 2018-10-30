@@ -28,6 +28,11 @@ class RhuVacacion
     private $codigoContratoFk;
 
     /**
+     * @ORM\Column(name="codigo_grupo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoGrupoFk;
+
+    /**
      * @ORM\Column(name="fecha", type="date",nullable=true)
      */
     private $fecha;
@@ -38,7 +43,7 @@ class RhuVacacion
     private $fechaContabilidad;
 
     /**
-     * @ORM\Column(name="numero",options={"default": 0},type="integer",nullable=true)
+     * @ORM\Column(name="numero", options={"default": 0},type="integer",nullable=true)
      */
     private $numero = 0;
 
@@ -98,29 +103,29 @@ class RhuVacacion
     private $vrBonificacion = 0;
 
     /**
-     * @ORM\Column(name="vr_vacacion",options={"default": 0}, type="float",nullable=true)
+     * @ORM\Column(name="vr_valor",options={"default": 0}, type="float",nullable=true)
      */
-    private $vrVacacion = 0;
+    private $vrValor = 0;
 
     /**
-     * @ORM\Column(name="vr_vacacion_disfrute",options={"default": 0}, type="float", nullable=true)
+     * @ORM\Column(name="vr_disfrute",options={"default": 0}, type="float", nullable=true)
      */
-    private $vrVacacionDisfrute = 0;
+    private $vrDisfrute = 0;
 
     /**
-     * @ORM\Column(name="vr_vacacion_dinero",options={"default": 0}, type="float", nullable=true)
+     * @ORM\Column(name="vr_dinero",options={"default": 0}, type="float", nullable=true)
      */
-    private $vrVacacionDinero = 0;
+    private $vrDinero = 0;
 
     /**
-     * @ORM\Column(name="vr_vacacion_total",options={"default": 0}, type="float", nullable=true)
+     * @ORM\Column(name="vr_total",options={"default": 0}, type="float", nullable=true)
      */
-    private $vrVacacionTotal = 0;
+    private $vrTotal = 0;
 
     /**
-     * @ORM\Column(name="dias_vacaciones",options={"default": 0}, type="integer",nullable=true)
+     * @ORM\Column(name="dias",options={"default": 0}, type="integer",nullable=true)
      */
-    private $diasVacaciones = 0;
+    private $dias = 0;
 
     /**
      * @ORM\Column(name="dias_disfrutados", options={"default": 0}, type="integer",nullable=true)
@@ -158,11 +163,6 @@ class RhuVacacion
     private $comentarios;
 
     /**
-     * @ORM\Column(name="codigo_centro_costo_fk", type="integer", nullable=true)
-     */
-    private $codigoCentroCostoFk;
-
-    /**
      * @ORM\Column(name="vr_salario_actual", options={"default": 0}, type="float",nullable=true)
      */
     private $vrSalarioActual = 0;
@@ -181,9 +181,9 @@ class RhuVacacion
     private $vrSalarioPromedioPropuesto = 0;
 
     /**
-     * @ORM\Column(name="vr_vacacion_disfrute_propuesto", options={"default": 0}, type="float", nullable=true)
+     * @ORM\Column(name="vr_disfrute_propuesto", options={"default": 0}, type="float", nullable=true)
      */
-    private $vrVacacionDisfrutePropuesto = 0;
+    private $vrDisfrutePropuesto = 0;
 
 
     /**
@@ -207,9 +207,9 @@ class RhuVacacion
     private $diasAusentismoPropuesto = 0;
 
     /**
-     * @ORM\Column(name="vr_vacacion_bruto", options={"default": 0}, type="float",nullable=true)
+     * @ORM\Column(name="vr_bruto", options={"default": 0}, type="float",nullable=true)
      */
-    private $vrVacacionBruto = 0;
+    private $vrBruto = 0;
 
     /**
      * @ORM\Column(name="estado_pago_generado", options={"default": false}, type="boolean",nullable=true)
@@ -252,7 +252,7 @@ class RhuVacacion
     private $estadoLiquidado = false;
 
     /**
-     * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
+     * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
      */
     private $usuario;
 
@@ -275,6 +275,24 @@ class RhuVacacion
      * @ORM\Column(name="vr_ibc_promedio", options={"default": 0}, type="float",nullable=true)
      */
     private $vrIbcPromedio = 0;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuContrato", inversedBy="vacacionesContratoRel")
+     * @ORM\JoinColumn(name="codigo_contrato_fk", referencedColumnName="codigo_contrato_pk")
+     */
+    protected $contratoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="vacacionesEmpleadoRel")
+     * @ORM\JoinColumn(name="codigo_empleado_fk", referencedColumnName="codigo_empleado_pk")
+     */
+    protected $empleadoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuGrupo", inversedBy="vacacionesGrupoRel")
+     * @ORM\JoinColumn(name="codigo_grupo_fk", referencedColumnName="codigo_grupo_pk")
+     */
+    protected $grupoRel;
 
     /**
      * @return mixed
@@ -322,6 +340,22 @@ class RhuVacacion
     public function setCodigoContratoFk($codigoContratoFk): void
     {
         $this->codigoContratoFk = $codigoContratoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
     }
 
     /**
@@ -551,81 +585,81 @@ class RhuVacacion
     /**
      * @return mixed
      */
-    public function getVrVacacion()
+    public function getVrValor()
     {
-        return $this->vrVacacion;
+        return $this->vrValor;
     }
 
     /**
-     * @param mixed $vrVacacion
+     * @param mixed $vrValor
      */
-    public function setVrVacacion($vrVacacion): void
+    public function setVrValor($vrValor): void
     {
-        $this->vrVacacion = $vrVacacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrVacacionDisfrute()
-    {
-        return $this->vrVacacionDisfrute;
-    }
-
-    /**
-     * @param mixed $vrVacacionDisfrute
-     */
-    public function setVrVacacionDisfrute($vrVacacionDisfrute): void
-    {
-        $this->vrVacacionDisfrute = $vrVacacionDisfrute;
+        $this->vrValor = $vrValor;
     }
 
     /**
      * @return mixed
      */
-    public function getVrVacacionDinero()
+    public function getVrDisfrute()
     {
-        return $this->vrVacacionDinero;
+        return $this->vrDisfrute;
     }
 
     /**
-     * @param mixed $vrVacacionDinero
+     * @param mixed $vrDisfrute
      */
-    public function setVrVacacionDinero($vrVacacionDinero): void
+    public function setVrDisfrute($vrDisfrute): void
     {
-        $this->vrVacacionDinero = $vrVacacionDinero;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrVacacionTotal()
-    {
-        return $this->vrVacacionTotal;
-    }
-
-    /**
-     * @param mixed $vrVacacionTotal
-     */
-    public function setVrVacacionTotal($vrVacacionTotal): void
-    {
-        $this->vrVacacionTotal = $vrVacacionTotal;
+        $this->vrDisfrute = $vrDisfrute;
     }
 
     /**
      * @return mixed
      */
-    public function getDiasVacaciones()
+    public function getVrDinero()
     {
-        return $this->diasVacaciones;
+        return $this->vrDinero;
     }
 
     /**
-     * @param mixed $diasVacaciones
+     * @param mixed $vrDinero
      */
-    public function setDiasVacaciones($diasVacaciones): void
+    public function setVrDinero($vrDinero): void
     {
-        $this->diasVacaciones = $diasVacaciones;
+        $this->vrDinero = $vrDinero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotal()
+    {
+        return $this->vrTotal;
+    }
+
+    /**
+     * @param mixed $vrTotal
+     */
+    public function setVrTotal($vrTotal): void
+    {
+        $this->vrTotal = $vrTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDias()
+    {
+        return $this->dias;
+    }
+
+    /**
+     * @param mixed $dias
+     */
+    public function setDias($dias): void
+    {
+        $this->dias = $dias;
     }
 
     /**
@@ -743,22 +777,6 @@ class RhuVacacion
     /**
      * @return mixed
      */
-    public function getCodigoCentroCostoFk()
-    {
-        return $this->codigoCentroCostoFk;
-    }
-
-    /**
-     * @param mixed $codigoCentroCostoFk
-     */
-    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
-    {
-        $this->codigoCentroCostoFk = $codigoCentroCostoFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVrSalarioActual()
     {
         return $this->vrSalarioActual;
@@ -807,17 +825,17 @@ class RhuVacacion
     /**
      * @return mixed
      */
-    public function getVrVacacionDisfrutePropuesto()
+    public function getVrDisfrutePropuesto()
     {
-        return $this->vrVacacionDisfrutePropuesto;
+        return $this->vrDisfrutePropuesto;
     }
 
     /**
-     * @param mixed $vrVacacionDisfrutePropuesto
+     * @param mixed $vrDisfrutePropuesto
      */
-    public function setVrVacacionDisfrutePropuesto($vrVacacionDisfrutePropuesto): void
+    public function setVrDisfrutePropuesto($vrDisfrutePropuesto): void
     {
-        $this->vrVacacionDisfrutePropuesto = $vrVacacionDisfrutePropuesto;
+        $this->vrDisfrutePropuesto = $vrDisfrutePropuesto;
     }
 
     /**
@@ -887,17 +905,17 @@ class RhuVacacion
     /**
      * @return mixed
      */
-    public function getVrVacacionBruto()
+    public function getVrBruto()
     {
-        return $this->vrVacacionBruto;
+        return $this->vrBruto;
     }
 
     /**
-     * @param mixed $vrVacacionBruto
+     * @param mixed $vrBruto
      */
-    public function setVrVacacionBruto($vrVacacionBruto): void
+    public function setVrBruto($vrBruto): void
     {
-        $this->vrVacacionBruto = $vrVacacionBruto;
+        $this->vrBruto = $vrBruto;
     }
 
     /**
@@ -1106,5 +1124,53 @@ class RhuVacacion
     public function setVrIbcPromedio($vrIbcPromedio): void
     {
         $this->vrIbcPromedio = $vrIbcPromedio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoRel()
+    {
+        return $this->contratoRel;
+    }
+
+    /**
+     * @param mixed $contratoRel
+     */
+    public function setContratoRel($contratoRel): void
+    {
+        $this->contratoRel = $contratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadoRel()
+    {
+        return $this->empleadoRel;
+    }
+
+    /**
+     * @param mixed $empleadoRel
+     */
+    public function setEmpleadoRel($empleadoRel): void
+    {
+        $this->empleadoRel = $empleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
     }
 }

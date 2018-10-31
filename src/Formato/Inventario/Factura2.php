@@ -27,9 +27,17 @@ class Factura2 extends \FPDF
         $pdf = new Factura2('P', 'mm', 'letter');
         $pdf->AliasNbPages();
         $pdf->AddPage();
+        $pdf->SetFont('Arial', '', 40);
+        $pdf->SetTextColor(255, 220, 220);
+        if ($arMovimiento->getEstadoAnulado()) {
+            $pdf->RotatedText(90, 150, 'ANULADO', 45);
+        } elseif (!$arMovimiento->getEstadoAprobado()) {
+            $pdf->RotatedText(90, 150, 'SIN APROBAR', 45);
+        }
+        $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Factura_{$arMovimiento->getNumero()}_{$arMovimiento->getTerceroRel()->getNombreCorto()}.pdf", 'I');
+        $pdf->Output("Factura_{$arMovimiento->getNumero()}_{$arMovimiento->getTerceroRel()->getNombreCorto()}.pdf", 'D');
     }
 
     public function Header()
@@ -138,11 +146,13 @@ class Factura2 extends \FPDF
         $this->SetFont('Arial', 'B', 9);
         $this->SetXY(90, 83);
         $this->Cell(15, 4, 'ESTADO DE LA FACTURA:', 0, 0, 'L', 0);
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetTextColor(88, 34,34);
         $this->SetX(132);
         $this->Cell(15, 4, 'PENDIENTE DE REALIZAR PAGO', 0, 0, 'L', 0);
 
         $this->SetFont('Arial', 'B', 9);
+        $this->SetTextColor(0, 0,0);
         $this->SetXY(18.5, 87);
         $this->Cell(15, 4, 'POR CONCEPTO DE:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
@@ -224,6 +234,7 @@ class Factura2 extends \FPDF
          * @var $arMovimientoDetalles InvMovimientoDetalle
          */
         $arMovimiento = self::$em->getRepository('App:Inventario\InvMovimiento')->find(self::$codigoMovimiento);
+        $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
         $this->Ln();
         $this->SetFont('Arial', 'B', 7.5);
         //Bloque informacion de conformidad
@@ -246,8 +257,19 @@ class Factura2 extends \FPDF
         $this->Text(80, 228, utf8_decode('FECHA:________________________________'));
         $this->Text(140, 228, utf8_decode('FECHA:________________________________'));
         //Bloque resolucion facturacion
+        $this->Text(40,236, utf8_decode($arMovimiento->getFacturaTipoRel()->getNumeroResolucionDianFactura()) . ' Interavolo ' . $arMovimiento->getFacturaTipoRel()->getNumeracionDesde(). ' al '. $arMovimiento->getFacturaTipoRel()->getNumeracionDesde());
+        $this->Text(32,240, utf8_decode($arMovimiento->getFacturaTipoRel()->getInformacionCuentaPago()));
+        //Informacion final
+        $this->Text(142, 246, utf8_decode('Impreso por computador'));
+        $this->Text(130, 250, utf8_decode($arConfiguracion->getNombre() .' Nit: ') . $arConfiguracion->getNit() . '-' . $arConfiguracion->getDigitoVerificacion());
+        $this->Text(120, 254, utf8_decode('Régimen Común. No retenedores del impuesto a las ventas.'));
+        $this->Text(124, 258, utf8_decode($arConfiguracion->getDireccion()));
+        $this->Text(126, 262, utf8_decode($arConfiguracion->getTelefono() .' E-mail: contacto@invivo.com.co'));
+        $this->Text(134, 266, utf8_decode('ORIGINAL: EMISOR - COPIA: CLIENTE'));
+        $this->Image('../public/img/empresa/iso9001.jpg', 40, 245, 12, 18);
+        $this->Image('../public/img/empresa/iqnet.jpg', 55, 245, 20, 18);
         $this->SetFont('Arial', '', 6.5);
-        $this->Text(188, 265, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+        $this->Text(188, 275, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }
 
     public static function devolverNumeroLetras($num, $fem = true, $dec = true)
@@ -579,7 +601,37 @@ class Factura2 extends \FPDF
 
     }
 
+    var $angle = 0;
+
+    function Rotate($angle, $x = -1, $y = -1)
+    {
+        if ($x == -1)
+            $x = $this->x;
+        if ($y == -1)
+            $y = $this->y;
+        if ($this->angle != 0)
+            $this->_out('Q');
+        $this->angle = $angle;
+        if ($angle != 0) {
+            $angle *= M_PI / 180;
+            $c = cos($angle);
+            $s = sin($angle);
+            $cx = $x * $this->k;
+            $cy = ($this->h - $y) * $this->k;
+            $this->_out(sprintf('q %.5F %.5F %.5F %.5F %.2F %.2F cm 1 0 0 1 %.2F %.2F cm', $c, $s, -$s, $c, $cx, $cy, -$cx, -$cy));
+        }
+    }
+
+    function RotatedText($x, $y, $txt, $angle)
+    {
+        //Text rotated around its origin
+        $this->Rotate($angle, $x, $y);
+        $this->Text($x, $y, $txt);
+        $this->Rotate(0);
+    }
+
 }
 
 
 ?>
+

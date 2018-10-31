@@ -34,8 +34,8 @@ class ContratoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fechaDesde',DateType::class,['data' => new \DateTime('now')])
-            ->add('fechaHasta',DateType::class,['data' => new \DateTime('now')])
+            ->add('fechaDesde', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
+            ->add('fechaHasta', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
             ->add('cargoDescripcion',TextType::class,['required' => false])
             ->add('vrSalario',NumberType::class,['required' => true])
             ->add('numero',TextType::class,['required' => false])
@@ -46,7 +46,7 @@ class ContratoType extends AbstractType
                 'class' => RhuContratoTipo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
-                        ->orderBy('r.nombre', 'ASC');
+                        ->orderBy('r.orden', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true
@@ -60,15 +60,6 @@ class ContratoType extends AbstractType
                 'choice_label' => 'nombre',
                 'required' => true
             ])
-//            ->add('contratoClaseRel', EntityType::class, [
-//                'class' => RhuContratoClase::class,
-//                'query_builder' => function (EntityRepository $er) {
-//                    return $er->createQueryBuilder('r')
-//                        ->orderBy('r.nombre', 'ASC');
-//                },
-//                'choice_label' => 'nombre',
-//                'required' => false
-//            ])
             ->add('clasificacionRiesgoRel', EntityType::class, [
                 'class' => RhuClasificacionRiesgo::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -82,7 +73,7 @@ class ContratoType extends AbstractType
                 'class' => RhuTiempo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
-                        ->orderBy('r.nombre', 'ASC');
+                        ->orderBy('r.orden', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true
@@ -217,15 +208,6 @@ class ContratoType extends AbstractType
                 'choice_label' => 'nombre',
                 'required' => false
             ])
-//            ->add('sucursalRel', EntityType::class, [
-//                'class' => RhuSucursal::class,
-//                'query_builder' => function (EntityRepository $er) {
-//                    return $er->createQueryBuilder('r')
-//                        ->orderBy('r.nombre', 'ASC');
-//                },
-//                'choice_label' => 'nombre',
-//                'required' => false
-//            ])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

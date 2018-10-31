@@ -18,8 +18,12 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Referencia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtReferenciaItem) }}
+                </div>
                 <label class="col-sm-2 control-label">Item con existencia:</label>
-                <div class="col-sm-8">
+                <div class="col-sm-4">
                     {{ form_widget(form.itemConExistencia) }}
                 </div>
             </div>
@@ -36,6 +40,7 @@
             <tr>
                 <th>ITEM</th>
                 <th>NOMBRE</th>
+                <th>REFERENCIA</th>
                 <th>MARCA</th>
                 <th>EXI</th>
                 <th>REM</th>
@@ -50,6 +55,7 @@
                 <tr>
                     <td style="text-align: right;">{{ arItem.codigoItemPk }}</td>
                     <td style="text-align: left;">{{ arItem.nombre }}</td>
+                    <td style="text-align: left;">{{ arItem.referencia }}</td>
                     <td style="text-align: left;">{{ arItem.marcaNombre }}</td>
                     <td style="text-align: right;">{{ arItem.cantidadExistencia }}</td>
                     <td style="text-align: right;">{{ arItem.cantidadRemisionada }}</td>

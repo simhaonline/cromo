@@ -62,6 +62,11 @@ class VacacionesController extends BaseController
         $arVacacion = new RhuVacacion();
         if ($id != 0) {
             $arVacacion = $em->getRepository($this->clase)->find($id);
+        } else {
+            $arVacacion->setFecha(new \DateTime('now'));
+            $arVacacion->setFechaDesdeDisfrute(new \DateTime('now'));
+            $arVacacion->setFechaHastaDisfrute(new \DateTime('now'));
+            $arVacacion->setFechaInicioLabor(new \DateTime('now'));
         }
         $form = $this->createForm(VacacionType::class, $arVacacion);
         $form->handleRequest($request);
@@ -70,9 +75,6 @@ class VacacionesController extends BaseController
                 $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arVacacion->getCodigoEmpleadoFk());
                 if ($arEmpleado->getCodigoContratoFk()) {
                     $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
-                    if($id == 0){
-                        $arVacacion->setFecha(new \DateTime('now'));
-                    }
                     $arVacacion->setContratoRel($arContrato);
                     $arVacacion->setGrupoRel($arContrato->getGrupoRel());
                     $arVacacion->setEmpleadoRel($arEmpleado);

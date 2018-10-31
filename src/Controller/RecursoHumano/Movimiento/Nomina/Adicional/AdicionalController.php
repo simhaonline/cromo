@@ -4,6 +4,8 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina\Adicional;
 
 use App\Controller\BaseController;
 use App\Entity\RecursoHumano\RhuAdicional;
+use App\Entity\RecursoHumano\RhuContrato;
+use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\AdicionalType;
 use App\General\General;
 use App\Utilidades\Mensajes;
@@ -55,7 +57,32 @@ class AdicionalController extends BaseController
      */
     public function nuevo(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicional_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arAdicional = new RhuAdicional();
+        if ($id != 0) {
+            $arAdicional = $em->getRepository(RhuAdicional::class)->find($id);
+        } else {
+            $arAdicional->setFecha(new \DateTime('now'));
+        }
+        $form = $this->createForm(AdicionalType::class, $arAdicional);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arAdicional->getCodigoEmpleadoFk());
+                if ($arEmpleado->getCodigoContratoFk()) {
+                    $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
+                    $arAdicional->setEmpleadoRel($arEmpleado);
+                    $arAdicional->setContratoRel($arContrato);
+                    $em->persist($arAdicional);
+                    $em->flush();
+                } else {
+                    Mensajes::error('El empleado no tiene un contrato activo en el sistema');
+                }
+            }
+        }
+        return $this->render('recursoHumano/movimiento/nomina/adicional/nuevo.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -68,7 +95,7 @@ class AdicionalController extends BaseController
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->clase)->find($id);
-        return $this->render('recursoHumano/movimiento/nomina/adicional/detalle.html.twig',[
+        return $this->render('recursoHumano/movimiento/nomina/adicional/detalle.html.twig', [
             'arRegistro' => $arRegistro
         ]);
     }

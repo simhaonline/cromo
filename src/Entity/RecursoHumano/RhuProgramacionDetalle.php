@@ -93,6 +93,16 @@ class RhuProgramacionDetalle
     private $fechaHasta;
 
     /**
+     * @ORM\Column(name="fecha_desde_contrato", type="date", nullable=true)
+     */
+    private $fechaDesdeContrato;
+
+    /**
+     * @ORM\Column(name="fecha_hasta_contrato", type="date", nullable=true)
+     */
+    private $fechaHastaContrato;
+
+    /**
      * @ORM\Column(name="fecha_desde_pago", type="date", nullable=true)
      */
     private $fechaDesdePago;
@@ -126,6 +136,11 @@ class RhuProgramacionDetalle
      * @ORM\Column(name="vr_neto_pagar", type="float", nullable=true)
      */
     private $vrNetoPagar = 0;
+
+    /**
+     * @ORM\Column(name="vr_neto", type="float", nullable=true)
+     */
+    private $vrNeto = 0;
 
     /**
      * @ORM\Column(name="vr_dia", type="float")
@@ -1567,5 +1582,53 @@ class RhuProgramacionDetalle
     public function setContratoRel($contratoRel): void
     {
         $this->contratoRel = $contratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDesdeContrato()
+    {
+        return $this->fechaDesdeContrato;
+    }
+
+    /**
+     * @param mixed $fechaDesdeContrato
+     */
+    public function setFechaDesdeContrato($fechaDesdeContrato): void
+    {
+        $this->fechaDesdeContrato = $fechaDesdeContrato;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHastaContrato()
+    {
+        return $this->fechaHastaContrato;
+    }
+
+    /**
+     * @param mixed $fechaHastaContrato
+     */
+    public function setFechaHastaContrato($fechaHastaContrato): void
+    {
+        $this->fechaHastaContrato = $fechaHastaContrato;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrNeto()
+    {
+        return $this->vrNeto;
+    }
+
+    /**
+     * @param mixed $vrNeto
+     */
+    public function setVrNeto($vrNeto): void
+    {
+        $this->vrNeto = $vrNeto;
     }
 }

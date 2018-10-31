@@ -332,9 +332,14 @@ class RhuEmpleado
     protected $embargosEmpleadoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuEmpleado", mappedBy="empleadoRel")
+     * @ORM\OneToMany(targetEntity="RhuVacacion", mappedBy="empleadoRel")
      */
     protected $vacacionesEmpleadoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAdicional", mappedBy="empleadoRel")
+     */
+    protected $adicionalesEmpleadoRel;
 
     /**
      * @return mixed
@@ -1214,5 +1219,21 @@ class RhuEmpleado
     public function setVacacionesEmpleadoRel($vacacionesEmpleadoRel): void
     {
         $this->vacacionesEmpleadoRel = $vacacionesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionalesEmpleadoRel()
+    {
+        return $this->adicionalesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $adicionalesEmpleadoRel
+     */
+    public function setAdicionalesEmpleadoRel($adicionalesEmpleadoRel): void
+    {
+        $this->adicionalesEmpleadoRel = $adicionalesEmpleadoRel;
     }
 }

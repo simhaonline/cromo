@@ -64,6 +64,7 @@ class InvItemRepository extends ServiceEntityRepository
         $queryBuilder = $this->_em->createQueryBuilder()->from(InvItem::class, 'i')
             ->select('i.codigoItemPk')
             ->addSelect('i.nombre')
+            ->addSelect('i.referencia')
             ->addSelect('i.cantidadExistencia')
             ->addSelect('i.cantidadOrden')
             ->addSelect('i.cantidadSolicitud')
@@ -87,6 +88,9 @@ class InvItemRepository extends ServiceEntityRepository
         }
         if ($session->get('filtroInvBuscarItemNombre') != '') {
             $queryBuilder->andWhere("i.nombre LIKE '%{$session->get('filtroInvBuscarItemNombre')}%'");
+        }
+        if ($session->get('filtroInvBuscarItemReferencia') != '') {
+            $queryBuilder->andWhere("i.referencia LIKE '%{$session->get('filtroInvBuscarItemReferencia')}%'");
         }
         if ($session->get('filtroInvBuscarItemMarca') != '') {
             $queryBuilder->andWhere("m.nombre LIKE '%{$session->get('filtroInvBuscarItemMarca')}%'");

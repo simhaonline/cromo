@@ -25,6 +25,7 @@
         <tr>
             <th>ID</th>
             <th>NOMBRE</th>
+            <th>REFERENCIA</th>
             <th>MARCA</th>
             <th title="Afecta inventario">AI</th>
             <th>EXI</th>
@@ -39,6 +40,7 @@
             <tr>
                 <td>{{ arItem.codigoItemPk }}</td>
                 <td>{{ arItem.nombre }}</td>
+                <td>{{ arItem.referencia }}</td>
                 <td>{{ arItem.marcaNombre }}</td>
                 {{ validarTipo(arItem.afectaInventario) }}
                 <td class="numero">{{ arItem.cantidadExistencia | number_format }}</td>

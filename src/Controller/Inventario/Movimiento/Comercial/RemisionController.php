@@ -72,7 +72,7 @@ class RemisionController extends Controller
                 }
             }
         }
-        $arRemision = $paginator->paginate($this->getDoctrine()->getRepository(InvRemision::class)->lista(), $request->query->getInt('page', 1), 10);
+        $arRemision = $paginator->paginate($this->getDoctrine()->getRepository(InvRemision::class)->lista(), $request->query->getInt('page', 1), 100);
         return $this->render('inventario/movimiento/comercial/remision/lista.html.twig', [
             'arRemisiones' => $arRemision,
             'form' => $form->createView()]);
@@ -202,6 +202,7 @@ class RemisionController extends Controller
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
+            ->add('txtReferenciaItem', TextType::class, ['label' => 'Referencia: ', 'required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
@@ -209,6 +210,7 @@ class RemisionController extends Controller
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
+                $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -235,7 +237,7 @@ class RemisionController extends Controller
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 10);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/movimiento/comercial/remision/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems

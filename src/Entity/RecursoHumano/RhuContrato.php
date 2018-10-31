@@ -97,6 +97,11 @@ class RhuContrato
      */
     private $estadoTerminado = false;
 
+     /**
+     * @ORM\Column(name="indefinido",options={"default": false}, type="boolean")
+     */
+    private $indefinido = false;
+
     /**
      * @ORM\Column(name="comentario_terminacion", type="string", length=2000, nullable=true)
      */
@@ -358,6 +363,11 @@ class RhuContrato
      * @ORM\OneToMany(targetEntity="RhuVacacion", mappedBy="contratoRel")
      */
     protected $vacacionesContratoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAdicional", mappedBy="contratoRel")
+     */
+    protected $adicionalesContratoRel;
 
     /**
      * @return mixed
@@ -1397,5 +1407,37 @@ class RhuContrato
     public function setVacacionesContratoRel($vacacionesContratoRel): void
     {
         $this->vacacionesContratoRel = $vacacionesContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionalesContratoRel()
+    {
+        return $this->adicionalesContratoRel;
+    }
+
+    /**
+     * @param mixed $adicionalesContratoRel
+     */
+    public function setAdicionalesContratoRel($adicionalesContratoRel): void
+    {
+        $this->adicionalesContratoRel = $adicionalesContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIndefinido()
+    {
+        return $this->indefinido;
+    }
+
+    /**
+     * @param mixed $indefinido
+     */
+    public function setIndefinido($indefinido): void
+    {
+        $this->indefinido = $indefinido;
     }
 }

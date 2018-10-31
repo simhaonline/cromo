@@ -132,6 +132,10 @@ class EmpleadoController extends BaseController
         $arContrato = new RhuContrato();
         if ($id != 0) {
             $arContrato = $em->getRepository(RhuContrato::class)->find($id);
+        } else {
+            $arContrato->setFecha(new \DateTime('now'));
+            $arContrato->setFechaDesde(new \DateTime('now'));
+            $arContrato->setFechaHasta(new \DateTime('now'));
         }
         $form = $this->createForm(ContratoType::class, $arContrato);
         $form->handleRequest($request);
@@ -139,7 +143,6 @@ class EmpleadoController extends BaseController
             if ($form->get('guardar')->isClicked()) {
                 $arContrato->setEmpleadoRel($arEmpleado);
                 $arContrato->setEstadoTerminado(false);
-                $arContrato->setFecha(new \DateTime('now'));
                 $em->persist($arContrato);
                 $em->flush();
 

@@ -15,4 +15,21 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuProgramacion::class);
     }
 
+    /**
+     * @param $arrSeleccionados array
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        if (is_array($arrSeleccionados) && count($arrSeleccionados) > 0) {
+            foreach ($arrSeleccionados as $codigoRegistro) {
+                $arRegistro = $this->_em->getRepository(RhuProgramacion::class)->find($codigoRegistro);
+                if ($arRegistro) {
+                    $this->_em->remove($arRegistro);
+                }
+            }
+            $this->_em->flush();
+        }
+    }
 }

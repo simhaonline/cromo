@@ -26,6 +26,8 @@ class ProgramacionController extends BaseController
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/movimiento/nomina/programacion/lista", name="recursohumano_movimiento_nomina_programacion_lista")
@@ -37,11 +39,12 @@ class ProgramacionController extends BaseController
         $formBotonera = $this->botoneraLista();
         $formBotonera->handleRequest($request);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-
+                $em->getRepository(RhuProgramacion::class)->eliminar($arrSeleccionados);
             }
         }
         return $this->render('recursoHumano/movimiento/nomina/programacion/lista.html.twig', [

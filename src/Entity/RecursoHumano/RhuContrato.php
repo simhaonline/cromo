@@ -97,6 +97,11 @@ class RhuContrato
      */
     private $estadoTerminado = false;
 
+     /**
+     * @ORM\Column(name="indefinido",options={"default": false}, type="boolean")
+     */
+    private $indefinido = false;
+
     /**
      * @ORM\Column(name="comentario_terminacion", type="string", length=2000, nullable=true)
      */
@@ -1418,5 +1423,21 @@ class RhuContrato
     public function setAdicionalesContratoRel($adicionalesContratoRel): void
     {
         $this->adicionalesContratoRel = $adicionalesContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIndefinido()
+    {
+        return $this->indefinido;
+    }
+
+    /**
+     * @param mixed $indefinido
+     */
+    public function setIndefinido($indefinido): void
+    {
+        $this->indefinido = $indefinido;
     }
 }

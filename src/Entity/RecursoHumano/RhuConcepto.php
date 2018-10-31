@@ -125,6 +125,11 @@ class RhuConcepto
     protected $embargosTiposConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuAdicional", mappedBy="conceptoRel")
+     */
+    protected $adicionalesConceptoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoConceptoPk()
@@ -474,5 +479,21 @@ class RhuConcepto
     public function setEmbargosTiposConceptoRel($embargosTiposConceptoRel): void
     {
         $this->embargosTiposConceptoRel = $embargosTiposConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionalesConceptoRel()
+    {
+        return $this->adicionalesConceptoRel;
+    }
+
+    /**
+     * @param mixed $adicionalesConceptoRel
+     */
+    public function setAdicionalesConceptoRel($adicionalesConceptoRel): void
+    {
+        $this->adicionalesConceptoRel = $adicionalesConceptoRel;
     }
 }

@@ -360,6 +360,11 @@ class RhuContrato
     protected $vacacionesContratoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuAdicional", mappedBy="contratoRel")
+     */
+    protected $adicionalesContratoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoContratoPk()
@@ -1397,5 +1402,21 @@ class RhuContrato
     public function setVacacionesContratoRel($vacacionesContratoRel): void
     {
         $this->vacacionesContratoRel = $vacacionesContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionalesContratoRel()
+    {
+        return $this->adicionalesContratoRel;
+    }
+
+    /**
+     * @param mixed $adicionalesContratoRel
+     */
+    public function setAdicionalesContratoRel($adicionalesContratoRel): void
+    {
+        $this->adicionalesContratoRel = $adicionalesContratoRel;
     }
 }

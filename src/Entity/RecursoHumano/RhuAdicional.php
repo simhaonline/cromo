@@ -97,6 +97,24 @@ class RhuAdicional
     private $estadoAnulado = false;
 
     /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="adicionalesConceptoRel")
+     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="adicionalesEmpleadoRel")
+     * @ORM\JoinColumn(name="codigo_empleado_fk", referencedColumnName="codigo_empleado_pk")
+     */
+    protected $empleadoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuContrato", inversedBy="adicionalesContratoRel")
+     * @ORM\JoinColumn(name="codigo_contrato_fk", referencedColumnName="codigo_contrato_pk")
+     */
+    protected $contratoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoAdicionalPk()
@@ -350,5 +368,53 @@ class RhuAdicional
     public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoRel()
+    {
+        return $this->conceptoRel;
+    }
+
+    /**
+     * @param mixed $conceptoRel
+     */
+    public function setConceptoRel($conceptoRel): void
+    {
+        $this->conceptoRel = $conceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadoRel()
+    {
+        return $this->empleadoRel;
+    }
+
+    /**
+     * @param mixed $empleadoRel
+     */
+    public function setEmpleadoRel($empleadoRel): void
+    {
+        $this->empleadoRel = $empleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoRel()
+    {
+        return $this->contratoRel;
+    }
+
+    /**
+     * @param mixed $contratoRel
+     */
+    public function setContratoRel($contratoRel): void
+    {
+        $this->contratoRel = $contratoRel;
     }
 }

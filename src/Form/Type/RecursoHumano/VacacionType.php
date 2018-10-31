@@ -17,9 +17,9 @@ class VacacionType extends AbstractType
     {
         $builder
             ->add('codigoEmpleadoFk',TextType::class,['required' => true])
-            ->add('fechaDesdeDisfrute', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',),'data' => new \DateTime('now')))
-            ->add('fechaHastaDisfrute', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',),'data' => new \DateTime('now')))
-            ->add('fechaInicioLabor', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',),'data' => new \DateTime('now')))
+            ->add('fechaDesdeDisfrute', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
+            ->add('fechaHastaDisfrute', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
+            ->add('fechaInicioLabor', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('diasDisfrutados',TextType::class,['required' => true])
             ->add('diasPagados',TextType::class,['required' => true])
             ->add('comentarios',TextareaType::class,['required' => false])

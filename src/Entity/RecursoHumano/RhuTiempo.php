@@ -28,7 +28,12 @@ class RhuTiempo
     /**
      * @ORM\Column(name="factor_horas_dia", type="integer", nullable=true)
      */    
-    private $factorHorasDia = 8;     
+    private $factorHorasDia = 8;
+
+    /**
+     * @ORM\Column(name="orden", type="integer", nullable=true)
+     */
+    private $orden;
     
     /**
      * @ORM\Column(name="abreviatura", type="string", length=1, nullable=true)
@@ -134,5 +139,21 @@ class RhuTiempo
     public function setContratosTiempoRel($contratosTiempoRel): void
     {
         $this->contratosTiempoRel = $contratosTiempoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
     }
 }

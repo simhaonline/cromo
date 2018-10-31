@@ -16,7 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 class Usuario implements UserInterface, \Serializable
 {
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="id")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */

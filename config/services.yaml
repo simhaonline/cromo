@@ -50,4 +50,4 @@ services:
         class:  App\Controller\Estructura\ControllerListener
         tags:
             - {name: kernel.event_listener, event: kernel.controller, method: getPermissionFunction}
-        arguments: ['@security.token_storage']
+        arguments: ['@security.token_storage','@request_stack','@doctrine.orm.entity_manager']

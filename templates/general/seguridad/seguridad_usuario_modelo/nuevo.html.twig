@@ -1,0 +1,23 @@
+{%  extends 'base_sin_menu.html.twig' %}
+{% block content %}
+            {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Permisos</div>
+        <div class="panel-body">
+                <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{form_widget(form.selModelo) }}
+                    </div>
+                </div>
+                    <div class="col-md-6">
+                        {{form_widget(form.checkLista) }}
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div style="float: right;">
+        {{ form_widget(form.btnGuardar) }}
+    </div>
+            {{ form_end(form)}}
+{% endblock %}

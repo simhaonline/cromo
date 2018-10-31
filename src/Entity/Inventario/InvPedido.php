@@ -29,7 +29,7 @@ class InvPedido
     private $codigoTerceroFk;
 
     /**
-     * @ORM\Column(name="fecha", type="datetime")
+     * @ORM\Column(name="fecha", type="datetime", nullable=false)
      */
     private $fecha;
 

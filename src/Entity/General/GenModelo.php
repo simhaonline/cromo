@@ -12,7 +12,7 @@ class GenModelo
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="string", length=80)
+     * @ORM\Column(type="string", length=80, name="codigo_modelo_pk")
      */
     private $codigoModeloPk;
 

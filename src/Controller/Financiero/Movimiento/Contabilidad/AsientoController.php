@@ -31,6 +31,10 @@ class AsientoController extends ControllerListenerPermisosFunciones
     protected $grupo = "Contabilidad";
     protected $nombre = "Asiento";
 
+
+
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

@@ -92,5 +92,6 @@ class RhuContratoRepository extends ServiceEntityRepository
             }
         }
         $this->_em->flush();
+        $this->_em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
     }
 }

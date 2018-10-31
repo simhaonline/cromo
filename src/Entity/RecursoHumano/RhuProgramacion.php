@@ -52,6 +52,16 @@ class RhuProgramacion
     private $dias = 0;
 
     /**
+     * @ORM\Column(name="cantidad", options={"default": 0}, type="integer")
+     */
+    private $cantidad = 0;
+
+    /**
+     * @ORM\Column(name="vr_neto", options={"default": 0}, type="float")
+     */
+    private $vrNeto = 0;
+
+    /**
      * @ORM\Column(name="codigo_grupo_fk", type="string", length=10, nullable=true)
      */
     private $codigoGrupoFk;
@@ -88,7 +98,7 @@ class RhuProgramacion
     protected $grupoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuProgramacionDetalle", mappedBy="programacionPagoRel")
+     * @ORM\OneToMany(targetEntity="RhuProgramacionDetalle", mappedBy="programacionRel")
      */
     protected $programacionesDetallesProgramacionRel;
 
@@ -165,22 +175,6 @@ class RhuProgramacion
     /**
      * @return mixed
      */
-    public function getMensajePago()
-    {
-        return $this->mensajePago;
-    }
-
-    /**
-     * @param mixed $mensajePago
-     */
-    public function setMensajePago($mensajePago): void
-    {
-        $this->mensajePago = $mensajePago;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getFechaHastaPeriodo()
     {
         return $this->fechaHastaPeriodo;
@@ -224,6 +218,38 @@ class RhuProgramacion
     public function setDias($dias): void
     {
         $this->dias = $dias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
+    }
+
+    /**
+     * @param mixed $cantidad
+     */
+    public function setCantidad($cantidad): void
+    {
+        $this->cantidad = $cantidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrNeto()
+    {
+        return $this->vrNeto;
+    }
+
+    /**
+     * @param mixed $vrNeto
+     */
+    public function setVrNeto($vrNeto): void
+    {
+        $this->vrNeto = $vrNeto;
     }
 
     /**
@@ -304,6 +330,22 @@ class RhuProgramacion
     public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMensajePago()
+    {
+        return $this->mensajePago;
+    }
+
+    /**
+     * @param mixed $mensajePago
+     */
+    public function setMensajePago($mensajePago): void
+    {
+        $this->mensajePago = $mensajePago;
     }
 
     /**

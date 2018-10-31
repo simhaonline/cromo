@@ -5,6 +5,7 @@ namespace App\Repository\RecursoHumano;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEgreso;
 use App\Entity\RecursoHumano\RhuProgramacion;
+use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -31,5 +32,11 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             }
             $this->_em->flush();
         }
+    }
+
+    public function setCantidadRegistros($arProgramacion){
+        $arProgramacion->setCantidad(count($this->_em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()])));
+        $this->_em->persist($arProgramacion);
+        $this->_em->flush();
     }
 }

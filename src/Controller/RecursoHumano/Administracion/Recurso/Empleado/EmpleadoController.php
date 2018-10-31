@@ -143,6 +143,8 @@ class EmpleadoController extends BaseController
             if ($form->get('guardar')->isClicked()) {
                 $arContrato->setEmpleadoRel($arEmpleado);
                 $arContrato->setEstadoTerminado(false);
+                $arContrato->setContratoClaseRel($arContrato->getContratoTipoRel()->getContratoClaseRel());
+                $arContrato->setIndefinido($arContrato->getContratoTipoRel()->getContratoClaseRel()->getIndefinido());
                 $em->persist($arContrato);
                 $em->flush();
 

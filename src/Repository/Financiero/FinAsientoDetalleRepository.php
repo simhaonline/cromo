@@ -16,14 +16,18 @@ class FinAsientoDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, FinAsientoDetalle::class);
     }
 
-    public function asiento($codigo){
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinAsientoDetalle::class,'ad')
+    public function asiento($codigo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinAsientoDetalle::class, 'ad')
             ->select('ad.codigoAsientoDetallePk')
             ->addSelect('ad.codigoCuentaFk')
+            ->addSelect('c.exigeTercero')
             ->addSelect('ad.codigoCentroCostoFk')
             ->addSelect('ad.codigoTerceroFk')
             ->addSelect('ad.vrDebito')
             ->addSelect('ad.vrCredito')
+            ->addSelect('ad.vrBase')
+            ->join('ad.cuentaRel', 'c')
             ->where('ad.codigoAsientoFk = ' . $codigo);
         return $queryBuilder->getQuery();
     }
@@ -64,7 +68,7 @@ class FinAsientoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinAsientoDetalle::class, 'ad')
             ->select('ad.codigoAsientoDetallePk')
             ->addSelect('ad.codigoCuentaFk')
-            ->where('ad.codigoAsientoFk = '. $codigoAsiento);
+            ->where('ad.codigoAsientoFk = ' . $codigoAsiento);
 
         return $queryBuilder->getQuery()->getResult();
     }

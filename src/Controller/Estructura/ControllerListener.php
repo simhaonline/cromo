@@ -31,7 +31,7 @@ class ControllerListener{
         $session = $request->getSession();
         if($controller[0] instanceof ControllerListenerPermisosFunciones){
 //            dump($controller);
-            $validado=false;
+            $validado=true;
             if($validado){
                 $session->set("permiso_denegado",null);
                 return;

@@ -47,7 +47,7 @@ class FinAsientoRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arPedido InvPedido
+     * @param $arAsiento FinAsiento
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
@@ -74,15 +74,13 @@ class FinAsientoRepository extends ServiceEntityRepository
             } else {
                 Mensajes::error("El registro no tiene detalles");
             }
-
-
         } else {
             Mensajes::error('El documento ya esta autorizado');
         }
     }
 
     /**
-     * @param $arPedido InvPedido
+     * @param $arAsiento FinAsiento
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -159,19 +157,9 @@ class FinAsientoRepository extends ServiceEntityRepository
             $arrCodigo = $arrControles['TxtCodigo'];
             $arrDebito = $arrControles['TxtDebito'];
             $arrCredito = $arrControles['TxtCredito'];
+            $arrBase = $arrControles['TxtBase'];
             foreach ($arrCodigo as $codigo) {
                 $arAsientoDetalle = $em->getRepository(FinAsientoDetalle::class)->find($codigo);
-                if ($arrTercero[$codigo]) {
-                    $arTercero = $em->getRepository(FinTercero::class)->find($arrTercero[$codigo]);
-                    if ($arTercero) {
-                        $arAsientoDetalle->setTerceroRel($arTercero);
-                    } else {
-                        $arAsientoDetalle->setTerceroRel(null);
-                    }
-                } else {
-                    $arAsientoDetalle->setTerceroRel(null);
-                }
-
                 if ($arrCuenta[$codigo]) {
                     $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCuenta[$codigo]);
                     if ($arCuenta) {
@@ -182,19 +170,55 @@ class FinAsientoRepository extends ServiceEntityRepository
                 } else {
                     $arAsientoDetalle->setCuentaRel(null);
                 }
-                $arAsientoDetalle->setVrDebito($arrDebito[$codigo] != '' ? $arrDebito[$codigo] : 0);
-                $arAsientoDetalle->setVrCredito($arrCredito[$codigo] != '' ? $arrCredito[$codigo] : 0);
-                if ($arrDebito[$codigo] > 0 && $arrCredito[$codigo] > 0) {
+                if ($arCuenta->getPermiteMovimiento()) {
+                    // validacion de tercero
+                    if ($arCuenta->getExigeTercero()) {
+                        if ($arrTercero[$codigo]) {
+                            $arTercero = $em->getRepository(FinTercero::class)->find($arrTercero[$codigo]);
+                            if ($arTercero) {
+                                $arAsientoDetalle->setTerceroRel($arTercero);
+                            } else {
+                                $error = true;
+                                Mensajes::error("El tercero no existe.");
+                            }
+                        } else {
+                            $error = true;
+                            Mensajes::error("La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " exige tercero.");
+                        }
+                    } else {
+                        $arAsientoDetalle->setTerceroRel(null);
+                    }
+                    // validaciones de base
+                    if ($arCuenta->getExigeBase()) {
+                        if ($arrBase[$codigo] == 0) {
+                            $error = true;
+                            Mensajes::error("La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " exige base.");
+                        } else {
+                            $arAsientoDetalle->setVrBase($arrBase[$codigo]);
+                        }
+                    } else {
+                        $arAsientoDetalle->setVrBase(0);
+                    }
+
+                    //validacion debitos y creditos
+                    $arAsientoDetalle->setVrDebito($arrDebito[$codigo] != '' ? $arrDebito[$codigo] : 0);
+                    $arAsientoDetalle->setVrCredito($arrCredito[$codigo] != '' ? $arrCredito[$codigo] : 0);
+                    if ($arrDebito[$codigo] > 0 && $arrCredito[$codigo] > 0) {
+                        $error = true;
+                        Mensajes::error("Por cada linea solo el debito o credito puede tener valor mayor a cero.");
+                    }
+                    $em->persist($arAsientoDetalle);
+                } else {
                     $error = true;
-                    Mensajes::error("Por cada linea solo el debito o credito puede tener valor mayor a cero");
+                    Mensajes::error("La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " no permite movimiento.");
                 }
-                $em->persist($arAsientoDetalle);
             }
         }
         if ($error == false) {
             $em->flush();
             $this->liquidar($codigoAsiento);
         }
+        return $error;
 
     }
 

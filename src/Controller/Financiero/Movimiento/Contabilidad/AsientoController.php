@@ -157,54 +157,58 @@ class AsientoController extends ControllerListenerPermisosFunciones
                     $base = $form->get('txtBase')->getData();
                     $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuenta);
 
-                    //valida si la cuenta exige movimiento
-                    if ($arCuenta->getPermiteMovimiento()) {
+                    if ($arCuenta) {
+                        //valida si la cuenta exige movimiento
+                        if ($arCuenta->getPermiteMovimiento()) {
 
-                        // solo debe tener debito o credito por cada linea
-                        if ($debito > 0 && $credito > 0) {
-                            $error = true;
-                            $strMensaje = "Por cada linea solo el debito o credito puede tener valor mayor a cero";
-                        }
-                        // validacion de tercero
-                        if ($arCuenta->getExigeTercero()) {
-                            if ($codigoTercero == "") {
-                                $strMensaje = "La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " exige tercero";
+                            // solo debe tener debito o credito por cada linea
+                            if ($debito > 0 && $credito > 0) {
+                                $error = true;
+                                $strMensaje = "Por cada linea solo el debito o credito puede tener valor mayor a cero";
+                            }
+                            // validacion de tercero
+                            if ($arCuenta->getExigeTercero()) {
+                                if ($codigoTercero == "") {
+                                    $strMensaje = "La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " exige tercero";
+                                    $error = true;
+                                } else {
+                                    $arTercero = $em->getRepository(FinTercero::class)->find($codigoTercero);
+                                    if (!$arTercero) {
+                                        $strMensaje = "El tercero no existe.";
+                                        $error = true;
+                                    }
+                                }
+                            } else {
+                                $arTercero = null;
+                            }
+
+                            $vrBase = 0;
+                            // validacion de base
+                            if ($arCuenta->getExigeBase() && $base == 0) {
+                                $strMensaje = "La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " exige base";
                                 $error = true;
                             } else {
-                                $arTercero = $em->getRepository(FinTercero::class)->find($codigoTercero);
-                                if (!$arTercero) {
-                                    $strMensaje = "El tercero no existe.";
-                                    $error = true;
-                                }
+                                $vrBase = $base;
+                            }
+                            if ($error == false) {
+                                $arAsientoDetalle = new FinAsientoDetalle();
+                                $arAsientoDetalle->setVrBase($vrBase);
+                                $arAsientoDetalle->setTerceroRel($arTercero);
+                                $arAsientoDetalle->setAsientoRel($arAsiento);
+                                $arAsientoDetalle->setCuentaRel($arCuenta);
+                                $arAsientoDetalle->setVrDebito($debito);
+                                $arAsientoDetalle->setVrCredito($credito);
+                                $em->persist($arAsientoDetalle);
+                                $em->flush();
+                                return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_detalle', ['id' => $id]));
+                            } else {
+                                Mensajes::error($strMensaje);
                             }
                         } else {
-                            $arTercero = null;
-                        }
-
-                        $vrBase = 0;
-                        // validacion de base
-                        if ($arCuenta->getExigeBase() && $base == 0) {
-                            $strMensaje = "La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " exige base";
-                            $error = true;
-                        } else {
-                            $vrBase = $base;
-                        }
-                        if ($error == false) {
-                            $arAsientoDetalle = new FinAsientoDetalle();
-                            $arAsientoDetalle->setVrBase($vrBase);
-                            $arAsientoDetalle->setTerceroRel($arTercero);
-                            $arAsientoDetalle->setAsientoRel($arAsiento);
-                            $arAsientoDetalle->setCuentaRel($arCuenta);
-                            $arAsientoDetalle->setVrDebito($debito);
-                            $arAsientoDetalle->setVrCredito($credito);
-                            $em->persist($arAsientoDetalle);
-                            $em->flush();
-                            return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_detalle', ['id' => $id]));
-                        } else {
-                            Mensajes::error($strMensaje);
+                            Mensajes::error("La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " no permite movimiento");
                         }
                     } else {
-                        Mensajes::error("La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " no permite movimiento");
+                        Mensajes::error("La cuenta " . $codigoCuenta . " no existe");
                     }
                 }
             }

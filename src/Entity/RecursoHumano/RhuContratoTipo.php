@@ -15,6 +15,11 @@ class RhuContratoTipo
      * @ORM\Column(name="codigo_contrato_tipo_pk", type="string", length=10)
      */
     private $codigoContratoTipoPk;
+
+    /**
+     * @ORM\Column(name="codigo_contrato_clase_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoContratoClaseFk;
     
     /**
      * @ORM\Column(name="nombre", type="string", length=200, nullable=true)
@@ -22,14 +27,15 @@ class RhuContratoTipo
     private $nombre;
 
     /**
-     * @ORM\Column(name="indefinido", type="boolean", nullable=true)
-     */
-    private $indefinido = false;
-
-    /**
      * @ORM\OneToMany(targetEntity="RhuContrato",mappedBy="contratoTipoRel")
      */
     protected $contratosContratoTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuContratoClase", inversedBy="contratosTiposContratoClaseRel")
+     * @ORM\JoinColumn(name="codigo_contrato_clase_fk", referencedColumnName="codigo_contrato_clase_pk")
+     */
+    protected $contratoClaseRel;
 
     /**
      * @return mixed
@@ -45,6 +51,22 @@ class RhuContratoTipo
     public function setCodigoContratoTipoPk($codigoContratoTipoPk): void
     {
         $this->codigoContratoTipoPk = $codigoContratoTipoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoClaseFk()
+    {
+        return $this->codigoContratoClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoClaseFk
+     */
+    public function setCodigoContratoClaseFk($codigoContratoClaseFk): void
+    {
+        $this->codigoContratoClaseFk = $codigoContratoClaseFk;
     }
 
     /**
@@ -66,22 +88,6 @@ class RhuContratoTipo
     /**
      * @return mixed
      */
-    public function getIndefinido()
-    {
-        return $this->indefinido;
-    }
-
-    /**
-     * @param mixed $indefinido
-     */
-    public function setIndefinido($indefinido): void
-    {
-        $this->indefinido = $indefinido;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getContratosContratoTipoRel()
     {
         return $this->contratosContratoTipoRel;
@@ -93,5 +99,21 @@ class RhuContratoTipo
     public function setContratosContratoTipoRel($contratosContratoTipoRel): void
     {
         $this->contratosContratoTipoRel = $contratosContratoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoClaseRel()
+    {
+        return $this->contratoClaseRel;
+    }
+
+    /**
+     * @param mixed $contratoClaseRel
+     */
+    public function setContratoClaseRel($contratoClaseRel): void
+    {
+        $this->contratoClaseRel = $contratoClaseRel;
     }
 }

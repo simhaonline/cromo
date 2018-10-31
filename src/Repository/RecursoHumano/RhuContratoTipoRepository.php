@@ -12,4 +12,11 @@ class RhuContratoTipoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuContratoTipo::class);
     }
+
+    public function camposPredeterminados(){
+        return $this->_em->createQueryBuilder()->from(RhuContratoTipo::class,'ct')
+            ->select('ct.codigoContratoTipoPk AS ID')
+            ->addSelect('ct.nombre')
+            ->where('ct.codigoContratoTipoPk IS NOT NULL');
+    }
 }

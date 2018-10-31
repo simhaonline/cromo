@@ -138,6 +138,11 @@ class RhuProgramacionDetalle
     private $vrNetoPagar = 0;
 
     /**
+     * @ORM\Column(name="vr_neto", type="float", nullable=true)
+     */
+    private $vrNeto = 0;
+
+    /**
      * @ORM\Column(name="vr_dia", type="float")
      */
     private $vrDia = 0;
@@ -1609,5 +1614,21 @@ class RhuProgramacionDetalle
     public function setFechaHastaContrato($fechaHastaContrato): void
     {
         $this->fechaHastaContrato = $fechaHastaContrato;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrNeto()
+    {
+        return $this->vrNeto;
+    }
+
+    /**
+     * @param mixed $vrNeto
+     */
+    public function setVrNeto($vrNeto): void
+    {
+        $this->vrNeto = $vrNeto;
     }
 }

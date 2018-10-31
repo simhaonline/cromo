@@ -59,14 +59,14 @@ class ProgramacionType extends AbstractType
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
-            {"campo":"codigoProgramacionPk",  "tipo":"pk"      ,"ayuda":"Codigo del registro"                    ,"titulo":"ID"},
-            {"campo":"nombre",                "tipo":"texto"   ,"ayuda":"Nombre dado a la programación"          ,"titulo":"NOMBRE"},
-            {"campo":"pagoTipoRel.nombre",    "tipo":"texto"   ,"ayuda":"Nombre del tipo de pago"                ,"titulo":"TIPO" ,"relacion":""},
-            {"campo":"grupoRel.nombre",       "tipo":"texto"   ,"ayuda":"Nombre del grupo"                       ,"titulo":"GRUPO","relacion":""},
-            {"campo":"fechaDesde",            "tipo":"fecha"   ,"ayuda":"Fecha en que inicia el periodo"         ,"titulo":"DESDE"},
-            {"campo":"fechaHasta",            "tipo":"fecha"   ,"ayuda":"Fecha en que termina el periodo"        ,"titulo":"HASTA"},
-            {"campo":"nombre",                "tipo":"texto"   ,"ayuda":"Nombre de la programacion"              ,"titulo":"NOMBRE"},
-            {"campo":"dias",                  "tipo":"moneda"   ,"ayuda":"Numero de dias que compone el perdiodo" ,"titulo":"DIAS"}
+            {"campo":"codigoProgramacionPk",  "tipo":"pk"      ,"ayuda":"Codigo del registro"                      ,"titulo":"ID"},
+            {"campo":"pagoTipoRel.nombre",    "tipo":"texto"   ,"ayuda":"Nombre del tipo de pago"                  ,"titulo":"TIPO" ,"relacion":""},
+            {"campo":"nombre",                "tipo":"texto"   ,"ayuda":"Nombre dado a la programación"            ,"titulo":"NOMBRE"},
+            {"campo":"grupoRel.nombre",       "tipo":"texto"   ,"ayuda":"Nombre del grupo"                         ,"titulo":"GRUPO","relacion":""},
+            {"campo":"fechaDesde",            "tipo":"fecha"   ,"ayuda":"Fecha en que inicia el periodo"           ,"titulo":"DESDE"},
+            {"campo":"fechaHasta",            "tipo":"fecha"   ,"ayuda":"Fecha en que termina el periodo"          ,"titulo":"HASTA"},
+            {"campo":"dias",                  "tipo":"moneda"   ,"ayuda":"Numero de dias que compone el perdiodo"  ,"titulo":"DIAS"},
+            {"campo":"cantidad",              "tipo":"moneda"   ,"ayuda":"Cantidad de registros en la programacion","titulo":"#"}
         ]';
         return $campos;
     }

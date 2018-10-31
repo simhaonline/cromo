@@ -116,8 +116,9 @@ class ProgramacionController extends BaseController
             if ($form->get('btnCargarContratos')->isClicked()) {
                 $em->getRepository(RhuContrato::class)->cargarContratos($arProgramacion);
             }
-            if($form->get('btnEliminar')){
+            if($form->get('btnEliminar')->isClicked()){
                 $em->getRepository(RhuProgramacionDetalle::class)->eliminar($arrSeleccionados);
+                $em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
             }
         }
         $arProgramacion = $em->getRepository($this->clase)->find($id);

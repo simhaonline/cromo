@@ -39,8 +39,8 @@
         <tr>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arMovimiento.fecha | date('Y-m-d H:i') }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-align: left;"></td>
+            <td class="titulo">FECHA VENCE:</td>
+            <td class="td-in-well">{{ arMovimiento.fechaVence | date('Y-m-d H:i') }}</td>
             <td class="titulo">(+)IVA:</td>
             <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrIva | number_format(0, '.', ',') }}</td>
         </tr>

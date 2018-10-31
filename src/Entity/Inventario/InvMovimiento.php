@@ -173,6 +173,13 @@ class InvMovimiento
     protected $terceroRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="InvFacturaTipo", inversedBy="movimientosFacturaTipoRel")
+     * @ORM\JoinColumn(name="codigo_factura_tipo_fk", referencedColumnName="codigo_factura_tipo_pk")
+
+     */
+    protected $facturaTipoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="movimientoRel")
      */
     protected $movimientosDetallesMovimientoRel;
@@ -709,6 +716,22 @@ class InvMovimiento
     public function setSucursalRel($sucursalRel): void
     {
         $this->sucursalRel = $sucursalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaTipoRel()
+    {
+        return $this->facturaTipoRel;
+    }
+
+    /**
+     * @param mixed $facturaTipoRel
+     */
+    public function setFacturaTipoRel($facturaTipoRel): void
+    {
+        $this->facturaTipoRel = $facturaTipoRel;
     }
 
 

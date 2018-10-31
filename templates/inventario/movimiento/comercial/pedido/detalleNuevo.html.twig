@@ -3,25 +3,29 @@
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <br/>
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4> Filtros de búsqueda</h4>
-        </div>
+        <div class="panel-heading">Filtros</div>
         <div class="panel-body">
-            {{ form_label(form.txtCodigoItem) }}
-            <div class="col-sm-4">
-                {{ form_widget(form.txtCodigoItem) }}
-
+            <div class="form-group form-group-sm">
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Codigo:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.txtCodigoItem, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label">Nombre:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.txtNombreItem, { 'attr': {'class': 'form-control'} }) }}
+                </div>
             </div>
-            {{ form_label(form.txtNombreItem) }}
-            <div class="col-sm-4">
-
-                {{ form_widget(form.txtNombreItem) }}
+            <div class="form-group form-group-sm">
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Referencia:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.txtReferenciaItem, { 'attr': {'class': 'form-control'} }) }}
+                </div>
             </div>
-        </div>
-        <div class="panel-footer">
-            {{ form_widget(form.btnFiltrar,{'attr':{'style':'float: right;'}}) }}
-            <br/>
-            <br/>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                </div>
+            </div>
         </div>
     </div>
     <div>
@@ -30,6 +34,7 @@
             <tr>
                 <th>ITEM</th>
                 <th>NOMBRE</th>
+                <th>REFERENCIA</th>
                 <th>MARCA</th>
                 <th>EXI</th>
                 <th>REM</th>
@@ -44,6 +49,7 @@
                 <tr>
                     <td style="text-align: right;">{{ arItem.codigoItemPk }}</td>
                     <td style="text-align: left;">{{ arItem.nombre }}</td>
+                    <td style="text-align: left;">{{ arItem.referencia }}</td>
                     <td style="text-align: left;">{{ arItem.marcaNombre }}</td>
                     <td style="text-align: right;">{{ arItem.cantidadExistencia }}</td>
                     <td style="text-align: right;">{{ arItem.cantidadRemisionada }}</td>

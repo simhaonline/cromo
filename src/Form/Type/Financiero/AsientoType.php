@@ -19,7 +19,7 @@ class AsientoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('comprobanteRel',EntityType::class,[
+            ->add('comprobanteRel', EntityType::class, [
                 'required' => true,
                 'class' => FinComprobante::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -30,6 +30,7 @@ class AsientoType extends AbstractType
                 'label' => 'Comprobante:'
             ])
             ->add('fecha', DateType::class, ['label' => 'Fecha:'])
+            ->add('numero', NumberType::class, ['label' => 'Numero:'])
             ->add('fechaContable', DateType::class, ['label' => 'Fecha contable:'])
             ->add('fechaDocumento', DateType::class, ['label' => 'Fecha documento:'])
             ->add('comentario', TextareaType::class, ['label' => 'Comentario:', 'required' => false])
@@ -43,7 +44,8 @@ class AsientoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista() {
+    public function getEstructuraPropiedadesLista()
+    {
         $campos = '[
             {"campo":"codigoAsientoPk",     "tipo":"pk",        "ayuda":"Codigo del asiento",   "titulo":"ID"},
             {"campo":"numero",              "tipo":"entero",    "ayuda":"",                     "titulo":"NUMERO"},

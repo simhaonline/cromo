@@ -1,20 +1,23 @@
 {% extends 'base_general.html.twig' %}
 {% block content %}
-            <div class="row">
-                <div class="col-lg-12">
-                    <h3 >
-                        <small style="font-size: 20px">
-                            {% if arUsuarioNombre%}
-                                {{ arUsuarioNombre}}
-                            {% endif%}</small>
-                    </h3>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
+
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td >USUARIO:</td>
+            <td class="td-in-well">{% if arUsuarioNombre%}
+                    {{ arUsuarioNombre}}
+                {% endif%}</td>
+        </tr>
+    </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+    </ul>
     <div>
+        <br>
         <table class="table table-striped table-bordered table-hover">
             <thead>
             <tr>
+                <th rowspan="2">TIPO</th>
                 <th rowspan="2">MODELO</th>
                 <th colspan="6">PERMISOS</th>
                 <th rowspan="2"></th>
@@ -31,6 +34,9 @@
             <tbody>
             {% for arSeguridadUsuarioModelo in arSeguridadUsuarioModelo %}
                 <tr>
+                    <td>
+                        {{ arSeguridadUsuarioModelo.tipo }}
+                    </td>
                     <td>
                         {{ arSeguridadUsuarioModelo.modelo }}
                     </td>
@@ -90,7 +96,7 @@
     </div>
     <div class="btn-toolbar">
         <div style="float: right;" class="btn-group">
-            <a class="btn btn-sm btn-default" href="javascript:abrirVentana3('{{ path('general_seguridad_usuario_modelo_nuevo',{'hash' : 0}) }}','editarPermisos',600,900)">Nuevo</a>
+            <a class="btn btn-sm btn-default" href="javascript:abrirVentana3('{{ path('general_seguridad_usuario_modelo_nuevo',{'hash' : hash}) }}','editarPermisos',600,900)">Nuevo</a>
         </div>
     </div>
 {% endblock %}

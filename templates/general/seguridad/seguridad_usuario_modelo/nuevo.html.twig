@@ -1,23 +1,99 @@
 {%  extends 'base_sin_menu.html.twig' %}
 {% block content %}
+    <script type="text/javascript">
+        function ChequearTodos()
+        {
+            var chks = ["checkLista", "checkNuevo", "checkDetalle", "checkAutorizar", "checkAprobar",
+                "checkAnular"];
+            var form = "form_"
+            var cant = chks.length;
+            for (i = 0; i < cant; i++)
+            {
+                var seleccionar = form.concat(chks[i]);
+                if (document.getElementById(seleccionar).checked === true)
+                {
+                    document.getElementById(seleccionar).checked = false;
+                } else
+                {
+                    document.getElementById(seleccionar).checked = true;
+                }
+            }
+        }
+    </script>
             {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
-        <div class="panel-heading">Permisos</div>
+        <div class="panel-heading">Filtro busqueda</div>
         <div class="panel-body">
-                <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{form_widget(form.selModelo) }}
-                    </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Modelo:</label>
+                <div class="col-sm-4">
+                    {{form_widget(form.TxtModulo, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                    <div class="col-md-6">
-                        {{form_widget(form.checkLista) }}
-                    </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                </div>
             </div>
         </div>
     </div>
-    <div style="float: right;">
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-3 control-label">
+                    Seleccionar todos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodos();"/>
+                </label>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-4">
+                    {{ form_widget(form.checkLista) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_widget(form.checkNuevo) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_widget(form.checkDetalle) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-4">
+                    {{ form_widget(form.checkAutorizar) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_widget(form.checkAprobar) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_widget(form.checkAnular) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>TIPO</th>
+                <th>MODELO</th>
+                <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+            </tr>
+            </thead>
+            <tbody>
+                {%for arGenModelo in arGenModelo %}
+            <tr>
+                <td>{{  arGenModelo.tipo}}</td>
+                <td>{{  arGenModelo.codigoModeloPk}}</td>
+                <td align="center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGenModelo.codigoModeloPk }}"/></td>
+            </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" onclick="window.close()">Cancelar</a>
         {{ form_widget(form.btnGuardar) }}
     </div>
             {{ form_end(form)}}
+    <br/><br/><br/><br/>
 {% endblock %}

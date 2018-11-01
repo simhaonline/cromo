@@ -6,6 +6,7 @@ use App\Controller\Estructura\MensajesController;
 use App\Entity\General\GenModelo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class GenModeloRepository extends ServiceEntityRepository
 {
@@ -14,6 +15,22 @@ class GenModeloRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, GenModelo::class);
+    }
+
+    public function lista(){
+        $em =   $this->getEntityManager();
+        $session=new Session();
+        $arModelo=$em->createQueryBuilder()
+            ->from('App:General\GenModelo','genModelo')
+            ->select('genModelo.codigoModeloPk')
+            ->addSelect('genModelo.codigoModuloFk as tipo');
+
+        if($session->get('arSeguridadUsuarioModulofiltroModulo')!==""){
+            $arModelo=$arModelo->andWhere("genModelo.codigoModeloPk LIKE '%{$session->get('arSeguridadUsuarioModulofiltroModulo')}%'");
+        }
+        $arModelo=$arModelo->getQuery()->getResult();
+
+        return$arModelo;
     }
 
 }

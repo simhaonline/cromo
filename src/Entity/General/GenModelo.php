@@ -17,6 +17,11 @@ class GenModelo
     private $codigoModeloPk;
 
     /**
+     * @ORM\Column(name="codigo_modulo_fk", length=80, type="string")
+     */
+    private $codigoModuloFk;
+
+    /**
      * @return mixed
      */
     public function getCodigoModeloPk()
@@ -31,6 +36,25 @@ class GenModelo
     {
         $this->codigoModeloPk = $codigoModeloPk;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoModuloFk()
+    {
+        return $this->codigoModuloFk;
+    }
+
+    /**
+     * @param mixed $codigoModuloFk
+     */
+    public function setCodigoModuloFk($codigoModuloFk)
+    {
+        $this->codigoModuloFk = $codigoModuloFk;
+        return $this;
+    }
+
+
 
 
 

@@ -14,6 +14,7 @@ class GenModelo extends Fixture
         if(!$arModelo) {
             $arModelo = new \App\Entity\General\GenModelo();
             $arModelo->setCodigoModeloPk('TteDespacho');
+            $arModelo->setCodigoModuloFk('Transporte');
             $manager->persist($arModelo);
         }
         $manager->flush();

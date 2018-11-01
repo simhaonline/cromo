@@ -136,6 +136,10 @@ class EmpleadoController extends BaseController
             $arContrato->setFecha(new \DateTime('now'));
             $arContrato->setFechaDesde(new \DateTime('now'));
             $arContrato->setFechaHasta(new \DateTime('now'));
+            $arContrato->setFechaUltimoPago(new \DateTime('now'));
+            $arContrato->setFechaUltimoPagoCesantias(new \DateTime('now'));
+            $arContrato->setFechaUltimoPagoPrimas(new \DateTime('now'));
+            $arContrato->setFechaUltimoPagoVacaciones(new \DateTime('now'));
         }
         $form = $this->createForm(ContratoType::class, $arContrato);
         $form->handleRequest($request);

@@ -46,7 +46,7 @@ class ContratoType extends AbstractType
                 'class' => RhuContratoTipo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
-                        ->orderBy('r.nombre', 'ASC');
+                        ->orderBy('r.orden', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true
@@ -73,7 +73,7 @@ class ContratoType extends AbstractType
                 'class' => RhuTiempo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
-                        ->orderBy('r.nombre', 'ASC');
+                        ->orderBy('r.orden', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true

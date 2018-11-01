@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Inventario;
 
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
@@ -158,6 +159,7 @@ class MovimientoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $arMovimiento = new InvMovimiento();
+        $objFunciones = new FuncionesController();
         if ($id != 0) {
             $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
             if (!$arMovimiento) {
@@ -178,6 +180,8 @@ class MovimientoController extends Controller
                         $arMovimiento->setPlazoPago($arMovimiento->getTerceroRel()->getPlazoPago());
                     }
                 }
+                $fecha = new \DateTime('now');
+                $arMovimiento->setFechaVence($arMovimiento->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha,$arMovimiento->getPlazoPago()));
                 $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
                 $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
                 $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
@@ -299,6 +303,7 @@ class MovimientoController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
+            ->add('txtReferenciaItem', TextType::class, ['label' => 'Referencia: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemReferencia')])
             ->add('itemConExistencia', CheckboxType::class, array('label' => ' ','required' => false, 'data' => $session->get('itemConExistencia')))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
@@ -308,6 +313,7 @@ class MovimientoController extends Controller
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
+                $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
                 $session->set('itemConExistencia', $form->get('itemConExistencia')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
@@ -344,7 +350,7 @@ class MovimientoController extends Controller
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 100);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/movimiento/inventario/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems

@@ -27,6 +27,11 @@ class RhuContratoTipo
     private $nombre;
 
     /**
+     * @ORM\Column(name="orden", type="integer", nullable=true)
+     */
+    private $orden;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuContrato",mappedBy="contratoTipoRel")
      */
     protected $contratosContratoTipoRel;
@@ -99,6 +104,22 @@ class RhuContratoTipo
     public function setContratosContratoTipoRel($contratosContratoTipoRel): void
     {
         $this->contratosContratoTipoRel = $contratosContratoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
     }
 
     /**

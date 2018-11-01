@@ -221,16 +221,16 @@ class ContratoType extends AbstractType
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
-            {"campo":"codigoContratoPk",            "tipo":"pk"      ,"ayuda":"Codigo del contrato"                   ,"titulo":"ID"},
-            {"campo":"fechaDesde",                  "tipo":"fecha"   ,"ayuda":"Fecha de inicio del contrato"          ,"titulo":"IDENTIFICACION"},
-            {"campo":"fechaHasta",                  "tipo":"fecha"   ,"ayuda":"Fecha de terminacion del cotnrato"     ,"titulo":"IDENTIFICACION"},
-            {"campo":"numero",                      "tipo":"texto"   ,"ayuda":"Numero del contrato"                   ,"titulo":"NOMBRE"},
-            {"campo":"codigoGrupoFk",               "tipo":"text"   ,"ayuda":"Codigo del grupo"                       ,"titulo":"CONTRATO"},
-            {"campo":"codigoCargoFk",               "tipo":"texto"   ,"ayuda":"Codigo del cargo"                      ,"titulo":"TELEFONO"},
-            {"campo":"codigoCostoTipoFk",           "tipo":"texto"   ,"ayuda":"Codigo del tipo de costo"              ,"titulo":"CORREO"},
-            {"campo":"codigoClasificacionRiesgoFk", "tipo":"texto"   ,"ayuda":"Codigo de la clasificacion de riesgo"  ,"titulo":"DIRECCION"},                     
-            {"campo":"vrSalario",                   "tipo":"moneda"    ,"ayuda":"Salario actual del empleado"         ,"titulo":"E_C"},
-            {"campo":"estadoTerminado",             "tipo":"bool"    ,"ayuda":"El contrato esta terminado o no"       ,"titulo":"E_C"}                     
+            {"campo":"codigoContratoPk",                    "tipo":"pk"      ,"ayuda":"Codigo del contrato"                   ,"titulo":"ID"},
+            {"campo":"contratoTipoRel.nombre",              "tipo":"texto"   ,"ayuda":"Tipo de contrato"                      ,"titulo":"TIPO", "relacion":""},
+            {"campo":"empleadoRel.numeroIdentificacion",    "tipo":"texto"   ,"ayuda":"Numero identificacion"                 ,"titulo":"IDENTIFICACION", "relacion":""},
+            {"campo":"empleadoRel.nombreCorto",             "tipo":"texto"   ,"ayuda":"Nombre del empleado"                 ,"titulo":"NOMBRE", "relacion":""},
+            {"campo":"grupoRel.nombre",                     "tipo":"text"   ,"ayuda":"Grupo del contrato"                    ,"titulo":"GRUPO",        "relacion":""},
+            {"campo":"codigoTiempoFk",                      "tipo":"texto"   ,"ayuda":"Tipo de tiempo (Completo, medio tiempo, sabatino)"                   ,"titulo":"TIE"},
+            {"campo":"fechaDesde",                          "tipo":"fecha"   ,"ayuda":"Fecha de inicio del contrato"          ,"titulo":"DESDE"},
+            {"campo":"fechaHasta",                          "tipo":"fecha"   ,"ayuda":"Fecha de terminacion del cotnrato"     ,"titulo":"HASTA"},
+            {"campo":"vrSalario",                           "tipo":"moneda"    ,"ayuda":"Salario actual del empleado"         ,"titulo":"SALARIO"},
+            {"campo":"estadoTerminado",                     "tipo":"bool"    ,"ayuda":"El contrato esta terminado o no"       ,"titulo":"TER"}                                                                                                                                                      
         ]';
         return $campos;
     }

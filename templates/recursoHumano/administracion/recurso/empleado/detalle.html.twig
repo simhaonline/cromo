@@ -94,7 +94,6 @@
                             <th>TIPO</th>
                             <th>NUMERO</th>
                             <th>GRUPO</th>
-                            <th>NOMBRE</th>
                             <th>CARGO</th>
                             <th title="Clasificacion de riesgo">C_RIESGO</th>
                             <th>DESDE</th>
@@ -102,22 +101,22 @@
                             <th>SALARIO</th>
                             <th title="Terminado">TER</th>
                             <th></th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% set contratoActivo = false %}
+
                         {% for arContrato in arContratos %}
                             <tr>
                                 <td>{{ arContrato.codigoContratoPk }}</td>
                                 <td>{{ arContrato.codigoCostoTipoFk }}</td>
                                 <td>{{ arContrato.numero }}</td>
-                                <td>{{ arContrato.codigoGrupoFk }}</td>
                                 <td>{{ arContrato.nombreGrupo }}</td>
                                 <td>{{ arContrato.nombreCargo }}</td>
                                 <td>{{ arContrato.nombre }}</td>
                                 {{ validarTipo(arContrato.fechaDesde) }}
                                 {{ validarTipo(arContrato.fechaHasta) }}
-                                {{ validarTipo(arContrato.vrSalario) }}
+                                <td class="numero">{{ arContrato.vrSalario | number_format(0, '.', ',') }}</td>
                                 {{ validarTipo(arContrato.estadoTerminado) }}
                                 <td style="text-align: center;">
                                     {% if arContrato.estadoTerminado == 0 %}
@@ -126,9 +125,11 @@
                                         </a>
                                     {% endif %}
                                 </td>
-                                {% if arContrato.estadoTerminado == 0 %}
-                                    {% set contratoActivo = true %}
-                                {% endif %}
+                                <td style="text-align: center">
+                                    <a href="{{ path('recursohumano_administracion_recurso_contrato_detalle', { 'id': arContrato.codigoContratoPk }) }}" target="_blank">
+                                        <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i>
+                                    </a>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -138,7 +139,7 @@
         </div>
         <div class="btn-toolbar" style="float: right;">
             <div class="btn-group">
-                {% if not contratoActivo %}
+                {% if arEmpleado.estadoContrato == 0 %}
                 <a class="btn btn-sm btn-default"
                    href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_empleado_nuevo_contrato',{'codigoEmpleado' : arEmpleado.codigoEmpleadoPk,'id':0 }) }}','agregarContrato',600,950)">Nuevo</a>
                 {% endif %}

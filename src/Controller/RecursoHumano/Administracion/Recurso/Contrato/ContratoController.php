@@ -55,7 +55,27 @@ class ContratoController extends BaseController
      */
     public function detalle(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_contrato_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arContrato = new RhuContrato();
+        if ($id != 0) {
+            $arContrato = $em->getRepository(RhuContrato::class)->find($id);
+            if (!$arContrato) {
+                return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_contrato_lista'));
+            }
+        }
+
+
+        /*if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $em->persist($arContrato);
+                $em->flush();
+                return $this->redirect($this->generateUrl('recursohumano_administracion_contrato_contrato_detalle'));
+            }
+        }*/
+        //$arContratos = $em->getRepository(RhuContrato::class)->contratosContrato($arContrato->getCodigoContratoPk());
+        return $this->render('recursoHumano/administracion/recurso/contrato/detalle.html.twig', [
+            'arContrato' => $arContrato
+        ]);
     }
 
     /**

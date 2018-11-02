@@ -155,7 +155,7 @@ class DespachoController extends Controller
 
                                 $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);
                                 $saldo = $total - $descuentos;
-                                $totalNeto = $arDespacho->getVrFletePago() - ($retencionFuente + $industriaComercio + $descuentos);
+                                $totalNeto = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio + $descuentos);
                                 $arDespacho->setVrIndustriaComercio($industriaComercio);
                                 $arDespacho->setVrRetencionFuente($retencionFuente);
                                 $arDespacho->setVrTotal($total);

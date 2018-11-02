@@ -216,7 +216,7 @@ class TteDespachoRepository extends ServiceEntityRepository
 
         $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);
         $saldo = ($total + $arDespacho->getVrCobroEntregaRechazado()) - ($descuentos + $arDespacho->getVrCobroEntrega());
-        $totalNeto = $arDespacho->getVrFletePago() - ($retencionFuente + $industriaComercio + $descuentos);
+        $totalNeto = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio + $descuentos);
         $arDespacho->setVrIndustriaComercio($industriaComercio);
         $arDespacho->setVrRetencionFuente($retencionFuente);
         $arDespacho->setVrTotal($total);
@@ -1109,6 +1109,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect('d.vrRetencionFuente')
             ->addSelect('d.vrAnticipo')
             ->addSelect('d.vrSaldo')
+            ->addSelect('d.vrTotalNeto')
             ->addSelect('d.vrDescuentoCargue')
             ->addSelect('d.vrDescuentoEstampilla')
             ->addSelect('d.vrDescuentoPapeleria')
@@ -1466,10 +1467,10 @@ class TteDespachoRepository extends ServiceEntityRepository
                             $arRegistro->setFecha($arDespacho['fechaSalida']);
                             $naturaleza = "C";
                             if ($naturaleza == 'D') {
-                                $arRegistro->setVrDebito($arDespacho['vrSaldo']);
+                                $arRegistro->setVrDebito($arDespacho['vrTotalNeto']);
                                 $arRegistro->setNaturaleza('D');
                             } else {
-                                $arRegistro->setVrCredito($arDespacho['vrSaldo']);
+                                $arRegistro->setVrCredito($arDespacho['vrTotalNeto']);
                                 $arRegistro->setNaturaleza('C');
                             }
                             $arRegistro->setDescripcion($descripcion);

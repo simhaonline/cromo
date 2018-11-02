@@ -7,7 +7,7 @@ use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvTercero;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class Factura2 extends \FPDF
+class Factura3 extends \FPDF
 {
 
     public static $em;
@@ -24,15 +24,15 @@ class Factura2 extends \FPDF
         /** @var  $arMovimiento InvMovimiento */
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($codigoMovimiento);
         ob_clean();
-        $pdf = new Factura2('P', 'mm', 'letter');
+        $pdf = new Factura3('P', 'mm', 'letter');
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Arial', '', 40);
         $pdf->SetTextColor(255, 220, 220);
         if ($arMovimiento->getEstadoAnulado()) {
-            $pdf->RotatedText(90, 150, 'ANULADO', 45);
+            $pdf->RotatedText(70, 160, 'ANULADO', 45);
         } elseif (!$arMovimiento->getEstadoAprobado()) {
-            $pdf->RotatedText(90, 150, 'SIN APROBAR', 45);
+            $pdf->RotatedText(70, 160, 'SIN APROBAR', 45);
         }
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
@@ -51,11 +51,35 @@ class Factura2 extends \FPDF
         $date = new \DateTime('now');
         $this->Text(170, 10, $date->format('Y-m-d H:i:s') . ' [Cromo | Inventario]');
 
-        $this->SetFont('Arial', 'B', 10);
-        $this->SetXY(120, 30);
-        $this->Cell(35, 4, 'FACTURA DE VENTA No.', 0, 0, 'L', 0);
-        $this->SetFont('Arial', '', 14);
-        $this->Cell(35, 4, $arMovimiento->getNumero(), 0, 0, 'R', 0);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetXY(140, 26);
+        $this->Cell(35, 4, 'FACTURA DE VENTA', 0, 0, 'L', 0);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(25, 4, $arMovimiento->getNumero(), 0, 0, 'R', 0);
+        //
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetXY(140, 30);
+        $this->Cell(35, 4, 'FECHA EMISION:', 0, 0, 'L', 0);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(25, 4, $arMovimiento->getFecha()->format('Y-m-d'), 0, 0, 'R', 0);
+        //
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetXY(140, 34);
+        $this->Cell(35, 4, 'FECHA VENCIMIENTO:', 0, 0, 'L', 0);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(25, 4, $arMovimiento->getFechaVence()->format('Y-m-d'), 0, 0, 'R', 0);
+        //
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetXY(140, 38);
+        $this->Cell(35, 4, 'FORMA PAGO:', 0, 0, 'L', 0);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(25, 4, $arMovimiento->getTerceroRel()->getFormaPagoRel()->getNombre(), 0, 0, 'R', 0);
+        //
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetXY(140, 42);
+        $this->Cell(35, 4, 'PLAZO PAGO:', 0, 0, 'L', 0);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(25, 4, $arMovimiento->getPlazoPago(), 0, 0, 'R', 0);
 
         $stringFecha = $arMovimiento->getFecha()->format('Y-m-d');
         $plazo = $arMovimiento->getPlazoPago();
@@ -74,12 +98,12 @@ class Factura2 extends \FPDF
 
         $this->SetFont('Arial', 'B', 10);
         $this->SetXY(18.5, 44);
-        $this->Cell(15, 4, 'INVIVO BIOINGENIERIA S.A.S', 0, 0, 'L', 0);
+        $this->Cell(15, 4, 'SEMANTICA DIGITAL SAS', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 10);
         $this->SetXY(18.5, 48);
-        $this->Cell(15, 4, 'NIT      811021556', 0, 0, 'L', 0);
+        $this->Cell(15, 4, 'NIT      901192048-4', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);
@@ -117,47 +141,6 @@ class Factura2 extends \FPDF
         $this->SetX(52);
         $this->Cell(15, 4, utf8_decode($arMovimiento->getTerceroRel()->getTelefono()), 0, 0, 'L', 0);
 
-        $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 75);
-        $this->Cell(15, 4, 'VENDEDOR:', 0, 0, 'L', 0);
-        $this->SetFont('Arial', '', 8);
-        $this->SetX(50);
-        $this->Cell(15, 4, '', 0, 0, 'L', 0);
-
-        $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 79);
-        $this->Cell(15, 4, 'FECHA CREACION:', 0, 0, 'L', 0);
-        $this->SetFont('Arial', '', 8);
-        $this->SetX(52);
-        $this->Cell(15, 4, $arMovimiento->getFecha()->format('Y-m-d'), 0, 0, 'L', 0);
-        $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(90, 79);
-        $this->Cell(15, 4, 'FECHA VENCIMIENTO:', 0, 0, 'L', 0);
-        $this->SetFont('Arial', '', 8);
-        $this->SetX(127);
-        $this->Cell(15, 4, $arMovimiento->getFechaVence()->format('Y-m-d'), 0, 0, 'L', 0);
-
-        $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 83);
-        $this->Cell(15, 4, 'FORMA PAGO:', 0, 0, 'L', 0);
-        $this->SetFont('Arial', '', 8);
-        $this->SetX(52);
-        $this->Cell(15, 4, $arMovimiento->getTerceroRel()->getFormaPagoRel()->getNombre(), 0, 0, 'L', 0);
-        $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(90, 83);
-        $this->Cell(15, 4, 'ESTADO DE LA FACTURA:', 0, 0, 'L', 0);
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetTextColor(88, 34,34);
-        $this->SetX(132);
-        $this->Cell(15, 4, 'PENDIENTE DE REALIZAR PAGO', 0, 0, 'L', 0);
-
-        $this->SetFont('Arial', 'B', 9);
-        $this->SetTextColor(0, 0,0);
-        $this->SetXY(18.5, 87);
-        $this->Cell(15, 4, 'POR CONCEPTO DE:', 0, 0, 'L', 0);
-        $this->SetFont('Arial', '', 8);
-        $this->SetX(52);
-        $this->Cell(15, 4, $arMovimiento->getComentarios(), 0, 0, 'L', 0);
         $this->Ln();
 
         $this->EncabezadoDetalles();
@@ -167,13 +150,13 @@ class Factura2 extends \FPDF
     {
         $this->Ln(6);
         $this->SetX(19.5);
-        $header = array('DESCRIPCION', 'LOTE', 'CANT', 'VR UNIT', 'IVA', 'TOTAL', 'OBSERVACIONES');
+        $header = array('DESCRIPCION', 'CANT', 'VR UNIT', 'IVA', 'TOTAL');
         $this->SetFillColor(225, 225, 225);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
 
         //creamos la cabecera de la tabla.
-        $w = array(60, 15, 10, 15, 10, 20, 50);
+        $w = array(120, 10, 15, 10, 25);
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
         }
@@ -200,31 +183,29 @@ class Factura2 extends \FPDF
         /** @var  $arMovimientoDetalle InvMovimientoDetalle */
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $pdf->SetX(19.5);
-            $pdf->Cell(60, 4, substr(utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()),0,30), 1, 0, 'L');
-            $pdf->Cell(15, 4, $arMovimientoDetalle->getLoteFk(), 1, 0, 'L');
+            $pdf->Cell(120, 4, substr(utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()),0,60), 1, 0, 'L');
             $pdf->Cell(10, 4, $arMovimientoDetalle->getCantidad(), 1, 0, 'R');
             $pdf->Cell(15, 4, number_format($arMovimientoDetalle->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(10, 4, $arMovimientoDetalle->getPorcentajeIva() . '%', 1, 0, 'C');
-            $pdf->Cell(20, 4, number_format($arMovimientoDetalle->getVrTotal()), 1, 0, 'R');
-            $pdf->Cell(50, 4, '', 1, 0, 'C');
+            $pdf->Cell(25, 4, number_format($arMovimientoDetalle->getVrTotal()), 1, 0, 'R');
             $pdf->Ln();
-            $pdf->SetAutoPageBreak(true, 105);
+            $pdf->SetAutoPageBreak(true, 15);
         }
         $pdf->Ln();
-        $pdf->SetX(150);
+        $pdf->SetX(140);
         $pdf->SetFont('Arial', 'B', 7);
-        $pdf->Cell(30, 4, utf8_decode('SUBTOTAL'), 1, 0, 'L');
-        $pdf->Cell(20, 4, number_format($arMovimiento->getVrSubtotal()), 1, 0, 'R');
+        $pdf->Cell(35, 4, utf8_decode('SUBTOTAL'), 1, 0, 'L');
+        $pdf->Cell(25, 4, number_format($arMovimiento->getVrSubtotal()), 1, 0, 'R');
         $pdf->Ln();
-        $pdf->SetX(150);
+        $pdf->SetX(140);
         $pdf->SetFont('Arial', 'B', 7);
-        $pdf->Cell(30, 4, utf8_decode('IVA'), 1, 0, 'L');
-        $pdf->Cell(20, 4, number_format($arMovimiento->getVrIva()), 1, 0, 'R');
+        $pdf->Cell(35, 4, utf8_decode('IVA'), 1, 0, 'L');
+        $pdf->Cell(25, 4, number_format($arMovimiento->getVrIva()), 1, 0, 'R');
         $pdf->Ln();
-        $pdf->SetX(150);
+        $pdf->SetX(140);
         $pdf->SetFont('Arial', 'B', 7);
-        $pdf->Cell(30, 4, utf8_decode('TOTAL FACTURADO'), 1, 0, 'L');
-        $pdf->Cell(20, 4, number_format($arMovimiento->getVrTotal()), 1, 0, 'R');
+        $pdf->Cell(35, 4, utf8_decode('TOTAL FACTURADO'), 1, 0, 'L');
+        $pdf->Cell(25, 4, number_format($arMovimiento->getVrTotal()), 1, 0, 'R');
     }
 
     public function Footer()
@@ -238,14 +219,10 @@ class Factura2 extends \FPDF
         $this->Ln();
         $this->SetFont('Arial', 'B', 7.5);
         //Bloque informacion de conformidad
-        $this->Text(19.5, 180, utf8_decode('De conformidad a la ley 1231 de 2008 y art. 617 del estatuto tributario se seguirá entregando copia de la factura de venta.'));
-        $this->Text(19.5, 184, utf8_decode('Pasados 10 días calendario contados a partir de la fecha de recepción de la factura, si no se ha recibido una reclamación'));
-        $this->Text(19.5, 188, utf8_decode('por escrito, esta se entenderá irrevocablemente aceptada. El pago no oportuno causara intereses moratorios a la tasa'));
-        $this->Text(19.5, 192, utf8_decode('máxima legal autorizada.'));
-        $this->Text(19.5, 196, utf8_decode('Esta factura de venta se asimila en todos sus efectos a una letra de cambio (Art 779 código de comercio).'));
-        $this->Text(19.5, 200, utf8_decode('Se hace constar que la firma de una persona diferente al comprador, Implica que dicha persona se entiende autorizada y'));
-        $this->Text(19.5, 204, utf8_decode('facultada tacita y expresamente para aceptar y recibir esta factura. Dando cumplimiento a lo expresado en la ley 1231 del'));
-        $this->Text(19.5, 208, utf8_decode('2008 se tomara para domicilio el cumplimiento de la obligación la ciudad de Medellín.'));
+        $this->Text(19.5, 180, utf8_decode('Esta factura de venta se asimila en todos sus efectos a una letra de cambio(Art. 774 codigo comercio). Se hace constar que la firma de una'));
+        $this->Text(19.5, 184, utf8_decode('persona diferente al comprador, implica que dicha persona se entienda autorizada y facultada tacita y expresamente, para aceptar y recibirla'));
+        $this->Text(19.5, 188, utf8_decode('Pasados 10 dias calendario, contados a partir de la fecha de recepcion de la factura, si no se ha recibido una reclamacion por escrito, esta se'));
+        $this->Text(19.5, 192, utf8_decode('entendera irrevocablemente acaptada. El pago no oportuno causara intereses moratorios a la tasa maxima legal autorizada.'));
         //Bloque firmas
         $this->Text(24, 216, utf8_decode('ELABORADO POR:'));
         $this->Text(80, 216, utf8_decode('RECIBIDO POR:________________________'));
@@ -257,17 +234,14 @@ class Factura2 extends \FPDF
         $this->Text(80, 228, utf8_decode('FECHA:________________________________'));
         $this->Text(140, 228, utf8_decode('FECHA:________________________________'));
         //Bloque resolucion facturacion
-        $this->Text(40,236, utf8_decode($arMovimiento->getFacturaTipoRel()->getNumeroResolucionDianFactura()) . ' Intervalo ' . $arMovimiento->getFacturaTipoRel()->getNumeracionDesde(). ' al '. $arMovimiento->getFacturaTipoRel()->getNumeracionDesde());
+        $this->Text(48,236, utf8_decode($arMovimiento->getFacturaTipoRel()->getNumeroResolucionDianFactura()) . ' Intervalo ' . $arMovimiento->getFacturaTipoRel()->getNumeracionDesde(). ' al '. $arMovimiento->getFacturaTipoRel()->getNumeracionDesde());
         $this->Text(32,240, utf8_decode($arMovimiento->getFacturaTipoRel()->getInformacionCuentaPago()));
         //Informacion final
-        $this->Text(142, 246, utf8_decode('Impreso por computador'));
+        $this->Text(143, 246, utf8_decode('Impreso por computador'));
         $this->Text(130, 250, utf8_decode($arConfiguracion->getNombre() .' Nit: ') . $arConfiguracion->getNit() . '-' . $arConfiguracion->getDigitoVerificacion());
         $this->Text(120, 254, utf8_decode('Régimen Común. No retenedores del impuesto a las ventas.'));
         $this->Text(124, 258, utf8_decode($arConfiguracion->getDireccion()));
-        $this->Text(126, 262, utf8_decode($arConfiguracion->getTelefono() .' E-mail: contacto@invivo.com.co'));
-        $this->Text(134, 266, utf8_decode('ORIGINAL: EMISOR - COPIA: CLIENTE'));
-        $this->Image('../public/img/empresa/iso9001.jpg', 40, 245, 12, 18);
-        $this->Image('../public/img/empresa/iqnet.jpg', 55, 245, 20, 18);
+        $this->Text(135, 258, utf8_decode('ORIGINAL: EMISOR - COPIA: CLIENTE'));
         $this->SetFont('Arial', '', 6.5);
         $this->Text(188, 275, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }

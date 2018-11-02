@@ -187,15 +187,18 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $arMovimiento->setEstadoAutorizado(0);
             $this->getEntityManager()->persist($arMovimiento);
             $this->getEntityManager()->flush();
-            $this->eliminarDetallesTraslado($arMovimiento);
+            if($arMovimiento->getDocumentoTipoRel() == 'TRA'){
+                $this->eliminarDetallesTraslado($arMovimiento);
+            }
         } else {
             Mensajes::error('El registro esta aprobado y no se puede desautorizar');
         }
     }
 
     /**
-     * @param $arMovimiento InvMovimiento
+     * @param $arMovimiento
      * @param $tipo
+     * @return bool
      * @throws \Doctrine\ORM\ORMException
      */
     public function afectar($arMovimiento, $tipo)

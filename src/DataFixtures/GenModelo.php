@@ -17,6 +17,14 @@ class GenModelo extends Fixture
             $arModelo->setCodigoModuloFk('Transporte');
             $manager->persist($arModelo);
         }
+
+        $arModelo = $manager->getRepository(\App\Entity\General\GenModelo::class)->find('FinAsiento');
+        if(!$arModelo) {
+            $arModelo = new \App\Entity\General\GenModelo();
+            $arModelo->setCodigoModeloPk('FinAsiento');
+            $arModelo->setCodigoModuloFk('Financiero');
+            $manager->persist($arModelo);
+        }
         $manager->flush();
     }
 }

@@ -71,7 +71,15 @@ class EmpleadoController extends BaseController
             if ($form->get('guardar')->isClicked()) {
                 $arEmpleadoBuscar = $em->getRepository($this->clase)->findOneBy(['codigoIdentificacionFk' => $arEmpleado->getIdentificacionRel()->getCodigoIdentificacionPk(), 'numeroIdentificacion' => $arEmpleado->getNumeroIdentificacion()]);
                 if ((!is_null($arEmpleado->getCodigoEmpleadoPk()) && $arEmpleado->getCodigoEmpleadoPk() == $arEmpleadoBuscar->getCodigoEmpleadoPk()) || is_null($arEmpleadoBuscar)) {
-                    $arEmpleado->setNombreCorto($arEmpleado->getNombre1() . ' ' . $arEmpleado->getApellido1());
+                    $nombreCorto = $arEmpleado->getNombre1();
+                    if($arEmpleado->getNombre2()) {
+                        $nombreCorto .= " " . $arEmpleado->getNombre2();
+                    }
+                    $nombreCorto .= " " . $arEmpleado->getApellido1();
+                    if($arEmpleado->getApellido2()) {
+                        $nombreCorto .= " " . $arEmpleado->getApellido2();
+                    }
+                    $arEmpleado->setNombreCorto($nombreCorto);
                     $em->persist($arEmpleado);
                     $em->flush();
                     return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_empleado_detalle', ['id' => $arEmpleado->getCodigoEmpleadoPk()]));
@@ -145,6 +153,12 @@ class EmpleadoController extends BaseController
                 $arContrato->setEstadoTerminado(false);
                 $arContrato->setContratoClaseRel($arContrato->getContratoTipoRel()->getContratoClaseRel());
                 $arContrato->setIndefinido($arContrato->getContratoTipoRel()->getContratoClaseRel()->getIndefinido());
+                if($id == 0) {
+                    $arContrato->setFechaUltimoPago($arContrato->getFechaDesde());
+                    $arContrato->setFechaUltimoPagoCesantias($arContrato->getFechaDesde());
+                    $arContrato->setFechaUltimoPagoPrimas($arContrato->getFechaDesde());
+                    $arContrato->setFechaUltimoPagoVacaciones($arContrato->getFechaDesde());
+                }
                 $em->persist($arContrato);
                 $em->flush();
 

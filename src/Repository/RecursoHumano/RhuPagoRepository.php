@@ -31,42 +31,45 @@ class RhuPagoRepository extends ServiceEntityRepository
      * @param $arProgramacionDetalle RhuProgramacionDetalle
      * @param $arProgramacion RhuProgramacion
      */
-    public function generarPago($arProgramacionDetalle, $arProgramacion){
+    public function generar($arProgramacionDetalle, $arProgramacion){
         $em = $this->getEntityManager();
-        if ($arProgramacion->getCodigoPagoTipoFk() == 1) {
-            $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
-            $arPago = new RhuPago();
-            $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getContratoRel());
-            $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
-            $arPago->setEmpleadoRel($arProgramacionDetalle->getEmpleadoRel());
-            $arPago->setContratoRel($arProgramacionDetalle->getContratoRel());
-            $arPago->setProgramacionDetalleRel($arProgramacionDetalle);
-            $arPago->setFechaDesde($arProgramacion->getFechaDesde());
-            $arPago->setFechaHasta($arProgramacion->getFechaHasta());
-            $arPago->setFechaDesde($arProgramacionDetalle->getFechaDesdePago());
-            $arPago->setFechaHasta($arProgramacionDetalle->getFechaHastaPago());
-            $arPago->setVrSalarioContrato($arProgramacionDetalle->getVrSalario());
-            $arPago->setUsuario($arProgramacion->getUsuario());
-            $arPago->setComentario($arProgramacionDetalle->getComentarios());
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arPago = new RhuPago();
+        $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getCodigoContratoFk());
+        $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
+        $arPago->setEmpleadoRel($arProgramacionDetalle->getEmpleadoRel());
+        $arPago->setContratoRel($arContrato);
+        $prueba = $arProgramacionDetalle->getEmpleadoRel()->getNombreCorto();
+        $arPago->setProgramacionDetalleRel($arProgramacionDetalle);
+        $em->persist($arPago);
 
-            //Parametros generales
-            $intHorasLaboradas = $arProgramacionDetalle->getHorasPeriodoReales();
-            $horasDiurnas = $arProgramacionDetalle->getHorasDiurnas();
-            $intDiasTransporte = $arProgramacionDetalle->getDiasReales();
-            $intFactorDia = $arProgramacionDetalle->getFactorDia();
-            $douVrDia = $arProgramacionDetalle->getVrDia();
-            $douVrHora = $arProgramacionDetalle->getVrHora();
-            $douVrSalarioMinimo = $arConfiguracion->getVrSalario();
-            $douVrHoraSalarioMinimo = ($douVrSalarioMinimo / 30) / 8;
-            $douIngresoBasePrestacional = 0;
-            $douIngresoBaseCotizacion = 0;
-            $douIngresoBaseCotizacionSalud = 0;
-            $devengado = 0;
-            $devengadoPrestacional = 0;
-            $salud = 0;
-            $pension = 0;
-            $transporte = 0;
-        }
+
+        /*$arPago->setFechaDesde($arProgramacion->getFechaDesde());
+        $arPago->setFechaHasta($arProgramacion->getFechaHasta());
+        $arPago->setFechaDesde($arProgramacionDetalle->getFechaDesdePago());
+        $arPago->setFechaHasta($arProgramacionDetalle->getFechaHastaPago());
+        $arPago->setVrSalarioContrato($arProgramacionDetalle->getVrSalario());
+        $arPago->setUsuario($arProgramacion->getUsuario());
+        $arPago->setComentario($arProgramacionDetalle->getComentarios());
+         */
+        //Parametros generales
+/*        $intHorasLaboradas = $arProgramacionDetalle->getHorasPeriodoReales();
+        $horasDiurnas = $arProgramacionDetalle->getHorasDiurnas();
+        $intDiasTransporte = $arProgramacionDetalle->getDiasReales();
+        $intFactorDia = $arProgramacionDetalle->getFactorDia();
+        $douVrDia = $arProgramacionDetalle->getVrDia();
+        $douVrHora = $arProgramacionDetalle->getVrHora();
+        $douVrSalarioMinimo = $arConfiguracion->getVrSalario();
+        $douVrHoraSalarioMinimo = ($douVrSalarioMinimo / 30) / 8;
+        $douIngresoBasePrestacional = 0;
+        $douIngresoBaseCotizacion = 0;
+        $douIngresoBaseCotizacionSalud = 0;
+        $devengado = 0;
+        $devengadoPrestacional = 0;
+        $salud = 0;
+        $pension = 0;
+        $transporte = 0;
+*/
     }
 
 }

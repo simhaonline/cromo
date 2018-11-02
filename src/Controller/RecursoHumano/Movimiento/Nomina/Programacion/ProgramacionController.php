@@ -126,14 +126,14 @@ class ProgramacionController extends BaseController
             if($form->get('btnAutorizar')->isClicked()){
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-                if ($arProgramacion->getEstadoAutorizado()) {
-                    $strResultado = $em->getRepository(RhuProgramacion::class)->autorizar($id);
+
+                    $strResultado = $em->getRepository(RhuProgramacion::class)->autorizar($arProgramacion);
                     if ($strResultado == "") {
                         return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
                     } else {
                         Mensajes::error($strResultado);
                     }
-                }
+
             }
             if($form->get('btnEliminarTodos')->isClicked()){
                 $em->getRepository(RhuProgramacionDetalle::class)->eliminarTodoDetalles($arProgramacion);

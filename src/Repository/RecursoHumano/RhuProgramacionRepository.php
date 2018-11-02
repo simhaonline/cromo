@@ -70,13 +70,14 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arProgramacionDetalle->setEmpleadoRel($arContrato->getEmpleadoRel());
             $arProgramacionDetalle->setContratoRel($arContrato);
             $arProgramacionDetalle->setVrSalario($arContrato->getVrSalario());
-            $dias = 0;
             $fechaDesde = $this->fechaDesdeContrato($arProgramacion->getFechaDesde(), $arContrato->getFechaDesde());
             $fechaHasta = $this->fechaHastaContrato($arProgramacion->getFechaHasta(),  $arContrato->getFechaHasta(), $arContrato->getIndefinido());
+            $dias = $fechaDesde->diff($fechaHasta)->days+1;
+            $horas = $dias * 8;
             $arProgramacionDetalle->setFechaDesde($fechaDesde);
             $arProgramacionDetalle->setFechaHasta($fechaHasta);
             $arProgramacionDetalle->setDias($dias);
-            $arProgramacionDetalle->setHorasDiurnas(0);
+            $arProgramacionDetalle->setHorasDiurnas($horas);
             $em->persist($arProgramacionDetalle);
         }
         $arProgramacion->setEmpleadosGenerados(0);
@@ -89,14 +90,13 @@ class RhuProgramacionRepository extends ServiceEntityRepository
      */
     public function autorizar($arProgramacion){
         $em = $this->getEntityManager();
-        if(!$arProgramacion->getEstadoAutorizado() && $arProgramacion->getEmpleadosGenerados()){
+        if(!$arProgramacion->getEstadoAutorizado()){
             $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()]);
             if($arProgramacionDetalles){
-                $em->getRepository(RhuPagoDetalle::class)->eliminarTodoDetalles($arProgramacion->getCodigoProgramacionPk());
-                $em->getRepository(RhuPago::class)->eliminarTodo($arProgramacion->getCodigoProgramacionPk());
                 foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
-                    $em->getRepository(RhuPago::class)->generarPago($arProgramacionDetalle, $arProgramacion);
+                    $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion);
                 }
+                $em->flush();
             }
         }
     }

@@ -53,14 +53,14 @@ class PagoType extends AbstractType
         $campos = '[
             {"campo":"codigoPagoPk",      "tipo":"pk"      ,"ayuda":"Codigo del registro"                    ,"titulo":"ID"},
             {"campo":"numero",            "tipo":"texto"   ,"ayuda":"Numero"                       ,"titulo":"NUMERO"},
-            {"campo":"codigoPagoTipoFk",  "tipo":"texto"   ,"ayuda":"Tipo de pago"         ,"titulo":"TIPO"},
-            {"campo":"codigoEmpleadoFk",  "tipo":"texto"   ,"ayuda":"Codigo del empleado"        ,"titulo":"EMPLEADO"},
-            {"campo":"codigoGrupoFk",     "tipo":"texto"   ,"ayuda":"Codigo del grupo"              ,"titulo":"GRUPO"},
+            {"campo":"pagoTipoRel.nombre",       "tipo":"texto"   ,"ayuda":"Tipo de pago"                ,"titulo":"TIPO", "relacion":""},
+            {"campo":"empleadoRel.numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del empleado"        ,"titulo":"IDENTIFICACION", "relacion":""},
+            {"campo":"empleadoRel.nombreCorto",  "tipo":"texto"   ,"ayuda":"Nombre del empleado"        ,"titulo":"EMPLEADO", "relacion":""},
             {"campo":"fechaDesde",        "tipo":"fecha"   ,"ayuda":"Fecha desde" ,"titulo":"DESDE"},                     
             {"campo":"fechaHasta",        "tipo":"fecha"   ,"ayuda":"Fecha hasta" ,"titulo":"HASTA"},                     
-            {"campo":"vrSalarioContrato", "tipo":"moneda"   ,"ayuda":"Salario del empleado al momento de realizado el pago" ,"titulo":"SAL"},                     
-            {"campo":"vrDevengado",       "tipo":"moneda"   ,"ayuda":"Valor devengado" ,"titulo":"DEV"},                     
-            {"campo":"vrDeduccion",       "tipo":"moneda"   ,"ayuda":"Valor de las deducciones" ,"titulo":"DED"}                                          
+            {"campo":"vrSalarioContrato", "tipo":"moneda"   ,"ayuda":"Salario del empleado al momento de realizado el pago" ,"titulo":"SALARIO"},                     
+            {"campo":"vrDevengado",       "tipo":"moneda"   ,"ayuda":"Valor devengado" ,"titulo":"DEVENGADO"},                     
+            {"campo":"vrDeduccion",       "tipo":"moneda"   ,"ayuda":"Valor de las deducciones" ,"titulo":"DEDUCCIONES"}                                          
         ]';
         return $campos;
     }

@@ -6,6 +6,7 @@ use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuPago;
+use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -35,17 +36,19 @@ class RhuPagoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         //$arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
         $arPago = new RhuPago();
-        $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getCodigoContratoFk());
+        $arContrato = $em->getRepository(RhuContrato::class)->generarPago($arProgramacionDetalle->getCodigoContratoFk());
         $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
         $arPago->setEmpleadoRel($arProgramacionDetalle->getEmpleadoRel());
-        $arPago->setContratoRel($arContrato);
+        $arPago->setContratoRel($arProgramacionDetalle->getContratoRel());
         $arPago->setProgramacionDetalleRel($arProgramacionDetalle);
         $em->persist($arPago);
 
-        $arrHoras = $this->getHoras($arProgramacionDetalle);
+
+
+        /*$arrHoras = $this->getHoras($arProgramacionDetalle);
         foreach ($arrHoras AS $arrHora) {
 
-        }
+        }*/
 
         /*$arPago->setFechaDesde($arProgramacion->getFechaDesde());
         $arPago->setFechaHasta($arProgramacion->getFechaHasta());

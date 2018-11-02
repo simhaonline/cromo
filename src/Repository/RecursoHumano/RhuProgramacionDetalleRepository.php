@@ -45,4 +45,5 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->select('COUNT(pd.codigoProgramacionDetallePk)')
             ->where('pd.codigoProgramacionFk =' . $codigoProgramacion)->getQuery()->execute();
     }
+
 }

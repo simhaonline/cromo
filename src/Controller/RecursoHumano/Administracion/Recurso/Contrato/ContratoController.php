@@ -7,6 +7,8 @@ use App\Controller\BaseController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Form\Type\RecursoHumano\ContratoType;
 use App\General\General;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -63,18 +65,43 @@ class ContratoController extends BaseController
                 return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_contrato_lista'));
             }
         }
-
-
-        /*if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
-                $em->persist($arContrato);
-                $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_administracion_contrato_contrato_detalle'));
-            }
-        }*/
-        //$arContratos = $em->getRepository(RhuContrato::class)->contratosContrato($arContrato->getCodigoContratoPk());
         return $this->render('recursoHumano/administracion/recurso/contrato/detalle.html.twig', [
             'arContrato' => $arContrato
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("recursohumano/administracion/recurso/contrato/detalle/parametrosIniciales/{id}", name="recursohumano_administracion_recurso_contrato_detalle_parametrosIniciales")
+     */
+    public function parametrosIniciales(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arContrato = $em->getRepository(RhuContrato::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('fechaUltimoPagoCesantias', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',],'data' => $arContrato->getFechaUltimoPagoCesantias()])
+            ->add('fechaUltimoPagoVacaciones', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',],'data' => $arContrato->getFechaUltimoPagoVacaciones()])
+            ->add('fechaUltimoPagoPrimas', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',],'data' => $arContrato->getFechaUltimoPagoPrimas()])
+            ->add('fechaUltimoPago', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',],'data' => $arContrato->getFechaUltimoPago()])
+            ->add('btnGuardar',SubmitType::class,['label' => 'Guardar'])
+            ->getForm();
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            if($form->get('btnGuardar')->isClicked()){
+                $arContrato->setFechaUltimoPago($form->get('fechaUltimoPago')->getData());
+                $arContrato->setFechaUltimoPagoPrimas($form->get('fechaUltimoPagoPrimas')->getData());
+                $arContrato->setFechaUltimoPagoVacaciones($form->get('fechaUltimoPagoVacaciones')->getData());
+                $arContrato->setFechaUltimoPagoCesantias($form->get('fechaUltimoPagoCesantias')->getData());
+                $em->persist($arContrato);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('recursoHumano/administracion/recurso/contrato/parametrosIniciales.html.twig', [
+            'arContrato' => $arContrato,
+            'form' => $form->createView()
         ]);
     }
 
@@ -89,4 +116,3 @@ class ContratoController extends BaseController
         return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_contrato_lista'));
     }
 }
-

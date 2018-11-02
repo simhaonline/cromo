@@ -136,6 +136,7 @@ class FacturaController extends Controller
                 }
             }
             if ($form->get('btnAutorizar')->isClicked()) {
+                $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($id);
                 $em->getRepository(TteFactura::class)->autorizar($arFactura);
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }

@@ -9,6 +9,7 @@ use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\FacturaType;
+use App\Formato\Inventario\Factura3;
 use App\Formato\Inventario\FormatoMovimiento;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
@@ -251,6 +252,10 @@ class MovimientoController extends Controller
                     }
                     if ($codigoFactura == 2) {
                         $objFormato = new Factura2();
+                        $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
+                    }
+                    if($codigoFactura ==3){
+                        $objFormato = new Factura3();
                         $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                     }
                 } else {

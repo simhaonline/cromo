@@ -38,7 +38,7 @@ class SeguridadUsuarioModeloController extends AbstractController
             if (!$arUsuario) {
                 return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
             }
-            $arSeguridadUsuarioModelo=$em->getRepository('SegUsuarioModelo.php')->lista($arUsuario->getId());
+            $arSeguridadUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->lista($arUsuario->getId());
             $nombreUsuario=$arUsuario->getNombreCorto();
         }
         return $this->render('general/seguridad/seguridad_usuario_modelo/lista.html.twig', [
@@ -138,7 +138,7 @@ class SeguridadUsuarioModeloController extends AbstractController
             }
         }
         if ($codigoSeguridadUsuarioModelo != 0) {
-            $arSeguridadUsuarioModelo = $em->getRepository('SegUsuarioModelo.php')->find($codigoSeguridadUsuarioModelo);
+            $arSeguridadUsuarioModelo = $em->getRepository('App:Seguridad\SegUsuarioModelo')->find($codigoSeguridadUsuarioModelo);
         if($arSeguridadUsuarioModelo) {
             $form = $this->createFormBuilder()
                 ->add('checkLista', CheckboxType::class, ['required' => false, 'label'=>'Lista','data'=>$arSeguridadUsuarioModelo->getLista()])

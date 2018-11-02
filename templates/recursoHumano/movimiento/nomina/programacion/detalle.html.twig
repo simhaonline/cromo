@@ -82,7 +82,7 @@
                                 <td>{{ arProgramacionDetalle.empleadoRel.nombreCorto }}</td>
                                 <td>{{ arProgramacionDetalle.fechaDesde | date('Y-m-d') }}</td>
                                 <td>{{ arProgramacionDetalle.fechaHasta | date('Y-m-d') }}</td>
-                                <td>{{ arProgramacionDetalle.vrSalario }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasDiurnas | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasNocturnas | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasFestivasDiurnas | number_format(0, '.', ',') }}</td>

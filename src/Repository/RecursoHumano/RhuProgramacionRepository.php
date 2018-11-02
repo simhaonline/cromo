@@ -70,77 +70,13 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arProgramacionDetalle->setEmpleadoRel($arContrato->getEmpleadoRel());
             $arProgramacionDetalle->setContratoRel($arContrato);
             $arProgramacionDetalle->setVrSalario($arContrato->getVrSalario());
-            $arProgramacionDetalle->setIndefinido($arContrato->getIndefinido());
-            $arProgramacionDetalle->setSalarioIntegral($arContrato->getSalarioIntegral());
-            $arProgramacionDetalle->setFechaDesde($arProgramacion->getFechaDesde());
-            $arProgramacionDetalle->setFechaHasta($arProgramacion->getFechaHasta());
-            $arProgramacionDetalle->setSalarioBasico(1);
-            if ($arContrato->getContratoTipoRel()->getCodigoContratoClaseFk() == 'APR' || $arContrato->getContratoTipoRel()->getCodigoContratoClaseFk() == 'PRA') {
-                $arProgramacionDetalle->setDescuentoPension(0);
-                $arProgramacionDetalle->setDescuentoSalud(0);
-                $arProgramacionDetalle->setPagoAuxilioTransporte(0);
-            }
-            $em->persist($arProgramacionDetalle);
-            if ($arContrato->getCodigoPensionFk() == 'PEN') {
-                $arProgramacionDetalle->setDescuentoPension(0);
-            }
-            $dateFechaDesde = "";
-            $dateFechaHasta = "";
-            $intDiasDevolver = 0;
-            $fechaFinalizaContrato = $arContrato->getFechaHasta();
-            if ($arContrato->getIndefinido() == 1) {
-                $fecha = date_create(date('Y-m-d'));
-                date_modify($fecha, '+100000 day');
-                $fechaFinalizaContrato = $fecha;
-            }
-            if ($arContrato->getFechaDesde() < $arProgramacion->getFechaDesde() == true) {
-                $dateFechaDesde = $arProgramacion->getFechaDesde();
-            } else {
-                if ($arContrato->getFechaDesde() > $arProgramacion->getFechaHasta() == true) {
-                    if ($arContrato->getFechaDesde() == $arProgramacion->getFechaHastaPeriodo()) {
-                        $dateFechaDesde = $arProgramacion->getFechaHastaPeriodo();
-                        $intDiasDevolver = 1;
-                    } else {
-                        $intDiasDevolver = 0;
-                    }
-                } else {
-                    $dateFechaDesde = $arContrato->getFechaDesde();
-                }
-            }
-
-            if ($fechaFinalizaContrato > $arProgramacion->getFechaHasta() == true) {
-                $dateFechaHasta = $arProgramacion->getFechaHasta();
-            } else {
-                if ($fechaFinalizaContrato < $arProgramacion->getFechaDesde() == true) {
-                    $intDiasDevolver = 0;
-                } else {
-                    $dateFechaHasta = $fechaFinalizaContrato;
-                }
-            }
-
-            $arProgramacionDetalle->setFechaDesde($dateFechaDesde);
-            $arProgramacionDetalle->setFechaHasta($dateFechaHasta);
-            $arProgramacionDetalle->setFechaDesde($arContrato->getFechaDesde());
-            $arProgramacionDetalle->setFechaHasta($dateFechaHasta);
-            $arProgramacionDetalle->setDias($intDiasDevolver);
-            $arProgramacionDetalle->setDiasReales($intDiasDevolver);
-            $horasDiurnas = ($intDiasDevolver * $arContrato->getFactorHorasDia());
-            $arProgramacionDetalle->setHorasPeriodo($horasDiurnas);
-            $arProgramacionDetalle->setHorasDiurnas($horasDiurnas);
-            $arProgramacionDetalle->setHorasPeriodoReales($horasDiurnas);
-            $arProgramacionDetalle->setFactorDia($arContrato->getFactorHorasDia());
-
-            $floValorDia = $arContrato->getVrSalario() / 30;
-            $floValorHora = $floValorDia / $arContrato->getFactorHorasDia();
-            $arProgramacionDetalle->setVrDia($floValorDia);
-            $arProgramacionDetalle->setVrHora($floValorHora);
-            $floDevengado = $arProgramacionDetalle->getDias() * $floValorDia;
-            $arProgramacionDetalle->setVrDevengado($floDevengado);
-
-            $arProgramacionDetalle->setVrCreditos(0);
-            $arProgramacionDetalle->setVrDeducciones(0);
-            $floNeto = $floDevengado;
-            $arProgramacionDetalle->setVrNetoPagar($floNeto);
+            $dias = 0;
+            $fechaDesde = $this->fechaDesdeContrato($arProgramacion->getFechaDesde(), $arContrato->getFechaDesde());
+            $fechaHasta = $this->fechaHastaContrato($arProgramacion->getFechaHasta(),  $arContrato->getFechaHasta(), $arContrato->getIndefinido());
+            $arProgramacionDetalle->setFechaDesde($fechaDesde);
+            $arProgramacionDetalle->setFechaHasta($fechaHasta);
+            $arProgramacionDetalle->setDias($dias);
+            $arProgramacionDetalle->setHorasDiurnas(0);
             $em->persist($arProgramacionDetalle);
         }
         $arProgramacion->setEmpleadosGenerados(0);
@@ -163,5 +99,26 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 }
             }
         }
+    }
+
+    private function fechaHastaContrato($fechaHastaPeriodo, $fechaHastaContrato, $indefinido) {
+        $fechaHasta = $fechaHastaContrato;
+        if ($indefinido) {
+            $fecha = date_create(date('Y-m-d'));
+            date_modify($fecha, '+100000 day');
+            $fechaHasta = $fecha;
+        }
+        if ($fechaHasta > $fechaHastaPeriodo) {
+            $fechaHasta = $fechaHastaPeriodo;
+        }
+        return $fechaHasta;
+    }
+
+    private function fechaDesdeContrato($fechaDesdePeriodo, $fechaDesdeContrato) {
+        $fechaDesde = $fechaDesdeContrato;
+        if ($fechaDesdeContrato < $fechaDesdePeriodo) {
+            $fechaDesde = $fechaDesdePeriodo;
+        }
+        return $fechaDesde;
     }
 }

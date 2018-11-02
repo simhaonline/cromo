@@ -149,7 +149,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('entidadPensionRel', EntityType::class, [
                 'class' => RhuEntidad::class,
@@ -159,7 +159,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('entidadCesantiaRel', EntityType::class, [
                 'class' => RhuEntidad::class,
@@ -169,7 +169,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('entidadCajaRel', EntityType::class, [
                 'class' => RhuEntidad::class,
@@ -179,7 +179,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('ciudadContratoRel', EntityType::class, [
                 'class' => GenCiudad::class,

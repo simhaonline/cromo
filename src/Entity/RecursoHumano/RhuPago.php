@@ -18,7 +18,7 @@ class RhuPago
     private $codigoPagoPk;
 
     /**
-     * @ORM\Column(name="codigo_pago_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_pago_tipo_fk", type="string", length=10,  nullable=true)
      */
     private $codigoPagoTipoFk;
 
@@ -43,39 +43,9 @@ class RhuPago
     private $codigoContratoFk;
 
     /**
-     * @ORM\Column(name="codigo_grupo_fk", type="integer", nullable=true)
-     */
-    private $codigoGrupoFk;
-
-    /**
-     * @ORM\Column(name="codigo_programacion_fk", type="integer", nullable=true)
-     */
-    private $codigoProgramacionFk;
-
-    /**
      * @ORM\Column(name="codigo_programacion_detalle_fk", type="integer", nullable=true)
      */
     private $codigoProgramacionDetalleFk;
-
-    /**
-     * @ORM\Column(name="codigo_vacacion_fk", type="integer", nullable=true)
-     */
-    private $codigoVacacionFk;
-
-    /**
-     * @ORM\Column(name="codigo_liquidacion_fk", type="integer", nullable=true)
-     */
-    private $codigoLiquidacionFk;
-
-    /**
-     * @ORM\Column(name="codigo_entidad_salud_fk", type="integer", nullable=true)
-     */
-    private $codigoEntidadSaludFk;
-
-    /**
-     * @ORM\Column(name="codigo_entidad_pension_fk", type="integer", nullable=true)
-     */
-    private $codigoEntidadPensionFk;
 
     /**
      * @ORM\Column(name="fecha_desde", type="date", nullable=true)
@@ -147,6 +117,40 @@ class RhuPago
      * @ORM\Column(name="comentario", type="string", length=500, nullable=true)
      */
     private $comentario;
+
+    /**
+     * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
+     */
+    private $usuario;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="")
+     * @ORM\JoinColumn(name="codigo_empleado_fk",referencedColumnName="codigo_empleado_pk")
+     */
+    protected $empleadoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuContrato", inversedBy="")
+     * @ORM\JoinColumn(name="codigo_contrato_fk",referencedColumnName="codigo_contrato_pk")
+     */
+    protected $contratoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuPagoTipo", inversedBy="")
+     * @ORM\JoinColumn(name="codigo_pago_tipo_fk",referencedColumnName="codigo_pago_tipo_pk")
+     */
+    protected $pagoTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuProgramacionDetalle", inversedBy="")
+     * @ORM\JoinColumn(name="codigo_programacion_detalle_fk",referencedColumnName="codigo_programacion_detalle_pk")
+     */
+    protected $programacionDetalleRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuPagoDetalle", mappedBy="pagoRel" )
+     */
+    protected $pagosDetallesPagoRel;
 
     /**
      * @return mixed
@@ -247,38 +251,6 @@ class RhuPago
     /**
      * @return mixed
      */
-    public function getCodigoGrupoFk()
-    {
-        return $this->codigoGrupoFk;
-    }
-
-    /**
-     * @param mixed $codigoGrupoFk
-     */
-    public function setCodigoGrupoFk($codigoGrupoFk): void
-    {
-        $this->codigoGrupoFk = $codigoGrupoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoProgramacionFk()
-    {
-        return $this->codigoProgramacionFk;
-    }
-
-    /**
-     * @param mixed $codigoProgramacionFk
-     */
-    public function setCodigoProgramacionFk($codigoProgramacionFk): void
-    {
-        $this->codigoProgramacionFk = $codigoProgramacionFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCodigoProgramacionDetalleFk()
     {
         return $this->codigoProgramacionDetalleFk;
@@ -290,70 +262,6 @@ class RhuPago
     public function setCodigoProgramacionDetalleFk($codigoProgramacionDetalleFk): void
     {
         $this->codigoProgramacionDetalleFk = $codigoProgramacionDetalleFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoVacacionFk()
-    {
-        return $this->codigoVacacionFk;
-    }
-
-    /**
-     * @param mixed $codigoVacacionFk
-     */
-    public function setCodigoVacacionFk($codigoVacacionFk): void
-    {
-        $this->codigoVacacionFk = $codigoVacacionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoLiquidacionFk()
-    {
-        return $this->codigoLiquidacionFk;
-    }
-
-    /**
-     * @param mixed $codigoLiquidacionFk
-     */
-    public function setCodigoLiquidacionFk($codigoLiquidacionFk): void
-    {
-        $this->codigoLiquidacionFk = $codigoLiquidacionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoEntidadSaludFk()
-    {
-        return $this->codigoEntidadSaludFk;
-    }
-
-    /**
-     * @param mixed $codigoEntidadSaludFk
-     */
-    public function setCodigoEntidadSaludFk($codigoEntidadSaludFk): void
-    {
-        $this->codigoEntidadSaludFk = $codigoEntidadSaludFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoEntidadPensionFk()
-    {
-        return $this->codigoEntidadPensionFk;
-    }
-
-    /**
-     * @param mixed $codigoEntidadPensionFk
-     */
-    public function setCodigoEntidadPensionFk($codigoEntidadPensionFk): void
-    {
-        $this->codigoEntidadPensionFk = $codigoEntidadPensionFk;
     }
 
     /**
@@ -579,4 +487,102 @@ class RhuPago
     {
         $this->comentario = $comentario;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadoRel()
+    {
+        return $this->empleadoRel;
+    }
+
+    /**
+     * @param mixed $empleadoRel
+     */
+    public function setEmpleadoRel($empleadoRel): void
+    {
+        $this->empleadoRel = $empleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoRel()
+    {
+        return $this->contratoRel;
+    }
+
+    /**
+     * @param mixed $contratoRel
+     */
+    public function setContratoRel($contratoRel): void
+    {
+        $this->contratoRel = $contratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagoTipoRel()
+    {
+        return $this->pagoTipoRel;
+    }
+
+    /**
+     * @param mixed $pagoTipoRel
+     */
+    public function setPagoTipoRel($pagoTipoRel): void
+    {
+        $this->pagoTipoRel = $pagoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProgramacionDetalleRel()
+    {
+        return $this->programacionDetalleRel;
+    }
+
+    /**
+     * @param mixed $programacionDetalleRel
+     */
+    public function setProgramacionDetalleRel($programacionDetalleRel): void
+    {
+        $this->programacionDetalleRel = $programacionDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosDetallesPagoRel()
+    {
+        return $this->pagosDetallesPagoRel;
+    }
+
+    /**
+     * @param mixed $pagosDetallesPagoRel
+     */
+    public function setPagosDetallesPagoRel($pagosDetallesPagoRel): void
+    {
+        $this->pagosDetallesPagoRel = $pagosDetallesPagoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+
 }

@@ -2,62 +2,71 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\Entity\RecursoHumano\RhuConfiguracion;
+use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuPago;
+use App\Entity\RecursoHumano\RhuProgramacion;
+use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class RhuPagoRepository extends ServiceEntityRepository
 {
-
-    /**
-     * @return string
-     */
-    public function getRuta(){
-        return 'recursohumano_movimiento_credito_credito_';
-    }
-
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, RhuPago::class);
     }
 
     /**
-     * @return \Doctrine\ORM\QueryBuilder
+     * @param $codigoProgramacion integer
      */
-    public function lista()
-    {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuCredito::class, 'e');
-        $queryBuilder
-            ->select('e.codigoCreditoPk');
-        return $queryBuilder;
+    public function eliminarTodo($codigoProgramacion){
+        $this->_em->createQueryBuilder()->delete(RhuPago::class,'p')
+            ->leftJoin('p.programacionDetalleRel','prd')
+            ->where("prd.codigoProgramacionFk = {$codigoProgramacion}")->getQuery()->execute();
     }
 
     /**
-     * @return array
+     * @param $arProgramacionDetalle RhuProgramacionDetalle
+     * @param $arProgramacion RhuProgramacion
      */
-    public function parametrosLista(){
-        $arEmbargo = new RhuEmbargo();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
-            ->select('re.codigoEmbargoPk')
-            ->addSelect('re.fecha')
-            ->where('re.codigoEmbargoPk <> 0');
-        $arrOpciones = ['json' =>'[{"campo":"codigoEmbargoPk","ayuda":"Codigo del embargo","titulo":"ID"},
-        {"campo":"fecha","ayuda":"Fecha de registro","titulo":"FECHA"}]',
-            'query' => $queryBuilder,'ruta' => $this->getRuta()];
-        return $arrOpciones;
-    }
+    public function generarPago($arProgramacionDetalle, $arProgramacion){
+        $em = $this->getEntityManager();
+        if ($arProgramacion->getCodigoPagoTipoFk() == 1) {
+            $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+            $arPago = new RhuPago();
+            $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getContratoRel());
+            $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
+            $arPago->setEmpleadoRel($arProgramacionDetalle->getEmpleadoRel());
+            $arPago->setContratoRel($arProgramacionDetalle->getContratoRel());
+            $arPago->setProgramacionDetalleRel($arProgramacionDetalle);
+            $arPago->setFechaDesde($arProgramacion->getFechaDesde());
+            $arPago->setFechaHasta($arProgramacion->getFechaHasta());
+            $arPago->setFechaDesde($arProgramacionDetalle->getFechaDesdePago());
+            $arPago->setFechaHasta($arProgramacionDetalle->getFechaHastaPago());
+            $arPago->setVrSalarioContrato($arProgramacionDetalle->getVrSalario());
+            $arPago->setUsuario($arProgramacion->getUsuario());
+            $arPago->setComentario($arProgramacionDetalle->getComentarios());
 
-    /**
-     * @return mixed
-     */
-    public function parametrosExcel(){
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
-            ->select('re.codigoEmbargoPk')
-            ->addSelect('re.fecha')
-            ->where('re.codigoEmbargoPk <> 0');
-        return $queryBuilder->getQuery()->execute();
+            //Parametros generales
+            $intHorasLaboradas = $arProgramacionDetalle->getHorasPeriodoReales();
+            $horasDiurnas = $arProgramacionDetalle->getHorasDiurnas();
+            $intDiasTransporte = $arProgramacionDetalle->getDiasReales();
+            $intFactorDia = $arProgramacionDetalle->getFactorDia();
+            $douVrDia = $arProgramacionDetalle->getVrDia();
+            $douVrHora = $arProgramacionDetalle->getVrHora();
+            $douVrSalarioMinimo = $arConfiguracion->getVrSalario();
+            $douVrHoraSalarioMinimo = ($douVrSalarioMinimo / 30) / 8;
+            $douIngresoBasePrestacional = 0;
+            $douIngresoBaseCotizacion = 0;
+            $douIngresoBaseCotizacionSalud = 0;
+            $devengado = 0;
+            $devengadoPrestacional = 0;
+            $salud = 0;
+            $pension = 0;
+            $transporte = 0;
+        }
     }
-
 
 }

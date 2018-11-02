@@ -48,6 +48,11 @@ class RhuContrato
     private $codigoTiempoFk;
 
     /**
+     * @ORM\Column(name="factor_horas_dia", options={"default" : 0 }, type="integer", nullable=true)
+     */
+    private $factorHorasDia = 0;
+
+    /**
      * @ORM\Column(name="codigo_pension_fk", type="string", length=10, nullable=true)
      */
     private $codigoPensionFk;
@@ -484,6 +489,22 @@ class RhuContrato
     /**
      * @return mixed
      */
+    public function getFactorHorasDia()
+    {
+        return $this->factorHorasDia;
+    }
+
+    /**
+     * @param mixed $factorHorasDia
+     */
+    public function setFactorHorasDia($factorHorasDia): void
+    {
+        $this->factorHorasDia = $factorHorasDia;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoPensionFk()
     {
         return $this->codigoPensionFk;
@@ -639,6 +660,22 @@ class RhuContrato
     public function setEstadoTerminado($estadoTerminado): void
     {
         $this->estadoTerminado = $estadoTerminado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIndefinido()
+    {
+        return $this->indefinido;
+    }
+
+    /**
+     * @param mixed $indefinido
+     */
+    public function setIndefinido($indefinido): void
+    {
+        $this->indefinido = $indefinido;
     }
 
     /**
@@ -1423,21 +1460,5 @@ class RhuContrato
     public function setAdicionalesContratoRel($adicionalesContratoRel): void
     {
         $this->adicionalesContratoRel = $adicionalesContratoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIndefinido()
-    {
-        return $this->indefinido;
-    }
-
-    /**
-     * @param mixed $indefinido
-     */
-    public function setIndefinido($indefinido): void
-    {
-        $this->indefinido = $indefinido;
     }
 }

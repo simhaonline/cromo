@@ -24,10 +24,15 @@
     <div class="panel panel-default">
         <div class="panel-heading">Filtro busqueda</div>
         <div class="panel-body">
+
             <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Modulo:</label>
+                <div class="col-sm-4">
+                    {{form_widget(form.cboModulo, { 'attr': {'class': 'form-control'} }) }}
+                </div>
                 <label class="col-sm-2 control-label">Modelo:</label>
                 <div class="col-sm-4">
-                    {{form_widget(form.TxtModulo, { 'attr': {'class': 'form-control'} }) }}
+                    {{form_widget(form.TxtModelo, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

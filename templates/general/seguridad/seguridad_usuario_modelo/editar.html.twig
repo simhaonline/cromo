@@ -1,0 +1,72 @@
+{%  extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    <script>
+        function seleccionarTodosCheck(clase, controlPadre){//funcion recibe como parametros el nombre de la clase que comparten los checks y el control (this) padre que ejecuta la funcion
+            checkBoxes = document.getElementsByClassName(clase);// obtenemos los checks
+            if(controlPadre.checked != false){ // verificamos si quieren checkear todos
+                for(i = 0; i < checkBoxes.length; i++ ){
+                    checkBoxes[i].checked= true;
+                }
+            } else { // de lo contrario los descheckeamos todos
+                for(i = 0; i < checkBoxes.length; i++ ){
+                    checkBoxes[i].checked = false;
+                }
+            }
+        }
+    </script>
+    <section class="content">
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <h3>Editar permiso {{ modulo }} - {{ modelo }}</h3>
+    <div class="panel panel-default">
+        <div class="panel-heading">Informacion general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-3 control-label">Seleccionar todo:</label>
+                <div class="col-sm-9">
+                    <input type="checkbox" onclick="seleccionarTodosCheck('chk-permisos',this);">
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-3 control-label">Ingreso:</label>
+                <div class="col-sm-9">
+                    {{ form_widget(form.checkLista,{'attr': {'class': 'chk-permisos'}}) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-3 control-label">Nuevo:</label>
+                <div class="col-sm-9">
+                    {{ form_widget(form.checkNuevo,{'attr': {'class': 'chk-permisos'}}) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-3 control-label">Editar:</label>
+                <div class="col-sm-9">
+                    {{ form_widget(form.checkDetalle,{'attr': {'class': 'chk-permisos'}}) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-3 control-label">Eliminar:</label>
+                <div class="col-sm-9">
+                    {{ form_widget(form.checkAutorizar,{'attr': {'class': 'chk-permisos'}}) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-3 control-label">Autorizar:</label>
+                <div class="col-sm-9">
+                    {{ form_widget(form.checkAprobar,{'attr': {'class': 'chk-permisos'}}) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-3 control-label">Desautorizar:</label>
+                <div class="col-sm-9">
+                    {{ form_widget(form.checkAnular,{'attr': {'class': 'chk-permisos'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+    <br/><br/><br/><br/>
+{% endblock %}

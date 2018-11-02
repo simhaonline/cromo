@@ -25,8 +25,13 @@ class GenModeloRepository extends ServiceEntityRepository
             ->select('genModelo.codigoModeloPk')
             ->addSelect('genModelo.codigoModuloFk as tipo');
 
-        if($session->get('arSeguridadUsuarioModulofiltroModulo')!==""){
-            $arModelo=$arModelo->andWhere("genModelo.codigoModeloPk LIKE '%{$session->get('arSeguridadUsuarioModulofiltroModulo')}%'");
+        if($session->get('arSeguridadUsuarioModulofiltroModelo')!=="" && $session->get('arSeguridadUsuarioModulofiltroModelo')!==null){
+            $arModelo=$arModelo->andWhere("genModelo.codigoModeloPk LIKE '%{$session->get('arSeguridadUsuarioModulofiltroModelo')}%'");
+        }
+
+        if($session->get('arSeguridadUsuarioModulofiltroModulo')!=="" && $session->get('arSeguridadUsuarioModulofiltroModulo')!==null){
+            $modulo=$session->get('arSeguridadUsuarioModulofiltroModulo')->getCodigoModuloPk();
+            $arModelo=$arModelo->andWhere("genModelo.codigoModuloFk = '{$modulo}'");
         }
         $arModelo=$arModelo->getQuery()->getResult();
 

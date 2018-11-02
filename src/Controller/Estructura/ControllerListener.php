@@ -41,7 +41,7 @@ class ControllerListener{
                     $arUsuario=$this->user->getToken()->getUser();
                     $arGenModelo=$em->getRepository('App:General\GenModelo')->find($controller[0]->getClaseNombre());
                     if($arGenModelo){
-                    $arSeguridadUsuarioModelo=$em->getRepository('App:Seguridad\SeguridadUsuarioModelo')->findOneBy(['codigoUsuarioFk'=>$arUsuario->getId(),'codigoGenModeloFk'=>$arGenModelo->getCodigoModeloPk()]);
+                    $arSeguridadUsuarioModelo=$em->getRepository('SegUsuarioModelo.php')->findOneBy(['codigoUsuarioFk'=>$arUsuario->getId(),'codigoGenModeloFk'=>$arGenModelo->getCodigoModeloPk()]);
                     }
                     $permisos=array(
                         'lista'=>$arSeguridadUsuarioModelo->getLista(),

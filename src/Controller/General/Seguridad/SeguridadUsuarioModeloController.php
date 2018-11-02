@@ -4,7 +4,7 @@ namespace App\Controller\General\Seguridad;
 
 use App\Entity\General\GenModulo;
 use App\Entity\Modulo\Modulo;
-use App\Entity\Seguridad\SeguridadUsuarioModelo;
+use App\Entity\Seguridad\SegUsuarioModelo;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -18,12 +18,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SeguridadUsuarioModeloController extends AbstractController
 {
-    protected $clase = SeguridadUsuarioModelo::class;
-    protected $claseNombre = "SeguridadUsuarioModelo";
+    protected $clase = SegUsuarioModelo::class;
+    protected $claseNombre = "SegUsuarioModelo";
     protected $modulo = "General";
     protected $funcion = "Seguridad";
     protected $grupo = "Seguridad";
-    protected $nombre = "SeguridadUsuarioModelo";
+    protected $nombre = "SegUsuarioModelo";
 
     /**
      * @Route("/gen/seguridad/usuario/modelo/lista/{hash}", name="general_seguridad_usuario_modelo_lista")
@@ -38,7 +38,7 @@ class SeguridadUsuarioModeloController extends AbstractController
             if (!$arUsuario) {
                 return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
             }
-            $arSeguridadUsuarioModelo=$em->getRepository('App:Seguridad\SeguridadUsuarioModelo')->lista($arUsuario->getId());
+            $arSeguridadUsuarioModelo=$em->getRepository('SegUsuarioModelo.php')->lista($arUsuario->getId());
             $nombreUsuario=$arUsuario->getNombreCorto();
         }
         return $this->render('general/seguridad/seguridad_usuario_modelo/lista.html.twig', [
@@ -95,7 +95,7 @@ class SeguridadUsuarioModeloController extends AbstractController
                     foreach ($arrSeleccionados as $codigoModelo) {
                         $arGenModeloValidar = $em->getRepository('App:General\GenModelo')->find($codigoModelo);
                         if ($arGenModeloValidar && $arUsuario) {
-                            $arSeguridadUsuarioModelo = (new SeguridadUsuarioModelo())
+                            $arSeguridadUsuarioModelo = (new SegUsuarioModelo())
                                 ->setGenModeloRel($arGenModeloValidar)
                                 ->setUsuarioRel($arUsuario)
                                 ->setLista($arDatos['checkLista'])
@@ -138,7 +138,7 @@ class SeguridadUsuarioModeloController extends AbstractController
             }
         }
         if ($codigoSeguridadUsuarioModelo != 0) {
-            $arSeguridadUsuarioModelo = $em->getRepository('App:Seguridad\SeguridadUsuarioModelo')->find($codigoSeguridadUsuarioModelo);
+            $arSeguridadUsuarioModelo = $em->getRepository('SegUsuarioModelo.php')->find($codigoSeguridadUsuarioModelo);
         if($arSeguridadUsuarioModelo) {
             $form = $this->createFormBuilder()
                 ->add('checkLista', CheckboxType::class, ['required' => false, 'label'=>'Lista','data'=>$arSeguridadUsuarioModelo->getLista()])

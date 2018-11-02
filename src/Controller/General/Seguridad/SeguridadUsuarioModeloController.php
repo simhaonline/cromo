@@ -2,6 +2,7 @@
 
 namespace App\Controller\General\Seguridad;
 
+use App\Entity\General\GenModulo;
 use App\Entity\Modulo\Modulo;
 use App\Entity\Seguridad\SeguridadUsuarioModelo;
 use App\Utilidades\Mensajes;
@@ -56,7 +57,7 @@ class SeguridadUsuarioModeloController extends AbstractController
         $form = $this->createFormBuilder()
             ->add('TxtModelo', TextType::class, array('label'=>'Modelo','required' => false, 'data' => $session->get('arSeguridadUsuarioModulofiltroModelo')))
             ->add('cboModulo', EntityType::class, array(
-                'class' => Modulo::class,
+                'class' => GenModulo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('m')
                         ->orderBy('m.codigoModuloPk', 'ASC');

@@ -109,18 +109,8 @@ class EmpleadoController extends BaseController
                 return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_empleado_lista'));
             }
         }
-        $form = $this->createForm(EmpleadoType::class, $arEmpleado);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
-                $em->persist($arEmpleado);
-                $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_administracion_empleado_empleado_detalle'));
-            }
-        }
         $arContratos = $em->getRepository(RhuContrato::class)->contratosEmpleado($arEmpleado->getCodigoEmpleadoPk());
         return $this->render('recursoHumano/administracion/recurso/empleado/detalle.html.twig', [
-            'form' => $form->createView(),
             'arEmpleado' => $arEmpleado,
             'arContratos' => $arContratos
         ]);
@@ -153,6 +143,7 @@ class EmpleadoController extends BaseController
                 $arContrato->setEstadoTerminado(false);
                 $arContrato->setContratoClaseRel($arContrato->getContratoTipoRel()->getContratoClaseRel());
                 $arContrato->setIndefinido($arContrato->getContratoTipoRel()->getContratoClaseRel()->getIndefinido());
+                $arContrato->setFactorHorasDia($arContrato->getTiempoRel()->getFactorHorasDia());
                 if($id == 0) {
                     $arContrato->setFechaUltimoPago($arContrato->getFechaDesde());
                     $arContrato->setFechaUltimoPagoCesantias($arContrato->getFechaDesde());

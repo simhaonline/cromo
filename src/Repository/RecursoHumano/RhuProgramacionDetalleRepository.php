@@ -26,6 +26,20 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
         $this->_em->flush();
     }
 
+    /**
+     * @param $arProgramacion RhuProgramacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function eliminarTodoDetalles($arProgramacion){
+        $this->_em->createQueryBuilder()
+        ->delete(RhuProgramacionDetalle::class,'pd')
+        ->where("pd.codigoProgramacionFk = {$arProgramacion->getCodigoProgramacionPk()}")->getQuery()->execute();
+        $arProgramacion->setEmpleadosGenerados(0);
+        $this->_em->persist($arProgramacion);
+        $this->_em->flush();
+    }
+
     public function contarDetalles($codigoProgramacion){
         $this->_em->createQueryBuilder()->from(RhuProgramacionDetalle::class,'pd')
             ->select('COUNT(pd.codigoProgramacionDetallePk)')

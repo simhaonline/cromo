@@ -9,6 +9,7 @@ use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Form\Type\RecursoHumano\ProgramacionType;
 use App\General\General;
 use App\Utilidades\Estandares;
+use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -106,18 +107,36 @@ class ProgramacionController extends BaseController
             }
         }
         $arrBtnCargarContratos = ['attr' => ['class' => 'btn btn-sm btn-default'],'label' => 'Cargar contratos'];
+        $arrBtnEliminarTodos = ['attr' => ['class' => 'btn btn-sm btn-danger'],'label' => 'Eliminar todos'];
         $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'],'label' => 'Eliminar'];
         $form = Estandares::botonera($arProgramacion->getEstadoAutorizado(), $arProgramacion->getEstadoAprobado(),$arProgramacion->getEstadoAnulado());
         $form->add('btnCargarContratos',SubmitType::class, $arrBtnCargarContratos);
         $form->add('btnEliminar',SubmitType::class, $arrBtnEliminar);
+        $form->add('btnEliminarTodos',SubmitType::class, $arrBtnEliminarTodos);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnCargarContratos')->isClicked()) {
-                $em->getRepository(RhuContrato::class)->cargarContratos($arProgramacion);
+                $em->getRepository(RhuProgramacion::class)->cargarContratos($arProgramacion);
             }
             if($form->get('btnEliminar')->isClicked()){
                 $em->getRepository(RhuProgramacionDetalle::class)->eliminar($arrSeleccionados);
+                $em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
+            }
+            if($form->get('btnAutorizar')->isClicked()){
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                if ($arProgramacion->getEstadoAutorizado()) {
+                    $strResultado = $em->getRepository(RhuProgramacion::class)->autorizar($id);
+                    if ($strResultado == "") {
+                        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
+                    } else {
+                        Mensajes::error($strResultado);
+                    }
+                }
+            }
+            if($form->get('btnEliminarTodos')->isClicked()){
+                $em->getRepository(RhuProgramacionDetalle::class)->eliminarTodoDetalles($arProgramacion);
                 $em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
             }
         }

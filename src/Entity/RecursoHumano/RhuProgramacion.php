@@ -72,17 +72,22 @@ class RhuProgramacion
     private $fechaPagado;
 
     /**
-     * @ORM\Column(name="estado_autorizado", options={"default": false}, type="boolean",options={"default" : false}, nullable=true)
+     * @ORM\Column(name="empelados_generados", options={"default": false}, type="boolean", nullable=true)
+     */
+    private $empleadosGenerados  = false;
+
+    /**
+     * @ORM\Column(name="estado_autorizado", options={"default": false}, type="boolean", nullable=true)
      */
     private $estadoAutorizado = false;
 
     /**
-     * @ORM\Column(name="estado_aprobado", options={"default": false}, type="boolean",options={"default" : false}, nullable=true)
+     * @ORM\Column(name="estado_aprobado", options={"default": false}, type="boolean", nullable=true)
      */
     private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="estado_anulado", options={"default": false}, type="boolean",options={"default" : false}, nullable=true)
+     * @ORM\Column(name="estado_anulado", options={"default": false}, type="boolean", nullable=true)
      */
     private $estadoAnulado = false;
 
@@ -90,6 +95,11 @@ class RhuProgramacion
      * @ORM\Column(name="mensaje_pago", type="text", nullable=true)
      */
     private $mensajePago;
+
+    /**
+     * @ORM\Column(name="usuario", type="string",length=25, nullable=true)
+     */
+    private $usuario;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuGrupo", inversedBy="programacionesGrupoRel")
@@ -287,6 +297,22 @@ class RhuProgramacion
     /**
      * @return mixed
      */
+    public function getEmpleadosGenerados()
+    {
+        return $this->empleadosGenerados;
+    }
+
+    /**
+     * @param mixed $empleadosGenerados
+     */
+    public function setEmpleadosGenerados($empleadosGenerados): void
+    {
+        $this->empleadosGenerados = $empleadosGenerados;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoAutorizado()
     {
         return $this->estadoAutorizado;
@@ -394,5 +420,21 @@ class RhuProgramacion
     public function setPagoTipoRel($pagoTipoRel): void
     {
         $this->pagoTipoRel = $pagoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
     }
 }

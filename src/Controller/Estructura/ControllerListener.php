@@ -2,6 +2,7 @@
 
 namespace  App\Controller\Estructura;
 
+use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -57,7 +58,7 @@ class ControllerListener{
                     }
                     else{
                         $session->set("permiso_denegado","No tiene permisos para ingresar a la ruta");
-
+                        Mensajes::error('No tiene permiso para ingresar a la funcion de '.$controller[1]);
                         $event->setController(function () use($url){
                             return new RedirectResponse($url);
                         });

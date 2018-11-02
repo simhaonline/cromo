@@ -33,16 +33,19 @@ class RhuPagoRepository extends ServiceEntityRepository
      */
     public function generar($arProgramacionDetalle, $arProgramacion){
         $em = $this->getEntityManager();
-        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        //$arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
         $arPago = new RhuPago();
         $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getCodigoContratoFk());
         $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
         $arPago->setEmpleadoRel($arProgramacionDetalle->getEmpleadoRel());
         $arPago->setContratoRel($arContrato);
-        $prueba = $arProgramacionDetalle->getEmpleadoRel()->getNombreCorto();
         $arPago->setProgramacionDetalleRel($arProgramacionDetalle);
         $em->persist($arPago);
 
+        $arrHoras = $this->getHoras($arProgramacionDetalle);
+        foreach ($arrHoras AS $arrHora) {
+
+        }
 
         /*$arPago->setFechaDesde($arProgramacion->getFechaDesde());
         $arPago->setFechaHasta($arProgramacion->getFechaHasta());
@@ -70,6 +73,24 @@ class RhuPagoRepository extends ServiceEntityRepository
         $pension = 0;
         $transporte = 0;
 */
+    }
+
+    /**
+     * @param $arProgramacionDetalle RhuProgramacionDetalle
+     */
+    private function getHoras($arProgramacionDetalle) {
+        $arrHoras['D'] = $arProgramacionDetalle->getHorasDiurnas();
+        $arrHoras['N'] = $arProgramacionDetalle->getHorasNocturnas();
+        $arrHoras['FD'] = $arProgramacionDetalle->getHorasDiurnas();
+        $arrHoras['FN'] = $arProgramacionDetalle->getHorasDiurnas();
+        $arrHoras['ED'] = $arProgramacionDetalle->getHorasDiurnas();
+        $arrHoras['EN'] = $arProgramacionDetalle->getHorasDiurnas();
+        $arrHoras['EFD'] = $arProgramacionDetalle->getHorasDiurnas();
+        $arrHoras['EFN'] = $arProgramacionDetalle->getHorasDiurnas();
+        $arrHoras['RN'] = $arProgramacionDetalle->getHorasDiurnas();
+        $arrHoras['RFD'] = $arProgramacionDetalle->getHorasDiurnas();
+        $arrHoras['RFN'] = $arProgramacionDetalle->getHorasDiurnas();
+
     }
 
 }

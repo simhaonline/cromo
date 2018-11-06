@@ -55,7 +55,7 @@ class Factura3 extends \FPDF
         $this->SetXY(140, 26);
         $this->Cell(35, 4, 'FACTURA DE VENTA', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(25, 4, $arMovimiento->getNumero(), 0, 0, 'R', 0);
+        $this->Cell(25, 4, '000'. $arMovimiento->getNumero(), 0, 0, 'R', 0);
         //
         $this->SetFont('Arial', 'B', 8);
         $this->SetXY(140, 30);

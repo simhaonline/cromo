@@ -22,6 +22,11 @@ class GenModelo
     private $codigoModuloFk;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\General\GenNotificacionTipo", mappedBy="modeloRel", cascade={"persist", "remove"})
+     */
+    protected $notificacionTipoModeloRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoModeloPk()
@@ -54,8 +59,22 @@ class GenModelo
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getNotificacionTipoModeloRel()
+    {
+        return $this->notificacionTipoModeloRel;
+    }
 
-
+    /**
+     * @param mixed $notificacionTipoModeloRel
+     */
+    public function setNotificacionTipoModeloRel($notificacionTipoModeloRel)
+    {
+        $this->notificacionTipoModeloRel = $notificacionTipoModeloRel;
+        return $this;
+    }
 
 
 }

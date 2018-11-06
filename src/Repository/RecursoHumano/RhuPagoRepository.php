@@ -2,11 +2,12 @@
 
 namespace App\Repository\RecursoHumano;
 
-use App\DataFixtures\RhuConceptoHora;
+use App\Entity\RecursoHumano\RhuConceptoHora;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuPago;
+use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
@@ -33,7 +34,7 @@ class RhuPagoRepository extends ServiceEntityRepository
      * @param $arProgramacionDetalle RhuProgramacionDetalle
      * @param $arProgramacion RhuProgramacion
      */
-    public function generar($arProgramacionDetalle, $arProgramacion){
+    public function generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora){
         $em = $this->getEntityManager();
         //$arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
         $arPago = new RhuPago();
@@ -44,12 +45,13 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setProgramacionDetalleRel($arProgramacionDetalle);
         $em->persist($arPago);
 
-
-        $arConceptoHoras = $em->getRepository(RhuConceptoHora::class)->findAll();
         $arrHoras = $this->getHoras($arProgramacionDetalle);
         foreach ($arrHoras AS $arrHora) {
-            if($arrHora['D'] > 0) {
-                //$arConceptoHoras[]
+            if($arrHora['valor'] > 0) {
+                $arPagoDetalle = new RhuPagoDetalle();
+                $arPagoDetalle->setPagoRel($arPago);
+                $arPagoDetalle->setConceptoRel($arConceptoHora[$arrHora['clave']]->getConceptoRel());
+                $em->persist($arPagoDetalle);
             }
         }
 
@@ -85,18 +87,9 @@ class RhuPagoRepository extends ServiceEntityRepository
      * @param $arProgramacionDetalle RhuProgramacionDetalle
      */
     private function getHoras($arProgramacionDetalle) {
-        $arrHoras['D'] = $arProgramacionDetalle->getHorasDiurnas();
-        $arrHoras['N'] = $arProgramacionDetalle->getHorasNocturnas();
-        $arrHoras['FD'] = $arProgramacionDetalle->getHorasDiurnas();
-        $arrHoras['FN'] = $arProgramacionDetalle->getHorasDiurnas();
-        $arrHoras['ED'] = $arProgramacionDetalle->getHorasDiurnas();
-        $arrHoras['EN'] = $arProgramacionDetalle->getHorasDiurnas();
-        $arrHoras['EFD'] = $arProgramacionDetalle->getHorasDiurnas();
-        $arrHoras['EFN'] = $arProgramacionDetalle->getHorasDiurnas();
-        $arrHoras['RN'] = $arProgramacionDetalle->getHorasDiurnas();
-        $arrHoras['RFD'] = $arProgramacionDetalle->getHorasDiurnas();
-        $arrHoras['RFN'] = $arProgramacionDetalle->getHorasDiurnas();
-
+        $arrHoras['D'] = array('tipo' => 'D', 'valor' => $arProgramacionDetalle->getHorasDiurnas(), 'clave' => 0);
+        $arrHoras['N'] = array('tipo' => 'N', 'valor' => $arProgramacionDetalle->getHorasNocturnas(), 'clave' => 7);
+        return $arrHoras;
     }
 
 }

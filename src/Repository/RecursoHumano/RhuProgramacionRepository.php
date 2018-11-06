@@ -2,6 +2,7 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\Entity\RecursoHumano\RhuConceptoHora;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEgreso;
@@ -93,8 +94,9 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         if(!$arProgramacion->getEstadoAutorizado()){
             $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()]);
             if($arProgramacionDetalles){
+                $arConceptoHora = $em->getRepository(RhuConceptoHora::class)->findAll();
                 foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
-                    $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion);
+                    $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora);
                 }
                 $em->flush();
             }

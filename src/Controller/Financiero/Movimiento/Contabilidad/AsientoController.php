@@ -283,10 +283,4 @@ class AsientoController extends ControllerListenerPermisosFunciones
             'form' => $form->createView()
         ));
     }
-
-
-    protected function indexprueba()
-    {
-        // TODO: Implement indexprueba() method.
-    }
 }

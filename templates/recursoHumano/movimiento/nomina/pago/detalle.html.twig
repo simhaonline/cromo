@@ -22,33 +22,35 @@
         </tr>
         <tr>
             <td class="titulo">EMPLEADO:</td>
-            <td class="td-in-well">{{ arPago.empleadoRel.numeroIdentificacion | default('') }} - {{ arPago.empleadoRel.nombreCorto | default('') }}</td>
+            <td class="td-in-well">{{ arPago.empleadoRel.numeroIdentificacion | default('') }}
+                - {{ arPago.empleadoRel.nombreCorto | default('') }}</td>
             <td class="titulo">TIPO:</td>
             <td class="td-in-well">{{ arPago.pagoTipoRel.nombre | default('') }}</td>
             <td class="titulo">IBC:</td>
-            <td class="td-in-well-numerico" align="right">$ {{ arPago.VrIngresoBaseCotizacion | number_format(0, '.', ',') }}</td>
+            <td class="td-in-well-numerico" align="right">
+                $ {{ arPago.VrIngresoBaseCotizacion | number_format(0, '.', ',') }}</td>
             <td class="titulo">TOTAL DEVENGADO:</td>
             <td class="td-in-well-numerico" align="right">$ {{ arPago.VrDevengado | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">GRUPO PAGO</td>
-            <td class="td-in-well" >{{ arPago.contratoRel.grupoRel.nombre | default('') }}</td>
+            <td class="td-in-well">{{ arPago.contratoRel.grupoRel.nombre | default('') }}</td>
             <td class="titulo">DESDE:</td>
             <td class="td-in-well">{{ arPago.fechaDesde|date("Y/m/d") }}</td>
             <td class="titulo"></td>
             <td class="td-in-well-numerico" align="right"></td>
             <td class="titulo">TOTAL DEDUCCIONES:</td>
-            <td class="td-in-well-numerico" align="right">$ {{ arPago.vrDeduccion | number_format(0, '.', ',')}}</td>
+            <td class="td-in-well-numerico" align="right">$ {{ arPago.vrDeduccion | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">PROGRAMACIÓN DETALLE:</td>
-            <td class="td-in-well" >{{ arPago.codigoProgramacionDetalleFk }}</td>
+            <td class="td-in-well">{{ arPago.codigoProgramacionDetalleFk }}</td>
             <td class="titulo">HASTA:</td>
             <td class="td-in-well">{{ arPago.fechaHasta|date("Y/m/d") }}</td>
             <td class="titulo"></td>
             <td class="td-in-well-numerico" align="right"></td>
             <td class="titulo">TOTAL NETO:</td>
-            <td class="td-in-well-numerico" align="right">$ {{ arPago.VrNeto | number_format(0, '.', ',')}}</td>
+            <td class="td-in-well-numerico" align="right">$ {{ arPago.VrNeto | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIOS:</td>
@@ -62,6 +64,49 @@
         <div class="tab-pane active" id="detalles">
             <div id="detalles" style="width: 100%"><br>
                 <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-condensed">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th title="Codigo del concepto">CODIGO</th>
+                            <th title="Nombre del concepto">CONCEPTO</th>
+                            <th>DETALLE</th>
+                            <th>PORCENTAJE</th>
+                            <th>HORAS</th>
+                            <th>DIAS</th>
+                            <th title="Valor de la hora">VR.HORA</th>
+                            <th title="Operacion">OP</th>
+                            <th>VR.PAGO</th>
+                            <th>IBP</th>
+                            <th>IBC</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arPagoDetalle in arPagoDetalles %}
+                            <tr>
+                                <td>{{ arPagoDetalle.codigoPagoDetallePk }}</td>
+                                <td>{{ arPagoDetalle.codigoConceptoFk }}</td>
+                                <td>{{ arPagoDetalle.nombre }}</td>
+                                <td>{{ arPagoDetalle.detalle }}</td>
+                                <td>{{ arPagoDetalle.porcentaje }}</td>
+                                <td>{{ arPagoDetalle.horas }}</td>
+                                <td>{{ arPagoDetalle.dias }}</td>
+                                <td>{{ arPagoDetalle.vrHora }}</td>
+                                <td>{{ arPagoDetalle.operacion == 1 ? 'SUMA' : 'RESTA' }}</td>
+                                <td>{{ arPagoDetalle.vrPago }}</td>
+                                <td>{{ arPagoDetalle.vrIngresoBasePrestacion }}</td>
+                                <td>{{ arPagoDetalle.vrIngresoBaseCotizacion }}</td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                                       value="{{ arPagoDetalle.codigoPagoDetallePk }}">
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

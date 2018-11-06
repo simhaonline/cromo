@@ -4,6 +4,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina\Pago;
 
 use App\Controller\BaseController;
 use App\Entity\RecursoHumano\RhuPago;
+use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Form\Type\RecursoHumano\PagoType;
 use App\General\General;
 use App\Utilidades\Estandares;
@@ -68,14 +69,18 @@ class PagoController extends BaseController
      */
     public function detalle(Request $request, $id)
     {
+        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arPago = $em->getRepository(RhuPago::class)->find($id);
         $form = Estandares::botonera($arPago->getEstadoAutorizado(),$arPago->getEstadoAprobado(),$arPago->getEstadoAnulado());
         $form->handleRequest($request);
+
+        $arPagoDetalles = $paginator->paginate($em->getRepository(RhuPagoDetalle::class)->lista($id), $request->query->getInt('page', 1), 30);
         return $this->render('recursoHumano/movimiento/nomina/pago/detalle.html.twig',[
             'arPago' => $arPago,
+            'arPagoDetalles' => $arPagoDetalles,
             'form' => $form->createView()
         ]);
     }
-}
 
+}

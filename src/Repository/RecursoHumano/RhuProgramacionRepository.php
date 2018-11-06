@@ -74,7 +74,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $fechaDesde = $this->fechaDesdeContrato($arProgramacion->getFechaDesde(), $arContrato->getFechaDesde());
             $fechaHasta = $this->fechaHastaContrato($arProgramacion->getFechaHasta(),  $arContrato->getFechaHasta(), $arContrato->getIndefinido());
             $dias = $fechaDesde->diff($fechaHasta)->days+1;
-            $horas = $dias * 8;
+            $horas = $dias * $arContrato->getFactorHorasDia();
             $arProgramacionDetalle->setFechaDesde($fechaDesde);
             $arProgramacionDetalle->setFechaHasta($fechaHasta);
             $arProgramacionDetalle->setDias($dias);
@@ -86,8 +86,11 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         $em->flush();
         $em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
     }
+
     /**
      * @param $arProgramacion RhuProgramacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function autorizar($arProgramacion){
         $em = $this->getEntityManager();

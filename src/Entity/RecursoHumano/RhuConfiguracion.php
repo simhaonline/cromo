@@ -18,8 +18,8 @@ class RhuConfiguracion
     private $codigoConfiguracionPk;
 
     /**
-     * @ORM\Column(name="vr_salario", type="float")
-     * @Assert\NotBlank(message="Este campo no puede estar vacio")
+     * @ORM\Column(name="vr_salario", type="float", nullable=true)
+     * @Assert\NotBlank(message="Este campo no puede estar vacío")
      */
     private $vrSalario;
 

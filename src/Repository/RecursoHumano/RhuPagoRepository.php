@@ -2,6 +2,7 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\DataFixtures\RhuConceptoHora;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
@@ -44,11 +45,13 @@ class RhuPagoRepository extends ServiceEntityRepository
         $em->persist($arPago);
 
 
-
-        /*$arrHoras = $this->getHoras($arProgramacionDetalle);
+        $arConceptoHoras = $em->getRepository(RhuConceptoHora::class)->findAll();
+        $arrHoras = $this->getHoras($arProgramacionDetalle);
         foreach ($arrHoras AS $arrHora) {
-
-        }*/
+            if($arrHora['D'] > 0) {
+                //$arConceptoHoras[]
+            }
+        }
 
         /*$arPago->setFechaDesde($arProgramacion->getFechaDesde());
         $arPago->setFechaHasta($arProgramacion->getFechaHasta());

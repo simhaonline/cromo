@@ -1,63 +1,86 @@
-{% extends 'base_transporte.html.twig' %}
+{% extends 'base_recursoHumano.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_start(formConfiguracion, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
-        <div class="panel-heading">Configuracion transporte</div>
+        <div class="panel-heading">Configuracion</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_usuarioRndc" class="col-sm-2 control-label">Usuario RNDC:</label>
+                <label for="" class="col-sm-2 control-label">Salario mínimo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.usuarioRndc, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-                <label for="form_claveRndc" class="col-sm-2 control-label">Contraseña:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.claveRndc) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_empresaRndc" class="col-sm-2 control-label">Empresa RNDC:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.empresaRndc) }}
-                </div>
-                <label for="form_numeroPoliza" class="col-sm-2 control-label">Numero poliza:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.numeroPoliza) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_fechaVencePoliza" class="col-sm-2 control-label">Identificacion aseguradora:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.numeroIdentificacionAseguradora) }}
-                </div>
-                <label for="form_numeroIdentificacionAseguradora" class="col-sm-2 control-label">Fecha vencimiento poliza:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.fechaVencePoliza) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_vrBaseRetencionFuente" class="col-sm-2 control-label">Base retencion fuente:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.vrBaseRetencionFuente) }}
-                </div>
-                <label for="form_porcentajeRetencionFuente" class="col-sm-2 control-label">Porcentaje retencion fuente:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.porcentajeRetencionFuente) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_vrBaseRetencionFuente" class="col-sm-2 control-label">Porcentaje industria y comercio:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.porcentajeIndustriaComercio) }}
-                </div>
-                <label for="form_porcentajeIndustriaComercio" class="col-sm-2 control-label">Codigo precio general:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.codigoPrecioGeneralFk) }}
+                    {{ form_widget(formConfiguracion.vrSalario ) }}
+                    {{ form_errors(formConfiguracion.vrSalario ) }}
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        {{ form_widget(formConfiguracion.guardar ) }}
     </div>
-    {{ form_end(form) }}
+    {{ form_end(formConfiguracion) }}
+    {{ form_start(formConceptoHora, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Conceptos horas</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="" class="col-sm-2 control-label">Horas diurnas:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConceptoHora.DConceptoRel) }}
+                </div>
+                <label for="" class="col-sm-2 control-label">Horas nocturnas:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConceptoHora.NConceptoRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="col-sm-2 control-label">Horas festivas diurnas:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConceptoHora.FDConceptoRel) }}
+                </div>
+                <label for="" class="col-sm-2 control-label">Horas festvias nocturnas:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConceptoHora.FNConceptoRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="col-sm-2 control-label">Horas extras ordinarias diurnas:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConceptoHora.EODConceptoRel) }}
+                </div>
+                <label for="" class="col-sm-2 control-label">Horas extras ordinarias nocturnas:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConceptoHora.EONConceptoRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="col-sm-2 control-label">Horas extras festivas diurnas:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConceptoHora.EFDConceptoRel) }}
+                </div>
+                <label for="" class="col-sm-2 control-label">Horas extras festivas nocturnas:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConceptoHora.EFNConceptoRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="col-sm-2 control-label">Horas recargo festivo diurno:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConceptoHora.RFDConceptoRel) }}
+                </div>
+                <label for="" class="col-sm-2 control-label">Horas recargo festivo nocturna:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConceptoHora.RFNConceptoRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="col-sm-2 control-label">Horas recargo nocturno:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConceptoHora.RNConceptoRel) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(formConceptoHora.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(formConceptoHora) }}
 {% endblock %}

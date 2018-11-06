@@ -55,7 +55,7 @@ class Factura3 extends \FPDF
         $this->SetXY(140, 26);
         $this->Cell(35, 4, 'FACTURA DE VENTA', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(25, 4, $arMovimiento->getNumero(), 0, 0, 'R', 0);
+        $this->Cell(25, 4, '000'. $arMovimiento->getNumero(), 0, 0, 'R', 0);
         //
         $this->SetFont('Arial', 'B', 8);
         $this->SetXY(140, 30);
@@ -234,7 +234,7 @@ class Factura3 extends \FPDF
         $this->Text(80, 228, utf8_decode('FECHA:________________________________'));
         $this->Text(140, 228, utf8_decode('FECHA:________________________________'));
         //Bloque resolucion facturacion
-        $this->Text(48,236, utf8_decode($arMovimiento->getFacturaTipoRel()->getNumeroResolucionDianFactura()) . ' Intervalo ' . $arMovimiento->getFacturaTipoRel()->getNumeracionDesde(). ' al '. $arMovimiento->getFacturaTipoRel()->getNumeracionDesde());
+        $this->Text(48,236, utf8_decode($arMovimiento->getFacturaTipoRel()->getNumeroResolucionDianFactura()) . ' Intervalo ' . $arMovimiento->getFacturaTipoRel()->getNumeracionDesde(). ' al '. $arMovimiento->getFacturaTipoRel()->getNumeracionHasta());
         $this->Text(32,240, utf8_decode($arMovimiento->getFacturaTipoRel()->getInformacionCuentaPago()));
         //Informacion final
         $this->Text(143, 246, utf8_decode('Impreso por computador'));

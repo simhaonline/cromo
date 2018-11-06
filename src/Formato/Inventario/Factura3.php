@@ -234,7 +234,7 @@ class Factura3 extends \FPDF
         $this->Text(80, 228, utf8_decode('FECHA:________________________________'));
         $this->Text(140, 228, utf8_decode('FECHA:________________________________'));
         //Bloque resolucion facturacion
-        $this->Text(48,236, utf8_decode($arMovimiento->getFacturaTipoRel()->getNumeroResolucionDianFactura()) . ' Intervalo ' . $arMovimiento->getFacturaTipoRel()->getNumeracionDesde(). ' al '. $arMovimiento->getFacturaTipoRel()->getNumeracionDesde());
+        $this->Text(48,236, utf8_decode($arMovimiento->getFacturaTipoRel()->getNumeroResolucionDianFactura()) . ' Intervalo ' . $arMovimiento->getFacturaTipoRel()->getNumeracionDesde(). ' al '. $arMovimiento->getFacturaTipoRel()->getNumeracionHasta());
         $this->Text(32,240, utf8_decode($arMovimiento->getFacturaTipoRel()->getInformacionCuentaPago()));
         //Informacion final
         $this->Text(143, 246, utf8_decode('Impreso por computador'));

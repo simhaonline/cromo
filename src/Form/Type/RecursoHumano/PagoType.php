@@ -56,11 +56,12 @@ class PagoType extends AbstractType
             {"campo":"pagoTipoRel.nombre",       "tipo":"texto"   ,"ayuda":"Tipo de pago"                ,"titulo":"TIPO", "relacion":""},
             {"campo":"empleadoRel.numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del empleado"        ,"titulo":"IDENTIFICACION", "relacion":""},
             {"campo":"empleadoRel.nombreCorto",  "tipo":"texto"   ,"ayuda":"Nombre del empleado"        ,"titulo":"EMPLEADO", "relacion":""},
-            {"campo":"fechaDesde",        "tipo":"fecha"   ,"ayuda":"Fecha desde" ,"titulo":"DESDE"},                     
-            {"campo":"fechaHasta",        "tipo":"fecha"   ,"ayuda":"Fecha hasta" ,"titulo":"HASTA"},                     
+            {"campo":"fechaDesde",        "tipo":"fecha"   ,"ayuda":"Fecha desde" ,"titulo":"DESDE"},
+            {"campo":"fechaHasta",        "tipo":"fecha"   ,"ayuda":"Fecha hasta" ,"titulo":"HASTA"},
             {"campo":"vrSalarioContrato", "tipo":"moneda"   ,"ayuda":"Salario del empleado al momento de realizado el pago" ,"titulo":"SALARIO"},                     
-            {"campo":"vrDevengado",       "tipo":"moneda"   ,"ayuda":"Valor devengado" ,"titulo":"DEVENGADO"},                     
-            {"campo":"vrDeduccion",       "tipo":"moneda"   ,"ayuda":"Valor de las deducciones" ,"titulo":"DEDUCCIONES"}                                          
+            {"campo":"vrDevengado",       "tipo":"moneda"   ,"ayuda":"Valor devengado" ,"titulo":"DEVENGADO"},
+            {"campo":"vrDeduccion",       "tipo":"moneda"   ,"ayuda":"Valor de las deducciones" ,"titulo":"DEDUCCIONES"},
+            {"campo":"vrNeto",            "tipo":"moneda"   ,"ayuda":"Valor neto del pago" ,"titulo":"NETO"}
         ]';
         return $campos;
     }

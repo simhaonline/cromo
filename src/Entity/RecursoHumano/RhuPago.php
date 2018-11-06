@@ -84,6 +84,11 @@ class RhuPago
     private $vrDeduccion = 0;
 
     /**
+     * @ORM\Column(name="vr_neto", options={"default" : 0}, type="float", nullable=true)
+     */
+    private $vrNeto = 0;
+
+    /**
      * @ORM\Column(name="vr_auxilio_transporte", options={"default" : 0}, type="float", nullable=true)
      */
     private $vrAuxilioTransporte = 0;
@@ -584,5 +589,19 @@ class RhuPago
         $this->usuario = $usuario;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getVrNeto()
+    {
+        return $this->vrNeto;
+    }
 
+    /**
+     * @param mixed $vrNeto
+     */
+    public function setVrNeto($vrNeto): void
+    {
+        $this->vrNeto = $vrNeto;
+    }
 }

@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Form\Type\RecursoHumano\PagoType;
 use App\General\General;
+use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,6 +56,7 @@ class PagoController extends BaseController
      */
     public function nuevo(Request $request, $id)
     {
+        Mensajes::error('Esta funcion aun no esta disponible');
         return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_pago_lista'));
     }
 
@@ -67,9 +69,12 @@ class PagoController extends BaseController
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arRegistro = $em->getRepository($this->clase)->find($id);
+        $arPago = $em->getRepository(RhuPago::class)->find($id);
+        $form = Estandares::botonera($arPago->getEstadoAutorizado(),$arPago->getEstadoAprobado(),$arPago->getEstadoAnulado());
+        $form->handleRequest($request);
         return $this->render('recursoHumano/movimiento/nomina/pago/detalle.html.twig',[
-            'arRegistro' => $arRegistro
+            'arPago' => $arPago,
+            'form' => $form->createView()
         ]);
     }
 }

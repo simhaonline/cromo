@@ -4,14 +4,68 @@
         <div class="btn-group">
             <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_pago_lista') }}">Volver</a>
         </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
-            <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arRegistro.codigoPagoPk }}</td>
+            <td class="titulo">CÓDIGO:</td>
+            <td class="td-in-well">{{ arPago.codigoPagoPk }}</td>
+            <td class="titulo">NÚMERO:</td>
+            <td class="td-in-well">{{ arPago.numero }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well-numerico" align="right"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well-numerico" align="right"></td>
+        </tr>
+        <tr>
+            <td class="titulo">EMPLEADO:</td>
+            <td class="td-in-well">{{ arPago.empleadoRel.numeroIdentificacion | default('') }} - {{ arPago.empleadoRel.nombreCorto | default('') }}</td>
+            <td class="titulo">TIPO:</td>
+            <td class="td-in-well">{{ arPago.pagoTipoRel.nombre | default('') }}</td>
+            <td class="titulo">IBC:</td>
+            <td class="td-in-well-numerico" align="right">$ {{ arPago.VrIngresoBaseCotizacion | number_format(0, '.', ',') }}</td>
+            <td class="titulo">TOTAL DEVENGADO:</td>
+            <td class="td-in-well-numerico" align="right">$ {{ arPago.VrDevengado | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">GRUPO PAGO</td>
+            <td class="td-in-well" >{{ arPago.contratoRel.grupoRel.nombre | default('') }}</td>
+            <td class="titulo">DESDE:</td>
+            <td class="td-in-well">{{ arPago.fechaDesde|date("Y/m/d") }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well-numerico" align="right"></td>
+            <td class="titulo">TOTAL DEDUCCIONES:</td>
+            <td class="td-in-well-numerico" align="right">$ {{ arPago.vrDeduccion | number_format(0, '.', ',')}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">PROGRAMACIÓN DETALLE:</td>
+            <td class="td-in-well" >{{ arPago.codigoProgramacionDetalleFk }}</td>
+            <td class="titulo">HASTA:</td>
+            <td class="td-in-well">{{ arPago.fechaHasta|date("Y/m/d") }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well-numerico" align="right"></td>
+            <td class="titulo">TOTAL NETO:</td>
+            <td class="td-in-well-numerico" align="right">$ {{ arPago.VrNeto | number_format(0, '.', ',')}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIOS:</td>
+            <td colspan="7">{{ arPago.comentario }}</td>
         </tr>
     </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+                </div>
+            </div>
+        </div>
+    </div>
     <br>
     <br>
 {% endblock %}

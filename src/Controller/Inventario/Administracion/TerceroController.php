@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Administracion;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Entity\Inventario\InvSucursal;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\SucursalType;
@@ -15,11 +16,20 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class TerceroController extends Controller
+class TerceroController extends ControllerListenerPermisosFunciones
 {
+    protected $class= InvTercero::class;
+    protected $claseNombre = "InvTercero";
+    protected $modulo = "Inventario";
+    protected $funcion = "Administracion";
+    protected $grupo = "General";
+    protected $nombre = "Tercero";
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/administracion/general/tercero/lista",name="inventario_administracion_general_tercero_lista")
      */
     public function lista(Request $request)

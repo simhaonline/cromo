@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Control\RelacionCaja;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Entity\Transporte\TteRecibo;
 use App\Entity\Transporte\TteRelacionCaja;
 use App\Form\Type\Transporte\RelacionCajaType;
@@ -13,13 +14,19 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class RelacionCajaController extends Controller
+class RelacionCajaController extends ControllerListenerPermisosFunciones
 {
+    protected $class= TteRelacionCaja::class;
+    protected $claseNombre = "TteRelacionCaja";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Control";
+    protected $nombre = "Relacion caja";
+
     /**
      * @param Request $request
      * @return Response

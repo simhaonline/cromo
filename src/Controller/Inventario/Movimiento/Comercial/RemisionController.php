@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Comercial;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
@@ -26,8 +27,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Form\Type\Inventario\PedidoType;
 
-class RemisionController extends Controller
+class RemisionController extends ControllerListenerPermisosFunciones
 {
+    protected $class= InvRemision::class;
+    protected $claseNombre = "InvRemision";
+    protected $modulo = "Inventario";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Comercial";
+    protected $nombre = "Remision";
 
     /**
      * @param Request $request

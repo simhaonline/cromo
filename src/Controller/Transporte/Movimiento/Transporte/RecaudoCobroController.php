@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteGuia;
@@ -21,8 +22,15 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class RecaudoCobroController extends Controller
+class RecaudoCobroController extends ControllerListenerPermisosFunciones
 {
+    protected $class= TteRecaudoCobro::class;
+    protected $claseNombre = "TteRecaudo";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Transporte";
+    protected $nombre = "Recaudo cobro";
+
    /**
     * @Route("/transporte/movimiento/transporte/recaudoCobro/lista", name="transporte_movimiento_transporte_recaudo_cobro_lista")
     */    

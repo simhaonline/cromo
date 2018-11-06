@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Compra;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
@@ -22,12 +23,21 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Form\Type\Inventario\SolicitudType;
 
-class SolicitudController extends Controller
+class SolicitudController extends ControllerListenerPermisosFunciones
 {
+    protected $class= InvSolicitud::class;
+    protected $claseNombre = "InvSolicitud";
+    protected $modulo = "Inventario";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Compra";
+    protected $nombre = "Solicitud";
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/movimiento/compra/solicitud/lista", name="inventario_movimiento_compra_solicitud_lista")
      */
     public function lista(Request $request)

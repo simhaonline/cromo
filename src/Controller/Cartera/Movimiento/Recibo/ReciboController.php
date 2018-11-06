@@ -2,6 +2,7 @@
 
 namespace App\Controller\Cartera\Movimiento\Recibo;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
@@ -24,8 +25,16 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-class ReciboController extends Controller
+
+class ReciboController extends ControllerListenerPermisosFunciones
 {
+    protected $class= CarRecibo::class;
+    protected $claseNombre = "CarRecibo";
+    protected $modulo = "Cartera";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Recibo";
+    protected $nombre = "Recibo";
+
     /**
      * @param Request $request
      * @return Response

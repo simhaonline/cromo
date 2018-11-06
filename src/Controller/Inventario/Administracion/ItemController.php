@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Administracion;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Controller\General\FuncionesGeneralesController;
 use App\Entity\Inventario\InvItem;
 use App\Form\Type\Inventario\ItemType;
@@ -14,9 +15,15 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ItemController extends Controller
+class ItemController extends ControllerListenerPermisosFunciones
 {
     var $query = '';
+    protected $class= InvItem::class;
+    protected $claseNombre = "InvItem";
+    protected $modulo = "Inventario";
+    protected $funcion = "Administracion";
+    protected $grupo = "Inventario";
+    protected $nombre = "Item";
 
     /**
      * @param Request $request

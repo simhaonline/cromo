@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Comercial;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Entity\Inventario\InvCotizacionDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\CotizacionType;
@@ -22,8 +23,15 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class CotizacionController extends Controller
+class CotizacionController extends ControllerListenerPermisosFunciones
 {
+    protected $class= InvCotizacion::class;
+    protected $claseNombre = "InvCotizacion";
+    protected $modulo = "Inventario";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Comercial";
+    protected $nombre = "Cotizacion";
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

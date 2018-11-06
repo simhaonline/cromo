@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Comercial\Factura;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\General\GenConfiguracion;
@@ -34,11 +35,21 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use App\Utilidades\Mensajes;
 
-class FacturaController extends Controller
+class FacturaController extends ControllerListenerPermisosFunciones
 {
-   /**
-    * @Route("/transporte/movimiento/comercial/factura/lista", name="transporte_movimiento_comercial_factura_lista")
-    */    
+    protected $class= TteFactura::class;
+    protected $claseNombre = "TteFactura";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Comercial";
+    protected $nombre = "Factura";
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @Route("/transporte/movimiento/comercial/factura/lista", name="transporte_movimiento_comercial_factura_lista")
+     */
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();

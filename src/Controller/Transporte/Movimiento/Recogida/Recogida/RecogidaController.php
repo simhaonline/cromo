@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Recogida\Recogida;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Entity\Transporte\TteRecogida;
@@ -20,8 +21,15 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class RecogidaController extends Controller
+class RecogidaController extends ControllerListenerPermisosFunciones
 {
+    protected $class= TteRecogida::class;
+    protected $claseNombre = "TteRecogida";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Recogida";
+    protected $nombre = "Recogida";
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

@@ -5,6 +5,7 @@ namespace App\Repository\Inventario;
 use App\Entity\Inventario\InvImportacion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @method InvImportacion|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +20,36 @@ class InvImportacionRepository extends ServiceEntityRepository
         parent::__construct($registry, InvImportacion::class);
     }
 
-    // /**
-    //  * @return InvImportacion[] Returns an array of InvImportacion objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function lista()
     {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvImportacion::class,'i')
+            ->select('i.codigoImportacionPk')
+            ->addSelect('i.numero')
+            ->addSelect('i.fecha')
+            ->addSelect('it.nombre')
+            ->addSelect('i.estadoAutorizado')
+            ->addSelect('i.estadoAprobado')
+            ->addSelect('i.estadoAnulado')
+            ->addSelect('i.vrSubtotal')
+            ->addSelect('i.vrIva')
+            ->addSelect('i.vrNeto')
+            ->addSelect('i.vrTotal')
+            ->addSelect('t.nombreCorto AS terceroNombreCorto')
+            ->leftJoin('i.terceroRel', 't')
+            ->leftJoin('i.importacionTipoRel', 'it')
+            ->where('i.codigoImportacionPk <> 0')
+            ->orderBy('i.codigoImportacionPk','DESC');
+        if($session->get('filtroInvNumeroImportacion')) {
+            $queryBuilder->andWhere("i.numero = {$session->get('filtroInvNumeroImportacion')}");
+        }
+        if($session->get('filtroInvImportacionTipo')) {
+            $queryBuilder->andWhere("i.codigoPedidoTipoFk = '{$session->get('filtroInvImportacionTipo')}'");
+        }
+        if($session->get('filtroInvCodigoTercero')){
+            $queryBuilder->andWhere("i.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
+        }
+        return $queryBuilder;
 
-    /*
-    public function findOneBySomeField($value): ?InvImportacion
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
     }
-    */
 }

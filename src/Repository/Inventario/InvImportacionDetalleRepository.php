@@ -19,32 +19,27 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, InvImportacionDetalle::class);
     }
 
-    // /**
-    //  * @return InvImportacionDetalle[] Returns an array of InvImportacionDetalle objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function importacion($codigoImportacion): array
     {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT id.codigoImportacionDetallePk,
+                  id.codigoImportacionFk,
+                  id.cantidad,                  
+                  id.vrPrecioLocal,
+                  id.porcentajeIvaLocal,
+                  id.vrIvaLocal,
+                  id.vrSubtotalLocal,
+                  id.vrNetoLocal,
+                  id.vrTotalLocal,
+                  i.nombre as itemNombre,
+                  m.nombre as itemMarcaNombre                         
+        FROM App\Entity\Inventario\InvImportacionDetalle id
+        LEFT JOIN id.itemRel i
+        LEFT JOIN i.marcaRel m
+        WHERE id.codigoImportacionFk = :codigoImportacion'
+        )->setParameter('codigoImportacion', $codigoImportacion);
 
-    /*
-    public function findOneBySomeField($value): ?InvImportacionDetalle
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $query->execute();
     }
-    */
 }

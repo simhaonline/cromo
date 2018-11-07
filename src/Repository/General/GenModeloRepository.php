@@ -38,4 +38,15 @@ class GenModeloRepository extends ServiceEntityRepository
         return$arModelo;
     }
 
+    public function modeloXModulo($modulo){
+        $em=$this->getEntityManager();
+        $arGenModelo= $em->createQueryBuilder()
+            ->from('App:General\GenModelo','gm')
+            ->select('gm.codigoModeloPk as id')
+            ->where("gm.codigoModuloFk='{$modulo}'")
+            ->getQuery()->getResult();
+
+        return $arGenModelo;
+    }
+
 }

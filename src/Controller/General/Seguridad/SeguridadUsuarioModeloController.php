@@ -3,7 +3,6 @@
 namespace App\Controller\General\Seguridad;
 
 use App\Entity\General\GenModulo;
-use App\Entity\Modulo\Modulo;
 use App\Entity\Seguridad\SegUsuarioModelo;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
@@ -194,4 +193,6 @@ class SeguridadUsuarioModeloController extends AbstractController
         }
         return $id;
     }
+
+
 }

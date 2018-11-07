@@ -41,19 +41,20 @@ class ControllerListener{
                 if(isset($controller[0]) && isset($controller[1])){
                     $arUsuario=$this->user->getToken()->getUser();
                     $arGenModelo=$em->getRepository('App:General\GenModelo')->find($controller[0]->getClaseNombre());
-                    if($arGenModelo){
-                    $arSeguridadUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->findOneBy(['codigoUsuarioFk'=>$arUsuario->getId(),'codigoGenModeloFk'=>$arGenModelo->getCodigoModeloPk()]);
-                    }
-                    $permisos=[];
-                    if($arSeguridadUsuarioModelo){
-                        $permisos=array(
-                            'lista'=>$arSeguridadUsuarioModelo->getLista(),
-                            'nuevo'=>$arSeguridadUsuarioModelo->getNuevo(),
-                            'detalle'=>$arSeguridadUsuarioModelo->getDetalle(),
-                            'aprobar'=>$arSeguridadUsuarioModelo->getAprobar(),
-                            'autorizar'=>$arSeguridadUsuarioModelo->getAutorizar(),
-                            'anular'=>$arSeguridadUsuarioModelo->getAnular(),
-                        );
+                    if($arGenModelo) {
+                        $arSeguridadUsuarioModelo = $em->getRepository('App:Seguridad\SegUsuarioModelo')->findOneBy(['codigoUsuarioFk' => $arUsuario->getId(), 'codigoGenModeloFk' => $arGenModelo->getCodigoModeloPk()]);
+
+                        $permisos = [];
+                        if ($arSeguridadUsuarioModelo) {
+                            $permisos = array(
+                                'lista' => $arSeguridadUsuarioModelo->getLista(),
+                                'nuevo' => $arSeguridadUsuarioModelo->getNuevo(),
+                                'detalle' => $arSeguridadUsuarioModelo->getDetalle(),
+                                'aprobar' => $arSeguridadUsuarioModelo->getAprobar(),
+                                'autorizar' => $arSeguridadUsuarioModelo->getAutorizar(),
+                                'anular' => $arSeguridadUsuarioModelo->getAnular(),
+                            );
+                        }
                     }
                     if(isset($permisos[$controller[1]]) && $permisos[$controller[1]]){
                         $session->set("permiso_denegado",null);

@@ -10,8 +10,11 @@ use App\Entity\General\GenNotificacionTipo;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,18 +48,9 @@ class NotificacionTipoController extends BaseController
                 'placeholder' => "TODOS",
                 'data' => $session->get('arGenNotificacionTipoFiltroModulo')||""
             ))
-            ->add('cbFiltroModelo', EntityType::class, array(
-                'class' => GenModelo::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('mo')
-                        ->andWhere("mo.codigoModuloFk='Financiero'")
-                        ->orderBy('mo.codigoModeloPk', 'ASC');
-                },
-                '',
-                'choice_label' => 'codigoModeloPk',
-                'required' => true,
-                'data_class' => null,
+            ->add('cbFiltroModelo', ChoiceType::class, array(
                 'data' => "",
+                'placeholder' => "TODOS",
             ))
             ->getForm();
         $form->handleRequest($request);
@@ -119,4 +113,21 @@ class NotificacionTipoController extends BaseController
             'arUsuario'=>$arUsuario,
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/comboxDependienteModelo", name="general_administracion_notificacion_tipo_nuevaNotificacionTipo_comboDependiente")
+     */
+    public function ajaxNivel(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $modulo = $request->query->get('id');
+
+        return new JsonResponse($em->getRepository('App:General\GenModelo')->modeloXModulo($modulo));
+
+    }
+
+
 }

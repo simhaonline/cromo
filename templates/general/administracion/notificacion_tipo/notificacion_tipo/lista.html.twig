@@ -1,5 +1,50 @@
 {% extends 'base_general.html.twig' %}
 {% block content %}
 {{ form_start(form, {'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtro busqueda</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Modulo:</label>
+                <div class="col-sm-4">
+                    {{form_widget(form.cbFiltroModulo, { 'attr': {'class': 'modulo form-control'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Modelo:</label>
+                <div class="col-sm-4">
+                    {{form_widget(form.cbFiltroModelo, { 'attr': {'class': 'modelo form-control'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 {{ form_end(form) }}
+    <script src="{{ asset('vendor/jquery/jquery.js') }}"></script>
+    <script>
+        $('.modulo').change(function () {
+            var selector = $(this);
+            var selectorAct=$('.modelo');
+            if (selector.attr('name') !== '') {
+                $.ajax({
+                    url: "{{ path('general_administracion_notificacion_tipo_nuevaNotificacionTipo_comboDependiente') }}",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: {
+                        id: selector.val(),
+                    },
+                    success: function (respuestas) {
+                        console.log(respuestas);
+                        selectorAct.html("");
+                        selectorAct.append('<option value=""> TODOS</option>');
+                        $.each(respuestas, function (key, respuesta) {
+                            selectorAct.append('<option value="' + respuesta.id + '">' + respuesta.id + '</option>');
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}

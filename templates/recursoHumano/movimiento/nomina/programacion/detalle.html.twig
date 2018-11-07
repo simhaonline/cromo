@@ -72,6 +72,7 @@
                             <th title="Recargo festivo diurno">RFD</th>
                             <th title="Recargo festivo nocturno">RFN</th>
                             <th></th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -94,6 +95,7 @@
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoNocturno | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoFestivoDiurno | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoFestivoNocturno | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: center;"><a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_detalle_resumen',{ 'id': arProgramacionDetalle.codigoProgramacionDetallePk }) }}','resumen',600,900)"><i class="fa fa-table" style="color: black;font-size: large;"></i></a></td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                                        value="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}">
                                 </td>

@@ -68,6 +68,16 @@ class RhuPagoDetalle
     private $detalle;
 
     /**
+     * @ORM\Column(name="vr_deduccion",options={"default":0}, type="float", nullable=true)
+     */
+    private $vrDeduccion = 0;
+
+    /**
+     * @ORM\Column(name="vr_devengado",options={"default":0}, type="float", nullable=true)
+     */
+    private $vrDevengado = 0;
+
+    /**
      * @ORM\Column(name="vr_ingreso_base_cotizacion", type="float")
      */
     private $vrIngresoBaseCotizacion = 0;
@@ -100,7 +110,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $codigoPagoDetallePk
      */
-    public function setCodigoPagoDetallePk( $codigoPagoDetallePk ): void
+    public function setCodigoPagoDetallePk($codigoPagoDetallePk): void
     {
         $this->codigoPagoDetallePk = $codigoPagoDetallePk;
     }
@@ -116,7 +126,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $codigoPagoFk
      */
-    public function setCodigoPagoFk( $codigoPagoFk ): void
+    public function setCodigoPagoFk($codigoPagoFk): void
     {
         $this->codigoPagoFk = $codigoPagoFk;
     }
@@ -132,7 +142,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $codigoConceptoFk
      */
-    public function setCodigoConceptoFk( $codigoConceptoFk ): void
+    public function setCodigoConceptoFk($codigoConceptoFk): void
     {
         $this->codigoConceptoFk = $codigoConceptoFk;
     }
@@ -148,7 +158,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $vrPago
      */
-    public function setVrPago( $vrPago ): void
+    public function setVrPago($vrPago): void
     {
         $this->vrPago = $vrPago;
     }
@@ -164,7 +174,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $operacion
      */
-    public function setOperacion( $operacion ): void
+    public function setOperacion($operacion): void
     {
         $this->operacion = $operacion;
     }
@@ -180,7 +190,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $vrPagoOperado
      */
-    public function setVrPagoOperado( $vrPagoOperado ): void
+    public function setVrPagoOperado($vrPagoOperado): void
     {
         $this->vrPagoOperado = $vrPagoOperado;
     }
@@ -196,7 +206,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $horas
      */
-    public function setHoras( $horas ): void
+    public function setHoras($horas): void
     {
         $this->horas = $horas;
     }
@@ -212,7 +222,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $vrHora
      */
-    public function setVrHora( $vrHora ): void
+    public function setVrHora($vrHora): void
     {
         $this->vrHora = $vrHora;
     }
@@ -228,7 +238,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $porcentaje
      */
-    public function setPorcentaje( $porcentaje ): void
+    public function setPorcentaje($porcentaje): void
     {
         $this->porcentaje = $porcentaje;
     }
@@ -244,9 +254,41 @@ class RhuPagoDetalle
     /**
      * @param mixed $dias
      */
-    public function setDias( $dias ): void
+    public function setDias($dias): void
     {
         $this->dias = $dias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDeduccion()
+    {
+        return $this->vrDeduccion;
+    }
+
+    /**
+     * @param mixed $vrDeduccion
+     */
+    public function setVrDeduccion($vrDeduccion): void
+    {
+        $this->vrDeduccion = $vrDeduccion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDevengado()
+    {
+        return $this->vrDevengado;
+    }
+
+    /**
+     * @param mixed $vrDevengado
+     */
+    public function setVrDevengado($vrDevengado): void
+    {
+        $this->vrDevengado = $vrDevengado;
     }
 
     /**
@@ -260,7 +302,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $detalle
      */
-    public function setDetalle( $detalle ): void
+    public function setDetalle($detalle): void
     {
         $this->detalle = $detalle;
     }
@@ -276,7 +318,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $vrIngresoBaseCotizacion
      */
-    public function setVrIngresoBaseCotizacion( $vrIngresoBaseCotizacion ): void
+    public function setVrIngresoBaseCotizacion($vrIngresoBaseCotizacion): void
     {
         $this->vrIngresoBaseCotizacion = $vrIngresoBaseCotizacion;
     }
@@ -292,7 +334,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $vrIngresoBasePrestacion
      */
-    public function setVrIngresoBasePrestacion( $vrIngresoBasePrestacion ): void
+    public function setVrIngresoBasePrestacion($vrIngresoBasePrestacion): void
     {
         $this->vrIngresoBasePrestacion = $vrIngresoBasePrestacion;
     }
@@ -308,7 +350,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $pagoRel
      */
-    public function setPagoRel( $pagoRel ): void
+    public function setPagoRel($pagoRel): void
     {
         $this->pagoRel = $pagoRel;
     }
@@ -324,7 +366,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $conceptoRel
      */
-    public function setConceptoRel( $conceptoRel ): void
+    public function setConceptoRel($conceptoRel): void
     {
         $this->conceptoRel = $conceptoRel;
     }

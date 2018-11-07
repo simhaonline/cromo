@@ -46,4 +46,19 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->where('pd.codigoProgramacionFk =' . $codigoProgramacion)->getQuery()->execute();
     }
 
+    public function resumen($id){
+        return $this->_em->createQueryBuilder()->from(RhuProgramacionDetalle::class,'pd')
+            ->leftJoin('pd.empleadoRel','e')
+            ->leftJoin('pd.contratoRel','c')
+            ->leftJoin('c.cargoRel','ca')
+            ->select('e.nombreCorto')
+            ->addSelect('pd.vrSalario')
+            ->addSelect('pd.codigoProgramacionDetallePk')
+            ->addSelect('c.fechaDesde as fechaDesdeContrato')
+            ->addSelect('c.fechaHasta as fechaHastaContrato')
+            ->addSelect('pd.fechaDesde')
+            ->addSelect('pd.fechaHasta')
+            ->addSelect('ca.nombre')
+            ->where("pd.codigoProgramacionDetallePk = {$id}")->getQuery()->execute()[0];
+    }
 }

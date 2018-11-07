@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Administracion\Vehiculo;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\VehiculoType;
@@ -12,8 +13,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class VehiculoController extends Controller
+class VehiculoController extends ControllerListenerPermisosFunciones
 {
+    protected $class= TteVehiculo::class;
+    protected $claseNombre = "TteVehiculo";
+    protected $modulo = "Transporte";
+    protected $funcion = "Administracion";
+    protected $grupo = "Transporte";
+    protected $nombre = "Vehiculo";
+
     /**
      * @param Request $request
      * @return Response

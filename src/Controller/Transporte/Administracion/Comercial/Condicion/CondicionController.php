@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\Transporte\Administracion\Comercial\Condicion;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteCondicion;
@@ -14,8 +15,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class CondicionController extends Controller
+class CondicionController extends ControllerListenerPermisosFunciones
 {
+    protected $class= TteCondicion::class;
+    protected $claseNombre = "TteCondicion";
+    protected $modulo = "Transporte";
+    protected $funcion = "Administracion";
+    protected $grupo = "Comercial";
+    protected $nombre = "Condicion";
+
     /**
      * @Route("/transporte/administracion/comercial/condicion/lista", name="transporte_administracion_comercial_condicion_lista")
      */

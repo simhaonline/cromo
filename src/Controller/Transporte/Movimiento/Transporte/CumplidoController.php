@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteCumplido;
@@ -20,8 +21,15 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class CumplidoController extends Controller
+class CumplidoController extends ControllerListenerPermisosFunciones
 {
+    protected $class= TteCumplido::class;
+    protected $claseNombre = "TteCumplido";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Transporte";
+    protected $nombre = "Cumplido";
+
    /**
     * @Route("/transporte/movimiento/transporte/cumplido/lista", name="transporte_movimiento_transporte_cumplido_lista")
     */    

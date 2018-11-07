@@ -97,7 +97,10 @@ class ConfiguracionController extends Controller
                     ->orderBy('er.nombre', 'ASC');
             },
             'required' => true,
-            'choice_label' => 'nombre',
+            'choice_label' => function ($er) {
+                $campo = $er->getCodigoConceptoPk() . " - " . $er->getNombre();
+                return $campo;
+            },
             'data' => '',
             'empty_data' => ''
         ];
@@ -113,11 +116,12 @@ class ConfiguracionController extends Controller
      * @param $nombreHora
      * @param $arConcepto RhuConcepto
      */
-    private function guardarConceptoRel($nombreHora, $arConcepto){
+    private function guardarConceptoRel($nombreHora, $arConcepto)
+    {
         $em = $this->getDoctrine()->getManager();
-        $codigoConceptoHora = explode('ConceptoRel',$nombreHora)[0];
+        $codigoConceptoHora = explode('ConceptoRel', $nombreHora)[0];
         $arConceptoHora = $this->getDoctrine()->getManager()->getRepository(RhuConceptoHora::class)->find($codigoConceptoHora);
-        if($arConceptoHora){
+        if ($arConceptoHora) {
             $arConceptoHora->setConceptoRel($arConcepto);
             $em->persist($arConceptoHora);
         }

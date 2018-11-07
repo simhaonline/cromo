@@ -44,15 +44,18 @@ class ControllerListener{
                     if($arGenModelo){
                     $arSeguridadUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->findOneBy(['codigoUsuarioFk'=>$arUsuario->getId(),'codigoGenModeloFk'=>$arGenModelo->getCodigoModeloPk()]);
                     }
-                    $permisos=array(
-                        'lista'=>$arSeguridadUsuarioModelo->getLista(),
-                        'nuevo'=>$arSeguridadUsuarioModelo->getNuevo(),
-                        'detalle'=>$arSeguridadUsuarioModelo->getDetalle(),
-                        'aprobar'=>$arSeguridadUsuarioModelo->getAprobar(),
-                        'autorizar'=>$arSeguridadUsuarioModelo->getAutorizar(),
-                        'anular'=>$arSeguridadUsuarioModelo->getAnular(),
-                    );
-                    if($permisos[$controller[1]]){
+                    $permisos=[];
+                    if($arSeguridadUsuarioModelo){
+                        $permisos=array(
+                            'lista'=>$arSeguridadUsuarioModelo->getLista(),
+                            'nuevo'=>$arSeguridadUsuarioModelo->getNuevo(),
+                            'detalle'=>$arSeguridadUsuarioModelo->getDetalle(),
+                            'aprobar'=>$arSeguridadUsuarioModelo->getAprobar(),
+                            'autorizar'=>$arSeguridadUsuarioModelo->getAutorizar(),
+                            'anular'=>$arSeguridadUsuarioModelo->getAnular(),
+                        );
+                    }
+                    if(isset($permisos[$controller[1]]) && $permisos[$controller[1]]){
                         $session->set("permiso_denegado",null);
                         return;
                     }

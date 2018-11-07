@@ -43,9 +43,9 @@ class RhuPagoDetalle
     private $vrPagoOperado = 0;
 
     /**
-     * @ORM\Column(name="numero_horas", type="float")
+     * @ORM\Column(name="horas", type="float")
      */
-    private $numeroHoras = 0;
+    private $horas = 0;
 
     /**
      * @ORM\Column(name="vr_hora", type="float")
@@ -53,24 +53,14 @@ class RhuPagoDetalle
     private $vrHora = 0;
 
     /**
-     * @ORM\Column(name="porcentaje_aplicado", type="float")
+     * @ORM\Column(name="porcentaje", type="float")
      */
-    private $porcentajeAplicado = 0;
+    private $porcentaje = 0;
 
     /**
-     * @ORM\Column(name="numero_dias", type="integer")
+     * @ORM\Column(name="dias", type="integer")
      */
-    private $numeroDias = 0;
-
-    /**
-     * @ORM\Column(name="vr_dia", type="float")
-     */
-    private $vrDia = 0;
-
-    /**
-     * @ORM\Column(name="vr_total", type="float")
-     */
-    private $vrTotal = 0;
+    private $dias = 0;
 
     /**
      * @ORM\Column(name="detalle", type="string", length=250, nullable=true)
@@ -86,61 +76,6 @@ class RhuPagoDetalle
      * @ORM\Column(name="vr_ingreso_base_prestacion", type="float")
      */
     private $vrIngresoBasePrestacion = 0;
-
-    /**
-     * @ORM\Column(name="vr_ingreso_base_cotizacion_salario", type="float")
-     */
-    private $vrIngresoBaseCotizacionSalario = 0;
-
-    /**
-     * @ORM\Column(name="vr_extra", type="float")
-     */
-    private $vrExtra = 0;
-
-    /**
-     * @ORM\Column(name="vr_suplementario", type="float", nullable=true)
-     */
-    private $vrSuplementario = 0;
-
-    /**
-     * @ORM\Column(name="vr_adicional_prestacional", type="float")
-     */
-    private $vrAdicionalPrestacional = 0;
-
-    /**
-     * @ORM\Column(name="vr_adicional_no_prestacional", type="float")
-     */
-    private $vrAdicionalNoPrestacional = 0;
-
-    /**
-     * @ORM\Column(name="dias_ausentismo", type="integer")
-     */
-    private $diasAusentismo = 0;
-
-    /**
-     * @ORM\Column(name="adicional", type="boolean")
-     */
-    private $adicional = 0;
-
-    /**
-     * @ORM\Column(name="prestacional", type="boolean")
-     */
-    private $prestacional = 0;
-
-    /**
-     * @ORM\Column(name="cotizacion", type="boolean")
-     */
-    private $cotizacion = 0;
-
-    /**
-     * @ORM\Column(name="salud", type="boolean")
-     */
-    private $salud = false;
-
-    /**
-     * @ORM\Column(name="pension", type="boolean")
-     */
-    private $pension = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuPago", inversedBy="pagosDetallesPagoRel")
@@ -165,7 +100,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $codigoPagoDetallePk
      */
-    public function setCodigoPagoDetallePk($codigoPagoDetallePk): void
+    public function setCodigoPagoDetallePk( $codigoPagoDetallePk ): void
     {
         $this->codigoPagoDetallePk = $codigoPagoDetallePk;
     }
@@ -181,7 +116,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $codigoPagoFk
      */
-    public function setCodigoPagoFk($codigoPagoFk): void
+    public function setCodigoPagoFk( $codigoPagoFk ): void
     {
         $this->codigoPagoFk = $codigoPagoFk;
     }
@@ -197,7 +132,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $codigoConceptoFk
      */
-    public function setCodigoConceptoFk($codigoConceptoFk): void
+    public function setCodigoConceptoFk( $codigoConceptoFk ): void
     {
         $this->codigoConceptoFk = $codigoConceptoFk;
     }
@@ -213,7 +148,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $vrPago
      */
-    public function setVrPago($vrPago): void
+    public function setVrPago( $vrPago ): void
     {
         $this->vrPago = $vrPago;
     }
@@ -229,7 +164,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $operacion
      */
-    public function setOperacion($operacion): void
+    public function setOperacion( $operacion ): void
     {
         $this->operacion = $operacion;
     }
@@ -245,7 +180,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $vrPagoOperado
      */
-    public function setVrPagoOperado($vrPagoOperado): void
+    public function setVrPagoOperado( $vrPagoOperado ): void
     {
         $this->vrPagoOperado = $vrPagoOperado;
     }
@@ -253,17 +188,17 @@ class RhuPagoDetalle
     /**
      * @return mixed
      */
-    public function getNumeroHoras()
+    public function getHoras()
     {
-        return $this->numeroHoras;
+        return $this->horas;
     }
 
     /**
-     * @param mixed $numeroHoras
+     * @param mixed $horas
      */
-    public function setNumeroHoras($numeroHoras): void
+    public function setHoras( $horas ): void
     {
-        $this->numeroHoras = $numeroHoras;
+        $this->horas = $horas;
     }
 
     /**
@@ -277,7 +212,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $vrHora
      */
-    public function setVrHora($vrHora): void
+    public function setVrHora( $vrHora ): void
     {
         $this->vrHora = $vrHora;
     }
@@ -285,65 +220,33 @@ class RhuPagoDetalle
     /**
      * @return mixed
      */
-    public function getPorcentajeAplicado()
+    public function getPorcentaje()
     {
-        return $this->porcentajeAplicado;
+        return $this->porcentaje;
     }
 
     /**
-     * @param mixed $porcentajeAplicado
+     * @param mixed $porcentaje
      */
-    public function setPorcentajeAplicado($porcentajeAplicado): void
+    public function setPorcentaje( $porcentaje ): void
     {
-        $this->porcentajeAplicado = $porcentajeAplicado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumeroDias()
-    {
-        return $this->numeroDias;
-    }
-
-    /**
-     * @param mixed $numeroDias
-     */
-    public function setNumeroDias($numeroDias): void
-    {
-        $this->numeroDias = $numeroDias;
+        $this->porcentaje = $porcentaje;
     }
 
     /**
      * @return mixed
      */
-    public function getVrDia()
+    public function getDias()
     {
-        return $this->vrDia;
+        return $this->dias;
     }
 
     /**
-     * @param mixed $vrDia
+     * @param mixed $dias
      */
-    public function setVrDia($vrDia): void
+    public function setDias( $dias ): void
     {
-        $this->vrDia = $vrDia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotal()
-    {
-        return $this->vrTotal;
-    }
-
-    /**
-     * @param mixed $vrTotal
-     */
-    public function setVrTotal($vrTotal): void
-    {
-        $this->vrTotal = $vrTotal;
+        $this->dias = $dias;
     }
 
     /**
@@ -357,7 +260,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $detalle
      */
-    public function setDetalle($detalle): void
+    public function setDetalle( $detalle ): void
     {
         $this->detalle = $detalle;
     }
@@ -373,7 +276,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $vrIngresoBaseCotizacion
      */
-    public function setVrIngresoBaseCotizacion($vrIngresoBaseCotizacion): void
+    public function setVrIngresoBaseCotizacion( $vrIngresoBaseCotizacion ): void
     {
         $this->vrIngresoBaseCotizacion = $vrIngresoBaseCotizacion;
     }
@@ -389,185 +292,9 @@ class RhuPagoDetalle
     /**
      * @param mixed $vrIngresoBasePrestacion
      */
-    public function setVrIngresoBasePrestacion($vrIngresoBasePrestacion): void
+    public function setVrIngresoBasePrestacion( $vrIngresoBasePrestacion ): void
     {
         $this->vrIngresoBasePrestacion = $vrIngresoBasePrestacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrIngresoBaseCotizacionSalario()
-    {
-        return $this->vrIngresoBaseCotizacionSalario;
-    }
-
-    /**
-     * @param mixed $vrIngresoBaseCotizacionSalario
-     */
-    public function setVrIngresoBaseCotizacionSalario($vrIngresoBaseCotizacionSalario): void
-    {
-        $this->vrIngresoBaseCotizacionSalario = $vrIngresoBaseCotizacionSalario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrExtra()
-    {
-        return $this->vrExtra;
-    }
-
-    /**
-     * @param mixed $vrExtra
-     */
-    public function setVrExtra($vrExtra): void
-    {
-        $this->vrExtra = $vrExtra;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrSuplementario()
-    {
-        return $this->vrSuplementario;
-    }
-
-    /**
-     * @param mixed $vrSuplementario
-     */
-    public function setVrSuplementario($vrSuplementario): void
-    {
-        $this->vrSuplementario = $vrSuplementario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrAdicionalPrestacional()
-    {
-        return $this->vrAdicionalPrestacional;
-    }
-
-    /**
-     * @param mixed $vrAdicionalPrestacional
-     */
-    public function setVrAdicionalPrestacional($vrAdicionalPrestacional): void
-    {
-        $this->vrAdicionalPrestacional = $vrAdicionalPrestacional;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrAdicionalNoPrestacional()
-    {
-        return $this->vrAdicionalNoPrestacional;
-    }
-
-    /**
-     * @param mixed $vrAdicionalNoPrestacional
-     */
-    public function setVrAdicionalNoPrestacional($vrAdicionalNoPrestacional): void
-    {
-        $this->vrAdicionalNoPrestacional = $vrAdicionalNoPrestacional;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDiasAusentismo()
-    {
-        return $this->diasAusentismo;
-    }
-
-    /**
-     * @param mixed $diasAusentismo
-     */
-    public function setDiasAusentismo($diasAusentismo): void
-    {
-        $this->diasAusentismo = $diasAusentismo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAdicional()
-    {
-        return $this->adicional;
-    }
-
-    /**
-     * @param mixed $adicional
-     */
-    public function setAdicional($adicional): void
-    {
-        $this->adicional = $adicional;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPrestacional()
-    {
-        return $this->prestacional;
-    }
-
-    /**
-     * @param mixed $prestacional
-     */
-    public function setPrestacional($prestacional): void
-    {
-        $this->prestacional = $prestacional;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCotizacion()
-    {
-        return $this->cotizacion;
-    }
-
-    /**
-     * @param mixed $cotizacion
-     */
-    public function setCotizacion($cotizacion): void
-    {
-        $this->cotizacion = $cotizacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSalud()
-    {
-        return $this->salud;
-    }
-
-    /**
-     * @param mixed $salud
-     */
-    public function setSalud($salud): void
-    {
-        $this->salud = $salud;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPension()
-    {
-        return $this->pension;
-    }
-
-    /**
-     * @param mixed $pension
-     */
-    public function setPension($pension): void
-    {
-        $this->pension = $pension;
     }
 
     /**
@@ -581,7 +308,7 @@ class RhuPagoDetalle
     /**
      * @param mixed $pagoRel
      */
-    public function setPagoRel($pagoRel): void
+    public function setPagoRel( $pagoRel ): void
     {
         $this->pagoRel = $pagoRel;
     }
@@ -597,8 +324,10 @@ class RhuPagoDetalle
     /**
      * @param mixed $conceptoRel
      */
-    public function setConceptoRel($conceptoRel): void
+    public function setConceptoRel( $conceptoRel ): void
     {
         $this->conceptoRel = $conceptoRel;
     }
+
+
 }

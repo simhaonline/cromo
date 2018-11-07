@@ -2,6 +2,7 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\Entity\RecursoHumano\RhuConceptoHora;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEgreso;
@@ -73,7 +74,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $fechaDesde = $this->fechaDesdeContrato($arProgramacion->getFechaDesde(), $arContrato->getFechaDesde());
             $fechaHasta = $this->fechaHastaContrato($arProgramacion->getFechaHasta(),  $arContrato->getFechaHasta(), $arContrato->getIndefinido());
             $dias = $fechaDesde->diff($fechaHasta)->days+1;
-            $horas = $dias * 8;
+            $horas = $dias * $arContrato->getFactorHorasDia();
             $arProgramacionDetalle->setFechaDesde($fechaDesde);
             $arProgramacionDetalle->setFechaHasta($fechaHasta);
             $arProgramacionDetalle->setDias($dias);
@@ -85,16 +86,20 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         $em->flush();
         $em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
     }
+
     /**
      * @param $arProgramacion RhuProgramacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function autorizar($arProgramacion){
         $em = $this->getEntityManager();
         if(!$arProgramacion->getEstadoAutorizado()){
             $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()]);
             if($arProgramacionDetalles){
+                $arConceptoHora = $em->getRepository(RhuConceptoHora::class)->findAll();
                 foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
-                    $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion);
+                    $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora);
                 }
                 $em->flush();
             }

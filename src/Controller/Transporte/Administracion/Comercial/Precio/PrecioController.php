@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Administracion\Comercial\Precio;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Entity\Transporte\TtePrecio;
 use App\Entity\Transporte\TtePrecioDetalle;
 use App\Form\Type\Transporte\PrecioDetalleType;
@@ -13,8 +14,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class PrecioController extends Controller
+class PrecioController extends ControllerListenerPermisosFunciones
 {
+    protected $class= TtePrecio::class;
+    protected $claseNombre = "TtePrecio";
+    protected $modulo = "Transporte";
+    protected $funcion = "Administracion";
+    protected $grupo = "Comercial";
+    protected $nombre = "Precio";
+
     /**
      * @Route("/transporte/administracion/comercial/precio/lista", name="transporte_administracion_comercial_precio_lista")
      */

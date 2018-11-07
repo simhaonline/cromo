@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Monitoreo\Monitoreo;
 
+use App\Controller\Estructura\ControllerListenerPermisosFunciones;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TteMonitoreoDetalle;
@@ -19,8 +20,15 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class MonitoreoController extends Controller
+class MonitoreoController extends ControllerListenerPermisosFunciones
 {
+    protected $class= TteMonitoreo::class;
+    protected $claseNombre = "TteMonitoreo";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Monitoreo";
+    protected $nombre = "Monitoreo";
+
    /**
     * @Route("/transporte/movimiento/monitoreo/monitoreo/lista", name="transporte_movimiento_monitoreo_monitoreo_lista")
     */    

@@ -36,6 +36,7 @@ class ControllerListener{
         $controller = $event->getController();
         $request = $event->getRequest();
         $session = $request->getSession();
+        $funcionesProtegidas=array('lista','nuevo','detalle','aprobar','autorizar'.'anular');
         if($controller[0] instanceof ControllerListenerGeneral){
             if(is_array($controller)){
                 if(isset($controller[0]) && isset($controller[1])){
@@ -56,7 +57,7 @@ class ControllerListener{
                             );
                         }
                     }
-                    if(isset($permisos[$controller[1]]) && $permisos[$controller[1]]){
+                    if((isset($permisos[$controller[1]]) && $permisos[$controller[1]]) || !array_key_exists($controller[1],$funcionesProtegidas)){
                         $session->set("permiso_denegado",null);
                         return;
                     }

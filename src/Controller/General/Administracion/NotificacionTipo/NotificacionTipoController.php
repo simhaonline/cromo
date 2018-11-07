@@ -3,7 +3,7 @@
 namespace App\Controller\General\Administracion\NotificacionTipo;
 
 use App\Controller\BaseController;
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\General\GenModelo;
 use App\Entity\General\GenModulo;
 use App\Entity\General\GenNotificacionTipo;

@@ -2,7 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
@@ -40,7 +40,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use SoapClient;
 
-class DespachoController extends ControllerListenerPermisosFunciones
+class DespachoController extends ControllerListenerGeneral
 {
     protected $class= TteDespacho::class;
     protected $claseNombre = "TteDespacho";

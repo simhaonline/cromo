@@ -2,7 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteCumplido;
@@ -21,7 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class CumplidoController extends ControllerListenerPermisosFunciones
+class CumplidoController extends ControllerListenerGeneral
 {
     protected $class= TteCumplido::class;
     protected $claseNombre = "TteCumplido";

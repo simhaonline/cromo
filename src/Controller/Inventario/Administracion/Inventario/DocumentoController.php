@@ -2,7 +2,7 @@
 
 namespace App\Controller\Inventario\Administracion\Inventario;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
 use App\Form\Type\Inventario\DocumentoType;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class DocumentoController extends ControllerListenerPermisosFunciones
+class DocumentoController extends ControllerListenerGeneral
 {
     protected $class= InvDocumento::class;
     protected $claseNombre = "InvDocumento";

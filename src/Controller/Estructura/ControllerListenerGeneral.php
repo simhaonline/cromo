@@ -4,7 +4,7 @@ namespace App\Controller\Estructura;
 
 use App\Controller\BaseController;
 
-abstract class ControllerListenerPermisosFunciones extends BaseController {
+abstract class ControllerListenerGeneral extends BaseController {
 
     protected $claseNombre=null;
 

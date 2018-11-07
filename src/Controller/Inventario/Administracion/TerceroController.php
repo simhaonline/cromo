@@ -2,7 +2,7 @@
 
 namespace App\Controller\Inventario\Administracion;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Inventario\InvSucursal;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\SucursalType;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class TerceroController extends ControllerListenerPermisosFunciones
+class TerceroController extends ControllerListenerGeneral
 {
     protected $class= InvTercero::class;
     protected $claseNombre = "InvTercero";

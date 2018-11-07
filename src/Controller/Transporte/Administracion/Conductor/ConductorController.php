@@ -2,7 +2,7 @@
 
 namespace App\Controller\Transporte\Administracion\Conductor;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Transporte\TteConductor;
 use App\Form\Type\Transporte\ConductorType;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class ConductorController extends ControllerListenerPermisosFunciones
+class ConductorController extends ControllerListenerGeneral
 {
     protected $class= TteConductor::class;
     protected $claseNombre = "TteConductor";

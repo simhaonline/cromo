@@ -3,7 +3,7 @@
 namespace App\Controller\Inventario\Administracion\General\Precio;
 
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Inventario\InvPrecio;
 use App\Entity\Inventario\InvPrecioDetalle;
 use App\Form\Type\Inventario\PrecioType;
@@ -21,7 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class PrecioController extends ControllerListenerPermisosFunciones
+class PrecioController extends ControllerListenerGeneral
 {
     protected $class= InvPrecio::class;
     protected $claseNombre = "InvPrecio";

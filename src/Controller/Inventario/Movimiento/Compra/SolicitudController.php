@@ -2,7 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Compra;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Form\Type\Inventario\SolicitudType;
 
-class SolicitudController extends ControllerListenerPermisosFunciones
+class SolicitudController extends ControllerListenerGeneral
 {
     protected $class= InvSolicitud::class;
     protected $claseNombre = "InvSolicitud";

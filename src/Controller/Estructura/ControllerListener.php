@@ -36,7 +36,7 @@ class ControllerListener{
         $controller = $event->getController();
         $request = $event->getRequest();
         $session = $request->getSession();
-        if($controller[0] instanceof ControllerListenerPermisosFunciones){
+        if($controller[0] instanceof ControllerListenerGeneral){
             if(is_array($controller)){
                 if(isset($controller[0]) && isset($controller[1])){
                     $arUsuario=$this->user->getToken()->getUser();

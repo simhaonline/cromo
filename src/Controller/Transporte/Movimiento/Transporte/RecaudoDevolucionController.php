@@ -2,7 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteGuia;
@@ -19,7 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class RecaudoDevolucionController extends ControllerListenerPermisosFunciones
+class RecaudoDevolucionController extends ControllerListenerGeneral
 {
     protected $class= TteRecaudoDevolucion::class;
     protected $claseNombre = "TteRecaudoDevolucion";

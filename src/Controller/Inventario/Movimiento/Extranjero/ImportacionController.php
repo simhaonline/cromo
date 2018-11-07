@@ -2,7 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Extranjero;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvImportacion;
 use App\Entity\Inventario\InvImportacionDetalle;
@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Form\Type\Inventario\ImportacionType;
 
-class ImportacionController extends ControllerListenerPermisosFunciones
+class ImportacionController extends ControllerListenerGeneral
 {
     protected $class= InvImportacion::class;
     protected $claseNombre = "InvImportacion";

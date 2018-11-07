@@ -2,7 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Compra;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvOrden;
 use App\Entity\Inventario\InvOrdenCompra;
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class OrdenController extends ControllerListenerPermisosFunciones
+class OrdenController extends ControllerListenerGeneral
 {
     protected $class= InvOrden::class;
     protected $claseNombre = "InvOrden";

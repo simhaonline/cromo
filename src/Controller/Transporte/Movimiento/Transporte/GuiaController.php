@@ -2,7 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteFacturaDetalle;
@@ -29,7 +29,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class GuiaController extends ControllerListenerPermisosFunciones
+class GuiaController extends ControllerListenerGeneral
 {
     protected $class= TteGuia::class;
     protected $claseNombre = "TteGuia";

@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller\Transporte\Administracion\Comercial\Condicion;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteCondicion;
@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class CondicionController extends ControllerListenerPermisosFunciones
+class CondicionController extends ControllerListenerGeneral
 {
     protected $class= TteCondicion::class;
     protected $claseNombre = "TteCondicion";

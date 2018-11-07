@@ -2,7 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Recogida\Despacho;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
@@ -30,7 +30,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Validator\Constraints\Count;
 
-class DespachoRecogidaController extends ControllerListenerPermisosFunciones
+class DespachoRecogidaController extends ControllerListenerGeneral
 {
     protected $class= TteDespachoRecogida::class;
     protected $claseNombre = "TteDespachoRecogida";

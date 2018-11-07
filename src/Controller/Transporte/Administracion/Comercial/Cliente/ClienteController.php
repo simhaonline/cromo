@@ -2,7 +2,7 @@
 
 namespace App\Controller\Transporte\Administracion\Comercial\Cliente;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteClienteCondicion;
@@ -18,7 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ClienteController extends ControllerListenerPermisosFunciones
+class ClienteController extends ControllerListenerGeneral
 {
     protected $class= TteCliente::class;
     protected $claseNombre = "TteCliente";

@@ -2,7 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Control\RelacionCaja;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Transporte\TteRecibo;
 use App\Entity\Transporte\TteRelacionCaja;
 use App\Form\Type\Transporte\RelacionCajaType;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class RelacionCajaController extends ControllerListenerPermisosFunciones
+class RelacionCajaController extends ControllerListenerGeneral
 {
     protected $class= TteRelacionCaja::class;
     protected $claseNombre = "TteRelacionCaja";

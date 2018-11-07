@@ -2,7 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Comercial;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Form\Type\Inventario\PedidoType;
 
-class PedidoController extends ControllerListenerPermisosFunciones
+class PedidoController extends ControllerListenerGeneral
 {
     protected $class= InvPedido::class;
     protected $claseNombre = "InvPedido";

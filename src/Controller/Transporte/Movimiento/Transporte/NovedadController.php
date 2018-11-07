@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteNovedad;
@@ -16,7 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class NovedadController extends ControllerListenerPermisosFunciones
+class NovedadController extends ControllerListenerGeneral
 {
     protected $class= TteNovedad::class;
     protected $claseNombre = "TteNovedad";

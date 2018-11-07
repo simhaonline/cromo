@@ -2,7 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Comercial\Factura;
 
-use App\Controller\Estructura\ControllerListenerPermisosFunciones;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\General\GenConfiguracion;
@@ -35,7 +35,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use App\Utilidades\Mensajes;
 
-class FacturaController extends ControllerListenerPermisosFunciones
+class FacturaController extends ControllerListenerGeneral
 {
     protected $class= TteFactura::class;
     protected $claseNombre = "TteFactura";

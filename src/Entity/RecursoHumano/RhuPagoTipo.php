@@ -34,6 +34,11 @@ class RhuPagoTipo
     protected $programacionesPagoTipoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuPago", mappedBy="pagoTipoRel")
+     */
+    protected $pagosPagoTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPagoTipoPk()
@@ -95,5 +100,21 @@ class RhuPagoTipo
     public function setProgramacionesPagoTipoRel($programacionesPagoTipoRel): void
     {
         $this->programacionesPagoTipoRel = $programacionesPagoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosPagoTipoRel()
+    {
+        return $this->pagosPagoTipoRel;
+    }
+
+    /**
+     * @param mixed $pagosPagoTipoRel
+     */
+    public function setPagosPagoTipoRel($pagosPagoTipoRel): void
+    {
+        $this->pagosPagoTipoRel = $pagosPagoTipoRel;
     }
 }

@@ -35,65 +35,98 @@ class RhuPagoRepository extends ServiceEntityRepository
     /**
      * @param $arProgramacionDetalle RhuProgramacionDetalle
      * @param $arProgramacion RhuProgramacion
-     * @param $arConceptoHora
+     * @param $arConceptoHora array
+     * @param $usuario string
+     * @return int|mixed
      * @throws \Doctrine\ORM\ORMException
      */
-    public function generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora)
+    public function generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $usuario)
     {
         $em = $this->getEntityManager();
-        //$arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $douDeducciones = 0;
+        $douDevengado = 0;
+//        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
         $arPago = new RhuPago();
-        $arContrato = $em->getRepository(RhuContrato::class)->generarPago($arProgramacionDetalle->getCodigoContratoFk());
-        $arPago->setPagoTipoRel($arProgramacion->getCodigoPagoTipoFk());
-        $arPago->setEmpleadoRel($arProgramacionDetalle->getCodigoEmpleadoFk());
-        $arPago->setContratoRel($arProgramacionDetalle->getCodigoContratoFk());
-        $arPago->setCodigoProgramacionDetalleFk($arProgramacionDetalle->getCodigoProgramacionDetallePk());
+        $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getCodigoContratoFk());
+        $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
+        $arPago->setEmpleadoRel($arProgramacionDetalle->getEmpleadoRel());
+        $arPago->setContratoRel($arProgramacionDetalle->getContratoRel());
+        $arPago->setProgramacionDetalleRel($arProgramacionDetalle);
+        $arPago->setProgramacionRel($arProgramacion);
+        $arPago->setVrSalarioContrato($arContrato->getVrSalario());
+        $arPago->setUsuario($usuario);
+        $arPago->setEntidadPensionRel($arContrato->getEntidadPensionRel());
+        $arPago->setEntidadSaludRel($arContrato->getEntidadSaludRel());
+        $arPago->setFechaDesde($arProgramacion->getFechaDesde());
+        $arPago->setFechaHasta($arProgramacion->getFechaHasta());
+        if ($arContrato->getFechaDesde() >= $arPago->getFechaDesde()) {
+            $arPago->setFechaDesdeContrato($arContrato->getFechaDesde());
+        } else {
+            $arPago->setFechaDesdeContrato($arPago->getFechaDesde());
+        }
+        if ($arContrato->getFechaHasta() <= $arPago->getFechaHasta()) {
+            $arPago->setFechaHastaContrato($arContrato->getFechaHasta());
+        } else {
+            $arPago->setFechaHastaContrato($arPago->getFechaHasta());
+        }
+
         $em->persist($arPago);
 
-//        $arrHoras = $this->getHoras($arProgramacionDetalle);
-//        foreach ($arrHoras AS $arrHora) {
-//            if ($arrHora['valor'] > 0) {
-//                /** @var  $arConcepto RhuConcepto */
-//                $arConcepto = $arConceptoHora[$arrHora['clave']]->getConceptoRel();
-//                $arPagoDetalle = new RhuPagoDetalle();
-//                $arPagoDetalle->setPagoRel($arPago);
-//                $floValorDia = $arContrato->getVrSalario() / 30;
-//                $floValorHora = $floValorDia / $arContrato->getFactorHorasDia();
-//                $arPagoDetalle->setVrHora($floValorHora);
-//                $arPagoDetalle->setPorcentaje($arConcepto->getPorcentaje());
-//                $arPagoDetalle->setConceptoRel($arConcepto);
-//                $arPagoDetalle->setDias($arrHora['valor']);
-//                $arPagoDetalle->setOperacion($arConcepto->getOperacion());
-//                $em->persist($arPagoDetalle);
-//            }
-//        }
+        $arrHoras = $this->getHoras($arProgramacionDetalle);
+        foreach ($arrHoras AS $arrHora) {
+            if ($arrHora['valor'] > 0) {
+                /** @var  $arConcepto RhuConcepto */
+                $arConcepto = $arConceptoHora[$arrHora['clave']]->getConceptoRel();
+                $arPagoDetalle = new RhuPagoDetalle();
+                $arPagoDetalle->setPagoRel($arPago);
+                $floValorDia = $arContrato->getVrSalario() / 30;
+                $floValorHora = $floValorDia / $arContrato->getFactorHorasDia();
+                $floDevengado = $arProgramacionDetalle->getDias() * $floValorDia;
+                $arPagoDetalle->setVrHora($floValorHora);
+                $arPagoDetalle->setPorcentaje($arConcepto->getPorcentaje());
+                $arPagoDetalle->setConceptoRel($arConcepto);
+                $arPagoDetalle->setHoras($arrHora['valor']);
+                $arPagoDetalle->setOperacion($arConcepto->getOperacion());
+                $arPagoDetalle->setVrPago($floDevengado);
+                $arPagoDetalle->setDias($arProgramacionDetalle->getDias());
+                if ($arPagoDetalle->getOperacion() == 1) {
+                    $douDevengado = $douDevengado + $arPagoDetalle->getVrPago();
+                }
+                $em->persist($arPagoDetalle);
+            }
+        }
+        $douNeto = $douDevengado - $douDeducciones;
+        $arPago->setVrNeto($douNeto);
+        $em->persist($arPago);
+        return $douNeto;
+    }
 
-        /*$arPago->setFechaDesde($arProgramacion->getFechaDesde());
-        $arPago->setFechaHasta($arProgramacion->getFechaHasta());
-        $arPago->setFechaDesde($arProgramacionDetalle->getFechaDesdePago());
-        $arPago->setFechaHasta($arProgramacionDetalle->getFechaHastaPago());
-        $arPago->setVrSalarioContrato($arProgramacionDetalle->getVrSalario());
-        $arPago->setUsuario($arProgramacion->getUsuario());
-        $arPago->setComentario($arProgramacionDetalle->getComentarios());
-         */
-        //Parametros generales
-        /*        $intHorasLaboradas = $arProgramacionDetalle->getHorasPeriodoReales();
-                $horasDiurnas = $arProgramacionDetalle->getHorasDiurnas();
-                $intDiasTransporte = $arProgramacionDetalle->getDiasReales();
-                $intFactorDia = $arProgramacionDetalle->getFactorDia();
-                $douVrDia = $arProgramacionDetalle->getVrDia();
-                $douVrHora = $arProgramacionDetalle->getVrHora();
-                $douVrSalarioMinimo = $arConfiguracion->getVrSalario();
-                $douVrHoraSalarioMinimo = ($douVrSalarioMinimo / 30) / 8;
-                $douIngresoBasePrestacional = 0;
-                $douIngresoBaseCotizacion = 0;
-                $douIngresoBaseCotizacionSalud = 0;
-                $devengado = 0;
-                $devengadoPrestacional = 0;
-                $salud = 0;
-                $pension = 0;
-                $transporte = 0;
-        */
+    /**
+     * @param $arPago RhuPago
+     * @return int|mixed
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function liquidar($arPago)
+    {
+        $em = $this->getEntityManager();
+//        $douSalario = 0;
+//        $douAuxilioTransporte = 0;
+//        $douPension = 0;
+//        $douEps = 0;
+        $douDeducciones = 0;
+        $douDevengado = 0;
+//        $douIngresoBaseCotizacion = 0;
+//        $douIngresoBasePrestacion = 0;
+        $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->findBy(array('codigoPagoFk' => $arPago->getCodigoPagoPk()));
+        foreach ($arPagoDetalles as $arPagoDetalle) {
+            if ($arPagoDetalle->getOperacion() == 1) {
+                $douDevengado = $douDevengado + $arPagoDetalle->getVrPago();
+            }
+        }
+        $douNeto = $douDevengado - $douDeducciones;
+        $arPago->setVrNeto($douNeto);
+        $em->persist($arPago);
+        return $douNeto;
     }
 
     /**

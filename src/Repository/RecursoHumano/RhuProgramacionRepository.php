@@ -3,6 +3,7 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuConceptoHora;
+use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEgreso;
@@ -10,6 +11,7 @@ use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
+use App\Entity\Seguridad\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -43,7 +45,8 @@ class RhuProgramacionRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setCantidadRegistros($arProgramacion){
+    public function setCantidadRegistros($arProgramacion)
+    {
         $arProgramacion->setCantidad(count($this->_em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()])));
         $this->_em->persist($arProgramacion);
         $this->_em->flush();
@@ -72,8 +75,8 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arProgramacionDetalle->setContratoRel($arContrato);
             $arProgramacionDetalle->setVrSalario($arContrato->getVrSalario());
             $fechaDesde = $this->fechaDesdeContrato($arProgramacion->getFechaDesde(), $arContrato->getFechaDesde());
-            $fechaHasta = $this->fechaHastaContrato($arProgramacion->getFechaHasta(),  $arContrato->getFechaHasta(), $arContrato->getIndefinido());
-            $dias = $fechaDesde->diff($fechaHasta)->days+1;
+            $fechaHasta = $this->fechaHastaContrato($arProgramacion->getFechaHasta(), $arContrato->getFechaHasta(), $arContrato->getIndefinido());
+            $dias = $fechaDesde->diff($fechaHasta)->days + 1;
             $horas = $dias * $arContrato->getFactorHorasDia();
             $arProgramacionDetalle->setFechaDesde($fechaDesde);
             $arProgramacionDetalle->setFechaHasta($fechaHasta);
@@ -89,24 +92,59 @@ class RhuProgramacionRepository extends ServiceEntityRepository
 
     /**
      * @param $arProgramacion RhuProgramacion
+     * @param $usuario Usuario
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function autorizar($arProgramacion){
+    public function autorizar($arProgramacion, $usuario)
+    {
         $em = $this->getEntityManager();
-        if(!$arProgramacion->getEstadoAutorizado()){
+        $douNetoTotal = 0;
+        $numeroPagos = 0;
+        if (!$arProgramacion->getEstadoAutorizado()) {
             $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()]);
-            if($arProgramacionDetalles){
+            if ($arProgramacionDetalles) {
                 $arConceptoHora = $em->getRepository(RhuConceptoHora::class)->findAll();
                 foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
-                    $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora);
+                    $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $usuario);
+                    $douNetoTotal += $vrNeto;
+                    $numeroPagos++;
                 }
+                $arProgramacion->setVrNeto($douNetoTotal);
+                $em->persist($arProgramacion);
                 $em->flush();
             }
         }
     }
 
-    private function fechaHastaContrato($fechaHastaPeriodo, $fechaHastaContrato, $indefinido) {
+    /**
+     * @param $arProgramacion RhuProgramacion
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function liquidar($arProgramacion)
+    {
+        $em = $this->getEntityManager();
+        set_time_limit(0);
+        $numeroPagos = 0;
+        $douNetoTotal = 0;
+//        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arPagos = $em->getRepository(RhuPago::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()]);
+        foreach ($arPagos as $arPago) {
+            $vrNeto = $em->getRepository(RhuPago::class)->liquidar($arPago);
+            $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($arPago->getCodigoProgramacionDetalleFk());
+            $arProgramacionDetalle->setVrNeto($vrNeto);
+            $em->persist($arProgramacionDetalle);
+            $douNetoTotal += $vrNeto;
+            $numeroPagos++;
+        }
+        $arProgramacion->setVrNeto($douNetoTotal);
+        $arProgramacion->setCantidad($numeroPagos);
+        $em->persist($arProgramacion);
+        $em->flush();
+    }
+
+    private function fechaHastaContrato($fechaHastaPeriodo, $fechaHastaContrato, $indefinido)
+    {
         $fechaHasta = $fechaHastaContrato;
         if ($indefinido) {
             $fecha = date_create(date('Y-m-d'));
@@ -119,7 +157,8 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         return $fechaHasta;
     }
 
-    private function fechaDesdeContrato($fechaDesdePeriodo, $fechaDesdeContrato) {
+    private function fechaDesdeContrato($fechaDesdePeriodo, $fechaDesdeContrato)
+    {
         $fechaDesde = $fechaDesdeContrato;
         if ($fechaDesdeContrato < $fechaDesdePeriodo) {
             $fechaDesde = $fechaDesdePeriodo;

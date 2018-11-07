@@ -119,6 +119,11 @@ class RhuProgramacion
     protected $pagoTipoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuPago", mappedBy="programacionRel")
+     */
+    protected $pagosProgramacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoProgramacionPk()
@@ -377,6 +382,22 @@ class RhuProgramacion
     /**
      * @return mixed
      */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getGrupoRel()
     {
         return $this->grupoRel;
@@ -425,16 +446,16 @@ class RhuProgramacion
     /**
      * @return mixed
      */
-    public function getUsuario()
+    public function getPagosProgramacionRel()
     {
-        return $this->usuario;
+        return $this->pagosProgramacionRel;
     }
 
     /**
-     * @param mixed $usuario
+     * @param mixed $pagosProgramacionRel
      */
-    public function setUsuario($usuario): void
+    public function setPagosProgramacionRel($pagosProgramacionRel): void
     {
-        $this->usuario = $usuario;
+        $this->pagosProgramacionRel = $pagosProgramacionRel;
     }
 }

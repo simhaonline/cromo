@@ -373,6 +373,10 @@ class RhuContrato
      * @ORM\OneToMany(targetEntity="RhuAdicional", mappedBy="contratoRel")
      */
     protected $adicionalesContratoRel;
+    /**
+     * @ORM\OneToMany(targetEntity="RhuPago", mappedBy="contratoRel")
+     */
+    protected $pagosContratoRel;
 
     /**
      * @return mixed

@@ -23,6 +23,16 @@ class RhuPago
     private $codigoPagoTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_entidad_salud_fk", type="integer",  nullable=true)
+     */
+    private $codigoEntidadSaludFk;
+
+    /**
+     * @ORM\Column(name="codigo_entidad_pension_fk", type="integer",  nullable=true)
+     */
+    private $codigoEntidadPensionFk;
+
+    /**
      * @ORM\Column(name="codigo_periodo_fk", type="string", length=10, nullable=true)
      */
     private $codigoPeriodoFk;
@@ -46,6 +56,11 @@ class RhuPago
      * @ORM\Column(name="codigo_programacion_detalle_fk", type="integer", nullable=true)
      */
     private $codigoProgramacionDetalleFk;
+
+    /**
+     * @ORM\Column(name="codigo_programacion_fk", type="integer", nullable=true)
+     */
+    private $codigoProgramacionFk;
 
     /**
      * @ORM\Column(name="fecha_desde", type="date", nullable=true)
@@ -129,33 +144,51 @@ class RhuPago
     private $usuario;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="")
+     * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="pagosEmpleadoRel")
      * @ORM\JoinColumn(name="codigo_empleado_fk",referencedColumnName="codigo_empleado_pk")
      */
     protected $empleadoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuContrato", inversedBy="")
+     * @ORM\ManyToOne(targetEntity="RhuContrato", inversedBy="pagosContratoRel")
      * @ORM\JoinColumn(name="codigo_contrato_fk",referencedColumnName="codigo_contrato_pk")
      */
     protected $contratoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuPagoTipo", inversedBy="")
+     * @ORM\ManyToOne(targetEntity="RhuPagoTipo", inversedBy="pagosPagoTipoRel")
      * @ORM\JoinColumn(name="codigo_pago_tipo_fk",referencedColumnName="codigo_pago_tipo_pk")
      */
     protected $pagoTipoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuProgramacionDetalle", inversedBy="")
+     * @ORM\ManyToOne(targetEntity="RhuProgramacionDetalle", inversedBy="pagosProgramacionDetalleRel")
      * @ORM\JoinColumn(name="codigo_programacion_detalle_fk",referencedColumnName="codigo_programacion_detalle_pk")
      */
     protected $programacionDetalleRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="pagosEntidadSaludRel")
+     * @ORM\JoinColumn(name="codigo_entidad_salud_fk",referencedColumnName="codigo_entidad_pk")
+     */
+    protected $entidadSaludRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="pagosEntidadPensionRel")
+     * @ORM\JoinColumn(name="codigo_entidad_pension_fk",referencedColumnName="codigo_entidad_pk")
+     */
+    protected $entidadPensionRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuPagoDetalle", mappedBy="pagoRel" )
      */
     protected $pagosDetallesPagoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuProgramacion", inversedBy="pagosProgramacionRel")
+     * @ORM\JoinColumn(name="codigo_programacion_fk",referencedColumnName="codigo_programacion_pk")
+     */
+    protected $programacionRel;
 
     /**
      * @return mixed
@@ -187,6 +220,38 @@ class RhuPago
     public function setCodigoPagoTipoFk($codigoPagoTipoFk): void
     {
         $this->codigoPagoTipoFk = $codigoPagoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidadSaludFk()
+    {
+        return $this->codigoEntidadSaludFk;
+    }
+
+    /**
+     * @param mixed $codigoEntidadSaludFk
+     */
+    public function setCodigoEntidadSaludFk($codigoEntidadSaludFk): void
+    {
+        $this->codigoEntidadSaludFk = $codigoEntidadSaludFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidadPensionFk()
+    {
+        return $this->codigoEntidadPensionFk;
+    }
+
+    /**
+     * @param mixed $codigoEntidadPensionFk
+     */
+    public function setCodigoEntidadPensionFk($codigoEntidadPensionFk): void
+    {
+        $this->codigoEntidadPensionFk = $codigoEntidadPensionFk;
     }
 
     /**
@@ -267,6 +332,22 @@ class RhuPago
     public function setCodigoProgramacionDetalleFk($codigoProgramacionDetalleFk): void
     {
         $this->codigoProgramacionDetalleFk = $codigoProgramacionDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoProgramacionFk()
+    {
+        return $this->codigoProgramacionFk;
+    }
+
+    /**
+     * @param mixed $codigoProgramacionFk
+     */
+    public function setCodigoProgramacionFk($codigoProgramacionFk): void
+    {
+        $this->codigoProgramacionFk = $codigoProgramacionFk;
     }
 
     /**
@@ -384,6 +465,22 @@ class RhuPago
     /**
      * @return mixed
      */
+    public function getVrNeto()
+    {
+        return $this->vrNeto;
+    }
+
+    /**
+     * @param mixed $vrNeto
+     */
+    public function setVrNeto($vrNeto): void
+    {
+        $this->vrNeto = $vrNeto;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrAuxilioTransporte()
     {
         return $this->vrAuxilioTransporte;
@@ -496,6 +593,22 @@ class RhuPago
     /**
      * @return mixed
      */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEmpleadoRel()
     {
         return $this->empleadoRel;
@@ -560,6 +673,38 @@ class RhuPago
     /**
      * @return mixed
      */
+    public function getEntidadSaludRel()
+    {
+        return $this->entidadSaludRel;
+    }
+
+    /**
+     * @param mixed $entidadSaludRel
+     */
+    public function setEntidadSaludRel($entidadSaludRel): void
+    {
+        $this->entidadSaludRel = $entidadSaludRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadPensionRel()
+    {
+        return $this->entidadPensionRel;
+    }
+
+    /**
+     * @param mixed $entidadPensionRel
+     */
+    public function setEntidadPensionRel($entidadPensionRel): void
+    {
+        $this->entidadPensionRel = $entidadPensionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPagosDetallesPagoRel()
     {
         return $this->pagosDetallesPagoRel;
@@ -576,32 +721,16 @@ class RhuPago
     /**
      * @return mixed
      */
-    public function getUsuario()
+    public function getProgramacionRel()
     {
-        return $this->usuario;
+        return $this->programacionRel;
     }
 
     /**
-     * @param mixed $usuario
+     * @param mixed $programacionRel
      */
-    public function setUsuario($usuario): void
+    public function setProgramacionRel($programacionRel): void
     {
-        $this->usuario = $usuario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrNeto()
-    {
-        return $this->vrNeto;
-    }
-
-    /**
-     * @param mixed $vrNeto
-     */
-    public function setVrNeto($vrNeto): void
-    {
-        $this->vrNeto = $vrNeto;
+        $this->programacionRel = $programacionRel;
     }
 }

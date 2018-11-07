@@ -98,6 +98,16 @@ class RhuEntidad
     protected $novedadesEntidadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuPago", mappedBy="entidadSaludRel")
+     */
+    protected $pagosEntidadSaludRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuPago", mappedBy="entidadPensionRel")
+     */
+    protected $pagosEntidadPensionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEntidadPk()
@@ -351,5 +361,37 @@ class RhuEntidad
     public function setNovedadesEntidadRel($novedadesEntidadRel): void
     {
         $this->novedadesEntidadRel = $novedadesEntidadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosEntidadSaludRel()
+    {
+        return $this->pagosEntidadSaludRel;
+    }
+
+    /**
+     * @param mixed $pagosEntidadSaludRel
+     */
+    public function setPagosEntidadSaludRel($pagosEntidadSaludRel): void
+    {
+        $this->pagosEntidadSaludRel = $pagosEntidadSaludRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosEntidadPensionRel()
+    {
+        return $this->pagosEntidadPensionRel;
+    }
+
+    /**
+     * @param mixed $pagosEntidadPensionRel
+     */
+    public function setPagosEntidadPensionRel($pagosEntidadPensionRel): void
+    {
+        $this->pagosEntidadPensionRel = $pagosEntidadPensionRel;
     }
 }

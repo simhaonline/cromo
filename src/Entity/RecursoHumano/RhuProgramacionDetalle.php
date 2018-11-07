@@ -48,6 +48,11 @@ class RhuProgramacionDetalle
     private $vrSalario = 0;
 
     /**
+     * @ORM\Column(name="vr_neto", type="float", nullable=true)
+     */
+    private $vrNeto = 0;
+
+    /**
      * @ORM\Column(name="fecha_desde", type="date", nullable=true)
      */
     private $fechaDesde;
@@ -131,6 +136,11 @@ class RhuProgramacionDetalle
     protected $contratoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuPago", mappedBy="programacionDetalleRel")
+     */
+    protected $pagosProgramacionDetalleRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoProgramacionDetallePk()
@@ -141,7 +151,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $codigoProgramacionDetallePk
      */
-    public function setCodigoProgramacionDetallePk( $codigoProgramacionDetallePk ): void
+    public function setCodigoProgramacionDetallePk($codigoProgramacionDetallePk): void
     {
         $this->codigoProgramacionDetallePk = $codigoProgramacionDetallePk;
     }
@@ -157,7 +167,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $codigoProgramacionFk
      */
-    public function setCodigoProgramacionFk( $codigoProgramacionFk ): void
+    public function setCodigoProgramacionFk($codigoProgramacionFk): void
     {
         $this->codigoProgramacionFk = $codigoProgramacionFk;
     }
@@ -173,7 +183,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $codigoEmpleadoFk
      */
-    public function setCodigoEmpleadoFk( $codigoEmpleadoFk ): void
+    public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
     {
         $this->codigoEmpleadoFk = $codigoEmpleadoFk;
     }
@@ -189,7 +199,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $codigoContratoFk
      */
-    public function setCodigoContratoFk( $codigoContratoFk ): void
+    public function setCodigoContratoFk($codigoContratoFk): void
     {
         $this->codigoContratoFk = $codigoContratoFk;
     }
@@ -205,7 +215,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $dias
      */
-    public function setDias( $dias ): void
+    public function setDias($dias): void
     {
         $this->dias = $dias;
     }
@@ -221,7 +231,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $diasTransporte
      */
-    public function setDiasTransporte( $diasTransporte ): void
+    public function setDiasTransporte($diasTransporte): void
     {
         $this->diasTransporte = $diasTransporte;
     }
@@ -237,9 +247,25 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $vrSalario
      */
-    public function setVrSalario( $vrSalario ): void
+    public function setVrSalario($vrSalario): void
     {
         $this->vrSalario = $vrSalario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrNeto()
+    {
+        return $this->vrNeto;
+    }
+
+    /**
+     * @param mixed $vrNeto
+     */
+    public function setVrNeto($vrNeto): void
+    {
+        $this->vrNeto = $vrNeto;
     }
 
     /**
@@ -253,7 +279,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $fechaDesde
      */
-    public function setFechaDesde( $fechaDesde ): void
+    public function setFechaDesde($fechaDesde): void
     {
         $this->fechaDesde = $fechaDesde;
     }
@@ -269,7 +295,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $fechaHasta
      */
-    public function setFechaHasta( $fechaHasta ): void
+    public function setFechaHasta($fechaHasta): void
     {
         $this->fechaHasta = $fechaHasta;
     }
@@ -285,7 +311,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $horasDiurnas
      */
-    public function setHorasDiurnas( $horasDiurnas ): void
+    public function setHorasDiurnas($horasDiurnas): void
     {
         $this->horasDiurnas = $horasDiurnas;
     }
@@ -301,7 +327,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $horasNocturnas
      */
-    public function setHorasNocturnas( $horasNocturnas ): void
+    public function setHorasNocturnas($horasNocturnas): void
     {
         $this->horasNocturnas = $horasNocturnas;
     }
@@ -317,7 +343,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $horasFestivasDiurnas
      */
-    public function setHorasFestivasDiurnas( $horasFestivasDiurnas ): void
+    public function setHorasFestivasDiurnas($horasFestivasDiurnas): void
     {
         $this->horasFestivasDiurnas = $horasFestivasDiurnas;
     }
@@ -333,7 +359,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $horasFestivasNocturnas
      */
-    public function setHorasFestivasNocturnas( $horasFestivasNocturnas ): void
+    public function setHorasFestivasNocturnas($horasFestivasNocturnas): void
     {
         $this->horasFestivasNocturnas = $horasFestivasNocturnas;
     }
@@ -349,7 +375,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $horasExtrasOrdinariasDiurnas
      */
-    public function setHorasExtrasOrdinariasDiurnas( $horasExtrasOrdinariasDiurnas ): void
+    public function setHorasExtrasOrdinariasDiurnas($horasExtrasOrdinariasDiurnas): void
     {
         $this->horasExtrasOrdinariasDiurnas = $horasExtrasOrdinariasDiurnas;
     }
@@ -365,7 +391,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $horasExtrasOrdinariasNocturnas
      */
-    public function setHorasExtrasOrdinariasNocturnas( $horasExtrasOrdinariasNocturnas ): void
+    public function setHorasExtrasOrdinariasNocturnas($horasExtrasOrdinariasNocturnas): void
     {
         $this->horasExtrasOrdinariasNocturnas = $horasExtrasOrdinariasNocturnas;
     }
@@ -381,7 +407,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $horasExtrasFestivasDiurnas
      */
-    public function setHorasExtrasFestivasDiurnas( $horasExtrasFestivasDiurnas ): void
+    public function setHorasExtrasFestivasDiurnas($horasExtrasFestivasDiurnas): void
     {
         $this->horasExtrasFestivasDiurnas = $horasExtrasFestivasDiurnas;
     }
@@ -397,7 +423,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $horasExtrasFestivasNocturnas
      */
-    public function setHorasExtrasFestivasNocturnas( $horasExtrasFestivasNocturnas ): void
+    public function setHorasExtrasFestivasNocturnas($horasExtrasFestivasNocturnas): void
     {
         $this->horasExtrasFestivasNocturnas = $horasExtrasFestivasNocturnas;
     }
@@ -413,7 +439,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $horasRecargoNocturno
      */
-    public function setHorasRecargoNocturno( $horasRecargoNocturno ): void
+    public function setHorasRecargoNocturno($horasRecargoNocturno): void
     {
         $this->horasRecargoNocturno = $horasRecargoNocturno;
     }
@@ -429,7 +455,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $horasRecargoFestivoDiurno
      */
-    public function setHorasRecargoFestivoDiurno( $horasRecargoFestivoDiurno ): void
+    public function setHorasRecargoFestivoDiurno($horasRecargoFestivoDiurno): void
     {
         $this->horasRecargoFestivoDiurno = $horasRecargoFestivoDiurno;
     }
@@ -445,7 +471,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $horasRecargoFestivoNocturno
      */
-    public function setHorasRecargoFestivoNocturno( $horasRecargoFestivoNocturno ): void
+    public function setHorasRecargoFestivoNocturno($horasRecargoFestivoNocturno): void
     {
         $this->horasRecargoFestivoNocturno = $horasRecargoFestivoNocturno;
     }
@@ -461,7 +487,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $programacionRel
      */
-    public function setProgramacionRel( $programacionRel ): void
+    public function setProgramacionRel($programacionRel): void
     {
         $this->programacionRel = $programacionRel;
     }
@@ -477,7 +503,7 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $empleadoRel
      */
-    public function setEmpleadoRel( $empleadoRel ): void
+    public function setEmpleadoRel($empleadoRel): void
     {
         $this->empleadoRel = $empleadoRel;
     }
@@ -493,11 +519,24 @@ class RhuProgramacionDetalle
     /**
      * @param mixed $contratoRel
      */
-    public function setContratoRel( $contratoRel ): void
+    public function setContratoRel($contratoRel): void
     {
         $this->contratoRel = $contratoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPagosProgramacionDetalleRel()
+    {
+        return $this->pagosProgramacionDetalleRel;
+    }
 
-
+    /**
+     * @param mixed $pagosProgramacionDetalleRel
+     */
+    public function setPagosProgramacionDetalleRel($pagosProgramacionDetalleRel): void
+    {
+        $this->pagosProgramacionDetalleRel = $pagosProgramacionDetalleRel;
+    }
 }

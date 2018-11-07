@@ -78,7 +78,7 @@ class ProgramacionController extends BaseController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arProgramacion->setDias(($arProgramacion->getFechaDesde()->diff($arProgramacion->getFechaHasta()))->days+1);
+                $arProgramacion->setDias(($arProgramacion->getFechaDesde()->diff($arProgramacion->getFechaHasta()))->days + 1);
                 $em->persist($arProgramacion);
                 $em->flush();
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $arProgramacion->getCodigoProgramacionPk()]));
@@ -106,27 +106,27 @@ class ProgramacionController extends BaseController
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_lista'));
             }
         }
-        $arrBtnCargarContratos = ['attr' => ['class' => 'btn btn-sm btn-default'],'label' => 'Cargar contratos'];
-        $arrBtnEliminarTodos = ['attr' => ['class' => 'btn btn-sm btn-danger'],'label' => 'Eliminar todos'];
-        $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'],'label' => 'Eliminar'];
-        $form = Estandares::botonera($arProgramacion->getEstadoAutorizado(), $arProgramacion->getEstadoAprobado(),$arProgramacion->getEstadoAnulado());
-        $form->add('btnCargarContratos',SubmitType::class, $arrBtnCargarContratos);
-        $form->add('btnEliminar',SubmitType::class, $arrBtnEliminar);
-        $form->add('btnEliminarTodos',SubmitType::class, $arrBtnEliminarTodos);
+        $arrBtnCargarContratos = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Cargar contratos'];
+        $arrBtnEliminarTodos = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar todos'];
+        $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar'];
+        $form = Estandares::botonera($arProgramacion->getEstadoAutorizado(), $arProgramacion->getEstadoAprobado(), $arProgramacion->getEstadoAnulado());
+        $form->add('btnCargarContratos', SubmitType::class, $arrBtnCargarContratos);
+        $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
+        $form->add('btnEliminarTodos', SubmitType::class, $arrBtnEliminarTodos);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnCargarContratos')->isClicked()) {
                 $em->getRepository(RhuProgramacion::class)->cargarContratos($arProgramacion);
             }
-            if($form->get('btnEliminar')->isClicked()){
+            if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(RhuProgramacionDetalle::class)->eliminar($arrSeleccionados);
                 $em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
             }
-            if($form->get('btnAutorizar')->isClicked()){
+            if ($form->get('btnAutorizar')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-                $strResultado = $em->getRepository(RhuProgramacion::class)->autorizar($arProgramacion);
+                $strResultado = $em->getRepository(RhuProgramacion::class)->autorizar($arProgramacion, $this->getUser()->getUsername());
                 if ($strResultado == "") {
                     return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
                 } else {
@@ -134,7 +134,7 @@ class ProgramacionController extends BaseController
                 }
 
             }
-            if($form->get('btnEliminarTodos')->isClicked()){
+            if ($form->get('btnEliminarTodos')->isClicked()) {
                 $em->getRepository(RhuProgramacionDetalle::class)->eliminarTodoDetalles($arProgramacion);
                 $em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
             }

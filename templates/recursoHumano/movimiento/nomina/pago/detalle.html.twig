@@ -92,11 +92,11 @@
                                 <td>{{ arPagoDetalle.porcentaje }}</td>
                                 <td>{{ arPagoDetalle.horas }}</td>
                                 <td>{{ arPagoDetalle.dias }}</td>
-                                <td>{{ arPagoDetalle.vrHora }}</td>
+                                <td class="numero">$ {{ arPagoDetalle.vrHora |number_format(0, '.', ',') }}</td>
                                 <td>{{ arPagoDetalle.operacion == 1 ? 'SUMA' : 'RESTA' }}</td>
-                                <td>{{ arPagoDetalle.vrPago }}</td>
-                                <td>{{ arPagoDetalle.vrIngresoBasePrestacion }}</td>
-                                <td>{{ arPagoDetalle.vrIngresoBaseCotizacion }}</td>
+                                <td class="numero">$ {{ arPagoDetalle.vrPago |number_format(0, '.', ',') }}</td>
+                                <td class="numero">$ {{ arPagoDetalle.vrIngresoBasePrestacion |number_format(0, '.', ',') }}</td>
+                                <td class="numero">$ {{ arPagoDetalle.vrIngresoBaseCotizacion |number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                                        value="{{ arPagoDetalle.codigoPagoDetallePk }}">
                                 </td>

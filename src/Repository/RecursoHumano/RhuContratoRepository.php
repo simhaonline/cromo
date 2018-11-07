@@ -54,8 +54,11 @@ class RhuContratoRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 'c')
             ->select('c.codigoContratoPk')
+            ->addSelect('c.fechaDesde')
+            ->addSelect('c.fechaHasta')
+            ->addSelect('c.vrSalario')
             ->where('c.codigoContratoPk = ' . $codigoContrato);
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery()->execute();
     }
 
     public function parametrosExcel()

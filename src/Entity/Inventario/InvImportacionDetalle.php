@@ -47,9 +47,11 @@ class InvImportacionDetalle
     private $precioLocal = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvImportacion" ,inversedBy="importacionDetallesRel")
-     * @ORM\JoinColumn(name="cod")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inventario\InvImportacion", inversedBy="importacionesDetallesImportacionRel")
+     * @ORM\JoinColumn(name="codigo_importacion_fk", referencedColumnName="codigo_importacion_pk")
      */
-    private $importacionRel;
+    protected $importacionRel;
+
+
 
 }

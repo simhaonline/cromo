@@ -40,4 +40,10 @@ class InvImportacion
      * @ORM\Column(name="comentarios" ,type="string")
      */
     private $comentarios;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvImportacionDetalle", mappedBy="importacionRel")
+     */
+    protected $importacionesDetallesImportacionRel;
+
 }

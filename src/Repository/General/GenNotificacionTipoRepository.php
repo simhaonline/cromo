@@ -34,11 +34,12 @@ class GenNotificacionTipoRepository extends ServiceEntityRepository
             ->addSelect('m.codigoModuloFk');
 
         if($session->get('arGenNotificacionTipoFiltroModulo')!="" && $session->get('arGenNotificacionTipoFiltroModulo')!=null){
-            $arNotificacionTipo=$arNotificacionTipo->andWhere("m.codigoModuloFk='{$session->get('arGenNotificacionTipoFiltroModulo')}'");
+            $modulo=$session->get('arGenNotificacionTipoFiltroModulo')->getCodigoModuloPk();
+            $arNotificacionTipo=$arNotificacionTipo->andWhere("m.codigoModuloFk='{$modulo}'");
         }
 
         if($session->get('arGenNotificacionTipoFiltroModelo')!="" && $session->get('arGenNotificacionTipoFiltroModelo')!=null){
-            $arNotificacionTipo=$arNotificacionTipo->andWhere("m.codigoModeloPkFk='{$session->get('arGenNotificacionTipoFiltroModelo')}'");
+            $arNotificacionTipo=$arNotificacionTipo->andWhere("m.codigoModeloPk='{$session->get('arGenNotificacionTipoFiltroModelo')}'");
         }
 
         $arNotificacionTipo=$arNotificacionTipo->getQuery()->getResult();
@@ -53,6 +54,7 @@ class GenNotificacionTipoRepository extends ServiceEntityRepository
             ->from('App:Seguridad\Usuario','u')
             ->select('u.id')
             ->addSelect('u.nombreCorto')
+            ->addSelect('u.username')
             ->where("u.id !='{$codigoUsuario}'");
 
             if($session->get('arGenNotificacionTipoNombreUsuario')!=="" || $session->get('arGenNotificacionTipoNombreUsuario')!==null){

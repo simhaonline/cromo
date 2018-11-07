@@ -100,7 +100,6 @@
             var selectModelo='{{ arModeloSelect }}';
             var selector = $('.modulo');
             var selectorAct=$('.modelo');
-            console.log(selectModelo);
             if (selector.attr('name') !== '') {
                 selectorAct.value=selectModelo;
                 $.ajax({
@@ -128,7 +127,7 @@
                     }
                 });
             }
-        })
+        });
 
         $('.estadoActivo').change(function () {
             var checked=$(this);

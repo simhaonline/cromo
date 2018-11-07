@@ -27,9 +27,14 @@ class GenNotificacion
     private $fecha;
 
     /**
-     * @ORM\Column(name="codigo_usuario_fk", type="integer", nullable=false)
+     * @ORM\Column(name="codigo_usuario_receptor_fk", type="integer", nullable=false)
      */
-    private $codigoUsuarioFk;
+    private $codigoUsuarioReceptorFk;
+
+    /**
+     * @ORM\Column(name="codigo_usuario_emisor_fk", type="integer", nullable=false)
+     */
+    private $codigoUsuarioEmisorFk;
 
     /**
      * @return mixed
@@ -76,19 +81,37 @@ class GenNotificacion
     /**
      * @return mixed
      */
-    public function getCodigoUsuarioFk()
+    public function getCodigoUsuarioReceptorFk()
     {
-        return $this->codigoUsuarioFk;
+        return $this->codigoUsuarioReceptorFk;
     }
 
     /**
-     * @param mixed $codigoUsuarioFk
+     * @param mixed $codigoUsuarioReceptorFk
      */
-    public function setCodigoUsuarioFk($codigoUsuarioFk)
+    public function setCodigoUsuarioReceptorFk($codigoUsuarioReceptorFk)
     {
-        $this->codigoUsuarioFk = $codigoUsuarioFk;
+        $this->codigoUsuarioReceptorFk = $codigoUsuarioReceptorFk;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoUsuarioEmisorFk()
+    {
+        return $this->codigoUsuarioEmisorFk;
+    }
+
+    /**
+     * @param mixed $codigoUsuarioEmisorFk
+     */
+    public function setCodigoUsuarioEmisorFk($codigoUsuarioEmisorFk)
+    {
+        $this->codigoUsuarioEmisorFk = $codigoUsuarioEmisorFk;
+        return $this;
+    }
+
 
 
 }

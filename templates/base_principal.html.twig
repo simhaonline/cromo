@@ -30,6 +30,25 @@
         <!-- /.navbar-header -->
 
         <ul class="nav navbar-top-links navbar-right">
+
+            <li class="dropdown">
+                <a class="notificacionPendiente dropdown-toggle" data-toggle="dropdown" href="#">
+                </a>
+                <ul class="dropdown-menu dropdown-alerts">
+                    <li>
+                        <a href="#">
+                            <div>
+                                <i class="fa fa-comment fa-fw"></i> New Comment
+                                <span class="pull-right text-muted small">4 minutes ago</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+
+                </ul>
+                <!-- /.dropdown-alerts -->
+            </li>
+
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
@@ -124,6 +143,30 @@
     <script src="{{ asset('dist/js/sb-admin-2.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="{{ asset('js/general.js') }}"></script>
+    <script src="{{ asset('vendor/jquery/jquery.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            var selector = $('.notificacionPendiente');
+            console.log(selector);
+            // if (selector.attr('name') !== '') {
+            $.ajax({
+                url: "{{ path('general_administracion_notificacion_notificacion') }}",
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    id: selector.val(),
+                },
+                success: function (respuestas) {
+                    console.log(respuestas);
+                    selector.append('<i class="fa fa-bell fa-fw"></i><span class="badge badge-notify" style="margin-top:-22px;margin-left:-24px">5</span> <i class="fa fa-caret-down"></i>');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+            // }
+        });
+    </script>
 {% endblock %}
 </body>
 </html>

@@ -11,7 +11,7 @@ class GenNotificacionTipo
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\Column(type="integer", name="codigo_notificacion_tipo_pk", unique=true, nullable=false)
      */
     private $codigoNotificacionTipoPk;
@@ -49,6 +49,17 @@ class GenNotificacionTipo
     {
         return $this->codigoNotificacionTipoPk;
     }
+
+    /**
+     * @param mixed $codigoNotificacionTipoPk
+     */
+    public function setCodigoNotificacionTipoPk($codigoNotificacionTipoPk)
+    {
+        $this->codigoNotificacionTipoPk = $codigoNotificacionTipoPk;
+        return $this;
+    }
+
+
 
     /**
      * @return mixed

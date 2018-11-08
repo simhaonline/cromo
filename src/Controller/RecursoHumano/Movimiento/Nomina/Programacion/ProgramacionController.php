@@ -141,8 +141,7 @@ class ProgramacionController extends BaseController
                 $em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
             }
         }
-        $arProgramacion = $em->getRepository($this->clase)->find($id);
-        $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()]);
+        $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->lista($arProgramacion->getCodigoProgramacionPk());
         return $this->render('recursoHumano/movimiento/nomina/programacion/detalle.html.twig', [
             'form' => $form->createView(),
             'arProgramacion' => $arProgramacion,

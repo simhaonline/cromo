@@ -36,12 +36,12 @@
             <td class="td-in-well" style="text-transform: uppercase;"></td>
         </tr>
         <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="titulo">DIAS:</td>
+            <td class="td-in-well">{{ arProgramacion.dias }}</td>
             <td class="titulo">HASTA PERIODO:</td>
             <td class="td-in-well">{{ arProgramacion.fechaHastaPeriodo | date('Y-m-d') }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="titulo">VR.NETO</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arProgramacion.vrNeto | number_format(0, '.', ',') }}</td>
         </tr>
     </table>
     <ul class="nav nav-tabs">
@@ -71,6 +71,7 @@
                             <th title="Recargos nocturnos">RN</th>
                             <th title="Recargo festivo diurno">RFD</th>
                             <th title="Recargo festivo nocturno">RFN</th>
+                            <th>VR.NETO</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -79,8 +80,8 @@
                         {% for arProgramacionDetalle in arProgramacionDetalles %}
                             <tr>
                                 <td>{{ arProgramacionDetalle.codigoProgramacionDetallePk }}</td>
-                                <td>{{ arProgramacionDetalle.empleadoRel.numeroIdentificacion }}</td>
-                                <td>{{ arProgramacionDetalle.empleadoRel.nombreCorto }}</td>
+                                <td>{{ arProgramacionDetalle.numeroIdentificacion }}</td>
+                                <td>{{ arProgramacionDetalle.nombreCorto }}</td>
                                 <td>{{ arProgramacionDetalle.fechaDesde | date('Y-m-d') }}</td>
                                 <td>{{ arProgramacionDetalle.fechaHasta | date('Y-m-d') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>
@@ -95,6 +96,7 @@
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoNocturno | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoFestivoDiurno | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoFestivoNocturno | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.vrNeto | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;"><a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_detalle_resumen',{ 'id': arProgramacionDetalle.codigoProgramacionDetallePk }) }}','resumen',600,900)"><i class="fa fa-table" style="color: black;font-size: large;"></i></a></td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                                        value="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}">

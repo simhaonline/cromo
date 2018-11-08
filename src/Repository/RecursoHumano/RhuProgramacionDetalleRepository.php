@@ -61,4 +61,28 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->addSelect('ca.nombre')
             ->where("pd.codigoProgramacionDetallePk = {$id}")->getQuery()->execute()[0];
     }
+
+    public function lista($id){
+        return $this->_em->createQueryBuilder()->from(RhuProgramacionDetalle::class,'pd')
+            ->select('pd.codigoProgramacionDetallePk')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('pd.fechaDesde')
+            ->addSelect('pd.fechaHasta')
+            ->addSelect('pd.vrSalario')
+            ->addSelect('pd.vrNeto')
+            ->addSelect('pd.horasDiurnas')
+            ->addSelect('pd.horasNocturnas')
+            ->addSelect('pd.horasFestivasDiurnas')
+            ->addSelect('pd.horasFestivasNocturnas')
+            ->addSelect('pd.horasExtrasOrdinariasDiurnas')
+            ->addSelect('pd.horasExtrasOrdinariasNocturnas')
+            ->addSelect('pd.horasExtrasFestivasDiurnas')
+            ->addSelect('pd.horasExtrasFestivasNocturnas')
+            ->addSelect('pd.horasRecargoNocturno')
+            ->addSelect('pd.horasRecargoFestivoDiurno')
+            ->addSelect('pd.horasRecargoFestivoNocturno')
+            ->leftJoin('pd.empleadoRel','e')
+            ->where("pd.codigoProgramacionFk = {$id}")->getQuery()->execute();
+    }
 }

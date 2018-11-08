@@ -5,7 +5,6 @@ namespace App\Controller\General\Informe\Log;
 use App\Controller\Estructura\AdministracionController;
 use App\Controller\Estructura\EntityListener;
 use App\Entity\General\GenModelo;
-use App\General\General;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

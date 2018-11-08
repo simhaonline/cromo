@@ -2,13 +2,13 @@
 
 namespace App\Controller\General\Administracion\Notificacion;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Zend\Json\Json;
 
-class NotificacionController extends AbstractController
+class NotificacionController extends Controller
 {
     /**
      * @Route("/general/administracion/notificacion/notificacion", name="general_administracion_notificacion_notificacion")
@@ -37,5 +37,19 @@ class NotificacionController extends AbstractController
         $em->flush();
 
         return new JsonResponse(true);
+    }
+
+    /**
+     * @param TokenStorageInterface $user
+     * @Route("/general/administracion/notificacion/todasNotificaciones", name="general_administracion_notificacion_tipo__todasNotificaciones")
+     */
+    public function todasNotificaciones(Request $request, TokenStorageInterface $user){
+        $em=$this->getDoctrine()->getManager();
+        $usuario=$user->getToken()->getUser();
+        $arNotificacion=$em->getRepository('App:General\GenNotificacion')->lista($usuario->getId());
+        $paginator  = $this->get('knp_paginator');
+        $arGenNotificacion= $paginator->paginate($arNotificacion,$request->query->getInt('page',1),20);
+        return $this->render('general/administracion/notificacion/notificacion/lista.html.twig',
+            ['arGenNotificacion' => $arGenNotificacion]);
     }
 }

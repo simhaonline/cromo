@@ -34,7 +34,7 @@
             <li class="dropdown">
                 <a class="notificacionPendiente dropdown-toggle" data-toggle="dropdown" href="" onclick="verNotificacionesPendientes()">
                 </a>
-                <ul class="notificaciones dropdown-menu dropdown-alerts">
+                <ul class="notificaciones dropdown-menu dropdown-alerts" style="width: 600px">
                 </ul>
                 <!-- /.dropdown-alerts -->
             </li>
@@ -144,17 +144,19 @@
                 type: "GET",
                 dataType: "JSON",
                 success: function (respuestas) {
-                        console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
                     if(respuestas['notificacionesPendientes'] && respuestas['notificacionesPendientes']>0){
+                    selector.append('<i class="fa fa-bell fa-fw"></i><span class="badge badge-notify" style="margin-top:-22px;margin-left:-24px">'+" "+respuestas['notificacionesPendientes']+'</span> <i class="fa fa-caret-down"></i>');
                     $.each(respuestas['notificaciones'],(key,notificacion)=>{
-                        notificaciones.append('<li><a href="#"><div><i class="fa fa-comment fa-fw"></i>'+notificacion['nombre']+'<span class="pull-right text-muted small">'+moment(notificacion['fecha'], "YYYYMMDDhms").fromNow()+'</span></div><a></li>');
-                        notificaciones.append('<li class="divider"></li>');
+                        if(key<7){
+                        notificaciones.append('<li><a href="#"><div><i class="fa fa-comment fa-fw"></i><span style="font-size: 13px">'+notificacion['nombre']+'</span><span class="pull-right text-muted small">'+moment(notificacion['fecha'], "YYYYMMDDhms").fromNow()+'</span></div></a></li><li class="divider"></li>');
+                        }
                     });
-                    selector.append('<i class="fa fa-bell fa-fw"></i><span class="badge badge-notify" style="margin-top:-22px;margin-left:-24px">'+respuestas['notificacionesPendientes']+'</span> <i class="fa fa-caret-down"></i>');
                     }
                     else{
                         selector.append('<i class="fa fa-bell fa-fw"></i><i class="fa fa-caret-down"></i>');
+                        notificaciones.append('<li><a href="#"><div><i class="fa fa-comment fa-fw"></i><span style="font-size: 13px" "> No tiene notificaciones</span></div></a></li><li class="divider"></li>');
                     }
+                    notificaciones.append('<li><a class="text-center" href="{{ path('general_administracion_notificacion_tipo__todasNotificaciones') }}"><strong>Ver todas </strong><i class="fa fa-angle-right"></i></a></li>');
                 },
                 error: function (error) {
                     console.log(error);

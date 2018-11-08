@@ -25,6 +25,7 @@ class GenConfiguracionEntidad extends Fixture
             'facturaTipo,admin,general,0,0',
             'ordenTipo,admin,general,0,0',
             'documentoTipo,admin,general,0,0',
+
             'tercero,admin,general,0,0',
             'orden,movimiento,inventario,1,1',
             'movimiento,movimiento,inventario,0,1',
@@ -35,7 +36,8 @@ class GenConfiguracionEntidad extends Fixture
             'sucursal,administracion,general,0,0',
             'cotizacionTipo,admin,general,0,0',
             'remisionTipo,admin,comercial,0,0',
-            'bodegaUsuario,admin,inventario,1,0'];
+            'bodegaUsuario,admin,inventario,1,0',
+            'importacionTipo,admin,inventario,0,0'];
         $this->setConfiguracionEntidades($arrModuloInventario, $em, 'inventario');
         /////////////////              FIN ESTRACTURA MODULO DE INVENTARIO                             ////////////////
 //
@@ -87,6 +89,15 @@ class GenConfiguracionEntidad extends Fixture
         ];
         $this->setConfiguracionEntidades($arrModuloContabilidad, $em, 'financiero');
 //        /////////////////                 FIN ESTRACTURA MODULO DE CONTABILIDAD                        ////////////////
+//
+//
+
+        ///////////////////              INICIO ESTRACTURA MODULO DE TURNOS                        ////////////////
+        $arrModulTurno = [
+            'contratoTipo,administracion,general,0,0'
+        ];
+        $this->setConfiguracionEntidades($arrModulTurno, $em, 'turno');
+//        /////////////////                 FIN ESTRACTURA MODULO DE TURNOS                        ////////////////
 
 
 //        /////////////////              INICIO ESTRACTURA MODULO DE GENERAL SISTEMA                     ////////////////
@@ -159,6 +170,9 @@ class GenConfiguracionEntidad extends Fixture
                 break;
             case 'transporte':
                 $prefijo = 'tte';
+                break;
+            case 'turno':
+                $prefijo = 'tur';
                 break;
             case 'general':
                 $prefijo = 'gen';

@@ -8,7 +8,7 @@
                     <td class="titulo">EMPLEADO:</td>
                     <td class="td-in-well">{{ arProgramacionDetalle.nombreCorto }}</td>
                     <td class="titulo">SALARIO:</td>
-                    <td class="td-in-well numero" style="text-transform: uppercase;">{{ arProgramacionDetalle.vrSalario }}</td>
+                    <td class="td-in-well numero" style="text-transform: uppercase;">$ {{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>
                 </tr>
                 <tr>
                     <td class="titulo">FECHA INGRESO/RETIRO:</td>

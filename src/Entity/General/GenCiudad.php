@@ -49,6 +49,11 @@ class GenCiudad
     protected $tteClientesCiudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCliente", mappedBy="ciudadRel")
+     */
+    protected $turClientesCiudadRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinTercero", mappedBy="ciudadRel")
      */
     protected $finTercerosCiudadRel;

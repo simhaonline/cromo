@@ -109,8 +109,15 @@ class ProgramacionController extends BaseController
             }
         }
         $arrBtnCargarContratos = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Cargar contratos'];
-        $arrBtnEliminarTodos = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar todos'];
-        $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar'];
+        $arrBtnEliminarTodos   = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar todos'];
+        $arrBtnEliminar        = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar'];
+        if($arProgramacion->getEstadoAutorizado()){
+            $arrBtnCargarContratos['attr']['class'] .= ' hidden';
+            $arrBtnEliminarTodos['attr']['class'] .= ' hidden';
+            $arrBtnEliminar['attr']['class'] .= ' hidden';
+        }
+
+
         $form = Estandares::botonera($arProgramacion->getEstadoAutorizado(), $arProgramacion->getEstadoAprobado(), $arProgramacion->getEstadoAnulado());
         $form->add('btnCargarContratos', SubmitType::class, $arrBtnCargarContratos);
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
@@ -122,24 +129,24 @@ class ProgramacionController extends BaseController
                 $em->getRepository(RhuProgramacion::class)->cargarContratos($arProgramacion);
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $em->getRepository(RhuProgramacionDetalle::class)->eliminar($arrSeleccionados);
-                $em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
+                $em->getRepository(RhuProgramacionDetalle::class)->eliminar($arrSeleccionados, $arProgramacion);
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-                $strResultado = $em->getRepository(RhuProgramacion::class)->autorizar($arProgramacion, $this->getUser()->getUsername());
-                if ($strResultado == "") {
-                    return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
-                } else {
-                    Mensajes::error($strResultado);
-                }
-
+                $em->getRepository(RhuProgramacion::class)->autorizar($arProgramacion, $this->getUser()->getUsername());
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $em->getRepository(RhuProgramacion::class)->desautorizar($arProgramacion);
             }
             if ($form->get('btnEliminarTodos')->isClicked()) {
-                $em->getRepository(RhuProgramacionDetalle::class)->eliminarTodoDetalles($arProgramacion);
-                $em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
+                if (!$arProgramacion->getEstadoAutorizado()) {
+                    $em->getRepository(RhuProgramacionDetalle::class)->eliminarTodoDetalles($arProgramacion);
+                }
             }
+            return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
         }
         $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->lista($arProgramacion->getCodigoProgramacionPk());
         return $this->render('recursoHumano/movimiento/nomina/programacion/detalle.html.twig', [

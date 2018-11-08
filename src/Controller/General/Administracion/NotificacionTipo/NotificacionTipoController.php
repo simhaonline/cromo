@@ -30,7 +30,7 @@ class NotificacionTipoController extends BaseController
     protected $nombre = "NotificacionTipo";
 
     /**
-     * @Route("/general/administracion/notificaciontipo/nuevaNotificacionTipo/lista", name="general_administracion_notificacion_tipo_nuevaNotificacionTipo_lista")
+     * @Route("/general/administracion/notificaciontipo/lista", name="general_administracion_notificacion_tipo_lista")
      */
     public function lista(Request $request){
         $em=$this->getDoctrine()->getManager();
@@ -49,23 +49,34 @@ class NotificacionTipoController extends BaseController
                 'data' => $session->get('arGenNotificacionTipoFiltroModulo')||""
             ))
             ->add('cbFiltroModelo', ChoiceType::class, array(
-                'data' => "",
+                'required'=>false,
                 'placeholder' => "TODOS",
             ))
+            ->add('btnFiltrar',SubmitType::class, ['label' => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+                $arModeloSelect=$request->request->get('form');
+            $arModeloSelect=$arModeloSelect['cbFiltroModelo'];
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('arGenNotificacionTipoFiltroModulo', $form->get('cbFiltroModulo')->getData());
+                $session->set('arGenNotificacionTipoFiltroModelo', $arModeloSelect);
+            }
+        }
         $arNotificacionTipo=$em->getRepository('App:General\GenNotificacionTipo')->lista();
 
         return $this->render('general/administracion/notificacion_tipo/notificacion_tipo/lista.html.twig',[
             'form'=>$form->createView(),
             'arNotificaionTipo'=>$arNotificacionTipo,
+            'arModeloSelect'=>$arModeloSelect??""
         ]);
     }
 
     /**
-     * @Route("/general/administracion/notificaciontipo/nuevaNotificacionTipo/nuevo", name="general_administracion_notificacion_tipo_nuevaNotificacionTipo_nuevo")
+     * @Route("/general/administracion/notificaciontipo/editar/{codigoNotificacion}", name="general_administracion_notificacion_tipo__editar")
      */
-    public function nuevo(Request $request, TokenStorageInterface $user)
+    public function editar(Request $request, TokenStorageInterface $user, $codigoNotificacion)
     {
         $em=$this->getDoctrine()->getManager();
         $session = new Session();
@@ -77,10 +88,10 @@ class NotificacionTipoController extends BaseController
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')) {
+            if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('arGenNotificacionTipoNombreUsuario', $form->get('txtNombreUsuario')->getData());
             }
-            if ($form->get('btnGuardar')) {
+            if ($form->get('btnGuardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 if ($arrSeleccionados) {
                     $usuariosExistentes=true;
@@ -96,30 +107,34 @@ class NotificacionTipoController extends BaseController
                     }
                     if ($usuariosExistentes) {
 
-                        $arNotificacionTipo = $em->getRepository('App:General\GenNotificacionTipo')->find(3);
+                        $arNotificacionTipo = $em->getRepository('App:General\GenNotificacionTipo')->find($codigoNotificacion);
                         $arNotificacionTipo
                             ->setUsuarios($usuarios?json_encode($usuarios):null);
                             $em->persist($arNotificacionTipo);
-                        }
+                    }
                     $em->flush();
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                     $session->set('arGenNotificacionTipoNombreUsuario', null);
                 }
             }
         }
+        $arUsuarioNotificacion=$em->getRepository('App:General\GenNotificacionTipo')->find($codigoNotificacion)->getUsuarios();
+        $arUsuarioNotificacion=json_decode($arUsuarioNotificacion);
+
         $arUsuario=$em->getRepository('App:General\GenNotificacionTipo')->listaUsuarios($usuario->getId());
         return $this->render('general/administracion/notificacion_tipo/notificacion_tipo/nuevo.html.twig',[
            'form'=>$form->createView(),
             'arUsuario'=>$arUsuario,
+            'arUsuarioNotificacion'=>$arUsuarioNotificacion,
         ]);
     }
 
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/comboxDependienteModelo", name="general_administracion_notificacion_tipo_nuevaNotificacionTipo_comboDependiente")
+     * @Route("/comboxDependienteModelo", name="general_administracion_notificacion_tipo__comboDependiente")
      */
-    public function ajaxNivel(Request $request)
+    public function comboxDependienteModelo(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -129,5 +144,23 @@ class NotificacionTipoController extends BaseController
 
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/cambiarEstadoNotificacion", name="general_administracion_notificacion_tipo__cambiarEstadoNotificacion")
+     */
+    public function cambiarEstadoNotificacion(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $codigoNotificacionTipo=$request->query->get('id');
+       try{
+        $arNotificacionTipo=$em->getRepository('App:General\GenNotificacionTipo')->find($codigoNotificacionTipo);
+        $arNotificacionTipo->setEstadoActivo(!$arNotificacionTipo->getEstadoActivo());
+        $em->persist($arNotificacionTipo);
+        $em->flush();
+        return new JsonResponse(true);
+       }catch (\Exception $exception){
+           return new JsonResponse(false);
+       }
+    }
 
 }

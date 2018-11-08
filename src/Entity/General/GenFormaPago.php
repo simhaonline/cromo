@@ -32,6 +32,11 @@ class GenFormaPago
     protected $tteClientesFormaPagoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCliente", mappedBy="formaPagoRel")
+     */
+    protected $turClientesFormaPagoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvTercero", mappedBy="formaPagoRel")
      */
     protected $invTercerosFormaPagoRel;

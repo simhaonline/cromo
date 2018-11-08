@@ -11,6 +11,9 @@ class GenModelo extends Fixture
     public function load(ObjectManager $manager )
     {
         $arrayGenModulo= array(
+            array('modulo'=>'Turno','modelo'=>array(
+                'TurCliente',
+            )),
             array('modulo'=>'Cartera','modelo'=>array(
                 'CarCliente',
                 'CarConsecutivo',

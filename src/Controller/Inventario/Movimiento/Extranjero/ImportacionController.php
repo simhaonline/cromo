@@ -200,6 +200,7 @@ class ImportacionController extends ControllerListenerGeneral
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
             ->add('txtReferenciaItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
+            ->add('btnGuardarCerrar', SubmitType::class, ['label' => 'Guardar y cerrar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
@@ -207,7 +208,25 @@ class ImportacionController extends ControllerListenerGeneral
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
-                $session->set('filtroInvBuscarReferenciaNombre', $form->get('txtReferenciaItem')->getData());
+                $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
+            }
+            if ($form->get('btnGuardarCerrar')->isClicked()) {
+                $arrItems = $request->request->get('itemCantidad');
+                if (count($arrItems) > 0) {
+                    foreach ($arrItems as $codigoItem => $cantidad) {
+                        if ($cantidad != '' && $cantidad != 0) {
+                            $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
+                            $arImportacionDetalle = new InvImportacionDetalle();
+                            $arImportacionDetalle->setImportacionRel($arImportacion);
+                            $arImportacionDetalle->setItemRel($arItem);
+                            $arImportacionDetalle->setCantidad($cantidad);
+                            $em->persist($arImportacionDetalle);
+                        }
+                    }
+                    $em->flush();
+                    $em->getRepository(InvImportacion::class)->liquidar($codigoImportacion);
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                }
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -224,7 +243,7 @@ class ImportacionController extends ControllerListenerGeneral
                     }
                     $em->flush();
                     $em->getRepository(InvImportacion::class)->liquidar($codigoImportacion);
-                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    echo "<script languaje='javascript' type='text/javascript'>window.opener.location.reload();</script>";
                 }
             }
         }

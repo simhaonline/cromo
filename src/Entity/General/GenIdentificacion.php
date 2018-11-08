@@ -42,6 +42,11 @@ class GenIdentificacion
     protected $tteClientesIdentificacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCliente", mappedBy="identificacionRel")
+     */
+    protected $turClientesIdentificacionRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDestinatario", mappedBy="identificacionRel")
      */
     protected $tteDestinatariosIdentificacionRel;

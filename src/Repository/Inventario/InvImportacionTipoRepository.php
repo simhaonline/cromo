@@ -16,6 +16,18 @@ class InvImportacionTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, InvImportacionTipo::class);
     }
 
+    public function camposPredeterminados()
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()->from('App:Inventario\InvImportacionTipo', 'it');
+        $qb
+            ->select('it.codigoImportacionTipoPk AS ID')
+            ->addSelect('it.nombre AS NOMBRE')
+            ->addSelect('it.consecutivo AS CONSECUTIVO')
+            ->orderBy('it.codigoImportacionTipoPk', 'DESC');
+        $dql = $this->getEntityManager()->createQuery($qb->getDQL());
+        return $dql->execute();
+    }
+
     public function lista(): array
     {
         $session = new Session();

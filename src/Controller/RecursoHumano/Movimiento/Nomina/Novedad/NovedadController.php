@@ -60,8 +60,11 @@ class NovedadController extends BaseController
     {
         $em = $this->getDoctrine()->getManager();
         $arNovedad = new RhuNovedad();
-        if ($id) {
+        if ($id != 0) {
             $arNovedad = $em->getRepository(RhuNovedad::class)->find($id);
+        } else {
+            $arNovedad->setFechaDesde(new \DateTime('now'));
+            $arNovedad->setFechaHasta(new \DateTime('now'));
         }
         $form = $this->createForm($this->claseFormulario, $arNovedad);
         $form->handleRequest($request);

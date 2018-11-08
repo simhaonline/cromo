@@ -27,7 +27,7 @@ class GenNotificacionTipoRepository extends ServiceEntityRepository
         $arNotificacionTipo= $em->createQueryBuilder()
             ->from('App:General\GenNotificacionTipo','nt')
             ->join('nt.modeloRel','m')
-            ->select('nt.codigoNotificacionPk')
+            ->select('nt.codigoNotificacionTipoPk')
             ->addSelect('nt.estadoActivo')
             ->addSelect('nt.nombre')
             ->addSelect('m.codigoModeloPk')

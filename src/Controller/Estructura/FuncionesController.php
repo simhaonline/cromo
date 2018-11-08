@@ -3,6 +3,9 @@
 namespace App\Controller\Estructura;
 
 
+use App\Entity\General\GenNotificacion;
+use App\Utilidades\BaseDatos;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -11,6 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 final class FuncionesController
 {
+
     private static function getInstance()
     {
         static $instance = null;
@@ -117,5 +121,33 @@ final class FuncionesController
         $aux = date('Y-m-d', strtotime("{$fechaDesde} + 1 month"));
         $fechaHasta = date('Y-m-d', strtotime("{$aux} - 1 day"));
         return $fechaHasta;
+    }
+
+    public static function crearNotificacion($id,$usuarios){
+        try{
+            $em=BaseDatos::getEm();
+            $arNotificacionTipoPrueba=$em->getRepository('App:General\GenNotificacionTipo')->find($id);
+            if(!$usuarios){
+                $usuarios=json_decode($arNotificacionTipoPrueba->getUsuarios(),true);
+            }
+            if($usuarios) {
+                foreach ($usuarios as $user) {
+                    $arUsuario = $em->getRepository('App:Seguridad\Usuario')->findOneBy(['username' => $user]);
+                    if ($arUsuario) {
+                        $arNotificacion = (new GenNotificacion())
+                            ->setFecha(new \DateTime('now'))
+                            ->setNotificacionTipoRel($arNotificacionTipoPrueba)
+                            ->setCodigoUsuarioReceptorFk($arUsuario->getId())
+                            ->setCodigoUsuarioEmisorFk(null);
+                        $arUsuario->setNotificacionesPendientes($arUsuario->getNotificacionesPendientes() + 1);
+                        $em->persist($arUsuario);
+                        $em->persist($arNotificacion);
+                    }
+                }
+            $em->flush();
+            }
+        }catch (\Exception $exception){
+            //Error
+        }
     }
 }

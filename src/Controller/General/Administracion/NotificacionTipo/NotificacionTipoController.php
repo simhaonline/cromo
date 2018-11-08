@@ -4,6 +4,7 @@ namespace App\Controller\General\Administracion\NotificacionTipo;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenModelo;
 use App\Entity\General\GenModulo;
 use App\Entity\General\GenNotificacion;
@@ -59,25 +60,16 @@ class NotificacionTipoController extends BaseController
             ->getForm();
         $form->handleRequest($request);
 
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $arModeloSelect=$request->request->get('form');
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $arModeloSelect=$request->request->get('form');
             $arModeloSelect=$arModeloSelect['cbFiltroModelo'];
-                $session->set('arGenNotificacionTipoFiltroModulo', $form->get('cbFiltroModulo')->getData());
-                $session->set('arGenNotificacionTipoFiltroModelo', $arModeloSelect);
-            }
-            if($form->get('btnPrueba')->isClicked()){
-                $arNotificacionTipoPrueba=$em->getRepository('App:General\GenNotificacionTipo')->find(1);
-                $arNotificacion=(new GenNotificacion())
-                    ->setFecha(new \DateTime('now'))
-                    ->setNotificacionTipoRel($arNotificacionTipoPrueba)
-                    ->setCodigoUsuarioReceptorFk(1)
-                    ->setCodigoUsuarioEmisorFk(1);
-                $arUsuario=$em->getRepository('App:Seguridad\Usuario')->find(1);
-                $arUsuario->setNotificacionesPendientes($arUsuario->getNotificacionesPendientes()+1);
-                $em->persist($arUsuario);
-                $em->persist($arNotificacion);
-                $em->flush();
-            }
+            $session->set('arGenNotificacionTipoFiltroModulo', $form->get('cbFiltroModulo')->getData());
+            $session->set('arGenNotificacionTipoFiltroModelo', $arModeloSelect);
+        }
+        if($form->get('btnPrueba')->isClicked()){
+            FuncionesController::crearNotificacion(1,array('semantica'));
+            return $this->redirectToRoute('general_administracion_notificacion_tipo_lista');
+        }
         $arNotificacionTipo=$em->getRepository('App:General\GenNotificacionTipo')->lista();
 
         return $this->render('general/administracion/notificacion_tipo/notificacion_tipo/lista.html.twig',[
@@ -107,9 +99,9 @@ class NotificacionTipoController extends BaseController
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $usuarios=[];
                 if ($arrSeleccionados) {
                     $usuariosExistentes=true;
-                    $usuarios=[];
                     foreach ($arrSeleccionados as $codigoUsuario) {
                         $arUsuarioValidar = $em->getRepository('App:Seguridad\Usuario')->find($codigoUsuario);
                         if(!$arUsuarioValidar){
@@ -124,12 +116,18 @@ class NotificacionTipoController extends BaseController
                         $arNotificacionTipo = $em->getRepository('App:General\GenNotificacionTipo')->find($codigoNotificacion);
                         $arNotificacionTipo
                             ->setUsuarios($usuarios?json_encode($usuarios):null);
-                            $em->persist($arNotificacionTipo);
+                        $em->persist($arNotificacionTipo);
                     }
-                    $em->flush();
-                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-                    $session->set('arGenNotificacionTipoNombreUsuario', null);
                 }
+                else{
+                    $arNotificacionTipo = $em->getRepository('App:General\GenNotificacionTipo')->find($codigoNotificacion);
+                    $arNotificacionTipo
+                        ->setUsuarios($usuarios?json_encode($usuarios):null);
+                    $em->persist($arNotificacionTipo);
+                }
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                $session->set('arGenNotificacionTipoNombreUsuario', null);
             }
         }
         $arUsuarioNotificacion=$em->getRepository('App:General\GenNotificacionTipo')->find($codigoNotificacion)->getUsuarios();
@@ -137,7 +135,7 @@ class NotificacionTipoController extends BaseController
 
         $arUsuario=$em->getRepository('App:General\GenNotificacionTipo')->listaUsuarios($usuario->getId());
         return $this->render('general/administracion/notificacion_tipo/notificacion_tipo/nuevo.html.twig',[
-           'form'=>$form->createView(),
+            'form'=>$form->createView(),
             'arUsuario'=>$arUsuario,
             'arUsuarioNotificacion'=>$arUsuarioNotificacion,
         ]);
@@ -166,15 +164,15 @@ class NotificacionTipoController extends BaseController
     public function cambiarEstadoNotificacion(Request $request){
         $em = $this->getDoctrine()->getManager();
         $codigoNotificacionTipo=$request->query->get('id');
-       try{
-        $arNotificacionTipo=$em->getRepository('App:General\GenNotificacionTipo')->find($codigoNotificacionTipo);
-        $arNotificacionTipo->setEstadoActivo(!$arNotificacionTipo->getEstadoActivo());
-        $em->persist($arNotificacionTipo);
-        $em->flush();
-        return new JsonResponse(true);
-       }catch (\Exception $exception){
-           return new JsonResponse(false);
-       }
+        try{
+            $arNotificacionTipo=$em->getRepository('App:General\GenNotificacionTipo')->find($codigoNotificacionTipo);
+            $arNotificacionTipo->setEstadoActivo(!$arNotificacionTipo->getEstadoActivo());
+            $em->persist($arNotificacionTipo);
+            $em->flush();
+            return new JsonResponse(true);
+        }catch (\Exception $exception){
+            return new JsonResponse(false);
+        }
     }
 
 }

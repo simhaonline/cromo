@@ -30,8 +30,9 @@
                 <th>NOTIFICACION</th>
                 <th>MODULO</th>
                 <th>MODELO</th>
-                <th>Activo</th>
-                <th>Usuarios</th>
+                <th>USUARIOS</th>
+                <th>ACTIVO</th>
+                <th>NOTIFICAR</th>
             </tr>
             </thead>
             <tbody>
@@ -49,11 +50,14 @@
                     <td>
                         {{ arNotificaionTipo.codigoModeloPk }}
                     </td>
+                    <td>
+                        {{ arNotificaionTipo.usuarios }}
+                    </td>
                     <td class="text-center">
                         <input class="estadoActivo" data-on="Activo" data-off="Desactivo" value={{  arNotificaionTipo.codigoNotificacionTipoPk }} type="checkbox" {{ arNotificaionTipo.estadoActivo?'checked':"" }} data-toggle="toggle" data-size="mini">
                     </td>
                     <td style="text-align: center;">
-                        <a  title="Cambiar permisos"
+                        <a  title="Usuarios notificacion"
                            href="javascript:abrirVentana3('{{ path('general_administracion_notificacion_tipo__editar',{'codigoNotificacion' :arNotificaionTipo.codigoNotificacionTipoPk}) }}','usuariosNotificacion',600,900)">
                             <i class="fa fa-edit" style="font-size: large;color: black;">
                             </i>
@@ -101,7 +105,8 @@
         $(document).ready(function() {
             var selectModelo='{{ arModeloSelect }}';
             var selector = $('.modulo');
-            var selectorAct=$('.modelo');
+            var selectorAct=$('.modelo')
+            // console.log(selector.value);
             if (selector.attr('name') !== '') {
                 selectorAct.value=selectModelo;
                 $.ajax({

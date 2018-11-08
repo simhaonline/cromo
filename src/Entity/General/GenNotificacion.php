@@ -32,7 +32,7 @@ class GenNotificacion
     private $codigoUsuarioReceptorFk;
 
     /**
-     * @ORM\Column(name="codigo_usuario_emisor_fk", type="integer", nullable=false)
+     * @ORM\Column(name="codigo_usuario_emisor_fk", type="integer", nullable=true)
      */
     private $codigoUsuarioEmisorFk;
 

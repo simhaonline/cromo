@@ -31,7 +31,8 @@ class GenNotificacionTipoRepository extends ServiceEntityRepository
             ->addSelect('nt.estadoActivo')
             ->addSelect('nt.nombre')
             ->addSelect('m.codigoModeloPk')
-            ->addSelect('m.codigoModuloFk');
+            ->addSelect('m.codigoModuloFk')
+            ->addSelect('nt.usuarios');
 
         if($session->get('arGenNotificacionTipoFiltroModulo')!="" && $session->get('arGenNotificacionTipoFiltroModulo')!=null){
             $modulo=$session->get('arGenNotificacionTipoFiltroModulo')->getCodigoModuloPk();

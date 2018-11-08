@@ -6,10 +6,12 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\General\GenModelo;
 use App\Entity\General\GenModulo;
+use App\Entity\General\GenNotificacion;
 use App\Entity\General\GenNotificacionTipo;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -53,17 +55,29 @@ class NotificacionTipoController extends BaseController
                 'placeholder' => "TODOS",
             ))
             ->add('btnFiltrar',SubmitType::class, ['label' => 'Filtrar'])
+            ->add('btnPrueba',SubmitType::class,['label'=>'Prueba'])
             ->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
                 $arModeloSelect=$request->request->get('form');
             $arModeloSelect=$arModeloSelect['cbFiltroModelo'];
-            if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('arGenNotificacionTipoFiltroModulo', $form->get('cbFiltroModulo')->getData());
                 $session->set('arGenNotificacionTipoFiltroModelo', $arModeloSelect);
             }
-        }
+            if($form->get('btnPrueba')->isClicked()){
+                $arNotificacionTipoPrueba=$em->getRepository('App:General\GenNotificacionTipo')->find(1);
+                $arNotificacion=(new GenNotificacion())
+                    ->setFecha(new \DateTime('now'))
+                    ->setNotificacionTipoRel($arNotificacionTipoPrueba)
+                    ->setCodigoUsuarioReceptorFk(1)
+                    ->setCodigoUsuarioEmisorFk(1);
+                $arUsuario=$em->getRepository('App:Seguridad\Usuario')->find(1);
+                $arUsuario->setNotificacionesPendientes($arUsuario->getNotificacionesPendientes()+1);
+                $em->persist($arUsuario);
+                $em->persist($arNotificacion);
+                $em->flush();
+            }
         $arNotificacionTipo=$em->getRepository('App:General\GenNotificacionTipo')->lista();
 
         return $this->render('general/administracion/notificacion_tipo/notificacion_tipo/lista.html.twig',[

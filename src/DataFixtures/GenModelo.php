@@ -71,6 +71,8 @@ class GenModelo extends Fixture
                 'GenLog',
                 'GenModelo',
                 'GenModulo',
+                'GenNotificacionTipo',
+                'GenNotificacion',
                 'GenPais',
                 'GenReligion',
                 'GenReporte',

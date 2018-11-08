@@ -19,32 +19,20 @@ class GenNotificacionRepository extends ServiceEntityRepository
         parent::__construct($registry, GenNotificacion::class);
     }
 
-//    /**
-//     * @return GenNotificacion[] Returns an array of GenNotificacion objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('g')
-            ->andWhere('g.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('g.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?GenNotificacion
-    {
-        return $this->createQueryBuilder('g')
-            ->andWhere('g.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+    public function notificaciones($codigoUsuario){
+        $em=$this->getEntityManager();
+        $arNotificacion=$em->createQueryBuilder()
+            ->from('App:General\GenNotificacion','n')
+            ->join('n.notificacionTipoRel','nt')
+            ->select('nt.nombre')
+            ->addSelect('n.fecha')
+            ->where("n.codigoUsuarioReceptorFk='{$codigoUsuario}'")
+            ->orderBy('n.fecha','DESC')
+            ->getQuery()->getResult();
+        for ( $i=0; $i<count($arNotificacion);$i++){
+            $arNotificacion[$i]['fecha']=$arNotificacion[$i]['fecha']->format('Ymdhis');
+        }
+        return $arNotificacion;
     }
-    */
 }

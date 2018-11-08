@@ -215,14 +215,10 @@ class ImportacionController extends ControllerListenerGeneral
                     foreach ($arrItems as $codigoItem => $cantidad) {
                         if ($cantidad != '' && $cantidad != 0) {
                             $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
-                            $precioVenta = $em->getRepository(InvPrecioDetalle::class)->obtenerPrecio($arImportacion->getTerceroRel()->getCodigoPrecioVentaFk(), $codigoItem);
                             $arImportacionDetalle = new InvImportacionDetalle();
                             $arImportacionDetalle->setImportacionRel($arImportacion);
                             $arImportacionDetalle->setItemRel($arItem);
                             $arImportacionDetalle->setCantidad($cantidad);
-                            $arImportacionDetalle->setCantidadPendiente($cantidad);
-                            $arImportacionDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
-                            $arImportacionDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
                             $em->persist($arImportacionDetalle);
                         }
                     }

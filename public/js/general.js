@@ -27,6 +27,8 @@ function ChequearTodosTabla(source, nombre) {
     }
 }
 
+
+
 /**
  * Función para convertir los combobox en select2.
  */

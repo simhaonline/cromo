@@ -38,7 +38,7 @@
             {% for arNotificaionTipo in arNotificaionTipo %}
                 <tr>
                     <td>
-                        {{ arNotificaionTipo.codigoNotificacionPk }}
+                        {{ arNotificaionTipo.codigoNotificacionTipoPk }}
                     </td>
                     <td>
                         {{ arNotificaionTipo.nombre }}
@@ -50,11 +50,11 @@
                         {{ arNotificaionTipo.codigoModeloPk }}
                     </td>
                     <td class="text-center">
-                        <input class="estadoActivo" data-on="Activo" data-off="Desactivo" value={{  arNotificaionTipo.codigoNotificacionPk }} type="checkbox" {{ arNotificaionTipo.estadoActivo?'checked':"" }} data-toggle="toggle" data-size="mini">
+                        <input class="estadoActivo" data-on="Activo" data-off="Desactivo" value={{  arNotificaionTipo.codigoNotificacionTipoPk }} type="checkbox" {{ arNotificaionTipo.estadoActivo?'checked':"" }} data-toggle="toggle" data-size="mini">
                     </td>
                     <td style="text-align: center;">
                         <a  title="Cambiar permisos"
-                           href="javascript:abrirVentana3('{{ path('general_administracion_notificacion_tipo__editar',{'codigoNotificacion' :arNotificaionTipo.codigoNotificacionPk}) }}','usuariosNotificacion',600,900)">
+                           href="javascript:abrirVentana3('{{ path('general_administracion_notificacion_tipo__editar',{'codigoNotificacion' :arNotificaionTipo.codigoNotificacionTipoPk}) }}','usuariosNotificacion',600,900)">
                             <i class="fa fa-edit" style="font-size: large;color: black;">
                             </i>
                         </a>
@@ -64,7 +64,9 @@
             </tbody>
         </table>
     </div>
-
+    <div class="modal-footer">
+        {{ form_widget(form.btnPrueba, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
 {{ form_end(form) }}
     <script src="{{ asset('vendor/jquery/jquery.js') }}"></script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
@@ -100,7 +102,6 @@
             var selectModelo='{{ arModeloSelect }}';
             var selector = $('.modulo');
             var selectorAct=$('.modelo');
-            console.log(selectModelo);
             if (selector.attr('name') !== '') {
                 selectorAct.value=selectModelo;
                 $.ajax({
@@ -128,7 +129,7 @@
                     }
                 });
             }
-        })
+        });
 
         $('.estadoActivo').change(function () {
             var checked=$(this);

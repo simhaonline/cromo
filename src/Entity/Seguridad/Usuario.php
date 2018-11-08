@@ -78,6 +78,11 @@ class Usuario implements UserInterface, \Serializable
     private $isActive;
 
     /**
+     * @ORM\Column(name="notificaciones_pendientes", type="integer", options={"default":0})
+     */
+    private $notificacionesPendientes=0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteOperacion", inversedBy="usuariosOperacionRel")
      * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
      */
@@ -331,5 +336,24 @@ class Usuario implements UserInterface, \Serializable
     {
         $this->claveEscritorio = $claveEscritorio;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNotificacionesPendientes()
+    {
+        return $this->notificacionesPendientes;
+    }
+
+    /**
+     * @param mixed $notificacionesPendientes
+     */
+    public function setNotificacionesPendientes($notificacionesPendientes)
+    {
+        $this->notificacionesPendientes = $notificacionesPendientes;
+        return $this;
+    }
+
+
 }
 

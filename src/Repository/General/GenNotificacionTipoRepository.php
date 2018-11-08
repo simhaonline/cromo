@@ -27,7 +27,7 @@ class GenNotificacionTipoRepository extends ServiceEntityRepository
         $arNotificacionTipo= $em->createQueryBuilder()
             ->from('App:General\GenNotificacionTipo','nt')
             ->join('nt.modeloRel','m')
-            ->select('nt.codigoNotificacionPk')
+            ->select('nt.codigoNotificacionTipoPk')
             ->addSelect('nt.estadoActivo')
             ->addSelect('nt.nombre')
             ->addSelect('m.codigoModeloPk')
@@ -54,8 +54,7 @@ class GenNotificacionTipoRepository extends ServiceEntityRepository
             ->from('App:Seguridad\Usuario','u')
             ->select('u.id')
             ->addSelect('u.nombreCorto')
-            ->addSelect('u.username')
-            ->where("u.id !='{$codigoUsuario}'");
+            ->addSelect('u.username');
 
             if($session->get('arGenNotificacionTipoNombreUsuario')!=="" || $session->get('arGenNotificacionTipoNombreUsuario')!==null){
                 $arUsuarios=$arUsuarios->andWhere("u.nombreCorto LIKE '%{$session->get('arGenNotificacionTipoNombreUsuario')}%'");

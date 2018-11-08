@@ -1,0 +1,70 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table width="100%" class="table table-condensed table-bordered" style="margin-bottom: 0 !important;">
+                <tr>
+                    <td class="titulo">EMPLEADO:</td>
+                    <td class="td-in-well">{{ arProgramacionDetalle.nombreCorto }}</td>
+                    <td class="titulo">SALARIO:</td>
+                    <td class="td-in-well numero" style="text-transform: uppercase;">{{ arProgramacionDetalle.vrSalario }}</td>
+                </tr>
+                <tr>
+                    <td class="titulo">FECHA INGRESO/RETIRO:</td>
+                    <td class="td-in-well">
+                        {{ arProgramacionDetalle.fechaDesdeContrato | date('Y-m-d') }}
+                        {% if arProgramacionDetalle.fechaHastaContrato >= arProgramacionDetalle.fechaHasta %}
+                            &nbsp;/ Vigente
+                        {% else %}
+                            / {{ arProgramacionDetalle.fechaHastaContrato | date('Y-m-d') }}
+                        {% endif %}
+                    </td>
+                    <td class="titulo"></td>
+                    <td class="td-in-well" style="text-transform: uppercase;"></td>
+                </tr>
+                <tr>
+                    <td class="titulo">PERIODO:</td>
+                    <td class="td-in-well">{{ arProgramacionDetalle.fechaDesde | date('Y-m-d') ~ ' / ' ~ arProgramacionDetalle.fechaHasta | date('Y-m-d') }}</td>
+                    <td class="titulo">CARGO:</td>
+                    <td class="td-in-well" style="text-transform: uppercase;">{{ arProgramacionDetalle.nombre }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <table width="100%" class="table table-condensed table-bordered">
+        <thead>
+        <tr>
+            <th title="Codigo del concepto">CODIGO</th>
+            <th title="Nombre del concepto">CONCEPTO</th>
+            <th title="Mensaje opciones del pago">DETALLE</th>
+            <th>PORCENTAJE</th>
+            <th>HORAS</th>
+            <th>DIAS</th>
+            <th title="Valor de la hora">VR.HORA</th>
+            <th title="Operación">OP</th>
+            <th>VR.PAGO</th>
+            <th>IBP</th>
+            <th>IBC</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arPagoDetalle in arPagoDetalles %}
+            <tr>
+                <td>{{ arPagoDetalle.codigoConceptoFk }}</td>
+                <td>{{ arPagoDetalle.nombre }}</td>
+                <td>{{ arPagoDetalle.detalle }}</td>
+                <td>{{ arPagoDetalle.porcentaje }}</td>
+                <td>{{ arPagoDetalle.horas }}</td>
+                <td>{{ arPagoDetalle.dias }}</td>
+                <td class="numero">$ {{ arPagoDetalle.vrHora |number_format(0, '.', ',') }}</td>
+                <td>{{ arPagoDetalle.operacion == 1 ? 'SUMA' : 'RESTA' }}</td>
+                <td class="numero">$ {{ arPagoDetalle.vrPago |number_format(0, '.', ',') }}</td>
+                <td class="numero">$ {{ arPagoDetalle.vrIngresoBasePrestacion |number_format(0, '.', ',') }}</td>
+                <td class="numero">$ {{ arPagoDetalle.vrIngresoBaseCotizacion |number_format(0, '.', ',') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

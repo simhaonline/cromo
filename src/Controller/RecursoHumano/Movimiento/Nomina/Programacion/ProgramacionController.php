@@ -4,6 +4,8 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina\Programacion;
 
 use App\Controller\BaseController;
 use App\Entity\RecursoHumano\RhuContrato;
+use App\Entity\RecursoHumano\RhuPago;
+use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Form\Type\RecursoHumano\ProgramacionType;
@@ -139,13 +141,27 @@ class ProgramacionController extends BaseController
                 $em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
             }
         }
-        $arProgramacion = $em->getRepository($this->clase)->find($id);
-        $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()]);
+        $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->lista($arProgramacion->getCodigoProgramacionPk());
         return $this->render('recursoHumano/movimiento/nomina/programacion/detalle.html.twig', [
             'form' => $form->createView(),
             'arProgramacion' => $arProgramacion,
             'arProgramacionDetalles' => $arProgramacionDetalles
         ]);
     }
-}
 
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("recursohumano/movimiento/nomina/programacion/detalle/resumen/{id}", name="recursohumano_movimiento_nomina_programacion_detalle_resumen")
+     */
+    public function resumenPagoDetalle($id){
+        $em = $this->getDoctrine()->getManager();
+        $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->resumen($id);
+        $codigoPago = $em->getRepository(RhuPago::class)->getCodigoPagoPk($arProgramacionDetalle['codigoProgramacionDetallePk']);
+        $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->lista($codigoPago);
+        return $this->render('recursoHumano/movimiento/nomina/programacion/resumen.html.twig', [
+            'arProgramacionDetalle' => $arProgramacionDetalle,
+            'arPagoDetalles' => $arPagoDetalles->getQuery()->execute()
+        ]);
+    }
+}

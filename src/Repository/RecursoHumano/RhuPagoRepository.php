@@ -88,6 +88,12 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $arPagoDetalle->setHoras($arrHora['valor']);
                 $arPagoDetalle->setOperacion($arConcepto->getOperacion());
                 $arPagoDetalle->setVrPago($floDevengado);
+                $arPagoDetalle->setVrPagoOperado($floDevengado * $arConcepto->getOperacion());
+                if ($arConcepto->getOperacion() == -1) {
+                    $arPagoDetalle->setVrDeduccion($floDevengado);
+                } else {
+                    $arPagoDetalle->setVrDevengado($floDevengado);
+                }
                 $arPagoDetalle->setDias($arProgramacionDetalle->getDias());
                 if ($arPagoDetalle->getOperacion() == 1) {
                     $douDevengado = $douDevengado + $arPagoDetalle->getVrPago();
@@ -129,6 +135,13 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $douNeto;
     }
 
+    public function getCodigoPagoPk($codigoProgramacionDetalle)
+    {
+        return $this->_em->createQueryBuilder()->from(RhuPago::class, 'p')
+            ->select('p.codigoPagoPk')
+            ->where("p.codigoProgramacionDetalleFk = {$codigoProgramacionDetalle}")->getQuery()->getSingleResult()['codigoPagoPk'];
+    }
+
     /**
      * @param $arProgramacionDetalle
      * @return mixed
@@ -139,5 +152,6 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arrHoras['N'] = array('tipo' => 'N', 'valor' => $arProgramacionDetalle->getHorasNocturnas(), 'clave' => 7);
         return $arrHoras;
     }
+
 
 }

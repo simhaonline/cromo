@@ -16,14 +16,26 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuProgramacionDetalle::class);
     }
 
-    public function eliminar($arrSeleccionados){
+    /**
+     * @param $arrSeleccionados
+     * @param $arProgramacion RhuProgramacion
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function eliminar($arrSeleccionados, $arProgramacion){
+        $em = $this->getEntityManager();
         foreach ($arrSeleccionados as $codigoProgramacionDetalle){
-            $arProgramacionDetalle = $this->_em->getRepository(RhuProgramacionDetalle::class)->find($codigoProgramacionDetalle);
+            $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($codigoProgramacionDetalle);
             if($arProgramacionDetalle){
-                $this->_em->remove($arProgramacionDetalle);
+                $em->remove($arProgramacionDetalle);
             }
         }
-        $this->_em->flush();
+        $cantidad = $em->getRepository(RhuProgramacion::class)->getCantidadRegistros($arProgramacion->getCodigoProgramacionPk());
+        $arProgramacion->setCantidad($cantidad);
+        $em->persist($arProgramacion);
+        $em->flush();
     }
 
     /**
@@ -36,6 +48,8 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
         ->delete(RhuProgramacionDetalle::class,'pd')
         ->where("pd.codigoProgramacionFk = {$arProgramacion->getCodigoProgramacionPk()}")->getQuery()->execute();
         $arProgramacion->setEmpleadosGenerados(0);
+        $cantidad = $this->_em->getRepository(RhuProgramacion::class)->getCantidadRegistros($arProgramacion->getCodigoProgramacionPk());
+        $arProgramacion->setCantidad($cantidad);
         $this->_em->persist($arProgramacion);
         $this->_em->flush();
     }

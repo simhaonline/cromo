@@ -14,6 +14,7 @@ use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Entity\Seguridad\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Twig\NodeVisitor\SafeAnalysisNodeVisitor;
 
 class RhuProgramacionRepository extends ServiceEntityRepository
 {
@@ -41,15 +42,16 @@ class RhuProgramacionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arProgramacion
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @param $codigoProgramacion integer
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function setCantidadRegistros($arProgramacion)
+    public function getCantidadRegistros($codigoProgramacion)
     {
-        $arProgramacion->setCantidad(count($this->_em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()])));
-        $this->_em->persist($arProgramacion);
-        $this->_em->flush();
+        return $this->_em->createQueryBuilder()->from(RhuProgramacionDetalle::class, 'pd')
+            ->select('count(pd.codigoProgramacionDetallePk)')
+            ->where("pd.codigoProgramacionFk = {$codigoProgramacion}")->getQuery()->getSingleResult()[1];
     }
 
     /**
@@ -84,10 +86,11 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arProgramacionDetalle->setHorasDiurnas($horas);
             $em->persist($arProgramacionDetalle);
         }
-        $arProgramacion->setEmpleadosGenerados(0);
+        $cantidad = $em->getRepository(RhuProgramacion::class)->getCantidadRegistros($arProgramacion->getCodigoProgramacionPk());
+        $arProgramacion->setCantidad($cantidad);
+        $arProgramacion->setEmpleadosGenerados(1);
         $em->persist($arProgramacion);
         $em->flush();
-        $em->getRepository(RhuProgramacion::class)->setCantidadRegistros($arProgramacion);
     }
 
     /**
@@ -107,13 +110,33 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $arConceptoHora = $em->getRepository(RhuConceptoHora::class)->findAll();
                 foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
                     $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $usuario);
+                    $arProgramacionDetalle->setVrNeto($vrNeto);
+                    $em->persist($arProgramacionDetalle);
                     $douNetoTotal += $vrNeto;
                     $numeroPagos++;
                 }
+                $arProgramacion->setEstadoAutorizado(1);
                 $arProgramacion->setVrNeto($douNetoTotal);
                 $em->persist($arProgramacion);
                 $em->flush();
             }
+        }
+    }
+
+    /**
+     * @param $arProgramacion RhuProgramacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function desautorizar($arProgramacion)
+    {
+        $em = $this->getEntityManager();
+        if ($arProgramacion->getEstadoAutorizado()) {
+            $em->getRepository(RhuPago::class)->eliminarPagos($arProgramacion->getCodigoProgramacionPk());
+            $arProgramacion->setEstadoAutorizado(0);
+            $arProgramacion->setVrNeto(0);
+            $em->persist($arProgramacion);
+            $em->flush();
         }
     }
 

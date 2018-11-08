@@ -25,13 +25,25 @@ class RhuPagoRepository extends ServiceEntityRepository
     /**
      * @param $codigoProgramacion integer
      */
-    public function eliminarTodo($codigoProgramacion)
+    public function eliminarPagos($codigoProgramacion)
     {
-        $this->_em->createQueryBuilder()->delete(RhuPago::class, 'p')
-            ->leftJoin('p.programacionDetalleRel', 'prd')
-            ->where("prd.codigoProgramacionFk = {$codigoProgramacion}")->getQuery()->execute();
-    }
+        $em = $this->getEntityManager();
+        $subQuery = $em->createQueryBuilder()->from(RhuPago::class,'pp')
+            ->select('pp.codigoPagoPk')
+            ->where("pp.codigoProgramacionFk = {$codigoProgramacion}");
 
+        $em->createQueryBuilder()
+            ->delete(RhuPagoDetalle::class,'pd')
+            ->where("pd.codigoPagoFk IN ({$subQuery})")->getQuery()->execute();
+
+        $codigosPagos = implode(',',array_map(function ($v){
+            return $v['codigoPagoPk'];
+        },$subQuery->getQuery()->execute()));
+
+
+        $em->createQueryBuilder()->delete(RhuPago::class, 'p')
+            ->where("p.codigoPagoPk IN ({$codigosPagos})")->getQuery()->execute();
+    }
     /**
      * @param $arProgramacionDetalle RhuProgramacionDetalle
      * @param $arProgramacion RhuProgramacion

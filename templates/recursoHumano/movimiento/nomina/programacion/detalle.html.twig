@@ -41,7 +41,8 @@
             <td class="titulo">HASTA PERIODO:</td>
             <td class="td-in-well">{{ arProgramacion.fechaHastaPeriodo | date('Y-m-d') }}</td>
             <td class="titulo">VR.NETO</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arProgramacion.vrNeto | number_format(0, '.', ',') }}</td>
+            <td class="td-in-well numero"
+                style="text-transform: uppercase;">$ {{ arProgramacion.vrNeto | number_format(0, '.', ',') }}</td>
         </tr>
     </table>
     <ul class="nav nav-tabs">
@@ -84,7 +85,7 @@
                                 <td>{{ arProgramacionDetalle.nombreCorto }}</td>
                                 <td>{{ arProgramacionDetalle.fechaDesde | date('Y-m-d') }}</td>
                                 <td>{{ arProgramacionDetalle.fechaHasta | date('Y-m-d') }}</td>
-                                <td style="text-align: right">{{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">$ {{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasDiurnas | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasNocturnas | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasFestivasDiurnas | number_format(0, '.', ',') }}</td>
@@ -96,8 +97,10 @@
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoNocturno | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoFestivoDiurno | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoFestivoNocturno | number_format(0, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arProgramacionDetalle.vrNeto | number_format(0, '.', ',') }}</td>
-                                <td style="text-align: center;"><a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_detalle_resumen',{ 'id': arProgramacionDetalle.codigoProgramacionDetallePk }) }}','resumen',600,900)"><i class="fa fa-table" style="color: black;font-size: large;"></i></a></td>
+                                <td style="text-align: right">$ {{ arProgramacionDetalle.vrNeto | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: center;"><a
+                                            href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_detalle_resumen',{ 'id': arProgramacionDetalle.codigoProgramacionDetallePk }) }}','resumen',600,900)"><i
+                                                class="fa fa-table" style="color: black;font-size: large;"></i></a></td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                                        value="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}">
                                 </td>

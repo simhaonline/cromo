@@ -12,9 +12,9 @@ class GenNotificacionTipo
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer", name="codigo_notificacion_pk", unique=true, nullable=false)
+     * @ORM\Column(type="integer", name="codigo_notificacion_tipo_pk", unique=true, nullable=false)
      */
-    private $codigoNotificacionPk;
+    private $codigoNotificacionTipoPk;
 
     /**
      * @ORM\Column(name="nombre", type="string", length=10)
@@ -45,9 +45,9 @@ class GenNotificacionTipo
     /**
      * @return mixed
      */
-    public function getCodigoNotificacionPk()
+    public function getCodigoNotificacionTipoPk()
     {
-        return $this->codigoNotificacionPk;
+        return $this->codigoNotificacionTipoPk;
     }
 
     /**

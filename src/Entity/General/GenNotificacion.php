@@ -37,6 +37,12 @@ class GenNotificacion
     private $codigoUsuarioEmisorFk;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenNotificacionTipo", inversedBy="notificacionNotificacionTipoRel")
+     * @ORM\JoinColumn(name="codigo_notificacion_tipo_fk", referencedColumnName="codigo_notificacion_tipo_pk")
+     */
+    protected $notificacionTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoNotificacionPk()
@@ -109,6 +115,23 @@ class GenNotificacion
     public function setCodigoUsuarioEmisorFk($codigoUsuarioEmisorFk)
     {
         $this->codigoUsuarioEmisorFk = $codigoUsuarioEmisorFk;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotificacionTipoRel()
+    {
+        return $this->notificacionTipoRel;
+    }
+
+    /**
+     * @param mixed $notificacionTipoRel
+     */
+    public function setNotificacionTipoRel($notificacionTipoRel)
+    {
+        $this->notificacionTipoRel = $notificacionTipoRel;
         return $this;
     }
 

@@ -32,19 +32,9 @@
         <ul class="nav navbar-top-links navbar-right">
 
             <li class="dropdown">
-                <a class="notificacionPendiente dropdown-toggle" data-toggle="dropdown" href="#">
+                <a class="notificacionPendiente dropdown-toggle" data-toggle="dropdown" href="" onclick="verNotificacionesPendientes()">
                 </a>
-                <ul class="dropdown-menu dropdown-alerts">
-                    <li>
-                        <a href="#">
-                            <div>
-                                <i class="fa fa-comment fa-fw"></i> New Comment
-                                <span class="pull-right text-muted small">4 minutes ago</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-
+                <ul class="notificaciones dropdown-menu dropdown-alerts">
                 </ul>
                 <!-- /.dropdown-alerts -->
             </li>
@@ -144,28 +134,51 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="{{ asset('js/general.js') }}"></script>
     <script src="{{ asset('vendor/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('vendor/moment/moment.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             var selector = $('.notificacionPendiente');
-            console.log(selector);
-            // if (selector.attr('name') !== '') {
+            var notificaciones = $('.notificaciones');
             $.ajax({
                 url: "{{ path('general_administracion_notificacion_notificacion') }}",
                 type: "GET",
                 dataType: "JSON",
-                data: {
-                    id: selector.val(),
-                },
                 success: function (respuestas) {
-                    console.log(respuestas);
-                    selector.append('<i class="fa fa-bell fa-fw"></i><span class="badge badge-notify" style="margin-top:-22px;margin-left:-24px">5</span> <i class="fa fa-caret-down"></i>');
+                        console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
+                    if(respuestas['notificacionesPendientes'] && respuestas['notificacionesPendientes']>0){
+                    $.each(respuestas['notificaciones'],(key,notificacion)=>{
+                        notificaciones.append('<li><a href="#"><div><i class="fa fa-comment fa-fw"></i>'+notificacion['nombre']+'<span class="pull-right text-muted small">'+moment(notificacion['fecha'], "YYYYMMDDhms").fromNow()+'</span></div><a></li>');
+                        notificaciones.append('<li class="divider"></li>');
+                    });
+                    selector.append('<i class="fa fa-bell fa-fw"></i><span class="badge badge-notify" style="margin-top:-22px;margin-left:-24px">'+respuestas['notificacionesPendientes']+'</span> <i class="fa fa-caret-down"></i>');
+                    }
+                    else{
+                        selector.append('<i class="fa fa-bell fa-fw"></i><i class="fa fa-caret-down"></i>');
+                    }
                 },
                 error: function (error) {
                     console.log(error);
                 }
             });
-            // }
         });
+
+
+        function verNotificacionesPendientes() {
+            var selector = $('.notificacionPendiente');
+            // var notificaciones=$('.notificaciones');
+            $.ajax({
+                url: "{{ path('general_administracion_notificacion_ver') }}",
+                type: "GET",
+                dataType: "JSON",
+                success: function (respuestas) {
+                        selector.html('');
+                        selector.append('<i class="fa fa-bell fa-fw"></i><i class="fa fa-caret-down"></i>');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
     </script>
 {% endblock %}
 </body>

@@ -3,16 +3,11 @@
 namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvImportacion;
+use App\Entity\Inventario\InvImportacionDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-/**
- * @method InvImportacion|null find($id, $lockMode = null, $lockVersion = null)
- * @method InvImportacion|null findOneBy(array $criteria, array $orderBy = null)
- * @method InvImportacion[]    findAll()
- * @method InvImportacion[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class InvImportacionRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -44,7 +39,7 @@ class InvImportacionRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("i.numero = {$session->get('filtroInvNumeroImportacion')}");
         }
         if($session->get('filtroInvImportacionTipo')) {
-            $queryBuilder->andWhere("i.codigoPedidoTipoFk = '{$session->get('filtroInvImportacionTipo')}'");
+            $queryBuilder->andWhere("i.codigoImportacionTipoFk = '{$session->get('filtroInvImportacionTipo')}'");
         }
         if($session->get('filtroInvCodigoTercero')){
             $queryBuilder->andWhere("i.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
@@ -52,4 +47,39 @@ class InvImportacionRepository extends ServiceEntityRepository
         return $queryBuilder;
 
     }
+
+    /**
+     * @param $codigoImportacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function liquidar($codigoImportacion)
+    {
+        $em = $this->getEntityManager();
+        $arImportacion = $em->getRepository(InvImportacion::class)->find($codigoImportacion);
+        $arImportacionDetalles = $em->getRepository(InvImportacionDetalle::class)->findBy(['codigoImportacionFk' => $codigoImportacion]);
+        $subtotalGeneral = 0;
+        $ivaGeneral = 0;
+        $totalGeneral = 0;
+        foreach ($arImportacionDetalles as $arImportacionDetalle) {
+            /*$arImportacionDetalleAct = $em->getRepository(InvImportacionDetalle::class)->find($arImportacionDetalle->getCodigoImportacionDetallePk());
+            $subtotal = $arImportacionDetalle->getCantidad() * $arImportacionDetalle->getVrPrecio();
+            $porcentajeIva = $arImportacionDetalle->getPorcentajeIva();
+            $iva = $subtotal * $porcentajeIva / 100;
+            $subtotalGeneral += $subtotal;
+            $ivaGeneral += $iva;
+            $total = $subtotal + $iva;
+            $totalGeneral += $total;
+            $arImportacionDetalleAct->setVrSubtotal($subtotal);
+            $arImportacionDetalleAct->setVrIva($iva);
+            $arImportacionDetalleAct->setVrTotal($total);
+            $em->persist($arImportacionDetalleAct);*/
+        }
+        $arImportacion->setVrSubtotal($subtotalGeneral);
+        $arImportacion->setVrIva($ivaGeneral);
+        $arImportacion->setVrTotal($totalGeneral);
+        $em->persist($arImportacion);
+        $em->flush();
+    }    
+    
 }

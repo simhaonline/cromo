@@ -37,6 +37,31 @@ class InvImportacionDetalle
     private $vrPrecioExtranjero = 0;
 
     /**
+     * @ORM\Column(name="vr_subtotal_extranjero", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $vrSubtotalExtranjero = 0;
+
+    /**
+     * @ORM\Column(name="porcentaje_iva_extranjero", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $porcentajeIvaExtranjero = 0;
+
+    /**
+     * @ORM\Column(name="vr_iva_extranjero", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $vrIvaExtranjero = 0;
+
+    /**
+     * @ORM\Column(name="vr_neto_extranjero", type="float", options={"default" : 0},)
+     */
+    private $vrNetoExtranjero = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_extranjero", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $vrTotalExtranjero = 0;
+
+    /**
      * @ORM\Column(name="vr_precio_local" ,type="float")
      */
     private $vrPrecioLocal = 0;
@@ -156,6 +181,86 @@ class InvImportacionDetalle
     public function setVrPrecioExtranjero( $vrPrecioExtranjero ): void
     {
         $this->vrPrecioExtranjero = $vrPrecioExtranjero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSubtotalExtranjero()
+    {
+        return $this->vrSubtotalExtranjero;
+    }
+
+    /**
+     * @param mixed $vrSubtotalExtranjero
+     */
+    public function setVrSubtotalExtranjero( $vrSubtotalExtranjero ): void
+    {
+        $this->vrSubtotalExtranjero = $vrSubtotalExtranjero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeIvaExtranjero()
+    {
+        return $this->porcentajeIvaExtranjero;
+    }
+
+    /**
+     * @param mixed $porcentajeIvaExtranjero
+     */
+    public function setPorcentajeIvaExtranjero( $porcentajeIvaExtranjero ): void
+    {
+        $this->porcentajeIvaExtranjero = $porcentajeIvaExtranjero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIvaExtranjero()
+    {
+        return $this->vrIvaExtranjero;
+    }
+
+    /**
+     * @param mixed $vrIvaExtranjero
+     */
+    public function setVrIvaExtranjero( $vrIvaExtranjero ): void
+    {
+        $this->vrIvaExtranjero = $vrIvaExtranjero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrNetoExtranjero()
+    {
+        return $this->vrNetoExtranjero;
+    }
+
+    /**
+     * @param mixed $vrNetoExtranjero
+     */
+    public function setVrNetoExtranjero( $vrNetoExtranjero ): void
+    {
+        $this->vrNetoExtranjero = $vrNetoExtranjero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalExtranjero()
+    {
+        return $this->vrTotalExtranjero;
+    }
+
+    /**
+     * @param mixed $vrTotalExtranjero
+     */
+    public function setVrTotalExtranjero( $vrTotalExtranjero ): void
+    {
+        $this->vrTotalExtranjero = $vrTotalExtranjero;
     }
 
     /**

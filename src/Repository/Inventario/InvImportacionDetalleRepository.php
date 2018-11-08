@@ -25,7 +25,13 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT id.codigoImportacionDetallePk,
                   id.codigoImportacionFk,
-                  id.cantidad,                  
+                  id.cantidad,
+                  id.vrPrecioExtranjero,
+                  id.porcentajeIvaExtranjero,
+                  id.vrIvaExtranjero,
+                  id.vrSubtotalExtranjero,
+                  id.vrNetoExtranjero,
+                  id.vrTotalExtranjero,                                    
                   id.vrPrecioLocal,
                   id.porcentajeIvaLocal,
                   id.vrIvaLocal,
@@ -42,4 +48,27 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
 
         return $query->execute();
     }
+
+    public function eliminar($arImportacion, $arrDetallesSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if (!$arImportacion->getEstadoAutorizado()) {
+            if (count($arrDetallesSeleccionados)) {
+                foreach ($arrDetallesSeleccionados as $codigo) {
+                    $ar = $em->getRepository(InvImportacionDetalle::class)->find($codigo);
+                    if ($ar) {
+                        $em->remove($ar);
+                    }
+                }
+                try {
+                    $em->flush();
+                } catch (\Exception $e) {
+                    Mensajes::error('No se puede eliminar, el registro porque se encuentra en uso');
+                }
+            }
+        } else {
+            Mensajes::error('No se puede eliminar, el registro se encuentra autorizado');
+        }
+    }
+
 }

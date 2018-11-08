@@ -86,6 +86,7 @@ class NotificacionTipoController extends BaseController
     {
         $em=$this->getDoctrine()->getManager();
         $session = new Session();
+        $session->set('arGenNotificacionTipoNombreUsuario', null);
         $usuario=$user->getToken()->getUser();
         $form = $this->createFormBuilder()
             ->add('txtNombreUsuario', TextType::class, array('required'=>false))

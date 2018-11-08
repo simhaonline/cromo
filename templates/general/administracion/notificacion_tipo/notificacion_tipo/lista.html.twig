@@ -64,7 +64,9 @@
             </tbody>
         </table>
     </div>
-
+    <div class="modal-footer">
+        {{ form_widget(form.btnPrueba, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
 {{ form_end(form) }}
     <script src="{{ asset('vendor/jquery/jquery.js') }}"></script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>

@@ -54,8 +54,7 @@ class GenNotificacionTipoRepository extends ServiceEntityRepository
             ->from('App:Seguridad\Usuario','u')
             ->select('u.id')
             ->addSelect('u.nombreCorto')
-            ->addSelect('u.username')
-            ->where("u.id !='{$codigoUsuario}'");
+            ->addSelect('u.username');
 
             if($session->get('arGenNotificacionTipoNombreUsuario')!=="" || $session->get('arGenNotificacionTipoNombreUsuario')!==null){
                 $arUsuarios=$arUsuarios->andWhere("u.nombreCorto LIKE '%{$session->get('arGenNotificacionTipoNombreUsuario')}%'");

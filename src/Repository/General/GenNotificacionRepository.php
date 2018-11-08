@@ -31,7 +31,7 @@ class GenNotificacionRepository extends ServiceEntityRepository
             ->orderBy('n.fecha','DESC')
             ->getQuery()->getResult();
         for ( $i=0; $i<count($arNotificacion);$i++){
-            $arNotificacion[$i]['fecha']=$arNotificacion[$i]['fecha']->format('Ymdhis');
+            $arNotificacion[$i]['fecha']=$arNotificacion[$i]['fecha']->format('YmdHis');
         }
         return $arNotificacion;
     }

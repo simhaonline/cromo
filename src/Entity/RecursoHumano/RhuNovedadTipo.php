@@ -28,6 +28,11 @@ class RhuNovedadTipo
     private $nombre;
 
     /**
+     * @ORM\Column(name="sub_tipo", type="string", length=1, nullable=true)
+     */
+    private $subTipo;
+
+    /**
      * @ORM\Column(name="afecta_salud", type="boolean", nullable=true)
      */
     private $afectaSalud = false;
@@ -109,6 +114,22 @@ class RhuNovedadTipo
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubTipo()
+    {
+        return $this->subTipo;
+    }
+
+    /**
+     * @param mixed $subTipo
+     */
+    public function setSubTipo($subTipo): void
+    {
+        $this->subTipo = $subTipo;
     }
 
     /**
@@ -223,4 +244,3 @@ class RhuNovedadTipo
         $this->conceptoRel = $conceptoRel;
     }
 }
-

@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,14 +26,19 @@ class NovedadTipoType extends AbstractType
             ->add('maternidad', CheckboxType::class, ['required' => false])
             ->add('paternidad', CheckboxType::class, ['required' => false])
             ->add('remunerada', CheckboxType::class, ['required' => false])
-//            ->add('conceptoRel', EntityType::class, [
-//                'class' => RhuConcepto::class,
-//                'query_builder' => function (EntityRepository $er) {
-//                    return $er->createQueryBuilder('er')
-//                        ->orderBy('er.nombre');
-//                }, 'choice_label' => 'nombre',
-//                'required' => true
-//            ])
+            ->add('subTipo', ChoiceType::class,[
+                'choices' => [
+                    'LICENCIA' => 'L','INCAPACIDAD' => 'I'
+                ],
+                'required' => true])
+            ->add('conceptoRel', EntityType::class, [
+                'class' => RhuConcepto::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('er')
+                        ->orderBy('er.nombre');
+                }, 'choice_label' => 'nombre',
+                'required' => true
+            ])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

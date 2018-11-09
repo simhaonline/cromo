@@ -41,7 +41,7 @@ class NotificacionController extends Controller
 
     /**
      * @param TokenStorageInterface $user
-     * @Route("/general/administracion/notificacion/todasNotificaciones", name="general_administracion_notificacion_tipo__todasNotificaciones")
+     * @Route("/general/administracion/notificacion/todasNotificaciones", name="general_administracion_notificacion__todasNotificaciones")
      */
     public function todasNotificaciones(Request $request, TokenStorageInterface $user){
         $em=$this->getDoctrine()->getManager();

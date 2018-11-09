@@ -7,6 +7,7 @@ use App\Entity\Inventario\InvImportacionTipo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -30,6 +31,7 @@ class ImportacionType extends AbstractType {
                 'choice_label' => 'nombre',
                 'label' => 'Importacion tipo:'
             ])
+            ->add('tasaRepresentativaMercado',NumberType::class, ['required' => false,'label' => 'TRM:'])
             ->add('soporte',TextType::class, ['required' => false,'label' => 'Soporte:'])
             ->add('comentario',TextareaType::class, ['required' => false,'label' => 'Comentario:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);

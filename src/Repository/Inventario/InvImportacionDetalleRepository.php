@@ -25,6 +25,7 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT id.codigoImportacionDetallePk,
                   id.codigoImportacionFk,
+                  id.codigoItemFk,
                   id.cantidad,
                   id.vrPrecioExtranjero,
                   id.porcentajeIvaExtranjero,
@@ -39,6 +40,7 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
                   id.vrNetoLocal,
                   id.vrTotalLocal,
                   i.nombre as itemNombre,
+                  i.referencia as itemReferencia,
                   m.nombre as itemMarcaNombre                         
         FROM App\Entity\Inventario\InvImportacionDetalle id
         LEFT JOIN id.itemRel i
@@ -53,7 +55,7 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if (!$arImportacion->getEstadoAutorizado()) {
-            if (count($arrDetallesSeleccionados)) {
+            if ($arrDetallesSeleccionados) {
                 foreach ($arrDetallesSeleccionados as $codigo) {
                     $ar = $em->getRepository(InvImportacionDetalle::class)->find($codigo);
                     if ($ar) {

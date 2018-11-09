@@ -157,12 +157,12 @@ class Importacion extends \FPDF
             $pdf->SetX(10);
             $pdf->Cell(10, 6, $arImportacionDetalle['codigoItemFk'], 1, 0, 'L');
             $pdf->Cell(99, 6, utf8_decode($arImportacionDetalle['itemNombre']), 1, 0, 'L');
-            $pdf->Cell(14.2, 6, substr($arImportacionDetalle['marca'], 0, 3), 1, 0, 'R');
-            $pdf->Cell(11, 6, 'UNIDAD', 1, 0, 'C');
+            $pdf->Cell(14.2, 6, substr($arImportacionDetalle['marca'], 0, 10), 1, 0, 'R');
+            $pdf->Cell(11, 6, 'UNIDAD', 1, 0, 'L');
             $pdf->Cell(10, 6, $arImportacionDetalle['cantidad'], 1, 0, 'R');
-            $pdf->Cell(18, 6, '$ ' . number_format($arImportacionDetalle['vrPrecioExtranjero'], 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(18, 6, number_format($arImportacionDetalle['vrPrecioExtranjero'], 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(7, 6, number_format($arImportacionDetalle['porcentajeIvaExtranjero'], 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(21, 6, '$ ' . number_format($arImportacionDetalle['vrTotalExtranjero'], 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(21, 6, number_format($arImportacionDetalle['vrTotalExtranjero'], 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 45);
         }
@@ -178,7 +178,7 @@ class Importacion extends \FPDF
             $pdf->Cell(25, 4, "SUBTOTAL", 1, 0, 'L', true);
             $pdf->SetFillColor(255, 255, 255);
             $pdf->SetFont('Arial', '', 8);
-            $pdf->Cell(25, 4, '$ '.number_format($arImportacion->getVrSubtotal(), 2, '.', ','), 1, 0, 'R');
+            $pdf->Cell(25, 4, number_format($arImportacion->getVrSubtotalExtranjero(), 2, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 8);
             $pdf->SetFillColor(236, 236, 236);
@@ -186,7 +186,7 @@ class Importacion extends \FPDF
             $pdf->Cell(25, 4, "IVA", 1, 0, 'L', true);
             $pdf->SetFont('Arial', '', 8);
             $pdf->SetFillColor(255, 255, 255);
-            $pdf->Cell(25, 4, '$ '.number_format($arImportacion->getVrIva(), 2, '.', ','), 1, 0, 'R');
+            $pdf->Cell(25, 4, number_format($arImportacion->getVrIvaExtranjero(), 2, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 8);
             $pdf->SetFillColor(236, 236, 236);
@@ -194,7 +194,7 @@ class Importacion extends \FPDF
             $pdf->Cell(25, 4, "TOTAL NETO", 1, 0, 'L', true);
             $pdf->SetFont('Arial', '', 8);
             $pdf->SetFillColor(255, 255, 255);
-            $pdf->Cell(25, 4,'$ '.number_format($arImportacion->getVrTotal(), 2, '.', ','), 1, 0, 'R');
+            $pdf->Cell(25, 4, number_format($arImportacion->getVrTotalExtranjero(), 2, '.', ','), 1, 0, 'R');
         }
     }
 

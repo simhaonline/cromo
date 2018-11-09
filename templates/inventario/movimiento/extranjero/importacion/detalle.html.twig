@@ -24,7 +24,9 @@
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arImportacion.usuario }}</td>
             <td class="titulo">SUBTOTAL:</td>
-            <td align="right">$ {{ arImportacion.vrSubtotal | number_format(0, '.', ',') }}</td>
+            <td align="right">$ {{ arImportacion.vrSubtotalExtranjero | number_format(0, '.', ',') }}</td>
+            <td class="titulo">SUBTOTAL:</td>
+            <td align="right">$ {{ arImportacion.vrSubtotalLocal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">NUMERO:</td>
@@ -32,34 +34,33 @@
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arImportacion.fecha | date("Y-m-d H:i:s") }}</td>
             <td class="titulo">IVA:</td>
-            <td align="right">$ {{ arImportacion.vrIva | number_format(0, '.', ',') }}</td>
+            <td align="right">$ {{ arImportacion.vrIvaExtranjero | number_format(0, '.', ',') }}</td>
+            <td class="titulo">IVA:</td>
+            <td align="right">$ {{ arImportacion.vrIvaLocal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">PROVEEDOR:</td>
             <td class="td-in-well">{{ arImportacion.terceroRel.nombreCorto }}</td>
             <td class="titulo">SOPORTE:</td>
             <td class="td-in-well">{{ arImportacion.soporte }}</td>
-            <td class="titulo">NETO:</td>
-            <td align="right">$ {{ arImportacion.vrTotal | number_format(0, '.', ',') }}</td>
+            <td class="titulo">TOTAL:</td>
+            <td align="right">$ {{ arImportacion.vrTotalExtranjero | number_format(0, '.', ',') }}</td>
+            <td class="titulo">TOTAL:</td>
+            <td align="right">$ {{ arImportacion.vrTotalLocal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
+            <td class="titulo">TRM:</td>
+            <td class="td-in-well">{{ arImportacion.tasaRepresentativaMercado }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo">TOTAL COSTOS:</td>
             <td align="right">$ {{ arImportacion.vrTotalCosto | number_format(0, '.', ',') }}</td>
-        </tr><tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">TOTAL:</td>
-            <td align="right">$ {{ arImportacion.vrTotal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
-            <td class="td-in-well" colspan="5">{{ arImportacion.comentario }}</td>
+            <td class="td-in-well" colspan="7">{{ arImportacion.comentario }}</td>
         </tr>
     </table>
     <ul class="nav nav-tabs">
@@ -73,10 +74,23 @@
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
                         <tr>
+                            <th colspan="5">ITEM</th>
+                            <th colspan="6">EXTRANJERO</th>
+                            <th colspan="5">LOCAL</th>
+                            <th></th>
+                        </tr>
+                        <tr>
                             <th>ID</th>
                             <th>ITEM</th>
+                            <th>NOMBRE</th>
+                            <th>REFERENCIA</th>
                             <th>MARCA</th>
                             <th>CAN</th>
+                            <th>PRECIO</th>
+                            <th>%IVA</th>
+                            <th>IVA</th>
+                            <th>SUBOTAL</th>
+                            <th>TOTAL</th>
                             <th>PRECIO</th>
                             <th>%IVA</th>
                             <th>IVA</th>
@@ -93,8 +107,10 @@
                                                                                                 name="TxtCodigo[]"
                                                                                                 value="{{ arImportacionDetalle.codigoImportacionDetallePk }}">
                                 </td>
+                                <td>{{ arImportacionDetalle.codigoItemFk | default('') }}</td>
                                 <td>{{ arImportacionDetalle.itemNombre | default('') }}</td>
                                 <td>{{ arImportacionDetalle.itemMarcaNombre | default('') }}</td>
+                                <td>{{ arImportacionDetalle.itemReferencia | default('') }}</td>
                                 <td style="text-align: center;">
                                     {% if not arImportacion.estadoAutorizado %}
                                         <input style="text-align: right;" type="text"
@@ -115,15 +131,15 @@
                                     {% endif %}
                                 </td>
                                 <td class="numero">{{ arImportacionDetalle.porcentajeIvaExtranjero }}</td>
-                                <td class="numero">
-                                    $ {{ arImportacionDetalle.vrIvaExtranjero | number_format(0, '.', ',') }}</td>
-                                <td class="numero">
-                                    $ {{ arImportacionDetalle.vrSubtotalExtranjero | number_format(0, '.', ',') }}</td>
-                                <td class="numero">
-                                    $ {{ arImportacionDetalle.vrTotalExtranjero | number_format(0, '.', ',') }}</td>
-                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
-                                                                       value="{{ arImportacionDetalle.codigoImportacionDetallePk }}"/>
-                                </td>
+                                <td class="numero">{{ arImportacionDetalle.vrIvaExtranjero | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arImportacionDetalle.vrSubtotalExtranjero | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arImportacionDetalle.vrTotalExtranjero | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arImportacionDetalle.vrPrecioLocal | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arImportacionDetalle.porcentajeIvaLocal }}</td>
+                                <td class="numero">{{ arImportacionDetalle.vrIvaLocal | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arImportacionDetalle.vrSubtotalLocal | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arImportacionDetalle.vrTotalLocal | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arImportacionDetalle.codigoImportacionDetallePk }}"/></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -191,7 +207,7 @@
                         <input type="button" class="btn btn-sm btn-default" value="Nuevo" disabled>
                     {% else %}
                         <a class="btn btn-sm btn-default"
-                           href="javascript:abrirVentana3('{{ path('inventario_movimiento_extranjero_importacion_costo_nuevo',{'id':0,'codigoImportacion': arImportacion.codigoImportacionPk }) }}','costoNuevo',500, 600)">Nuevo</a>
+                           href="javascript:abrirVentana3('{{ path('inventario_movimiento_extranjero_importacion_costo_nuevo',{'id':0,'codigoImportacion': arImportacion.codigoImportacionPk }) }}','costoNuevo',500, 800)">Nuevo</a>
                     {% endif %}
                 </div>
                 <div class="btn-group btn-group-sm">

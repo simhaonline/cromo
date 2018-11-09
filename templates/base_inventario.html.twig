@@ -142,6 +142,20 @@
                                         </a>
                                     </li>
                                 </ul>
+                            <li/>
+                            <li>
+                                <a href="#">Extranjero <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'importacionTipo'}) }}">
+                                            Importacion tipo</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'importacionCostoConcepto'}) }}">
+                                            Importacion costo concepto</a>
+                                    </li>
+                                </ul>
+                            </li>
                             <li>
                                 <a href="#">Inventario <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
@@ -168,14 +182,6 @@
                                     <li>
                                         <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'bodega'}) }}">
                                             Bodega</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'importacionTipo'}) }}">
-                                            Importacion tipo</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('admin_lista',{'modulo' : 'inventario', 'entidad' : 'importacionCostoConcepto'}) }}">
-                                            Importacion costo concepto</a>
                                     </li>
                                     <li>
                                         <a href="{{ path('inventario_administracion_inventario_documento_lista') }}">Documento</a></li>

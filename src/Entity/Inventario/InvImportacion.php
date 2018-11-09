@@ -47,24 +47,49 @@ class InvImportacion
     private $soporte;
 
     /**
-     * @ORM\Column(name="vr_subtotal", type="float", nullable=true)
+     * @ORM\Column(name="tasa_representativa_mercado", type="float", nullable=true)
      */
-    private $vrSubtotal = 0;
+    private $tasaRepresentativaMercado = 0;
 
     /**
-     * @ORM\Column(name="vr_iva", type="float", nullable=true)
+     * @ORM\Column(name="vr_subtotal_extranjero", type="float", nullable=true)
      */
-    private $vrIva = 0;
+    private $vrSubtotalExtranjero = 0;
 
     /**
-     * @ORM\Column(name="vr_neto", type="float", nullable=true)
+     * @ORM\Column(name="vr_iva_extranjero", type="float", nullable=true)
      */
-    private $vrNeto = 0;
+    private $vrIvaExtranjero = 0;
 
     /**
-     * @ORM\Column(name="vr_total", type="float", nullable=true)
+     * @ORM\Column(name="vr_neto_extranjero", type="float", nullable=true)
      */
-    private $vrTotal = 0;
+    private $vrNetoExtranjero = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_extranjero", type="float", nullable=true)
+     */
+    private $vrTotalExtranjero = 0;
+
+    /**
+     * @ORM\Column(name="vr_subtotal_local", type="float", nullable=true)
+     */
+    private $vrSubtotalLocal = 0;
+
+    /**
+     * @ORM\Column(name="vr_iva_local", type="float", nullable=true)
+     */
+    private $vrIvaLocal = 0;
+
+    /**
+     * @ORM\Column(name="vr_neto_local", type="float", nullable=true)
+     */
+    private $vrNetoLocal = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_local", type="float", nullable=true)
+     */
+    private $vrTotalLocal = 0;
 
     /**
      * @ORM\Column(name="vr_total_costo", type="float", nullable=true)
@@ -133,7 +158,7 @@ class InvImportacion
     /**
      * @param mixed $codigoImportacionPk
      */
-    public function setCodigoImportacionPk($codigoImportacionPk): void
+    public function setCodigoImportacionPk( $codigoImportacionPk ): void
     {
         $this->codigoImportacionPk = $codigoImportacionPk;
     }
@@ -149,7 +174,7 @@ class InvImportacion
     /**
      * @param mixed $codigoTerceroFk
      */
-    public function setCodigoTerceroFk($codigoTerceroFk): void
+    public function setCodigoTerceroFk( $codigoTerceroFk ): void
     {
         $this->codigoTerceroFk = $codigoTerceroFk;
     }
@@ -165,7 +190,7 @@ class InvImportacion
     /**
      * @param mixed $numero
      */
-    public function setNumero($numero): void
+    public function setNumero( $numero ): void
     {
         $this->numero = $numero;
     }
@@ -181,7 +206,7 @@ class InvImportacion
     /**
      * @param mixed $fecha
      */
-    public function setFecha($fecha): void
+    public function setFecha( $fecha ): void
     {
         $this->fecha = $fecha;
     }
@@ -197,7 +222,7 @@ class InvImportacion
     /**
      * @param mixed $fechaLlegada
      */
-    public function setFechaLlegada($fechaLlegada): void
+    public function setFechaLlegada( $fechaLlegada ): void
     {
         $this->fechaLlegada = $fechaLlegada;
     }
@@ -213,7 +238,7 @@ class InvImportacion
     /**
      * @param mixed $soporte
      */
-    public function setSoporte($soporte): void
+    public function setSoporte( $soporte ): void
     {
         $this->soporte = $soporte;
     }
@@ -221,65 +246,81 @@ class InvImportacion
     /**
      * @return mixed
      */
-    public function getVrSubtotal()
+    public function getVrSubtotalExtranjero()
     {
-        return $this->vrSubtotal;
+        return $this->vrSubtotalExtranjero;
     }
 
     /**
-     * @param mixed $vrSubtotal
+     * @param mixed $vrSubtotalExtranjero
      */
-    public function setVrSubtotal($vrSubtotal): void
+    public function setVrSubtotalExtranjero( $vrSubtotalExtranjero ): void
     {
-        $this->vrSubtotal = $vrSubtotal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrIva()
-    {
-        return $this->vrIva;
-    }
-
-    /**
-     * @param mixed $vrIva
-     */
-    public function setVrIva($vrIva): void
-    {
-        $this->vrIva = $vrIva;
+        $this->vrSubtotalExtranjero = $vrSubtotalExtranjero;
     }
 
     /**
      * @return mixed
      */
-    public function getVrNeto()
+    public function getVrIvaExtranjero()
     {
-        return $this->vrNeto;
+        return $this->vrIvaExtranjero;
     }
 
     /**
-     * @param mixed $vrNeto
+     * @param mixed $vrIvaExtranjero
      */
-    public function setVrNeto($vrNeto): void
+    public function setVrIvaExtranjero( $vrIvaExtranjero ): void
     {
-        $this->vrNeto = $vrNeto;
+        $this->vrIvaExtranjero = $vrIvaExtranjero;
     }
 
     /**
      * @return mixed
      */
-    public function getVrTotal()
+    public function getVrNetoExtranjero()
     {
-        return $this->vrTotal;
+        return $this->vrNetoExtranjero;
     }
 
     /**
-     * @param mixed $vrTotal
+     * @param mixed $vrNetoExtranjero
      */
-    public function setVrTotal($vrTotal): void
+    public function setVrNetoExtranjero( $vrNetoExtranjero ): void
     {
-        $this->vrTotal = $vrTotal;
+        $this->vrNetoExtranjero = $vrNetoExtranjero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalExtranjero()
+    {
+        return $this->vrTotalExtranjero;
+    }
+
+    /**
+     * @param mixed $vrTotalExtranjero
+     */
+    public function setVrTotalExtranjero( $vrTotalExtranjero ): void
+    {
+        $this->vrTotalExtranjero = $vrTotalExtranjero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalCosto()
+    {
+        return $this->vrTotalCosto;
+    }
+
+    /**
+     * @param mixed $vrTotalCosto
+     */
+    public function setVrTotalCosto( $vrTotalCosto ): void
+    {
+        $this->vrTotalCosto = $vrTotalCosto;
     }
 
     /**
@@ -293,7 +334,7 @@ class InvImportacion
     /**
      * @param mixed $estadoAutorizado
      */
-    public function setEstadoAutorizado($estadoAutorizado): void
+    public function setEstadoAutorizado( $estadoAutorizado ): void
     {
         $this->estadoAutorizado = $estadoAutorizado;
     }
@@ -309,7 +350,7 @@ class InvImportacion
     /**
      * @param mixed $estadoAprobado
      */
-    public function setEstadoAprobado($estadoAprobado): void
+    public function setEstadoAprobado( $estadoAprobado ): void
     {
         $this->estadoAprobado = $estadoAprobado;
     }
@@ -325,7 +366,7 @@ class InvImportacion
     /**
      * @param mixed $estadoAnulado
      */
-    public function setEstadoAnulado($estadoAnulado): void
+    public function setEstadoAnulado( $estadoAnulado ): void
     {
         $this->estadoAnulado = $estadoAnulado;
     }
@@ -341,7 +382,7 @@ class InvImportacion
     /**
      * @param mixed $comentario
      */
-    public function setComentario($comentario): void
+    public function setComentario( $comentario ): void
     {
         $this->comentario = $comentario;
     }
@@ -357,7 +398,7 @@ class InvImportacion
     /**
      * @param mixed $usuario
      */
-    public function setUsuario($usuario): void
+    public function setUsuario( $usuario ): void
     {
         $this->usuario = $usuario;
     }
@@ -373,7 +414,7 @@ class InvImportacion
     /**
      * @param mixed $importacionTipoRel
      */
-    public function setImportacionTipoRel($importacionTipoRel): void
+    public function setImportacionTipoRel( $importacionTipoRel ): void
     {
         $this->importacionTipoRel = $importacionTipoRel;
     }
@@ -389,7 +430,7 @@ class InvImportacion
     /**
      * @param mixed $terceroRel
      */
-    public function setTerceroRel($terceroRel): void
+    public function setTerceroRel( $terceroRel ): void
     {
         $this->terceroRel = $terceroRel;
     }
@@ -405,7 +446,7 @@ class InvImportacion
     /**
      * @param mixed $importacionesDetallesImportacionRel
      */
-    public function setImportacionesDetallesImportacionRel($importacionesDetallesImportacionRel): void
+    public function setImportacionesDetallesImportacionRel( $importacionesDetallesImportacionRel ): void
     {
         $this->importacionesDetallesImportacionRel = $importacionesDetallesImportacionRel;
     }
@@ -421,7 +462,7 @@ class InvImportacion
     /**
      * @param mixed $importacionesCostosImportacionRel
      */
-    public function setImportacionesCostosImportacionRel($importacionesCostosImportacionRel): void
+    public function setImportacionesCostosImportacionRel( $importacionesCostosImportacionRel ): void
     {
         $this->importacionesCostosImportacionRel = $importacionesCostosImportacionRel;
     }
@@ -429,16 +470,83 @@ class InvImportacion
     /**
      * @return mixed
      */
-    public function getVrTotalCosto()
+    public function getTasaRepresentativaMercado()
     {
-        return $this->vrTotalCosto;
+        return $this->tasaRepresentativaMercado;
     }
 
     /**
-     * @param mixed $vrTotalCosto
+     * @param mixed $tasaRepresentativaMercado
      */
-    public function setVrTotalCosto($vrTotalCosto): void
+    public function setTasaRepresentativaMercado( $tasaRepresentativaMercado ): void
     {
-        $this->vrTotalCosto = $vrTotalCosto;
+        $this->tasaRepresentativaMercado = $tasaRepresentativaMercado;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSubtotalLocal()
+    {
+        return $this->vrSubtotalLocal;
+    }
+
+    /**
+     * @param mixed $vrSubtotalLocal
+     */
+    public function setVrSubtotalLocal( $vrSubtotalLocal ): void
+    {
+        $this->vrSubtotalLocal = $vrSubtotalLocal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIvaLocal()
+    {
+        return $this->vrIvaLocal;
+    }
+
+    /**
+     * @param mixed $vrIvaLocal
+     */
+    public function setVrIvaLocal( $vrIvaLocal ): void
+    {
+        $this->vrIvaLocal = $vrIvaLocal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrNetoLocal()
+    {
+        return $this->vrNetoLocal;
+    }
+
+    /**
+     * @param mixed $vrNetoLocal
+     */
+    public function setVrNetoLocal( $vrNetoLocal ): void
+    {
+        $this->vrNetoLocal = $vrNetoLocal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalLocal()
+    {
+        return $this->vrTotalLocal;
+    }
+
+    /**
+     * @param mixed $vrTotalLocal
+     */
+    public function setVrTotalLocal( $vrTotalLocal ): void
+    {
+        $this->vrTotalLocal = $vrTotalLocal;
+    }
+
+
+
 }

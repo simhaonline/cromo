@@ -28,10 +28,10 @@ class InvImportacionRepository extends ServiceEntityRepository
             ->addSelect('i.estadoAutorizado')
             ->addSelect('i.estadoAprobado')
             ->addSelect('i.estadoAnulado')
-            ->addSelect('i.vrSubtotal')
-            ->addSelect('i.vrIva')
-            ->addSelect('i.vrNeto')
-            ->addSelect('i.vrTotal')
+            ->addSelect('i.vrSubtotalExtranjero')
+            ->addSelect('i.vrIvaExtranjero')
+            ->addSelect('i.vrNetoExtranjero')
+            ->addSelect('i.vrTotalExtranjero')
             ->addSelect('t.nombreCorto AS terceroNombreCorto')
             ->leftJoin('i.terceroRel', 't')
             ->leftJoin('i.importacionTipoRel', 'it')
@@ -60,29 +60,50 @@ class InvImportacionRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arImportacion = $em->getRepository(InvImportacion::class)->find($codigoImportacion);
         $arImportacionDetalles = $em->getRepository(InvImportacionDetalle::class)->findBy(['codigoImportacionFk' => $codigoImportacion]);
-        $subtotalGeneral = 0;
-        $ivaGeneral = 0;
-        $totalGeneral = 0;
+        $subtotalGeneralExtranjero = 0;
+        $ivaGeneralExtranjero = 0;
+        $totalGeneralExtranjero = 0;
+        $subtotalGeneralLocal = 0;
+        $ivaGeneralLocal = 0;
+        $totalGeneralLocal = 0;
         foreach ($arImportacionDetalles as $arImportacionDetalle) {
             $arImportacionDetalleAct = $em->getRepository(InvImportacionDetalle::class)->find($arImportacionDetalle->getCodigoImportacionDetallePk());
-            $subtotal = $arImportacionDetalle->getCantidad() * $arImportacionDetalle->getVrPrecioExtranjero();
-//            $porcentajeIva = $arImportacionDetalle->getPorcentajeIva();
-//            $iva = $subtotal * $porcentajeIva / 100;
-            $subtotalGeneral += $subtotal;
-//            $ivaGeneral += $iva;
-//            $total = $subtotal + $iva;
-            $total = $subtotal;
-            $totalGeneral += $total;
-            $arImportacionDetalleAct->setVrSubtotalExtranjero($subtotal);
-//            $arImportacionDetalleAct->setVrIva($iva);
-            $arImportacionDetalleAct->setVrTotalExtranjero($total);
+            $subtotalExtranjero = $arImportacionDetalle->getCantidad() * $arImportacionDetalle->getVrPrecioExtranjero();
+            $porcentajeIvaExtranjero = $arImportacionDetalle->getPorcentajeIvaExtranjero();
+            $ivaExtranjero = $subtotalExtranjero * $porcentajeIvaExtranjero / 100;
+            $subtotalGeneralExtranjero += $subtotalExtranjero;
+            $ivaGeneralExtranjero += $ivaExtranjero;
+            $totalExtranjero = $subtotalExtranjero + $ivaExtranjero;
+            $totalGeneralExtranjero += $totalExtranjero;
+            $arImportacionDetalleAct->setVrSubtotalExtranjero($subtotalExtranjero);
+            $arImportacionDetalleAct->setVrIvaExtranjero($ivaExtranjero);
+            $arImportacionDetalleAct->setVrTotalExtranjero($totalExtranjero);
+
+            $precioLocal = $arImportacionDetalle->getVrPrecioExtranjero() * $arImportacion->getTasaRepresentativaMercado();
+            $subtotalLocal = $arImportacionDetalle->getCantidad() * $precioLocal;
+            $porcentajeIvaLocal = $arImportacionDetalle->getPorcentajeIvaLocal();
+            $ivaLocal = $subtotalExtranjero * $porcentajeIvaLocal / 100;
+            $subtotalGeneralLocal += $subtotalLocal;
+            $ivaGeneralLocal += $ivaLocal;
+            $totalLocal = $subtotalLocal + $ivaLocal;
+            $totalGeneralLocal += $totalLocal;
+            $arImportacionDetalleAct->setVrPrecioLocal($precioLocal);
+            $arImportacionDetalleAct->setVrSubtotalLocal($subtotalLocal);
+            $arImportacionDetalleAct->setVrIvaLocal($ivaLocal);
+            $arImportacionDetalleAct->setVrTotalLocal($totalLocal);
+
             $em->persist($arImportacionDetalleAct);
         }
         $vrTotalCosto = $em->getRepository(InvImportacionCosto::class)->totalCostos($arImportacion->getCodigoImportacionPk());
         $arImportacion->setVrTotalCosto($vrTotalCosto);
-        $arImportacion->setVrSubtotal($subtotalGeneral);
-        $arImportacion->setVrIva($ivaGeneral);
-        $arImportacion->setVrTotal($totalGeneral);
+        $arImportacion->setVrSubtotalExtranjero($subtotalGeneralExtranjero);
+        $arImportacion->setVrIvaExtranjero($ivaGeneralExtranjero);
+        $arImportacion->setVrTotalExtranjero($totalGeneralExtranjero);
+
+        $arImportacion->setVrSubtotalLocal($subtotalGeneralLocal);
+        $arImportacion->setVrIvaLocal($ivaGeneralLocal);
+        $arImportacion->setVrTotalLocal($totalGeneralLocal);
+
         $em->persist($arImportacion);
         $em->flush();
     }
@@ -148,6 +169,39 @@ class InvImportacionRepository extends ServiceEntityRepository
             $arImportacion->setEstadoAutorizado(0);
             $em->persist($arImportacion);
             $em->flush();
+        }
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        /**
+         * @var $arImportacion InvImportacion
+         */
+        $respuesta = '';
+        if (count($arrSeleccionados) > 0) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(InvImportacion::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            if (count($this->getEntityManager()->getRepository(InvImportacionDetalle::class)->findBy(['codigoImportacionFk' => $arRegistro->getCodigoImportacionPk()])) <= 0) {
+                                $this->getEntityManager()->remove($arRegistro);
+                            } else {
+                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                            }
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                }
+                if($respuesta != ''){
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
         }
     }
 

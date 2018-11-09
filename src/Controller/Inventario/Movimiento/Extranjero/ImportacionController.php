@@ -50,6 +50,7 @@ class ImportacionController extends ControllerListenerGeneral
             ->add('numero', TextType::class, array('data' => $session->get('filtroInvImportacionImportacionNumero')))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
@@ -66,6 +67,10 @@ class ImportacionController extends ControllerListenerGeneral
                 }
                 if ($form->get('btnExcel')->isClicked()) {
                     General::get()->setExportar($em->createQuery($em->getRepository(InvImportacion::class)->lista())->execute(), "Importacions");
+                }
+                if($form->get('btnEliminar')->isClicked()){
+                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                    $em->getRepository(InvImportacion::class)->eliminar($arrSeleccionados);
                 }
             }
         }
@@ -229,6 +234,7 @@ class ImportacionController extends ControllerListenerGeneral
                             $arImportacionDetalle->setImportacionRel($arImportacion);
                             $arImportacionDetalle->setItemRel($arItem);
                             $arImportacionDetalle->setCantidad($cantidad);
+                            $arImportacionDetalle->setCantidadPendiente($cantidad);
                             $em->persist($arImportacionDetalle);
                         }
                     }
@@ -247,6 +253,7 @@ class ImportacionController extends ControllerListenerGeneral
                             $arImportacionDetalle->setImportacionRel($arImportacion);
                             $arImportacionDetalle->setItemRel($arItem);
                             $arImportacionDetalle->setCantidad($cantidad);
+                            $arImportacionDetalle->setCantidadPendiente($cantidad);
                             $em->persist($arImportacionDetalle);
                         }
                     }

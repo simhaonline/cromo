@@ -5,6 +5,7 @@ namespace App\Controller\Estructura;
 
 use App\Entity\General\GenNotificacion;
 use App\Utilidades\BaseDatos;
+use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -127,24 +128,29 @@ final class FuncionesController
         try{
             $em=BaseDatos::getEm();
             $arNotificacionTipoPrueba=$em->getRepository('App:General\GenNotificacionTipo')->find($id);
-            if(!$usuarios){
-                $usuarios=json_decode($arNotificacionTipoPrueba->getUsuarios(),true);
-            }
-            if($usuarios) {
-                foreach ($usuarios as $user) {
-                    $arUsuario = $em->getRepository('App:Seguridad\Usuario')->findOneBy(['username' => $user]);
-                    if ($arUsuario) {
-                        $arNotificacion = (new GenNotificacion())
-                            ->setFecha(new \DateTime('now'))
-                            ->setNotificacionTipoRel($arNotificacionTipoPrueba)
-                            ->setCodigoUsuarioReceptorFk($arUsuario->getId())
-                            ->setCodigoUsuarioEmisorFk(null);
-                        $arUsuario->setNotificacionesPendientes($arUsuario->getNotificacionesPendientes() + 1);
-                        $em->persist($arUsuario);
-                        $em->persist($arNotificacion);
-                    }
+            if($arNotificacionTipoPrueba->getEstadoActivo()) {
+                if (!$usuarios) {
+                    $usuarios = json_decode($arNotificacionTipoPrueba->getUsuarios(), true);
                 }
-            $em->flush();
+                if ($usuarios) {
+                    foreach ($usuarios as $user) {
+                        $arUsuario = $em->getRepository('App:Seguridad\Usuario')->findOneBy(['username' => $user]);
+                        if ($arUsuario) {
+                            $arNotificacion = (new GenNotificacion())
+                                ->setFecha(new \DateTime('now'))
+                                ->setNotificacionTipoRel($arNotificacionTipoPrueba)
+                                ->setCodigoUsuarioReceptorFk($arUsuario->getId())
+                                ->setCodigoUsuarioEmisorFk(null);
+                            $arUsuario->setNotificacionesPendientes($arUsuario->getNotificacionesPendientes() + 1);
+                            $em->persist($arUsuario);
+                            $em->persist($arNotificacion);
+                        }
+                    }
+                    $em->flush();
+                }
+            }
+            else{
+                Mensajes::error("No se puede crear la notificacion, se encuentra desactivada");
             }
         }catch (\Exception $exception){
             //Error

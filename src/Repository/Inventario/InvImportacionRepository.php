@@ -3,6 +3,7 @@
 namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvImportacion;
+use App\Entity\Inventario\InvImportacionCosto;
 use App\Entity\Inventario\InvImportacionDetalle;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -77,6 +78,8 @@ class InvImportacionRepository extends ServiceEntityRepository
             $arImportacionDetalleAct->setVrTotalExtranjero($total);
             $em->persist($arImportacionDetalleAct);
         }
+        $vrTotalCosto = $em->getRepository(InvImportacionCosto::class)->totalCostos($arImportacion->getCodigoImportacionPk());
+        $arImportacion->setVrTotalCosto($vrTotalCosto);
         $arImportacion->setVrSubtotal($subtotalGeneral);
         $arImportacion->setVrIva($ivaGeneral);
         $arImportacion->setVrTotal($totalGeneral);

@@ -47,24 +47,29 @@ class InvImportacion
     private $soporte;
 
     /**
-     * @ORM\Column(name="vr_subtotal", type="float")
+     * @ORM\Column(name="vr_subtotal", type="float", nullable=true)
      */
     private $vrSubtotal = 0;
 
     /**
-     * @ORM\Column(name="vr_iva", type="float")
+     * @ORM\Column(name="vr_iva", type="float", nullable=true)
      */
     private $vrIva = 0;
 
     /**
-     * @ORM\Column(name="vr_neto", type="float")
+     * @ORM\Column(name="vr_neto", type="float", nullable=true)
      */
     private $vrNeto = 0;
 
     /**
-     * @ORM\Column(name="vr_total", type="float")
+     * @ORM\Column(name="vr_total", type="float", nullable=true)
      */
     private $vrTotal = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_costo", type="float", nullable=true)
+     */
+    private $vrTotalCosto = 0;
 
     /**
      * @ORM\Column(name="estado_autorizado", type="boolean",options={"default" : false}, nullable=true)
@@ -419,5 +424,21 @@ class InvImportacion
     public function setImportacionesCostosImportacionRel($importacionesCostosImportacionRel): void
     {
         $this->importacionesCostosImportacionRel = $importacionesCostosImportacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalCosto()
+    {
+        return $this->vrTotalCosto;
+    }
+
+    /**
+     * @param mixed $vrTotalCosto
+     */
+    public function setVrTotalCosto($vrTotalCosto): void
+    {
+        $this->vrTotalCosto = $vrTotalCosto;
     }
 }

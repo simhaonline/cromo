@@ -52,6 +52,11 @@ class InvImportacion
     private $tasaRepresentativaMercado = 0;
 
     /**
+     * @ORM\Column(name="codigo_moneda_fk", type="string",length=10, nullable=true)
+     */
+    private $codigoMonedaFk;
+
+    /**
      * @ORM\Column(name="vr_subtotal_extranjero", type="float", nullable=true)
      */
     private $vrSubtotalExtranjero = 0;
@@ -136,6 +141,12 @@ class InvImportacion
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
      */
     protected $terceroRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenMoneda", inversedBy="invImportacionesMonedaRel")
+     * @ORM\JoinColumn(name="codigo_moneda_fk", referencedColumnName="codigo_moneda_pk")
+     */
+    protected $monedaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvImportacionDetalle", mappedBy="importacionRel")
@@ -246,6 +257,38 @@ class InvImportacion
     /**
      * @return mixed
      */
+    public function getTasaRepresentativaMercado()
+    {
+        return $this->tasaRepresentativaMercado;
+    }
+
+    /**
+     * @param mixed $tasaRepresentativaMercado
+     */
+    public function setTasaRepresentativaMercado( $tasaRepresentativaMercado ): void
+    {
+        $this->tasaRepresentativaMercado = $tasaRepresentativaMercado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoMonedaFk()
+    {
+        return $this->codigoMonedaFk;
+    }
+
+    /**
+     * @param mixed $codigoMonedaFk
+     */
+    public function setCodigoMonedaFk( $codigoMonedaFk ): void
+    {
+        $this->codigoMonedaFk = $codigoMonedaFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrSubtotalExtranjero()
     {
         return $this->vrSubtotalExtranjero;
@@ -305,6 +348,70 @@ class InvImportacion
     public function setVrTotalExtranjero( $vrTotalExtranjero ): void
     {
         $this->vrTotalExtranjero = $vrTotalExtranjero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSubtotalLocal()
+    {
+        return $this->vrSubtotalLocal;
+    }
+
+    /**
+     * @param mixed $vrSubtotalLocal
+     */
+    public function setVrSubtotalLocal( $vrSubtotalLocal ): void
+    {
+        $this->vrSubtotalLocal = $vrSubtotalLocal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIvaLocal()
+    {
+        return $this->vrIvaLocal;
+    }
+
+    /**
+     * @param mixed $vrIvaLocal
+     */
+    public function setVrIvaLocal( $vrIvaLocal ): void
+    {
+        $this->vrIvaLocal = $vrIvaLocal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrNetoLocal()
+    {
+        return $this->vrNetoLocal;
+    }
+
+    /**
+     * @param mixed $vrNetoLocal
+     */
+    public function setVrNetoLocal( $vrNetoLocal ): void
+    {
+        $this->vrNetoLocal = $vrNetoLocal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalLocal()
+    {
+        return $this->vrTotalLocal;
+    }
+
+    /**
+     * @param mixed $vrTotalLocal
+     */
+    public function setVrTotalLocal( $vrTotalLocal ): void
+    {
+        $this->vrTotalLocal = $vrTotalLocal;
     }
 
     /**
@@ -438,6 +545,22 @@ class InvImportacion
     /**
      * @return mixed
      */
+    public function getMonedaRel()
+    {
+        return $this->monedaRel;
+    }
+
+    /**
+     * @param mixed $monedaRel
+     */
+    public function setMonedaRel( $monedaRel ): void
+    {
+        $this->monedaRel = $monedaRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getImportacionesDetallesImportacionRel()
     {
         return $this->importacionesDetallesImportacionRel;
@@ -465,86 +588,6 @@ class InvImportacion
     public function setImportacionesCostosImportacionRel( $importacionesCostosImportacionRel ): void
     {
         $this->importacionesCostosImportacionRel = $importacionesCostosImportacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTasaRepresentativaMercado()
-    {
-        return $this->tasaRepresentativaMercado;
-    }
-
-    /**
-     * @param mixed $tasaRepresentativaMercado
-     */
-    public function setTasaRepresentativaMercado( $tasaRepresentativaMercado ): void
-    {
-        $this->tasaRepresentativaMercado = $tasaRepresentativaMercado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrSubtotalLocal()
-    {
-        return $this->vrSubtotalLocal;
-    }
-
-    /**
-     * @param mixed $vrSubtotalLocal
-     */
-    public function setVrSubtotalLocal( $vrSubtotalLocal ): void
-    {
-        $this->vrSubtotalLocal = $vrSubtotalLocal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrIvaLocal()
-    {
-        return $this->vrIvaLocal;
-    }
-
-    /**
-     * @param mixed $vrIvaLocal
-     */
-    public function setVrIvaLocal( $vrIvaLocal ): void
-    {
-        $this->vrIvaLocal = $vrIvaLocal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrNetoLocal()
-    {
-        return $this->vrNetoLocal;
-    }
-
-    /**
-     * @param mixed $vrNetoLocal
-     */
-    public function setVrNetoLocal( $vrNetoLocal ): void
-    {
-        $this->vrNetoLocal = $vrNetoLocal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalLocal()
-    {
-        return $this->vrTotalLocal;
-    }
-
-    /**
-     * @param mixed $vrTotalLocal
-     */
-    public function setVrTotalLocal( $vrTotalLocal ): void
-    {
-        $this->vrTotalLocal = $vrTotalLocal;
     }
 
 

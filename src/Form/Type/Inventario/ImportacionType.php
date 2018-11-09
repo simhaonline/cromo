@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\Inventario;
 
+use App\Entity\General\GenMoneda;
 use App\Entity\Inventario\InvImportacion;
 use App\Entity\Inventario\InvImportacionTipo;
 use Doctrine\ORM\EntityRepository;
@@ -30,6 +31,16 @@ class ImportacionType extends AbstractType {
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Importacion tipo:'
+            ])
+            ->add('monedaRel',EntityType::class,[
+                'required' => true,
+                'class' => GenMoneda::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('m')
+                        ->orderBy('m.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Moneda:'
             ])
             ->add('tasaRepresentativaMercado',NumberType::class, ['required' => false,'label' => 'TRM:'])
             ->add('soporte',TextType::class, ['required' => false,'label' => 'Soporte:'])

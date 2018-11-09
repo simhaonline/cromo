@@ -94,6 +94,21 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         }
     }
 
+    public function duplicar($arrSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if (count($arrSeleccionados) > 0) {
+            foreach ($arrSeleccionados as $codigoMovimientoDetalle) {
+                $arMovimientoDetalle = $em->getRepository(InvMovimientoDetalle::class)->find($codigoMovimientoDetalle);
+                if ($arMovimientoDetalle) {
+                    $arMovimientoDetalleNuevo = clone $arMovimientoDetalle;
+                    $em->persist($arMovimientoDetalleNuevo);
+                }
+            }
+            $em->flush();
+        }
+    }
+
     public function listarItems($nombreItem = '', $codigoItem = '')
     {
         $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvItem', 'ii')

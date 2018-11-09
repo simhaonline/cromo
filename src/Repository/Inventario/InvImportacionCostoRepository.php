@@ -23,4 +23,15 @@ class InvImportacionCostoRepository extends ServiceEntityRepository
             ->leftJoin('iic.importacionCostoConceptoRel','c')
             ->where("iic.codigoImportacionFk = {$codigoImportacion}");
     }
+
+    /**
+     * @param $codigoImportacion
+     * @return mixed
+     */
+    public function totalCostos($codigoImportacion){
+        return $this->_em->createQueryBuilder()
+            ->select('SUM(iic.vrValor)')
+            ->from(InvImportacionCosto::class,'iic')
+            ->where("iic.codigoImportacionFk = {$codigoImportacion} ")->getQuery()->execute();
+    }
 }

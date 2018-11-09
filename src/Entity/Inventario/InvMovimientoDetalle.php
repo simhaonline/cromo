@@ -48,7 +48,7 @@ class InvMovimientoDetalle
     private $loteFk;
 
     /**
-     * @ORM\Column(name="fechaVencimiento", type="date", nullable=true)
+     * @ORM\Column(name="fecha_vencimiento", type="date", nullable=true)
      */
     private $fechaVencimiento;
 

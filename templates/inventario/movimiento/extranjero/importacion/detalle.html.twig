@@ -47,6 +47,13 @@
             <td class="td-in-well"></td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
+            <td class="titulo">TOTAL COSTOS:</td>
+            <td align="right">$ {{ arImportacion.vrTotalCosto | number_format(0, '.', ',') }}</td>
+        </tr><tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
             <td class="titulo">TOTAL:</td>
             <td align="right">$ {{ arImportacion.vrTotal | number_format(0, '.', ',') }}</td>
         </tr>
@@ -165,9 +172,9 @@
                                 <td>$ {{ arCosto.vrValor | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;">
                                     {% if not arImportacion.estadoAutorizado %}
-                                    <a href="javascript:abrirVentana3('{{ path('inventario_movimiento_extranjero_importacion_costo_nuevo',{'id': arCosto.id,'codigoImportacion': arImportacion.codigoImportacionPk }) }}','costoNuevo',500, 600)">
-                                        <li class="fa fa-edit" style="color: black;font-size: large;"></li>
-                                    </a>
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_movimiento_extranjero_importacion_costo_nuevo',{'id': arCosto.id,'codigoImportacion': arImportacion.codigoImportacionPk }) }}','costoNuevo',500, 600)">
+                                            <li class="fa fa-edit" style="color: black;font-size: large;"></li>
+                                        </a>
                                     {% endif %}
                                 </td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionarCostos[]"

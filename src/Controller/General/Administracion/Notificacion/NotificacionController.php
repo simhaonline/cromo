@@ -17,10 +17,10 @@ class NotificacionController extends Controller
     {
         $em=$this->getDoctrine()->getManager();
         $usuario=$user->getToken()->getUser();
-        $notificacion=$em->getRepository('App:Seguridad\Usuario')->find($usuario->getId())->getNotificacionesPendientes();
+        $notificacion=$em->getRepository('App:Seguridad\Usuario')->find($usuario->getUsername())->getNotificacionesPendientes();
         $notificaciones=[];
         if($notificacion!=0){
-            $notificaciones=$em->getRepository('App:General\GenNotificacion')->notificaciones($usuario->getId());
+            $notificaciones=$em->getRepository('App:General\GenNotificacion')->notificaciones($usuario->getUsername());
         }
         return new JsonResponse(['notificacionesPendientes'=>$notificacion,'notificaciones'=>$notificaciones]);
     }
@@ -31,7 +31,7 @@ class NotificacionController extends Controller
     public function verNotificacionesPendientes(TokenStorageInterface $user){
         $em=$this->getDoctrine()->getManager();
         $usuario=$user->getToken()->getUser();
-        $arUsuario=$em->getRepository('App:Seguridad\Usuario')->find($usuario->getId());
+        $arUsuario=$em->getRepository('App:Seguridad\Usuario')->find($usuario->getUsername());
         $arUsuario->setNotificacionesPendientes(0);
         $em->persist($arUsuario);
         $em->flush();
@@ -46,7 +46,7 @@ class NotificacionController extends Controller
     public function todasNotificaciones(Request $request, TokenStorageInterface $user){
         $em=$this->getDoctrine()->getManager();
         $usuario=$user->getToken()->getUser();
-        $arNotificacion=$em->getRepository('App:General\GenNotificacion')->lista($usuario->getId());
+        $arNotificacion=$em->getRepository('App:General\GenNotificacion')->lista($usuario->getUsername());
         $paginator  = $this->get('knp_paginator');
         $arGenNotificacion= $paginator->paginate($arNotificacion,$request->query->getInt('page',1),20);
         return $this->render('general/administracion/notificacion/notificacion/lista.html.twig',

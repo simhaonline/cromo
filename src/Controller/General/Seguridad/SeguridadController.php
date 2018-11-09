@@ -181,8 +181,8 @@ class SeguridadController extends Controller
             if (count($arUsuarios) > 0) {
                 $hash = str_replace('&', '/', $hash);
                 foreach ($arUsuarios as $arUsuario) {
-                    if (password_verify($arUsuario->getId(), $hash)) {
-                        $id = $arUsuario->getId();
+                    if (password_verify($arUsuario->getUsername(), $hash)) {
+                        $id = $arUsuario->getUsername();
                     }
                 }
             }

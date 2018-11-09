@@ -17,7 +17,7 @@ class SegUsuarioModelo
     private $codigoSeguridadUsuarioModeloPk;
 
     /**
-     * @ORM\Column(name="codigo_usuario_fk", type="integer")
+     * @ORM\Column(name="codigo_usuario_fk", type="string")
      */
     private $codigoUsuarioFk;
 
@@ -58,7 +58,7 @@ class SegUsuarioModelo
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Seguridad\Usuario", inversedBy="seguridadUsuarioModeloUsuarioRel")
-     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="id")
+     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="username")
      */
     protected $usuarioRel;
 

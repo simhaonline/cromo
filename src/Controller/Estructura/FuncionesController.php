@@ -139,7 +139,7 @@ final class FuncionesController
                             $arNotificacion = (new GenNotificacion())
                                 ->setFecha(new \DateTime('now'))
                                 ->setNotificacionTipoRel($arNotificacionTipoPrueba)
-                                ->setCodigoUsuarioReceptorFk($arUsuario->getId())
+                                ->setCodigoUsuarioReceptorFk($arUsuario->getUsername())
                                 ->setCodigoUsuarioEmisorFk(null);
                             $arUsuario->setNotificacionesPendientes($arUsuario->getNotificacionesPendientes() + 1);
                             $em->persist($arUsuario);

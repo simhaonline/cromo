@@ -367,7 +367,7 @@ class EntityListener extends DefaultEntityListenerResolver
 
     private function capturarUsuario(&$data) {
         if($this->usuario !== null && $this->usuario !== "anon.") {
-            $data['codigoUsuarioFk'] = $this->usuario->getId();
+            $data['username'] = $this->usuario->getUsername();
             $data['nombreUsuario'] = $this->usuario->getUsername();
         } else if($this->usuario === "anon.") {
             $data['nombreUsuario'] = self::USUARIO_API;
@@ -410,7 +410,7 @@ class EntityListener extends DefaultEntityListenerResolver
             ->setRuta($this->ruta)
             ->setAccion($this->accion)
             ->setUsuarioRel($this->usuario)
-            ->setCodigoUsuarioFk(($this->usuario && $this->usuario !== "anon.")? $this->usuario->getId():  null)
+            ->setCodigoUsuarioFk(($this->usuario && $this->usuario !== "anon.")? $this->usuario->getUsername():  null)
             ->setNombreEntidad($this->nombreEntidad);
 
         $claveLog = $this->accion . $arLog->getCodigoRegistroPk();

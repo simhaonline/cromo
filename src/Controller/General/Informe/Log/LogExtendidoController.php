@@ -78,7 +78,7 @@ class LogExtendidoController extends Controller
     {
         $session = new Session();
         $fecha = $form->get('DtmFecha')->getData() ? $form->get('DtmFecha')->getData()->format("Y-m-d") : null;
-        $usuario = $form->get('UsuarioRel')->getData() ? $form->get('UsuarioRel')->getData()->getId() : null;
+        $usuario = $form->get('UsuarioRel')->getData() ? $form->get('UsuarioRel')->getData()->getUsername() : null;
         $session->set('filtroCodigoLog', $form->get('TxtCodigo')->getData());
         $session->set('filtroUsuarioRel', $usuario);
         $session->set('filtroAccionLog', $form->get('SelAccion')->getData());

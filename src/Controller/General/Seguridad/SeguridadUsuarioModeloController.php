@@ -60,7 +60,7 @@ class SeguridadUsuarioModeloController extends AbstractController
             if (!$arUsuario) {
                 return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
             }
-            $arSeguridadUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->lista($arUsuario->getId());
+            $arSeguridadUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->lista($arUsuario->getUsername());
             $nombreUsuario=$arUsuario->getNombreCorto();
         }
         return $this->render('general/seguridad/seguridad_usuario_modelo/lista.html.twig', [
@@ -118,7 +118,7 @@ class SeguridadUsuarioModeloController extends AbstractController
                     foreach ($arrSeleccionados as $codigoModelo) {
                         $arGenModeloValidar = $em->getRepository('App:General\GenModelo')->find($codigoModelo);
                         if ($arGenModeloValidar && $arUsuario) {
-                            $arSegUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->findOneBy(['codigoUsuarioFk'=>$arUsuario->getId(),'codigoGenModeloFk'=>$arGenModeloValidar->getCodigoModeloPk()]);
+                            $arSegUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->findOneBy(['codigoUsuarioFk'=>$arUsuario->getUsername(),'codigoGenModeloFk'=>$arGenModeloValidar->getCodigoModeloPk()]);
                             if(!$arSegUsuarioModelo) {
                                 $arSeguridadUsuarioModelo = (new SegUsuarioModelo())
                                     ->setGenModeloRel($arGenModeloValidar)
@@ -239,8 +239,8 @@ class SeguridadUsuarioModeloController extends AbstractController
             if (count($arUsuarios) > 0) {
                 $hash = str_replace('&', '/', $hash);
                 foreach ($arUsuarios as $arUsuario) {
-                    if (password_verify($arUsuario->getId(), $hash)) {
-                        $id = $arUsuario->getId();
+                    if (password_verify($arUsuario->getUsername(), $hash)) {
+                        $id = $arUsuario->getUsername();
                     }
                 }
             }

@@ -16,14 +16,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 class Usuario implements UserInterface, \Serializable
 {
     /**
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * @ORM\Column(name="username",type="string", length=25, unique=true)
+     * @ORM\Column(type="string", name="username", length=25)
+     * @ORM\Id()
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $username;
 
@@ -103,9 +98,10 @@ class Usuario implements UserInterface, \Serializable
     /**
      * @param mixed $username
      */
-    public function setUsername($username): void
+    public function setUsername($username)
     {
         $this->username = $username;
+        return $this;
     }
 
     public function getSalt()
@@ -141,7 +137,6 @@ class Usuario implements UserInterface, \Serializable
     public function serialize()
     {
         return serialize(array(
-            $this->id,
             $this->username,
             $this->password,
             // see section on salt below
@@ -153,7 +148,6 @@ class Usuario implements UserInterface, \Serializable
     public function unserialize($serialized)
     {
         list (
-            $this->id,
             $this->username,
             $this->password,
             // see section on salt below
@@ -193,21 +187,7 @@ class Usuario implements UserInterface, \Serializable
         $this->operacionRel = $operacionRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): void
-    {
-        $this->id = $id;
-    }
 
     /**
      * @return mixed

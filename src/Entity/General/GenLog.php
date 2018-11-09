@@ -33,7 +33,7 @@ class GenLog
     private $accion;
 
     /**
-     * @ORM\Column(name="codigo_usuario_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_usuario_fk", type="string", nullable=true)
      */
     private $codigoUsuarioFk;
 
@@ -69,7 +69,7 @@ class GenLog
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Seguridad\Usuario", inversedBy="logsUsuarioRel")
-     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="id")
+     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="username")
      */
     protected $usuarioRel;
 

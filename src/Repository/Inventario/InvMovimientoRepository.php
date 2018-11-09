@@ -187,7 +187,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $arMovimiento->setEstadoAutorizado(0);
             $this->getEntityManager()->persist($arMovimiento);
             $this->getEntityManager()->flush();
-            if($arMovimiento->getDocumentoTipoRel() == 'TRA'){
+            if($arMovimiento->getCodigoDocumentoTipoFk() == 'TRA'){
                 $this->eliminarDetallesTraslado($arMovimiento);
             }
         } else {

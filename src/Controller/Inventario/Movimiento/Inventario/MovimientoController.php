@@ -224,14 +224,17 @@ class MovimientoController extends Controller
         //Controles para el formulario
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnDuplicar = ['label' => 'Duplicar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
 
         if ($arMovimiento->getEstadoAutorizado()) {
             $arrBtnEliminar['disabled'] = true;
             $arrBtnActualizar['disabled'] = true;
+            $arrBtnDuplicar['disabled'] = true;
         }
         $form
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
-            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
+            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
+            ->add('btnDuplicar', SubmitType::class, $arrBtnDuplicar);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -280,6 +283,10 @@ class MovimientoController extends Controller
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(InvMovimientoDetalle::class)->eliminar($arMovimiento, $arrDetallesSeleccionados);
+                $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
+            }
+            if ($form->get('btnDuplicar')->isClicked()) {
+                $em->getRepository(InvMovimientoDetalle::class)->duplicar($arrDetallesSeleccionados);
                 $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
             }
 

@@ -71,10 +71,10 @@
                 <td>{{ arImportacion.numero }}</td>
                 <td>{{ arImportacion.fecha | date('Y-m-d') }}</td>
                 <td>{{ arImportacion.terceroNombreCorto }}</td>
-                <td class="numero">{{ arImportacion.vrSubtotal | number_format}}</td>
-                <td class="numero">{{ arImportacion.vrIva | number_format }}</td>
-                <td class="numero">{{ arImportacion.vrNeto | number_format }}</td>
-                <td class="numero">{{ arImportacion.vrTotal | number_format }}</td>
+                <td class="numero">{{ arImportacion.vrSubtotalExtranjero | number_format}}</td>
+                <td class="numero">{{ arImportacion.vrIvaExtranjero | number_format }}</td>
+                <td class="numero">{{ arImportacion.vrNetoExtranjero | number_format }}</td>
+                <td class="numero">{{ arImportacion.vrTotalExtranjero | number_format }}</td>
                 <td class="estado">{{ arImportacion.estadoAutorizado?'SI':'NO' }}</td>
                 <td class="estado">{{ arImportacion.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arImportacion.estadoAnulado?'SI':'NO' }}</td>
@@ -113,6 +113,9 @@
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
                href="{{ path('inventario_movimiento_extranjero_importacion_nuevo', {'id': 0}) }}">Nuevo</a>
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnEliminar) }}
         </div>
     </div>
     {{ form_rest(form) }}

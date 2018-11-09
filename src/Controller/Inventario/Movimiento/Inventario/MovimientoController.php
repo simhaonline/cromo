@@ -27,6 +27,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -183,13 +184,13 @@ class MovimientoController extends Controller
                     }
                 }
                 $fecha = new \DateTime('now');
-                $arMovimiento->setFechaVence($arMovimiento->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha,$arMovimiento->getPlazoPago()));
+                $arMovimiento->setFechaVence($arMovimiento->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha, $arMovimiento->getPlazoPago()));
                 $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
                 $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
                 $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
-                if($arMovimiento->getCodigoSucursalFk()){
+                if ($arMovimiento->getCodigoSucursalFk()) {
                     $arSucursal = $em->getRepository(InvSucursal::class)->find($arMovimiento->getCodigoSucursalFk());
-                    if($arSucursal){
+                    if ($arSucursal) {
                         $arMovimiento->setSucursalRel($arSucursal);
                     }
                 }
@@ -258,7 +259,7 @@ class MovimientoController extends Controller
                         $objFormato = new Factura2();
                         $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                     }
-                    if($codigoFactura ==3){
+                    if ($codigoFactura == 3) {
                         $objFormato = new Factura3();
                         $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                     }
@@ -289,7 +290,6 @@ class MovimientoController extends Controller
                 $em->getRepository(InvMovimientoDetalle::class)->duplicar($arrDetallesSeleccionados);
                 $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
             }
-
             return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $id]));
         }
         $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->listaDetalle($id, $arMovimiento->getCodigoDocumentoTipoFk());
@@ -317,7 +317,7 @@ class MovimientoController extends Controller
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
             ->add('txtReferenciaItem', TextType::class, ['label' => 'Referencia: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemReferencia')])
-            ->add('itemConExistencia', CheckboxType::class, array('label' => ' ','required' => false, 'data' => $session->get('itemConExistencia')))
+            ->add('itemConExistencia', CheckboxType::class, array('label' => ' ', 'required' => false, 'data' => $session->get('itemConExistencia')))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
@@ -635,6 +635,42 @@ class MovimientoController extends Controller
         return $this->render('inventario/movimiento/inventario/detalleNuevoRemision.html.twig', [
             'form' => $form->createView(),
             'arRemisionDetalles' => $arRemisionDetalles
+        ]);
+    }
+
+    /**
+     * @Route("/inventario/movimiento/inventario/movimiento/detalle/distrubucion/cargar/{id}", name="inventario_movimiento_inventario_movimiento_remision_distribucion_cargar")
+     */
+    public function cargarDatosDistribuidos(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('txtDatos', TextareaType::class, ['required' => true, 'attr' => ['rows' => '6']])
+            ->getForm();
+        $form->handleRequest($request);
+        $arMovimientoDetalle = $em->find(InvMovimientoDetalle::class, $id);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $datos = $form->get('txtDatos')->getData();
+                $arrDatos = array_map(function ($var){
+                    return str_replace("\r", '', $var);
+                },preg_split("/[\n]/", $datos));
+                foreach ($arrDatos as $registro) {
+                    $arrCampos = preg_split("/[\t]/", $registro);
+                    $arMovimientoDetalleNuevo = clone $arMovimientoDetalle;
+                    $arMovimientoDetalleNuevo->setLoteFk($arrCampos[0]);
+                    $arMovimientoDetalleNuevo->setCodigoBodegaFk($arrCampos[1]);
+                    $arMovimientoDetalleNuevo->setFechaVencimiento(date_create($arrCampos[2]));
+                    $arMovimientoDetalleNuevo->setCantidad($arrCampos[3]);
+                    $em->persist($arMovimientoDetalleNuevo);
+                }
+            }
+            $em->flush();
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        return $this->render('inventario/movimiento/inventario/cargarDistrubucion.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 }

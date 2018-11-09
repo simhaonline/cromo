@@ -115,6 +115,7 @@
                             <th>TOTAL</th>
                             <th title="Remision detalle">RD</th>
                             <th title="Pedido detalle">PD</th>
+                            <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
@@ -173,6 +174,7 @@
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrTotal| number_format(0,'.',',') }}</td>
                                 <td>{{ arMovimientoDetalle.codigoRemisionDetalleFk }}</td>
                                 <td>{{ arMovimientoDetalle.codigoPedidoDetalleFk }}</td>
+                                <td><a href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_remision_distribucion_cargar',{'id' : arMovimientoDetalle.codigoMovimientoDetallePk }) }}','cargarDistribucion',400,700)"><li title="Carga rapida de datos" class="fa fa-bolt" style="color: black;font-size: large;"></li></a></td>
                                 <td style="text-align: center;"><input type="checkbox" style="text-align: right;" name="ChkSeleccionar[]" value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/></td>
                             </tr>
                         {% endfor %}

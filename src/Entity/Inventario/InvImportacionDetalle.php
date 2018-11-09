@@ -32,6 +32,16 @@ class InvImportacionDetalle
     private $cantidad = 0;
 
     /**
+     * @ORM\Column(name="cantidad_afectada",options={"default" : 0}, type="integer", nullable=true)
+     */
+    private $cantidadAfectada = 0;
+
+    /**
+     * @ORM\Column(name="cantidad_pendiente",options={"default" : 0}, type="integer", nullable=true)
+     */
+    private $cantidadPendiente = 0;
+
+    /**
      * @ORM\Column(name="vr_precio_extranjero",type="float")
      */
     private $vrPrecioExtranjero = 0;
@@ -389,6 +399,38 @@ class InvImportacionDetalle
     public function setItemRel( $itemRel ): void
     {
         $this->itemRel = $itemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadAfectada()
+    {
+        return $this->cantidadAfectada;
+    }
+
+    /**
+     * @param mixed $cantidadAfectada
+     */
+    public function setCantidadAfectada( $cantidadAfectada ): void
+    {
+        $this->cantidadAfectada = $cantidadAfectada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadPendiente()
+    {
+        return $this->cantidadPendiente;
+    }
+
+    /**
+     * @param mixed $cantidadPendiente
+     */
+    public function setCantidadPendiente( $cantidadPendiente ): void
+    {
+        $this->cantidadPendiente = $cantidadPendiente;
     }
 
 

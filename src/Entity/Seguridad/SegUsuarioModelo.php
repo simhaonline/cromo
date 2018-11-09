@@ -56,11 +56,11 @@ class SegUsuarioModelo
      */
     private $anular;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Seguridad\Usuario", inversedBy="seguridadUsuarioModeloUsuarioRel")
-     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="username")
-     */
-    protected $usuarioRel;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="App\Entity\Seguridad\Usuario", inversedBy="seguridadUsuarioModeloUsuarioRel")
+//     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="username")
+//     */
+//    protected $usuarioRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenModelo", inversedBy="seguridadUsuarioModeloGenModeloRel")

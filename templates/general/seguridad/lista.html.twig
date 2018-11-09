@@ -33,21 +33,21 @@
                     {{ validarTipo(arUsuario.extension) }}
                     {{ validarTipo(arUsuario.isActive) }}
                     <td style="text-align: center;">
-                        <a href="{{ path('gen_seguridad_usuario_nuevo', {'hash' : encriptar( arUsuario.id)}) }}">
+                        <a href="{{ path('gen_seguridad_usuario_nuevo', {'hash' : encriptar( arUsuario.username)}) }}">
                             <i class="fa fa-edit" style="font-size: large; color:black">
                             </i>
                         </a>
                     </td>
                     <td style="text-align: center;">
                         <a class="btn btn-xs btn-default" title="Cambiar contraseña"
-                           href="javascript:abrirVentana3('{{ path('gen_seguridad_usuario_nuevo_clave',{'hash' : encriptar(arUsuario.id)}) }}','cambiarContrasena',600,900)">
+                           href="javascript:abrirVentana3('{{ path('gen_seguridad_usuario_nuevo_clave',{'hash' : encriptar(arUsuario.username)}) }}','cambiarContrasena',600,900)">
                             <i class="fa fa-key" style="font-size: smaller;color: black;">
                             </i>
                         </a>
                     </td>
                     <td style="text-align: center;">
                         <a  title="Asignar permisos"
-                           href="{{ path('general_seguridad_usuario_modelo_lista',{'hash' : encriptar(arUsuario.id)}) }}">
+                           href="{{ path('general_seguridad_usuario_modelo_lista',{'hash' : encriptar(arUsuario.username)}) }}">
                             <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                             </i>
                         </a>

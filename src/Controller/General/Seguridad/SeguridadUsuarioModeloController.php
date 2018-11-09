@@ -55,7 +55,7 @@ class SeguridadUsuarioModeloController extends AbstractController
                 }
             }
         }
-        if ($id != 0) {
+        if ($id != "") {
             $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
             if (!$arUsuario) {
                 return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
@@ -163,7 +163,7 @@ class SeguridadUsuarioModeloController extends AbstractController
     public function editarPermisos(Request $request, $hash, $codigoSeguridadUsuarioModelo){
         $em=$this->getDoctrine()->getManager();
         $id = $this->verificarUsuario($hash);
-        if ($id != 0) {
+        if ($id != "") {
             $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
             if (!$arUsuario) {
                 return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));

@@ -28,22 +28,23 @@ class RhuPagoRepository extends ServiceEntityRepository
     public function eliminarPagos($codigoProgramacion)
     {
         $em = $this->getEntityManager();
-        $subQuery = $em->createQueryBuilder()->from(RhuPago::class,'pp')
+        $subQuery = $em->createQueryBuilder()->from(RhuPago::class, 'pp')
             ->select('pp.codigoPagoPk')
             ->where("pp.codigoProgramacionFk = {$codigoProgramacion}");
 
         $em->createQueryBuilder()
-            ->delete(RhuPagoDetalle::class,'pd')
+            ->delete(RhuPagoDetalle::class, 'pd')
             ->where("pd.codigoPagoFk IN ({$subQuery})")->getQuery()->execute();
 
-        $codigosPagos = implode(',',array_map(function ($v){
+        $codigosPagos = implode(',', array_map(function ($v) {
             return $v['codigoPagoPk'];
-        },$subQuery->getQuery()->execute()));
+        }, $subQuery->getQuery()->execute()));
 
 
         $em->createQueryBuilder()->delete(RhuPago::class, 'p')
             ->where("p.codigoPagoPk IN ({$codigosPagos})")->getQuery()->execute();
     }
+
     /**
      * @param $arProgramacionDetalle RhuProgramacionDetalle
      * @param $arProgramacion RhuProgramacion
@@ -57,7 +58,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $douDeducciones = 0;
         $douDevengado = 0;
-//        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
         $arPago = new RhuPago();
         $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getCodigoContratoFk());
         $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
@@ -81,9 +82,9 @@ class RhuPagoRepository extends ServiceEntityRepository
         } else {
             $arPago->setFechaHastaContrato($arPago->getFechaHasta());
         }
-
         $em->persist($arPago);
 
+        // Calculo de las horas
         $arrHoras = $this->getHoras($arProgramacionDetalle);
         foreach ($arrHoras AS $arrHora) {
             if ($arrHora['valor'] > 0) {
@@ -113,6 +114,40 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $em->persist($arPagoDetalle);
             }
         }
+        $douIngresoBasePrestacional = 0;
+        $douIngresoBaseCotizacion = 0;
+        $douIngresoBaseCotizacionSalud = 0;
+        $devengado = 0;
+        $devengadoPrestacional = 0;
+        $salud = 0;
+        $pension = 0;
+        $transporte = 0;
+
+        if ($arContrato->getAuxilioTransporte() == 1) {
+            $intPagoConceptoTransporte = $arConfiguracion->getCodigoAuxilioTransporte();
+            $arConcepto = $em->getRepository(RhuConcepto::class)->find($intPagoConceptoTransporte);
+            $duoVrAuxilioTransporte = $arConfiguracion->getVrAuxilioTransporte();
+            $douVrDiaTransporte = $duoVrAuxilioTransporte / 30;
+            $douPagoDetalle = $douVrDiaTransporte * $arProgramacionDetalle->getDiasTransporte();
+            $douPagoDetalle = round($douPagoDetalle);
+            $arPagoDetalle = new RhuPagoDetalle();
+            $arPagoDetalle->setPagoRel($arPago);
+            $arPagoDetalle->setConceptoRel($arConcepto);
+            $arPagoDetalle->setHoras(0);
+            $arPagoDetalle->setDias($arProgramacionDetalle->getDiasTransporte());
+            $arPagoDetalle->setVrHora($douVrDiaTransporte / 8);
+            $arPagoDetalle->setVrPago($douPagoDetalle);
+            $transporte = $douPagoDetalle;
+            if ($arConcepto->getGeneraIngresoBasePrestacion() == 1) {
+                $douIngresoBasePrestacional += $douPagoDetalle;
+                $arPagoDetalle->setVrIngresoBasePrestacion($douPagoDetalle);
+            }
+//            $arPagoDetalle->setPrestacional($arPagoConcepto->getPrestacional());
+            $arPagoDetalle->setOperacion($arConcepto->getOperacion());
+            $arPagoDetalle->setVrPagoOperado($douPagoDetalle * $arConcepto->getOperacion());
+            $em->persist($arPagoDetalle);
+        }
+
         $douNeto = $douDevengado - $douDeducciones;
         $arPago->setVrNeto($douNeto);
         $em->persist($arPago);

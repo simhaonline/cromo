@@ -71,4 +71,19 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
         }
     }
 
+    public function listaDetalle($codigoImportacion){
+        return $this->_em->createQueryBuilder()
+            ->select('imd.codigoItemFk')
+            ->addSelect('i.nombre as itemNombre')
+            ->addSelect('m.nombre as marca')
+            ->addSelect('imd.cantidad')
+            ->addSelect('imd.vrPrecioExtranjero')
+            ->addSelect('imd.porcentajeIvaExtranjero')
+            ->addSelect('imd.vrTotalExtranjero')
+            ->from(InvImportacionDetalle::class,'imd')
+            ->leftJoin('imd.itemRel','i')
+            ->leftJoin('i.marcaRel','m')
+            ->where("imd.codigoImportacionFk = {$codigoImportacion}")->getQuery()->execute();
+    }
+
 }

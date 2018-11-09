@@ -7,7 +7,6 @@ use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvImportacion;
 use App\Entity\Inventario\InvImportacionDetalle;
 use App\Entity\Inventario\InvImportacionTipo;
-use App\Entity\Inventario\InvPrecioDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Formato\Inventario\Importacion;
 use App\General\General;
@@ -24,7 +23,7 @@ use App\Form\Type\Inventario\ImportacionType;
 
 class ImportacionController extends ControllerListenerGeneral
 {
-    protected $class= InvImportacion::class;
+    protected $class = InvImportacion::class;
     protected $claseNombre = "InvImportacion";
     protected $modulo = "Inventario";
     protected $funcion = "Movimiento";
@@ -58,7 +57,7 @@ class ImportacionController extends ControllerListenerGeneral
                     $session->set('filtroInvImportacionImportacionNumero', $form->get('numero')->getData());
                     $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
                     $importacionTipo = $form->get('cboImportacionTipo')->getData();
-                    if($importacionTipo != ''){
+                    if ($importacionTipo != '') {
                         $session->set('filtroInvImportacionTipo', $form->get('cboImportacionTipo')->getData()->getCodigoImportacionTipoPk());
                     } else {
                         $session->set('filtroInvImportacionTipo', null);
@@ -96,15 +95,19 @@ class ImportacionController extends ControllerListenerGeneral
                 if ($txtCodigoTercero != '') {
                     $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
                     if ($arTercero) {
-                        $arImportacion->setTerceroRel($arTercero);
-                        $arImportacion->setFecha(new \DateTime('now'));
-                        if ($id == 0) {
+                        if ($arImportacion->getImportacionTipoRel()) {
+                            $arImportacion->setTerceroRel($arTercero);
                             $arImportacion->setFecha(new \DateTime('now'));
-                            $arImportacion->setUsuario($this->getUser()->getUserName());
+                            if ($id == 0) {
+                                $arImportacion->setFecha(new \DateTime('now'));
+                                $arImportacion->setUsuario($this->getUser()->getUserName());
+                            }
+                            $em->persist($arImportacion);
+                            $em->flush();
+                            return $this->redirect($this->generateUrl('inventario_movimiento_extranjero_importacion_detalle', ['id' => $arImportacion->getCodigoImportacionPk()]));
+                        } else {
+                            Mensajes::error('Debe seleccionar un tipo de importación');
                         }
-                        $em->persist($arImportacion);
-                        $em->flush();
-                        return $this->redirect($this->generateUrl('inventario_movimiento_extranjero_importacion_detalle', ['id' => $arImportacion->getCodigoImportacionPk()]));
                     }
                 } else {
                     Mensajes::error('Debe seleccionar un tercero');
@@ -121,8 +124,6 @@ class ImportacionController extends ControllerListenerGeneral
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/extranjero/importacion/detalle/{id}", name="inventario_movimiento_extranjero_importacion_detalle")
@@ -168,6 +169,7 @@ class ImportacionController extends ControllerListenerGeneral
             }
             if ($form->get('btnActualizarDetalle')->isClicked()) {
                 $em->getRepository(InvImportacion::class)->actualizarDetalles($id, $arrControles);
+                $em->getRepository(InvImportacion::class)->liquidar($id);
             }
             return $this->redirect($this->generateUrl('inventario_movimiento_extranjero_importacion_detalle', ['id' => $id]));
         }

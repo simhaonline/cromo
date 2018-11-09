@@ -58,7 +58,7 @@ class GenNotificacionTipoRepository extends ServiceEntityRepository
             ->addSelect('u.username');
 
             if($session->get('arGenNotificacionTipoNombreUsuario')!=="" || $session->get('arGenNotificacionTipoNombreUsuario')!==null){
-                $arUsuarios=$arUsuarios->andWhere("u.nombreCorto LIKE '%{$session->get('arGenNotificacionTipoNombreUsuario')}%'");
+                $arUsuarios=$arUsuarios->andWhere("u.username LIKE '%{$session->get('arGenNotificacionTipoNombreUsuario')}%'");
             }
             $arUsuarios=$arUsuarios->getQuery()->getResult();
 

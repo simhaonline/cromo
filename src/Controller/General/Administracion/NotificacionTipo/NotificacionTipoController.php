@@ -3,17 +3,12 @@
 namespace App\Controller\General\Administracion\NotificacionTipo;
 
 use App\Controller\BaseController;
-use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
-use App\Entity\General\GenModelo;
 use App\Entity\General\GenModulo;
-use App\Entity\General\GenNotificacion;
 use App\Entity\General\GenNotificacionTipo;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

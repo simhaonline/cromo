@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SeguridadUsuarioModeloController extends AbstractController
 {
@@ -27,11 +28,33 @@ class SeguridadUsuarioModeloController extends AbstractController
     /**
      * @Route("/gen/seguridad/usuario/modelo/lista/{hash}", name="general_seguridad_usuario_modelo_lista")
      */
-    public function lista($hash)
+    public function lista($hash, Request $request)
     {
         $em=$this->getDoctrine()->getManager();
         $id = $this->verificarUsuario($hash);
         $nombreUsuario="";
+        $form = $this->createFormBuilder()
+            ->add('btnEliminar',SubmitType::class,['label'=>'Eliminar'])
+            ->getForm();
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionarPermiso');
+                if($arrSeleccionados && count($arrSeleccionados)>0){
+                    if ($arrSeleccionados) {
+                        foreach ($arrSeleccionados as $codigoSeguridad) {
+                            $arSegUsuarioModelo = $em->getRepository('App:Seguridad\SegUsuarioModelo')->find($codigoSeguridad);
+                            if($arSegUsuarioModelo){
+                                $em->remove($arSegUsuarioModelo);
+                            }
+
+                        }
+                        $em->flush();
+                        return $this->redirectToRoute('general_seguridad_usuario_modelo_lista',array('hash'=>$hash));
+                    }
+                }
+            }
+        }
         if ($id != 0) {
             $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
             if (!$arUsuario) {
@@ -44,6 +67,7 @@ class SeguridadUsuarioModeloController extends AbstractController
             'arSeguridadUsuarioModelo'  =>  $arSeguridadUsuarioModelo,
             'arUsuarioNombre'           =>  $nombreUsuario,
             'hash'                      =>  $hash,
+            'form'=>$form->createView(),
         ]);
     }
 
@@ -77,13 +101,12 @@ class SeguridadUsuarioModeloController extends AbstractController
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')) {
+        if ($form->isSubmitted() && $form->isValid() ) {
+            if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('arSeguridadUsuarioModulofiltroModelo',$form->get('TxtModelo')->getData());
                 $session->set('arSeguridadUsuarioModulofiltroModulo',$form->get('cboModulo')->getData());
             }
-
-            if($form->get('btnGuardar')) {
+            if($form->get('btnGuardar')->isClicked()) {
                 $id = $this->verificarUsuario($hash);
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $arDatos = $form->getData();
@@ -122,9 +145,9 @@ class SeguridadUsuarioModeloController extends AbstractController
                     $session->set('arSeguridadUsuarioModulofiltroModulo',null);
                     }
                 }
-            }
-            else{
-                Mensajes::error("No selecciono ningun dato para grabar");
+                else{
+                    Mensajes::error("No selecciono ningun dato para grabar");
+                }
             }
         }
         $arGenModelo=$em->getRepository('App:General\GenModelo')->lista();
@@ -185,6 +208,27 @@ class SeguridadUsuarioModeloController extends AbstractController
 
     }
 
+//    /**
+//     * @Route("/gen/seguridad/usuario/modelo/eliminar", name="general_seguridad_usuario_modelo_eliminar")
+//     */
+//    public function eliminarPermiso(Request $request){
+//        $em=$this->getDoctrine()->getManager();
+//        $arrSeleccionados = $request->request->get('ChkSeleccionar');
+//        if($arrSeleccionados && count($arrSeleccionados)>0){
+//            if ($arrSeleccionados) {
+//                foreach ($arrSeleccionados as $codigoSeguridad) {
+//                    $arSegUsuarioModelo = $em->getRepository('App:Seguridad\SegUsuarioModelo')->find($codigoSeguridad);
+//                    if($arSegUsuarioModelo){
+//                        $em->remove($arSegUsuarioModelo);
+//                    }
+//
+//                }
+//                $em->flush();
+//            }
+//        }
+//
+//        return $this->redirectToRoute('general_seguridad_usuario_modelo_lista');
+//    }
 
     private function verificarUsuario($hash)
     {

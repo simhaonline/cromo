@@ -7,15 +7,15 @@
                 "checkAnular"];
             var form = "form_"
             var cant = chks.length;
-            for (i = 0; i < cant; i++)
+            for (let i = 0; i < cant; i++)
             {
                 var seleccionar = form.concat(chks[i]);
-                if (document.getElementById(seleccionar).checked === true)
-                {
-                    document.getElementById(seleccionar).checked = false;
-                } else
+                if (document.getElementById('ChkSeleccionarTodos').checked)
                 {
                     document.getElementById(seleccionar).checked = true;
+                } else
+                {
+                    document.getElementById(seleccionar).checked = false;
                 }
             }
         }
@@ -47,7 +47,7 @@
         <div class="panel-body">
             <div class="form-group form-group-sm">
                 <label class="col-sm-3 control-label">
-                    Seleccionar todos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodos();"/>
+                    Seleccionar todos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="ChkSeleccionarTodos" id="ChkSeleccionarTodos" OnClick="ChequearTodos();"/>
                 </label>
             </div>
             <div class="form-group form-group-sm">
@@ -97,7 +97,7 @@
     </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm" onclick="window.close()">Cancelar</a>
-        {{ form_widget(form.btnGuardar) }}
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
     </div>
             {{ form_end(form)}}
     <br/><br/><br/><br/>

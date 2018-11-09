@@ -14,9 +14,9 @@
         {% for arGenNotificacion in arGenNotificacion %}
             <tr>
                 <td>{{ arGenNotificacion.id }}</td>
+                <td>{{ arGenNotificacion.fecha|date("Y/m/d H:i:s") }}</td>
                 <td>{{ arGenNotificacion.nombre }}</td>
                 <td>{{ arGenNotificacion.modelo }}</td>
-                <td>{{ arGenNotificacion.fecha|date("d/m/Y H:i:s") }}</td>
 
             </tr>
         {% endfor %}

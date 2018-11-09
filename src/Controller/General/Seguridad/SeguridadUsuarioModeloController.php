@@ -91,26 +91,36 @@ class SeguridadUsuarioModeloController extends AbstractController
                     $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
                 }
                 if ($arrSeleccionados) {
+                    $error=false;
                     foreach ($arrSeleccionados as $codigoModelo) {
                         $arGenModeloValidar = $em->getRepository('App:General\GenModelo')->find($codigoModelo);
                         if ($arGenModeloValidar && $arUsuario) {
-                            $arSeguridadUsuarioModelo = (new SegUsuarioModelo())
-                                ->setGenModeloRel($arGenModeloValidar)
-                                ->setUsuarioRel($arUsuario)
-                                ->setLista($arDatos['checkLista'])
-                                ->setDetalle($arDatos['checkDetalle'])
-                                ->setNuevo($arDatos['checkNuevo'])
-                                ->setAutorizar($arDatos['checkAutorizar'])
-                                ->setAprobar($arDatos['checkAprobar'])
-                                ->setAnular($arDatos['checkAnular']);
+                            $arSegUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->findOneBy(['codigoUsuarioFk'=>$arUsuario->getId(),'codigoGenModeloFk'=>$arGenModeloValidar->getCodigoModeloPk()]);
+                            if(!$arSegUsuarioModelo) {
+                                $arSeguridadUsuarioModelo = (new SegUsuarioModelo())
+                                    ->setGenModeloRel($arGenModeloValidar)
+                                    ->setUsuarioRel($arUsuario)
+                                    ->setLista($arDatos['checkLista'])
+                                    ->setDetalle($arDatos['checkDetalle'])
+                                    ->setNuevo($arDatos['checkNuevo'])
+                                    ->setAutorizar($arDatos['checkAutorizar'])
+                                    ->setAprobar($arDatos['checkAprobar'])
+                                    ->setAnular($arDatos['checkAnular']);
 
-                            $em->persist($arSeguridadUsuarioModelo);
+                                $em->persist($arSeguridadUsuarioModelo);
+                            }
+                            else{
+                                $error=true;
+                                Mensajes::error("El modelo '{$arGenModeloValidar->getCodigoModeloPk()}' ya tiene permisos asignados, si desea modificar, puede hacerlo desde el detalle");
+                            }
                         }
                     }
+                    if(!$error){
                     $em->flush();
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                     $session->set('arSeguridadUsuarioModulofiltroModelo',null);
                     $session->set('arSeguridadUsuarioModulofiltroModulo',null);
+                    }
                 }
             }
             else{

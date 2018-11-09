@@ -46,9 +46,11 @@
             <tr>
                 <th>ITEM</th>
                 <th>NOMBRE</th>
+                <th>REF</th>
                 <th>MARCA</th>
                 <th>BOD</th>
                 <th>LOTE</th>
+                <th>VENCE</th>
                 <th>EXI</th>
                 <th>REM</th>
                 <th>DIS</th>
@@ -59,9 +61,11 @@
                 <tr>
                     <td>{{ arLote.codigoItemFk }}</td>
                     <td>{{ arLote.itemNombre }}</td>
+                    <td>{{ arLote.itemReferencia }}</td>
                     <td>{{ arLote.marca }}</td>
                     <td>{{ arLote.codigoBodegaFk }}</td>
                     <td>{{ arLote.loteFk }}</td>
+                    <td>{{ arLote.fechaVencimiento | date('Y-m-d') }}</td>
                     <td class="numero">{{ arLote.cantidadExistencia | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arLote.cantidadRemisionada | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arLote.cantidadDisponible | number_format(0, '.', ',') }}</td>

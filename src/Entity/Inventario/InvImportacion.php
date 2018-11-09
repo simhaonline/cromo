@@ -113,6 +113,11 @@ class InvImportacion
     protected $importacionesDetallesImportacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvImportacionCosto", mappedBy="importacionRel")
+     */
+    protected $importacionesCostosImportacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoImportacionPk()
@@ -123,7 +128,7 @@ class InvImportacion
     /**
      * @param mixed $codigoImportacionPk
      */
-    public function setCodigoImportacionPk( $codigoImportacionPk ): void
+    public function setCodigoImportacionPk($codigoImportacionPk): void
     {
         $this->codigoImportacionPk = $codigoImportacionPk;
     }
@@ -139,7 +144,7 @@ class InvImportacion
     /**
      * @param mixed $codigoTerceroFk
      */
-    public function setCodigoTerceroFk( $codigoTerceroFk ): void
+    public function setCodigoTerceroFk($codigoTerceroFk): void
     {
         $this->codigoTerceroFk = $codigoTerceroFk;
     }
@@ -155,7 +160,7 @@ class InvImportacion
     /**
      * @param mixed $numero
      */
-    public function setNumero( $numero ): void
+    public function setNumero($numero): void
     {
         $this->numero = $numero;
     }
@@ -171,7 +176,7 @@ class InvImportacion
     /**
      * @param mixed $fecha
      */
-    public function setFecha( $fecha ): void
+    public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
     }
@@ -187,7 +192,7 @@ class InvImportacion
     /**
      * @param mixed $fechaLlegada
      */
-    public function setFechaLlegada( $fechaLlegada ): void
+    public function setFechaLlegada($fechaLlegada): void
     {
         $this->fechaLlegada = $fechaLlegada;
     }
@@ -203,7 +208,7 @@ class InvImportacion
     /**
      * @param mixed $soporte
      */
-    public function setSoporte( $soporte ): void
+    public function setSoporte($soporte): void
     {
         $this->soporte = $soporte;
     }
@@ -219,7 +224,7 @@ class InvImportacion
     /**
      * @param mixed $vrSubtotal
      */
-    public function setVrSubtotal( $vrSubtotal ): void
+    public function setVrSubtotal($vrSubtotal): void
     {
         $this->vrSubtotal = $vrSubtotal;
     }
@@ -235,7 +240,7 @@ class InvImportacion
     /**
      * @param mixed $vrIva
      */
-    public function setVrIva( $vrIva ): void
+    public function setVrIva($vrIva): void
     {
         $this->vrIva = $vrIva;
     }
@@ -251,7 +256,7 @@ class InvImportacion
     /**
      * @param mixed $vrNeto
      */
-    public function setVrNeto( $vrNeto ): void
+    public function setVrNeto($vrNeto): void
     {
         $this->vrNeto = $vrNeto;
     }
@@ -267,7 +272,7 @@ class InvImportacion
     /**
      * @param mixed $vrTotal
      */
-    public function setVrTotal( $vrTotal ): void
+    public function setVrTotal($vrTotal): void
     {
         $this->vrTotal = $vrTotal;
     }
@@ -283,7 +288,7 @@ class InvImportacion
     /**
      * @param mixed $estadoAutorizado
      */
-    public function setEstadoAutorizado( $estadoAutorizado ): void
+    public function setEstadoAutorizado($estadoAutorizado): void
     {
         $this->estadoAutorizado = $estadoAutorizado;
     }
@@ -299,7 +304,7 @@ class InvImportacion
     /**
      * @param mixed $estadoAprobado
      */
-    public function setEstadoAprobado( $estadoAprobado ): void
+    public function setEstadoAprobado($estadoAprobado): void
     {
         $this->estadoAprobado = $estadoAprobado;
     }
@@ -315,7 +320,7 @@ class InvImportacion
     /**
      * @param mixed $estadoAnulado
      */
-    public function setEstadoAnulado( $estadoAnulado ): void
+    public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
     }
@@ -331,7 +336,7 @@ class InvImportacion
     /**
      * @param mixed $comentario
      */
-    public function setComentario( $comentario ): void
+    public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
     }
@@ -347,7 +352,7 @@ class InvImportacion
     /**
      * @param mixed $usuario
      */
-    public function setUsuario( $usuario ): void
+    public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
     }
@@ -363,7 +368,7 @@ class InvImportacion
     /**
      * @param mixed $importacionTipoRel
      */
-    public function setImportacionTipoRel( $importacionTipoRel ): void
+    public function setImportacionTipoRel($importacionTipoRel): void
     {
         $this->importacionTipoRel = $importacionTipoRel;
     }
@@ -379,7 +384,7 @@ class InvImportacion
     /**
      * @param mixed $terceroRel
      */
-    public function setTerceroRel( $terceroRel ): void
+    public function setTerceroRel($terceroRel): void
     {
         $this->terceroRel = $terceroRel;
     }
@@ -395,11 +400,24 @@ class InvImportacion
     /**
      * @param mixed $importacionesDetallesImportacionRel
      */
-    public function setImportacionesDetallesImportacionRel( $importacionesDetallesImportacionRel ): void
+    public function setImportacionesDetallesImportacionRel($importacionesDetallesImportacionRel): void
     {
         $this->importacionesDetallesImportacionRel = $importacionesDetallesImportacionRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getImportacionesCostosImportacionRel()
+    {
+        return $this->importacionesCostosImportacionRel;
+    }
 
-
+    /**
+     * @param mixed $importacionesCostosImportacionRel
+     */
+    public function setImportacionesCostosImportacionRel($importacionesCostosImportacionRel): void
+    {
+        $this->importacionesCostosImportacionRel = $importacionesCostosImportacionRel;
+    }
 }

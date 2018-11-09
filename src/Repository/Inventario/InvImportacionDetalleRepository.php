@@ -71,4 +71,42 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
         }
     }
 
+    public function listaDetalle($codigoImportacion){
+        return $this->_em->createQueryBuilder()
+            ->select('imd.codigoItemFk')
+            ->addSelect('i.nombre as itemNombre')
+            ->addSelect('m.nombre as marca')
+            ->addSelect('imd.cantidad')
+            ->addSelect('imd.vrPrecioExtranjero')
+            ->addSelect('imd.porcentajeIvaExtranjero')
+            ->addSelect('imd.vrTotalExtranjero')
+            ->from(InvImportacionDetalle::class,'imd')
+            ->leftJoin('imd.itemRel','i')
+            ->leftJoin('i.marcaRel','m')
+            ->where("imd.codigoImportacionFk = {$codigoImportacion}")->getQuery()->execute();
+    }
+
+    public function listarDetallesPendientes()
+    {
+        $em = $this->getEntityManager();
+        $session = new Session();
+        $queryBuilder = $em->createQueryBuilder()->from(InvImportacionDetalle::class, 'id')
+            ->select('id.codigoImportacionDetallePk')
+            ->addSelect('id.codigoItemFk')
+            ->addSelect('i.nombre AS itemNombre')
+            ->addSelect('i.referencia AS itemReferencia')
+            ->addSelect('i.cantidadExistencia')
+            ->addSelect('id.cantidad')
+            ->addSelect('id.cantidadPendiente')
+            ->addSelect('im.numero AS importacionNumero')
+            ->join('id.itemRel', 'i')
+            ->join('id.importacionRel', 'im')
+            ->where('i.estadoAprobado = 1')
+            ->where('i.estadoAnulado = 0')
+            ->andWhere('id.cantidadPendiente > 0')
+            ->orderBy('id.codigoImportacionDetallePk', 'ASC');
+        $query = $em->createQuery($queryBuilder->getDQL());
+        return $query->execute();
+    }
+
 }

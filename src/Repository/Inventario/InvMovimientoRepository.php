@@ -224,7 +224,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $arLote->setCodigoBodegaFk($arMovimientoDetalle->getCodigoBodegaFk());
                     $arLote->setBodegaRel($arBodega);
                     $arLote->setLoteFk($arMovimientoDetalle->getLoteFk());
-                    $arLote->setFechaVencimiento($arMovimientoDetalle->getFecha());
+                    $arLote->setFechaVencimiento($arMovimientoDetalle->getFechaVencimiento());
                     $em->persist($arLote);
                 }
 
@@ -312,8 +312,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->validarDetalles($arMovimiento->getCodigoMovimientoPk());
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             if ($arMovimientoDetalle['afectaInventario']) {
-                if($arMovimientoDetalle['codigoBodegaFk'] == "" || $arMovimientoDetalle['loteFk'] == "") {
-                      $respuesta = "El detalle con id " . $arMovimientoDetalle['codigoMovimientoDetallePk'] . " no tiene bodega o lote";
+                if($arMovimientoDetalle['codigoBodegaFk'] == "" || $arMovimientoDetalle['loteFk'] == "" || $arMovimientoDetalle['fechaVencimiento'] == "") {
+                      $respuesta = "El detalle con id " . $arMovimientoDetalle['codigoMovimientoDetallePk'] . " no tiene bodega, lote o fecha vence";
                       break;
                 } else {
                     $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle['codigoBodegaFk']);

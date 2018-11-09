@@ -1,0 +1,23 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Agregar costo</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-1">Concepto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.importacionCostoConceptoRel) }}
+                </div>
+                <label for="" class="control-label col-sm-1">Valor:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrValor) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.guardar) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

@@ -95,6 +95,7 @@ class GenModelo extends Fixture
                 'InvGrupo',
                 'InvInventarioValorizado',
                 'InvItem',
+                'InvImportacion',
                 'InvLinea',
                 'InvLote',
                 'InvMarca',

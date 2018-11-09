@@ -33,6 +33,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.loteFk')
             ->addSelect('md.codigoBodegaFk')
             ->addSelect('md.codigoBodegaDestinoFk')
+            ->addSelect('md.fechaVencimiento')
             ->addSelect('md.cantidad')
             ->addSelect('md.vrPrecio')
             ->addSelect('md.vrSubtotal')
@@ -44,6 +45,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.codigoRemisionDetalleFk')
             ->addSelect('md.codigoPedidoDetalleFk')
             ->addSelect('i.nombre AS itemNombre')
+            ->addSelect('i.referencia AS itemReferencia')
             ->leftJoin('md.itemRel', 'i')
             ->where('md.codigoMovimientoFk = ' . $codigoMovimiento);
         if($tipo == "TRA") {
@@ -138,6 +140,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             $arrPorcentajeDescuento = $arrControles['arrDescuento'];
             $arrPorcentajeIva = $arrControles['arrIva'];
             $arrCodigo = $arrControles['arrCodigo'];
+            $arrFechaVencimiento = $arrControles['arrFechaVencimiento'];
             $mensajeError = "";
             foreach ($arrCodigo as $codigoMovimientoDetalle) {
                 $arMovimientoDetalle = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->find($codigoMovimientoDetalle);
@@ -150,6 +153,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                 $arMovimientoDetalle->setLoteFk($arrLote[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setCantidad($arrCantidad[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setVrPrecio($arrPrecio[$codigoMovimientoDetalle]);
+                $fecha = $arrFechaVencimiento[$codigoMovimientoDetalle];
+                $arMovimientoDetalle->setFechaVencimiento(date_create($fecha));
                 if ($arMovimiento->getGeneraCostoPromedio()) {
                     $arMovimientoDetalle->setVrCosto($arrPrecio[$codigoMovimientoDetalle]);
                 }
@@ -492,6 +497,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.loteFk')
             ->addSelect('md.codigoBodegaFk')
             ->addSelect('md.codigoBodegaDestinoFk')
+            ->addSelect('md.fechaVencimiento')
             ->addSelect('md.cantidad')
             ->addSelect('i.afectaInventario')
             ->leftJoin('md.itemRel', 'i')

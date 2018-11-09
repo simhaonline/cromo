@@ -98,11 +98,13 @@
                             <th>ID</th>
                             <th>ITEM</th>
                             <th>NOMBRE</th>
+                            <th>REF</th>
                             <th>LOTE</th>
                             <th title="La bodega del movimiento">BOD</th>
                             {% if arMovimiento.codigoDocumentoTipoFk == 'TRA' %}
                                 <th title="Bodega de destino">BOD_D</th>
                             {% endif %}
+                            <th>VENCE</th>
                             <th>CAN</th>
                             <th title="Precio por unidad">PRECIO</th>
                             <th>SUBTOTAL</th>
@@ -122,6 +124,7 @@
                                 {{ validarTipo(arMovimientoDetalle.codigoMovimientoDetallePk) }}<input type="hidden" name="arrCodigo[]" value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}">
                                 {{ validarTipo(arMovimientoDetalle.codigoItemFk) }}
                                 {{ validarTipo(arMovimientoDetalle.itemNombre) }}
+                                {{ validarTipo(arMovimientoDetalle.itemReferencia) }}
 
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td>{{ arMovimientoDetalle.loteFk }}</td>
@@ -129,6 +132,7 @@
                                     {% if arMovimiento.codigoDocumentoTipoFk == 'TRA' %}
                                         <td>{{ arMovimientoDetalle.codigoBodegaDestinoFk }}</td>
                                     {% endif %}
+                                    <td>{{ arMovimientoDetalle.fechaVencimiento | date('Y-m-d') }}</td>
                                     <td class="numero">{{ arMovimientoDetalle.cantidad | number_format(0, '.', ',') }}</td>
                                 {% else %}
                                     <td style="text-align: center;">
@@ -145,6 +149,7 @@
                                             <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodegaDestino['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBodega',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                         </td>
                                     {% endif %}
+                                    <td style="text-align: center;"><input type="date" name="arrFechaVencimiento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.fechaVencimiento | date('Y-m-d') }}"  style="text-align: right; width:100px" size="10" ></td>
                                     <td style="text-align: center;"><input type="number" name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.cantidad }}"  style="text-align: right; width:60px" size="10" ></td>
                                 {% endif %}
                                 {% if arMovimiento.estadoAutorizado %}
@@ -195,6 +200,9 @@
                         {% if arMovimiento.documentoRel.operacionInventario == 1 %}
                             <div class="btn-group">
                                 <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_orden_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde orden</a>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_importacion_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde importacion</a>
                             </div>
                         {% endif %}
                         {% if arMovimiento.codigoDocumentoTipoFk == 'FAC' %}

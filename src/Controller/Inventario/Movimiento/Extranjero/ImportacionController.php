@@ -3,11 +3,13 @@
 namespace App\Controller\Inventario\Movimiento\Extranjero;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Entity\Inventario\InvImportacionCosto;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvImportacion;
 use App\Entity\Inventario\InvImportacionDetalle;
 use App\Entity\Inventario\InvImportacionTipo;
 use App\Entity\Inventario\InvTercero;
+use App\Form\Type\Inventario\ImportacionCostoType;
 use App\Formato\Inventario\Importacion;
 use App\General\General;
 use App\Utilidades\Estandares;
@@ -18,7 +20,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Form\Type\Inventario\ImportacionType;
 
 class ImportacionController extends ControllerListenerGeneral
@@ -142,6 +143,7 @@ class ImportacionController extends ControllerListenerGeneral
         }
         $form->add('btnActualizarDetalle', SubmitType::class, $arrBtnActualizarDetalle);
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
+        $form->add('btnEliminarCosto', SubmitType::class, $arrBtnEliminar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
@@ -167,6 +169,11 @@ class ImportacionController extends ControllerListenerGeneral
                 $em->getRepository(InvImportacionDetalle::class)->eliminar($arImportacion, $arrDetallesSeleccionados);
                 $em->getRepository(InvImportacion::class)->liquidar($id);
             }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(InvImportacionDetalle::class)->eliminar($arImportacion, $arrDetallesSeleccionados);
+                $em->getRepository(InvImportacion::class)->liquidar($id);
+            }
             if ($form->get('btnActualizarDetalle')->isClicked()) {
                 $em->getRepository(InvImportacion::class)->actualizarDetalles($id, $arrControles);
                 $em->getRepository(InvImportacion::class)->liquidar($id);
@@ -174,19 +181,19 @@ class ImportacionController extends ControllerListenerGeneral
             return $this->redirect($this->generateUrl('inventario_movimiento_extranjero_importacion_detalle', ['id' => $id]));
         }
         $arImportacionDetalles = $paginator->paginate($em->getRepository(InvImportacionDetalle::class)->importacion($id), $request->query->getInt('page', 1), 10);
+        $arCostos = $paginator->paginate($em->getRepository(InvImportacionCosto::class)->lista($id), $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/extranjero/importacion/detalle.html.twig', [
             'form' => $form->createView(),
             'arImportacionDetalles' => $arImportacionDetalles,
-            'arImportacion' => $arImportacion
+            'arImportacion' => $arImportacion,
+            'arCostos' => $arCostos
         ]);
     }
 
     /**
      * @param Request $request
      * @param $codigoImportacion
-     * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/extranjero/importacion/detalle/nuevo/{codigoImportacion}", name="inventario_movimiento_extranjero_importacion_detalle_nuevo")
@@ -256,4 +263,31 @@ class ImportacionController extends ControllerListenerGeneral
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/movimiento/extranjero/importacion/costo/nuevo/{id}/{codigoImportacion}", name="inventario_movimiento_extranjero_importacion_costo_nuevo")
+     */
+    public function costoNuevo(Request $request, $id, $codigoImportacion)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arImportacionCosto = new InvImportacionCosto();
+        if ($id != 0) {
+            $arImportacionCosto = $em->getRepository(InvImportacionCosto::class)->find($id);
+        }
+        $form = $this->createForm(ImportacionCostoType::class, $arImportacionCosto);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arImportacionCosto->setImportacionRel($em->find(InvImportacion::class, $codigoImportacion));
+                $em->persist($arImportacionCosto);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('inventario/movimiento/extranjero/importacion/costoNuevo.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
 }

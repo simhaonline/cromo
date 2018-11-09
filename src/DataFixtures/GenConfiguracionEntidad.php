@@ -25,7 +25,6 @@ class GenConfiguracionEntidad extends Fixture
             'facturaTipo,admin,general,0,0',
             'ordenTipo,admin,general,0,0',
             'documentoTipo,admin,general,0,0',
-
             'tercero,admin,general,0,0',
             'orden,movimiento,inventario,1,1',
             'movimiento,movimiento,inventario,0,1',
@@ -37,7 +36,8 @@ class GenConfiguracionEntidad extends Fixture
             'cotizacionTipo,admin,general,0,0',
             'remisionTipo,admin,comercial,0,0',
             'bodegaUsuario,admin,inventario,1,0',
-            'importacionTipo,admin,inventario,0,0'];
+            'importacionTipo,admin,inventario,0,0',
+            'importacionCostoConcepto,admin,inventario,0,0'];
         $this->setConfiguracionEntidades($arrModuloInventario, $em, 'inventario');
         /////////////////              FIN ESTRACTURA MODULO DE INVENTARIO                             ////////////////
 //

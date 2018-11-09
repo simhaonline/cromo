@@ -11,38 +11,131 @@ class InvImportacionCosto
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
      * @ORM\Column(name="codigo_importacion_costo_pk" , type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $codigoImportacionCostoPk;
 
     /**
-     * @ORM\Column(name="codigo_item_fk" , type="integer")
+     * @ORM\Column(name="codigo_importacion_costo_concepto_fk", type="string", length=10, nullable=true)
      */
-    private $codigoItemFk;
+    private $codigoImportacionCostoConceptoFk;
 
     /**
-     * @ORM\Column(name="codigo_moneda_fk" , type="integer")
+     * @ORM\Column(name="codigo_importacion_fk" ,type="integer", nullable=true)
      */
-    private $codigoMonedaFk;
+    private $codigoImportacionFk;
 
     /**
-     * @ORM\Column(name="precio" ,type="float")
+     * @ORM\Column(name="vr_valor" ,type="float", nullable=true)
      */
-    private $precio = 0;
+    private $vrValor = 0;
 
     /**
-     * @ORM\Column(name="por_descuento" ,type="float")
+     * @ORM\ManyToOne(targetEntity="InvImportacionCostoConcepto", inversedBy="importacionesCostosImportacionCostoConceptoRel")
+     * @ORM\JoinColumn(name="codigo_importacion_costo_concepto_fk", referencedColumnName="codigo_importacion_costo_concepto_pk")
      */
-    private $porDescuento = 0;
+    protected $importacionCostoConceptoRel;
 
     /**
-     * @ORM\Column(name="vr_descuento" ,type="float")
+     * @ORM\ManyToOne(targetEntity="InvImportacion", inversedBy="importacionesCostosImportacionRel")
+     * @ORM\JoinColumn(name="codigo_importacion_fk", referencedColumnName="codigo_importacion_pk")
      */
-    private $vrDescuento = 0;
+    protected $importacionRel;
 
     /**
-     * @ORM\Column(name="cantidad", type="float")
+     * @return mixed
      */
-    private $cantidad = 0;
+    public function getCodigoImportacionCostoPk()
+    {
+        return $this->codigoImportacionCostoPk;
+    }
+
+    /**
+     * @param mixed $codigoImportacionCostoPk
+     */
+    public function setCodigoImportacionCostoPk($codigoImportacionCostoPk): void
+    {
+        $this->codigoImportacionCostoPk = $codigoImportacionCostoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImportacionCostoConceptoFk()
+    {
+        return $this->codigoImportacionCostoConceptoFk;
+    }
+
+    /**
+     * @param mixed $codigoImportacionCostoConceptoFk
+     */
+    public function setCodigoImportacionCostoConceptoFk($codigoImportacionCostoConceptoFk): void
+    {
+        $this->codigoImportacionCostoConceptoFk = $codigoImportacionCostoConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImportacionFk()
+    {
+        return $this->codigoImportacionFk;
+    }
+
+    /**
+     * @param mixed $codigoImportacionFk
+     */
+    public function setCodigoImportacionFk($codigoImportacionFk): void
+    {
+        $this->codigoImportacionFk = $codigoImportacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrValor()
+    {
+        return $this->vrValor;
+    }
+
+    /**
+     * @param mixed $vrValor
+     */
+    public function setVrValor($vrValor): void
+    {
+        $this->vrValor = $vrValor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImportacionCostoConceptoRel()
+    {
+        return $this->importacionCostoConceptoRel;
+    }
+
+    /**
+     * @param mixed $importacionCostoConceptoRel
+     */
+    public function setImportacionCostoConceptoRel($importacionCostoConceptoRel): void
+    {
+        $this->importacionCostoConceptoRel = $importacionCostoConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImportacionRel()
+    {
+        return $this->importacionRel;
+    }
+
+    /**
+     * @param mixed $importacionRel
+     */
+    public function setImportacionRel($importacionRel): void
+    {
+        $this->importacionRel = $importacionRel;
+    }
 }

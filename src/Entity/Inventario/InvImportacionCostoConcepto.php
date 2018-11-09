@@ -13,7 +13,6 @@ class InvImportacionCostoConcepto
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
      * @ORM\Column(name="codigo_importacion_costo_concepto_pk" , type="string", length=10)
      */
     private $codigoImportacionCostoConceptoPk;
@@ -21,5 +20,58 @@ class InvImportacionCostoConcepto
     /**
      * @ORM\Column(name="nombre", type="string", length=50, nullable=true)
      */
-    private $nombre = 0;
+    private $nombre;
+
+    /**
+     * @ORM\OneToMany(targetEntity="InvImportacionCosto", mappedBy="importacionCostoConceptoRel")
+     */
+    protected $importacionesCostosImportacionCostoConceptoRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImportacionCostoConceptoPk()
+    {
+        return $this->codigoImportacionCostoConceptoPk;
+    }
+
+    /**
+     * @param mixed $codigoImportacionCostoConceptoPk
+     */
+    public function setCodigoImportacionCostoConceptoPk($codigoImportacionCostoConceptoPk): void
+    {
+        $this->codigoImportacionCostoConceptoPk = $codigoImportacionCostoConceptoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImportacionesCostosImportacionCostoConceptoRel()
+    {
+        return $this->importacionesCostosImportacionCostoConceptoRel;
+    }
+
+    /**
+     * @param mixed $importacionesCostosImportacionCostoConceptoRel
+     */
+    public function setImportacionesCostosImportacionCostoConceptoRel($importacionesCostosImportacionCostoConceptoRel): void
+    {
+        $this->importacionesCostosImportacionCostoConceptoRel = $importacionesCostosImportacionCostoConceptoRel;
+    }
 }

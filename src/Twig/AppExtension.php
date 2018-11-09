@@ -69,7 +69,7 @@ class AppExtension extends AbstractExtension
                     echo "<td style='text-align: left;'>" . 'NO' . "</td>";
                 }
             } elseif (is_numeric($dato)) {
-                echo "<td style='text-align: right;'>" . $dato . "</td>";
+                echo "<td style='text-align: left;'>" . $dato . "</td>";
             } else {
                 echo "<td style='text-align: left;'>" . $dato . "</td>";
             }

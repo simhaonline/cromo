@@ -36,4 +36,23 @@ class UsuarioRepository extends ServiceEntityRepository
         return $array;
     }
 
+    public function exportarExcelPermisos(){
+        $em=$this->getEntityManager();
+        $arUsuarios = $em->createQueryBuilder()
+            ->from('App:Seguridad\SegUsuarioModelo','seg')
+            ->join('seg.genModeloRel','m')
+            ->addSelect('seg.codigoUsuarioFk as USUARIO')
+            ->addSelect('m.codigoModuloFk as TIPO')
+            ->addSelect('m.codigoModeloPk as MODELO')
+            ->addSelect('seg.lista as LISTA')
+            ->addSelect('seg.nuevo as NUEVO')
+            ->addSelect('seg.detalle as DETALLE')
+            ->addSelect('seg.autorizar as AUTORIZAR')
+            ->addSelect('seg.aprobar as APROBAR')
+            ->addSelect('seg.anular as ANULAR')
+            ->orderBy('seg.codigoUsuarioFk','ASC')
+            ->getQuery()->getResult();
+        return $arUsuarios;
+    }
+
 }

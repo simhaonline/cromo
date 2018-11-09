@@ -28,16 +28,16 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Modulo:</label>
                 <div class="col-sm-4">
-                    {{form_widget(form.cboModulo, { 'attr': {'class': 'form-control'} }) }}
+                    {{form_widget(form.cboModulo, { 'attr': {'class': 'modulo form-control'} }) }}
                 </div>
                 <label class="col-sm-2 control-label">Modelo:</label>
                 <div class="col-sm-4">
-                    {{form_widget(form.TxtModelo, { 'attr': {'class': 'form-control'} }) }}
+                    {{form_widget(form.CboModelo, { 'attr': {'class': 'modelo form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <div class="col-sm-offset-2 col-sm-10">
-                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} ,'onclick':'ChequearTodos()' })}}
                 </div>
             </div>
         </div>
@@ -89,16 +89,78 @@
             <tr>
                 <td>{{  arGenModelo.tipo}}</td>
                 <td>{{  arGenModelo.codigoModeloPk}}</td>
-                <td align="center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGenModelo.codigoModeloPk }}"/></td>
+                <td align="center"><input type="checkbox"  name="ChkSeleccionar[]" value="{{ arGenModelo.codigoModeloPk }}"/></td>
             </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" onclick="window.close()">Cancelar</a>
+        <a class="btn btn-default btn-sm" onclick="window.close();">Cancelar</a>
         {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
     </div>
             {{ form_end(form)}}
     <br/><br/><br/><br/>
+    <script src="{{ asset('vendor/jquery/jquery.js') }}"></script>
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script>
+        $('.modulo').change(function () {
+            var selector = $(this);
+            var selectorAct=$('.modelo');
+            if (selector.attr('name') !== '') {
+                $.ajax({
+                    url: "{{ path('general_administracion_notificacion_tipo__comboDependiente') }}",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: {
+                        id: selector.val(),
+                    },
+                    success: function (respuestas) {
+                        console.log(respuestas);
+                        selectorAct.html("");
+                        selectorAct.append('<option value=""> TODOS</option>');
+                        $.each(respuestas, function (key, respuesta) {
+                            selectorAct.append('<option value="' + respuesta.id + '">' + respuesta.id + '</option>');
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        });
+
+        $(document).ready(function() {
+            var selectModelo='{{ arModeloSelect }}';
+            var selector = $('.modulo');
+            var selectorAct=$('.modelo')
+            if (selector.attr('name') !== '') {
+                selectorAct.value=selectModelo;
+                $.ajax({
+                    url: "{{ path('general_administracion_notificacion_tipo__comboDependiente') }}",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: {
+                        id: selector.val(),
+                    },
+                    success: function (respuestas) {
+                        console.log(respuestas);
+                        selectorAct.html("");
+                        selectorAct.append('<option value=""> TODOS</option>');
+                        $.each(respuestas, function (key, respuesta) {
+                            if(respuesta.id!==selectModelo){
+                                selectorAct.append('<option  value="' + respuesta.id + '">' + respuesta.id + '</option>');
+                            }
+                            else{
+                                selectorAct.append('<option selected value="' + respuesta.id + '">' + respuesta.id + '</option>');
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}

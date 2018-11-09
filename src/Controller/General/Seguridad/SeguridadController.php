@@ -4,6 +4,7 @@ namespace App\Controller\General\Seguridad;
 
 use App\Entity\Seguridad\Usuario;
 use App\Entity\Transporte\TteOperacion;
+use App\General\General;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -29,11 +30,27 @@ class SeguridadController extends Controller
         $arUsuarios = $em->getRepository('App:Seguridad\Usuario')->findAll();
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcelPermiso', SubmitType::class, ['label' => 'Excel permiso', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnExcel')->isClicked()) {
                 $this->generarExcel();
+            }
+            if ($form->get('btnExcelPermiso')->isClicked()) {
+                $arUsuariosPermisos=$em->getRepository('App:Seguridad\Usuario')->exportarExcelPermisos();
+                $permisos=array('LISTA','NUEVO','DETALLE','AUTORIZAR','APROBAR','ANULAR');
+                for($i=0; $i<count($arUsuariosPermisos);$i++){
+                    foreach ($permisos as $permiso){
+                        if(!$arUsuariosPermisos[$i][$permiso]){
+                            $arUsuariosPermisos[$i][$permiso]="NO";
+                        }
+                        else{
+                            $arUsuariosPermisos[$i][$permiso]="SI";
+                        }
+                    }
+                }
+                General::get()->setExportar($arUsuariosPermisos,'Excel_Permisos');
             }
         }
         return $this->render('general/seguridad/lista.html.twig', [

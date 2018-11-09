@@ -67,11 +67,6 @@ class GenLog
      */
     private $fecha;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="App\Entity\Seguridad\Usuario", inversedBy="logsUsuarioRel")
-//     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="username")
-//     */
-//    protected $usuarioRel;
 
     /**
      * @return mixed

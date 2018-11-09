@@ -122,7 +122,7 @@ class SeguridadUsuarioModeloController extends AbstractController
                             if(!$arSegUsuarioModelo) {
                                 $arSeguridadUsuarioModelo = (new SegUsuarioModelo())
                                     ->setGenModeloRel($arGenModeloValidar)
-                                    ->setUsuarioRel($arUsuario)
+                                    ->setCodigoUsuarioFk($arUsuario->getUsername())
                                     ->setLista($arDatos['checkLista'])
                                     ->setDetalle($arDatos['checkDetalle'])
                                     ->setNuevo($arDatos['checkNuevo'])
@@ -208,27 +208,6 @@ class SeguridadUsuarioModeloController extends AbstractController
 
     }
 
-//    /**
-//     * @Route("/gen/seguridad/usuario/modelo/eliminar", name="general_seguridad_usuario_modelo_eliminar")
-//     */
-//    public function eliminarPermiso(Request $request){
-//        $em=$this->getDoctrine()->getManager();
-//        $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//        if($arrSeleccionados && count($arrSeleccionados)>0){
-//            if ($arrSeleccionados) {
-//                foreach ($arrSeleccionados as $codigoSeguridad) {
-//                    $arSegUsuarioModelo = $em->getRepository('App:Seguridad\SegUsuarioModelo')->find($codigoSeguridad);
-//                    if($arSegUsuarioModelo){
-//                        $em->remove($arSegUsuarioModelo);
-//                    }
-//
-//                }
-//                $em->flush();
-//            }
-//        }
-//
-//        return $this->redirectToRoute('general_seguridad_usuario_modelo_lista');
-//    }
 
     private function verificarUsuario($hash)
     {

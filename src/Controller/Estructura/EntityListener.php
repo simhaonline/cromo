@@ -367,7 +367,7 @@ class EntityListener extends DefaultEntityListenerResolver
 
     private function capturarUsuario(&$data) {
         if($this->usuario !== null && $this->usuario !== "anon.") {
-            $data['username'] = $this->usuario->getUsername();
+            $data['codigoUsuarioFk'] = $this->usuario->getUsername();
             $data['nombreUsuario'] = $this->usuario->getUsername();
         } else if($this->usuario === "anon.") {
             $data['nombreUsuario'] = self::USUARIO_API;

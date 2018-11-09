@@ -110,7 +110,7 @@ class SeguridadUsuarioModeloController extends AbstractController
                 $id = $this->verificarUsuario($hash);
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $arDatos = $form->getData();
-                if ($id != 0) {
+                if ($id != "") {
                     $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
                 }
                 if ($arrSeleccionados) {

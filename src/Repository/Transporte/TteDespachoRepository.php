@@ -185,7 +185,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'SELECT COUNT(dd.codigoGuiaFk) as cantidad, SUM(dd.unidades+0) as unidades, SUM(dd.pesoReal+0) as pesoReal, SUM(dd.pesoVolumen+0) as pesoVolumen,
-                  SUM(dd.vrFlete) as vrFlete, SUM(dd.vrManejo) as vrManejo, SUM(dd.vrCobroEntrega) as vrCobroEntrega 
+                  SUM(dd.vrFlete) as vrFlete, SUM(dd.vrManejo) as vrManejo, SUM(dd.vrCobroEntrega) as vrCobroEntrega, SUM(dd.vrDeclara) as vrDeclara
         FROM App\Entity\Transporte\TteDespachoDetalle dd
         WHERE dd.codigoDespachoFk = :codigoDespacho')
             ->setParameter('codigoDespacho', $codigoDespacho);
@@ -204,6 +204,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $arDespacho->setVrFlete(intval($arrGuias['vrFlete']));
         $arDespacho->setVrManejo(intval($arrGuias['vrManejo']));
         $arDespacho->setVrCobroEntrega(intval($arrGuias['vrCobroEntrega']));
+        $arDespacho->setVrDeclara(intval($arrGuias['vrDeclara']));
         $arDespacho->setPorcentajeRentabilidad($margen);
         //Totales
         $arrConfiguracionLiquidarDespacho = $em->getRepository(TteConfiguracion::class)->liquidarDespacho();

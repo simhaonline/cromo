@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,7 +79,7 @@ class SeguridadUsuarioModeloController extends AbstractController
         $em=$this->getDoctrine()->getManager();
         $session=new Session();
         $form = $this->createFormBuilder()
-            ->add('TxtModelo', TextType::class, array('label'=>'Modelo','required' => false, 'data' => $session->get('arSeguridadUsuarioModulofiltroModelo')))
+            ->add('CboModelo', ChoiceType::class, array('placeholder'=>'TODOS','required' => false))
             ->add('cboModulo', EntityType::class, array(
                 'class' => GenModulo::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -101,11 +102,16 @@ class SeguridadUsuarioModeloController extends AbstractController
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid() ) {
+
+        //eliminar variables de session solo cuando se cierre la pestaña
+
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('arSeguridadUsuarioModulofiltroModelo',$form->get('TxtModelo')->getData());
+                $arModeloSelect=$request->request->get('form');
+                $arModeloSelect=$arModeloSelect['CboModelo'];
+                $session->set('arSeguridadUsuarioModulofiltroModelo',$arModeloSelect);
                 $session->set('arSeguridadUsuarioModulofiltroModulo',$form->get('cboModulo')->getData());
             }
+
             if($form->get('btnGuardar')->isClicked()) {
                 $id = $this->verificarUsuario($hash);
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -114,7 +120,6 @@ class SeguridadUsuarioModeloController extends AbstractController
                     $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
                 }
                 if ($arrSeleccionados) {
-                    $error=false;
                     foreach ($arrSeleccionados as $codigoModelo) {
                         $arGenModeloValidar = $em->getRepository('App:General\GenModelo')->find($codigoModelo);
                         if ($arGenModeloValidar && $arUsuario) {
@@ -132,28 +137,26 @@ class SeguridadUsuarioModeloController extends AbstractController
 
                                 $em->persist($arSeguridadUsuarioModelo);
                             }
-                            else{
-                                $error=true;
-                                Mensajes::error("El modelo '{$arGenModeloValidar->getCodigoModeloPk()}' ya tiene permisos asignados, si desea modificar, puede hacerlo desde el detalle");
-                            }
                         }
                     }
-                    if(!$error){
                     $em->flush();
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                     $session->set('arSeguridadUsuarioModulofiltroModelo',null);
                     $session->set('arSeguridadUsuarioModulofiltroModulo',null);
-                    }
                 }
                 else{
                     Mensajes::error("No selecciono ningun dato para grabar");
                 }
-            }
+        }
+        if(!$form->get('btnGuardar')->isClicked() && !$form->get('btnFiltrar')->isClicked()) {
+            $session->set('arSeguridadUsuarioModulofiltroModelo', null);
+            $session->set('arSeguridadUsuarioModulofiltroModulo', null);
         }
         $arGenModelo=$em->getRepository('App:General\GenModelo')->lista();
         return $this->render('general/seguridad/seguridad_usuario_modelo/nuevo.html.twig', [
             'form'          =>  $form->createView(),
             'arGenModelo'   =>  $arGenModelo,
+            'arModeloSelect'=>$arModeloSelect??""
         ]);
     }
 

@@ -26,7 +26,7 @@
                     {{ validarTipo(arUsuario.username) }}
                     {{ validarTipo(arUsuario.codigoOperacionFk) }}
                     {{ validarTipo(arUsuario.nombreCorto) }}
-                    {{ validarTipo(arUsuario.numeroIdentificacion) }}
+                    {{ validarTipo(arUsuario.numeroIdentificacion)}}
                     {{ validarTipo(arUsuario.cargo) }}
                     {{ validarTipo(arUsuario.email) }}
                     {{ validarTipo(arUsuario.telefono) }}
@@ -39,7 +39,7 @@
                         </a>
                     </td>
                     <td style="text-align: center;">
-                        <a class="btn btn-xs btn-default" title="Cambiar contraseña"
+                        <a style="font-size: 16px" title="Cambiar contraseña"
                            href="javascript:abrirVentana3('{{ path('gen_seguridad_usuario_nuevo_clave',{'hash' : encriptar(arUsuario.username)}) }}','cambiarContrasena',600,900)">
                             <i class="fa fa-key" style="font-size: smaller;color: black;">
                             </i>
@@ -63,6 +63,9 @@
         </div>
         <div style="float: right;" class="btn-group">
             {{ form_widget(form.btnExcel) }}
+        </div>
+        <div style="float: right;" class="btn-group">
+            {{ form_widget(form.btnExcelPermiso) }}
         </div>
     </div>
     {{ form_end(form) }}

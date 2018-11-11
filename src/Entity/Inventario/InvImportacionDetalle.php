@@ -114,6 +114,11 @@ class InvImportacionDetalle
     protected $itemRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimientoDetalle", mappedBy="importacionDetalleRel")
+     */
+    protected $movimientosDetallesImportacionDetalleRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoImportacionDetallePk()
@@ -431,6 +436,22 @@ class InvImportacionDetalle
     public function setCantidadPendiente( $cantidadPendiente ): void
     {
         $this->cantidadPendiente = $cantidadPendiente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosDetallesImportacionDetalleRel()
+    {
+        return $this->movimientosDetallesImportacionDetalleRel;
+    }
+
+    /**
+     * @param mixed $movimientosDetallesImportacionDetalleRel
+     */
+    public function setMovimientosDetallesImportacionDetalleRel($movimientosDetallesImportacionDetalleRel): void
+    {
+        $this->movimientosDetallesImportacionDetalleRel = $movimientosDetallesImportacionDetalleRel;
     }
 
 

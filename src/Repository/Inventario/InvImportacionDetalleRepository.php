@@ -5,6 +5,7 @@ namespace App\Repository\Inventario;
 use App\Entity\Inventario\InvImportacionDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @method InvImportacionDetalle|null find($id, $lockMode = null, $lockVersion = null)
@@ -103,8 +104,8 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
             ->addSelect('im.numero AS importacionNumero')
             ->join('id.itemRel', 'i')
             ->join('id.importacionRel', 'im')
-            ->where('i.estadoAprobado = 1')
-            ->where('i.estadoAnulado = 0')
+            ->where('im.estadoAprobado = 1')
+            ->andWhere('im.estadoAnulado = 0')
             ->andWhere('id.cantidadPendiente > 0')
             ->orderBy('id.codigoImportacionDetallePk', 'ASC');
         $query = $em->createQuery($queryBuilder->getDQL());

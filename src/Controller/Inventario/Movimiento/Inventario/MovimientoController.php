@@ -449,7 +449,7 @@ class MovimientoController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoItemCodigo'), 'required' => false))
             ->add('txtNombre', TextType::class, array('data' => $session->get('filtroInvMovimientoItemNombre'), 'required' => false, 'attr' => ['readonly' => 'readonly']))
-            ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvNumeroOrdenCompra'), 'required' => false))
+            ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvNumeroImportacion'), 'required' => false))
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -459,30 +459,30 @@ class MovimientoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvMovimientoItemCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroInvNumeroOrden', $form->get('txtNumero')->getData());
+                $session->set('filtroInvNumeroImportacion', $form->get('txtNumero')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
-                $arrOrdenDetalles = $request->request->get('itemCantidad');
-                if ($arrOrdenDetalles) {
-                    if (count($arrOrdenDetalles) > 0) {
-                        foreach ($arrOrdenDetalles as $codigoOrdenDetalle => $cantidad) {
+                $arrImportacionDetalles = $request->request->get('itemCantidad');
+                if ($arrImportacionDetalles) {
+                    if (count($arrImportacionDetalles) > 0) {
+                        foreach ($arrImportacionDetalles as $codigoImportacionDetalle => $cantidad) {
                             if ($cantidad != '' && $cantidad != 0) {
-                                $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($codigoOrdenDetalle);
-                                if ($cantidad <= $arOrdenDetalle->getCantidadPendiente()) {
+                                $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($codigoImportacionDetalle);
+                                if ($cantidad <= $arImportacionDetalle->getCantidadPendiente()) {
                                     $arMovimientoDetalle = new InvMovimientoDetalle();
                                     $arMovimientoDetalle->setMovimientoRel($arMovimiento);
                                     $arMovimientoDetalle->setOperacionInventario($arMovimiento->getOperacionInventario());
-                                    $arMovimientoDetalle->setItemRel($arOrdenDetalle->getItemRel());
+                                    $arMovimientoDetalle->setItemRel($arImportacionDetalle->getItemRel());
                                     $arMovimientoDetalle->setCantidad($cantidad);
                                     $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
-                                    $arMovimientoDetalle->setVrPrecio($arOrdenDetalle->getVrPrecio());
-                                    $arMovimientoDetalle->setPorcentajeDescuento($arOrdenDetalle->getPorcentajeDescuento());
-                                    $arMovimientoDetalle->setPorcentajeIva($arOrdenDetalle->getPorcentajeIva());
-                                    $arMovimientoDetalle->setOrdenDetalleRel($arOrdenDetalle);
+                                    $arMovimientoDetalle->setVrPrecio($arImportacionDetalle->getVrPrecioLocal());
+                                    //$arMovimientoDetalle->setPorcentajeDescuento($arImportacionDetalle->getPorcentajeDescuentoLocal());
+                                    $arMovimientoDetalle->setPorcentajeIva($arImportacionDetalle->getPorcentajeIvaLocal());
+                                    $arMovimientoDetalle->setImportacionDetalleRel($arImportacionDetalle);
                                     $em->persist($arMovimientoDetalle);
-                                    $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() + $cantidad);
-                                    $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
-                                    $em->persist($arOrdenDetalle);
+                                    $arImportacionDetalle->setCantidadAfectada($arImportacionDetalle->getCantidadAfectada() + $cantidad);
+                                    $arImportacionDetalle->setCantidadPendiente($arImportacionDetalle->getCantidad() - $arImportacionDetalle->getCantidadAfectada());
+                                    $em->persist($arImportacionDetalle);
                                 } else {
                                     $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada.";
                                 }
@@ -500,7 +500,7 @@ class MovimientoController extends Controller
             }
         }
         $arImportacionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvImportacionDetalle::class)->listarDetallesPendientes(), $request->query->getInt('page', 1), 10);
-        return $this->render('inventario/movimiento/inventario/detalleNuevoImportacion.html.', [
+        return $this->render('inventario/movimiento/inventario/detalleNuevoImportacion.html.twig', [
             'form' => $form->createView(),
             'arImportacionDetalles' => $arImportacionDetalles
         ]);

@@ -133,6 +133,11 @@ class InvMovimientoDetalle
     private $codigoRemisionDetalleFk;
 
     /**
+     * @ORM\Column(name="codigo_importacion_detalle_fk", type="integer", nullable=true)
+     */
+    private $codigoImportacionDetalleFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvMovimiento", inversedBy="movimientosDetallesMovimientoRel")
      * @ORM\JoinColumn(name="codigo_movimiento_fk", referencedColumnName="codigo_movimiento_pk")
      */
@@ -161,6 +166,12 @@ class InvMovimientoDetalle
      * @ORM\JoinColumn(name="codigo_pedido_detalle_fk", referencedColumnName="codigo_pedido_detalle_pk")
      */
     protected $pedidoDetalleRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inventario\InvImportacionDetalle", inversedBy="movimientosDetallesImportacionDetalleRel")
+     * @ORM\JoinColumn(name="codigo_importacion_detalle_fk", referencedColumnName="codigo_importacion_detalle_pk")
+     */
+    protected $importacionDetalleRel;
 
     /**
      * @return mixed
@@ -624,6 +635,38 @@ class InvMovimientoDetalle
     public function setPedidoDetalleRel( $pedidoDetalleRel ): void
     {
         $this->pedidoDetalleRel = $pedidoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImportacionDetalleFk()
+    {
+        return $this->codigoImportacionDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoImportacionDetalleFk
+     */
+    public function setCodigoImportacionDetalleFk($codigoImportacionDetalleFk): void
+    {
+        $this->codigoImportacionDetalleFk = $codigoImportacionDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImportacionDetalleRel()
+    {
+        return $this->importacionDetalleRel;
+    }
+
+    /**
+     * @param mixed $importacionDetalleRel
+     */
+    public function setImportacionDetalleRel($importacionDetalleRel): void
+    {
+        $this->importacionDetalleRel = $importacionDetalleRel;
     }
 
 

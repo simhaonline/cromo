@@ -2,6 +2,7 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Inventario\InvImportacionDetalle;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvOrdenDetalle;
@@ -86,6 +87,13 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                         $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
                         $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad() - $arRemisionDetalle->getCantidadAfectada());
                         $em->persist($arRemisionDetalle);
+                    }
+                    //Si el detalle tiene una importacion detalle relacionado
+                    if ($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
+                        $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($arMovimientoDetalle->getCodigoImportacionDetalleFk());
+                        $arImportacionDetalle->setCantidadAfectada($arImportacionDetalle->getCantidadAfectada() - $arImportacionDetalle->getCantidad());
+                        $arImportacionDetalle->setCantidadPendiente($arImportacionDetalle->getCantidad() - $arImportacionDetalle->getCantidadAfectada());
+                        $em->persist($arImportacionDetalle);
                     }
                     $em->remove($arMovimientoDetalle);
                 }
@@ -233,6 +241,26 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                         $mensajeError = "No se permiten cantidades negativas";
                     }
                 }
+                //Si tiene importacion enlazado
+                if ($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
+                    if($cantidadNueva > 0) {
+                        $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
+                        if ($cantidadAfectar != 0) {
+                            $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($arMovimientoDetalle->getCodigoImportacionDetalleFk());
+                            if ($cantidadAfectar <= $arImportacionDetalle->getCantidadPendiente()) {
+                                $arImportacionDetalle->setCantidadAfectada($arImportacionDetalle->getCantidadAfectada() + $cantidadAfectar);
+                                $arImportacionDetalle->setCantidadPendiente($arImportacionDetalle->getCantidad() - $arImportacionDetalle->getCantidadAfectada());
+                                $em->persist($arImportacionDetalle);
+                            } else {
+                                $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
+                                break;
+                            }
+                        }
+                    } else {
+                        $mensajeError = "No se permiten cantidades negativas";
+                    }
+                }
+
             }
             if ($mensajeError == "") {
                 $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);

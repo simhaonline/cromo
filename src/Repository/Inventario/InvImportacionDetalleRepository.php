@@ -28,6 +28,7 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
                   id.codigoImportacionFk,
                   id.codigoItemFk,
                   id.cantidad,
+                  id.cantidadPendiente,
                   id.vrPrecioExtranjero,
                   id.porcentajeIvaExtranjero,
                   id.vrIvaExtranjero,

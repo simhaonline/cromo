@@ -9,9 +9,11 @@ use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvBodegaUsuario;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumento;
+use App\Entity\Inventario\InvImportacionDetalle;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvOrdenDetalle;
+use App\Entity\Inventario\InvPedidoDetalle;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimiento;
@@ -78,14 +80,42 @@ class InvMovimientoRepository extends ServiceEntityRepository
      */
     public function autorizar($arMovimiento, $usuario)
     {
+        $em = $this->getEntityManager();
         $respuesta = $this->validarDetalles($arMovimiento, $usuario);
         if ($respuesta) {
             Mensajes::error($respuesta);
         } else {
-            if ($this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
+            if ($em->getRepository(InvMovimientoDetalle::class)->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
                 $arMovimiento->setEstadoAutorizado(1);
-                $this->getEntityManager()->persist($arMovimiento);
-                $this->getEntityManager()->flush();
+                $em->persist($arMovimiento);
+                $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
+                foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+                    if($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
+                        $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($arMovimientoDetalle->getCodigoImportacionDetalleFk());
+                        $arImportacionDetalle->setCantidadAfectada($arImportacionDetalle->getCantidadAfectada() + $arMovimientoDetalle->getCantidad());
+                        $arImportacionDetalle->setCantidadPendiente($arImportacionDetalle->getCantidad() - $arImportacionDetalle->getCantidadAfectada());
+                        $em->persist($arImportacionDetalle);
+                    }
+                    if($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
+                        $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($arMovimientoDetalle->getCodigoRemisionDetalleFk());
+                        $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada() + $arMovimientoDetalle->getCantidad());
+                        $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad() - $arRemisionDetalle->getCantidadAfectada());
+                        $em->persist($arRemisionDetalle);
+                    }
+                    if($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
+                        $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
+                        $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $arMovimientoDetalle->getCantidad());
+                        $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
+                        $em->persist($arPedidoDetalle);
+                    }
+                    if($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
+                        $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenDetalleFk());
+                        $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() + $arMovimientoDetalle->getCantidad());
+                        $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
+                        $em->persist($arOrdenDetalle);
+                    }                    
+                }
+                $em->flush();
                 if($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
                     $this->generarDetallesTraslado($arMovimiento);
                 }
@@ -179,14 +209,42 @@ class InvMovimientoRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function desautorizar($arMovimiento)
-    {
+    public function desautorizar($arMovimiento) {
+        $em = $this->getEntityManager();
         if ($arMovimiento->getEstadoAutorizado() == 1 && $arMovimiento->getEstadoAprobado() == 0) {
             //Se define que mueve inventario es al aprobar
             //$this->afectar($arMovimiento, -1);
             $arMovimiento->setEstadoAutorizado(0);
-            $this->getEntityManager()->persist($arMovimiento);
-            $this->getEntityManager()->flush();
+            $em->persist($arMovimiento);
+            $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
+            foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+                if($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
+                    $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($arMovimientoDetalle->getCodigoImportacionDetalleFk());
+                    $arImportacionDetalle->setCantidadAfectada($arImportacionDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
+                    $arImportacionDetalle->setCantidadPendiente($arImportacionDetalle->getCantidad() - $arImportacionDetalle->getCantidadAfectada());
+                    $em->persist($arImportacionDetalle);
+                }
+                if($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
+                    $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($arMovimientoDetalle->getCodigoRemisionDetalleFk());
+                    $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
+                    $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad() - $arRemisionDetalle->getCantidadAfectada());
+                    $em->persist($arRemisionDetalle);
+                }
+                if($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
+                    $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
+                    $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
+                    $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
+                    $em->persist($arPedidoDetalle);
+                }
+                if($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
+                    $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenDetalleFk());
+                    $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
+                    $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
+                    $em->persist($arOrdenDetalle);
+                }
+            }
+
+            $em->flush();
             if($arMovimiento->getCodigoDocumentoTipoFk() == 'TRA'){
                 $this->eliminarDetallesTraslado($arMovimiento);
             }
@@ -313,8 +371,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             if ($arMovimientoDetalle['afectaInventario']) {
                 if($arMovimientoDetalle['codigoBodegaFk'] == "" || $arMovimientoDetalle['loteFk'] == "" || $arMovimientoDetalle['fechaVencimiento'] == "") {
-                      $respuesta = "El detalle con id " . $arMovimientoDetalle['codigoMovimientoDetallePk'] . " no tiene bodega, lote o fecha vence";
-                      break;
+                    $respuesta = "El detalle con id " . $arMovimientoDetalle['codigoMovimientoDetallePk'] . " no tiene bodega, lote o fecha vence";
+                    break;
                 } else {
                     $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle['codigoBodegaFk']);
                     if ($arBodega) {
@@ -335,6 +393,10 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $respuesta = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' tiene cantidad 0.';
                 break;
             }
+        }
+
+        if($respuesta == "") {
+            $respuesta = $this->validarCantidadesAfectar($arMovimiento->getCodigoMovimientoPk());
         }
         if($respuesta == "") {
             $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->validarDetalles();
@@ -359,7 +421,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
     public function aprobar($arMovimiento)
     {
         $em = $this->getEntityManager();
-        $arDocumento = $this->getEntityManager()->getRepository(InvDocumento::class)->find($arMovimiento->getCodigoDocumentoFk());
+        $arDocumento = $em->getRepository(InvDocumento::class)->find($arMovimiento->getCodigoDocumentoFk());
         if ($arMovimiento->getEstadoAprobado() == 0) {
             if($this->afectar($arMovimiento, 1)) {
                 $stringFecha = $arMovimiento->getFecha()->format('Y-m-d');
@@ -460,6 +522,93 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $em->flush();
     }
 
+    private function validarCantidadesAfectar($codigoMovimiento) {
+        $em = $this->getEntityManager();
+        $respuesta = "";
+        //Validar importaciones
+        $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoImportacionDetalleFk')
+            ->addSelect("SUM(md.cantidad) AS cantidad")
+            ->where("md.codigoMovimientoFk = {$codigoMovimiento} ")
+            ->andWhere('md.codigoImportacionDetalleFk IS NOT NULL')
+            ->groupBy('md.codigoImportacionDetalleFk');
+        $arrResultado = $queryBuilder->getQuery()->getResult();
+        if ($arrResultado) {
+            foreach ($arrResultado as $arrElemento) {
+                $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($arrElemento['codigoImportacionDetalleFk']);
+                if($arImportacionDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
+                    $respuesta = "La importacion detalle " . $arrElemento['codigoImportacionDetalleFk'] . " tiene pendiente " . $arImportacionDetalle->getCantidadPendiente() .
+                        " y no son suficientes para afectar " . $arrElemento['cantidad'];
+                    break;
+                }
+            }
+        }
+        
+        //Validar pedidos
+        if($respuesta == "") {
+            $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+                ->select('md.codigoPedidoDetalleFk')
+                ->addSelect("SUM(md.cantidad) AS cantidad")
+                ->where("md.codigoMovimientoFk = {$codigoMovimiento} ")
+                ->andWhere('md.codigoPedidoDetalleFk IS NOT NULL')
+                ->groupBy('md.codigoPedidoDetalleFk');
+            $arrResultado = $queryBuilder->getQuery()->getResult();
+            if ($arrResultado) {
+                foreach ($arrResultado as $arrElemento) {
+                    $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arrElemento['codigoPedidoDetalleFk']);
+                    if($arPedidoDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
+                        $respuesta = "El pedido detalle " . $arrElemento['codigoPedidoDetalleFk'] . " tiene pendiente " . $arPedidoDetalle->getCantidadPendiente() .
+                            " y no son suficientes para afectar " . $arrElemento['cantidad'];
+                        break;
+                    }
+                }
+            }
+        }
 
+        //Validar orden
+        if($respuesta == "") {
+            $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+                ->select('md.codigoOrdenDetalleFk')
+                ->addSelect("SUM(md.cantidad) AS cantidad")
+                ->where("md.codigoMovimientoFk = {$codigoMovimiento} ")
+                ->andWhere('md.codigoOrdenDetalleFk IS NOT NULL')
+                ->groupBy('md.codigoOrdenDetalleFk');
+            $arrResultado = $queryBuilder->getQuery()->getResult();
+            if ($arrResultado) {
+                foreach ($arrResultado as $arrElemento) {
+                    $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($arrElemento['codigoOrdenDetalleFk']);
+                    if($arOrdenDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
+                        $respuesta = "La orden detalle " . $arrElemento['codigoOrdenDetalleFk'] . " tiene pendiente " . $arOrdenDetalle->getCantidadPendiente() .
+                            " y no son suficientes para afectar " . $arrElemento['cantidad'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        //Validar remision
+        if($respuesta == "") {
+            $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+                ->select('md.codigoRemisionDetalleFk')
+                ->addSelect("SUM(md.cantidad) AS cantidad")
+                ->where("md.codigoMovimientoFk = {$codigoMovimiento} ")
+                ->andWhere('md.codigoRemisionDetalleFk IS NOT NULL')
+                ->groupBy('md.codigoRemisionDetalleFk');
+            $arrResultado = $queryBuilder->getQuery()->getResult();
+            if ($arrResultado) {
+                foreach ($arrResultado as $arrElemento) {
+                    $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($arrElemento['codigoRemisionDetalleFk']);
+                    if($arRemisionDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
+                        $respuesta = "La remision detalle " . $arrElemento['codigoRemisionDetalleFk'] . " tiene pendiente " . $arRemisionDetalle->getCantidadPendiente() .
+                            " y no son suficientes para afectar " . $arrElemento['cantidad'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        
+        return $respuesta;
+    }
 
 }

@@ -412,9 +412,6 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle->setPorcentajeIva($arOrdenDetalle->getPorcentajeIva());
                                     $arMovimientoDetalle->setOrdenDetalleRel($arOrdenDetalle);
                                     $em->persist($arMovimientoDetalle);
-                                    $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() + $cantidad);
-                                    $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
-                                    $em->persist($arOrdenDetalle);
                                 } else {
                                     $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada.";
                                 }
@@ -480,9 +477,6 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle->setPorcentajeIva($arImportacionDetalle->getPorcentajeIvaLocal());
                                     $arMovimientoDetalle->setImportacionDetalleRel($arImportacionDetalle);
                                     $em->persist($arMovimientoDetalle);
-                                    $arImportacionDetalle->setCantidadAfectada($arImportacionDetalle->getCantidadAfectada() + $cantidad);
-                                    $arImportacionDetalle->setCantidadPendiente($arImportacionDetalle->getCantidad() - $arImportacionDetalle->getCantidadAfectada());
-                                    $em->persist($arImportacionDetalle);
                                 } else {
                                     $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada.";
                                 }
@@ -546,9 +540,6 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle->setPorcentajeIva($arPedidoDetalle->getPorcentajeIva());
                                     $arMovimientoDetalle->setPedidoDetalleRel($arPedidoDetalle);
                                     $em->persist($arMovimientoDetalle);
-                                    $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $cantidad);
-                                    $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
-                                    $em->persist($arPedidoDetalle);
                                 } else {
                                     $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada en el id " . $codigo;
                                 }
@@ -612,9 +603,6 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle->setLoteFk($arRemisionDetalle->getLoteFk());
                                     $arMovimientoDetalle->setCodigoBodegaFk($arRemisionDetalle->getCodigoBodegaFk());
                                     $em->persist($arMovimientoDetalle);
-                                    $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada() + $cantidad);
-                                    $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad() - $arRemisionDetalle->getCantidadAfectada());
-                                    $em->persist($arRemisionDetalle);
                                 } else {
                                     $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada en el id " . $codigo;
                                 }

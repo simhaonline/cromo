@@ -45,6 +45,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.vrTotal')
             ->addSelect('md.codigoRemisionDetalleFk')
             ->addSelect('md.codigoPedidoDetalleFk')
+            ->addSelect('md.codigoImportacionDetalleFk')
             ->addSelect('i.nombre AS itemNombre')
             ->addSelect('i.referencia AS itemReferencia')
             ->leftJoin('md.itemRel', 'i')
@@ -67,34 +68,6 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             foreach ($arrSeleccionados as $codigoMovimientoDetalle) {
                 $arMovimientoDetalle = $em->getRepository(InvMovimientoDetalle::class)->find($codigoMovimientoDetalle);
                 if ($arMovimientoDetalle) {
-                    //Si el detalle tiene una orden detalle relacionado
-                    if ($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
-                        $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenDetalleFk());
-                        $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
-                        $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
-                        $em->persist($arOrdenDetalle);
-                    }
-                    //Si el detalle tiene un pedido detalle relacionado
-                    if ($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
-                        $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
-                        $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
-                        $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
-                        $em->persist($arPedidoDetalle);
-                    }
-                    //Si el detalle tiene una remision detalle relacionado
-                    if ($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
-                        $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($arMovimientoDetalle->getCodigoRemisionDetalleFk());
-                        $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
-                        $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad() - $arRemisionDetalle->getCantidadAfectada());
-                        $em->persist($arRemisionDetalle);
-                    }
-                    //Si el detalle tiene una importacion detalle relacionado
-                    if ($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
-                        $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($arMovimientoDetalle->getCodigoImportacionDetalleFk());
-                        $arImportacionDetalle->setCantidadAfectada($arImportacionDetalle->getCantidadAfectada() - $arImportacionDetalle->getCantidad());
-                        $arImportacionDetalle->setCantidadPendiente($arImportacionDetalle->getCantidad() - $arImportacionDetalle->getCantidadAfectada());
-                        $em->persist($arImportacionDetalle);
-                    }
                     $em->remove($arMovimientoDetalle);
                 }
             }
@@ -184,83 +157,6 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                 $arMovimientoDetalle->setPorcentajeDescuento($arrPorcentajeDescuento[$codigoMovimientoDetalle]);
                 $arMovimientoDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoMovimientoDetalle]);
                 $em->persist($arMovimientoDetalle);
-                //Si tiene orden enlazada
-                if ($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
-                    if($cantidadNueva) {
-                        $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
-                        if ($cantidadAfectar != 0) {
-                            $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenDetalleFk());
-                            if ($cantidadAfectar <= $arOrdenDetalle->getCantidadPendiente()) {
-                                $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() + $cantidadAfectar);
-                                $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
-                                $em->persist($arOrdenDetalle);
-                            } else {
-                                $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
-                                break;
-                            }
-                        }
-                    } else {
-                        $mensajeError = "No se permiten cantidades negativas";
-                    }
-                }
-                //Si tiene pedido enlazado
-                if ($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
-                    if($cantidadNueva > 0) {
-                        $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
-                        if ($cantidadAfectar != 0) {
-                            $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
-                            if ($cantidadAfectar <= $arPedidoDetalle->getCantidadPendiente()) {
-                                $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $cantidadAfectar);
-                                $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
-                                $em->persist($arPedidoDetalle);
-                            } else {
-                                $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
-                                break;
-                            }
-                        }
-                    } else {
-                        $mensajeError = "No se permiten cantidades negativas";
-                    }
-                }
-                //Si tiene remision enlazado
-                if ($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
-                    if($cantidadNueva > 0) {
-                        $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
-                        if ($cantidadAfectar != 0) {
-                            $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($arMovimientoDetalle->getCodigoRemisionDetalleFk());
-                            if ($cantidadAfectar <= $arRemisionDetalle->getCantidadPendiente()) {
-                                $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada() + $cantidadAfectar);
-                                $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad() - $arRemisionDetalle->getCantidadAfectada());
-                                $em->persist($arRemisionDetalle);
-                            } else {
-                                $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
-                                break;
-                            }
-                        }
-                    } else {
-                        $mensajeError = "No se permiten cantidades negativas";
-                    }
-                }
-                //Si tiene importacion enlazado
-                if ($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
-                    if($cantidadNueva > 0) {
-                        $cantidadAfectar = $cantidadNueva - $cantidadAnterior;
-                        if ($cantidadAfectar != 0) {
-                            $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($arMovimientoDetalle->getCodigoImportacionDetalleFk());
-                            if ($cantidadAfectar <= $arImportacionDetalle->getCantidadPendiente()) {
-                                $arImportacionDetalle->setCantidadAfectada($arImportacionDetalle->getCantidadAfectada() + $cantidadAfectar);
-                                $arImportacionDetalle->setCantidadPendiente($arImportacionDetalle->getCantidad() - $arImportacionDetalle->getCantidadAfectada());
-                                $em->persist($arImportacionDetalle);
-                            } else {
-                                $mensajeError = "El id " . $codigoMovimientoDetalle . " va afectar mas cantidades de las pendientes en el detalle relacionado";
-                                break;
-                            }
-                        }
-                    } else {
-                        $mensajeError = "No se permiten cantidades negativas";
-                    }
-                }
-
             }
             if ($mensajeError == "") {
                 $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);

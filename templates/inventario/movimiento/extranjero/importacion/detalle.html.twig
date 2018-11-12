@@ -76,7 +76,7 @@
                         <tr>
                             <th colspan="5">ITEM</th>
                             <th colspan="6">EXTRANJERO</th>
-                            <th colspan="5">LOCAL</th>
+                            <th colspan="7">LOCAL</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -84,8 +84,8 @@
                             <th>ID</th>
                             <th>ITEM</th>
                             <th>NOMBRE</th>
-                            <th>REFERENCIA</th>
                             <th>MARCA</th>
+                            <th>REFERENCIA</th>
                             <th>CAN</th>
                             <th>PRECIO</th>
                             <th>%IVA</th>
@@ -93,6 +93,8 @@
                             <th>SUBOTAL</th>
                             <th>TOTAL</th>
                             <th>PRECIO</th>
+                            <th>%COS</th>
+                            <th>COSTO</th>
                             <th>%IVA</th>
                             <th>IVA</th>
                             <th>SUBOTAL</th>
@@ -137,6 +139,8 @@
                                 <td class="numero">{{ arImportacionDetalle.vrSubtotalExtranjero | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arImportacionDetalle.vrTotalExtranjero | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arImportacionDetalle.vrPrecioLocal | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arImportacionDetalle.porcentajeParticipaCosto }}</td>
+                                <td class="numero">{{ arImportacionDetalle.vrCostoParticipa | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arImportacionDetalle.porcentajeIvaLocal }}</td>
                                 <td class="numero">{{ arImportacionDetalle.vrIvaLocal | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arImportacionDetalle.vrSubtotalLocal | number_format(0, '.', ',') }}</td>
@@ -179,7 +183,7 @@
                             <th>VALOR</th>
                             <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodosCostos"
-                                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionarCostos[]');"/></th>
+                                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionarCosto[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -196,7 +200,7 @@
                                         </a>
                                     {% endif %}
                                 </td>
-                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionarCostos[]"
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionarCosto[]"
                                                                        value="{{ arCosto.id }}"></td>
                             </tr>
                         {% endfor %}

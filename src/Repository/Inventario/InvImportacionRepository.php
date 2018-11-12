@@ -59,15 +59,15 @@ class InvImportacionRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arImportacion = $em->getRepository(InvImportacion::class)->find($codigoImportacion);
-        $arImportacionDetalles = $em->getRepository(InvImportacionDetalle::class)->findBy(['codigoImportacionFk' => $codigoImportacion]);
+        $vrTotalCosto = $em->getRepository(InvImportacionCosto::class)->totalCostos($arImportacion->getCodigoImportacionPk());
         $subtotalGeneralExtranjero = 0;
         $ivaGeneralExtranjero = 0;
         $totalGeneralExtranjero = 0;
         $subtotalGeneralLocal = 0;
         $ivaGeneralLocal = 0;
         $totalGeneralLocal = 0;
+        $arImportacionDetalles = $em->getRepository(InvImportacionDetalle::class)->findBy(['codigoImportacionFk' => $codigoImportacion]);
         foreach ($arImportacionDetalles as $arImportacionDetalle) {
-            $arImportacionDetalleAct = $em->getRepository(InvImportacionDetalle::class)->find($arImportacionDetalle->getCodigoImportacionDetallePk());
             $subtotalExtranjero = $arImportacionDetalle->getCantidad() * $arImportacionDetalle->getVrPrecioExtranjero();
             $porcentajeIvaExtranjero = $arImportacionDetalle->getPorcentajeIvaExtranjero();
             $ivaExtranjero = $subtotalExtranjero * $porcentajeIvaExtranjero / 100;
@@ -75,9 +75,9 @@ class InvImportacionRepository extends ServiceEntityRepository
             $ivaGeneralExtranjero += $ivaExtranjero;
             $totalExtranjero = $subtotalExtranjero + $ivaExtranjero;
             $totalGeneralExtranjero += $totalExtranjero;
-            $arImportacionDetalleAct->setVrSubtotalExtranjero($subtotalExtranjero);
-            $arImportacionDetalleAct->setVrIvaExtranjero($ivaExtranjero);
-            $arImportacionDetalleAct->setVrTotalExtranjero($totalExtranjero);
+            $arImportacionDetalle->setVrSubtotalExtranjero($subtotalExtranjero);
+            $arImportacionDetalle->setVrIvaExtranjero($ivaExtranjero);
+            $arImportacionDetalle->setVrTotalExtranjero($totalExtranjero);
 
             $precioLocal = $arImportacionDetalle->getVrPrecioExtranjero() * $arImportacion->getTasaRepresentativaMercado();
             $subtotalLocal = $arImportacionDetalle->getCantidad() * $precioLocal;
@@ -87,14 +87,27 @@ class InvImportacionRepository extends ServiceEntityRepository
             $ivaGeneralLocal += $ivaLocal;
             $totalLocal = $subtotalLocal + $ivaLocal;
             $totalGeneralLocal += $totalLocal;
-            $arImportacionDetalleAct->setVrPrecioLocal($precioLocal);
-            $arImportacionDetalleAct->setVrSubtotalLocal($subtotalLocal);
-            $arImportacionDetalleAct->setVrIvaLocal($ivaLocal);
-            $arImportacionDetalleAct->setVrTotalLocal($totalLocal);
-
-            $em->persist($arImportacionDetalleAct);
+            $arImportacionDetalle->setVrPrecioLocal($precioLocal);
+            $arImportacionDetalle->setVrSubtotalLocal($subtotalLocal);
+            $arImportacionDetalle->setVrIvaLocal($ivaLocal);
+            $arImportacionDetalle->setVrTotalLocal($totalLocal);
+            $em->persist($arImportacionDetalle);
         }
-        $vrTotalCosto = $em->getRepository(InvImportacionCosto::class)->totalCostos($arImportacion->getCodigoImportacionPk());
+        foreach ($arImportacionDetalles as $arImportacionDetalle) {
+            $porcentajeParticipaCosto = 0;
+            $costoParticipa = 0;
+            if($vrTotalCosto > 0) {
+                if($subtotalGeneralLocal > 0) {
+                    $porcentajeParticipaCosto = ($arImportacionDetalle->getVrSubtotalLocal() / $subtotalGeneralLocal) * 100;
+                    $costoParticipa = ($vrTotalCosto * $porcentajeParticipaCosto) / 100;
+                }
+
+            }
+            $arImportacionDetalle->setPorcentajeParticipaCosto($porcentajeParticipaCosto);
+            $arImportacionDetalle->setVrCostoParticipa($costoParticipa);
+            $em->persist($arImportacionDetalle);
+        }
+
         $arImportacion->setVrTotalCosto($vrTotalCosto);
         $arImportacion->setVrSubtotalExtranjero($subtotalGeneralExtranjero);
         $arImportacion->setVrIvaExtranjero($ivaGeneralExtranjero);

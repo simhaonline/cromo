@@ -102,6 +102,16 @@ class InvImportacionDetalle
     private $vrTotalLocal = 0;
 
     /**
+     * @ORM\Column(name="porcentaje_participa_costo", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $porcentajeParticipaCosto = 0;
+
+    /**
+     * @ORM\Column(name="vr_costo_participa", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $vrCostoParticipa = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Inventario\InvImportacion", inversedBy="importacionesDetallesImportacionRel")
      * @ORM\JoinColumn(name="codigo_importacion_fk", referencedColumnName="codigo_importacion_pk")
      */
@@ -452,6 +462,38 @@ class InvImportacionDetalle
     public function setMovimientosDetallesImportacionDetalleRel($movimientosDetallesImportacionDetalleRel): void
     {
         $this->movimientosDetallesImportacionDetalleRel = $movimientosDetallesImportacionDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeParticipaCosto()
+    {
+        return $this->porcentajeParticipaCosto;
+    }
+
+    /**
+     * @param mixed $porcentajeParticipaCosto
+     */
+    public function setPorcentajeParticipaCosto($porcentajeParticipaCosto): void
+    {
+        $this->porcentajeParticipaCosto = $porcentajeParticipaCosto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoParticipa()
+    {
+        return $this->vrCostoParticipa;
+    }
+
+    /**
+     * @param mixed $vrCostoParticipa
+     */
+    public function setVrCostoParticipa($vrCostoParticipa): void
+    {
+        $this->vrCostoParticipa = $vrCostoParticipa;
     }
 
 

@@ -41,6 +41,8 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
                   id.vrSubtotalLocal,
                   id.vrNetoLocal,
                   id.vrTotalLocal,
+                  id.porcentajeParticipaCosto,
+                  id.vrCostoParticipa,
                   i.nombre as itemNombre,
                   i.referencia as itemReferencia,
                   m.nombre as itemMarcaNombre                         

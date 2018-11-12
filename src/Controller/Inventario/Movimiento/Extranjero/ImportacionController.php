@@ -174,9 +174,9 @@ class ImportacionController extends ControllerListenerGeneral
                 $em->getRepository(InvImportacionDetalle::class)->eliminar($arImportacion, $arrDetallesSeleccionados);
                 $em->getRepository(InvImportacion::class)->liquidar($id);
             }
-            if ($form->get('btnEliminar')->isClicked()) {
-                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(InvImportacionDetalle::class)->eliminar($arImportacion, $arrDetallesSeleccionados);
+            if ($form->get('btnEliminarCosto')->isClicked()) {
+                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionarCosto');
+                $em->getRepository(InvImportacionCosto::class)->eliminar($arImportacion, $arrDetallesSeleccionados);
                 $em->getRepository(InvImportacion::class)->liquidar($id);
             }
             if ($form->get('btnActualizarDetalle')->isClicked()) {
@@ -290,6 +290,7 @@ class ImportacionController extends ControllerListenerGeneral
                 $arImportacionCosto->setImportacionRel($em->find(InvImportacion::class, $codigoImportacion));
                 $em->persist($arImportacionCosto);
                 $em->flush();
+                $em->getRepository(InvImportacion::class)->liquidar($codigoImportacion);
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }

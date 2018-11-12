@@ -178,6 +178,31 @@ class InvDocumento
     private $codigoCuentaCobrarTipoFk;
 
     /**
+     * @ORM\Column(name="adicionar", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $adicionar = false;
+
+    /**
+     * @ORM\Column(name="adicionar_importacion", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $adicionarImportacion = false;
+
+    /**
+     * @ORM\Column(name="adicionar_pedido", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $adicionarPedido = false;
+
+    /**
+     * @ORM\Column(name="adicionar_remision", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $adicionarRemision = false;
+
+    /**
+     * @ORM\Column(name="adicionar_orden", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $adicionarOrden = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentosDocumentoTipoRel")
      * @ORM\JoinColumn(name="codigo_documento_tipo_fk", referencedColumnName="codigo_documento_tipo_pk")
      */
@@ -666,6 +691,86 @@ class InvDocumento
     public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
     {
         $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionarImportacion()
+    {
+        return $this->adicionarImportacion;
+    }
+
+    /**
+     * @param mixed $adicionarImportacion
+     */
+    public function setAdicionarImportacion($adicionarImportacion): void
+    {
+        $this->adicionarImportacion = $adicionarImportacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionarPedido()
+    {
+        return $this->adicionarPedido;
+    }
+
+    /**
+     * @param mixed $adicionarPedido
+     */
+    public function setAdicionarPedido($adicionarPedido): void
+    {
+        $this->adicionarPedido = $adicionarPedido;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionarRemision()
+    {
+        return $this->adicionarRemision;
+    }
+
+    /**
+     * @param mixed $adicionarRemision
+     */
+    public function setAdicionarRemision($adicionarRemision): void
+    {
+        $this->adicionarRemision = $adicionarRemision;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionarOrden()
+    {
+        return $this->adicionarOrden;
+    }
+
+    /**
+     * @param mixed $adicionarOrden
+     */
+    public function setAdicionarOrden($adicionarOrden): void
+    {
+        $this->adicionarOrden = $adicionarOrden;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionar()
+    {
+        return $this->adicionar;
+    }
+
+    /**
+     * @param mixed $adicionar
+     */
+    public function setAdicionar($adicionar): void
+    {
+        $this->adicionar = $adicionar;
     }
 
 

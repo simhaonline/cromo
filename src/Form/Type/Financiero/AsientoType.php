@@ -61,4 +61,12 @@ class AsientoType extends AbstractType
         ]';
         return $campos;
     }
+
+//    public function getEstructuraPropiedadesFiltro()
+//    {
+//        $campos = '[
+//            {"campo":"numero",              "tipo":"entero",    "ayuda":"",                     "titulo":"NUMERO"}
+//        ]';
+//        return $campos;
+//    }
 }

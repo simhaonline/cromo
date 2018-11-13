@@ -41,6 +41,16 @@ class RhuPension
      */    
     private $porcentajeEmpleador = 0;
 
+    /**
+     * @ORM\Column(name="codigo_concepto_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="pensionesConceptoRel")
+     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="pensionRel")
@@ -142,5 +152,40 @@ class RhuPension
     {
         $this->contratosPensionRel = $contratosPensionRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoFk()
+    {
+        return $this->codigoConceptoFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoFk
+     */
+    public function setCodigoConceptoFk( $codigoConceptoFk ): void
+    {
+        $this->codigoConceptoFk = $codigoConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoRel()
+    {
+        return $this->conceptoRel;
+    }
+
+    /**
+     * @param mixed $conceptoRel
+     */
+    public function setConceptoRel( $conceptoRel ): void
+    {
+        $this->conceptoRel = $conceptoRel;
+    }
+
+
+
 }
 

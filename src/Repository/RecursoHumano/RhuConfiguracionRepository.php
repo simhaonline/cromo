@@ -13,4 +13,16 @@ class RhuConfiguracionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuConfiguracion::class);
     }
+
+    public function autorizarProgramacion(): array
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuConfiguracion::class, 'c')
+            ->select('c.vrSalarioMinimo')
+            ->addSelect('c.vrAuxilioTransporte')
+            ->addSelect('c.codigoConceptoAuxilioTransporteFk')
+            ->where('c.codigoConfiguracionPk = 1');
+        return $queryBuilder->getQuery()->getSingleResult();
+
+    }
+
 }

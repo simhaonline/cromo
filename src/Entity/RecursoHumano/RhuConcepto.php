@@ -140,6 +140,16 @@ class RhuConcepto
     protected $conceptosHorasConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSalud", mappedBy="conceptoRel")
+     */
+    protected $saludesConceptoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuPension", mappedBy="conceptoRel")
+     */
+    protected $pensionesConceptoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoConceptoPk()
@@ -538,4 +548,39 @@ class RhuConcepto
     {
         $this->conceptosHorasConceptoRel = $conceptosHorasConceptoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSaludesConceptoRel()
+    {
+        return $this->saludesConceptoRel;
+    }
+
+    /**
+     * @param mixed $saludesConceptoRel
+     */
+    public function setSaludesConceptoRel( $saludesConceptoRel ): void
+    {
+        $this->saludesConceptoRel = $saludesConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPensionesConceptoRel()
+    {
+        return $this->pensionesConceptoRel;
+    }
+
+    /**
+     * @param mixed $pensionesConceptoRel
+     */
+    public function setPensionesConceptoRel( $pensionesConceptoRel ): void
+    {
+        $this->pensionesConceptoRel = $pensionesConceptoRel;
+    }
+
+
+
 }

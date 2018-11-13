@@ -34,7 +34,19 @@ class RhuSalud
      * @ORM\Column(name="porcentaje_empleador", type="float")
      */    
     private $porcentajeEmpleador = 0;
-    
+
+    /**
+     * @ORM\Column(name="codigo_concepto_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="saludesConceptoRel")
+     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoRel;
+
+
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="saludRel")
      */
@@ -135,4 +147,38 @@ class RhuSalud
     {
         $this->contratosSaludRel = $contratosSaludRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoFk()
+    {
+        return $this->codigoConceptoFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoFk
+     */
+    public function setCodigoConceptoFk( $codigoConceptoFk ): void
+    {
+        $this->codigoConceptoFk = $codigoConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoRel()
+    {
+        return $this->conceptoRel;
+    }
+
+    /**
+     * @param mixed $conceptoRel
+     */
+    public function setConceptoRel( $conceptoRel ): void
+    {
+        $this->conceptoRel = $conceptoRel;
+    }
+
+
 }

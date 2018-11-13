@@ -53,8 +53,8 @@ class RhuPagoRepository extends ServiceEntityRepository
     public function generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $usuario)
     {
         $em = $this->getEntityManager();
-        $netoGeneral = 0;
-        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
+
         $arPago = new RhuPago();
         $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getCodigoContratoFk());
         $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
@@ -71,13 +71,16 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaDesdeContrato());
         $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaHastaContrato());
 
-        $ingresoBasePrestacion = 0;
-        $ingresoBaseCotizacion = 0;
+        $arrDatosGenerales = array( 'ingresoBaseCotizacion' => 0,
+                                    'ingresoBasePrestacion' => 0,
+                                    'neto' => 0);
         $valorDia = $arContrato->getVrSalario() / 30;
         $valorHora = $valorDia / $arContrato->getFactorHorasDia();
-        $auxilioTransporte = $arConfiguracion->getVrAuxilioTransporte();
+        $auxilioTransporte = $arConfiguracion['vrAuxilioTransporte'];
         $diaAuxilioTransporte = $auxilioTransporte / 30;
-        // Calculo de las horas
+        $salarioMinimo = $arConfiguracion['vrSalarioMinimo'];
+
+        //Horas
         $arrHoras = $this->getHoras($arProgramacionDetalle);
         foreach ($arrHoras AS $arrHora) {
             if ($arrHora['cantidad'] > 0) {
@@ -92,32 +95,56 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $arPagoDetalle->setConceptoRel($arConcepto);
                 $arPagoDetalle->setHoras($arrHora['cantidad']);
                 $arPagoDetalle->setDias($arProgramacionDetalle->getDias());
-                $netoGeneral += $this->getValoresPagoDetalle($arPagoDetalle, $pagoDetalle, $arConcepto);
-                $ingresoBaseCotizacion += $this->getIngresoBaseCotizacion($arPagoDetalle, $arConcepto, $pagoDetalle);
-                $ingresoBasePrestacion += $this->getIngresoBasePrestacion($arPagoDetalle, $arConcepto, $pagoDetalle);
+                $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
                 $em->persist($arPagoDetalle);
             }
         }
 
-        // Calculo del auxilio de transporte
+        //Auxilio de transporte
         if ($arContrato->getAuxilioTransporte() == 1) {
-            $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion->getCodigoConceptoAuxilioTransporteFk());
+            $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoAuxilioTransporteFk']);
             $pagoDetalle = round($diaAuxilioTransporte * $arProgramacionDetalle->getDiasTransporte());
             $arPagoDetalle = new RhuPagoDetalle();
             $arPagoDetalle->setPagoRel($arPago);
             $arPagoDetalle->setConceptoRel($arConcepto);
             $arPagoDetalle->setDias($arProgramacionDetalle->getDiasTransporte());
-            $netoGeneral += $this->getValoresPagoDetalle($arPagoDetalle, $pagoDetalle, $arConcepto);
-            $ingresoBaseCotizacion += $this->getIngresoBaseCotizacion($arPagoDetalle, $arConcepto, $pagoDetalle);
-            $ingresoBasePrestacion += $this->getIngresoBasePrestacion($arPagoDetalle, $arConcepto, $pagoDetalle);
+            $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
             $em->persist($arPagoDetalle);
         }
 
-        // Calculo de salud
+        //Salud
+        $arSalud = $arContrato->getSaludRel();
+        $porcentajeSalud = $arSalud->getPorcentajeEmpleado();
+        if($porcentajeSalud > 0) {
+            $ingresoBaseCotizacionSalud = $arrDatosGenerales['ingresoBaseCotizacion'];
+            $arConcepto = $arSalud->getConceptoRel();
+            if($arConcepto) {
+                /*
+                 * La base de aportes a seguridad social tanto en salud como en pensión,
+                 * no puede ser inferior al salario mínimo ni superior a los 25 salarios mínimos mensuales.
+                 * Esta limitación está dada por el artículo 5 de la ley 797 de 2003, reglamentado por el decreto 510 de 2003 en su artículo 3:
+                 */
+                if ($ingresoBaseCotizacionSalud > ($salarioMinimo * 25)) {
+                    $ingresoBaseCotizacionSalud = $salarioMinimo * 25;
+                }
 
-        $arPago->setVrNeto($netoGeneral);
+                $pagoDetalle = ($ingresoBaseCotizacionSalud * $porcentajeSalud) / 100;
+                $pagoDetalle = round($pagoDetalle);
+
+                $arPagoDetalle = new RhuPagoDetalle();
+                $arPagoDetalle->setPagoRel($arPago);
+                $arPagoDetalle->setConceptoRel($arConcepto);
+                $arPagoDetalle->setPorcentaje($porcentajeSalud);
+                $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+                $em->persist($arPagoDetalle);
+            }
+        }
+
+
+
+        $arPago->setVrNeto($arrDatosGenerales['neto']);
         $em->persist($arPago);
-        return $netoGeneral;
+        return $arrDatosGenerales['neto'];
     }
 
     /**
@@ -170,7 +197,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $arrHoras;
     }
 
-    private function getValoresPagoDetalle($arPagoDetalle, $pagoDetalle, $arConcepto) {
+    private function getValoresPagoDetalle(&$arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle) {
         $arPagoDetalle->setVrPago($pagoDetalle);
         $pagoDetalleOperado = $pagoDetalle * $arConcepto->getOperacion();
         $arPagoDetalle->setVrPagoOperado($pagoDetalleOperado);
@@ -180,26 +207,17 @@ class RhuPagoRepository extends ServiceEntityRepository
         } else {
             $arPagoDetalle->setVrDevengado($pagoDetalle);
         }
-        return $pagoDetalleOperado;
-    }
+        $arrDatosGenerales['neto'] += $pagoDetalleOperado;
 
-    private function getIngresoBaseCotizacion($arPagoDetalle, $arConcepto, $pagoDetalleOperado) {
-        $ingresoBaseCotizacion = 0;
         if($arConcepto->getGeneraIngresoBaseCotizacion()) {
-            $ingresoBaseCotizacion += $pagoDetalleOperado;
+            $arrDatosGenerales['ingresoBaseCotizacion'] += $pagoDetalleOperado;
             $arPagoDetalle->setVrIngresoBaseCotizacion($pagoDetalleOperado);
         }
-        return $ingresoBaseCotizacion;
-    }
 
-    private function getIngresoBasePrestacion($arPagoDetalle, $arConcepto, $pagoDetalle) {
-        $ingresoBasePrestacion = 0;
-        $pagoDetalleOperado = $pagoDetalle * $arConcepto->getOperacion();
         if($arConcepto->getGeneraIngresoBasePrestacion()) {
-            $ingresoBasePrestacion += $pagoDetalleOperado;
+            $arrDatosGenerales['ingresoBaseCotizacion'] += $pagoDetalleOperado;
             $arPagoDetalle->setVrIngresoBasePrestacion($pagoDetalleOperado);
         }
-        return $ingresoBasePrestacion;
     }
 
 }

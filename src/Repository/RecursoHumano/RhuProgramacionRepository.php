@@ -80,8 +80,10 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $fechaHasta = $this->fechaHastaContrato($arProgramacion->getFechaHasta(), $arContrato->getFechaHasta(), $arContrato->getIndefinido());
             $dias = $fechaDesde->diff($fechaHasta)->days + 1;
             $horas = $dias * $arContrato->getFactorHorasDia();
-            $arProgramacionDetalle->setFechaDesde($fechaDesde);
-            $arProgramacionDetalle->setFechaHasta($fechaHasta);
+            $arProgramacionDetalle->setFechaDesde($arProgramacion->getFechaDesde());
+            $arProgramacionDetalle->setFechaHasta($arProgramacion->getFechaHasta());
+            $arProgramacionDetalle->setFechaDesdeContrato($fechaDesde);
+            $arProgramacionDetalle->setFechaHastaContrato($fechaHasta);
             $arProgramacionDetalle->setDias($dias);
             $arProgramacionDetalle->setDiasTransporte($dias);
             $arProgramacionDetalle->setHorasDiurnas($horas);

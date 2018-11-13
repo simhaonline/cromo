@@ -69,44 +69,43 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setEntidadSaludRel($arContrato->getEntidadSaludRel());
         $arPago->setFechaDesde($arProgramacion->getFechaDesde());
         $arPago->setFechaHasta($arProgramacion->getFechaHasta());
-        if ($arContrato->getFechaDesde() >= $arPago->getFechaDesde()) {
-            $arPago->setFechaDesdeContrato($arContrato->getFechaDesde());
-        } else {
-            $arPago->setFechaDesdeContrato($arPago->getFechaDesde());
-        }
-        if ($arContrato->getFechaHasta() <= $arPago->getFechaHasta()) {
-            $arPago->setFechaHastaContrato($arContrato->getFechaHasta());
-        } else {
-            $arPago->setFechaHastaContrato($arPago->getFechaHasta());
-        }
+        $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaDesdeContrato());
+        $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaHastaContrato());
         $em->persist($arPago);
+
+        $douIngresoBasePrestacional = 0;
+        $douIngresoBaseCotizacion = 0;
+        $valorDia = $arContrato->getVrSalario() / 30;
+        $valorHora = $valorDia / $arContrato->getFactorHorasDia();
 
         // Calculo de las horas
         $arrHoras = $this->getHoras($arProgramacionDetalle);
         foreach ($arrHoras AS $arrHora) {
-            if ($arrHora['valor'] > 0) {
+            if ($arrHora['cantidad'] > 0) {
                 /** @var  $arConcepto RhuConcepto */
                 $arConcepto = $arConceptoHora[$arrHora['clave']]->getConceptoRel();
                 $arPagoDetalle = new RhuPagoDetalle();
                 $arPagoDetalle->setPagoRel($arPago);
-                $floValorDia = $arContrato->getVrSalario() / 30;
-                $floValorHora = $floValorDia / $arContrato->getFactorHorasDia();
-                $floDevengado = $arProgramacionDetalle->getDias() * $floValorDia;
-                $arPagoDetalle->setVrHora($floValorHora);
+                $valorHoraDetalle = ($valorHora *  $arConcepto->getPorcentaje()) / 100;
+                $pagoDetalle = $valorHoraDetalle * $arrHora['cantidad'];
+                $pagoDetalleOperado = $pagoDetalle * $arConcepto->getOperacion();
+                $arPagoDetalle->setVrHora($valorHoraDetalle);
                 $arPagoDetalle->setPorcentaje($arConcepto->getPorcentaje());
                 $arPagoDetalle->setConceptoRel($arConcepto);
-                $arPagoDetalle->setHoras($arrHora['valor']);
+                $arPagoDetalle->setHoras($arrHora['cantidad']);
                 $arPagoDetalle->setOperacion($arConcepto->getOperacion());
-                $arPagoDetalle->setVrPago($floDevengado);
-                $arPagoDetalle->setVrPagoOperado($floDevengado * $arConcepto->getOperacion());
-                if ($arConcepto->getOperacion() == -1) {
-                    $arPagoDetalle->setVrDeduccion($floDevengado);
-                } else {
-                    $arPagoDetalle->setVrDevengado($floDevengado);
-                }
+                $arPagoDetalle->setVrPago($pagoDetalle);
+                $arPagoDetalle->setVrPagoOperado($pagoDetalleOperado);
                 $arPagoDetalle->setDias($arProgramacionDetalle->getDias());
-                if ($arPagoDetalle->getOperacion() == 1) {
-                    $douDevengado = $douDevengado + $arPagoDetalle->getVrPago();
+
+                if ($arConcepto->getOperacion() == -1) {
+                    $arPagoDetalle->setVrDeduccion($pagoDetalle);
+                } else {
+                    $arPagoDetalle->setVrDevengado($pagoDetalle);
+                }
+
+                if($arConcepto->getGeneraIngresoBaseCotizacion()) {
+
                 }
                 $em->persist($arPagoDetalle);
             }
@@ -195,8 +194,8 @@ class RhuPagoRepository extends ServiceEntityRepository
      */
     private function getHoras($arProgramacionDetalle)
     {
-        $arrHoras['D'] = array('tipo' => 'D', 'valor' => $arProgramacionDetalle->getHorasDiurnas(), 'clave' => 0);
-        $arrHoras['N'] = array('tipo' => 'N', 'valor' => $arProgramacionDetalle->getHorasNocturnas(), 'clave' => 7);
+        $arrHoras['D'] = array('tipo' => 'D', 'cantidad' => $arProgramacionDetalle->getHorasDiurnas(), 'clave' => 0);
+        $arrHoras['N'] = array('tipo' => 'N', 'cantidad' => $arProgramacionDetalle->getHorasNocturnas(), 'clave' => 7);
         return $arrHoras;
     }
 

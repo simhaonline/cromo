@@ -1,190 +1,23 @@
+
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Cromo{% endblock %}</title>
-    {% block stylesheets %}
-        <!-- Bootstrap Core CSS -->
-        <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('vendor/metisMenu/metisMenu.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('dist/css/sb-admin-2.css') }}">
-        <link rel="stylesheet" href="{{ asset('vendor/morrisjs/morris.css') }}">
-        <link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="{{ asset('css/general.css') }}">
-    {% endblock %}
-</head>
+{{ include('base_cabecera_enlace.html.twig') }}
 <body>
 <div id="wrapper">
     <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{{ path('inicio') }}">Cromo v2.0</a>
-        </div>
-        <!-- /.navbar-header -->
-
-        <ul class="nav navbar-top-links navbar-right">
-
-            <li class="dropdown">
-                <a class="notificacionPendiente dropdown-toggle" data-toggle="dropdown" href="" onclick="verNotificacionesPendientes()">
-                </a>
-                <ul class="notificaciones dropdown-menu dropdown-alerts" style="width: 600px">
-                </ul>
-                <!-- /.dropdown-alerts -->
-            </li>
-
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-user">
-                    <li><a href="#"><i class="fa fa-user fa-fw"></i> Perfil</a>
-                    </li>
-                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Configuracion</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li><a href="{{ path('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Salir</a>
-                    </li>
-                </ul>
-                <!-- /.dropdown-user -->
-            </li>
-        </ul>
-        <!-- /.navbar-top-links -->
-
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-                    <li class="sidebar-search">
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                        <!-- /input-group -->
-                    </li>
-                    <li>
-                        <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('transporte_general_general_inicio_ver') }}"><i class="fa fa-road"></i> Transporte</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('recursohumano_general_general_inicio_ver') }}"><i class="fa fa-users"></i> Recurso humano</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('turno_general_general_inicio_ver') }}"><i class="fa fa-calendar"></i> Turno</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('cartera_general_general_inicio_ver') }}"><i class="fa fa-credit-card-alt"></i> Cartera</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('compra_general_general_inicio_ver') }}"><i class="fa fa-shopping-bag"></i> Compra</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('inventario_general_general_inicio_ver') }}"><i class="fa fa-cube fa-fw"></i> Inventario</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('financiero_general_general_inicio_ver') }}"><i class="fa fa-calculator fa-fw"></i>Financiero</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('documental_general_general_inicio_ver') }}"><i class="fa fa-file fa-fw"></i>Documental</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('general_general_inicio') }}"><i class="fa fa-support fa-fw"></i>General</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.sidebar-collapse -->
-        </div>
-        <!-- /.navbar-static-side -->
-    </nav>
+    {{ include('base_menu_inicio.html.twig') }}
     {% block body %}
+
         <div id="page-wrapper">
+            {{ include('base_cuerpo.html.twig') }}
             {% block content %}
-                <div class="row">
-                    <div class="col-lg-12">
-                        {% set route = app.request.attributes.get('_route') %}
-                        {% set parametros = app.request.attributes.get('_route_params') %}
-                        {% set ruta = route | split('_') %}
-                        <h3 class="page-header">General
-
-                        </h3>
-                    </div>
-                </div>
-
 
             {% endblock %}
         </div>
     {% endblock %}
 </div>
 {% block javascripts %}
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('vendor/metisMenu/metisMenu.min.js') }}"></script>
-    <script src="{{ asset('vendor/raphael/raphael.min.js') }}"></script>
-    <script src="{{ asset('vendor/morrisjs/morris.min.js') }}"></script>
-    {#<script src="{{ asset('data/morris-data.js') }}"></script>#}
-    <script src="{{ asset('dist/js/sb-admin-2.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-    <script src="{{ asset('js/general.js') }}"></script>
-    <script src="{{ asset('vendor/jquery/jquery.js') }}"></script>
-    <script src="{{ asset('vendor/moment/moment.min.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            var selector = $('.notificacionPendiente');
-            var notificaciones = $('.notificaciones');
-            $.ajax({
-                url: "{{ path('general_administracion_notificacion_notificacion') }}",
-                type: "GET",
-                dataType: "JSON",
-                success: function (respuestas) {
-                    if(respuestas['notificacionesPendientes'] && respuestas['notificacionesPendientes']>0){
-                    selector.append('<i class="fa fa-bell fa-fw"></i><span class="badge badge-notify" style="margin-top:-22px;margin-left:-24px">'+" "+respuestas['notificacionesPendientes']+'</span> <i class="fa fa-caret-down"></i>');
-                    $.each(respuestas['notificaciones'],(key,notificacion)=>{
-                        if(key<7){
-                        notificaciones.append('<li><a href="#"><div><i class="fa fa-comment fa-fw"></i><span style="font-size: 13px">'+notificacion['nombre']+'</span><span class="pull-right text-muted small">'+moment(notificacion['fecha'], "YYYYMMDDhms").fromNow()+'</span></div></a></li><li class="divider"></li>');
-                        }
-                    });
-                    }
-                    else{
-                        selector.append('<i class="fa fa-bell fa-fw"></i><i class="fa fa-caret-down"></i>');
-                        notificaciones.append('<li><a href="#"><div><i class="fa fa-comment fa-fw"></i><span style="font-size: 13px" "> No tiene notificaciones</span></div></a></li><li class="divider"></li>');
-                    }
-                    notificaciones.append('<li><a class="text-center" href="{{ path('general_administracion_notificacion__todasNotificaciones') }}"><strong>Ver todas </strong><i class="fa fa-angle-right"></i></a></li>');
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        });
-
-
-        function verNotificacionesPendientes() {
-            var selector = $('.notificacionPendiente');
-            // var notificaciones=$('.notificaciones');
-            $.ajax({
-                url: "{{ path('general_administracion_notificacion_ver') }}",
-                type: "GET",
-                dataType: "JSON",
-                success: function (respuestas) {
-                        selector.html('');
-                        selector.append('<i class="fa fa-bell fa-fw"></i><i class="fa fa-caret-down"></i>');
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        }
-    </script>
+{{ include('base_pie_script.html.twig') }}
 {% endblock %}
 </body>
 </html>

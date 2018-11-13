@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Cromo{% endblock %}</title>
-    {% block stylesheets %}
-        <!-- Bootstrap Core CSS -->
-        <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('vendor/metisMenu/metisMenu.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('dist/css/sb-admin-2.css') }}">
-        <link rel="stylesheet" href="{{ asset('vendor/morrisjs/morris.css') }}">
-        <link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/general.css') }}">
-    {% endblock %}
-</head>
+{{ include('base_cabecera_enlace.html.twig') }}
 <body>
 <div id="wrapper">
     <!-- Navigation -->
@@ -58,6 +45,13 @@
                             <i class="fa fa-angle-right"></i>
                         </a>
                     </li>
+                </ul>
+                <!-- /.dropdown-alerts -->
+            </li>
+            <li class="dropdown">
+                <a class="notificacionPendiente dropdown-toggle" data-toggle="dropdown" href="" onclick="verNotificacionesPendientes()">
+                </a>
+                <ul class="notificaciones dropdown-menu dropdown-alerts">
                 </ul>
                 <!-- /.dropdown-alerts -->
             </li>
@@ -547,40 +541,17 @@
         <!-- /.navbar-static-side -->
     </nav>
     {% block body %}
+
         <div id="page-wrapper">
-            {% set arrRuta = app.request.attributes.get('_route')|split('_') %}
-            {% if arrRuta.0 != 'admin' %}
-                <div class="row">
-                    <br>
-                    {{ notificar()|raw }}
-                    <div class="col-lg-12">
-                        <h3 class='page-header'>
-                            {{ arrRuta.0 | capitalize }} {{ arrRuta.1 | capitalize }}
-                            <small style="font-size: 20px">{{ arrRuta.2 | capitalize }}
-                                : {{ arrRuta.3 }} {{ arrRuta.4 }}</small>
-                        </h3>
-                    </div>
-                    <!-- /.col-lg-12 -->
-                </div>
-            {% endif %}
+            {{ include('base_cuerpo.html.twig') }}
             {% block content %}
 
             {% endblock %}
-            <br/><br/>
         </div>
     {% endblock %}
 </div>
 {% block javascripts %}
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('vendor/metisMenu/metisMenu.min.js') }}"></script>
-    <script src="{{ asset('vendor/raphael/raphael.min.js') }}"></script>
-    <script src="{{ asset('vendor/morrisjs/morris.min.js') }}"></script>
-    {#<script src="{{ asset('data/morris-data.js') }}"></script>#}
-    <script src="{{ asset('dist/js/sb-admin-2.js') }}"></script>
-    <script src="{{ asset('plugins/select2/js/i18n/es.js') }}"></script>
-    <script src="{{ asset('plugins/select2/js/select2.full.js') }}"></script>
-    <script src="{{ asset('js/general.js') }}"></script>
+    {{ include('base_pie_script.html.twig') }}
 {% endblock %}
 </body>
 </html>

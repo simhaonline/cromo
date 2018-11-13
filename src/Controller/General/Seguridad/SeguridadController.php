@@ -100,8 +100,9 @@ class SeguridadController extends Controller
             ->add('operacionRel',EntityType::class, $arrPropiedadesOperacionRel)
             ->add('txtUser', TextType::class, ['data' => $arUsuario->getUsername(), 'required'=>true, 'constraints'=>array(
                 new NotBlank(array("message"=>"El nombre de usuario es obligatorio")),
-                new Regex(array('pattern'=>"/^[A-Za-z]+[A-Za-z0-9]/",'message'=>"El nombre de usuario es invalido")),
-            )
+                new Regex(array('pattern'=>"/[A-Za-z0-9]/",'message'=>"El nombre de usuario no puedo contener caracteres")),
+            ),
+                'disabled'=> $arUsuario->getUsername()?true:false
             ])
             ->add('txtEmail', TextType::class, ['data' => $arUsuario->getEmail()])
             ->add('txtCargo', TextType::class, ['data' => $arUsuario->getCargo(),'required' => false])

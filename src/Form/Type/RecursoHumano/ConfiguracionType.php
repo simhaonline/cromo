@@ -15,10 +15,9 @@ class ConfiguracionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('vrSalario', NumberType::class, ['required' => false])
+            ->add('vrSalarioMinimo', NumberType::class, ['required' => false])
             ->add('codigoConceptoAuxilioTransporteFk', TextType::class, ['required' => true])
-            ->add('vrAuxilioTransporte', NumberType::class, ['required' => true])
-            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('vrAuxilioTransporte', NumberType::class, ['required' => true]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -53,9 +53,8 @@ class RhuPagoRepository extends ServiceEntityRepository
     public function generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $usuario)
     {
         $em = $this->getEntityManager();
-        $douDeducciones = 0;
-        $douDevengado = 0;
-        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
+
         $arPago = new RhuPago();
         $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getCodigoContratoFk());
         $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
@@ -71,14 +70,17 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setFechaHasta($arProgramacion->getFechaHasta());
         $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaDesdeContrato());
         $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaHastaContrato());
-        $em->persist($arPago);
 
-        $douIngresoBasePrestacional = 0;
-        $douIngresoBaseCotizacion = 0;
+        $arrDatosGenerales = array( 'ingresoBaseCotizacion' => 0,
+                                    'ingresoBasePrestacion' => 0,
+                                    'neto' => 0);
         $valorDia = $arContrato->getVrSalario() / 30;
         $valorHora = $valorDia / $arContrato->getFactorHorasDia();
+        $auxilioTransporte = $arConfiguracion['vrAuxilioTransporte'];
+        $diaAuxilioTransporte = $auxilioTransporte / 30;
+        $salarioMinimo = $arConfiguracion['vrSalarioMinimo'];
 
-        // Calculo de las horas
+        //Horas
         $arrHoras = $this->getHoras($arProgramacionDetalle);
         foreach ($arrHoras AS $arrHora) {
             if ($arrHora['cantidad'] > 0) {
@@ -88,65 +90,61 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $arPagoDetalle->setPagoRel($arPago);
                 $valorHoraDetalle = ($valorHora *  $arConcepto->getPorcentaje()) / 100;
                 $pagoDetalle = $valorHoraDetalle * $arrHora['cantidad'];
-                $pagoDetalleOperado = $pagoDetalle * $arConcepto->getOperacion();
                 $arPagoDetalle->setVrHora($valorHoraDetalle);
                 $arPagoDetalle->setPorcentaje($arConcepto->getPorcentaje());
                 $arPagoDetalle->setConceptoRel($arConcepto);
                 $arPagoDetalle->setHoras($arrHora['cantidad']);
-                $arPagoDetalle->setOperacion($arConcepto->getOperacion());
-                $arPagoDetalle->setVrPago($pagoDetalle);
-                $arPagoDetalle->setVrPagoOperado($pagoDetalleOperado);
                 $arPagoDetalle->setDias($arProgramacionDetalle->getDias());
-
-                if ($arConcepto->getOperacion() == -1) {
-                    $arPagoDetalle->setVrDeduccion($pagoDetalle);
-                } else {
-                    $arPagoDetalle->setVrDevengado($pagoDetalle);
-                }
-
-                if($arConcepto->getGeneraIngresoBaseCotizacion()) {
-
-                }
+                $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
                 $em->persist($arPagoDetalle);
             }
         }
-        $douIngresoBasePrestacional = 0;
-        $douIngresoBaseCotizacion = 0;
-        $douIngresoBaseCotizacionSalud = 0;
-        $devengado = 0;
-        $devengadoPrestacional = 0;
 
-        // Calculo del auxilio de transporte
+        //Auxilio de transporte
         if ($arContrato->getAuxilioTransporte() == 1) {
-            $intPagoConceptoTransporte = $arConfiguracion->getCodigoConceptoAuxilioTransporteFk();
-            $arConcepto = $em->getRepository(RhuConcepto::class)->find($intPagoConceptoTransporte);
-            $duoVrAuxilioTransporte = $arConfiguracion->getVrAuxilioTransporte();
-            $douVrDiaTransporte = $duoVrAuxilioTransporte / 30;
-            $douPagoDetalle = $douVrDiaTransporte * $arProgramacionDetalle->getDiasTransporte();
-            $douPagoDetalle = round($douPagoDetalle);
+            $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoAuxilioTransporteFk']);
+            $pagoDetalle = round($diaAuxilioTransporte * $arProgramacionDetalle->getDiasTransporte());
             $arPagoDetalle = new RhuPagoDetalle();
             $arPagoDetalle->setPagoRel($arPago);
             $arPagoDetalle->setConceptoRel($arConcepto);
-            $arPagoDetalle->setHoras(0);
             $arPagoDetalle->setDias($arProgramacionDetalle->getDiasTransporte());
-            $arPagoDetalle->setVrHora($douVrDiaTransporte / 8);
-            $arPagoDetalle->setVrPago($douPagoDetalle);
-            if ($arConcepto->getGeneraIngresoBasePrestacion() == 1) {
-                $arPagoDetalle->setVrIngresoBasePrestacion($douPagoDetalle);
-            }
-            $arPagoDetalle->setOperacion($arConcepto->getOperacion());
-            $arPagoDetalle->setVrPagoOperado($douPagoDetalle * $arConcepto->getOperacion());
+            $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
             $em->persist($arPagoDetalle);
-            $arPago->setVrAuxilioTransporte($douPagoDetalle);
         }
 
-        // Calculo de salud
+        //Salud
+        $arSalud = $arContrato->getSaludRel();
+        $porcentajeSalud = $arSalud->getPorcentajeEmpleado();
+        if($porcentajeSalud > 0) {
+            $ingresoBaseCotizacionSalud = $arrDatosGenerales['ingresoBaseCotizacion'];
+            $arConcepto = $arSalud->getConceptoRel();
+            if($arConcepto) {
+                /*
+                 * La base de aportes a seguridad social tanto en salud como en pensión,
+                 * no puede ser inferior al salario mínimo ni superior a los 25 salarios mínimos mensuales.
+                 * Esta limitación está dada por el artículo 5 de la ley 797 de 2003, reglamentado por el decreto 510 de 2003 en su artículo 3:
+                 */
+                if ($ingresoBaseCotizacionSalud > ($salarioMinimo * 25)) {
+                    $ingresoBaseCotizacionSalud = $salarioMinimo * 25;
+                }
+
+                $pagoDetalle = ($ingresoBaseCotizacionSalud * $porcentajeSalud) / 100;
+                $pagoDetalle = round($pagoDetalle);
+
+                $arPagoDetalle = new RhuPagoDetalle();
+                $arPagoDetalle->setPagoRel($arPago);
+                $arPagoDetalle->setConceptoRel($arConcepto);
+                $arPagoDetalle->setPorcentaje($porcentajeSalud);
+                $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+                $em->persist($arPagoDetalle);
+            }
+        }
 
 
-        $douNeto = $douDevengado - $douDeducciones;
-        $arPago->setVrNeto($douNeto);
+
+        $arPago->setVrNeto($arrDatosGenerales['neto']);
         $em->persist($arPago);
-        return $douNeto;
+        return $arrDatosGenerales['neto'];
     }
 
     /**
@@ -199,5 +197,27 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $arrHoras;
     }
 
+    private function getValoresPagoDetalle(&$arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle) {
+        $arPagoDetalle->setVrPago($pagoDetalle);
+        $pagoDetalleOperado = $pagoDetalle * $arConcepto->getOperacion();
+        $arPagoDetalle->setVrPagoOperado($pagoDetalleOperado);
+        $arPagoDetalle->setOperacion($arConcepto->getOperacion());
+        if ($arConcepto->getOperacion() == -1) {
+            $arPagoDetalle->setVrDeduccion($pagoDetalle);
+        } else {
+            $arPagoDetalle->setVrDevengado($pagoDetalle);
+        }
+        $arrDatosGenerales['neto'] += $pagoDetalleOperado;
+
+        if($arConcepto->getGeneraIngresoBaseCotizacion()) {
+            $arrDatosGenerales['ingresoBaseCotizacion'] += $pagoDetalleOperado;
+            $arPagoDetalle->setVrIngresoBaseCotizacion($pagoDetalleOperado);
+        }
+
+        if($arConcepto->getGeneraIngresoBasePrestacion()) {
+            $arrDatosGenerales['ingresoBaseCotizacion'] += $pagoDetalleOperado;
+            $arPagoDetalle->setVrIngresoBasePrestacion($pagoDetalleOperado);
+        }
+    }
 
 }

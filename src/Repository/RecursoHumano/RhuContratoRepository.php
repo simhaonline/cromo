@@ -28,25 +28,27 @@ class RhuContratoRepository extends ServiceEntityRepository
 
     public function contratosEmpleado($codigoEmpleado)
     {
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 're')
-            ->select('re.codigoContratoPk')
-            ->addSelect('re.fechaDesde')
-            ->addSelect('re.numero')
-            ->addSelect('re.codigoGrupoFk')
-            ->addSelect('re.codigoCargoFk')
-            ->addSelect('re.codigoCostoTipoFk')
-            ->addSelect('re.codigoClasificacionRiesgoFk')
-            ->addSelect('re.fechaHasta')
-            ->addSelect('re.vrSalario')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 'c')
+            ->select('c.codigoContratoPk')
+            ->addSelect('c.fechaDesde')
+            ->addSelect('c.numero')
+            ->addSelect('c.codigoGrupoFk')
+            ->addSelect('c.codigoGrupoFk')
+            ->addSelect('c.codigoCargoFk')
+            ->addSelect('c.codigoCostoTipoFk')
+            ->addSelect('c.codigoClasificacionRiesgoFk')
+            ->addSelect('c.fechaHasta')
+            ->addSelect('c.vrSalario')
+            ->addSelect('c.auxilioTransporte')
             ->addSelect('cr.nombre')
             ->addSelect('cg.nombre as nombreCargo')
             ->addSelect('gp.nombre as nombreGrupo')
-            ->addSelect('re.estadoTerminado')
-            ->leftJoin('re.clasificacionRiesgoRel', 'cr')
-            ->leftJoin('re.grupoRel', 'gp')
-            ->leftJoin('re.cargoRel', 'cg')
-            ->where('re.codigoEmpleadoFk = ' . $codigoEmpleado)
-            ->andWhere('re.codigoContratoPk <> 0');
+            ->addSelect('c.estadoTerminado')
+            ->leftJoin('c.clasificacionRiesgoRel', 'cr')
+            ->leftJoin('c.grupoRel', 'gp')
+            ->leftJoin('c.cargoRel', 'cg')
+            ->where('c.codigoEmpleadoFk = ' . $codigoEmpleado)
+            ->andWhere('c.codigoContratoPk <> 0');
         return $queryBuilder->getQuery()->execute();
     }
 

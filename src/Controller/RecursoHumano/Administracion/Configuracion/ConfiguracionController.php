@@ -61,22 +61,29 @@ class ConfiguracionController extends Controller
         $formConfiguracion = $this->createForm(ConfiguracionType::class, $arConfiguracion);
         $formConfiguracion->handleRequest($request);
         if ('POST' === $request->getMethod()) {
-            if ($request->request->has('conceptoHora')) {
-                if ($formConceptoHora->isSubmitted() && $formConceptoHora->isValid()) {
-                    if ($formConceptoHora->get('btnGuardar')->isClicked()) {
-                        foreach ($formConceptoHora->getViewData() as $nombreHora => $arConceptoRel) {
-                            $this->guardarConceptoRel($nombreHora, $arConceptoRel);
-                        }
+            if ($request->request->has('configuracion')) {
+                if ($formConfiguracion->isValid()) {
+                    $arConceptoTransporte = $em->find(RhuConcepto::class, $arConfiguracion->getCodigoConceptoAuxilioTransporteFk());
+                    if (!$arConceptoTransporte) {
+                        $em->detach($arConfiguracion);
+                        Mensajes::error('No existe un concepto con el codigo ingresado');
+                    } else {
+                        $em->persist($arConfiguracion);
                         $em->flush();
-                        Mensajes::success('Configuracion actualizada correctamente');
                     }
                 }
-            } else {
-                $em->persist($arConfiguracion);
-                $em->flush();
-                Mensajes::success('Configuracion actualizada correctamente');
             }
+            if ($request->request->has('conceptoHora')) {
+                if ($formConceptoHora->isValid()) {
+                    foreach ($formConceptoHora->getViewData() as $nombreHora => $arConceptoRel) {
+                        $this->guardarConceptoRel($nombreHora, $arConceptoRel);
+                    }
+                    $em->flush();
+                }
+            }
+            Mensajes::success('Configuracion actualizada correctamente');
         }
+
         return $this->render('transporte/administracion/configuracion/configuracion.html.twig', [
             'arConfiguracion' => $arConfiguracion,
             'formConceptoHora' => $formConceptoHora->createView(),

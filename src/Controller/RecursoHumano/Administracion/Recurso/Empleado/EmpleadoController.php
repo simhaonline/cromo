@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Administracion\Recurso\Empleado;
 
 use App\Controller\BaseController;
+use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\ContratoType;
@@ -72,11 +73,11 @@ class EmpleadoController extends BaseController
                 $arEmpleadoBuscar = $em->getRepository($this->clase)->findOneBy(['codigoIdentificacionFk' => $arEmpleado->getIdentificacionRel()->getCodigoIdentificacionPk(), 'numeroIdentificacion' => $arEmpleado->getNumeroIdentificacion()]);
                 if ((!is_null($arEmpleado->getCodigoEmpleadoPk()) && $arEmpleado->getCodigoEmpleadoPk() == $arEmpleadoBuscar->getCodigoEmpleadoPk()) || is_null($arEmpleadoBuscar)) {
                     $nombreCorto = $arEmpleado->getNombre1();
-                    if($arEmpleado->getNombre2()) {
+                    if ($arEmpleado->getNombre2()) {
                         $nombreCorto .= " " . $arEmpleado->getNombre2();
                     }
                     $nombreCorto .= " " . $arEmpleado->getApellido1();
-                    if($arEmpleado->getApellido2()) {
+                    if ($arEmpleado->getApellido2()) {
                         $nombreCorto .= " " . $arEmpleado->getApellido2();
                     }
                     $arEmpleado->setNombreCorto($nombreCorto);
@@ -127,10 +128,12 @@ class EmpleadoController extends BaseController
     {
         $em = $this->getDoctrine()->getManager();
         $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($codigoEmpleado);
+        $arConfiguracion = $em->find(RhuConfiguracion::class, 1);
         $arContrato = new RhuContrato();
         if ($id != 0) {
             $arContrato = $em->getRepository(RhuContrato::class)->find($id);
         } else {
+            $arContrato->setVrSalario($arConfiguracion->getVrSalarioMinimo());
             $arContrato->setFecha(new \DateTime('now'));
             $arContrato->setFechaDesde(new \DateTime('now'));
             $arContrato->setFechaHasta(new \DateTime('now'));
@@ -144,7 +147,10 @@ class EmpleadoController extends BaseController
                 $arContrato->setContratoClaseRel($arContrato->getContratoTipoRel()->getContratoClaseRel());
                 $arContrato->setIndefinido($arContrato->getContratoTipoRel()->getContratoClaseRel()->getIndefinido());
                 $arContrato->setFactorHorasDia($arContrato->getTiempoRel()->getFactorHorasDia());
-                if($id == 0) {
+                if ($id == 0) {
+                    if ($arContrato->getVrSalario() <= ($arConfiguracion->getVrSalarioMinimo() * 2)) {
+                        $arContrato->setAuxilioTransporte(true);
+                    }
                     $arContrato->setFechaUltimoPago($arContrato->getFechaDesde());
                     $arContrato->setFechaUltimoPagoCesantias($arContrato->getFechaDesde());
                     $arContrato->setFechaUltimoPagoPrimas($arContrato->getFechaDesde());

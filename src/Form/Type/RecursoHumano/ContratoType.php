@@ -38,6 +38,8 @@ class ContratoType extends AbstractType
             ->add('fechaHasta', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
             ->add('cargoDescripcion',TextType::class,['required' => false])
             ->add('vrSalario',NumberType::class,['required' => true])
+            ->add('vrAdicional',NumberType::class,['required' => false])
+            ->add('vrAdicionalPrestacional',NumberType::class,['required' => false])
             ->add('numero',TextType::class,['required' => false])
             ->add('codigoCostoTipoFk',ChoiceType::class,['required' => true, 'choices' => ['DISTRIBUIDO' => 'DIS','FIJO' => 'FIJ', 'OPERATIVO' => 'OPE']])
             ->add('salarioIntegral',CheckboxType::class,['required' => false, 'label' => 'Salario integral'])

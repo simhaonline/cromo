@@ -186,7 +186,7 @@
                 {#<div class="separador-1"></div>#}
                 <div class="btn-toolbar" style="float: right">
                     {% if arMovimiento.estadoAutorizado == false %}
-                        {% if arMovimiento.documentoRel.adicionarOrden == 1 %}
+                        {% if arMovimiento.documentoRel.adicionar == 1 %}
                             <div class="btn-group">
                                 <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 900)">Nuevo</a>
                             </div>
@@ -196,18 +196,18 @@
                                 <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_orden_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde orden</a>
                             </div>
                         {% endif %}
-                        {% if arMovimiento.documentoRel.adicionarOrden == 1 %}
+                        {% if arMovimiento.documentoRel.adicionarImportacion == 1 %}
                             <div class="btn-group">
                                 <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_importacion_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde importacion</a>
                             </div>
                         {% endif %}
 
                         {% if arMovimiento.codigoDocumentoTipoFk == 'FAC' %}
-                            {% if arMovimiento.documentoRel.adicionarOrden == 1 %}
+                            {% if arMovimiento.documentoRel.adicionarPedido == 1 %}
                                 <div class="btn-group"><a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_pedido_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde pedido</a>
                                 </div>
                             {% endif %}
-                            {% if arMovimiento.documentoRel.adicionarOrden == 1 %}
+                            {% if arMovimiento.documentoRel.adicionarRemision == 1 %}
                                 <div class="btn-group">
                                     <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_remision_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde remision</a>
                                 </div>

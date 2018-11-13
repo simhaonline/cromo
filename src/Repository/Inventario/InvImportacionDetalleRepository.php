@@ -36,6 +36,7 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
                   id.vrNetoExtranjero,
                   id.vrTotalExtranjero,                                    
                   id.vrPrecioLocal,
+                  id.vrPrecioLocalTotal,
                   id.porcentajeIvaLocal,
                   id.vrIvaLocal,
                   id.vrSubtotalLocal,
@@ -110,7 +111,8 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
             ->where('im.estadoAprobado = 1')
             ->andWhere('im.estadoAnulado = 0')
             ->andWhere('id.cantidadPendiente > 0')
-            ->orderBy('id.codigoImportacionDetallePk', 'ASC');
+            ->orderBy('im.fecha', 'DESC')
+            ->addOrderBy('id.codigoImportacionDetallePk', 'ASC');
         $query = $em->createQuery($queryBuilder->getDQL());
         return $query->execute();
     }

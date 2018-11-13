@@ -18,6 +18,11 @@ class InvImportacion
     private $codigoImportacionPk;
 
     /**
+     * @ORM\Column(name="codigo_importacion_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoImportacionTipoFk;
+
+    /**
      * @ORM\Column(name="codigo_tercero_fk" , type="integer")
      */
     private $codigoTerceroFk;
@@ -588,6 +593,22 @@ class InvImportacion
     public function setImportacionesCostosImportacionRel( $importacionesCostosImportacionRel ): void
     {
         $this->importacionesCostosImportacionRel = $importacionesCostosImportacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImportacionTipoFk()
+    {
+        return $this->codigoImportacionTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoImportacionTipoFk
+     */
+    public function setCodigoImportacionTipoFk( $codigoImportacionTipoFk ): void
+    {
+        $this->codigoImportacionTipoFk = $codigoImportacionTipoFk;
     }
 
 

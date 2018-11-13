@@ -24,9 +24,9 @@
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arImportacion.usuario }}</td>
             <td class="titulo">SUBTOTAL:</td>
-            <td align="right">$ {{ arImportacion.vrSubtotalExtranjero | number_format(0, '.', ',') }}</td>
+            <td align="right">{{ arImportacion.vrSubtotalExtranjero | number_format(0, '.', ',') }}</td>
             <td class="titulo">SUBTOTAL:</td>
-            <td align="right">$ {{ arImportacion.vrSubtotalLocal | number_format(0, '.', ',') }}</td>
+            <td align="right">{{ arImportacion.vrSubtotalLocal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">NUMERO:</td>
@@ -34,9 +34,9 @@
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arImportacion.fecha | date("Y-m-d H:i:s") }}</td>
             <td class="titulo">IVA:</td>
-            <td align="right">$ {{ arImportacion.vrIvaExtranjero | number_format(0, '.', ',') }}</td>
+            <td align="right">{{ arImportacion.vrIvaExtranjero | number_format(0, '.', ',') }}</td>
             <td class="titulo">IVA:</td>
-            <td align="right">$ {{ arImportacion.vrIvaLocal | number_format(0, '.', ',') }}</td>
+            <td align="right">{{ arImportacion.vrIvaLocal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">PROVEEDOR:</td>
@@ -44,9 +44,9 @@
             <td class="titulo">SOPORTE:</td>
             <td class="td-in-well">{{ arImportacion.soporte }}</td>
             <td class="titulo">TOTAL:</td>
-            <td align="right">$ {{ arImportacion.vrTotalExtranjero | number_format(0, '.', ',') }}</td>
+            <td align="right">{{ arImportacion.vrTotalExtranjero | number_format(0, '.', ',') }}</td>
             <td class="titulo">TOTAL:</td>
-            <td align="right">$ {{ arImportacion.vrTotalLocal | number_format(0, '.', ',') }}</td>
+            <td align="right">{{ arImportacion.vrTotalLocal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">TRM:</td>
@@ -56,7 +56,7 @@
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo">TOTAL COSTOS:</td>
-            <td align="right">$ {{ arImportacion.vrTotalCosto | number_format(0, '.', ',') }}</td>
+            <td align="right">{{ arImportacion.vrTotalCosto | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
@@ -76,7 +76,7 @@
                         <tr>
                             <th colspan="5">ITEM</th>
                             <th colspan="6">EXTRANJERO</th>
-                            <th colspan="7">LOCAL</th>
+                            <th colspan="8">LOCAL</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -92,9 +92,10 @@
                             <th>IVA</th>
                             <th>SUBOTAL</th>
                             <th>TOTAL</th>
-                            <th>PRECIO</th>
+                            <th>PRE_TRM</th>
                             <th>%COS</th>
                             <th>COSTO</th>
+                            <th>PRECIO</th>
                             <th>%IVA</th>
                             <th>IVA</th>
                             <th>SUBOTAL</th>
@@ -131,7 +132,7 @@
                                                value="{{ arImportacionDetalle.vrPrecioExtranjero }}" size="10"
                                                style="width:70px">
                                     {% else %}
-                                        $ {{ arImportacionDetalle.vrPrecioExtranjero | number_format(0, '.', ',') }}
+                                        {{ arImportacionDetalle.vrPrecioExtranjero | number_format(0, '.', ',') }}
                                     {% endif %}
                                 </td>
                                 <td class="numero">{{ arImportacionDetalle.porcentajeIvaExtranjero }}</td>
@@ -141,6 +142,7 @@
                                 <td class="numero">{{ arImportacionDetalle.vrPrecioLocal | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arImportacionDetalle.porcentajeParticipaCosto }}</td>
                                 <td class="numero">{{ arImportacionDetalle.vrCostoParticipa | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arImportacionDetalle.vrPrecioLocalTotal | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arImportacionDetalle.porcentajeIvaLocal }}</td>
                                 <td class="numero">{{ arImportacionDetalle.vrIvaLocal | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arImportacionDetalle.vrSubtotalLocal | number_format(0, '.', ',') }}</td>
@@ -192,7 +194,7 @@
                                 <td>{{ arCosto.id }}</td>
                                 <td>{{ arCosto.concepto }}</td>
                                 <td>{{ arCosto.nombre }}</td>
-                                <td>$ {{ arCosto.vrValor | number_format(0, '.', ',') }}</td>
+                                <td>{{ arCosto.vrValor | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;">
                                     {% if not arImportacion.estadoAutorizado %}
                                         <a href="javascript:abrirVentana3('{{ path('inventario_movimiento_extranjero_importacion_costo_nuevo',{'id': arCosto.id,'codigoImportacion': arImportacion.codigoImportacionPk }) }}','costoNuevo',500, 600)">

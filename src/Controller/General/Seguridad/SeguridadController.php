@@ -99,9 +99,9 @@ class SeguridadController extends Controller
         $form = $this->createFormBuilder()
             ->add('operacionRel',EntityType::class, $arrPropiedadesOperacionRel)
             ->add('txtUser', TextType::class, ['data' => $arUsuario->getUsername(), 'required'=>true, 'constraints'=>array(
-                new NotBlank(),
-                new Regex("/^[A-Za-z]+[A-Za-z0-9]/")
-            ),'invalid_message_parameters'=>"ingrese un nombre de usuario valido"
+                new NotBlank(array("message"=>"El nombre de usuario es obligatorio")),
+                new Regex(array('pattern'=>"/^[A-Za-z]+[A-Za-z0-9]/",'message'=>"El nombre de usuario es invalido")),
+            )
             ])
             ->add('txtEmail', TextType::class, ['data' => $arUsuario->getEmail()])
             ->add('txtCargo', TextType::class, ['data' => $arUsuario->getCargo(),'required' => false])

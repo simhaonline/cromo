@@ -19,6 +19,8 @@ class Usuario implements UserInterface, \Serializable
      * @ORM\Column(type="string", name="username", length=25)
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="NONE")
+     * @Assert\NotBlank(message="aaasas")
+
      */
     private $username;
 

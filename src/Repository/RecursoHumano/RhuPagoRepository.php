@@ -94,23 +94,11 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $arPagoDetalle->setPorcentaje($arConcepto->getPorcentaje());
                 $arPagoDetalle->setConceptoRel($arConcepto);
                 $arPagoDetalle->setHoras($arrHora['cantidad']);
-                $arPagoDetalle->setDias($arProgramacionDetalle->getDias());
                 $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
                 $em->persist($arPagoDetalle);
             }
         }
 
-        //Auxilio de transporte
-        if ($arContrato->getAuxilioTransporte() == 1) {
-            $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoAuxilioTransporteFk']);
-            $pagoDetalle = round($diaAuxilioTransporte * $arProgramacionDetalle->getDiasTransporte());
-            $arPagoDetalle = new RhuPagoDetalle();
-            $arPagoDetalle->setPagoRel($arPago);
-            $arPagoDetalle->setConceptoRel($arConcepto);
-            $arPagoDetalle->setDias($arProgramacionDetalle->getDiasTransporte());
-            $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
-            $em->persist($arPagoDetalle);
-        }
 
         //Salud
         $arSalud = $arContrato->getSaludRel();
@@ -140,7 +128,78 @@ class RhuPagoRepository extends ServiceEntityRepository
             }
         }
 
+        //Pension
+        $arPension = $arContrato->getPensionRel();
+        $porcentajePension = $arPension->getPorcentajeEmpleado();
+        if($porcentajePension > 0) {
+            $ingresoBaseCotizacionPension = $arrDatosGenerales['ingresoBaseCotizacion'];
+            $arConcepto = $arPension->getConceptoRel();
+            if($arConcepto) {
+                /*
+                 * La base de aportes a seguridad social tanto en salud como en pensión,
+                 * no puede ser inferior al salario mínimo ni superior a los 25 salarios mínimos mensuales.
+                 * Esta limitación está dada por el artículo 5 de la ley 797 de 2003, reglamentado por el decreto 510 de 2003 en su artículo 3:
+                 */
+                if ($ingresoBaseCotizacionPension > ($salarioMinimo * 25)) {
+                    $ingresoBaseCotizacionPension = $salarioMinimo * 25;
+                }
 
+                $pagoDetalle = ($ingresoBaseCotizacionPension * $porcentajePension) / 100;
+                $pagoDetalle = round($pagoDetalle);
+
+                $arPagoDetalle = new RhuPagoDetalle();
+                $arPagoDetalle->setPagoRel($arPago);
+                $arPagoDetalle->setConceptoRel($arConcepto);
+                $arPagoDetalle->setPorcentaje($porcentajePension);
+                $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+                $em->persist($arPagoDetalle);
+//                //Fondo de solidaridad pensional
+//                $vrTopeFondoSolidaridad = $douVrSalarioMinimo * 4;
+//                $fechaInicioMes = $arProgramacionPagoDetalle->getFechaDesdePago()->format("Y-m") . "-1";//fecha de inicio del mes
+//                $ultimoDia = cal_days_in_month(CAL_GREGORIAN, $arProgramacionPagoDetalle->getFechaDesdePago()->format('m'), $arProgramacionPagoDetalle->getFechaDesdePago()->format('Y'));//Ultimo dia del mes
+//                $fechaFinMes = $arProgramacionPagoDetalle->getFechaDesdePago()->format("Y-m") . "-{$ultimoDia}";//Fecha fin del mes
+//                $arrIngresoBaseCotizacionMes = $em->getRepository("BrasaRecursoHumanoBundle:RhuPagoDetalle")->ibc($fechaInicioMes, $fechaFinMes, $arContrato->getCodigoContratoPk());//Se consulta el ingreso base cotizacion que ha devengado el empleado en el mes
+//                $douIngresoBaseCotizacionTotal = $douIngresoBaseCotizacion + $arrIngresoBaseCotizacionMes["ibc"] + $ibcVacaciones;//Se suman los IBC que ha devengado el empleado en el mes, mas el IBC de la nomina actual.
+//                //Se validad si el ingreso base cotizacion es mayor que los 4 salarios minimos legales vigentes, se debe calcular valor a aportar al fondo
+//                if ($douIngresoBaseCotizacionTotal > $vrTopeFondoSolidaridad) {
+//                    $douPorcentajeFondo = $em->getRepository("BrasaRecursoHumanoBundle:RhuSsoPeriodoDetalle")->porcentajeFondo($douVrSalarioMinimo, $douIngresoBaseCotizacionTotal);
+//                    if ($douPorcentajeFondo > 0) {
+//                        $arPagoCoceptoFondo = $arContrato->getTipoPensionRel()->getPagoConceptoFondoRel();
+//                        $douPagoDetalle = ($douIngresoBaseCotizacionTotal * $douPorcentajeFondo) / 100;
+//                        $vrDeduccionFondoAnterior = $em->getRepository("BrasaRecursoHumanoBundle:RhuPagoDetalle")->valorDeduccionFondo($fechaInicioMes, $fechaFinMes, $arContrato->getCodigoContratoPk(), $arPagoCoceptoFondo->getCodigoPagoConceptoPk());//Se consultan las deducciones al fondo de solidaridad que el empleado ha aportado en el mes.
+//                        $douPagoDetalle -= $vrDeduccionFondoAnterior;//Se resta la deduccion que ha tenido el empleado de la 15na anterior.
+//                        $douPagoDetalle = round($douPagoDetalle);
+//                        $pension += $douPagoDetalle;
+//                        $deducciones += $douPagoDetalle;
+//                        //Se guarda el concepto deduccion de fondo solidaridad pensional
+//                        $arPagoDetalle = new \Brasa\RecursoHumanoBundle\Entity\RhuPagoDetalle();
+//                        $arPagoDetalle->setPagoRel($arPago);
+//                        $arPagoDetalle->setPagoConceptoRel($arPagoCoceptoFondo);
+//                        $arPagoDetalle->setPorcentajeAplicado($douPorcentajeFondo);
+//                        $arPagoDetalle->setVrDia($douVrDia);
+//                        $arPagoDetalle->setVrPago($douPagoDetalle);
+//                        $arPagoDetalle->setOperacion($intOperacion);
+//                        $arPagoDetalle->setVrPagoOperado($douPagoDetalle * $intOperacion);
+//                        $arPagoDetalle->setProgramacionPagoDetalleRel($arProgramacionPagoDetalle);
+//                        //$arPagoDetalle->setPension(1);
+//                        $em->persist($arPagoDetalle);
+//                    }
+//                }
+
+            }
+        }
+
+        //Auxilio de transporte
+        if ($arContrato->getAuxilioTransporte() == 1) {
+            $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoAuxilioTransporteFk']);
+            $pagoDetalle = round($diaAuxilioTransporte * $arProgramacionDetalle->getDiasTransporte());
+            $arPagoDetalle = new RhuPagoDetalle();
+            $arPagoDetalle->setPagoRel($arPago);
+            $arPagoDetalle->setConceptoRel($arConcepto);
+            $arPagoDetalle->setDias($arProgramacionDetalle->getDiasTransporte());
+            $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+            $em->persist($arPagoDetalle);
+        }
 
         $arPago->setVrNeto($arrDatosGenerales['neto']);
         $em->persist($arPago);

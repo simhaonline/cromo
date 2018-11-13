@@ -18,10 +18,10 @@ class RhuConfiguracion
     private $codigoConfiguracionPk;
 
     /**
-     * @ORM\Column(name="vr_salario", type="float",options={"default":0}, nullable=true)
+     * @ORM\Column(name="vr_salario_minimo", type="float",options={"default":0}, nullable=true)
      * @Assert\NotBlank(message="Este campo no puede estar vacío")
      */
-    private $vrSalario = 0;
+    private $vrSalarioMinimo = 0;
 
     /**
      * @ORM\Column(name="codigo_concepto_auxilio_transporte_fk", type="string", length=10, nullable=true)
@@ -52,17 +52,17 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
-    public function getVrSalario()
+    public function getVrSalarioMinimo()
     {
-        return $this->vrSalario;
+        return $this->vrSalarioMinimo;
     }
 
     /**
-     * @param mixed $vrSalario
+     * @param mixed $vrSalarioMinimo
      */
-    public function setVrSalario($vrSalario): void
+    public function setVrSalarioMinimo($vrSalarioMinimo): void
     {
-        $this->vrSalario = $vrSalario;
+        $this->vrSalarioMinimo = $vrSalarioMinimo;
     }
 
     /**

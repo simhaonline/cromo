@@ -1,23 +1,18 @@
 {% extends 'base_recursoHumano.html.twig' %}
 {% block content %}
     {{ form_start(formConfiguracion, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_start(formConceptoHora, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
         <div class="panel-heading">Configuracion</div>
         <div class="panel-body">
+            {{ form_row(formConfiguracion._token) }}
             <div class="form-group form-group-sm">
-                <label for="" class="col-sm-2 control-label">Salario mínimo:</label>
+                <label for="" class="col-sm-2 control-label">Salario mínimo: $</label>
                 <div class="col-sm-4">
-                    {{ form_widget(formConfiguracion.vrSalario ) }}
-                    {{ form_errors(formConfiguracion.vrSalario ) }}
+                    {{ form_widget(formConfiguracion.vrSalarioMinimo ) }}
+                    {{ form_errors(formConfiguracion.vrSalarioMinimo ) }}
                 </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="" class="col-sm-2 control-label">Concepto auxilio transporte:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(formConfiguracion.codigoConceptoAuxilioTransporteFk ) }}
-                    {{ form_errors(formConfiguracion.codigoConceptoAuxilioTransporteFk ) }}
-                </div>
-                <label for="" class="col-sm-2 control-label">Auxilio de transporte:</label>
+                <label for="" class="col-sm-2 control-label">Auxilio de transporte: $</label>
                 <div class="col-sm-4">
                     {{ form_widget(formConfiguracion.vrAuxilioTransporte ) }}
                     {{ form_errors(formConfiguracion.vrAuxilioTransporte ) }}
@@ -25,14 +20,19 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer">
-        {{ form_widget(formConfiguracion.guardar ) }}
-    </div>
-    {{ form_end(formConfiguracion) }}
-    {{ form_start(formConceptoHora, { 'attr': {'class': 'form-horizontal'} }) }}
+    <hr>
     <div class="panel panel-default">
-        <div class="panel-heading">Conceptos horas</div>
+        <div class="panel-heading">Conceptos</div>
         <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Auxilio de transporte</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.codigoConceptoAuxilioTransporteFk ) }}
+                    {{ form_errors(formConfiguracion.codigoConceptoAuxilioTransporteFk ) }}
+                </div>
+            </div>
+
+
             <div class="form-group form-group-sm">
                 <label for="" class="col-sm-2 control-label">Horas diurnas:</label>
                 <div class="col-sm-4">
@@ -95,4 +95,5 @@
         {{ form_widget(formConceptoHora.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(formConceptoHora) }}
+    {{ form_end(formConfiguracion) }}
 {% endblock %}

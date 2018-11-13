@@ -93,9 +93,19 @@ class RhuContrato
     private $cargoDescripcion;
 
     /**
-     * @ORM\Column(name="vr_salario", type="float")
+     * @ORM\Column(name="vr_salario", options={"default":0},type="float", nullable=true)
      */
     private $vrSalario = 0;
+
+    /**
+     * @ORM\Column(name="vr_adicional", options={"default":0},type="float", nullable=true)
+     */
+    private $vrAdicional = 0;
+
+    /**
+     * @ORM\Column(name="vr_adicional_prestacional", options={"default":0},type="float", nullable=true)
+     */
+    private $vrAdicionalPrestacional = 0;
 
     /**
      * @ORM\Column(name="estado_terminado", type="boolean")
@@ -648,6 +658,38 @@ class RhuContrato
     public function setVrSalario($vrSalario): void
     {
         $this->vrSalario = $vrSalario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAdicional()
+    {
+        return $this->vrAdicional;
+    }
+
+    /**
+     * @param mixed $vrAdicional
+     */
+    public function setVrAdicional($vrAdicional): void
+    {
+        $this->vrAdicional = $vrAdicional;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAdicionalPrestacional()
+    {
+        return $this->vrAdicionalPrestacional;
+    }
+
+    /**
+     * @param mixed $vrAdicionalPrestacional
+     */
+    public function setVrAdicionalPrestacional($vrAdicionalPrestacional): void
+    {
+        $this->vrAdicionalPrestacional = $vrAdicionalPrestacional;
     }
 
     /**
@@ -1464,5 +1506,21 @@ class RhuContrato
     public function setAdicionalesContratoRel($adicionalesContratoRel): void
     {
         $this->adicionalesContratoRel = $adicionalesContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosContratoRel()
+    {
+        return $this->pagosContratoRel;
+    }
+
+    /**
+     * @param mixed $pagosContratoRel
+     */
+    public function setPagosContratoRel($pagosContratoRel): void
+    {
+        $this->pagosContratoRel = $pagosContratoRel;
     }
 }

@@ -99,6 +99,7 @@
                             <th>DESDE</th>
                             <th>HASTA</th>
                             <th>SALARIO</th>
+                            <th title="Auxilio de transporte">AT</th>
                             <th title="Terminado">TER</th>
                             <th></th>
                             <th></th>
@@ -114,10 +115,11 @@
                                 <td>{{ arContrato.nombreGrupo }}</td>
                                 <td>{{ arContrato.nombreCargo }}</td>
                                 <td>{{ arContrato.nombre }}</td>
-                                {{ validarTipo(arContrato.fechaDesde) }}
-                                {{ validarTipo(arContrato.fechaHasta) }}
+                                <td>{{ arContrato.fechaDesde | date('Y-m-d') }}</td>
+                                <td>{{ arContrato.fechaHasta | date('Y-m-d') }}</td>
                                 <td class="numero">{{ arContrato.vrSalario | number_format(0, '.', ',') }}</td>
-                                {{ validarTipo(arContrato.estadoTerminado) }}
+                                <td>{{ arContrato.auxilioTransporte ? 'SI' : 'NO' }}</td>
+                                <td>{{ arContrato.estadoTerminado ? 'SI' : 'NO' }}</td>
                                 <td style="text-align: center;">
                                     {% if arContrato.estadoTerminado == 0 %}
                                         <a href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_empleado_nuevo_contrato',{'codigoEmpleado' : arEmpleado.codigoEmpleadoPk,'id': arContrato.codigoContratoPk }) }}','agregarContrato',600,950)"><i
@@ -125,6 +127,7 @@
                                         </a>
                                     {% endif %}
                                 </td>
+
                                 <td style="text-align: center">
                                     <a href="{{ path('recursohumano_administracion_recurso_contrato_detalle', { 'id': arContrato.codigoContratoPk }) }}" target="_blank">
                                         <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i>

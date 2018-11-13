@@ -14,6 +14,7 @@
                 <th>EMAIL</th>
                 <th>TELEFONO</th>
                 <th>EXT.</th>
+                <td>ROL</td>
                 <th>ACTIVO</th>
                 <th></th>
                 <th></th>
@@ -31,6 +32,12 @@
                     {{ validarTipo(arUsuario.email) }}
                     {{ validarTipo(arUsuario.telefono) }}
                     {{ validarTipo(arUsuario.extension) }}
+                    {% if arUsuario.roles.0 == 'ROLE_ADMIN' %}
+                        {{ validarTipo("ADMINISTRADOR") }}
+                        {% else %}
+                        {{ validarTipo("USUARIO")}}
+                    {% endif %}
+                    {#{{ validarTipo(arUsuario.roles.0) }}#}
                     {{ validarTipo(arUsuario.isActive) }}
                     <td style="text-align: center;">
                         <a href="{{ path('gen_seguridad_usuario_nuevo', {'hash' : encriptar( arUsuario.username)}) }}">

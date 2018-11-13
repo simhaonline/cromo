@@ -2,15 +2,6 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     {{ notificar()|raw }}
-    <div class="row">
-        <div class="col-lg-12">
-            <h3 class='page-header'>
-                General seguridad
-                <small style="font-size: 20px">Usuario: nuevo</small>
-            </h3>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
     <div class="panel panel-default">
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
@@ -55,8 +46,11 @@
                 <div class="col-sm-1">
                     {{ form_widget(form.txtExtension, { 'attr': {'class': 'form-control','placeholder':'Ext.'} }) }}
                 </div>
-                <label class="col-sm-3 control-label"></label>
+                <div class="col-sm-1">
+                </div>
+                <label class="col-sm-2 control-label">Rol:</label>
                 <div class="col-sm-4">
+                    {{ form_widget(form.cboRol, {'attr':{'class':'form-control'}}) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

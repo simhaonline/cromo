@@ -37,7 +37,7 @@ class ControllerListener{
         if($controller[0] instanceof ControllerListenerGeneral){
             if(is_array($controller)){
                 if(isset($controller[0]) && isset($controller[1])){
-                    $arUsuarioRol=$this->user->getToken()->getRoles()[0]->getRole()??"anon";
+                    $arUsuarioRol=$this->user->getToken()->getRoles()[0]->getRole()??"ROLE_USER";
                     $arUsuario=$this->user->getToken()->getUser();
                     $arGenModelo=$em->getRepository('App:General\GenModelo')->find($controller[0]->getClaseNombre());
                     if($arGenModelo) {

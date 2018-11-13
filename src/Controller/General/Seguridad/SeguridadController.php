@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -50,7 +51,7 @@ class SeguridadController extends Controller
                         }
                     }
                 }
-                General::get()->setExportar($arUsuariosPermisos,'Excel_Permisos');
+                General::get()->setExportar($arUsuariosPermisos,'ExcelPermiso');
             }
         }
         return $this->render('general/seguridad/lista.html.twig', [
@@ -102,6 +103,7 @@ class SeguridadController extends Controller
             ->add('txtIdentificacion', NumberType::class, ['data' => $arUsuario->getNumeroIdentificacion(),'required' => false])
             ->add('txtTelefono', TextType::class, ['data' => $arUsuario->getTelefono(),'required' => false])
             ->add('txtExtension', TextType::class, ['data' => $arUsuario->getExtension(),'required' => false])
+            ->add('cboRol', ChoiceType::class, ['data' => $arUsuario->getRoles()[0],'required' => true, 'choices'=>array('Usuario'=>"ROLE_USER",'Administrador'=>"ROLE_ADMIN")])
             ->add('txtNuevaClave', PasswordType::class, $arrPropiedadesClaves)
             ->add('txtConfirmacionClave', PasswordType::class, $arrPropiedadesClaves)
             ->add('boolActivo', CheckboxType::class, ['data' => $arUsuario->getisActive(), 'label' => ' ', 'required' => false])
@@ -121,6 +123,7 @@ class SeguridadController extends Controller
                 $arUsuario->setTelefono($form->get('txtTelefono')->getData());
                 $arUsuario->setExtension($form->get('txtExtension')->getData());
                 $arUsuario->setOperacionRel($form->get('operacionRel')->getData());
+                $arUsuario->setRol($form->get('cboRol')->getData());
                 if ($id == 0) {
                     $claveNueva = $form->get('txtNuevaClave')->getData();
                     $claveConfirmacion = $form->get('txtConfirmacionClave')->getData();

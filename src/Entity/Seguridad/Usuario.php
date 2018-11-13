@@ -339,6 +339,15 @@ class Usuario implements UserInterface, \Serializable
         return $this;
     }
 
+    /**
+     * @param mixed $rol
+     */
+    public function setRol($rol)
+    {
+        $this->rol = $rol;
+        return $this;
+    }
+
 
 }
 

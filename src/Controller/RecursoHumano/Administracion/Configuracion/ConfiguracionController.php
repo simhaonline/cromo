@@ -74,6 +74,7 @@ class ConfiguracionController extends Controller
             } else {
                 $em->persist($arConfiguracion);
                 $em->flush();
+                Mensajes::success('Configuracion actualizada correctamente');
             }
         }
         return $this->render('transporte/administracion/configuracion/configuracion.html.twig', [

@@ -3,13 +3,10 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuConcepto;
-use App\Entity\RecursoHumano\RhuConceptoHora;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
-use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
-use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -119,10 +116,8 @@ class RhuPagoRepository extends ServiceEntityRepository
         $douIngresoBaseCotizacionSalud = 0;
         $devengado = 0;
         $devengadoPrestacional = 0;
-        $salud = 0;
-        $pension = 0;
-        $transporte = 0;
 
+        // Calculo del auxilio de transporte
         if ($arContrato->getAuxilioTransporte() == 1) {
             $intPagoConceptoTransporte = $arConfiguracion->getCodigoAuxilioTransporte();
             $arConcepto = $em->getRepository(RhuConcepto::class)->find($intPagoConceptoTransporte);
@@ -137,16 +132,16 @@ class RhuPagoRepository extends ServiceEntityRepository
             $arPagoDetalle->setDias($arProgramacionDetalle->getDiasTransporte());
             $arPagoDetalle->setVrHora($douVrDiaTransporte / 8);
             $arPagoDetalle->setVrPago($douPagoDetalle);
-            $transporte = $douPagoDetalle;
             if ($arConcepto->getGeneraIngresoBasePrestacion() == 1) {
-                $douIngresoBasePrestacional += $douPagoDetalle;
                 $arPagoDetalle->setVrIngresoBasePrestacion($douPagoDetalle);
             }
-//            $arPagoDetalle->setPrestacional($arPagoConcepto->getPrestacional());
             $arPagoDetalle->setOperacion($arConcepto->getOperacion());
             $arPagoDetalle->setVrPagoOperado($douPagoDetalle * $arConcepto->getOperacion());
             $em->persist($arPagoDetalle);
+            $arPago->setVrAuxilioTransporte($douPagoDetalle);
         }
+
+
 
         $douNeto = $douDevengado - $douDeducciones;
         $arPago->setVrNeto($douNeto);
@@ -184,9 +179,13 @@ class RhuPagoRepository extends ServiceEntityRepository
 
     public function getCodigoPagoPk($codigoProgramacionDetalle)
     {
-        return $this->_em->createQueryBuilder()->from(RhuPago::class, 'p')
+        $query =  $this->_em->createQueryBuilder()->from(RhuPago::class, 'p')
             ->select('p.codigoPagoPk')
-            ->where("p.codigoProgramacionDetalleFk = {$codigoProgramacionDetalle}")->getQuery()->getSingleResult()['codigoPagoPk'];
+            ->where("p.codigoProgramacionDetalleFk = {$codigoProgramacionDetalle}")->getQuery()->getOneOrNullResult();
+        if($query){
+            $query = $query['codigoPagoPk'];
+        }
+        return $query;
     }
 
     /**

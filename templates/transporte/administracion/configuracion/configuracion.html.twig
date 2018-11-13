@@ -11,6 +11,18 @@
                     {{ form_errors(formConfiguracion.vrSalario ) }}
                 </div>
             </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="col-sm-2 control-label">Concepto auxilio transporte:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.codigoAuxilioTransporte ) }}
+                    {{ form_errors(formConfiguracion.codigoAuxilioTransporte ) }}
+                </div>
+                <label for="" class="col-sm-2 control-label">Auxilio de transporte:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.vrAuxilioTransporte ) }}
+                    {{ form_errors(formConfiguracion.vrAuxilioTransporte ) }}
+                </div>
+            </div>
         </div>
     </div>
     <div class="modal-footer">

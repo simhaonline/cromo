@@ -73,6 +73,11 @@ class Usuario implements UserInterface, \Serializable
     private $isActive;
 
     /**
+     * @ORM\Column(name="rol", type="string", options={"default":"ROLE_USER"})
+     */
+    private $rol;
+
+    /**
      * @ORM\Column(name="notificaciones_pendientes", type="integer", options={"default":0})
      */
     private $notificacionesPendientes=0;
@@ -126,7 +131,7 @@ class Usuario implements UserInterface, \Serializable
 
     public function getRoles()
     {
-        return array('ROLE_USER');
+        return array($this->rol);
     }
 
     public function eraseCredentials()

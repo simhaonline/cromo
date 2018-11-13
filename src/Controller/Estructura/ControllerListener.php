@@ -29,9 +29,6 @@ class ControllerListener{
     public function getPermissionFunction(FilterControllerEvent $event){
         $em=$this->em;
         $url=$this->routeActual;
-//        if($url==null){
-//            $url=
-//        }
         $this->routeActual=$event->getRequest()->get('_route');
         $controller = $event->getController();
         $request = $event->getRequest();
@@ -40,6 +37,7 @@ class ControllerListener{
         if($controller[0] instanceof ControllerListenerGeneral){
             if(is_array($controller)){
                 if(isset($controller[0]) && isset($controller[1])){
+                    $arUsuarioRol=$this->user->getToken()->getRoles()[0]->getRole()??"anon";
                     $arUsuario=$this->user->getToken()->getUser();
                     $arGenModelo=$em->getRepository('App:General\GenModelo')->find($controller[0]->getClaseNombre());
                     if($arGenModelo) {
@@ -57,7 +55,7 @@ class ControllerListener{
                             );
                         }
                     }
-                    if((isset($permisos[$controller[1]]) && $permisos[$controller[1]]) || !in_array($controller[1],$funcionesProtegidas)){
+                    if((isset($permisos[$controller[1]]) && $permisos[$controller[1]]) || !in_array($controller[1],$funcionesProtegidas) || $arUsuarioRol=="ROLE_ADMIN"){
                         $session->set("permiso_denegado",null);
                         return;
                     }

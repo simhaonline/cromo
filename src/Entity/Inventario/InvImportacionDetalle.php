@@ -72,6 +72,11 @@ class InvImportacionDetalle
     private $vrTotalExtranjero = 0;
 
     /**
+     * @ORM\Column(name="vr_precio_local_total" ,type="float")
+     */
+    private $vrPrecioLocalTotal = 0;
+
+    /**
      * @ORM\Column(name="vr_precio_local" ,type="float")
      */
     private $vrPrecioLocal = 0;
@@ -494,6 +499,22 @@ class InvImportacionDetalle
     public function setVrCostoParticipa($vrCostoParticipa): void
     {
         $this->vrCostoParticipa = $vrCostoParticipa;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPrecioLocalTotal()
+    {
+        return $this->vrPrecioLocalTotal;
+    }
+
+    /**
+     * @param mixed $vrPrecioLocalTotal
+     */
+    public function setVrPrecioLocalTotal( $vrPrecioLocalTotal ): void
+    {
+        $this->vrPrecioLocalTotal = $vrPrecioLocalTotal;
     }
 
 

@@ -80,9 +80,12 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $fechaHasta = $this->fechaHastaContrato($arProgramacion->getFechaHasta(), $arContrato->getFechaHasta(), $arContrato->getIndefinido());
             $dias = $fechaDesde->diff($fechaHasta)->days + 1;
             $horas = $dias * $arContrato->getFactorHorasDia();
-            $arProgramacionDetalle->setFechaDesde($fechaDesde);
-            $arProgramacionDetalle->setFechaHasta($fechaHasta);
+            $arProgramacionDetalle->setFechaDesde($arProgramacion->getFechaDesde());
+            $arProgramacionDetalle->setFechaHasta($arProgramacion->getFechaHasta());
+            $arProgramacionDetalle->setFechaDesdeContrato($fechaDesde);
+            $arProgramacionDetalle->setFechaHastaContrato($fechaHasta);
             $arProgramacionDetalle->setDias($dias);
+            $arProgramacionDetalle->setDiasTransporte($dias);
             $arProgramacionDetalle->setHorasDiurnas($horas);
             $em->persist($arProgramacionDetalle);
         }
@@ -137,6 +140,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arProgramacion->setVrNeto(0);
             $em->persist($arProgramacion);
             $em->flush();
+            $this->setVrNeto($arProgramacion->getCodigoProgramacionPk());
         }
     }
 
@@ -187,5 +191,17 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $fechaDesde = $fechaDesdePeriodo;
         }
         return $fechaDesde;
+    }
+
+    /**
+     * @param $codigoProgramacion int
+     */
+    private function setVrNeto($codigoProgramacion){
+        $this->_em->createQueryBuilder()
+            ->update(RhuProgramacionDetalle::class,'pd')
+            ->set('pd.vrNeto','?1')
+            ->where("pd.codigoProgramacionFk = {$codigoProgramacion}")
+            ->setParameter('1',0)
+            ->getQuery()->execute();
     }
 }

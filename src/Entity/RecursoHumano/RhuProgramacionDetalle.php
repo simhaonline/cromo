@@ -63,6 +63,16 @@ class RhuProgramacionDetalle
     private $fechaHasta;
 
     /**
+     * @ORM\Column(name="fecha_desde_contrato", type="date", nullable=true)
+     */
+    private $fechaDesdeContrato;
+
+    /**
+     * @ORM\Column(name="fecha_hasta_contrato", type="date", nullable=true)
+     */
+    private $fechaHastaContrato;
+
+    /**
      * @ORM\Column(name="horas_diurnas", type="float")
      */
     private $horasDiurnas = 0;
@@ -539,4 +549,38 @@ class RhuProgramacionDetalle
     {
         $this->pagosProgramacionDetalleRel = $pagosProgramacionDetalleRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDesdeContrato()
+    {
+        return $this->fechaDesdeContrato;
+    }
+
+    /**
+     * @param mixed $fechaDesdeContrato
+     */
+    public function setFechaDesdeContrato( $fechaDesdeContrato ): void
+    {
+        $this->fechaDesdeContrato = $fechaDesdeContrato;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHastaContrato()
+    {
+        return $this->fechaHastaContrato;
+    }
+
+    /**
+     * @param mixed $fechaHastaContrato
+     */
+    public function setFechaHastaContrato( $fechaHastaContrato ): void
+    {
+        $this->fechaHastaContrato = $fechaHastaContrato;
+    }
+
+
 }

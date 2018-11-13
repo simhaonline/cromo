@@ -472,7 +472,7 @@ class MovimientoController extends Controller
                                     $arMovimientoDetalle->setItemRel($arImportacionDetalle->getItemRel());
                                     $arMovimientoDetalle->setCantidad($cantidad);
                                     $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
-                                    $arMovimientoDetalle->setVrPrecio($arImportacionDetalle->getVrPrecioLocal());
+                                    $arMovimientoDetalle->setVrPrecio($arImportacionDetalle->getVrPrecioLocalTotal());
                                     //$arMovimientoDetalle->setPorcentajeDescuento($arImportacionDetalle->getPorcentajeDescuentoLocal());
                                     $arMovimientoDetalle->setPorcentajeIva($arImportacionDetalle->getPorcentajeIvaLocal());
                                     $arMovimientoDetalle->setImportacionDetalleRel($arImportacionDetalle);

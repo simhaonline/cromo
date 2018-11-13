@@ -5,6 +5,7 @@ namespace App\Repository\Inventario;
 use App\Entity\Inventario\InvImportacion;
 use App\Entity\Inventario\InvImportacionCosto;
 use App\Entity\Inventario\InvImportacionDetalle;
+use App\Entity\Inventario\InvImportacionTipo;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -61,12 +62,16 @@ class InvImportacionRepository extends ServiceEntityRepository
         $arImportacion = $em->getRepository(InvImportacion::class)->find($codigoImportacion);
         $vrTotalCosto = $em->getRepository(InvImportacionCosto::class)->totalCostos($arImportacion->getCodigoImportacionPk());
         $subtotalGeneralExtranjero = 0;
+        $subtotalGeneralExtranjeroTemporal = 0;
         $ivaGeneralExtranjero = 0;
         $totalGeneralExtranjero = 0;
         $subtotalGeneralLocal = 0;
         $ivaGeneralLocal = 0;
         $totalGeneralLocal = 0;
         $arImportacionDetalles = $em->getRepository(InvImportacionDetalle::class)->findBy(['codigoImportacionFk' => $codigoImportacion]);
+        foreach ($arImportacionDetalles as $arImportacionDetalle) {
+            $subtotalGeneralExtranjeroTemporal += $arImportacionDetalle->getCantidad() * $arImportacionDetalle->getVrPrecioExtranjero();
+        }
         foreach ($arImportacionDetalles as $arImportacionDetalle) {
             $subtotalExtranjero = $arImportacionDetalle->getCantidad() * $arImportacionDetalle->getVrPrecioExtranjero();
             $porcentajeIvaExtranjero = $arImportacionDetalle->getPorcentajeIvaExtranjero();
@@ -80,7 +85,17 @@ class InvImportacionRepository extends ServiceEntityRepository
             $arImportacionDetalle->setVrTotalExtranjero($totalExtranjero);
 
             $precioLocal = $arImportacionDetalle->getVrPrecioExtranjero() * $arImportacion->getTasaRepresentativaMercado();
-            $subtotalLocal = $arImportacionDetalle->getCantidad() * $precioLocal;
+            $porcentajeParticipaCosto = 0;
+            $costoParticipa = 0;
+            if($vrTotalCosto > 0) {
+                if($subtotalGeneralExtranjeroTemporal > 0) {
+                    $porcentajeParticipaCosto = ($arImportacionDetalle->getVrSubtotalExtranjero() / $subtotalGeneralExtranjeroTemporal) * 100;
+                    $costoParticipa = ($vrTotalCosto * $porcentajeParticipaCosto) / 100;
+                }
+
+            }
+            $precioLocalTotal = $arImportacionDetalle->getVrPrecioLocal() + $costoParticipa;
+            $subtotalLocal = $arImportacionDetalle->getCantidad() * $precioLocalTotal;
             $porcentajeIvaLocal = $arImportacionDetalle->getPorcentajeIvaLocal();
             $ivaLocal = $subtotalExtranjero * $porcentajeIvaLocal / 100;
             $subtotalGeneralLocal += $subtotalLocal;
@@ -88,21 +103,10 @@ class InvImportacionRepository extends ServiceEntityRepository
             $totalLocal = $subtotalLocal + $ivaLocal;
             $totalGeneralLocal += $totalLocal;
             $arImportacionDetalle->setVrPrecioLocal($precioLocal);
+            $arImportacionDetalle->setVrPrecioLocalTotal($precioLocalTotal);
             $arImportacionDetalle->setVrSubtotalLocal($subtotalLocal);
             $arImportacionDetalle->setVrIvaLocal($ivaLocal);
             $arImportacionDetalle->setVrTotalLocal($totalLocal);
-            $em->persist($arImportacionDetalle);
-        }
-        foreach ($arImportacionDetalles as $arImportacionDetalle) {
-            $porcentajeParticipaCosto = 0;
-            $costoParticipa = 0;
-            if($vrTotalCosto > 0) {
-                if($subtotalGeneralLocal > 0) {
-                    $porcentajeParticipaCosto = ($arImportacionDetalle->getVrSubtotalLocal() / $subtotalGeneralLocal) * 100;
-                    $costoParticipa = ($vrTotalCosto * $porcentajeParticipaCosto) / 100;
-                }
-
-            }
             $arImportacionDetalle->setPorcentajeParticipaCosto($porcentajeParticipaCosto);
             $arImportacionDetalle->setVrCostoParticipa($costoParticipa);
             $em->persist($arImportacionDetalle);
@@ -149,6 +153,12 @@ class InvImportacionRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arImportacion->getEstadoAutorizado() && !$arImportacion->getEstadoAnulado()) {
+            $arImportacionTipo = $this->getEntityManager()->getRepository(InvImportacionTipo::class)->find($arImportacion->getCodigoImportacionTipoFk());
+            if($arImportacionTipo){
+                $arImportacionTipo->setConsecutivo($arImportacionTipo->getConsecutivo() + 1);
+                $arImportacion->setNumero($arImportacionTipo->getConsecutivo());
+                $em->persist($arImportacionTipo);
+            }
             $arImportacion->setEstadoAprobado(1);
             $em->persist($arImportacion);
             $em->flush();
@@ -235,6 +245,7 @@ class InvImportacionRepository extends ServiceEntityRepository
                     $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($codigoImportacionDetalle);
                     if ($arImportacionDetalle) {
                         $arImportacionDetalle->setCantidad($arrCantidades[$codigoImportacionDetalle]);
+                        $arImportacionDetalle->setCantidadPendiente($arrCantidades[$codigoImportacionDetalle]);
                         $arImportacionDetalle->setVrPrecioExtranjero($arrPrecios[$codigoImportacionDetalle]);
                         $em->persist($arImportacionDetalle);
                     }

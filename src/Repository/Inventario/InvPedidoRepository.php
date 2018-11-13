@@ -186,6 +186,7 @@ class InvPedidoRepository extends ServiceEntityRepository
             foreach ($arrCodigo as $codigo) {
                 $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($codigo);
                 $arPedidoDetalle->setCantidad( $arrCantidad[$codigo] != '' ? $arrCantidad[$codigo] :0 );
+                $arPedidoDetalle->setCantidadPendiente( $arrCantidad[$codigo] != '' ? $arrCantidad[$codigo] :0 );
                 $arPedidoDetalle->setVrPrecio( $arrPrecio[$codigo] != '' ? $arrPrecio[$codigo] : 0);
                 $em->persist($arPedidoDetalle);
             }

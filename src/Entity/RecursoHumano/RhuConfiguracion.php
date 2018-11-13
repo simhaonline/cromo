@@ -18,10 +18,20 @@ class RhuConfiguracion
     private $codigoConfiguracionPk;
 
     /**
-     * @ORM\Column(name="vr_salario", type="float", nullable=true)
+     * @ORM\Column(name="vr_salario", type="float",options={"default":0}, nullable=true)
      * @Assert\NotBlank(message="Este campo no puede estar vacío")
      */
-    private $vrSalario;
+    private $vrSalario = 0;
+
+    /**
+     * @ORM\Column(name="codigo_concepto_auxilio_transporte_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoAuxilioTransporteFk;
+
+    /**
+     * @ORM\Column(name="vr_auxilio_transporte", type="float", nullable=true)
+     */
+    private $vrAuxilioTransporte;
 
     /**
      * @return mixed
@@ -53,5 +63,37 @@ class RhuConfiguracion
     public function setVrSalario($vrSalario): void
     {
         $this->vrSalario = $vrSalario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoAuxilioTransporteFk()
+    {
+        return $this->codigoConceptoAuxilioTransporteFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoAuxilioTransporteFk
+     */
+    public function setCodigoConceptoAuxilioTransporteFk($codigoConceptoAuxilioTransporteFk): void
+    {
+        $this->codigoConceptoAuxilioTransporteFk = $codigoConceptoAuxilioTransporteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAuxilioTransporte()
+    {
+        return $this->vrAuxilioTransporte;
+    }
+
+    /**
+     * @param mixed $vrAuxilioTransporte
+     */
+    public function setVrAuxilioTransporte($vrAuxilioTransporte): void
+    {
+        $this->vrAuxilioTransporte = $vrAuxilioTransporte;
     }
 }

@@ -74,25 +74,25 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-1 col-sm-3">
+                        {{ form_widget(form.auxilioTransporte) }}
+                        {{ form_errors(form.auxilioTransporte) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.salarioIntegral) }}
+                        {{ form_errors(form.salarioIntegral) }}
+                    </div>
                     <label class="col-sm-2 control-label">Adicional:</label>
                     <div class="col-sm-4">
                         {{ form_widget(form.vrAdicional) }}
                         {{ form_errors(form.vrAdicional) }}
                     </div>
-                    <label class="col-sm-2 control-label">Adicional prestacional:</label>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 col-sm-offset-6 control-label">Adicional prestacional:</label>
                     <div class="col-sm-4">
                         {{ form_widget(form.vrAdicionalPrestacional, { 'attr': {'class': 'form-control'} }) }}
                         {{ form_errors(form.vrAdicionalPrestacional) }}
-                    </div>
-                </div>
-                <div class="form-group form-group-sm">
-                    <div class="col-sm-offset-2 col-sm-3">
-                        {{ form_widget(form.auxilioTransporte) }}
-                        {{ form_errors(form.auxilioTransporte) }}
-                    </div>
-                    <div class="col-sm-3">
-                        {{ form_widget(form.salarioIntegral) }}
-                        {{ form_errors(form.salarioIntegral) }}
                     </div>
                 </div>
             </div>

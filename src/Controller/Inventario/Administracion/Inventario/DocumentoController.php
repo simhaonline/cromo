@@ -81,7 +81,7 @@ class DocumentoController extends ControllerListenerGeneral
                 } elseif($arDocumento->getOperacionInventario() != 0) {
                     $em->persist($arDocumento);
                     $em->flush();
-                    return $this->redirect($this->generateUrl('inventario_administracion_inventario_inventario_documento_detalle', ['id' => $arDocumento->getCodigoDocumentoPk()]));
+                    return $this->redirect($this->generateUrl('inventario_administracion_inventario_documento_detalle', ['id' => $arDocumento->getCodigoDocumentoPk()]));
                 } else {
                     Mensajes::error('Debe seleccionar otro tipo de operacion diferente a NEUTRO');
                 }

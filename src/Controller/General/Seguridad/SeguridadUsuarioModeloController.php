@@ -60,11 +60,11 @@ class SeguridadUsuarioModeloController extends AbstractController
                 return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
             }
             $arSeguridadUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->lista($arUsuario->getUsername());
-            $nombreUsuario=$arUsuario->getNombreCorto();
+//            $nombreUsuario=$arUsuario->getNombreCorto();
         }
         return $this->render('general/seguridad/seguridad_usuario_modelo/lista.html.twig', [
             'arSeguridadUsuarioModelo'  =>  $arSeguridadUsuarioModelo,
-            'arUsuarioNombre'           =>  $nombreUsuario,
+            'arUsuario'           =>  $arUsuario,
             'hash'                      =>  $hash,
             'form'=>$form->createView(),
         ]);

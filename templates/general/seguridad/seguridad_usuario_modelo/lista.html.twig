@@ -8,10 +8,50 @@
     <br>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
-            <td >USUARIO:</td>
-            <td class="td-in-well">{% if arUsuarioNombre%}
-                    {{ arUsuarioNombre}}
-                {% endif%}</td>
+            <td class="col-md-3">CODIGO OPERACION:</td>
+            <td class="col-md-3 ">{{ arUsuario.codigoOperacionFk }}</td>
+            <td class="col-md-3"></td>
+            <td class="col-md-3"></td>
+        </tr>
+        <tr>
+            <td class="col-md-3">NOMBRE:</td>
+            <td class="col-md-3">
+                    {{ arUsuario.nombreCorto}}
+            </td>
+            <td class="col-md-3">IDENTIFICACION:</td>
+            <td class="col-md-3">
+                {{ arUsuario.numeroIdentificacion}}
+            </td>
+
+        </tr>
+        <tr>
+            <td class="col-md-3">USUARIO:</td>
+            <td class="col-md-3">{{ arUsuario.username }}</td>
+            <td class="col-md-3">ROL:</td>
+            <td class="col-md-3">
+                {% if arUsuario.roles.0 =="ROLE_ADMIN" %}
+                    {{ "administrador" }}
+                {% else %}
+                    {{ "Usuario" }}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td class="col-md-3">TELEFONO:</td>
+            <td class="col-md-3">
+                {{ arUsuario.telefono}}
+            </td>
+            <td class="col-md-3">EXT:</td>
+            <td class="col-md-3">{{ arUsuario.extension }}</td>
+        </tr>
+        <tr>
+            <td class="col-md-3">CORREO:</td>
+            <td class="col-md-3">
+                {{ arUsuario.email}}
+            </td>
+
+            <td class="col-md-3">CARGO:</td>
+            <td class="col-md-3">{{ arUsuario.cargo }}</td>
         </tr>
     </table>
     <ul class="nav nav-tabs">

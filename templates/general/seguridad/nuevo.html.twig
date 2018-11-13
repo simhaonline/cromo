@@ -1,6 +1,7 @@
 {% extends 'base_general.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate':'novalidate'} }) }}
+    {{ form_errors(form) }}
     {{ notificar()|raw }}
     <div class="panel panel-default">
         <div class="panel-heading">Información general</div>
@@ -9,6 +10,7 @@
                 <label class="col-sm-2 control-label">Nombre de usuario:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtUser, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.txtUser)}}
                 </div>
                 <label class="col-sm-2 control-label">Email:</label>
                 <div class="col-sm-4">
@@ -78,6 +80,7 @@
     <div>
         <a class="btn btn-sm btn-default" href="{{ path('gen_seguridad_usuario_lista') }}">Cancelar</a>
     </div>
+    {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}
 

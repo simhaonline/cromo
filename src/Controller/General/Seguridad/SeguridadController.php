@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class SeguridadController extends Controller
 {
@@ -70,7 +72,7 @@ class SeguridadController extends Controller
         $respuesta = '';
         $arrPropiedadesClaves = ['required' => true];
         $id = $this->verificarUsuario($hash);
-        if ($id != 0) {
+        if ($id != "") {
             $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
             if (!$arUsuario) {
                 return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
@@ -96,7 +98,11 @@ class SeguridadController extends Controller
         }
         $form = $this->createFormBuilder()
             ->add('operacionRel',EntityType::class, $arrPropiedadesOperacionRel)
-            ->add('txtUser', TextType::class, ['data' => $arUsuario->getUsername()])
+            ->add('txtUser', TextType::class, ['data' => $arUsuario->getUsername(), 'required'=>true, 'constraints'=>array(
+                new NotBlank(),
+                new Regex("/^[A-Za-z]+[A-Za-z0-9]/")
+            ),'invalid_message_parameters'=>"ingrese un nombre de usuario valido"
+            ])
             ->add('txtEmail', TextType::class, ['data' => $arUsuario->getEmail()])
             ->add('txtCargo', TextType::class, ['data' => $arUsuario->getCargo(),'required' => false])
             ->add('txtNombreCorto', TextType::class, ['data' => $arUsuario->getNombreCorto(),'required' => false])
@@ -139,6 +145,7 @@ class SeguridadController extends Controller
                     return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
                 } catch (\Exception $e) {
                     Mensajes::error('El usuario ingresado ya se encuentra registrado');
+
                 }
             }
         }

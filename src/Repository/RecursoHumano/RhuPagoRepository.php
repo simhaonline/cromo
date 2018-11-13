@@ -119,7 +119,7 @@ class RhuPagoRepository extends ServiceEntityRepository
 
         // Calculo del auxilio de transporte
         if ($arContrato->getAuxilioTransporte() == 1) {
-            $intPagoConceptoTransporte = $arConfiguracion->getCodigoAuxilioTransporte();
+            $intPagoConceptoTransporte = $arConfiguracion->getCodigoConceptoAuxilioTransporteFk();
             $arConcepto = $em->getRepository(RhuConcepto::class)->find($intPagoConceptoTransporte);
             $duoVrAuxilioTransporte = $arConfiguracion->getVrAuxilioTransporte();
             $douVrDiaTransporte = $duoVrAuxilioTransporte / 30;
@@ -141,6 +141,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             $arPago->setVrAuxilioTransporte($douPagoDetalle);
         }
 
+        // Calculo de salud
 
 
         $douNeto = $douDevengado - $douDeducciones;
@@ -179,10 +180,10 @@ class RhuPagoRepository extends ServiceEntityRepository
 
     public function getCodigoPagoPk($codigoProgramacionDetalle)
     {
-        $query =  $this->_em->createQueryBuilder()->from(RhuPago::class, 'p')
+        $query = $this->_em->createQueryBuilder()->from(RhuPago::class, 'p')
             ->select('p.codigoPagoPk')
             ->where("p.codigoProgramacionDetalleFk = {$codigoProgramacionDetalle}")->getQuery()->getOneOrNullResult();
-        if($query){
+        if ($query) {
             $query = $query['codigoPagoPk'];
         }
         return $query;

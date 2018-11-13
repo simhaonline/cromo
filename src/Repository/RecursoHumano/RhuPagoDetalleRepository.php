@@ -39,6 +39,6 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         } else {
             $query = null;
         }
-        return $query;
+        return $query ? $query->getQuery()->execute() : null;
     }
 }

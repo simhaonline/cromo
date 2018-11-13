@@ -16,7 +16,7 @@ class ConfiguracionType extends AbstractType
     {
         $builder
             ->add('vrSalario', NumberType::class, ['required' => false])
-            ->add('codigoAuxilioTransporte', TextType::class, ['required' => true])
+            ->add('codigoConceptoAuxilioTransporteFk', TextType::class, ['required' => true])
             ->add('vrAuxilioTransporte', NumberType::class, ['required' => true])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

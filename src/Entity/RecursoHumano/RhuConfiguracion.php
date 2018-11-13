@@ -24,9 +24,9 @@ class RhuConfiguracion
     private $vrSalario = 0;
 
     /**
-     * @ORM\Column(name="codigo_auxilio_transporte",options={"default":0}, type="string", length=10, nullable=true)
+     * @ORM\Column(name="codigo_concepto_auxilio_transporte_fk", type="string", length=10, nullable=true)
      */
-    private $codigoAuxilioTransporte = 0;
+    private $codigoConceptoAuxilioTransporteFk;
 
     /**
      * @ORM\Column(name="vr_auxilio_transporte", type="float", nullable=true)
@@ -68,17 +68,17 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
-    public function getCodigoAuxilioTransporte()
+    public function getCodigoConceptoAuxilioTransporteFk()
     {
-        return $this->codigoAuxilioTransporte;
+        return $this->codigoConceptoAuxilioTransporteFk;
     }
 
     /**
-     * @param mixed $codigoAuxilioTransporte
+     * @param mixed $codigoConceptoAuxilioTransporteFk
      */
-    public function setCodigoAuxilioTransporte($codigoAuxilioTransporte): void
+    public function setCodigoConceptoAuxilioTransporteFk($codigoConceptoAuxilioTransporteFk): void
     {
-        $this->codigoAuxilioTransporte = $codigoAuxilioTransporte;
+        $this->codigoConceptoAuxilioTransporteFk = $codigoConceptoAuxilioTransporteFk;
     }
 
     /**

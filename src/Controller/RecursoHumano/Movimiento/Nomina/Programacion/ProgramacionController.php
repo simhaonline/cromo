@@ -168,7 +168,7 @@ class ProgramacionController extends BaseController
         $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->lista($codigoPago);
         return $this->render('recursoHumano/movimiento/nomina/programacion/resumen.html.twig', [
             'arProgramacionDetalle' => $arProgramacionDetalle,
-            'arPagoDetalles' => $arPagoDetalles->getQuery()->execute()
+            'arPagoDetalles' => $arPagoDetalles
         ]);
     }
 }

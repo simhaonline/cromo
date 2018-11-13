@@ -163,11 +163,12 @@ class ProgramacionController extends BaseController
      */
     public function resumenPagoDetalle($id){
         $em = $this->getDoctrine()->getManager();
-        $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->resumen($id);
-        $codigoPago = $em->getRepository(RhuPago::class)->getCodigoPagoPk($arProgramacionDetalle['codigoProgramacionDetallePk']);
-        $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->lista($codigoPago);
+        $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($id);
+        $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoProgramacionDetalleFk' => $id));
+        $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->lista($arPago->getCodigoPagoPk());
         return $this->render('recursoHumano/movimiento/nomina/programacion/resumen.html.twig', [
             'arProgramacionDetalle' => $arProgramacionDetalle,
+            'arPago' => $arPago,
             'arPagoDetalles' => $arPagoDetalles
         ]);
     }

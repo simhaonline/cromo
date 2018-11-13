@@ -33,6 +33,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
                 ->addSelect('pd.vrHora')
                 ->addSelect('pd.operacion')
                 ->addSelect('pd.vrPago')
+                ->addSelect('pd.vrPagoOperado')
                 ->addSelect('pd.vrIngresoBasePrestacion')
                 ->addSelect('pd.vrIngresoBaseCotizacion')
                 ->where("pd.codigoPagoFk = {$codigoPago}");

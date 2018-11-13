@@ -5,10 +5,16 @@
         <div class="panel-body">
             <table width="100%" class="table table-condensed table-bordered" style="margin-bottom: 0 !important;">
                 <tr>
+                    <td class="titulo">CODIGO:</td>
+                    <td class="td-in-well">{{ arPago.codigoPagoPk }}</td>
+                    <td class="titulo"></td>
+                    <td class="td-in-well numero" style="text-transform: uppercase;"></td>
+                </tr>
+                <tr>
                     <td class="titulo">EMPLEADO:</td>
-                    <td class="td-in-well">{{ arProgramacionDetalle.nombreCorto }}</td>
+                    <td class="td-in-well">{{ arPago.empleadoRel.nombreCorto }}</td>
                     <td class="titulo">SALARIO:</td>
-                    <td class="td-in-well numero" style="text-transform: uppercase;">$ {{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>
+                    <td class="td-in-well numero" style="text-transform: uppercase;">{{ arPago.vrSalarioContrato | number_format(0, '.', ',') }}</td>
                 </tr>
                 <tr>
                     <td class="titulo">FECHA INGRESO/RETIRO:</td>
@@ -20,14 +26,14 @@
                             / {{ arProgramacionDetalle.fechaHastaContrato | date('Y-m-d') }}
                         {% endif %}
                     </td>
-                    <td class="titulo"></td>
-                    <td class="td-in-well" style="text-transform: uppercase;"></td>
+                    <td class="titulo">NETO:</td>
+                    <td class="td-in-well numero" style="text-transform: uppercase;">{{ arPago.vrNeto | number_format(0, '.', ',') }}</td>
                 </tr>
                 <tr>
                     <td class="titulo">PERIODO:</td>
                     <td class="td-in-well">{{ arProgramacionDetalle.fechaDesde | date('Y-m-d') ~ ' / ' ~ arProgramacionDetalle.fechaHasta | date('Y-m-d') }}</td>
                     <td class="titulo">CARGO:</td>
-                    <td class="td-in-well" style="text-transform: uppercase;">{{ arProgramacionDetalle.nombre }}</td>
+                    <td class="td-in-well" style="text-transform: uppercase;">{{ arPago.contratoRel.cargoRel.nombre }}</td>
                 </tr>
             </table>
         </div>
@@ -35,35 +41,49 @@
     <table width="100%" class="table table-condensed table-bordered">
         <thead>
         <tr>
+            <th>ID</th>
             <th title="Codigo del concepto">CODIGO</th>
             <th title="Nombre del concepto">CONCEPTO</th>
             <th title="Mensaje opciones del pago">DETALLE</th>
-            <th>PORCENTAJE</th>
-            <th>HORAS</th>
-            <th>DIAS</th>
+            <th>%</th>
+            <th>H</th>
+            <th>D</th>
             <th title="Valor de la hora">VR.HORA</th>
             <th title="Operación">OP</th>
-            <th>VR.PAGO</th>
+            <th>PAGO</th>
             <th>IBP</th>
             <th>IBC</th>
         </tr>
         </thead>
         <tbody>
+        {% set ibc = 0 %}
+        {% set ibp = 0 %}
+        {% set pago = 0 %}
         {% for arPagoDetalle in arPagoDetalles %}
             <tr>
+                <td>{{ arPagoDetalle.codigoPagoDetallePk }}</td>
                 <td>{{ arPagoDetalle.codigoConceptoFk }}</td>
                 <td>{{ arPagoDetalle.nombre }}</td>
                 <td>{{ arPagoDetalle.detalle }}</td>
                 <td>{{ arPagoDetalle.porcentaje }}</td>
                 <td>{{ arPagoDetalle.horas }}</td>
                 <td>{{ arPagoDetalle.dias }}</td>
-                <td class="numero">$ {{ arPagoDetalle.vrHora |number_format(0, '.', ',') }}</td>
-                <td>{{ arPagoDetalle.operacion == 1 ? 'SUMA' : 'RESTA' }}</td>
-                <td class="numero">$ {{ arPagoDetalle.vrPago |number_format(0, '.', ',') }}</td>
-                <td class="numero">$ {{ arPagoDetalle.vrIngresoBasePrestacion |number_format(0, '.', ',') }}</td>
-                <td class="numero">$ {{ arPagoDetalle.vrIngresoBaseCotizacion |number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arPagoDetalle.vrHora |number_format(0, '.', ',') }}</td>
+                <td>{{ arPagoDetalle.operacion }}</td>
+                <td class="numero">{{ arPagoDetalle.vrPagoOperado |number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arPagoDetalle.vrIngresoBasePrestacion |number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arPagoDetalle.vrIngresoBaseCotizacion |number_format(0, '.', ',') }}</td>
             </tr>
+            {% set ibc = ibc + arPagoDetalle.vrIngresoBaseCotizacion %}
+            {% set ibp = ibp + arPagoDetalle.vrIngresoBasePrestacion %}
+            {% set pago = pago + arPagoDetalle.vrPagoOperado %}
         {% endfor %}
+        <tr>
+            <td colspan="9"> </td>
+            <td class="numero">{{ pago |number_format(0, '.', ',') }} </td>
+            <td class="numero">{{ ibp |number_format(0, '.', ',')}} </td>
+            <td class="numero">{{ ibc |number_format(0, '.', ',')}} </td>
+        </tr>
         </tbody>
     </table>
 

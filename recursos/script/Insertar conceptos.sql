@@ -10,3 +10,5 @@ INSERT INTO rhu_concepto (codigo_concepto_pk,nombre,porcentaje,operacion,genera_
 INSERT INTO rhu_concepto (codigo_concepto_pk,nombre,porcentaje,operacion,genera_ingreso_base_cotizacion,genera_ingreso_base_prestacion,recargo_nocturno) VALUES ('RFD','RECARGO FESTIVO DIURNO',75,1,1,1,0);
 INSERT INTO rhu_concepto (codigo_concepto_pk,nombre,porcentaje,operacion,genera_ingreso_base_cotizacion,genera_ingreso_base_prestacion,recargo_nocturno) VALUES ('RFN','RECARGO FESTIVO NOCTURNO',110,1,1,1,1);
 INSERT INTO rhu_concepto (codigo_concepto_pk,nombre,porcentaje,operacion,genera_ingreso_base_cotizacion,genera_ingreso_base_prestacion,recargo_nocturno) VALUES ('AUXT','AUXILIO DE TRANSPORTE',0,1,1,1,0);
+INSERT INTO rhu_concepto (codigo_concepto_pk,nombre,porcentaje,operacion,genera_ingreso_base_cotizacion,genera_ingreso_base_prestacion,recargo_nocturno) VALUES ('SAL','APORTE SALUD',0,-1,0,0,0);
+INSERT INTO rhu_concepto (codigo_concepto_pk,nombre,porcentaje,operacion,genera_ingreso_base_cotizacion,genera_ingreso_base_prestacion,recargo_nocturno) VALUES ('PEN','APORTE PENSION',0,-1,0,0,0);

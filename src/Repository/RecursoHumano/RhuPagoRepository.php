@@ -349,4 +349,13 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getCodigoPago($id){
+        return $this->_em->createQueryBuilder()
+            ->from(RhuPago::class,'p')
+            ->select("p.codigoProgramacionDetalleFk = {$id}")->getQuery()->execute();
+    }
 }

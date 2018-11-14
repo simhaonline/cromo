@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Form\Type\RecursoHumano\PagoType;
+use App\Formato\RecursoHumano\Pago;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -71,12 +72,17 @@ class PagoController extends BaseController
     {
         $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
-        $arPago = $em->getRepository(RhuPago::class)->find($id);
-        $form = Estandares::botonera($arPago->getEstadoAutorizado(),$arPago->getEstadoAprobado(),$arPago->getEstadoAnulado());
+        $arPago = $em->find(RhuPago::class, $id);
+        $form = Estandares::botonera($arPago->getEstadoAutorizado(), $arPago->getEstadoAprobado(), $arPago->getEstadoAnulado());
         $form->handleRequest($request);
-
+        if ($form->isSubmitted() && $form->isValid()) {
+            if($form->get('btnImprimir')->isClicked()){
+                $objFormato = new Pago();
+                $objFormato->Generar($em, $id);
+            }
+        }
         $arPagoDetalles = $paginator->paginate($em->getRepository(RhuPagoDetalle::class)->lista($id), $request->query->getInt('page', 1), 30);
-        return $this->render('recursoHumano/movimiento/nomina/pago/detalle.html.twig',[
+        return $this->render('recursoHumano/movimiento/nomina/pago/detalle.html.twig', [
             'arPago' => $arPago,
             'arPagoDetalles' => $arPagoDetalles,
             'form' => $form->createView()

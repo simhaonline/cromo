@@ -80,10 +80,14 @@ class ProgramacionController extends BaseController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arProgramacion->setDias(($arProgramacion->getFechaDesde()->diff($arProgramacion->getFechaHasta()))->days + 1);
-                $em->persist($arProgramacion);
-                $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $arProgramacion->getCodigoProgramacionPk()]));
+                if($arProgramacion->getGrupoRel()){
+                    $arProgramacion->setDias(($arProgramacion->getFechaDesde()->diff($arProgramacion->getFechaHasta()))->days + 1);
+                    $em->persist($arProgramacion);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $arProgramacion->getCodigoProgramacionPk()]));
+                } else {
+                    Mensajes::error('Debe seleccionar un grupo para la programacion');
+                }
             }
         }
         return $this->render('recursoHumano/movimiento/nomina/programacion/nuevo.html.twig', [
@@ -165,6 +169,10 @@ class ProgramacionController extends BaseController
         $em = $this->getDoctrine()->getManager();
         $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($id);
         $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoProgramacionDetalleFk' => $id));
+        if(!$arPago){
+            Mensajes::error('El empleado aun no tiene pagos generados');
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
         $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->lista($arPago->getCodigoPagoPk());
         return $this->render('recursoHumano/movimiento/nomina/programacion/resumen.html.twig', [
             'arProgramacionDetalle' => $arProgramacionDetalle,

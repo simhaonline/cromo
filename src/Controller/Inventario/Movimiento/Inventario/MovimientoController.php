@@ -16,6 +16,7 @@ use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
 use App\Entity\Inventario\InvSucursal;
+use App\Formato\Inventario\FormatoMovimientoTraslado;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;
@@ -263,6 +264,9 @@ class MovimientoController extends Controller
                         $objFormato = new Factura3();
                         $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                     }
+                } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'TRA'){
+                    $objFormato = new FormatoMovimientoTraslado();
+                    $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                 } else {
                     $objFormato = new FormatoMovimiento();
                     $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());

@@ -2,6 +2,7 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
@@ -80,6 +81,38 @@ class RhuPagoRepository extends ServiceEntityRepository
         $auxilioTransporte = $arConfiguracion['vrAuxilioTransporte'];
         $diaAuxilioTransporte = $auxilioTransporte / 30;
         $salarioMinimo = $arConfiguracion['vrSalarioMinimo'];
+
+
+        //Adicionales
+        $arAdicionales = $em->getRepository(RhuAdicional::class)->programacionPago($arProgramacionDetalle->getCodigoEmpleadoFk(), $arProgramacion->getFechaDesde()->format('Y/m/d'), $arProgramacion->getFechaHasta()->format('Y/m/d'), $arProgramacion->getCodigoPagoTipoFk(), true, true, $arContrato->getCodigoContratoPk());
+        foreach ($arAdicionales as $arAdicional) {
+            $arConcepto = $em->getRepository(RhuConcepto::class)->find($arAdicional['codigoConceptoFk']);
+            $arPagoDetalle = new RhuPagoDetalle();
+            $arPagoDetalle->setPagoRel($arPago);
+            $arPagoDetalle->setConceptoRel($arConcepto);
+            $pagoDetalle = $arAdicional['vrValor'];
+//            if ($arPagoAdicional->getAplicaDiaLaborado() == 1) {
+//                $diasPeriodo = $arCentroCosto->getPeriodoPagoRel()->getDias();
+//                $valorDia = $arPagoAdicional->getValor() / $diasPeriodo;
+//                $douPagoDetalle = $valorDia * $arProgramacionPagoDetalle->getDias();
+//            }
+//            if ($arPagoAdicional->getAplicaDiaLaboradoSinDescanso() == 1) {
+//                $diasPeriodo = $arCentroCosto->getPeriodoPagoRel()->getDias();
+//                $valorDia = $arPagoAdicional->getValor() / $diasPeriodo;
+//                $douPagoDetalle = $valorDia * ($arProgramacionPagoDetalle->getDias() - ($arProgramacionPagoDetalle->getHorasDescanso() / 8));
+//            }
+//            $douPagoDetalle = round($douPagoDetalle);
+//            if ($arPagoAdicional->getPagoConceptoRel()->getOperacion() == 1) {
+//                $devengado += $douPagoDetalle;
+//                if ($arPagoAdicional->getPagoConceptoRel()->getPrestacional() == 1) {
+//                    $devengadoPrestacional += $douPagoDetalle;
+//                }
+//            }
+//            $arPagoDetalle->setNumeroHoras($arPagoAdicional->getHoras());
+            $arPagoDetalle->setDetalle($arAdicional['detalle']);
+            $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+            $em->persist($arPagoDetalle);
+        }
 
         //Horas
         $arrHoras = $this->getHoras($arProgramacionDetalle);

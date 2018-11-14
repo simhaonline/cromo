@@ -53,6 +53,11 @@ class RhuAdicional
     private $aplicaDiaLaborado = false;
 
     /**
+     * @ORM\Column(name="aplica_nomina", options={"default":false}, options={"default":false}, type="boolean", nullable=true)
+     */
+    private $aplicaNomina = false;
+
+    /**
      * @ORM\Column(name="aplica_prima", options={"default":false}, options={"default":false}, type="boolean", nullable=true)
      */
     private $aplicaPrima = false;
@@ -417,4 +422,22 @@ class RhuAdicional
     {
         $this->contratoRel = $contratoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAplicaNomina()
+    {
+        return $this->aplicaNomina;
+    }
+
+    /**
+     * @param mixed $aplicaNomina
+     */
+    public function setAplicaNomina( $aplicaNomina ): void
+    {
+        $this->aplicaNomina = $aplicaNomina;
+    }
+
+
 }

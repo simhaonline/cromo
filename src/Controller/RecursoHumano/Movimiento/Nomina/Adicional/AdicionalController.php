@@ -36,11 +36,12 @@ class AdicionalController extends BaseController
         $formBotonera = $this->botoneraLista();
         $formBotonera->handleRequest($request);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-
+                $em->getRepository(RhuAdicional::class)->eliminar($arrSeleccionados);
             }
         }
         return $this->render('recursoHumano/movimiento/nomina/adicional/lista.html.twig', [
@@ -73,8 +74,13 @@ class AdicionalController extends BaseController
                     $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
                     $arAdicional->setEmpleadoRel($arEmpleado);
                     $arAdicional->setContratoRel($arContrato);
+                    $arAdicional->setPermanente(1);
+                    if($id == 0) {
+                        $arAdicional->setAplicaNomina(1);
+                    }
                     $em->persist($arAdicional);
                     $em->flush();
+                    return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicional_lista'));
                 } else {
                     Mensajes::error('El empleado no tiene un contrato activo en el sistema');
                 }

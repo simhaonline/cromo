@@ -10,54 +10,72 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 class RhuAdicionalRepository extends ServiceEntityRepository
 {
 
-    /**
-     * @return string
-     */
-    public function getRuta(){
-        return 'recursohumano_movimiento_nomina_adicional_';
-    }
-
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, RhuAdicional::class);
     }
 
-    /**
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    public function lista()
+    public function eliminar($arrSeleccionados)
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuCredito::class, 'e');
-        $queryBuilder
-            ->select('e.codigoCreditoPk');
-        return $queryBuilder;
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigoRegistro) {
+                $arRegistro = $this->_em->getRepository(RhuAdicional::class)->find($codigoRegistro);
+                if ($arRegistro) {
+                    $this->_em->remove($arRegistro);
+                }
+            }
+            $this->_em->flush();
+        }
     }
 
-    /**
-     * @return array
-     */
-    public function parametrosLista(){
-        $arEmbargo = new RhuEmbargo();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
-            ->select('re.codigoEmbargoPk')
-            ->addSelect('re.fecha')
-            ->where('re.codigoEmbargoPk <> 0');
-        $arrOpciones = ['json' =>'[{"campo":"codigoEmbargoPk","ayuda":"Codigo del embargo","titulo":"ID"},
-        {"campo":"fecha","ayuda":"Fecha de registro","titulo":"FECHA"}]',
-            'query' => $queryBuilder,'ruta' => $this->getRuta()];
-        return $arrOpciones;
+    //Este metodo fue migrado y solo es un ejemplo
+    public function programacionPagoEjemplo($codigoEmpleado = "", $fechaDesde, $fechaHasta, $tipoPago = 0, $aplicarAdicionalPermanente = false, $aplicarAdicional = false, $codigoContrato = "")
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT a "
+            . "FROM App\Entity\Inventario\InvMovimientoDetalle a "
+            . "WHERE a.estadoInactivo = 0 AND (a.estadoInactivoPeriodo = 0 OR a.estadoInactivoPeriodo IS NULL) "
+            . "AND a.codigoEmpleadoFk = $codigoEmpleado AND (a.codigoContratoFk = '$codigoContrato' OR a.codigoContratoFk IS NULL)";
+
+        if ($aplicarAdicional && $aplicarAdicionalPermanente) {
+            $dql .= " AND (((a.fecha >= '$fechaDesde' AND a.fecha <= '$fechaHasta') AND a.modalidad = 2) OR a.modalidad = 1) ";
+        } else {
+            if (!$aplicarAdicional && $aplicarAdicionalPermanente) {
+                $dql .= " AND a.modalidad = 1 ";
+            } else {
+                $dql .= " AND ((a.fecha >= '$fechaDesde' AND a.fecha <= '$fechaHasta') AND a.modalidad = 2) ";
+            }
+        }
+        if ($tipoPago == 'NOM') {
+            $dql .= " AND (a.aplicaPrima = 0 AND a.aplicaCesantia = 0)";
+        }
+        if ($tipoPago == 'PRI') {
+            $dql .= " AND a.aplicaPrima = 1";
+        }
+        if ($tipoPago == 'CES') {
+            $dql .= " AND a.aplicaCesantia = 1";
+        }
+        $objQuery = $em->createQuery($dql);
+        $arPagosAdicionales = $objQuery->getResult();
+        return $arPagosAdicionales;
     }
 
-    /**
-     * @return mixed
-     */
-    public function parametrosExcel(){
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
-            ->select('re.codigoEmbargoPk')
-            ->addSelect('re.fecha')
-            ->where('re.codigoEmbargoPk <> 0');
-        return $queryBuilder->getQuery()->execute();
-    }
+    public function programacionPago ($codigoEmpleado = "", $pagoTipo) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuAdicional::class, 'a')
+            ->select('a.codigoAdicionalPk')
+            ->addSelect('a.codigoConceptoFk')
+            ->addSelect('a.vrValor')
+            ->addSelect('a.detalle')
+            ->where('a.estadoInactivo = 0 AND a.estadoInactivoPeriodo = 0')
+            ->andWhere("a.codigoEmpleadoFk = {$codigoEmpleado} ");
 
+        if($pagoTipo == 'NOM') {
+            $queryBuilder->andWhere('a.aplicaNomina = 1');
+        }
+
+        $arrResultado = $queryBuilder->getQuery()->getResult();
+        return $arrResultado;
+    }
 
 }

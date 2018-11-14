@@ -23,8 +23,8 @@ class AdicionalType extends AbstractType
         $builder
             ->add('codigoEmpleadoFk', TextType::class, ['required' => true])
             ->add('vrValor', NumberType::class, ['required' => true])
-            ->add('permanente',CheckboxType::class,['required' => false])
             ->add('aplicaDiaLaborado',CheckboxType::class,['required' => false])
+            ->add('aplicaNomina',CheckboxType::class,['required' => false])
             ->add('aplicaPrima',CheckboxType::class,['required' => false])
             ->add('aplicaCesantia',CheckboxType::class,['required' => false])
             ->add('detalle',TextType::class,['required' => false,'attr' => ['placeholder' => 'Opcional']])
@@ -33,9 +33,11 @@ class AdicionalType extends AbstractType
                 'class' => RhuConcepto::class,
                 'query_builder' => function(EntityRepository $er){
                     return $er->createQueryBuilder('er')
+                        ->where('er.adicional = 1')
                         ->orderBy('er.nombre','ASC');
                 },'choice_label' => 'nombre',
-                'required' => true
+                'required' => true,
+                'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('guardar',SubmitType::class,['label' => 'guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
@@ -51,16 +53,17 @@ class AdicionalType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoAdicionalPk","tipo":"pk"    ,"ayuda":"Codigo del registro" ,"titulo":"ID"},
-            {"campo":"codigoConceptoFk", "tipo":"texto" ,"ayuda":"Codigo del concepto" ,"titulo":"CONCEPTO"},
-            {"campo":"detalle",          "tipo":"fecha" ,"ayuda":"Detalle del registro","titulo":"DETALLE"},
-            {"campo":"codigoEmpleadoFk", "tipo":"texto" ,"ayuda":"Codigo del empleado" ,"titulo":"EMPLEADO"},
-            {"campo":"codigoContratoFk", "tipo":"texto" ,"ayuda":"Codigo del contrato" ,"titulo":"CONTRATO"},
+            {"campo":"codigoConceptoFk", "tipo":"texto" ,"ayuda":"Codigo del concepto" ,"titulo":"CODIGO"},
+            {"campo":"conceptoRel.nombre", "tipo":"texto" ,"ayuda":"Codigo del concepto" ,"titulo":"CONCEPTO", "relacion":"SI"},
+            {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto"  ,"ayuda":"Numero de identificacion del empleado" ,"titulo":"IDENTIFICACION" ,"relacion":"SI"},
+            {"campo":"empleadoRel.nombreCorto"         ,"tipo":"texto"  ,"ayuda":"Nombre del empleado"                   ,"titulo":"EMPLEADO"         ,"relacion":"SI"},             
+            {"campo":"detalle",          "tipo":"texto" ,"ayuda":"Detalle del registro","titulo":"DETALLE"},
             {"campo":"fecha",            "tipo":"fecha" ,"ayuda":"Fecha"               ,"titulo":"FECHA"},
             {"campo":"vrValor",          "tipo":"moneda","ayuda":"Valor del anticipo"  ,"titulo":"VALOR"},
             {"campo":"permanente",       "tipo":"bool"  ,"ayuda":"Permanente"          ,"titulo":"PER"},
-            {"campo":"estadoAutorizado", "tipo":"bool"  ,"ayuda":"Estado autorizado"   ,"titulo":"AUT"},                     
-            {"campo":"estadoAprobado",   "tipo":"bool"  ,"ayuda":"Estado aprobado"     ,"titulo":"APR"},                     
-            {"campo":"estadoAnulado",    "tipo":"bool"  ,"ayuda":"Estado anulado"      ,"titulo":"ANU"}
+            {"campo":"aplicaNomina", "tipo":"bool"  ,"ayuda":"Estado autorizado"   ,"titulo":"NOM"},                     
+            {"campo":"aplicaPrima",   "tipo":"bool"  ,"ayuda":"Estado aprobado"     ,"titulo":"PRI"},                     
+            {"campo":"estadoInactivo",    "tipo":"bool"  ,"ayuda":"Estado anulado"      ,"titulo":"INA"}
         ]';
         return $campos;
     }

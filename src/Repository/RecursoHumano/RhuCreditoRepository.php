@@ -20,7 +20,7 @@ class RhuCreditoRepository extends ServiceEntityRepository
      */
     public function eliminar($arrSeleccionados)
     {
-        if (is_array($arrSeleccionados) && count($arrSeleccionados) > 0) {
+        if ($arrSeleccionados) {
             foreach ($arrSeleccionados as $codigoRegistro) {
                 $arRegistro = $this->_em->getRepository(RhuCredito::class)->find($codigoRegistro);
                 if ($arRegistro) {

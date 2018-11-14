@@ -90,6 +90,7 @@ class CreditoController extends BaseController
                         $arCredito->setEmpleadoRel($arEmpleado);
                         $arCredito->setContratoRel($arContrato);
                         $arCredito->setUsuario($this->getUser()->getUsername());
+                        $arCredito->setVrSaldo($arCredito->getVrCredito() - $arCredito->getVrAbonos());
                         $em->persist($arCredito);
                         $em->flush();
                         return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_credito_detalle', ['id' => $arCredito->getCodigoCreditoPk()]));

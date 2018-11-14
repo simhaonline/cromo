@@ -34,6 +34,7 @@ class InvPedidoRepository extends ServiceEntityRepository
             ->addSelect('p.estadoAutorizado')
             ->addSelect('p.estadoAprobado')
             ->addSelect('p.estadoAnulado')
+            ->addSelect('p.usuario')
             ->addSelect('t.nombreCorto AS terceroNombreCorto')
             ->where('p.codigoPedidoPk <> 0')
             ->orderBy('p.codigoPedidoPk','DESC');

@@ -28,6 +28,11 @@ class RhuPagoDetalle
     private $codigoConceptoFk;
 
     /**
+     * @ORM\Column(name="codigo_credito_fk", type="integer", nullable=true)
+     */
+    private $codigoCreditoFk;
+
+    /**
      * @ORM\Column(name="vr_pago", type="float", nullable=true)
      */
     private $vrPago = 0;
@@ -98,6 +103,13 @@ class RhuPagoDetalle
      * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
      */
     protected $conceptoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuCredito", inversedBy="pagosDetallesCreditoRel")
+     * @ORM\JoinColumn(name="codigo_credito_fk", referencedColumnName="codigo_credito_pk")
+     */
+    protected $creditoRel;
+
 
     /**
      * @return mixed
@@ -370,6 +382,39 @@ class RhuPagoDetalle
     {
         $this->conceptoRel = $conceptoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCreditoFk()
+    {
+        return $this->codigoCreditoFk;
+    }
+
+    /**
+     * @param mixed $codigoCreditoFk
+     */
+    public function setCodigoCreditoFk( $codigoCreditoFk ): void
+    {
+        $this->codigoCreditoFk = $codigoCreditoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreditoRel()
+    {
+        return $this->creditoRel;
+    }
+
+    /**
+     * @param mixed $creditoRel
+     */
+    public function setCreditoRel( $creditoRel ): void
+    {
+        $this->creditoRel = $creditoRel;
+    }
+
 
 
 }

@@ -4,6 +4,7 @@ namespace App\Form\Type\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;
+use App\Entity\RecursoHumano\RhuCreditoPagoTipo;
 use App\Entity\RecursoHumano\RhuCreditoTipo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -28,20 +29,19 @@ class CreditoType extends AbstractType
             ->add('fechaFinalizacion', DateType::class, ['data' => new \DateTime('now'),'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('fechaCredito', DateType::class, ['data' => new \DateTime('now'),'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('numeroCuotas', IntegerType::class, ['required' => true])
-            ->add('comentarios', TextareaType::class, ['required' => false])
-            ->add('vrSeguro',NumberType::class,['required' => false])
-            ->add('vrPagar',NumberType::class,['required' => false])
-            ->add('vrValorCuota',NumberType::class,['required' => false])
+            ->add('comentario', TextareaType::class, ['required' => false])
+            ->add('vrCredito',NumberType::class,['required' => false])
+            ->add('vrCuota',NumberType::class,['required' => false])
             ->add('numeroCuotaActual',NumberType::class,['required' => false])
             ->add('validarCuotas',CheckboxType::class,['required' => false])
             ->add('aplicarCuotaPrima',CheckboxType::class,['required' => false])
             ->add('inactivoPeriodo',CheckboxType::class,['required' => false])
             ->add('aplicarCuotaCesantia',CheckboxType::class,['required' => false])
-            ->add('creditoPagoRel',EntityType::class,[
-                'class' => RhuCreditoPago::class,
+            ->add('creditoPagoTipoRel',EntityType::class,[
+                'class' => RhuCreditoPagoTipo::class,
                 'query_builder' => function(EntityRepository $er){
-                    return $er->createQueryBuilder('er')
-                        ->orderBy('er.nombre');
+                    return $er->createQueryBuilder('cpt')
+                        ->orderBy('cpt.nombre');
                 },'required' => true,
                 'choice_label' => 'nombre'
             ])
@@ -68,15 +68,18 @@ class CreditoType extends AbstractType
         $campos = '[
             {"campo":"codigoCreditoPk"                 ,"tipo":"pk"     ,"ayuda":"Codigo del registro"                   ,"titulo":"ID"},
             {"campo":"creditoTipoRel.nombre"           ,"tipo":"texto"  ,"ayuda":"Tipo de credito"                       ,"titulo":"TIPO"           ,"relacion":"SI"},
-            {"campo":"codigoEmpleadoFk"                ,"tipo":"texto"  ,"ayuda":"Codigo del empleado"                   ,"titulo":"COD.EMPLEADO"},
-            {"campo":"empleadoRel.nombreCorto"         ,"tipo":"texto"  ,"ayuda":"Nombre del empleado"                   ,"titulo":"NOMBRE"         ,"relacion":"SI"},
+            {"campo":"codigoEmpleadoFk"                ,"tipo":"texto"  ,"ayuda":"Codigo del empleado"                   ,"titulo":"CODIGO"},
             {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto"  ,"ayuda":"Numero de identificacion del empleado" ,"titulo":"IDENTIFICACION" ,"relacion":"SI"},
+            {"campo":"empleadoRel.nombreCorto"         ,"tipo":"texto"  ,"ayuda":"Nombre del empleado"                   ,"titulo":"EMPLEADO"         ,"relacion":"SI"},            
             {"campo":"empleadoRel.estadoContrato"      ,"tipo":"bool"   ,"ayuda":"Si el empleado se encuentra contratado","titulo":"CON"            ,"relacion":"SI"},
             {"campo":"grupoRel.nombre"                 ,"tipo":"texto"  ,"ayuda":"Nombre del grupo del empleado"         ,"titulo":"GRUPO"          ,"relacion":"SI"},
             {"campo":"fecha"                           ,"tipo":"fecha"  ,"ayuda":"Fecha"                                 ,"titulo":"FECHA"},
+            {"campo":"vrCredito"                       ,"tipo":"moneda" ,"ayuda":"Valor del credito"                     ,"titulo":"CREDITO"},            
             {"campo":"vrCuota"                         ,"tipo":"moneda" ,"ayuda":"Valor de la cuota"                     ,"titulo":"V.CUOTA"},
-            {"campo":"numeroCuotaActual"               ,"tipo":"text"   ,"ayuda":"Numero de la cuota actual"             ,"titulo":"CUOTA ACTUAL"},
+            {"campo":"numeroCuotaActual"               ,"tipo":"text"   ,"ayuda":"Numero de la cuota actual"             ,"titulo":"C_ACTUAL"},
             {"campo":"numeroCuotas"                    ,"tipo":"texto"  ,"ayuda":"Cantidad de cuotas"                    ,"titulo":"CUOTAS"},
+            {"campo":"vrAbonos"                        ,"tipo":"moneda" ,"ayuda":"Total de abonos"                     ,"titulo":"ABONOS"},
+            {"campo":"vrSaldo"                         ,"tipo":"moneda" ,"ayuda":"Saldo por pagar"                     ,"titulo":"SALDO"},
             {"campo":"estadoPagado"                    ,"tipo":"bool"   ,"ayuda":"Estado pagado"                         ,"titulo":"PAG"},
             {"campo":"estadoSuspendido"                ,"tipo":"bool"   ,"ayuda":"Estado suspendido"                     ,"titulo":"SUS"}]';
         return $campos;

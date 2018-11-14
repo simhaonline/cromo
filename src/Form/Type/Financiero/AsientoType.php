@@ -64,9 +64,10 @@ class AsientoType extends AbstractType
 
     public function getEstructuraPropiedadesFiltro()
     {
+
         $campos = '[
-            {"child":"numero", "label":"numero", "tipo":"TextType", "propiedades":{"label":"Numero"}},
-            {"child":"btnFiltro", "label":"filtro", "tipo":"SubmitType", "propiedades":{"label" : "Filtrar", "attr": {"class":"btn btn-sm btn-primary"}}}
+            {"child":"numero", "tipo":"TextType", "propiedades":{"label":"Numero"}},
+            {"child":"codigoComprobanteFk","tipo":"EntityType","propiedades":{"class":"FinComprobante","choice_label":"codigoComprobantePk","label":"comprobante"}}
         ]';
 
         return $campos;

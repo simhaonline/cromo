@@ -61,14 +61,15 @@ class AsientoController extends ControllerListenerGeneral
 
         if($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                $session->set('FinAsientonumero',$formFiltro->get('numero')->getData());
+                $session->set('FinAsiento_numero',$formFiltro->get('numero')->getData());
+                $session->set('FinAsiento_codigoComprobanteFk',$formFiltro->get('codigoComprobanteFk')->getData()!=""?$formFiltro->get('codigoComprobanteFk')->getData()->getCodigoComprobantePk():"");
                 $datos=$this->getDatosLista();
             }
         }
         return $this->render('financiero/movimiento/contabilidad/asiento/lista.html.twig', [
             'arrDatosLista' =>$datos,
             'formBotonera' => $formBotonera->createView(),
-            'formFormulario'=> $formFiltro->createView(),
+            'formFiltro'=> $formFiltro->createView(),
         ]);
     }
 

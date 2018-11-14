@@ -67,7 +67,13 @@ class AsientoType extends AbstractType
 
         $campos = '[
             {"child":"numero", "tipo":"TextType", "propiedades":{"label":"Numero"}},
-            {"child":"codigoComprobanteFk","tipo":"EntityType","propiedades":{"class":"FinComprobante","choice_label":"codigoComprobantePk","label":"comprobante"}}
+            {"child":"codigoComprobanteFk","tipo":"EntityType","propiedades":{"class":"FinComprobante","choice_label":"nombre","label":"comprobante"}},
+            {"child":"estadoAutorizado","tipo":"CheckboxType","propiedades":{"label":"Autorizado"}},
+            {"child":"estadoAprobado","tipo":"CheckboxType","propiedades":{"label":"Aprobado"}},
+            {"child":"estadoAnulado","tipo":"CheckboxType","propiedades":{"label":"Anulado"}},
+            {"child":"filtrarFecha","tipo":"CheckboxType","propiedades":{"label":"Filtrar Fecha"}},
+            {"child":"fechaDesde","tipo":"DateType","propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaHasta","tipo":"DateType","propiedades":{"label":"Fecha Hasta"}}
         ]';
 
         return $campos;

@@ -63,6 +63,14 @@ class AsientoController extends ControllerListenerGeneral
             if ($formFiltro->get('btnFiltro')->isClicked()) {
                 $session->set('FinAsiento_numero',$formFiltro->get('numero')->getData());
                 $session->set('FinAsiento_codigoComprobanteFk',$formFiltro->get('codigoComprobanteFk')->getData()!=""?$formFiltro->get('codigoComprobanteFk')->getData()->getCodigoComprobantePk():"");
+                $session->set('FinAsiento_estadoAutorizado',$formFiltro->get('estadoAutorizado')->getData());
+                $session->set('FinAsiento_estadoAprobado',$formFiltro->get('estadoAprobado')->getData());
+                $session->set('FinAsiento_estadoAnulado',$formFiltro->get('estadoAnulado')->getData());
+                $session->set('FinAsiento_filtrarFecha',$formFiltro->get('filtrarFecha')->getData());
+                if($formFiltro->get('filtrarFecha')->getData()){
+                    $session->set('FinAsiento_fechaDesde',$formFiltro->get('fechaDesde')->getData()->format('Y-m-d'));
+                    $session->set('FinAsiento_fechaHasta',$formFiltro->get('fechaHasta')->getData()->format('Y-m-d'));
+                }
                 $datos=$this->getDatosLista();
             }
         }

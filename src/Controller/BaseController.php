@@ -55,11 +55,16 @@ abstract class BaseController extends Controller
                             'placeholder' => "TODOS",
                         ]);
                 }
-                else if($campo['tipo']!="SubmitType"){
+                else if($campo['tipo']=="DateType"){
+                    $dateFecha = new \DateTime('now');
+                    $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false, 'format'=>'yyyyMMdd','data'=>$dateFecha]);
+                }
+                else if($campo['tipo']!="SubmitType" && $campo['tipo']!="CheckboxType"){
                     $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false, 'data'=>$session->get($this->claseNombre."_".$campo['child'])??""]);
                 }
+
                 else{
-                    $form->add($campo['child'], $tipo,['label'=>"Filtro"]);
+                    $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false]);
                 }
             }
             $form->add("btnFiltro",SubmitType::class,['label'=>"Filtro",'attr'=> ['class'=>'filtrar btn btn-default btn-sm', 'style'=>'float:right']]);
@@ -252,9 +257,18 @@ abstract class BaseController extends Controller
             }
 
             if($claseNombre){
-                $session->get($claseNombre.$campo->campo);
-                if($filtro!="" && $filtro!=null){
-                    $queryBuilder->andWhere('e.'. $campo->campo."=".$filtro);
+                if($campo->campo=="fecha"){
+                    $fechaDesde=$session->get($claseNombre."_".$campo->campo."Desde");
+                    $fechaHasta=$session->get($claseNombre."_".$campo->campo."Hasta");
+                    if($fechaDesde && $fechaHasta){
+                    $queryBuilder->andWhere('e.'. $campo->campo.">='{$fechaDesde}'")
+                        ->andWhere('e.'. $campo->campo."<='{$fechaHasta}'");
+                    }
+                }
+                else{
+                    if($filtro!="" && $filtro!=null){
+                        $queryBuilder->andWhere('e.'. $campo->campo."=".$filtro);
+                    }
                 }
             }
         }

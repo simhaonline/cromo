@@ -15,10 +15,50 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Fecha Desde:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(formFiltro.fechaDesde) }}
+                </div>
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-2">
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Fecha Hasta:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(formFiltro.fechaHasta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-3">
+                    {{ form_widget(formFiltro.filtrarFecha) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-3">
+                    {{ form_widget(formFiltro.estadoAutorizado) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-3">
+                    {{ form_widget(formFiltro.estadoAprobado) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-3">
+                    {{ form_widget(formFiltro.estadoAnulado) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <div class="col-sm-offset-2 col-sm-10">
                     {{ form_widget(formFiltro.btnFiltro) }}
                 </div>
             </div>
+
         </div>
     </div>
     {{ form_end(formFiltro) }}

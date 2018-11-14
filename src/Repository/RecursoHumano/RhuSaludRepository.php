@@ -16,4 +16,16 @@ class RhuSaludRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuSalud::class);
     }
+
+    public function camposPredeterminados(){
+        return $this->_em->createQueryBuilder()
+            ->select('s.codigoSaludPk AS ID')
+            ->addSelect('s.nombre')
+            ->addSelect('s.porcentajeEmpleado')
+            ->addSelect('s.porcentajeEmpleador')
+            ->addSelect('s.codigoConceptoFk')
+            ->addSelect('s.orden')
+            ->from(RhuSalud::class,'s')
+            ->where('s.codigoSaludPk IS NOT NULL')->getQuery()->execute();
+    }
 }

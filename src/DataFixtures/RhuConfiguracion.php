@@ -13,7 +13,7 @@ class RhuConfiguracion extends Fixture
         if(!$arConfiguracion){
             $arConfiguracion = new \App\Entity\RecursoHumano\RhuConfiguracion();
             $arConfiguracion->setCodigoConfiguracionPk(1);
-            $arConfiguracion->setVrSalario(0);
+            $arConfiguracion->setVrSalarioMinimo(0);
             $manager->persist($arConfiguracion);
         }
         $manager->flush();

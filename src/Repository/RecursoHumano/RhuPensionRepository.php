@@ -14,4 +14,16 @@ class RhuPensionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuPension::class);
     }
+
+    public function camposPredeterminados(){
+        return $this->_em->createQueryBuilder()
+            ->select('p.codigoPensionPk AS ID')
+            ->addSelect('p.nombre')
+            ->addSelect('p.porcentajeEmpleado')
+            ->addSelect('p.porcentajeEmpleador')
+            ->addSelect('p.codigoConceptoFk')
+            ->addSelect('p.orden')
+            ->from(RhuPension::class,'p')
+            ->where('p.codigoPensionPk IS NOT NULL')->getQuery()->execute();
+    }
 }

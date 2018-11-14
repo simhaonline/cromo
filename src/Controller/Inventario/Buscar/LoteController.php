@@ -22,6 +22,7 @@ class LoteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('txtBodega', TextType::class, ['required' => false, 'data' => $session->get('filtroInvBuscarBodegaLote')])
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroInvBuscarLoteCodigo')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->getForm();
@@ -29,6 +30,7 @@ class LoteController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvBuscarLoteCodigo', $form->get('txtCodigo')->getData());
+                $session->set('filtroInvBuscarBodegaLote', $form->get('txtBodega')->getData());
             }
         }
         $arLotes = $paginator->paginate($em->getRepository(InvLote::class)->lista(), $request->query->get('page', 1), 20);

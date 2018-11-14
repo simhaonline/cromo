@@ -251,4 +251,66 @@ class RemisionController extends ControllerListenerGeneral
         ]);
     }
 
+    /**
+     * @Route("/inventario/movimiento/comercial/remision/detalle/pedido/nuevo/{id}", name="inventario_movimiento_comercial_remision_pedido_detalle_nuevo")
+     */
+    public function detalleNuevoPedido(Request $request, $id)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtNumero', TextType::class, array('required' => false))
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $arRemision = $em->getRepository(InvRemision::class)->find($id);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvPedidoNumero', $form->get('txtNumero')->getData());
+            }
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrDetalles = $request->request->get('itemCantidad');
+                if ($arrDetalles) {
+                    if (count($arrDetalles) > 0) {
+                        $respuesta = "";
+                        foreach ($arrDetalles as $codigo => $cantidad) {
+                            if ($cantidad != '' && $cantidad != 0) {
+                                $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($codigo);
+                                if ($cantidad <= $arPedidoDetalle->getCantidadPendiente()) {
+                                    $arRemisionDetalle = new InvRemisionDetalle();
+                                    $arRemisionDetalle->setRemisionRel($arRemision);
+                                    $arRemisionDetalle->setItemRel($arPedidoDetalle->getItemRel());
+                                    $arRemisionDetalle->setCantidad($cantidad);
+                                    $arRemisionDetalle->setCantidadOperada($cantidad * $arRemision->getOperacionInventario());
+                                    $arRemisionDetalle->setVrPrecio($arPedidoDetalle->getVrPrecio());
+                                    $arRemisionDetalle->setOperacionInventario($arRemision->getOperacionInventario());
+                                    //$arMovimientoDetalle->setPorcentajeDescuento($arPedidoDetalle->getPorcentajeDescuento());
+                                    $arRemisionDetalle->setPorcentajeIva($arPedidoDetalle->getPorcentajeIva());
+                                    $arRemisionDetalle->setPedidoDetalleRel($arPedidoDetalle);
+                                    $em->persist($arRemisionDetalle);
+                                } else {
+                                    $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada en el id " . $codigo;
+                                }
+                            }
+                        }
+                        if ($respuesta != '') {
+                            Mensajes::error($respuesta);
+                        } else {
+                            $em->flush();
+                            $em->getRepository(InvRemision::class)->liquidar($arRemision);
+                            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                        }
+                    }
+                }
+            }
+        }
+        $arPedidoDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvPedidoDetalle::class)->listarDetallesPendientes($arRemision->getCodigoTerceroFk()), $request->query->getInt('page', 1), 10);
+        return $this->render('inventario/movimiento/comercial/remision/detalleNuevoPedido.html.twig', [
+            'form' => $form->createView(),
+            'arPedidoDetalles' => $arPedidoDetalles
+        ]);
+    }
+
 }

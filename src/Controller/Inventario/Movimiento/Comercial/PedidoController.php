@@ -207,7 +207,7 @@ class PedidoController extends ControllerListenerGeneral
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
-                $session->set('filtroInvBuscarReferenciaNombre', $form->get('txtReferenciaItem')->getData());
+                $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');

@@ -31,7 +31,7 @@
             <td class="td-in-well-numerico" align="right">
                 {#$ {{ arPago.vrIngresoBaseCotizacion | number_format(0, '.', ',') }}</td>#}
             <td class="titulo">TOTAL DEVENGADO:</td>
-            <td class="td-in-well-numerico" align="right">$ {{ arPago.VrDevengado | number_format(0, '.', ',') }}</td>
+            <td class="td-in-well-numerico" align="right">{{ arPago.VrDevengado | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">GRUPO PAGO</td>
@@ -41,7 +41,7 @@
             <td class="titulo"></td>
             <td class="td-in-well-numerico" align="right"></td>
             <td class="titulo">TOTAL DEDUCCIONES:</td>
-            <td class="td-in-well-numerico" align="right">$ {{ arPago.vrDeduccion | number_format(0, '.', ',') }}</td>
+            <td class="td-in-well-numerico" align="right">{{ arPago.vrDeduccion | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">PROGRAMACIÓN DETALLE:</td>
@@ -51,7 +51,7 @@
             <td class="titulo"></td>
             <td class="td-in-well-numerico" align="right"></td>
             <td class="titulo">TOTAL NETO:</td>
-            <td class="td-in-well-numerico" align="right">$ {{ arPago.VrNeto | number_format(0, '.', ',') }}</td>
+            <td class="td-in-well-numerico" align="right">{{ arPago.VrNeto | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIOS:</td>
@@ -84,6 +84,9 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {% set ibc = 0 %}
+                        {% set ibp = 0 %}
+                        {% set pago = 0 %}
                         {% for arPagoDetalle in arPagoDetalles %}
                             <tr>
                                 <td>{{ arPagoDetalle.codigoPagoDetallePk }}</td>
@@ -93,17 +96,25 @@
                                 <td>{{ arPagoDetalle.porcentaje }}</td>
                                 <td>{{ arPagoDetalle.horas }}</td>
                                 <td>{{ arPagoDetalle.dias }}</td>
-                                <td class="numero">$ {{ arPagoDetalle.vrHora |number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPagoDetalle.vrHora |number_format(0, '.', ',') }}</td>
                                 <td>{{ arPagoDetalle.operacion == 1 ? 'SUMA' : 'RESTA' }}</td>
-                                <td class="numero">$ {{ arPagoDetalle.vrPago |number_format(0, '.', ',') }}</td>
-                                <td class="numero">$ {{ arPagoDetalle.vrIngresoBasePrestacion |number_format(0, '.', ',') }}</td>
-                                <td class="numero">$ {{ arPagoDetalle.vrIngresoBaseCotizacion |number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPagoDetalle.vrPagoOperado |number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPagoDetalle.vrIngresoBasePrestacion |number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPagoDetalle.vrIngresoBaseCotizacion |number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                                        value="{{ arPagoDetalle.codigoPagoDetallePk }}">
                                 </td>
                             </tr>
+                            {% set ibc = ibc + arPagoDetalle.vrIngresoBaseCotizacion %}
+                            {% set ibp = ibp + arPagoDetalle.vrIngresoBasePrestacion %}
+                            {% set pago = pago + arPagoDetalle.vrPagoOperado %}
                         {% endfor %}
                         <tr>
+                            <td colspan="9"> </td>
+                            <td class="numero">{{ pago |number_format(0, '.', ',') }} </td>
+                            <td class="numero">{{ ibp |number_format(0, '.', ',')}} </td>
+                            <td class="numero">{{ ibc |number_format(0, '.', ',')}} </td>
+                            <td></td>
                         </tr>
                         </tbody>
                     </table>

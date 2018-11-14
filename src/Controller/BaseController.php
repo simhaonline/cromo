@@ -56,6 +56,7 @@ abstract class BaseController extends Controller
                         ]);
                 }
                 else if($campo['tipo']=="DateType"){
+
                     $dateFecha = new \DateTime('now');
                     $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false, 'format'=>'yyyyMMdd','data'=>$dateFecha]);
                 }
@@ -64,6 +65,9 @@ abstract class BaseController extends Controller
                 }
 
                 else{
+                    if($campo['tipo']=="CheckboxType"){
+                    $session->set($this->claseNombre."_".$campo['child'],false);
+                    }
                     $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false]);
                 }
             }

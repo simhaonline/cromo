@@ -62,11 +62,13 @@ class AsientoType extends AbstractType
         return $campos;
     }
 
-//    public function getEstructuraPropiedadesFiltro()
-//    {
-//        $campos = '[
-//            {"campo":"numero",              "tipo":"entero",    "ayuda":"",                     "titulo":"NUMERO"}
-//        ]';
-//        return $campos;
-//    }
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"numero", "label":"numero", "tipo":"TextType", "propiedades":{"label":"Numero"}},
+            {"child":"btnFiltro", "label":"filtro", "tipo":"SubmitType", "propiedades":{"label" : "Filtrar", "attr": {"class":"btn btn-sm btn-primary"}}}
+        ]';
+
+        return $campos;
+    }
 }

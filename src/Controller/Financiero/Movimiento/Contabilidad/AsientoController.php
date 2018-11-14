@@ -4,7 +4,6 @@ namespace App\Controller\Financiero\Movimiento\Contabilidad;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
-use App\Controller\Estructura\ControllerListener;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinCuenta;
@@ -19,7 +18,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class AsientoController extends ControllerListenerGeneral
@@ -45,9 +43,13 @@ class AsientoController extends ControllerListenerGeneral
     public function lista(Request $request)
     {
         $this->request = $request;
+        $session=new Session();
         $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
+        $formFiltro=$this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+        $datos=$this->getDatosLista();
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Asientos");
@@ -56,9 +58,17 @@ class AsientoController extends ControllerListenerGeneral
 
             }
         }
+
+        if($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                $session->set('FinAsientonumero',$formFiltro->get('numero')->getData());
+                $datos=$this->getDatosLista();
+            }
+        }
         return $this->render('financiero/movimiento/contabilidad/asiento/lista.html.twig', [
-            'arrDatosLista' => $this->getDatosLista(),
-            'formBotonera' => $formBotonera->createView()
+            'arrDatosLista' =>$datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFormulario'=> $formFiltro->createView(),
         ]);
     }
 

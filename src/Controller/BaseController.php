@@ -7,6 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 abstract class BaseController extends Controller
 {
@@ -22,12 +23,33 @@ abstract class BaseController extends Controller
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
         $campos = json_decode($namespaceType::getEstructuraPropiedadesLista());
         /** @var  $queryBuilder QueryBuilder */
-        $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos);
+        $queryBuilder = $this->getGenerarQueryConFiltro($nombreRepositorio, $campos);
         return [
             'ruta' => strtolower($this->modulo) . "_" . strtolower($this->funcion) . "_" . strtolower($this->grupo) . "_" . strtolower($this->nombre),
             'arrCampos' => $campos,
             'arDatos' => $paginator->paginate($queryBuilder->getQuery(), $this->request->query->getInt('page', 1), 30)
         ];
+    }
+
+    protected function getFiltroLista(){
+        $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
+        $campos = json_decode($namespaceType::getEstructuraPropiedadesFiltro(), true);
+
+        $form=$this->createFormBuilder();
+        if($campos){
+        foreach($campos as $campo){
+            $tipoNombre=$campo['tipo'];
+            $tipo="Symfony\\Component\Form\Extension\\Core\\Type\\{$tipoNombre}";
+            if($campo['tipo']!="SubmitType"){
+                $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false]);
+            }
+            else{
+            $form->add($campo['child'], $tipo,['label'=>"Filtro"]);
+            }
+        }
+        }
+
+        return $form ->getForm();
     }
 
     protected function botoneraLista()
@@ -162,7 +184,7 @@ abstract class BaseController extends Controller
             ->select('e.' . $campos[0]->campo);
         foreach ($campos as $campo) {
             if ($campo->tipo != "pk" && !isset($campo->relacion)) {
-                    $queryBuilder->addSelect('e.' . $campo->campo);
+                $queryBuilder->addSelect('e.' . $campo->campo);
             } elseif (isset($campo->relacion)) {
                 $arrRel = explode('.', $campo->campo);
                 $alias = substr($arrRel[0], 0, 3) . 'Rel' . $arrRel[1];
@@ -172,6 +194,52 @@ abstract class BaseController extends Controller
                     $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
                 } else {
                     $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
+                }
+            }
+        }
+
+        return $queryBuilder;
+    }
+
+
+    /**
+     * @param $nombreRepositorio
+     * @param $campos
+     * @return QueryBuilder
+     */
+    private function getGenerarQueryConFiltro($nombreRepositorio, $campos){
+        $claseNombre=$this->claseNombre;
+        $arrRelaciones = [];
+        $session= new Session();
+        /** @var  $queryBuilder QueryBuilder */
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio, 'e')
+            ->select('e.' . $campos[0]->campo);
+        foreach ($campos as $campo) {
+            if ($campo->tipo != "pk" && !isset($campo->relacion)) {
+                $queryBuilder->addSelect('e.' . $campo->campo);
+            } elseif (isset($campo->relacion)) {
+                $arrRel = explode('.', $campo->campo);
+                $alias = substr($arrRel[0], 0, 3) . 'Rel' . $arrRel[1];
+                if (!$this->validarRelacion($arrRelaciones, $arrRel[0])) {
+                    $arrRelaciones[] = $arrRel[0];
+                    $queryBuilder->leftJoin('e.' . $arrRel[0], $arrRel[0]);
+                    $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
+                } else {
+                    $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
+                }
+                if($claseNombre){
+                    $filtro=$session->get($claseNombre.$campo->campo);
+
+                    if($filtro!="" && $filtro!=null){
+                        $queryBuilder->andWhere($arrRel[0]. '.'.$campo->campo."=".$filtro);
+                    }
+                }
+            }
+
+            if($claseNombre){
+                $session->get($claseNombre.$campo->campo);
+                if($session->get($claseNombre.$campo->campo)!="" && $session->get($claseNombre.$campo->campo)!=null){
+                    $queryBuilder->andWhere('e.'. $campo->campo."=".$session->get($claseNombre.$campo->campo));
                 }
             }
         }

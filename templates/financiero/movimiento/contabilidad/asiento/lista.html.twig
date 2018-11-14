@@ -2,6 +2,9 @@
 {% block content %}
     <br>
     <br>
+
+    {{ form_start(formFormulario) }}
+    {{ form_end(formFormulario) }}
     {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
     {{ form_start(formBotonera) }}
     {% include 'estructura/movimiento/botoneraGeneral.html.twig' %}

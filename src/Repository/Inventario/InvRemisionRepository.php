@@ -6,6 +6,7 @@ namespace App\Repository\Inventario;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvLote;
+use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvRemision;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvRemisionTipo;
@@ -93,15 +94,25 @@ class InvRemisionRepository extends ServiceEntityRepository
      */
     public function autorizar($arRemision)
     {
+        $em = $this->getEntityManager();
         if(!$arRemision->getEstadoAutorizado()) {
             $respuesta = $this->validarDetalles($arRemision->getCodigoRemisionPk());
             if ($respuesta) {
                 Mensajes::error($respuesta);
             } else {
-                if ($this->getEntityManager()->getRepository(InvRemisionDetalle::class)->contarDetalles($arRemision->getCodigoRemisionPk()) > 0) {
+                if ($em->getRepository(InvRemisionDetalle::class)->contarDetalles($arRemision->getCodigoRemisionPk()) > 0) {
                     $arRemision->setEstadoAutorizado(1);
-                    $this->getEntityManager()->persist($arRemision);
-                    $this->getEntityManager()->flush();
+                    $em->persist($arRemision);
+                    $arRemisionDetalles = $em->getRepository(InvRemisionDetalle::class)->findBy(array('codigoRemisionFk' => $arRemision->getCodigoRemisionPk()));
+                    foreach ($arRemisionDetalles as $arRemisionDetalle) {
+                        if($arRemisionDetalle->getCodigoPedidoDetalleFk()) {
+                            $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arRemisionDetalle->getCodigoPedidoDetalleFk());
+                            $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $arRemisionDetalle->getCantidad());
+                            $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
+                            $em->persist($arPedidoDetalle);
+                        }
+                    }
+                    $em->flush();
                 } else {
                     Mensajes::error("El registro no tiene detalles");
                 }

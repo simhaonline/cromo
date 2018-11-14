@@ -93,10 +93,21 @@ class InvRemisionDetalle
     private $cantidadOperada = 0;
 
     /**
+     * @ORM\Column(name="codigo_pedido_detalle_fk", type="integer", nullable=true)
+     */
+    private $codigoPedidoDetalleFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvRemision", inversedBy="remisionesDetallesPedidoRel")
      * @ORM\JoinColumn(name="codigo_remision_fk", referencedColumnName="codigo_remision_pk")
      */
     protected $remisionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inventario\InvPedidoDetalle", inversedBy="remisionesDetallesPedidoDetalleRel")
+     * @ORM\JoinColumn(name="codigo_pedido_detalle_fk", referencedColumnName="codigo_pedido_detalle_pk")
+     */
+    protected $pedidoDetalleRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimientoDetalle", mappedBy="remisionDetalleRel")
@@ -411,6 +422,38 @@ class InvRemisionDetalle
     public function setCantidadOperada( $cantidadOperada ): void
     {
         $this->cantidadOperada = $cantidadOperada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPedidoDetalleFk()
+    {
+        return $this->codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoPedidoDetalleFk
+     */
+    public function setCodigoPedidoDetalleFk( $codigoPedidoDetalleFk ): void
+    {
+        $this->codigoPedidoDetalleFk = $codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidoDetalleRel()
+    {
+        return $this->pedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $pedidoDetalleRel
+     */
+    public function setPedidoDetalleRel( $pedidoDetalleRel ): void
+    {
+        $this->pedidoDetalleRel = $pedidoDetalleRel;
     }
 
 

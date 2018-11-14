@@ -101,6 +101,11 @@ class InvPedidoDetalle
     protected $movimientosDetallesPedidoDetalleRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvRemisionDetalle", mappedBy="pedidoDetalleRel")
+     */
+    protected $remisionesDetallesPedidoDetalleRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPedidoDetallePk()
@@ -370,6 +375,22 @@ class InvPedidoDetalle
     public function setCantidadAfectada($cantidadAfectada): void
     {
         $this->cantidadAfectada = $cantidadAfectada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemisionesDetallesPedidoDetalleRel()
+    {
+        return $this->remisionesDetallesPedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $remisionesDetallesPedidoDetalleRel
+     */
+    public function setRemisionesDetallesPedidoDetalleRel( $remisionesDetallesPedidoDetalleRel ): void
+    {
+        $this->remisionesDetallesPedidoDetalleRel = $remisionesDetallesPedidoDetalleRel;
     }
 
 

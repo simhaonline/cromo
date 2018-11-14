@@ -126,15 +126,14 @@
                     </table>
                 </div>
                 <div class="btn-toolbar" style="float: right">
-                    <div class="btn-group">
-                        {% if arRemision.estadoAutorizado == true %}
-                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
-                                   value="Nuevo"/>
-                        {% else %}
-                            <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_remision_detalle_nuevo', {'codigoRemision':arRemision.codigoRemisionPk }) }}', 'RemisionAdicionarDetalle', 600, 900)">Nuevo</a>
-                        {% endif %}
-                    </div>
+                    {% if arRemision.estadoAutorizado == false %}
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_remision_detalle_nuevo', {'codigoRemision':arRemision.codigoRemisionPk }) }}', 'RemisionAdicionarDetalle', 600, 900)">Nuevo</a>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_remision_pedido_detalle_nuevo', {'id':arRemision.codigoRemisionPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde pedido</a>
+                        </div>
+                    {% endif %}
                     <div class="btn-group">
                         {{ form_widget(form.btnActualizarDetalle) }}
                     </div>

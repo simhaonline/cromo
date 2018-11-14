@@ -1,5 +1,6 @@
 {% extends 'base_recursoHumano.html.twig' %}
 {% block content %}
+    {{ form_start(form) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_pago_lista') }}">Volver</a>
@@ -28,7 +29,7 @@
             <td class="td-in-well">{{ arPago.pagoTipoRel.nombre | default('') }}</td>
             <td class="titulo">IBC:</td>
             <td class="td-in-well-numerico" align="right">
-                $ {{ arPago.VrIngresoBaseCotizacion | number_format(0, '.', ',') }}</td>
+                {#$ {{ arPago.vrIngresoBaseCotizacion | number_format(0, '.', ',') }}</td>#}
             <td class="titulo">TOTAL DEVENGADO:</td>
             <td class="td-in-well-numerico" align="right">$ {{ arPago.VrDevengado | number_format(0, '.', ',') }}</td>
         </tr>
@@ -112,4 +113,5 @@
     </div>
     <br>
     <br>
+    {{ form_end(form) }}
 {% endblock %}

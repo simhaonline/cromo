@@ -23,7 +23,7 @@ class Solicitud extends \FPDF
         self::$em = $em;
         self::$codigoSolicitud = $codigoSolicitud;
         ob_clean();
-        $pdf = new Solicitud('P', 'mm', 'letter');
+        $pdf = new Pago('P', 'mm', 'letter');
         $arSolicitud = $em->getRepository(InvSolicitud::class)->find($codigoSolicitud);
         $pdf->AliasNbPages();
         $pdf->AddPage();

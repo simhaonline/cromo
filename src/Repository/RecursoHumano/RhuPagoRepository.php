@@ -5,6 +5,7 @@ namespace App\Repository\RecursoHumano;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
+use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
@@ -99,6 +100,42 @@ class RhuPagoRepository extends ServiceEntityRepository
             }
         }
 
+        //Creditos
+        $arCreditos = $em->getRepository(RhuCredito::class)->findBy(array('codigoEmpleadoFk' => $arProgramacionDetalle->getCodigoEmpleadoFk(), 'codigoCreditoPagoTipoFk' => 'NOM', 'estadoPagado' => 0, 'estadoSuspendido' => 0, "inactivoPeriodo" => 0));
+        foreach ($arCreditos as $arCredito) {
+            if ($arCredito->getVrSaldo() > 0) {
+                $descontarCuota = true;
+                $numeroCuotas = $arCredito->getNumeroCuotas();
+                $numeroCuotaActual = $arCredito->getNumeroCuotaActual();
+                if ($arCredito->getValidarCuotas() == 1) {
+                    if ($numeroCuotaActual > $numeroCuotas) {
+                        $descontarCuota = false;
+                    }
+                }
+                if ($arCredito->getFechaInicio() > $arProgramacionDetalle->getFechaHasta()) {
+                    $descontarCuota = false;
+                }
+                if ($arCredito->getFechaInicio() < $arContrato->getFechaDesde()) {
+                    $descontarCuota = false;
+                }
+                if ($descontarCuota) {
+                    $arConcepto = $arCredito->getCreditoTipoRel()->getConceptoRel();
+                    if ($arCredito->getVrSaldo() >= $arCredito->getVrCuota()) {
+                        $cuota = $arCredito->getVrCuota();
+                    } else {
+                        $cuota = $arCredito->getVrSaldo();
+                    }
+                    $pagoDetalle = $cuota;
+                    $arPagoDetalle = new RhuPagoDetalle();
+                    $arPagoDetalle->setPagoRel($arPago);
+                    $arPagoDetalle->setConceptoRel($arConcepto);
+                    $arPagoDetalle->setDetalle($arCredito->getCreditoTipoRel()->getNombre());
+                    $arPagoDetalle->setCreditoRel($arCredito);
+                    $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+                    $em->persist($arPagoDetalle);
+                }
+            }
+        }
 
         //Salud
         $arSalud = $arContrato->getSaludRel();

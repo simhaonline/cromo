@@ -62,10 +62,6 @@ class Factura2 extends \FPDF
         $fechaVencimiento = date_create($stringFecha);
         $fechaVencimiento->modify("+ " . (string)$plazo . " day");
 
-        $this->SetFont('Arial', '', 8);
-        $this->Cell(17, 4, $arMovimiento->getSoporte(), 0, 0, 'R', 0);
-
-
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
         //Logo
@@ -157,7 +153,7 @@ class Factura2 extends \FPDF
         $this->Cell(15, 4, 'POR CONCEPTO DE:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
         $this->SetX(52);
-        $this->Cell(15, 4, $arMovimiento->getComentarios(), 0, 0, 'L', 0);
+        $this->MultiCell(147, 4, $arMovimiento->getComentarios(), 0, 'L',  0);
         $this->Ln();
 
         $this->EncabezadoDetalles();
@@ -166,14 +162,14 @@ class Factura2 extends \FPDF
     public function EncabezadoDetalles()
     {
         $this->Ln(6);
-        $this->SetX(19.5);
+        $this->SetX(10);
         $header = array('DESCRIPCION', 'LOTE', 'CANT', 'VR UNIT', 'IVA', 'TOTAL', 'OBSERVACIONES');
         $this->SetFillColor(225, 225, 225);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
 
         //creamos la cabecera de la tabla.
-        $w = array(60, 15, 10, 15, 10, 20, 50);
+        $w = array(75, 20, 10, 15, 10, 15, 50);
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
         }
@@ -199,29 +195,30 @@ class Factura2 extends \FPDF
         $pdf->SetFont('Arial', '', 7);
         /** @var  $arMovimientoDetalle InvMovimientoDetalle */
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-            $pdf->SetX(19.5);
-            $pdf->Cell(60, 4, substr(utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()),0,30), 1, 0, 'L');
-            $pdf->Cell(15, 4, $arMovimientoDetalle->getLoteFk(), 1, 0, 'L');
-            $pdf->Cell(10, 4, $arMovimientoDetalle->getCantidad(), 1, 0, 'R');
+            $pdf->SetX(10);
+            $pdf->SetFont('Arial', '', 6);
+            $pdf->Cell(75, 4, substr(utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()),0,57), 1, 0, 'L');
+            $pdf->Cell(20, 4, $arMovimientoDetalle->getLoteFk(), 1, 0, 'L');
+            $pdf->Cell(10, 4, $arMovimientoDetalle->getCantidad(), 1, 0, 'C');
             $pdf->Cell(15, 4, number_format($arMovimientoDetalle->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(10, 4, $arMovimientoDetalle->getPorcentajeIva() . '%', 1, 0, 'C');
-            $pdf->Cell(20, 4, number_format($arMovimientoDetalle->getVrTotal()), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($arMovimientoDetalle->getVrTotal()), 1, 0, 'R');
             $pdf->Cell(50, 4, '', 1, 0, 'C');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 105);
         }
         $pdf->Ln();
-        $pdf->SetX(150);
+        $pdf->SetX(155);
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->Cell(30, 4, utf8_decode('SUBTOTAL'), 1, 0, 'L');
         $pdf->Cell(20, 4, number_format($arMovimiento->getVrSubtotal()), 1, 0, 'R');
         $pdf->Ln();
-        $pdf->SetX(150);
+        $pdf->SetX(155);
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->Cell(30, 4, utf8_decode('IVA'), 1, 0, 'L');
         $pdf->Cell(20, 4, number_format($arMovimiento->getVrIva()), 1, 0, 'R');
         $pdf->Ln();
-        $pdf->SetX(150);
+        $pdf->SetX(155);
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->Cell(30, 4, utf8_decode('TOTAL FACTURADO'), 1, 0, 'L');
         $pdf->Cell(20, 4, number_format($arMovimiento->getVrTotal()), 1, 0, 'R');
@@ -257,7 +254,7 @@ class Factura2 extends \FPDF
         $this->Text(80, 228, utf8_decode('FECHA:________________________________'));
         $this->Text(140, 228, utf8_decode('FECHA:________________________________'));
         //Bloque resolucion facturacion
-        $this->Text(40,236, utf8_decode($arMovimiento->getFacturaTipoRel()->getNumeroResolucionDianFactura()) . ' Intervalo ' . $arMovimiento->getFacturaTipoRel()->getNumeracionDesde(). ' al '. $arMovimiento->getFacturaTipoRel()->getNumeracionDesde());
+        $this->Text(40,236, utf8_decode($arMovimiento->getFacturaTipoRel()->getNumeroResolucionDianFactura()) . ' Intervalo ' . $arMovimiento->getFacturaTipoRel()->getNumeracionDesde(). ' al '. $arMovimiento->getFacturaTipoRel()->getNumeracionHasta());
         $this->Text(32,240, utf8_decode($arMovimiento->getFacturaTipoRel()->getInformacionCuentaPago()));
         //Informacion final
         $this->Text(142, 246, utf8_decode('Impreso por computador'));

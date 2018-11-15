@@ -72,6 +72,13 @@
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
         {{ knp_pagination_render(arItems) }}
     </div>
-    {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+    <div class="btn-toolbar" style="float: right;">
+        <div class="btn-group btn-group-sm">
+            {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+        </div>
+        <div class="btn-group btn-group-sm">
+            {{ form_widget(form.btnGuardarCerrar,{'attr':{'style':'float: right;'}}) }}
+        </div>
+    </div>
     {{ form_end(form) }}
 {% endblock %}

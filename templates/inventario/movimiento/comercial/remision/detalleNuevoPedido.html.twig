@@ -27,6 +27,7 @@
             <tr>
                 <th>ID</th>
                 <th title="NUMERO PEDIDO">NUMERO</th>
+                <th>TERCERO</th>
                 <th title="CODIGO ITEM">ITEM</th>
                 <th>NOMBRE</th>
                 <th>CANT</th>
@@ -39,6 +40,7 @@
                 <tr>
                     <td style="text-align: right;">{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
                     <td style="text-align: right;">{{ arPedidoDetalle.numero }}</td>
+                    <td style="text-align: left;">{{ arPedidoDetalle.tercero }}</td>
                     <td style="text-align: right;">{{ arPedidoDetalle.codigoItemFk }}</td>
                     <td style="text-align: left;">{{ arPedidoDetalle.itemNombre }}</td>
                     <td style="text-align: right;">{{ arPedidoDetalle.cantidad }}</td>
@@ -49,6 +51,16 @@
             </tbody>
         </table>
     </div>
-    {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arPedidoDetalles) }}
+    </div>
+    <div class="btn-toolbar" style="float: right;">
+        <div class="btn-group btn-group-sm">
+            {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+        </div>
+        <div class="btn-group btn-group-sm">
+            {{ form_widget(form.btnGuardarCerrar,{'attr':{'style':'float: right;'}}) }}
+        </div>
+    </div>
     {{ form_end(form) }}
 {% endblock %}

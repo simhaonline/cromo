@@ -56,11 +56,10 @@ abstract class BaseController extends Controller
                         ]);
                 }
                 else if($campo['tipo']=="DateType"){
-                    $session->set($this->claseNombre."_".$campo['child'],'');
+                    $session->set($this->claseNombre."_".$campo['child'],null);
                     $dateFecha = new \DateTime('now');
                     $form->add($campo['child'], $tipo,
                         [
-//                            'label'=>$campo['propiedades']['label'],
                             'required'=>false,
                             'data'=>$dateFecha,
                             'widget'=>'single_text',
@@ -74,7 +73,7 @@ abstract class BaseController extends Controller
 
                 else{
                     if($campo['tipo']=="ChoiceType"){
-                    $session->set($this->claseNombre."_".$campo['child'],false);
+                    $session->set($this->claseNombre."_".$campo['child'],null);
                     $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false,'placeholder' => 'TODO' ,'attr'=>['class'=>'form-control'],'choices'=>$campo['propiedades']['choices']]);
                     }
                     else{

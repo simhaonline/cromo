@@ -384,7 +384,7 @@ class Manifiesto extends \FPDF {
                     $pdf->Text(17, $yt, "Nro Remesa");
                     $pdf->Text(43, $yt, "UnidadMedida");
                     $pdf->Text(70, $yt, "Cantidad");
-                    $pdf->Text(92, $yt, "Naturaleza");
+                    $pdf->Text(92, $yt, "Poblacion");
                     $pdf->Text(118, $yt, "Empaque");
                     $pdf->Text(155, $yt, "NIT/CC Nombre/Razon Social");
                     $pdf->Text(212, $yt, "NIT/CC Nombre/Razon Social");
@@ -395,7 +395,7 @@ class Manifiesto extends \FPDF {
                 $pdf->Cell(25, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
                 $pdf->Cell(25, 4, "KILO", 1, 0, 'L');
                 $pdf->Cell(25, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'L');
-                $pdf->Cell(25, 4, 'VARIOS', 1, 0, 'L');
+                $pdf->Cell(25, 4, substr(utf8_decode($arGuia['ciudadDestino']),0,20), 1, 0, 'L');
                 $pdf->Cell(30, 4, 'VARIOS', 1, 0, 'L');
                 $pdf->Cell(65, 4, substr(utf8_decode($arGuia['clienteNombre']),0,20), 1, 0, 'L');
                 $pdf->Cell(45, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,28), 1, 0, 'L');

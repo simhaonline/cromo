@@ -42,6 +42,11 @@ class InvConfiguracion
     private $codigoFormatoMovimiento = 0;
 
     /**
+     * @ORM\Column(name="codigo_formato_remision", type="integer", options={"default" : 0})
+     */
+    private $codigoFormatoRemision = 0;
+
+    /**
      * @ORM\Column(name="codigo_documento_movimientos_salida_bodega", type="integer", nullable=true, options={"default" : 0})
      */
     private $codigoDocumentoMovimientosSalidaBodega = 0;
@@ -347,6 +352,22 @@ class InvConfiguracion
     public function setValidarBodegaUsuario($validarBodegaUsuario): void
     {
         $this->validarBodegaUsuario = $validarBodegaUsuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFormatoRemision()
+    {
+        return $this->codigoFormatoRemision;
+    }
+
+    /**
+     * @param mixed $codigoFormatoRemision
+     */
+    public function setCodigoFormatoRemision($codigoFormatoRemision): void
+    {
+        $this->codigoFormatoRemision = $codigoFormatoRemision;
     }
 
 

@@ -53,6 +53,11 @@ class InvMovimientoDetalle
     private $fechaVencimiento;
 
     /**
+     * @ORM\Column(name="codigo_impuesto_retencion_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoImpuestoRetencionFk;
+
+    /**
      * @ORM\Column(name="cantidad", type="integer", options={"default" : 0})
      */
     private $cantidad = 0;
@@ -184,7 +189,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $codigoMovimientoDetallePk
      */
-    public function setCodigoMovimientoDetallePk( $codigoMovimientoDetallePk ): void
+    public function setCodigoMovimientoDetallePk($codigoMovimientoDetallePk): void
     {
         $this->codigoMovimientoDetallePk = $codigoMovimientoDetallePk;
     }
@@ -200,7 +205,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $codigoMovimientoFk
      */
-    public function setCodigoMovimientoFk( $codigoMovimientoFk ): void
+    public function setCodigoMovimientoFk($codigoMovimientoFk): void
     {
         $this->codigoMovimientoFk = $codigoMovimientoFk;
     }
@@ -216,7 +221,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $fecha
      */
-    public function setFecha( $fecha ): void
+    public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
     }
@@ -232,7 +237,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $codigoItemFk
      */
-    public function setCodigoItemFk( $codigoItemFk ): void
+    public function setCodigoItemFk($codigoItemFk): void
     {
         $this->codigoItemFk = $codigoItemFk;
     }
@@ -248,7 +253,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $codigoBodegaFk
      */
-    public function setCodigoBodegaFk( $codigoBodegaFk ): void
+    public function setCodigoBodegaFk($codigoBodegaFk): void
     {
         $this->codigoBodegaFk = $codigoBodegaFk;
     }
@@ -264,7 +269,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $codigoBodegaDestinoFk
      */
-    public function setCodigoBodegaDestinoFk( $codigoBodegaDestinoFk ): void
+    public function setCodigoBodegaDestinoFk($codigoBodegaDestinoFk): void
     {
         $this->codigoBodegaDestinoFk = $codigoBodegaDestinoFk;
     }
@@ -280,7 +285,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $loteFk
      */
-    public function setLoteFk( $loteFk ): void
+    public function setLoteFk($loteFk): void
     {
         $this->loteFk = $loteFk;
     }
@@ -296,9 +301,25 @@ class InvMovimientoDetalle
     /**
      * @param mixed $fechaVencimiento
      */
-    public function setFechaVencimiento( $fechaVencimiento ): void
+    public function setFechaVencimiento($fechaVencimiento): void
     {
         $this->fechaVencimiento = $fechaVencimiento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImpuestoRetencionFk()
+    {
+        return $this->codigoImpuestoRetencionFk;
+    }
+
+    /**
+     * @param mixed $codigoImpuestoRetencionFk
+     */
+    public function setCodigoImpuestoRetencionFk($codigoImpuestoRetencionFk): void
+    {
+        $this->codigoImpuestoRetencionFk = $codigoImpuestoRetencionFk;
     }
 
     /**
@@ -312,7 +333,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $cantidad
      */
-    public function setCantidad( $cantidad ): void
+    public function setCantidad($cantidad): void
     {
         $this->cantidad = $cantidad;
     }
@@ -328,7 +349,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $cantidadOperada
      */
-    public function setCantidadOperada( $cantidadOperada ): void
+    public function setCantidadOperada($cantidadOperada): void
     {
         $this->cantidadOperada = $cantidadOperada;
     }
@@ -344,7 +365,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $cantidadSaldo
      */
-    public function setCantidadSaldo( $cantidadSaldo ): void
+    public function setCantidadSaldo($cantidadSaldo): void
     {
         $this->cantidadSaldo = $cantidadSaldo;
     }
@@ -360,7 +381,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $vrCosto
      */
-    public function setVrCosto( $vrCosto ): void
+    public function setVrCosto($vrCosto): void
     {
         $this->vrCosto = $vrCosto;
     }
@@ -376,7 +397,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $porcentajeIva
      */
-    public function setPorcentajeIva( $porcentajeIva ): void
+    public function setPorcentajeIva($porcentajeIva): void
     {
         $this->porcentajeIva = $porcentajeIva;
     }
@@ -392,7 +413,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $porcentajeDescuento
      */
-    public function setPorcentajeDescuento( $porcentajeDescuento ): void
+    public function setPorcentajeDescuento($porcentajeDescuento): void
     {
         $this->porcentajeDescuento = $porcentajeDescuento;
     }
@@ -408,7 +429,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $vrIva
      */
-    public function setVrIva( $vrIva ): void
+    public function setVrIva($vrIva): void
     {
         $this->vrIva = $vrIva;
     }
@@ -424,7 +445,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $vrPrecio
      */
-    public function setVrPrecio( $vrPrecio ): void
+    public function setVrPrecio($vrPrecio): void
     {
         $this->vrPrecio = $vrPrecio;
     }
@@ -440,7 +461,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $vrSubtotal
      */
-    public function setVrSubtotal( $vrSubtotal ): void
+    public function setVrSubtotal($vrSubtotal): void
     {
         $this->vrSubtotal = $vrSubtotal;
     }
@@ -456,7 +477,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $vrDescuento
      */
-    public function setVrDescuento( $vrDescuento ): void
+    public function setVrDescuento($vrDescuento): void
     {
         $this->vrDescuento = $vrDescuento;
     }
@@ -472,7 +493,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $vrNeto
      */
-    public function setVrNeto( $vrNeto ): void
+    public function setVrNeto($vrNeto): void
     {
         $this->vrNeto = $vrNeto;
     }
@@ -488,7 +509,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $vrTotal
      */
-    public function setVrTotal( $vrTotal ): void
+    public function setVrTotal($vrTotal): void
     {
         $this->vrTotal = $vrTotal;
     }
@@ -504,7 +525,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $operacionInventario
      */
-    public function setOperacionInventario( $operacionInventario ): void
+    public function setOperacionInventario($operacionInventario): void
     {
         $this->operacionInventario = $operacionInventario;
     }
@@ -520,7 +541,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $codigoOrdenDetalleFk
      */
-    public function setCodigoOrdenDetalleFk( $codigoOrdenDetalleFk ): void
+    public function setCodigoOrdenDetalleFk($codigoOrdenDetalleFk): void
     {
         $this->codigoOrdenDetalleFk = $codigoOrdenDetalleFk;
     }
@@ -536,7 +557,7 @@ class InvMovimientoDetalle
     /**
      * @param mixed $codigoPedidoDetalleFk
      */
-    public function setCodigoPedidoDetalleFk( $codigoPedidoDetalleFk ): void
+    public function setCodigoPedidoDetalleFk($codigoPedidoDetalleFk): void
     {
         $this->codigoPedidoDetalleFk = $codigoPedidoDetalleFk;
     }
@@ -552,89 +573,9 @@ class InvMovimientoDetalle
     /**
      * @param mixed $codigoRemisionDetalleFk
      */
-    public function setCodigoRemisionDetalleFk( $codigoRemisionDetalleFk ): void
+    public function setCodigoRemisionDetalleFk($codigoRemisionDetalleFk): void
     {
         $this->codigoRemisionDetalleFk = $codigoRemisionDetalleFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMovimientoRel()
-    {
-        return $this->movimientoRel;
-    }
-
-    /**
-     * @param mixed $movimientoRel
-     */
-    public function setMovimientoRel( $movimientoRel ): void
-    {
-        $this->movimientoRel = $movimientoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getItemRel()
-    {
-        return $this->itemRel;
-    }
-
-    /**
-     * @param mixed $itemRel
-     */
-    public function setItemRel( $itemRel ): void
-    {
-        $this->itemRel = $itemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrdenDetalleRel()
-    {
-        return $this->ordenDetalleRel;
-    }
-
-    /**
-     * @param mixed $ordenDetalleRel
-     */
-    public function setOrdenDetalleRel( $ordenDetalleRel ): void
-    {
-        $this->ordenDetalleRel = $ordenDetalleRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRemisionDetalleRel()
-    {
-        return $this->remisionDetalleRel;
-    }
-
-    /**
-     * @param mixed $remisionDetalleRel
-     */
-    public function setRemisionDetalleRel( $remisionDetalleRel ): void
-    {
-        $this->remisionDetalleRel = $remisionDetalleRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPedidoDetalleRel()
-    {
-        return $this->pedidoDetalleRel;
-    }
-
-    /**
-     * @param mixed $pedidoDetalleRel
-     */
-    public function setPedidoDetalleRel( $pedidoDetalleRel ): void
-    {
-        $this->pedidoDetalleRel = $pedidoDetalleRel;
     }
 
     /**
@@ -651,6 +592,86 @@ class InvMovimientoDetalle
     public function setCodigoImportacionDetalleFk($codigoImportacionDetalleFk): void
     {
         $this->codigoImportacionDetalleFk = $codigoImportacionDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientoRel()
+    {
+        return $this->movimientoRel;
+    }
+
+    /**
+     * @param mixed $movimientoRel
+     */
+    public function setMovimientoRel($movimientoRel): void
+    {
+        $this->movimientoRel = $movimientoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemRel()
+    {
+        return $this->itemRel;
+    }
+
+    /**
+     * @param mixed $itemRel
+     */
+    public function setItemRel($itemRel): void
+    {
+        $this->itemRel = $itemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrdenDetalleRel()
+    {
+        return $this->ordenDetalleRel;
+    }
+
+    /**
+     * @param mixed $ordenDetalleRel
+     */
+    public function setOrdenDetalleRel($ordenDetalleRel): void
+    {
+        $this->ordenDetalleRel = $ordenDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemisionDetalleRel()
+    {
+        return $this->remisionDetalleRel;
+    }
+
+    /**
+     * @param mixed $remisionDetalleRel
+     */
+    public function setRemisionDetalleRel($remisionDetalleRel): void
+    {
+        $this->remisionDetalleRel = $remisionDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidoDetalleRel()
+    {
+        return $this->pedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $pedidoDetalleRel
+     */
+    public function setPedidoDetalleRel($pedidoDetalleRel): void
+    {
+        $this->pedidoDetalleRel = $pedidoDetalleRel;
     }
 
     /**

@@ -112,6 +112,7 @@
                             <th>DESCUENTO</th>
                             <th>%IVA</th>
                             <th>IVA</th>
+                            <th title="Codigo de la retencion">RET</th>
                             <th>TOTAL</th>
                             <th title="Remision detalle">R</th>
                             <th title="Pedido detalle">P</th>
@@ -172,6 +173,7 @@
                                     <td style="text-align: center;"><input type="number" name="arrIva[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.porcentajeIva }}" style="text-align: right; width:40px" size="10"></td>
                                 {% endif %}
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrIva | number_format(0,'.',',') }}</td>
+                                <td>{{ arMovimientoDetalle.codigoImpuestoRetencionFk }}</td>
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrTotal| number_format(0,'.',',') }}</td>
                                 <td>{{ arMovimientoDetalle.codigoRemisionDetalleFk }}</td>
                                 <td>{{ arMovimientoDetalle.codigoPedidoDetalleFk }}</td>

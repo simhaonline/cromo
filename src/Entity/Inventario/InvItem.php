@@ -88,6 +88,11 @@ class InvItem
     private $codigoMarcaFk;
 
     /**
+     * @ORM\Column(name="codigo_impuesto_retencion_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoImpuestoRetencionFk;
+
+    /**
      * @ORM\Column(name="modelo", type="string",length=50, nullable=true)
      */
     private $modelo;
@@ -182,6 +187,12 @@ class InvItem
      * @ORM\JoinColumn(name="codigo_linea_fk",referencedColumnName="codigo_linea_pk")
      */
     protected $lineaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenImpuesto", inversedBy="itemsImpuestoRetencionRel")
+     * @ORM\JoinColumn(name="codigo_impuesto_retencion_fk",referencedColumnName="codigo_impuesto_pk")
+     */
+    protected $impuestoRetencionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvSolicitudDetalle", mappedBy="itemRel")
@@ -460,6 +471,22 @@ class InvItem
     /**
      * @return mixed
      */
+    public function getCodigoImpuestoRetencionFk()
+    {
+        return $this->codigoImpuestoRetencionFk;
+    }
+
+    /**
+     * @param mixed $codigoImpuestoRetencionFk
+     */
+    public function setCodigoImpuestoRetencionFk($codigoImpuestoRetencionFk): void
+    {
+        $this->codigoImpuestoRetencionFk = $codigoImpuestoRetencionFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getModelo()
     {
         return $this->modelo;
@@ -471,6 +498,22 @@ class InvItem
     public function setModelo($modelo): void
     {
         $this->modelo = $modelo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferencia()
+    {
+        return $this->referencia;
+    }
+
+    /**
+     * @param mixed $referencia
+     */
+    public function setReferencia($referencia): void
+    {
+        $this->referencia = $referencia;
     }
 
     /**
@@ -716,6 +759,22 @@ class InvItem
     /**
      * @return mixed
      */
+    public function getImpuestoRetencionRel()
+    {
+        return $this->impuestoRetencionRel;
+    }
+
+    /**
+     * @param mixed $impuestoRetencionRel
+     */
+    public function setImpuestoRetencionRel($impuestoRetencionRel): void
+    {
+        $this->impuestoRetencionRel = $impuestoRetencionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSolicitudesDetallesItemRel()
     {
         return $this->solicitudesDetallesItemRel;
@@ -796,6 +855,22 @@ class InvItem
     /**
      * @return mixed
      */
+    public function getRemisionesDetallesItemRel()
+    {
+        return $this->remisionesDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $remisionesDetallesItemRel
+     */
+    public function setRemisionesDetallesItemRel($remisionesDetallesItemRel): void
+    {
+        $this->remisionesDetallesItemRel = $remisionesDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPreciosDetallesItemRel()
     {
         return $this->preciosDetallesItemRel;
@@ -828,22 +903,6 @@ class InvItem
     /**
      * @return mixed
      */
-    public function getRemisionesDetallesItemRel()
-    {
-        return $this->remisionesDetallesItemRel;
-    }
-
-    /**
-     * @param mixed $remisionesDetallesItemRel
-     */
-    public function setRemisionesDetallesItemRel($remisionesDetallesItemRel): void
-    {
-        $this->remisionesDetallesItemRel = $remisionesDetallesItemRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCotizacionesDetallesItemRel()
     {
         return $this->cotizacionesDetallesItemRel;
@@ -860,22 +919,6 @@ class InvItem
     /**
      * @return mixed
      */
-    public function getReferencia()
-    {
-        return $this->referencia;
-    }
-
-    /**
-     * @param mixed $referencia
-     */
-    public function setReferencia($referencia): void
-    {
-        $this->referencia = $referencia;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getImportacionesDetallesItemRel()
     {
         return $this->importacionesDetallesItemRel;
@@ -884,10 +927,11 @@ class InvItem
     /**
      * @param mixed $importacionesDetallesItemRel
      */
-    public function setImportacionesDetallesItemRel( $importacionesDetallesItemRel ): void
+    public function setImportacionesDetallesItemRel($importacionesDetallesItemRel): void
     {
         $this->importacionesDetallesItemRel = $importacionesDetallesItemRel;
     }
+
 
 
 

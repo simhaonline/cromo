@@ -22,9 +22,6 @@ class ItemType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nombre', TextType::class, ['required' => true])
-            ->add('codigoBarras', TextType::class, ['required' => false])
-            ->add('modelo', TextType::class, ['required' => false])
             ->add('lineaRel', EntityType::class, [
                 'class' => 'App\Entity\Inventario\InvLinea',
                 'query_builder' => function (EntityRepository $er) {
@@ -61,6 +58,19 @@ class ItemType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Marca:'
                 , 'required' => true])
+            ->add('impuestoRetencionRel', EntityType::class, [
+                'class' => 'App\Entity\General\GenImpuesto',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->where("i.codigoImpuestoTipoFk = 'R'")
+                        ->orderBy('i.nombre', 'DESC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Retencion:'
+                , 'required' => true])
+            ->add('nombre', TextType::class, ['required' => true])
+            ->add('codigoBarras', TextType::class, ['required' => false])
+            ->add('modelo', TextType::class, ['required' => false])
             ->add('referencia', TextType::class, ['required' => false])
             ->add('porcentajeIva', IntegerType::class, ['required' => false])
             ->add('afectaInventario', CheckboxType::class, ['required' => false, 'label' => 'Afecta inventario'])

@@ -46,6 +46,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.codigoRemisionDetalleFk')
             ->addSelect('md.codigoPedidoDetalleFk')
             ->addSelect('md.codigoImportacionDetalleFk')
+            ->addSelect('md.codigoImpuestoRetencionFk')
             ->addSelect('i.nombre AS itemNombre')
             ->addSelect('i.referencia AS itemReferencia')
             ->leftJoin('md.itemRel', 'i')

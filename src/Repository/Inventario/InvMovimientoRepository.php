@@ -5,6 +5,7 @@ namespace App\Repository\Inventario;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
+use App\Entity\General\GenImpuesto;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvBodegaUsuario;
 use App\Entity\Inventario\InvConfiguracion;
@@ -134,6 +135,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $respuesta = '';
+        $arrImpuestoRetenciones = array();
         $vrTotalBrutoGlobal = 0;
         $vrTotalGlobal = 0;
         $vrTotalNetoGlobal = 0;
@@ -166,21 +168,40 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $arMovimientoDetalle->setVrDescuento($vrDescuento);
             $arMovimientoDetalle->setVrIva($vrIva);
             $arMovimientoDetalle->setVrTotal($vrTotal);
-            //$arMovimientoDetalle->setVrNeto($vrTotalNeto);
-
+            if($arMovimientoDetalle->getCodigoImpuestoRetencionFk()) {
+                if (!array_key_exists($arMovimientoDetalle->getCodigoImpuestoRetencionFk(), $arrImpuestoRetenciones)) {
+                    $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()] =  array('codigo' => $arMovimientoDetalle->getCodigoImpuestoRetencionFk(),
+                        'valor' => $vrSubtotal);
+                } else {
+                    $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['valor'] += $vrSubtotal;
+                }
+            }
             $this->getEntityManager()->persist($arMovimientoDetalle);
         }
         //Calcular retenciones en Ventas
         if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC') {
-            $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->liquidarMovimiento();
+
             //Retencion en la fuente
-            if ($arMovimiento->getTerceroRel()->getRetencionFuente()) {
-                if ($vrTotalBrutoGlobal >= $arrConfiguracion['vrBaseRetencionFuenteVenta'] || $arMovimiento->getTerceroRel()->getRetencionFuenteSinBase()) {
-                    $vrRetencionFuenteGlobal = ($vrTotalBrutoGlobal * $arrConfiguracion['porcentajeRetencionFuente']) / 100;
+            if($arrImpuestoRetenciones) {
+                foreach ($arrImpuestoRetenciones as $arrImpuestoRetencion) {
+                    $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrImpuestoRetencion['codigo']);
+                    if($arImpuesto) {
+                        if($arrImpuestoRetencion['valor'] >= $arImpuesto->getBase()) {
+                            $vrRetencionFuenteGlobal += ($arrImpuestoRetencion['valor'] * $arImpuesto->getPorcentaje()) / 100;
+                        }
+                    }
                 }
             }
 
+
+            /*if ($arMovimiento->getTerceroRel()->getRetencionFuente()) {
+                if ($vrTotalBrutoGlobal >= $arrConfiguracion['vrBaseRetencionFuenteVenta'] || $arMovimiento->getTerceroRel()->getRetencionFuenteSinBase()) {
+                    $vrRetencionFuenteGlobal = ($vrTotalBrutoGlobal * $arrConfiguracion['porcentajeRetencionFuente']) / 100;
+                }
+            }*/
+
             //Liquidar retencion de iva para las ventas, solo los grandes contribuyentes y entidades del estado nos retienen 50% iva
+            $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->liquidarMovimiento();
             if ($arMovimiento->getTerceroRel()->getRetencionIva() == 1) {
                 //Validacion acordada con Luz Dary de que las devoluciones tambien validen la base
                 if ($vrIvaGlobal >=  $arrConfiguracion['vrBaseRetencionIvaVenta']) {
@@ -188,6 +209,10 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 }
             }
         }
+
+        //Calcular retenciones en la fuente
+
+
         $vrTotalNetoGlobal = $vrTotalGlobal - $vrRetencionFuenteGlobal - $vrRetencionIvaGlobal;
         $arMovimiento->setVrIva($vrIvaGlobal);
         $arMovimiento->setVrSubtotal($vrSubtotalGlobal);

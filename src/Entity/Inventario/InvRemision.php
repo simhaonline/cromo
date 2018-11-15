@@ -28,6 +28,12 @@ class InvRemision
      */
     private $codigoTerceroFk;
 
+
+    /**
+     * @ORM\Column(name="codigo_asesor_fk", type="integer", nullable=true)
+     */
+    private $codigoAsesorFk;
+
     /**
      * @ORM\Column(name="fecha", type="datetime")
      */
@@ -120,6 +126,13 @@ class InvRemision
      * @ORM\OneToMany(targetEntity="InvRemisionDetalle", mappedBy="remisionRel")
      */
     protected $remisionesDetallesPedidoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="remisionesAsesorRel")
+     * @ORM\JoinColumn(name="codigo_asesor_fk", referencedColumnName="codigo_asesor_pk")
+
+     */
+    protected $asesorRel;
 
     /**
      * @return mixed
@@ -424,6 +437,39 @@ class InvRemision
     {
         $this->operacionInventario = $operacionInventario;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAsesorFk()
+    {
+        return $this->codigoAsesorFk;
+    }
+
+    /**
+     * @param mixed $codigoAsesorFk
+     */
+    public function setCodigoAsesorFk($codigoAsesorFk): void
+    {
+        $this->codigoAsesorFk = $codigoAsesorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsesorRel()
+    {
+        return $this->asesorRel;
+    }
+
+    /**
+     * @param mixed $asesorRel
+     */
+    public function setAsesorRel($asesorRel): void
+    {
+        $this->asesorRel = $asesorRel;
+    }
+
 
 
 }

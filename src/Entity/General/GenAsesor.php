@@ -53,6 +53,11 @@ class GenAsesor
     protected $movimientosAsesorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvRemision",mappedBy="asesorRel")
+     */
+    protected $remisionesAsesorRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoAsesorPk()
@@ -163,6 +168,39 @@ class GenAsesor
     {
         $this->email = $email;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosAsesorRel()
+    {
+        return $this->movimientosAsesorRel;
+    }
+
+    /**
+     * @param mixed $movimientosAsesorRel
+     */
+    public function setMovimientosAsesorRel($movimientosAsesorRel): void
+    {
+        $this->movimientosAsesorRel = $movimientosAsesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemisionesAsesorRel()
+    {
+        return $this->remisionesAsesorRel;
+    }
+
+    /**
+     * @param mixed $remisionesAsesorRel
+     */
+    public function setRemisionesAsesorRel($remisionesAsesorRel): void
+    {
+        $this->remisionesAsesorRel = $remisionesAsesorRel;
+    }
+
 
 
 }

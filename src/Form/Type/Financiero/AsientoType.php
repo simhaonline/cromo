@@ -68,12 +68,13 @@ class AsientoType extends AbstractType
         $campos = '[
             {"child":"numero", "tipo":"TextType", "propiedades":{"label":"Numero"}},
             {"child":"codigoComprobanteFk","tipo":"EntityType","propiedades":{"class":"FinComprobante","choice_label":"nombre","label":"comprobante"}},
-            {"child":"estadoAutorizado","tipo":"CheckboxType","propiedades":{"label":"Autorizado"}},
-            {"child":"estadoAprobado","tipo":"CheckboxType","propiedades":{"label":"Aprobado"}},
-            {"child":"estadoAnulado","tipo":"CheckboxType","propiedades":{"label":"Anulado"}},
-            {"child":"filtrarFecha","tipo":"CheckboxType","propiedades":{"label":"Filtrar Fecha"}},
             {"child":"fechaDesde","tipo":"DateType","propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHasta","tipo":"DateType","propiedades":{"label":"Fecha Hasta"}}
+            {"child":"fechaHasta","tipo":"DateType","propiedades":{"label":"Fecha Hasta"}},
+            {"child":"filtrarFecha","tipo":"CheckboxType","propiedades":{"label":"Filtrar Fecha"}},
+            {"child":"estadoAutorizado","tipo":"ChoiceType","propiedades":{"label":"Autorizado","choices":{"Autorizado":true,"Desautorizado":false}}},
+            {"child":"estadoAprobado","tipo":"ChoiceType","propiedades":{"label":"Aprobado","choices":{"Aprobado":true,"Desaprobado":false}}},
+            {"child":"estadoAnulado","tipo":"ChoiceType","propiedades":{"label":"Anulado","choices":{"Anulado":true,"Desanulado":false}}}
+   
         ]';
 
         return $campos;

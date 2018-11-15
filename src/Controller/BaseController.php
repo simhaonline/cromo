@@ -56,19 +56,30 @@ abstract class BaseController extends Controller
                         ]);
                 }
                 else if($campo['tipo']=="DateType"){
-
+                    $session->set($this->claseNombre."_".$campo['child'],'');
                     $dateFecha = new \DateTime('now');
-                    $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false, 'format'=>'yyyyMMdd','data'=>$dateFecha]);
+                    $form->add($campo['child'], $tipo,
+                        [
+//                            'label'=>$campo['propiedades']['label'],
+                            'required'=>false,
+                            'data'=>$dateFecha,
+                            'widget'=>'single_text',
+                            'format'=>'yyyy-MM-dd',
+                            'attr'=>array('class' => 'date')
+                        ]);
                 }
-                else if($campo['tipo']!="SubmitType" && $campo['tipo']!="CheckboxType"){
+                else if($campo['tipo']!="SubmitType" && $campo['tipo']!="CheckboxType" && $campo['tipo']!="ChoiceType"){
                     $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false, 'data'=>$session->get($this->claseNombre."_".$campo['child'])??""]);
                 }
 
                 else{
-                    if($campo['tipo']=="CheckboxType"){
+                    if($campo['tipo']=="ChoiceType"){
                     $session->set($this->claseNombre."_".$campo['child'],false);
+                    $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false,'placeholder' => 'TODO' ,'attr'=>['class'=>'form-control'],'choices'=>$campo['propiedades']['choices']]);
                     }
-                    $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false]);
+                    else{
+                        $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false,'attr'=>$campo['tipo']!="CheckboxType"?['class'=>'form-control']:[]]);
+                    }
                 }
             }
             $form->add("btnFiltro",SubmitType::class,['label'=>"Filtro",'attr'=> ['class'=>'filtrar btn btn-default btn-sm', 'style'=>'float:right']]);
@@ -261,7 +272,7 @@ abstract class BaseController extends Controller
             }
 
             if($claseNombre){
-                if($campo->campo=="fecha"){
+                if(strlen($campo->campo)>=5 && substr($campo->campo,0,5)=="fecha"){
                     $fechaDesde=$session->get($claseNombre."_".$campo->campo."Desde");
                     $fechaHasta=$session->get($claseNombre."_".$campo->campo."Hasta");
                     if($fechaDesde && $fechaHasta){
@@ -270,8 +281,9 @@ abstract class BaseController extends Controller
                     }
                 }
                 else{
-                    if($filtro!="" && $filtro!=null){
-                        $queryBuilder->andWhere('e.'. $campo->campo."=".$filtro);
+                    if($filtro !== "" && $filtro !== null ){
+
+                        $queryBuilder->andWhere('e.'. $campo->campo."='{$filtro}'");
                     }
                 }
             }

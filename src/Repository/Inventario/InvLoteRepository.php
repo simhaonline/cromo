@@ -77,8 +77,11 @@ class InvLoteRepository extends ServiceEntityRepository
             ->addSelect('l.cantidadDisponible')
             ->addSelect('l.cantidadRemisionada')
             ->where("l.codigoItemFk = {$session->get('filtroInvBuscarLoteItem')}");
-        if($session->get('filtroInvBuscarLoteCodigo') != ''){
-            $queryBuilder->andWhere("l.codigoLotePk =  {$session->get('filtroInvBuscarLoteCodigo')}");
+        if ($session->get('filtroInvBuscarLoteCodigo') != '') {
+            $queryBuilder->andWhere("l.loteFk LIKE '%{$session->get('filtroInvBuscarLoteCodigo')}%'");
+        }
+        if ($session->get('filtroInvBuscarBodegaLote') != '') {
+            $queryBuilder->andWhere("l.codigoBodegaFk LIKE '%{$session->get('filtroInvBuscarBodegaLote')}%'");
         }
         return $queryBuilder;
     }

@@ -9,6 +9,8 @@ use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Form\Type\RecursoHumano\ProgramacionType;
+use App\Formato\RecursoHumano\Programacion;
+use App\Formato\RecursoHumano\ResumenConceptos;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -80,7 +82,7 @@ class ProgramacionController extends BaseController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if($arProgramacion->getGrupoRel()){
+                if ($arProgramacion->getGrupoRel()) {
                     $arProgramacion->setDias(($arProgramacion->getFechaDesde()->diff($arProgramacion->getFechaHasta()))->days + 1);
                     $em->persist($arProgramacion);
                     $em->flush();
@@ -113,12 +115,14 @@ class ProgramacionController extends BaseController
             }
         }
         $arrBtnCargarContratos = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Cargar contratos'];
-        $arrBtnEliminarTodos   = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar todos'];
-        $arrBtnEliminar        = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar'];
-        if($arProgramacion->getEstadoAutorizado()){
+        $arrBtnImprimirResumen = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Resumen','disabled' => true];
+        $arrBtnEliminarTodos = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar todos'];
+        $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar'];
+        if ($arProgramacion->getEstadoAutorizado()) {
             $arrBtnCargarContratos['attr']['class'] .= ' hidden';
             $arrBtnEliminarTodos['attr']['class'] .= ' hidden';
             $arrBtnEliminar['attr']['class'] .= ' hidden';
+            $arrBtnImprimirResumen['disabled'] = false;
         }
 
 
@@ -126,6 +130,7 @@ class ProgramacionController extends BaseController
         $form->add('btnCargarContratos', SubmitType::class, $arrBtnCargarContratos);
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
         $form->add('btnEliminarTodos', SubmitType::class, $arrBtnEliminarTodos);
+        $form->add('btnImprimirResumen', SubmitType::class, $arrBtnImprimirResumen);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -134,6 +139,14 @@ class ProgramacionController extends BaseController
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(RhuProgramacionDetalle::class)->eliminar($arrSeleccionados, $arProgramacion);
+            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $objFormato = new Programacion();
+                $objFormato->Generar($em, $id);
+            }
+            if ($form->get('btnImprimirResumen')->isClicked()) {
+                $objFormato = new ResumenConceptos();
+                $objFormato->Generar($em, $id);
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 set_time_limit(0);
@@ -165,11 +178,12 @@ class ProgramacionController extends BaseController
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("recursohumano/movimiento/nomina/programacion/detalle/resumen/{id}", name="recursohumano_movimiento_nomina_programacion_detalle_resumen")
      */
-    public function resumenPagoDetalle($id){
+    public function resumenPagoDetalle($id)
+    {
         $em = $this->getDoctrine()->getManager();
         $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($id);
         $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoProgramacionDetalleFk' => $id));
-        if(!$arPago){
+        if (!$arPago) {
             Mensajes::error('El empleado aun no tiene pagos generados');
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }

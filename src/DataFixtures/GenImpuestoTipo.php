@@ -6,10 +6,26 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 
-class GenImpuesto extends Fixture
+class GenImpuestoTipo extends Fixture
 {
     public function load(ObjectManager $manager)
     {
+        $arGenImpuestoTipo = $manager->getRepository('App:General\GenImpuestoTipo')->find('R');
+        if(!$arGenImpuestoTipo){
+            $arGenImpuestoTipo = new \App\Entity\General\GenImpuestoTipo();
+            $arGenImpuestoTipo->setCodigoImpuestoTipoPk('R');
+            $arGenImpuestoTipo->setNombre('RETENCION');
+            $manager->persist($arGenImpuestoTipo);
+        }
+        $arGenImpuestoTipo = $manager->getRepository('App:General\GenImpuestoTipo')->find('I');
+        if(!$arGenImpuestoTipo){
+            $arGenImpuestoTipo = new \App\Entity\General\GenImpuestoTipo();
+            $arGenImpuestoTipo->setCodigoImpuestoTipoPk('I');
+            $arGenImpuestoTipo->setNombre('IVA');
+            $manager->persist($arGenImpuestoTipo);
+        }
+        $manager->flush();
+
         $arGenImpuesto = $manager->getRepository('App:General\GenImpuesto')->find('R00');
         if(!$arGenImpuesto){
             $arGenImpuesto = new \App\Entity\General\GenImpuesto();

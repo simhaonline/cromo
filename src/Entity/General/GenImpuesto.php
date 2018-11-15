@@ -37,6 +37,12 @@ class GenImpuesto
     private $base = 0;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenImpuestoTipo", inversedBy="impuestosImpuestoTipoRel")
+     * @ORM\JoinColumn(name="codigo_impuesto_tipo_fk", referencedColumnName="codigo_impuesto_tipo_pk")
+     */
+    protected $impuestoTipoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvItem", mappedBy="impuestoRetencionRel")
      */
     private $itemsImpuestoRetencionRel;
@@ -92,22 +98,6 @@ class GenImpuesto
     /**
      * @return mixed
      */
-    public function getItemsImpuestoRetencionRel()
-    {
-        return $this->itemsImpuestoRetencionRel;
-    }
-
-    /**
-     * @param mixed $itemsImpuestoRetencionRel
-     */
-    public function setItemsImpuestoRetencionRel($itemsImpuestoRetencionRel): void
-    {
-        $this->itemsImpuestoRetencionRel = $itemsImpuestoRetencionRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getPorcentaje()
     {
         return $this->porcentaje;
@@ -137,6 +127,37 @@ class GenImpuesto
         $this->base = $base;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getImpuestoTipoRel()
+    {
+        return $this->impuestoTipoRel;
+    }
+
+    /**
+     * @param mixed $impuestoTipoRel
+     */
+    public function setImpuestoTipoRel($impuestoTipoRel): void
+    {
+        $this->impuestoTipoRel = $impuestoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemsImpuestoRetencionRel()
+    {
+        return $this->itemsImpuestoRetencionRel;
+    }
+
+    /**
+     * @param mixed $itemsImpuestoRetencionRel
+     */
+    public function setItemsImpuestoRetencionRel($itemsImpuestoRetencionRel): void
+    {
+        $this->itemsImpuestoRetencionRel = $itemsImpuestoRetencionRel;
+    }
 
 
 }

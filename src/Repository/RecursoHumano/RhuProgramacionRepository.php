@@ -42,6 +42,19 @@ class RhuProgramacionRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $id
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getNeto($id){
+        return $this->_em->createQueryBuilder()
+            ->from(RhuProgramacion::class,'p')
+            ->select('p.vrNeto')
+            ->where("p.codigoProgramacionPk = {$id}")
+            ->getQuery()->getSingleResult();
+    }
+    /**
      * @param $codigoProgramacion integer
      * @return mixed
      * @throws \Doctrine\ORM\NoResultException

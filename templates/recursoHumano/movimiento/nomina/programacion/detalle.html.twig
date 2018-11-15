@@ -7,6 +7,7 @@
         </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
+            {{ form_widget(form.btnImprimirResumen) }}
         </div>
     </div>
     <br/><br/>
@@ -29,7 +30,7 @@
         </tr>
         <tr>
             <td class="titulo">GRUPO:</td>
-            <td class="td-in-well">{{ arProgramacion.grupoRel.nombre | default('')}}</td>
+            <td class="td-in-well">{{ arProgramacion.grupoRel.nombre | default('') }}</td>
             <td class="titulo">HASTA:</td>
             <td class="td-in-well">{{ arProgramacion.fechaHasta | date('Y-m-d') }}</td>
             <td class="titulo"></td>

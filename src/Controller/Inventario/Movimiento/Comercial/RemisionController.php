@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Movimiento\Comercial;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
@@ -15,6 +16,7 @@ use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\RemisionType;
 use App\Formato\Inventario\Pedido;
 use App\Formato\Inventario\Remision;
+use App\Formato\Inventario\Remision2;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -163,8 +165,15 @@ class RemisionController extends ControllerListenerGeneral
                 $em->getRepository(InvRemision::class)->desautorizar($arRemision);
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                $objFormatoRemision = new Remision();
-                $objFormatoRemision->Generar($em, $id);
+                    $codigoRemision = $em->getRepository(InvConfiguracion::class)->find(1)->getCodigoFormatoRemision();
+                    if ($codigoRemision == 1) {
+                        $objFormatoRemision = new Remision();
+                        $objFormatoRemision->Generar($em, $id);
+                    }
+                    if ($codigoRemision == 2) {
+                        $objFormatoRemision = new Remision2();
+                        $objFormatoRemision->Generar($em, $id);
+                    }
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(InvRemision::class)->aprobar($arRemision);
@@ -211,6 +220,7 @@ class RemisionController extends ControllerListenerGeneral
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
             ->add('txtReferenciaItem', TextType::class, ['label' => 'Referencia: ', 'required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnGuardarCerrar', SubmitType::class, ['label' => 'Guardar y cerrar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -220,6 +230,30 @@ class RemisionController extends ControllerListenerGeneral
                 $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
+                $arrItems = $request->request->get('itemCantidad');
+                if (count($arrItems) > 0) {
+                    foreach ($arrItems as $codigoItem => $cantidad) {
+                        if ($cantidad != '' && $cantidad != 0) {
+                            $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
+                            $precioVenta = $em->getRepository(InvPrecioDetalle::class)->obtenerPrecio($arRemision->getTerceroRel()->getCodigoPrecioVentaFk(), $codigoItem);
+                            $arRemisionDetalle = new InvRemisionDetalle();
+                            $arRemisionDetalle->setRemisionRel($arRemision);
+                            $arRemisionDetalle->setItemRel($arItem);
+                            $arRemisionDetalle->setCantidad($cantidad);
+                            $arRemisionDetalle->setCantidadPendiente($cantidad);
+                            $arRemisionDetalle->setCantidadOperada($cantidad * $arRemision->getOperacionInventario());
+                            $arRemisionDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
+                            $arRemisionDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
+                            $arRemisionDetalle->setOperacionInventario($arRemision->getOperacionInventario());
+                            $em->persist($arRemisionDetalle);
+                        }
+                    }
+                    $em->flush();
+                    $em->getRepository(InvRemision::class)->liquidar($codigoRemision);
+                    echo "<script languaje='javascript' type='text/javascript'>window.opener.location.reload();</script>";
+                }
+            }
+            if ($form->get('btnGuardarCerrar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
                 if (count($arrItems) > 0) {
                     foreach ($arrItems as $codigoItem => $cantidad) {
@@ -262,6 +296,7 @@ class RemisionController extends ControllerListenerGeneral
         $form = $this->createFormBuilder()
             ->add('txtNumero', TextType::class, array('required' => false))
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnGuardarCerrar', SubmitType::class, ['label' => 'Guardar y cerrar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -271,6 +306,41 @@ class RemisionController extends ControllerListenerGeneral
                 $session->set('filtroInvPedidoNumero', $form->get('txtNumero')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
+                $arrDetalles = $request->request->get('itemCantidad');
+                if ($arrDetalles) {
+                    if (count($arrDetalles) > 0) {
+                        $respuesta = "";
+                        foreach ($arrDetalles as $codigo => $cantidad) {
+                            if ($cantidad != '' && $cantidad != 0) {
+                                $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($codigo);
+                                if ($cantidad <= $arPedidoDetalle->getCantidadPendiente()) {
+                                    $arRemisionDetalle = new InvRemisionDetalle();
+                                    $arRemisionDetalle->setRemisionRel($arRemision);
+                                    $arRemisionDetalle->setItemRel($arPedidoDetalle->getItemRel());
+                                    $arRemisionDetalle->setCantidad($cantidad);
+                                    $arRemisionDetalle->setCantidadOperada($cantidad * $arRemision->getOperacionInventario());
+                                    $arRemisionDetalle->setVrPrecio($arPedidoDetalle->getVrPrecio());
+                                    $arRemisionDetalle->setOperacionInventario($arRemision->getOperacionInventario());
+                                    //$arMovimientoDetalle->setPorcentajeDescuento($arPedidoDetalle->getPorcentajeDescuento());
+                                    $arRemisionDetalle->setPorcentajeIva($arPedidoDetalle->getPorcentajeIva());
+                                    $arRemisionDetalle->setPedidoDetalleRel($arPedidoDetalle);
+                                    $em->persist($arRemisionDetalle);
+                                } else {
+                                    $respuesta = "Debe ingresar una cantidad menor o igual a la solicitada en el id " . $codigo;
+                                }
+                            }
+                        }
+                        if ($respuesta != '') {
+                            Mensajes::error($respuesta);
+                        } else {
+                            $em->flush();
+                            $em->getRepository(InvRemision::class)->liquidar($arRemision);
+                            echo "<script languaje='javascript' type='text/javascript'>window.opener.location.reload();</script>";
+                        }
+                    }
+                }
+            }
+            if ($form->get('btnGuardarCerrar')->isClicked()) {
                 $arrDetalles = $request->request->get('itemCantidad');
                 if ($arrDetalles) {
                     if (count($arrDetalles) > 0) {

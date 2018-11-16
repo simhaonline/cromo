@@ -116,6 +116,9 @@
             <a class="btn btn-default btn-sm"
                href="{{ path('inventario_movimiento_comercial_pedido_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnEliminar) }}
+        </div>
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}

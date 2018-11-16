@@ -395,13 +395,13 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->validarDetalles($arMovimiento->getCodigoMovimientoPk());
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             if ($arMovimientoDetalle['afectaInventario']) {
-                if($arMovimientoDetalle['codigoBodegaFk'] == "" || $arMovimientoDetalle['loteFk'] == "" || $arMovimientoDetalle['fechaVencimiento'] == "") {
+                if ($arMovimientoDetalle['codigoBodegaFk'] == "" || $arMovimientoDetalle['loteFk'] == "" || $arMovimientoDetalle['fechaVencimiento'] == "") {
                     $respuesta = "El detalle con id " . $arMovimientoDetalle['codigoMovimientoDetallePk'] . " no tiene bodega, lote o fecha vence";
                     break;
                 } else {
                     $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle['codigoBodegaFk']);
                     if ($arBodega) {
-                        if($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
+                        if ($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
                             $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle['codigoBodegaDestinoFk']);
                             if (!$arBodega) {
                                 $respuesta = 'La bodega destino ingresada en el detalle con id ' . $arMovimientoDetalle['codigoMovimientoDetallePk'] . ', no existe.';
@@ -417,6 +417,13 @@ class InvMovimientoRepository extends ServiceEntityRepository
             if ($arMovimientoDetalle['cantidad'] == 0) {
                 $respuesta = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' tiene cantidad 0.';
                 break;
+            }
+            if ($arMovimiento->getCodigoDocumentoTipoFk() == "FAC") {
+                $arLote = $this->getEntityManager()->getRepository(InvLote::class)
+                    ->findOneBy(['loteFk' => $arMovimientoDetalle['loteFk'], 'codigoItemFk' => $arMovimientoDetalle['codigoItemFk'], 'codigoBodegaFk' => $arMovimientoDetalle['codigoBodegaFk']]);
+                if (!$arLote) {
+                    $respuesta = 'El lote especificado en el detalle id ' .  $arMovimientoDetalle['codigoMovimientoDetallePk'] . ' no existe.';
+                }
             }
         }
 

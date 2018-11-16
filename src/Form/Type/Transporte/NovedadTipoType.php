@@ -21,9 +21,9 @@ class NovedadTipoType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('codigoNovedadTipoPk',TextType::class, array('required' => true))
-            ->add('nombre',TextType::class, array('required' => true))
-            ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
+            ->add('codigoNovedadTipoPk',TextType::class, array('required' => true,'label'=>"Codigo novedad tipo:"))
+            ->add('nombre',TextType::class, array('required' => true,'label'=>'Nombre:'))
+            ->add('guardar', SubmitType::class,array('label'=>'Guardar','attr'=>['class'=>'btn btn-primary btn-sm']));
     }
 
     /**
@@ -40,6 +40,20 @@ class NovedadTipoType extends AbstractType {
      */
     public function getBlockPrefix() {
         return 'App_novedad';
+    }
+
+    public function getEstructuraPropiedadesLista(){
+        return '[
+            {"campo":"codigoNovedadTipoPk",      "tipo":"pk"     ,"ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"nombre",      "tipo":"texto"     ,"ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+        ]';
+    }
+
+    public function getEstructuraPropiedadesExportar(){
+        return '[
+            {"campo":"codigoNovedadTipoPk",      "tipo":"pk"     ,"ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"nombre",      "tipo":"texto"     ,"ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+        ]';
     }
 
 }

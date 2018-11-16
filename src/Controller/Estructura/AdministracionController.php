@@ -5,7 +5,6 @@ namespace App\Controller\Estructura;
 use App\Controller\BaseController;
 use App\Entity\General\GenEntidad;
 use App\Entity\General\GenCubo;
-use App\General\General;
 use App\Utilidades\Mensajes;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -15,7 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Routing\Annotation\Route;
@@ -274,79 +272,79 @@ final class AdministracionController extends BaseController
         exit();
     }
 
-    /**
-     * @author Andres Acevedo Cartagena
-     * @param Request $request
-     * @param $modulo
-     * @param $entidad
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("admin/{modulo}/{entidad}/lista",name="admin_lista")
-     */
-    public function generarAdminLista(Request $request, $modulo, $entidad)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
-        $codigo = $modulo . "_" . $entidad;
-        $arEntidad = $em->getRepository('App:General\GenEntidad')->find($codigo);
-        $jsonFiltro = $arEntidad->getJsonFiltro();
-        $arrCamposFiltro = json_decode($jsonFiltro);
-        $arrNombreCamposFiltro = [];
-        foreach ($arrCamposFiltro as $arrCampo) {
-            if ($arrCampo->mostrar) {
-                $arrNombreCamposFiltro[] = $arrCampo->campo;
-            }
-        }
-        $arrFiltrar = $this->formularioFiltro($jsonFiltro);
-        if ($arrFiltrar['filtrar']) {
-            $formFiltro = $arrFiltrar['form'];
-            $formFiltro->handleRequest($request);
-        } else {
-            $formFiltro = '';
-        }
-        $form = $this->formularioLista();
-        $form->handleRequest($request);
-        if ($arEntidad->getPersonalizado()) {
-            $arRegistros = $em->getRepository('App:General\GenEntidad')->lista($arEntidad, 0);
-        } else {
-            $arRegistros = $em->getRepository('App:' . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad()))->camposPredeterminados();
-        }
-        if ($request->getMethod() == 'POST') {
-            if ($request->request->has('form')) {
-                if ($form->isSubmitted() && $form->isValid()) {
-                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                    if ($form->get('btnExcel')->isClicked()) {
-                        $arRegistrosExcel = $em->getRepository('App:General\GenEntidad')->lista($arEntidad, 1);
-                        General::get()->setExportar($arRegistrosExcel, "Excel");
-                    }
-                    if ($form->get('btnEliminar')->isClicked()) {
-                        $em->getRepository('App:General\GenEntidad')->eliminar($arEntidad, $arrSeleccionados);
-                        return $this->redirect($this->generateUrl('admin_lista', ['modulo' => $arEntidad->getModulo(), 'entidad' => $arEntidad->getEntidad()]));
-                    }
-                }
-            }
-            if ($request->request->has('formFiltro')) {
-                if ($formFiltro instanceof Form) {
-                    if ($formFiltro->get('btnFiltrar')->isClicked()) {
-                        $arrFiltros = $formFiltro->getData();
-                        $arRegistros = $em->getRepository('App:General\GenEntidad')->listaFiltro($arEntidad, $arrFiltros);
-                    }
-                }
-            }
-        }
-        $arRegistros = $paginator->paginate($arRegistros, $request->query->getInt('page', 1), 30);
-        return $this->render('estructura/lista.html.twig', [
-            'arRegistros' => $arRegistros,
-            'entidadCubo' => "",
-            'arEntidad' => $arEntidad,
-            'form' => $form->createView(),
-            'formFiltro' => $formFiltro instanceof Form ? $formFiltro->createView() : '',
-            'filtrar' => $arrFiltrar['filtrar']
-        ]);
-    }
+//    /**
+//     * @author Andres Acevedo Cartagena
+//     * @param Request $request
+//     * @param $modulo
+//     * @param $entidad
+//     * @return \Symfony\Component\HttpFoundation\Response
+//     * @throws \Doctrine\ORM\ORMException
+//     * @throws \Doctrine\ORM\OptimisticLockException
+//     * @throws \PhpOffice\PhpSpreadsheet\Exception
+//     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+//     * @Route("admin/{modulo}/{entidad}/lista",name="admin_lista")
+//     */
+//    public function generarAdminLista(Request $request, $modulo, $entidad)
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//        $paginator = $this->get('knp_paginator');
+//        $codigo = $modulo . "_" . $entidad;
+//        $arEntidad = $em->getRepository('App:General\GenEntidad')->find($codigo);
+//        $jsonFiltro = $arEntidad->getJsonFiltro();
+//        $arrCamposFiltro = json_decode($jsonFiltro);
+//        $arrNombreCamposFiltro = [];
+//        foreach ($arrCamposFiltro as $arrCampo) {
+//            if ($arrCampo->mostrar) {
+//                $arrNombreCamposFiltro[] = $arrCampo->campo;
+//            }
+//        }
+//        $arrFiltrar = $this->formularioFiltro($jsonFiltro);
+//        if ($arrFiltrar['filtrar']) {
+//            $formFiltro = $arrFiltrar['form'];
+//            $formFiltro->handleRequest($request);
+//        } else {
+//            $formFiltro = '';
+//        }
+//        $form = $this->formularioLista();
+//        $form->handleRequest($request);
+//        if ($arEntidad->getPersonalizado()) {
+//            $arRegistros = $em->getRepository('App:General\GenEntidad')->lista($arEntidad, 0);
+//        } else {
+//            $arRegistros = $em->getRepository('App:' . ucfirst($arEntidad->getModulo()) . "\\" . ucfirst($arEntidad->getPrefijo()) . ucfirst($arEntidad->getEntidad()))->camposPredeterminados();
+//        }
+//        if ($request->getMethod() == 'POST') {
+//            if ($request->request->has('form')) {
+//                if ($form->isSubmitted() && $form->isValid()) {
+//                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
+//                    if ($form->get('btnExcel')->isClicked()) {
+//                        $arRegistrosExcel = $em->getRepository('App:General\GenEntidad')->lista($arEntidad, 1);
+//                        General::get()->setExportar($arRegistrosExcel, "Excel");
+//                    }
+//                    if ($form->get('btnEliminar')->isClicked()) {
+//                        $em->getRepository('App:General\GenEntidad')->eliminar($arEntidad, $arrSeleccionados);
+//                        return $this->redirect($this->generateUrl('admin_lista', ['modulo' => $arEntidad->getModulo(), 'entidad' => $arEntidad->getEntidad()]));
+//                    }
+//                }
+//            }
+//            if ($request->request->has('formFiltro')) {
+//                if ($formFiltro instanceof Form) {
+//                    if ($formFiltro->get('btnFiltrar')->isClicked()) {
+//                        $arrFiltros = $formFiltro->getData();
+//                        $arRegistros = $em->getRepository('App:General\GenEntidad')->listaFiltro($arEntidad, $arrFiltros);
+//                    }
+//                }
+//            }
+//        }
+//        $arRegistros = $paginator->paginate($arRegistros, $request->query->getInt('page', 1), 30);
+//        return $this->render('estructura/lista.html.twig', [
+//            'arRegistros' => $arRegistros,
+//            'entidadCubo' => "",
+//            'arEntidad' => $arEntidad,
+//            'form' => $form->createView(),
+//            'formFiltro' => $formFiltro instanceof Form ? $formFiltro->createView() : '',
+//            'filtrar' => $arrFiltrar['filtrar']
+//        ]);
+//    }
 
     /**
      * @author Andres Acevedo Cartagena

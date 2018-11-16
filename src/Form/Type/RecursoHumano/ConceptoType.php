@@ -39,6 +39,30 @@ class ConceptoType extends AbstractType
             ->add('guardar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        return '[
+            {"campo":"codigoConceptoPk",            "tipo":"pk"     ,"ayuda":"Codigo del registro",  "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto"  ,"ayuda":"Nombre del registro",  "titulo":"NOMBRE"},                                  
+            {"campo":"porcentaje",                  "tipo":"texto"  ,"ayuda":"Nombre del registro",  "titulo":"NOMBRE"},                                  
+            {"campo":"operacion",                   "tipo":"texto"  ,"ayuda":"Nombre del registro",  "titulo":"NOMBRE"},                                  
+            {"campo":"numeroDian",                  "tipo":"texto"  ,"ayuda":"Nombre del registro",  "titulo":"NOMBRE"},                                  
+            {"campo":"adicionalTipo",               "tipo":"texto"  ,"ayuda":"Nombre del registro",  "titulo":"NOMBRE"},                                  
+            {"campo":"generaIngresoBasePrestacion", "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
+            {"campo":"generaIngresoBaseCotizacion", "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
+            {"campo":"incapacidad",                 "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
+            {"campo":"incapacidadEntidad",          "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
+            {"campo":"pension",                     "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
+            {"campo":"salud",                       "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
+            {"campo":"vacacion",                    "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
+            {"campo":"comision",                    "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
+            {"campo":"cesantia",                    "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
+            {"campo":"adicional",                   "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
+            {"campo":"recargoNocturno",             "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
+            {"campo":"fondoSolidaridadPensional",   "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
+        ]';
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

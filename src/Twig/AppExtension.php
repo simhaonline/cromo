@@ -9,7 +9,8 @@ use Twig\Extension\AbstractExtension;
 //Funciones personalizadas para twig
 class AppExtension extends AbstractExtension
 {
-    public function getEnv($env) {
+    public function getEnv($env)
+    {
         return getenv($env);
     }
 
@@ -41,7 +42,7 @@ class AppExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-          new \Twig_Filter('objectToArray',[$this,'objectToArray']),
+            new \Twig_Filter('objectToArray', [$this, 'objectToArray']),
         ];
     }
 
@@ -106,8 +107,9 @@ class AppExtension extends AbstractExtension
         }
     }
 
-    public function validarBooleano($dato){
-        if($dato == 1){
+    public function validarBooleano($dato)
+    {
+        if ($dato == 1) {
             echo 'SI';
         } else {
             echo 'NO';
@@ -255,8 +257,8 @@ class AppExtension extends AbstractExtension
                     $pk = $dato;
                 }
             }
-            $body .= "<td style='text-align: center;'><a href='". $router->generate($arrOpciones['ruta'].'nuevo',['id'=> $pk ]) ."'><i class='fa fa-edit' style='font-size: large;color: black;'></i></a></td>";
-            $body .= "<td style='text-align: center;'><a href='". $router->generate($arrOpciones['ruta'].'detalle',['id'=> $pk ]) ."'><i class='fa fa-share-square-o' style='font-size: large;color: black;'></i></a></td>";
+            $body .= "<td style='text-align: center;'><a href='" . $router->generate($arrOpciones['ruta'] . 'nuevo', ['id' => $pk]) . "'><i class='fa fa-edit' style='font-size: large;color: black;'></i></a></td>";
+            $body .= "<td style='text-align: center;'><a href='" . $router->generate($arrOpciones['ruta'] . 'detalle', ['id' => $pk]) . "'><i class='fa fa-share-square-o' style='font-size: large;color: black;'></i></a></td>";
             if ($check) {
                 $body .= "<td style='text-align: center;'><input type='checkbox' name='ChkSeleccionar[]' value='" . $pk . "'></td>";
             }
@@ -296,14 +298,17 @@ class AppExtension extends AbstractExtension
      * @param $arRegistro
      * @return mixed
      */
-    public function objectToArray($arRegistro){
+    public function objectToArray($arRegistro)
+    {
         $arrOpciones = (array)$arRegistro;
         $arrRegistro = [];
         foreach ($arrOpciones as $key => $dato) {
-            $campo = explode("\x00", $key)[2];
+            if ($key !== 'infoLog') {
+                $campo = explode("\x00", $key)[2];
 
-            if(strpos($campo,'Rel') === false){
-                $arrRegistro[$campo] = $dato;
+                if (strpos($campo, 'Rel') === false) {
+                    $arrRegistro[$campo] = $dato;
+                }
             }
         }
         return $arrRegistro;

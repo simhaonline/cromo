@@ -131,6 +131,11 @@ class TurCliente
     protected $ciudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="clienteRel")
+     */
+    protected $contratosClienteRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -496,6 +501,22 @@ class TurCliente
     public function setCiudadRel($ciudadRel): void
     {
         $this->ciudadRel = $ciudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratosClienteRel()
+    {
+        return $this->contratosClienteRel;
+    }
+
+    /**
+     * @param mixed $contratosClienteRel
+     */
+    public function setContratosClienteRel($contratosClienteRel): void
+    {
+        $this->contratosClienteRel = $contratosClienteRel;
     }
 
 

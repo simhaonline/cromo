@@ -27,4 +27,13 @@ class ContratoTipoType extends AbstractType
             'data_class' => TurContratoTipo::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoContratoTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
+            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}
+        ]';
+        return $campos;
+    }
 }

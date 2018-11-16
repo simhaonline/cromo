@@ -40,4 +40,13 @@ class DepartamentoType extends AbstractType
             'data_class' => GenDepartamento::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoDepartamentoPk",    "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
+            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}            
+        ]';
+        return $campos;
+    }
 }

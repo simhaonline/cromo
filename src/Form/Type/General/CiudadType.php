@@ -39,4 +39,13 @@ class CiudadType extends AbstractType
             'data_class' => GenCiudad::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoCiudadPk",    "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
+            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}            
+        ]';
+        return $campos;
+    }
 }

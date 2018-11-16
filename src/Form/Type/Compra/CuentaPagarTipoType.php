@@ -34,4 +34,13 @@ class CuentaPagarTipoType extends AbstractType
             'data_class' => ComCuentaPagarTipo::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoCuentaPagarTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
+            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}            
+        ]';
+        return $campos;
+    }
 }

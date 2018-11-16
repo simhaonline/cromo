@@ -25,7 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class RecaudoCobroController extends ControllerListenerGeneral
 {
     protected $class= TteRecaudoCobro::class;
-    protected $claseNombre = "TteRecaudo";
+    protected $claseNombre = "TteRecaudoCobro";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
     protected $grupo = "Transporte";

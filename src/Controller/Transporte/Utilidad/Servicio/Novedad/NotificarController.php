@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityRepository;
 
 class NotificarController extends Controller
 {
+
    /**
     * @Route("/transporte/uti/servicio/novedad/notificar", name="transporte_uti_servicio_novedad_notificar")
     */    

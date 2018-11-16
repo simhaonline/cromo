@@ -29,4 +29,22 @@ class AseguradoraType extends AbstractType
             'data_class' => TteAseguradora::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista(){
+        return '[
+            {"campo":"codigoAseguradoraPk",         "tipo":"pk"         ,"ayuda":"Codigo del registro",             "titulo":"ID"},
+            {"campo":"numeroIdentificacion",        "tipo":"texto"      ,"ayuda":"Numero de identificacion",        "titulo":"NUMERO IDENTIFICACION"},
+            {"campo":"digitoVerificacion",          "tipo":"texto"      ,"ayuda":"Digito de verificacion",          "titulo":"DIGITO VERIFICACION"},
+            {"campo":"nombre",                      "tipo":"texto"      ,"ayuda":"Nombre del registro",             "titulo":"NOMBRE DEL REGISTRO"}
+        ]';
+    }
+
+    public function getEstructuraPropiedadesExportar(){
+        return '[
+            {"campo":"codigoAseguradoraPk",         "tipo":"pk"         ,"ayuda":"Codigo del registro",             "titulo":"ID"},
+            {"campo":"numeroIdentificacion",        "tipo":"texto"      ,"ayuda":"Numero de identificacion",        "titulo":"NUMERO IDENTIFICACION"},
+            {"campo":"digitoVerificacion",          "tipo":"texto"      ,"ayuda":"Digito de verificacion",          "titulo":"DIGITO VERIFICACION"},
+            {"campo":"nombre",                      "tipo":"texto"      ,"ayuda":"Nombre del registro",             "titulo":"NOMBRE DEL REGISTRO"}
+        ]';
+    }
 }

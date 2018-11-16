@@ -98,11 +98,13 @@ final class AdministracionController extends BaseController
                 return $this->redirect($this->generateUrl('administracion_lista', ['modulo' => $modulo, 'entidad' => $entidad]));
             }
         }
+        $getPk = 'getCodigo' . ucfirst($entidad) . 'Pk';
         $form = $this->createForm("\\App\Form\\Type\\" . ucfirst($modulo) . "\\" . ucfirst($entidad) . "Type", $arRegistro);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($arRegistro);
             $em->flush();
+            return $this->redirect($this->generateUrl('administracion_detalle',['modulo' => $modulo,'entidad' => $entidad,'id' => $arRegistro->$getPk()]));
         }
         return $this->render('estructura/administracion/nuevo.html.twig', [
             'modulo' => $modulo,

@@ -45,6 +45,7 @@ class PedidoController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('cboPedidoTipo', EntityType::class, $em->getRepository(InvPedidoTipo::class)->llenarCombo())
             ->add('numero', TextType::class, array('data' => $session->get('filtroInvPedidoPedidoNumero')))
@@ -66,6 +67,10 @@ class PedidoController extends ControllerListenerGeneral
                 }
                 if ($form->get('btnExcel')->isClicked()) {
                     General::get()->setExportar($em->createQuery($em->getRepository(InvPedido::class)->lista())->execute(), "Pedidos");
+                }
+                if($form->get('btnEliminar')->isClicked()){
+                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                    $em->getRepository(InvPedido::class)->eliminar($arrSeleccionados);
                 }
             }
         }

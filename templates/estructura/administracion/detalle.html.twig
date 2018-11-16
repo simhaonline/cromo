@@ -8,13 +8,24 @@
     </div>
     <br>
     <table width="100%" class="table table-condensed table-bordered">
-        {#{% for key, value in arRegistro|cast_to_array %}#}
-            {#{{ dump(key) }}#}
-            {#{{ dump(value) }}#}
-        {#{% endfor %}#}
+        {% set contador = 0 %}
         <tr>
-            <td class="titulo">CODIGO:</td>
+        {% for key, value in arRegistro|objectToArray %}
+            {% if contador is divisible by(2) and contador != 0 %}
+                </tr>
+                <tr>
+                    <td class="titulo">{{ key }}</td>
+                    <td class="td-in-well">{{ value }}</td>
+            {% else %}
+                <td class="titulo">{{ key }}</td>
+                <td class="td-in-well">{{ value }}</td>
+            {% endif %}
+            {% set contador = contador + 1 %}
+        {% endfor %}
+        {% if contador is not divisible by(2) %}
+            <td class="titulo"></td>
             <td class="td-in-well"></td>
-        </tr>
+                </tr>
+        {% endif %}
     </table>
 {% endblock %}

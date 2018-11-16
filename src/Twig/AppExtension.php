@@ -38,6 +38,13 @@ class AppExtension extends AbstractExtension
         ];
     }
 
+    public function getFilters()
+    {
+        return [
+          new \Twig_Filter('objectToArray',[$this,'objectToArray']),
+        ];
+    }
+
     /**
      * @author Andres Acevedo
      * @param $dato
@@ -283,6 +290,23 @@ class AppExtension extends AbstractExtension
         }
         $session->getFlashBag()->clear();
         return implode('', $html);
+    }
+
+    /**
+     * @param $arRegistro
+     * @return mixed
+     */
+    public function objectToArray($arRegistro){
+        $arrOpciones = (array)$arRegistro;
+        $arrRegistro = [];
+        foreach ($arrOpciones as $key => $dato) {
+            $campo = explode("\x00", $key)[2];
+
+            if(strpos($campo,'Rel') === false){
+                $arrRegistro[$campo] = $dato;
+            }
+        }
+        return $arrRegistro;
     }
 
     /**

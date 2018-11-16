@@ -198,19 +198,19 @@ class Remision2 extends \FPDF
         $pdf->SetFillColor(236, 236, 236);
         $pdf->Cell(20, 4, "SUBTOTAL:", 1, 0, 'R', true);
         $pdf->SetFont('Arial', '', 7);
-        $pdf->Cell(25, 4, number_format($arRemisionDetalle->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
+        $pdf->Cell(25, 4, number_format($arRemision->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln();
         $pdf->Cell(145, 4, "", 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->Cell(20, 4, "IVA:", 1, 0, 'R', true);
         $pdf->SetFont('Arial', '', 7);
-        $pdf->Cell(25, 4, number_format($arRemisionDetalle->getVrIva(), 0, '.', ','), 1, 0, 'R');
+        $pdf->Cell(25, 4, number_format($arRemision->getVrIva(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln();
         $pdf->Cell(145, 4, "", 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->Cell(20, 4, "NETO PAGAR", 1, 0, 'R', true);
         $pdf->SetFont('Arial', '', 7);
-        $pdf->Cell(25, 4, number_format($arRemisionDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
+        $pdf->Cell(25, 4, number_format($arRemision->getVrTotal(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln(-8);
     }
 

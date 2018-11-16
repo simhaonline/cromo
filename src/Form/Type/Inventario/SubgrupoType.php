@@ -37,7 +37,6 @@ class SubgrupoType extends AbstractType
             ])
             ->add('nombre',TextType::class,['label' => 'Nombre: '])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 
@@ -46,5 +45,28 @@ class SubgrupoType extends AbstractType
         $resolver->setDefaults([
             'data_class' => InvSubgrupo::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoSubgrupoPk",      "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
+            {"campo":"grupoRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre del grupo",           "titulo":"GRUPO", "relacion":""},
+            {"campo":"lineaRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre de la linea",         "titulo":"LINEA", "relacion":""},
+            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre del grupo",           "titulo":"NOMBRE"}                     
+                                                                          
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoSubgrupoPk",      "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
+            {"campo":"grupoRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre del grupo",           "titulo":"GRUPO", "relacion":""},
+            {"campo":"lineaRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre de la linea",         "titulo":"LINEA", "relacion":""},
+            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre del grupo",           "titulo":"NOMBRE"}                                            
+        ]';
+        return $campos;
     }
 }

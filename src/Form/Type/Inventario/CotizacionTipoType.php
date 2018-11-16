@@ -19,7 +19,6 @@ class CotizacionTipoType extends AbstractType
             ->add('nombre',TextType::class,['label' => 'Nombre:'])
             ->add('consecutivo',NumberType::class,['label' => 'Consecutivo:'])
             ->add('guardar', SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 
@@ -28,5 +27,26 @@ class CotizacionTipoType extends AbstractType
         $resolver->setDefaults([
             'data_class' => InvCotizacionTipo::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoCotizacionTipoPk",     "tipo":"pk"     ,"ayuda":"Codigo del registro",              "titulo":"ID"},
+            {"campo":"nombre",                     "tipo":"texto"  ,"ayuda":"Nombre de las cotizaciones tipo",    "titulo":"NOMBRE"},   
+            {"campo":"consecutivo",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro",         "titulo":"NOMBRE"}             
+                                                                          
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoCotizacionTipoPk",     "tipo":"pk"     ,"ayuda":"Codigo del registro",                  "titulo":"ID"},
+            {"campo":"nombre",                     "tipo":"texto"  ,"ayuda":"Nombre de las cotizaciones tipo",      "titulo":"NOMBRE"}, 
+            {"campo":"consecutivo",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro",             "titulo":"NOMBRE"}                                      
+        ]';
+        return $campos;
     }
 }

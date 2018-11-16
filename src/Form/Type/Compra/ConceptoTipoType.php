@@ -25,4 +25,13 @@ class ConceptoTipoType extends AbstractType
             'data_class' => ComConceptoTipo::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoConceptoTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
+            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}            
+        ]';
+        return $campos;
+    }
 }

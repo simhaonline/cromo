@@ -15,9 +15,9 @@ class ImportacionTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoImportacionTipoPk', TextType::class, ['required' => true])
-            ->add('nombre', TextType::class, ['required' => true])
-            ->add('consecutivo', NumberType::class, ['required' => true])
+            ->add('codigoImportacionTipoPk', TextType::class, ['label'=> 'Codigo importacion tipo pk', 'required' => true])
+            ->add('nombre', TextType::class, ['label' => 'Nombre', 'required' => true])
+            ->add('consecutivo', NumberType::class, ['label' => 'Consecutivo','required' => true])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
         ;
     }
@@ -27,5 +27,26 @@ class ImportacionTipoType extends AbstractType
         $resolver->setDefaults([
             'data_class' => InvImportacionTipo::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoImportacionTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
+            {"campo":"nombre",                          "tipo":"texto"  ,"ayuda":"Nombre de la importacion tipo",     "titulo":"NOMBRE"},
+            {"campo":"consecutivo",                     "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"NOMBRE"}                
+                                                                          
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoImportacionTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
+            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre de la importacion tipo",     "titulo":"NOMBRE"},
+            {"campo":"consecutivo",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"NOMBRE"}                                           
+        ]';
+        return $campos;
     }
 }

@@ -16,8 +16,7 @@ class FacturaTipoType extends AbstractType
         $builder
             ->add('codigoFacturaTipoPk',TextType::class,['label' => 'Codigo factura tipo:','required' => true])
             ->add('nombre',TextType::class,['label' => 'Nombre:','required' => true])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -25,5 +24,24 @@ class FacturaTipoType extends AbstractType
         $resolver->setDefaults([
             'data_class' => InvFacturaTipo::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoFacturaTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto"  ,"ayuda":"Nombre de la factura tipo",     "titulo":"NOMBRE"}                
+                                                                          
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoFacturaTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto"  ,"ayuda":"Nombre de la factura tipo",     "titulo":"NOMBRE"}                                            
+        ]';
+        return $campos;
     }
 }

@@ -17,8 +17,8 @@ class OrdenTipoType extends AbstractType
         $builder
             ->add('codigoOrdenTipoPk',TextType::class,['label' => 'Codigo orden compra tipo:','required' => true])
             ->add('nombre',TextType::class,['label' => 'Nombre:','required' => true])
-            ->add('consecutivo',NumberType::class,['label' => 'Consecutivo:'])->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo',SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('consecutivo',NumberType::class,['label' => 'Consecutivo:'])
+            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 
@@ -27,5 +27,26 @@ class OrdenTipoType extends AbstractType
         $resolver->setDefaults([
             'data_class' => InvOrdenTipo::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoOrdenTipoPk",          "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
+            {"campo":"nombre",                     "tipo":"texto"  ,"ayuda":"Nombre de las ordenes tipo",       "titulo":"NOMBRE"},   
+            {"campo":"consecutivo",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"NOMBRE"}             
+                                                                          
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoOrdenTipoPk",          "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
+            {"campo":"nombre",                     "tipo":"texto"  ,"ayuda":"Nombre de las ordenes tipo",       "titulo":"NOMBRE"},   
+            {"campo":"consecutivo",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"NOMBRE"}                                      
+        ]';
+        return $campos;
     }
 }

@@ -27,4 +27,13 @@ class EgresoTipoType extends AbstractType
             'data_class' => ComEgresoTipo::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoEgresoTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
+            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}            
+        ]';
+        return $campos;
+    }
 }

@@ -17,7 +17,6 @@ class MarcaType extends AbstractType
             ->add('codigoMarcaPk',TextType::class,['label' => 'Código marca: '])
             ->add('nombre',TextType::class,['label' => 'Nombre: ','required' => false])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 
@@ -26,5 +25,24 @@ class MarcaType extends AbstractType
         $resolver->setDefaults([
             'data_class' => InvMarca::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoMarcaPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
+            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre de la factura tipo",     "titulo":"NOMBRE"}                
+                                                                          
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoMarcaPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
+            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre de la factura tipo",     "titulo":"NOMBRE"}                                         
+        ]';
+        return $campos;
     }
 }

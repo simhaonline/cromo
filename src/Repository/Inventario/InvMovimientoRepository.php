@@ -436,15 +436,20 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $respuesta = $this->validarCantidadesAfectar($arMovimiento->getCodigoMovimientoPk());
         }
         if($respuesta == "") {
-            $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->validarDetalles();
-            if($arrConfiguracion['validarBodegaUsuario']) {
-                if($arItem->getAfectaInventario() == true) {
-                    $arrBodegas = $em->getRepository(InvMovimientoDetalle::class)->bodegaMovimiento($arMovimiento->getCodigoMovimientoPk());
-                    foreach ($arrBodegas as $arrBodega) {
-                        $arBodegaUsuario = $em->getRepository(InvBodegaUsuario::class)->findOneBy(array('codigoBodegaFk' => $arrBodega['codigoBodegaFk'], 'usuario' => $usuario));
-                        if (!$arBodegaUsuario) {
-                            $respuesta = 'El usuario no tiene permiso para mover cantidades de la bodega ' . $arrBodega['codigoBodegaFk'];
-                            break;
+            $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->validarDetalles($arMovimiento->getCodigoMovimientoPk());
+            foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+                $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->validarDetalles();
+                if ($arrConfiguracion['validarBodegaUsuario']) {
+                    $arItem = $this->getEntityManager()->getRepository(InvItem::class)
+                        ->findOneBy(['codigoItemPk' => $arMovimientoDetalle['codigoItemFk']]);
+                    if ($arItem->getAfectaInventario() == true) {
+                        $arrBodegas = $em->getRepository(InvMovimientoDetalle::class)->bodegaMovimiento($arMovimiento->getCodigoMovimientoPk());
+                        foreach ($arrBodegas as $arrBodega) {
+                            $arBodegaUsuario = $em->getRepository(InvBodegaUsuario::class)->findOneBy(array('codigoBodegaFk' => $arrBodega['codigoBodegaFk'], 'usuario' => $usuario));
+                            if (!$arBodegaUsuario) {
+                                $respuesta = 'El usuario no tiene permiso para mover cantidades de la bodega ' . $arrBodega['codigoBodegaFk'];
+                                break;
+                            }
                         }
                     }
                 }
@@ -648,6 +653,41 @@ class InvMovimientoRepository extends ServiceEntityRepository
 
         
         return $respuesta;
+    }
+
+    /**
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        if (count($arrSeleccionados) > 0) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(InvMovimiento::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            if (count($this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arRegistro->getCodigoMovimientoPk()])) <= 0) {
+                                $this->getEntityManager()->remove($arRegistro);
+                            } else {
+                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                            }
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                }
+                if($respuesta != ''){
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
     }
 
 }

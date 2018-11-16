@@ -141,6 +141,9 @@
                    href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_factura',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
             {% endif %}
         </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnEliminar) }}
+        </div>
     </div>
 
     {{ form_rest(form) }}

@@ -79,6 +79,7 @@ class MovimientoController extends ControllerListenerGeneral
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoCodigo')))
             ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvMovimientoNumero')))
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('chkEstadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvMovimientoEstadoAutorizado'), 'required' => false])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
@@ -94,6 +95,10 @@ class MovimientoController extends ControllerListenerGeneral
                 }
                 if ($form->get('btnExcel')->isClicked()) {
                     General::get()->setExportar($em->createQuery($em->getRepository(InvMovimiento::class)->lista($codigoDocumento))->execute(), "Movimientos");
+                }
+                if($form->get('btnEliminar')->isClicked()){
+                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                    $em->getRepository(InvMovimiento::class)->eliminar($arrSeleccionados);
                 }
             }
         }
@@ -251,7 +256,7 @@ class MovimientoController extends ControllerListenerGeneral
                 $em->getRepository(InvMovimiento::class)->autorizar($arMovimiento, $this->getUser()->getUsername());
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-               // $em->getRepository(InvMovimiento::class)->desautorizar($arMovimiento);
+                $em->getRepository(InvMovimiento::class)->desautorizar($arMovimiento);
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC') {

@@ -27,6 +27,15 @@ class FacturaType extends AbstractType
                 },
                 'choice_label' => 'nombre'
             ])
+            ->add('asesorRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\General\GenAsesor',
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre'
+            ])
             ->add('codigoTerceroFk',TextType::class,['required' => false ])
             ->add('soporte',TextType::class,['required' => false ])
             ->add('codigoSucursalFk',TextType::class,['required' => false ])

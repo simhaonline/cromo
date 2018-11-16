@@ -30,6 +30,11 @@ class TurContratoTipo
     private $nombre;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="contratoTipoRel")
+     */
+    protected $contratosContratoTipoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -75,6 +80,22 @@ class TurContratoTipo
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratosContratoTipoRel()
+    {
+        return $this->contratosContratoTipoRel;
+    }
+
+    /**
+     * @param mixed $contratosContratoTipoRel
+     */
+    public function setContratosContratoTipoRel($contratosContratoTipoRel): void
+    {
+        $this->contratosContratoTipoRel = $contratosContratoTipoRel;
     }
 
 

@@ -395,13 +395,13 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->validarDetalles($arMovimiento->getCodigoMovimientoPk());
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             if ($arMovimientoDetalle['afectaInventario']) {
-                if($arMovimientoDetalle['codigoBodegaFk'] == "" || $arMovimientoDetalle['loteFk'] == "" || $arMovimientoDetalle['fechaVencimiento'] == "") {
+                if ($arMovimientoDetalle['codigoBodegaFk'] == "" || $arMovimientoDetalle['loteFk'] == "" || $arMovimientoDetalle['fechaVencimiento'] == "") {
                     $respuesta = "El detalle con id " . $arMovimientoDetalle['codigoMovimientoDetallePk'] . " no tiene bodega, lote o fecha vence";
                     break;
                 } else {
                     $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle['codigoBodegaFk']);
                     if ($arBodega) {
-                        if($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
+                        if ($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
                             $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle['codigoBodegaDestinoFk']);
                             if (!$arBodega) {
                                 $respuesta = 'La bodega destino ingresada en el detalle con id ' . $arMovimientoDetalle['codigoMovimientoDetallePk'] . ', no existe.';
@@ -418,6 +418,18 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $respuesta = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' tiene cantidad 0.';
                 break;
             }
+            if ($arMovimiento->getCodigoDocumentoTipoFk() == "FAC") {
+                $arLote = $this->getEntityManager()->getRepository(InvLote::class)
+                    ->findOneBy(['loteFk' => $arMovimientoDetalle['loteFk'], 'codigoItemFk' => $arMovimientoDetalle['codigoItemFk']]);
+                $arItem =  $this->getEntityManager()->getRepository(InvItem::class)
+                    ->findOneBy(['codigoItemPk' => $arMovimientoDetalle['codigoItemFk']]);
+                if($arItem->getAfectaInventario() == true){
+                    if (!$arLote) {
+                        $respuesta = 'El lote especificado en el detalle id ' .  $arMovimientoDetalle['codigoMovimientoDetallePk'] . ' no existe.';
+                    }
+
+                }
+            }
         }
 
         if($respuesta == "") {
@@ -426,12 +438,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
         if($respuesta == "") {
             $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->validarDetalles();
             if($arrConfiguracion['validarBodegaUsuario']) {
-                $arrBodegas = $em->getRepository(InvMovimientoDetalle::class)->bodegaMovimiento($arMovimiento->getCodigoMovimientoPk());
-                foreach ($arrBodegas as $arrBodega) {
-                    $arBodegaUsuario = $em->getRepository(InvBodegaUsuario::class)->findOneBy(array('codigoBodegaFk' => $arrBodega['codigoBodegaFk'], 'usuario' => $usuario));
-                    if(!$arBodegaUsuario) {
-                        $respuesta = 'El usuario no tiene permiso para mover cantidades de la bodega ' . $arrBodega['codigoBodegaFk'];
-                        break;
+                if($arItem->getAfectaInventario() == true) {
+                    $arrBodegas = $em->getRepository(InvMovimientoDetalle::class)->bodegaMovimiento($arMovimiento->getCodigoMovimientoPk());
+                    foreach ($arrBodegas as $arrBodega) {
+                        $arBodegaUsuario = $em->getRepository(InvBodegaUsuario::class)->findOneBy(array('codigoBodegaFk' => $arrBodega['codigoBodegaFk'], 'usuario' => $usuario));
+                        if (!$arBodegaUsuario) {
+                            $respuesta = 'El usuario no tiene permiso para mover cantidades de la bodega ' . $arrBodega['codigoBodegaFk'];
+                            break;
+                        }
                     }
                 }
             }

@@ -165,15 +165,20 @@ class RhuPago
     protected $entidadPensionRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="RhuProgramacion", inversedBy="pagosProgramacionRel")
+     * @ORM\JoinColumn(name="codigo_programacion_fk",referencedColumnName="codigo_programacion_pk")
+     */
+    protected $programacionRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuPagoDetalle", mappedBy="pagoRel" )
      */
     protected $pagosDetallesPagoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuProgramacion", inversedBy="pagosProgramacionRel")
-     * @ORM\JoinColumn(name="codigo_programacion_fk",referencedColumnName="codigo_programacion_pk")
+     * @ORM\OneToMany(targetEntity="RhuEgresoDetalle", mappedBy="pagoRel" )
      */
-    protected $programacionRel;
+    protected $egresosDetallesPagoRel;
 
     /**
      * @return mixed
@@ -186,7 +191,7 @@ class RhuPago
     /**
      * @param mixed $codigoPagoPk
      */
-    public function setCodigoPagoPk( $codigoPagoPk ): void
+    public function setCodigoPagoPk($codigoPagoPk): void
     {
         $this->codigoPagoPk = $codigoPagoPk;
     }
@@ -202,7 +207,7 @@ class RhuPago
     /**
      * @param mixed $codigoPagoTipoFk
      */
-    public function setCodigoPagoTipoFk( $codigoPagoTipoFk ): void
+    public function setCodigoPagoTipoFk($codigoPagoTipoFk): void
     {
         $this->codigoPagoTipoFk = $codigoPagoTipoFk;
     }
@@ -218,7 +223,7 @@ class RhuPago
     /**
      * @param mixed $codigoEntidadSaludFk
      */
-    public function setCodigoEntidadSaludFk( $codigoEntidadSaludFk ): void
+    public function setCodigoEntidadSaludFk($codigoEntidadSaludFk): void
     {
         $this->codigoEntidadSaludFk = $codigoEntidadSaludFk;
     }
@@ -234,7 +239,7 @@ class RhuPago
     /**
      * @param mixed $codigoEntidadPensionFk
      */
-    public function setCodigoEntidadPensionFk( $codigoEntidadPensionFk ): void
+    public function setCodigoEntidadPensionFk($codigoEntidadPensionFk): void
     {
         $this->codigoEntidadPensionFk = $codigoEntidadPensionFk;
     }
@@ -250,7 +255,7 @@ class RhuPago
     /**
      * @param mixed $codigoPeriodoFk
      */
-    public function setCodigoPeriodoFk( $codigoPeriodoFk ): void
+    public function setCodigoPeriodoFk($codigoPeriodoFk): void
     {
         $this->codigoPeriodoFk = $codigoPeriodoFk;
     }
@@ -266,7 +271,7 @@ class RhuPago
     /**
      * @param mixed $numero
      */
-    public function setNumero( $numero ): void
+    public function setNumero($numero): void
     {
         $this->numero = $numero;
     }
@@ -282,7 +287,7 @@ class RhuPago
     /**
      * @param mixed $codigoEmpleadoFk
      */
-    public function setCodigoEmpleadoFk( $codigoEmpleadoFk ): void
+    public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
     {
         $this->codigoEmpleadoFk = $codigoEmpleadoFk;
     }
@@ -298,7 +303,7 @@ class RhuPago
     /**
      * @param mixed $codigoContratoFk
      */
-    public function setCodigoContratoFk( $codigoContratoFk ): void
+    public function setCodigoContratoFk($codigoContratoFk): void
     {
         $this->codigoContratoFk = $codigoContratoFk;
     }
@@ -314,7 +319,7 @@ class RhuPago
     /**
      * @param mixed $codigoProgramacionDetalleFk
      */
-    public function setCodigoProgramacionDetalleFk( $codigoProgramacionDetalleFk ): void
+    public function setCodigoProgramacionDetalleFk($codigoProgramacionDetalleFk): void
     {
         $this->codigoProgramacionDetalleFk = $codigoProgramacionDetalleFk;
     }
@@ -330,7 +335,7 @@ class RhuPago
     /**
      * @param mixed $codigoProgramacionFk
      */
-    public function setCodigoProgramacionFk( $codigoProgramacionFk ): void
+    public function setCodigoProgramacionFk($codigoProgramacionFk): void
     {
         $this->codigoProgramacionFk = $codigoProgramacionFk;
     }
@@ -346,7 +351,7 @@ class RhuPago
     /**
      * @param mixed $fechaDesde
      */
-    public function setFechaDesde( $fechaDesde ): void
+    public function setFechaDesde($fechaDesde): void
     {
         $this->fechaDesde = $fechaDesde;
     }
@@ -362,7 +367,7 @@ class RhuPago
     /**
      * @param mixed $fechaHasta
      */
-    public function setFechaHasta( $fechaHasta ): void
+    public function setFechaHasta($fechaHasta): void
     {
         $this->fechaHasta = $fechaHasta;
     }
@@ -378,7 +383,7 @@ class RhuPago
     /**
      * @param mixed $fechaDesdeContrato
      */
-    public function setFechaDesdeContrato( $fechaDesdeContrato ): void
+    public function setFechaDesdeContrato($fechaDesdeContrato): void
     {
         $this->fechaDesdeContrato = $fechaDesdeContrato;
     }
@@ -394,7 +399,7 @@ class RhuPago
     /**
      * @param mixed $fechaHastaContrato
      */
-    public function setFechaHastaContrato( $fechaHastaContrato ): void
+    public function setFechaHastaContrato($fechaHastaContrato): void
     {
         $this->fechaHastaContrato = $fechaHastaContrato;
     }
@@ -410,7 +415,7 @@ class RhuPago
     /**
      * @param mixed $vrSalarioContrato
      */
-    public function setVrSalarioContrato( $vrSalarioContrato ): void
+    public function setVrSalarioContrato($vrSalarioContrato): void
     {
         $this->vrSalarioContrato = $vrSalarioContrato;
     }
@@ -426,7 +431,7 @@ class RhuPago
     /**
      * @param mixed $vrDevengado
      */
-    public function setVrDevengado( $vrDevengado ): void
+    public function setVrDevengado($vrDevengado): void
     {
         $this->vrDevengado = $vrDevengado;
     }
@@ -442,7 +447,7 @@ class RhuPago
     /**
      * @param mixed $vrDeduccion
      */
-    public function setVrDeduccion( $vrDeduccion ): void
+    public function setVrDeduccion($vrDeduccion): void
     {
         $this->vrDeduccion = $vrDeduccion;
     }
@@ -458,7 +463,7 @@ class RhuPago
     /**
      * @param mixed $vrNeto
      */
-    public function setVrNeto( $vrNeto ): void
+    public function setVrNeto($vrNeto): void
     {
         $this->vrNeto = $vrNeto;
     }
@@ -474,7 +479,7 @@ class RhuPago
     /**
      * @param mixed $estadoAutorizado
      */
-    public function setEstadoAutorizado( $estadoAutorizado ): void
+    public function setEstadoAutorizado($estadoAutorizado): void
     {
         $this->estadoAutorizado = $estadoAutorizado;
     }
@@ -490,7 +495,7 @@ class RhuPago
     /**
      * @param mixed $estadoAprobado
      */
-    public function setEstadoAprobado( $estadoAprobado ): void
+    public function setEstadoAprobado($estadoAprobado): void
     {
         $this->estadoAprobado = $estadoAprobado;
     }
@@ -506,7 +511,7 @@ class RhuPago
     /**
      * @param mixed $estadoAnulado
      */
-    public function setEstadoAnulado( $estadoAnulado ): void
+    public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
     }
@@ -522,7 +527,7 @@ class RhuPago
     /**
      * @param mixed $comentario
      */
-    public function setComentario( $comentario ): void
+    public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
     }
@@ -538,7 +543,7 @@ class RhuPago
     /**
      * @param mixed $usuario
      */
-    public function setUsuario( $usuario ): void
+    public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
     }
@@ -554,7 +559,7 @@ class RhuPago
     /**
      * @param mixed $empleadoRel
      */
-    public function setEmpleadoRel( $empleadoRel ): void
+    public function setEmpleadoRel($empleadoRel): void
     {
         $this->empleadoRel = $empleadoRel;
     }
@@ -570,7 +575,7 @@ class RhuPago
     /**
      * @param mixed $contratoRel
      */
-    public function setContratoRel( $contratoRel ): void
+    public function setContratoRel($contratoRel): void
     {
         $this->contratoRel = $contratoRel;
     }
@@ -586,7 +591,7 @@ class RhuPago
     /**
      * @param mixed $pagoTipoRel
      */
-    public function setPagoTipoRel( $pagoTipoRel ): void
+    public function setPagoTipoRel($pagoTipoRel): void
     {
         $this->pagoTipoRel = $pagoTipoRel;
     }
@@ -602,7 +607,7 @@ class RhuPago
     /**
      * @param mixed $programacionDetalleRel
      */
-    public function setProgramacionDetalleRel( $programacionDetalleRel ): void
+    public function setProgramacionDetalleRel($programacionDetalleRel): void
     {
         $this->programacionDetalleRel = $programacionDetalleRel;
     }
@@ -618,7 +623,7 @@ class RhuPago
     /**
      * @param mixed $entidadSaludRel
      */
-    public function setEntidadSaludRel( $entidadSaludRel ): void
+    public function setEntidadSaludRel($entidadSaludRel): void
     {
         $this->entidadSaludRel = $entidadSaludRel;
     }
@@ -634,25 +639,9 @@ class RhuPago
     /**
      * @param mixed $entidadPensionRel
      */
-    public function setEntidadPensionRel( $entidadPensionRel ): void
+    public function setEntidadPensionRel($entidadPensionRel): void
     {
         $this->entidadPensionRel = $entidadPensionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPagosDetallesPagoRel()
-    {
-        return $this->pagosDetallesPagoRel;
-    }
-
-    /**
-     * @param mixed $pagosDetallesPagoRel
-     */
-    public function setPagosDetallesPagoRel( $pagosDetallesPagoRel ): void
-    {
-        $this->pagosDetallesPagoRel = $pagosDetallesPagoRel;
     }
 
     /**
@@ -666,10 +655,40 @@ class RhuPago
     /**
      * @param mixed $programacionRel
      */
-    public function setProgramacionRel( $programacionRel ): void
+    public function setProgramacionRel($programacionRel): void
     {
         $this->programacionRel = $programacionRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPagosDetallesPagoRel()
+    {
+        return $this->pagosDetallesPagoRel;
+    }
 
+    /**
+     * @param mixed $pagosDetallesPagoRel
+     */
+    public function setPagosDetallesPagoRel($pagosDetallesPagoRel): void
+    {
+        $this->pagosDetallesPagoRel = $pagosDetallesPagoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEgresosDetallesPagoRel()
+    {
+        return $this->egresosDetallesPagoRel;
+    }
+
+    /**
+     * @param mixed $egresosDetallesPagoRel
+     */
+    public function setEgresosDetallesPagoRel($egresosDetallesPagoRel): void
+    {
+        $this->egresosDetallesPagoRel = $egresosDetallesPagoRel;
+    }
 }

@@ -117,8 +117,8 @@ class Factura2 extends \FPDF
         $this->SetXY(18.5, 75);
         $this->Cell(15, 4, 'VENDEDOR:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
-        $this->SetX(50);
-        $this->Cell(15, 4, '', 0, 0, 'L', 0);
+        $this->SetX(52);
+        $this->Cell(15, 4, utf8_decode($arMovimiento->getAsesorRel()->getNombre()), 0, 0, 'L', 0);
 
         $this->SetFont('Arial', 'B', 9);
         $this->SetXY(18.5, 79);

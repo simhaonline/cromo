@@ -42,4 +42,21 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         }
         return $query ? $query->getQuery()->execute() : null;
     }
+
+    /**
+     * @param $codigoPago
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function creditos($codigoProgramacion)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->select('pd.codigoPagoDetallePk')
+            ->addSelect('pd.codigoCreditoFk')
+            ->addSelect('pd.vrPago')
+            ->leftJoin('pd.pagoRel', 'p')
+            ->where('pd.codigoCreditoFk IS NOT NULL')
+            ->andWhere('p.codigoProgramacionFk = ' . $codigoProgramacion);
+        return $query->getQuery()->execute();
+    }
 }

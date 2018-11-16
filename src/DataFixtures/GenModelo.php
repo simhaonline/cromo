@@ -13,6 +13,7 @@ class GenModelo extends Fixture
         $arrayGenModulo= array(
             array('modulo'=>'Turno','modelo'=>array(
                 'TurCliente',
+                'TurContrato',
             )),
             array('modulo'=>'Cartera','modelo'=>array(
                 'CarCliente',

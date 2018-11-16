@@ -1,0 +1,9 @@
+{% extends 'base_recursoHumano.html.twig' %}
+{% block content %}
+    <br>
+    <br>
+    {{ form_start(form) }}
+    {% include 'estructura/administracion/tablaGeneral.html.twig' %}
+    {% include 'estructura/administracion/botoneraGeneral.html.twig' %}
+    {{ form_end(form) }}
+{% endblock %}

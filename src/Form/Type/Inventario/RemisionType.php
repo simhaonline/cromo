@@ -30,6 +30,15 @@ class RemisionType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Remision tipo:'
             ])
+            ->add('asesorRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\General\GenAsesor',
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre'
+            ])
             ->add('soporte',TextType::class, ['required' => false,'label' => 'Soporte:'])
             ->add('comentario',TextareaType::class, ['required' => false,'label' => 'Comentario:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);

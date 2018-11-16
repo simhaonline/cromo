@@ -28,6 +28,11 @@ class InvMovimiento
     private $codigoFacturaTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_asesor_fk", type="integer", nullable=true)
+     */
+    private $codigoAsesorFk;
+
+    /**
      * @ORM\Column(name="codigo_documento_tipo_fk", type="string",length=10, nullable=true)
      */
     private $codigoDocumentoTipoFk;
@@ -171,6 +176,13 @@ class InvMovimiento
 
      */
     protected $terceroRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="movimientosAsesorRel")
+     * @ORM\JoinColumn(name="codigo_asesor_fk", referencedColumnName="codigo_asesor_pk")
+
+     */
+    protected $asesorRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvFacturaTipo", inversedBy="movimientosFacturaTipoRel")
@@ -732,6 +744,38 @@ class InvMovimiento
     public function setFacturaTipoRel($facturaTipoRel): void
     {
         $this->facturaTipoRel = $facturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAsesorFk()
+    {
+        return $this->codigoAsesorFk;
+    }
+
+    /**
+     * @param mixed $codigoAsesorFk
+     */
+    public function setCodigoAsesorFk($codigoAsesorFk): void
+    {
+        $this->codigoAsesorFk = $codigoAsesorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsesorRel()
+    {
+        return $this->asesorRel;
+    }
+
+    /**
+     * @param mixed $asesorRel
+     */
+    public function setAsesorRel($asesorRel): void
+    {
+        $this->asesorRel = $asesorRel;
     }
 
 

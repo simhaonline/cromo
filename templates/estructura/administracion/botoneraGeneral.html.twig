@@ -1,0 +1,12 @@
+<div class="btn-toolbar" style="float: right">
+    <div class="btn-group">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-sm btn-default"
+           href="{{ path('administracion_nuevo',{'modulo' : modulo,'entidad' : entidad, 'id' : 0 }) }}">Nuevo</a>
+    </div>
+    <div class="btn-group">
+        {{ form_widget(form.btnEliminar) }}
+    </div>
+</div>

@@ -13,13 +13,13 @@ class GenModulo extends Fixture
     {
         $arrayGenModulo=array('Cartera','Compra','Documental','Financiero','General','Inventario','Recurso Humano','Seguridad','Transporte');
         foreach ($arrayGenModulo as $arrGenModulo){
-        $arGenModulo = $manager->getRepository('App:General\GenModulo')->find($arrGenModulo);
-        if(!$arGenModulo) {
-            $arGenModulo = new \App\Entity\General\GenModulo();
-        $arGenModulo->setCodigoModuloPk($arrGenModulo);
-            $manager->persist($arGenModulo);
-            $manager->flush();
-        }
+            $arGenModulo = $manager->getRepository('App:General\GenModulo')->find($arrGenModulo);
+            if(!$arGenModulo) {
+                $arGenModulo = new \App\Entity\General\GenModulo();
+                $arGenModulo->setCodigoModuloPk($arrGenModulo);
+                $manager->persist($arGenModulo);
+                $manager->flush();
+            }
         }
     }
 }

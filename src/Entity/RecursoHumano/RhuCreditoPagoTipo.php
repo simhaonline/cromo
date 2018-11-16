@@ -26,6 +26,11 @@ class RhuCreditoPagoTipo {
     protected $creditosCreditoPagoTipoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCreditoPago", mappedBy="creditoPagoTipoRel")
+     */
+    protected $creditosPagosCreditoPagoTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCreditoPagoTipoPk()
@@ -71,6 +76,22 @@ class RhuCreditoPagoTipo {
     public function setCreditosCreditoPagoTipoRel( $creditosCreditoPagoTipoRel ): void
     {
         $this->creditosCreditoPagoTipoRel = $creditosCreditoPagoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreditosPagosCreditoPagoTipoRel()
+    {
+        return $this->creditosPagosCreditoPagoTipoRel;
+    }
+
+    /**
+     * @param mixed $creditosPagosCreditoPagoTipoRel
+     */
+    public function setCreditosPagosCreditoPagoTipoRel( $creditosPagosCreditoPagoTipoRel ): void
+    {
+        $this->creditosPagosCreditoPagoTipoRel = $creditosPagosCreditoPagoTipoRel;
     }
 
 

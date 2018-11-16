@@ -153,6 +153,11 @@ class ProgramacionController extends BaseController
                 ini_set("memory_limit", -1);
                 $em->getRepository(RhuProgramacion::class)->autorizar($arProgramacion, $this->getUser()->getUsername());
             }
+            if ($form->get('btnAprobar')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $em->getRepository(RhuProgramacion::class)->aprobar($arProgramacion);
+            }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);

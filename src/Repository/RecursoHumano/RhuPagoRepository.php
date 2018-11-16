@@ -73,7 +73,10 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaDesdeContrato());
         $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaHastaContrato());
 
-        $arrDatosGenerales = array('ingresoBaseCotizacion' => 0,
+        $arrDatosGenerales = array(
+            'devengado' => 0,
+            'deduccion' => 0,
+            'ingresoBaseCotizacion' => 0,
             'ingresoBasePrestacion' => 0,
             'neto' => 0);
         $valorDia = $arContrato->getVrSalario() / 30;
@@ -272,6 +275,8 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
 
         $arPago->setVrNeto($arrDatosGenerales['neto']);
+        $arPago->setVrDeduccion($arrDatosGenerales['deduccion']);
+        $arPago->setVrDevengado($arrDatosGenerales['devengado']);
         $em->persist($arPago);
         return $arrDatosGenerales['neto'];
     }
@@ -334,8 +339,10 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPagoDetalle->setOperacion($arConcepto->getOperacion());
         if ($arConcepto->getOperacion() == -1) {
             $arPagoDetalle->setVrDeduccion($pagoDetalle);
+            $arrDatosGenerales['deduccion'] += $pagoDetalle;
         } else {
             $arPagoDetalle->setVrDevengado($pagoDetalle);
+            $arrDatosGenerales['devengado'] += $pagoDetalle;
         }
         $arrDatosGenerales['neto'] += $pagoDetalleOperado;
 

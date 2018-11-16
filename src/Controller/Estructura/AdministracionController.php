@@ -2,12 +2,12 @@
 
 namespace App\Controller\Estructura;
 
+use App\Controller\BaseController;
 use App\Entity\General\GenEntidad;
 use App\Entity\General\GenCubo;
 use App\General\General;
+use App\Utilidades\Mensajes;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -17,13 +17,157 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class AdministracionController extends Controller
+final class AdministracionController extends BaseController
 {
+    protected $clase;
+    protected $claseFormulario;
+    protected $claseNombre;
+    protected $modulo;
+    protected $funcion;
+    protected $grupo;
+    protected $nombre;
+
+    /**
+     * @author Andres Acevedo Cartagena
+     * @param Request $request
+     * @param $entidad
+     * @param $modulo
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("administracion/{modulo}/{entidad}/lista",name="administracion_lista")
+     */
+    public function lista(Request $request, $modulo, $entidad)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $this->request = $request;
+        $this->modulo = ucfirst($modulo);
+        $this->nombre = ucfirst($entidad);
+        $prefijo = $this->obtenerPrefijo($modulo);
+        $clase = "\\App\\Entity\\" . ucfirst($modulo) . "\\" . ucfirst($prefijo) . ucfirst($entidad);
+        $this->claseNombre = ucfirst($prefijo) . ucfirst($entidad);
+        $form = $this->botoneraLista();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            if ($form->get('btnEliminar')->isClicked()) {
+                foreach ($arrSeleccionados as $codigoRegistro) {
+                    $arRegistro = $em->find($clase, $codigoRegistro);
+                    if ($arRegistro) {
+                        $em->remove($arRegistro);
+                    }
+                }
+                try {
+                    $em->flush();
+                } catch (\Exception $e) {
+                    Mensajes::error('El registro esta siendo utilizado en el sistema');
+                }
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $this->getDatosExportar($form->getClickedButton()->getName(), $this->nombre);
+            }
+        }
+        return $this->render('estructura/administracion/lista.html.twig', [
+            'modulo' => $modulo,
+            'entidad' => $entidad,
+            'arrDatosLista' => $this->getDatosLista(),
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @author Andres Acevedo Cartagena
+     * @param Request $request
+     * @param $entidad string
+     * @param $modulo string
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("administracion/{modulo}/{entidad}/{id}/nuevo",name="administracion_nuevo")
+     */
+    public function nuevo(Request $request, $modulo, $entidad, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $prefijo = $this->obtenerPrefijo($modulo);
+        $clase = "\\App\\Entity\\" . ucfirst($modulo) . "\\" . ucfirst($prefijo) . ucfirst($entidad);
+        $arRegistro = new $clase();
+        if ($id != '0') {
+            $arRegistro = $em->find($clase, $id);
+            if (!$arRegistro) {
+                return $this->redirect($this->generateUrl('administracion_lista', ['modulo' => $modulo, 'entidad' => $entidad]));
+            }
+        }
+        $form = $this->createForm("\\App\Form\\Type\\" . ucfirst($modulo) . "\\" . ucfirst($entidad) . "Type", $arRegistro);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($arRegistro);
+            $em->flush();
+        }
+        return $this->render('estructura/administracion/nuevo.html.twig', [
+            'modulo' => $modulo,
+            'entidad' => $entidad,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @author Andres Acevedo Cartagena
+     * @param $modulo
+     * @param $entidad
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("administracion/{modulo}/{entidad}/{id}/detalle",name="administracion_detalle")
+     */
+    public function detalle($modulo, $entidad, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $prefijo = $this->obtenerPrefijo($modulo);
+        $clase = "\\App\\Entity\\" . ucfirst($modulo) . "\\" . ucfirst($prefijo) . ucfirst($entidad);
+        $arRegistro = $em->find($clase, $id);
+        return $this->render('estructura/administracion/detalle.html.twig', [
+            'modulo' => $modulo,
+            'entidad' => $entidad,
+            'arRegistro' => $arRegistro
+        ]);
+    }
+
+
+    /**
+     * @param $modulo
+     * @return string
+     */
+    private function obtenerPrefijo($modulo)
+    {
+        switch ($modulo) {
+            case 'inventario':
+                $prefijo = 'inv';
+                break;
+            case 'recursoHumano':
+                $prefijo = 'rhu';
+                break;
+            case 'cartera':
+                $prefijo = 'car';
+                break;
+            case 'compra':
+                $prefijo = 'com';
+                break;
+            case 'financiero':
+                $prefijo = 'fin';
+                break;
+            case 'transporte':
+                $prefijo = 'tte';
+                break;
+            case 'turno':
+                $prefijo = 'tur';
+                break;
+            case 'general':
+                $prefijo = 'gen';
+                break;
+        }
+        return $prefijo;
+    }
+
 
     /**
      * @param $arrRespuestas
@@ -51,7 +195,7 @@ final class AdministracionController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function generarExcel($arrDatos, $nombre)
+    public function generarExcelAdmin($arrDatos, $nombre)
     {
         if (count($arrDatos) > 0) {
             $spreadsheet = new Spreadsheet();
@@ -138,7 +282,6 @@ final class AdministracionController extends Controller
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-
      * @Route("admin/{modulo}/{entidad}/lista",name="admin_lista")
      */
     public function generarAdminLista(Request $request, $modulo, $entidad)
@@ -221,7 +364,7 @@ final class AdministracionController extends Controller
             'arEntidad' => $arEntidad,
             'arRegistro' => $arRegistro,
             'arrCampos' => $arrCampos,
-            'clase' => array('clase'=>$arEntidad->getPrefijo() . "_" . $entidad, 'codigo' => $id),
+            'clase' => array('clase' => $arEntidad->getPrefijo() . "_" . $entidad, 'codigo' => $id),
         ]);
     }
 
@@ -299,6 +442,7 @@ final class AdministracionController extends Controller
     }
 
     /**
+     * @author Andres Acevedo Cartagena
      * @param $arConfiguracionEntidad GenEntidad
      * @param $arrColumnas
      * @param $em

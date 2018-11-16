@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig\Extension\AbstractExtension;
 
@@ -33,6 +34,7 @@ class AppExtension extends AbstractExtension
             new \Twig_Function('crearCuerpoTabla', [$this, "crearCuerpoTabla"]),
             new \Twig_Function('generarArrRegistros', [$this, "generarArrRegistros"]),
             new \Twig_Function('validarBooleano', [$this, "validarBooleano"]),
+            new \Twig_Function('obtenerFormView', [$this, "obtenerFormView"]),
         ];
     }
 
@@ -191,6 +193,11 @@ class AppExtension extends AbstractExtension
                 return true;
             }
         }
+    }
+
+    public function obtenerFormView(FormView $formView, string $prop)
+    {
+        return $formView->children[$prop];
     }
 
     /**

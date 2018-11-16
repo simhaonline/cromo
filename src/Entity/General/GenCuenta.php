@@ -58,6 +58,11 @@ class GenCuenta
     protected $egresosCuentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEgreso" , mappedBy="cuentaRel")
+     */
+    protected $rhuEgresosCuentaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaPk()
@@ -201,5 +206,20 @@ class GenCuenta
         $this->egresosCuentaRel = $egresosCuentaRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRhuEgresosCuentaRel()
+    {
+        return $this->rhuEgresosCuentaRel;
+    }
+
+    /**
+     * @param mixed $rhuEgresosCuentaRel
+     */
+    public function setRhuEgresosCuentaRel($rhuEgresosCuentaRel): void
+    {
+        $this->rhuEgresosCuentaRel = $rhuEgresosCuentaRel;
+    }
 }
 

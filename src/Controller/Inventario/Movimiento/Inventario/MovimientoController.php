@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Movimiento\Inventario;
 
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvImportacionDetalle;
@@ -23,9 +24,7 @@ use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Form\Type\Inventario\MovimientoType;
 use App\Formato\Inventario\Factura1;
-use App\Formato\Inventario\Factura2;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Formato\Inventario\Factura2;;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -33,12 +32,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use App\General\General;
 
-class MovimientoController extends Controller
+class MovimientoController extends ControllerListenerGeneral
 {
+    protected $clase = InvMovimiento::class;
+    protected $claseNombre = "InvMovimiento";
+    protected $modulo = "Inventario";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Inventario";
+    protected $nombre = "Movimiento";
     var $query = '';
 
     /**
@@ -247,7 +251,7 @@ class MovimientoController extends Controller
                 $em->getRepository(InvMovimiento::class)->autorizar($arMovimiento, $this->getUser()->getUsername());
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository(InvMovimiento::class)->desautorizar($arMovimiento);
+               // $em->getRepository(InvMovimiento::class)->desautorizar($arMovimiento);
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC') {

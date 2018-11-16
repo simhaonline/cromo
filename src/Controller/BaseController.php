@@ -52,7 +52,7 @@ abstract class BaseController extends Controller
                             'required'=>false,
                             'class'=>$nombreRepositorio,
                             'choice_label'=>$campo['propiedades']['choice_label'],
-                            'placeholder' => "TODOS",
+                            'placeholder' => "TODO",
                         ]);
                 }
                 else if($campo['tipo']=="DateType"){

@@ -14,7 +14,7 @@ class InvItem
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",name="codigo_item_pk")
      */
     private $codigoItemPk;
 

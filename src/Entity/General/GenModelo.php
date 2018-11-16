@@ -23,9 +23,9 @@ class GenModelo
 
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Seguridad\SegUsuarioModelo", mappedBy="genModeloRel", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Seguridad\SegUsuarioModelo", mappedBy="modeloRel", cascade={"persist", "remove"})
      */
-    protected $seguridadUsuarioModeloGenModeloRel;
+    protected $seguridadUsuarioModeloModeloRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\General\GenNotificacionTipo", mappedBy="modeloRel", cascade={"persist", "remove"})
@@ -85,17 +85,17 @@ class GenModelo
     /**
      * @return mixed
      */
-    public function getSeguridadUsuarioModeloGenModeloRel()
+    public function getSeguridadUsuarioModeloModeloRel()
     {
-        return $this->seguridadUsuarioModeloGenModeloRel;
+        return $this->seguridadUsuarioModeloModeloRel;
     }
 
     /**
-     * @param mixed $seguridadUsuarioModeloGenModeloRel
+     * @param mixed $seguridadUsuarioModeloModeloRel
      */
-    public function setSeguridadUsuarioModeloGenModeloRel($seguridadUsuarioModeloGenModeloRel)
+    public function setSeguridadUsuarioModeloModeloRel($seguridadUsuarioModeloModeloRel)
     {
-        $this->seguridadUsuarioModeloGenModeloRel = $seguridadUsuarioModeloGenModeloRel;
+        $this->seguridadUsuarioModeloModeloRel = $seguridadUsuarioModeloModeloRel;
         return $this;
     }
 

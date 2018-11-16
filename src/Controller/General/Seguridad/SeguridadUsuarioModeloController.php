@@ -121,10 +121,10 @@ class SeguridadUsuarioModeloController extends AbstractController
                     foreach ($arrSeleccionados as $codigoModelo) {
                         $arGenModeloValidar = $em->getRepository('App:General\GenModelo')->find($codigoModelo);
                         if ($arGenModeloValidar && $arUsuario) {
-                            $arSegUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->findOneBy(['codigoUsuarioFk'=>$arUsuario->getUsername(),'codigoGenModeloFk'=>$arGenModeloValidar->getCodigoModeloPk()]);
+                            $arSegUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->findOneBy(['codigoUsuarioFk'=>$arUsuario->getUsername(),'codigoModeloFk'=>$arGenModeloValidar->getCodigoModeloPk()]);
                             if(!$arSegUsuarioModelo) {
                                 $arSeguridadUsuarioModelo = (new SegUsuarioModelo())
-                                    ->setGenModeloRel($arGenModeloValidar)
+                                    ->setModeloRel($arGenModeloValidar)
                                     ->setCodigoUsuarioFk($arUsuario->getUsername())
                                     ->setLista($arDatos['checkLista'])
                                     ->setDetalle($arDatos['checkDetalle'])
@@ -203,8 +203,8 @@ class SeguridadUsuarioModeloController extends AbstractController
         }
         return $this->render('general/seguridad/seguridad_usuario_modelo/editar.html.twig',[
            'form'=>$form->createView(),
-            'modulo'=>$arSeguridadUsuarioModelo->getGenModeloRel()->getCodigoModuloFk(),
-            'modelo'=>$arSeguridadUsuarioModelo->getCodigoGenModeloFk(),
+            'modulo'=>$arSeguridadUsuarioModelo->getModeloRel()->getCodigoModuloFk(),
+            'modelo'=>$arSeguridadUsuarioModelo->getCodigoModeloFk(),
         ]);
 
     }

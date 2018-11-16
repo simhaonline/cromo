@@ -32,6 +32,7 @@ class ControllerListener{
         $this->routeActual=$event->getRequest()->get('_route');
         $controller = $event->getController();
         $request = $event->getRequest();
+        $requestPhp=$_REQUEST;
         $session = $request->getSession();
         $funcionesProtegidas=array('lista','nuevo','detalle','aprobar','autorizar','anular');
         if($controller[0] instanceof ControllerListenerGeneral){
@@ -41,7 +42,7 @@ class ControllerListener{
                     $arUsuario=$this->user->getToken()->getUser();
                     $arGenModelo=$em->getRepository('App:General\GenModelo')->find($controller[0]->getClaseNombre());
                     if($arGenModelo) {
-                        $arSeguridadUsuarioModelo = $em->getRepository('App:Seguridad\SegUsuarioModelo')->findOneBy(['codigoUsuarioFk' => $arUsuario->getUsername(), 'codigoGenModeloFk' => $arGenModelo->getCodigoModeloPk()]);
+                        $arSeguridadUsuarioModelo = $em->getRepository('App:Seguridad\SegUsuarioModelo')->findOneBy(['codigoUsuarioFk' => $arUsuario->getUsername(), 'codigoModeloFk' => $arGenModelo->getCodigoModeloPk()]);
 
                         $permisos = [];
                         if ($arSeguridadUsuarioModelo) {
@@ -56,11 +57,25 @@ class ControllerListener{
                         }
                     }
                     if((isset($permisos[$controller[1]]) && $permisos[$controller[1]]) || !in_array($controller[1],$funcionesProtegidas) || $arUsuarioRol=="ROLE_ADMIN"){
-                        $session->set("permiso_denegado",null);
+                        if($controller[1]==="detalle"){
+                            foreach ($permisos as $key=>$permiso){
+                                $permisoMayuscula=ucfirst($key);
+                            if(isset($requestPhp['form']['btn'.$permisoMayuscula])){
+                                if(call_user_func(array($arSeguridadUsuarioModelo,"get{$permisoMayuscula}"))){
+                                    return;
+                                }
+                                else{
+                                    Mensajes::error('No tiene permiso para ingresar a la funcion de '.$permisoMayuscula);
+                                    $event->setController(function () use($url){
+                                        return new RedirectResponse($url);
+                                    });
+                                }
+                            }
+                            }
+                        }
                         return;
                     }
                     else{
-                        $session->set("permiso_denegado","No tiene permisos para ingresar a la ruta");
                         Mensajes::error('No tiene permiso para ingresar a la funcion de '.$controller[1]);
                         $event->setController(function () use($url){
                             return new RedirectResponse($url);

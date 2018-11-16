@@ -22,9 +22,9 @@ class SegUsuarioModelo
     private $codigoUsuarioFk;
 
     /**
-     * @ORM\Column(name="codigo_gen_modelo_fk", type="string", length=80)
+     * @ORM\Column(name="codigo_modelo_fk", type="string", length=80)
      */
-    private $codigoGenModeloFk;
+    private $codigoModeloFk;
 
     /**
      * @ORM\Column(name="nuevo", type="boolean", options={"default"=false})
@@ -58,10 +58,10 @@ class SegUsuarioModelo
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenModelo", inversedBy="seguridadUsuarioModeloGenModeloRel")
-     * @ORM\JoinColumn(name="codigo_gen_modelo_fk", referencedColumnName="codigo_modelo_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenModelo", inversedBy="seguridadUsuarioModeloModeloRel")
+     * @ORM\JoinColumn(name="codigo_modelo_fk", referencedColumnName="codigo_modelo_pk")
      */
-    protected $genModeloRel;
+    protected $modeloRel;
     /**
      * @return mixed
      */
@@ -90,17 +90,17 @@ class SegUsuarioModelo
     /**
      * @return mixed
      */
-    public function getCodigoGenModeloFk()
+    public function getCodigoModeloFk()
     {
-        return $this->codigoGenModeloFk;
+        return $this->codigoModeloFk;
     }
 
     /**
-     * @param mixed $codigoGenModeloFk
+     * @param mixed $codigoModeloFk
      */
-    public function setCodigoGenModeloFk($codigoGenModeloFk)
+    public function setCodigoModeloFK($codigoModeloFk)
     {
-        $this->codigoGenModeloFk = $codigoGenModeloFk;
+        $this->codigoModeloFk = $codigoModeloFk;
         return $this;
     }
 
@@ -228,17 +228,17 @@ class SegUsuarioModelo
     /**
      * @return mixed
      */
-    public function getGenModeloRel()
+    public function getModeloRel()
     {
-        return $this->genModeloRel;
+        return $this->modeloRel;
     }
 
     /**
-     * @param mixed $genModeloRel
+     * @param mixed $modeloRel
      */
-    public function setGenModeloRel($genModeloRel)
+    public function setModeloRel($modeloRel)
     {
-        $this->genModeloRel = $genModeloRel;
+        $this->modeloRel = $modeloRel;
         return $this;
     }
 

@@ -40,7 +40,7 @@ class UsuarioRepository extends ServiceEntityRepository
         $em=$this->getEntityManager();
         $arUsuarios = $em->createQueryBuilder()
             ->from('App:Seguridad\SegUsuarioModelo','seg')
-            ->join('seg.genModeloRel','m')
+            ->join('seg.modeloRel','m')
             ->addSelect('seg.codigoUsuarioFk as USUARIO')
             ->addSelect('m.codigoModuloFk as TIPO')
             ->addSelect('m.codigoModeloPk as MODELO')

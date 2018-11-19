@@ -77,7 +77,9 @@
                             <th>IVA</th>
                             <th>SUBOTAL</th>
                             <th>TOTAL</th>
-                            <th title="PENDIENTE">PEN</th>
+                            <th title="Cantidad pendiente">PEN</th>
+                            <th title="Remision detalle">R</th>
+                            <th title="Pedido detalle">P</th>
                             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
@@ -118,6 +120,8 @@
                                 <td class="numero">{{ arRemisionDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arRemisionDetalle.vrTotal | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;">{{ arRemisionDetalle.cantidadPendiente }}</td>
+                                <td>{{ arRemisionDetalle.codigoRemisionDetalleFk }}</td>
+                                <td>{{ arRemisionDetalle.codigoPedidoDetalleFk }}</td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRemisionDetalle.codigoRemisionDetallePk }}"/>
                                 </td>
                             </tr>
@@ -127,12 +131,21 @@
                 </div>
                 <div class="btn-toolbar" style="float: right">
                     {% if arRemision.estadoAutorizado == false %}
-                        <div class="btn-group">
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_remision_detalle_nuevo', {'codigoRemision':arRemision.codigoRemisionPk }) }}', 'RemisionAdicionarDetalle', 600, 900)">Nuevo</a>
-                        </div>
-                        <div class="btn-group">
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_remision_pedido_detalle_nuevo', {'id':arRemision.codigoRemisionPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde pedido</a>
-                        </div>
+                        {% if arRemision.remisionTipoRel.adicionar == 1 %}
+                            <div class="btn-group">
+                                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_remision_detalle_nuevo', {'codigoRemision':arRemision.codigoRemisionPk }) }}', 'RemisionAdicionarDetalle', 600, 900)">Nuevo</a>
+                            </div>
+                        {% endif %}
+                        {% if arRemision.remisionTipoRel.adicionarPedido == 1 %}
+                            <div class="btn-group">
+                                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_remision_pedido_detalle_nuevo', {'id':arRemision.codigoRemisionPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde pedido</a>
+                            </div>
+                        {% endif %}
+                        {% if arRemision.remisionTipoRel.adicionarRemision == 1 %}
+                            <div class="btn-group">
+                                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_comercial_remision_remision_detalle_nuevo', {'id':arRemision.codigoRemisionPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde remision (dev)</a>
+                            </div>
+                        {% endif %}
                     {% endif %}
                     <div class="btn-group">
                         {{ form_widget(form.btnActualizarDetalle) }}

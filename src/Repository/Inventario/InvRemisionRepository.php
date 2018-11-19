@@ -96,7 +96,7 @@ class InvRemisionRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if(!$arRemision->getEstadoAutorizado()) {
-            $respuesta = $this->validarDetalles($arRemision->getCodigoRemisionPk());
+            $respuesta = $this->validarDetalles($arRemision);
             if ($respuesta) {
                 Mensajes::error($respuesta);
             } else {
@@ -105,11 +105,20 @@ class InvRemisionRepository extends ServiceEntityRepository
                     $em->persist($arRemision);
                     $arRemisionDetalles = $em->getRepository(InvRemisionDetalle::class)->findBy(array('codigoRemisionFk' => $arRemision->getCodigoRemisionPk()));
                     foreach ($arRemisionDetalles as $arRemisionDetalle) {
+                        //Si afecta pedido
                         if($arRemisionDetalle->getCodigoPedidoDetalleFk()) {
                             $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arRemisionDetalle->getCodigoPedidoDetalleFk());
                             $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $arRemisionDetalle->getCantidad());
                             $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
                             $em->persist($arPedidoDetalle);
+                        }
+
+                        //Si afecta remision
+                        if($arRemisionDetalle->getCodigoRemisionDetalleFk()) {
+                            $arRemisionDetalleOrigen = $em->getRepository(InvRemisionDetalle::class)->find($arRemisionDetalle->getCodigoRemisionDetalleFk());
+                            $arRemisionDetalleOrigen->setCantidadAfectada($arRemisionDetalleOrigen->getCantidadAfectada() + $arRemisionDetalle->getCantidad());
+                            $arRemisionDetalleOrigen->setCantidadPendiente($arRemisionDetalleOrigen->getCantidad() - $arRemisionDetalleOrigen->getCantidadAfectada());
+                            $em->persist($arRemisionDetalleOrigen);
                         }
                     }
                     $em->flush();
@@ -178,9 +187,12 @@ class InvRemisionRepository extends ServiceEntityRepository
             if($arItem->getAfectaInventario() == 1) {
                 $arLote = $this->getEntityManager()->getRepository(InvLote::class)
                     ->findOneBy(['loteFk' => $arRemisionDetalle->getLoteFk(), 'codigoItemFk' => $arRemisionDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $arRemisionDetalle->getCodigoBodegaFk()]);
+
                 if($arRemisionDetalle->getOperacionInventario() == -1) {
-                    if($arRemisionDetalle->getCantidad() > $arLote->getCantidadDisponible()) {
-                        Mensajes::error("La cantidad: " . $arRemisionDetalle->getCantidad() . " del lote: " . $arRemisionDetalle->getLoteFk() ." en la remision con id: " . $arRemisionDetalle->getCodigoRemisionDetallePk() . " no tiene existencia suficiente");
+                    $cantidadRemisonadaFinal =  $arLote->getCantidadRemisionada() + $arRemisionDetalle->getCantidadOperada();
+                    $cantidadDisponibleFinal = $arLote->getCantidadExistencia() - $cantidadRemisonadaFinal;
+                    if($cantidadDisponibleFinal < 0) {
+                        Mensajes::error("La cantidad: " . $arRemisionDetalle->getCantidad() . " del lote: " . $arRemisionDetalle->getLoteFk() ." en la remision detalle id: " . $arRemisionDetalle->getCodigoRemisionDetallePk() . " no tiene existencia suficiente");
                         $validacion = false;
                         break;
                     }
@@ -195,6 +207,7 @@ class InvRemisionRepository extends ServiceEntityRepository
                 $em->persist($arItem);
             }
         }
+        //$validacion = false;
         return $validacion;
     }
 
@@ -210,17 +223,44 @@ class InvRemisionRepository extends ServiceEntityRepository
         if($arRemision->getEstadoAprobado() == 1 && $arRemision->getEstadoAnulado() == 0) {
             $arRemisionDetalles = $em->getRepository(InvRemisionDetalle::class)->findBy(array('codigoRemisionFk' => $arRemision->getCodigoRemisionPk()));
             foreach ($arRemisionDetalles as $arRemisionDetalle) {
+                if($arRemisionDetalle->getCantidadAfectada() > 0) {
+                    Mensajes::error("No se puede anular la remision porque uno de sus detalles es usado");
+                    $validacion = false;
+                    break;
+                }
+                $arItem = $this->getEntityManager()->getRepository(InvItem::class)->find($arRemisionDetalle->getCodigoItemFk());
+                if($arItem->getAfectaInventario() == 1) {
+                    $arLote = $this->getEntityManager()->getRepository(InvLote::class)
+                        ->findOneBy(['loteFk' => $arRemisionDetalle->getLoteFk(), 'codigoItemFk' => $arRemisionDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $arRemisionDetalle->getCodigoBodegaFk()]);
+                    $arLote->setCantidadRemisionada($arLote->getCantidadRemisionada() - $arRemisionDetalle->getCantidadOperada());
+                    $arLote->setCantidadDisponible($arLote->getCantidadExistencia() - $arLote->getCantidadRemisionada());
+                    $em->persist($arLote);
+                    $em->persist($arRemisionDetalle);
+                    $arItem->setCantidadRemisionada($arItem->getCantidadRemisionada() - $arRemisionDetalle->getCantidadOperada());
+                    $arItem->setCantidadDisponible($arItem->getCantidadExistencia() - $arItem->getCantidadRemisionada());
+                    $em->persist($arItem);
+                }
+
                 if($arRemisionDetalle->getCodigoPedidoDetalleFk()) {
-                    if($arRemisionDetalle->getCantidadAfectada() > 0) {
-                        Mensajes::error("No se puede anular la remision porque uno de sus detalles es usado");
-                        $validacion = false;
-                        break;
-                    }
                     $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arRemisionDetalle->getCodigoPedidoDetalleFk());
                     $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() - $arRemisionDetalle->getCantidad());
                     $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
                     $em->persist($arPedidoDetalle);
                 }
+                if($arRemisionDetalle->getCodigoRemisionDetalleFk()) {
+                    $arRemisionDetalleOrigen = $em->getRepository(InvRemisionDetalle::class)->find($arRemisionDetalle->getCodigoRemisionDetalleFk());
+                    $arRemisionDetalleOrigen->setCantidadAfectada($arRemisionDetalleOrigen->getCantidadAfectada() - $arRemisionDetalle->getCantidad());
+                    $arRemisionDetalleOrigen->setCantidadPendiente($arRemisionDetalleOrigen->getCantidad() - $arRemisionDetalleOrigen->getCantidadAfectada());
+                    $em->persist($arRemisionDetalleOrigen);
+                }
+                $arRemisionDetalle->setCantidad(0);
+                $arRemisionDetalle->setCantidadOperada(0);
+                $arRemisionDetalle->setCantidadPendiente(0);
+                $arRemisionDetalle->setVrSubtotal(0);
+                $arRemisionDetalle->setVrPrecio(0);
+                $arRemisionDetalle->setVrNeto(0);
+                $arRemisionDetalle->setVrIva(0);
+                $arRemisionDetalle->setPorcentajeIva(0);
             }
             if($validacion == true) {
                 $arRemision->setEstadoAnulado(1);
@@ -257,6 +297,8 @@ class InvRemisionRepository extends ServiceEntityRepository
                 $arRemisionDetalle->setCodigoBodegaFk($arrBodega[$codigo]);
                 $arRemisionDetalle->setLoteFk($arrLote[$codigo]);
                 $arRemisionDetalle->setCantidad( $arrCantidad[$codigo] != '' ? $arrCantidad[$codigo] :0 );
+                $arRemisionDetalle->setCantidadOperada($arRemisionDetalle->getCantidad() * $arRemisionDetalle->getOperacionInventario());
+                $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad());
                 $arRemisionDetalle->setVrPrecio( $arrPrecio[$codigo] != '' ? $arrPrecio[$codigo] : 0);
                 $em->persist($arRemisionDetalle);
             }
@@ -280,10 +322,10 @@ class InvRemisionRepository extends ServiceEntityRepository
         return $resultado[1];
     }
 
-    public function validarDetalles($codigoRemision)
+    public function validarDetalles($arRemision)
     {
         $respuesta = "";
-        $arRemisionDetalles = $this->getEntityManager()->getRepository(InvRemisionDetalle::class)->validarDetalles($codigoRemision);
+        $arRemisionDetalles = $this->getEntityManager()->getRepository(InvRemisionDetalle::class)->validarDetalles($arRemision->getCodigoRemisionPk());
         foreach ($arRemisionDetalles as $arRemisionDetalle) {
             if ($arRemisionDetalle['afectaInventario']) {
                 if($arRemisionDetalle['codigoBodegaFk'] == "" || $arRemisionDetalle['loteFk'] == "") {
@@ -301,6 +343,9 @@ class InvRemisionRepository extends ServiceEntityRepository
                 $respuesta = 'El detalle con id ' . $arRemisionDetalle['codigoRemisionDetallePk'] . ' tiene cantidad 0.';
                 break;
             }
+        }
+        if($respuesta == "") {
+            $respuesta = $this->validarCantidadesAfectar($arRemision->getCodigoRemisionPk());
         }
         return $respuesta;
     }
@@ -338,6 +383,54 @@ class InvRemisionRepository extends ServiceEntityRepository
                 }
             }
         }
+    }
+
+    private function validarCantidadesAfectar($codigoRemision) {
+        $em = $this->getEntityManager();
+        $respuesta = "";
+
+        //Validar pedidos
+        if($respuesta == "") {
+            $queryBuilder = $em->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
+                ->select('rd.codigoPedidoDetalleFk')
+                ->addSelect("SUM(rd.cantidad) AS cantidad")
+                ->where("rd.codigoRemisionFk = {$codigoRemision} ")
+                ->andWhere('rd.codigoPedidoDetalleFk IS NOT NULL')
+                ->groupBy('rd.codigoPedidoDetalleFk');
+            $arrResultado = $queryBuilder->getQuery()->getResult();
+            if ($arrResultado) {
+                foreach ($arrResultado as $arrElemento) {
+                    $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arrElemento['codigoPedidoDetalleFk']);
+                    if($arPedidoDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
+                        $respuesta = "El pedido detalle " . $arrElemento['codigoPedidoDetalleFk'] . " tiene pendiente " . $arPedidoDetalle->getCantidadPendiente() .
+                            " y no son suficientes para afectar " . $arrElemento['cantidad'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        //Validar remision
+        if($respuesta == "") {
+            $queryBuilder = $em->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
+                ->select('rd.codigoRemisionDetalleFk')
+                ->addSelect("SUM(rd.cantidad) AS cantidad")
+                ->where("rd.codigoRemisionFk = {$codigoRemision} ")
+                ->andWhere('rd.codigoRemisionDetalleFk IS NOT NULL')
+                ->groupBy('rd.codigoRemisionDetalleFk');
+            $arrResultado = $queryBuilder->getQuery()->getResult();
+            if ($arrResultado) {
+                foreach ($arrResultado as $arrElemento) {
+                    $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($arrElemento['codigoRemisionDetalleFk']);
+                    if($arRemisionDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
+                        $respuesta = "La remision detalle " . $arrElemento['codigoRemisionDetalleFk'] . " enlazada a esta remision tiene pendiente " . $arRemisionDetalle->getCantidadPendiente() .
+                            " y no son suficientes para afectar " . $arrElemento['cantidad'];
+                        break;
+                    }
+                }
+            }
+        }
+        return $respuesta;
     }
 
 }

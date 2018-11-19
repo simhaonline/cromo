@@ -141,8 +141,6 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             $mensajeError = "";
             foreach ($arrCodigo as $codigoMovimientoDetalle) {
                 $arMovimientoDetalle = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->find($codigoMovimientoDetalle);
-                $cantidadAnterior = $arMovimientoDetalle->getCantidad();
-                $cantidadNueva = $arrCantidad[$codigoMovimientoDetalle];
                 $arMovimientoDetalle->setCodigoBodegaFk($arrBodega[$codigoMovimientoDetalle]);
                 if($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
                     $arMovimientoDetalle->setCodigoBodegaDestinoFk($arrBodegaDestino[$codigoMovimientoDetalle]);

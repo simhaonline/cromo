@@ -27,12 +27,12 @@ class RegenerarController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('btnRegenerarExistencias', SubmitType::class, ['label' => 'Kardex', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnRegenerarRemisiones', SubmitType::class, ['label' => 'Remisiones', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnRegenerarCostos', SubmitType::class, ['label' => 'Costos', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnRegenerarPedidos', SubmitType::class, ['label' => 'Pedidos', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnRegenerarSolicitudes', SubmitType::class, ['label' => 'Solicitudes', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnRegenerarOrdenes', SubmitType::class, ['label' => 'Ordenes', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnRegenerarExistencias', SubmitType::class, ['label' => '2-Kardex', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnRegenerarRemisiones', SubmitType::class, ['label' => '1-Remisiones', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnRegenerarCostos', SubmitType::class, ['label' => '3-Costos', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnRegenerarPedidos', SubmitType::class, ['label' => '4-Pedidos', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnRegenerarSolicitudes', SubmitType::class, ['label' => '5-Solicitudes', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnRegenerarOrdenes', SubmitType::class, ['label' => '6-Ordenes', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

@@ -98,6 +98,11 @@ class InvRemisionDetalle
     private $codigoPedidoDetalleFk;
 
     /**
+     * @ORM\Column(name="codigo_remision_detalle_fk", type="integer", nullable=true)
+     */
+    private $codigoRemisionDetalleFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvRemision", inversedBy="remisionesDetallesPedidoRel")
      * @ORM\JoinColumn(name="codigo_remision_fk", referencedColumnName="codigo_remision_pk")
      */
@@ -110,15 +115,26 @@ class InvRemisionDetalle
     protected $pedidoDetalleRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimientoDetalle", mappedBy="remisionDetalleRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inventario\InvRemisionDetalle", inversedBy="remisionesDetallesRemisionDetalleRel")
+     * @ORM\JoinColumn(name="codigo_remision_detalle_fk", referencedColumnName="codigo_remision_detalle_pk")
      */
-    protected $movimientosDetallesRemisionDetalleRel;
+    protected $remisionDetalleRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvItem", inversedBy="remisionesDetallesItemRel")
      * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
     protected $itemRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimientoDetalle", mappedBy="remisionDetalleRel")
+     */
+    protected $movimientosDetallesRemisionDetalleRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvRemisionDetalle", mappedBy="remisionDetalleRel")
+     */
+    protected $remisionesDetallesRemisionDetalleRel;
 
     /**
      * @return mixed
@@ -182,6 +198,38 @@ class InvRemisionDetalle
     public function setCantidad($cantidad): void
     {
         $this->cantidad = $cantidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoBodegaFk()
+    {
+        return $this->codigoBodegaFk;
+    }
+
+    /**
+     * @param mixed $codigoBodegaFk
+     */
+    public function setCodigoBodegaFk($codigoBodegaFk): void
+    {
+        $this->codigoBodegaFk = $codigoBodegaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLoteFk()
+    {
+        return $this->loteFk;
+    }
+
+    /**
+     * @param mixed $loteFk
+     */
+    public function setLoteFk($loteFk): void
+    {
+        $this->loteFk = $loteFk;
     }
 
     /**
@@ -315,6 +363,70 @@ class InvRemisionDetalle
     /**
      * @return mixed
      */
+    public function getOperacionInventario()
+    {
+        return $this->operacionInventario;
+    }
+
+    /**
+     * @param mixed $operacionInventario
+     */
+    public function setOperacionInventario($operacionInventario): void
+    {
+        $this->operacionInventario = $operacionInventario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadOperada()
+    {
+        return $this->cantidadOperada;
+    }
+
+    /**
+     * @param mixed $cantidadOperada
+     */
+    public function setCantidadOperada($cantidadOperada): void
+    {
+        $this->cantidadOperada = $cantidadOperada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPedidoDetalleFk()
+    {
+        return $this->codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoPedidoDetalleFk
+     */
+    public function setCodigoPedidoDetalleFk($codigoPedidoDetalleFk): void
+    {
+        $this->codigoPedidoDetalleFk = $codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRemisionDetalleFk()
+    {
+        return $this->codigoRemisionDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoRemisionDetalleFk
+     */
+    public function setCodigoRemisionDetalleFk($codigoRemisionDetalleFk): void
+    {
+        $this->codigoRemisionDetalleFk = $codigoRemisionDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getRemisionRel()
     {
         return $this->remisionRel;
@@ -326,6 +438,38 @@ class InvRemisionDetalle
     public function setRemisionRel($remisionRel): void
     {
         $this->remisionRel = $remisionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidoDetalleRel()
+    {
+        return $this->pedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $pedidoDetalleRel
+     */
+    public function setPedidoDetalleRel($pedidoDetalleRel): void
+    {
+        $this->pedidoDetalleRel = $pedidoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemisionDetalleRel()
+    {
+        return $this->remisionDetalleRel;
+    }
+
+    /**
+     * @param mixed $remisionDetalleRel
+     */
+    public function setRemisionDetalleRel($remisionDetalleRel): void
+    {
+        $this->remisionDetalleRel = $remisionDetalleRel;
     }
 
     /**
@@ -363,99 +507,18 @@ class InvRemisionDetalle
     /**
      * @return mixed
      */
-    public function getCodigoBodegaFk()
+    public function getRemisionesDetallesRemisionDetalleRel()
     {
-        return $this->codigoBodegaFk;
+        return $this->remisionesDetallesRemisionDetalleRel;
     }
 
     /**
-     * @param mixed $codigoBodegaFk
+     * @param mixed $remisionesDetallesRemisionDetalleRel
      */
-    public function setCodigoBodegaFk( $codigoBodegaFk ): void
+    public function setRemisionesDetallesRemisionDetalleRel($remisionesDetallesRemisionDetalleRel): void
     {
-        $this->codigoBodegaFk = $codigoBodegaFk;
+        $this->remisionesDetallesRemisionDetalleRel = $remisionesDetallesRemisionDetalleRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getLoteFk()
-    {
-        return $this->loteFk;
-    }
-
-    /**
-     * @param mixed $loteFk
-     */
-    public function setLoteFk( $loteFk ): void
-    {
-        $this->loteFk = $loteFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOperacionInventario()
-    {
-        return $this->operacionInventario;
-    }
-
-    /**
-     * @param mixed $operacionInventario
-     */
-    public function setOperacionInventario( $operacionInventario ): void
-    {
-        $this->operacionInventario = $operacionInventario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCantidadOperada()
-    {
-        return $this->cantidadOperada;
-    }
-
-    /**
-     * @param mixed $cantidadOperada
-     */
-    public function setCantidadOperada( $cantidadOperada ): void
-    {
-        $this->cantidadOperada = $cantidadOperada;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoPedidoDetalleFk()
-    {
-        return $this->codigoPedidoDetalleFk;
-    }
-
-    /**
-     * @param mixed $codigoPedidoDetalleFk
-     */
-    public function setCodigoPedidoDetalleFk( $codigoPedidoDetalleFk ): void
-    {
-        $this->codigoPedidoDetalleFk = $codigoPedidoDetalleFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPedidoDetalleRel()
-    {
-        return $this->pedidoDetalleRel;
-    }
-
-    /**
-     * @param mixed $pedidoDetalleRel
-     */
-    public function setPedidoDetalleRel( $pedidoDetalleRel ): void
-    {
-        $this->pedidoDetalleRel = $pedidoDetalleRel;
-    }
-
 
 
 

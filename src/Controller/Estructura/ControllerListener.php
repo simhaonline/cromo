@@ -102,15 +102,16 @@ class ControllerListener{
      */
     public function getPermisosProcesos($em, $controller, $event, $url){
         $arSegUsuarioProceso=$em->getRepository('App:Seguridad\SegUsuarioProceso')->findOneBy(['codigoProcesoFk'=>$controller[0]->getProceso()]);
+        $arProceso=$em->getRepository('App:General\GenProceso')->find($controller[0]->getProceso());
         if($arSegUsuarioProceso){
             if(!$arSegUsuarioProceso->getIngreso()){
-                $this->redireccionar($event, $url, "No tiene permiso para ingresar al proceso '{$controller[0]->getNombreProceso()}'");
+                $this->redireccionar($event, $url, "No tiene permiso para ingresar al proceso '{$arProceso->getNombre()}'");
         }
             return;
 
         }
         else{
-            $this->redireccionar($event, $url, "No tiene permiso para ingresar al proceso '{$controller[0]->getNombreProceso()}'");
+            $this->redireccionar($event, $url, "No tiene permiso para ingresar al proceso '{$arProceso->getNombre()}'");
         }
     }
 

@@ -8,7 +8,11 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Modulo:</label>
                 <div class="col-sm-4">
-                    {{form_widget(form.cboModulo, { 'attr': {'class': 'modulo form-control'} }) }}
+                    {{form_widget(form.cboModulo, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Proceso tipo:</label>
+                <div class="col-sm-4">
+                    {{form_widget(form.cboTipoProceso, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -23,16 +27,20 @@
         <table class="table table-striped table-bordered table-hover">
             <thead>
             <tr>
+                <th>MODULO</th>
                 <th>TIPO</th>
                 <th>PROCESO</th>
+                <th>NOMBRE</th>
                 <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
             </tr>
             </thead>
             <tbody>
             {%for arGenProceso in arGenProceso %}
                 <tr>
+                    <td>{{  arGenProceso.modulo}}</td>
                     <td>{{  arGenProceso.tipo}}</td>
                     <td>{{  arGenProceso.codigoProcesoPk}}</td>
+                    <td>{{  arGenProceso.nombre}}</td>
                     <td align="center"><input type="checkbox"  name="ChkSeleccionar[]" value="{{ arGenProceso.codigoProcesoPk }}"/></td>
                 </tr>
             {% endfor %}

@@ -18,10 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ExistenciaController extends ControllerListenerGeneral
 {
-    protected $proceso = "0001";
-    protected $procestoTipo= "I";
-    protected $nombreProceso = "Existencia lote";
-    protected $modulo = "Inventario";
+    protected $proceso = "0002";
+
 
     /**
      * @param Request $request

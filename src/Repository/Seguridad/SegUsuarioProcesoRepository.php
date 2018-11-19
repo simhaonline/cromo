@@ -26,13 +26,16 @@ class SegUsuarioProcesoRepository extends ServiceEntityRepository
         $arSeguridadUsuarioProceso=$em->createQueryBuilder()
             ->from('App:Seguridad\SegUsuarioProceso','arsup')
             ->join('arsup.procesoRel','p')
+            ->join('p.procesoTipoRel','pt')
             ->select('arsup.codigoSeguridadUsuarioProcesoPk as codigoSeguridadProceso')
+            ->addSelect('pt.nombre as tipo')
             ->addSelect('p.nombre as nombre')
-            ->addSelect('p.codigoModuloFk as tipo')
+            ->addSelect('p.codigoModuloFk as modulo')
             ->addSelect('arsup.ingreso as lista')
             ->where("arsup.codigoUsuarioFk='{$idUsuario}'")
             ->getQuery()->getResult();
 
         return $arSeguridadUsuarioProceso;
     }
+
 }

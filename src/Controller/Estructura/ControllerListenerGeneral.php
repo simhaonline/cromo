@@ -10,7 +10,6 @@ abstract class ControllerListenerGeneral extends BaseController {
 
     protected $proceso=null;
 
-    protected $nombreProceso=null;
 
     /**
      * @return null
@@ -28,13 +27,6 @@ abstract class ControllerListenerGeneral extends BaseController {
         return $this->proceso;
     }
 
-    /**
-     * @return null
-     */
-    public function getNombreProceso()
-    {
-        return $this->nombreProceso;
-    }
 
 
 

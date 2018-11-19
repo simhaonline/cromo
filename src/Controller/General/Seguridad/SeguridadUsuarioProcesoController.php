@@ -3,6 +3,7 @@
 namespace App\Controller\General\Seguridad;
 
 use App\Entity\General\GenModulo;
+use App\Entity\General\GenProcesoTipo;
 use App\Entity\Seguridad\SegUsuarioProceso;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
@@ -35,7 +36,19 @@ class SeguridadUsuarioProcesoController extends AbstractController
                 'required' => false,
                 'empty_data' => "",
                 'placeholder' => "TODOS",
-                'data' => $session->get('arSeguridadUsuarioModulofiltroModulo')||""
+                'data' => $session->get('arSeguridadUsuarioProcesofiltroModulo')||""
+            ))
+            ->add('cboTipoProceso', EntityType::class, array(
+                'class' => GenProcesoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('m')
+                        ->orderBy('m.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => false,
+                'empty_data' => "",
+                'placeholder' => "TODOS",
+                'data' => $session->get('arSeguridadUsuarioProcesofiltroProcesoTipo')||""
             ))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
@@ -46,6 +59,7 @@ class SeguridadUsuarioProcesoController extends AbstractController
 
         if ($form->get('btnFiltrar')->isClicked()) {
             $session->set('arSeguridadUsuarioProcesofiltroModulo',$form->get('cboModulo')->getData());
+            $session->set('arSeguridadUsuarioProcesofiltroProcesoTipo',$form->get('cboTipoProceso')->getData());
         }
 
         if($form->get('btnGuardar')->isClicked()) {
@@ -72,6 +86,7 @@ class SeguridadUsuarioProcesoController extends AbstractController
                 $em->flush();
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 $session->set('arSeguridadUsuarioProcesofiltroModulo',null);
+                $session->set('arSeguridadUsuarioProcesofiltroProcesoTipo',null);
             }
             else{
                 Mensajes::error("No selecciono ningun dato para grabar");
@@ -79,6 +94,7 @@ class SeguridadUsuarioProcesoController extends AbstractController
         }
         if(!$form->get('btnGuardar')->isClicked() && !$form->get('btnFiltrar')->isClicked()) {
             $session->set('arSeguridadUsuarioProcesofiltroModulo', null);
+            $session->set('arSeguridadUsuarioProcesofiltroProcesoTipo', null);
         }
         $arGenProceso=$em->getRepository('App:General\GenProceso')->lista();
         return $this->render('general/seguridad/seguridad_usuario_proceso/nuevo.html.twig', [

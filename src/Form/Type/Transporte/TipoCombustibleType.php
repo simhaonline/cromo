@@ -27,4 +27,18 @@ class TipoCombustibleType extends AbstractType
             'data_class' => TteTipoCombustible::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista(){
+        return '[
+            {"campo":"codigoTipoCombustiblePk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"nombre",                          "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+        ]';
+    }
+
+    public function getEstructuraPropiedadesExportar(){
+        return '[
+            {"campo":"codigoTipoCombustiblePk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+        ]';
+    }
 }

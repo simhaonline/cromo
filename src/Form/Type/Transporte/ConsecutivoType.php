@@ -29,4 +29,18 @@ class ConsecutivoType extends AbstractType
             'data_class' => TteConsecutivo::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista(){
+        return '[
+            {"campo":"codigoConsecutivoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+        ]';
+    }
+
+    public function getEstructuraPropiedadesExportar(){
+        return '[
+            {"campo":"codigoConsecutivoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+        ]';
+    }
 }

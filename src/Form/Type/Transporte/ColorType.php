@@ -27,4 +27,18 @@ class ColorType extends AbstractType
             'data_class' => TteColor::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista(){
+        return '[
+            {"campo":"codigoColorPk",               "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+        ]';
+    }
+
+    public function getEstructuraPropiedadesExportar(){
+        return '[
+            {"campo":"codigoColorPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+        ]';
+    }
 }

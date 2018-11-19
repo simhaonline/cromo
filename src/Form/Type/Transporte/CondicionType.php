@@ -55,4 +55,48 @@ class CondicionType extends AbstractType
             'data_class' => TteCondicion::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista(){
+        return '[
+            {"campo":"codigoCondicionPk",           "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
+            {"campo":"codigoPrecioFk",              "tipo":"numero",    "ayuda":"Codigo precio",           "titulo":"CODIGO PRECIO"},
+            {"campo":"porcentajeManejo",            "tipo":"texto",     "ayuda":"Porcentaje manejo",       "titulo":"PORCENTAJE MANEJO"},
+            {"campo":"manejoMinimoUnidad",          "tipo":"texto",     "ayuda":"Manejo minimo unidad",    "titulo":"MANEJO MINIMO UNIDAD"},
+            {"campo":"manejoMinimoDespacho",        "tipo":"texto",     "ayuda":"Manejo minimo despacho",  "titulo":"MANEJO MINIMO DESPACHO"},
+            {"campo":"precioPeso",                  "tipo":"bool",      "ayuda":"Precio peso",             "titulo":"PRECIO PESO"},
+            {"campo":"precioUnidad",                "tipo":"bool",      "ayuda":"Precio unidad",           "titulo":"PRECIO UNIDAD"},
+            {"campo":"precioAdicional",             "tipo":"bool",      "ayuda":"Precio adicional",        "titulo":"PRECIO ADICIONAL"},
+            {"campo":"descuentoPeso",               "tipo":"texto",     "ayuda":"Descuento peso",          "titulo":"DESCUENTO PESO"},
+            {"campo":"descuentoUnidad",             "tipo":"texto",     "ayuda":"Descuento unidad",        "titulo":"DESCUENTO UNIDAD"},
+            {"campo":"pesoMinimo",                  "tipo":"numero",    "ayuda":"Peso minimo",             "titulo":"PESO MINIMO"},
+            {"campo":"permiteRecaudo",              "tipo":"bool",      "ayuda":"Permite recaudo",         "titulo":"PERMITE RECAUDO"},
+            {"campo":"precioGeneral",               "tipo":"bool",      "ayuda":"Precio general",          "titulo":"PRECIO GENERAL"},
+            {"campo":"redondearFlete",              "tipo":"bool",      "ayuda":"Redondear flete",         "titulo":"REDONDEAR FLETE"},
+            {"campo":"limitarDescuentoReexpedicion","tipo":"bool",      "ayuda":"Limitar descuento reexpedicion","titulo":"LIMITAR DESCUENTO REEXPEDICION"},
+            {"campo":"comentario",                  "tipo":"texto",     "ayuda":"Comentario",              "titulo":"COMENTARIO"}
+        ]';
+    }
+
+    public function getEstructuraPropiedadesExportar(){
+        return '[
+            {"campo":"codigoCondicionPk",           "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
+            {"campo":"codigoPrecioFk",              "tipo":"numero",    "ayuda":"Codigo precio",           "titulo":"CODIGO PRECIO"},
+            {"campo":"porcentajeManejo",            "tipo":"texto",     "ayuda":"Porcentaje manejo",       "titulo":"PORCENTAJE MANEJO"},
+            {"campo":"manejoMinimoUnidad",          "tipo":"texto",     "ayuda":"Manejo minimo unidad",    "titulo":"MANEJO MINIMO UNIDAD"},
+            {"campo":"manejoMinimoDespacho",        "tipo":"texto",     "ayuda":"Manejo minimo despacho",  "titulo":"MANEJO MINIMO DESPACHO"},
+            {"campo":"precioPeso",                  "tipo":"bool",      "ayuda":"Precio peso",             "titulo":"PRECIO PESO"},
+            {"campo":"precioUnidad",                "tipo":"bool",      "ayuda":"Precio unidad",           "titulo":"PRECIO UNIDAD"},
+            {"campo":"precioAdicional",             "tipo":"bool",      "ayuda":"Precio adicional",        "titulo":"PRECIO ADICIONAL"},
+            {"campo":"descuentoPeso",               "tipo":"texto",     "ayuda":"Descuento peso",          "titulo":"DESCUENTO PESO"},
+            {"campo":"descuentoUnidad",             "tipo":"texto",     "ayuda":"Descuento unidad",        "titulo":"DESCUENTO UNIDAD"},
+            {"campo":"pesoMinimo",                  "tipo":"numero",    "ayuda":"Peso minimo",             "titulo":"PESO MINIMO"},
+            {"campo":"permiteRecaudo",              "tipo":"bool",      "ayuda":"Permite recaudo",         "titulo":"PERMITE RECAUDO"},
+            {"campo":"precioGeneral",               "tipo":"bool",      "ayuda":"Precio general",          "titulo":"PRECIO GENERAL"},
+            {"campo":"redondearFlete",              "tipo":"bool",      "ayuda":"Redondear flete",         "titulo":"REDONDEAR FLETE"},
+            {"campo":"limitarDescuentoReexpedicion","tipo":"bool",      "ayuda":"Limitar descuento reexpedicion","titulo":"LIMITAR DESCUENTO REEXPEDICION"},
+            {"campo":"comentario",                  "tipo":"texto",     "ayuda":"Comentario",              "titulo":"COMENTARIO"}
+        ]';
+    }
 }

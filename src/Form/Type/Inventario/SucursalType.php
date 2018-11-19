@@ -41,7 +41,7 @@ class SucursalType extends AbstractType
                 'attr' => ['class' => 'to-select-2']
             ])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -50,4 +50,32 @@ class SucursalType extends AbstractType
             'data_class' => InvSucursal::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoSucursalPk",        "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
+            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre de la sucursal",      "titulo":"NOMBRE"},
+            {"campo":"direccion",               "tipo":"texto"  ,"ayuda":"Direccion de la sucursal",   "titulo":"DIRECCION"},
+            {"campo":"contacto",                "tipo":"texto"  ,"ayuda":"Contacto en la sucursal",    "titulo":"CONTACTO"},
+            {"campo":"terceroRel.nombreCorto",       "tipo":"texto"  ,"ayuda":"Nombre del tercero",         "titulo":"TERCERO", "relacion":""},
+            {"campo":"ciudadRel.nombre",        "tipo":"texto"  ,"ayuda":"Ciudad de la sucursal",      "titulo":"CIUDAD", "relacion":""}                  
+                                                                          
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoSucursalPk",        "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
+            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre de la sucursal",      "titulo":"NOMBRE"}
+            {"campo":"direccion",               "tipo":"texto"  ,"ayuda":"Direccion de la sucursal",   "titulo":"DIRECCION"}
+            {"campo":"contacto",                "tipo":"texto"  ,"ayuda":"Contacto en la sucursal",    "titulo":"CONTACTO"}
+            {"campo":"terceroRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre del tercero",         "titulo":"TERCERO", "relacion":""},
+            {"campo":"ciudadRel.nombre",        "tipo":"texto"  ,"ayuda":"Ciudad de la sucursal",      "titulo":"CIUDAD", "relacion":""}                                    
+        ]';
+        return $campos;
+    }
+
 }

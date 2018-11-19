@@ -17,7 +17,6 @@ class BodegaType extends AbstractType
             ->add('codigoBodegaPk',TextType::class,['label' => 'Código bodega: '])
             ->add('nombre',TextType::class,['label' => 'Nombre: '])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 
@@ -26,5 +25,24 @@ class BodegaType extends AbstractType
         $resolver->setDefaults([
             'data_class' => InvBodega::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoBodegaPk",        "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
+            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre de la bodega",           "titulo":"NOMBRE"}                     
+                                                                          
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoBodegaPk",        "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
+            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre de la bodega",           "titulo":"NOMBRE"}                                             
+        ]';
+        return $campos;
     }
 }

@@ -39,4 +39,22 @@ class OperacionType extends AbstractType
             'data_class' => TteOperacion::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista(){
+        return '[
+            {"campo":"codigoOperacionPk",           "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
+            {"campo":"codigoCiudadFk",              "tipo":"texto",     "ayuda":"Codigo ciudad",           "titulo":"CODIGO CIUDAD"},
+            {"campo":"codigoCentroCostoFk",         "tipo":"texto",     "ayuda":"Codigo centro costo",     "titulo":"CODIGO CENTRO COSTO"}
+        ]';
+    }
+
+    public function getEstructuraPropiedadesExportar(){
+        return '[
+            {"campo":"codigoOperacionPk",           "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
+            {"campo":"codigoCiudadFk",              "tipo":"texto",     "ayuda":"Codigo ciudad",           "titulo":"CODIGO CIUDAD"},
+            {"campo":"codigoCentroCostoFk",         "tipo":"texto",     "ayuda":"Codigo centro costo",     "titulo":"CODIGO CENTRO COSTO"}
+        ]';
+    }
 }

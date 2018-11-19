@@ -205,14 +205,31 @@ class InvRemisionRepository extends ServiceEntityRepository
      */
     public function anular($arRemision)
     {
+        $validacion = true;
+        $em = $this->getEntityManager();
         if($arRemision->getEstadoAprobado() == 1 && $arRemision->getEstadoAnulado() == 0) {
-            $arRemision->setEstadoAnulado(1);
-            $arRemision->setVrSubtotal(0);
-            $arRemision->setVrIva(0);
-            $arRemision->setVrTotal(0);
-            $this->getEntityManager()->persist($arRemision);
-            $this->getEntityManager()->flush();
-
+            $arRemisionDetalles = $em->getRepository(InvRemisionDetalle::class)->findBy(array('codigoRemisionFk' => $arRemision->getCodigoRemisionPk()));
+            foreach ($arRemisionDetalles as $arRemisionDetalle) {
+                if($arRemisionDetalle->getCodigoPedidoDetalleFk()) {
+                    if($arRemisionDetalle->getCantidadAfectada() > 0) {
+                        Mensajes::error("No se puede anular la remision porque uno de sus detalles es usado");
+                        $validacion = false;
+                        break;
+                    }
+                    $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arRemisionDetalle->getCodigoPedidoDetalleFk());
+                    $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() - $arRemisionDetalle->getCantidad());
+                    $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
+                    $em->persist($arPedidoDetalle);
+                }
+            }
+            if($validacion == true) {
+                $arRemision->setEstadoAnulado(1);
+                $arRemision->setVrSubtotal(0);
+                $arRemision->setVrIva(0);
+                $arRemision->setVrTotal(0);
+                $em->persist($arRemision);
+                $em->flush();
+            }
         } else {
             Mensajes::error('El documento debe estar aprobado y no puede estar previamente anulado');
         }

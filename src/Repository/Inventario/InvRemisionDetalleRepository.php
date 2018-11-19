@@ -145,4 +145,37 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         return $resultado[1];
     }
 
+    public function listaRegenerarCantidadAfectada()
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
+            ->select('rd.codigoRemisionDetallePk')
+            ->addSelect('rd.cantidad')
+            ->addSelect('rd.cantidadAfectada')
+            ->addSelect('rd.cantidadPendiente');
+        $arrRemisionsDetalles = $queryBuilder->getQuery()->getResult();
+        return $arrRemisionsDetalles;
+    }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function regenerarCantidadAfectada() {
+        $em = $this->getEntityManager();
+        $arRemisionsDetalles = $em->getRepository(InvRemisionDetalle::class)->listaRegenerarCantidadAfectada();
+        foreach ($arRemisionsDetalles as $arRemisionDetalle) {
+            $cantidad = $arRemisionDetalle['cantidad'];
+            $cantidadAfectada = $em->getRepository(InvMovimientoDetalle::class)->cantidadAfectaRemision($arRemisionDetalle['codigoRemisionDetallePk']);
+            $cantidadPendiente = $cantidad - $cantidadAfectada;
+            if($cantidadAfectada != $arRemisionDetalle['cantidadAfectada'] || $cantidadPendiente != $arRemisionDetalle['cantidadPendiente']) {
+                $arRemisionDetalleAct = $em->getRepository(InvRemisionDetalle::class)->find($arRemisionDetalle['codigoRemisionDetallePk']);
+                $arRemisionDetalleAct->setCantidadAfectada($cantidadAfectada);
+                $arRemisionDetalleAct->setCantidadPendiente($cantidadPendiente);
+                $em->persist($arRemisionDetalleAct);
+            }
+        }
+        $em->flush();
+    }    
+    
 }

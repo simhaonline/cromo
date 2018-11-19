@@ -107,6 +107,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->addSelect('rd.codigoRemisionFk')
             ->addSelect('rd.codigoItemFk')
             ->addSelect('rd.cantidadPendiente')
+            ->addSelect('rd.loteFk')
             ->addSelect('rd.cantidad')
             ->addSelect('i.nombre')
             ->addSelect('r.numero')

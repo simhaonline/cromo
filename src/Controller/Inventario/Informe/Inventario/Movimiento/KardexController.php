@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Informe\Inventario\Movimiento;
 
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
@@ -16,8 +17,13 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class KardexController extends Controller
+class KardexController extends ControllerListenerGeneral
 {
+    protected $proceso = "0001";
+    protected $procestoTipo= "I";
+    protected $nombreProceso = "Kardex";
+    protected $modulo = "Inventario";
+
     /**
      * @param Request $request
      * @return Response

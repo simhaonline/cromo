@@ -32,7 +32,7 @@ class GenNotificacionTipo
     private $estadoActivo;
 
     /**
-     * @ORM\Column(name="codigo_modelo_fk",  type="string", nullable=false)
+     * @ORM\Column(name="codigo_modelo_fk",  type="string",length=80, nullable=false)
      */
     private $codigoModeloFk;
 
@@ -53,13 +53,10 @@ class GenNotificacionTipo
     /**
      * @param mixed $codigoNotificacionTipoPk
      */
-    public function setCodigoNotificacionTipoPk($codigoNotificacionTipoPk)
+    public function setCodigoNotificacionTipoPk($codigoNotificacionTipoPk): void
     {
         $this->codigoNotificacionTipoPk = $codigoNotificacionTipoPk;
-        return $this;
     }
-
-
 
     /**
      * @return mixed
@@ -72,10 +69,9 @@ class GenNotificacionTipo
     /**
      * @param mixed $nombre
      */
-    public function setNombre($nombre)
+    public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
-        return $this;
     }
 
     /**
@@ -89,10 +85,9 @@ class GenNotificacionTipo
     /**
      * @param mixed $usuarios
      */
-    public function setUsuarios($usuarios)
+    public function setUsuarios($usuarios): void
     {
         $this->usuarios = $usuarios;
-        return $this;
     }
 
     /**
@@ -106,10 +101,9 @@ class GenNotificacionTipo
     /**
      * @param mixed $estadoActivo
      */
-    public function setEstadoActivo($estadoActivo)
+    public function setEstadoActivo($estadoActivo): void
     {
         $this->estadoActivo = $estadoActivo;
-        return $this;
     }
 
     /**
@@ -123,10 +117,9 @@ class GenNotificacionTipo
     /**
      * @param mixed $codigoModeloFk
      */
-    public function setCodigoModeloFk($codigoModeloFk)
+    public function setCodigoModeloFk($codigoModeloFk): void
     {
         $this->codigoModeloFk = $codigoModeloFk;
-        return $this;
     }
 
     /**
@@ -140,11 +133,8 @@ class GenNotificacionTipo
     /**
      * @param mixed $modeloRel
      */
-    public function setModeloRel($modeloRel)
+    public function setModeloRel($modeloRel): void
     {
         $this->modeloRel = $modeloRel;
-        return $this;
     }
-
-
 }

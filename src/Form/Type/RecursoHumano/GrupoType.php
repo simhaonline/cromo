@@ -26,4 +26,22 @@ class GrupoType extends AbstractType
             'data_class' => RhuGrupo::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoGrupoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",        "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"}
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoGrupoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",        "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"}
+        ]';
+        return $campos;
+    }
 }

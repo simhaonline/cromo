@@ -23,8 +23,8 @@ class ConceptoType extends AbstractType
             ->add('operacion',ChoiceType::class,['required' => true,'choices' => ['SUMA' => 1,'RESTA' => -1,'NEUTRO' => 0],'label' => 'Operacion:'])
             ->add('numeroDian',TextType::class,['required' => false,'label' => 'Numero Dian (Cert. Ing):'])
             ->add('adicionalTipo',ChoiceType::class,['required' => true,'choices' => ['BONIFICACION' => 'BON','DESCUENTO' => 'DES','COMISION' => 'COM','NO APLICA' => 'NNN'],'label' => 'Adicional tipo:'])
-            ->add('generaIngresoBasePrestacion',CheckboxType::class,['required' => false,'label' => 'Genera IBP'])
-            ->add('generaIngresoBaseCotizacion',CheckboxType::class,['required' => false,'label' => 'Genera IBC'])
+            ->add('generaIngresoBasePrestacion',CheckboxType::class,['required' => false])
+            ->add('generaIngresoBaseCotizacion',CheckboxType::class,['required' => false])
             ->add('auxilioTransporte',CheckboxType::class,['required'=> false])
             ->add('incapacidad',CheckboxType::class,['required'=> false])
             ->add('incapacidadEntidad',CheckboxType::class,['required'=> false])
@@ -39,34 +39,54 @@ class ConceptoType extends AbstractType
             ->add('guardar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        return '[
-            {"campo":"codigoConceptoPk",            "tipo":"pk"     ,"ayuda":"Codigo del registro",  "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto"  ,"ayuda":"Nombre del registro",  "titulo":"NOMBRE"},                                  
-            {"campo":"porcentaje",                  "tipo":"texto"  ,"ayuda":"Nombre del registro",  "titulo":"NOMBRE"},                                  
-            {"campo":"operacion",                   "tipo":"texto"  ,"ayuda":"Nombre del registro",  "titulo":"NOMBRE"},                                  
-            {"campo":"numeroDian",                  "tipo":"texto"  ,"ayuda":"Nombre del registro",  "titulo":"NOMBRE"},                                  
-            {"campo":"adicionalTipo",               "tipo":"texto"  ,"ayuda":"Nombre del registro",  "titulo":"NOMBRE"},                                  
-            {"campo":"generaIngresoBasePrestacion", "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
-            {"campo":"generaIngresoBaseCotizacion", "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
-            {"campo":"incapacidad",                 "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
-            {"campo":"incapacidadEntidad",          "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
-            {"campo":"pension",                     "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
-            {"campo":"salud",                       "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
-            {"campo":"vacacion",                    "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
-            {"campo":"comision",                    "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
-            {"campo":"cesantia",                    "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
-            {"campo":"adicional",                   "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
-            {"campo":"recargoNocturno",             "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
-            {"campo":"fondoSolidaridadPensional",   "tipo":"bool"   ,"ayuda":"Nombre del registro",   "titulo":"NOMBRE"},                                  
-        ]';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => RhuConcepto::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        return '[
+            {"campo":"codigoConceptoPk",            "tipo":"pk"     ,"ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto"  ,"ayuda":"Nombre del registro", "titulo":"NOMBRE"},
+            {"campo":"porcentaje",                  "tipo":"texto"  ,"ayuda":"Porcentaje",          "titulo":"%"},
+            {"campo":"operacion",                   "tipo":"texto"  ,"ayuda":"Operación",           "titulo":"OP"},
+            {"campo":"adicional",                   "tipo":"texto"  ,"ayuda":"Adicional",           "titulo":"ADI"},
+            {"campo":"auxilioTransporte",          "tipo":"texto"  ,"ayuda":"Auxilio de transporte",           "titulo":"AUXT"},
+            {"campo":"cesantia",                    "tipo":"texto"  ,"ayuda":"Cesantia",           "titulo":"CES"},
+            {"campo":"comision",                    "tipo":"texto"  ,"ayuda":"Comision",           "titulo":"COM"},
+            {"campo":"fondoSolidaridadPensional",   "tipo":"texto"  ,"ayuda":"Fondo solidaridad pensional",           "titulo":"FSP"},
+            {"campo":"vacacion",                    "tipo":"texto"  ,"ayuda":"Vacación",           "titulo":"VAC"},
+            {"campo":"salud",                       "tipo":"texto"  ,"ayuda":"Salud",           "titulo":"SAL"},
+            {"campo":"recargoNocturno",             "tipo":"texto"  ,"ayuda":"Recargo nocturno",           "titulo":"REN"},
+            {"campo":"pension",                     "tipo":"texto"  ,"ayuda":"Pensión",           "titulo":"PEN"},
+            {"campo":"incapacidadEntidad",          "tipo":"texto"  ,"ayuda":"Incapacidad entidad",           "titulo":"IES"},
+            {"campo":"generaIngresoBasePrestacion", "tipo":"texto"  ,"ayuda":"Ingreso base prestación",           "titulo":"IBP"},
+            {"campo":"generaIngresoBaseCotizacion", "tipo":"texto"  ,"ayuda":"Ingreso base cotización",           "titulo":"IBC"}
+        ]';
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        return '[
+            {"campo":"codigoConceptoPk",            "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto"  ,"ayuda":"Nombre del registro",        "titulo":"NOMBRE"},
+            {"campo":"porcentaje",                  "tipo":"texto"  ,"ayuda":"Porcentaje",                 "titulo":"%"},
+            {"campo":"operacion",                   "tipo":"texto"  ,"ayuda":"Operación",                  "titulo":"OP"},
+            {"campo":"adicional",                   "tipo":"texto"  ,"ayuda":"Adicional",                  "titulo":"ADI"},
+            {"campo":"auxilioTransporte ",          "tipo":"texto"  ,"ayuda":"Auxilio de transporte",      "titulo":"AUXT"},
+            {"campo":"cesantia",                    "tipo":"texto"  ,"ayuda":"Cesantia",                   "titulo":"CES"},
+            {"campo":"comision",                    "tipo":"texto"  ,"ayuda":"Comision",                   "titulo":"COM"},
+            {"campo":"fondoSolidaridadPensional",   "tipo":"texto"  ,"ayuda":"Fondo solidaridad pensional","titulo":"FSP"},
+            {"campo":"vacacion",                    "tipo":"texto"  ,"ayuda":"Vacación",                   "titulo":"VAC"},
+            {"campo":"salud",                       "tipo":"texto"  ,"ayuda":"Salud",                      "titulo":"SAL"},
+            {"campo":"recargoNocturno",             "tipo":"texto"  ,"ayuda":"Recargo nocturno",           "titulo":"REN"},
+            {"campo":"pension",                     "tipo":"texto"  ,"ayuda":"Pensión",                    "titulo":"PEN"},
+            {"campo":"incapacidadEntidad",          "tipo":"texto"  ,"ayuda":"Incapacidad entidad",        "titulo":"IES"},
+            {"campo":"generaIngresoBasePrestacion", "tipo":"texto"  ,"ayuda":"Ingreso base prestación",    "titulo":"IBP"},
+            {"campo":"generaIngresoBaseCotizacion", "tipo":"texto"  ,"ayuda":"Ingreso base cotización",    "titulo":"IBC"}
+        ]';
     }
 }

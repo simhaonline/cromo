@@ -38,4 +38,24 @@ class CostoGrupoType extends AbstractType
             'data_class' => RhuCostoGrupo::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoCostoGrupoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
+            {"campo":"codigoCentroCostoFk",    "tipo":"texto", "ayuda":"Codigo centro costo ",    "titulo":"CENTRO COSTO"}
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoCostoGrupoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
+            {"campo":"codigoCentroCostoFk",    "tipo":"texto", "ayuda":"Codigo centro costo ",    "titulo":"CENTRO COSTO"}
+        ]';
+        return $campos;
+    }
 }

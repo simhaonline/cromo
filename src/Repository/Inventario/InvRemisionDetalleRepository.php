@@ -176,6 +176,43 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             }
         }
         $em->flush();
+
+        $mensajesError = "";
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->update(InvLote::class, 'l')
+            ->set('l.cantidadRemisionada', 0);
+        $queryBuilder->getQuery()->execute();
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->update(InvItem::class, 'i')
+            ->set('i.cantidadRemisionada', 0);
+        $queryBuilder->getQuery()->execute();
+
+        $arMovimientosDetalles = $this->listaRegenerarExistencia();
+        foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
+            $arLote = $em->getRepository(InvLote::class)->findOneBy(array('codigoItemFk' => $arMovimientoDetalle['codigoItemFk'],
+                'loteFk' => $arMovimientoDetalle['loteFk'], 'codigoBodegaFk' => $arMovimientoDetalle['codigoBodegaFk']));
+            if($arLote) {
+                $arLote->setCantidadExistencia($arMovimientoDetalle['cantidad']);
+                $arLote->setCantidadDisponible($arMovimientoDetalle['cantidad'] - $arLote->getCantidadRemisionada());
+                $em->persist($arLote);
+            } else {
+                Mensajes::error('Misteriosamente un lote no esta creado' . $arMovimientoDetalle['codigoItemFk'] . " " . $arMovimientoDetalle['loteFk'] . " " . $arMovimientoDetalle['codigoBodegaFk']);
+                break;
+            }
+        }
+        $arMovimientosDetalles = $this->listaRegenerarExistenciaItem();
+        foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
+            $arItem = $em->getRepository(InvItem::class)->find($arMovimientoDetalle['codigoItemFk']);
+            $arItem->setCantidadExistencia($arMovimientoDetalle['cantidad']);
+            $arItem->setCantidadDisponible($arMovimientoDetalle['cantidad'] - $arItem->getCantidadRemisionada());
+            $em->persist($arItem);
+        }
+
+        if($mensajesError == "") {
+            $em->flush();
+        }
+
     }    
     
 }

@@ -216,7 +216,6 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $arrExistencias;
     }
 
-
     public function listaRegenerarExistenciaItem(){
         $cantidad = 0;
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
@@ -242,17 +241,16 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->update(InvLote::class, 'l')
             ->set('l.cantidadDisponible', 0)
-            ->set('l.cantidadRemisionada', 0)
             ->set('l.cantidadExistencia', 0);
         $queryBuilder->getQuery()->execute();
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->update(InvItem::class, 'i')
             ->set('i.cantidadExistencia', 0)
-            ->set('i.cantidadRemisionada', 0)
             ->set('i.cantidadDisponible', 0);
         $queryBuilder->getQuery()->execute();
         $mensajesError = "";
+
         $arMovimientosDetalles = $this->listaRegenerarExistencia();
         foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
             $arLote = $em->getRepository(InvLote::class)->findOneBy(array('codigoItemFk' => $arMovimientoDetalle['codigoItemFk'],

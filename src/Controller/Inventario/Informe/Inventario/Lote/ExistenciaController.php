@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Informe\Inventario\Lote;
 
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Inventario\InvLote;
 use App\Formato\Inventario\ExistenciaLote;
 use App\General\General;
@@ -15,8 +16,12 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class ExistenciaController extends Controller
+class ExistenciaController extends ControllerListenerGeneral
 {
+    protected $proceso = "0001";
+    protected $procestoTipo= "I";
+    protected $nombreProceso = "Existencia lote";
+    protected $modulo = "Inventario";
 
     /**
      * @param Request $request

@@ -48,9 +48,10 @@ class SegUsuarioProceso
     /**
      * @param mixed $codigoSeguridadUsuarioProcesoPk
      */
-    public function setCodigoSeguridadUsuarioProcesoPk( $codigoSeguridadUsuarioProcesoPk ): void
+    public function setCodigoSeguridadUsuarioProcesoPk( $codigoSeguridadUsuarioProcesoPk )
     {
         $this->codigoSeguridadUsuarioProcesoPk = $codigoSeguridadUsuarioProcesoPk;
+        return $this;
     }
 
     /**
@@ -64,9 +65,10 @@ class SegUsuarioProceso
     /**
      * @param mixed $codigoUsuarioFk
      */
-    public function setCodigoUsuarioFk( $codigoUsuarioFk ): void
+    public function setCodigoUsuarioFk( $codigoUsuarioFk )
     {
         $this->codigoUsuarioFk = $codigoUsuarioFk;
+        return $this;
     }
 
     /**
@@ -80,9 +82,10 @@ class SegUsuarioProceso
     /**
      * @param mixed $codigoProcesoFk
      */
-    public function setCodigoProcesoFk( $codigoProcesoFk ): void
+    public function setCodigoProcesoFk( $codigoProcesoFk )
     {
         $this->codigoProcesoFk = $codigoProcesoFk;
+        return $this;
     }
 
     /**
@@ -96,10 +99,30 @@ class SegUsuarioProceso
     /**
      * @param mixed $ingreso
      */
-    public function setIngreso( $ingreso ): void
+    public function setIngreso( $ingreso )
     {
         $this->ingreso = $ingreso;
+        return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getProcesoRel()
+    {
+        return $this->procesoRel;
+    }
+
+    /**
+     * @param mixed $procesoRel
+     */
+    public function setProcesoRel($procesoRel)
+    {
+        $this->procesoRel = $procesoRel;
+        return $this;
+    }
+
+
 
 
 

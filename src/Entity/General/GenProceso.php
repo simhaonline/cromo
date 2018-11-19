@@ -53,9 +53,10 @@ class GenProceso
     /**
      * @param mixed $codigoProcesoPk
      */
-    public function setCodigoProcesoPk( $codigoProcesoPk ): void
+    public function setCodigoProcesoPk( $codigoProcesoPk )
     {
         $this->codigoProcesoPk = $codigoProcesoPk;
+        return $this;
     }
 
     /**
@@ -69,9 +70,10 @@ class GenProceso
     /**
      * @param mixed $codigoProcesoTipoFk
      */
-    public function setCodigoProcesoTipoFk( $codigoProcesoTipoFk ): void
+    public function setCodigoProcesoTipoFk( $codigoProcesoTipoFk )
     {
         $this->codigoProcesoTipoFk = $codigoProcesoTipoFk;
+        return $this;
     }
 
     /**
@@ -85,9 +87,10 @@ class GenProceso
     /**
      * @param mixed $codigoModuloFk
      */
-    public function setCodigoModuloFk( $codigoModuloFk ): void
+    public function setCodigoModuloFk( $codigoModuloFk )
     {
         $this->codigoModuloFk = $codigoModuloFk;
+        return $this;
     }
 
     /**
@@ -101,9 +104,10 @@ class GenProceso
     /**
      * @param mixed $nombre
      */
-    public function setNombre( $nombre ): void
+    public function setNombre( $nombre )
     {
         $this->nombre = $nombre;
+        return $this;
     }
 
     /**
@@ -117,9 +121,10 @@ class GenProceso
     /**
      * @param mixed $procesoTipoRel
      */
-    public function setProcesoTipoRel( $procesoTipoRel ): void
+    public function setProcesoTipoRel( $procesoTipoRel )
     {
         $this->procesoTipoRel = $procesoTipoRel;
+        return $this;
     }
 
 

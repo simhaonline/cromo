@@ -20,4 +20,19 @@ class SegUsuarioProcesoRepository extends ServiceEntityRepository
         parent::__construct($registry, SegUsuarioProceso::class);
     }
 
+    public function lista($idUsuario){
+        $em=$this->getEntityManager();
+
+        $arSeguridadUsuarioProceso=$em->createQueryBuilder()
+            ->from('App:Seguridad\SegUsuarioProceso','arsup')
+            ->join('arsup.procesoRel','p')
+            ->select('arsup.codigoSeguridadUsuarioProcesoPk as codigoSeguridadProceso')
+            ->addSelect('p.nombre as nombre')
+            ->addSelect('p.codigoModuloFk as tipo')
+            ->addSelect('arsup.ingreso as lista')
+            ->where("arsup.codigoUsuarioFk='{$idUsuario}'")
+            ->getQuery()->getResult();
+
+        return $arSeguridadUsuarioProceso;
+    }
 }

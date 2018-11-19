@@ -19,7 +19,6 @@
                 type: "GET",
                 dataType: "JSON",
                 success: function (respuestas) {
-                    console.log(respuestas);
                     if(respuestas['notificacionesPendientes'] && respuestas['notificacionesPendientes']>0){
                         selector.html("");
                         notificaciones.html("");

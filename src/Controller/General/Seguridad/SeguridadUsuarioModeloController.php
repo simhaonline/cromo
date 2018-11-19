@@ -31,7 +31,6 @@ class SeguridadUsuarioModeloController extends AbstractController
     {
         $em=$this->getDoctrine()->getManager();
         $id = $this->verificarUsuario($hash);
-        $nombreUsuario="";
         $form = $this->createFormBuilder()
             ->add('btnEliminar',SubmitType::class,['label'=>'Eliminar'])
             ->getForm();
@@ -54,12 +53,35 @@ class SeguridadUsuarioModeloController extends AbstractController
                 }
             }
         }
+        $formProcesos = $this->createFormBuilder()
+            ->add('btnEliminarProceso',SubmitType::class,['label'=>'Eliminar'])
+            ->getForm();
+        $formProcesos->handleRequest($request);
+        if($formProcesos->isSubmitted() && $formProcesos->isValid()){
+            if($formProcesos->get('btnEliminarProceso')->isClicked()){
+                $arrSeleccionadosProceso = $request->request->get('ChkSeleccionarPermisoProcesos');
+                if($arrSeleccionadosProceso && count($arrSeleccionadosProceso)>0){
+                    if ($arrSeleccionadosProceso) {
+                        foreach ($arrSeleccionadosProceso as $codigoProceso) {
+                            $arSegUsuarioProceso = $em->getRepository('App:Seguridad\SegUsuarioProceso')->find($codigoProceso);
+                            if($arSegUsuarioProceso){
+                                $em->remove($arSegUsuarioProceso);
+                            }
+
+                        }
+                        $em->flush();
+                        return $this->redirectToRoute('general_seguridad_usuario_modelo_lista',array('hash'=>$hash));
+                    }
+                }
+            }
+        }
         if ($id != "") {
             $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
             if (!$arUsuario) {
                 return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
             }
             $arSeguridadUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->lista($arUsuario->getUsername());
+            $arSeguridadUsuarioProceso=$em->getRepository('App:Seguridad\SegUsuarioProceso')->lista($arUsuario->getUsername());
 //            $nombreUsuario=$arUsuario->getNombreCorto();
         }
         return $this->render('general/seguridad/seguridad_usuario_modelo/lista.html.twig', [
@@ -67,6 +89,8 @@ class SeguridadUsuarioModeloController extends AbstractController
             'arUsuario'           =>  $arUsuario,
             'hash'                      =>  $hash,
             'form'=>$form->createView(),
+            'arSeguridadUsuarioProceso'  =>  $arSeguridadUsuarioProceso,
+            'formProceso'=>$formProcesos->createView(),
         ]);
     }
 

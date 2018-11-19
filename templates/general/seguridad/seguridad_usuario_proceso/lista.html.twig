@@ -1,0 +1,66 @@
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<div>{{ form_start(formProceso, {'attr':{'class':'form_horizontal'}}) }}
+
+    <br>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th >TIPO</th>
+            <th >PROCESO</th>
+            <th>LISTA</th>
+            <th>
+                <input type="checkbox" name="chkSeleccionarTodosPermisos" id="chkSeleccionarTodosPermisos" onclick="ChequearTodosTabla(this, 'ChkSeleccionarPermiso[]')" />
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arSeguridadUsuarioProceso in arSeguridadUsuarioProceso %}
+            <tr>
+                <td>
+                    {{ arSeguridadUsuarioProceso.tipo }}
+                </td>
+                <td>
+                    {{ arSeguridadUsuarioProceso.nombre }}
+                </td>
+
+                <td style="text-align: center; ">
+                    <input class="estadoActivoProceso" data-on="Activo" data-off="Desactivo" data-width="100" value={{  arSeguridadUsuarioProceso.codigoSeguridadProceso }} type="checkbox" {{ arSeguridadUsuarioProceso.lista?'checked':"" }} data-toggle="toggle" data-size="small">
+                </td>
+                <td style="text-align: center;">
+                    <input type="checkbox" name="ChkSeleccionarPermisoProcesos[]" value="{{arSeguridadUsuarioProceso.codigoSeguridadProceso  }}"/>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="modal-footer">
+        <a class="btn btn-sm btn-default" href="javascript:abrirVentana3('{{ path('general_seguridad_usuario_proceso_nuevo',{'hash' : hash}) }}','editarPermisosProceso',600,900)">Nuevo</a>
+        {{ form_widget(formProceso.btnEliminarProceso,{'attr':{'class':'btn btn-sm btn-danger'}}) }}
+    </div>
+{{ form_end(formProceso) }}
+</div>
+{% block javascripts %}
+    <script src="{{ asset('vendor/jquery/jquery.js') }}"></script>
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script>
+        $('.estadoActivoProceso').change(function () {
+            var checked=$(this);
+            $.ajax({
+                url: "{{ path('general_seguridad_usuario_proceso_editar') }}",
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    id: checked.val(),
+                },
+                success: function (respuestas) {
+                    if(!respuestas){
+                        $('.estadoActivoProceso').value=false;
+                    }
+                },
+                error: function (error) {
+                    $('.estadoActivoProceso').value=false;
+                }
+            });
+        });
+    </script>
+{% endblock %}

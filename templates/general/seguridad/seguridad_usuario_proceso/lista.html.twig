@@ -9,7 +9,7 @@
             <th >PROCESO</th>
             <th>LISTA</th>
             <th>
-                <input type="checkbox" name="chkSeleccionarTodosPermisos" id="chkSeleccionarTodosPermisos" onclick="ChequearTodosTabla(this, 'ChkSeleccionarPermiso[]')" />
+                <input type="checkbox" name="chkSeleccionarTodosPermisos" id="chkSeleccionarTodosPermisos" onclick="ChequearTodosTabla(this, 'ChkSeleccionarPermisoProcesos[]')" />
             </th>
         </tr>
         </thead>
@@ -24,7 +24,7 @@
                 </td>
 
                 <td style="text-align: center; ">
-                    <input class="estadoActivoProceso" data-on="Activo" data-off="Desactivo" data-width="100" value={{  arSeguridadUsuarioProceso.codigoSeguridadProceso }} type="checkbox" {{ arSeguridadUsuarioProceso.lista?'checked':"" }} data-toggle="toggle" data-size="small">
+                    <input class="estadoActivoProceso" data-on="Activo" data-off="Desactivo" data-width="100" value={{  arSeguridadUsuarioProceso.codigoSeguridadProceso }} type="checkbox" {{ arSeguridadUsuarioProceso.lista?'checked':"" }} data-toggle="toggle" data-size="mini">
                 </td>
                 <td style="text-align: center;">
                     <input type="checkbox" name="ChkSeleccionarPermisoProcesos[]" value="{{arSeguridadUsuarioProceso.codigoSeguridadProceso  }}"/>

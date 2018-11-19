@@ -7,6 +7,7 @@ use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
 use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
+use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +28,7 @@ class RegenerarController extends Controller
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
             ->add('btnRegenerarExistencias', SubmitType::class, ['label' => 'Kardex', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnRegenerarRemisiones', SubmitType::class, ['label' => 'Remisiones', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnRegenerarCostos', SubmitType::class, ['label' => 'Costos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnRegenerarPedidos', SubmitType::class, ['label' => 'Pedidos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnRegenerarSolicitudes', SubmitType::class, ['label' => 'Solicitudes', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -39,6 +41,9 @@ class RegenerarController extends Controller
             }
             if ($form->get('btnRegenerarCostos')->isClicked()) {
                 $em->getRepository(InvMovimientoDetalle::class)->regenerarCosto();
+            }
+            if ($form->get('btnRegenerarRemisiones')->isClicked()) {
+                $em->getRepository(InvRemisionDetalle::class)->regenerarCantidadAfectada();
             }
             if ($form->get('btnRegenerarPedidos')->isClicked()) {
                 $em->getRepository(InvPedidoDetalle::class)->regenerarCantidadAfectada();

@@ -15,6 +15,7 @@ use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
+use App\Entity\Inventario\InvRemisionDetalle;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimiento;

@@ -145,4 +145,74 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         return $resultado[1];
     }
 
+    public function listaRegenerarCantidadAfectada()
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
+            ->select('rd.codigoRemisionDetallePk')
+            ->addSelect('rd.cantidad')
+            ->addSelect('rd.cantidadAfectada')
+            ->addSelect('rd.cantidadPendiente');
+        $arrRemisionsDetalles = $queryBuilder->getQuery()->getResult();
+        return $arrRemisionsDetalles;
+    }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function regenerarCantidadAfectada() {
+        $em = $this->getEntityManager();
+        $arRemisionsDetalles = $em->getRepository(InvRemisionDetalle::class)->listaRegenerarCantidadAfectada();
+        foreach ($arRemisionsDetalles as $arRemisionDetalle) {
+            $cantidad = $arRemisionDetalle['cantidad'];
+            $cantidadAfectada = $em->getRepository(InvMovimientoDetalle::class)->cantidadAfectaRemision($arRemisionDetalle['codigoRemisionDetallePk']);
+            $cantidadPendiente = $cantidad - $cantidadAfectada;
+            if($cantidadAfectada != $arRemisionDetalle['cantidadAfectada'] || $cantidadPendiente != $arRemisionDetalle['cantidadPendiente']) {
+                $arRemisionDetalleAct = $em->getRepository(InvRemisionDetalle::class)->find($arRemisionDetalle['codigoRemisionDetallePk']);
+                $arRemisionDetalleAct->setCantidadAfectada($cantidadAfectada);
+                $arRemisionDetalleAct->setCantidadPendiente($cantidadPendiente);
+                $em->persist($arRemisionDetalleAct);
+            }
+        }
+        $em->flush();
+
+        $mensajesError = "";
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->update(InvLote::class, 'l')
+            ->set('l.cantidadRemisionada', 0);
+        $queryBuilder->getQuery()->execute();
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->update(InvItem::class, 'i')
+            ->set('i.cantidadRemisionada', 0);
+        $queryBuilder->getQuery()->execute();
+
+        $arMovimientosDetalles = $this->listaRegenerarExistencia();
+        foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
+            $arLote = $em->getRepository(InvLote::class)->findOneBy(array('codigoItemFk' => $arMovimientoDetalle['codigoItemFk'],
+                'loteFk' => $arMovimientoDetalle['loteFk'], 'codigoBodegaFk' => $arMovimientoDetalle['codigoBodegaFk']));
+            if($arLote) {
+                $arLote->setCantidadExistencia($arMovimientoDetalle['cantidad']);
+                $arLote->setCantidadDisponible($arMovimientoDetalle['cantidad'] - $arLote->getCantidadRemisionada());
+                $em->persist($arLote);
+            } else {
+                Mensajes::error('Misteriosamente un lote no esta creado' . $arMovimientoDetalle['codigoItemFk'] . " " . $arMovimientoDetalle['loteFk'] . " " . $arMovimientoDetalle['codigoBodegaFk']);
+                break;
+            }
+        }
+        $arMovimientosDetalles = $this->listaRegenerarExistenciaItem();
+        foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
+            $arItem = $em->getRepository(InvItem::class)->find($arMovimientoDetalle['codigoItemFk']);
+            $arItem->setCantidadExistencia($arMovimientoDetalle['cantidad']);
+            $arItem->setCantidadDisponible($arMovimientoDetalle['cantidad'] - $arItem->getCantidadRemisionada());
+            $em->persist($arItem);
+        }
+
+        if($mensajesError == "") {
+            $em->flush();
+        }
+
+    }    
+    
 }

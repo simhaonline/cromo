@@ -250,6 +250,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->set('i.cantidadDisponible', 0);
         $queryBuilder->getQuery()->execute();
         $mensajesError = "";
+
         $arMovimientosDetalles = $this->listaRegenerarExistencia();
         foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
             $arLote = $em->getRepository(InvLote::class)->findOneBy(array('codigoItemFk' => $arMovimientoDetalle['codigoItemFk'],
@@ -275,6 +276,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             $em->flush();
         }
     }
+
+
 
     public function listaRegenerarCostos($codigoItem)
     {
@@ -401,7 +404,9 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         $cantidad = 0;
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
             ->select("SUM(md.cantidad)")
-            ->where("md.codigoPedidoDetalleFk = {$codigoPedidoDetalle} ");
+            ->leftJoin("md.movimientoRel", "m")
+            ->where("md.codigoPedidoDetalleFk = {$codigoPedidoDetalle} ")
+            ->andWhere('m.estadoAutorizado = 1');
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         if ($resultado[1]) {
             $cantidad = $resultado[1];
@@ -419,9 +424,33 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $cantidad = 0;
-        $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'r')
+        $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
             ->select("SUM(r.cantidad)")
-            ->where("r.codigoOrdenDetalleFk = {$codigoOrdenDetalle} ");
+            ->leftJoin("md.movimientoRel", "m")
+            ->where("md.codigoOrdenDetalleFk = {$codigoOrdenDetalle} ")
+            ->andWhere('m.estadoAutorizado = 1');
+        $resultado = $queryBuilder->getQuery()->getSingleResult();
+        if ($resultado[1]) {
+            $cantidad = $resultado[1];
+        }
+        return $cantidad;
+    }
+
+    /**
+     * @param $codigoRemisionDetalle
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function cantidadAfectaRemision($codigoRemisionDetalle)
+    {
+        $em = $this->getEntityManager();
+        $cantidad = 0;
+        $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select("SUM(md.cantidad)")
+            ->leftJoin("md.movimientoRel", "m")
+            ->where("md.codigoRemisionDetalleFk = {$codigoRemisionDetalle} ")
+        ->andWhere('m.estadoAutorizado = 1');
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         if ($resultado[1]) {
             $cantidad = $resultado[1];

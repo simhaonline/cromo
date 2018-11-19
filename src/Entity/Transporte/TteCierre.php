@@ -44,11 +44,6 @@ class TteCierre
     private $estadoCerrado = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteCosto", mappedBy="cierreRel")
-     */
-    protected $costosCierreRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoCierrePk()
@@ -59,7 +54,7 @@ class TteCierre
     /**
      * @param mixed $codigoCierrePk
      */
-    public function setCodigoCierrePk($codigoCierrePk): void
+    public function setCodigoCierrePk( $codigoCierrePk ): void
     {
         $this->codigoCierrePk = $codigoCierrePk;
     }
@@ -75,7 +70,7 @@ class TteCierre
     /**
      * @param mixed $anio
      */
-    public function setAnio($anio): void
+    public function setAnio( $anio ): void
     {
         $this->anio = $anio;
     }
@@ -91,7 +86,7 @@ class TteCierre
     /**
      * @param mixed $mes
      */
-    public function setMes($mes): void
+    public function setMes( $mes ): void
     {
         $this->mes = $mes;
     }
@@ -107,7 +102,7 @@ class TteCierre
     /**
      * @param mixed $estadoGenerado
      */
-    public function setEstadoGenerado($estadoGenerado): void
+    public function setEstadoGenerado( $estadoGenerado ): void
     {
         $this->estadoGenerado = $estadoGenerado;
     }
@@ -123,25 +118,9 @@ class TteCierre
     /**
      * @param mixed $estadoCerrado
      */
-    public function setEstadoCerrado($estadoCerrado): void
+    public function setEstadoCerrado( $estadoCerrado ): void
     {
         $this->estadoCerrado = $estadoCerrado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCostosCierreRel()
-    {
-        return $this->costosCierreRel;
-    }
-
-    /**
-     * @param mixed $costosCierreRel
-     */
-    public function setCostosCierreRel($costosCierreRel): void
-    {
-        $this->costosCierreRel = $costosCierreRel;
     }
 
 

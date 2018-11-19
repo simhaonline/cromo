@@ -108,11 +108,6 @@ class TteCiudad
     protected $despachosCiudadDestinoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TteCosto", mappedBy="ciudadDestinoRel")
-     */
-    protected $costosCiudadDestinoRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="TteRecogida", mappedBy="ciudadRel")
      */
     protected $recogidasCiudadRel;
@@ -159,6 +154,16 @@ class TteCiudad
     protected $ciudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteCosto", mappedBy="ciudadOrigenRel")
+     */
+    protected $costosCiudadOrigenRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteCosto", mappedBy="ciudadDestinoRel")
+     */
+    protected $costosCiudadDestinoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -169,7 +174,7 @@ class TteCiudad
     /**
      * @param mixed $codigoCiudadPk
      */
-    public function setCodigoCiudadPk($codigoCiudadPk): void
+    public function setCodigoCiudadPk( $codigoCiudadPk ): void
     {
         $this->codigoCiudadPk = $codigoCiudadPk;
     }
@@ -185,7 +190,7 @@ class TteCiudad
     /**
      * @param mixed $nombre
      */
-    public function setNombre($nombre): void
+    public function setNombre( $nombre ): void
     {
         $this->nombre = $nombre;
     }
@@ -201,7 +206,7 @@ class TteCiudad
     /**
      * @param mixed $codigoDivision
      */
-    public function setCodigoDivision($codigoDivision): void
+    public function setCodigoDivision( $codigoDivision ): void
     {
         $this->codigoDivision = $codigoDivision;
     }
@@ -217,7 +222,7 @@ class TteCiudad
     /**
      * @param mixed $nombreDivision
      */
-    public function setNombreDivision($nombreDivision): void
+    public function setNombreDivision( $nombreDivision ): void
     {
         $this->nombreDivision = $nombreDivision;
     }
@@ -233,7 +238,7 @@ class TteCiudad
     /**
      * @param mixed $codigoZona
      */
-    public function setCodigoZona($codigoZona): void
+    public function setCodigoZona( $codigoZona ): void
     {
         $this->codigoZona = $codigoZona;
     }
@@ -249,7 +254,7 @@ class TteCiudad
     /**
      * @param mixed $nombreZona
      */
-    public function setNombreZona($nombreZona): void
+    public function setNombreZona( $nombreZona ): void
     {
         $this->nombreZona = $nombreZona;
     }
@@ -265,7 +270,7 @@ class TteCiudad
     /**
      * @param mixed $codigoMunicipio
      */
-    public function setCodigoMunicipio($codigoMunicipio): void
+    public function setCodigoMunicipio( $codigoMunicipio ): void
     {
         $this->codigoMunicipio = $codigoMunicipio;
     }
@@ -281,7 +286,7 @@ class TteCiudad
     /**
      * @param mixed $nombreMunicipio
      */
-    public function setNombreMunicipio($nombreMunicipio): void
+    public function setNombreMunicipio( $nombreMunicipio ): void
     {
         $this->nombreMunicipio = $nombreMunicipio;
     }
@@ -297,7 +302,7 @@ class TteCiudad
     /**
      * @param mixed $codigoDepartamentoFk
      */
-    public function setCodigoDepartamentoFk($codigoDepartamentoFk): void
+    public function setCodigoDepartamentoFk( $codigoDepartamentoFk ): void
     {
         $this->codigoDepartamentoFk = $codigoDepartamentoFk;
     }
@@ -313,121 +318,9 @@ class TteCiudad
     /**
      * @param mixed $codigoRutaFk
      */
-    public function setCodigoRutaFk($codigoRutaFk): void
+    public function setCodigoRutaFk( $codigoRutaFk ): void
     {
         $this->codigoRutaFk = $codigoRutaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRutaRel()
-    {
-        return $this->rutaRel;
-    }
-
-    /**
-     * @param mixed $rutaRel
-     */
-    public function setRutaRel($rutaRel): void
-    {
-        $this->rutaRel = $rutaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiasCiudadOrigenRel()
-    {
-        return $this->guiasCiudadOrigenRel;
-    }
-
-    /**
-     * @param mixed $guiasCiudadOrigenRel
-     */
-    public function setGuiasCiudadOrigenRel($guiasCiudadOrigenRel): void
-    {
-        $this->guiasCiudadOrigenRel = $guiasCiudadOrigenRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiasCiudadDestinoRel()
-    {
-        return $this->guiasCiudadDestinoRel;
-    }
-
-    /**
-     * @param mixed $guiasCiudadDestinoRel
-     */
-    public function setGuiasCiudadDestinoRel($guiasCiudadDestinoRel): void
-    {
-        $this->guiasCiudadDestinoRel = $guiasCiudadDestinoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDespachosCiudadOrigenRel()
-    {
-        return $this->despachosCiudadOrigenRel;
-    }
-
-    /**
-     * @param mixed $despachosCiudadOrigenRel
-     */
-    public function setDespachosCiudadOrigenRel($despachosCiudadOrigenRel): void
-    {
-        $this->despachosCiudadOrigenRel = $despachosCiudadOrigenRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDespachosCiudadDestinoRel()
-    {
-        return $this->despachosCiudadDestinoRel;
-    }
-
-    /**
-     * @param mixed $despachosCiudadDestinoRel
-     */
-    public function setDespachosCiudadDestinoRel($despachosCiudadDestinoRel): void
-    {
-        $this->despachosCiudadDestinoRel = $despachosCiudadDestinoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRecogidasCiudadRel()
-    {
-        return $this->recogidasCiudadRel;
-    }
-
-    /**
-     * @param mixed $recogidasCiudadRel
-     */
-    public function setRecogidasCiudadRel($recogidasCiudadRel): void
-    {
-        $this->recogidasCiudadRel = $recogidasCiudadRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRecogidasProgramadasCiudadRel()
-    {
-        return $this->recogidasProgramadasCiudadRel;
-    }
-
-    /**
-     * @param mixed $recogidasProgramadasCiudadRel
-     */
-    public function setRecogidasProgramadasCiudadRel($recogidasProgramadasCiudadRel): void
-    {
-        $this->recogidasProgramadasCiudadRel = $recogidasProgramadasCiudadRel;
     }
 
     /**
@@ -441,89 +334,9 @@ class TteCiudad
     /**
      * @param mixed $ordenRuta
      */
-    public function setOrdenRuta($ordenRuta): void
+    public function setOrdenRuta( $ordenRuta ): void
     {
         $this->ordenRuta = $ordenRuta;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOperacionesCiudadRel()
-    {
-        return $this->operacionesCiudadRel;
-    }
-
-    /**
-     * @param mixed $operacionesCiudadRel
-     */
-    public function setOperacionesCiudadRel($operacionesCiudadRel): void
-    {
-        $this->operacionesCiudadRel = $operacionesCiudadRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPreciosDetallesCiudadOrigenRel()
-    {
-        return $this->preciosDetallesCiudadOrigenRel;
-    }
-
-    /**
-     * @param mixed $preciosDetallesCiudadOrigenRel
-     */
-    public function setPreciosDetallesCiudadOrigenRel($preciosDetallesCiudadOrigenRel): void
-    {
-        $this->preciosDetallesCiudadOrigenRel = $preciosDetallesCiudadOrigenRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPreciosDetallesCiudadDestinoRel()
-    {
-        return $this->preciosDetallesCiudadDestinoRel;
-    }
-
-    /**
-     * @param mixed $preciosDetallesCiudadDestinoRel
-     */
-    public function setPreciosDetallesCiudadDestinoRel($preciosDetallesCiudadDestinoRel): void
-    {
-        $this->preciosDetallesCiudadDestinoRel = $preciosDetallesCiudadDestinoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConductoresCiudadRel()
-    {
-        return $this->conductoresCiudadRel;
-    }
-
-    /**
-     * @param mixed $conductoresCiudadRel
-     */
-    public function setConductoresCiudadRel($conductoresCiudadRel): void
-    {
-        $this->conductoresCiudadRel = $conductoresCiudadRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPoseedoresCiudadRel()
-    {
-        return $this->poseedoresCiudadRel;
-    }
-
-    /**
-     * @param mixed $poseedoresCiudadRel
-     */
-    public function setPoseedoresCiudadRel($poseedoresCiudadRel): void
-    {
-        $this->poseedoresCiudadRel = $poseedoresCiudadRel;
     }
 
     /**
@@ -537,7 +350,7 @@ class TteCiudad
     /**
      * @param mixed $codigoInterface
      */
-    public function setCodigoInterface($codigoInterface): void
+    public function setCodigoInterface( $codigoInterface ): void
     {
         $this->codigoInterface = $codigoInterface;
     }
@@ -553,9 +366,201 @@ class TteCiudad
     /**
      * @param mixed $reexpedicion
      */
-    public function setReexpedicion($reexpedicion): void
+    public function setReexpedicion( $reexpedicion ): void
     {
         $this->reexpedicion = $reexpedicion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRutaRel()
+    {
+        return $this->rutaRel;
+    }
+
+    /**
+     * @param mixed $rutaRel
+     */
+    public function setRutaRel( $rutaRel ): void
+    {
+        $this->rutaRel = $rutaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasCiudadOrigenRel()
+    {
+        return $this->guiasCiudadOrigenRel;
+    }
+
+    /**
+     * @param mixed $guiasCiudadOrigenRel
+     */
+    public function setGuiasCiudadOrigenRel( $guiasCiudadOrigenRel ): void
+    {
+        $this->guiasCiudadOrigenRel = $guiasCiudadOrigenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasCiudadDestinoRel()
+    {
+        return $this->guiasCiudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $guiasCiudadDestinoRel
+     */
+    public function setGuiasCiudadDestinoRel( $guiasCiudadDestinoRel ): void
+    {
+        $this->guiasCiudadDestinoRel = $guiasCiudadDestinoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosCiudadOrigenRel()
+    {
+        return $this->despachosCiudadOrigenRel;
+    }
+
+    /**
+     * @param mixed $despachosCiudadOrigenRel
+     */
+    public function setDespachosCiudadOrigenRel( $despachosCiudadOrigenRel ): void
+    {
+        $this->despachosCiudadOrigenRel = $despachosCiudadOrigenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosCiudadDestinoRel()
+    {
+        return $this->despachosCiudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $despachosCiudadDestinoRel
+     */
+    public function setDespachosCiudadDestinoRel( $despachosCiudadDestinoRel ): void
+    {
+        $this->despachosCiudadDestinoRel = $despachosCiudadDestinoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasCiudadRel()
+    {
+        return $this->recogidasCiudadRel;
+    }
+
+    /**
+     * @param mixed $recogidasCiudadRel
+     */
+    public function setRecogidasCiudadRel( $recogidasCiudadRel ): void
+    {
+        $this->recogidasCiudadRel = $recogidasCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasProgramadasCiudadRel()
+    {
+        return $this->recogidasProgramadasCiudadRel;
+    }
+
+    /**
+     * @param mixed $recogidasProgramadasCiudadRel
+     */
+    public function setRecogidasProgramadasCiudadRel( $recogidasProgramadasCiudadRel ): void
+    {
+        $this->recogidasProgramadasCiudadRel = $recogidasProgramadasCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionesCiudadRel()
+    {
+        return $this->operacionesCiudadRel;
+    }
+
+    /**
+     * @param mixed $operacionesCiudadRel
+     */
+    public function setOperacionesCiudadRel( $operacionesCiudadRel ): void
+    {
+        $this->operacionesCiudadRel = $operacionesCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPreciosDetallesCiudadOrigenRel()
+    {
+        return $this->preciosDetallesCiudadOrigenRel;
+    }
+
+    /**
+     * @param mixed $preciosDetallesCiudadOrigenRel
+     */
+    public function setPreciosDetallesCiudadOrigenRel( $preciosDetallesCiudadOrigenRel ): void
+    {
+        $this->preciosDetallesCiudadOrigenRel = $preciosDetallesCiudadOrigenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPreciosDetallesCiudadDestinoRel()
+    {
+        return $this->preciosDetallesCiudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $preciosDetallesCiudadDestinoRel
+     */
+    public function setPreciosDetallesCiudadDestinoRel( $preciosDetallesCiudadDestinoRel ): void
+    {
+        $this->preciosDetallesCiudadDestinoRel = $preciosDetallesCiudadDestinoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConductoresCiudadRel()
+    {
+        return $this->conductoresCiudadRel;
+    }
+
+    /**
+     * @param mixed $conductoresCiudadRel
+     */
+    public function setConductoresCiudadRel( $conductoresCiudadRel ): void
+    {
+        $this->conductoresCiudadRel = $conductoresCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPoseedoresCiudadRel()
+    {
+        return $this->poseedoresCiudadRel;
+    }
+
+    /**
+     * @param mixed $poseedoresCiudadRel
+     */
+    public function setPoseedoresCiudadRel( $poseedoresCiudadRel ): void
+    {
+        $this->poseedoresCiudadRel = $poseedoresCiudadRel;
     }
 
     /**
@@ -569,7 +574,7 @@ class TteCiudad
     /**
      * @param mixed $departamentoRel
      */
-    public function setDepartamentoRel($departamentoRel): void
+    public function setDepartamentoRel( $departamentoRel ): void
     {
         $this->departamentoRel = $departamentoRel;
     }
@@ -585,9 +590,41 @@ class TteCiudad
     /**
      * @param mixed $ciudadRel
      */
-    public function setCiudadRel($ciudadRel): void
+    public function setCiudadRel( $ciudadRel ): void
     {
         $this->ciudadRel = $ciudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosCiudadOrigenRel()
+    {
+        return $this->costosCiudadOrigenRel;
+    }
+
+    /**
+     * @param mixed $costosCiudadOrigenRel
+     */
+    public function setCostosCiudadOrigenRel( $costosCiudadOrigenRel ): void
+    {
+        $this->costosCiudadOrigenRel = $costosCiudadOrigenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosCiudadDestinoRel()
+    {
+        return $this->costosCiudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $costosCiudadDestinoRel
+     */
+    public function setCostosCiudadDestinoRel( $costosCiudadDestinoRel ): void
+    {
+        $this->costosCiudadDestinoRel = $costosCiudadDestinoRel;
     }
 
 

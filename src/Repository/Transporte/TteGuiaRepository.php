@@ -1643,11 +1643,17 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $arDespachoDetalle->setUnidades($arGuia->getUnidades());
                 $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
                 $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                if($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
+                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                } else {
+                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                }
                 $em->persist($arDespachoDetalle);
 
                 $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
                 $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
                 $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
+                $arDespacho->setPesoCosto($arDespacho->getPesoCosto() + $arDespachoDetalle->getPesoCosto());
                 $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
                 $em->persist($arDespacho);
                 $em->flush();
@@ -1697,11 +1703,17 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $arDespachoDetalle->setUnidades($arGuia->getUnidades());
                 $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
                 $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                if($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
+                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                } else {
+                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                }
                 $em->persist($arDespachoDetalle);
 
                 $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
                 $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
                 $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
+                $arDespacho->setPesoCosto($arDespacho->getPesoCosto() + $arDespachoDetalle->getPesoCosto());
                 $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
                 $em->persist($arDespacho);
                 $em->flush();

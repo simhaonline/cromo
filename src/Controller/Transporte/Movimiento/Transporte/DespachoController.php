@@ -366,6 +366,11 @@ class DespachoController extends ControllerListenerGeneral
                                 $arDespachoDetalle->setUnidades($arGuia->getUnidades());
                                 $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
                                 $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                                if($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
+                                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                                } else {
+                                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                                }
                                 $em->persist($arDespachoDetalle);
                             }
                         }
@@ -475,6 +480,8 @@ class DespachoController extends ControllerListenerGeneral
             if ($form->get('guardar')->isClicked()) {
                 $arDespacho = $form->getData();
                 $em->getRepository(TteDespacho::class)->liquidar($id);
+                $em->getRepository(TteDespacho::class)->costos($arDespacho);
+
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }

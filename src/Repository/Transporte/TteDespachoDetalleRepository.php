@@ -30,6 +30,7 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         dd.unidades,
         dd.pesoReal,
         dd.pesoVolumen,
+        dd.pesoCosto,
         dd.vrFlete,
         dd.vrManejo,
         dd.vrCobroEntrega,      

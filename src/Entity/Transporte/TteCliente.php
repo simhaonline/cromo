@@ -136,6 +136,12 @@ class TteCliente
     private $formaPagoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="tteClientesCiudadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="clienteRel")
      */
     protected $guiasClienteRel;
@@ -176,17 +182,6 @@ class TteCliente
     protected $clientesCondicionesClienteRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="tteClientesCiudadRel")
-     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
-     */
-    protected $ciudadRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="TteCosto", mappedBy="clienteRel")
-     */
-    protected $costosClienteRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoClientePk()
@@ -197,7 +192,7 @@ class TteCliente
     /**
      * @param mixed $codigoClientePk
      */
-    public function setCodigoClientePk($codigoClientePk): void
+    public function setCodigoClientePk( $codigoClientePk ): void
     {
         $this->codigoClientePk = $codigoClientePk;
     }
@@ -213,9 +208,25 @@ class TteCliente
     /**
      * @param mixed $codigoIdentificacionFk
      */
-    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
+    public function setCodigoIdentificacionFk( $codigoIdentificacionFk ): void
     {
         $this->codigoIdentificacionFk = $codigoIdentificacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadFk()
+    {
+        return $this->codigoCiudadFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadFk
+     */
+    public function setCodigoCiudadFk( $codigoCiudadFk ): void
+    {
+        $this->codigoCiudadFk = $codigoCiudadFk;
     }
 
     /**
@@ -229,7 +240,7 @@ class TteCliente
     /**
      * @param mixed $numeroIdentificacion
      */
-    public function setNumeroIdentificacion($numeroIdentificacion): void
+    public function setNumeroIdentificacion( $numeroIdentificacion ): void
     {
         $this->numeroIdentificacion = $numeroIdentificacion;
     }
@@ -245,7 +256,7 @@ class TteCliente
     /**
      * @param mixed $digitoVerificacion
      */
-    public function setDigitoVerificacion($digitoVerificacion): void
+    public function setDigitoVerificacion( $digitoVerificacion ): void
     {
         $this->digitoVerificacion = $digitoVerificacion;
     }
@@ -261,9 +272,25 @@ class TteCliente
     /**
      * @param mixed $nombreCorto
      */
-    public function setNombreCorto($nombreCorto): void
+    public function setNombreCorto( $nombreCorto ): void
     {
         $this->nombreCorto = $nombreCorto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreExtendido()
+    {
+        return $this->nombreExtendido;
+    }
+
+    /**
+     * @param mixed $nombreExtendido
+     */
+    public function setNombreExtendido( $nombreExtendido ): void
+    {
+        $this->nombreExtendido = $nombreExtendido;
     }
 
     /**
@@ -277,7 +304,7 @@ class TteCliente
     /**
      * @param mixed $nombre1
      */
-    public function setNombre1($nombre1): void
+    public function setNombre1( $nombre1 ): void
     {
         $this->nombre1 = $nombre1;
     }
@@ -293,7 +320,7 @@ class TteCliente
     /**
      * @param mixed $nombre2
      */
-    public function setNombre2($nombre2): void
+    public function setNombre2( $nombre2 ): void
     {
         $this->nombre2 = $nombre2;
     }
@@ -309,7 +336,7 @@ class TteCliente
     /**
      * @param mixed $apellido1
      */
-    public function setApellido1($apellido1): void
+    public function setApellido1( $apellido1 ): void
     {
         $this->apellido1 = $apellido1;
     }
@@ -325,7 +352,7 @@ class TteCliente
     /**
      * @param mixed $apellido2
      */
-    public function setApellido2($apellido2): void
+    public function setApellido2( $apellido2 ): void
     {
         $this->apellido2 = $apellido2;
     }
@@ -341,7 +368,7 @@ class TteCliente
     /**
      * @param mixed $direccion
      */
-    public function setDireccion($direccion): void
+    public function setDireccion( $direccion ): void
     {
         $this->direccion = $direccion;
     }
@@ -357,7 +384,7 @@ class TteCliente
     /**
      * @param mixed $telefono
      */
-    public function setTelefono($telefono): void
+    public function setTelefono( $telefono ): void
     {
         $this->telefono = $telefono;
     }
@@ -373,7 +400,7 @@ class TteCliente
     /**
      * @param mixed $movil
      */
-    public function setMovil($movil): void
+    public function setMovil( $movil ): void
     {
         $this->movil = $movil;
     }
@@ -389,7 +416,7 @@ class TteCliente
     /**
      * @param mixed $plazoPago
      */
-    public function setPlazoPago($plazoPago): void
+    public function setPlazoPago( $plazoPago ): void
     {
         $this->plazoPago = $plazoPago;
     }
@@ -405,7 +432,7 @@ class TteCliente
     /**
      * @param mixed $correo
      */
-    public function setCorreo($correo): void
+    public function setCorreo( $correo ): void
     {
         $this->correo = $correo;
     }
@@ -421,7 +448,7 @@ class TteCliente
     /**
      * @param mixed $estadoInactivo
      */
-    public function setEstadoInactivo($estadoInactivo): void
+    public function setEstadoInactivo( $estadoInactivo ): void
     {
         $this->estadoInactivo = $estadoInactivo;
     }
@@ -437,7 +464,7 @@ class TteCliente
     /**
      * @param mixed $codigoCondicionFk
      */
-    public function setCodigoCondicionFk($codigoCondicionFk): void
+    public function setCodigoCondicionFk( $codigoCondicionFk ): void
     {
         $this->codigoCondicionFk = $codigoCondicionFk;
     }
@@ -453,7 +480,7 @@ class TteCliente
     /**
      * @param mixed $codigoFormaPagoFk
      */
-    public function setCodigoFormaPagoFk($codigoFormaPagoFk): void
+    public function setCodigoFormaPagoFk( $codigoFormaPagoFk ): void
     {
         $this->codigoFormaPagoFk = $codigoFormaPagoFk;
     }
@@ -469,7 +496,7 @@ class TteCliente
     /**
      * @param mixed $comentario
      */
-    public function setComentario($comentario): void
+    public function setComentario( $comentario ): void
     {
         $this->comentario = $comentario;
     }
@@ -485,7 +512,7 @@ class TteCliente
     /**
      * @param mixed $identificacionRel
      */
-    public function setIdentificacionRel($identificacionRel): void
+    public function setIdentificacionRel( $identificacionRel ): void
     {
         $this->identificacionRel = $identificacionRel;
     }
@@ -501,7 +528,7 @@ class TteCliente
     /**
      * @param mixed $condicionRel
      */
-    public function setCondicionRel($condicionRel): void
+    public function setCondicionRel( $condicionRel ): void
     {
         $this->condicionRel = $condicionRel;
     }
@@ -517,9 +544,25 @@ class TteCliente
     /**
      * @param mixed $formaPagoRel
      */
-    public function setFormaPagoRel($formaPagoRel): void
+    public function setFormaPagoRel( $formaPagoRel ): void
     {
         $this->formaPagoRel = $formaPagoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel( $ciudadRel ): void
+    {
+        $this->ciudadRel = $ciudadRel;
     }
 
     /**
@@ -533,7 +576,7 @@ class TteCliente
     /**
      * @param mixed $guiasClienteRel
      */
-    public function setGuiasClienteRel($guiasClienteRel): void
+    public function setGuiasClienteRel( $guiasClienteRel ): void
     {
         $this->guiasClienteRel = $guiasClienteRel;
     }
@@ -549,7 +592,7 @@ class TteCliente
     /**
      * @param mixed $recogidasClienteRel
      */
-    public function setRecogidasClienteRel($recogidasClienteRel): void
+    public function setRecogidasClienteRel( $recogidasClienteRel ): void
     {
         $this->recogidasClienteRel = $recogidasClienteRel;
     }
@@ -565,7 +608,7 @@ class TteCliente
     /**
      * @param mixed $recogidasProgramadasClienteRel
      */
-    public function setRecogidasProgramadasClienteRel($recogidasProgramadasClienteRel): void
+    public function setRecogidasProgramadasClienteRel( $recogidasProgramadasClienteRel ): void
     {
         $this->recogidasProgramadasClienteRel = $recogidasProgramadasClienteRel;
     }
@@ -581,7 +624,7 @@ class TteCliente
     /**
      * @param mixed $cumplidosClienteRel
      */
-    public function setCumplidosClienteRel($cumplidosClienteRel): void
+    public function setCumplidosClienteRel( $cumplidosClienteRel ): void
     {
         $this->cumplidosClienteRel = $cumplidosClienteRel;
     }
@@ -597,7 +640,7 @@ class TteCliente
     /**
      * @param mixed $recaudosClienteRel
      */
-    public function setRecaudosClienteRel($recaudosClienteRel): void
+    public function setRecaudosClienteRel( $recaudosClienteRel ): void
     {
         $this->recaudosClienteRel = $recaudosClienteRel;
     }
@@ -613,7 +656,7 @@ class TteCliente
     /**
      * @param mixed $facturasClienteRel
      */
-    public function setFacturasClienteRel($facturasClienteRel): void
+    public function setFacturasClienteRel( $facturasClienteRel ): void
     {
         $this->facturasClienteRel = $facturasClienteRel;
     }
@@ -629,7 +672,7 @@ class TteCliente
     /**
      * @param mixed $recibosClienteRel
      */
-    public function setRecibosClienteRel($recibosClienteRel): void
+    public function setRecibosClienteRel( $recibosClienteRel ): void
     {
         $this->recibosClienteRel = $recibosClienteRel;
     }
@@ -645,58 +688,12 @@ class TteCliente
     /**
      * @param mixed $clientesCondicionesClienteRel
      */
-    public function setClientesCondicionesClienteRel($clientesCondicionesClienteRel): void
+    public function setClientesCondicionesClienteRel( $clientesCondicionesClienteRel ): void
     {
         $this->clientesCondicionesClienteRel = $clientesCondicionesClienteRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getNombreExtendido()
-    {
-        return $this->nombreExtendido;
-    }
 
-    /**
-     * @param mixed $nombreExtendido
-     */
-    public function setNombreExtendido($nombreExtendido): void
-    {
-        $this->nombreExtendido = $nombreExtendido;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCiudadFk()
-    {
-        return $this->codigoCiudadFk;
-    }
-
-    /**
-     * @param mixed $codigoCiudadFk
-     */
-    public function setCodigoCiudadFk($codigoCiudadFk): void
-    {
-        $this->codigoCiudadFk = $codigoCiudadFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCiudadRel()
-    {
-        return $this->ciudadRel;
-    }
-
-    /**
-     * @param mixed $ciudadRel
-     */
-    public function setCiudadRel($ciudadRel): void
-    {
-        $this->ciudadRel = $ciudadRel;
-    }
 
 }
 

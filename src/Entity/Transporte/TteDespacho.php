@@ -104,6 +104,11 @@ class TteDespacho
     private $pesoVolumen = 0;
 
     /**
+     * @ORM\Column(name="peso_costo", type="float", options={"default" : 0})
+     */
+    private $pesoCosto = 0;
+
+    /**
      * @ORM\Column(name="vr_declara", type="float", options={"default" : 0})
      */
     private $vrDeclara = 0;
@@ -192,6 +197,11 @@ class TteDespacho
      * @ORM\Column(name="vr_costo", type="float", nullable=true, options={"default" : 0})
      */
     private $vrCosto = 0;
+
+    /**
+     * @ORM\Column(name="vr_costo_base", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrCostoBase = 0;
 
     /**
      * @ORM\Column(name="porcentaje_rentabilidad", type="float", nullable=true, options={"default" : 0})
@@ -1288,6 +1298,54 @@ class TteDespacho
     public function setVrTotalNeto($vrTotalNeto): void
     {
         $this->vrTotalNeto = $vrTotalNeto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPesoCosto()
+    {
+        return $this->pesoCosto;
+    }
+
+    /**
+     * @param mixed $pesoCosto
+     */
+    public function setPesoCosto( $pesoCosto ): void
+    {
+        $this->pesoCosto = $pesoCosto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRedespachosDespachoRel()
+    {
+        return $this->redespachosDespachoRel;
+    }
+
+    /**
+     * @param mixed $redespachosDespachoRel
+     */
+    public function setRedespachosDespachoRel( $redespachosDespachoRel ): void
+    {
+        $this->redespachosDespachoRel = $redespachosDespachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoBase()
+    {
+        return $this->vrCostoBase;
+    }
+
+    /**
+     * @param mixed $vrCostoBase
+     */
+    public function setVrCostoBase( $vrCostoBase ): void
+    {
+        $this->vrCostoBase = $vrCostoBase;
     }
 
 

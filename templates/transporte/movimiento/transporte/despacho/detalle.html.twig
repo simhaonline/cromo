@@ -35,7 +35,7 @@
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arDespacho.numero }}</td>
             <td class="titulo">FECHA SALIDA:</td>
-            <td class="td-in-well">{{ arDespacho.fechaSalida |date("Y/m/d") }}</td>
+            <td class="td-in-well">{{ arDespacho.fechaSalida |date("Y/m/d H:i") }}</td>
             <td class="titulo" >(-)ANTICIPO:</td>
             <td align="right">{{ arDespacho.vrAnticipo | number_format(0, '.', ',')  }}</td>
         </tr>
@@ -43,7 +43,7 @@
             <td class="titulo">RNDC:</td>
             <td class="td-in-well">{{ arDespacho.numeroRndc }}</td>
             <td class="titulo">FECHA LLEGADA</td>
-            <td class="td-in-well">{{ arDespacho.fechaLlegada |date("Y/m/d") }}</td>
+            <td class="td-in-well">{{ arDespacho.fechaLlegada |date("Y/m/d H:i") }}</td>
             <td class="titulo" >(-)INDUSTRIA COMERCIO</td>
             <td align="right">{{ arDespacho.vrIndustriaComercio | number_format(0, '.', ',')  }}</td>
         </tr>
@@ -91,48 +91,48 @@
         <tr>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo">CANTIDAD:</td>
-            <td class="td-in-well">{{ arDespacho.cantidad }}</td>
+            <td class="titulo">PESO(COSTO):</td>
+            <td class="td-in-well">{{ arDespacho.pesoCosto }}</td>
             <td class="titulo" >ESTAMPILLA:</td>
             <td align="right">{{ arDespacho.vrDescuentoEstampilla | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo">FLETE:</td>
-            <td class="td-in-well">{{ arDespacho.vrFlete | number_format(0, '.', ',') }}</td>
+            <td class="titulo">CANTIDAD:</td>
+            <td class="td-in-well">{{ arDespacho.cantidad }}</td>
             <td class="titulo" >(-)COBRO ENTREGA:</td>
             <td align="right">{{ arDespacho.vrCobroEntrega | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo">MANEJO:</td>
-            <td class="td-in-well">{{ arDespacho.vrManejo | number_format(0, '.', ',') }}</td>
+            <td class="titulo">FLETE:</td>
+            <td class="td-in-well">{{ arDespacho.vrFlete | number_format(0, '.', ',') }}</td>
             <td class="titulo" >(+)COBRO (RECHAZADO):</td>
             <td align="right">{{ arDespacho.vrCobroEntregaRechazado | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo">COBRO ENTREGA:</td>
-            <td class="td-in-well">{{ arDespacho.vrCobroEntrega | number_format(0, '.', ',') }}</td>
+            <td class="titulo">MANEJO:</td>
+            <td class="td-in-well">{{ arDespacho.vrManejo | number_format(0, '.', ',') }}</td>
             <td class="titulo" >TOTAL NETO:</td>
             <td align="right">{{ arDespacho.vrTotalNeto | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="titulo">COBRO ENTREGA:</td>
+            <td class="td-in-well">{{ arDespacho.vrCobroEntrega | number_format(0, '.', ',') }}</td>
             <td class="titulo" >SALDO:</td>
             <td align="right">{{ arDespacho.vrSaldo | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="titulo">COSTO(BASE):</td>
+            <td class="td-in-well">{{ arDespacho.vrCostoBase | number_format(0, '.', ',') }}</td>
             <td class="titulo" >DECLARADO:</td>
             <td align="right">{{ arDespacho.vrDeclara | number_format(0, '.', ',') }}</td>
         </tr>

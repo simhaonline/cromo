@@ -10,6 +10,7 @@ use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
+use App\Entity\Transporte\TteCosto;
 use App\Utilidades\Mensajes;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
@@ -149,19 +150,59 @@ class TteDespachoRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arDespacho
+     * @param $arDespacho TteDespacho
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function autorizar($arDespacho)
     {
-        if ($this->contarDetalles($arDespacho->getCodigoDespachoPk()) > 0) {
-            $arDespacho->setEstadoAutorizado(1);
-            $this->getEntityManager()->persist($arDespacho);
-            $this->getEntityManager()->flush();
+        $em = $this->getEntityManager();
+        if($arDespacho->getEstadoAutorizado() == 0) {
+            if ($this->contarDetalles($arDespacho->getCodigoDespachoPk()) > 0) {
+                $costoBaseTotal = 0;
+                $arDespachoDetalles = $em->getRepository(TteDespachoDetalle::class)->findBy(array('codigoDespachoFk' => $arDespacho->getCodigoDespachoPk()));
+                foreach ($arDespachoDetalles as $arDespachoDetalle) {
+                    $arCosto = $em->getRepository(TteCosto::class)->findOneBy(array('codigoCiudadOrigenFk' => $arDespachoDetalle->getGuiaRel()->getCodigoCiudadOrigenFk(), 'codigoCiudadDestinoFk' => $arDespachoDetalle->getGuiaRel()->getCodigoCiudadDestinoFk() ));
+                    if($arCosto) {
+                        $costo = $arDespachoDetalle->getPesoCosto() * $arCosto->getVrPeso();
+                        $costoBaseTotal += $costo;
+                        $arDespachoDetalle->setVrCostoBase($costo);
+                    }
+                }
+                $arDespacho->setVrCostoBase($costoBaseTotal);
+                $arDespacho->setEstadoAutorizado(1);
+                $em->persist($arDespacho);
+                $em->flush();
+            } else {
+                Mensajes::error('No se puede autorizar, el registro no tiene detalles');
+            }
         } else {
-            Mensajes::error('No se puede autorizar, el registro no tiene detalles');
+            Mensajes::error('El despacho ya esta autorizado');
         }
+    }
+
+    /**
+     * @param $arDespacho TteDespacho
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function costos($arDespacho)
+    {
+        $em = $this->getEntityManager();
+        $costoBaseTotal = 0;
+        $arDespachoDetalles = $em->getRepository(TteDespachoDetalle::class)->findBy(array('codigoDespachoFk' => $arDespacho->getCodigoDespachoPk()));
+        foreach ($arDespachoDetalles as $arDespachoDetalle) {
+            $arCosto = $em->getRepository(TteCosto::class)->findOneBy(array('codigoCiudadOrigenFk' => $arDespachoDetalle->getGuiaRel()->getCodigoCiudadOrigenFk(), 'codigoCiudadDestinoFk' => $arDespachoDetalle->getGuiaRel()->getCodigoCiudadDestinoFk() ));
+            if($arCosto) {
+                $costo = $arDespachoDetalle->getPesoCosto() * $arCosto->getVrPeso();
+                $costoBaseTotal += $costo;
+                $arDespachoDetalle->setVrCostoBase($costo);
+            }
+        }
+        $arDespacho->setVrCostoBase($costoBaseTotal);
+        $arDespacho->setEstadoAutorizado(1);
+        $em->persist($arDespacho);
+        $em->flush();
     }
 
     /**
@@ -184,7 +225,7 @@ class TteDespachoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT COUNT(dd.codigoGuiaFk) as cantidad, SUM(dd.unidades+0) as unidades, SUM(dd.pesoReal+0) as pesoReal, SUM(dd.pesoVolumen+0) as pesoVolumen,
+            'SELECT COUNT(dd.codigoGuiaFk) as cantidad, SUM(dd.unidades+0) as unidades, SUM(dd.pesoReal+0) as pesoReal, SUM(dd.pesoVolumen+0) as pesoVolumen, SUM(dd.pesoCosto+0) as pesoCosto,
                   SUM(dd.vrFlete) as vrFlete, SUM(dd.vrManejo) as vrManejo, SUM(dd.vrCobroEntrega) as vrCobroEntrega, SUM(dd.vrDeclara) as vrDeclara
         FROM App\Entity\Transporte\TteDespachoDetalle dd
         WHERE dd.codigoDespachoFk = :codigoDespacho')
@@ -200,6 +241,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $arDespacho->setUnidades(intval($arrGuias['unidades']));
         $arDespacho->setPesoReal(intval($arrGuias['pesoReal']));
         $arDespacho->setPesoVolumen(intval($arrGuias['pesoVolumen']));
+        $arDespacho->setPesoCosto(intval($arrGuias['pesoCosto']));
         $arDespacho->setCantidad(intval($arrGuias['cantidad']));
         $arDespacho->setVrFlete(intval($arrGuias['vrFlete']));
         $arDespacho->setVrManejo(intval($arrGuias['vrManejo']));
@@ -231,8 +273,8 @@ class TteDespachoRepository extends ServiceEntityRepository
 
     public function aprobar($codigoDespacho): string
     {
-        $respuesta = "";
         $em = $this->getEntityManager();
+        $respuesta = "";
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         if (!$arDespacho->getEstadoAprobado()) {
             if ($arDespacho->getCantidad() > 0) {
@@ -250,6 +292,35 @@ class TteDespachoRepository extends ServiceEntityRepository
                     $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
                     $em->persist($arDespachoTipo);
                 }
+
+                //Costos
+                /*$query = $em->createQuery(
+                    'SELECT dd.codigoDespachoDetallePk,
+                  dd.unidades,
+                  dd.pesoReal,
+                  dd.pesoVolumen      
+                FROM App\Entity\Transporte\TteDespachoDetalle dd
+                WHERE dd.codigoDespachoFk = :despacho  
+                ORDER BY dd.codigoDespachoFk DESC '
+                )->setParameter('despacho', $codigoDespacho);
+                $arDespachoDetalles = $query->execute();
+                foreach ($arDespachoDetalles as $arDespachoDetalle) {
+                    $arDespachoDetalleActualizar = $em->getRepository(TteDespachoDetalle::class)->find($arDespachoDetalle['codigoDespachoDetallePk']);
+                    $costoUnidadTotal = $arDespacho->getVrFletePago() / $arDespacho->getUnidades();
+                    $costoPesoTotal = $arDespacho->getVrFletePago() / $arDespacho->getPesoReal();
+                    $costoVolumenTotal = $arDespacho->getVrFletePago() / $arDespacho->getPesoVolumen();
+                    $costoUnidad = $costoUnidadTotal * $arDespachoDetalle['unidades'];
+                    $costoPeso = $costoPesoTotal * $arDespachoDetalle['pesoReal'];
+                    $costoVolumen = $costoVolumenTotal * $arDespachoDetalle['pesoVolumen'];
+                    $costo = ($costoPeso + $costoVolumen + $costoUnidad) / 3;
+                    $arDespachoDetalleActualizar->setVrCostoUnidad($costoUnidad);
+                    $arDespachoDetalleActualizar->setVrCostoPeso($costoPeso);
+                    $arDespachoDetalleActualizar->setVrCostoVolumen($costoVolumen);
+                    $arDespachoDetalleActualizar->setVrCosto($costo);
+                    $em->persist($arDespachoDetalleActualizar);
+                }*/
+
+                //Generar monitoreo
                 if ($arDespachoTipo->getGeneraMonitoreo()) {
                     $arMonitoreo = new TteMonitoreo();
                     $arMonitoreo->setVehiculoRel($arDespacho->getVehiculoRel());
@@ -262,6 +333,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 }
                 $em->persist($arDespacho);
 
+                //Generar cuenta por pagar
                 if ($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
                     $arPoseedor = $arDespacho->getVehiculoRel()->getPoseedorRel();
                     $arProveedor = $em->getRepository(ComProveedor::class)->findOneBy(['codigoIdentificacionFk' => $arPoseedor->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPoseedor->getNumeroIdentificacion()]);
@@ -314,32 +386,31 @@ class TteDespachoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         //Actualizar los costos de transporte
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT dd.codigoDespachoDetallePk,
-                  dd.unidades,
-                  dd.pesoReal,
-                  dd.pesoVolumen      
-                FROM App\Entity\Transporte\TteDespachoDetalle dd
-                WHERE dd.codigoDespachoFk = :despacho  
-                ORDER BY dd.codigoDespachoFk DESC '
-        )->setParameter('despacho', $codigoDespacho);
-        $arDespachoDetalles = $query->execute();
-        foreach ($arDespachoDetalles as $arDespachoDetalle) {
-            $arDespachoDetalleActualizar = $em->getRepository(TteDespachoDetalle::class)->find($arDespachoDetalle['codigoDespachoDetallePk']);
-            $costoUnidadTotal = $arDespacho->getVrFletePago() / $arDespacho->getUnidades();
-            $costoPesoTotal = $arDespacho->getVrFletePago() / $arDespacho->getPesoReal();
-            $costoVolumenTotal = $arDespacho->getVrFletePago() / $arDespacho->getPesoVolumen();
-            $costoUnidad = $costoUnidadTotal * $arDespachoDetalle['unidades'];
-            $costoPeso = $costoPesoTotal * $arDespachoDetalle['pesoReal'];
-            $costoVolumen = $costoVolumenTotal * $arDespachoDetalle['pesoVolumen'];
-            $costo = ($costoPeso + $costoVolumen + $costoUnidad) / 3;
-            $arDespachoDetalleActualizar->setVrCostoUnidad($costoUnidad);
-            $arDespachoDetalleActualizar->setVrCostoPeso($costoPeso);
-            $arDespachoDetalleActualizar->setVrCostoVolumen($costoVolumen);
-            $arDespachoDetalleActualizar->setVrCosto($costo);
-            $em->persist($arDespachoDetalleActualizar);
-        }
+//        $query = $em->createQuery(
+//            'SELECT dd.codigoDespachoDetallePk,
+//                  dd.unidades,
+//                  dd.pesoReal,
+//                  dd.pesoVolumen
+//                FROM App\Entity\Transporte\TteDespachoDetalle dd
+//                WHERE dd.codigoDespachoFk = :despacho
+//                ORDER BY dd.codigoDespachoFk DESC '
+//        )->setParameter('despacho', $codigoDespacho);
+//        $arDespachoDetalles = $query->execute();
+//        foreach ($arDespachoDetalles as $arDespachoDetalle) {
+//            $arDespachoDetalleActualizar = $em->getRepository(TteDespachoDetalle::class)->find($arDespachoDetalle['codigoDespachoDetallePk']);
+//            $costoUnidadTotal = $arDespacho->getVrFletePago() / $arDespacho->getUnidades();
+//            $costoPesoTotal = $arDespacho->getVrFletePago() / $arDespacho->getPesoReal();
+//            $costoVolumenTotal = $arDespacho->getVrFletePago() / $arDespacho->getPesoVolumen();
+//            $costoUnidad = $costoUnidadTotal * $arDespachoDetalle['unidades'];
+//            $costoPeso = $costoPesoTotal * $arDespachoDetalle['pesoReal'];
+//            $costoVolumen = $costoVolumenTotal * $arDespachoDetalle['pesoVolumen'];
+//            $costo = ($costoPeso + $costoVolumen + $costoUnidad) / 3;
+//            $arDespachoDetalleActualizar->setVrCostoUnidad($costoUnidad);
+//            $arDespachoDetalleActualizar->setVrCostoPeso($costoPeso);
+//            $arDespachoDetalleActualizar->setVrCostoVolumen($costoVolumen);
+//            $arDespachoDetalleActualizar->setVrCosto($costo);
+//            $em->persist($arDespachoDetalleActualizar);
+//        }
         $arDespacho->setEstadoCerrado(1);
         $em->flush();
         return $respuesta;

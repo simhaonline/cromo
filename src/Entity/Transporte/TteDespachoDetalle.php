@@ -48,6 +48,11 @@ class TteDespachoDetalle
     private $pesoVolumen = 0;
 
     /**
+     * @ORM\Column(name="peso_costo", type="float", options={"default" : 0})
+     */
+    private $pesoCosto = 0;
+
+    /**
      * @ORM\Column(name="vr_declara", type="float", options={"default" : 0})
      */
     private $vrDeclara = 0;
@@ -68,24 +73,9 @@ class TteDespachoDetalle
     private $vrRecaudo = 0;
 
     /**
-     * @ORM\Column(name="vr_costo_unidad", type="float", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="vr_costo_base", type="float", nullable=true, options={"default" : 0})
      */
-    private $vrCostoUnidad = 0;
-
-    /**
-     * @ORM\Column(name="vr_costo_peso", type="float", nullable=true, options={"default" : 0})
-     */
-    private $vrCostoPeso = 0;
-
-    /**
-     * @ORM\Column(name="vr_costo_volumen", type="float", nullable=true, options={"default" : 0})
-     */
-    private $vrCostoVolumen = 0;
-
-    /**
-     * @ORM\Column(name="vr_costo", type="float", nullable=true, options={"default" : 0})
-     */
-    private $vrCosto = 0;
+    private $vrCostoBase = 0;
 
     /**
      * @ORM\Column(name="vr_cobro_entrega", type="float", options={"default" : 0})
@@ -120,7 +110,7 @@ class TteDespachoDetalle
     /**
      * @param mixed $codigoDespachoDetallePk
      */
-    public function setCodigoDespachoDetallePk($codigoDespachoDetallePk): void
+    public function setCodigoDespachoDetallePk( $codigoDespachoDetallePk ): void
     {
         $this->codigoDespachoDetallePk = $codigoDespachoDetallePk;
     }
@@ -136,7 +126,7 @@ class TteDespachoDetalle
     /**
      * @param mixed $codigoDespachoFk
      */
-    public function setCodigoDespachoFk($codigoDespachoFk): void
+    public function setCodigoDespachoFk( $codigoDespachoFk ): void
     {
         $this->codigoDespachoFk = $codigoDespachoFk;
     }
@@ -152,7 +142,7 @@ class TteDespachoDetalle
     /**
      * @param mixed $codigoGuiaFk
      */
-    public function setCodigoGuiaFk($codigoGuiaFk): void
+    public function setCodigoGuiaFk( $codigoGuiaFk ): void
     {
         $this->codigoGuiaFk = $codigoGuiaFk;
     }
@@ -168,7 +158,7 @@ class TteDespachoDetalle
     /**
      * @param mixed $unidades
      */
-    public function setUnidades($unidades): void
+    public function setUnidades( $unidades ): void
     {
         $this->unidades = $unidades;
     }
@@ -184,7 +174,7 @@ class TteDespachoDetalle
     /**
      * @param mixed $pesoReal
      */
-    public function setPesoReal($pesoReal): void
+    public function setPesoReal( $pesoReal ): void
     {
         $this->pesoReal = $pesoReal;
     }
@@ -200,9 +190,25 @@ class TteDespachoDetalle
     /**
      * @param mixed $pesoVolumen
      */
-    public function setPesoVolumen($pesoVolumen): void
+    public function setPesoVolumen( $pesoVolumen ): void
     {
         $this->pesoVolumen = $pesoVolumen;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPesoCosto()
+    {
+        return $this->pesoCosto;
+    }
+
+    /**
+     * @param mixed $pesoCosto
+     */
+    public function setPesoCosto( $pesoCosto ): void
+    {
+        $this->pesoCosto = $pesoCosto;
     }
 
     /**
@@ -216,7 +222,7 @@ class TteDespachoDetalle
     /**
      * @param mixed $vrDeclara
      */
-    public function setVrDeclara($vrDeclara): void
+    public function setVrDeclara( $vrDeclara ): void
     {
         $this->vrDeclara = $vrDeclara;
     }
@@ -232,7 +238,7 @@ class TteDespachoDetalle
     /**
      * @param mixed $vrFlete
      */
-    public function setVrFlete($vrFlete): void
+    public function setVrFlete( $vrFlete ): void
     {
         $this->vrFlete = $vrFlete;
     }
@@ -248,7 +254,7 @@ class TteDespachoDetalle
     /**
      * @param mixed $vrManejo
      */
-    public function setVrManejo($vrManejo): void
+    public function setVrManejo( $vrManejo ): void
     {
         $this->vrManejo = $vrManejo;
     }
@@ -264,7 +270,7 @@ class TteDespachoDetalle
     /**
      * @param mixed $vrRecaudo
      */
-    public function setVrRecaudo($vrRecaudo): void
+    public function setVrRecaudo( $vrRecaudo ): void
     {
         $this->vrRecaudo = $vrRecaudo;
     }
@@ -272,97 +278,17 @@ class TteDespachoDetalle
     /**
      * @return mixed
      */
-    public function getVrCostoUnidad()
+    public function getVrCostoBase()
     {
-        return $this->vrCostoUnidad;
+        return $this->vrCostoBase;
     }
 
     /**
-     * @param mixed $vrCostoUnidad
+     * @param mixed $vrCostoBase
      */
-    public function setVrCostoUnidad($vrCostoUnidad): void
+    public function setVrCostoBase( $vrCostoBase ): void
     {
-        $this->vrCostoUnidad = $vrCostoUnidad;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrCostoPeso()
-    {
-        return $this->vrCostoPeso;
-    }
-
-    /**
-     * @param mixed $vrCostoPeso
-     */
-    public function setVrCostoPeso($vrCostoPeso): void
-    {
-        $this->vrCostoPeso = $vrCostoPeso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrCostoVolumen()
-    {
-        return $this->vrCostoVolumen;
-    }
-
-    /**
-     * @param mixed $vrCostoVolumen
-     */
-    public function setVrCostoVolumen($vrCostoVolumen): void
-    {
-        $this->vrCostoVolumen = $vrCostoVolumen;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrCosto()
-    {
-        return $this->vrCosto;
-    }
-
-    /**
-     * @param mixed $vrCosto
-     */
-    public function setVrCosto($vrCosto): void
-    {
-        $this->vrCosto = $vrCosto;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDespachoRel()
-    {
-        return $this->despachoRel;
-    }
-
-    /**
-     * @param mixed $despachoRel
-     */
-    public function setDespachoRel($despachoRel): void
-    {
-        $this->despachoRel = $despachoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiaRel()
-    {
-        return $this->guiaRel;
-    }
-
-    /**
-     * @param mixed $guiaRel
-     */
-    public function setGuiaRel($guiaRel): void
-    {
-        $this->guiaRel = $guiaRel;
+        $this->vrCostoBase = $vrCostoBase;
     }
 
     /**
@@ -376,7 +302,7 @@ class TteDespachoDetalle
     /**
      * @param mixed $vrCobroEntrega
      */
-    public function setVrCobroEntrega($vrCobroEntrega): void
+    public function setVrCobroEntrega( $vrCobroEntrega ): void
     {
         $this->vrCobroEntrega = $vrCobroEntrega;
     }
@@ -392,9 +318,41 @@ class TteDespachoDetalle
     /**
      * @param mixed $vrPrecioReexpedicion
      */
-    public function setVrPrecioReexpedicion($vrPrecioReexpedicion): void
+    public function setVrPrecioReexpedicion( $vrPrecioReexpedicion ): void
     {
         $this->vrPrecioReexpedicion = $vrPrecioReexpedicion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoRel()
+    {
+        return $this->despachoRel;
+    }
+
+    /**
+     * @param mixed $despachoRel
+     */
+    public function setDespachoRel( $despachoRel ): void
+    {
+        $this->despachoRel = $despachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaRel()
+    {
+        return $this->guiaRel;
+    }
+
+    /**
+     * @param mixed $guiaRel
+     */
+    public function setGuiaRel( $guiaRel ): void
+    {
+        $this->guiaRel = $guiaRel;
     }
 
 

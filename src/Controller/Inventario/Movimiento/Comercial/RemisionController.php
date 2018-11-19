@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Movimiento\Comercial;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Entity\General\GenAsesor;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvPedido;
@@ -21,6 +22,7 @@ use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,7 +56,10 @@ class RemisionController extends ControllerListenerGeneral
         $form = $this->createFormBuilder()
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('cboRemisionTipo', EntityType::class, $em->getRepository(InvRemisionTipo::class)->llenarCombo())
-            ->add('numero', TextType::class, array('data' => $session->get('filtroInvPedidoPedidoNumero')))
+            ->add('cboAsesor', EntityType::class, $em->getRepository(GenAsesor::class)->llenarCombo())
+            ->add('chkEstadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvRemisionEstadoAutorizado'), 'required' => false])
+            ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvRemisionEstadoAprobado'), 'required' => false])
+            ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvRemisionNumero')))
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
@@ -63,13 +68,20 @@ class RemisionController extends ControllerListenerGeneral
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
-//                    $session->set('filtroInvPedidoPedidoNumero', $form->get('numero')->getData());
-//                    $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
+                    $session->set('filtroInvRemisionNumero', $form->get('txtNumero')->getData());
+                    $session->set('filtroInvRemisionEstadoAutorizado', $form->get('chkEstadoAutorizado')->getData());
+                    $session->set('filtroInvRemisionEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
                     $arRemisionTipo = $form->get('cboRemisionTipo')->getData();
                     if($arRemisionTipo != ''){
                         $session->set('filtroInvRemisionTipo', $form->get('cboRemisionTipo')->getData()->getCodigoRemisionTipoPk());
                     } else {
                         $session->set('filtroInvRemisionTipo', null);
+                    }
+                    $arAsesor = $form->get('cboAsesor')->getData();
+                    if($arAsesor != ''){
+                        $session->set('filtroGenAsesor', $form->get('cboAsesor')->getData()->getCodigoAsesorPk());
+                    } else {
+                        $session->set('filtroGenAsesor', null);
                     }
                 }
                 if ($form->get('btnExcel')->isClicked()) {

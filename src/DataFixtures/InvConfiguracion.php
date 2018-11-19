@@ -15,6 +15,7 @@ class InvConfiguracion extends Fixture
             $arInvConfiguracion = new \App\Entity\Inventario\InvConfiguracion();
             $arInvConfiguracion->setCodigoConfiguracionPk(1);
             $arInvConfiguracion->setCodigoFormatoMovimiento(1);
+            $arInvConfiguracion->setCodigoFormatoRemision(1);
             $manager->persist($arInvConfiguracion);
         }
         $manager->flush();

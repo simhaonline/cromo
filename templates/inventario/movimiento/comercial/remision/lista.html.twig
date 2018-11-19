@@ -27,12 +27,31 @@
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_TxtCodigo" class="col-sm-1 control-label">Tipo:</label>
-                <div class="col-sm-5">
+                <div class="col-sm-4">
                     {{ form_widget(form.cboRemisionTipo, { 'attr': {'class': 'form-control'} }) }}
                 </div>
+                <label class="col-sm-1 control-label"></label>
                 <label for="form_estadoAutorizado" class="col-sm-1 control-label">Numero:</label>
-                <div class="col-sm-5">
-                    {{ form_widget(form.numero, { 'attr': {'class': 'form-control'} }) }}
+                <div class="col-sm-2">
+                    {{ form_widget(form.txtNumero, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label">Autorizado:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.chkEstadoAutorizado, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Asesor:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cboAsesor, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-1 control-label"></label>
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label"></label>
+                <div class="col-sm-2">
+                </div>
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label">Aprobado:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.chkEstadoAprobado, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
 

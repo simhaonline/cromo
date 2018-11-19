@@ -4,6 +4,7 @@ namespace App\Controller\Inventario\Movimiento\Inventario;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\General\GenAsesor;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvImportacionDetalle;
 use App\Entity\Inventario\InvOrdenDetalle;
@@ -25,6 +26,8 @@ use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Form\Type\Inventario\MovimientoType;
 use App\Formato\Inventario\Factura1;
 use App\Formato\Inventario\Factura2;;
+
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -66,6 +69,8 @@ class MovimientoController extends ControllerListenerGeneral
      * @param $codigoDocumento
      * @param $tipoDocumento
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/movimiento/inventario/movimiento/lista/movimientos/{tipoDocumento}/{codigoDocumento}", name="inventario_movimiento_inventario_movimiento_lista")
@@ -79,8 +84,10 @@ class MovimientoController extends ControllerListenerGeneral
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoCodigo')))
             ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvMovimientoNumero')))
+            ->add('cboAsesor', EntityType::class, $em->getRepository(GenAsesor::class)->llenarCombo())
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('chkEstadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvMovimientoEstadoAutorizado'), 'required' => false])
+            ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvMovimientoEstadoAprobado'), 'required' => false])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
@@ -92,6 +99,13 @@ class MovimientoController extends ControllerListenerGeneral
                     $session->set('filtroInvMovimientoCodigo', $form->get('txtCodigo')->getData());
                     $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
                     $session->set('filtroInvMovimientoEstadoAutorizado', $form->get('chkEstadoAutorizado')->getData());
+                    $session->set('filtroInvMovimientoEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
+                    $arAsesor = $form->get('cboAsesor')->getData();
+                    if($arAsesor != ''){
+                        $session->set('filtroGenAsesor', $form->get('cboAsesor')->getData()->getCodigoAsesorPk());
+                    } else {
+                        $session->set('filtroGenAsesor', null);
+                    }
                 }
                 if ($form->get('btnExcel')->isClicked()) {
                     General::get()->setExportar($em->createQuery($em->getRepository(InvMovimiento::class)->lista($codigoDocumento))->execute(), "Movimientos");

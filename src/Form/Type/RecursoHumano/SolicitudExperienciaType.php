@@ -15,9 +15,7 @@ class SolicitudExperienciaType extends AbstractType
     {
         $builder
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
-        ;
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -25,5 +23,21 @@ class SolicitudExperienciaType extends AbstractType
         $resolver->setDefaults([
             'data_class' => RhuSolicitudExperiencia::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"nombre",        "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"}
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"nombre",        "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"}
+        ]';
+        return $campos;
     }
 }

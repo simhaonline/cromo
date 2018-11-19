@@ -73,9 +73,9 @@ class Usuario implements UserInterface, \Serializable
     private $isActive;
 
     /**
-     * @ORM\Column(name="rol", type="string", options={"default":"ROLE_USER"})
+     * @ORM\Column(name="rol", type="string", length=20, options={"default":"ROLE_USER"})
      */
-    private $rol;
+    private $rol = 'ROLE_USER';
 
     /**
      * @ORM\Column(name="notificaciones_pendientes", type="integer", options={"default":0})

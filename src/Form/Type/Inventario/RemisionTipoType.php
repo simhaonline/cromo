@@ -18,6 +18,9 @@ class RemisionTipoType extends AbstractType
             ->add('codigoRemisionTipoPk',TextType::class,['label' => 'Código remision tipo: '])
             ->add('nombre',TextType::class,['label' => 'Nombre: '])
             ->add('consecutivo',NumberType::class,['label' => 'Consecutivo:'])
+            ->add('adicionar')
+            ->add('adicionarPedido')
+            ->add('adicionarRemision')
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
@@ -34,7 +37,8 @@ class RemisionTipoType extends AbstractType
         $campos = '[
             {"campo":"codigoRemisionTipoPk",          "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
             {"campo":"nombre",                     "tipo":"texto"  ,"ayuda":"Nombre de las remisiones tipo",       "titulo":"NOMBRE"},   
-            {"campo":"consecutivo",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"NOMBRE"}             
+            {"campo":"consecutivo",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"CONSECUTIVO"},
+            {"campo":"operacionInventario",                "tipo":"numero"  ,"ayuda":"Operacion inventario",     "titulo":"OP"}             
                                                                           
         ]';
         return $campos;

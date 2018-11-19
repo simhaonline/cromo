@@ -15,11 +15,10 @@ class ClasificacionRiesgoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('codigoClasificacionRiesgoPk',TextType::class,['required' => true,'label' => 'Codigo clasificación riesgo:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('porcentaje',NumberType::class,['required' => true,'label' => 'Nombre:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
-        ;
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -27,5 +26,25 @@ class ClasificacionRiesgoType extends AbstractType
         $resolver->setDefaults([
             'data_class' => RhuClasificacionRiesgo::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoClasificacionRiesgoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
+            {"campo":"porcentaje",                  "tipo":"texto", "ayuda":"Porcentaje",          "titulo":"%"}
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoClasificacionRiesgoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",                      "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
+            {"campo":"porcentaje",                  "tipo":"texto", "ayuda":"Porcentaje",          "titulo":"%"}
+        ]';
+        return $campos;
     }
 }

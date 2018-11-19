@@ -27,4 +27,22 @@ class CargoType extends AbstractType
             'data_class' => RhuCargo::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoCargoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",        "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"}
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoCargoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",        "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"}
+        ]';
+        return $campos;
+    }
 }

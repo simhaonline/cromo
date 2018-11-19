@@ -31,4 +31,28 @@ class TiempoType extends AbstractType
             'data_class' => RhuTiempo::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        return '[
+            {"campo":"codigoTiempoPk", "tipo":"pk"     ,"ayuda":"Codigo del registro","titulo":"ID"},
+            {"campo":"nombre",         "tipo":"texto"  ,"ayuda":"Nombre del registro","titulo":"NOMBRE"},
+            {"campo":"factor",         "tipo":"texto"  ,"ayuda":"Factor",             "titulo":"FAC"},
+            {"campo":"factorHorasDia", "tipo":"texto"  ,"ayuda":"Factor horas dia",   "titulo":"FAC_HD"},
+            {"campo":"abreviatura",    "tipo":"texto"  ,"ayuda":"Abreviatura",        "titulo":"ABREVIATURA"},                                  
+            {"campo":"orden",          "tipo":"texto"  ,"ayuda":"Orden",              "titulo":"ORDEN"}
+        ]';
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        return '[
+            {"campo":"codigoTiempoPk", "tipo":"pk"     ,"ayuda":"Codigo del registro","titulo":"ID"},
+            {"campo":"nombre",         "tipo":"texto"  ,"ayuda":"Nombre del registro","titulo":"NOMBRE"},
+            {"campo":"factor",         "tipo":"texto"  ,"ayuda":"Factor",             "titulo":"FAC"},
+            {"campo":"factorHorasDia", "tipo":"texto"  ,"ayuda":"Factor horas dia",   "titulo":"FAC_HD"},
+            {"campo":"abreviatura",    "tipo":"texto"  ,"ayuda":"Abreviatura",        "titulo":"ABREVIATURA"},                                  
+            {"campo":"orden",          "tipo":"texto"  ,"ayuda":"Orden",              "titulo":"ORDEN"},
+        ]';
+    }
 }

@@ -34,6 +34,21 @@ class InvRemisionTipo
     private $operacionInventario = 0;
 
     /**
+     * @ORM\Column(name="adicionar", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $adicionar = false;
+
+    /**
+     * @ORM\Column(name="adicionar_pedido", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $adicionarPedido = false;
+
+    /**
+     * @ORM\Column(name="adicionar_remision", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $adicionarRemision = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvRemision", mappedBy="remisionTipoRel")
      */
     protected $remisionesRemisionTipoRel;
@@ -89,6 +104,70 @@ class InvRemisionTipo
     /**
      * @return mixed
      */
+    public function getOperacionInventario()
+    {
+        return $this->operacionInventario;
+    }
+
+    /**
+     * @param mixed $operacionInventario
+     */
+    public function setOperacionInventario($operacionInventario): void
+    {
+        $this->operacionInventario = $operacionInventario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionar()
+    {
+        return $this->adicionar;
+    }
+
+    /**
+     * @param mixed $adicionar
+     */
+    public function setAdicionar($adicionar): void
+    {
+        $this->adicionar = $adicionar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionarPedido()
+    {
+        return $this->adicionarPedido;
+    }
+
+    /**
+     * @param mixed $adicionarPedido
+     */
+    public function setAdicionarPedido($adicionarPedido): void
+    {
+        $this->adicionarPedido = $adicionarPedido;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionarRemision()
+    {
+        return $this->adicionarRemision;
+    }
+
+    /**
+     * @param mixed $adicionarRemision
+     */
+    public function setAdicionarRemision($adicionarRemision): void
+    {
+        $this->adicionarRemision = $adicionarRemision;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getRemisionesRemisionTipoRel()
     {
         return $this->remisionesRemisionTipoRel;
@@ -101,23 +180,6 @@ class InvRemisionTipo
     {
         $this->remisionesRemisionTipoRel = $remisionesRemisionTipoRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getOperacionInventario()
-    {
-        return $this->operacionInventario;
-    }
-
-    /**
-     * @param mixed $operacionInventario
-     */
-    public function setOperacionInventario( $operacionInventario ): void
-    {
-        $this->operacionInventario = $operacionInventario;
-    }
-
 
 
 

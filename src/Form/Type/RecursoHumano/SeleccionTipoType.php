@@ -14,9 +14,8 @@ class SeleccionTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nombre', TextType::class, ['required' => false])
-            ->add('guardar', SubmitType::class, ['label' => 'Guardar'])
-            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo']);
+            ->add('nombre', TextType::class, ['required' => false,'label' => 'Nombre:'])
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
         ;
     }
 
@@ -25,5 +24,21 @@ class SeleccionTipoType extends AbstractType
         $resolver->setDefaults([
             'data_class' => RhuSeleccionTipo::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"nombre",        "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"}
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"nombre",        "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"}
+        ]';
+        return $campos;
     }
 }

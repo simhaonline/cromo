@@ -19,26 +19,28 @@ class NovedadTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoNovedadTipoPk', TextType::class, ['required' => true])
-            ->add('nombre', TextType::class, ['required' => false])
-            ->add('afectaSalud', CheckboxType::class, ['required' => false])
-            ->add('ausentismo', CheckboxType::class, ['required' => false])
-            ->add('maternidad', CheckboxType::class, ['required' => false])
-            ->add('paternidad', CheckboxType::class, ['required' => false])
-            ->add('remunerada', CheckboxType::class, ['required' => false])
+            ->add('codigoNovedadTipoPk', TextType::class, ['required' => true, 'label' => 'Codigo novedad tipo:'])
+            ->add('nombre', TextType::class, ['required' => false,'label' => 'Nombre:'])
             ->add('subTipo', ChoiceType::class,[
                 'choices' => [
                     'LICENCIA' => 'L','INCAPACIDAD' => 'I'
                 ],
-                'required' => true])
+                'required' => true,
+                'label' => 'Subtipo:'])
             ->add('conceptoRel', EntityType::class, [
                 'class' => RhuConcepto::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('er')
                         ->orderBy('er.nombre');
                 }, 'choice_label' => 'nombre',
-                'required' => true
+                'required' => true,
+                'label' => 'Concepto:'
             ])
+            ->add('afectaSalud', CheckboxType::class, ['required' => false])
+            ->add('ausentismo', CheckboxType::class, ['required' => false])
+            ->add('maternidad', CheckboxType::class, ['required' => false])
+            ->add('paternidad', CheckboxType::class, ['required' => false])
+            ->add('remunerada', CheckboxType::class, ['required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
@@ -47,5 +49,35 @@ class NovedadTipoType extends AbstractType
         $resolver->setDefaults([
             'data_class' => RhuNovedadTipo::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoNovedadTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
+            {"campo":"afectaSalud",         "tipo":"texto", "ayuda":"Afecta salud",        "titulo":"A_S"},
+            {"campo":"ausentismo",          "tipo":"texto", "ayuda":"Ausentismo", "titulo":"AUS"},
+            {"campo":"maternidad",          "tipo":"texto", "ayuda":"Maternidad", "titulo":"MAT"},
+            {"campo":"paternidad",          "tipo":"texto", "ayuda":"Paternidad", "titulo":"PAT"},
+            {"campo":"remunerada",          "tipo":"texto", "ayuda":"Remunerada", "titulo":"REM"},
+            {"campo":"codigoConceptoFk",    "tipo":"texto", "ayuda":"Codigo concepto ",    "titulo":"CONCEPTO"}
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoNovedadTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
+            {"campo":"afectaSalud",         "tipo":"texto", "ayuda":"Afecta salud",        "titulo":"A_S"},
+            {"campo":"ausentismo",          "tipo":"texto", "ayuda":"Ausentismo", "titulo":"AUS"},
+            {"campo":"maternidad",          "tipo":"texto", "ayuda":"Maternidad", "titulo":"MAT"},
+            {"campo":"paternidad",          "tipo":"texto", "ayuda":"Paternidad", "titulo":"PAT"},
+            {"campo":"remunerada",          "tipo":"texto", "ayuda":"Remunerada", "titulo":"REM"},
+            {"campo":"codigoConceptoFk",    "tipo":"texto", "ayuda":"Codigo concepto ",    "titulo":"CONCEPTO"}
+        ]';
+        return $campos;
     }
 }

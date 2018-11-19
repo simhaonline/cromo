@@ -3,6 +3,8 @@
 namespace App\Repository\Inventario;
 
 
+use App\Entity\Inventario\InvItem;
+use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvRemisionDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -36,6 +38,8 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->addSelect('rd.vrIva')
             ->addSelect('rd.vrSubtotal')
             ->addSelect('rd.vrNeto')
+            ->addSelect('rd.codigoPedidoDetalleFk')
+            ->addSelect('rd.codigoRemisionDetalleFk')
             ->leftJoin('rd.itemRel','i')
             ->leftJoin('i.marcaRel','m')
             ->addSelect('rd.vrTotal')
@@ -145,4 +149,108 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         return $resultado[1];
     }
 
+    public function listaRegenerarCantidadAfectada()
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
+            ->select('rd.codigoRemisionDetallePk')
+            ->addSelect('rd.cantidad')
+            ->addSelect('rd.cantidadAfectada')
+            ->addSelect('rd.cantidadPendiente');
+        $arrRemisionsDetalles = $queryBuilder->getQuery()->getResult();
+        return $arrRemisionsDetalles;
+    }
+
+    public function listaRegenerarRemisionada(){
+        $cantidad = 0;
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
+            ->select('rd.codigoItemFk')
+            ->addSelect('rd.loteFk')
+            ->addSelect('rd.codigoBodegaFk')
+            ->addSelect("SUM(rd.cantidadOperada) AS cantidad")
+            ->leftJoin('rd.itemRel', 'i')
+            ->leftJoin('rd.remisionRel', 'r')
+            ->where('i.afectaInventario = 1')
+            ->andWhere('rd.operacionInventario <> 0')
+            ->andWhere('r.estadoAprobado = 1')
+            ->groupBy('rd.codigoItemFk')
+            ->addGroupBy('rd.loteFk')
+            ->addGroupBy('rd.codigoBodegaFk');
+        $arrExistencias = $queryBuilder->getQuery()->getResult();
+        return $arrExistencias;
+    }
+
+    public function listaRegenerarRemisionadaItem(){
+        $cantidad = 0;
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
+            ->select('rd.codigoItemFk')
+            ->addSelect("SUM(rd.cantidadOperada) AS cantidad")
+            ->leftJoin('rd.itemRel', 'i')
+            ->leftJoin('rd.remisionRel', 'r')
+            ->where('i.afectaInventario = 1')
+            ->andWhere('rd.operacionInventario <> 0')
+            ->andWhere('r.estadoAprobado = 1')
+            ->groupBy('rd.codigoItemFk');
+        $arrExistencias = $queryBuilder->getQuery()->getResult();
+        return $arrExistencias;
+    }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function regenerarCantidadAfectada() {
+        $em = $this->getEntityManager();
+        $arRemisionsDetalles = $em->getRepository(InvRemisionDetalle::class)->listaRegenerarCantidadAfectada();
+        foreach ($arRemisionsDetalles as $arRemisionDetalle) {
+            $cantidad = $arRemisionDetalle['cantidad'];
+            $cantidadAfectada = $em->getRepository(InvMovimientoDetalle::class)->cantidadAfectaRemision($arRemisionDetalle['codigoRemisionDetallePk']);
+            $cantidadPendiente = $cantidad - $cantidadAfectada;
+            if($cantidadAfectada != $arRemisionDetalle['cantidadAfectada'] || $cantidadPendiente != $arRemisionDetalle['cantidadPendiente']) {
+                $arRemisionDetalleAct = $em->getRepository(InvRemisionDetalle::class)->find($arRemisionDetalle['codigoRemisionDetallePk']);
+                $arRemisionDetalleAct->setCantidadAfectada($cantidadAfectada);
+                $arRemisionDetalleAct->setCantidadPendiente($cantidadPendiente);
+                $em->persist($arRemisionDetalleAct);
+            }
+        }
+        $em->flush();
+
+        $mensajesError = "";
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->update(InvLote::class, 'l')
+            ->set('l.cantidadRemisionada', 0);
+        $queryBuilder->getQuery()->execute();
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->update(InvItem::class, 'i')
+            ->set('i.cantidadRemisionada', 0);
+        $queryBuilder->getQuery()->execute();
+
+        $arRemisionDetalles = $this->listaRegenerarRemisionada();
+        foreach ($arRemisionDetalles as $arRemisionDetalle) {
+            $arLote = $em->getRepository(InvLote::class)->findOneBy(array('codigoItemFk' => $arRemisionDetalle['codigoItemFk'],
+                'loteFk' => $arRemisionDetalle['loteFk'], 'codigoBodegaFk' => $arRemisionDetalle['codigoBodegaFk']));
+            if($arLote) {
+                $arLote->setCantidadRemisionada($arRemisionDetalle['cantidad']);
+                $arLote->setCantidadDisponible($arLote->getCantidadExistencia() - $arLote->getCantidadRemisionada());
+                $em->persist($arLote);
+            } else {
+                Mensajes::error('Misteriosamente un lote no esta creado' . $arRemisionDetalle['codigoItemFk'] . " " . $arRemisionDetalle['loteFk'] . " " . $arRemisionDetalle['codigoBodegaFk']);
+                break;
+            }
+        }
+        $arRemisionDetalles = $this->listaRegenerarRemisionadaItem();
+        foreach ($arRemisionDetalles as $arRemisionDetalle) {
+            $arItem = $em->getRepository(InvItem::class)->find($arRemisionDetalle['codigoItemFk']);
+            $arItem->setCantidadRemisionada($arRemisionDetalle['cantidad']);
+            $arItem->setCantidadDisponible($arItem->getCantidadExistencia() - $arItem->getCantidadRemisionada());
+            $em->persist($arItem);
+        }
+
+        if($mensajesError == "") {
+            $em->flush();
+        }
+
+    }    
+    
 }

@@ -62,7 +62,6 @@ class InvMovimientoRepository extends ServiceEntityRepository
         if($session->get('filtroInvCodigoTercero')){
             $queryBuilder->andWhere("m.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
         }
-
         switch ($session->get('filtroInvMovimientoEstadoAutorizado')) {
             case '0':
                 $queryBuilder->andWhere("m.estadoAutorizado = 0");
@@ -70,6 +69,17 @@ class InvMovimientoRepository extends ServiceEntityRepository
             case '1':
                 $queryBuilder->andWhere("m.estadoAutorizado = 1");
                 break;
+        }
+        switch ($session->get('filtroInvMovimientoEstadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("m.estadoAprobado= 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("m.estadoAprobado = 1");
+                break;
+        }
+        if($session->get('filtroGenAsesor')) {
+            $queryBuilder->andWhere("m.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
         }
         $queryBuilder->orderBy('m.estadoAprobado', 'ASC');
         $queryBuilder->addOrderBy('m.fecha', 'DESC');

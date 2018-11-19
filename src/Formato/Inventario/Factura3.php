@@ -51,10 +51,10 @@ class Factura3 extends \FPDF
         $date = new \DateTime('now');
         $this->Text(170, 10, $date->format('Y-m-d H:i:s') . ' [Cromo | Inventario]');
 
-        $this->SetFont('Arial', 'B', 8);
+        $this->SetFont('Arial', 'B', 12);
         $this->SetXY(140, 26);
         $this->Cell(35, 4, 'FACTURA DE VENTA', 0, 0, 'L', 0);
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 12);
         $this->Cell(25, 4, '000'. $arMovimiento->getNumero(), 0, 0, 'R', 0);
         //
         $this->SetFont('Arial', 'B', 8);
@@ -86,8 +86,8 @@ class Factura3 extends \FPDF
         $fechaVencimiento = date_create($stringFecha);
         $fechaVencimiento->modify("+ " . (string)$plazo . " day");
 
-        $this->SetFont('Arial', '', 8);
-        $this->Cell(17, 4, $arMovimiento->getSoporte(), 0, 0, 'R', 0);
+//        $this->SetFont('Arial', '', 8);
+//        $this->Cell(17, 4, $arMovimiento->getSoporte(), 0, 0, 'R', 0);
 
 
         $this->SetFillColor(200, 200, 200);
@@ -140,6 +140,20 @@ class Factura3 extends \FPDF
         $this->SetFont('Arial', '', 8);
         $this->SetX(52);
         $this->Cell(15, 4, utf8_decode($arMovimiento->getTerceroRel()->getTelefono()), 0, 0, 'L', 0);
+
+        $this->SetFont('Arial', 'B', 9);
+        $this->SetXY(18.5, 75);
+        $this->Cell(15, 4, 'SOPORTE:', 0, 0, 'L', 0);
+        $this->SetFont('Arial', '', 8);
+        $this->SetX(52);
+        $this->Cell(15, 4, utf8_decode($arMovimiento->getSoporte()), 0, 0, 'L', 0);
+
+        $this->SetFont('Arial', 'B', 9);
+        $this->SetXY(18.5, 79);
+        $this->Cell(15, 4, 'COMENTARIOS:', 0, 0, 'L', 0);
+        $this->SetFont('Arial', '', 8);
+        $this->SetX(52);
+        $this->Cell(15, 4, utf8_decode($arMovimiento->getComentarios()), 0, 0, 'L', 0);
 
         $this->Ln();
 

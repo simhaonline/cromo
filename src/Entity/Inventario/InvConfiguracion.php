@@ -42,7 +42,7 @@ class InvConfiguracion
     private $codigoFormatoMovimiento = 0;
 
     /**
-     * @ORM\Column(name="codigo_formato_remision", type="integer", options={"default" : 0})
+     * @ORM\Column(name="codigo_formato_remision", type="integer", nullable=true, options={"default" : 0})
      */
     private $codigoFormatoRemision = 0;
 

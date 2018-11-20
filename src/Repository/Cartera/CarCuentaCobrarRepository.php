@@ -38,6 +38,61 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.vrSaldo')
             ->addSelect('cc.vrSaldoOperado')
             ->where('cc.codigoCuentaCobrarPk <> 0')
+            ->orderBy('cc.codigoCuentaCobrarPk', 'DESC');
+        $fecha =  new \DateTime('now');
+        if ($session->get('filtroCarCuentaCobrarTipo') != "") {
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo')."'");
+        }
+        if($session->get('filtroCarNumeroReferencia') != ''){
+            $queryBuilder->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
+        }
+        if($session->get('filtroCarCuentaCobrarNumero') != ''){
+            $queryBuilder->andWhere("cc.numeroDocumento = {$session->get('filtroCarCuentaCobrarNumero')}");
+        }
+        if($session->get('filtroCarCodigoCliente')){
+            $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        }
+        if ($session->get('filtroCarCuentaCobrarTipo')) {
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo') . "'");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("cc.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("cc.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("cc.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        return $queryBuilder;
+    }
+
+    public function pendientes()
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
+            ->select('cc.codigoCuentaCobrarPk')
+            ->leftJoin('cc.clienteRel','cl')
+            ->leftJoin('cc.cuentaCobrarTipoRel','cct')
+            ->addSelect('cc.numeroDocumento')
+            ->addSelect('cc.codigoCuentaCobrarTipoFk')
+            ->addSelect('cc.numeroReferencia')
+            ->addSelect('cct.nombre AS tipo')
+            ->addSelect('cc.fecha')
+            ->addSelect('cc.fechaVence')
+            ->addSelect('cc.soporte')
+            ->addSelect('cl.numeroIdentificacion')
+            ->addSelect('cl.nombreCorto')
+            ->addSelect('cc.plazo')
+            ->addSelect('cc.vrTotal')
+            ->addSelect('cc.vrAbono')
+            ->addSelect('cc.vrSaldo')
+            ->addSelect('cc.vrSaldoOperado')
+            ->where('cc.codigoCuentaCobrarPk <> 0')
             ->andWhere('cc.vrSaldo > 0')
             ->orderBy('cc.codigoCuentaCobrarPk', 'DESC');
         $fecha =  new \DateTime('now');

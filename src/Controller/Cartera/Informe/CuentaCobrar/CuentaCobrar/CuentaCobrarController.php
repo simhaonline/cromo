@@ -74,9 +74,9 @@ class CuentaCobrarController extends Controller
             $em->getRepository(CarCuentaCobrar::class)->generarVencimientos();
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(CarCuentaCobrar::class)->lista())->execute(), "Cuenta cobrar");
+            General::get()->setExportar($em->createQuery($em->getRepository(CarCuentaCobrar::class)->pendientes())->execute(), "Cuenta cobrar");
         }
-        $query = $this->getDoctrine()->getRepository(CarCuentaCobrar::class)->lista();
+        $query = $this->getDoctrine()->getRepository(CarCuentaCobrar::class)->pendientes();
         $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1),50);
         return $this->render('cartera/informe/cuentaCobrar.html.twig', [
             'arCuentasCobrar' => $arCuentasCobrar,

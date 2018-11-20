@@ -2,8 +2,8 @@
 
 namespace App\Formato\Inventario;
 
-use App\Entity\Inventario\InvOrdenCompra;
-use App\Entity\Inventario\InvOrdenCompraDetalle;
+use App\Entity\Inventario\InvOrden;
+use App\Entity\Inventario\InvOrdenDetalle;
 use App\Utilidades\Estandares;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -23,7 +23,7 @@ class OrdenCompra extends \FPDF
         self::$codigoOrdenCompra = $codigoOrdenCompra;
         ob_clean();
         $pdf = new OrdenCompra('P', 'mm', 'letter');
-        $arOrdenCompra = $em->getRepository(InvOrdenCompra::class)->find($codigoOrdenCompra);
+        $arOrdenCompra = $em->getRepository(InvOrden::class)->find($codigoOrdenCompra);
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Arial', '', 40);
@@ -40,8 +40,8 @@ class OrdenCompra extends \FPDF
 
     public function Header()
     {
-        /** @var  $arOrdenCompra InvOrdenCompra */
-        $arOrdenCompra = self::$em->getRepository(InvOrdenCompra::class)->find(self::$codigoOrdenCompra);
+
+        $arOrdenCompra = self::$em->getRepository(InvOrden::class)->find(self::$codigoOrdenCompra);
         Estandares::generarEncabezado($this, 'ORDEN DE COMPRA');
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
@@ -89,7 +89,7 @@ class OrdenCompra extends \FPDF
         $this->Cell(40, 4, "TIPO ORDEN COMPRA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(55, 4, utf8_decode($arOrdenCompra->getOrdenCompraTipoRel()->getNombre()), 1, 0, 'L', 1);
+        $this->Cell(55, 4, utf8_decode($arOrdenCompra->getOrdenTipoRel()->getNombre()), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(40, 4, 'SOPORTE:', 1, 0, 'L', 1);
@@ -162,17 +162,14 @@ class OrdenCompra extends \FPDF
 
     public function Body($pdf)
     {
-        /**
-         * @var $arOrdenCompra InvOrdenCompra
-         * @var $arOrdenCompraDetalle InvOrdenCompraDetalle
-         */
-        $arOrdenCompra = self::$em->getRepository(InvOrdenCompra::class)->find(self::$codigoOrdenCompra);
-        $arOrdenCompraDetalles = self::$em->getRepository(InvOrdenCompraDetalle::class)->findBy(['codigoOrdenCompraFk' => self::$codigoOrdenCompra]);
+
+        $arOrdenCompra = self::$em->getRepository(InvOrden::class)->find(self::$codigoOrdenCompra);
+        $arOrdenCompraDetalles = self::$em->getRepository(InvOrdenDetalle::class)->findBy(['codigoOrdenFk' => self::$codigoOrdenCompra]);
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         $pdf->SetTextColor(0);
         foreach ($arOrdenCompraDetalles as $arOrdenCompraDetalle) {
-            $pdf->Cell(15, 4, $arOrdenCompraDetalle->getCodigoOrdenCompraDetallePk(), 1, 0, 'L');
+            $pdf->Cell(15, 4, $arOrdenCompraDetalle->getCodigoOrdenDetallePk(), 1, 0, 'L');
             $pdf->Cell(80, 4, utf8_decode($arOrdenCompraDetalle->getItemRel()->getNombre()), 1, 0, 'L');
             $pdf->Cell(15, 4, $arOrdenCompraDetalle->getCantidad(), 1, 0, 'C');
             $pdf->Cell(20, 4, $arOrdenCompraDetalle->getPorcentajeIva(), 1, 0, 'C');

@@ -5,18 +5,17 @@ namespace App\Controller\Inventario\Movimiento\Compra;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvOrden;
-use App\Entity\Inventario\InvOrdenCompra;
 use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvOrdenTipo;
 use App\Entity\Inventario\InvPrecioDetalle;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\OrdenType;
+use App\Formato\Inventario\OrdenCompra;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use App\General\General;
-use App\Entity\Inventario\InvOrdenCompraDetalle;
-use App\Formato\Inventario\OrdenCompra;
+use App\Formato\Inventario\Orden;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -126,6 +125,8 @@ class OrdenController extends ControllerListenerGeneral
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/compra/orden/detalle/{id}", name="inventario_movimiento_compra_orden_detalle")
      */
     public function detalle(Request $request, $id)
@@ -163,7 +164,7 @@ class OrdenController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('inventario_movimiento_compra_orden_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                $objFormatoOrdenCompra = new InvOrden();
+                $objFormatoOrdenCompra = new OrdenCompra();
                 $objFormatoOrdenCompra->Generar($em, $id);
             }
             if ($form->get('btnAnular')->isClicked()) {
@@ -198,6 +199,8 @@ class OrdenController extends ControllerListenerGeneral
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/compra/orden/detalle/nuevo/{id}", name="inventario_movimiento_compra_orden_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id)
@@ -253,6 +256,8 @@ class OrdenController extends ControllerListenerGeneral
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/compra/orden/solicitud/detalle/nuevo/{id}", name="inventario_movimiento_compra_orden_solicitud_detalle_nuevo")
      */
     public function detalleNuevoSolicitud(Request $request, $id)

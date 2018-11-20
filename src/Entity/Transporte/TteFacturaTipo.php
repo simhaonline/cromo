@@ -87,6 +87,11 @@ class TteFacturaTipo
     private $codigoComprobanteFk;
 
     /**
+     * @ORM\Column(name="operacion_comercial", type="smallint", nullable=true, options={"default" : 0})
+     */
+    private $operacionComercial = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="facturaTipoRel")
      */
     protected $facturasFacturaTipoRel;
@@ -97,9 +102,9 @@ class TteFacturaTipo
     protected $guiasTiposFacturaTipoRel;
 
     /**
-     * @ORM\Column(name="operacion_comercial", type="smallint", nullable=true, options={"default" : 0})
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionDetalle", mappedBy="facturaTipoRel")
      */
-    private $operacionComercial = 0;
+    protected $intermediacionesDetallesFacturaTipoRel;
 
     /**
      * @return mixed
@@ -387,6 +392,22 @@ class TteFacturaTipo
     public function setOperacionComercial($operacionComercial): void
     {
         $this->operacionComercial = $operacionComercial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacionesDetallesFacturaTipoRel()
+    {
+        return $this->intermediacionesDetallesFacturaTipoRel;
+    }
+
+    /**
+     * @param mixed $intermediacionesDetallesFacturaTipoRel
+     */
+    public function setIntermediacionesDetallesFacturaTipoRel( $intermediacionesDetallesFacturaTipoRel ): void
+    {
+        $this->intermediacionesDetallesFacturaTipoRel = $intermediacionesDetallesFacturaTipoRel;
     }
 
 

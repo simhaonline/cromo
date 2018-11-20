@@ -23,6 +23,7 @@ use App\Formato\Transporte\Despacho;
 use App\Formato\Transporte\Liquidacion;
 use App\Formato\Transporte\Manifiesto;
 use App\Formato\Transporte\RelacionEntrega;
+use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -75,11 +76,12 @@ class DespachoController extends ControllerListenerGeneral
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoNombreConductor'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteDespachoEstadoAprobado'), 'required' => false])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
                 $session->set('filtroTteMovDespachoFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
                 $session->set('filtroTteMovDespachoFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroTteMovDespachoFiltroFecha', $form->get('filtrarFecha')->getData());
@@ -118,6 +120,9 @@ class DespachoController extends ControllerListenerGeneral
             if($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteDespacho::class)->eliminar($arrSeleccionados);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($em->getRepository(TteDespacho::class)->lista())->execute(), "Despachos");
             }
         }
 

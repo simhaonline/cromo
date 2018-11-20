@@ -182,6 +182,11 @@ class TteCliente
     protected $clientesCondicionesClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionDetalle", mappedBy="clienteRel")
+     */
+    protected $intermediacionesDetallesClienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoClientePk()
@@ -691,6 +696,22 @@ class TteCliente
     public function setClientesCondicionesClienteRel( $clientesCondicionesClienteRel ): void
     {
         $this->clientesCondicionesClienteRel = $clientesCondicionesClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacionesDetallesClienteRel()
+    {
+        return $this->intermediacionesDetallesClienteRel;
+    }
+
+    /**
+     * @param mixed $intermediacionesDetallesClienteRel
+     */
+    public function setIntermediacionesDetallesClienteRel( $intermediacionesDetallesClienteRel ): void
+    {
+        $this->intermediacionesDetallesClienteRel = $intermediacionesDetallesClienteRel;
     }
 
 

@@ -4,7 +4,10 @@ namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteCierre;
 use App\Entity\Transporte\TteCosto;
+use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
+use App\Entity\Transporte\TteDespachoRecogida;
+use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -24,7 +27,8 @@ class TteCierreRepository extends ServiceEntityRepository
             'SELECT c.codigoCierrePk, 
         c.anio, 
         c.mes,
-        c.estadoGenerado
+        c.estadoGenerado,
+        c.estadoCerrado
         FROM App\Entity\Transporte\TteCierre c                 
         ORDER BY c.anio, c.mes DESC '
         );
@@ -36,48 +40,15 @@ class TteCierreRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $respuesta = "";
         $arCierre = $em->getRepository(TteCierre::class)->find($codigoCierre);
-        $arGuias = $em->getRepository(TteGuia::class)->periodoCierre($arCierre->getAnio(), $arCierre->getMes());
-        foreach ($arGuias as $arGuia) {
-            $arGuiaObjeto = $em->getRepository(TteGuia::class)->find($arGuia['codigoGuiaPk']);
-            $costo = 0;
-            $costoPeso = 0;
-            $costoVolumen = 0;
-            $costoUnidad = 0;
-            $arrCostos = $em->getRepository(TteDespachoDetalle::class)->guiaCosto($arGuia['codigoGuiaPk']);
-            if($arrCostos && $arrCostos != null) {
-                $costo = $arrCostos['vrCosto']+0;
-                $costoPeso = $arrCostos['vrCostoPeso']+0;
-                $costoVolumen = $arrCostos['vrCostoVolumen']+0;
-                $costoUnidad = $arrCostos['vrCostoUnidad']+0;
-            }
-            $precio = 0;
-            $arrPrecios = $em->getRepository(TteFacturaDetalle::class)->guiaPrecio($arGuia['codigoGuiaPk']);
-            if($arrPrecios && $arrPrecios != null) {
-                $precio = $arrPrecios['vrFlete']+0;
-            }
-            $arCosto = new TteCosto();
-            $arCosto->setCierreRel($arCierre);
-            $arCosto->setGuiaRel($arGuiaObjeto);
-            $arCosto->setCiudadDestinoRel($arGuiaObjeto->getCiudadDestinoRel());
-            $arCosto->setClienteRel($arGuiaObjeto->getClienteRel());
-            $arCosto->setAnio($arCierre->getAnio());
-            $arCosto->setMes($arCierre->getMes());
-            $arCosto->setVrCosto($costo);
-            $arCosto->setVrCostoPeso($costoPeso);
-            $arCosto->setVrCostoVolumen($costoVolumen);
-            $arCosto->setVrCostoUnidad($costoUnidad);
-            $arCosto->setVrPrecio($precio);
-            $rentabilidad = $precio - $costo;
-            $arCosto->setVrRentabilidad($rentabilidad);
-            $porcentajeRentabilidad = 0;
-            if ($precio > 0) {
-                $porcentajeRentabilidad = ($rentabilidad / $precio) * 100;
-            }
+        /*$ultimoDia = date("d", (mktime(0, 0, 0, $arCierre->getMes() + 1, 1, $arCierre->getAnio()) - 1));
+        $fechaDesde = $arCierre->getAnio() . "-" . $arCierre->getMes() . "-01 00:00:00";
+        $fechaHasta = $arCierre->getAnio() . "-" . $arCierre->getMes() . "-" . $ultimoDia . " 23:59:00";
+        $fletePago = $em->getRepository(TteDespacho::class)->fletePago($fechaDesde, $fechaHasta);
+        $fletePagoRecogidas = $em->getRepository(TteDespachoRecogida::class)->fletePago($fechaDesde, $fechaHasta);
+        $fleteCobro = $em->getRepository(TteFactura::class)->fleteCobro($fechaDesde, $fechaHasta);
+        $arCierre->setVrFletePago($fletePago);
+        $arCierre->setVrFlete($fleteCobro);*/
 
-            $arCosto->setPorcentajeRentabilidad($porcentajeRentabilidad);
-            $em->persist($arCosto);
-
-        }
         $arCierre->setEstadoGenerado(1);
         $em->flush();
         return $respuesta;
@@ -87,8 +58,8 @@ class TteCierreRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $respuesta = "";
         $arCierre = $em->getRepository(TteCierre::class)->find($codigoCierre);
-        $query = $em->createQuery('DELETE FROM App\Entity\Transporte\TteCosto c WHERE c.codigoCierreFk =' . $codigoCierre);
-        $numDeleted = $query->execute();
+        //$query = $em->createQuery('DELETE FROM App\Entity\Transporte\TteCosto c WHERE c.codigoCierreFk =' . $codigoCierre);
+        //$numDeleted = $query->execute();
         $arCierre->setEstadoGenerado(0);
         $em->flush();
         return $respuesta;

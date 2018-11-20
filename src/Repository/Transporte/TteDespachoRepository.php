@@ -1679,5 +1679,22 @@ class TteDespachoRepository extends ServiceEntityRepository
             Mensajes::error('Las siguientes guias no cuentan con soporte: ' . $strErrores);
         }
     }
+
+    public function fletePago($fechaDesde, $fechaHasta)
+    {
+        $valor = 0;
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
+            ->select("SUM(d.vrFletePago) as fletePago")
+            ->leftJoin('d.despachoTipoRel', 'dt')
+            ->where("d.fechaSalida >='" . $fechaDesde . "' AND d.fechaSalida <= '" . $fechaHasta . "'")
+        ->andWhere('dt.viaje = 1')
+        ->andWhere('d.estadoAprobado = 1');
+        $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+        if($arrResultado) {
+            $valor = $arrResultado['fletePago'];
+        }
+        return $valor;
+    }
+
 }
 

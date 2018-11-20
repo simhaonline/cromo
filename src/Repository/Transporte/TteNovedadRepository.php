@@ -74,7 +74,7 @@ class TteNovedadRepository extends ServiceEntityRepository
                   n.fechaReporte,
                   n.fechaSolucion,
                   n.descripcion,
-                  n.descripcion,
+                  n.codigoGuiaFk,
                   n.estadoAtendido,
                   n.estadoReporte,
                   n.estadoSolucion,

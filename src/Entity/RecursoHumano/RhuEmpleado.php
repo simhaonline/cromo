@@ -33,7 +33,7 @@ class RhuEmpleado
     private $codigoEmpleadoTipoFk;
 
     /**
-     * @ORM\Column(name="codigo_contrato_fk", type="string", length=3, nullable=true)
+     * @ORM\Column(name="codigo_contrato_fk", type="string", length=5, nullable=true)
      */
     private $codigoContratoFk;
 
@@ -43,7 +43,7 @@ class RhuEmpleado
     private $codigoCuentaTipoFk;
 
     /**
-     * @ORM\Column(name="codigo_contrato_ultimo_fk", type="string", length=3, nullable=true)
+     * @ORM\Column(name="codigo_contrato_ultimo_fk", type="string", length=5, nullable=true)
      */
     private $codigoContratoUltimoFk;
 
@@ -63,12 +63,12 @@ class RhuEmpleado
     private $estadoContrato = false;
 
     /**
-     * @ORM\Column(name="carro", type="boolean", nullable=false)
+     * @ORM\Column(name="carro", type="boolean",options={"default":0}, nullable=false)
      */
     private $carro = false;
 
     /**
-     * @ORM\Column(name="moto", type="boolean", nullable=false)
+     * @ORM\Column(name="moto", type="boolean",options={"default":0}, nullable=false)
      */
     private $moto = false;
 

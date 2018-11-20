@@ -17,6 +17,15 @@ class MovimientoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('asesorRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\General\GenAsesor',
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre'
+            ])
             ->add('soporte', TextType::class, ['required' => false,'label' => 'Soporte:'])
             ->add('comentarios', TextareaType::class, ['required' => false,'label' => 'Comentario:'])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])

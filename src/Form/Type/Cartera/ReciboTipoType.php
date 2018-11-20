@@ -18,9 +18,9 @@ class ReciboTipoType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('codigoReciboTipoPk', TextType::class, array('required' => true))
-            ->add('nombre', TextType::class, array('required' => true))
-            ->add('orden', IntegerType::class, array('required' => true))
+            ->add('codigoReciboTipoPk', TextType::class, array('label' => 'Codigo recibo tipo pk:', 'required' => true))
+            ->add('nombre', TextType::class, array('label' => 'Nombre:','required' => true))
+            ->add('orden', IntegerType::class, array('label' => 'Orden:','required' => true))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']));
     }
 

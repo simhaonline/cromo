@@ -197,7 +197,19 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $costo = $arDespachoDetalle->getPesoCosto() * $arCosto->getVrPeso();
                 $costoBaseTotal += $costo;
                 $arDespachoDetalle->setVrCostoBase($costo);
+                $em->persist($arDespachoDetalle);
             }
+        }
+        $costoTotal = $arDespacho->getVrFletePago();
+        foreach ($arDespachoDetalles as $arDespachoDetalle) {
+            $participacion =  ($arDespachoDetalle->getVrCostoBase() / $costoBaseTotal) * 100;
+            $costoParticipacionTotal = ($participacion * $costoTotal) / 100;
+            $costoParticipacion = $costoParticipacionTotal - $arDespachoDetalle->getVrCostoBase();
+            $costo = $arDespachoDetalle->getVrCostoBase() + $costoParticipacion;
+            $arDespachoDetalle->setVrCostoParticipacion($costoParticipacion);
+            $arDespachoDetalle->setPorcentajeParticipacionCosto($participacion);
+            $arDespachoDetalle->setVrCosto($costo);
+            $em->persist($arDespachoDetalle);
         }
         $arDespacho->setVrCostoBase($costoBaseTotal);
         $arDespacho->setEstadoAutorizado(1);

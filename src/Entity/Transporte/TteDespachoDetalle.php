@@ -78,6 +78,16 @@ class TteDespachoDetalle
     private $vrCostoBase = 0;
 
     /**
+     * @ORM\Column(name="vr_costo_participacion", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrCostoParticipacion = 0;
+
+    /**
+     * @ORM\Column(name="vr_costo", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrCosto = 0;
+
+    /**
      * @ORM\Column(name="vr_cobro_entrega", type="float", options={"default" : 0})
      */
     private $vrCobroEntrega = 0;
@@ -86,6 +96,11 @@ class TteDespachoDetalle
      * @ORM\Column(name="vr_precio_reexpedicion", type="float", options={"default" : 0})
      */
     private $vrPrecioReexpedicion = 0;
+
+    /**
+     * @ORM\Column(name="porcentaje_participacion_costo", type="float", options={"default" : 0})
+     */
+    private $porcentajeParticipacionCosto = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDespacho", inversedBy="despachosDetallesDespachoRel")
@@ -353,6 +368,54 @@ class TteDespachoDetalle
     public function setGuiaRel( $guiaRel ): void
     {
         $this->guiaRel = $guiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoParticipacion()
+    {
+        return $this->vrCostoParticipacion;
+    }
+
+    /**
+     * @param mixed $vrCostoParticipacion
+     */
+    public function setVrCostoParticipacion( $vrCostoParticipacion ): void
+    {
+        $this->vrCostoParticipacion = $vrCostoParticipacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCosto()
+    {
+        return $this->vrCosto;
+    }
+
+    /**
+     * @param mixed $vrCosto
+     */
+    public function setVrCosto( $vrCosto ): void
+    {
+        $this->vrCosto = $vrCosto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeParticipacionCosto()
+    {
+        return $this->porcentajeParticipacionCosto;
+    }
+
+    /**
+     * @param mixed $porcentajeParticipacionCosto
+     */
+    public function setPorcentajeParticipacionCosto( $porcentajeParticipacionCosto ): void
+    {
+        $this->porcentajeParticipacionCosto = $porcentajeParticipacionCosto;
     }
 
 

@@ -26,6 +26,10 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_TxtMarca" class="col-sm-2 control-label">Referencia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtReferencia, { 'attr': {'class': 'form-control'} }) }}
+                </div>
                 <label for="form_TxtMarca" class="col-sm-2 control-label">Marca:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtMarca, { 'attr': {'class': 'form-control'} }) }}

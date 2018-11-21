@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Informe\Inventario\Lote;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvLote;
 use App\Formato\Inventario\ExistenciaLote;
 use App\General\General;
@@ -24,6 +25,7 @@ class ExistenciaController extends ControllerListenerGeneral
     /**
      * @param Request $request
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/lote/existencia", name="inventario_informe_inventario_lote_existencia")
@@ -37,7 +39,7 @@ class ExistenciaController extends ControllerListenerGeneral
             ->add('txtCodigoItem', TextType::class, array('data' => $session->get('filtroInvInformeItemCodigo'), 'required' => false))
             ->add('txtNombreItem', TextType::class, array('data' => $session->get('filtroInvInformeItemNombre'), 'required' => false , 'attr' => ['readonly' => 'readonly']))
             ->add('txtLote', TextType::class, ['required' => false, 'data' => $session->get('filtroInvLote')])
-            ->add('txtBodega', TextType::class, ['required' => false, 'data' => $session->get('filtroInvLoteBodega')])
+            ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -46,8 +48,13 @@ class ExistenciaController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvInformeItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvLote', $form->get('txtLote')->getData());
-                $session->set('filtroInvLoteBodega', $form->get('txtBodega')->getData());
+                $session->set('filtroInvInformeLote', $form->get('txtLote')->getData());
+                $arBodega = $form->get('cboBodega')->getData();
+                if($arBodega != ''){
+                    $session->set('filtroInvInformeLoteBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());
+                } else {
+                    $session->set('filtroInvInformeLoteBodega', null);
+                }
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->createQuery($em->getRepository(InvLote::class)->existencia())->execute(), "Existencia");

@@ -607,6 +607,7 @@ class MovimientoController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('txtNumero', TextType::class, array('required' => false))
             ->add('txtLote', TextType::class, array('required' => false))
             ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
@@ -617,6 +618,7 @@ class MovimientoController extends ControllerListenerGeneral
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
                 $session->set('filtroInvRemisionNumero', $form->get('txtNumero')->getData());
                 $session->set('filtroInvRemisionDetalleLote', $form->get('txtLote')->getData());
                 $arBodega = $form->get('cboBodega')->getData();

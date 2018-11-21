@@ -11,10 +11,16 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 /**
  * @ORM\Table(name="usuario")
  * @ORM\Entity(repositoryClass="App\Repository\Seguridad\UsuarioRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  * @DoctrineAssert\UniqueEntity(fields={"username"},message="Ya existe el usuario")
  */
 class Usuario implements UserInterface, \Serializable
 {
+    public $infoLog = [
+        "primaryKey" => "username",
+        "todos"     => true,
+    ];
+
     /**
      * @ORM\Column(type="string", name="username", length=25)
      * @ORM\Id()

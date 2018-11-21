@@ -62,7 +62,7 @@ class KardexController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($em->getRepository(InvMovimientoDetalle::class)->listaKardex())->execute(), "Kardex");
             }
         }
-        $arMovimientosDetalles = $paginator->paginate($em->getRepository(InvMovimientoDetalle::class)->listaKardex(), $request->query->getInt('page', 1), 30);
+        $arMovimientosDetalles = $paginator->paginate($em->getRepository(InvMovimientoDetalle::class)->listaKardex(), $request->query->getInt('page', 1), 100);
         return $this->render('inventario/informe/inventario/movimiento/kardex.html.twig', [
             'arMovimientosDetalles' => $arMovimientosDetalles,
             'form' => $form->createView()

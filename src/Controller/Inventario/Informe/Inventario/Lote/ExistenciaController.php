@@ -64,7 +64,7 @@ class ExistenciaController extends ControllerListenerGeneral
                 $formato->Generar($em);
             }
         }
-        $arLotes = $paginator->paginate($em->getRepository(InvLote::class)->existencia(), $request->query->getInt('page', 1), 30);
+        $arLotes = $paginator->paginate($em->getRepository(InvLote::class)->existencia(), $request->query->getInt('page', 1), 100);
         return $this->render('inventario/informe/inventario/lote/existencia.html.twig', [
             'arLotes' => $arLotes,
             'form' => $form->createView()

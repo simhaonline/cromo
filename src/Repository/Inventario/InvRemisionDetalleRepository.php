@@ -104,6 +104,9 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         if($session->get('filtroInvBodega')) {
             $queryBuilder->andWhere("rd.codigoBodegaFk = '{$session->get('filtroInvBodega')}'");
         }
+        if($session->get('filtroInvCodigoTercero')) {
+            $queryBuilder->andWhere("t.codigoTerceroPk = '{$session->get('filtroInvCodigoTercero')}'");
+        }
 
         return $queryBuilder;
     }

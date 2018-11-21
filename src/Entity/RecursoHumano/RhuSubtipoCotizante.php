@@ -10,11 +10,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RhuSubtipoCotizante
 {
+    public $infoLog = [
+        "primaryKey" => "codigoSubtipoCotizantePk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_subtipo_cotizante_pk", type="string", length=10)
      */
-    private $codigoSubtipoCotizantePk;   
+    private $codigoSubtipoCotizantePk;
     
     /**
      * @ORM\Column(name="nombre", type="string", length=150, nullable=true)

@@ -10,7 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RhuRh
 {
-    
+    public $infoLog = [
+        "primaryKey" => "codigoRhPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_rh_pk", type="string", length=10)

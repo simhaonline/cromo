@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RhuSucursal {
 
+    public $infoLog = [
+        "primaryKey" => "codigoSucursalPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_sucursal_pk", type="string", length=10, )

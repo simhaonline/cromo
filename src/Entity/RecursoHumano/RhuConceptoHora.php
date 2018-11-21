@@ -11,6 +11,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  */
 class RhuConceptoHora
 {
+    public $infoLog = [
+        "primaryKey" => "codigoConceptoHoraPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_concepto_hora_pk", type="string", length=10)

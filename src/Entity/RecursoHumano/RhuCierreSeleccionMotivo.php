@@ -10,7 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RhuCierreSeleccionMotivo
 {
-    
+    public $infoLog = [
+        "primaryKey" => "codigoCierreSeleccionMotivoPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_cierre_seleccion_motivo_pk", type="integer")

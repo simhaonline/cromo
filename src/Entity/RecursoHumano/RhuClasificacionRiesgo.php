@@ -10,7 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RhuClasificacionRiesgo
 {
-    
+    public $infoLog = [
+        "primaryKey" => "codigoClasificacionRiesgoPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_clasificacion_riesgo_pk", type="string", length=10)

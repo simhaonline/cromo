@@ -13,6 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RhuEmbargoJuzgado
 {
+    public $infoLog = [
+        "primaryKey" => "codigoEmbargoJuzgadoPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Column(name="codigo_embargo_juzgado_pk", type="string", length=30)
      * @ORM\Id

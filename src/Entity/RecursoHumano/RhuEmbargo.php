@@ -11,6 +11,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class RhuEmbargo
 {
+    public $infoLog = [
+        "primaryKey" => "codigoEmbargoPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_embargo_pk", type="integer")

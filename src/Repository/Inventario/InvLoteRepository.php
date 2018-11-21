@@ -109,11 +109,14 @@ class InvLoteRepository extends ServiceEntityRepository
         if ($session->get('filtroInvInformeItemCodigo') != '') {
             $queryBuilder->andWhere("l.codigoItemFk = {$session->get('filtroInvInformeItemCodigo')}");
         }
-        if ($session->get('filtroInvLote') != '') {
-            $queryBuilder->andWhere("l.loteFk = '{$session->get('filtroInvLote')}' ");
+        if ($session->get('filtroInvInformeItemReferencia') != '') {
+            $queryBuilder->andWhere("i.referencia = {$session->get('filtroInvInformeItemReferencia')}");
         }
-        if ($session->get('filtroInvLoteBodega') != '') {
-            $queryBuilder->andWhere("l.codigoBodegaFk = '{$session->get('filtroInvLoteBodega')}' ");
+        if ($session->get('filtroInvInformeLote') != '') {
+            $queryBuilder->andWhere("l.loteFk = '{$session->get('filtroInvInformeLote')}' ");
+        }
+        if ($session->get('filtroInvInformeLoteBodega') != '') {
+            $queryBuilder->andWhere("l.codigoBodegaFk = '{$session->get('filtroInvInformeLoteBodega')}' ");
         }
         return $queryBuilder;
     }

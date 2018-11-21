@@ -4,6 +4,7 @@ namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvBodega;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -37,5 +38,29 @@ class InvBodegaRepository extends ServiceEntityRepository
             ->addSelect('ib.nombre as NOMBRE');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
+    }
+
+    /**
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function llenarCombo()
+    {
+        $session = new Session();
+        $array = [
+            'class' => 'App:Inventario\InvBodega',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('b')
+                    ->orderBy('b.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""];
+        if ($session->get('filtroInvBodega')) {
+            $array['data'] = $this->getEntityManager()->getReference(InvBodega::class, $session->get('filtroInvBodega'));
+        }
+        return $array;
     }
 }

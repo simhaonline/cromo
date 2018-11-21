@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Inventario;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenAsesor;
+use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvImportacionDetalle;
 use App\Entity\Inventario\InvOrdenDetalle;
@@ -593,6 +594,11 @@ class MovimientoController extends ControllerListenerGeneral
     }
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/inventario/movimiento/detalle/remision/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_remision_detalle_nuevo")
      */
     public function detalleNuevoRemision(Request $request, $id)
@@ -602,6 +608,8 @@ class MovimientoController extends ControllerListenerGeneral
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtNumero', TextType::class, array('required' => false))
+            ->add('txtLote', TextType::class, array('required' => false))
+            ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -610,6 +618,13 @@ class MovimientoController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvRemisionNumero', $form->get('txtNumero')->getData());
+                $session->set('filtroInvRemisionDetalleLote', $form->get('txtLote')->getData());
+                $arBodega = $form->get('cboBodega')->getData();
+                if($arBodega != ''){
+                    $session->set('filtroInvBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());
+                } else {
+                    $session->set('filtroInvBodega', null);
+                }
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrDetalles = $request->request->get('itemCantidad');
@@ -649,7 +664,7 @@ class MovimientoController extends ControllerListenerGeneral
                 }
             }
         }
-        $arRemisionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvRemisionDetalle::class)->listarDetallesPendientes($arMovimiento->getCodigoTerceroFk()), $request->query->getInt('page', 1), 10);
+        $arRemisionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvRemisionDetalle::class)->listarDetallesPendientes($arMovimiento->getCodigoTerceroFk()), $request->query->getInt('page', 1), 500);
         return $this->render('inventario/movimiento/inventario/detalleNuevoRemision.html.twig', [
             'form' => $form->createView(),
             'arRemisionDetalles' => $arRemisionDetalles

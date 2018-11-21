@@ -5,14 +5,20 @@
     {{ notificar()|raw }}
     <div class="panel panel-default">
         <div class="panel-heading"><h5> Filtros</h5></div>
-        <br>
+        <div class="panel-body">
+        </div>
         <div class="form-group form-group-sm">
-            <label for="form_nombre" class="col-sm-2 control-label">Numero:</label>
+            <label for="form_numero" class="col-sm-1 control-label">Numero:</label>
             <div class="col-sm-3">
                 {{ form_widget(form.txtNumero,{'attr':{'class':'form-control'}}) }}
             </div>
-            <label for="form_codigoBarras" class="col-sm-2 control-label"></label>
+            <label for="form_numero" class="col-sm-1 control-label">Lote:</label>
             <div class="col-sm-3">
+                {{ form_widget(form.txtLote,{'attr':{'class':'form-control'}}) }}
+            </div>
+            <label for="form_cboBodega" class="col-sm-1 control-label">Bodega</label>
+            <div class="col-sm-3">
+                {{ form_widget(form.cboBodega,{'attr':{'class':'form-control'}}) }}
             </div>
         </div>
         <div class="panel-footer">
@@ -27,6 +33,7 @@
             <tr>
                 <th>ID</th>
                 <th title="NUMERO PEDIDO">NUMERO</th>
+                <th>TERCERO</th>
                 <th title="CODIGO ITEM">ITEM</th>
                 <th>NOMBRE</th>
                 <th>LOTE</th>
@@ -41,6 +48,7 @@
                 <tr>
                     <td style="text-align: right;">{{ arRemisionDetalle.codigoRemisionDetallePk }}</td>
                     <td style="text-align: right;">{{ arRemisionDetalle.numero }}</td>
+                    <td style="text-align: left;">{{ arRemisionDetalle.tercero }}</td>
                     <td style="text-align: right;">{{ arRemisionDetalle.codigoItemFk }}</td>
                     <td style="text-align: left;">{{ arRemisionDetalle.itemNombre }}</td>
                     <td>{{ arRemisionDetalle.loteFk }}</td>

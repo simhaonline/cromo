@@ -176,7 +176,7 @@ class SeguridadController extends Controller
             ->add('btnActualizar', SubmitType::class, ['label' => 'Actualizar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
-
+        $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnActualizar')->isClicked()) {
                 $claveNueva = $form->get('txtNuevaClave')->getData();

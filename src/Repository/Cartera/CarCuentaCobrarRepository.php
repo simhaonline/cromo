@@ -92,6 +92,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.vrAbono')
             ->addSelect('cc.vrSaldo')
             ->addSelect('cc.vrSaldoOperado')
+            ->addSelect('cc.comentario')
             ->where('cc.codigoCuentaCobrarPk <> 0')
             ->andWhere('cc.vrSaldo > 0')
             ->orderBy('cc.codigoCuentaCobrarPk', 'DESC');

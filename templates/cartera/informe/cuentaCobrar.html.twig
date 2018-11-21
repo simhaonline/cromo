@@ -76,9 +76,10 @@
             <th>FECHA</th>
             <th>VENCE</th>
             <th>SOPORTE</th>
+            <th>COMENTARIO</th>
             <th>NIT</th>
             <th>CLIENTE</th>
-            <th>PLAZO</th>
+            <th>PLAZO
             <th>VALOR</th>
             <th>ABONO</th>
             <th>SALDO</th>
@@ -94,6 +95,7 @@
                 <td>{{ arCuentaCobrar.fecha | date('Y-m-d') }}</td>
                 <td>{{ arCuentaCobrar.fechaVence | date('Y-m-d') }}</td>
                 <td>{{ arCuentaCobrar.soporte }}</td>
+                <td>{{ arCuentaCobrar.comentario }}</td>
                 <td>{{ arCuentaCobrar.numeroIdentificacion }}</td>
                 <td>{{ arCuentaCobrar.nombreCorto }}</td>
                 <td>{{ arCuentaCobrar.plazo }}</td>

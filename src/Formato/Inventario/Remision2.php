@@ -109,7 +109,7 @@ class Remision2 extends \FPDF
         $this->Cell(30, 4, 'SOPORTE:', 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arRemision->getSoporte(), 1, 0, 'L', 1);
+        $this->Cell(65, 4, utf8_decode($arRemision->getSoporte()), 1, 0, 'L', 1);
 
         $this->SetXY(10, $intY + 16);
         $this->SetFont('Arial', 'B', 8);
@@ -133,7 +133,7 @@ class Remision2 extends \FPDF
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
 //        $this->Cell(160, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
-        $this->MultiCell(160, 4, $arRemision->getComentario(), 1, 'L');
+        $this->MultiCell(160, 4, utf8_decode($arRemision->getComentario()), 1, 'L');
 
         $this->EncabezadoDetalles();
 
@@ -150,7 +150,7 @@ class Remision2 extends \FPDF
         $this->SetFont('', 'B', 7);
 
         //creamos la cabecera de la tabla.
-        $w = array(20, 35, 15, 25, 30, 15, 25, 25);
+        $w = array(20, 70, 10, 15, 20, 15, 20, 20);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -179,13 +179,13 @@ class Remision2 extends \FPDF
         //$header = array('COD', 'ITEM', 'CANT', 'MARCA', 'PRECIO', 'IVA', 'SUBTOTAL', 'TOTAL');
         foreach ($arRemisionDetalles as $arRemisionDetalle) {
             $pdf->Cell(20, 4, $arRemisionDetalle->getItemRel()->getReferencia(), 1, 0, 'L');
-            $pdf->Cell(35, 4, utf8_decode($arRemisionDetalle->getItemRel()->getNombre()), 1, 0, 'L');
-            $pdf->Cell(15, 4, $arRemisionDetalle->getCantidad(), 1, 0, 'C');
-            $pdf->Cell(25, 4, $arRemisionDetalle->getLoteFk(), 1, 0, 'C');
-            $pdf->Cell(30, 4, number_format($arRemisionDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'C');
-            $pdf->Cell(15, 4, number_format($arRemisionDetalle->getVrIva(), 0, '.', ','), 1, 0, 'C');
-            $pdf->Cell(25, 4, number_format($arRemisionDetalle->getVrSubtotal(), 0, '.', ','), 1, 0, 'C');
-            $pdf->Cell(25, 4, number_format($arRemisionDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'C');
+            $pdf->Cell(70, 4, utf8_decode($arRemisionDetalle->getItemRel()->getNombre()), 1, 0, 'L');
+            $pdf->Cell(10, 4, $arRemisionDetalle->getCantidad(), 1, 0, 'C');
+            $pdf->Cell(15, 4, $arRemisionDetalle->getLoteFk(), 1, 0, 'L');
+            $pdf->Cell(20, 4, number_format($arRemisionDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($arRemisionDetalle->getVrIva(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(20, 4, number_format($arRemisionDetalle->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(20, 4, number_format($arRemisionDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }
@@ -193,24 +193,24 @@ class Remision2 extends \FPDF
         $pdf->SetFont('Arial', '', 7);
         //TOTALES
         $pdf->Ln(2);
-        $pdf->Cell(145, 4, "", 0, 0, 'R');
+        $pdf->Cell(150, 4, "", 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->SetFillColor(236, 236, 236);
         $pdf->Cell(20, 4, "SUBTOTAL:", 1, 0, 'R', true);
         $pdf->SetFont('Arial', '', 7);
-        $pdf->Cell(25, 4, number_format($arRemision->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
+        $pdf->Cell(20, 4, number_format($arRemision->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln();
-        $pdf->Cell(145, 4, "", 0, 0, 'R');
+        $pdf->Cell(150, 4, "", 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->Cell(20, 4, "IVA:", 1, 0, 'R', true);
         $pdf->SetFont('Arial', '', 7);
-        $pdf->Cell(25, 4, number_format($arRemision->getVrIva(), 0, '.', ','), 1, 0, 'R');
+        $pdf->Cell(20, 4, number_format($arRemision->getVrIva(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln();
-        $pdf->Cell(145, 4, "", 0, 0, 'R');
+        $pdf->Cell(150, 4, "", 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->Cell(20, 4, "NETO PAGAR", 1, 0, 'R', true);
         $pdf->SetFont('Arial', '', 7);
-        $pdf->Cell(25, 4, number_format($arRemision->getVrTotal(), 0, '.', ','), 1, 0, 'R');
+        $pdf->Cell(20, 4, number_format($arRemision->getVrTotal(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln(-8);
     }
 

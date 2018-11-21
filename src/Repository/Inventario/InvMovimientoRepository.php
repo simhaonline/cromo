@@ -323,7 +323,11 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 }
 
                 if($arMovimientoDetalle->getOperacionInventario() == -1) {
-                    if($arMovimientoDetalle->getCantidad() > $arLote->getCantidadDisponible()) {
+                    $disponible = $arLote->getCantidadDisponible();
+                    if($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
+                        $disponible += $arMovimientoDetalle->getCantidad();
+                    }
+                    if($arMovimientoDetalle->getCantidad() > $disponible) {
                         Mensajes::error("Detalle " . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ": La cantidad disponible [" . $arLote->getCantidadDisponible() . "] del lote: " . $arMovimientoDetalle->getLoteFk() ." es insuficiente para la salida de [" . $arMovimientoDetalle->getCantidad() . "]");
                         $validacion = false;
                         break;

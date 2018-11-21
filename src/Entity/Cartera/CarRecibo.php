@@ -7,10 +7,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Cartera\CarReciboRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class CarRecibo
 {
-    
+    public $infoLog = [
+        "primaryKey" => "codigoReciboPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_recibo_pk", type="integer")

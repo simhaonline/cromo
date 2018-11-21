@@ -7,10 +7,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Cartera\CarReciboTipoRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  * @DoctrineAssert\UniqueEntity(fields={"orden"},message="El orden ingresado ya existe")
  */
 class CarReciboTipo
 {
+    public $infoLog = [
+        "primaryKey" => "codigoReciboTipoPk",
+        "todos"     => true,
+    ];
 
     /**
      * @ORM\Id

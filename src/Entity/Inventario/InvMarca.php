@@ -8,10 +8,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 /**
  * @ORM\Table(name="inv_marca")
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvMarcaRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  * @DoctrineAssert\UniqueEntity(fields={"codigoMarcaPk"},message="Ya existe el código de la marca")
  */
 class InvMarca
 {
+    public $infoLog = [
+        "primaryKey" => "codigoMarcaPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_marca_pk", type="string",length=10)

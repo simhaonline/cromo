@@ -8,9 +8,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvRemisionRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class InvRemision
 {
+    public $infoLog = [
+        "primaryKey" => "codigoRemisionPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

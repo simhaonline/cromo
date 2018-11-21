@@ -7,9 +7,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvImportacionRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class InvImportacion
 {
+    public $infoLog = [
+        "primaryKey" => "codigoImportacionPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

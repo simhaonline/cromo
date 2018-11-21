@@ -9,9 +9,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Financiero\FinRegistroRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class FinRegistro
 {
+    public $infoLog = [
+        "primaryKey" => "codigoRegistroPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_registro_pk", type="integer")

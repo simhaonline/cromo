@@ -6,9 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvImportacionCostoRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class InvImportacionCosto
 {
+    public $infoLog = [
+        "primaryKey" => "codigoImportacionCostoPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id()
      * @ORM\Column(name="codigo_importacion_costo_pk" , type="integer")

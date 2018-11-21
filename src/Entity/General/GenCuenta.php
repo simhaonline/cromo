@@ -7,9 +7,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\General\GenCuentaRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class GenCuenta
 {
+    public $infoLog = [
+        "primaryKey" => "codigoCuentaPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_cuenta_pk", type="string", length=10, nullable=false)

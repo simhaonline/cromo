@@ -8,9 +8,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Table(name="inv_subgrupo")
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvSubgrupoRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class InvSubgrupo
 {
+    public $infoLog = [
+        "primaryKey" => "codigoSubgrupoPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_subgrupo_pk", type="string", length=10)

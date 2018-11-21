@@ -9,10 +9,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Compra\ComProveedorRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  * @DoctrineAssert\UniqueEntity(fields={"numeroIdentificacion"},message="Ya existe el número de identificación")
  */
 class ComProveedor
 {
+    public $infoLog = [
+        "primaryKey" => "codigoProveedorPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

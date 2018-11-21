@@ -8,10 +8,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvBodegaUsuarioRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  * @DoctrineAssert\UniqueEntity(fields={"codigoBodegaUsuarioPk"},message="Ya existe ")
  */
 class InvBodegaUsuario
 {
+    public $infoLog = [
+        "primaryKey" => "codigoBodegaUsuarioPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_bodega_usuario_pk", type="integer")

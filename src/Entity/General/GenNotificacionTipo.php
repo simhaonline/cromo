@@ -6,9 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\General\GenNotificacionTipoRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class GenNotificacionTipo
 {
+    public $infoLog = [
+        "primaryKey" => "codigoNotificacionTipoPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="NONE")

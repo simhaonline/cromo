@@ -6,10 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Cartera\CarNotaDebitoDetalleRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class CarNotaDebitoDetalle
 {
-    
+    public $infoLog = [
+        "primaryKey" => "codigoNotaDebitoDetallePk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_nota_debito_detalle_pk", type="integer")

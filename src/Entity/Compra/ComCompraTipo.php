@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Compra\ComCompraTipoRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  * @DoctrineAssert\UniqueEntity(fields={"codigoCompraTipoPk"},message="Ya existe un registro con el mismo codigo")
  */
 class ComCompraTipo

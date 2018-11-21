@@ -7,9 +7,14 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Table(name="inv_movimiento_detalle")
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvMovimientoDetalleRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class InvMovimientoDetalle
 {
+    public $infoLog = [
+        "primaryKey" => "codigoMovimientoDetallePk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_movimiento_detalle_pk", type="integer")

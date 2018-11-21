@@ -6,9 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Compra\ComCuentaPagarRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class ComCuentaPagar
 {
+    public $infoLog = [
+        "primaryKey" => "codigoCuentaPagarPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

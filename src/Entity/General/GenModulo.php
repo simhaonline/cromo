@@ -6,9 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\General\GenModuloRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class GenModulo
 {
+    public $infoLog = [
+        "primaryKey" => "codigoModuloPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="NONE")

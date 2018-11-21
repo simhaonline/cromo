@@ -8,10 +8,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Compra\ComCuentaPagarTipoRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  * @DoctrineAssert\UniqueEntity(fields={"codigoCuentaPagarTipoPk"},message="Ya existe un registro con el mismo codigo")
  */
 class ComCuentaPagarTipo
 {
+    public $infoLog = [
+        "primaryKey" => "codigoCuentaPagarTipoPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id()
      * @ORM\Column(name="codigo_cuenta_pagar_tipo_pk",type="string", length=10)

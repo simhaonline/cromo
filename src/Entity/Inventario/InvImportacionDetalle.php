@@ -6,9 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Inventario\InvImportacionDetalleRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class InvImportacionDetalle
 {
+    public $infoLog = [
+        "primaryKey" => "codigoImportacionDetallePk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

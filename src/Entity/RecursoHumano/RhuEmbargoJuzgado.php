@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuEmbargoJuzgadoRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  * @DoctrineAssert\UniqueEntity(fields={"codigoEmbargoJuzgadoPk"},message="Ya existe el codigo de juzgado")
  */
 class RhuEmbargoJuzgado

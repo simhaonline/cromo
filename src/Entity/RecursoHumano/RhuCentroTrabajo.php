@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="rhu_centro_trabajo")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuCentroTrabajoRepository")
  */
 class RhuCentroTrabajo

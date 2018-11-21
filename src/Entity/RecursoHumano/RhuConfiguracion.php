@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="rhu_configuracion")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuConfiguracionRepository")
  */
 class RhuConfiguracion

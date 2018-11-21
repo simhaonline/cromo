@@ -532,6 +532,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $arCuentaCobrar->setVrSaldoOperado($arMovimiento->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
                     $arCuentaCobrar->setPlazo($arMovimiento->getPlazoPago());
                     $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
+                    $arCuentaCobrar->setComentario($arMovimiento->getComentarios());
                     $em->persist($arCuentaCobrar);
                 }
 

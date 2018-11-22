@@ -73,6 +73,11 @@ class TteFacturaDetalle
     private $vrManejo = 0;
 
     /**
+     * @ORM\Column(name="codigo_impuesto_retencion_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoImpuestoRetencionFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteFactura", inversedBy="facturasDetallesFacturaRel")
      * @ORM\JoinColumn(name="codigo_factura_fk", referencedColumnName="codigo_factura_pk")
      */
@@ -355,6 +360,22 @@ class TteFacturaDetalle
     public function setFacturaPlanillaRel($facturaPlanillaRel): void
     {
         $this->facturaPlanillaRel = $facturaPlanillaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImpuestoRetencionFk()
+    {
+        return $this->codigoImpuestoRetencionFk;
+    }
+
+    /**
+     * @param mixed $codigoImpuestoRetencionFk
+     */
+    public function setCodigoImpuestoRetencionFk( $codigoImpuestoRetencionFk ): void
+    {
+        $this->codigoImpuestoRetencionFk = $codigoImpuestoRetencionFk;
     }
 
 

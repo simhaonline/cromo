@@ -49,10 +49,33 @@
             <td class="td-in-well"></td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo" >TOTAL:</td>
+            <td class="titulo" >IVA:</td>
+            <td align="right">{{ arFactura.vrIva | number_format(0, '.', ',')}}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >TOTAL BRUTO:</td>
             <td align="right">{{ arFactura.vrTotal | number_format(0, '.', ',')}}</td>
         </tr>
-
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >RTE FUENTE:</td>
+            <td align="right">{{ arFactura.vrRetencionFuente | number_format(0, '.', ',')}}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >TOTAL NETO:</td>
+            <td align="right">{{ arFactura.vrTotalNeto | number_format(0, '.', ',')}}</td>
+        </tr>
         <tr>
             <td class="titulo" >COMENTARIO: </td>
             <td class="td-in-well" colspan="5">{{ arFactura.comentario }}</td>

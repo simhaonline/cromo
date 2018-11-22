@@ -226,6 +226,7 @@ class DespachoController extends ControllerListenerGeneral
         if ($arDespacho->getEstadoAutorizado()) {
             $arrBotonRetirarGuia['disabled'] = true;
             $arrBotonActualizar['disabled'] = true;
+            $arrBotonCobroEntrega['disabled'] = false;
         }
         if ($arDespacho->getEstadoAprobado()) {
             if (!$arDespacho->getEstadoAnulado()) {
@@ -276,7 +277,7 @@ class DespachoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnAnular')->isClicked()) {
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->anular($id);
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->anular($arDespacho);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {

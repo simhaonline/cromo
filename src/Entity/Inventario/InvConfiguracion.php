@@ -62,16 +62,6 @@ class InvConfiguracion
     private $codigoDocumentoMovimientosEntradaBodega = 0;
 
     /**
-     * @ORM\Column(name="vr_base_retencion_fuente_venta", type="float", nullable=true, options={"default" : 0})
-     */
-    private $vrBaseRetencionFuenteVenta = 0;
-
-    /**
-     * @ORM\Column(name="porcentaje_retencion_fuente", type="float", nullable=true, options={"default" : 0})
-     */
-    private $porcentajeRetencionFuente = 0;
-
-    /**
      * @ORM\Column(name="vr_base_retencion_iva_venta", type="float", nullable=true, options={"default" : 0})
      */
     private $vrBaseRetencionIvaVenta = 0;
@@ -86,25 +76,8 @@ class InvConfiguracion
      */
     private $validarBodegaUsuario = false;
 
-
     /**
-     * Set codigoConfiguracionPk.
-     *
-     * @param int $codigoConfiguracionPk
-     *
-     * @return InvConfiguracion
-     */
-    public function setCodigoConfiguracionPk($codigoConfiguracionPk)
-    {
-        $this->codigoConfiguracionPk = $codigoConfiguracionPk;
-
-        return $this;
-    }
-
-    /**
-     * Get codigoConfiguracionPk.
-     *
-     * @return int
+     * @return mixed
      */
     public function getCodigoConfiguracionPk()
     {
@@ -112,23 +85,15 @@ class InvConfiguracion
     }
 
     /**
-     * Set informacionLegalMovimiento.
-     *
-     * @param string|null $informacionLegalMovimiento
-     *
-     * @return InvConfiguracion
+     * @param mixed $codigoConfiguracionPk
      */
-    public function setInformacionLegalMovimiento($informacionLegalMovimiento = null)
+    public function setCodigoConfiguracionPk( $codigoConfiguracionPk ): void
     {
-        $this->informacionLegalMovimiento = $informacionLegalMovimiento;
-
-        return $this;
+        $this->codigoConfiguracionPk = $codigoConfiguracionPk;
     }
 
     /**
-     * Get informacionLegalMovimiento.
-     *
-     * @return string|null
+     * @return mixed
      */
     public function getInformacionLegalMovimiento()
     {
@@ -136,23 +101,15 @@ class InvConfiguracion
     }
 
     /**
-     * Set informacionPagoMovimiento.
-     *
-     * @param string|null $informacionPagoMovimiento
-     *
-     * @return InvConfiguracion
+     * @param mixed $informacionLegalMovimiento
      */
-    public function setInformacionPagoMovimiento($informacionPagoMovimiento = null)
+    public function setInformacionLegalMovimiento( $informacionLegalMovimiento ): void
     {
-        $this->informacionPagoMovimiento = $informacionPagoMovimiento;
-
-        return $this;
+        $this->informacionLegalMovimiento = $informacionLegalMovimiento;
     }
 
     /**
-     * Get informacionPagoMovimiento.
-     *
-     * @return string|null
+     * @return mixed
      */
     public function getInformacionPagoMovimiento()
     {
@@ -160,23 +117,15 @@ class InvConfiguracion
     }
 
     /**
-     * Set informacionContactoMovimiento.
-     *
-     * @param string|null $informacionContactoMovimiento
-     *
-     * @return InvConfiguracion
+     * @param mixed $informacionPagoMovimiento
      */
-    public function setInformacionContactoMovimiento($informacionContactoMovimiento = null)
+    public function setInformacionPagoMovimiento( $informacionPagoMovimiento ): void
     {
-        $this->informacionContactoMovimiento = $informacionContactoMovimiento;
-
-        return $this;
+        $this->informacionPagoMovimiento = $informacionPagoMovimiento;
     }
 
     /**
-     * Get informacionContactoMovimiento.
-     *
-     * @return string|null
+     * @return mixed
      */
     public function getInformacionContactoMovimiento()
     {
@@ -184,23 +133,15 @@ class InvConfiguracion
     }
 
     /**
-     * Set informacionResolucionDianMovimiento.
-     *
-     * @param string|null $informacionResolucionDianMovimiento
-     *
-     * @return InvConfiguracion
+     * @param mixed $informacionContactoMovimiento
      */
-    public function setInformacionResolucionDianMovimiento($informacionResolucionDianMovimiento = null)
+    public function setInformacionContactoMovimiento( $informacionContactoMovimiento ): void
     {
-        $this->informacionResolucionDianMovimiento = $informacionResolucionDianMovimiento;
-
-        return $this;
+        $this->informacionContactoMovimiento = $informacionContactoMovimiento;
     }
 
     /**
-     * Get informacionResolucionDianMovimiento.
-     *
-     * @return string|null
+     * @return mixed
      */
     public function getInformacionResolucionDianMovimiento()
     {
@@ -208,23 +149,15 @@ class InvConfiguracion
     }
 
     /**
-     * Set codigoFormatoMovimiento.
-     *
-     * @param int $codigoFormatoMovimiento
-     *
-     * @return InvConfiguracion
+     * @param mixed $informacionResolucionDianMovimiento
      */
-    public function setCodigoFormatoMovimiento($codigoFormatoMovimiento)
+    public function setInformacionResolucionDianMovimiento( $informacionResolucionDianMovimiento ): void
     {
-        $this->codigoFormatoMovimiento = $codigoFormatoMovimiento;
-
-        return $this;
+        $this->informacionResolucionDianMovimiento = $informacionResolucionDianMovimiento;
     }
 
     /**
-     * Get codigoFormatoMovimiento.
-     *
-     * @return int
+     * @return mixed
      */
     public function getCodigoFormatoMovimiento()
     {
@@ -232,23 +165,31 @@ class InvConfiguracion
     }
 
     /**
-     * Set codigoDocumentoMovimientosSalidaBodega.
-     *
-     * @param int|null $codigoDocumentoMovimientosSalidaBodega
-     *
-     * @return InvConfiguracion
+     * @param mixed $codigoFormatoMovimiento
      */
-    public function setCodigoDocumentoMovimientosSalidaBodega($codigoDocumentoMovimientosSalidaBodega = null)
+    public function setCodigoFormatoMovimiento( $codigoFormatoMovimiento ): void
     {
-        $this->codigoDocumentoMovimientosSalidaBodega = $codigoDocumentoMovimientosSalidaBodega;
-
-        return $this;
+        $this->codigoFormatoMovimiento = $codigoFormatoMovimiento;
     }
 
     /**
-     * Get codigoDocumentoMovimientosSalidaBodega.
-     *
-     * @return int|null
+     * @return mixed
+     */
+    public function getCodigoFormatoRemision()
+    {
+        return $this->codigoFormatoRemision;
+    }
+
+    /**
+     * @param mixed $codigoFormatoRemision
+     */
+    public function setCodigoFormatoRemision( $codigoFormatoRemision ): void
+    {
+        $this->codigoFormatoRemision = $codigoFormatoRemision;
+    }
+
+    /**
+     * @return mixed
      */
     public function getCodigoDocumentoMovimientosSalidaBodega()
     {
@@ -256,23 +197,15 @@ class InvConfiguracion
     }
 
     /**
-     * Set codigoDocumentoMovimientosEntradaBodega.
-     *
-     * @param int|null $codigoDocumentoMovimientosEntradaBodega
-     *
-     * @return InvConfiguracion
+     * @param mixed $codigoDocumentoMovimientosSalidaBodega
      */
-    public function setCodigoDocumentoMovimientosEntradaBodega($codigoDocumentoMovimientosEntradaBodega = null)
+    public function setCodigoDocumentoMovimientosSalidaBodega( $codigoDocumentoMovimientosSalidaBodega ): void
     {
-        $this->codigoDocumentoMovimientosEntradaBodega = $codigoDocumentoMovimientosEntradaBodega;
-
-        return $this;
+        $this->codigoDocumentoMovimientosSalidaBodega = $codigoDocumentoMovimientosSalidaBodega;
     }
 
     /**
-     * Get codigoDocumentoMovimientosEntradaBodega.
-     *
-     * @return int|null
+     * @return mixed
      */
     public function getCodigoDocumentoMovimientosEntradaBodega()
     {
@@ -280,35 +213,11 @@ class InvConfiguracion
     }
 
     /**
-     * @return mixed
+     * @param mixed $codigoDocumentoMovimientosEntradaBodega
      */
-    public function getVrBaseRetencionFuenteVenta()
+    public function setCodigoDocumentoMovimientosEntradaBodega( $codigoDocumentoMovimientosEntradaBodega ): void
     {
-        return $this->vrBaseRetencionFuenteVenta;
-    }
-
-    /**
-     * @param mixed $vrBaseRetencionFuenteVenta
-     */
-    public function setVrBaseRetencionFuenteVenta($vrBaseRetencionFuenteVenta): void
-    {
-        $this->vrBaseRetencionFuenteVenta = $vrBaseRetencionFuenteVenta;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPorcentajeRetencionFuente()
-    {
-        return $this->porcentajeRetencionFuente;
-    }
-
-    /**
-     * @param mixed $porcentajeRetencionFuente
-     */
-    public function setPorcentajeRetencionFuente($porcentajeRetencionFuente): void
-    {
-        $this->porcentajeRetencionFuente = $porcentajeRetencionFuente;
+        $this->codigoDocumentoMovimientosEntradaBodega = $codigoDocumentoMovimientosEntradaBodega;
     }
 
     /**
@@ -322,7 +231,7 @@ class InvConfiguracion
     /**
      * @param mixed $vrBaseRetencionIvaVenta
      */
-    public function setVrBaseRetencionIvaVenta($vrBaseRetencionIvaVenta): void
+    public function setVrBaseRetencionIvaVenta( $vrBaseRetencionIvaVenta ): void
     {
         $this->vrBaseRetencionIvaVenta = $vrBaseRetencionIvaVenta;
     }
@@ -338,7 +247,7 @@ class InvConfiguracion
     /**
      * @param mixed $porcentajeRetencionIva
      */
-    public function setPorcentajeRetencionIva($porcentajeRetencionIva): void
+    public function setPorcentajeRetencionIva( $porcentajeRetencionIva ): void
     {
         $this->porcentajeRetencionIva = $porcentajeRetencionIva;
     }
@@ -354,26 +263,11 @@ class InvConfiguracion
     /**
      * @param mixed $validarBodegaUsuario
      */
-    public function setValidarBodegaUsuario($validarBodegaUsuario): void
+    public function setValidarBodegaUsuario( $validarBodegaUsuario ): void
     {
         $this->validarBodegaUsuario = $validarBodegaUsuario;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCodigoFormatoRemision()
-    {
-        return $this->codigoFormatoRemision;
-    }
-
-    /**
-     * @param mixed $codigoFormatoRemision
-     */
-    public function setCodigoFormatoRemision($codigoFormatoRemision): void
-    {
-        $this->codigoFormatoRemision = $codigoFormatoRemision;
-    }
 
 
 

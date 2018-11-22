@@ -11,6 +11,7 @@ use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
+use App\Entity\General\GenImpuesto;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaPlanilla;
@@ -220,26 +221,68 @@ class TteFacturaRepository extends ServiceEntityRepository
     public function liquidar($id): bool
     {
         $em = $this->getEntityManager();
-        $query = $em->createQuery(
+        $arrImpuestoRetenciones = array();
+        $arFactura = $em->getRepository(TteFactura::class)->find($id);
+        $subTotalGeneral = 0;
+        $fleteGeneral = 0;
+        $manejoGeneral = 0;
+        $cantidadGeneral = 0;
+        $retencionFuenteGlobal = 0;
+        /*$query = $em->createQuery(
             'SELECT COUNT(fd.codigoFacturaDetallePk) as cantidad, SUM(fd.unidades+0) as unidades, SUM(fd.pesoReal+0) as pesoReal,
             SUM(fd.pesoVolumen+0) as pesoVolumen, SUM(fd.vrFlete+0) as vrFlete, SUM(fd.vrManejo+0) as vrManejo
         FROM App\Entity\Transporte\TteFacturaDetalle fd
         WHERE fd.codigoFacturaFk = :codigoFactura')
             ->setParameter('codigoFactura', $id);
         $arrGuias = $query->getSingleResult();
-        $vrSubtotal = intval($arrGuias['vrFlete']) + intval($arrGuias['vrManejo']);
-        $arFactura = $em->getRepository(TteFactura::class)->find($id);
-        $arFactura->setGuias(intval($arrGuias['cantidad']));
-        $arFactura->setVrFlete(intval($arrGuias['vrFlete']));
-        $arFactura->setVrManejo(intval($arrGuias['vrManejo']));
-        $arFactura->setVrSubtotal($vrSubtotal);
-        $arFactura->setVrTotal($vrSubtotal);
-        $arFactura->setVrTotalOperado($vrSubtotal * $arFactura->getOperacionComercial());
+        $vrSubtotal = intval($arrGuias['vrFlete']) + intval($arrGuias['vrManejo']);*/
+
+        $arFacturaDetalles = $this->getEntityManager()->getRepository(TteFacturaDetalle::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()]);
+        foreach ($arFacturaDetalles as $arFacturaDetalle) {
+            $subTotal =  $arFacturaDetalle->getVrFlete() + $arFacturaDetalle->getVrManejo();
+            $subTotalGeneral += $subTotal;
+            $fleteGeneral += $arFacturaDetalle->getVrFlete();
+            $manejoGeneral += $arFacturaDetalle->getVrManejo();
+            $cantidadGeneral++;
+
+            if($arFacturaDetalle->getCodigoImpuestoRetencionFk()) {
+                if (!array_key_exists($arFacturaDetalle->getCodigoImpuestoRetencionFk(), $arrImpuestoRetenciones)) {
+                    $arrImpuestoRetenciones[$arFacturaDetalle->getCodigoImpuestoRetencionFk()] =  array('codigo' => $arFacturaDetalle->getCodigoImpuestoRetencionFk(),
+                        'valor' => $subTotal);
+                } else {
+                    $arrImpuestoRetenciones[$arFacturaDetalle->getCodigoImpuestoRetencionFk()]['valor'] += $subTotal;
+                }
+            }
+            //$this->getEntityManager()->persist($arMovimientoDetalle);
+        }
+        //Retencion en la fuente
+        if($arrImpuestoRetenciones) {
+            foreach ($arrImpuestoRetenciones as $arrImpuestoRetencion) {
+                $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrImpuestoRetencion['codigo']);
+                if($arImpuesto) {
+                    if($arrImpuestoRetencion['valor'] >= $arImpuesto->getBase() || $arFactura->getClienteRel()->getRetencionFuenteSinBase()) {
+                        $retencionFuenteGlobal += ($arrImpuestoRetencion['valor'] * $arImpuesto->getPorcentaje()) / 100;
+                    }
+                }
+            }
+        }
+
+
+        $arFactura->setGuias($cantidadGeneral);
+        $arFactura->setVrFlete($fleteGeneral);
+        $arFactura->setVrManejo($manejoGeneral);
+        $arFactura->setVrSubtotal($subTotalGeneral);
+        $total = $subTotalGeneral;
+        $arFactura->setVrTotal($total);
+        $arFactura->setVrTotalOperado($total * $arFactura->getOperacionComercial());
+        $arFactura->setVrRetencionFuente($retencionFuenteGlobal);
+        $totalNeto = $total - $retencionFuenteGlobal;
+        $arFactura->setVrTotalNeto($totalNeto);
         $em->persist($arFactura);
 
+        //Facturas planillas
         $arFacturaPlanillas = $em->getRepository(TteFacturaPlanilla::class)->findBy(array('codigoFacturaFk' => $id));
         foreach ($arFacturaPlanillas as $arFacturaPlanilla) {
-
             $query = $em->createQuery(
                 'SELECT COUNT(fd.codigoFacturaDetallePk) as cantidad, SUM(fd.unidades+0) as unidades, SUM(fd.pesoReal+0) as pesoReal,
             SUM(fd.pesoVolumen+0) as pesoVolumen, SUM(fd.vrFlete+0) as vrFlete, SUM(fd.vrManejo+0) as vrManejo
@@ -401,6 +444,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $arCuentaCobrar->setNumeroDocumento($arFactura->getNumero());
                 $arCuentaCobrar->setVrSubtotal($arFactura->getVrSubtotal());
                 $arCuentaCobrar->setVrTotal($arFactura->getVrTotal());
+                $arCuentaCobrar->setVrRetencionFuente($arFactura->getVrRetencionFuente());
                 $arCuentaCobrar->setVrSaldo($arFactura->getVrTotal());
                 $arCuentaCobrar->setVrSaldoOperado($arFactura->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
                 $arCuentaCobrar->setPlazo($arFactura->getPlazoPago());

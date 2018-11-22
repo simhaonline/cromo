@@ -1765,6 +1765,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             if ($arGuia->getEstadoFacturaGenerada() == 0) {
                 if ($arGuia->getFactura() == 0 && $arGuia->getEstadoAnulado() == 0) {
                     if ($arGuia->getCodigoClienteFk() == $arFactura->getCodigoClienteFk()) {
+                        $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->retencionTransporte();
                         $arGuia->setFacturaRel($arFactura);
                         $arGuia->setEstadoFacturaGenerada(1);
                         $em->persist($arGuia);
@@ -1778,6 +1779,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arFacturaDetalle->setUnidades($arGuia->getUnidades());
                         $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
                         $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                        $arFacturaDetalle->setCodigoImpuestoRetencionFk($arrConfiguracion['codigoImpuestoRetencionTransporteFk']);
                         $em->persist($arFacturaDetalle);
 
                         $arFactura->setGuias($arFactura->getGuias() + 1);
@@ -1852,7 +1854,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arGuia->setFacturaRel($arFactura);
                         $arGuia->setEstadoFacturaGenerada(1);
                         $em->persist($arGuia);
-
+                        $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->retencionTransporte();
                         $arFacturaDetalle = new TteFacturaDetalle();
                         $arFacturaDetalle->setFacturaRel($arFactura);
                         $arFacturaDetalle->setGuiaRel($arGuia);
@@ -1863,6 +1865,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
                         $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
                         $arFacturaDetalle->setFacturaPlanillaRel($arFacturaPlanilla);
+                        $arFacturaDetalle->setCodigoImpuestoRetencionFk($arrConfiguracion['codigoImpuestoRetencionTransporteFk']);
                         $em->persist($arFacturaDetalle);
 
                         $arFactura->setGuias($arFactura->getGuias() + 1);
@@ -1981,72 +1984,6 @@ class TteGuiaRepository extends ServiceEntityRepository
             ];
         }
     }
-
-//    public function excelPendienteEntrega(){
-//
-//        $session = new Session();
-//        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
-//            ->select('tg.codigoGuiaPk')
-//            ->addSelect('tg.codigoServicioFk')
-//            ->addSelect('tg.codigoGuiaTipoFk')
-//            ->addSelect('tg.numero')
-//            ->addSelect('tg.documentoCliente')
-//            ->addSelect('tg.fechaIngreso')
-//            ->addSelect('dg.fechaRegistro')
-//            ->addSelect('tg.codigoOperacionIngresoFk')
-//            ->addSelect('tg.codigoOperacionCargoFk')
-//            ->addSelect('c.nombreCorto AS clienteNombreCorto')
-//            ->addSelect('cd.nombre AS ciudadDestino')
-//            ->addSelect('tg.unidades')
-//            ->addSelect('tg.pesoReal')
-//            ->addSelect('tg.pesoVolumen')
-//            ->addSelect('tg.vrFlete')
-//            ->addSelect('tg.vrManejo')
-//            ->addSelect('tg.vrRecaudo')
-//            ->addSelect('ct.nombreCorto')
-//            ->addSelect('ct.movil')
-//            ->addSelect('tg.codigoDespachoFk')
-//            ->addSelect(
-//                '(dg.numero) AS manifiesto'
-//            )
-//            ->addSelect('tg.estadoNovedad')
-//            ->addSelect('tg.estadoNovedadSolucion')
-//            ->addSelect('tg.estadoCumplido')
-//            ->leftJoin('tg.clienteRel', 'c')
-//            ->leftJoin('tg.ciudadDestinoRel', 'cd')
-//            ->leftJoin('tg.despachoRel', 'dg')
-//            ->leftJoin('dg.conductorRel', 'ct')
-//            ->where('tg.estadoEntregado = 0')
-//            ->andWhere('tg.estadoDespachado = 1')
-//            ->andWhere('tg.estadoAnulado = 0');
-//        $queryBuilder->orderBy('tg.codigoGuiaPk', 'DESC');
-//        switch ($session->get('filtroTteGuiaEstadoNovedad')) {
-//            case '0':
-//                $queryBuilder->andWhere("tg.estadoNovedad = 0");
-//                break;
-//            case '1':
-//                $queryBuilder->andWhere("tg.estadoNovedad = 1");
-//                break;
-//        }
-//        if ($session->get('filtroNumeroGuia')) {
-//            $queryBuilder->andWhere("tg.codigoGuiaPk = '{$session->get('filtroNumeroGuia')}'");
-//        }
-//        if ($session->get('filtroConductor') != '') {
-//            $queryBuilder->andWhere("ct.nombreCorto LIKE '%{$session->get('filtroConductor')}%' ");
-//        }
-//        if ($session->get('filtroDocumentoCliente')) {
-//            $queryBuilder->andWhere("tg.documentoCliente = '{$session->get('filtroDocumentoCliente')}'");
-//        }
-//        if ($session->get('filtroFechaDesdeEntrega') != null) {
-//            $queryBuilder->andWhere("tg.fechaIngreso >= '{$session->get('filtroFechaDesdeEntrega')->format('Y-m-d')} 00:00:00'");
-//        }
-//        if ($session->get('filtroFechaHastaEntrega') != null) {
-//            $queryBuilder->andWhere("tg.fechaIngreso <= '{$session->get('filtroFechaHastaEntrega')->format('Y-m-d')} 23:59:59'");
-//        }
-//
-//        return $queryBuilder;
-//
-//    }
 
     public function tableroProduccionMes($fecha): array
     {

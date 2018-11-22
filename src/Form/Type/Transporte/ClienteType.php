@@ -63,6 +63,7 @@ class ClienteType extends AbstractType
             ->add('plazoPago',NumberType::class,['required' => true,'label' => 'Plazo pago:'])
             ->add('correo',TextType::class,['required' => false,'label' => 'Correo:'])
             ->add('estadoInactivo', CheckboxType::class, array('required'  => false, 'label' => 'Inactivo'))
+            ->add('retencionFuenteSinBase', CheckboxType::class, array('required'  => false, 'label' => 'Retencion fuente sin base'))
             ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);

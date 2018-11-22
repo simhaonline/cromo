@@ -113,6 +113,11 @@ class TteCliente
     private $codigoFormaPagoFk;
 
     /**
+     * @ORM\Column(name="retencionFuenteSinBase", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $retencionFuenteSinBase = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -712,6 +717,22 @@ class TteCliente
     public function setIntermediacionesDetallesClienteRel( $intermediacionesDetallesClienteRel ): void
     {
         $this->intermediacionesDetallesClienteRel = $intermediacionesDetallesClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRetencionFuenteSinBase()
+    {
+        return $this->retencionFuenteSinBase;
+    }
+
+    /**
+     * @param mixed $retencionFuenteSinBase
+     */
+    public function setRetencionFuenteSinBase( $retencionFuenteSinBase ): void
+    {
+        $this->retencionFuenteSinBase = $retencionFuenteSinBase;
     }
 
 

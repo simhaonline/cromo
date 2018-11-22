@@ -231,8 +231,11 @@ class ReciboController extends ControllerListenerGeneral
                         $arReciboDetalle = new CarReciboDetalle();
                         $arReciboDetalle->setReciboRel($arRecibo);
                         $arReciboDetalle->setCuentaCobrarRel($arCuentaCobrar);
+                        $arReciboDetalle->setVrRetencionFuente($arCuentaCobrar->getVrRetencionFuente());
+                        $saldo -= $arCuentaCobrar->getVrRetencionFuente();
+                        $pagoAfectar = $arrControles['TxtSaldo' . $codigoCuentaCobrar];
                         $arReciboDetalle->setVrPago($saldo);
-                        $arReciboDetalle->setVrPagoAfectar($saldo);
+                        $arReciboDetalle->setVrPagoAfectar($pagoAfectar);
                         $arReciboDetalle->setNumeroFactura($arCuentaCobrar->getNumeroDocumento());
                         $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
                         $arReciboDetalle->setOperacion(1);

@@ -73,6 +73,11 @@ class TteConfiguracion
     private $porcentajeIndustriaComercio = 0;
 
     /**
+     * @ORM\Column(name="codigo_impuesto_retencion_transporte_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoImpuestoRetencionTransporteFk;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -246,6 +251,22 @@ class TteConfiguracion
     public function setPorcentajeIndustriaComercio($porcentajeIndustriaComercio): void
     {
         $this->porcentajeIndustriaComercio = $porcentajeIndustriaComercio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImpuestoRetencionTransporteFk()
+    {
+        return $this->codigoImpuestoRetencionTransporteFk;
+    }
+
+    /**
+     * @param mixed $codigoImpuestoRetencionTransporteFk
+     */
+    public function setCodigoImpuestoRetencionTransporteFk( $codigoImpuestoRetencionTransporteFk ): void
+    {
+        $this->codigoImpuestoRetencionTransporteFk = $codigoImpuestoRetencionTransporteFk;
     }
 
 

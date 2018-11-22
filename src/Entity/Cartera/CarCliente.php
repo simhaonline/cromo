@@ -10,7 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CarCliente
 {
-    
+    public $infoLog = [
+        "primaryKey" => "codigoClientePk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_cliente_pk", type="integer")

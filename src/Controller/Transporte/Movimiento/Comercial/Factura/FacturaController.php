@@ -6,6 +6,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\General\GenConfiguracion;
+use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
@@ -212,6 +213,7 @@ class FacturaController extends ControllerListenerGeneral
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 if (count($arrSeleccionados) > 0) {
+                    $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->retencionTransporte();
                     foreach ($arrSeleccionados AS $codigo) {
                         $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
                         $arGuia->setFacturaRel($arFactura);
@@ -227,6 +229,7 @@ class FacturaController extends ControllerListenerGeneral
                         $arFacturaDetalle->setUnidades($arGuia->getUnidades());
                         $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
                         $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                        $arFacturaDetalle->setCodigoImpuestoRetencionFk($arrConfiguracion['codigoImpuestoRetencionTransporteFk']);
                         $em->persist($arFacturaDetalle);
                     }
                     $em->flush();
@@ -263,6 +266,7 @@ class FacturaController extends ControllerListenerGeneral
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 if ($arrSeleccionados) {
+                    $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->retencionTransporte();
                     foreach ($arrSeleccionados AS $codigo) {
                         $arGuias = $em->getRepository(TteGuia::class)->findBy(array('codigoCumplidoFk' => $codigo, 'estadoFacturaGenerada' => 0, 'estadoFacturado' => 0));
                         if($arGuias) {
@@ -288,6 +292,7 @@ class FacturaController extends ControllerListenerGeneral
                                     $arFacturaDetalle->setUnidades($arGuia->getUnidades());
                                     $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
                                     $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                                    $arFacturaDetalle->setCodigoImpuestoRetencionFk($arrConfiguracion['codigoImpuestoRetencionTransporteFk']);
                                     $em->persist($arFacturaDetalle);
                                 }
                             }
@@ -325,6 +330,7 @@ class FacturaController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnCargar')->isClicked()) {
+                $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->retencionTransporte();
                 $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
                 $ruta = $arConfiguracion->getRutaTemporal();
                 if (!$ruta) {
@@ -388,6 +394,7 @@ class FacturaController extends ControllerListenerGeneral
                                 $arFacturaDetalle->setUnidades($arGuia->getUnidades());
                                 $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
                                 $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                                $arFacturaDetalle->setCodigoImpuestoRetencionFk($arrConfiguracion['codigoImpuestoRetencionTransporteFk']);
                                 $em->persist($arFacturaDetalle);
                             }
                         }
@@ -529,6 +536,7 @@ class FacturaController extends ControllerListenerGeneral
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 if (count($arrSeleccionados) > 0) {
+                    $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->retencionTransporte();
                     foreach ($arrSeleccionados AS $codigo) {
                         //$arFacturaReferencia = $em->getRepository(TteFactura::class)->find($codigo);
                         $arFacturaDetallesReferencia = $em->getRepository(TteFacturaDetalle::class)->findBy(array('codigoFacturaFk' => $codigo));
@@ -543,6 +551,7 @@ class FacturaController extends ControllerListenerGeneral
                             $arFacturaDetalle->setUnidades($arFacturaDetalleReferencia->getUnidades());
                             $arFacturaDetalle->setPesoReal($arFacturaDetalleReferencia->getPesoReal());
                             $arFacturaDetalle->setPesoVolumen($arFacturaDetalleReferencia->getPesoVolumen());
+                            $arFacturaDetalle->setCodigoImpuestoRetencionFk($arrConfiguracion['codigoImpuestoRetencionTransporteFk']);
                             $em->persist($arFacturaDetalle);
 
                             $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalleReferencia->getCodigoGuiaFk());

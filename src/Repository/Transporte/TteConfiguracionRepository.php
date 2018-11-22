@@ -24,4 +24,13 @@ class TteConfiguracionRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getSingleResult();
 
     }
+
+    public function retencionTransporte(): array
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteConfiguracion::class, 'c')
+            ->select('c.codigoImpuestoRetencionTransporteFk')
+            ->where('c.codigoConfiguracionPk = 1');
+        return $queryBuilder->getQuery()->getSingleResult();
+
+    }
 }

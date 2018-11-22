@@ -13,7 +13,9 @@
             {{ form_widget(form.btnImprimirManifiesto, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnCobroEntrega, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {{ form_widget(form.btnLiquidacion, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_liquidar', {'id': arDespacho.codigoDespachoPk }) }}', 'DespachoLiquidar', 600, 1200)">Liquidar</a>
+            {% if arDespacho.estadoAnulado == 0 %}
+                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_liquidar', {'id': arDespacho.codigoDespachoPk }) }}', 'DespachoLiquidar', 600, 1200)">Liquidar</a>
+            {% endif %}
         </div>
     </div>
     <div style="float:right">

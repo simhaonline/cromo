@@ -73,14 +73,29 @@ class TteFactura
     private $vrOtros = 0;
 
     /**
+     * @ORM\Column(name="vr_iva", type="float")
+     */
+    private $vrIva = 0;
+
+    /**
      * @ORM\Column(name="vr_subtotal", type="float")
      */
     private $vrSubtotal = 0;
 
     /**
+     * @ORM\Column(name="vr_retencion_fuente", type="float")
+     */
+    private $vrRetencionFuente = 0;
+
+    /**
      * @ORM\Column(name="vr_total", type="float")
      */
     private $vrTotal = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_neto", type="float")
+     */
+    private $vrTotalNeto = 0;
 
     /**
      * @ORM\Column(name="vr_total_operado", type="float")
@@ -685,6 +700,54 @@ class TteFactura
     public function setOperacionComercial($operacionComercial): void
     {
         $this->operacionComercial = $operacionComercial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRetencionFuente()
+    {
+        return $this->vrRetencionFuente;
+    }
+
+    /**
+     * @param mixed $vrRetencionFuente
+     */
+    public function setVrRetencionFuente( $vrRetencionFuente ): void
+    {
+        $this->vrRetencionFuente = $vrRetencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalNeto()
+    {
+        return $this->vrTotalNeto;
+    }
+
+    /**
+     * @param mixed $vrTotalNeto
+     */
+    public function setVrTotalNeto( $vrTotalNeto ): void
+    {
+        $this->vrTotalNeto = $vrTotalNeto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIva()
+    {
+        return $this->vrIva;
+    }
+
+    /**
+     * @param mixed $vrIva
+     */
+    public function setVrIva( $vrIva ): void
+    {
+        $this->vrIva = $vrIva;
     }
 
 

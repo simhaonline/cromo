@@ -19,6 +19,15 @@ class CobroEntrega extends \FPDF {
         $pdf = new CobroEntrega();
         $pdf->AliasNbPages();
         $pdf->AddPage();
+        $pdf->SetFont('Arial', '', 40);
+        $pdf->SetTextColor(255, 220, 220);
+        $arDespacho = self::$em->getRepository(TteDespacho::class)->find($codigoDespacho);
+        if ($arDespacho->getEstadoAnulado()) {
+            $pdf->RotatedText(90, 150, 'ANULADO', 45);
+        } elseif (!$arDespacho->getEstadoAprobado()) {
+            $pdf->RotatedText(90, 150, 'SIN APROBAR', 45);
+        }
+        $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
         $pdf->Output("TteCobro$codigoDespacho.pdf", 'D');
@@ -39,7 +48,7 @@ class CobroEntrega extends \FPDF {
         $this->SetXY(5, 40);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 6, utf8_decode("NUMERO:"), 1, 0, 'L', 1);
+        $this->Cell(30, 6, utf8_decode("CODIGO:"), 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', '', 8);
         $this->Cell(30, 6, $arDespacho->getCodigoDespachoPk(), 1, 0, 'L', 1);
@@ -54,16 +63,32 @@ class CobroEntrega extends \FPDF {
         $this->SetXY(5, 45);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 5, utf8_decode("FECHA:"), 1, 0, 'L', 1);
+        $this->Cell(30, 5, utf8_decode("NUMERO:"), 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(30, 5, $arDespacho->getFechaRegistro()->format('Y-m-d'), 1, 0, 'L', 1);
+        $this->Cell(30, 5, $arDespacho->getNumero(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 5, "VEHICULO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(103, 5, $arDespacho->getCodigoVehiculoFk(), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+
+        //linea 3
+        $this->SetXY(5, 50);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 5, utf8_decode("FECHA:"), 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(30, 5, $arDespacho->getFechaRegistro()->format('Y-m-d'), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 5, "", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(103, 5, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
 
         $this->EncabezadoDetalles();
@@ -109,7 +134,7 @@ class CobroEntrega extends \FPDF {
                 $pdf->Cell(10, 4, $arGuia['fechaIngreso']->format('m-d'), 1, 0, 'L');
                 $pdf->Cell(38, 4, substr(utf8_decode(utf8_decode($arGuia['clienteNombreCorto'])),0,20), 1, 0, 'L');
                 $pdf->Cell(16, 4, $arGuia['nit'], 1, 0, 'L');
-                $pdf->Cell(35, 4, substr(utf8_decode(utf8_decode($arGuia['nombreDestinatario'])),0,10), 1, 0, 'L');
+                $pdf->Cell(35, 4, substr(utf8_decode(utf8_decode($arGuia['nombreDestinatario'])),0,20), 1, 0, 'L');
                 $fleteManejo = 0;
                 if($arGuia['generaCobroEntrega']) {
                     $fleteManejo = ($arGuia['vrFlete'] + $arGuia['vrManejo']) - $arGuia['vrAbono'];
@@ -149,6 +174,35 @@ class CobroEntrega extends \FPDF {
 
         $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+    }
+
+    var $angle = 0;
+
+    function Rotate($angle, $x = -1, $y = -1)
+    {
+        if ($x == -1)
+            $x = $this->x;
+        if ($y == -1)
+            $y = $this->y;
+        if ($this->angle != 0)
+            $this->_out('Q');
+        $this->angle = $angle;
+        if ($angle != 0) {
+            $angle *= M_PI / 180;
+            $c = cos($angle);
+            $s = sin($angle);
+            $cx = $x * $this->k;
+            $cy = ($this->h - $y) * $this->k;
+            $this->_out(sprintf('q %.5F %.5F %.5F %.5F %.2F %.2F cm 1 0 0 1 %.2F %.2F cm', $c, $s, -$s, $c, $cx, $cy, -$cx, -$cy));
+        }
+    }
+
+    function RotatedText($x, $y, $txt, $angle)
+    {
+        //Text rotated around its origin
+        $this->Rotate($angle, $x, $y);
+        $this->Text($x, $y, $txt);
+        $this->Rotate(0);
     }
 }
 

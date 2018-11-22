@@ -11,6 +11,9 @@
         {% set contador = 0 %}
         <tr>
         {% for key, value in arRegistro|objectToArray %}
+            {% if value.timestamp is defined %}
+                {% set value = value|date('Y-m-d') %}
+            {% endif %}
             {% if contador is divisible by(2) and contador != 0 %}
                 </tr>
                 <tr>

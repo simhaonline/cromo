@@ -58,8 +58,14 @@
                             <a href="#">Contabilidad <span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level">
                                 <li>
-                                    <a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro') }}">Intercambio
-                                        de datos</a>
+                                    <a href="#">Intercambio de datos <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-four-level">
+                                        <li>
+                                            <a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro') }}">Registro</a>
+                                            <a href="{{ path('financiero_utilidad_contabilidad_intercambio_tercero') }}">Tercero</a>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
                     </ul>

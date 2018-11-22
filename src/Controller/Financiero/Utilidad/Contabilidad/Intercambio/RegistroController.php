@@ -54,7 +54,7 @@ class RegistroController extends Controller
 
         }
         $arRegistros = $paginator->paginate($em->getRepository(FinRegistro::class)->listaIntercambio(), $request->query->getInt('page', 1),20);
-        return $this->render('financiero/utilidad/contabilidad/intercambio/registro.html.twig',
+        return $this->render('financiero/utilidad/contabilidad/intercambio/registro/registro.html.twig',
             ['arRegistros' => $arRegistros,
             'form' => $form->createView()]);
     }

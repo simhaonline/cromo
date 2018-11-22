@@ -37,4 +37,12 @@ class FinTerceroRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function listaIntercambio(){
+        return $this->_em->createQueryBuilder()->from(FinTercero::class,'t')
+            ->select('t.nombre1')
+            ->addSelect('t.nombre2')
+            ->addSelect('t.apellido1')
+            ->addSelect('t.apellido2')
+            ->addSelect('t.numeroIdentificacion');
+    }
 }

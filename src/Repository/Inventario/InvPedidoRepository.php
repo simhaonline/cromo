@@ -157,14 +157,34 @@ class InvPedidoRepository extends ServiceEntityRepository
      */
     public function anular($arPedido)
     {
+        $em = $this->getEntityManager();
+        $validacion = true;
         if($arPedido->getEstadoAprobado() == 1 && $arPedido->getEstadoAnulado() == 0) {
-            $arPedido->setEstadoAnulado(1);
-            $arPedido->setVrSubtotal(0);
-            $arPedido->setVrIva(0);
-            $arPedido->setVrTotal(0);
-            $this->getEntityManager()->persist($arPedido);
-            $this->getEntityManager()->flush();
-
+            $arPedidoDetalles = $em->getRepository(InvPedidoDetalle::class)->findBy(array('codigoPedidoFk' => $arPedido->getCodigoPedidoPk()));
+            foreach ($arPedidoDetalles as $arPedidoDetalle) {
+                if($arPedidoDetalle->getCantidadAfectada() > 0) {
+                    Mensajes::error("No se puede anular el documento porque uno de sus detalles es usado");
+                    $validacion = false;
+                    break;
+                }
+                $arPedidoDetalle->setCantidad(0);
+                $arPedidoDetalle->setCantidadPendiente(0);
+                $arPedidoDetalle->setVrSubtotal(0);
+                $arPedidoDetalle->setVrNeto(0);
+                $arPedidoDetalle->setPorcentajeIva(0);
+                $arPedidoDetalle->setVrIva(0);
+                $arPedidoDetalle->setVrTotal(0);
+                $arPedidoDetalle->setVrPrecio(0);
+                $em->persist($arPedidoDetalle);
+            }
+            if($validacion == true) {
+                $arPedido->setEstadoAnulado(1);
+                $arPedido->setVrSubtotal(0);
+                $arPedido->setVrIva(0);
+                $arPedido->setVrTotal(0);
+                $em->persist($arPedido);
+                $em->flush();
+            }
         } else {
             Mensajes::error('El documento debe estar aprobado y no puede estar previamente anulado');
         }

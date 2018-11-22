@@ -243,8 +243,8 @@ class InvRemisionRepository extends ServiceEntityRepository
      */
     public function anular($arRemision)
     {
-        $validacion = true;
         $em = $this->getEntityManager();
+        $validacion = true;
         if($arRemision->getEstadoAprobado() == 1 && $arRemision->getEstadoAnulado() == 0) {
             $arRemisionDetalles = $em->getRepository(InvRemisionDetalle::class)->findBy(array('codigoRemisionFk' => $arRemision->getCodigoRemisionPk()));
             foreach ($arRemisionDetalles as $arRemisionDetalle) {

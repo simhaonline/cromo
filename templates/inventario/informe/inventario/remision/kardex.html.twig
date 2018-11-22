@@ -35,9 +35,9 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Documento:</label>
+                <label class="col-sm-2 control-label">Tipo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.cboDocumento, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.cboRemisionTipo, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
         </div>
@@ -52,36 +52,30 @@
                 <th>ID</th>
                 <th>NUMERO</th>
                 <th>FECHA</th>
-                <th>DOCUMENTO</th>
+                <th>TIPO</th>
                 <th>ITEM</th>
                 <th>DESCRIPCION</th>
-                <th title="Remision detalle">RD</th>
                 <th>BOD</th>
                 <th>LOTE</th>
                 <th>CAN</th>
                 <th>C_O</th>
-                <th>SALDO</th>
-                <th>COSTO</th>
-                <th>PRECIO</th>
+                <th>PEN</th>
             </tr>
             </thead>
             <tbody>
-            {% for arMovimientoDetalle in arMovimientosDetalles %}
+            {% for arRemisionDetalle in arRemisionesDetalles %}
                 <tr>
-                    <td>{{ arMovimientoDetalle.codigoMovimientoDetallePk }}</td>
-                    <td>{{ arMovimientoDetalle.numeroMovimiento }}</td>
-                    <td>{{ arMovimientoDetalle.fecha | date ('Y-m-d H:i')}}</td>
-                    <td>{{ arMovimientoDetalle.nombreDocumento }}</td>
-                    <td>{{ arMovimientoDetalle.codigoItemFk }}</td>
-                    <td>{{ arMovimientoDetalle.nombreItem }}</td>
-                    <td>{{ arMovimientoDetalle.codigoRemisionDetalleFk }}</td>
-                    <td>{{ arMovimientoDetalle.codigoBodegaFk }}</td>
-                    <td>{{ arMovimientoDetalle.loteFk }}</td>
-                    <td class="numero">{{ arMovimientoDetalle.cantidad | number_format(0, '.', ',') }}</td>
-                    <td class="numero">{{ arMovimientoDetalle.cantidadOperada | number_format(0, '.', ',') }}</td>
-                    <td class="numero">{{ arMovimientoDetalle.cantidadSaldo | number_format(0, '.', ',')}}</td>
-                    <td class="numero">{{ arMovimientoDetalle.vrCosto | number_format(0, '.', ',')}}</td>
-                    <td class="numero">{{ arMovimientoDetalle.vrPrecio | number_format(0, '.', ',')}}</td>
+                    <td>{{ arRemisionDetalle.codigoRemisionDetallePk }}</td>
+                    <td>{{ arRemisionDetalle.numeroRemision }}</td>
+                    <td>{{ arRemisionDetalle.fecha | date ('Y-m-d H:i')}}</td>
+                    <td>{{ arRemisionDetalle.remisionTipo }}</td>
+                    <td>{{ arRemisionDetalle.codigoItemFk }}</td>
+                    <td>{{ arRemisionDetalle.nombreItem }}</td>
+                    <td>{{ arRemisionDetalle.codigoBodegaFk }}</td>
+                    <td>{{ arRemisionDetalle.loteFk }}</td>
+                    <td class="numero">{{ arRemisionDetalle.cantidad | number_format(0, '.', ',') }}</td>
+                    <td class="numero">{{ arRemisionDetalle.cantidadOperada | number_format(0, '.', ',') }}</td>
+                    <td class="numero">{{ arRemisionDetalle.cantidadPendiente | number_format(0, '.', ',') }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -90,7 +84,7 @@
     <div class="btn-group" style="float: left">
         <div class="btn-group" style="float: left">
             <div class="btn btn-default btn-sm">Registros <span
-                        class="badge">{{ arMovimientosDetalles.getTotalItemCount }}</span>
+                        class="badge">{{ arRemisionesDetalles.getTotalItemCount }}</span>
             </div>
         </div>
     </div>
@@ -98,7 +92,7 @@
         {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
     </div>
     <div class="btn-group btn-xs">
-        {{ knp_pagination_render(arMovimientosDetalles) }}
+        {{ knp_pagination_render(arRemisionesDetalles) }}
     </div>
     {{ form_end(form) }}
 {% endblock %}

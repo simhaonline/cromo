@@ -16,6 +16,7 @@ class RhuSolicitud
         "todos"     => true,
     ];
     /**
+     * @ORM\Id
      * @ORM\Column(name="codigo_solicitud_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */        

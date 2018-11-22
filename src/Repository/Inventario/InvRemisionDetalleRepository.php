@@ -179,7 +179,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->select('rd.codigoItemFk')
             ->addSelect('rd.loteFk')
             ->addSelect('rd.codigoBodegaFk')
-            ->addSelect("SUM(rd.cantidadOperada) AS cantidad")
+            ->addSelect("SUM(rd.cantidadPendiente) AS cantidad")
             ->leftJoin('rd.itemRel', 'i')
             ->leftJoin('rd.remisionRel', 'r')
             ->where('i.afectaInventario = 1')
@@ -263,6 +263,45 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             $em->flush();
         }
 
+    }
+
+    public function listaKardex()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
+            ->select('rd.codigoRemisionDetallePk')
+            ->addSelect('rd.codigoItemFk')
+            ->addSelect('i.nombre AS nombreItem')
+            ->addSelect('rd.cantidad')
+            ->addSelect('rd.cantidadOperada')
+            ->addSelect('rd.cantidadPendiente')
+            ->addSelect('rd.vrPrecio')
+            ->addSelect('rd.loteFk')
+            ->addSelect('rd.codigoBodegaFk')
+            ->addSelect('r.fecha')
+            ->addSelect('r.numero AS numeroRemision')
+            ->addSelect('rt.nombre AS remisionTipo')
+            ->leftJoin('rd.remisionRel', 'r')
+            ->leftJoin('r.remisionTipoRel', 'rt')
+            ->leftJoin('rd.itemRel', 'i')
+            ->where('rd.codigoRemisionDetallePk != 0')
+            ->andWhere('r.estadoAprobado = 1')
+            ->andWhere('r.estadoAnulado = 0')
+            ->andWhere('rd.operacionInventario <> 0')
+            ->orderBy('r.fecha', 'ASC');
+        if ($session->get('filtroInvItemCodigo')) {
+            $queryBuilder->andWhere("rd.codigoItemFk = '{$session->get('filtroInvItemCodigo')}'");
+        }
+        if ($session->get('filtroInvLote') != '') {
+            $queryBuilder->andWhere("rd.loteFk = '{$session->get('filtroInvLote')}' ");
+        }
+        if ($session->get('filtroInvBodega') != '') {
+            $queryBuilder->andWhere("rd.codigoBodegaFk = '{$session->get('filtroInvBodega')}' ");
+        }
+        if ($session->get('filtroInvCodigoRemisionTipo')) {
+            $queryBuilder->andWhere("r.codigoRemisionTipoFk = '{$session->get('filtroInvCodigoRemisionTipo')}'");
+        }
+        return $queryBuilder;
     }    
     
 }

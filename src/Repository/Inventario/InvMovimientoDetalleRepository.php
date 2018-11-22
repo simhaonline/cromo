@@ -348,6 +348,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('m.fecha')
             ->addSelect('m.numero AS numeroMovimiento')
             ->addSelect('d.nombre AS nombreDocumento')
+            ->addSelect('md.codigoRemisionDetalleFk')
             ->leftJoin('md.movimientoRel', 'm')
             ->leftJoin('m.documentoRel', 'd')
             ->leftJoin('md.itemRel', 'i')

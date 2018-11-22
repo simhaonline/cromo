@@ -131,7 +131,7 @@ class SeguridadController extends Controller
                 $arUsuario->setExtension($form->get('txtExtension')->getData());
                 $arUsuario->setOperacionRel($form->get('operacionRel')->getData());
                 $arUsuario->setRol($form->get('cboRol')->getData());
-                if ($id == 0) {
+                if ($id === 0) {
                     $claveNueva = $form->get('txtNuevaClave')->getData();
                     $claveConfirmacion = $form->get('txtConfirmacionClave')->getData();
                     if ($claveNueva != $claveConfirmacion) {

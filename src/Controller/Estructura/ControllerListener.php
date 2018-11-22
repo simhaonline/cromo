@@ -78,7 +78,7 @@ class ControllerListener{
                 foreach ($permisos as $key=>$permiso){
                     $permisoMayuscula=ucfirst($key);
                     if(isset($requestPhp['form']['btn'.$permisoMayuscula])){
-                        if(call_user_func(array($arSeguridadUsuarioModelo,"get{$permisoMayuscula}"))){
+                        if(call_user_func(array($arSeguridadUsuarioModelo,"get{$permisoMayuscula}")) || $arUsuarioRol=="ROLE_ADMIN"){
                             return;
                         }
                         else{
@@ -101,10 +101,11 @@ class ControllerListener{
      * @param $url
      */
     public function getPermisosProcesos($em, $controller, $event, $url){
+        $arUsuarioRol=$this->user->getToken()->getRoles()[0]->getRole()??"ROLE_USER";
         $arSegUsuarioProceso=$em->getRepository('App:Seguridad\SegUsuarioProceso')->findOneBy(['codigoProcesoFk'=>$controller[0]->getProceso()]);
         $arProceso=$em->getRepository('App:General\GenProceso')->find($controller[0]->getProceso());
-        if($arSegUsuarioProceso){
-            if(!$arSegUsuarioProceso->getIngreso()){
+        if($arSegUsuarioProceso || $arUsuarioRol=="ROLE_ADMIN"){
+            if(!$arSegUsuarioProceso->getIngreso() && $arUsuarioRol!="ROLE_ADMIN"){
                 $this->redireccionar($event, $url, "No tiene permiso para ingresar al proceso '{$arProceso->getNombre()}'");
         }
             return;

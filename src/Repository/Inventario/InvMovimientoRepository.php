@@ -10,6 +10,7 @@ use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvBodegaUsuario;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvDocumento;
+use App\Entity\Inventario\InvFacturaTipo;
 use App\Entity\Inventario\InvImportacionDetalle;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvMovimientoDetalle;
@@ -481,6 +482,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arDocumento = $em->getRepository(InvDocumento::class)->find($arMovimiento->getCodigoDocumentoFk());
+        if($arMovimiento->getFacturaTipoRel()!= ''){
+            $arFacturaTipo = $em->getRepository(InvFacturaTipo::class)->find($arMovimiento->getCodigoFacturaTipoFk());
+        }
         if ($arMovimiento->getEstadoAprobado() == 0) {
             if($this->afectar($arMovimiento, 1)) {
                 $stringFecha = $arMovimiento->getFecha()->format('Y-m-d');
@@ -489,12 +493,19 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $fechaVencimiento = date_create($stringFecha);
                 $fechaVencimiento->modify("+ " . (string)$plazo . " day");
                 $arMovimiento->setFechaVence($fechaVencimiento);
-                $arMovimiento->setNumero($arDocumento->getConsecutivo());
+                if($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC'){
+                    $arMovimiento->setNumero($arFacturaTipo->getConsecutivo());
+                }else {
+                    $arMovimiento->setNumero($arDocumento->getConsecutivo());
+                }
                 $arMovimiento->setEstadoAprobado(1);
                 $arMovimiento->setFecha(new \DateTime('now'));
                 $this->getEntityManager()->persist($arMovimiento);
-
-                $arDocumento->setConsecutivo($arDocumento->getConsecutivo() + 1);
+                if($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC'){
+                    $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo()+ 1);
+                } else {
+                    $arDocumento->setConsecutivo($arDocumento->getConsecutivo() + 1);
+                }
                 $this->getEntityManager()->persist($arDocumento);
 
                 if($arMovimiento->getDocumentoRel()->getGeneraCartera()) {

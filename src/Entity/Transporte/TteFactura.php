@@ -33,6 +33,16 @@ class TteFactura
     private $codigoFacturaClaseFk;
 
     /**
+     * @ORM\Column(name="codigo_factura_concepto_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoFacturaConceptoFk;
+
+    /**
+     * @ORM\Column(name="codigo_factura_referencia_fk", type="integer", nullable=true, options={"default" : null})
+     */
+    private $codigoFacturaReferenciaFk;
+
+    /**
      * @ORM\Column(name="numero", type="float")
      */
     private $numero = 0;
@@ -113,7 +123,7 @@ class TteFactura
     private $plazoPago = 0;
 
     /**
-     * @ORM\Column(name="estado_autorizado",options={"default" : false}, type="boolean")
+     * @ORM\Column(name="estado_autorizado", options={"default" : false}, type="boolean")
      */
     private $estadoAutorizado = false;
 
@@ -157,6 +167,12 @@ class TteFactura
      * @ORM\JoinColumn(name="codigo_factura_tipo_fk", referencedColumnName="codigo_factura_tipo_pk")
      */
     private $facturaTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteFacturaConcepto", inversedBy="facturasFacturaConceptoRel")
+     * @ORM\JoinColumn(name="codigo_factura_concepto_fk", referencedColumnName="codigo_factura_concepto_pk")
+     */
+    private $facturaConceptoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteCliente", inversedBy="facturasClienteRel")
@@ -748,6 +764,54 @@ class TteFactura
     public function setVrIva( $vrIva ): void
     {
         $this->vrIva = $vrIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaConceptoFk()
+    {
+        return $this->codigoFacturaConceptoFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaConceptoFk
+     */
+    public function setCodigoFacturaConceptoFk( $codigoFacturaConceptoFk ): void
+    {
+        $this->codigoFacturaConceptoFk = $codigoFacturaConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaConceptoRel()
+    {
+        return $this->facturaConceptoRel;
+    }
+
+    /**
+     * @param mixed $facturaConceptoRel
+     */
+    public function setFacturaConceptoRel( $facturaConceptoRel ): void
+    {
+        $this->facturaConceptoRel = $facturaConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaReferenciaFk()
+    {
+        return $this->codigoFacturaReferenciaFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaReferenciaFk
+     */
+    public function setCodigoFacturaReferenciaFk( $codigoFacturaReferenciaFk ): void
+    {
+        $this->codigoFacturaReferenciaFk = $codigoFacturaReferenciaFk;
     }
 
 

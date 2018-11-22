@@ -15,6 +15,7 @@ use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteFacturaTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
+use App\Form\Type\Transporte\FacturaNotaCreditoType;
 use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
@@ -490,7 +491,12 @@ class FacturaController extends ControllerListenerGeneral
         } else {
             $arFactura->setCodigoFacturaClaseFk($clase);
         }
-        $form = $this->createForm(FacturaType::class, $arFactura);
+        if($clase == "FA") {
+            $form = $this->createForm(FacturaType::class, $arFactura);
+        }
+        if($clase == "NC") {
+            $form = $this->createForm(FacturaNotaCreditoType::class, $arFactura);
+        }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $txtCodigoCliente = $request->request->get('txtCodigoCliente');
@@ -515,9 +521,17 @@ class FacturaController extends ControllerListenerGeneral
                 }
             }
         }
-        return $this->render('transporte/movimiento/comercial/factura/nuevo.html.twig', [
-            'arFactura' => $arFactura,
-            'form' => $form->createView()]);
+        if($clase == "FA") {
+            return $this->render('transporte/movimiento/comercial/factura/nuevo.html.twig', [
+                'arFactura' => $arFactura,
+                'form' => $form->createView()]);
+        }
+        if($clase == "NC") {
+            return $this->render('transporte/movimiento/comercial/factura/nuevoNotaCredito.html.twig', [
+                'arFactura' => $arFactura,
+                'form' => $form->createView()]);
+        }
+
     }
 
     /**
@@ -538,6 +552,8 @@ class FacturaController extends ControllerListenerGeneral
                 if (count($arrSeleccionados) > 0) {
                     $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->retencionTransporte();
                     foreach ($arrSeleccionados AS $codigo) {
+                        $arFactura->setCodigoFacturaReferenciaFk($codigo);
+                        $em->persist($arFactura);
                         //$arFacturaReferencia = $em->getRepository(TteFactura::class)->find($codigo);
                         $arFacturaDetallesReferencia = $em->getRepository(TteFacturaDetalle::class)->findBy(array('codigoFacturaFk' => $codigo));
                         foreach ($arFacturaDetallesReferencia as $arFacturaDetalleReferencia) {

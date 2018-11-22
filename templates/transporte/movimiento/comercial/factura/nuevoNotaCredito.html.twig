@@ -1,0 +1,72 @@
+{% extends 'base_transporte.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Informacion general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtNit" class="col-sm-2 control-label">Cliente:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                <input id="txtCodigoCliente"  name="txtCodigoCliente"  type="text" class="form-control" value="{{ arFactura.codigoClienteFk |default('') }}"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="{{ arFactura.clienteRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'txtCodigoCliente', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_facturaTipoRel" class="col-sm-2 control-label">Factura tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.facturaTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_facturaTipoRel" class="col-sm-2 control-label">Concepto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.facturaConceptoRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Soporte:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.soporte, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_plazoPago" class="col-sm-2 control-label">Plazo pago:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.plazoPago, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Comentario:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentario, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_lista') }}">Cancelar</a>
+
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        {#<script>#}
+            {#$(document).ready(function () {#}
+                {#$("#form_guardar").on('click', function (event) {#}
+                    {#event.preventDefault();#}
+                    {#//do something#}
+                    {#$(this).prop('disabled', true);#}
+                {#});#}
+            {#});#}
+        {#</script>#}
+        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

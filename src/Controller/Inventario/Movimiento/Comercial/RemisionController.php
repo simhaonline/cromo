@@ -68,6 +68,7 @@ class RemisionController extends ControllerListenerGeneral
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+                    $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
                     $session->set('filtroInvRemisionNumero', $form->get('txtNumero')->getData());
                     $session->set('filtroInvRemisionEstadoAutorizado', $form->get('chkEstadoAutorizado')->getData());
                     $session->set('filtroInvRemisionEstadoAprobado', $form->get('chkEstadoAprobado')->getData());

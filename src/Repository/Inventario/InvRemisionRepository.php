@@ -45,6 +45,9 @@ class InvRemisionRepository extends ServiceEntityRepository
         if ($session->get('filtroInvRemisionNumero') != "") {
             $queryBuilder->andWhere("r.numero = " . $session->get('filtroInvRemisionNumero'));
         }
+        if ($session->get('filtroInvCodigoTercero') != "") {
+            $queryBuilder->andWhere("r.codigoTerceroFk = " . $session->get('filtroInvCodigoTercero'));
+        }
         if($session->get('filtroInvRemisionTipo')) {
             $queryBuilder->andWhere("r.codigoRemisionTipoFk = '{$session->get('filtroInvRemisionTipo')}'");
         }

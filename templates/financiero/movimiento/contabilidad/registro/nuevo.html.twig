@@ -1,0 +1,58 @@
+{% extends 'base_recursoHumano.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Tercero:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.terceroRel) }}
+                </div>
+                <label for="" class="control-label col-sm-2">Cuenta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cuentaRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Comprobante:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.comprobanteRel) }}
+                </div>
+                <label for="" class="control-label col-sm-2">Centro costo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.centroCostoRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Debito:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrDebito) }}
+                </div>
+                <label for="" class="control-label col-sm-2">Credito:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrCredito) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Base:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrBase) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Descripcion:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.descripcion) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('financiero_movimiento_contabilidad_registro_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

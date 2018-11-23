@@ -30,7 +30,7 @@ class FinRegistro
     private $codigoComprobanteFk;
 
     /**
-     * @ORM\Column(name="codigo_cuenta_fk", type="string", length=20)
+     * @ORM\Column(name="codigo_cuenta_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaFk;
 
@@ -121,7 +121,23 @@ class FinRegistro
      * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCentroCosto", inversedBy="registrosCentroCostoRel")
      * @ORM\JoinColumn(name="codigo_centro_costo_fk", referencedColumnName="codigo_centro_costo_pk")
      */
-    private $centroCostoRel;
+    protected $centroCostoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -442,8 +458,5 @@ class FinRegistro
     {
         $this->centroCostoRel = $centroCostoRel;
     }
-
-
-
 }
 

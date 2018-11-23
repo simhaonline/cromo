@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Financiero\Movimiento\Contabilidad;
+namespace App\Controller\Financiero\Movimiento\Contabilidad\Asiento;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;

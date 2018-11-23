@@ -27,9 +27,9 @@ class RegistroType extends AbstractType
                 'class' => FinCuenta::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('tbl')
-                        ->orderBy('tbl.nombreCuenta', 'ASC');
+                        ->orderBy('tbl.nombre', 'ASC');
                 },
-                'choice_label' => 'nombreCuenta',
+                'choice_label' => 'nombre',
                 'label' => 'Cuenta:'
             ])
             ->add('terceroRel', EntityType::class, [
@@ -62,14 +62,11 @@ class RegistroType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Centro costo:'
             ])
-            ->add('fecha', DateType::class, ['label' => 'Fecha:'])
-            ->add('numero', NumberType::class, ['label' => 'Número:'])
-            ->add('debito', NumberType::class, ['label' => 'Debito:'])
-            ->add('credito', NumberType::class, ['label' => 'Credito:'])
-            ->add('base', NumberType::class, ['label' => 'Base:'])
-            ->add('descripcionContable', TextareaType::class, ['label' => 'Descripción:'])
-            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('vrDebito', NumberType::class, ['label' => 'Debito:'])
+            ->add('vrCredito', NumberType::class, ['label' => 'Credito:'])
+            ->add('vrBase', NumberType::class, ['label' => 'Base:'])
+            ->add('descripcion', TextareaType::class, ['label' => 'Descripción:'])
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -77,5 +74,39 @@ class RegistroType extends AbstractType
         $resolver->setDefaults([
             'data_class' => FinRegistro::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        return '[
+            {"campo":"codigoRegistroPk",      "tipo":"pk"    , "ayuda":"Código del registro",        "titulo":"ID"},
+            {"campo":"terceroRel.nombreCorto","tipo":"texto" , "ayuda":"Nombre del tercero",        "titulo":"TERCERO", "relacion":""},
+            {"campo":"codigoCuentaFk",        "tipo":"texto" , "ayuda":"Código de la cuenta",        "titulo":"CUENTA"},
+            {"campo":"codigoComprobanteFk",   "tipo":"texto" , "ayuda":"Código del registro",        "titulo":"COMPROBANTE"},
+            {"campo":"codigoCentroCostoFk",   "tipo":"texto" , "ayuda":"Código del centro de costo", "titulo":"CENTRO_COSTO"},
+            {"campo":"fecha",                 "tipo":"fecha" , "ayuda":"Fecha",                      "titulo":"FECHA"},
+            {"campo":"numero",                "tipo":"texto" , "ayuda":"Numero",                     "titulo":"NUMERO"},
+            {"campo":"vrDebito",              "tipo":"moneda", "ayuda":"Débito",                     "titulo":"DEBITO"},
+            {"campo":"vrCredito",             "tipo":"moneda", "ayuda":"Crédito",                    "titulo":"CREDITO"},
+            {"campo":"vrBase",                "tipo":"moneda", "ayuda":"Base",                       "titulo":"BASE"},
+            {"campo":"descripcion",           "tipo":"texto" , "ayuda":"Descripción contable",       "titulo":"DESCRIPCION"}
+        ]';
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        return '[
+            {"campo":"codigoRegistroPk",      "tipo":"pk"    , "ayuda":"Código del registro",        "titulo":"ID"},
+            {"campo":"terceroRel.nombreCorto","tipo":"texto" , "ayuda":"Nombre del tercero",        "titulo":"TERCERO", "relacion":""},
+            {"campo":"codigoCuentaFk",        "tipo":"texto" , "ayuda":"Código de la cuenta",        "titulo":"CUENTA"},
+            {"campo":"codigoComprobanteFk",   "tipo":"texto" , "ayuda":"Código del registro",        "titulo":"COMPROBANTE"},
+            {"campo":"codigoCentroCostoFk",   "tipo":"texto" , "ayuda":"Código del centro de costo", "titulo":"CENTRO_COSTO"},
+            {"campo":"fecha",                 "tipo":"fecha" , "ayuda":"Fecha",                      "titulo":"FECHA"},
+            {"campo":"numero",                "tipo":"texto" , "ayuda":"Numero",                     "titulo":"NUMERO"},
+            {"campo":"vrDebito",              "tipo":"moneda", "ayuda":"Débito",                     "titulo":"DEBITO"},
+            {"campo":"vrCredito",             "tipo":"moneda", "ayuda":"Crédito",                    "titulo":"CREDITO"},
+            {"campo":"vrBase",                "tipo":"moneda", "ayuda":"Base",                       "titulo":"BASE"},
+            {"campo":"descripcion",           "tipo":"texto" , "ayuda":"Descripción contable",       "titulo":"DESCRIPCION"}
+        ]';
     }
 }

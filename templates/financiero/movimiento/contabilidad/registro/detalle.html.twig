@@ -1,0 +1,41 @@
+{% extends 'base_financiero.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('financiero_movimiento_contabilidad_registro_lista') }}">Volver</a>&nbsp;&nbsp;
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td class="titulo">CODIGO:</td>
+            <td class="td-in-well">{{ arRegistro.codigoRegistroPk }}</td>
+            <td class="titulo">NUMERO:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arRegistro.numero }}</td>
+            <td class="titulo">DEBITO:</td>
+            <td align="right">{{ arRegistro.vrDebito | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">COMPROBANTE:</td>
+            <td class="td-in-well">{{ arRegistro.codigoComprobanteFk }} - {{ arRegistro.comprobanteRel ? arRegistro.comprobanteRel.nombre : '' }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arRegistro.fecha | date('Y-m-d') }}</td>
+            <td class="titulo">CREDITO:</td>
+            <td align="right">{{ arRegistro.vrCredito | number_format(0, '.', ',') }}</td>
+        </tr>
+    </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

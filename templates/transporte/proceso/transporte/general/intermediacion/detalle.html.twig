@@ -33,7 +33,6 @@
                         <tr>
                             <th>ID</th>
                             <th>CLIENTE</th>
-                            <th>TIPO</th>
                             <th>FLETE</th>
                             <th>PAGO</th>
                             <th>PAR</th>
@@ -46,7 +45,6 @@
                             <tr>
                                 <td><input type="hidden" name="arrCodigo[]" value="{{ arIntermediacionDetalle.codigoIntermediacionDetallePk }}">{{ arIntermediacionDetalle.codigoIntermediacionDetallePk }}</td>
                                 <td>{{ arIntermediacionDetalle.clienteNombreCorto }}</td>
-                                <td>{{ arIntermediacionDetalle.facturaTipoNombre }}</td>
                                 <td class="numero">{{ arIntermediacionDetalle.vrFlete | number_format(0, '.', ',')}}</td>
                                 <td class="numero">{{ arIntermediacionDetalle.vrPago | number_format(0, '.', ',')}}</td>
                                 <td class="numero">{{ arIntermediacionDetalle.porcentajeParticipacion | number_format(0, '.', ',')}}</td>

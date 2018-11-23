@@ -69,6 +69,11 @@ class TteIntermediacionDetalle
     private $vrIngreso = 0;
 
     /**
+     * @ORM\Column(name="estado_contabilizado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoContabilizado = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteIntermediacion", inversedBy="intermediacionesDetallesIntermediacionRel")
      * @ORM\JoinColumn(name="codigo_intermediacion_fk", referencedColumnName="codigo_intermediacion_pk")
      */
@@ -292,6 +297,22 @@ class TteIntermediacionDetalle
     public function setClienteRel( $clienteRel ): void
     {
         $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado( $estadoContabilizado ): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
     }
 
 

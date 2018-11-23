@@ -699,7 +699,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->where("d.fecha >='" . $fechaDesde . "' AND d.fecha <= '" . $fechaHasta . "'")
         ->andWhere('d.estadoAprobado = 1');
         $arrResultado = $queryBuilder->getQuery()->getSingleResult();
-        if($arrResultado) {
+        if($arrResultado['fletePago']) {
             $valor = $arrResultado['fletePago'];
         }
         return $valor;

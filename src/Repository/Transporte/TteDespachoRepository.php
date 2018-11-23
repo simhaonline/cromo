@@ -1717,7 +1717,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         ->andWhere('dt.viaje = 1')
         ->andWhere('d.estadoAprobado = 1');
         $arrResultado = $queryBuilder->getQuery()->getSingleResult();
-        if($arrResultado) {
+        if($arrResultado['fletePago']) {
             $valor = $arrResultado['fletePago'];
         }
         return $valor;

@@ -17,7 +17,7 @@ class ComprobanteType extends AbstractType
             ->add('codigoComprobantePk', TextType::class, ['label' => 'Codigo comprobante:'])
             ->add('nombre', TextType::class, ['label' => 'Nombre:'])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -25,5 +25,24 @@ class ComprobanteType extends AbstractType
         $resolver->setDefaults([
             'data_class' => FinComprobante::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoComprobantePk",     "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
+            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre del comprobante",       "titulo":"NOMBRE"}          
+                                                                          
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoComprobantePk",     "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
+            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre del comprobante",       "titulo":"NOMBRE"}                               
+        ]';
+        return $campos;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Utilidades\Estandares;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig\Extension\AbstractExtension;
@@ -9,6 +10,7 @@ use Twig\Extension\AbstractExtension;
 //Funciones personalizadas para twig
 class AppExtension extends AbstractExtension
 {
+
     public function getEnv($env)
     {
         return getenv($env);
@@ -36,6 +38,7 @@ class AppExtension extends AbstractExtension
             new \Twig_Function('generarArrRegistros', [$this, "generarArrRegistros"]),
             new \Twig_Function('validarBooleano', [$this, "validarBooleano"]),
             new \Twig_Function('obtenerFormView', [$this, "obtenerFormView"]),
+            new \Twig_Function('validarRuta', [$this, "validarRuta"]),
         ];
     }
 
@@ -312,6 +315,15 @@ class AppExtension extends AbstractExtension
             }
         }
         return $arrRegistro;
+    }
+
+    /**
+     * @param $ruta
+     * @return bool
+     */
+    public function validarRuta($ruta){
+        return (null === Estandares::getRouter()->getRouteCollection()->get($ruta)) ? false : true;
+
     }
 
     /**

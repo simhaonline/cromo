@@ -19,6 +19,7 @@ final class Estandares
     {
         global $kernel;
         $this->form = $kernel->getContainer()->get("form.factory");
+        $this->router = $kernel->getContainer()->get("router");
     }
 
     private static function getInstance()
@@ -33,6 +34,11 @@ final class Estandares
     public static function getForm()
     {
         return self::getInstance()->form;
+    }
+
+    public static function getRouter()
+    {
+        return self::getInstance()->router;
     }
 
     /**

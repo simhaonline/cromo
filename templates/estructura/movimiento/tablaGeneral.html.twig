@@ -21,7 +21,13 @@
                     {% else %}
                         {% set dato = arDato[campo.campo] %}
                     {% endif %}
-                    {% if campo.tipo == "fecha" %}
+                    {% if campo.tipo == "pk" %}
+                        {% if validarRuta(arrDatosLista.ruta ~ '_referencia') %}
+                            <td><a href="{{ path(arrDatosLista.ruta ~ '_referencia',{'id': dato }) }}">{{ dato }}</a></td>
+                        {% else %}
+                            <td>{{ dato }}</td>
+                        {% endif %}
+                    {% elseif campo.tipo == "fecha" %}
                         <td>{{ dato  | date('Y-m-d') }} </td>
                     {% elseif campo.tipo == "moneda" %}
                         <td class="numero">{{ dato | number_format(0, '.', ',') }}</td>

@@ -163,13 +163,13 @@ class Factura2 extends \FPDF
     {
         $this->Ln(6);
         $this->SetX(10);
-        $header = array('DESCRIPCION', 'LOTE', 'CANT', 'VR UNIT', 'IVA', 'TOTAL', 'OBSERVACIONES');
+        $header = array('DESCRIPCION', 'REF', 'LOTE', 'CANT', 'VR UNIT', 'IVA', 'TOTAL', 'OBSERVACIONES');
         $this->SetFillColor(225, 225, 225);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
 
         //creamos la cabecera de la tabla.
-        $w = array(75, 20, 10, 15, 10, 15, 50);
+        $w = array(60, 20 , 15, 10, 15, 10, 15, 50);
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
         }
@@ -197,8 +197,9 @@ class Factura2 extends \FPDF
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $pdf->SetX(10);
             $pdf->SetFont('Arial', '', 6);
-            $pdf->Cell(75, 4, substr(utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()),0,57), 1, 0, 'L');
-            $pdf->Cell(20, 4, $arMovimientoDetalle->getLoteFk(), 1, 0, 'L');
+            $pdf->Cell(60, 4, substr(utf8_decode($arMovimientoDetalle->getItemRel()->getNombre()),0,57), 1, 0, 'L');
+            $pdf->Cell(20, 4, $arMovimientoDetalle->getItemRel()->getReferencia(), 1, 0, 'L');
+            $pdf->Cell(15, 4, $arMovimientoDetalle->getLoteFk(), 1, 0, 'L');
             $pdf->Cell(10, 4, $arMovimientoDetalle->getCantidad(), 1, 0, 'C');
             $pdf->Cell(15, 4, number_format($arMovimientoDetalle->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(10, 4, $arMovimientoDetalle->getPorcentajeIva() . '%', 1, 0, 'C');

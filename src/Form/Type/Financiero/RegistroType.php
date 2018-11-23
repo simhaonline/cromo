@@ -80,12 +80,12 @@ class RegistroType extends AbstractType
     {
         return '[
             {"campo":"codigoRegistroPk",      "tipo":"pk"    , "ayuda":"Código del registro",        "titulo":"ID"},
+            {"campo":"numero",                "tipo":"texto" , "ayuda":"Numero",                     "titulo":"NUMERO"},
             {"campo":"terceroRel.nombreCorto","tipo":"texto" , "ayuda":"Nombre del tercero",        "titulo":"TERCERO", "relacion":""},
             {"campo":"codigoCuentaFk",        "tipo":"texto" , "ayuda":"Código de la cuenta",        "titulo":"CUENTA"},
             {"campo":"codigoComprobanteFk",   "tipo":"texto" , "ayuda":"Código del registro",        "titulo":"COMPROBANTE"},
             {"campo":"codigoCentroCostoFk",   "tipo":"texto" , "ayuda":"Código del centro de costo", "titulo":"CENTRO_COSTO"},
             {"campo":"fecha",                 "tipo":"fecha" , "ayuda":"Fecha",                      "titulo":"FECHA"},
-            {"campo":"numero",                "tipo":"texto" , "ayuda":"Numero",                     "titulo":"NUMERO"},
             {"campo":"vrDebito",              "tipo":"moneda", "ayuda":"Débito",                     "titulo":"DEBITO"},
             {"campo":"vrCredito",             "tipo":"moneda", "ayuda":"Crédito",                    "titulo":"CREDITO"},
             {"campo":"vrBase",                "tipo":"moneda", "ayuda":"Base",                       "titulo":"BASE"},
@@ -108,5 +108,19 @@ class RegistroType extends AbstractType
             {"campo":"vrBase",                "tipo":"moneda", "ayuda":"Base",                       "titulo":"BASE"},
             {"campo":"descripcion",           "tipo":"texto" , "ayuda":"Descripción contable",       "titulo":"DESCRIPCION"}
         ]';
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+            {"child":"numero", "tipo":"TextType", "propiedades":{"label":"Numero"}},
+            {"child":"codigoComprobanteFk","tipo":"EntityType","propiedades":{"class":"FinComprobante","choice_label":"nombre","label":"Comprobante"}},
+            {"child":"fechaDesde","tipo":"DateType","propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaHasta","tipo":"DateType","propiedades":{"label":"Fecha Hasta"}},
+            {"child":"filtrarFecha","tipo":"CheckboxType","propiedades":{"label":"Filtrar Fecha"}}
+        ]';
+
+        return $campos;
     }
 }

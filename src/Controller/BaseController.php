@@ -33,58 +33,54 @@ abstract class BaseController extends Controller
         ];
     }
 
-    protected function getFiltroLista(){
+    protected function getFiltroLista()
+    {
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
         $campos = json_decode($namespaceType::getEstructuraPropiedadesFiltro(), true);
-        $session=new Session();
-        $form=$this->createFormBuilder();
-        if($campos){
-            foreach($campos as $campo){
-                $tipoNombre=$campo['tipo'];
-                $tipo="Symfony\\Component\Form\Extension\\Core\\Type\\{$tipoNombre}";
-                if($campo['tipo']=="EntityType"){
-                    $session->set($this->claseNombre."_".$campo['child'],'');
-                    $entidad=$campo['propiedades']['class'];
+        $session = new Session();
+        $form = $this->createFormBuilder();
+        if ($campos) {
+            foreach ($campos as $campo) {
+                $tipoNombre = $campo['tipo'];
+                $tipo = "Symfony\\Component\Form\Extension\\Core\\Type\\{$tipoNombre}";
+                if ($campo['tipo'] == "EntityType") {
+                    $session->set($this->claseNombre . "_" . $campo['child'], '');
+                    $entidad = $campo['propiedades']['class'];
                     $nombreRepositorio = "App:{$this->modulo}\\{$entidad}";
                     $form->add($campo['child'], EntityType::class,
                         [
-                            'label'=>$campo['propiedades']['label'],
-                            'required'=>false,
-                            'class'=>$nombreRepositorio,
-                            'choice_label'=>$campo['propiedades']['choice_label'],
+                            'label' => $campo['propiedades']['label'],
+                            'required' => false,
+                            'class' => $nombreRepositorio,
+                            'choice_label' => $campo['propiedades']['choice_label'],
                             'placeholder' => "TODO",
                         ]);
-                }
-                else if($campo['tipo']=="DateType"){
-                    $session->set($this->claseNombre."_".$campo['child'],null);
+                } else if ($campo['tipo'] == "DateType") {
+                    $session->set($this->claseNombre . "_" . $campo['child'], null);
                     $dateFecha = new \DateTime('now');
                     $form->add($campo['child'], $tipo,
                         [
-                            'required'=>false,
-                            'data'=>$dateFecha,
-                            'widget'=>'single_text',
-                            'format'=>'yyyy-MM-dd',
-                            'attr'=>array('class' => 'date')
+                            'required' => false,
+                            'data' => $dateFecha,
+                            'widget' => 'single_text',
+                            'format' => 'yyyy-MM-dd',
+                            'attr' => array('class' => 'date')
                         ]);
-                }
-                else if($campo['tipo']!="SubmitType" && $campo['tipo']!="CheckboxType" && $campo['tipo']!="ChoiceType"){
-                    $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false, 'data'=>$session->get($this->claseNombre."_".$campo['child'])??""]);
-                }
-
-                else{
-                    if($campo['tipo']=="ChoiceType"){
-                    $session->set($this->claseNombre."_".$campo['child'],null);
-                    $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false,'placeholder' => 'TODO' ,'attr'=>['class'=>'form-control'],'choices'=>$campo['propiedades']['choices']]);
-                    }
-                    else{
-                        $form->add($campo['child'], $tipo,['label'=>$campo['propiedades']['label'],'required'=>false,'attr'=>$campo['tipo']!="CheckboxType"?['class'=>'form-control']:[]]);
+                } else if ($campo['tipo'] != "SubmitType" && $campo['tipo'] != "CheckboxType" && $campo['tipo'] != "ChoiceType") {
+                    $form->add($campo['child'], $tipo, ['label' => $campo['propiedades']['label'], 'required' => false, 'data' => $session->get($this->claseNombre . "_" . $campo['child']) ?? ""]);
+                } else {
+                    if ($campo['tipo'] == "ChoiceType") {
+                        $session->set($this->claseNombre . "_" . $campo['child'], null);
+                        $form->add($campo['child'], $tipo, ['label' => $campo['propiedades']['label'], 'required' => false, 'placeholder' => 'TODO', 'attr' => ['class' => 'form-control'], 'choices' => $campo['propiedades']['choices']]);
+                    } else {
+                        $form->add($campo['child'], $tipo, ['label' => $campo['propiedades']['label'], 'required' => false, 'attr' => $campo['tipo'] != "CheckboxType" ? ['class' => 'form-control'] : []]);
                     }
                 }
             }
-            $form->add("btnFiltro",SubmitType::class,['label'=>"Filtro",'attr'=> ['class'=>'filtrar btn btn-default btn-sm', 'style'=>'float:right']]);
+            $form->add("btnFiltro", SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']]);
         }
 
-        return $form ->getForm();
+        return $form->getForm();
     }
 
     protected function botoneraLista()
@@ -109,7 +105,7 @@ abstract class BaseController extends Controller
         $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos);
         switch ($submittedButton) {
             case 'btnExcel':
-                $this->generarExcel($campos,$queryBuilder->getQuery()->execute(), $this->nombre);
+                $this->generarExcel($campos, $queryBuilder->getQuery()->execute(), $this->nombre);
                 break;
         }
     }
@@ -122,7 +118,7 @@ abstract class BaseController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function generarExcel($campos,$arrDatos, $nombre)
+    public function generarExcel($campos, $arrDatos, $nombre)
     {
         if (count($arrDatos) > 0) {
             $spreadsheet = new Spreadsheet();
@@ -130,7 +126,7 @@ abstract class BaseController extends Controller
             $j = 0;
             //Se obtienen las columnas del archivo
             $arrColumnas = array_keys($arrDatos[0]);
-            $arrCampos = array_map(function ($campo){
+            $arrCampos = array_map(function ($campo) {
                 return $campo->titulo;
             }
                 , $campos);
@@ -148,8 +144,8 @@ abstract class BaseController extends Controller
                     $dato = $datos[$arrColumnas[$col]];
                     if ($dato instanceof \DateTime) {
                         $dato = $dato->format('Y-m-d');
-                    } elseif(is_bool($dato)){
-                        $dato = $dato ? 'SI':'NO';
+                    } elseif (is_bool($dato)) {
+                        $dato = $dato ? 'SI' : 'NO';
                     }
                     $spreadsheet->getActiveSheet()->getStyle($i)->getFont()->setBold(false);
                     $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
@@ -242,15 +238,16 @@ abstract class BaseController extends Controller
      * @param $campos
      * @return QueryBuilder
      */
-    private function getGenerarQueryConFiltro($nombreRepositorio, $campos){
-        $claseNombre=$this->claseNombre;
+    private function getGenerarQueryConFiltro($nombreRepositorio, $campos)
+    {
+        $claseNombre = $this->claseNombre;
         $arrRelaciones = [];
-        $session= new Session();
+        $session = new Session();
         /** @var  $queryBuilder QueryBuilder */
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio, 'e')
             ->select('e.' . $campos[0]->campo);
         foreach ($campos as $campo) {
-            $filtro=$session->get($claseNombre."_".$campo->campo);
+            $filtro = $session->get($claseNombre . "_" . $campo->campo);
             if ($campo->tipo != "pk" && !isset($campo->relacion)) {
                 $queryBuilder->addSelect('e.' . $campo->campo);
             } elseif (isset($campo->relacion)) {
@@ -263,26 +260,25 @@ abstract class BaseController extends Controller
                 } else {
                     $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
                 }
-                if($claseNombre){
-                    if($filtro!="" && $filtro!=null){
-                        $queryBuilder->andWhere($arrRel[0]. '.'.$campo->campo."=".$filtro);
+                if ($claseNombre) {
+                    if ($filtro != "" && $filtro != null) {
+                        $queryBuilder->andWhere($arrRel[0] . '.' . $campo->campo . "=" . $filtro);
                     }
                 }
             }
 
-            if($claseNombre){
-                if(strlen($campo->campo)>=5 && substr($campo->campo,0,5)=="fecha"){
-                    $fechaDesde=$session->get($claseNombre."_".$campo->campo."Desde");
-                    $fechaHasta=$session->get($claseNombre."_".$campo->campo."Hasta");
-                    if($fechaDesde && $fechaHasta){
-                    $queryBuilder->andWhere('e.'. $campo->campo.">='{$fechaDesde}'")
-                        ->andWhere('e.'. $campo->campo."<='{$fechaHasta}'");
+            if ($claseNombre) {
+                if (strlen($campo->campo) >= 5 && substr($campo->campo, 0, 5) == "fecha") {
+                    $fechaDesde = $session->get($claseNombre . "_" . $campo->campo . "Desde");
+                    $fechaHasta = $session->get($claseNombre . "_" . $campo->campo . "Hasta");
+                    if ($fechaDesde && $fechaHasta) {
+                        $queryBuilder->andWhere('e.' . $campo->campo . ">='{$fechaDesde}'")
+                            ->andWhere('e.' . $campo->campo . "<='{$fechaHasta}'");
                     }
-                }
-                else{
-                    if($filtro !== "" && $filtro !== null ){
+                } else {
+                    if ($filtro !== "" && $filtro !== null) {
 
-                        $queryBuilder->andWhere('e.'. $campo->campo."='{$filtro}'");
+                        $queryBuilder->andWhere('e.' . $campo->campo . "='{$filtro}'");
                     }
                 }
             }

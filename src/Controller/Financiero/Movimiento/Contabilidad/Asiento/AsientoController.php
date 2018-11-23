@@ -29,10 +29,6 @@ class AsientoController extends ControllerListenerGeneral
     protected $grupo = "Contabilidad";
     protected $nombre = "Asiento";
 
-
-
-
-
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -43,13 +39,13 @@ class AsientoController extends ControllerListenerGeneral
     public function lista(Request $request)
     {
         $this->request = $request;
-        $session=new Session();
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
-        $formFiltro=$this->getFiltroLista();
+        $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
-        $datos=$this->getDatosLista();
+        $datos = $this->getDatosLista();
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Asientos");
@@ -59,25 +55,25 @@ class AsientoController extends ControllerListenerGeneral
             }
         }
 
-        if($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                $session->set('FinAsiento_numero',$formFiltro->get('numero')->getData());
-                $session->set('FinAsiento_codigoComprobanteFk',$formFiltro->get('codigoComprobanteFk')->getData()!=""?$formFiltro->get('codigoComprobanteFk')->getData()->getCodigoComprobantePk():"");
-                $session->set('FinAsiento_estadoAutorizado',$formFiltro->get('estadoAutorizado')->getData());
-                $session->set('FinAsiento_estadoAprobado',$formFiltro->get('estadoAprobado')->getData());
-                $session->set('FinAsiento_estadoAnulado',$formFiltro->get('estadoAnulado')->getData());
-                $session->set('FinAsiento_filtrarFecha',$formFiltro->get('filtrarFecha')->getData());
-                if($formFiltro->get('filtrarFecha')->getData()){
-                    $session->set('FinAsiento_fechaDesde',$formFiltro->get('fechaDesde')->getData()->format('Y-m-d'));
-                    $session->set('FinAsiento_fechaHasta',$formFiltro->get('fechaHasta')->getData()->format('Y-m-d'));
+                $session->set('FinAsiento_estadoAutorizado', $formFiltro->get('estadoAutorizado')->getData());
+                $session->set('FinAsiento_estadoAprobado', $formFiltro->get('estadoAprobado')->getData());
+                $session->set('FinAsiento_estadoAnulado', $formFiltro->get('estadoAnulado')->getData());
+                $session->set('FinAsiento_numero', $formFiltro->get('numero')->getData());
+                $session->set('FinAsiento_codigoComprobanteFk', $formFiltro->get('codigoComprobanteFk')->getData() != "" ? $formFiltro->get('codigoComprobanteFk')->getData()->getCodigoComprobantePk() : "");
+                $session->set('FinAsiento_filtrarFecha', $formFiltro->get('filtrarFecha')->getData());
+                if ($formFiltro->get('filtrarFecha')->getData()) {
+                    $session->set('FinAsiento_fechaDesde', $formFiltro->get('fechaDesde')->getData()->format('Y-m-d'));
+                    $session->set('FinAsiento_fechaHasta', $formFiltro->get('fechaHasta')->getData()->format('Y-m-d'));
                 }
-                $datos=$this->getDatosLista();
+                $datos = $this->getDatosLista();
             }
         }
         return $this->render('financiero/movimiento/contabilidad/asiento/lista.html.twig', [
-            'arrDatosLista' =>$datos,
+            'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
-            'formFiltro'=> $formFiltro->createView(),
+            'formFiltro' => $formFiltro->createView(),
         ]);
     }
 
@@ -116,6 +112,10 @@ class AsientoController extends ControllerListenerGeneral
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/financiero/movimiento/contabilidad/asiento/detalle/{id}", name="financiero_movimiento_contabilidad_asiento_detalle")
      */
     public function detalle(Request $request, $id)

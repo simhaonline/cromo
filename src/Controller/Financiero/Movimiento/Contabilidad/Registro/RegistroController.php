@@ -41,9 +41,12 @@ class RegistroController extends ControllerListenerGeneral
     public function lista(Request $request)
     {
         $this->request = $request;
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
         $datos = $this->getDatosLista();
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
@@ -53,9 +56,22 @@ class RegistroController extends ControllerListenerGeneral
 
             }
         }
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                $session->set($this->claseNombre . '_numero', $formFiltro->get('numero')->getData());
+                $session->set($this->claseNombre . '_codigoComprobanteFk', $formFiltro->get('codigoComprobanteFk')->getData() != "" ? $formFiltro->get('codigoComprobanteFk')->getData()->getCodigoComprobantePk() : "");
+                $session->set($this->claseNombre . '_filtrarFecha', $formFiltro->get('filtrarFecha')->getData());
+                if ($formFiltro->get('filtrarFecha')->getData()) {
+                    $session->set($this->claseNombre . '_fechaDesde', $formFiltro->get('fechaDesde')->getData()->format('Y-m-d'));
+                    $session->set($this->claseNombre . '_fechaHasta', $formFiltro->get('fechaHasta')->getData()->format('Y-m-d'));
+                }
+                $datos = $this->getDatosLista();
+            }
+        }
         return $this->render('financiero/movimiento/contabilidad/registro/lista.html.twig', [
             'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView()
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView()
         ]);
     }
 

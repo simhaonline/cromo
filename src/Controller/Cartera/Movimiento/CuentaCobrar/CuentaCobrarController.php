@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
+use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinCuenta;
@@ -98,17 +99,24 @@ class CuentaCobrarController extends ControllerListenerGeneral
         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
         $form = Estandares::botonera(false,false,false);
         $form->handleRequest($request);
-        return $this->render('financiero/movimiento/contabilidad/asiento/detalle.html.twig', [
+        return $this->render('cartera/movimiento/cuentaCobrar/detalle.html.twig', [
             'arCuentaCobrar' => $arCuentaCobrar,
             'form' => $form->createView()
         ]);
     }
 
     /**
-     * @param $id integer
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/cartera/movimiento/cartera/cuentacobrar/referencia/{id}", name="cartera_movimiento_cartera_cuentacobrar_referencia")
      */
     public function referencia($id){
-
+        $em = $this->getDoctrine()->getManager();
+        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
+        $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(['codigoCuentaCobrarFk' => $id]);
+        return $this->render('cartera/movimiento/cuentaCobrar/referencia.html.twig',[
+            'arCuentaCobrar' => $arCuentaCobrar,
+            'arReciboDetalles' => $arReciboDetalles
+        ]);
     }
 }

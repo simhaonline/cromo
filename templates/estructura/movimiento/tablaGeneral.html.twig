@@ -23,7 +23,7 @@
                     {% endif %}
                     {% if campo.tipo == "pk" %}
                         {% if validarRuta(arrDatosLista.ruta ~ '_referencia') %}
-                            <td><a href="{{ path(arrDatosLista.ruta ~ '_referencia',{'id': dato }) }}">{{ dato }}</a></td>
+                            <td><a href="javascript:abrirVentana3('{{ path(arrDatosLista.ruta ~ '_referencia',{'id': dato }) }}','referencia',600,900)">{{ dato }}</a></td>
                         {% else %}
                             <td>{{ dato }}</td>
                         {% endif %}

@@ -4,6 +4,7 @@ DELETE FROM tte_novedad;
 DELETE FROM tte_monitoreo_registro;
 DELETE FROM tte_monitoreo_detalle;
 DELETE FROM tte_monitoreo;
+DELETE FROM tte_factura_detalle WHERE tte_factura_detalle.codigo_factura_detalle_fk IS NOT NULL;
 DELETE FROM tte_factura_detalle;
 DELETE FROM tte_despacho_detalle;
 DELETE FROM tte_recibo;

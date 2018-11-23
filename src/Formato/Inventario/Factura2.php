@@ -150,10 +150,17 @@ class Factura2 extends \FPDF
         $this->SetFont('Arial', 'B', 9);
         $this->SetTextColor(0, 0,0);
         $this->SetXY(18.5, 87);
+        $this->Cell(15, 4, 'SOPORTE:', 0, 0, 'L', 0);
+        $this->SetFont('Arial', '', 8);
+        $this->SetX(52);
+        $this->Cell(15, 4, utf8_decode($arMovimiento->getSoporte()), 0, 0, 'L', 0);
+
+        $this->SetFont('Arial', 'B', 9);
+        $this->SetXY(18.5, 91);
         $this->Cell(15, 4, 'POR CONCEPTO DE:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
         $this->SetX(52);
-        $this->MultiCell(147, 4, $arMovimiento->getComentarios(), 0, 'L',  0);
+        $this->MultiCell(147, 4, utf8_decode($arMovimiento->getComentarios()), 0, 'L',  0);
         $this->Ln();
 
         $this->EncabezadoDetalles();

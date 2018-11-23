@@ -23,7 +23,7 @@ class CuentaType extends AbstractType
             ->add('exigeBase', CheckboxType::class, ['label' => 'Exige base', 'required' => false])
             ->add('permiteMovimiento', CheckboxType::class, ['label' => 'Permite movimientos', 'required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -37,8 +37,7 @@ class CuentaType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoCuentaPk",          "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
-            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre de la cuenta",       "titulo":"NOMBRE"},
-            {"campo":"codigoCuentaPadreFk",     "tipo":"texto"  ,"ayuda":"Cuenta padre",       "titulo":"CUENTA PADRE"},   
+            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre de la cuenta",       "titulo":"NOMBRE"}, 
             {"campo":"exigeTercero",            "tipo":"bool"  ,"ayuda":"La cuenta exige tercero",     "titulo":"EXIGE TERCERO"},
             {"campo":"exigeCentroCosto",        "tipo":"bool"  ,"ayuda":"La cuenta exige centro de costos",     "titulo":"EXIGE CENTRO COSTO"},
             {"campo":"exigeBase",               "tipo":"bool"  ,"ayuda":"Exige base",     "titulo":"EXIGE BASE DE RETENCION"},

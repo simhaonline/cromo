@@ -37,9 +37,7 @@ class InvConfiguracionRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvConfiguracion::class, 'c')
-//            ->select('c.vrBaseRetencionFuenteVenta')
             ->select('c.vrBaseRetencionIvaVenta')
-//            ->addSelect('c.porcentajeRetencionFuente')
             ->addSelect('c.porcentajeRetencionIva')
             ->where('c.codigoConfiguracionPk = 1');
 

@@ -68,6 +68,7 @@
                             <th>ID</th>
                             <th>ITEM</th>
                             <th>NOMBRE</th>
+                            <th>REFERENCIA</th>
                             <th>MARCA</th>
                             <th>LOTE</th>
                             <th>BODEGA</th>
@@ -91,6 +92,7 @@
                                                                                       value="{{ arRemisionDetalle.codigoRemisionDetallePk }}"></td>
                                 <td>{{ arRemisionDetalle.codigoItemFk }}</td>
                                 <td>{{ arRemisionDetalle.itemNombre | default('') }}</td>
+                                <td>{{ arRemisionDetalle.itemReferencia | default('') }}</td>
                                 <td>{{ arRemisionDetalle.itemMarcaNombre | default('') }}</td>
                                 {% if arRemision.estadoAutorizado %}
                                     <td>{{ arRemisionDetalle.loteFk }}</td>

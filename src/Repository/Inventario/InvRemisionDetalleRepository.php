@@ -31,6 +31,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->addSelect('rd.cantidad')
             ->addSelect('rd.cantidadPendiente')
             ->addSelect('i.nombre as itemNombre')
+            ->addSelect('i.referencia as itemReferencia')
             ->addSelect('m.nombre as itemMarcaNombre')
             ->addSelect('rd.cantidadAfectada')
             ->addSelect('rd.vrPrecio')

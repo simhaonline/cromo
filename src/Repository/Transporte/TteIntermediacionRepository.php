@@ -62,17 +62,20 @@ class TteIntermediacionRepository extends ServiceEntityRepository
         $ingresoTotal = 0;
         $arrFleteCobroDetallados = $em->getRepository(TteFactura::class)->fleteCobroDetallado($fechaDesde, $fechaHasta);
         foreach ($arrFleteCobroDetallados as $arrFleteCobroDetallado) {
-            $arFacturaTipo = $em->getRepository(TteFacturaTipo::class)->find($arrFleteCobroDetallado['codigoFacturaTipoFk']);
+            //$arFacturaTipo = $em->getRepository(TteFacturaTipo::class)->find($arrFleteCobroDetallado['codigoFacturaTipoFk']);
             $arCliente = $em->getRepository(TteCliente::class)->find($arrFleteCobroDetallado['codigoClienteFk']);
             $arIntermediacionDetalle = new TteIntermediacionDetalle();
             $arIntermediacionDetalle->setIntermediacionRel($arIntermediacion);
             $arIntermediacionDetalle->setAnio($arIntermediacion->getAnio());
             $arIntermediacionDetalle->setMes($arIntermediacion->getMes());
             $arIntermediacionDetalle->setClienteRel($arCliente);
-            $arIntermediacionDetalle->setFacturaTipoRel($arFacturaTipo);
+            //$arIntermediacionDetalle->setFacturaTipoRel($arFacturaTipo);
 
             $flete = $arrFleteCobroDetallado['flete'];
-            $participacion = ($flete / $fleteCobro) * 100;
+            $participacion = 0;
+            if($fleteCobro > 0) {
+                $participacion = ($flete / $fleteCobro) * 100;
+            }
             $pago = ($fletePagoTotal * $participacion) / 100;
             $ingreso = $flete - $pago;
             $arIntermediacionDetalle->setPorcentajeParticipacion($participacion);

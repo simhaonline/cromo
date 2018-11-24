@@ -78,6 +78,11 @@ class TteConfiguracion
     private $codigoImpuestoRetencionTransporteFk;
 
     /**
+     * @ORM\Column(name="codigo_comprobante_intermediacion_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoComprobanteIntermediacionFk;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -267,6 +272,22 @@ class TteConfiguracion
     public function setCodigoImpuestoRetencionTransporteFk( $codigoImpuestoRetencionTransporteFk ): void
     {
         $this->codigoImpuestoRetencionTransporteFk = $codigoImpuestoRetencionTransporteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteIntermediacionFk()
+    {
+        return $this->codigoComprobanteIntermediacionFk;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteIntermediacionFk
+     */
+    public function setCodigoComprobanteIntermediacionFk( $codigoComprobanteIntermediacionFk ): void
+    {
+        $this->codigoComprobanteIntermediacionFk = $codigoComprobanteIntermediacionFk;
     }
 
 

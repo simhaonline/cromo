@@ -34,6 +34,11 @@ class TteIntermediacion
     private $mes;
 
     /**
+     * @ORM\Column(name="fecha", type="date", nullable=true)
+     */
+    private $fecha;
+
+    /**
      * @ORM\Column(name="vr_flete_pago", type="float", options={"default" : 0})
      */
     private $vrFletePago = 0;
@@ -59,14 +64,14 @@ class TteIntermediacion
     private $vrIngreso = 0;
 
     /**
-     * @ORM\Column(name="estado_generado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_autorizado", type="boolean", options={"default" : false}, nullable=true)
      */
-    private $estadoGenerado = false;
+    private $estadoAutorizado = false;
 
     /**
-     * @ORM\Column(name="estado_cerrado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_aprobado", type="boolean", options={"default" : false}, nullable=true)
      */
-    private $estadoCerrado = false;
+    private $estadoAprobado = false;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionDetalle", mappedBy="intermediacionRel")
@@ -140,54 +145,6 @@ class TteIntermediacion
     /**
      * @return mixed
      */
-    public function getVrFlete()
-    {
-        return $this->vrFlete;
-    }
-
-    /**
-     * @param mixed $vrFlete
-     */
-    public function setVrFlete( $vrFlete ): void
-    {
-        $this->vrFlete = $vrFlete;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoGenerado()
-    {
-        return $this->estadoGenerado;
-    }
-
-    /**
-     * @param mixed $estadoGenerado
-     */
-    public function setEstadoGenerado( $estadoGenerado ): void
-    {
-        $this->estadoGenerado = $estadoGenerado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoCerrado()
-    {
-        return $this->estadoCerrado;
-    }
-
-    /**
-     * @param mixed $estadoCerrado
-     */
-    public function setEstadoCerrado( $estadoCerrado ): void
-    {
-        $this->estadoCerrado = $estadoCerrado;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVrFletePagoRecogida()
     {
         return $this->vrFletePagoRecogida;
@@ -220,17 +177,17 @@ class TteIntermediacion
     /**
      * @return mixed
      */
-    public function getIntermediacionesDetallesIntermediacionRel()
+    public function getVrFlete()
     {
-        return $this->intermediacionesDetallesIntermediacionRel;
+        return $this->vrFlete;
     }
 
     /**
-     * @param mixed $intermediacionesDetallesIntermediacionRel
+     * @param mixed $vrFlete
      */
-    public function setIntermediacionesDetallesIntermediacionRel( $intermediacionesDetallesIntermediacionRel ): void
+    public function setVrFlete( $vrFlete ): void
     {
-        $this->intermediacionesDetallesIntermediacionRel = $intermediacionesDetallesIntermediacionRel;
+        $this->vrFlete = $vrFlete;
     }
 
     /**
@@ -247,6 +204,70 @@ class TteIntermediacion
     public function setVrIngreso( $vrIngreso ): void
     {
         $this->vrIngreso = $vrIngreso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado( $estadoAutorizado ): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado( $estadoAprobado ): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacionesDetallesIntermediacionRel()
+    {
+        return $this->intermediacionesDetallesIntermediacionRel;
+    }
+
+    /**
+     * @param mixed $intermediacionesDetallesIntermediacionRel
+     */
+    public function setIntermediacionesDetallesIntermediacionRel( $intermediacionesDetallesIntermediacionRel ): void
+    {
+        $this->intermediacionesDetallesIntermediacionRel = $intermediacionesDetallesIntermediacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha( $fecha ): void
+    {
+        $this->fecha = $fecha;
     }
 
 

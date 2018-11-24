@@ -4,6 +4,7 @@ namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteCierre;
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteConsecutivo;
 use App\Entity\Transporte\TteCosto;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
@@ -14,6 +15,7 @@ use App\Entity\Transporte\TteFacturaTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteIntermediacion;
 use App\Entity\Transporte\TteIntermediacionDetalle;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -31,7 +33,8 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             'SELECT i.codigoIntermediacionPk, 
         i.anio, 
         i.mes,
-        i.estadoGenerado,
+        i.estadoAutorizado,
+        i.estadoAprobado, 
         i.vrFletePago,
         i.vrFletePagoRecogida,
         i.vrFletePagoTotal,
@@ -42,69 +45,142 @@ class TteIntermediacionRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function generar($codigoIntermediacion): string
+    /**
+     * @param $arIntermediacion TteIntermediacion
+     * @return string
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function autorizar($arIntermediacion)
     {
         $em = $this->getEntityManager();
-        $respuesta = "";
-        $arIntermediacion = $em->getRepository(TteIntermediacion::class)->find($codigoIntermediacion);
-        $ultimoDia = date("d", (mktime(0, 0, 0, $arIntermediacion->getMes() + 1, 1, $arIntermediacion->getAnio()) - 1));
-        $fechaDesde = $arIntermediacion->getAnio() . "-" . $arIntermediacion->getMes() . "-01 00:00:00";
-        $fechaHasta = $arIntermediacion->getAnio() . "-" . $arIntermediacion->getMes() . "-" . $ultimoDia . " 23:59:00";
-        $fletePago = $em->getRepository(TteDespacho::class)->fletePago($fechaDesde, $fechaHasta);
-        $fletePagoRecogida = $em->getRepository(TteDespachoRecogida::class)->fletePago($fechaDesde, $fechaHasta);
-        $fletePagoTotal = $fletePago + $fletePagoRecogida;
-        $fleteCobro = $em->getRepository(TteFactura::class)->fleteCobro($fechaDesde, $fechaHasta);
-        $arIntermediacion->setVrFletePago($fletePago);
-        $arIntermediacion->setVrFletePagoRecogida($fletePagoRecogida);
-        $arIntermediacion->setVrFletePagoTotal($fletePagoTotal);
-        $arIntermediacion->setVrFlete($fleteCobro);
+        if(!$arIntermediacion->getEstadoAutorizado()) {
+            $ultimoDia = date("d", (mktime(0, 0, 0, $arIntermediacion->getMes() + 1, 1, $arIntermediacion->getAnio()) - 1));
+            $fechaDesde = $arIntermediacion->getAnio() . "-" . $arIntermediacion->getMes() . "-01 00:00:00";
+            $fechaHasta = $arIntermediacion->getAnio() . "-" . $arIntermediacion->getMes() . "-" . $ultimoDia . " 23:59:00";
+            $fletePago = $em->getRepository(TteDespacho::class)->fletePago($fechaDesde, $fechaHasta);
+            $fletePagoRecogida = $em->getRepository(TteDespachoRecogida::class)->fletePago($fechaDesde, $fechaHasta);
+            $fletePagoTotal = $fletePago + $fletePagoRecogida;
+            $fleteCobro = $em->getRepository(TteFactura::class)->fleteCobro($fechaDesde, $fechaHasta);
+            $arIntermediacion->setVrFletePago($fletePago);
+            $arIntermediacion->setVrFletePagoRecogida($fletePagoRecogida);
+            $arIntermediacion->setVrFletePagoTotal($fletePagoTotal);
+            $arIntermediacion->setVrFlete($fleteCobro);
 
-        $ingresoTotal = 0;
-        $arrFleteCobroDetallados = $em->getRepository(TteFactura::class)->fleteCobroDetallado($fechaDesde, $fechaHasta);
-        foreach ($arrFleteCobroDetallados as $arrFleteCobroDetallado) {
-            //$arFacturaTipo = $em->getRepository(TteFacturaTipo::class)->find($arrFleteCobroDetallado['codigoFacturaTipoFk']);
-            $arCliente = $em->getRepository(TteCliente::class)->find($arrFleteCobroDetallado['codigoClienteFk']);
-            $arIntermediacionDetalle = new TteIntermediacionDetalle();
-            $arIntermediacionDetalle->setIntermediacionRel($arIntermediacion);
-            $arIntermediacionDetalle->setAnio($arIntermediacion->getAnio());
-            $arIntermediacionDetalle->setMes($arIntermediacion->getMes());
-            $arIntermediacionDetalle->setClienteRel($arCliente);
-            //$arIntermediacionDetalle->setFacturaTipoRel($arFacturaTipo);
+            $ingresoTotal = 0;
+            $arrFleteCobroDetallados = $em->getRepository(TteFactura::class)->fleteCobroDetallado($fechaDesde, $fechaHasta);
+            foreach ($arrFleteCobroDetallados as $arrFleteCobroDetallado) {
+                $arFacturaTipo = $em->getRepository(TteFacturaTipo::class)->find($arrFleteCobroDetallado['codigoFacturaTipoFk']);
+                $arCliente = $em->getRepository(TteCliente::class)->find($arrFleteCobroDetallado['codigoClienteFk']);
+                $arIntermediacionDetalle = new TteIntermediacionDetalle();
+                $arIntermediacionDetalle->setIntermediacionRel($arIntermediacion);
+                $arIntermediacionDetalle->setAnio($arIntermediacion->getAnio());
+                $arIntermediacionDetalle->setMes($arIntermediacion->getMes());
+                $arIntermediacionDetalle->setFecha($arIntermediacion->getFecha());
+                $arIntermediacionDetalle->setClienteRel($arCliente);
+                $arIntermediacionDetalle->setFacturaTipoRel($arFacturaTipo);
 
-            $flete = $arrFleteCobroDetallado['flete'];
-            $participacion = 0;
-            if($fleteCobro > 0) {
+                $flete = $arrFleteCobroDetallado['flete'];
                 $participacion = ($flete / $fleteCobro) * 100;
+
+                $pago = ($fletePagoTotal * $participacion) / 100;
+                $ingreso = $flete - $pago;
+                $arIntermediacionDetalle->setPorcentajeParticipacion($participacion);
+                $arIntermediacionDetalle->setVrFlete($flete);
+                $arIntermediacionDetalle->setVrPago($pago);
+                $arIntermediacionDetalle->setVrIngreso($ingreso);
+                $arIntermediacionDetalle->setVrPagoOperado($pago * $arFacturaTipo->getOperacionComercial());
+                $arIntermediacionDetalle->setVrIngresoOperado($ingreso * $arFacturaTipo->getOperacionComercial());
+                $em->persist($arIntermediacionDetalle);
+                $ingresoTotal += $ingreso * $arFacturaTipo->getOperacionComercial();
             }
-            $pago = ($fletePagoTotal * $participacion) / 100;
-            $ingreso = $flete - $pago;
-            $arIntermediacionDetalle->setPorcentajeParticipacion($participacion);
-            $arIntermediacionDetalle->setVrFlete($flete);
-            $arIntermediacionDetalle->setVrPago($pago);
-            $arIntermediacionDetalle->setVrIngreso($ingreso);
-            $em->persist($arIntermediacionDetalle);
-            $ingresoTotal += $ingreso;
+            $arIntermediacion->setEstadoAutorizado(1);
+            $arIntermediacion->setVrIngreso($ingresoTotal);
+            $em->flush();
+        } else {
+            Mensajes::error("El documento ya esta autorizado");
         }
-        $arIntermediacion->setEstadoGenerado(1);
-        $arIntermediacion->setVrIngreso($ingresoTotal);
-        $em->flush();
-        return $respuesta;
-    }
-    public function deshacer($codigoIntermediacion): string
-    {
-        $em = $this->getEntityManager();
-        $respuesta = "";
-        $arIntermediacion = $em->getRepository(TteIntermediacion::class)->find($codigoIntermediacion);
-        $query = $em->createQuery('DELETE FROM App\Entity\Transporte\TteIntermediacionDetalle id WHERE id.codigoIntermediacionFk =' . $codigoIntermediacion);
-        $numDeleted = $query->execute();
-        $arIntermediacion->setEstadoGenerado(0);
-        $arIntermediacion->setVrFlete(0);
-        $arIntermediacion->setVrFletePago(0);
-        $arIntermediacion->setVrFletePagoRecogida(0);
-        $arIntermediacion->setVrFletePagoTotal(0);
-        $em->flush();
-        return $respuesta;
     }
 
+    /**
+     * @param $arIntermediacion TteIntermediacion
+     * @return string
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function desAutorizar($arIntermediacion)
+    {
+        $em = $this->getEntityManager();
+        if($arIntermediacion->getEstadoAutorizado() && !$arIntermediacion->getEstadoAprobado()) {
+            $query = $em->createQuery('DELETE FROM App\Entity\Transporte\TteIntermediacionDetalle id WHERE id.codigoIntermediacionFk =' . $arIntermediacion->getCodigoIntermediacionPk());
+            $numDeleted = $query->execute();
+            $arIntermediacion->setEstadoAutorizado(0);
+            $arIntermediacion->setVrFlete(0);
+            $arIntermediacion->setVrFletePago(0);
+            $arIntermediacion->setVrFletePagoRecogida(0);
+            $arIntermediacion->setVrFletePagoTotal(0);
+            $arIntermediacion->setVrIngreso(0);
+            $em->persist($arIntermediacion);
+            $em->flush();
+        } else {
+            Mensajes::error("El documento no esta autorizado o esta aprobado");
+        }
+    }
+
+    /**
+     * @param $arIntermediacion TteIntermediacion
+     * @return string
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function aprobar($arIntermediacion)
+    {
+        $em = $this->getEntityManager();
+        if($arIntermediacion->getEstadoAutorizado() && !$arIntermediacion->getEstadoAprobado()) {
+            $arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
+            $arIntermediacionDetalles = $em->getRepository(TteIntermediacionDetalle::class)->findBy(array('codigoIntermediacionFk' => $arIntermediacion->getCodigoIntermediacionPk()));
+            foreach ($arIntermediacionDetalles as $arIntermediacionDetalle) {
+                $arIntermediacionDetalle->setNumero($arConsecutivo->getIntermediacion());
+                $em->persist($arIntermediacionDetalle);
+                $arConsecutivo->setIntermediacion($arConsecutivo->getIntermediacion() + 1);
+            }
+            $em->persist($arConsecutivo);
+            $arIntermediacion->setEstadoAprobado(1);
+            $em->persist($arIntermediacion);
+            $em->flush();
+        } else {
+            Mensajes::error("El documento no esta autorizado o esta aprobado");
+        }
+    }
+
+    /**
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(TteIntermediacion::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if (count($this->getEntityManager()->getRepository(TteIntermediacionDetalle::class)->findBy(['codigoIntermediacionFk' => $arRegistro->getCodigoIntermediacionPk()])) <= 0) {
+                            $this->getEntityManager()->remove($arRegistro);
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado o autorizado';
+                    }
+                }
+                if($respuesta != ''){
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
+    }
 
 }

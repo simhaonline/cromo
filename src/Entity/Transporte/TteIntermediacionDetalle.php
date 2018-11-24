@@ -39,6 +39,16 @@ class TteIntermediacionDetalle
     private $mes;
 
     /**
+     * @ORM\Column(name="fecha", type="date", nullable=true)
+     */
+    private $fecha;
+
+    /**
+     * @ORM\Column(name="numero", type="integer", nullable=true)
+     */
+    private $numero = 0;
+
+    /**
      * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
      */
     private $codigoClienteFk;
@@ -67,6 +77,16 @@ class TteIntermediacionDetalle
      * @ORM\Column(name="vr_ingreso", type="float", options={"default" : 0}, nullable=true)
      */
     private $vrIngreso = 0;
+
+    /**
+     * @ORM\Column(name="vr_pago_operado", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $vrPagoOperado = 0;
+
+    /**
+     * @ORM\Column(name="vr_ingreso_operado", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $vrIngresoOperado = 0;
 
     /**
      * @ORM\Column(name="estado_contabilizado", type="boolean",options={"default" : false}, nullable=true)
@@ -313,6 +333,70 @@ class TteIntermediacionDetalle
     public function setEstadoContabilizado( $estadoContabilizado ): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPagoOperado()
+    {
+        return $this->vrPagoOperado;
+    }
+
+    /**
+     * @param mixed $vrPagoOperado
+     */
+    public function setVrPagoOperado( $vrPagoOperado ): void
+    {
+        $this->vrPagoOperado = $vrPagoOperado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIngresoOperado()
+    {
+        return $this->vrIngresoOperado;
+    }
+
+    /**
+     * @param mixed $vrIngresoOperado
+     */
+    public function setVrIngresoOperado( $vrIngresoOperado ): void
+    {
+        $this->vrIngresoOperado = $vrIngresoOperado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha( $fecha ): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero( $numero ): void
+    {
+        $this->numero = $numero;
     }
 
 

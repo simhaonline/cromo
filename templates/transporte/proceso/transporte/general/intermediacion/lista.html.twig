@@ -26,19 +26,8 @@
                 <td class="numero">{{ arIntermediacion.vrFletePagoRecogida | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arIntermediacion.vrFletePagoTotal | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arIntermediacion.vrFlete | number_format(0, '.', ',') }}</td>
-                <td>
-                    {% if arIntermediacion.estadoGenerado == 0 %}
-                        <button class="btn btn-default btn-xs" type="submit" name="OpGenerar"
-                                value="{{ arIntermediacion.codigoIntermediacionPk }}">Generar
-                        </button>
-                    {% else %}
-                        <button class="btn btn-default btn-xs" type="submit" name="OpDeshacer"
-                                value="{{ arIntermediacion.codigoIntermediacionPk }}">Deshacer
-                        </button>
-                    {% endif %}
-
-                </td>
                 <td style="text-align: center"><a href="{{ path('transporte_proceso_transporte_general_intermediacion_detalle', { 'id': arIntermediacion.codigoIntermediacionPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arIntermediacion.codigoIntermediacionPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -52,6 +41,9 @@
         {{ knp_pagination_render(arIntermediacions) }}
     </div>
     <div class="btn-toolbar" style="float: right">
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(form.btnEliminar) }}
+        </div>
         <div class="btn-group">
             <a class="btn btn-default btn-sm" href="{{ path('transporte_proceso_transporte_general_intermediacion_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>

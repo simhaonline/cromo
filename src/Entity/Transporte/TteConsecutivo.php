@@ -22,14 +22,9 @@ class TteConsecutivo
     private $codigoConsecutivoPk;
 
     /**
-     * @ORM\Column(name="nombre", type="string", length=60, nullable=true)
+     * @ORM\Column(name="intermediacion", type="integer")
      */
-    private $nombre;
-
-    /**
-     * @ORM\Column(name="consecutivo", type="integer")
-     */
-    private $consecutivo = 0;
+    private $intermediacion = 0;
 
     /**
      * @return mixed
@@ -42,7 +37,7 @@ class TteConsecutivo
     /**
      * @param mixed $codigoConsecutivoPk
      */
-    public function setCodigoConsecutivoPk($codigoConsecutivoPk): void
+    public function setCodigoConsecutivoPk( $codigoConsecutivoPk ): void
     {
         $this->codigoConsecutivoPk = $codigoConsecutivoPk;
     }
@@ -50,33 +45,17 @@ class TteConsecutivo
     /**
      * @return mixed
      */
-    public function getNombre()
+    public function getIntermediacion()
     {
-        return $this->nombre;
+        return $this->intermediacion;
     }
 
     /**
-     * @param mixed $nombre
+     * @param mixed $intermediacion
      */
-    public function setNombre($nombre): void
+    public function setIntermediacion( $intermediacion ): void
     {
-        $this->nombre = $nombre;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConsecutivo()
-    {
-        return $this->consecutivo;
-    }
-
-    /**
-     * @param mixed $consecutivo
-     */
-    public function setConsecutivo($consecutivo): void
-    {
-        $this->consecutivo = $consecutivo;
+        $this->intermediacion = $intermediacion;
     }
 
 

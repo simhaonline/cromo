@@ -23,9 +23,12 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>NUMERO</th>
+            <th>FECHA</th>
             <th>AÑO</th>
             <th>MES</th>
             <th>CLIENTE</th>
+            <th>TIPO</th>
             <th>FLETE</th>
             <th>PAGO</th>
             <th>PAR</th>
@@ -37,9 +40,12 @@
         {% for arIntermediacionDetalle in arIntermediacionDetalles %}
             <tr>
                 <td>{{ arIntermediacionDetalle.codigoIntermediacionDetallePk }}</td>
+                <td>{{ arIntermediacionDetalle.numero }}</td>
+                <td>{{ arIntermediacionDetalle.fecha | date('Y-m-d') }}</td>
                 <td>{{ arIntermediacionDetalle.anio }}</td>
                 <td>{{ arIntermediacionDetalle.mes }}</td>
                 <td>{{ arIntermediacionDetalle.clienteNombreCorto }}</td>
+                <td>{{ arIntermediacionDetalle.facturaTipoNombre }}</td>
                 <td class="numero">{{ arIntermediacionDetalle.vrFlete | number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arIntermediacionDetalle.vrPago | number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arIntermediacionDetalle.porcentajeParticipacion | number_format(0, '.', ',')}}</td>

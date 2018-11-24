@@ -2,8 +2,13 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Financiero\FinCentroCosto;
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
 use App\Entity\Transporte\TteCierre;
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteCosto;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
@@ -29,12 +34,17 @@ class TteIntermediacionDetalleRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteIntermediacionDetalle::class, 'id')
             ->select('id.codigoIntermediacionDetallePk')
+            ->addSelect('id.numero')
             ->addSelect('id.vrFlete')
             ->addSelect('id.vrPago')
             ->addSelect('id.porcentajeParticipacion')
             ->addSelect('id.vrIngreso')
+            ->addSelect('id.vrPagoOperado')
+            ->addSelect('id.vrIngresoOperado')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('ft.nombre AS facturaTipoNombre')
             ->leftJoin('id.clienteRel', 'c')
+            ->leftJoin('id.facturaTipoRel','ft')
             ->where('id.codigoIntermediacionFk = ' . $codigoIntermediacion)
         ->orderBy('id.codigoClienteFk');
         return $queryBuilder->getQuery()->execute();
@@ -45,6 +55,8 @@ class TteIntermediacionDetalleRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteIntermediacionDetalle::class, 'id')
             ->select('id.codigoIntermediacionDetallePk')
+            ->addSelect('id.numero')
+            ->addSelect('id.fecha')
             ->addSelect('id.anio')
             ->addSelect('id.mes')
             ->addSelect('id.vrFlete')
@@ -52,7 +64,9 @@ class TteIntermediacionDetalleRepository extends ServiceEntityRepository
             ->addSelect('id.porcentajeParticipacion')
             ->addSelect('id.vrIngreso')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('ft.nombre AS facturaTipoNombre')
             ->leftJoin('id.clienteRel', 'c')
+            ->leftJoin('id.facturaTipoRel','ft')
             ->where('id.estadoContabilizado =  0');
         /*if($session->get('filtroTteFacturaNumero') != ''){
             $queryBuilder->andWhere("f.numero = {$session->get('filtroTteFacturaNumero')}");
@@ -65,7 +79,15 @@ class TteIntermediacionDetalleRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteIntermediacionDetalle::class, 'id')
             ->select('id.codigoIntermediacionDetallePk')
+            ->addSelect('id.numero')
+            ->addSelect('id.fecha')
+            ->addSelect('id.codigoClienteFk')
+            ->addSelect('ft.codigoCuentaIngresoFleteFk')
+            ->addSelect('ft.codigoCuentaIngresoFleteIntermediacionFk')
+            ->addSelect('ft.naturalezaCuentaIngresoFleteIntermediacion')
             ->addSelect('id.estadoContabilizado')
+            ->addSelect('id.vrIngreso')
+            ->leftJoin('id.facturaTipoRel', 'ft')
             ->where('id.codigoIntermediacionDetallePk = ' . $codigo);
         $arIntermediacionDetalle = $queryBuilder->getQuery()->getSingleResult();
         return $arIntermediacionDetalle;
@@ -76,116 +98,81 @@ class TteIntermediacionDetalleRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arr) {
             $error = "";
+            $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->contabilizarIntermediacion();
+            $arComprobante = $em->getRepository(FinComprobante::class)->find($arrConfiguracion['codigoComprobanteIntermediacionFk']);
             foreach ($arr AS $codigo) {
                 $arIntermediacionDetalle = $em->getRepository(TteIntermediacionDetalle::class)->registroContabilizar($codigo);
                 if($arIntermediacionDetalle) {
                     if($arIntermediacionDetalle['estadoContabilizado'] == 0) {
+                        $arTercero = $em->getRepository(TteCliente::class)->terceroFinanciero($arIntermediacionDetalle['codigoClienteFk']);
+                        //Cuenta del ingreso flete intermediacion
+                        if($arIntermediacionDetalle['codigoCuentaIngresoFleteIntermediacionFk']) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arIntermediacionDetalle['codigoCuentaIngresoFleteIntermediacionFk']);
+                            if(!$arCuenta) {
+                                $error = "No se encuentra la cuenta del flete " . $arIntermediacionDetalle['codigoCuentaIngresoFleteIntermediacionFk'];
+                                break;
+                            }
+                            $arRegistro = new FinRegistro();
+                            $arRegistro->setTerceroRel($arTercero);
+                            $arRegistro->setCuentaRel($arCuenta);
+                            $arRegistro->setComprobanteRel($arComprobante);
+                            /*if($arCuenta->getExigeCentroCosto()) {
+                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
+                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                            }*/
+                            //$arRegistro->setNumeroPrefijo($arFactura['prefijo']);
+                            $arRegistro->setNumero($arIntermediacionDetalle['numero']);
+                            //$arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
+                            //$arRegistro->setNumeroReferencia($numeroReferencia);
+                            $arRegistro->setFecha($arIntermediacionDetalle['fecha']);
+                            if($arIntermediacionDetalle['naturalezaCuentaIngresoFleteIntermediacion'] == 'D') {
+                                $arRegistro->setVrDebito($arIntermediacionDetalle['vrIngreso']);
+                                $arRegistro->setNaturaleza('D');
+                            } else {
+                                $arRegistro->setVrCredito($arIntermediacionDetalle['vrIngreso']);
+                                $arRegistro->setNaturaleza('C');
+                            }
+                            $arRegistro->setDescripcion('INGRESO REAL POR INTERMEDIACION');
+                            $em->persist($arRegistro);
+                        } else {
+                            $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete";
+                            break;
+                        }
 
-                        //$arComprobante = $em->getRepository(FinComprobante::class)->find($arFactura['codigoComprobanteFk']);
-                        //$arTercero = $em->getRepository(TteCliente::class)->terceroFinanciero($arFactura['codigoClienteFk']);
-
-//                        //Cuenta del ingreso flete
-//                        if($arFactura['codigoCuentaIngresoFleteFk']) {
-//                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arFactura['codigoCuentaIngresoFleteFk']);
-//                            if(!$arCuenta) {
-//                                $error = "No se encuentra la cuenta del flete " . $arFactura['codigoCuentaIngresoFleteFk'];
-//                                break;
-//                            }
-//                            $arRegistro = new FinRegistro();
-//                            $arRegistro->setTerceroRel($arTercero);
-//                            $arRegistro->setCuentaRel($arCuenta);
-//                            $arRegistro->setComprobanteRel($arComprobante);
+                        //Cuenta del ingreso disminucino
+                        if($arIntermediacionDetalle['codigoCuentaIngresoFleteFk']) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arIntermediacionDetalle['codigoCuentaIngresoFleteFk']);
+                            if(!$arCuenta) {
+                                $error = "No se encuentra la cuenta del flete " . $arIntermediacionDetalle['codigoCuentaIngresoFleteFk'];
+                                break;
+                            }
+                            $arRegistro = new FinRegistro();
+                            $arRegistro->setTerceroRel($arTercero);
+                            $arRegistro->setCuentaRel($arCuenta);
+                            $arRegistro->setComprobanteRel($arComprobante);
 //                            if($arCuenta->getExigeCentroCosto()) {
 //                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
 //                                $arRegistro->setCentroCostoRel($arCentroCosto);
 //                            }
-//                            $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
-//                            $arRegistro->setNumero($arFactura['numero']);
-//                            $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
-//                            $arRegistro->setNumeroReferencia($numeroReferencia);
-//                            $arRegistro->setFecha($arFactura['fecha']);
-//                            if($arFactura['naturalezaCuentaIngreso'] == 'D') {
-//                                $arRegistro->setVrDebito($arFactura['vrFlete']);
-//                                $arRegistro->setNaturaleza('D');
-//                            } else {
-//                                $arRegistro->setVrCredito($arFactura['vrFlete']);
-//                                $arRegistro->setNaturaleza('C');
-//                            }
-//                            $arRegistro->setDescripcion('INGRESO FLETE');
-//                            $em->persist($arRegistro);
-//                        } else {
-//                            $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete";
-//                            break;
-//                        }
-//
-//                        //Cuenta del ingreso manejo
-//                        if($arFactura['codigoCuentaIngresoManejoFk']) {
-//                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arFactura['codigoCuentaIngresoManejoFk']);
-//                            if(!$arCuenta) {
-//                                $error = "No se encuentra la cuenta del manejo " . $arFactura['codigoCuentaIngresoManejoFk'];
-//                                break;
-//                            }
-//                            $arRegistro = new FinRegistro();
-//                            $arRegistro->setTerceroRel($arTercero);
-//                            $arRegistro->setCuentaRel($arCuenta);
-//                            $arRegistro->setComprobanteRel($arComprobante);
-//                            if($arCuenta->getExigeCentroCosto()) {
-//                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
-//                                $arRegistro->setCentroCostoRel($arCentroCosto);
-//                            }
-//                            $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
-//                            $arRegistro->setNumero($arFactura['numero']);
-//                            $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
-//                            $arRegistro->setNumeroReferencia($numeroReferencia);
-//                            $arRegistro->setFecha($arFactura['fecha']);
-//                            if($arFactura['naturalezaCuentaIngreso'] == 'D') {
-//                                $arRegistro->setVrDebito($arFactura['vrManejo']);
-//                                $arRegistro->setNaturaleza('D');
-//                            } else {
-//                                $arRegistro->setVrCredito($arFactura['vrManejo']);
-//                                $arRegistro->setNaturaleza('C');
-//                            }
-//                            $arRegistro->setDescripcion('INGRESO MANEJO');
-//                            $em->persist($arRegistro);
-//                        } else {
-//                            $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por manejo";
-//                            break;
-//                        }
-//
-//                        //Cuenta cliente
-//                        if($arFactura['codigoCuentaClienteFk']) {
-//                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arFactura['codigoCuentaClienteFk']);
-//                            if(!$arCuenta) {
-//                                $error = "No se encuentra la cuenta cliente " . $arFactura['codigoCuentaClienteFk'];
-//                                break;
-//                            }
-//                            $arRegistro = new FinRegistro();
-//                            $arRegistro->setTerceroRel($arTercero);
-//                            $arRegistro->setCuentaRel($arCuenta);
-//                            $arRegistro->setComprobanteRel($arComprobante);
-//                            if($arCuenta->getExigeCentroCosto()) {
-//                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
-//                                $arRegistro->setCentroCostoRel($arCentroCosto);
-//                            }
-//                            $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
-//                            $arRegistro->setNumero($arFactura['numero']);
-//                            $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
-//                            $arRegistro->setNumeroReferencia($numeroReferencia);
-//                            $arRegistro->setFecha($arFactura['fecha']);
-//                            if($arFactura['naturalezaCuentaCliente'] == 'D') {
-//                                $arRegistro->setVrDebito($arFactura['vrTotal']);
-//                                $arRegistro->setNaturaleza('D');
-//                            } else {
-//                                $arRegistro->setVrCredito($arFactura['vrTotal']);
-//                                $arRegistro->setNaturaleza('C');
-//                            }
-//                            $arRegistro->setDescripcion('CLIENTES');
-//                            $em->persist($arRegistro);
-//                        } else {
-//                            $error = "El tipo de factura no tiene configurada la cuenta cliente";
-//                            break;
-//                        }
-
+                            //$arRegistro->setNumeroPrefijo($arFactura['prefijo']);
+                            $arRegistro->setNumero($arIntermediacionDetalle['numero']);
+                            //$arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
+                            //$arRegistro->setNumeroReferencia($numeroReferencia);
+                            $arRegistro->setFecha($arIntermediacionDetalle['fecha']);
+                            $tipo = "D";
+                            if($tipo == 'D') {
+                                $arRegistro->setVrDebito($arIntermediacionDetalle['vrIngreso']);
+                                $arRegistro->setNaturaleza('D');
+                            } else {
+                                $arRegistro->setVrCredito($arIntermediacionDetalle['vrIngreso']);
+                                $arRegistro->setNaturaleza('C');
+                            }
+                            $arRegistro->setDescripcion('DISMINUCION CUENTA FLETE');
+                            $em->persist($arRegistro);
+                        } else {
+                            $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete";
+                            break;
+                        }
 
                         $arIntermediacionDetalle = $em->getRepository(TteIntermediacionDetalle::class)->find($arIntermediacionDetalle['codigoIntermediacionDetallePk']);
                         //$arIntermediacionDetalle->setEstadoContabilizado(1);

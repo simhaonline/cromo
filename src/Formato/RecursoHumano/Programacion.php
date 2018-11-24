@@ -38,7 +38,7 @@ class Programacion extends \FPDF
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Programacion_$codigoProgramacion.pdf", 'I');
+        $pdf->Output("Programacion_$codigoProgramacion.pdf", 'D');
     }
 
     public function Header()

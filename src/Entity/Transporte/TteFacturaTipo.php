@@ -87,6 +87,16 @@ class TteFacturaTipo
     private $codigoComprobanteFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_ingreso_flete_intermediacion_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaIngresoFleteIntermediacionFk;
+
+    /**
+     * @ORM\Column(name="naturaleza_cuenta_ingreso_flete_intermediacion", type="string", length=1, nullable=true)
+     */
+    private $naturalezaCuentaIngresoFleteIntermediacion = 0;
+
+    /**
      * @ORM\Column(name="operacion_comercial", type="smallint", nullable=true, options={"default" : 0})
      */
     private $operacionComercial = 0;
@@ -117,7 +127,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoFacturaTipoPk
      */
-    public function setCodigoFacturaTipoPk($codigoFacturaTipoPk): void
+    public function setCodigoFacturaTipoPk( $codigoFacturaTipoPk ): void
     {
         $this->codigoFacturaTipoPk = $codigoFacturaTipoPk;
     }
@@ -133,7 +143,7 @@ class TteFacturaTipo
     /**
      * @param mixed $nombre
      */
-    public function setNombre($nombre): void
+    public function setNombre( $nombre ): void
     {
         $this->nombre = $nombre;
     }
@@ -149,7 +159,7 @@ class TteFacturaTipo
     /**
      * @param mixed $consecutivo
      */
-    public function setConsecutivo($consecutivo): void
+    public function setConsecutivo( $consecutivo ): void
     {
         $this->consecutivo = $consecutivo;
     }
@@ -165,7 +175,7 @@ class TteFacturaTipo
     /**
      * @param mixed $resolucionFacturacion
      */
-    public function setResolucionFacturacion($resolucionFacturacion): void
+    public function setResolucionFacturacion( $resolucionFacturacion ): void
     {
         $this->resolucionFacturacion = $resolucionFacturacion;
     }
@@ -181,7 +191,7 @@ class TteFacturaTipo
     /**
      * @param mixed $guiaFactura
      */
-    public function setGuiaFactura($guiaFactura): void
+    public function setGuiaFactura( $guiaFactura ): void
     {
         $this->guiaFactura = $guiaFactura;
     }
@@ -197,7 +207,7 @@ class TteFacturaTipo
     /**
      * @param mixed $prefijo
      */
-    public function setPrefijo($prefijo): void
+    public function setPrefijo( $prefijo ): void
     {
         $this->prefijo = $prefijo;
     }
@@ -213,7 +223,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoFacturaClaseFk
      */
-    public function setCodigoFacturaClaseFk($codigoFacturaClaseFk): void
+    public function setCodigoFacturaClaseFk( $codigoFacturaClaseFk ): void
     {
         $this->codigoFacturaClaseFk = $codigoFacturaClaseFk;
     }
@@ -229,7 +239,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoCuentaCobrarTipoFk
      */
-    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
+    public function setCodigoCuentaCobrarTipoFk( $codigoCuentaCobrarTipoFk ): void
     {
         $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
     }
@@ -245,7 +255,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoCuentaIngresoFleteFk
      */
-    public function setCodigoCuentaIngresoFleteFk($codigoCuentaIngresoFleteFk): void
+    public function setCodigoCuentaIngresoFleteFk( $codigoCuentaIngresoFleteFk ): void
     {
         $this->codigoCuentaIngresoFleteFk = $codigoCuentaIngresoFleteFk;
     }
@@ -261,7 +271,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoCuentaIngresoManejoFk
      */
-    public function setCodigoCuentaIngresoManejoFk($codigoCuentaIngresoManejoFk): void
+    public function setCodigoCuentaIngresoManejoFk( $codigoCuentaIngresoManejoFk ): void
     {
         $this->codigoCuentaIngresoManejoFk = $codigoCuentaIngresoManejoFk;
     }
@@ -277,7 +287,7 @@ class TteFacturaTipo
     /**
      * @param mixed $naturalezaCuentaIngreso
      */
-    public function setNaturalezaCuentaIngreso($naturalezaCuentaIngreso): void
+    public function setNaturalezaCuentaIngreso( $naturalezaCuentaIngreso ): void
     {
         $this->naturalezaCuentaIngreso = $naturalezaCuentaIngreso;
     }
@@ -293,7 +303,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoCuentaClienteFk
      */
-    public function setCodigoCuentaClienteFk($codigoCuentaClienteFk): void
+    public function setCodigoCuentaClienteFk( $codigoCuentaClienteFk ): void
     {
         $this->codigoCuentaClienteFk = $codigoCuentaClienteFk;
     }
@@ -309,9 +319,73 @@ class TteFacturaTipo
     /**
      * @param mixed $naturalezaCuentaCliente
      */
-    public function setNaturalezaCuentaCliente($naturalezaCuentaCliente): void
+    public function setNaturalezaCuentaCliente( $naturalezaCuentaCliente ): void
     {
         $this->naturalezaCuentaCliente = $naturalezaCuentaCliente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteFk()
+    {
+        return $this->codigoComprobanteFk;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteFk
+     */
+    public function setCodigoComprobanteFk( $codigoComprobanteFk ): void
+    {
+        $this->codigoComprobanteFk = $codigoComprobanteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaIngresoFleteIntermediacionFk()
+    {
+        return $this->codigoCuentaIngresoFleteIntermediacionFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaIngresoFleteIntermediacionFk
+     */
+    public function setCodigoCuentaIngresoFleteIntermediacionFk( $codigoCuentaIngresoFleteIntermediacionFk ): void
+    {
+        $this->codigoCuentaIngresoFleteIntermediacionFk = $codigoCuentaIngresoFleteIntermediacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNaturalezaCuentaIngresoFleteIntermediacion()
+    {
+        return $this->naturalezaCuentaIngresoFleteIntermediacion;
+    }
+
+    /**
+     * @param mixed $naturalezaCuentaIngresoFleteIntermediacion
+     */
+    public function setNaturalezaCuentaIngresoFleteIntermediacion( $naturalezaCuentaIngresoFleteIntermediacion ): void
+    {
+        $this->naturalezaCuentaIngresoFleteIntermediacion = $naturalezaCuentaIngresoFleteIntermediacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionComercial()
+    {
+        return $this->operacionComercial;
+    }
+
+    /**
+     * @param mixed $operacionComercial
+     */
+    public function setOperacionComercial( $operacionComercial ): void
+    {
+        $this->operacionComercial = $operacionComercial;
     }
 
     /**
@@ -325,7 +399,7 @@ class TteFacturaTipo
     /**
      * @param mixed $facturasFacturaTipoRel
      */
-    public function setFacturasFacturaTipoRel($facturasFacturaTipoRel): void
+    public function setFacturasFacturaTipoRel( $facturasFacturaTipoRel ): void
     {
         $this->facturasFacturaTipoRel = $facturasFacturaTipoRel;
     }
@@ -341,57 +415,9 @@ class TteFacturaTipo
     /**
      * @param mixed $guiasTiposFacturaTipoRel
      */
-    public function setGuiasTiposFacturaTipoRel($guiasTiposFacturaTipoRel): void
+    public function setGuiasTiposFacturaTipoRel( $guiasTiposFacturaTipoRel ): void
     {
         $this->guiasTiposFacturaTipoRel = $guiasTiposFacturaTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoComprobanteFk()
-    {
-        return $this->codigoComprobanteFk;
-    }
-
-    /**
-     * @param mixed $codigoComprobanteFk
-     */
-    public function setCodigoComprobanteFk($codigoComprobanteFk): void
-    {
-        $this->codigoComprobanteFk = $codigoComprobanteFk;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOperacionComercial()
-    {
-        return $this->operacionComercial;
-    }
-
-    /**
-     * @param mixed $operacionComercial
-     */
-    public function setOperacionComercial($operacionComercial): void
-    {
-        $this->operacionComercial = $operacionComercial;
     }
 
     /**
@@ -409,6 +435,8 @@ class TteFacturaTipo
     {
         $this->intermediacionesDetallesFacturaTipoRel = $intermediacionesDetallesFacturaTipoRel;
     }
+
+
 
 
 

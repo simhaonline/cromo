@@ -27,8 +27,10 @@ class FacturaTipoType extends AbstractType
             ->add('codigoCuentaIngresoFleteFk',TextType::class,['required' => false,'label' => 'Codigo cuenta ingreso flete fk:'])
             ->add('codigoCuentaIngresoManejoFk',TextType::class,['required' => false,'label' => 'Codigo cuenta ingreso manejo fk:'])
             ->add('codigoCuentaClienteFk',TextType::class,['required' => false,'label' => 'Codigo cuenta cliente fk:'])
+            ->add('codigoCuentaIngresoFleteIntermediacionFk',TextType::class,['required' => false,'label' => 'Codigo cuenta ingreso flete (Intermediacion) :'])
             ->add('naturalezaCuentaIngreso',TextType::class,['required' => false,'label' => 'Naturaleza cuenta ingreso:'])
             ->add('naturalezaCuentaCliente',TextType::class,['required' => false,'label' => 'Naturaleza cuenta cliente:'])
+            ->add('naturalezaCuentaIngresoFleteIntermediacion',TextType::class,['required' => false,'label' => 'Naturaleza cuenta ingreso flete (intermediacion):'])
             ->add('codigoComprobanteFk',TextType::class,['required' => false,'label' => 'Codigo comprobante:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
@@ -46,18 +48,10 @@ class FacturaTipoType extends AbstractType
         return '[
             {"campo":"codigoFacturaTipoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
             {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                 "tipo":"numero",    "ayuda":"Consecutivo",             "titulo":"CONSECUTIVO"},
-            {"campo":"resolucionFacturacion",       "tipo":"texto",     "ayuda":"Resolucion factura",      "titulo":"RESOLUCION FACTURA"},
-            {"campo":"guiaFactura",                 "tipo":"bool",      "ayuda":"Guia factura",            "titulo":"GUIA FACTURA"},
-            {"campo":"prefijo",                     "tipo":"texto",     "ayuda":"Prefijo",                 "titulo":"PREFIJO"},
-            {"campo":"codigoFacturaClaseFk",        "tipo":"texto",     "ayuda":"Codigo factura clase",    "titulo":"CODIGO FACTURA CLASE"},
-            {"campo":"codigoCuentaCobrarTipoFk",    "tipo":"texto",     "ayuda":"Codigo cuenta cobro tipo","titulo":"CODIGO CUENTA COBRO TIPO"},
-            {"campo":"codigoCuentaIngresoFleteFk",  "tipo":"texto",     "ayuda":"Codigo cuenta ingreso flete","titulo":"CODIGO CUENTA INGRESO TIPO"},
-            {"campo":"codigoCuentaIngresoManejoFk", "tipo":"texto",     "ayuda":"Codigo cuenta ingreso manejo","titulo":"CODIGO CUENTA INGRESO MANEJO"},
-            {"campo":"naturalezaCuentaIngreso",     "tipo":"texto",     "ayuda":"Naturaleza cuenta ingreso","titulo":"NATURALEZA CUENTA INGRESO"},
-            {"campo":"codigoCuentaClienteFk",       "tipo":"texto",     "ayuda":"Codigo cuenta cliente",    "titulo":"CODIGO CUENTA CLIENTE"},
-            {"campo":"naturalezaCuentaCliente",     "tipo":"texto",     "ayuda":"Naturaleza cuenta cliente","titulo":"NATURALEZA CUENTA CLIENTE"},
-            {"campo":"codigoComprobanteFk",         "tipo":"texto",     "ayuda":"Codigo comprobante",       "titulo":"CODIGO COMPROBANTE"}
+            {"campo":"consecutivo",                 "tipo":"numero",    "ayuda":"Consecutivo",             "titulo":"CON"},
+            {"campo":"guiaFactura",                 "tipo":"bool",      "ayuda":"Guia factura",            "titulo":"GF"},
+            {"campo":"prefijo",                     "tipo":"texto",     "ayuda":"Prefijo",                 "titulo":"PRE"},
+            {"campo":"codigoFacturaClaseFk",        "tipo":"texto",     "ayuda":"Codigo factura clase",    "titulo":"CLASE"}
         ]';
     }
 

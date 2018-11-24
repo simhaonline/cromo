@@ -6,7 +6,11 @@
             <a  class="btn btn-default btn-sm" href="{{ path('transporte_proceso_transporte_general_intermediacion') }}">Volver</a>
         </div>
         <div class="btn-group">
-
+            {{ form_widget(form.btnAutorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnDesautorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnAprobar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {{ form_widget(form.btnAnular,  { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular el registro?")'} }) }}
         </div>
     </div>
     <br /><br />
@@ -16,10 +20,25 @@
             <td class="td-in-well">{{ arIntermediacion.anio }}</td>
             <td class="titulo">MES:</td>
             <td class="td-in-well">{{ arIntermediacion.mes }}</td>
-            <td class="titulo" ></td>
-            <td align="right"></td>
+            <td class="titulo" >FLETE (PAGADO)</td>
+            <td align="right">{{ arIntermediacion.vrFletePagoTotal | number_format(0, '.', ',')}}</td>
         </tr>
-
+        <tr>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arIntermediacion.fecha | date('Y-m-d') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >FLETE (COBRADO)</td>
+            <td align="right">{{ arIntermediacion.vrFlete | number_format(0, '.', ',')}}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >INTERMEDIACION (INGRESO)</td>
+            <td align="right">{{ arIntermediacion.vrIngreso | number_format(0, '.', ',')}}</td>
+        </tr>
     </table>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
@@ -32,7 +51,9 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>NUMERO</th>
                             <th>CLIENTE</th>
+                            <th>TIPO</th>
                             <th>FLETE</th>
                             <th>PAGO</th>
                             <th>PAR</th>
@@ -44,11 +65,13 @@
                         {% for arIntermediacionDetalle in arIntermediacionDetalles %}
                             <tr>
                                 <td><input type="hidden" name="arrCodigo[]" value="{{ arIntermediacionDetalle.codigoIntermediacionDetallePk }}">{{ arIntermediacionDetalle.codigoIntermediacionDetallePk }}</td>
+                                <td>{{ arIntermediacionDetalle.numero }}</td>
                                 <td>{{ arIntermediacionDetalle.clienteNombreCorto }}</td>
+                                <td>{{ arIntermediacionDetalle.facturaTipoNombre }}</td>
                                 <td class="numero">{{ arIntermediacionDetalle.vrFlete | number_format(0, '.', ',')}}</td>
-                                <td class="numero">{{ arIntermediacionDetalle.vrPago | number_format(0, '.', ',')}}</td>
+                                <td class="numero">{{ arIntermediacionDetalle.vrPagoOperado | number_format(0, '.', ',')}}</td>
                                 <td class="numero">{{ arIntermediacionDetalle.porcentajeParticipacion | number_format(0, '.', ',')}}</td>
-                                <td class="numero">{{ arIntermediacionDetalle.vrIngreso | number_format(0, '.', ',')}}</td>
+                                <td class="numero">{{ arIntermediacionDetalle.vrIngresoOperado | number_format(0, '.', ',')}}</td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arIntermediacionDetalle.codigoIntermediacionDetallePk }}" /></td>
                             </tr>
                         {% endfor %}

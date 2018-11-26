@@ -2,14 +2,40 @@
 {% block content %}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_reclamo_lista') }}">Volver</a>
+            <a class="btn btn-sm btn-default"
+               href="{{ path('recursohumano_movimiento_nomina_reclamo_lista') }}">Volver</a>
         </div>
     </div>
-    <br/><br/>
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <br/>
     <table width="100%" class="table table-condensed table-bordered">
         <tr>
             <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arRegistro.codigoReclamoPk }}</td>
+            <td class="td-in-well">{{ arReclamo.codigoReclamoPk }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo">IDENTIFICACIÓN:</td>
+            <td class="td-in-well">{{ arReclamo.empleadoRel.numeroIdentificacion }}</td>
+            <td class="titulo">EMPLEADO:</td>
+            <td class="td-in-well">{{ arReclamo.empleadoRel.nombreCorto }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arReclamo.fecha | date('Y-m-d') }}</td>
+            <td class="titulo">RESPONSABLE:</td>
+            <td class="td-in-well">{{ arReclamo.responsable }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA CIERRE:</td>
+            <td class="td-in-well">{{ arReclamo.fechaCierre ? arReclamo.fechaCierre | date('Y-m-d') : 'SIN CERRAR' }}</td>
+            <td class="titulo">USUARIO:</td>
+            <td class="td-in-well">{{ arReclamo.usuario }}</td>
         </tr>
     </table>
     <br>

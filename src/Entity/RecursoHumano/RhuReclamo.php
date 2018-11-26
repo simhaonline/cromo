@@ -28,14 +28,9 @@ class RhuReclamo
     private $codigoEmpleadoFk;
 
     /**
-     * @ORM\Column(name="codigo_reclamo_concepto_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_reclamo_concepto_fk", type="string",length=10 , nullable=true)
      */
     private $codigoReclamoConceptoFk;
-
-    /**
-     * @ORM\Column(name="fecha_registro", type="date", nullable=true)
-     */
-    private $fechaRegistro;
 
     /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
@@ -58,9 +53,9 @@ class RhuReclamo
     private $descripcion;
 
     /**
-     * @ORM\Column(name="comentarios", type="string", length=2000, nullable=true)
+     * @ORM\Column(name="comentario", type="text", nullable=true)
      */
-    private $comentarios;
+    private $comentario;
 
     /**
      * @ORM\Column(name="estado_autorizado", type="boolean",options={"default" : false}, nullable=true)
@@ -86,6 +81,34 @@ class RhuReclamo
      * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
      */
     private $usuario;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="reclamosEmpleadoRel")
+     * @ORM\JoinColumn(name="codigo_empleado_fk", referencedColumnName="codigo_empleado_pk")
+     */
+    protected $empleadoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuReclamoConcepto", inversedBy="reclamosReclamoConceptoRel")
+     * @ORM\JoinColumn(name="codigo_reclamo_concepto_fk", referencedColumnName="codigo_reclamo_concepto_pk")
+     */
+    protected $reclamoConceptoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -133,22 +156,6 @@ class RhuReclamo
     public function setCodigoReclamoConceptoFk($codigoReclamoConceptoFk): void
     {
         $this->codigoReclamoConceptoFk = $codigoReclamoConceptoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaRegistro()
-    {
-        return $this->fechaRegistro;
-    }
-
-    /**
-     * @param mixed $fechaRegistro
-     */
-    public function setFechaRegistro($fechaRegistro): void
-    {
-        $this->fechaRegistro = $fechaRegistro;
     }
 
     /**
@@ -218,17 +225,17 @@ class RhuReclamo
     /**
      * @return mixed
      */
-    public function getComentarios()
+    public function getComentario()
     {
-        return $this->comentarios;
+        return $this->comentario;
     }
 
     /**
-     * @param mixed $comentarios
+     * @param mixed $comentario
      */
-    public function setComentarios($comentarios): void
+    public function setComentario($comentario): void
     {
-        $this->comentarios = $comentarios;
+        $this->comentario = $comentario;
     }
 
     /**
@@ -309,5 +316,37 @@ class RhuReclamo
     public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadoRel()
+    {
+        return $this->empleadoRel;
+    }
+
+    /**
+     * @param mixed $empleadoRel
+     */
+    public function setEmpleadoRel($empleadoRel): void
+    {
+        $this->empleadoRel = $empleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReclamoConceptoRel()
+    {
+        return $this->reclamoConceptoRel;
+    }
+
+    /**
+     * @param mixed $reclamoConceptoRel
+     */
+    public function setReclamoConceptoRel($reclamoConceptoRel): void
+    {
+        $this->reclamoConceptoRel = $reclamoConceptoRel;
     }
 }

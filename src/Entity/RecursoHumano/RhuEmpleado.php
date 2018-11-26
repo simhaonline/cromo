@@ -357,6 +357,27 @@ class RhuEmpleado
     protected $egresosDetallesEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuReclamo", mappedBy="empleadoRel")
+     */
+    protected $reclamosEmpleadoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoEmpleadoPk()
@@ -1282,5 +1303,21 @@ class RhuEmpleado
     public function setEgresosDetallesEmpleadoRel($egresosDetallesEmpleadoRel): void
     {
         $this->egresosDetallesEmpleadoRel = $egresosDetallesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReclamosEmpleadoRel()
+    {
+        return $this->reclamosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $reclamosEmpleadoRel
+     */
+    public function setReclamosEmpleadoRel($reclamosEmpleadoRel): void
+    {
+        $this->reclamosEmpleadoRel = $reclamosEmpleadoRel;
     }
 }

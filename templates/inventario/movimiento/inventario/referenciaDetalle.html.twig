@@ -1,11 +1,11 @@
-{% extends 'base_inventario.html.twig' %}
+{% extends 'base_sin_menu.html.twig' %}
 {% block content %}
     <div class="panel panel-default">
         <div class="panel panel-heading">Información general</div>
         <div class="panel-body">
             <table width="100%" class="table table-condensed table-bordered">
                 <tr>
-                    <td class="titulo">CODIGO:</td>
+                    <td class="titulo">ID:</td>
                     <td class="td-in-well">{{ arMovimientoDetalle.codigoMovimientoDetallePk }}</td>
                     <td class="titulo">MOVIMIENTO:</td>
                     <td class="td-in-well"
@@ -16,10 +16,50 @@
                 <tr>
                     <td class="titulo">BODEGA:</td>
                     <td class="td-in-well">{{ arMovimientoDetalle.codigoBodegaFk | default('') }}</td>
+                    <td class="titulo">LOTE:</td>
+                    <td class="td-in-well" style="text-transform: uppercase;">{{ arMovimientoDetalle.loteFk | default('')}}</td>
+                    <td class="titulo"></td>
+                    <td class="td-in-well" style="text-align: right;"></td>
+                </tr>
+                <tr>
                     <td class="titulo">ITEM:</td>
-                    <td class="td-in-well" style="text-transform: uppercase;">{{ arMovimientoDetalle.itemRel.nombre | default('')}}</td>
-                    <td class="titulo">SUBTOTAL:</td>
+                    <td class="td-in-well">{{ arMovimientoDetalle.codigoItemFk | default('') }}</td>
+                    <td class="titulo">FECHA:</td>
+                    <td class="td-in-well">{{ arMovimientoDetalle.fecha | date('Y-m-d') }}</td>
+                    <td class="titulo">PRECIO:</td>
                     <td class="td-in-well" style="text-align: right;">{{ arMovimientoDetalle.vrPrecio |number_format(0, '.', ',') }}</td>
+                </tr>
+                <tr>
+                    <td class="titulo">NOMBRE:</td>
+                    <td class="td-in-well" style="text-transform: uppercase;">{{ arMovimientoDetalle.itemRel.nombre | default('') }}</td>
+                    <td class="titulo">VENCE:</td>
+                    <td class="td-in-well">{{ arMovimientoDetalle.fechaVencimiento | date('Y-m-d') }}</td>
+                    <td class="titulo">SUBTOTAL:</td>
+                    <td class="td-in-well" style="text-align: right;">{{ arMovimientoDetalle.vrSubtotal |number_format(0, '.', ',') }}</td>
+                </tr>
+                <tr>
+                    <td class="titulo"></td>
+                    <td class="td-in-well"></td>
+                    <td class="titulo"></td>
+                    <td class="td-in-well"></td>
+                    <td class="titulo">DESCUENTO:</td>
+                    <td class="td-in-well" style="text-align: right;">{{ arMovimientoDetalle.vrDescuento |number_format(0, '.', ',') }}</td>
+                </tr>
+                <tr>
+                    <td class="titulo"></td>
+                    <td class="td-in-well"></td>
+                    <td class="titulo"></td>
+                    <td class="td-in-well"></td>
+                    <td class="titulo">IVA:</td>
+                    <td class="td-in-well" style="text-align: right;">{{ arMovimientoDetalle.vrIva |number_format(0, '.', ',') }}</td>
+                </tr>
+                <tr>
+                    <td class="titulo"></td>
+                    <td class="td-in-well"></td>
+                    <td class="titulo"></td>
+                    <td class="td-in-well"></td>
+                    <td class="titulo">TOTAL:</td>
+                    <td class="td-in-well" style="text-align: right;">{{ arMovimientoDetalle.vrTotal |number_format(0, '.', ',') }}</td>
                 </tr>
             </table>
         </div>

@@ -18,7 +18,6 @@ use App\Formato\Inventario\Factura3;
 use App\Formato\Inventario\FormatoMovimiento;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
-use App\Entity\Inventario\InvOrdenCompraDetalle;
 use App\Entity\Inventario\InvSucursal;
 use App\Formato\Inventario\FormatoMovimientoTraslado;
 use App\Utilidades\Estandares;
@@ -27,7 +26,9 @@ use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Form\Type\Inventario\MovimientoType;
 use App\Formato\Inventario\Factura1;
-use App\Formato\Inventario\Factura2;;
+use App\Formato\Inventario\Factura2;
+
+;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -103,7 +104,7 @@ class MovimientoController extends ControllerListenerGeneral
                     $session->set('filtroInvMovimientoEstadoAutorizado', $form->get('chkEstadoAutorizado')->getData());
                     $session->set('filtroInvMovimientoEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
                     $arAsesor = $form->get('cboAsesor')->getData();
-                    if($arAsesor != ''){
+                    if ($arAsesor != '') {
                         $session->set('filtroGenAsesor', $form->get('cboAsesor')->getData()->getCodigoAsesorPk());
                     } else {
                         $session->set('filtroGenAsesor', null);
@@ -112,7 +113,7 @@ class MovimientoController extends ControllerListenerGeneral
                 if ($form->get('btnExcel')->isClicked()) {
                     General::get()->setExportar($em->createQuery($em->getRepository(InvMovimiento::class)->lista($codigoDocumento))->execute(), "Movimientos");
                 }
-                if($form->get('btnEliminar')->isClicked()){
+                if ($form->get('btnEliminar')->isClicked()) {
                     $arrSeleccionados = $request->request->get('ChkSeleccionar');
                     $em->getRepository(InvMovimiento::class)->eliminar($arrSeleccionados);
                 }
@@ -289,7 +290,7 @@ class MovimientoController extends ControllerListenerGeneral
                         $objFormato = new Factura3();
                         $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                     }
-                } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'TRA'){
+                } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'TRA') {
                     $objFormato = new FormatoMovimientoTraslado();
                     $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                 } else {
@@ -623,7 +624,7 @@ class MovimientoController extends ControllerListenerGeneral
                 $session->set('filtroInvRemisionNumero', $form->get('txtNumero')->getData());
                 $session->set('filtroInvRemisionDetalleLote', $form->get('txtLote')->getData());
                 $arBodega = $form->get('cboBodega')->getData();
-                if($arBodega != ''){
+                if ($arBodega != '') {
                     $session->set('filtroInvBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());
                 } else {
                     $session->set('filtroInvBodega', null);
@@ -689,9 +690,9 @@ class MovimientoController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $datos = $form->get('txtDatos')->getData();
-                $arrDatos = array_map(function ($var){
+                $arrDatos = array_map(function ($var) {
                     return str_replace("\r", '', $var);
-                },preg_split("/[\n]/", $datos));
+                }, preg_split("/[\n]/", $datos));
                 foreach ($arrDatos as $registro) {
                     $arrCampos = preg_split("/[\t]/", $registro);
                     $arMovimientoDetalleNuevo = clone $arMovimientoDetalle;
@@ -713,14 +714,15 @@ class MovimientoController extends ControllerListenerGeneral
     /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/inventario/movimiento/inventario/movimiento/detalle/referencia/{id}", name="inventario_movimiento_inventario_movimiento_detalle_referencia")
+     * @Route("/inventario/movimiento/inventario/movimiento/detalle/referenciaDetalle/{id}", name="inventario_movimiento_inventario_movimiento_detalle_referenciaDetalle")
      */
-    public function referenciaDetalle($id){
+    public function referenciaDetalle($id)
+    {
         $em = $this->getDoctrine()->getManager();
-        $arMovimientoDetalle = $em->find(InvMovimientoDetalle::class,$id);
-        $arPedidoDetalle = $em->find(InvPedidoDetalle::class,$arMovimientoDetalle->getCodigoPedidoDetalleFk());
-        $arOrdenDetalle = $em->find(InvOrdenDetalle::class,$arMovimientoDetalle->getCodigoOrdenDetalleFk());
-        return $this->render('inventario/movimiento/inventario/referenciaDetalle.html.twig',[
+        $arMovimientoDetalle = $em->find(InvMovimientoDetalle::class, $id);
+        $arPedidoDetalle = $arMovimientoDetalle->getCodigoPedidoDetalleFk() != null ? $em->find(InvPedidoDetalle::class, $arMovimientoDetalle->getCodigoPedidoDetalleFk()) : null;
+        $arOrdenDetalle = $arMovimientoDetalle->getCodigoOrdenDetalleFk() != null ? $em->find(InvOrdenDetalle::class, $arMovimientoDetalle->getCodigoOrdenDetalleFk()) : null;
+        return $this->render('inventario/movimiento/inventario/referenciaDetalle.html.twig', [
             'arMovimientoDetalle' => $arMovimientoDetalle,
             'arPedidoDetalle' => $arPedidoDetalle,
             'arOrdenDetalle' => $arOrdenDetalle

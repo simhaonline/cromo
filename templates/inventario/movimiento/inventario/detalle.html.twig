@@ -118,13 +118,20 @@
                             <th title="Pedido detalle">P</th>
                             <th title="Importacion detalle">I</th>
                             <th></th>
-                            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
+                                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for arMovimientoDetalle in arMovimientoDetalles %}
                             <tr>
-                                {{ validarTipo(arMovimientoDetalle.codigoMovimientoDetallePk) }}<input type="hidden" name="arrCodigo[]" value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}">
+                                <td>
+                                    <a href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_detalle_referenciaDetalle',{'id' : arMovimientoDetalle.codigoMovimientoDetallePk }) }}','referenciaDetalle',600,1200)">
+                                        {{ arMovimientoDetalle.codigoMovimientoDetallePk }}
+                                    </a></td>
+                                <input type="hidden"
+                                       name="arrCodigo[]"
+                                       value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}">
                                 {{ validarTipo(arMovimientoDetalle.codigoItemFk) }}
                                 {{ validarTipo(arMovimientoDetalle.itemNombre) }}
                                 {{ validarTipo(arMovimientoDetalle.itemReferencia) }}
@@ -139,38 +146,72 @@
                                     <td class="numero">{{ arMovimientoDetalle.cantidad | number_format(0, '.', ',') }}</td>
                                 {% else %}
                                     <td style="text-align: center;">
-                                        <input type="text" style="text-align: left;width: 50%;" name="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" id="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.loteFk }}">
-                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoBodega' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','codigoItem' : arMovimientoDetalle.codigoItemFk }) }}','BuscarLote',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                        <input type="text" style="text-align: left;width: 50%;"
+                                               name="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               id="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.loteFk }}">
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoBodega' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','codigoItem' : arMovimientoDetalle.codigoItemFk }) }}','BuscarLote',600,900)"
+                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
                                     <td style="text-align: center;">
-                                        <input type="text" name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" id="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.codigoBodegaFk }}" style="text-align: left; width:40px" size="10">
-                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBodega',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                        <input type="text"
+                                               name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               id="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.codigoBodegaFk }}"
+                                               style="text-align: left; width:40px" size="10">
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBodega',600,900)"
+                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
                                     {% if arMovimiento.codigoDocumentoTipoFk == 'TRA' %}
                                         <td style="text-align: center;">
-                                            <input type="text" name="arrBodegaDestino[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" id="arrBodegaDestino[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.codigoBodegaDestinoFk }}" style="text-align: left; width:40px" size="10">
-                                            <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodegaDestino['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBodega',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                            <input type="text"
+                                                   name="arrBodegaDestino[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                   id="arrBodegaDestino[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                   value="{{ arMovimientoDetalle.codigoBodegaDestinoFk }}"
+                                                   style="text-align: left; width:40px" size="10">
+                                            <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodegaDestino['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBodega',600,900)"
+                                               class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                         </td>
                                     {% endif %}
-                                    <td style="text-align: center;"><input type="date" name="arrFechaVencimiento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.fechaVencimiento | date('Y-m-d') }}"  style="text-align: right; width:100px" size="10" ></td>
-                                    <td style="text-align: center;"><input type="number" name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.cantidad }}"  style="text-align: right; width:60px" size="10" ></td>
+                                    <td style="text-align: center;"><input type="date"
+                                                                           name="arrFechaVencimiento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                                           value="{{ arMovimientoDetalle.fechaVencimiento | date('Y-m-d') }}"
+                                                                           style="text-align: right; width:100px"
+                                                                           size="10"></td>
+                                    <td style="text-align: center;"><input type="number"
+                                                                           name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                                           value="{{ arMovimientoDetalle.cantidad }}"
+                                                                           style="text-align: right; width:60px"
+                                                                           size="10"></td>
                                 {% endif %}
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td style="text-align: right;">{{ arMovimientoDetalle.vrPrecio | number_format(0,'.',',') }}</td>
                                 {% else %}
-                                    <td style="text-align: center;"><input type="number" name="arrValor[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.vrPrecio }}"  style="text-align: right; width:90px" size="10"> </td>
+                                    <td style="text-align: center;"><input type="number"
+                                                                           name="arrValor[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                                           value="{{ arMovimientoDetalle.vrPrecio }}"
+                                                                           style="text-align: right; width:90px"
+                                                                           size="10"></td>
                                 {% endif %}
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrSubtotal | number_format(0,'.',',') }}</td>
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td style="text-align: right;">{{ arMovimientoDetalle.porcentajeDescuento | number_format(0,'.',',') }}</td>
                                 {% else %}
-                                    <td style="text-align: center;"><input type="number" name="arrDescuento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.porcentajeDescuento }}" style="text-align: right; width:40px" size="10"></td>
+                                    <td style="text-align: center;"><input type="number"
+                                                                           name="arrDescuento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                                           value="{{ arMovimientoDetalle.porcentajeDescuento }}"
+                                                                           style="text-align: right; width:40px"
+                                                                           size="10"></td>
                                 {% endif %}
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrDescuento | number_format(0,'.',',') }}</td>
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td style="text-align: right;">{{ arMovimientoDetalle.porcentajeIva | number_format(0,'.',',') }}</td>
                                 {% else %}
-                                    <td style="text-align: center;"><input type="number" name="arrIva[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]" value="{{ arMovimientoDetalle.porcentajeIva }}" style="text-align: right; width:40px" size="10"></td>
+                                    <td style="text-align: center;"><input type="number"
+                                                                           name="arrIva[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                                           value="{{ arMovimientoDetalle.porcentajeIva }}"
+                                                                           style="text-align: right; width:40px"
+                                                                           size="10"></td>
                                 {% endif %}
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrIva | number_format(0,'.',',') }}</td>
                                 <td>{{ arMovimientoDetalle.codigoImpuestoRetencionFk }}</td>
@@ -178,8 +219,15 @@
                                 <td>{{ arMovimientoDetalle.codigoRemisionDetalleFk }}</td>
                                 <td>{{ arMovimientoDetalle.codigoPedidoDetalleFk }}</td>
                                 <td>{{ arMovimientoDetalle.codigoImportacionDetalleFk }}</td>
-                                <td><a href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_remision_distribucion_cargar',{'id' : arMovimientoDetalle.codigoMovimientoDetallePk }) }}','cargarDistribucion',400,600)"><li title="Carga rapida de datos" class="fa fa-bolt" style="color: black;font-size: large;"></li></a></td>
-                                <td style="text-align: center;"><input type="checkbox" style="text-align: right;" name="ChkSeleccionar[]" value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/></td>
+                                <td>
+                                    <a href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_remision_distribucion_cargar',{'id' : arMovimientoDetalle.codigoMovimientoDetallePk }) }}','cargarDistribucion',400,600)">
+                                        <li title="Carga rapida de datos" class="fa fa-bolt"
+                                            style="color: black;font-size: large;"></li>
+                                    </a></td>
+                                <td style="text-align: center;"><input type="checkbox" style="text-align: right;"
+                                                                       name="ChkSeleccionar[]"
+                                                                       value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -190,28 +238,37 @@
                     {% if arMovimiento.estadoAutorizado == false %}
                         {% if arMovimiento.documentoRel.adicionar == 1 %}
                             <div class="btn-group">
-                                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 900)">Nuevo</a>
+                                <a class="btn btn-default btn-sm"
+                                   href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 900)">Nuevo</a>
                             </div>
                         {% endif %}
                         {% if arMovimiento.documentoRel.adicionarOrden == 1 %}
                             <div class="btn-group">
-                                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_orden_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde orden</a>
+                                <a class="btn btn-default btn-sm"
+                                   href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_orden_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo
+                                    desde orden</a>
                             </div>
                         {% endif %}
                         {% if arMovimiento.documentoRel.adicionarImportacion == 1 %}
                             <div class="btn-group">
-                                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_importacion_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde importacion</a>
+                                <a class="btn btn-default btn-sm"
+                                   href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_importacion_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo
+                                    desde importacion</a>
                             </div>
                         {% endif %}
 
                         {% if arMovimiento.codigoDocumentoTipoFk == 'FAC' %}
                             {% if arMovimiento.documentoRel.adicionarPedido == 1 %}
-                                <div class="btn-group"><a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_pedido_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde pedido</a>
+                                <div class="btn-group"><a class="btn btn-default btn-sm"
+                                                          href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_pedido_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo
+                                        desde pedido</a>
                                 </div>
                             {% endif %}
                             {% if arMovimiento.documentoRel.adicionarRemision == 1 %}
                                 <div class="btn-group">
-                                    <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_remision_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo desde remision</a>
+                                    <a class="btn btn-default btn-sm"
+                                       href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_remision_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo
+                                        desde remision</a>
                                 </div>
                             {% endif %}
                         {% endif %}

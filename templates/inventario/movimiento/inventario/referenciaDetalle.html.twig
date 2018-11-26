@@ -1,0 +1,73 @@
+{% extends 'base_inventario.html.twig' %}
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel panel-heading">Información general</div>
+        <div class="panel-body">
+            <table width="100%" class="table table-condensed table-bordered">
+                <tr>
+                    <td class="titulo">CODIGO:</td>
+                    <td class="td-in-well">{{ arMovimientoDetalle.codigoMovimientoDetallePk }}</td>
+                    <td class="titulo">MOVIMIENTO:</td>
+                    <td class="td-in-well"
+                        style="text-transform: uppercase;">{{ arMovimientoDetalle.codigoMovimientoFk | default('')}}</td>
+                    <td class="titulo"></td>
+                    <td class="td-in-well" style="text-align: right;"></td>
+                </tr>
+                <tr>
+                    <td class="titulo">BODEGA:</td>
+                    <td class="td-in-well">{{ arMovimientoDetalle.codigoBodegaFk | default('') }}</td>
+                    <td class="titulo">ITEM:</td>
+                    <td class="td-in-well" style="text-transform: uppercase;">{{ arMovimientoDetalle.itemRel.nombre | default('')}}</td>
+                    <td class="titulo">SUBTOTAL:</td>
+                    <td class="td-in-well" style="text-align: right;">{{ arMovimientoDetalle.vrPrecio |number_format(0, '.', ',') }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <hr>
+    {% if arOrdenDetalle %}
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>ORDEN</th>
+                <th>CANT</th>
+                <th>ITEM</th>
+                <th>TOTAL</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ arOrdenDetalle.codigoOrdenDetallePk }}</td>
+                <td>{{ arOrdenDetalle.codigoOrdenFk }}</td>
+                <td>{{ arOrdenDetalle.cantidad }}</td>
+                <td>{{ arOrdenDetalle.itemRel.nombre }}</td>
+                <td>{{ arOrdenDetalle.vrTotal | number_format(0, '.', ',') }}</td>
+            </tr>
+            </tbody>
+        </table>
+    {% endif %}
+    <hr>
+    {% if arPedidoDetalle %}
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>PEDIDO</th>
+                <th>CANT</th>
+                <th>ITEM</th>
+                <th>TOTAL</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
+                <td>{{ arPedidoDetalle.codigoPedidoFk }}</td>
+                <td>{{ arPedidoDetalle.cantidad }}</td>
+                <td>{{ arPedidoDetalle.itemRel.nombre }}</td>
+                <td>{{ arPedidoDetalle.vrTotal | number_format(0, '.', ',') }}</td>
+            </tr>
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

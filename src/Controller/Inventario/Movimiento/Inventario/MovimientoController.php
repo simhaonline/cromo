@@ -8,6 +8,7 @@ use App\Entity\General\GenAsesor;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvImportacionDetalle;
+use App\Entity\Inventario\InvOrden;
 use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvRemisionDetalle;
@@ -706,6 +707,23 @@ class MovimientoController extends ControllerListenerGeneral
         }
         return $this->render('inventario/movimiento/inventario/cargarDistrubucion.html.twig', [
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/movimiento/inventario/movimiento/detalle/referencia/{id}", name="inventario_movimiento_inventario_movimiento_detalle_referencia")
+     */
+    public function referenciaDetalle($id){
+        $em = $this->getDoctrine()->getManager();
+        $arMovimientoDetalle = $em->find(InvMovimientoDetalle::class,$id);
+        $arPedidoDetalle = $em->find(InvPedidoDetalle::class,$arMovimientoDetalle->getCodigoPedidoDetalleFk());
+        $arOrdenDetalle = $em->find(InvOrdenDetalle::class,$arMovimientoDetalle->getCodigoOrdenDetalleFk());
+        return $this->render('inventario/movimiento/inventario/referenciaDetalle.html.twig',[
+            'arMovimientoDetalle' => $arMovimientoDetalle,
+            'arPedidoDetalle' => $arPedidoDetalle,
+            'arOrdenDetalle' => $arOrdenDetalle
         ]);
     }
 }

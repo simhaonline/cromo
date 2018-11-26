@@ -49,6 +49,41 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function informeDetalles()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvRemisionDetalle::class,'rd')
+            ->select('rd.codigoRemisionDetallePk')
+            ->addSelect('rd.codigoRemisionFk')
+            ->addSelect('rd.codigoItemFk')
+            ->addSelect('r.numero')
+            ->addSelect('r.fecha')
+            ->addSelect('t.nombreCorto AS tercero')
+            ->addSelect('rd.loteFk')
+            ->addSelect('rd.codigoBodegaFk')
+            ->addSelect('rd.cantidad')
+            ->addSelect('rd.cantidadPendiente')
+            ->addSelect('i.nombre as itemNombre')
+            ->addSelect('i.referencia as itemReferencia')
+            ->addSelect('m.nombre as itemMarcaNombre')
+            ->addSelect('rd.cantidadAfectada')
+            ->addSelect('rd.vrPrecio')
+            ->addSelect('rd.porcentajeIva')
+            ->addSelect('rd.vrIva')
+            ->addSelect('rd.vrSubtotal')
+            ->addSelect('rd.vrNeto')
+            ->leftJoin('rd.remisionRel','r')
+            ->leftJoin('r.terceroRel', 't')
+            ->leftJoin('rd.itemRel','i')
+            ->leftJoin('i.marcaRel','m')
+        ->orderBy('r.numero', 'ASC');
+        if($session->get('filtroInvInformeRemisionDetalleCodigoTercero')){
+            $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroInvInformeRemisionDetalleCodigoTercero')}");
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
     /**
      * @param $arRemision
      * @param $arrDetallesSeleccionados

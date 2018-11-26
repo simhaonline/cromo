@@ -37,12 +37,24 @@ class FinTerceroRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function listaIntercambio(){
-        return $this->_em->createQueryBuilder()->from(FinTercero::class,'t')
-            ->select('t.nombre1')
+    public function listaIntercambio()
+    {
+        return $this->_em->createQueryBuilder()->from(FinTercero::class, 't')
+            ->leftJoin('t.ciudadRel', 'c')
+            ->leftJoin('c.departamentoRel', 'd')
+            ->select('t.codigoIdentificacionFk')
+            ->addSelect('t.nombreCorto')
+            ->addSelect('t.nombre1')
             ->addSelect('t.nombre2')
             ->addSelect('t.apellido1')
             ->addSelect('t.apellido2')
+            ->addSelect('t.direccion')
+            ->addSelect('c.nombre as ciudadNombre')
+            ->addSelect('c.codigoDane as codigoDaneCiudad')
+            ->addSelect('t.telefono')
+            ->addSelect('d.codigoDane as codigoDaneDepartamento')
+            ->addSelect('t.email')
+            ->addSelect('t.celular')
             ->addSelect('t.numeroIdentificacion');
     }
 }

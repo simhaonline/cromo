@@ -4,21 +4,23 @@
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
-            <th>NIT</th>
-            <th>P_NOMBRE</th>
-            <th>S_NOMBRE</th>
-            <th>P_APELLIDO</th>
-            <th>S_APELLIDO</th>
+            <th>IDENTIFICACION</th>
+            <th>TIPO</th>
+            <th>NOMBRE</th>
+            <th>DIRECCION</th>
+            <th>CIUDAD</th>
+            <th>TELEFONO</th>
         </tr>
         </thead>
         <tbody>
         {% for arTercero in arTerceros %}
             <tr>
                 <td>{{ arTercero.numeroIdentificacion }}</td>
-                <td>{{ arTercero.nombre1 }}</td>
-                <td>{{ arTercero.nombre2 }}</td>
-                <td>{{ arTercero.apellido1 }}</td>
-                <td>{{ arTercero.apellido2 }}</td>
+                <td>{{ arTercero.codigoIdentificacionFk }}</td>
+                <td>{{ arTercero.nombreCorto }}</td>
+                <td>{{ arTercero.direccion }}</td>
+                <td>{{ arTercero.ciudadNombre }}</td>
+                <td>{{ arTercero.telefono }}</td>
             </tr>
         {% endfor %}
     </table>

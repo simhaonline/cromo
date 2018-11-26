@@ -19,7 +19,7 @@ final class FuncionesController
     private static function getInstance()
     {
         static $instance = null;
-        if($instance === null) {
+        if ($instance === null) {
             $instance = new FuncionesController();
         }
         return $instance;
@@ -34,18 +34,18 @@ final class FuncionesController
      */
     public function sumarDiasFecha($dateFecha, $intDias = '', $intMeses = '', $intAnios = '')
     {
-        if($dateFecha instanceof \DateTime){
+        if ($dateFecha instanceof \DateTime) {
             $fecha = $dateFecha->format('Y-m-j');
         } else {
             $fecha = $dateFecha;
         }
-        if($intDias != ''){
+        if ($intDias != '') {
             $nuevafecha = strtotime('+' . $intDias . ' day', strtotime($fecha));
         }
-        if($intMeses != ''){
+        if ($intMeses != '') {
             $nuevafecha = strtotime('+' . $intMeses . ' month', strtotime($fecha));
         }
-        if($intAnios != ''){
+        if ($intAnios != '') {
             $nuevafecha = strtotime('+' . $intAnios . ' year', strtotime($fecha));
         }
         $nuevafecha = date('Y-m-j', $nuevafecha);
@@ -66,69 +66,78 @@ final class FuncionesController
      * @param $index
      * @return string
      */
-    public static function indexAColumna($index){
+    public static function indexAColumna($index)
+    {
         $letra = '';
-        switch ($index){
+        switch ($index) {
             case 1:
                 $letra = 'A';
-            break;
+                break;
             case 2:
                 $letra = 'B';
-            break;
+                break;
             case 3:
                 $letra = 'C';
-            break;
+                break;
             case 4:
                 $letra = 'D';
-            break;
+                break;
             case 5:
                 $letra = 'E';
-            break;
+                break;
             case 6:
                 $letra = 'F';
-            break;
+                break;
             case 7:
                 $letra = 'G';
-            break;
+                break;
             case 8:
                 $letra = 'H';
-            break;
+                break;
             case 9:
                 $letra = 'I';
-            break;
+                break;
             case 10:
                 $letra = 'J';
-            break;
+                break;
             case 11:
                 $letra = 'K';
-            break;
+                break;
         }
         return $letra;
     }
 
-    public static function RellenarNr($Nro, $Str, $NroCr)
+    //5,0,10
+    public static function RellenarNr($Nro, $Str, $NroCr, $pos = 'L')
     {
-        $Longitud = strlen($Nro);
+        $Longitud = strlen($Nro); //5
 
-        $Nc = $NroCr - $Longitud;
-        for ($i = 0; $i < $Nc; $i++)
-            $Nro = $Str . $Nro;
+        $Nc = $NroCr - $Longitud; //5
+        for ($i = 0; $i < $Nc; $i++) {
+            if($pos == 'L'){
+                $Nro = $Str . $Nro;
+            } else {
+                $Nro =  $Nro . $Str;
+            }
+        }
 
         return (string)$Nro;
     }
 
-    public static function ultimoDia($fecha){
-        $fechaDesde = $fecha->format('Y-m').'-01';
+    public static function ultimoDia($fecha)
+    {
+        $fechaDesde = $fecha->format('Y-m') . '-01';
         $aux = date('Y-m-d', strtotime("{$fechaDesde} + 1 month"));
         $fechaHasta = date('Y-m-d', strtotime("{$aux} - 1 day"));
         return $fechaHasta;
     }
 
-    public static function crearNotificacion($id,$usuarios){
-        try{
-            $em=BaseDatos::getEm();
-            $arNotificacionTipoPrueba=$em->getRepository('App:General\GenNotificacionTipo')->find($id);
-            if($arNotificacionTipoPrueba->getEstadoActivo()) {
+    public static function crearNotificacion($id, $usuarios)
+    {
+        try {
+            $em = BaseDatos::getEm();
+            $arNotificacionTipoPrueba = $em->getRepository('App:General\GenNotificacionTipo')->find($id);
+            if ($arNotificacionTipoPrueba->getEstadoActivo()) {
                 if (!$usuarios) {
                     $usuarios = json_decode($arNotificacionTipoPrueba->getUsuarios(), true);
                 }
@@ -148,11 +157,10 @@ final class FuncionesController
                     }
                     $em->flush();
                 }
-            }
-            else{
+            } else {
                 Mensajes::error("No se puede crear la notificacion, se encuentra desactivada");
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             //Error
         }
     }

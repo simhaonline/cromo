@@ -50,11 +50,32 @@ class TerceroController extends Controller
         die("Problemas en la creacion del archivo plano");
         $arTerceros = $em->getRepository(FinTercero::class)->listaIntercambio()->getQuery()->getResult();
         foreach ($arTerceros as $arTercero) {
-            fputs($ar, $arTercero['numeroIdentificacion'] . "\t");
-            fputs($ar, utf8_decode($arTercero['nombre1']) . "\t");
-            fputs($ar, utf8_decode($arTercero['nombre2']) . "\t");
-            fputs($ar, utf8_decode($arTercero['apellido1']) . "\t");
-            fputs($ar, utf8_decode($arTercero['apellido2']) . "\t");
+            fputs($ar, FuncionesController::RellenarNr($arTercero['numeroIdentificacion'], ' ', 11,'R') . "\t");
+            if ($arTercero['codigoIdentificacionFk'] == 'NI') {
+                $tipoDocumento = 'A';
+            } elseif ($arTercero['codigoIdentificacionFk'] == 'CC') {
+                $tipoDocumento = 'C';
+            }
+            fputs($ar, $tipoDocumento . "\t");
+            fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['nombreCorto']), ' ', 30, 'R') . "\t");
+            fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['direccion']), ' ', 30, 'R') . "\t");
+            fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['ciudadNombre']), ' ', 15, 'R') . "\t");
+            fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['telefono']), ' ', 7, 'R') . "\t");
+            $codigoMunicipio = FuncionesController::RellenarNr($arTercero['codigoDaneDepartamento'], '0', 2);
+            $codigoCiudad = FuncionesController::RellenarNr($arTercero['codigoDaneCiudad'], '0', 3);
+            fputs($ar, $codigoMunicipio . $codigoCiudad. "\t");
+            fputs($ar, 'S' . "\t");
+            fputs($ar, 'N' . "\t");
+            fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['nombre1']), ' ', 30, 'R') . "\t");
+            fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['nombre2']), ' ', 30, 'R') . "\t");
+            fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['apellido1']), ' ', 30, 'R') . "\t");
+            fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['apellido2']), ' ', 30, 'R') . "\t");
+            fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['email']), ' ', 60, 'R') . "\t");
+            fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['celular']), ' ', 15, 'R') . "\t");
+            fputs($ar, FuncionesController::RellenarNr('0', ' ', 3, 'R') . "\t");
+            fputs($ar, FuncionesController::RellenarNr(' ', ' ', 4, 'R') . "\t");
+            fputs($ar, FuncionesController::RellenarNr(' ', ' ', 5, 'R') . "\t");
+            fputs($ar, ' '  ."|");
             fputs($ar, "\n");
         }
         fclose($ar);

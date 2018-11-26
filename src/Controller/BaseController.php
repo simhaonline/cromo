@@ -57,11 +57,11 @@ abstract class BaseController extends Controller
                         ]);
                 } else if ($campo['tipo'] == "DateType") {
                     $session->set($this->claseNombre . "_" . $campo['child'], null);
-                    $dateFecha = new \DateTime('now');
+//                    $dateFecha = new \DateTime('now');
                     $form->add($campo['child'], $tipo,
                         [
                             'required' => false,
-                            'data' => $dateFecha,
+                            'data' => null,
                             'widget' => 'single_text',
                             'format' => 'yyyy-MM-dd',
                             'attr' => array('class' => 'date')
@@ -271,7 +271,7 @@ abstract class BaseController extends Controller
                 if (strlen($campo->campo) >= 5 && substr($campo->campo, 0, 5) == "fecha") {
                     $fechaDesde = $session->get($claseNombre . "_" . $campo->campo . "Desde");
                     $fechaHasta = $session->get($claseNombre . "_" . $campo->campo . "Hasta");
-                    if ($fechaDesde && $fechaHasta) {
+                    if ($fechaDesde!==null && $fechaHasta!==null) {
                         $queryBuilder->andWhere('e.' . $campo->campo . ">='{$fechaDesde}'")
                             ->andWhere('e.' . $campo->campo . "<='{$fechaHasta}'");
                     }

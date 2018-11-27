@@ -81,7 +81,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroInvInformeRemisionDetalleCodigoTercero')}");
         }
 
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder;
     }
 
     /**

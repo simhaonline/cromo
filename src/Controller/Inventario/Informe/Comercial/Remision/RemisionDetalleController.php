@@ -19,7 +19,6 @@ class RemisionDetalleController extends Controller
     /**
      * @param Request $request
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/comercial/remision/detalle", name="inventario_informe_inventario_comercial_remision_detalle")
@@ -40,7 +39,7 @@ class RemisionDetalleController extends Controller
                 $session->set('filtroInvInformeRemisionDetalleCodigoTercero', $form->get('txtCodigoTercero')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(InvRemisionDetalle::class)->informeDetalles(), "Informe remisiones pendientes");
+                General::get()->setExportar($em->createQuery($em->getRepository(InvRemisionDetalle::class)->informeDetalles())->execute(), "Informe remisiones pendientes");
             }
         }
         $arRemisionDetalles = $paginator->paginate($em->getRepository(InvRemisionDetalle::class)->informeDetalles(), $request->query->getInt('page', 1), 30);

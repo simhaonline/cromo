@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Informe\Inventario\Remision;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
@@ -39,7 +40,7 @@ class KardexController extends ControllerListenerGeneral
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('txtLote', TextType::class, ['required' => false, 'data' => $session->get('filtroInvKardexLote')])
-            ->add('txtBodega', TextType::class, ['required' => false, 'data' => $session->get('filtroInvKardexLoteBodega')])
+            ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
             ->add('cboRemisionTipo', EntityType::class, $em->getRepository(InvRemisionTipo::class)->llenarCombo())
             ->add('txtCodigoItem', TextType::class, ['required' => false, 'data' => $session->get('filtroInvItemCodigo'), 'attr' => ['class' => 'form-control']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -49,7 +50,12 @@ class KardexController extends ControllerListenerGeneral
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvLote', $form->get('txtLote')->getData());
-                $session->set('filtroInvBodega', $form->get('txtBodega')->getData());
+                $arBodega = $form->get('cboBodega')->getData();
+                if ($arBodega != '') {
+                    $session->set('filtroInvBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());
+                } else {
+                    $session->set('filtroInvBodega', null);
+                }
                 $remisionTipo = $form->get('cboRemisionTipo')->getData();
                 if($remisionTipo != ''){
                     $session->set('filtroInvCodigoRemisionTipo', $form->get('cboRemisionTipo')->getData()->getCodigoRemisionTipoPk());
@@ -58,7 +64,7 @@ class KardexController extends ControllerListenerGeneral
                 }
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvMovimientoDetalle::class)->listaKardex())->execute(), "Kardex");
+                General::get()->setExportar($em->createQuery($em->getRepository(InvRemisionDetalle::class)->listaKardex())->execute(), "Kardex");
             }
         }
         $arRemisionesDetalles = $paginator->paginate($em->getRepository(InvRemisionDetalle::class)->listaKardex(), $request->query->getInt('page', 1), 100);

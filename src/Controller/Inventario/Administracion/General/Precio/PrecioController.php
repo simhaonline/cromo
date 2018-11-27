@@ -48,7 +48,7 @@ class PrecioController extends ControllerListenerGeneral
             $session->set('filtroInvTipoPrecio', $form->get('chkTipoPrecio')->getData());
         }
         $query = $this->getDoctrine()->getRepository(InvPrecio::class)->lista();
-        $arPrecios = $paginator->paginate($query, $request->query->getInt('page', 1), 10);
+        $arPrecios = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
         return $this->render('inventario/administracion/general/precio/lista.html.twig', [
             'arPrecios' => $arPrecios,
             'form' => $form->createView()]);

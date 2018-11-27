@@ -36,7 +36,10 @@ class NovedadType extends AbstractType
                     return $er->createQueryBuilder('er')
                         ->orderBy('er.nombre', 'ASC');
                 },
-                'choice_label' => 'nombre',
+                'choice_label' => function($er){
+                    $tipo = $er->getSubTipo() == 'L' ? 'LICENCIA' : 'INCAPACIDAD';
+                    return $er->getNombre().' - '.$tipo;
+                },
                 'required' => true
             ])
             ->add('guardar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-primary']]);
@@ -53,7 +56,22 @@ class NovedadType extends AbstractType
     {
         $campos = '[
         {"campo":"codigoNovedadPk",                 "tipo":"pk"    ,"ayuda":"Codigo del registro"        ,"titulo":"ID"},
-        {"campo":"codigoNovedadTipoFk",             "tipo":"texto" ,"ayuda":"Codigo del tipo de novedad" ,"titulo":"TIPO"},
+        {"campo":"novedadTipoRel.nombre",           "tipo":"texto" ,"ayuda":"Nombre del tipo de novedad" ,"titulo":"TIPO", "relacion":""},
+        {"campo":"fecha",                           "tipo":"fecha" ,"ayuda":"Fecha del registro"         ,"titulo":"FECHA"},
+        {"campo":"codigoEmpleadoFk",                "tipo":"texto" ,"ayuda":"Codigo del empleado"        ,"titulo":"EMPLEADO"},
+        {"campo":"empleadoRel.nombreCorto",         "tipo":"texto" ,"ayuda":"Nombre del empleado"        ,"titulo":"NOMBRE", "relacion":""},
+        {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto" ,"ayuda":"Identificacion del empleado","titulo":"IDENTIFICACION", "relacion":""},
+        {"campo":"codigoContratoFk",                "tipo":"texto" ,"ayuda":"Codigo del contrato"        ,"titulo":"CONTRATO"},
+        {"campo":"fechaDesde",                      "tipo":"fecha" ,"ayuda":"Fecha desde"                ,"titulo":"DESDE"},                     
+        {"campo":"fechaHasta",                      "tipo":"fecha" ,"ayuda":"Fecha hasta"                ,"titulo":"HASTA"}]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+        {"campo":"codigoNovedadPk",                 "tipo":"pk"    ,"ayuda":"Codigo del registro"        ,"titulo":"ID"},
+        {"campo":"novedadTipoRel.nombre",           "tipo":"texto" ,"ayuda":"Nombre del tipo de novedad" ,"titulo":"TIPO", "relacion":""},
         {"campo":"fecha",                           "tipo":"fecha" ,"ayuda":"Fecha del registro"         ,"titulo":"FECHA"},
         {"campo":"codigoEmpleadoFk",                "tipo":"texto" ,"ayuda":"Codigo del empleado"        ,"titulo":"EMPLEADO"},
         {"campo":"empleadoRel.nombreCorto",         "tipo":"texto" ,"ayuda":"Nombre del empleado"        ,"titulo":"NOMBRE", "relacion":""},

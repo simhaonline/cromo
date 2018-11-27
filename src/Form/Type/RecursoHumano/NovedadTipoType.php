@@ -36,11 +36,7 @@ class NovedadTipoType extends AbstractType
                 'required' => true,
                 'label' => 'Concepto:'
             ])
-            ->add('afectaSalud', CheckboxType::class, ['required' => false])
-            ->add('ausentismo', CheckboxType::class, ['required' => false])
-            ->add('maternidad', CheckboxType::class, ['required' => false])
-            ->add('paternidad', CheckboxType::class, ['required' => false])
-            ->add('remunerada', CheckboxType::class, ['required' => false])
+            ->add('abreviatura', TextType::class, ['required' => false,'label' => 'Abreviatura:'])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
@@ -56,12 +52,9 @@ class NovedadTipoType extends AbstractType
         $campos = '[
             {"campo":"codigoNovedadTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
             {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
-            {"campo":"afectaSalud",         "tipo":"texto", "ayuda":"Afecta salud",        "titulo":"A_S"},
-            {"campo":"ausentismo",          "tipo":"texto", "ayuda":"Ausentismo", "titulo":"AUS"},
-            {"campo":"maternidad",          "tipo":"texto", "ayuda":"Maternidad", "titulo":"MAT"},
-            {"campo":"paternidad",          "tipo":"texto", "ayuda":"Paternidad", "titulo":"PAT"},
-            {"campo":"remunerada",          "tipo":"texto", "ayuda":"Remunerada", "titulo":"REM"},
-            {"campo":"codigoConceptoFk",    "tipo":"texto", "ayuda":"Codigo concepto ",    "titulo":"CONCEPTO"}
+            {"campo":"subTipo",             "tipo":"texto", "ayuda":"Subtipo del registro L = LICENCIA, I = INCAPACIDAD", "titulo":"SUBTIPO"},
+            {"campo":"codigoConceptoFk",    "tipo":"texto", "ayuda":"Codigo concepto ",    "titulo":"CONCEPTO"},
+            {"campo":"abreviatura",         "tipo":"texto", "ayuda":"Abreviatura del nombre del registro ",    "titulo":"ABR"}
         ]';
         return $campos;
     }
@@ -71,12 +64,9 @@ class NovedadTipoType extends AbstractType
         $campos = '[
             {"campo":"codigoNovedadTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
             {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
-            {"campo":"afectaSalud",         "tipo":"texto", "ayuda":"Afecta salud",        "titulo":"A_S"},
-            {"campo":"ausentismo",          "tipo":"texto", "ayuda":"Ausentismo", "titulo":"AUS"},
-            {"campo":"maternidad",          "tipo":"texto", "ayuda":"Maternidad", "titulo":"MAT"},
-            {"campo":"paternidad",          "tipo":"texto", "ayuda":"Paternidad", "titulo":"PAT"},
-            {"campo":"remunerada",          "tipo":"texto", "ayuda":"Remunerada", "titulo":"REM"},
-            {"campo":"codigoConceptoFk",    "tipo":"texto", "ayuda":"Codigo concepto ",    "titulo":"CONCEPTO"}
+            {"campo":"subTipo",             "tipo":"texto", "ayuda":"Subtipo del registro L = LICENCIA, I = INCAPACIDAD", "titulo":"SUBTIPO"},
+            {"campo":"codigoConceptoFk",    "tipo":"texto", "ayuda":"Codigo concepto ",    "titulo":"CONCEPTO"},
+            {"campo":"abreviatura",         "tipo":"texto", "ayuda":"Abreviatura del nombre del registro ",    "titulo":"ABR"}
         ]';
         return $campos;
     }

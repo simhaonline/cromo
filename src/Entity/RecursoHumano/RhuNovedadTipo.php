@@ -14,8 +14,9 @@ class RhuNovedadTipo
 {
     public $infoLog = [
         "primaryKey" => "codigoNovedadTipoPk",
-        "todos"     => true,
+        "todos" => true,
     ];
+
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_novedad_tipo_pk", type="string", length=10)
@@ -33,34 +34,14 @@ class RhuNovedadTipo
     private $nombre;
 
     /**
+     * @ORM\Column(name="abreviatura", type="string", length=5, nullable=true)
+     */
+    private $abreviatura;
+
+    /**
      * @ORM\Column(name="sub_tipo", type="string", length=1, nullable=true)
      */
     private $subTipo;
-
-    /**
-     * @ORM\Column(name="afecta_salud", type="boolean", nullable=true)
-     */
-    private $afectaSalud = false;
-
-    /**
-     * @ORM\Column(name="ausentismo", type="boolean", nullable=true)
-     */
-    private $ausentismo = false;
-
-    /**
-     * @ORM\Column(name="maternidad", type="boolean", nullable=true)
-     */
-    private $maternidad = false;
-
-    /**
-     * @ORM\Column(name="paternidad", type="boolean", nullable=true)
-     */
-    private $paternidad = false;
-
-    /**
-     * @ORM\Column(name="remunerada", type="boolean", nullable=true)
-     */
-    private $remunerada = false;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuNovedad", mappedBy="novedadTipoRel")
@@ -124,6 +105,22 @@ class RhuNovedadTipo
     /**
      * @return mixed
      */
+    public function getAbreviatura()
+    {
+        return $this->abreviatura;
+    }
+
+    /**
+     * @param mixed $abreviatura
+     */
+    public function setAbreviatura($abreviatura): void
+    {
+        $this->abreviatura = $abreviatura;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSubTipo()
     {
         return $this->subTipo;
@@ -135,86 +132,6 @@ class RhuNovedadTipo
     public function setSubTipo($subTipo): void
     {
         $this->subTipo = $subTipo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAfectaSalud()
-    {
-        return $this->afectaSalud;
-    }
-
-    /**
-     * @param mixed $afectaSalud
-     */
-    public function setAfectaSalud($afectaSalud): void
-    {
-        $this->afectaSalud = $afectaSalud;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAusentismo()
-    {
-        return $this->ausentismo;
-    }
-
-    /**
-     * @param mixed $ausentismo
-     */
-    public function setAusentismo($ausentismo): void
-    {
-        $this->ausentismo = $ausentismo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMaternidad()
-    {
-        return $this->maternidad;
-    }
-
-    /**
-     * @param mixed $maternidad
-     */
-    public function setMaternidad($maternidad): void
-    {
-        $this->maternidad = $maternidad;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPaternidad()
-    {
-        return $this->paternidad;
-    }
-
-    /**
-     * @param mixed $paternidad
-     */
-    public function setPaternidad($paternidad): void
-    {
-        $this->paternidad = $paternidad;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRemunerada()
-    {
-        return $this->remunerada;
-    }
-
-    /**
-     * @param mixed $remunerada
-     */
-    public function setRemunerada($remunerada): void
-    {
-        $this->remunerada = $remunerada;
     }
 
     /**

@@ -10,6 +10,7 @@ use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Form\Type\RecursoHumano\EgresoType;
+use App\Formato\RecursoHumano\Egreso;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -71,6 +72,8 @@ class EgresoController extends BaseController
             if (!$arEgreso) {
                 return $this->render($this->generateUrl('recursohumano_movimiento_nomina_egreso_lista'));
             }
+        } else {
+            $arEgreso->setFecha(new \DateTime('now'));
         }
         $form = $this->createForm(EgresoType::class, $arEgreso);
         $form->handleRequest($request);
@@ -127,6 +130,10 @@ class EgresoController extends BaseController
                 $em->getRepository(RhuEgresoDetalle::class)->eliminarTodos($id);
                 $em->getRepository(RhuEgreso::class)->liquidar($id);
             }
+            if($form->get('btnImprimir')->isClicked()){
+                $objFormato = new Egreso();
+                $objFormato->Generar($em, $id);
+            }
             return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_egreso_detalle',['id' => $id]));
         }
         $arEgresoDetalles = $em->getRepository(RhuEgresoDetalle::class)->listaEgresosDetalle($id);
@@ -169,6 +176,7 @@ class EgresoController extends BaseController
                             $arEgresoDetalle->setVrPago($valorPagar);
                             $arEgresoDetalle->setBancoRel($arPago->getEmpleadoRel()->getBancoRel());
                             $arEgresoDetalle->setEmpleadoRel($arPago->getEmpleadoRel());
+                            $arEgresoDetalle->setCuenta($arPago->getEmpleadoRel()->getCuenta());
                             $arPago->setEstadoEgreso(1);
                             $em->persist($arEgresoDetalle);
                             $em->persist($arPago);

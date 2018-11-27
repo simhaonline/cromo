@@ -47,6 +47,11 @@ class RhuEgresoDetalle
     private $vrPago = 0;
 
     /**
+     * @ORM\Column(name="cuenta",type="string", length=80, nullable=true)
+     */
+    private $cuenta;
+
+    /**
      * @ORM\Column(name="estado_contabilizado", type="boolean")
      */
     private $estadoContabilizado = false;
@@ -185,6 +190,22 @@ class RhuEgresoDetalle
     public function setEstadoContabilizado($estadoContabilizado): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuenta()
+    {
+        return $this->cuenta;
+    }
+
+    /**
+     * @param mixed $cuenta
+     */
+    public function setCuenta($cuenta): void
+    {
+        $this->cuenta = $cuenta;
     }
 
     /**

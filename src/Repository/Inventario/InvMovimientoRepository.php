@@ -439,22 +439,28 @@ class InvMovimientoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arMovimiento->getEstadoAprobado() && !$arMovimiento->getEstadoAnulado() && !$arMovimiento->getEstadoContabilizado()) {
-            if($this->afectar($arMovimiento, -1)) {
-                $arMovimiento->setVrSubtotal(0);
-                $arMovimiento->setVrIva(0);
-                $arMovimiento->setVrTotal(0);
-                $arMovimiento->setVrRetencionFuente(0);
-                $arMovimiento->setVrRetencionIva(0);
-                $arMovimiento->setVrDescuento(0);
-                $arMovimiento->setVrNeto(0);
-                $arMovimiento->setEstadoAnulado(1);
-                $this->getEntityManager()->persist($arMovimiento);
-                $query = $em->createQuery('UPDATE App\Entity\inventario\InvMovimientoDetalle md set md.vrPrecio = 0, 
+            $validarCartera = true;
+            if($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
+                $validarCartera = $em->getRepository(CarCuentaCobrar::class)->anularExterno('INV', $arMovimiento->getCodigoMovimientoPk());
+            }
+            if($validarCartera) {
+                if($this->afectar($arMovimiento, -1)) {
+                    $arMovimiento->setVrSubtotal(0);
+                    $arMovimiento->setVrIva(0);
+                    $arMovimiento->setVrTotal(0);
+                    $arMovimiento->setVrRetencionFuente(0);
+                    $arMovimiento->setVrRetencionIva(0);
+                    $arMovimiento->setVrDescuento(0);
+                    $arMovimiento->setVrNeto(0);
+                    $arMovimiento->setEstadoAnulado(1);
+                    $this->getEntityManager()->persist($arMovimiento);
+                    $query = $em->createQuery('UPDATE App\Entity\inventario\InvMovimientoDetalle md set md.vrPrecio = 0, 
                       md.vrIva = 0, md.vrSubtotal = 0, md.vrTotal = 0, md.vrNeto = 0, md.vrDescuento = 0, md.porcentajeDescuento = 0, md.cantidad = 0, md.cantidadOperada = 0, md.cantidadSaldo = 0  
                       WHERE md.codigoMovimientoFk = :codigoMovimiento')
-                    ->setParameter('codigoMovimiento', $arMovimiento->getCodigoMovimientoPk());
-                $query->execute();
-                $this->getEntityManager()->flush();
+                        ->setParameter('codigoMovimiento', $arMovimiento->getCodigoMovimientoPk());
+                    $query->execute();
+                    $this->getEntityManager()->flush();
+                }
             }
         } else {
             Mensajes::error('El registro debe estar aprobado, sin anular previamente y sin contabilizar');

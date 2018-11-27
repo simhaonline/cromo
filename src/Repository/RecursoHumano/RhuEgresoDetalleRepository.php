@@ -27,6 +27,7 @@ class RhuEgresoDetalleRepository extends ServiceEntityRepository
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('e.nombreCorto')
             ->addSelect('b.nombre')
+            ->addSelect('p.numero as pagoNumero')
             ->addSelect('ed.cuenta')
             ->addSelect('ed.vrPago')
             ->from(RhuEgresoDetalle::class, 'ed')

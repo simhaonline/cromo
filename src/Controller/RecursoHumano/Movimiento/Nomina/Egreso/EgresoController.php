@@ -74,6 +74,8 @@ class EgresoController extends BaseController
             }
         } else {
             $arEgreso->setFecha(new \DateTime('now'));
+            $arEgreso->setFechaAplicacion(new \DateTime('now'));
+            $arEgreso->setFechaTrasmision(new \DateTime('now'));
         }
         $form = $this->createForm(EgresoType::class, $arEgreso);
         $form->handleRequest($request);

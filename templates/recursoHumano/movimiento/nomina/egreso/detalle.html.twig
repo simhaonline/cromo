@@ -45,7 +45,8 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>PAGO</th>
+            <th title="Id del pago">PAGO</th>
+            <th title="Consecutivo de aprobación del pago">NÚMERO</th>
             <th>TIPO</th>
             <th>IDENTIFICACIÓN</th>
             <th>EMPLEADO</th>
@@ -60,6 +61,7 @@
             <tr>
                 <td>{{ arEgresoDetalle.codigoEgresoDetallePk }}</td>
                 <td>{{ arEgresoDetalle.codigoPagoFk }}</td>
+                <td>{{ arEgresoDetalle.pagoNumero }}</td>
                 <td>{{ arEgresoDetalle.pagoTipo }}</td>
                 <td>{{ arEgresoDetalle.numeroIdentificacion }}</td>
                 <td>{{ arEgresoDetalle.nombreCorto }}</td>

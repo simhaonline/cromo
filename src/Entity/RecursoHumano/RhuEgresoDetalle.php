@@ -12,7 +12,7 @@ class RhuEgresoDetalle
 {
     public $infoLog = [
         "primaryKey" => "codigoEgresoDetallePk",
-        "todos"     => true,
+        "todos" => true,
     ];
     /**
      * @ORM\Id

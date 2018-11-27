@@ -92,6 +92,11 @@ class RhuProgramacion
     private $estadoAprobado = false;
 
     /**
+     * @ORM\Column(name="estado_pagado", options={"default": false}, type="boolean", nullable=true)
+     */
+    private $estadoPagado = false;
+
+    /**
      * @ORM\Column(name="estado_anulado", options={"default": false}, type="boolean", nullable=true)
      */
     private $estadoAnulado = false;
@@ -222,6 +227,22 @@ class RhuProgramacion
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoPagado()
+    {
+        return $this->estadoPagado;
+    }
+
+    /**
+     * @param mixed $estadoPagado
+     */
+    public function setEstadoPagado($estadoPagado): void
+    {
+        $this->estadoPagado = $estadoPagado;
     }
 
     /**

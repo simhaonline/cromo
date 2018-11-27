@@ -357,6 +357,11 @@ class RhuEmpleado
     protected $egresosDetallesEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuProgramacionDetalle", mappedBy="empleadoRel")
+     */
+    protected $programacionesPagosDetallesEmpleadoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuReclamo", mappedBy="empleadoRel")
      */
     protected $reclamosEmpleadoRel;
@@ -1303,6 +1308,22 @@ class RhuEmpleado
     public function setEgresosDetallesEmpleadoRel($egresosDetallesEmpleadoRel): void
     {
         $this->egresosDetallesEmpleadoRel = $egresosDetallesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProgramacionesPagosDetallesEmpleadoRel()
+    {
+        return $this->programacionesPagosDetallesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $programacionesPagosDetallesEmpleadoRel
+     */
+    public function setProgramacionesPagosDetallesEmpleadoRel($programacionesPagosDetallesEmpleadoRel): void
+    {
+        $this->programacionesPagosDetallesEmpleadoRel = $programacionesPagosDetallesEmpleadoRel;
     }
 
     /**

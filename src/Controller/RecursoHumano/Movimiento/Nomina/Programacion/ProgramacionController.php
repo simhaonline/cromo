@@ -187,11 +187,11 @@ class ProgramacionController extends BaseController
     {
         $em = $this->getDoctrine()->getManager();
         $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($id);
-        $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoProgramacionDetalleFk' => $id));
-        if (!$arPago) {
+        if (!$arProgramacionDetalle->getProgramacionRel()->getEstadoAutorizado()) {
             Mensajes::error('El empleado aun no tiene pagos generados');
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
+        $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoProgramacionDetalleFk' => $id));
         $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->lista($arPago->getCodigoPagoPk());
         return $this->render('recursoHumano/movimiento/nomina/programacion/resumen.html.twig', [
             'arProgramacionDetalle' => $arProgramacionDetalle,

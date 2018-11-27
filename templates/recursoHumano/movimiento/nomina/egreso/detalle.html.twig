@@ -46,7 +46,7 @@
             <th>ID</th>
             <th>PAGO</th>
             <th>TIPO</th>
-            <th>IDENTIFICACION</th>
+            <th>IDENTIFICACIÓN</th>
             <th>EMPLEADO</th>
             <th>BANCO</th>
             <th>CUENTA</th>
@@ -70,6 +70,11 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="btn-toolbar">
+        <div class="btn-group" style="float: right;">
+            <a class="btn btn-sm btn-default" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_egreso_detalle_nuevo',{'id': arEgreso.codigoEgresoPk,'codigoPagoTipo' : 'NOM'}) }}','detalleNuevo',700,900)">Nuevo</a>
+        </div>
+    </div>
     <br>
     <br>
 {% endblock %}

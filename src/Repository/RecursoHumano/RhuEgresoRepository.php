@@ -4,18 +4,12 @@ namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEgreso;
+use App\Entity\RecursoHumano\RhuEgresoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class RhuEgresoRepository extends ServiceEntityRepository
 {
-
-    /**
-     * @return string
-     */
-    public function getRuta(){
-        return 'recursohumano_movimiento_credito_credito_';
-    }
 
     public function __construct(RegistryInterface $registry)
     {
@@ -23,41 +17,23 @@ class RhuEgresoRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return \Doctrine\ORM\QueryBuilder
+     * @param $codigoEgreso
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function lista()
-    {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuCredito::class, 'e');
-        $queryBuilder
-            ->select('e.codigoCreditoPk');
-        return $queryBuilder;
+    public function liquidar($codigoEgreso){
+        $em = $this->getEntityManager();
+        $arEgreso = $em->getRepository(RhuEgreso::class)->find($codigoEgreso);
+        $arEgresoDetalles = $em->getRepository(RhuEgresoDetalle::class)->findBy(['codigoEgresoFk' => $codigoEgreso]);
+        $douTotal = 0;
+        $intNumeroRegistros = 0;
+        foreach ($arEgresoDetalles AS $arEgresoDetalle) {
+            $douTotal += $arEgresoDetalle->getVrPago();
+            $intNumeroRegistros++;
+        }
+        $arEgreso->setVrTotal($douTotal);
+        $arEgreso->setNumeroRegistros($intNumeroRegistros);
+        $em->persist($arEgreso);
+        $em->flush();
     }
-
-    /**
-     * @return array
-     */
-    public function parametrosLista(){
-        $arEmbargo = new RhuEmbargo();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
-            ->select('re.codigoEmbargoPk')
-            ->addSelect('re.fecha')
-            ->where('re.codigoEmbargoPk <> 0');
-        $arrOpciones = ['json' =>'[{"campo":"codigoEmbargoPk","ayuda":"Codigo del embargo","titulo":"ID"},
-        {"campo":"fecha","ayuda":"Fecha de registro","titulo":"FECHA"}]',
-            'query' => $queryBuilder,'ruta' => $this->getRuta()];
-        return $arrOpciones;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function parametrosExcel(){
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
-            ->select('re.codigoEmbargoPk')
-            ->addSelect('re.fecha')
-            ->where('re.codigoEmbargoPk <> 0');
-        return $queryBuilder->getQuery()->execute();
-    }
-
-
 }

@@ -87,6 +87,59 @@ class InvMovimientoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+
+    public function listaContabilizar()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm');
+        $queryBuilder
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('m.codigoDocumentoFk')
+            ->addSelect('m.numero')
+            ->addSelect('t.nombreCorto AS terceroNombreCorto')
+            ->addSelect('m.fecha')
+            ->addSelect('m.vrSubtotal')
+            ->addSelect('m.vrIva')
+            ->addSelect('m.vrDescuento')
+            ->addSelect('m.vrNeto')
+            ->addSelect('m.vrTotal')
+            ->addSelect('m.estadoAnulado')
+            ->addSelect('m.estadoAprobado')
+            ->addSelect('m.estadoAutorizado')
+            ->leftJoin('m.terceroRel', 't')
+            ->where("m.codigoMovimientoPk <> 0 ");
+        if ($session->get('filtroInvMovimientoNumero') != "") {
+            $queryBuilder->andWhere("m.numero = " . $session->get('filtroInvMovimientoNumero'));
+        }
+        if ($session->get('filtroInvMovimientoCodigo') != "") {
+            $queryBuilder->andWhere("m.codigoMovimientoPk = " . $session->get('filtroInvMovimientoCodigo'));
+        }
+        if($session->get('filtroInvCodigoTercero')){
+            $queryBuilder->andWhere("m.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
+        }
+        switch ($session->get('filtroInvMovimientoEstadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("m.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("m.estadoAutorizado = 1");
+                break;
+        }
+        switch ($session->get('filtroInvMovimientoEstadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("m.estadoAprobado= 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("m.estadoAprobado = 1");
+                break;
+        }
+        if($session->get('filtroGenAsesor')) {
+            $queryBuilder->andWhere("m.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
+        }
+        $queryBuilder->orderBy('m.estadoAprobado', 'ASC');
+        $queryBuilder->addOrderBy('m.fecha', 'DESC');
+        return $queryBuilder;
+    }
     /**
      * @param $arMovimiento InvMovimiento
      * @throws \Doctrine\ORM\ORMException
@@ -304,6 +357,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $arItem = $this->getEntityManager()->getRepository(InvItem::class)->find($arMovimientoDetalle->getCodigoItemFk());
             if($arItem->getAfectaInventario() == 1) {
+                //Se hace en el detalle porque los traslados tienen un registro 1 y otro -1
+                $operacionTransaccion = $arMovimientoDetalle->getOperacionInventario() * $tipo;
                 $arLote = $this->getEntityManager()->getRepository(InvLote::class)
                     ->findOneBy(['loteFk' => $arMovimientoDetalle->getLoteFk(), 'codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $arMovimientoDetalle->getCodigoBodegaFk()]);
                 if (!$arLote) {
@@ -323,7 +378,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $em->persist($arLote);
                 }
 
-                if($arMovimientoDetalle->getOperacionInventario() == -1) {
+                if($operacionTransaccion == -1 ) {
                     $disponible = $arLote->getCantidadDisponible();
                     if($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
                         $disponible += $arMovimientoDetalle->getCantidad();
@@ -335,14 +390,19 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     }
                 }
                 if($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
-                    $arLote->setCantidadRemisionada($arLote->getCantidadRemisionada() - $arMovimientoDetalle->getCantidad());
-                    $arItem->setCantidadRemisionada($arItem->getCantidadRemisionada() - $arMovimientoDetalle->getCantidad());
+                    if($operacionTransaccion == -1) {
+                        $arLote->setCantidadRemisionada($arLote->getCantidadRemisionada() - $arMovimientoDetalle->getCantidad());
+                        $arItem->setCantidadRemisionada($arItem->getCantidadRemisionada() - $arMovimientoDetalle->getCantidad());
+                    } else {
+                        $arLote->setCantidadRemisionada($arLote->getCantidadRemisionada() + $arMovimientoDetalle->getCantidad());
+                        $arItem->setCantidadRemisionada($arItem->getCantidadRemisionada() + $arMovimientoDetalle->getCantidad());
+                    }
                 }
                 $existenciaAnterior = $arItem->getCantidadExistencia();
                 $costoPromedio = $arItem->getVrCostoPromedio();
                 $cantidadSaldo = $arItem->getCantidadExistencia() + ($arMovimientoDetalle->getCantidadOperada() * $tipo);
                 $cantidadOperada = $arMovimientoDetalle->getCantidad() * $arMovimientoDetalle->getOperacionInventario();
-                $cantidadAfectar = ($arMovimientoDetalle->getCantidad() * $arMovimientoDetalle->getOperacionInventario()) * $tipo;
+                $cantidadAfectar = $arMovimientoDetalle->getCantidad() * $operacionTransaccion;
                 $arLote->setCantidadExistencia($arLote->getCantidadExistencia() + $cantidadAfectar);
                 $arLote->setCantidadDisponible($arLote->getCantidadExistencia() - $arLote->getCantidadRemisionada());
                 $em->persist($arLote);
@@ -378,25 +438,26 @@ class InvMovimientoRepository extends ServiceEntityRepository
     public function anular($arMovimiento)
     {
         $em = $this->getEntityManager();
-        if ($arMovimiento->getEstadoAprobado()) {
-            $this->afectar($arMovimiento, -1);
-            $arMovimiento->setVrSubtotal(0);
-            $arMovimiento->setVrIva(0);
-            $arMovimiento->setVrTotal(0);
-            $arMovimiento->setVrRetencionFuente(0);
-            $arMovimiento->setVrRetencionIva(0);
-            $arMovimiento->setVrDescuento(0);
-            $arMovimiento->setVrNeto(0);
-            $arMovimiento->setEstadoAnulado(1);
-            $this->getEntityManager()->persist($arMovimiento);
-            $query = $em->createQuery('UPDATE App\Entity\inventario\InvMovimientoDetalle md set md.vrPrecio = 0, 
-                      md.vrIva = 0, md.vrSubtotal = 0, md.vrTotal = 0, md.vrNeto = 0, md.vrDescuento = 0, md.porcentajeDescuento = 0, md.cantidad = 0, md.cantidadOperada = 0  
+        if ($arMovimiento->getEstadoAprobado() && !$arMovimiento->getEstadoAnulado() && !$arMovimiento->getEstadoContabilizado()) {
+            if($this->afectar($arMovimiento, -1)) {
+                $arMovimiento->setVrSubtotal(0);
+                $arMovimiento->setVrIva(0);
+                $arMovimiento->setVrTotal(0);
+                $arMovimiento->setVrRetencionFuente(0);
+                $arMovimiento->setVrRetencionIva(0);
+                $arMovimiento->setVrDescuento(0);
+                $arMovimiento->setVrNeto(0);
+                $arMovimiento->setEstadoAnulado(1);
+                $this->getEntityManager()->persist($arMovimiento);
+                $query = $em->createQuery('UPDATE App\Entity\inventario\InvMovimientoDetalle md set md.vrPrecio = 0, 
+                      md.vrIva = 0, md.vrSubtotal = 0, md.vrTotal = 0, md.vrNeto = 0, md.vrDescuento = 0, md.porcentajeDescuento = 0, md.cantidad = 0, md.cantidadOperada = 0, md.cantidadSaldo = 0  
                       WHERE md.codigoMovimientoFk = :codigoMovimiento')
-                ->setParameter('codigoMovimiento', $arMovimiento->getCodigoMovimientoPk());
-            $query->execute();
-            $this->getEntityManager()->flush();
+                    ->setParameter('codigoMovimiento', $arMovimiento->getCodigoMovimientoPk());
+                $query->execute();
+                $this->getEntityManager()->flush();
+            }
         } else {
-            Mensajes::error('El registro esta aprobado y no se puede desautorizar');
+            Mensajes::error('El registro debe estar aprobado, sin anular previamente y sin contabilizar');
         }
     }
 

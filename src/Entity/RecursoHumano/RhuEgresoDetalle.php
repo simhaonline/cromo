@@ -12,7 +12,7 @@ class RhuEgresoDetalle
 {
     public $infoLog = [
         "primaryKey" => "codigoEgresoDetallePk",
-        "todos"     => true,
+        "todos" => true,
     ];
     /**
      * @ORM\Id
@@ -45,6 +45,11 @@ class RhuEgresoDetalle
      * @ORM\Column(name="vr_pago", options={"default":0},type="float")
      */
     private $vrPago = 0;
+
+    /**
+     * @ORM\Column(name="cuenta",type="string", length=80, nullable=true)
+     */
+    private $cuenta;
 
     /**
      * @ORM\Column(name="estado_contabilizado", type="boolean")
@@ -185,6 +190,22 @@ class RhuEgresoDetalle
     public function setEstadoContabilizado($estadoContabilizado): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuenta()
+    {
+        return $this->cuenta;
+    }
+
+    /**
+     * @param mixed $cuenta
+     */
+    public function setCuenta($cuenta): void
+    {
+        $this->cuenta = $cuenta;
     }
 
     /**

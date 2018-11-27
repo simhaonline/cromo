@@ -124,6 +124,11 @@ class RhuPago
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="estado_egreso", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoEgreso = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=500, nullable=true)
      */
     private $comentario;
@@ -263,6 +268,22 @@ class RhuPago
     public function setCodigoPeriodoFk($codigoPeriodoFk): void
     {
         $this->codigoPeriodoFk = $codigoPeriodoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoEgreso()
+    {
+        return $this->estadoEgreso;
+    }
+
+    /**
+     * @param mixed $estadoEgreso
+     */
+    public function setEstadoEgreso($estadoEgreso): void
+    {
+        $this->estadoEgreso = $estadoEgreso;
     }
 
     /**

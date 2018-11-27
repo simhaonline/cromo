@@ -3,20 +3,19 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuConceptoHora;
-use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuConsecutivo;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;
-use App\Entity\RecursoHumano\RhuEgreso;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Entity\Seguridad\Usuario;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Twig\NodeVisitor\SafeAnalysisNodeVisitor;
+
 
 class RhuProgramacionRepository extends ServiceEntityRepository
 {
@@ -169,6 +168,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arPagoDetalleCreditos = $em->getRepository(RhuPagoDetalle::class)->creditos($arProgramacion->getCodigoProgramacionPk());
             foreach ($arPagoDetalleCreditos as $arPagoDetalleCredito) {
                 $arPagoDetalle = $em->getRepository(RhuPagoDetalle::class)->find($arPagoDetalleCredito['codigoPagoDetallePk']);
+                /** @var  $arCredito RhuCredito */
                 $arCredito = $arPagoDetalle->getCreditoRel();
                 //Crear credito pago, se guarda el pago en la tabla rhu_pago_credito
                 $arPagoCredito = new RhuCreditoPago();
@@ -177,6 +177,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $arPagoCredito->setfechaPago(new \ DateTime("now"));
                 $arPagoCredito->setCreditoPagoTipoRel($arCredito->getCreditoPagoTipoRel());
                 $arPagoCredito->setVrPago($arPagoDetalle->getVrPago());
+
                 //Actualizar el saldo del credito
                 $arCredito->setNumeroCuotaActual($arCredito->getNumeroCuotaActual() + 1);
                 $arCredito->setVrSaldo($arCredito->getVrSaldo() - $arPagoDetalleCredito['vrPago']);

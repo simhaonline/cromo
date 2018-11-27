@@ -82,5 +82,7 @@ class CuentaCobrarController extends Controller
             'arCuentasCobrar' => $arCuentasCobrar,
             'form' => $form->createView()]);
     }
+
+
 }
 

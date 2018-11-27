@@ -33,7 +33,7 @@
                     <td class="titulo">PERIODO:</td>
                     <td class="td-in-well">{{ arProgramacionDetalle.fechaDesde | date('Y-m-d') ~ ' / ' ~ arProgramacionDetalle.fechaHasta | date('Y-m-d') }}</td>
                     <td class="titulo">CARGO:</td>
-                    <td class="td-in-well" style="text-transform: uppercase;">{{ arPago.contratoRel.cargoRel.nombre }}</td>
+                    <td class="td-in-well" style="text-transform: uppercase;">{{ arPago.contratoRel.cargoRel.nombre | default('') }}</td>
                 </tr>
             </table>
         </div>

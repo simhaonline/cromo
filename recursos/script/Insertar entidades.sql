@@ -42,7 +42,7 @@ INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'ESSC62','','817000248','Asociación Mutual La Esperanza Asmet Salud','',0,0,1,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'ESSC76','','818000140','Asociación Mutual Barrios Unidos de Quibdó E.S.S. AMBUQ','',0,0,1,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'ESSC91','','832000760','Entidad Cooperativa Solidaria de Salud Ecoopsos','',0,0,1,0,0);
-INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'EPS 040','','900604350','Caja de Compensación Familiar de Antioquía - Comfama - Hoy Savia Salud EPS','',0,0,1,0,0);
+INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'EPS040','','900604350','Caja de Compensación Familiar de Antioquía - Comfama - Hoy Savia Salud EPS','',0,0,1,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCFC09','','891800213','Comfaboy EPS-CCF de Boyacá','',0,0,1,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCFC15','','891080005','Comfacor EPS – CCF de Córdoba','',0,0,1,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCFC20','','891600091','Comfachoco – CCF del Chocó','',0,0,1,0,0);

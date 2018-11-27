@@ -70,4 +70,15 @@ class ProgramacionType extends AbstractType
         ]';
         return $campos;
     }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+            {"child":"numero", "tipo":"TextType", "propiedades":{"label":"Numero"}}
+   
+        ]';
+
+        return $campos;
+    }
 }

@@ -136,6 +136,20 @@ class EgresoController extends BaseController
                 $objFormato = new Egreso();
                 $objFormato->Generar($em, $id);
             }
+            if($form->get('btnAutorizar')->isClicked()){
+                $arEgreso->setEstadoAutorizado(1);
+                $em->flush();
+            }
+            if($form->get('btnDesautorizar')->isClicked()){
+                $arEgreso->setEstadoAutorizado(0);
+                $em->flush();
+            }
+            if($form->get('btnAprobar')->isClicked()){
+                if($arEgreso->getEstadoAutorizado()){
+                    $arEgreso->setEstadoAprobado(1);
+                    $em->flush();
+                }
+            }
             return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_egreso_detalle',['id' => $id]));
         }
         $arEgresoDetalles = $em->getRepository(RhuEgresoDetalle::class)->listaEgresosDetalle($id);

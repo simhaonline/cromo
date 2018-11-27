@@ -81,7 +81,9 @@
             {{ form_widget(form.btnEliminar) }}
         </div>
         <div class="btn-group" style="float: right;">
+            {% if not arEgreso.estadoAutorizado %}
             <a class="btn btn-sm btn-default" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_egreso_detalle_nuevo',{'id': arEgreso.codigoEgresoPk,'codigoPagoTipo' : 'NOM'}) }}','detalleNuevo',700,900)">Nuevo</a>
+            {% endif %}
         </div>
     </div>
     <br>

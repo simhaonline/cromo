@@ -9,6 +9,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 abstract class BaseController extends Controller
@@ -66,9 +67,15 @@ abstract class BaseController extends Controller
                             'format' => 'yyyy-MM-dd',
                             'attr' => array('class' => 'date')
                         ]);
-                } else if ($campo['tipo'] != "SubmitType" && $campo['tipo'] != "CheckboxType" && $campo['tipo'] != "ChoiceType") {
+                }
+                else if($campo['tipo'] == "Tercero"){
+                    $form->add("txtCodigoTercero", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_codigoTercero')??""])
+                        ->add("txtNombreCorto", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_terceroRel.nombreCorto')??"", 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']]);
+                }
+                 else if ($campo['tipo'] != "SubmitType" && $campo['tipo'] != "CheckboxType" && $campo['tipo'] != "ChoiceType") {
                     $form->add($campo['child'], $tipo, ['label' => $campo['propiedades']['label'], 'required' => false, 'data' => $session->get($this->claseNombre . "_" . $campo['child']) ?? ""]);
-                } else {
+                }
+                else {
                     if ($campo['tipo'] == "ChoiceType") {
                         $session->set($this->claseNombre . "_" . $campo['child'], null);
                         $form->add($campo['child'], $tipo, ['label' => $campo['propiedades']['label'], 'required' => false, 'placeholder' => 'TODO', 'attr' => ['class' => 'form-control'], 'choices' => $campo['propiedades']['choices']]);
@@ -262,12 +269,12 @@ abstract class BaseController extends Controller
                 }
                 if ($claseNombre) {
                     if ($filtro != "" && $filtro != null) {
-                        $queryBuilder->andWhere($arrRel[0] . '.' . $campo->campo . "=" . $filtro);
+                        $queryBuilder->andWhere($arrRel[0] . '.' . $arrRel[1] . "='{$filtro}'");
                     }
                 }
             }
 
-            if ($claseNombre) {
+            if ($claseNombre && !isset($campo->relacion)) {
                 if (strlen($campo->campo) >= 5 && substr($campo->campo, 0, 5) == "fecha") {
                     $fechaDesde = $session->get($claseNombre . "_" . $campo->campo . "Desde");
                     $fechaHasta = $session->get($claseNombre . "_" . $campo->campo . "Hasta");

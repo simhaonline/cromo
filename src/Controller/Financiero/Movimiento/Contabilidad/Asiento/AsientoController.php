@@ -56,6 +56,7 @@ class AsientoController extends ControllerListenerGeneral
         }
 
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+
             if ($formFiltro->get('btnFiltro')->isClicked()) {
                 $session->set('FinAsiento_estadoAutorizado', $formFiltro->get('estadoAutorizado')->getData());
                 $session->set('FinAsiento_estadoAprobado', $formFiltro->get('estadoAprobado')->getData());
@@ -67,6 +68,7 @@ class AsientoController extends ControllerListenerGeneral
                 $datos = $this->getDatosLista();
             }
         }
+
         return $this->render('financiero/movimiento/contabilidad/asiento/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),

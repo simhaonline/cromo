@@ -58,6 +58,8 @@ class RegistroController extends ControllerListenerGeneral
         }
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
+                $session->set($this->claseNombre . '_codigoTercero', $formFiltro->get('txtCodigoTercero')->getData());
+                $session->set($this->claseNombre . '_terceroRel.nombreCorto', $formFiltro->get('txtNombreCorto')->getData());
                 $session->set($this->claseNombre . '_numero', $formFiltro->get('numero')->getData());
                 $session->set($this->claseNombre . '_codigoComprobanteFk', $formFiltro->get('codigoComprobanteFk')->getData() != "" ? $formFiltro->get('codigoComprobanteFk')->getData()->getCodigoComprobantePk() : "");
                 $session->set($this->claseNombre . '_filtrarFecha', $formFiltro->get('filtrarFecha')->getData());

@@ -1,0 +1,20 @@
+<div class="form-group form-group-sm">
+    <label for="txtCodigoConductor" class="col-sm-2 ">Tercero:</label>
+    <div class="col-sm-10">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="input-group">
+                    {{ form_widget(formFiltro.txtCodigoTercero) }}
+                </div>
+            </div>
+            <div class="col-lg-10">
+                <div class="input-group">
+                    {{ form_widget(formFiltro.txtNombreCorto) }}
+                    <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('financiero_buscar_tercero', { 'campoCodigo': 'form_txtCodigoTercero', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

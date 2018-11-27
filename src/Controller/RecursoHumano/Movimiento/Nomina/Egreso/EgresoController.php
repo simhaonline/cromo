@@ -95,17 +95,39 @@ class EgresoController extends BaseController
     /**
      * @param Request $request
      * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("recursohumano/movimiento/nomina/egreso/detalle/{id}", name="recursohumano_movimiento_nomina_egreso_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arEgreso = $em->find(RhuEgreso::class, $id);
+        $arrBtnEliminarTodos = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar todos'];
+        $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar'];
+        if ($arEgreso->getEstadoAutorizado()) {
+            $arrBtnEliminarTodos['attr']['class'] .= ' hidden';
+            $arrBtnEliminar['attr']['class'] .= ' hidden';
+        }
         $form = Estandares::botonera($arEgreso->getEstadoAutorizado(), $arEgreso->getEstadoAprobado(), $arEgreso->getEstadoAnulado());
+        $form
+            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
+            ->add('btnEliminarTodos', SubmitType::class, $arrBtnEliminarTodos);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if($arrSeleccionados){
+                    $em->getRepository(RhuEgresoDetalle::class)->eliminar($arrSeleccionados);
+                    $em->getRepository(RhuEgreso::class)->liquidar($id);
+                }
+            }
+            if($form->get('btnEliminarTodos')->isClicked()){
+                $em->getRepository(RhuEgresoDetalle::class)->eliminarTodos($id);
+                $em->getRepository(RhuEgreso::class)->liquidar($id);
+            }
+            return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_egreso_detalle',['id' => $id]));
         }
         $arEgresoDetalles = $em->getRepository(RhuEgresoDetalle::class)->listaEgresosDetalle($id);
         return $this->render('recursoHumano/movimiento/nomina/egreso/detalle.html.twig', [

@@ -36,5 +36,4 @@ class RhuEgresoRepository extends ServiceEntityRepository
         $em->persist($arEgreso);
         $em->flush();
     }
-
 }

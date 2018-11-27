@@ -5,19 +5,19 @@
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                <label for="txtCodigoConductor" class="col-sm-1 control-label">Tercero:</label>
                 <div class="col-sm-11">
                     <div class="row">
                         <div class="col-lg-2">
                             <div class="input-group">
-                                {{ form_widget(form.txtCodigoCliente) }}
+                                {{ form_widget(form.txtCodigoTercero) }}
                             </div>
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                {{ form_widget(form.txtNombreCorto) }}
+                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="" readOnly="ReadOnly" />
                                 <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_bus_tercero', { 'campoCodigo': 'form_txtCodigoTercero', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>
@@ -25,79 +25,86 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Desde:</label>
-                <div class="col-sm-5">
-                    {{ form_widget(form.fechaDesde) }}
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Codigo:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.txtCodigo, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-1 control-label">Tipo:</label>
-                <div class="col-sm-5">
-                    {{ form_widget(form.cboFacturaTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                <label class="col-sm-3 control-label"></label>
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label">Numero:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.txtNumero, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label">Autorizado</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.chkEstadoAutorizado, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Hasta:</label>
-                <div class="col-sm-5">
-                    {{ form_widget(form.fechaHasta) }}
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Asesor:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.cboAsesor, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-3 control-label"></label>
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label"></label>
+                <div class="col-sm-2">
+                </div>
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label">Aprobado</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.chkEstadoAprobado, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-5">
-                    {{ form_widget(form.filtrarFecha) }}
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            {{ form_widget(form.btnFiltrar) }}
         </div>
     </div>
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
             <th>ID</th>
-            <th>TIPO</th>
             <th>NUMERO</th>
+            <th>TERCERO</th>
             <th>FECHA</th>
-            <th>CLIENTE</th>
-            <th>CANT</th>
-            <th>FLETE</th>
-            <th>MANEJO</th>
             <th>SUBTOTAL</th>
+            <th>IVA</th>
+            <th>DCT</th>
+            <th>NETO</th>
             <th>TOTAL</th>
             <th>AUT</th>
             <th>APR</th>
             <th>ANU</th>
-            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+            <th><input type="checkbox" name="ChkSeleccionar" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
         <tbody>
-        {% for arFactura in arFacturas %}
+        {% for arMovimiento in arMovimientos %}
             <tr>
-                <td>{{ arFactura.codigoFacturaPk }}</td>
-                <td>{{ arFactura.facturaTipo }}</td>
-                <td>{{ arFactura.numero }}</td>
-                <td>{{ arFactura.fecha | date('Y-m-d') }}</td>
-                <td>{{ arFactura.clienteNombre }}</td>
-                <td class="numero">{{ arFactura.guias | number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arFactura.vrFlete | number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arFactura.vrManejo | number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arFactura.vrSubtotal | number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arFactura.vrTotal| number_format(0, '.', ',') }}</td>
-                <td class="estado">{{ arFactura.estadoAutorizado?'SI':'NO' }}</td>
-                <td class="estado">{{ arFactura.estadoAprobado?'SI':'NO' }}</td>
-                <td class="estado">{{ arFactura.estadoAnulado?'SI':'NO' }}</td>
-                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arFactura.codigoFacturaPk }}" /></td>
+                {{ validarTipo(arMovimiento.codigoMovimientoPk ) }}
+                {{ validarTipo(arMovimiento.numero) }}
+                {{ validarTipo(arMovimiento.terceroNombreCorto ) }}
+                {{ validarTipo(arMovimiento.fecha) }}
+                <td class="numero">{{ arMovimiento.vrSubtotal | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arMovimiento.vrIva | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arMovimiento.vrDescuento | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arMovimiento.vrNeto | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arMovimiento.vrTotal | number_format(0, '.', ',') }}</td>
+                <td class="estado">{{ arMovimiento.estadoAutorizado?'SI':'NO' }}</td>
+                <td class="estado">{{ arMovimiento.estadoAprobado?'SI':'NO' }}</td>
+                <td class="estado">{{ arMovimiento.estadoAnulado?'SI':'NO' }}</td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arMovimiento.codigoMovimientoPk }}"></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     <div>
         <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arFacturas.getTotalItemCount }}</span></div>
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arMovimientos.getTotalItemCount }}</span></div>
         </div>
 
         <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-            {{ knp_pagination_render(arFacturas) }}
+            {{ knp_pagination_render(arMovimientos) }}
         </div>
         <div class="btn-toolbar" style="float: right">
             <div class="btn-group">

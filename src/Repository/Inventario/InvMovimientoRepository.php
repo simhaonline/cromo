@@ -87,6 +87,59 @@ class InvMovimientoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+
+    public function listaContabilizar()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm');
+        $queryBuilder
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('m.codigoDocumentoFk')
+            ->addSelect('m.numero')
+            ->addSelect('t.nombreCorto AS terceroNombreCorto')
+            ->addSelect('m.fecha')
+            ->addSelect('m.vrSubtotal')
+            ->addSelect('m.vrIva')
+            ->addSelect('m.vrDescuento')
+            ->addSelect('m.vrNeto')
+            ->addSelect('m.vrTotal')
+            ->addSelect('m.estadoAnulado')
+            ->addSelect('m.estadoAprobado')
+            ->addSelect('m.estadoAutorizado')
+            ->leftJoin('m.terceroRel', 't')
+            ->where("m.codigoMovimientoPk <> 0 ");
+        if ($session->get('filtroInvMovimientoNumero') != "") {
+            $queryBuilder->andWhere("m.numero = " . $session->get('filtroInvMovimientoNumero'));
+        }
+        if ($session->get('filtroInvMovimientoCodigo') != "") {
+            $queryBuilder->andWhere("m.codigoMovimientoPk = " . $session->get('filtroInvMovimientoCodigo'));
+        }
+        if($session->get('filtroInvCodigoTercero')){
+            $queryBuilder->andWhere("m.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
+        }
+        switch ($session->get('filtroInvMovimientoEstadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("m.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("m.estadoAutorizado = 1");
+                break;
+        }
+        switch ($session->get('filtroInvMovimientoEstadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("m.estadoAprobado= 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("m.estadoAprobado = 1");
+                break;
+        }
+        if($session->get('filtroGenAsesor')) {
+            $queryBuilder->andWhere("m.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
+        }
+        $queryBuilder->orderBy('m.estadoAprobado', 'ASC');
+        $queryBuilder->addOrderBy('m.fecha', 'DESC');
+        return $queryBuilder;
+    }
     /**
      * @param $arMovimiento InvMovimiento
      * @throws \Doctrine\ORM\ORMException

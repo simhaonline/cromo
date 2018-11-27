@@ -114,12 +114,15 @@ class ControllerListener extends Controller{
         $arUsuarioRol=$this->user->getToken()->getRoles()[0]->getRole()??"ROLE_USER";
         $arSegUsuarioProceso=$em->getRepository('App:Seguridad\SegUsuarioProceso')->findOneBy(['codigoProcesoFk'=>$controller[0]->getProceso()]);
         $arProceso=$em->getRepository('App:General\GenProceso')->find($controller[0]->getProceso());
-        if($arSegUsuarioProceso || $arUsuarioRol=="ROLE_ADMIN"){
-            if(!$arSegUsuarioProceso->getIngreso() && $arUsuarioRol!="ROLE_ADMIN"){
+        if($arSegUsuarioProceso && $arUsuarioRol!="ROLE_ADMIN"){
+            if(!$arSegUsuarioProceso->getIngreso()){
                 $this->redireccionar($event, $url, "No tiene permiso para ingresar al proceso '{$arProceso->getNombre()}'");
         }
             return;
 
+        }
+        elseif($arUsuarioRol=="ROLE_ADMIN"){
+            return;
         }
         else{
             $this->redireccionar($event, $url, "No tiene permiso para ingresar al proceso '{$arProceso->getNombre()}'");
@@ -128,7 +131,7 @@ class ControllerListener extends Controller{
 
     public function redireccionar($event, $url, $mensage){
         Mensajes::error($mensage);
-        $event->setController(function () use($url){
+        $event->setController(function () use($url) {
             return new RedirectResponse($url);
         });
     }

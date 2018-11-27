@@ -2,25 +2,35 @@
 
 namespace  App\Controller\Estructura;
 
+use App\Controller\Principal\InicioController;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\Routing\RouterInterface;
 
-class ControllerListener{
+class ControllerListener extends Controller{
 
     private $user;
     private $routeActual;
     private $em;
+    private $router;
     /**
      * ControllerListener constructor.
      * @param $user
      */
-    public function __construct($user, RequestStack $rs, EntityManager $em)
+    public function __construct($user, RequestStack $rs, EntityManager $em,RouterInterface $router)
     {
+        $this->router=$router;
         $this->routeActual=$rs->getCurrentRequest()->headers->get('referer');
+        if(!$this->routeActual){
+            $this->routeActual="{$rs->getCurrentRequest()->getScheme()}://{$rs->getCurrentRequest()->getHost()}{$rs->getCurrentRequest()->getBaseUrl()}";
+
+        }
         $this->user = $user;
         $this->em=$em;
     }

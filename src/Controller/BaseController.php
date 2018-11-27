@@ -19,14 +19,20 @@ abstract class BaseController extends Controller
     /**
      * @return array
      */
-    protected function getDatosLista()
+    protected function getDatosLista($filtro=false)
     {
         $paginator = $this->get('knp_paginator');
         $nombreRepositorio = "App:{$this->modulo}\\{$this->claseNombre}";
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
         $campos = json_decode($namespaceType::getEstructuraPropiedadesLista());
+        if(!$filtro){
+        $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos);
+        }
+        else{
+            $camposFiltro = json_decode($namespaceType::getEstructuraPropiedadesFiltro(), true);
+            $queryBuilder = $this->getGenerarQueryConFiltro($nombreRepositorio, $camposFiltro);
+        }
         /** @var  $queryBuilder QueryBuilder */
-        $queryBuilder = $this->getGenerarQueryConFiltro($nombreRepositorio, $campos);
         return [
             'ruta' => strtolower($this->modulo) . "_" . strtolower($this->funcion) . "_" . strtolower($this->grupo) . "_" . strtolower($this->nombre),
             'arrCampos' => $campos,
@@ -252,13 +258,13 @@ abstract class BaseController extends Controller
         $session = new Session();
         /** @var  $queryBuilder QueryBuilder */
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio, 'e')
-            ->select('e.' . $campos[0]->campo);
+            ->select('e.' . $campos[0]['child']);
         foreach ($campos as $campo) {
-            $filtro = $session->get($claseNombre . "_" . $campo->campo);
+            $filtro = $session->get($claseNombre . "_" . $campo['child']);
             if ($campo->tipo != "pk" && !isset($campo->relacion)) {
-                $queryBuilder->addSelect('e.' . $campo->campo);
+                $queryBuilder->addSelect('e.' . $campo['child']);
             } elseif (isset($campo->relacion)) {
-                $arrRel = explode('.', $campo->campo);
+                $arrRel = explode('.', $campo['child']);
                 $alias = substr($arrRel[0], 0, 3) . 'Rel' . $arrRel[1];
                 if (!$this->validarRelacion($arrRelaciones, $arrRel[0])) {
                     $arrRelaciones[] = $arrRel[0];
@@ -275,17 +281,17 @@ abstract class BaseController extends Controller
             }
 
             if ($claseNombre && !isset($campo->relacion)) {
-                if (strlen($campo->campo) >= 5 && substr($campo->campo, 0, 5) == "fecha") {
-                    $fechaDesde = $session->get($claseNombre . "_" . $campo->campo . "Desde");
-                    $fechaHasta = $session->get($claseNombre . "_" . $campo->campo . "Hasta");
+                if (strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha") {
+                    $fechaDesde = $session->get($claseNombre . "_" . $campo['child'] . "Desde");
+                    $fechaHasta = $session->get($claseNombre . "_" . $campo['child'] . "Hasta");
                     if ($fechaDesde!==null && $fechaHasta!==null) {
-                        $queryBuilder->andWhere('e.' . $campo->campo . ">='{$fechaDesde}'")
-                            ->andWhere('e.' . $campo->campo . "<='{$fechaHasta}'");
+                        $queryBuilder->andWhere('e.' . $campo['child'] . ">='{$fechaDesde}'")
+                            ->andWhere('e.' . $campo['child'] . "<='{$fechaHasta}'");
                     }
                 } else {
                     if ($filtro !== "" && $filtro !== null) {
 
-                        $queryBuilder->andWhere('e.' . $campo->campo . "='{$filtro}'");
+                        $queryBuilder->andWhere('e.' . $campo['child'] . "='{$filtro}'");
                     }
                 }
             }

@@ -16,7 +16,7 @@ framework:
         log: true
 
     cache:
-        # The app cache caches to the filesystem by default. Other options include:
+        # The app cache caches to the filesystem by default. /documental/general/general/inicio/verOther options include:
 
         # Redis
         #app: cache.adapter.redis

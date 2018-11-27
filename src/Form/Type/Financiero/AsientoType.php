@@ -66,7 +66,6 @@ class AsientoType extends AbstractType
     {
 
         $campos = '[
-            {"child":"tercero", "tipo":"Tercero"},
             {"child":"numero", "tipo":"TextType", "propiedades":{"label":"Numero"}},
             {"child":"codigoComprobanteFk","tipo":"EntityType","propiedades":{"class":"FinComprobante","choice_label":"nombre","label":"Comprobante"}},
             {"child":"fechaDesde","tipo":"DateType","propiedades":{"label":"Fecha Desde"}},

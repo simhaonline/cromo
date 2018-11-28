@@ -58,6 +58,11 @@ class GenAsesor
     protected $movimientosAsesorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarCuentaCobrar",mappedBy="asesorRel")
+     */
+    protected $cuentasCobrarAsesorRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvRemision",mappedBy="asesorRel")
      */
     protected $remisionesAsesorRel;
@@ -204,6 +209,38 @@ class GenAsesor
     public function setRemisionesAsesorRel($remisionesAsesorRel): void
     {
         $this->remisionesAsesorRel = $remisionesAsesorRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentasCobrarAsesorRel()
+    {
+        return $this->cuentasCobrarAsesorRel;
+    }
+
+    /**
+     * @param mixed $cuentasCobrarAsesorRel
+     */
+    public function setCuentasCobrarAsesorRel($cuentasCobrarAsesorRel): void
+    {
+        $this->cuentasCobrarAsesorRel = $cuentasCobrarAsesorRel;
     }
 
 

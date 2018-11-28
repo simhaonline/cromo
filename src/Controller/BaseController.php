@@ -257,8 +257,7 @@ abstract class BaseController extends Controller
         $arrRelaciones = [];
         $session = new Session();
         /** @var  $queryBuilder QueryBuilder */
-        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio, 'e')
-            ->select($campos[0]['child']);
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio, 'e');
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
         $camposTabla = json_decode($namespaceType::getEstructuraPropiedadesLista());
 

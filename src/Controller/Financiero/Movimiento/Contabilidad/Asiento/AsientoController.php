@@ -4,6 +4,7 @@ namespace App\Controller\Financiero\Movimiento\Contabilidad\Asiento;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinCuenta;
@@ -45,7 +46,7 @@ class AsientoController extends ControllerListenerGeneral
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
-        $datos = $this->getDatosLista();
+
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Asientos");
@@ -58,17 +59,11 @@ class AsientoController extends ControllerListenerGeneral
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
 
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                $session->set('FinAsiento_estadoAutorizado', $formFiltro->get('estadoAutorizado')->getData());
-                $session->set('FinAsiento_estadoAprobado', $formFiltro->get('estadoAprobado')->getData());
-                $session->set('FinAsiento_estadoAnulado', $formFiltro->get('estadoAnulado')->getData());
-                $session->set('FinAsiento_numero', $formFiltro->get('numero')->getData());
-                $session->set('FinAsiento_codigoComprobanteFk', $formFiltro->get('codigoComprobanteFk')->getData() != "" ? $formFiltro->get('codigoComprobanteFk')->getData()->getCodigoComprobantePk() : "");
-                $session->set('FinAsiento_fechaDesde', $formFiltro->get('fechaDesde')->getData()!=null?$formFiltro->get('fechaDesde')->getData()->format('Y-m-d'):null);
-                $session->set('FinAsiento_fechaHasta', $formFiltro->get('fechaHasta')->getData()!=null?$formFiltro->get('fechaHasta')->getData()->format('Y-m-d'):null);
-                $datos = $this->getDatosLista();
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+//                $datos = $this->getDatosLista();
             }
         }
-
+        $datos = $this->getDatosLista(true);
         return $this->render('financiero/movimiento/contabilidad/asiento/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),

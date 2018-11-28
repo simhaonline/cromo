@@ -118,7 +118,8 @@ class RegistroType extends AbstractType
             {"child":"numero", "tipo":"TextType", "propiedades":{"label":"Numero"}},
             {"child":"codigoComprobanteFk","tipo":"EntityType","propiedades":{"class":"FinComprobante","choice_label":"nombre","label":"Comprobante"}},
             {"child":"fechaDesde","tipo":"DateType","propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHasta","tipo":"DateType","propiedades":{"label":"Fecha Hasta"}}
+            {"child":"fechaHasta","tipo":"DateType","propiedades":{"label":"Fecha Hasta"}},
+            {"child":"estadoIntercambio","tipo":"ChoiceType","propiedades":{"label":"Intercambio","choices":{"SI":true,"NO":false}}}
         ]';
 
         return $campos;

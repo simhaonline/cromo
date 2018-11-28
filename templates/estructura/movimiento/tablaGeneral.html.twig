@@ -28,7 +28,11 @@
                             <td>{{ dato }}</td>
                         {% endif %}
                     {% elseif campo.tipo == "fecha" %}
+                        {% if dato %}
                         <td>{{ dato  | date('Y-m-d') }} </td>
+                        {% else %}
+                            <td></td>
+                            {% endif %}
                     {% elseif campo.tipo == "moneda" %}
                         <td class="numero">{{ dato | number_format(0, '.', ',') }}</td>
                     {% elseif campo.tipo == "bool" %}

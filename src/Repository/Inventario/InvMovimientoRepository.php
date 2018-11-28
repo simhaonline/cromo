@@ -355,27 +355,27 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $validacion = true;
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
         /* se deben crear los lotes primero ya que si no estan creados se crean duplicados */
-        if($arMovimiento->getOperacionInventario() == 1) {
-            foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-                $arItem = $this->getEntityManager()->getRepository(InvItem::class)->find($arMovimientoDetalle->getCodigoItemFk());
-                if($arItem->getAfectaInventario() == 1) {
-                    $arLote = $this->getEntityManager()->getRepository(InvLote::class)
-                        ->findOneBy(['loteFk' => $arMovimientoDetalle->getLoteFk(), 'codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $arMovimientoDetalle->getCodigoBodegaFk()]);
-                    if (!$arLote) {
-                        $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle->getCodigoBodegaFk());
-                        $arLote = new InvLote();
-                        $arLote->setCodigoItemFk($arMovimientoDetalle->getCodigoItemFk());
-                        $arLote->setItemRel($arItem);
-                        $arLote->setCodigoBodegaFk($arMovimientoDetalle->getCodigoBodegaFk());
-                        $arLote->setBodegaRel($arBodega);
-                        $arLote->setLoteFk($arMovimientoDetalle->getLoteFk());
-                        $arLote->setFechaVencimiento($arMovimientoDetalle->getFechaVencimiento());
-                        $em->persist($arLote);
-                        $em->flush();
-                    }
+
+        foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+            $arItem = $this->getEntityManager()->getRepository(InvItem::class)->find($arMovimientoDetalle->getCodigoItemFk());
+            if($arItem->getAfectaInventario() == 1) {
+                $arLote = $this->getEntityManager()->getRepository(InvLote::class)
+                    ->findOneBy(['loteFk' => $arMovimientoDetalle->getLoteFk(), 'codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $arMovimientoDetalle->getCodigoBodegaFk()]);
+                if (!$arLote) {
+                    $arBodega = $this->getEntityManager()->getRepository(InvBodega::class)->find($arMovimientoDetalle->getCodigoBodegaFk());
+                    $arLote = new InvLote();
+                    $arLote->setCodigoItemFk($arMovimientoDetalle->getCodigoItemFk());
+                    $arLote->setItemRel($arItem);
+                    $arLote->setCodigoBodegaFk($arMovimientoDetalle->getCodigoBodegaFk());
+                    $arLote->setBodegaRel($arBodega);
+                    $arLote->setLoteFk($arMovimientoDetalle->getLoteFk());
+                    $arLote->setFechaVencimiento($arMovimientoDetalle->getFechaVencimiento());
+                    $em->persist($arLote);
+                    $em->flush();
                 }
             }
         }
+
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $arItem = $this->getEntityManager()->getRepository(InvItem::class)->find($arMovimientoDetalle->getCodigoItemFk());
             if($arItem->getAfectaInventario() == 1) {

@@ -316,7 +316,7 @@ abstract class BaseController extends Controller
                 } else {
                     if ($filtro !== "" && $filtro !== null) {
 
-                        $queryBuilder->andWhere($campo['child'] . "='{$filtro}'");
+                        $queryBuilder->andWhere('e.'.$campo['child'] . "='{$filtro}'");
                     }
                 }
             }

@@ -45,9 +45,6 @@ class RegistroController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
-        $datos = $this->getDatosLista();
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Registros");
@@ -56,6 +53,8 @@ class RegistroController extends ControllerListenerGeneral
 
             }
         }
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
                 $session->set($this->claseNombre . '_terceroRel.codigoTerceroPk', $formFiltro->get('txtCodigoTercero')->getData());
@@ -64,9 +63,10 @@ class RegistroController extends ControllerListenerGeneral
                 $session->set($this->claseNombre . '_codigoComprobanteFk', $formFiltro->get('codigoComprobanteFk')->getData() != "" ? $formFiltro->get('codigoComprobanteFk')->getData()->getCodigoComprobantePk() : "");
                 $session->set($this->claseNombre . '_fechaDesde', $formFiltro->get('fechaDesde')->getData()!=null?$formFiltro->get('fechaDesde')->getData()->format('Y-m-d'):null);
                 $session->set($this->claseNombre . '_fechaHasta', $formFiltro->get('fechaHasta')->getData()!=null?$formFiltro->get('fechaHasta')->getData()->format('Y-m-d'):null);
-                $datos = $this->getDatosLista(true);
+                //$datos = $this->getDatosLista(true);
             }
         }
+        $datos = $this->getDatosLista(true);
         return $this->render('financiero/movimiento/contabilidad/registro/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),

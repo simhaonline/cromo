@@ -74,6 +74,60 @@ class GuiaType extends AbstractType {
         ));
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoGuiaPk",                            "tipo":"pk",        "ayuda":"Codigo de guia",                           "titulo":"GUIA"},
+            {"campo":"codigoOperacionIngresoFk",                "tipo":"texto",     "ayuda":"Codigo operacion",                         "titulo":"IO"},
+            {"campo":"codigoOperacionCargoFk",                  "tipo":"texto",     "ayuda":"Codigo operacion cargo",                   "titulo":"OC"},
+            {"campo":"codigoServicioFk",                        "tipo":"texto",     "ayuda":"Codigo servicio",                          "titulo":"SER"},
+            {"campo":"codigoGuiaTipoFk",                        "tipo":"texto",     "ayuda":"Codigo guia tipo",                         "titulo":"TIPO"},
+            {"campo":"numero",                                  "tipo":"entero",    "ayuda":"Numero",                                   "titulo":"NUMERO"},
+            {"campo":"documentoCliente",                        "tipo":"entero",    "ayuda":"Documento cliente",                        "titulo":"DOC"},
+            {"campo":"fechaIngreso",                            "tipo":"fecha",     "ayuda":"Fecha ingreso",                            "titulo":"FECHA"},
+            {"campo":"clienteRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Nombre cliente",                           "titulo":"CLIENTE",         "relacion":""},
+            {"campo":"ciudadDestinoRel.nombre",                 "tipo":"texto",     "ayuda":"Ciudad destino",                           "titulo":"DESTINO",         "relacion":""},
+            {"campo":"unidades",                                "tipo":"moneda",    "ayuda":"Unidades",                                 "titulo":"UND"},                                
+            {"campo":"pesoReal",                                "tipo":"moneda",    "ayuda":"Peso real",                                "titulo":"PES"},                                
+            {"campo":"pesoVolumen",                             "tipo":"moneda",    "ayuda":"Peso volumen",                             "titulo":"VOL"},
+            {"campo":"vrFlete",                                 "tipo":"moneda",    "ayuda":"Valor flete",                              "titulo":"FLETE"},
+            {"campo":"vrManejo",                                "tipo":"moneda",    "ayuda":"Valor manejo",                             "titulo":"MANEJO"},
+            {"campo":"vrRecaudo",                               "tipo":"moneda",    "ayuda":"Valor recaudo",                            "titulo":"REC"},
+            {"campo":"estadoImpreso",                           "tipo":"bool",      "ayuda":"Impresa",                                  "titulo":"I"},
+            {"campo":"estadoEmbarcado",                         "tipo":"bool",      "ayuda":"Embarcada sin despachar",                  "titulo":"B"},
+            {"campo":"estadoDespachado",                        "tipo":"bool",      "ayuda":"Despachada",                               "titulo":"D"},
+            {"campo":"estadoEntregado",                         "tipo":"bool",      "ayuda":"Entregada",                                "titulo":"E"},
+            {"campo":"estadoSoporte",                           "tipo":"bool",      "ayuda":"Soporte de entrega",                       "titulo":"S"},
+            {"campo":"estadoCumplido",                          "tipo":"bool",      "ayuda":"Cumplido entregado al cliente",            "titulo":"C"},
+            {"campo":"estadoFacturado",                         "tipo":"bool",      "ayuda":"Facturado",                                "titulo":"F"},
+            {"campo":"estadoNovedad",                           "tipo":"bool",      "ayuda":"Con novedad",                              "titulo":"N"}
+        ]';
+        return $campos;
+
+    }
+
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+            {"child":"codigoClienteFk",                 "tipo":"TextType",   "propiedades":{"label":"Cliente"}},
+            {"child":"codigoGuiaTipoFk",                "tipo":"EntityType", "propiedades":{"class":"TteGuiaTipo",  "choice_label":"nombre","label":"TODOS"}},
+            {"child":"codigoOperacionCargoFk",          "tipo":"EntityType", "propiedades":{"class":"TteOperacion", "choice_label":"nombre","label":"TODOS"}},
+            {"child":"codigoServicioFk",                "tipo":"EntityType", "propiedades":{"class":"TteServicio",  "choice_label":"nombre","label":"TODOS"}},
+            {"child":"codigoGuiaPk",                    "tipo":"TextType",   "propiedades":{"label":"Guía"}},
+            {"child":"numero",                          "tipo":"TextType",   "propiedades":{"label":"Numero"}},
+            {"child":"documentoCliente",                "tipo":"TextType",   "propiedades":{"label":"Documento"}},
+            {"child":"fechaIngresoDesde",               "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaIngresoHasta",               "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
+            {"child":"codigoFacturaFk",                 "tipo":"TextType",   "propiedades":{"label":"Factura"}},
+            {"child":"estadoFacturado",                 "tipo":"ChoiceType", "propiedades":{"label":"Facturado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"remitente",                       "tipo":"TextType",   "propiedades":{"label":"Remitente"}}
+        ]';
+
+        return $campos;
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -170,11 +170,11 @@ final class FuncionesController
         $campos = json_decode($namespaceType::getEstructuraPropiedadesFiltro(), true);
         $session=new Session();
         foreach ($campos as $campo){
-            if($campo['tipo']==="Tercero"){
-        $session->set($claseNombre . '_terceroRel.codigoTerceroPk', $formFiltro->get('txtCodigoTercero')->getData());
-        $session->set($claseNombre . '_nombreCorto', $formFiltro->get('txtNombreCorto')->getData());
-            }
-            elseif(substr($campo['child'], -2)=="Fk"){
+//            if($campo['tipo']==="Tercero"){
+//        $session->set($claseNombre . '_'.$campo['child'], $formFiltro->get('txtCodigoTercero')->getData());
+//        $session->set($claseNombre . '_nombreCorto', $formFiltro->get('txtNombreCorto')->getData());
+//            }
+            if(substr($campo['child'], -2)=="Fk" && $campo['tipo']=="EntityType"){
                 $session->set($claseNombre . '_'.$campo['child'], $formFiltro->get($campo['child'])->getData() != "" ? call_user_func(array($formFiltro->get($campo['child'])->getData(), 'get'.substr($campo['child'], 0,-2).'Pk')): "");
             }
             else if(strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha"){

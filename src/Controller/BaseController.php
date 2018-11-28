@@ -74,10 +74,10 @@ abstract class BaseController extends Controller
                             'attr' => array('class' => 'date')
                         ]);
                 }
-                else if($campo['tipo'] == "Tercero"){
-                    $form->add("txtCodigoTercero", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_terceroRel.codigoTerceroPk')??""])
-                        ->add("txtNombreCorto", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_nombreCorto')??"", 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']]);
-                }
+//                else if($campo['tipo'] == "Tercero"){
+//                    $form->add("txtCodigoTercero", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_'.$campo['child'])??""])
+//                        ->add("txtNombreCorto", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_nombreCorto')??"", 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']]);
+//                }
                  else if ($campo['tipo'] != "SubmitType" && $campo['tipo'] != "CheckboxType" && $campo['tipo'] != "ChoiceType") {
                     $form->add($campo['child'], $tipo, ['label' => $campo['propiedades']['label'], 'required' => false, 'data' => $session->get($this->claseNombre . "_" . $campo['child']) ?? ""]);
                 }
@@ -241,7 +241,6 @@ abstract class BaseController extends Controller
                 }
             }
         }
-
         return $queryBuilder;
     }
 
@@ -268,7 +267,13 @@ abstract class BaseController extends Controller
             else{
                 $arrRel = explode('.', $camposT->campo);
                 $alias = substr($arrRel[0], 0, 3) . 'Rel' . $arrRel[1];
-                $queryBuilder->addSelect($camposT->campo . ' AS ' . $alias);
+                if (!$this->validarRelacion($arrRelaciones, $arrRel[0])) {
+                    $arrRelaciones[] = $arrRel[0];
+                    $queryBuilder->leftJoin('e.' . $arrRel[0], $arrRel[0]);
+                    $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
+                } else {
+                    $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
+                }
             }
         }
         foreach ($campos as $campo) {

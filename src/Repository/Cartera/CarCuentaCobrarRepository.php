@@ -4,6 +4,8 @@ namespace App\Repository\Cartera;
 
 
 use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\Cartera\CarReciboDetalle;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -291,5 +293,31 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             }
         }
         return $queryBuilder;
+    }
+
+    public function anularExterno($modulo, $codigoDocumento)
+    {
+        $respuesta = true;
+        $em = $this->getEntityManager();
+        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->findOneBy(array('modulo' => $modulo, 'codigoDocumento' => $codigoDocumento));
+        if($arCuentaCobrar) {
+            $arRecibosDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoCuentaCobrarFk' => $arCuentaCobrar->getCodigoCuentaCobrarPk()));
+            if($arRecibosDetalles) {
+                Mensajes::error("La cuenta por cobrar enlazada a este documento tiene recibos de caja, no se puede anular el documento");
+                $respuesta = false;
+            } else {
+                $arCuentaCobrarAct = $em->getRepository(CarCuentaCobrar::class)->find($arCuentaCobrar->getCodigoCuentaCobrarPk());
+                $arCuentaCobrarAct->setVrSubtotal(0);
+                $arCuentaCobrarAct->setVrTotal(0);
+                $arCuentaCobrarAct->setVrIva(0);
+                $arCuentaCobrarAct->setVrRetencionFuente(0);
+                $arCuentaCobrarAct->setVrRetencionIva(0);
+                $arCuentaCobrarAct->setVrSaldo(0);
+                $arCuentaCobrarAct->setVrSaldoOperado(0);
+                $arCuentaCobrarAct->setEstadoAnulado(1);
+                $em->persist($arCuentaCobrarAct);
+            }
+        }
+        return $respuesta;
     }
 }

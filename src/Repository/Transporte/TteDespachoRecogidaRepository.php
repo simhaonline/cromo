@@ -691,18 +691,18 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
         return true;
     }
 
-    public function fletePago($fechaDesde, $fechaHasta)
-    {
-        $valor = 0;
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'd')
-            ->select("SUM(d.vrFletePago) as fletePago")
-            ->where("d.fecha >='" . $fechaDesde . "' AND d.fecha <= '" . $fechaHasta . "'")
-        ->andWhere('d.estadoAprobado = 1');
-        $arrResultado = $queryBuilder->getQuery()->getSingleResult();
-        if($arrResultado['fletePago']) {
-            $valor = $arrResultado['fletePago'];
-        }
-        return $valor;
-    }
+//    public function fletePago($fechaDesde, $fechaHasta)
+//    {
+//        $valor = 0;
+//        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'd')
+//            ->select("SUM(d.vrFletePago) as fletePago")
+//            ->where("d.fecha >='" . $fechaDesde . "' AND d.fecha <= '" . $fechaHasta . "'")
+//        ->andWhere('d.estadoAprobado = 1');
+//        $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+//        if($arrResultado['fletePago']) {
+//            $valor = $arrResultado['fletePago'];
+//        }
+//        return $valor;
+//    }
 
 }

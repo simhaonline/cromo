@@ -9,6 +9,7 @@ use App\Entity\Transporte\TteCosto;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteDespachoRecogida;
+use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaTipo;
@@ -36,9 +37,7 @@ class TteIntermediacionRepository extends ServiceEntityRepository
         i.estadoAutorizado,
         i.estadoAprobado, 
         i.vrFletePago,
-        i.vrFletePagoRecogida,
-        i.vrFletePagoTotal,
-        i.vrFlete
+        i.vrFleteCobro
         FROM App\Entity\Transporte\TteIntermediacion i                 
         ORDER BY i.anio, i.mes DESC '
         );
@@ -59,40 +58,44 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             $fechaDesde = $arIntermediacion->getAnio() . "-" . $arIntermediacion->getMes() . "-01 00:00:00";
             $fechaHasta = $arIntermediacion->getAnio() . "-" . $arIntermediacion->getMes() . "-" . $ultimoDia . " 23:59:00";
             $fletePago = $em->getRepository(TteDespacho::class)->fletePago($fechaDesde, $fechaHasta);
-            $fletePagoRecogida = $em->getRepository(TteDespachoRecogida::class)->fletePago($fechaDesde, $fechaHasta);
-            $fletePagoTotal = $fletePago + $fletePagoRecogida;
+            //$fletePagoRecogida = $em->getRepository(TteDespachoRecogida::class)->fletePago($fechaDesde, $fechaHasta);
+            //$fletePagoTotal = $fletePago + $fletePagoRecogida;
             $fleteCobro = $em->getRepository(TteFactura::class)->fleteCobro($fechaDesde, $fechaHasta);
             $arIntermediacion->setVrFletePago($fletePago);
-            $arIntermediacion->setVrFletePagoRecogida($fletePagoRecogida);
-            $arIntermediacion->setVrFletePagoTotal($fletePagoTotal);
-            $arIntermediacion->setVrFlete($fleteCobro);
+            $arIntermediacion->setVrFleteCobro($fleteCobro);
 
             $ingresoTotal = 0;
+            $arrFletePagoDetallados = $em->getRepository(TteDespacho::class)->fletePagoDetallado($fechaDesde, $fechaHasta);
             $arrFleteCobroDetallados = $em->getRepository(TteFactura::class)->fleteCobroDetallado($fechaDesde, $fechaHasta);
-            foreach ($arrFleteCobroDetallados as $arrFleteCobroDetallado) {
-                $arFacturaTipo = $em->getRepository(TteFacturaTipo::class)->find($arrFleteCobroDetallado['codigoFacturaTipoFk']);
-                $arCliente = $em->getRepository(TteCliente::class)->find($arrFleteCobroDetallado['codigoClienteFk']);
-                $arIntermediacionDetalle = new TteIntermediacionDetalle();
-                $arIntermediacionDetalle->setIntermediacionRel($arIntermediacion);
-                $arIntermediacionDetalle->setAnio($arIntermediacion->getAnio());
-                $arIntermediacionDetalle->setMes($arIntermediacion->getMes());
-                $arIntermediacionDetalle->setFecha($arIntermediacion->getFecha());
-                $arIntermediacionDetalle->setClienteRel($arCliente);
-                $arIntermediacionDetalle->setFacturaTipoRel($arFacturaTipo);
+            foreach ($arrFletePagoDetallados as $arrFletePagoDetallado) {
+                $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arrFletePagoDetallado['codigoDespachoTipoFk']);
+                foreach ($arrFleteCobroDetallados as $arrFleteCobroDetallado) {
+                    $arFacturaTipo = $em->getRepository(TteFacturaTipo::class)->find($arrFleteCobroDetallado['codigoFacturaTipoFk']);
+                    $arCliente = $em->getRepository(TteCliente::class)->find($arrFleteCobroDetallado['codigoClienteFk']);
+                    $arIntermediacionDetalle = new TteIntermediacionDetalle();
+                    $arIntermediacionDetalle->setIntermediacionRel($arIntermediacion);
+                    $arIntermediacionDetalle->setAnio($arIntermediacion->getAnio());
+                    $arIntermediacionDetalle->setMes($arIntermediacion->getMes());
+                    $arIntermediacionDetalle->setFecha($arIntermediacion->getFecha());
+                    $arIntermediacionDetalle->setClienteRel($arCliente);
+                    $arIntermediacionDetalle->setFacturaTipoRel($arFacturaTipo);
+                    $arIntermediacionDetalle->setDespachoTipoRel($arDespachoTipo);
 
-                $flete = $arrFleteCobroDetallado['flete'];
-                $participacion = ($flete / $fleteCobro) * 100;
+                    $flete = $arrFleteCobroDetallado['flete'];
+                    $participacion = ($flete / $fleteCobro) * 100;
 
-                $pago = ($fletePagoTotal * $participacion) / 100;
-                $ingreso = $flete - $pago;
-                $arIntermediacionDetalle->setPorcentajeParticipacion($participacion);
-                $arIntermediacionDetalle->setVrFlete($flete);
-                $arIntermediacionDetalle->setVrPago($pago);
-                $arIntermediacionDetalle->setVrIngreso($ingreso);
-                $arIntermediacionDetalle->setVrPagoOperado($pago * $arFacturaTipo->getOperacionComercial());
-                $arIntermediacionDetalle->setVrIngresoOperado($ingreso * $arFacturaTipo->getOperacionComercial());
-                $em->persist($arIntermediacionDetalle);
-                $ingresoTotal += $ingreso * $arFacturaTipo->getOperacionComercial();
+                    $fletePagoTipo = $arrFletePagoDetallado['fletePago'];
+                    $pago = ($fletePagoTipo * $participacion) / 100;
+                    $ingreso = $flete - $pago;
+                    $arIntermediacionDetalle->setPorcentajeParticipacion($participacion);
+                    $arIntermediacionDetalle->setVrFlete($flete);
+                    $arIntermediacionDetalle->setVrPago($pago);
+                    $arIntermediacionDetalle->setVrIngreso($ingreso);
+                    $arIntermediacionDetalle->setVrPagoOperado($pago * $arFacturaTipo->getOperacionComercial());
+                    $arIntermediacionDetalle->setVrIngresoOperado($ingreso * $arFacturaTipo->getOperacionComercial());
+                    $em->persist($arIntermediacionDetalle);
+                    $ingresoTotal += $ingreso * $arFacturaTipo->getOperacionComercial();
+                }
             }
             $arIntermediacion->setEstadoAutorizado(1);
             $arIntermediacion->setVrIngreso($ingresoTotal);
@@ -115,10 +118,8 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             $query = $em->createQuery('DELETE FROM App\Entity\Transporte\TteIntermediacionDetalle id WHERE id.codigoIntermediacionFk =' . $arIntermediacion->getCodigoIntermediacionPk());
             $numDeleted = $query->execute();
             $arIntermediacion->setEstadoAutorizado(0);
-            $arIntermediacion->setVrFlete(0);
+            $arIntermediacion->setVrFleteCobro(0);
             $arIntermediacion->setVrFletePago(0);
-            $arIntermediacion->setVrFletePagoRecogida(0);
-            $arIntermediacion->setVrFletePagoTotal(0);
             $arIntermediacion->setVrIngreso(0);
             $em->persist($arIntermediacion);
             $em->flush();

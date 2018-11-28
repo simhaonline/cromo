@@ -38,7 +38,9 @@ class IntermediacionController extends Controller
         }
         $query = $this->getDoctrine()->getRepository(TteIntermediacion::class)->lista();
         $arIntermediacions = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('transporte/proceso/transporte/general/intermediacion/lista.html.twig', ['arIntermediacions' => $arIntermediacions, 'form' => $form->createView()]);
+        return $this->render('transporte/proceso/transporte/general/intermediacion/lista.html.twig', [
+            'arIntermediacions' => $arIntermediacions,
+            'form' => $form->createView()]);
     }
 
     /**

@@ -44,19 +44,9 @@ class TteIntermediacion
     private $vrFletePago = 0;
 
     /**
-     * @ORM\Column(name="vr_flete_pago_recogida", type="float", options={"default" : 0})
+     * @ORM\Column(name="vr_flete_cobro", type="float", options={"default" : 0})
      */
-    private $vrFletePagoRecogida = 0;
-
-    /**
-     * @ORM\Column(name="vr_flete_total", type="float", options={"default" : 0})
-     */
-    private $vrFletePagoTotal = 0;
-
-    /**
-     * @ORM\Column(name="vr_flete", type="float", options={"default" : 0})
-     */
-    private $vrFlete = 0;
+    private $vrFleteCobro = 0;
 
     /**
      * @ORM\Column(name="vr_ingreso", type="float", options={"default" : 0})
@@ -129,6 +119,22 @@ class TteIntermediacion
     /**
      * @return mixed
      */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha( $fecha ): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrFletePago()
     {
         return $this->vrFletePago;
@@ -145,49 +151,17 @@ class TteIntermediacion
     /**
      * @return mixed
      */
-    public function getVrFletePagoRecogida()
+    public function getVrFleteCobro()
     {
-        return $this->vrFletePagoRecogida;
+        return $this->vrFleteCobro;
     }
 
     /**
-     * @param mixed $vrFletePagoRecogida
+     * @param mixed $vrFleteCobro
      */
-    public function setVrFletePagoRecogida( $vrFletePagoRecogida ): void
+    public function setVrFleteCobro( $vrFleteCobro ): void
     {
-        $this->vrFletePagoRecogida = $vrFletePagoRecogida;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrFletePagoTotal()
-    {
-        return $this->vrFletePagoTotal;
-    }
-
-    /**
-     * @param mixed $vrFletePagoTotal
-     */
-    public function setVrFletePagoTotal( $vrFletePagoTotal ): void
-    {
-        $this->vrFletePagoTotal = $vrFletePagoTotal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrFlete()
-    {
-        return $this->vrFlete;
-    }
-
-    /**
-     * @param mixed $vrFlete
-     */
-    public function setVrFlete( $vrFlete ): void
-    {
-        $this->vrFlete = $vrFlete;
+        $this->vrFleteCobro = $vrFleteCobro;
     }
 
     /**
@@ -252,22 +226,6 @@ class TteIntermediacion
     public function setIntermediacionesDetallesIntermediacionRel( $intermediacionesDetallesIntermediacionRel ): void
     {
         $this->intermediacionesDetallesIntermediacionRel = $intermediacionesDetallesIntermediacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFecha()
-    {
-        return $this->fecha;
-    }
-
-    /**
-     * @param mixed $fecha
-     */
-    public function setFecha( $fecha ): void
-    {
-        $this->fecha = $fecha;
     }
 
 

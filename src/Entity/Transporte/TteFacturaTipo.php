@@ -57,6 +57,11 @@ class TteFacturaTipo
     private $codigoCuentaCobrarTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_ingreso_tercero_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaIngresoTerceroFk;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_ingreso_flete_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaIngresoFleteFk;
@@ -65,6 +70,11 @@ class TteFacturaTipo
      * @ORM\Column(name="codigo_cuenta_ingreso_manejo_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaIngresoManejoFk;
+
+    /**
+     * @ORM\Column(name="naturaleza_cuenta_ingreso_tercero", type="string", length=1, nullable=true)
+     */
+    private $naturalezaCuentaIngresoTercero = 0;
 
     /**
      * @ORM\Column(name="naturaleza_cuenta_ingreso", type="string", length=1, nullable=true)
@@ -434,6 +444,38 @@ class TteFacturaTipo
     public function setIntermediacionesDetallesFacturaTipoRel( $intermediacionesDetallesFacturaTipoRel ): void
     {
         $this->intermediacionesDetallesFacturaTipoRel = $intermediacionesDetallesFacturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaIngresoTerceroFk()
+    {
+        return $this->codigoCuentaIngresoTerceroFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaIngresoTerceroFk
+     */
+    public function setCodigoCuentaIngresoTerceroFk( $codigoCuentaIngresoTerceroFk ): void
+    {
+        $this->codigoCuentaIngresoTerceroFk = $codigoCuentaIngresoTerceroFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNaturalezaCuentaIngresoTercero()
+    {
+        return $this->naturalezaCuentaIngresoTercero;
+    }
+
+    /**
+     * @param mixed $naturalezaCuentaIngresoTercero
+     */
+    public function setNaturalezaCuentaIngresoTercero( $naturalezaCuentaIngresoTercero ): void
+    {
+        $this->naturalezaCuentaIngresoTercero = $naturalezaCuentaIngresoTercero;
     }
 
 

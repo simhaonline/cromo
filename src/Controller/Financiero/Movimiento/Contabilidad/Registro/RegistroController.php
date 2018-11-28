@@ -4,6 +4,7 @@ namespace App\Controller\Financiero\Movimiento\Contabilidad\Registro;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinCuenta;
@@ -41,7 +42,6 @@ class RegistroController extends ControllerListenerGeneral
     public function lista(Request $request)
     {
         $this->request = $request;
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
@@ -57,12 +57,7 @@ class RegistroController extends ControllerListenerGeneral
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                $session->set($this->claseNombre . '_terceroRel.codigoTerceroPk', $formFiltro->get('txtCodigoTercero')->getData());
-                $session->set($this->claseNombre . '_nombreCorto', $formFiltro->get('txtNombreCorto')->getData());
-                $session->set($this->claseNombre . '_numero', $formFiltro->get('numero')->getData());
-                $session->set($this->claseNombre . '_codigoComprobanteFk', $formFiltro->get('codigoComprobanteFk')->getData() != "" ? $formFiltro->get('codigoComprobanteFk')->getData()->getCodigoComprobantePk() : "");
-                $session->set($this->claseNombre . '_fechaDesde', $formFiltro->get('fechaDesde')->getData()!=null?$formFiltro->get('fechaDesde')->getData()->format('Y-m-d'):null);
-                $session->set($this->claseNombre . '_fechaHasta', $formFiltro->get('fechaHasta')->getData()!=null?$formFiltro->get('fechaHasta')->getData()->format('Y-m-d'):null);
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre, $formFiltro);
                 //$datos = $this->getDatosLista(true);
             }
         }

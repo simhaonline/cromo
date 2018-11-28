@@ -41,7 +41,7 @@ services:
       class: App\Controller\Estructura\ExceptionHandler
       tags:
       - {name: kernel.event_listener, event: kernel.exception, method: getException}
-      arguments: ['@service_container','@doctrine.orm.entity_manager','@security.token_storage','@router']
+      arguments: ['@service_container','@doctrine.orm.entity_manager','@security.token_storage']
       
 
     # add more service definitions when explicit configuration is needed

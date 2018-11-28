@@ -75,8 +75,8 @@ abstract class BaseController extends Controller
                         ]);
                 }
                 else if($campo['tipo'] == "Tercero"){
-                    $form->add("txtCodigoTercero", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_codigoTercero')??""])
-                        ->add("txtNombreCorto", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_terceroRel.nombreCorto')??"", 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']]);
+                    $form->add("txtCodigoTercero", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_terceroRel.codigoTerceroPk')??""])
+                        ->add("txtNombreCorto", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_nombreCorto')??"", 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']]);
                 }
                  else if ($campo['tipo'] != "SubmitType" && $campo['tipo'] != "CheckboxType" && $campo['tipo'] != "ChoiceType") {
                     $form->add($campo['child'], $tipo, ['label' => $campo['propiedades']['label'], 'required' => false, 'data' => $session->get($this->claseNombre . "_" . $campo['child']) ?? ""]);
@@ -258,40 +258,65 @@ abstract class BaseController extends Controller
         $session = new Session();
         /** @var  $queryBuilder QueryBuilder */
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio, 'e')
-            ->select('e.' . $campos[0]['child']);
+            ->select($campos[0]['child']);
+        $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
+        $camposTabla = json_decode($namespaceType::getEstructuraPropiedadesLista());
+
+        foreach ($camposTabla as $camposT){
+            if(!isset($camposT->relacion)){
+            $queryBuilder->addSelect('e.' . $camposT->campo);
+            }
+            else{
+                $arrRel = explode('.', $camposT->campo);
+                $alias = substr($arrRel[0], 0, 3) . 'Rel' . $arrRel[1];
+                $queryBuilder->addSelect($camposT->campo . ' AS ' . $alias);
+            }
+        }
         foreach ($campos as $campo) {
             $filtro = $session->get($claseNombre . "_" . $campo['child']);
-            if ($campo->tipo != "pk" && !isset($campo->relacion)) {
+            if (!isset($campo['relacion'])) {
+                if(strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha"){
+                    $queryBuilder->addSelect('e.' . (substr($campo['child'], 0, strlen($campo['child'])-5)));
+
+                }
+                else{
+
                 $queryBuilder->addSelect('e.' . $campo['child']);
-            } elseif (isset($campo->relacion)) {
+                }
+            } elseif (isset($campo['relacion'])) {
                 $arrRel = explode('.', $campo['child']);
                 $alias = substr($arrRel[0], 0, 3) . 'Rel' . $arrRel[1];
                 if (!$this->validarRelacion($arrRelaciones, $arrRel[0])) {
                     $arrRelaciones[] = $arrRel[0];
                     $queryBuilder->leftJoin('e.' . $arrRel[0], $arrRel[0]);
                     $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
-                } else {
+                } else{
                     $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
                 }
-                if ($claseNombre) {
+
+                if($claseNombre) {
                     if ($filtro != "" && $filtro != null) {
-                        $queryBuilder->andWhere($arrRel[0] . '.' . $arrRel[1] . "='{$filtro}'");
+                        $queryBuilder->andWhere($arrRel[0] . '.' . $arrRel[1] . "={$filtro}");
                     }
                 }
             }
 
-            if ($claseNombre && !isset($campo->relacion)) {
+            if ($claseNombre && !isset($campo['relacion'])) {
                 if (strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha") {
-                    $fechaDesde = $session->get($claseNombre . "_" . $campo['child'] . "Desde");
-                    $fechaHasta = $session->get($claseNombre . "_" . $campo['child'] . "Hasta");
-                    if ($fechaDesde!==null && $fechaHasta!==null) {
-                        $queryBuilder->andWhere('e.' . $campo['child'] . ">='{$fechaDesde}'")
-                            ->andWhere('e.' . $campo['child'] . "<='{$fechaHasta}'");
+                    $fecha = $session->get($claseNombre . "_" . $campo['child']);
+                    if ($fecha!==null) {
+                        $campoExplode=substr($campo['child'], 0, strlen($campo['child'])-5);
+                        if(substr($campo['child'],  -5)==="Desde"){
+                        $queryBuilder->andWhere('e.' . $campoExplode . ">='{$fecha}'");
+                        }
+                        else{
+                            $queryBuilder->andWhere('e.' . $campoExplode . "<='{$fecha}'");
+                        }
                     }
                 } else {
                     if ($filtro !== "" && $filtro !== null) {
 
-                        $queryBuilder->andWhere('e.' . $campo['child'] . "='{$filtro}'");
+                        $queryBuilder->andWhere($campo['child'] . "='{$filtro}'");
                     }
                 }
             }

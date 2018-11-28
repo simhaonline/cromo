@@ -58,15 +58,12 @@ class RegistroController extends ControllerListenerGeneral
         }
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                $session->set($this->claseNombre . '_terceroRel.codigoTercero', $formFiltro->get('txtCodigoTercero')->getData());
+                $session->set($this->claseNombre . '_terceroRel.codigoTerceroPk', $formFiltro->get('txtCodigoTercero')->getData());
                 $session->set($this->claseNombre . '_nombreCorto', $formFiltro->get('txtNombreCorto')->getData());
                 $session->set($this->claseNombre . '_numero', $formFiltro->get('numero')->getData());
                 $session->set($this->claseNombre . '_codigoComprobanteFk', $formFiltro->get('codigoComprobanteFk')->getData() != "" ? $formFiltro->get('codigoComprobanteFk')->getData()->getCodigoComprobantePk() : "");
-                $session->set($this->claseNombre . '_filtrarFecha', $formFiltro->get('filtrarFecha')->getData());
-                if ($formFiltro->get('filtrarFecha')->getData()) {
-                    $session->set($this->claseNombre . '_fechaDesde', $formFiltro->get('fechaDesde')->getData()->format('Y-m-d'));
-                    $session->set($this->claseNombre . '_fechaHasta', $formFiltro->get('fechaHasta')->getData()->format('Y-m-d'));
-                }
+                $session->set($this->claseNombre . '_fechaDesde', $formFiltro->get('fechaDesde')->getData()!=null?$formFiltro->get('fechaDesde')->getData()->format('Y-m-d'):null);
+                $session->set($this->claseNombre . '_fechaHasta', $formFiltro->get('fechaHasta')->getData()!=null?$formFiltro->get('fechaHasta')->getData()->format('Y-m-d'):null);
                 $datos = $this->getDatosLista(true);
             }
         }

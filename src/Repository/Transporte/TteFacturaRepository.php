@@ -643,9 +643,9 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.vrFlete')
             ->addSelect('f.vrManejo')
             ->addSelect('f.vrTotal')
-            ->addSelect('ft.codigoCuentaIngresoFleteFk')
+            ->addSelect('ft.codigoCuentaIngresoTerceroFk')
             ->addSelect('ft.codigoCuentaIngresoManejoFk')
-            ->addSelect('ft.naturalezaCuentaIngreso')
+            ->addSelect('ft.naturalezaCuentaIngresoTercero')
             ->addSelect('ft.naturalezaCuentaCliente')
             ->addSelect('ft.codigoCuentaClienteFk')
             ->addSelect('ft.codigoComprobanteFk')
@@ -689,10 +689,10 @@ class TteFacturaRepository extends ServiceEntityRepository
                         $arTercero = $em->getRepository(TteCliente::class)->terceroFinanciero($arFactura['codigoClienteFk']);
 
                         //Cuenta del ingreso flete
-                        if($arFactura['codigoCuentaIngresoFleteFk']) {
-                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arFactura['codigoCuentaIngresoFleteFk']);
+                        if($arFactura['codigoCuentaIngresoTerceroFk']) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arFactura['codigoCuentaIngresoTerceroFk']);
                             if(!$arCuenta) {
-                                $error = "No se encuentra la cuenta del flete " . $arFactura['codigoCuentaIngresoFleteFk'];
+                                $error = "No se encuentra la cuenta del flete " . $arFactura['codigoCuentaIngresoFleteTerceroFk'];
                                 break;
                             }
                             $arRegistro = new FinRegistro();
@@ -708,14 +708,14 @@ class TteFacturaRepository extends ServiceEntityRepository
                             $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
                             $arRegistro->setNumeroReferencia($numeroReferencia);
                             $arRegistro->setFecha($arFactura['fecha']);
-                            if($arFactura['naturalezaCuentaIngreso'] == 'D') {
+                            if($arFactura['naturalezaCuentaIngresoTercero'] == 'D') {
                                 $arRegistro->setVrDebito($arFactura['vrFlete']);
                                 $arRegistro->setNaturaleza('D');
                             } else {
                                 $arRegistro->setVrCredito($arFactura['vrFlete']);
                                 $arRegistro->setNaturaleza('C');
                             }
-                            $arRegistro->setDescripcion('INGRESO FLETE');
+                            $arRegistro->setDescripcion('INGRESO FLETE TERCERO');
                             $em->persist($arRegistro);
                         } else {
                             $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete";
@@ -742,7 +742,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                             $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
                             $arRegistro->setNumeroReferencia($numeroReferencia);
                             $arRegistro->setFecha($arFactura['fecha']);
-                            if($arFactura['naturalezaCuentaIngreso'] == 'D') {
+                            if($arFactura['naturalezaCuentaIngresoTercero'] == 'D') {
                                 $arRegistro->setVrDebito($arFactura['vrManejo']);
                                 $arRegistro->setNaturaleza('D');
                             } else {

@@ -1723,5 +1723,19 @@ class TteDespachoRepository extends ServiceEntityRepository
         return $valor;
     }
 
+    public function fletePagoDetallado($fechaDesde, $fechaHasta)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
+            ->select("d.codigoDespachoTipoFk")
+            ->addSelect("SUM(d.vrFletePago) as fletePago")
+            ->leftJoin('d.despachoTipoRel', 'dt')
+            ->where("d.fechaSalida >='" . $fechaDesde . "' AND d.fechaSalida <= '" . $fechaHasta . "'")
+            ->andWhere('dt.viaje = 1')
+            ->andWhere('d.estadoAprobado = 1')
+            ->groupBy('d.codigoDespachoTipoFk');
+        $arrResultado = $queryBuilder->getQuery()->getResult();
+        return $arrResultado;
+    }
+
 }
 

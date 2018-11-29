@@ -40,6 +40,7 @@ class FacturaType extends AbstractType
             ->add('soporte',TextType::class,['required' => false ])
             ->add('codigoSucursalFk',TextType::class,['required' => false ])
             ->add('plazoPago',IntegerType::class,['required' => false ])
+            ->add('guia',TextType::class,['required' => false ])
             ->add('comentarios',TextareaType::class,['required' => false ,'attr' => ['class' => 'form-control','rows' => '5']])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;

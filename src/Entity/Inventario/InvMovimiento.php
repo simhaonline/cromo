@@ -83,6 +83,11 @@ class InvMovimiento
     private $soporte;
 
     /**
+     * @ORM\Column(name="guia", type="string", length=50, nullable=true)
+     */
+    private $guia;
+
+    /**
      * @ORM\Column(name="ciudad_factura", type="string", length=50, nullable=true)
      */
     private $ciudadFactura;
@@ -781,6 +786,38 @@ class InvMovimiento
     public function setAsesorRel($asesorRel): void
     {
         $this->asesorRel = $asesorRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuia()
+    {
+        return $this->guia;
+    }
+
+    /**
+     * @param mixed $guia
+     */
+    public function setGuia($guia): void
+    {
+        $this->guia = $guia;
     }
 
 

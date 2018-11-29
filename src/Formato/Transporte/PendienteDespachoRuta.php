@@ -105,14 +105,14 @@ class PendienteDespachoRuta extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(1);
-        $header = array('ID', 'OI','OC', 'NUMERO', 'FECHA', 'CLIENTE', 'DESTINO', 'DECLARA', 'FLETE', 'UND', 'PES','VOL');
+        $header = array('ID', 'DOC_CLIENTE', 'NUMERO', 'FECHA', 'CLIENTE', 'DESTINO', 'DECLARA', 'FLETE', 'UND', 'PES','VOL');
         $this->SetFillColor(170, 170, 170);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('arial', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(12, 8, 8, 15, 15, 45, 35, 15, 15, 8,8,8);
+        $w = array(15, 20, 15, 15, 40, 35, 15, 15, 8,8,8);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -135,33 +135,32 @@ class PendienteDespachoRuta extends \FPDF {
         $vrTotalVolumen = 0;
         $primeraRuta = true;
         $pdf->SetX(10);
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Arial', '', 6.5);
         if($arGuias) {
             foreach ($arGuias as $arGuia) {
                 if($primeraRuta){
-                    $pdf->Cell(192,4,$arGuia['nombreRuta'],1,0,'L');
+                    $pdf->Cell(194,4,$arGuia['nombreRuta'],1,0,'L');
                     $primeraRuta = false;
                     $ruta = $arGuia['codigoRutaFk'];
                     $pdf->Ln(4);
                 }
                 if($arGuia['codigoRutaFk'] != $ruta){
-                    $pdf->SetX(148);
+                    $pdf->SetX(150);
                     $pdf->Cell(15,4,$vrTotalDeclara,1,0,'R');
                     $pdf->Cell(15,4,$vrTotalFlete,1,0,'R');
                     $pdf->Cell(8,4,$vrTotalUnidad,1,0,'R');
                     $pdf->Cell(8,4,$vrTotalPeso,1,0,'R');
                     $pdf->Cell(8,4,$vrTotalVolumen,1,0,'R');
                     $pdf->Ln(4);
-                    $pdf->Cell(192,4,$arGuia['nombreRuta'],1,0,'L');
+                    $pdf->Cell(194,4,$arGuia['nombreRuta'],1,0,'L');
                     $ruta = $arGuia['codigoRutaFk'];
                     $pdf->Ln(4);
                 }
-                $pdf->Cell(12, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
-                $pdf->Cell(8, 4, $arGuia['codigoOperacionIngresoFk'], 1, 0, 'L');
-                $pdf->Cell(8, 4, $arGuia['codigoOperacionCargoFk'], 1, 0, 'L');
+                $pdf->Cell(15, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arGuia['documentoCliente'], 1, 0, 'L');
                 $pdf->Cell(15, 4, $arGuia['numero'], 1, 0, 'L');
                 $pdf->Cell(15, 4, $arGuia['fechaIngreso']->format('Y-m-d'), 1, 0, 'L');
-                $pdf->Cell(45, 4, substr($arGuia['clienteNombreCorto'],0,25), 1, 0, 'L');
+                $pdf->Cell(40, 4, substr($arGuia['clienteNombreCorto'],0,25), 1, 0, 'L');
                 $pdf->Cell(35, 4, substr($arGuia['ciudadDestino'], 0, 22), 1, 0, 'L');
                 $pdf->Cell(15, 4, number_format($arGuia['vrDeclara'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arGuia['vrFlete'], 0, '.', ','), 1, 0, 'R');

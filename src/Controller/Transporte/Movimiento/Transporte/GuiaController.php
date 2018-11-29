@@ -86,7 +86,7 @@ class GuiaController extends ControllerListenerGeneral
     /**
      * @param Request $request
      * @param $id
-     * @Route("/transporte/movimiento/transporte/guia/nuevo/{id}/{tipo}", name="transporte_movimiento_transporte_guia_nuevo")
+     * @Route("/transporte/movimiento/transporte/guia/nuevo/{id}", name="transporte_movimiento_transporte_guia_nuevo")
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function nuevo(Request $request, $id)

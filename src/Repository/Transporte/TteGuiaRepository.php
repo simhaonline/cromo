@@ -1078,6 +1078,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
             ->select('g.codigoGuiaPk')
             ->addSelect('g.numero')
+            ->addSelect('g.documentoCliente')
             ->addSelect('g.codigoGuiaTipoFk')
             ->addSelect('g.codigoServicioFk')
             ->addSelect('g.fechaIngreso')

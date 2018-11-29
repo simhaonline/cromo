@@ -50,6 +50,46 @@ class FacturaType extends AbstractType {
         ));
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoFacturaPk",                         "tipo":"pk",        "ayuda":"Codigo de factura",                        "titulo":"ID"},
+            {"campo":"facturaTipoRel.nombre",                   "tipo":"texto",     "ayuda":"Tipo factura",                             "titulo":"TIPO",                "relacion":""},
+            {"campo":"numero",                                  "tipo":"entero",    "ayuda":"Numero",                                   "titulo":"NUMERO"},
+            {"campo":"fecha",                                   "tipo":"fecha",     "ayuda":"Fecha",                                    "titulo":"FECHA"},
+            {"campo":"clienteRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Nombre del cliente",                       "titulo":"CLIENTE",             "relacion":""},
+            {"campo":"guias",                                   "tipo":"entero",    "ayuda":"Cantidad",                                 "titulo":"CANT"},
+            {"campo":"vrFlete",                                 "tipo":"moneda",    "ayuda":"Valor flete",                              "titulo":"FLETE"},
+            {"campo":"vrManejo",                                "tipo":"moneda",    "ayuda":"Valor manejo",                             "titulo":"MANEJO"},
+            {"campo":"vrSubtotal",                              "tipo":"moneda",    "ayuda":"Subtotal",                                 "titulo":"SUBTOTAL"},
+            {"campo":"vrTotal",                                 "tipo":"moneda",    "ayuda":"Total",                                    "titulo":"TOTAL"},
+            {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},
+            {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},
+            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"}
+        ]';
+        return $campos;
+
+    }
+
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+            {"child":"codigoClienteFk",                 "tipo":"TextType",   "propiedades":{"label":"Cliente"}},
+            {"child":"numero",                          "tipo":"TextType",   "propiedades":{"label":"Numero"}},
+            {"child":"codigoFacturaPk",                 "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
+            {"child":"codigoFacturaTipoFk",             "tipo":"EntityType", "propiedades":{"class":"TteFacturaTipo",   "choice_label":"nombre",    "label":"TODOS"}},
+            {"child":"fechaDesde",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaHasta",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
+            {"child":"estadoAutorizado",                "tipo":"ChoiceType",   "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",                  "tipo":"ChoiceType",   "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",                   "tipo":"ChoiceType",   "propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
+        ]';
+
+        return $campos;
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -1,44 +1,36 @@
 <?php
 
-namespace App\Controller\Transporte\Movimiento\Comercial\Factura;
+namespace App\Controller\Transporte\Movimiento\Comercial\NotaCredito;
+
+
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
-use App\Controller\Estructura\MensajesController;
-use App\Entity\General\GenConfiguracion;
-use App\Entity\Transporte\TteConfiguracion;
+use App\DataFixtures\GenConfiguracion;
+use App\DataFixtures\TteConfiguracion;
+use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaOtro;
 use App\Entity\Transporte\TteFacturaPlanilla;
-use App\Entity\Transporte\TteFacturaTipo;
 use App\Entity\Transporte\TteGuia;
-use App\Entity\Transporte\TteCliente;
 use App\Form\Type\Transporte\FacturaNotaCreditoType;
 use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
-use App\Formato\Transporte\ListaFactura;
 use App\Formato\Transporte\NotaCredito;
-use App\General\General;
 use App\Utilidades\Estandares;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use App\Utilidades\Mensajes;
 
-class FacturaController extends ControllerListenerGeneral
+class NotaCreditoController extends ControllerListenerGeneral
 {
     protected $clase= TteFactura::class;
     protected $claseNombre = "TteFactura";
@@ -51,7 +43,7 @@ class FacturaController extends ControllerListenerGeneral
      * @param Request $request
      * @return Response
      * @throws \Doctrine\ORM\ORMException
-     * @Route("/transporte/movimiento/comercial/factura/lista", name="transporte_movimiento_comercial_factura_lista")
+     * @Route("/transporte/movimiento/comercial/notaCredito/lista", name="transporte_movimiento_comercial_notaCredito_lista")
      */
     public function lista(Request $request)
     {
@@ -80,9 +72,9 @@ class FacturaController extends ControllerListenerGeneral
 //                $datos = $this->getDatosLista();
             }
         }
-
         $datos = $this->getDatosLista(true);
-        return $this->render('transporte/movimiento/comercial/factura/lista.html.twig', [
+        $datos['ruta']=strtolower($this->modulo) . "_" . strtolower($this->funcion) . "_" . strtolower($this->grupo) . "_" . "notaCredito";
+        return $this->render('transporte/movimiento/comercial/notaCredito/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -91,7 +83,52 @@ class FacturaController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/comercial/factura/detalle/{id}", name="transporte_movimiento_comercial_factura_detalle")
+     * @Route("/transporte/movimiento/comercial/notaCredito/nuevo/{id}/", name="transporte_movimiento_comercial_notaCredito_nuevo")
+     */
+    public function nuevo(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $objFunciones = new FuncionesController();
+        $arFactura = new TteFactura();
+        if($id != 0) {
+            $arFactura = $em->getRepository(TteFactura::class)->find($id);
+        } else {
+            $arFactura->setCodigoFacturaClaseFk("NC");
+        }
+
+        $form = $this->createForm(FacturaNotaCreditoType::class, $arFactura);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+            if($txtCodigoCliente != '') {
+                $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
+                if($arCliente) {
+                    $arFactura->setClienteRel($arCliente);
+                    if ($id == 0) {
+                        $arFactura->setUsuario($this->getUser()->getUsername());
+                        $arFactura->setOperacionRel($this->getUser()->getOperacionRel());
+                    }
+                    if ($arFactura->getPlazoPago() <= 0) {
+                        $arFactura->setPlazoPago($arFactura->getClienteRel()->getPlazoPago());
+                    }
+                    $fecha = new \DateTime('now');
+                    $arFactura->setFecha($fecha);
+                    $arFactura->setFechaVence($arFactura->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
+                    $arFactura->setOperacionComercial($arFactura->getFacturaTipoRel()->getOperacionComercial());
+                    $em->persist($arFactura);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', array('id' => $arFactura->getCodigoFacturaPk())));
+                }
+            }
+        }
+        return $this->render('transporte/movimiento/comercial/factura/nuevoNotaCredito.html.twig', [
+            'arFactura' => $arFactura,
+            'form' => $form->createView()]);
+
+    }
+
+    /**
+     * @Route("/transporte/movimiento/comercial/notaCredito/detalle/{id}", name="transporte_movimiento_comercial_notaCredito_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -176,7 +213,7 @@ class FacturaController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/{codigoFactura}", name="transporte_movimiento_comercial_factura_detalle_adicionar_guia")
+     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/{codigoFactura}", name="transporte_movimiento_notaCredito_factura_detalle_adicionar_guia")
      */
     public function detalleAdicionarGuia(Request $request, $codigoFactura)
     {
@@ -224,7 +261,7 @@ class FacturaController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/cumplido/{codigoFactura}/{codigoFacturaPlanilla}", name="transporte_movimiento_comercial_factura_detalle_adicionar_guia_cumplido")
+     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/cumplido/{codigoFactura}/{codigoFacturaPlanilla}", name="transporte_movimiento_comercial_notaCredito_detalle_adicionar_guia_cumplido")
      */
     public function detalleAdicionarGuiaCumplido(Request $request, $codigoFactura, $codigoFacturaPlanilla)
     {
@@ -289,7 +326,7 @@ class FacturaController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/archivo/{codigoFactura}/{codigoFacturaPlanilla}", name="transporte_movimiento_comercial_factura_detalle_adicionar_guia_archivo")
+     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/archivo/{codigoFactura}/{codigoFacturaPlanilla}", name="transporte_movimiento_comercial_notaCredito_detalle_adicionar_guia_archivo")
      */
     public function detalleAdicionarGuiaArchivo(Request $request, $codigoFactura, $codigoFacturaPlanilla)
     {
@@ -390,7 +427,7 @@ class FacturaController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/planilla/guia/{codigoFactura}/{codigoFacturaPlanilla}", name="transporte_movimiento_comercial_factura_detalle_adicionar_planilla_guia")
+     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/planilla/guia/{codigoFactura}/{codigoFacturaPlanilla}", name="transporte_movimiento_comercial_notaCredito_detalle_adicionar_planilla_guia")
      */
     public function detalleAdicionarGuiaPlanilla(Request $request, $codigoFactura, $codigoFacturaPlanilla)
     {
@@ -429,7 +466,7 @@ class FacturaController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/planilla/{codigoFactura}/{id}", name="transporte_movimiento_comercial_factura_detalle_adicionar_planilla")
+     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/planilla/{codigoFactura}/{id}", name="transporte_movimiento_comercial_notaCredito_detalle_adicionar_planilla")
      */
     public function detalleAdicionarPlanilla(Request $request, $codigoFactura, $id)
     {
@@ -455,52 +492,10 @@ class FacturaController extends ControllerListenerGeneral
             ['form' => $form->createView()]);
     }
 
-    /**
-     * @Route("/transporte/movimiento/comercial/factura/nuevo/{id}", name="transporte_movimiento_comercial_factura_nuevo")
-     */
-    public function nuevo(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $objFunciones = new FuncionesController();
-        $arFactura = new TteFactura();
-        if($id != 0) {
-            $arFactura = $em->getRepository(TteFactura::class)->find($id);
-        } else {
-            $arFactura->setCodigoFacturaClaseFk("FA");
-        }
-        $form = $this->createForm(FacturaType::class, $arFactura);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $txtCodigoCliente = $request->request->get('txtCodigoCliente');
-            if($txtCodigoCliente != '') {
-                $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
-                if($arCliente) {
-                    $arFactura->setClienteRel($arCliente);
-                    if ($id == 0) {
-                        $arFactura->setUsuario($this->getUser()->getUsername());
-                        $arFactura->setOperacionRel($this->getUser()->getOperacionRel());
-                    }
-                    if ($arFactura->getPlazoPago() <= 0) {
-                        $arFactura->setPlazoPago($arFactura->getClienteRel()->getPlazoPago());
-                    }
-                    $fecha = new \DateTime('now');
-                    $arFactura->setFecha($fecha);
-                    $arFactura->setFechaVence($arFactura->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
-                    $arFactura->setOperacionComercial($arFactura->getFacturaTipoRel()->getOperacionComercial());
-                    $em->persist($arFactura);
-                    $em->flush();
-                    return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', array('id' => $arFactura->getCodigoFacturaPk())));
-                }
-            }
-        }
-            return $this->render('transporte/movimiento/comercial/factura/nuevo.html.twig', [
-                'arFactura' => $arFactura,
-                'form' => $form->createView()]);
 
-    }
 
     /**
-     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/nc/{codigoFactura}", name="transporte_movimiento_comercial_factura_detalle_adicionar_nc_guia")
+     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/nc/{codigoFactura}", name="transporte_movimiento_comercial_notaCredito_detalle_adicionar_nc_guia")
      */
     public function detalleAdicionarGuiaNc(Request $request, $codigoFactura)
     {

@@ -18,7 +18,6 @@ use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
 use App\Form\Type\Transporte\FacturaNotaCreditoType;
 use App\Form\Type\Transporte\FacturaPlanillaType;
-use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
 use App\Formato\Transporte\NotaCredito;
 use App\Utilidades\Estandares;

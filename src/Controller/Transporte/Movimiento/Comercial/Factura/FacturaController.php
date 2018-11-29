@@ -5,7 +5,6 @@ namespace App\Controller\Transporte\Movimiento\Comercial\Factura;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
-use App\Controller\Estructura\MensajesController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteCumplido;
@@ -13,28 +12,25 @@ use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaOtro;
 use App\Entity\Transporte\TteFacturaPlanilla;
-use App\Entity\Transporte\TteFacturaTipo;
+
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
-use App\Form\Type\Transporte\FacturaNotaCreditoType;
+
 use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
-use App\Formato\Transporte\ListaFactura;
+
 use App\Formato\Transporte\NotaCredito;
 use App\General\General;
 use App\Utilidades\Estandares;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use App\Utilidades\Mensajes;
 

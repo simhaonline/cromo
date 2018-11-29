@@ -24,7 +24,7 @@
                 <div class="col-sm-5">
                     {{ form_widget(formFiltro.fechaDesde) }}
                 </div>
-                <label class="col-sm-1 control-label">Aprobado:</label>
+                <label class="col-sm-1 control-label">Autorizado:</label>
                 <div class="col-sm-5">
                     {{ form_widget(formFiltro.estadoAutorizado, { 'attr': {'class': 'form-control'} }) }}
                 </div>
@@ -48,8 +48,6 @@
                     {{ form_widget(formFiltro.estadoAnulado, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
             {{ form_end(formFiltro) }}
         </div>
     </div>
@@ -57,7 +55,5 @@
     {{ form_start(formBotonera) }}
     {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
     {{ form_end(formBotonera) }}
-
-
 {% endblock %}
 

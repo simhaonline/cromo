@@ -58,14 +58,6 @@ class GuiaController extends ControllerListenerGeneral
         $formBotonera->handleRequest($request);
 
 
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->lista())->execute(), "Guias");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-
-            }
-        }
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
@@ -75,6 +67,14 @@ class GuiaController extends ControllerListenerGeneral
             }
         }
         $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Guias");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+
+            }
+        }
         return $this->render('transporte/movimiento/transporte/guia/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),

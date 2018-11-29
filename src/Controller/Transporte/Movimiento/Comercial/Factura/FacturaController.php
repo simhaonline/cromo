@@ -57,17 +57,6 @@ class FacturaController extends ControllerListenerGeneral
 
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
-
-
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-//            if ($formBotonera->get('btnExcel')->isClicked()) {
-//                General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->lista())->execute(), "Guias");
-//            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-
-            }
-        }
-
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
@@ -76,8 +65,16 @@ class FacturaController extends ControllerListenerGeneral
 //                $datos = $this->getDatosLista();
             }
         }
-
         $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Facturas");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+
+            }
+        }
+
         return $this->render('transporte/movimiento/comercial/factura/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),

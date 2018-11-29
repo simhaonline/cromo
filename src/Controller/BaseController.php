@@ -34,6 +34,7 @@ abstract class BaseController extends Controller
         }
         /** @var  $queryBuilder QueryBuilder */
         return [
+            'queryBuilder'=>$queryBuilder,
             'ruta' => strtolower($this->modulo) . "_" . strtolower($this->funcion) . "_" . strtolower($this->grupo) . "_" . strtolower($this->nombre),
             'arrCampos' => $campos,
             'arDatos' => $paginator->paginate($queryBuilder->getQuery(), $this->request->query->getInt('page', 1), 30)

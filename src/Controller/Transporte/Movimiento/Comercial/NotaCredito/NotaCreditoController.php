@@ -20,6 +20,7 @@ use App\Form\Type\Transporte\FacturaNotaCreditoType;
 use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Formato\Transporte\Factura;
 use App\Formato\Transporte\NotaCredito;
+use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,14 +55,6 @@ class NotaCreditoController extends ControllerListenerGeneral
         $formBotonera->handleRequest($request);
 
 
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-//            if ($formBotonera->get('btnExcel')->isClicked()) {
-//                General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->lista())->execute(), "Guias");
-//            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-
-            }
-        }
 
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
@@ -72,6 +65,14 @@ class NotaCreditoController extends ControllerListenerGeneral
             }
         }
         $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Guias");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+
+            }
+        }
         $datos['ruta']=strtolower($this->modulo) . "_" . strtolower($this->funcion) . "_" . strtolower($this->grupo) . "_" . "notaCredito";
         return $this->render('transporte/movimiento/comercial/notaCredito/lista.html.twig', [
             'arrDatosLista' => $datos,

@@ -128,6 +128,13 @@ class GuiaType extends AbstractType {
         return $campos;
     }
 
+    public function getOrdenamiento(){
+        $campos ='[
+            {"campo":"fechaIngreso","tipo":"DESC"}
+        ]';
+        return $campos;
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -39,6 +39,11 @@ class InvRemisionTipo
     private $operacionInventario = 0;
 
     /**
+     * @ORM\Column(name="orden", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $orden = 0;
+
+    /**
      * @ORM\Column(name="adicionar", type="boolean",options={"default" : false}, nullable=true)
      */
     private $adicionar = false;
@@ -184,6 +189,38 @@ class InvRemisionTipo
     public function setRemisionesRemisionTipoRel($remisionesRemisionTipoRel): void
     {
         $this->remisionesRemisionTipoRel = $remisionesRemisionTipoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
     }
 
 

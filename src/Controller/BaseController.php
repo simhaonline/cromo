@@ -348,7 +348,6 @@ abstract class BaseController extends Controller
         else if(isset($camposTabla) && count($camposTabla)>0){
             $queryBuilder->orderBy('e.'.$camposTabla[0]->campo,'DESC');
         }
-        dump($queryBuilder->getDQL());
         return $queryBuilder;
     }
 

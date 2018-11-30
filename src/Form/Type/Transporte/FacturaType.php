@@ -93,8 +93,8 @@ class FacturaType extends AbstractType {
 
     public function getOrdenamiento(){
         $campos ='[
-            {"campo":"fecha","tipo":"DESC"},
             {"campo":"estadoAprobado","tipo":"ASC"},
+            {"campo":"fecha","tipo":"DESC"},
             {"campo":"codigoFacturaPk","tipo":"DESC"}
         ]';
         return $campos;

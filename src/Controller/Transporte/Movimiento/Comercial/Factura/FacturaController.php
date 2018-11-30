@@ -16,6 +16,7 @@ use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
 
+use App\Form\Type\Transporte\FacturaNotaCreditoType;
 use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
@@ -54,6 +55,10 @@ class FacturaController extends ControllerListenerGeneral
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
+        $formBotonera->add('btnPdf','Symfony\Component\Form\Extension\Core\Type\SubmitType',[
+           'attr'=>['class'=>'btn btn-default btn-sm'],
+            'label'=>'Pdf'
+        ]);
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
@@ -449,9 +454,9 @@ class FacturaController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/comercial/factura/nuevo/{id}", name="transporte_movimiento_comercial_factura_nuevo")
+     * @Route("/transporte/movimiento/comercial/factura/nuevo/{id}/{clase}", name="transporte_movimiento_comercial_factura_nuevo")
      */
-    public function nuevo(Request $request, $id)
+    public function nuevo(Request $request, $id, $clase)
     {
         $em = $this->getDoctrine()->getManager();
         $objFunciones = new FuncionesController();
@@ -459,9 +464,16 @@ class FacturaController extends ControllerListenerGeneral
         if($id != 0) {
             $arFactura = $em->getRepository(TteFactura::class)->find($id);
         } else {
-            $arFactura->setCodigoFacturaClaseFk("FA");
+            $arFactura->setCodigoFacturaClaseFk($clase);
         }
-        $form = $this->createForm(FacturaType::class, $arFactura);
+
+        if($clase == "FA") {
+            $form = $this->createForm(FacturaType::class, $arFactura);
+        }
+        if($clase == "NC") {
+            $form = $this->createForm(FacturaNotaCreditoType::class, $arFactura);
+        }
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $txtCodigoCliente = $request->request->get('txtCodigoCliente');
@@ -486,9 +498,16 @@ class FacturaController extends ControllerListenerGeneral
                 }
             }
         }
+        if($clase == "FA") {
             return $this->render('transporte/movimiento/comercial/factura/nuevo.html.twig', [
                 'arFactura' => $arFactura,
                 'form' => $form->createView()]);
+        }
+        if($clase == "NC") {
+            return $this->render('transporte/movimiento/comercial/factura/nuevoNotaCredito.html.twig', [
+                'arFactura' => $arFactura,
+                'form' => $form->createView()]);
+        }
 
     }
 

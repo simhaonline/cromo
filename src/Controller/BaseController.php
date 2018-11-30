@@ -326,10 +326,10 @@ abstract class BaseController extends Controller
                     $fecha = $session->get($claseNombre . "_" . $campo['child']);
                     if ($fecha!==null) {
                         if(substr($campo['child'],  -5)==="Desde"){
-                        $queryBuilder->andWhere('e.' . $campoExplode . ">='{$fecha}'");
+                        $queryBuilder->andWhere('e.' . $campoExplode . ">='{$fecha} 00:00:00'");
                         }
                         else{
-                            $queryBuilder->andWhere('e.' . $campoExplode . "<='{$fecha}'");
+                            $queryBuilder->andWhere('e.' . $campoExplode . "<='{$fecha} 23:59:59'");
                         }
                     }
                 } else {

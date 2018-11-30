@@ -1,23 +1,2 @@
-
-<!DOCTYPE html>
-<html>
-{{ include('base_cabecera_enlace.html.twig') }}
-<body>
-<div id="wrapper">
-    <!-- Navigation -->
-    {{ include('base_menu_inicio.html.twig') }}
-    {% block body %}
-
-        <div id="page-wrapper">
-            {{ include('base_cuerpo.html.twig') }}
-            {% block content %}
-
-            {% endblock %}
-        </div>
-    {% endblock %}
-</div>
-{% block javascripts %}
-{{ include('base_pie_script.html.twig') }}
-{% endblock %}
-</body>
-</html>
+{{ include('base.html.twig') }}
+<h1>-desde inicio</h1>

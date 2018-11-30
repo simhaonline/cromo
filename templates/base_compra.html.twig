@@ -1,123 +1,94 @@
-<!DOCTYPE html>
-<html>
-{{ include('base_cabecera_enlace.html.twig') }}
-<body>
-<div id="wrapper">
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        {{ include('base_cabecera_navegacion.html.twig') }}
-
-    <div class="navbar-default sidebar" role="navigation">
-        <div class="sidebar-nav navbar-collapse">
-            <ul class="nav" id="side-menu">
-                <li class="sidebar-search">
-                    <div class="input-group custom-search-form">
-                        <input type="text" class="form-control" placeholder="Search...">
-                        <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                    </div>
-                </li>
+<nav>
+    <ul>
+        <li>
+            <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
+            <ul>
                 <li>
-                    <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a href="#">Compra <span class="fa arrow"></span></a>
-                            <ul class="nav nav-third-level">
-                                <li><a href="{{ path('compra_movimiento_compra_compra_lista') }}">Compra</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Pago <span class="fa arrow"></span></a>
-                            <ul class="nav nav-third-level">
-                                <li><a href="{{ path('compra_movimiento_egreso_egreso_lista') }}">Egreso</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Cuentas por Pagar <span class="fa arrow"></span></a>
-                            <ul class="nav nav-third-level">
-                                <li><a href="{{ path('compra_movimiento_cuenta_pagar_lista') }}">Cuentas por pagar</a>
-                                </li>
-                            </ul>
-                        </li>
+                    <a href="#">Compra <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('compra_movimiento_compra_compra_lista') }}">Compra</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a href="#">General <span class="fa arrow"></span></a>
-                            <ul class="nav nav-third-level">
-                                <li><a href="{{ path('administracion_lista',{'modulo':'compra','entidad':'compraTipo'}) }}">Compra tipo</a></li>
-                                <li><a href="{{ path('administracion_lista',{'modulo':'compra','entidad':'conceptoTipo'}) }}">Concepto tipo</a></li>
-                                <li><a href="{{ path('administracion_lista',{'modulo':'compra','entidad':'concepto'}) }}">Concepto</a></li>
-                                <li><a href="{{ path('administracion_lista',{'modulo':'compra','entidad':'cuentaPagarTipo'}) }}">Cuenta pagar tipo</a></li>
-                                <li><a href="{{ path('administracion_lista',{'modulo':'compra','entidad':'egresoTipo'}) }}">Egreso tipo</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Proveedor <span class="fa arrow"></span></a>
-                            <ul class="nav nav-third-level">
-                                <li>
-                                    <a href="{{ path('compra_administracion_proveedor_proveedor_lista') }}">Proveedor</a>
-                                </li>
-                            </ul>
-
-                        </li>
+                    <a href="#">Pago <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('compra_movimiento_egreso_egreso_lista') }}">Egreso</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-retweet fa-fw"></i> Proceso<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a href="#">Contabilidad <span class="fa arrow"></span></a>
-                            <ul class="nav nav-third-level">
-                                <li>
-                                    <a href="{{ path('compra_proceso_contabilidad_egreso_lista') }}">Egreso</a>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-file-text-o fa-fw"></i> Informe<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a href="#">Cuentas por Pagar <span class="fa arrow"></span></a>
-                            <ul class="nav nav-third-level">
-                                <li><a href="{{ path('compra_informe_cuenta_pagar_pendiente') }}">Cuentas por pagar</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Egresos<span class="fa arrow"></span></a>
-                            <ul class="nav nav-third-level">
-                                <li><a href="{{ path('compra_informe_egreso_egreso_lista') }}">Egresos</a>
-                                </li>
-                            </ul>
+                    <a href="#">Cuentas por Pagar <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('compra_movimiento_cuenta_pagar_lista') }}">Cuentas por pagar</a>
                         </li>
                     </ul>
                 </li>
             </ul>
-        </div>
-    </div>
-    </nav>
-    {% block body %}
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">General <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'compra','entidad':'compraTipo'}) }}">Compra
+                                tipo</a></li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'compra','entidad':'conceptoTipo'}) }}">Concepto
+                                tipo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'compra','entidad':'concepto'}) }}">Concepto</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'compra','entidad':'cuentaPagarTipo'}) }}">Cuenta
+                                pagar tipo</a></li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'compra','entidad':'egresoTipo'}) }}">Egreso
+                                tipo</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Proveedor <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('compra_administracion_proveedor_proveedor_lista') }}">Proveedor</a>
+                        </li>
+                    </ul>
 
-        <div id="page-wrapper">
-            {{ include('base_cuerpo.html.twig') }}
-            {% block content %}
-
-            {% endblock %}
-        </div>
-    {% endblock %}
-</div>
-{% block javascripts %}
-    {{ include('base_pie_script.html.twig') }}
-{% endblock %}
-</body>
-</html>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-retweet fa-fw"></i> Proceso<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Contabilidad <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('compra_proceso_contabilidad_egreso_lista') }}">Egreso</a>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-file-text-o fa-fw"></i> Informe<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Cuentas por Pagar <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('compra_informe_cuenta_pagar_pendiente') }}">Cuentas por pagar</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Egresos<span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('compra_informe_egreso_egreso_lista') }}">Egresos</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>

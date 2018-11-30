@@ -1,149 +1,150 @@
-<!DOCTYPE html>
-<html>
-{{ include('base_cabecera_enlace.html.twig') }}
-<body>
-<div id="wrapper">
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        {{ include('base_cabecera_navegacion.html.twig') }}
-
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-                    <li class="sidebar-search">
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                        <!-- /input-group -->
-                    </li>
-                    <li>
-                        <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Seleccion <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'aspirante'}) }}">Aspirante</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'solicitud'}) }}">Solicitud</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'seleccion'}) }}">Seleccion</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Nomina <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('recursohumano_movimiento_nomina_programacion_lista') }}">Programacion</a></li>
-                                    <li><a href="{{ path('recursohumano_movimiento_nomina_pago_lista') }}">Pago</a></li>
-                                    <li><a href="{{ path('recursohumano_movimiento_nomina_egreso_lista') }}">Egreso</a></li>
-                                    <li><a href="{{ path('recursohumano_movimiento_nomina_liquidacion_lista') }}">Liquidacion</a></li>
-                                    <li><a href="{{ path('recursohumano_movimiento_nomina_adicional_lista') }}">Adicional</a></li>
-                                    <li><a href="{{ path('recursohumano_movimiento_nomina_novedad_lista') }}">Novedad</a></li>
-                                    <li><a href="{{ path('recursohumano_movimiento_nomina_recaudo_lista') }}">Recaudo</a></li>
-                                    <li><a href="{{ path('recursohumano_movimiento_nomina_vacacion_lista') }}">Vacacion</a></li>
-                                    <li><a href="{{ path('recursohumano_movimiento_nomina_embargo_lista') }}">Embargo</a></li>
-                                    <li><a href="{{ path('recursohumano_movimiento_nomina_credito_lista') }}">Credito</a></li>
-                                    <li><a href="{{ path('recursohumano_movimiento_nomina_reclamo_lista') }}">Reclamo</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Recurso <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('recursohumano_administracion_recurso_empleado_lista') }}">Empleado</a></li>
-                                    <li><a href="{{ path('recursohumano_administracion_recurso_contrato_lista') }}">Contrato</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Nomina <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'contratoTipo'}) }}">Contrato tipo</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'egresoTipo'}) }}">Egreso tipo</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'novedadTipo'}) }}">Novedad tipo</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'pagoTipo'}) }}">Pago tipo</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'creditoTipo'}) }}">Credito tipo</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'embargoTipo'}) }}">Embargo tipo</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'reclamoConcepto'}) }}">Reclamo concepto</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'concepto'}) }}">Concepto</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'embargoJuzgado'}) }}">Juzgado</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'salud'}) }}">Salud</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'pension'}) }}">Pension</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'tiempo'}) }}">Tiempo</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Costo <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'costoGrupo'}) }}">Costo grupo</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'costoClase'}) }}">Costo clase</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">General <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'grupo'}) }}">Grupo</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'cargo'}) }}">Cargo</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Seleccion <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'solicitudMotivo'}) }}">Solicitud motivo</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'solicitudExperiencia'}) }}">Solicitud experiencia</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'seleccionTipo'}) }}">Seleccion tipo</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Seguridad social <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'clasificacionRiesgo'}) }}">Clasificacion del riesgo</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Contratación <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'cargo'}) }}">Cargo</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-cogs"></i> Configuracion<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="{{ path('recursohumano_administracion_configuracion_configuracion_lista', {'id': 1}) }}">Configuracion</a>
-                            <li>
-
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.sidebar-collapse -->
-        </div>
-        <!-- /.navbar-static-side -->
-    </nav>
-    {% block body %}
-
-        <div id="page-wrapper">
-            {{ include('base_cuerpo.html.twig') }}
-            {% block content %}
-
-            {% endblock %}
-        </div>
-    {% endblock %}
-</div>
-{% block javascripts %}
-    {{ include('base_pie_script.html.twig') }}
-{% endblock %}
-</body>
-</html>
+<nav>
+    <ul>
+        <li>
+            <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Seleccion <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'aspirante'}) }}">Aspirante</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'solicitud'}) }}">Solicitud</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'seleccion'}) }}">Seleccion</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Nomina <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_programacion_lista') }}">Programacion</a>
+                        </li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_pago_lista') }}">Pago</a></li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_egreso_lista') }}">Egreso</a></li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_liquidacion_lista') }}">Liquidacion</a>
+                        </li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_adicional_lista') }}">Adicional</a></li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_novedad_lista') }}">Novedad</a></li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_recaudo_lista') }}">Recaudo</a></li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_vacacion_lista') }}">Vacacion</a></li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_embargo_lista') }}">Embargo</a></li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_credito_lista') }}">Credito</a></li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_reclamo_lista') }}">Reclamo</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Recurso <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('recursohumano_administracion_recurso_empleado_lista') }}">Empleado</a>
+                        </li>
+                        <li><a href="{{ path('recursohumano_administracion_recurso_contrato_lista') }}">Contrato</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Nomina <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'contratoTipo'}) }}">Contrato
+                                tipo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'egresoTipo'}) }}">Egreso
+                                tipo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'novedadTipo'}) }}">Novedad
+                                tipo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'pagoTipo'}) }}">Pago
+                                tipo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'creditoTipo'}) }}">Credito
+                                tipo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'embargoTipo'}) }}">Embargo
+                                tipo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'concepto'}) }}">Concepto</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'embargoJuzgado'}) }}">Juzgado</a>
+                        </li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'salud'}) }}">Salud</a>
+                        </li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'pension'}) }}">Pension</a>
+                        </li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'tiempo'}) }}">Tiempo</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Costo <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'costoGrupo'}) }}">Costo
+                                grupo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'costoClase'}) }}">Costo
+                                clase</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">General <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'grupo'}) }}">Grupo</a>
+                        </li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'cargo'}) }}">Cargo</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Seleccion <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'solicitudMotivo'}) }}">Solicitud
+                                motivo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'solicitudExperiencia'}) }}">Solicitud
+                                experiencia</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'seleccionTipo'}) }}">Seleccion
+                                tipo</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Seguridad social <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'clasificacionRiesgo'}) }}">Clasificacion
+                                del riesgo</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Contratación <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'cargo'}) }}">Cargo</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-cogs"></i> Configuracion<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="{{ path('recursohumano_administracion_configuracion_configuracion_lista', {'id': 1}) }}">Configuracion</a>
+                <li>
+            </ul>
+        </li>
+    </ul>
+</nav>

@@ -1,53 +1,199 @@
-<div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="{{ path('inicio') }}">Cromo v2.0</a>
-</div>
-<!-- /.navbar-header -->
+<!-- #HEADER -->
+<header id="header">
+    <div id="logo-group">
+        <!-- PLACE YOUR LOGO HERE -->
+        <span id="logo"> <img src="{{ asset('img/logo.png') }}" alt="SmartAdmin"> </span>
+        <!-- END LOGO PLACEHOLDER -->
+    </div>
+    <!-- end projects dropdown -->
 
-<ul class="nav navbar-top-links navbar-right">
-    <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
-        </a>
-        <ul class="dropdown-menu dropdown-alerts">
-            <li class="divider"></li>
-            <li>
-                <a class="text-center" href="#">
-                    <strong>See All Alerts</strong>
-                    <i class="fa fa-angle-right"></i>
+    <!-- #TOGGLE LAYOUT BUTTONS -->
+    <!-- pulled right: nav area -->
+    <div class="pull-right">
+
+        <!-- collapse menu button -->
+        <div id="hide-menu" class="btn-header pull-right">
+            <span> <a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu"><i
+                            class="fa fa-reorder"></i></a> </span>
+        </div>
+        <!-- end collapse menu -->
+
+        <!-- #MOBILE -->
+        <!-- Top menu profile link : this shows only when top menu is active -->
+        <ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
+            <li class="">
+                <a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
+                    <img src="{{ asset('img/avatars/sunny.png') }}" alt="John Doe" class="online"/>
                 </a>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"><i
+                                    class="fa fa-cog"></i> Setting</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#ajax/profile.html" class="padding-10 padding-top-0 padding-bottom-0"> <i
+                                    class="fa fa-user"></i> <u>P</u>rofile</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"
+                           data-action="toggleShortcut"><i class="fa fa-arrow-down"></i> <u>S</u>hortcut</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"
+                           data-action="launchFullscreen"><i class="fa fa-arrows-alt"></i> Full <u>S</u>creen</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="login.html" class="padding-10 padding-top-5 padding-bottom-5" data-action="userLogout"><i
+                                    class="fa fa-sign-out fa-lg"></i> <strong><u>L</u>ogout</strong></a>
+                    </li>
+                </ul>
             </li>
         </ul>
-        <!-- /.dropdown-alerts -->
-    </li>
-    <li class="dropdown">
-        <a class="notificacionPendiente dropdown-toggle" data-toggle="dropdown" href="" onclick="verNotificacionesPendientes()">
-            <i class="fa fa-bell fa-fw"></i><i class="fa fa-caret-down"></i>
-        </a>
-        <ul class="notificaciones dropdown-menu dropdown-alerts">
-            <li><a href="#"><div><i class="fa fa-comment fa-fw"></i><span style="font-size: 13px"> No tiene notificaciones</span></div></a></li><li class="divider"></li>
-            <li><a class="text-center" href="{{ path('general_administracion_notificacion__todasNotificaciones') }}"><strong>Ver todas </strong><i class="fa fa-angle-right"></i></a></li>
+
+        <!-- logout button -->
+        <div id="logout" class="btn-header transparent pull-right">
+            <span> <a href="{{ path('logout') }}" title="Sign Out" data-action="userLogout"
+                      data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i
+                            class="fa fa-sign-out"></i></a> </span>
+        </div>
+        <!-- end logout button -->
+
+        <!-- search mobile button (this is hidden till mobile view port) -->
+        <div id="search-mobile" class="btn-header transparent pull-right">
+            <span> <a href="javascript:void(0)" title="Search"><i class="fa fa-search"></i></a> </span>
+        </div>
+        <!-- end search mobile button -->
+
+        <!-- #SEARCH -->
+        <!-- input: search field -->
+        <form action="#ajax/search.html" class="header-search pull-right">
+            <input id="search-fld" type="text" name="param" placeholder="Find reports and more">
+            <button type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+            <a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
+        </form>
+        <!-- end input: search field -->
+
+        <!-- fullscreen button -->
+        <div id="fullscreen" class="btn-header transparent pull-right">
+            <span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i
+                            class="fa fa-arrows-alt"></i></a> </span>
+        </div>
+        <!-- end fullscreen button -->
+
+        <!-- multiple lang dropdown : find all flags in the flags page -->
+        <ul class="header-dropdown-list hidden-xs">
+            {#<li>#}
+                {#<a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="img/blank.gif"#}
+                                                                                 {#class="flag flag-us"#}
+                                                                                 {#alt="United States"> <span> US</span>#}
+                    {#<i class="fa fa-angle-down"></i> </a>#}
+                {#<ul class="dropdown-menu pull-right">#}
+                    {#<li class="active">#}
+                        {#<a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-us" alt="United States">#}
+                            {#English (US)</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-fr" alt="France">#}
+                            {#Français</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-es" alt="Spanish">#}
+                            {#Español</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-de" alt="German">#}
+                            {#Deutsch</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-jp" alt="Japan"> 日本語</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-cn" alt="China"> 中文</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-it" alt="Italy">#}
+                            {#Italiano</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-pt" alt="Portugal">#}
+                            {#Portugal</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-ru" alt="Russia">#}
+                            {#Русский язык</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-kr" alt="Korea"> 한국어</a>#}
+                    {#</li>#}
+
+                {#</ul>#}
+            {#</li>#}
         </ul>
-        <!-- /.dropdown-alerts -->
-    </li>
-    <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-        </a>
-        <ul class="dropdown-menu dropdown-user">
-            <li><a href="#"><i class="fa fa-user fa-fw"></i> Perfil</a>
-            </li>
-            <li><a href="#"><i class="fa fa-gear fa-fw"></i> Configuración</a>
-            </li>
-            <li class="divider"></li>
-            <li><a href="{{ path('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Salir</a>
-            </li>
-        </ul>
-        <!-- /.dropdown-user -->
-    </li>
-</ul>
+        <!-- end multiple lang -->
+
+    </div>
+    <!-- end pulled right: nav area -->
+
+</header>
+<!-- END HEADER -->
+
+
+{#<div class="navbar-header">#}
+    {#<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">#}
+        {#<span class="sr-only">Toggle navigation</span>#}
+        {#<span class="icon-bar"></span>#}
+        {#<span class="icon-bar"></span>#}
+        {#<span class="icon-bar"></span>#}
+    {#</button>#}
+    {#<a class="navbar-brand" href="{{ path('inicio') }}">Cromo v2.0</a>#}
+{#</div>#}
+{#<!-- /.navbar-header -->#}
+
+{#<ul class="nav navbar-top-links navbar-right">#}
+    {#<li class="dropdown">#}
+        {#<a class="dropdown-toggle" data-toggle="dropdown" href="#">#}
+            {#<i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>#}
+        {#</a>#}
+        {#<ul class="dropdown-menu dropdown-alerts">#}
+            {#<li class="divider"></li>#}
+            {#<li>#}
+                {#<a class="text-center" href="#">#}
+                    {#<strong>See All Alerts</strong>#}
+                    {#<i class="fa fa-angle-right"></i>#}
+                {#</a>#}
+            {#</li>#}
+        {#</ul>#}
+        {#<!-- /.dropdown-alerts -->#}
+    {#</li>#}
+    {#<li class="dropdown">#}
+        {#<a class="notificacionPendiente dropdown-toggle" data-toggle="dropdown" href="" onclick="verNotificacionesPendientes()">#}
+            {#<i class="fa fa-bell fa-fw"></i><i class="fa fa-caret-down"></i>#}
+        {#</a>#}
+        {#<ul class="notificaciones dropdown-menu dropdown-alerts">#}
+            {#<li><a href="#"><div><i class="fa fa-comment fa-fw"></i><span style="font-size: 13px"> No tiene notificaciones</span></div></a></li><li class="divider"></li>#}
+            {#<li><a class="text-center" href="{{ path('general_administracion_notificacion__todasNotificaciones') }}"><strong>Ver todas </strong><i class="fa fa-angle-right"></i></a></li>#}
+        {#</ul>#}
+        {#<!-- /.dropdown-alerts -->#}
+    {#</li>#}
+    {#<li class="dropdown">#}
+        {#<a class="dropdown-toggle" data-toggle="dropdown" href="#">#}
+            {#<i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>#}
+        {#</a>#}
+        {#<ul class="dropdown-menu dropdown-user">#}
+            {#<li><a href="#"><i class="fa fa-user fa-fw"></i> Perfil</a>#}
+            {#</li>#}
+            {#<li><a href="#"><i class="fa fa-gear fa-fw"></i> Configuración</a>#}
+            {#</li>#}
+            {#<li class="divider"></li>#}
+            {#<li><a href="{{ path('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Salir</a>#}
+            {#</li>#}
+        {#</ul>#}
+        {#<!-- /.dropdown-user -->#}
+    {#</li>#}
+{#</ul>#}

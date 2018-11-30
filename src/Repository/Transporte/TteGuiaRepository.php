@@ -8,6 +8,7 @@ use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\General\GenFormaPago;
 use App\Entity\General\GenIdentificacion;
+use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;

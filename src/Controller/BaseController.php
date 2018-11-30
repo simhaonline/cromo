@@ -69,7 +69,6 @@ abstract class BaseController extends Controller
                             'class' => $nombreRepositorio,
                             'choice_label' => $campo['propiedades']['choice_label'],
                             'placeholder' => "TODO",
-                            'choice_value'=>substr($campo['child'], 0,-2).'Pk',
                             'data'=>$session->get($this->claseNombre . "_" . $campo['child'])?$em->getReference($nombreRepositorio,$session->get($this->claseNombre . "_" . $campo['child'])):"",
 //                            'auto_initialize'=>"COR"
 
@@ -270,8 +269,12 @@ abstract class BaseController extends Controller
         /** @var  $queryBuilder QueryBuilder */
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio, 'e');
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
+
         $camposTabla = json_decode($namespaceType::getEstructuraPropiedadesLista());
-        $auxFecha=0;
+        $formType=new $namespaceType;
+        if(method_exists($formType,"getOrdenamiento")){
+            $camposOrdenamiento=json_decode($namespaceType::getOrdenamiento());
+        }
         foreach ($camposTabla as $camposT){
             if(!isset($camposT->relacion)){
             $queryBuilder->addSelect('e.' . $camposT->campo);
@@ -321,10 +324,6 @@ abstract class BaseController extends Controller
                 if (strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha") {
                     $campoExplode=substr($campo['child'], 0, strlen($campo['child'])-5);
                     $fecha = $session->get($claseNombre . "_" . $campo['child']);
-                    $auxFecha++;
-                    if($auxFecha>=2){
-                        $queryBuilder->orderBy('e.' . $campoExplode,'DESC');
-                    }
                     if ($fecha!==null) {
                         if(substr($campo['child'],  -5)==="Desde"){
                         $queryBuilder->andWhere('e.' . $campoExplode . ">='{$fecha}'");
@@ -340,6 +339,14 @@ abstract class BaseController extends Controller
                     }
                 }
             }
+        }
+        if(isset($camposOrdenamiento)){
+            foreach ($camposOrdenamiento as $ordenamiento){
+                $queryBuilder->addOrderBy('e.'.$ordenamiento->campo,$ordenamiento->tipo);
+            }
+        }
+        else if(isset($camposTabla) && count($camposTabla)>0){
+            $queryBuilder->orderBy('e.'.$camposTabla[0]->campo,'DESC');
         }
         return $queryBuilder;
     }

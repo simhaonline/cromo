@@ -67,6 +67,8 @@ class GuiaController extends ControllerListenerGeneral
             }
         }
         $datos = $this->getDatosLista(true);
+//        dump($datos['queryBuilder']->getDql());
+//        exit();
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Guias");

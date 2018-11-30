@@ -23,7 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class CumplidoController extends ControllerListenerGeneral
 {
-    protected $class= TteCumplido::class;
+    protected $clase= TteCumplido::class;
     protected $claseNombre = "TteCumplido";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";

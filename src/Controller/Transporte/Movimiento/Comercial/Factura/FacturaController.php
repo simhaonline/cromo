@@ -52,7 +52,6 @@ class FacturaController extends ControllerListenerGeneral
     public function lista(Request $request)
     {
         $this->request = $request;
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
 
         $formBotonera = BaseController::botoneraLista();

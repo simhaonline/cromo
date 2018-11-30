@@ -21,6 +21,7 @@ use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
 
+use App\Formato\Transporte\ListaFactura;
 use App\Formato\Transporte\NotaCredito;
 use App\General\General;
 use App\Utilidades\Estandares;
@@ -77,6 +78,11 @@ class FacturaController extends ControllerListenerGeneral
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_lista'));
+            }
+
+            if ($formBotonera->get('btnPdf')->isClicked()) {
+                $formato = new ListaFactura();
+                $formato->Generar($em);
             }
         }
 

@@ -53,7 +53,6 @@ class FacturaController extends ControllerListenerGeneral
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
@@ -70,7 +69,9 @@ class FacturaController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Facturas");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_lista'));
             }
         }
 

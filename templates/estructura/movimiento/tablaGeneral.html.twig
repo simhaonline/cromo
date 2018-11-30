@@ -57,8 +57,7 @@
                 <td style="text-align: center"><a
                             href="{{ path(arrDatosLista.ruta ~ '_detalle', { 'id': arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
                                 style="font-size: large;color: black;" class="fa fa-share-square-o"></i></a></td>
-                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
-                                                       value="{{ arDato[arrDatosLista.arrCampos[0].campo] }}"/></td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDato[arrDatosLista.arrCampos[0].campo] }}"/></td>
             </tr>
         {% endfor %}
         </tbody>

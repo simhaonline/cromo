@@ -1,100 +1,69 @@
-<!DOCTYPE html>
-<html>
-{{ include('base_cabecera_enlace.html.twig') }}
-<body>
-<div id="wrapper">
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        {{ include('base_cabecera_navegacion.html.twig') }}
-
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-                    <li class="sidebar-search">
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                        <!-- /input-group -->
-                    </li>
-                    <li>
-                        <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">General <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'sexo'}) }}">Sexo</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'religion'}) }}">Religion</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'estadoCivil'}) }}">Estado civil</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'ciudad'}) }}">Ciudad</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'departamento'}) }}">Departamento</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'pais'}) }}">País</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'estudioTipo'}) }}">Estudio tipo</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Notificacion <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('general_administracion_notificacion__todasNotificaciones') }}">Notificacion</a></li>
-                                    <li><a href="{{ path('general_administracion_notificacion_tipo_lista') }}">Notificacion tipo</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Seguridad <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('gen_seguridad_usuario_lista') }}">Usuario</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-clipboard"></i> Informe<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Log <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('general_informe_log_lista') }}">General</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-cogs"></i> Configuracion<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="{{ path('general_administracion_configuracion_configuracion_lista', {'id': 1}) }}">Configuracion</a>
-                            <li>
-
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                </ul>
-            </div>
-            <!-- /.sidebar-collapse -->
-        </div>
-        <!-- /.navbar-static-side -->
-    </nav>
-    {% block body %}
-
-    <div id="page-wrapper">
-    {{ include('base_cuerpo.html.twig') }}
-        {% block content %}
-
-        {% endblock %}
-    </div>
-    {% endblock %}
-</div>
-{% block javascripts %}
-    {{ include('base_pie_script.html.twig') }}
-{% endblock %}
-</body>
-</html>
+{% include('base_menu_inicio.html.twig') %}
+<nav>
+    <ul>
+        <li>
+            <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">General <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'sexo'}) }}">Sexo</a>
+                        </li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'religion'}) }}">Religion</a>
+                        </li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'estadoCivil'}) }}">Estado
+                                civil</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'general','entidad':'ciudad'}) }}">Ciudad</a>
+                        </li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'departamento'}) }}">Departamento</a>
+                        </li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'pais'}) }}">País</a>
+                        </li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'general','entidad':'estudioTipo'}) }}">Estudio
+                                tipo</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Notificacion <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('general_administracion_notificacion__todasNotificaciones') }}">Notificacion</a>
+                        </li>
+                        <li><a href="{{ path('general_administracion_notificacion_tipo_lista') }}">Notificacion tipo</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Seguridad <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('gen_seguridad_usuario_lista') }}">Usuario</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-clipboard"></i> Informe<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Log <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('general_informe_log_lista') }}">General</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-cogs"></i> Configuracion<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="{{ path('general_administracion_configuracion_configuracion_lista', {'id': 1}) }}">Configuracion</a>
+                <li>
+            </ul>
+        </li>
+    </ul>
+</nav>

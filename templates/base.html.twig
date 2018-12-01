@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>{% block title %}Cromo!{% endblock %}</title>
     {% block stylesheets %}
         <!-- Bootstrap Core CSS -->
         {#<link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">#}
@@ -79,7 +79,7 @@
 					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
 						<img src="{{ asset('img/avatars/sunny.png') }}" alt="me" class="online"/>
 						<span>
-							john.doe
+							{{ app.user.username }}
 						</span>
 						<i class="fa fa-angle-down"></i>
 					</a>

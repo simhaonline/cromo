@@ -2,8 +2,8 @@
     <a class="btn btn-sm btn-default" href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id':0}) }}">Nuevo</a>
 </div>
 <div class="btn-group" style="float: right; margin-right: 5px !important;">
-    {{ form_widget(formBotonera.btnEliminar) }}
+    {{ form_widget(formBotonera.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
 </div>
 <div class="btn-group" style="float: right; margin-right: 5px !important;">
-    {{ form_widget(formBotonera.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    {{ form_widget(formBotonera.btnEliminar) }}
 </div>

@@ -1,328 +1,398 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content">
+        <section id="widget-grid" class="">
 
-    <div class="btn-toolbar" style="float:left">
-        <div class="btn-group">
-            <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Volver</a>
-        </div>
-        <div class="btn-group">
-            {% include 'estructura/botonera.html.twig' %}
-            {{ form_widget(form.btnCerrar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnRndc, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnImprimirManifiesto, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnCobroEntrega, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnLiquidacion, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {% if arDespacho.estadoAnulado == 0 %}
-                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_liquidar', {'id': arDespacho.codigoDespachoPk }) }}', 'DespachoLiquidar', 600, 1200)">Liquidar</a>
-            {% endif %}
-        </div>
-    </div>
-    <div style="float:right">
-        {% if arDespacho.estadoAutorizado == 1 %}<span class="label label-default">Autorizado</span>{% endif %}
-        {% if arDespacho.estadoAprobado == 1 %}<span class="label label-default">Aprobado</span>{% endif %}
-        {% if arDespacho.estadoAnulado == 1 %}<span class="label label-default">Anulado</span>{% endif %}
-    </div>
-    <br /><br />
-    <table width="100%" class="table table-condensed table-bordered">
-        <tr>
-            <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arDespacho.codigoDespachoPk }}</td>
-            <td class="titulo">TIPO:</td>
-            <td class="td-in-well">{{ arDespacho.despachoTipoRel.nombre | default('') }}</td>
-            <td class="titulo" >FLETE:</td>
-            <td align="right">{{ arDespacho.vrFletePago | number_format(0, '.', ',')  }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arDespacho.numero }}</td>
-            <td class="titulo">FECHA SALIDA:</td>
-            <td class="td-in-well">{{ arDespacho.fechaSalida |date("Y/m/d H:i") }}</td>
-            <td class="titulo" >(-)ANTICIPO:</td>
-            <td align="right">{{ arDespacho.vrAnticipo | number_format(0, '.', ',')  }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">RNDC:</td>
-            <td class="td-in-well">{{ arDespacho.numeroRndc }}</td>
-            <td class="titulo">FECHA LLEGADA</td>
-            <td class="td-in-well">{{ arDespacho.fechaLlegada |date("Y/m/d H:i") }}</td>
-            <td class="titulo" >(-)INDUSTRIA COMERCIO</td>
-            <td align="right">{{ arDespacho.vrIndustriaComercio | number_format(0, '.', ',')  }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">CONDUCTOR:</td>
-            <td class="td-in-well">{{ arDespacho.conductorRel.numeroIdentificacion | default('') }} - {{ arDespacho.conductorRel.nombreCorto | default('') }}</td>
-            <td class="titulo">VEHICULO:</td>
-            <td class="td-in-well">{{ arDespacho.codigoVehiculoFk }}</td>
-            <td class="titulo" >(-)RETENCION FUENTE</td>
-            <td align="right">{{ arDespacho.vrRetencionFuente | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">ORIGEN:</td>
-            <td class="td-in-well">{{ arDespacho.ciudadOrigenRel.nombre | default('') }}</td>
-            <td class="titulo">DESTINO:</td>
-            <td class="td-in-well">{{ arDespacho.ciudadDestinoRel.nombre | default('') }}</td>
-            <td class="titulo" >TOTAL</td>
-            <td align="right">{{ arDespacho.vrTotal | number_format(0, '.', ',')  }}</td>
-        </tr>
+            <div class="row">
 
-        <tr>
-            <td class="titulo">RUTA:</td>
-            <td class="td-in-well">{{ arDespacho.rutaRel.nombre | default('') }}</td>
-            <td class="titulo">UNIDADES:</td>
-            <td class="td-in-well">{{ arDespacho.unidades | number_format(0, '.', ',') }}</td>
-            <td class="titulo" >PAPELERIA:</td>
-            <td align="right">{{ arDespacho.vrDescuentoPapeleria | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">USUARIO:</td>
-            <td class="td-in-well">{{ arDespacho.usuario }}</td>
-            <td class="titulo">PESO:</td>
-            <td class="td-in-well">{{ arDespacho.pesoReal }}</td>
-            <td class="titulo">SEGURIDAD:</td>
-            <td align="right">{{ arDespacho.vrDescuentoSeguridad | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">VOLUMEN:</td>
-            <td class="td-in-well">{{ arDespacho.pesoVolumen }}</td>
-            <td class="titulo" >CARGUE:</td>
-            <td align="right">{{ arDespacho.vrDescuentoCargue | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">PESO(COSTO):</td>
-            <td class="td-in-well">{{ arDespacho.pesoCosto }}</td>
-            <td class="titulo" >ESTAMPILLA:</td>
-            <td align="right">{{ arDespacho.vrDescuentoEstampilla | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">CANTIDAD:</td>
-            <td class="td-in-well">{{ arDespacho.cantidad }}</td>
-            <td class="titulo" >(-)COBRO ENTREGA:</td>
-            <td align="right">{{ arDespacho.vrCobroEntrega | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">FLETE:</td>
-            <td class="td-in-well">{{ arDespacho.vrFlete | number_format(0, '.', ',') }}</td>
-            <td class="titulo" >(+)COBRO (RECHAZADO):</td>
-            <td align="right">{{ arDespacho.vrCobroEntregaRechazado | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">MANEJO:</td>
-            <td class="td-in-well">{{ arDespacho.vrManejo | number_format(0, '.', ',') }}</td>
-            <td class="titulo" >TOTAL NETO:</td>
-            <td align="right">{{ arDespacho.vrTotalNeto | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">COBRO ENTREGA:</td>
-            <td class="td-in-well">{{ arDespacho.vrCobroEntrega | number_format(0, '.', ',') }}</td>
-            <td class="titulo" >SALDO:</td>
-            <td align="right">{{ arDespacho.vrSaldo | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">COSTO(BASE):</td>
-            <td class="td-in-well">{{ arDespacho.vrCostoBase | number_format(0, '.', ',') }}</td>
-            <td class="titulo" >DECLARADO:</td>
-            <td align="right">{{ arDespacho.vrDeclara | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo" >COMENTARIO: </td>
-            <td class="td-in-well" colspan="5">{{ arDespacho.comentario }}</td>
-        </tr>
-    </table>
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#guias" data-toggle="tab">Guias</a></li>
-        <li><a href="#novedades" data-toggle="tab">Novedades</a></li>
-        <li><a href="#otros" data-toggle="tab">Otros</a></li>
-    </ul>
+                <!-- NEW WIDGET START -->
+                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <!-- Widget ID (each widget will need unique ID)-->
+                    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+                         data-widget-fullscreenbutton="true">
+                        <!-- widget options:
+                        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
-    <div class="tab-content">
-        <div class="tab-pane active" id="guias">
-            <div id="detalles" style="width: 100%"><br>
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>TIPO</th>
-                            <th>GUIA</th>
-                            <th>FECHA</th>
-                            <th title="Operacion de ingreso">OI</th>
-                            <th title="Operacion de cargo">OC</th>
-                            <th>NUMERO</th>
-                            <th>DOCUMENTO</th>
-                            <th>CLIENTE</th>
-                            <th>DESTINATARIO</th>
-                            <th>DESTINO</th>
-                            <th>FLETE</th>
-                            <th>MANEJO</th>
-                            <th title="Cobro entrega">COB_ENT</th>
-                            <th title="Precio reexpedicion">PRE_REE</th>
-                            <th title="Unidades">UND</th>
-                            <th title="Peso">PES</th>
-                            <th title="Volumen">VOL</th>
-                            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for arDespachoDetalle in arDespachoDetalles %}
-                            <tr>
-                                <td>{{ arDespachoDetalle.codigoDespachoDetallePk }}</td>
-                                <td>{{ arDespachoDetalle.codigoGuiaTipoFk }}</td>
-                                <td>{{ arDespachoDetalle.codigoGuiaFk }}</td>
-                                <td>{{ arDespachoDetalle.fechaIngreso | date('Y-m-d') }}</td>
-                                <td>{{ arDespachoDetalle.codigoOperacionIngresoFk }}</td>
-                                <td>{{ arDespachoDetalle.codigoOperacionCargoFk }}</td>
-                                <td>{{ arDespachoDetalle.numero }}</td>
-                                <td>{{ arDespachoDetalle.documentoCliente }}</td>
-                                <td>{{ arDespachoDetalle.clienteNombreCorto |slice(0, 25) }}</td>
-                                <td>{{ arDespachoDetalle.nombreDestinatario |slice(0, 25) }}</td>
-                                <td>{{ arDespachoDetalle.ciudadDestino }}</td>
-                                <td style="text-align: right">{{ arDespachoDetalle.vrFlete | number_format(0, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arDespachoDetalle.vrManejo | number_format(0, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arDespachoDetalle.vrCobroEntrega | number_format(0, '.', ',')}}</td>
-                                <td style="text-align: right">{{ arDespachoDetalle.vrPrecioReexpedicion | number_format(0, '.', ',')}}</td>
-                                <td style="text-align: right">{{ arDespachoDetalle.unidades | number_format(0, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arDespachoDetalle.pesoReal | number_format(0, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arDespachoDetalle.pesoVolumen | number_format(0, '.', ',') }}</td>
-                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDespachoDetalle.codigoDespachoDetallePk }}" /></td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="separador-1"></div>
-                <div class="btn-toolbar" style="float: right">
-                    <div class="btn-group">
-                        {% if arDespacho.estadoAutorizado == 0 %}
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_detalle_adicionar_guia', {'id': arDespacho.codigoDespachoPk }) }}', 'DespachoAdicionarGuia', 600, 1200)">Nuevo</a>
-                        {% endif %}
+                        data-widget-colorbutton="false"
+                        data-widget-editbutton="false"
+                        data-widget-togglebutton="false"
+                        data-widget-deletebutton="false"
+                        data-widget-fullscreenbutton="true"
+                        data-widget-custombutton="false"
+                        data-widget-collapsed="true"
+                        data-widget-sortable="false"
+
+                        -->
+                        <header>
+                            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                            <h2>Detalle</h2>
+                        </header>
+
+                        <!-- widget div-->
+                        <div>
+
+                            <!-- widget edit box -->
+                            <div class="jarviswidget-editbox">
+                                <!-- This area used as dropdown edit box -->
+
+                            </div>
+                            <!-- end widget edit box -->
+
+                            <!-- widget content -->
+                            <div class="widget-body no-padding">
+                                {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+
+                                <div class="btn-toolbar" style="float:left">
+                                    <div class="btn-group">
+                                        <a class="btn btn-default btn-sm"
+                                           href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Volver</a>
+                                    </div>
+                                    <div class="btn-group">
+                                        {% include 'estructura/botonera.html.twig' %}
+                                        {{ form_widget(form.btnCerrar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                                        {{ form_widget(form.btnRndc, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                                        {{ form_widget(form.btnImprimirManifiesto, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                                        {{ form_widget(form.btnCobroEntrega, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                                        {{ form_widget(form.btnLiquidacion, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                                        {% if arDespacho.estadoAnulado == 0 %}
+                                            <a class="btn btn-default btn-sm"
+                                               href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_liquidar', {'id': arDespacho.codigoDespachoPk }) }}', 'DespachoLiquidar', 600, 1200)">Liquidar</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div style="float:right">
+                                    {% if arDespacho.estadoAutorizado == 1 %}<span class="label label-default">Autorizado</span>{% endif %}
+                                    {% if arDespacho.estadoAprobado == 1 %}<span
+                                            class="label label-default">Aprobado</span>{% endif %}
+                                    {% if arDespacho.estadoAnulado == 1 %}<span
+                                            class="label label-default">Anulado</span>{% endif %}
+                                </div>
+                                <br/><br/>
+                                <table width="100%" class="table table-condensed table-bordered">
+                                    <tr>
+                                        <td class="titulo">CODIGO:</td>
+                                        <td class="td-in-well">{{ arDespacho.codigoDespachoPk }}</td>
+                                        <td class="titulo">TIPO:</td>
+                                        <td class="td-in-well">{{ arDespacho.despachoTipoRel.nombre | default('') }}</td>
+                                        <td class="titulo">FLETE:</td>
+                                        <td align="right">{{ arDespacho.vrFletePago | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo">NUMERO:</td>
+                                        <td class="td-in-well">{{ arDespacho.numero }}</td>
+                                        <td class="titulo">FECHA SALIDA:</td>
+                                        <td class="td-in-well">{{ arDespacho.fechaSalida |date("Y/m/d H:i") }}</td>
+                                        <td class="titulo">(-)ANTICIPO:</td>
+                                        <td align="right">{{ arDespacho.vrAnticipo | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo">RNDC:</td>
+                                        <td class="td-in-well">{{ arDespacho.numeroRndc }}</td>
+                                        <td class="titulo">FECHA LLEGADA</td>
+                                        <td class="td-in-well">{{ arDespacho.fechaLlegada |date("Y/m/d H:i") }}</td>
+                                        <td class="titulo">(-)INDUSTRIA COMERCIO</td>
+                                        <td align="right">{{ arDespacho.vrIndustriaComercio | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo">CONDUCTOR:</td>
+                                        <td class="td-in-well">{{ arDespacho.conductorRel.numeroIdentificacion | default('') }}
+                                            - {{ arDespacho.conductorRel.nombreCorto | default('') }}</td>
+                                        <td class="titulo">VEHICULO:</td>
+                                        <td class="td-in-well">{{ arDespacho.codigoVehiculoFk }}</td>
+                                        <td class="titulo">(-)RETENCION FUENTE</td>
+                                        <td align="right">{{ arDespacho.vrRetencionFuente | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo">ORIGEN:</td>
+                                        <td class="td-in-well">{{ arDespacho.ciudadOrigenRel.nombre | default('') }}</td>
+                                        <td class="titulo">DESTINO:</td>
+                                        <td class="td-in-well">{{ arDespacho.ciudadDestinoRel.nombre | default('') }}</td>
+                                        <td class="titulo">TOTAL</td>
+                                        <td align="right">{{ arDespacho.vrTotal | number_format(0, '.', ',') }}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="titulo">RUTA:</td>
+                                        <td class="td-in-well">{{ arDespacho.rutaRel.nombre | default('') }}</td>
+                                        <td class="titulo">UNIDADES:</td>
+                                        <td class="td-in-well">{{ arDespacho.unidades | number_format(0, '.', ',') }}</td>
+                                        <td class="titulo">PAPELERIA:</td>
+                                        <td align="right">{{ arDespacho.vrDescuentoPapeleria | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo">USUARIO:</td>
+                                        <td class="td-in-well">{{ arDespacho.usuario }}</td>
+                                        <td class="titulo">PESO:</td>
+                                        <td class="td-in-well">{{ arDespacho.pesoReal }}</td>
+                                        <td class="titulo">SEGURIDAD:</td>
+                                        <td align="right">{{ arDespacho.vrDescuentoSeguridad | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo"></td>
+                                        <td class="td-in-well"></td>
+                                        <td class="titulo">VOLUMEN:</td>
+                                        <td class="td-in-well">{{ arDespacho.pesoVolumen }}</td>
+                                        <td class="titulo">CARGUE:</td>
+                                        <td align="right">{{ arDespacho.vrDescuentoCargue | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo"></td>
+                                        <td class="td-in-well"></td>
+                                        <td class="titulo">PESO(COSTO):</td>
+                                        <td class="td-in-well">{{ arDespacho.pesoCosto }}</td>
+                                        <td class="titulo">ESTAMPILLA:</td>
+                                        <td align="right">{{ arDespacho.vrDescuentoEstampilla | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo"></td>
+                                        <td class="td-in-well"></td>
+                                        <td class="titulo">CANTIDAD:</td>
+                                        <td class="td-in-well">{{ arDespacho.cantidad }}</td>
+                                        <td class="titulo">(-)COBRO ENTREGA:</td>
+                                        <td align="right">{{ arDespacho.vrCobroEntrega | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo"></td>
+                                        <td class="td-in-well"></td>
+                                        <td class="titulo">FLETE:</td>
+                                        <td class="td-in-well">{{ arDespacho.vrFlete | number_format(0, '.', ',') }}</td>
+                                        <td class="titulo">(+)COBRO (RECHAZADO):</td>
+                                        <td align="right">{{ arDespacho.vrCobroEntregaRechazado | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo"></td>
+                                        <td class="td-in-well"></td>
+                                        <td class="titulo">MANEJO:</td>
+                                        <td class="td-in-well">{{ arDespacho.vrManejo | number_format(0, '.', ',') }}</td>
+                                        <td class="titulo">TOTAL NETO:</td>
+                                        <td align="right">{{ arDespacho.vrTotalNeto | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo"></td>
+                                        <td class="td-in-well"></td>
+                                        <td class="titulo">COBRO ENTREGA:</td>
+                                        <td class="td-in-well">{{ arDespacho.vrCobroEntrega | number_format(0, '.', ',') }}</td>
+                                        <td class="titulo">SALDO:</td>
+                                        <td align="right">{{ arDespacho.vrSaldo | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo"></td>
+                                        <td class="td-in-well"></td>
+                                        <td class="titulo">COSTO(BASE):</td>
+                                        <td class="td-in-well">{{ arDespacho.vrCostoBase | number_format(0, '.', ',') }}</td>
+                                        <td class="titulo">DECLARADO:</td>
+                                        <td align="right">{{ arDespacho.vrDeclara | number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titulo">COMENTARIO:</td>
+                                        <td class="td-in-well" colspan="5">{{ arDespacho.comentario }}</td>
+                                    </tr>
+                                </table>
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#guias" data-toggle="tab">Guias</a></li>
+                                    <li><a href="#novedades" data-toggle="tab">Novedades</a></li>
+                                    <li><a href="#otros" data-toggle="tab">Otros</a></li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="guias">
+                                        <div id="detalles" style="width: 100%"><br>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-bordered table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>TIPO</th>
+                                                        <th>GUIA</th>
+                                                        <th>FECHA</th>
+                                                        <th title="Operacion de ingreso">OI</th>
+                                                        <th title="Operacion de cargo">OC</th>
+                                                        <th>NUMERO</th>
+                                                        <th>DOCUMENTO</th>
+                                                        <th>CLIENTE</th>
+                                                        <th>DESTINATARIO</th>
+                                                        <th>DESTINO</th>
+                                                        <th>FLETE</th>
+                                                        <th>MANEJO</th>
+                                                        <th title="Cobro entrega">COB_ENT</th>
+                                                        <th title="Precio reexpedicion">PRE_REE</th>
+                                                        <th title="Unidades">UND</th>
+                                                        <th title="Peso">PES</th>
+                                                        <th title="Volumen">VOL</th>
+                                                        <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
+                                                                   OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/>
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for arDespachoDetalle in arDespachoDetalles %}
+                                                        <tr>
+                                                            <td>{{ arDespachoDetalle.codigoDespachoDetallePk }}</td>
+                                                            <td>{{ arDespachoDetalle.codigoGuiaTipoFk }}</td>
+                                                            <td>{{ arDespachoDetalle.codigoGuiaFk }}</td>
+                                                            <td>{{ arDespachoDetalle.fechaIngreso | date('Y-m-d') }}</td>
+                                                            <td>{{ arDespachoDetalle.codigoOperacionIngresoFk }}</td>
+                                                            <td>{{ arDespachoDetalle.codigoOperacionCargoFk }}</td>
+                                                            <td>{{ arDespachoDetalle.numero }}</td>
+                                                            <td>{{ arDespachoDetalle.documentoCliente }}</td>
+                                                            <td>{{ arDespachoDetalle.clienteNombreCorto |slice(0, 25) }}</td>
+                                                            <td>{{ arDespachoDetalle.nombreDestinatario |slice(0, 25) }}</td>
+                                                            <td>{{ arDespachoDetalle.ciudadDestino }}</td>
+                                                            <td style="text-align: right">{{ arDespachoDetalle.vrFlete | number_format(0, '.', ',') }}</td>
+                                                            <td style="text-align: right">{{ arDespachoDetalle.vrManejo | number_format(0, '.', ',') }}</td>
+                                                            <td style="text-align: right">{{ arDespachoDetalle.vrCobroEntrega | number_format(0, '.', ',') }}</td>
+                                                            <td style="text-align: right">{{ arDespachoDetalle.vrPrecioReexpedicion | number_format(0, '.', ',') }}</td>
+                                                            <td style="text-align: right">{{ arDespachoDetalle.unidades | number_format(0, '.', ',') }}</td>
+                                                            <td style="text-align: right">{{ arDespachoDetalle.pesoReal | number_format(0, '.', ',') }}</td>
+                                                            <td style="text-align: right">{{ arDespachoDetalle.pesoVolumen | number_format(0, '.', ',') }}</td>
+                                                            <td style="text-align: center;"><input type="checkbox"
+                                                                                                   name="ChkSeleccionar[]"
+                                                                                                   value="{{ arDespachoDetalle.codigoDespachoDetallePk }}"/>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="separador-1"></div>
+                                            <div class="btn-toolbar" style="float: right">
+                                                <div class="btn-group">
+                                                    {% if arDespacho.estadoAutorizado == 0 %}
+                                                        <a class="btn btn-default btn-sm"
+                                                           href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_detalle_adicionar_guia', {'id': arDespacho.codigoDespachoPk }) }}', 'DespachoAdicionarGuia', 600, 1200)">Nuevo</a>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="btn-group">
+                                                    {{ form_widget(form.btnActualizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                                                </div>
+                                                <div class="btn-group">
+                                                    {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="novedades">
+                                        <div id="detalles" style="width: 100%"><br>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-bordered table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>FECHA</th>
+                                                        <th>REPORTE</th>
+                                                        <th>SOLUCION</th>
+                                                        <th>TIPO</th>
+                                                        <th>DESCRIPCION</th>
+                                                        <th>SOLUCION</th>
+                                                        <th title="Atendido">ATE</th>
+                                                        <th title="Reportado">REP</th>
+                                                        <th title="Solucionado">SOL</th>
+                                                        <th></th>
+                                                        <th></th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for arNovedad in arNovedades %}
+                                                        <tr>
+                                                            <td>{{ arNovedad.codigoNovedadPk }}</td>
+                                                            <td>{{ arNovedad.fecha |date('Y-m-d H:i') }}</td>
+                                                            <td>{{ arNovedad.fechaReporte |date('Y-m-d H:i') }}</td>
+                                                            <td>{{ arNovedad.fechaSolucion |date('Y-m-d H:i') }}</td>
+                                                            <td>{{ arNovedad.nombreTipo }}</td>
+                                                            <td>{{ arNovedad.descripcion }}</td>
+                                                            <td>{{ arNovedad.solucion }}</td>
+                                                            <td>{% if arNovedad.estadoAtendido == 1 %} SI {% else %} NO {% endif %}</td>
+                                                            <td>{% if arNovedad.estadoReporte == 1 %} SI {% else %} NO {% endif %}</td>
+                                                            <td>{% if arNovedad.estadoSolucion == 1 %} SI {% else %} NO {% endif %}</td>
+                                                            {% if arNovedad.estadoSolucion == false %}
+                                                                <td><a class="btn btn-default btn-sm"
+                                                                       href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_novedad_despacho_solucion', {'codigoNovedad': arNovedad.codigoNovedadPk }) }}', 'GuiaAdicionarNovedad', 600, 900)">Solucion</a>
+                                                                </td>
+                                                            {% else %}
+                                                                <td></td>
+                                                            {% endif %}
+                                                            <td><input type="checkbox" name="ChkSeleccionar[]"
+                                                                       value="{{ arNovedad.codigoNovedadPk }}"/></td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="separador-1"></div>
+                                            <div class="btn-toolbar" style="float: right">
+                                                <div class="btn-group">
+                                                    <a class="btn btn-default btn-sm"
+                                                       href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_detalle_adicionar_novedad', {'codigoDespacho': arDespacho.codigoDespachoPk, 'id': 0 }) }}', 'DespachoAdicionarNovedad', 600, 900)">Nuevo</a>
+                                                </div>
+                                                <div class="btn-group">
+                                                    {{ form_widget(form.btnRetirarNovedad, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="otros">
+                                        <div id="auxiliares" style="width: 100%"><br>
+                                            <div class="table-responsive">
+
+                                            </div>
+                                            <div class="separador-1"></div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                {{ form_end(form) }}
+                                {% if arDespacho.estadoAutorizado == 0 %}
+                                    <br/><br/>
+                                    <input type="text" id="txtGuiaCodigo">
+                                    <button id="btnAdicionar">Adicionar</button>
+                                    <br/><br/>
+                                    <input type="text" id="txtGuiaDocumento">
+                                    <button id="btnAdicionarDocumento">Adicionar documento</button>
+                                {% endif %}</div>
+                            <!-- end widget content -->
+
+                        </div>
+                        <!-- end widget div -->
+
                     </div>
-                    <div class="btn-group">
-                        {{ form_widget(form.btnActualizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-                    </div>
-                    <div class="btn-group">
-                        {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
-                    </div>
-                </div>
+                    <!-- end widget -->
+                </article>
+                <!-- WIDGET END -->
             </div>
-        </div>
-        <div class="tab-pane" id="novedades">
-            <div id="detalles" style="width: 100%"><br>
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>FECHA</th>
-                            <th>REPORTE</th>
-                            <th>SOLUCION</th>
-                            <th>TIPO</th>
-                            <th>DESCRIPCION</th>
-                            <th>SOLUCION</th>
-                            <th title="Atendido">ATE</th>
-                            <th title="Reportado">REP</th>
-                            <th title="Solucionado">SOL</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for arNovedad in arNovedades %}
-                            <tr>
-                                <td>{{ arNovedad.codigoNovedadPk }}</td>
-                                <td>{{ arNovedad.fecha |date('Y-m-d H:i') }}</td>
-                                <td>{{ arNovedad.fechaReporte |date('Y-m-d H:i') }}</td>
-                                <td>{{ arNovedad.fechaSolucion |date('Y-m-d H:i') }}</td>
-                                <td>{{ arNovedad.nombreTipo }}</td>
-                                <td>{{ arNovedad.descripcion }}</td>
-                                <td>{{ arNovedad.solucion }}</td>
-                                <td>{% if arNovedad.estadoAtendido == 1 %} SI {% else %} NO {% endif %}</td>
-                                <td>{% if arNovedad.estadoReporte == 1 %} SI {% else %} NO {% endif %}</td>
-                                <td>{% if arNovedad.estadoSolucion == 1 %} SI {% else %} NO {% endif %}</td>
-                                {% if arNovedad.estadoSolucion == false %}
-                                    <td><a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_novedad_despacho_solucion', {'codigoNovedad': arNovedad.codigoNovedadPk }) }}', 'GuiaAdicionarNovedad', 600, 900)">Solucion</a></td>
-                                {% else %}
-                                    <td></td>
-                                {% endif %}
-                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arNovedad.codigoNovedadPk }}" /></td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="separador-1"></div>
-                <div class="btn-toolbar" style="float: right">
-                    <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_detalle_adicionar_novedad', {'codigoDespacho': arDespacho.codigoDespachoPk, 'id': 0 }) }}', 'DespachoAdicionarNovedad', 600, 900)">Nuevo</a>
-                    </div>
-                    <div class="btn-group">
-                        {{ form_widget(form.btnRetirarNovedad, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane" id="otros">
-            <div id="auxiliares" style="width: 100%"><br>
-                <div class="table-responsive">
-
-                </div>
-                <div class="separador-1"></div>
-
-            </div>
-        </div>
+            <!-- end row -->
+        </section>
     </div>
-    {{ form_end(form) }}
-    {% if arDespacho.estadoAutorizado == 0 %}
-        <br /><br />
-        <input type="text" id="txtGuiaCodigo"><button id="btnAdicionar">Adicionar</button>
-        <br /><br />
-        <input type="text" id="txtGuiaDocumento"><button id="btnAdicionarDocumento">Adicionar documento</button>
-    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script>
         var codigoDespacho = '{{ arDespacho.codigoDespachoPk }}';
-        $(function() {
+        $(function () {
             var button = $("#btnAdicionar");
             var buttonDocumento = $("#btnAdicionarDocumento");
             var txtGuiaCodigo = $("#txtGuiaCodigo");
             var txtGuiaDocumento = $("#txtGuiaDocumento");
-            button.click(function() {
+            button.click(function () {
                 agregarGuia(txtGuiaCodigo.val(), codigoDespacho);
             });
             txtGuiaCodigo.keydown(function (event) {
-                if(event.keyCode === 13) {
+                if (event.keyCode === 13) {
                     agregarGuia(txtGuiaCodigo.val(), codigoDespacho);
                 }
             });
-            buttonDocumento.click(function() {
+            buttonDocumento.click(function () {
                 agregarDocumento(txtGuiaDocumento.val(), codigoDespacho);
             });
             txtGuiaDocumento.keydown(function (event) {
-                if(event.keyCode === 13) {
+                if (event.keyCode === 13) {
                     agregarDocumento(txtGuiaDocumento.val(), codigoDespacho);
                 }
             });
         });
 
-        var agregarGuia = function(codigoGuia, codigoDespacho) {
-            if(codigoGuia != '') {
+        var agregarGuia = function (codigoGuia, codigoDespacho) {
+            if (codigoGuia != '') {
                 endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
                 $.ajax(endpoint, {
                     type: 'POST',
@@ -331,8 +401,8 @@
                             codigoGuia: codigoGuia
                         }),
                     }
-                }).done(function(respuesta) {
-                    if(respuesta && respuesta.error === true) {
+                }).done(function (respuesta) {
+                    if (respuesta && respuesta.error === true) {
                         alert(respuesta.mensaje);
                     }
                     $("#txtGuiaCodigo").val("").focus();
@@ -343,8 +413,8 @@
 
         };
 
-        var agregarDocumento = function(documento, codigoDespacho) {
-            if(documento != '') {
+        var agregarDocumento = function (documento, codigoDespacho) {
+            if (documento != '') {
                 endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/documento/" + codigoDespacho + "/" + documento;
                 $.ajax(endpoint, {
                     type: 'POST',
@@ -353,8 +423,8 @@
                             documento: documento
                         }),
                     }
-                }).done(function(respuesta) {
-                    if(respuesta && respuesta.error === true) {
+                }).done(function (respuesta) {
+                    if (respuesta && respuesta.error === true) {
                         alert(respuesta.mensaje);
                     }
                     $("#txtGuiaDocumento").val("").focus();

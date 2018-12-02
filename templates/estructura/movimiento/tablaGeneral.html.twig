@@ -1,4 +1,4 @@
-    <table class="table table-bordered table-striped" style="border-top: 1px solid #c9c9c9 !important;margin-bottom: 10px !important;">
+    <table class="table table-bordered table-striped" style="border: 1px solid #c9c9c9 !important;margin-bottom: 10px !important;">
         <thead>
         <tr>
             {% for campo in arrDatosLista.arrCampos %}
@@ -61,14 +61,12 @@
         {% endfor %}
         </tbody>
     </table>
-<div class="btn-group" style="float: left">
     <div class="btn-group" style="float: left">
         <div class="btn btn-default btn-sm">Registros <span
                     class="badge">{{ arrDatosLista.arDatos.getTotalItemCount }}</span>
         </div>
     </div>
-</div>
 
-<div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-    {{ knp_pagination_render(arrDatosLista.arDatos) }}
-</div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arrDatosLista.arDatos) }}
+    </div>

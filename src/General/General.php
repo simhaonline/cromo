@@ -40,7 +40,6 @@ final class General
     public function setExportar($arrDatos, $nombre)
     {
         if (count($arrDatos) > 0) {
-            $campo = '';
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             $j = 0;

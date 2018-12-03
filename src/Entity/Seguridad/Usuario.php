@@ -130,9 +130,10 @@ class Usuario implements UserInterface, \Serializable
     /**
      * @param mixed $password
      */
-    public function setPassword($password): void
+    public function setPassword($password)
     {
         $this->password = $password;
+        return $this;
     }
 
     public function getRoles()

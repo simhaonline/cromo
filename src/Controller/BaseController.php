@@ -52,7 +52,6 @@ abstract class BaseController extends Controller
 
         $form = $this->createFormBuilder();
         if ($campos) {
-            $i=3;
             foreach ($campos as $campo) {
                 if(isset($campo['relacion'])){
                     $relacion=explode('.', $campo['child']);
@@ -98,8 +97,8 @@ abstract class BaseController extends Controller
                     }
                 }
             }
-            $form->add("btnFiltro", SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']]);
         }
+        $form->add("btnFiltro", SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']]);
 
         return $form->getForm();
     }

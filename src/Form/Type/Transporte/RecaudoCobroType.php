@@ -32,4 +32,28 @@ class RecaudoCobroType extends AbstractType
             'data_class' => TteRecaudoCobro::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoRecaudoCobroPk",                    "tipo":"pk",        "ayuda":"Codigo de recaudo cobro",                  "titulo":"ID"},
+            {"campo":"fecha",                                   "tipo":"fecha",     "ayuda":"Fecha",                                    "titulo":"FECHA"},
+            {"campo":"vrTotal",                                 "tipo":"moneda",    "ayuda":"Total",                                    "titulo":"TOTAL"},
+            {"campo":"usuario",                                 "tipo":"texto",     "ayuda":"Usuario",                                  "titulo":"USUARIO"},
+            {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},
+            {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},
+            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"}
+        ]';
+        return $campos;
+
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+        ]';
+
+        return $campos;
+    }
 }

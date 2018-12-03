@@ -110,14 +110,16 @@ class GuiaType extends AbstractType {
     public function getEstructuraPropiedadesFiltro()
     {
 
+        //se anexa la posicion 'pk' cuando el campo 'fk' se llama distinto al 'pk', es decir que no solamente se cambia la palabra 'pk ' por 'fk'
+        //se anexa la posicion operador cuando se va acompara un valor en la consulta diferente de '='
         $campos = '[
             {"child":"codigoClienteFk",                 "tipo":"TextType",   "propiedades":{"label":"Cliente"}},
             {"child":"codigoGuiaTipoFk",                "tipo":"EntityType", "propiedades":{"class":"TteGuiaTipo",  "choice_label":"nombre","label":"TODOS"}},
-            {"child":"codigoOperacionCargoFk",          "tipo":"EntityType", "propiedades":{"class":"TteOperacion", "choice_label":"nombre","label":"TODOS"}},
+            {"child":"codigoOperacionCargoFk",          "tipo":"EntityType", "propiedades":{"class":"TteOperacion", "choice_label":"nombre","label":"TODOS"},       "pk":"codigoOperacionPk"},
             {"child":"codigoServicioFk",                "tipo":"EntityType", "propiedades":{"class":"TteServicio",  "choice_label":"nombre","label":"TODOS"}},
             {"child":"codigoGuiaPk",                    "tipo":"TextType",   "propiedades":{"label":"Guía"}},
             {"child":"numero",                          "tipo":"TextType",   "propiedades":{"label":"Numero"}},
-            {"child":"documentoCliente",                "tipo":"TextType",   "propiedades":{"label":"Documento"}},
+            {"child":"documentoCliente",                "tipo":"TextType",   "propiedades":{"label":"Documento"},       "operador":"like"},
             {"child":"fechaIngresoDesde",               "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
             {"child":"fechaIngresoHasta",               "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
             {"child":"codigoFacturaFk",                 "tipo":"TextType",   "propiedades":{"label":"Factura"}},

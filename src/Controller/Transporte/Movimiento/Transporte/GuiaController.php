@@ -63,12 +63,9 @@ class GuiaController extends ControllerListenerGeneral
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
                 FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
-//                $datos = $this->getDatosLista();
             }
         }
         $datos = $this->getDatosLista(true);
-//        dump($datos['queryBuilder']->getDql());
-//        exit();
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Guias");

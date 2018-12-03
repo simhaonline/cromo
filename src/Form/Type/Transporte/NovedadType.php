@@ -46,6 +46,33 @@ class NovedadType extends AbstractType {
         ));
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoNovedadPk",                         "tipo":"pk",        "ayuda":"Codigo de novedad",                        "titulo":"ID"},
+            {"campo":"novedadTipoRel.nombre",                   "tipo":"texto",     "ayuda":"Tipo novedad",                             "titulo":"TIPO",                "relacion":""},
+            {"campo":"guiaRel.numero",                          "tipo":"entero",    "ayuda":"Numero guia",                              "titulo":"GUIA",                "relacion":""},
+            {"campo":"descripcion",                             "tipo":"texto",     "ayuda":"Descripcion",                              "titulo":"DESCRIPCION"},
+            {"campo":"solucion",                                "tipo":"texto",     "ayuda":"Solucion",                                 "titulo":"SOLUCION"},
+            {"campo":"fechaReporte",                            "tipo":"fecha",     "ayuda":"Fecha reporte",                            "titulo":"FECHA REPORTE"},
+            {"campo":"fechaAtencion",                           "tipo":"fecha",     "ayuda":"Fecha atencion",                           "titulo":"FECHA ATENCION"},
+            {"campo":"fechaSolucion",                           "tipo":"fecha",     "ayuda":"Fecha solucion",                           "titulo":"FECHA SOLUCION"}
+        ]';
+        return $campos;
+
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+            {"child":"guiaRel.numero",                  "tipo":"TextType",   "propiedades":{"label":"Guia"},        "relacion":""},
+            {"child":"codigoNovedadTipoFk",             "tipo":"EntityType", "propiedades":{"class":"TteNovedadTipo",   "choice_label":"nombre",    "label":"TODOS"}}
+        ]';
+
+        return $campos;
+    }
+
     /**
      * {@inheritdoc}
      */

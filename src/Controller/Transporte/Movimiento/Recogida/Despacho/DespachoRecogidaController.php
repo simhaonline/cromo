@@ -193,7 +193,7 @@ class DespachoRecogidaController extends ControllerListenerGeneral
                     $em->flush();
                     $em->getRepository(TteDespachoRecogida::class)->liquidar($id);
                 }
-                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', array('id' => $id)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle', array('id' => $id)));
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->autorizar($arDespachoRecogida);
@@ -207,7 +207,7 @@ class DespachoRecogidaController extends ControllerListenerGeneral
             if ($form->get('btnAnular')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->anular($arDespachoRecogida);
             }
-            return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle',['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
+            return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle',['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
         }
         $arRecogidas = $this->getDoctrine()->getRepository(TteRecogida::class)->despacho($id);
         $arDespachoRecogidaAuxiliares = $this->getDoctrine()->getRepository(TteDespachoRecogidaAuxiliar::class)->despacho($id);

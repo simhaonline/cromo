@@ -1,11 +1,13 @@
 <?php
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteNovedad;
 use App\Entity\Transporte\TteNovedadTipo;
+use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,32 +32,70 @@ class NovedadController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
-        $session = new Session();
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
-        $form = $this->createFormBuilder()
-            ->add('guia', TextType::class, ['label' => 'GUIA: ', 'required' => false, 'data' => $session->get('filtroNombreCondicion')])
-            ->add('cboNovedadTipoRel', EntityType::class, $em->getRepository(TteNovedadTipo::class)->llenarCombo())
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroNumeroGuia', $form->get('guia')->getData());
-                $novedadTipo = $form->get('cboNovedadTipoRel')->getData();
-                if ($novedadTipo != '') {
-                    $session->set('filtroTteCodigoNovedadTipo', $form->get('cboNovedadTipoRel')->getData()->getCodigoNovedadTipoPk());
-                } else {
-                    $session->set('filtroTteCodigoNovedadTipo', null);
-                }
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
             }
         }
-        $arNovedad = $paginator->paginate($em->getRepository(TteNovedad::class)->lista(), $request->query->getInt('page', 1),10);
-        return $this->render('transporte/movimiento/transporte/novedad/lista.html.twig',
-            ['arNovedades' => $arNovedad,
-            'form' => $form->createView()
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Novedad");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+//                $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_novedad_lista'));
+            }
+
+        }
+
+        return $this->render('transporte/movimiento/transporte/novedad/lista.html.twig', [
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
         ]);
+//        $session = new Session();
+//        $em = $this->getDoctrine()->getManager();
+//        $paginator  = $this->get('knp_paginator');
+//        $form = $this->createFormBuilder()
+//            ->add('guia', TextType::class, ['label' => 'GUIA: ', 'required' => false, 'data' => $session->get('filtroNombreCondicion')])
+//            ->add('cboNovedadTipoRel', EntityType::class, $em->getRepository(TteNovedadTipo::class)->llenarCombo())
+//            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+//            ->getForm();
+//        $form->handleRequest($request);
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            if ($form->get('btnFiltrar')->isClicked()) {
+//                $session->set('filtroNumeroGuia', $form->get('guia')->getData());
+//                $novedadTipo = $form->get('cboNovedadTipoRel')->getData();
+//                if ($novedadTipo != '') {
+//                    $session->set('filtroTteCodigoNovedadTipo', $form->get('cboNovedadTipoRel')->getData()->getCodigoNovedadTipoPk());
+//                } else {
+//                    $session->set('filtroTteCodigoNovedadTipo', null);
+//                }
+//            }
+//        }
+//        $arNovedad = $paginator->paginate($em->getRepository(TteNovedad::class)->lista(), $request->query->getInt('page', 1),10);
+//        return $this->render('transporte/movimiento/transporte/novedad/lista.html.twig',
+//            ['arNovedades' => $arNovedad,
+//            'form' => $form->createView()
+//        ]);
     }
+
+    /**
+     * @Route("/transporte/movimiento/transporte/novedad/nuevo/{id}", name="transporte_movimiento_transporte_novedad_nuevo")
+     */
+    public function nuevo(){
+        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_novedad_lista'));
+    }
+
+
     /**
      * @Route("/transporte/movimiento/transporte/novedad/detalle/{id}", name="transporte_movimiento_transporte_novedad_detalle")
      */

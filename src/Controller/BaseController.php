@@ -52,8 +52,11 @@ abstract class BaseController extends Controller
 
         $form = $this->createFormBuilder();
         if ($campos) {
-            $i=3;
             foreach ($campos as $campo) {
+                if(isset($campo['relacion'])){
+                    $relacion=explode('.', $campo['child']);
+                    $campo['child']=$relacion[0].$relacion[1];
+                }
 
                 $tipoNombre = $campo['tipo'];
                 $tipo = "Symfony\\Component\Form\Extension\\Core\\Type\\{$tipoNombre}";
@@ -61,7 +64,6 @@ abstract class BaseController extends Controller
                     $em=$this->getDoctrine()->getManager();
                     $entidad = $campo['propiedades']['class'];
                     $nombreRepositorio = "App:{$this->modulo}\\{$entidad}";
-//
                     $form->add($campo['child'], EntityType::class,
                         [
                             'label' => $campo['propiedades']['label'],
@@ -70,11 +72,9 @@ abstract class BaseController extends Controller
                             'choice_label' => $campo['propiedades']['choice_label'],
                             'placeholder' => "TODO",
                             'data'=>$session->get($this->claseNombre . "_" . $campo['child'])?$em->getReference($nombreRepositorio,$session->get($this->claseNombre . "_" . $campo['child'])):"",
-//                            'auto_initialize'=>"COR"
 
                         ]);
                 } else if ($campo['tipo'] == "DateType") {
-//                    $dateFecha = new \DateTime('now');
                     $form->add($campo['child'], $tipo,
                         [
                             'required' => false,
@@ -84,10 +84,6 @@ abstract class BaseController extends Controller
                             'attr' => array('class' => 'date')
                         ]);
                 }
-//                else if($campo['tipo'] == "Tercero"){
-//                    $form->add("txtCodigoTercero", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_'.$campo['child'])??""])
-//                        ->add("txtNombreCorto", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_nombreCorto')??"", 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']]);
-//                }
                  else if ($campo['tipo'] != "SubmitType" && $campo['tipo'] != "CheckboxType" && $campo['tipo'] != "ChoiceType") {
 
                     $form->add($campo['child'], $tipo, ['label' => $campo['propiedades']['label'], 'required' => false, 'data' => $session->get($this->claseNombre . "_" . $campo['child']) ?? ""]);
@@ -101,8 +97,8 @@ abstract class BaseController extends Controller
                     }
                 }
             }
-            $form->add("btnFiltro", SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']]);
         }
+        $form->add("btnFiltro", SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']]);
 
         return $form->getForm();
     }
@@ -292,7 +288,13 @@ abstract class BaseController extends Controller
             }
         }
         foreach ($campos as $campo) {
-            $filtro = $session->get($claseNombre . "_" . $campo['child']);
+            if(isset($campo['relacion'])){
+                $relacion=explode('.', $campo['child']);
+                $filtro = $session->get($claseNombre . "_" . $relacion[0].$relacion[1]);
+            }
+            else{
+                $filtro = $session->get($claseNombre . "_" . $campo['child']);
+            }
             if (!isset($campo['relacion'])) {
                 if(strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha"){
                     $queryBuilder->addSelect('e.' . (substr($campo['child'], 0, strlen($campo['child'])-5)));
@@ -315,12 +317,25 @@ abstract class BaseController extends Controller
 
                 if($claseNombre) {
                     if ($filtro != "" && $filtro != null) {
-                        $queryBuilder->andWhere($arrRel[0] . '.' . $arrRel[1] . "={$filtro}");
+                        if(isset($campo['operador'])){
+                            if($campo['operador']=="like"){
+                                $queryBuilder->andWhere($arrRel[0] . '.' . $arrRel[1] . " LIKE '%{$filtro}%'");
+                            }
+                            else{
+
+                                $queryBuilder->andWhere($arrRel[0] . '.' . $arrRel[1] . "{$campo['operador']} {$filtro}");
+                            }
+                        }
+                        else {
+
+                            $queryBuilder->andWhere($arrRel[0] . '.' . $arrRel[1] . "={$filtro}");
+                        }
                     }
                 }
             }
 
             if ($claseNombre && !isset($campo['relacion'])) {
+
                 if (strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha") {
                     $campoExplode=substr($campo['child'], 0, strlen($campo['child'])-5);
                     $fecha = $session->get($claseNombre . "_" . $campo['child']);
@@ -334,8 +349,20 @@ abstract class BaseController extends Controller
                     }
                 } else {
                     if ($filtro !== "" && $filtro !== null) {
+                        if(isset($campo['operador'])){
+                            if($campo['operador']=="like"){
+                                $queryBuilder->andWhere('e.'.$campo['child']. " LIKE '%{$filtro}%'");
+                            }
+                            else{
 
-                        $queryBuilder->andWhere('e.'.$campo['child'] . "='{$filtro}'");
+                                $queryBuilder->andWhere('e.'.$campo['child']. " {$campo['operador']} {$filtro}");
+                            }
+                        }
+                        else {
+
+                            $queryBuilder->andWhere('e.'.$campo['child'] . "='{$filtro}'");
+                        }
+
                     }
                 }
             }
@@ -348,6 +375,7 @@ abstract class BaseController extends Controller
         else if(isset($camposTabla) && count($camposTabla)>0){
             $queryBuilder->orderBy('e.'.$camposTabla[0]->campo,'DESC');
         }
+
         return $queryBuilder;
     }
 

@@ -58,6 +58,48 @@ class DespachoRecogidaType extends AbstractType {
         ));
     }
 
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoDespachoRecogidaPk",                "tipo":"pk",        "ayuda":"Codigo despacho recogida",                 "titulo":"ID"},
+            {"campo":"numero",                                  "tipo":"entero",    "ayuda":"Numero",                                   "titulo":"NUMERO"},
+            {"campo":"fecha",                                   "tipo":"fecha",     "ayuda":"Fecha",                                    "titulo":"FECHA"},
+            {"campo":"codigoOperacionFk",                       "tipo":"texto",     "ayuda":"Codigo operacion",                         "titulo":"OP"},
+            {"campo":"codigoVehiculoFk",                        "tipo":"texto",     "ayuda":"Codigo vehiculo",                          "titulo":"VEH"},
+            {"campo":"conductorRel.nombreCorto",                "tipo":"texto",     "ayuda":"Conductor",                                "titulo":"CONDUCTOR",                "relacion":""},
+            {"campo":"codigoRutaRecogidaFk",                    "tipo":"texto",     "ayuda":"Codigo ruta recogida",                     "titulo":"RUTA"},
+            {"campo":"cantidad",                                "tipo":"entero",    "ayuda":"Cantidad",                                 "titulo":"CAN"},
+            {"campo":"unidades",                                "tipo":"entero",    "ayuda":"Unidad",                                   "titulo":"UND"},
+            {"campo":"pesoReal",                                "tipo":"entero",    "ayuda":"Peso real",                                "titulo":"PES"},
+            {"campo":"pesoVolumen",                             "tipo":"entero",    "ayuda":"Peso volumen",                             "titulo":"VOL"},
+            {"campo":"vrFletePago",                             "tipo":"moneda",    "ayuda":"Valor flete pago",                         "titulo":"PAGO"},
+            {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},
+            {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},
+            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"}
+        ]';
+        return $campos;
+
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+            {"child":"codigoVehiculoFk",                "tipo":"TextType",      "propiedades":{"label":"Vehiculo"}},
+            {"child":"codigoDespachoRecogidaPk",        "tipo":"TextType",      "propiedades":{"label":"Codigo"}},
+            {"child":"numero",                          "tipo":"TextType",      "propiedades":{"label":"Numero"}},
+            {"child":"codigoOperacionFk",               "tipo":"EntityType",    "propiedades":{"class":"TteOperacion",   "choice_label":"nombre","label":"TODOS"}},
+            {"child":"estadoAutorizado",                "tipo":"ChoiceType",    "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",                  "tipo":"ChoiceType",    "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",                   "tipo":"ChoiceType",    "propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}},
+            {"child":"fechaDesde",                      "tipo":"DateType",      "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaHasta",                      "tipo":"DateType",      "propiedades":{"label":"Fecha Hasta"}}
+        ]';
+
+        return $campos;
+    }
+
     /**
      * {@inheritdoc}
      */

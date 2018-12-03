@@ -1,72 +1,78 @@
-    <table class="table table-bordered table-striped" style="border: 1px solid #c9c9c9 !important;margin-bottom: 10px !important;">
-        <thead>
+<table class="table table-bordered table-striped" style="border: 1px solid #c9c9c9 !important;margin-bottom: 10px !important;">
+    <thead>
+    <tr>
+        {% for campo in arrDatosLista.arrCampos %}
+            <th title="{{ campo.ayuda }}">{{ campo.titulo }}</th>
+        {% endfor %}
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for arDato in arrDatosLista.arDatos %}
         <tr>
             {% for campo in arrDatosLista.arrCampos %}
-                <th title="{{ campo.ayuda }}">{{ campo.titulo }}</th>
-            {% endfor %}
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for arDato in arrDatosLista.arDatos %}
-            <tr>
-                {% for campo in arrDatosLista.arrCampos %}
-                    {% if campo.relacion is defined %}
-                        {% set campoNombre = (campo.campo|split('.')) %}
-                        {% set alias = campoNombre[0]  ~ 'Rel' ~ campoNombre[1] %}
-                        {% set dato = arDato[alias] %}
-                    {% else %}
-                        {% set dato = arDato[campo.campo] %}
-                    {% endif %}
-                    {% if campo.tipo == "pk" %}
-                        {% if validarRuta(arrDatosLista.ruta ~ '_referencia') %}
-                            <td><a href="javascript:abrirVentana3('{{ path(arrDatosLista.ruta ~ '_referencia',{'id': dato }) }}','referencia',600,900)">{{ dato }}</a></td>
-                        {% else %}
-                            <td>{{ dato }}</td>
-                        {% endif %}
-                    {% elseif campo.tipo == "fecha" %}
-                        {% if dato %}
-                        <td>{{ dato  | date('Y-m-d') }} </td>
-                        {% else %}
-                            <td></td>
-                            {% endif %}
-                    {% elseif campo.tipo == "moneda" %}
-                        <td class="numero">{{ dato | number_format(0, '.', ',') }}</td>
-                    {% elseif campo.tipo == "bool" %}
-                        <td class="estado">{{ dato ?'SI':'NO' }}</td>
+                {% if campo.relacion is defined %}
+                    {% set campoNombre = (campo.campo|split('.')) %}
+                    {% set alias = campoNombre[0]  ~ 'Rel' ~ campoNombre[1] %}
+                    {% set dato = arDato[alias] %}
+                {% else %}
+                    {% set dato = arDato[campo.campo] %}
+                {% endif %}
+                {% if campo.tipo == "pk" %}
+                    {% if validarRuta(arrDatosLista.ruta ~ '_referencia') %}
+                        <td><a href="javascript:abrirVentana3('{{ path(arrDatosLista.ruta ~ '_referencia',{'id': dato }) }}','referencia',600,900)">{{ dato }}</a></td>
                     {% else %}
                         <td>{{ dato }}</td>
                     {% endif %}
-                {% endfor %}
-                <td style="text-align: center;">
-                    {% if arDato.estadoAutorizado is defined %}
-                        {% if arDato.estadoAutorizado == 0 %}
-                            <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
-                                        title="Editar el registro" class="fa fa-edit"
-                                        style="font-size: large;color: black;"></i></a>
-                        {% endif %}
+                {% elseif campo.tipo == "fecha" %}
+                    {% if dato %}
+                        <td>{{ dato  | date('Y-m-d') }} </td>
                     {% else %}
+                        <td></td>
+                    {% endif %}
+                {% elseif campo.tipo== "hora" %}
+                    {% if dato %}
+                        <td>{{ dato  | date('h:m') }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                {% elseif campo.tipo == "moneda" %}
+                    <td class="numero">{{ dato | number_format(0, '.', ',') }}</td>
+                {% elseif campo.tipo == "bool" %}
+                    <td class="estado">{{ dato ?'SI':'NO' }}</td>
+                {% else %}
+                    <td>{{ dato }}</td>
+                {% endif %}
+            {% endfor %}
+            <td style="text-align: center;">
+                {% if arDato.estadoAutorizado is defined %}
+                    {% if arDato.estadoAutorizado == 0 %}
                         <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
                                     title="Editar el registro" class="fa fa-edit"
                                     style="font-size: large;color: black;"></i></a>
                     {% endif %}
-                </td>
-                <td style="text-align: center"><a
-                            href="{{ path(arrDatosLista.ruta ~ '_detalle', { 'id': arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
-                                style="font-size: large;color: black;" class="fa fa-share-square-o"></i></a></td>
-                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDato[arrDatosLista.arrCampos[0].campo] }}"/></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <div class="btn-group" style="float: left">
-        <div class="btn btn-default btn-sm">Registros <span
-                    class="badge">{{ arrDatosLista.arDatos.getTotalItemCount }}</span>
-        </div>
+                {% else %}
+                    <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
+                                title="Editar el registro" class="fa fa-edit"
+                                style="font-size: large;color: black;"></i></a>
+                {% endif %}
+            </td>
+            <td style="text-align: center"><a
+                        href="{{ path(arrDatosLista.ruta ~ '_detalle', { 'id': arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
+                            style="font-size: large;color: black;" class="fa fa-share-square-o"></i></a></td>
+            <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDato[arrDatosLista.arrCampos[0].campo] }}"/></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="btn-group" style="float: left">
+    <div class="btn btn-default btn-sm">Registros <span
+                class="badge">{{ arrDatosLista.arDatos.getTotalItemCount }}</span>
     </div>
+</div>
 
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-        {{ knp_pagination_render(arrDatosLista.arDatos) }}
-    </div>
+<div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+    {{ knp_pagination_render(arrDatosLista.arDatos) }}
+</div>

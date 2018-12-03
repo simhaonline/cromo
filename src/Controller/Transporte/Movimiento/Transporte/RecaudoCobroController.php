@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
@@ -24,53 +25,82 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RecaudoCobroController extends ControllerListenerGeneral
 {
-    protected $class= TteRecaudoCobro::class;
+    protected $clase= TteRecaudoCobro::class;
     protected $claseNombre = "TteRecaudoCobro";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
     protected $grupo = "Transporte";
-    protected $nombre = "Recaudo cobro";
+    protected $nombre = "RecaudoCobro";
 
    /**
     * @Route("/transporte/movimiento/transporte/recaudoCobro/lista", name="transporte_movimiento_transporte_recaudo_cobro_lista")
     */    
     public function lista(Request $request)
     {
+
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
-        $session = new Session();
-        $form = $this->createFormBuilder()
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                if ($form->get('txtCodigoCliente')->getData() != '') {
-                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-                } else {
-                    $session->set('filtroTteCodigoCliente', null);
-                    $session->set('filtroTteNombreCliente', null);
-                }
-            }
-            if($form->get('btnEliminar')->isClicked()){
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteRecaudoCobro::class)->eliminar($arrSeleccionados);
-            }
-            if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(TteRecaudoCobro::class)->lista())->execute(), "Guias");
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
             }
         }
-        $arRecaudoCobros = $paginator->paginate($em->getRepository(TteRecaudoCobro::class)->lista(), $request->query->getInt('page', 1),40);
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Recaudo cobrar");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteRecaudoCobro::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_lista'));
+            }
+        }
+
         return $this->render('transporte/movimiento/transporte/recaudoCobro/lista.html.twig', [
-            'arRecaudoCobros' => $arRecaudoCobros,
-            'form' => $form->createView()]);
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
+        ]);
+//        $em = $this->getDoctrine()->getManager();
+//        $paginator  = $this->get('knp_paginator');
+//        $session = new Session();
+//        $form = $this->createFormBuilder()
+//            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+//            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+//            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+//            ->getForm();
+//        $form->handleRequest($request);
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            if ($form->get('btnFiltrar')->isClicked()) {
+//                if ($form->get('txtCodigoCliente')->getData() != '') {
+//                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+//                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+//                } else {
+//                    $session->set('filtroTteCodigoCliente', null);
+//                    $session->set('filtroTteNombreCliente', null);
+//                }
+//            }
+//            if($form->get('btnEliminar')->isClicked()){
+//                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+//                $em->getRepository(TteRecaudoCobro::class)->eliminar($arrSeleccionados);
+//            }
+//            if ($form->get('btnExcel')->isClicked()) {
+//                General::get()->setExportar($em->createQuery($em->getRepository(TteRecaudoCobro::class)->lista())->execute(), "Guias");
+//            }
+//        }
+//        $arRecaudoCobros = $paginator->paginate($em->getRepository(TteRecaudoCobro::class)->lista(), $request->query->getInt('page', 1),40);
+//        return $this->render('transporte/movimiento/transporte/recaudoCobro/lista.html.twig', [
+//            'arRecaudoCobros' => $arRecaudoCobros,
+//            'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/recaudoCobro/detalle/{id}", name="transporte_movimiento_transporte_recaudo_cobro_detalle")
+     * @Route("/transporte/movimiento/transporte/recaudoCobro/detalle/{id}", name="transporte_movimiento_transporte_recaudocobro_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -156,7 +186,7 @@ class RecaudoCobroController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/recaudoCobro/nuevo/{id}", name="transporte_movimiento_transporte_recaudo_cobro_nuevo")
+     * @Route("/transporte/movimiento/transporte/recaudoCobro/nuevo/{id}", name="transporte_movimiento_transporte_recaudocobro_nuevo")
      */
     public function nuevo(Request $request, $id)
     {

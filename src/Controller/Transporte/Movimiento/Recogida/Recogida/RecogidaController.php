@@ -2,8 +2,11 @@
 
 namespace App\Controller\Transporte\Movimiento\Recogida\Recogida;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Entity\Transporte\TteRecogida;
 use App\Form\Type\Transporte\RecogidaType;
@@ -23,7 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RecogidaController extends ControllerListenerGeneral
 {
-    protected $class= TteRecogida::class;
+    protected $clase= TteRecogida::class;
     protected $claseNombre = "TteRecogida";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
@@ -39,42 +42,72 @@ class RecogidaController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $session = new Session();
-        $paginator  = $this->get('knp_paginator');
-        $form = $this->createFormBuilder()
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
-            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteRecogidaCodigo')])
-            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-            ->add('chkEstadoProgramado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteRecogidaEstadoProgramado'), 'required' => false])
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                if ($form->get('btnFiltrar')->isClicked()) {
-                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-                    $session->set('filtroTteRecogidaEstadoProgramado', $form->get('chkEstadoProgramado')->getData());
-                    $session->set('filtroTteRecogidaCodigo', $form->get('txtCodigo')->getData());
-                }
-                if($form->get('btnEliminar')->isClicked()){
-                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                    $em->getRepository(TteRecogida::class)->eliminar($arrSeleccionados);
-                }
-                if ($form->get('btnExcel')->isClicked()) {
-                    General::get()->setExportar($em->createQuery($em->getRepository(TteRecogida::class)->lista())->execute(), "Recogida");
-                }
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+//                $datos = $this->getDatosLista();
             }
         }
-        $query = $this->getDoctrine()->getRepository(TteRecogida::class)->lista();
-        $arRecogidas = $paginator->paginate($query, $request->query->getInt('page', 1),20);
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Facturas");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteRecogida::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_lista'));
+            }
+
+        }
+
         return $this->render('transporte/movimiento/recogida/recogida/lista.html.twig', [
-            'arRecogidas' => $arRecogidas ,
-            'form' => $form->createView()
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
         ]);
+//        $em = $this->getDoctrine()->getManager();
+//        $session = new Session();
+//        $paginator  = $this->get('knp_paginator');
+//        $form = $this->createFormBuilder()
+//            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+//            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
+//            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteRecogidaCodigo')])
+//            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+//            ->add('chkEstadoProgramado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteRecogidaEstadoProgramado'), 'required' => false])
+//            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+//            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+//            ->getForm();
+//        $form->handleRequest($request);
+//        if ($form->isSubmitted()) {
+//            if ($form->isValid()) {
+//                if ($form->get('btnFiltrar')->isClicked()) {
+//                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+//                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+//                    $session->set('filtroTteRecogidaEstadoProgramado', $form->get('chkEstadoProgramado')->getData());
+//                    $session->set('filtroTteRecogidaCodigo', $form->get('txtCodigo')->getData());
+//                }
+//                if($form->get('btnEliminar')->isClicked()){
+//                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
+//                    $em->getRepository(TteRecogida::class)->eliminar($arrSeleccionados);
+//                }
+//                if ($form->get('btnExcel')->isClicked()) {
+//                    General::get()->setExportar($em->createQuery($em->getRepository(TteRecogida::class)->lista())->execute(), "Recogida");
+//                }
+//            }
+//        }
+//        $query = $this->getDoctrine()->getRepository(TteRecogida::class)->lista();
+//        $arRecogidas = $paginator->paginate($query, $request->query->getInt('page', 1),20);
+//        return $this->render('transporte/movimiento/recogida/recogida/lista.html.twig', [
+//            'arRecogidas' => $arRecogidas ,
+//            'form' => $form->createView()
+//        ]);
     }
 
     /**

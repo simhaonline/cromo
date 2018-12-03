@@ -2,30 +2,28 @@
 
 namespace App\Controller\Transporte\Movimiento\Control\RelacionCaja;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteRecibo;
 use App\Entity\Transporte\TteRelacionCaja;
 use App\Form\Type\Transporte\RelacionCajaType;
 use App\Formato\Transporte\RelacionCaja;
 use App\General\General;
 use App\Utilidades\Estandares;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class RelacionCajaController extends ControllerListenerGeneral
 {
-    protected $class= TteRelacionCaja::class;
+    protected $clase= TteRelacionCaja::class;
     protected $claseNombre = "TteRelacionCaja";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
     protected $grupo = "Control";
-    protected $nombre = "Relacion caja";
+    protected $nombre = "RelacionCaja";
 
     /**
      * @param Request $request
@@ -36,47 +34,48 @@ class RelacionCajaController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
-        $session = new Session();
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
-        $form = $this->createFormBuilder()
-            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTteRelacionCajaFiltroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteRelacionCajaFechaDesde'))])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteRelacionCajaFechaHasta'))])
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroTteRelacionCajaFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
-                $session->set('filtroTteRelacionCajaFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
-                $session->set('filtroTteRelacionCajaFiltroFecha', $form->get('filtrarFecha')->getData());
-            }
-            if($form->get('btnEliminar')->isClicked()){
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteRelacionCaja::class)->eliminar($arrSeleccionados);
-            }
-            if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TteRelacionCaja::class)->lista()->getQuery()->getResult(), "Relacion caja");
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+//                $datos = $this->getDatosLista();
             }
         }
-        $arRelacionesCaja = $paginator->paginate($em->getRepository(TteRelacionCaja::class)->lista(), $request->query->getInt('page', 1), 30);
+
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Relacion caja");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteRelacionCaja::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_lista'));
+            }
+        }
 
         return $this->render('transporte/movimiento/control/relacioncaja/lista.html.twig', [
-            'arRelacionesCaja' => $arRelacionesCaja,
-            'form' => $form->createView()]);
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
+            ]);
+
+
     }
 
     /**
-     * @Route("/transporte/movimiento/control/relacioncaja/nuevo/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_nuevo")
+     * @Route("/transporte/movimiento/control/relacioncaja/nuevo/{id}", name="transporte_movimiento_control_relacioncaja_nuevo")
      */
-    public function nuevo(Request $request, $codigoRelacionCaja)
+    public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arRelacionCaja = new TteRelacionCaja();
-        if($codigoRelacionCaja == 0) {
+        if($id == 0) {
             $arRelacionCaja->setFecha(new \DateTime('now'));
         }
         $form = $this->createForm(RelacionCajaType::class, $arRelacionCaja);
@@ -86,7 +85,7 @@ class RelacionCajaController extends ControllerListenerGeneral
             $em->persist($arRelacionCaja);
             $em->flush();
             if ($form->get('guardarnuevo')->isClicked()) {
-                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_nuevo', array('codigoRelacionCaja' => 0)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_nuevo', array('id' => 0)));
             } else {
                 return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_lista'));
             }
@@ -100,12 +99,12 @@ class RelacionCajaController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/transporte/movimiento/control/relacioncaja/detalle/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_detalle")
+     * @Route("/transporte/movimiento/control/relacioncaja/detalle/{id}", name="transporte_movimiento_control_relacioncaja_detalle")
      */
-    public function detalle(Request $request, $codigoRelacionCaja)
+    public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arRelacionCaja = $em->getRepository(TteRelacionCaja::class)->find($codigoRelacionCaja);
+        $arRelacionCaja = $em->getRepository(TteRelacionCaja::class)->find($id);
         $form = Estandares::botonera($arRelacionCaja->getEstadoAutorizado(), $arRelacionCaja->getEstadoAprobado(), $arRelacionCaja->getEstadoAnulado());
 
         //Controles para el formulario
@@ -120,35 +119,35 @@ class RelacionCajaController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new RelacionCaja();
-                $formato->Generar($em, $codigoRelacionCaja);
+                $formato->Generar($em, $id);
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteRelacionCaja::class)->autorizar($arRelacionCaja);
-                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', ['codigoRelacionCaja' => $codigoRelacionCaja]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(TteRelacionCaja::class)->desautorizar($arRelacionCaja);
-                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', ['codigoRelacionCaja' => $codigoRelacionCaja]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TteRelacionCaja::class)->aprobar($arRelacionCaja);
-                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', ['codigoRelacionCaja' => $codigoRelacionCaja]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', ['id' => $id]));
             }
             if ($form->get('btnRetirarRecibo')->isClicked()) {
                 $arr = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteRelacionCaja::class)->retirarRecibo($arr);
                 if($respuesta) {
                     $em->flush();
-                    $this->getDoctrine()->getRepository(TteRelacionCaja::class)->liquidar($codigoRelacionCaja);
+                    $this->getDoctrine()->getRepository(TteRelacionCaja::class)->liquidar($id);
                 }
-                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', array('codigoRelacionCaja' => $codigoRelacionCaja)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', array('codigoRelacionCaja' => $id)));
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TteRecibo::class)->relacionCaja($codigoRelacionCaja), "Relacion caja detalle");
+                General::get()->setExportar($em->getRepository(TteRecibo::class)->relacionCaja($id), "Relacion caja detalle");
             }
         }
 
-        $arRecibos = $this->getDoctrine()->getRepository(TteRecibo::class)->relacionCaja($codigoRelacionCaja);
+        $arRecibos = $this->getDoctrine()->getRepository(TteRecibo::class)->relacionCaja($id);
         return $this->render('transporte/movimiento/control/relacioncaja/detalle.html.twig', [
             'arRelacionCaja' => $arRelacionCaja,
             'arRecibos' => $arRecibos,
@@ -156,12 +155,12 @@ class RelacionCajaController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/control/relacioncaja/detalle/adicionar/recibo/{codigoRelacionCaja}", name="transporte_movimiento_control_relacioncaja_detalle_adicionar_recibo")
+     * @Route("/transporte/movimiento/control/relacioncaja/detalle/adicionar/recibo/{id}", name="transporte_movimiento_control_relacioncaja_detalle_adicionar_recibo")
      */
-    public function detalleAdicionarGuia(Request $request, $codigoRelacionCaja)
+    public function detalleAdicionarGuia(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arRelacionCaja = $em->getRepository(TteRelacionCaja::class)->find($codigoRelacionCaja);
+        $arRelacionCaja = $em->getRepository(TteRelacionCaja::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();
@@ -176,7 +175,7 @@ class RelacionCajaController extends ControllerListenerGeneral
                     $em->persist($ar);
                 }
                 $em->flush();
-                $this->getDoctrine()->getRepository(TteRelacionCaja::class)->liquidar($codigoRelacionCaja);
+                $this->getDoctrine()->getRepository(TteRelacionCaja::class)->liquidar($id);
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }

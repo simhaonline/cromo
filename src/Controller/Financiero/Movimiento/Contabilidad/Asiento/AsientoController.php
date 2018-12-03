@@ -40,30 +40,27 @@ class AsientoController extends ControllerListenerGeneral
     public function lista(Request $request)
     {
         $this->request = $request;
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
-
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Asientos");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-
-            }
-        }
-
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-
             if ($formFiltro->get('btnFiltro')->isClicked()) {
                 FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
-//                $datos = $this->getDatosLista();
             }
         }
         $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "CuentasCobrar");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(FinAsiento::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
+            }
+        }
         return $this->render('financiero/movimiento/contabilidad/asiento/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),

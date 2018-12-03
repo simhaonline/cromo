@@ -1,28 +1,15 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <div class="panel panel-default">
-        <div class="panel-heading">Filtro busqueda</div>
-        <div class="panel-body">
-            {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
-            {% include 'estructura/buscarTerceroFinanciero.html.twig' %}
-            <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Numero:</label>
-                <div class="col-sm-5">
-                    {{ form_widget(formFiltro.numero) }}
-                </div>
-                <label class="col-sm-1 control-label">Comprobante:</label>
-                <div class="col-sm-5">
-                    {{ form_widget(formFiltro.codigoComprobanteFk, { 'attr': {'class': 'form-control'} }) }}
-                </div>
+    <div id="content">
+        {% include 'financiero/movimiento/contabilidad/registro/filtro.html.twig' %}
+        {{ form_start(formBotonera) }}
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+             data-widget-fullscreenbutton="true">
+            <div class="table-responsive" style="padding:0px;">
+                {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
+                {% include 'estructura/movimiento/botoneraGeneral.html.twig' %}
             </div>
-
-
-            {{ form_end(formFiltro) }}
-
         </div>
+        {{ form_end(formBotonera) }}
     </div>
-    {{ form_start(formBotonera) }}
-    {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-    {% include 'estructura/movimiento/botoneraGeneral.html.twig' %}
-    {{ form_end(formBotonera) }}
 {% endblock %}

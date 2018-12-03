@@ -1,126 +1,57 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
-            <div class="form-group form-group-sm">
-                <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
-                <div class="col-sm-11">
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <div class="input-group">
-                                {{ form_widget(form.txtCodigoCliente) }}
-                            </div>
-                        </div>
-                        <div class="col-lg-10">
-                            <div class="input-group">
-                                {{ form_widget(form.txtNombreCorto) }}
-                                <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
-                                    </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
+            {% include ('estructura/buscarClienteTransporte.html.twig') %}
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Codigo:</label>
                 <div class="col-sm-5">
-                    {{ form_widget(form.txtCodigo, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(formFiltro.codigoRecogidaPk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label class="col-sm-1 control-label">Programado:</label>
                 <div class="col-sm-5">
-                    {{ form_widget(form.chkEstadoProgramado, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(formFiltro.estadoProgramado, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+
+                </div>
+                <label class="col-sm-1 control-label">Autorizado:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(formFiltro.estadoAutorizado, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+
+                </div>
+                <label class="col-sm-1 control-label">Aprobado:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(formFiltro.estadoAprobado, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+                </div>
+                <label class="col-sm-1 control-label">Anulado:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(formFiltro.estadoAnulado, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+            {{ form_end(formFiltro) }}
         </div>
     </div>
-    <table class="table table-striped table-bordered table-hover">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>OP</th>
-            <th>REG</th>
-            <th>FECHA</th>
-            <th>HORA</th>
-            <th>CLIENTE</th>
-            <th>ANUNCIANTE</th>
-            <th>DIRECCION</th>
-            <th>CIUDAD</th>
-            <th>TELEFONO</th>
-            <th>UND</th>
-            <th>PES</th>
-            <th>VOL</th>
-            <th title>AUT</th>
-            <th title="APROBADO">APR</th>
-            <th>ANU</th>
-            <th>PRO</th>
-            <th>REC</th>
-            <th>DES</th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for arRecogida in arRecogidas %}
-            <tr>
-                <td>{{ arRecogida.codigoRecogidaPk }}</td>
-                <td>{{ arRecogida.codigoOperacionFk }}</td>
-                <td>{{ arRecogida.fechaRegistro | date('Y-m-d') }}</td>
-                <td>{{ arRecogida.fecha | date('Y-m-d') }}</td>
-                <td>{{ arRecogida.fecha | date('H:i') }}</td>
-                <td>{{ arRecogida.clienteNombreCorto }}</td>
-                <td>{{ arRecogida.anunciante }}</td>
-                <td>{{ arRecogida.direccion }}</td>
-                <td>{{ arRecogida.ciudad }}</td>
-                <td>{{ arRecogida.telefono }}</td>
-                <td style="text-align: right">{{ arRecogida.unidades }}</td>
-                <td style="text-align: right">{{ arRecogida.pesoReal }}</td>
-                <td style="text-align: right">{{ arRecogida.pesoVolumen }}</td>
-                <td style="text-align: center">{{ arRecogida.estadoAutorizado?'SI':'NO' }}</td>
-                <td style="text-align: center">{{ arRecogida.estadoAprobado?'SI':'NO' }}</td>
-                <td style="text-align: center">{{ arRecogida.estadoAnulado?'SI':'NO' }}</td>
-                <td style="text-align: center">{{ arRecogida.estadoProgramado?'SI':'NO' }}</td>
-                <td style="text-align: center">{{ arRecogida.estadoRecogido?'SI':'NO' }}</td>
-                <td style="text-align: center">{{ arRecogida.estadoDescargado?'SI':'NO' }}</td>
-                <td style="text-align: center;">
-                    {% if arRecogida.estadoAutorizado == 0 %}
-                    <a href="{{ path('transporte_movimiento_recogida_recogida_nuevo',{'id' : arRecogida.codigoRecogidaPk}) }}">
-                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
-                        </i>
-                    </a>
-                    {% endif %}
-                </td>
-                <td style="text-align: center"><a href="{{ path('transporte_movimiento_recogida_recogida_detalle', { 'id': arRecogida.codigoRecogidaPk }) }}"><img src="{{ asset('../public/img/bootstrap/glyphicons_152_new_window.png') }}"></a></td>
-                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecogida.codigoRecogidaPk }}" /></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <div class="btn-group" style="float: left">
-        <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRecogidas.getTotalItemCount }}</span></div>
-        </div>
-    </div>
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-        {{ knp_pagination_render(arRecogidas) }}
-    </div>
-    <div class="btn-toolbar" style="float: right">
-        <div class="btn-group" style="float: right;">
-            {{ form_widget(form.btnEliminar) }}
-        </div>
-        <div class="btn-group">
-            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
-        </div>
-        <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_recogida_recogida_nuevo', {'id': 0}) }}">Nuevo</a>
-        </div>
-    </div>
-    {{ form_end(form) }}
+    {{ form_start(formBotonera) }}
+    {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
+    {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
+    {{ form_end(formBotonera) }}
 {% endblock %}
 

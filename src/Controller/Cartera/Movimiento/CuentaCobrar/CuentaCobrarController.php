@@ -7,6 +7,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarReciboDetalle;
+use App\Form\Type\Compra\CuentaPagarType;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Component\Routing\Annotation\Route;

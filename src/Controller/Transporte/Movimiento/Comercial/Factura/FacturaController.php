@@ -66,7 +66,6 @@ class FacturaController extends ControllerListenerGeneral
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
                 FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
-//                $datos = $this->getDatosLista();
             }
         }
         $datos = $this->getDatosLista(true);

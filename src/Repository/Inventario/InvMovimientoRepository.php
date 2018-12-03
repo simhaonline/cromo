@@ -532,9 +532,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $respuesta = $this->validarCantidadesAfectar($arMovimiento->getCodigoMovimientoPk());
         }
         if($respuesta == "") {
+            $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->validarDetalles();
             $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->validarDetalles($arMovimiento->getCodigoMovimientoPk());
             foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-                $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->validarDetalles();
                 if ($arrConfiguracion['validarBodegaUsuario']) {
                     $arItem = $this->getEntityManager()->getRepository(InvItem::class)
                         ->findOneBy(['codigoItemPk' => $arMovimientoDetalle['codigoItemFk']]);

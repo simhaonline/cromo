@@ -338,6 +338,15 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("r.codigoRemisionTipoFk = '{$session->get('filtroInvCodigoRemisionTipo')}'");
         }
         return $queryBuilder;
-    }    
-    
+    }
+
+    public function bodegaRemision($codigoRemision){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
+            ->select('rd.codigoBodegaFk')
+            ->where('rd.codigoRemisionFk=' . $codigoRemision)
+            ->groupBy('rd.codigoBodegaFk');
+        $arrDetalles = $queryBuilder->getQuery()->getResult();
+        return $arrDetalles;
+    }
+
 }

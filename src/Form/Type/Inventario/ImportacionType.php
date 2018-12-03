@@ -64,4 +64,36 @@ class ImportacionType extends AbstractType {
         return 'App_importacion';
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoImportacionPk",             "tipo":"pk",        "ayuda":"Codigo del registro",                  "titulo":"ID"},
+            {"campo":"importacionTipoRel.nombre",       "tipo":"texto",     "ayuda":"Tipo de importacion",                  "titulo":"IMPORTACION TIPO",         "relacion":""},
+            {"campo":"numero",                          "tipo":"texto",     "ayuda":"Numero del registro",                  "titulo":"NUMERO"},
+            {"campo":"fecha",                           "tipo":"fecha",     "ayuda":"Fecha del registro",                   "titulo":"FECHA"},
+            {"campo":"monedaRel.nombre",                "tipo":"texto",     "ayuda":"Moneda en que se realizo el proceso",  "titulo":"MONEDA",                    "relacion":""},   
+            {"campo":"tasaRepresentativaMercado",       "tipo":"moneda",    "ayuda":"TMR",                                  "titulo":"TMR"},
+            {"campo":"vrSubtotalExtranjero",            "tipo":"moneda",    "ayuda":"Subtotal extranjero",                  "titulo":"SUBTOTAL EXTRANJERO"},
+            {"campo":"vrTotalExtranjero",               "tipo":"moneda",    "ayuda":"Total extranjero",                     "titulo":"TOTAL EXTRANJERO"},
+            {"campo":"vrSubtotalLocal",                 "tipo":"moneda",    "ayuda":"Subtotal local",                       "titulo":"SUBTOTAL LOCAL"},
+            {"campo":"vrTotalLocal",                    "tipo":"moneda",    "ayuda":"Total local",                          "titulo":"TOTAL LOCAL"},
+            {"campo":"estadoAutorizado",                "tipo":"bool",      "ayuda":"Autorizdo",                            "titulo":"AUT"},
+            {"campo":"estadoAprobado",                  "tipo":"bool",      "ayuda":"Aprobado",                             "titulo":"APR"},
+            {"campo":"estadoAnulado",                   "tipo":"bool",      "ayuda":"Anulado",                              "titulo":"ANU"}
+                                     
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"numero",                  "tipo":"TextType",    "propiedades":{"label":"Numero"}},
+            {"child":"codigoImportacionPk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
+            {"child":"codigoTerceroFk",         "tipo":"TextType",    "propiedades":{"label":"Codigo cliente"}},
+            {"child":"codigoImportacionTipoFk", "tipo":"EntityType",  "propiedades":{"class":"InvImportacionTipo","choice_label":"nombre","label":"Tipo"}}
+        ]';
+        return $campos;
+    }
+
 }

@@ -2,7 +2,9 @@
 
 namespace App\Controller\Inventario\Movimiento\Extranjero;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Inventario\InvImportacionCosto;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvImportacion;
@@ -33,51 +35,41 @@ class ImportacionController extends ControllerListenerGeneral
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\ORMException
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/movimiento/extranjero/importacion/lista", name="inventario_movimiento_extranjero_importacion_lista")
      */
     public function lista(Request $request)
     {
-        $session = new Session();
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
-        $form = $this->createFormBuilder()
-            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
-            ->add('cboImportacionTipo', EntityType::class, $em->getRepository(InvImportacionTipo::class)->llenarCombo())
-            ->add('numero', TextType::class, array('data' => $session->get('filtroInvImportacionImportacionNumero')))
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
-                    $session->set('filtroInvImportacionImportacionNumero', $form->get('numero')->getData());
-                    $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
-                    $importacionTipo = $form->get('cboImportacionTipo')->getData();
-                    if ($importacionTipo != '') {
-                        $session->set('filtroInvImportacionTipo', $form->get('cboImportacionTipo')->getData()->getCodigoImportacionTipoPk());
-                    } else {
-                        $session->set('filtroInvImportacionTipo', null);
-                    }
-                }
-                if ($form->get('btnExcel')->isClicked()) {
-                    General::get()->setExportar($em->createQuery($em->getRepository(InvImportacion::class)->lista())->execute(), "Importacions");
-                }
-                if($form->get('btnEliminar')->isClicked()){
-                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                    $em->getRepository(InvImportacion::class)->eliminar($arrSeleccionados);
-                }
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
-        $arImportacions = $paginator->paginate($this->getDoctrine()->getRepository(InvImportacion::class)->lista(), $request->query->getInt('page', 1), 10);
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Importacion");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(InvImportacion::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
+            }
+        }
         return $this->render('inventario/movimiento/extranjero/importacion/lista.html.twig', [
-            'arImportacions' => $arImportacions,
-            'form' => $form->createView()]);
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
+        ]);
     }
 
     /**

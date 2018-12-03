@@ -1,45 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
-    <div class="panel panel-default">
-        <div class="panel-heading">Filtro busqueda</div>
-        <div class="panel-body">
-            {% include 'estructura/buscarClienteCartera.html.twig' %}
-            <div class="form-group form-group-sm">
-                <label for="" class="control-label col-sm-1">No.documento:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(formFiltro.numeroDocumento) }}
-                </div>
-                <label for="" class="control-label col-sm-1">No.referencia:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(formFiltro.numeroReferencia) }}
-                </div>
-                <label for="" class="control-label col-sm-1">Código:</label>
-                <div class="col-sm-5">
-                    {{ form_widget(formFiltro.codigoCuentaCobrarPk) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="" class="control-label col-sm-1">Desde</label>
-                <div class="col-sm-5">
-                    {{ form_widget(formFiltro.fechaDesde) }}
-                </div>
-                <label for="" class="control-label col-sm-1">Tipo:</label>
-                <div class="col-sm-5">
-                    {{ form_widget(formFiltro.codigoCuentaCobrarTipoFk) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="" class="control-label col-sm-1">Hasta</label>
-                <div class="col-sm-5">
-                    {{ form_widget(formFiltro.fechaHasta) }}
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            {{ form_end(formFiltro) }}
-        </div>
-    </div>
+    {% include 'cartera/movimiento/cuentaCobrar/filtro.html.twig' %}
     {{ form_start(formBotonera) }}
     {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
     {% include 'estructura/movimiento/botoneraGeneral.html.twig' %}

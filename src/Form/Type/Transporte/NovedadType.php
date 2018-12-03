@@ -73,6 +73,13 @@ class NovedadType extends AbstractType {
         return $campos;
     }
 
+    public function getOrdenamiento(){
+        $campos ='[
+            {"campo":"codigoNovedadPk","tipo":"ASC"}
+        ]';
+        return $campos;
+    }
+
     /**
      * {@inheritdoc}
      */

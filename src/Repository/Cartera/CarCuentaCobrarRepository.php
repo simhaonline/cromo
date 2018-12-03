@@ -72,6 +72,13 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    /**
+     * @param $arrSeleccionados
+     */
+    public function eliminar($arrSeleccionados){
+
+    }
+
     public function pendientes()
     {
         $session = new Session();

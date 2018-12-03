@@ -61,7 +61,7 @@ class RecogidaController extends ControllerListenerGeneral
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
+                $em->getRepository(TteRecogida::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_lista'));
             }
 

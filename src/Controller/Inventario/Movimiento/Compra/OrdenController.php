@@ -229,7 +229,7 @@ class OrdenController extends ControllerListenerGeneral
                             $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
                             $arOrdenDetalle = new InvOrdenDetalle();
                             $precioVenta = $em->getRepository(InvPrecioDetalle::class)->obtenerPrecio($arOrden->getTerceroRel()->getCodigoPrecioCompraFk(), $codigoItem);
-                            $arOrdenDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
+                            $arOrdenDetalle->setVrPrecio($precioVenta);
                             $arOrdenDetalle->setOrdenRel($arOrden);
                             $arOrdenDetalle->setItemRel($arItem);
                             $arOrdenDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
@@ -287,7 +287,7 @@ class OrdenController extends ControllerListenerGeneral
                                     $arItem = $em->getRepository('App:Inventario\InvItem')->find($arSolicitudDetalle->getCodigoItemFk());
                                     $arOrdenDetalle = new InvOrdenDetalle();
                                     $precioVenta = $em->getRepository(InvPrecioDetalle::class)->obtenerPrecio($arOrden->getTerceroRel()->getCodigoPrecioCompraFk(), $arItem->getCodigoItemPk());
-                                    $arOrdenDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
+                                    $arOrdenDetalle->setVrPrecio($precioVenta);
                                     $arOrdenDetalle->setOrdenRel($arOrden);
                                     $arOrdenDetalle->setItemRel($arItem);
                                     $arOrdenDetalle->setCantidadPendiente($cantidad);

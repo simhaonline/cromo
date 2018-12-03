@@ -4,6 +4,8 @@ namespace App\Repository\Inventario;
 
 
 use App\Entity\Inventario\InvBodega;
+use App\Entity\Inventario\InvBodegaUsuario;
+use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvPedidoDetalle;
@@ -117,11 +119,11 @@ class InvRemisionRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function autorizar($arRemision)
+    public function autorizar($arRemision, $usuario)
     {
         $em = $this->getEntityManager();
         if(!$arRemision->getEstadoAutorizado()) {
-            $respuesta = $this->validarDetalles($arRemision);
+            $respuesta = $this->validarDetalles($arRemision, $usuario);
             if ($respuesta) {
                 Mensajes::error($respuesta);
             } else {
@@ -213,7 +215,7 @@ class InvRemisionRepository extends ServiceEntityRepository
                 $arLote = $this->getEntityManager()->getRepository(InvLote::class)
                     ->findOneBy(['loteFk' => $arRemisionDetalle->getLoteFk(), 'codigoItemFk' => $arRemisionDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $arRemisionDetalle->getCodigoBodegaFk()]);
 
-                if($arRemisionDetalle->getOperacionInventario() == -1) {
+                if($arRemisionDetalle->getOperacionInventario() == 1) {
                     $cantidadRemisonadaFinal =  $arLote->getCantidadRemisionada() + $arRemisionDetalle->getCantidadOperada();
                     $cantidadDisponibleFinal = $arLote->getCantidadExistencia() - $cantidadRemisonadaFinal;
                     if($cantidadDisponibleFinal < 0) {
@@ -347,8 +349,9 @@ class InvRemisionRepository extends ServiceEntityRepository
         return $resultado[1];
     }
 
-    public function validarDetalles($arRemision)
+    public function validarDetalles($arRemision, $usuario)
     {
+        $em = $this->getEntityManager();
         $respuesta = "";
         $arRemisionDetalles = $this->getEntityManager()->getRepository(InvRemisionDetalle::class)->validarDetalles($arRemision->getCodigoRemisionPk());
         foreach ($arRemisionDetalles as $arRemisionDetalle) {
@@ -371,6 +374,25 @@ class InvRemisionRepository extends ServiceEntityRepository
         }
         if($respuesta == "") {
             $respuesta = $this->validarCantidadesAfectar($arRemision->getCodigoRemisionPk());
+        }
+        if($respuesta == "") {
+            $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->validarDetalles();
+            foreach ($arRemisionDetalles as $arRemisionDetalle) {
+                if ($arrConfiguracion['validarBodegaUsuario']) {
+                    $arItem = $this->getEntityManager()->getRepository(InvItem::class)
+                        ->findOneBy(['codigoItemPk' => $arRemisionDetalle['codigoItemFk']]);
+                    if ($arItem->getAfectaInventario() == true) {
+                        $arrBodegas = $em->getRepository(InvRemisionDetalle::class)->bodegaRemision($arRemision->getCodigoRemisionPk());
+                        foreach ($arrBodegas as $arrBodega) {
+                            $arBodegaUsuario = $em->getRepository(InvBodegaUsuario::class)->findOneBy(array('codigoBodegaFk' => $arrBodega['codigoBodegaFk'], 'usuario' => $usuario));
+                            if (!$arBodegaUsuario) {
+                                $respuesta = 'El usuario no tiene permiso para mover cantidades de la bodega ' . $arrBodega['codigoBodegaFk'];
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
         return $respuesta;
     }

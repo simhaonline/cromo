@@ -111,7 +111,7 @@
                     {% if arRelacionCaja.estadoAutorizado == 0 %}
                         <div class="btn-group">
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('transporte_movimiento_control_relacioncaja_detalle_adicionar_recibo', {'codigoRelacionCaja': arRelacionCaja.codigoRelacionCajaPk }) }}', 'RelacionCajaAdicionaRecibo', 600, 900)">Adicionar</a>
+                               href="javascript:abrirVentana3('{{ path('transporte_movimiento_control_relacioncaja_detalle_adicionar_recibo', {'id': arRelacionCaja.codigoRelacionCajaPk }) }}', 'RelacionCajaAdicionaRecibo', 600, 900)">Adicionar</a>
                         </div>
                     {% endif %}
                     <div class="btn-group">

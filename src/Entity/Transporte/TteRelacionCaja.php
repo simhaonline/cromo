@@ -18,7 +18,7 @@ class TteRelacionCaja
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",name="codigo_relacion_caja_pk")
      */
     private $codigoRelacionCajaPk;
 

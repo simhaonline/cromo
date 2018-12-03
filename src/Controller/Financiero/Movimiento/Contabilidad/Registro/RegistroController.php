@@ -45,27 +45,28 @@ class RegistroController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Registros");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-
-            }
-        }
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre, $formFiltro);
-                //$datos = $this->getDatosLista(true);
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
             }
         }
         $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "CuentasCobrar");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(FinAsiento::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
+            }
+        }
         return $this->render('financiero/movimiento/contabilidad/registro/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView()
+            'formFiltro' => $formFiltro->createView(),
         ]);
     }
 

@@ -11,13 +11,9 @@ use App\Form\Type\Transporte\RelacionCajaType;
 use App\Formato\Transporte\RelacionCaja;
 use App\General\General;
 use App\Utilidades\Estandares;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class RelacionCajaController extends ControllerListenerGeneral
@@ -54,7 +50,7 @@ class RelacionCajaController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Facturas");
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Relacion caja");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

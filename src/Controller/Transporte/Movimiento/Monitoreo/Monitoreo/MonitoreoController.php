@@ -2,12 +2,15 @@
 
 namespace App\Controller\Transporte\Movimiento\Monitoreo\Monitoreo;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TteMonitoreoDetalle;
 use App\Entity\Transporte\TteMonitoreoRegistro;
 use App\Form\Type\Transporte\MonitoreoDetalleType;
+use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,7 +25,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class MonitoreoController extends ControllerListenerGeneral
 {
-    protected $class= TteMonitoreo::class;
+    protected $clase= TteMonitoreo::class;
     protected $claseNombre = "TteMonitoreo";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
@@ -34,34 +37,53 @@ class MonitoreoController extends ControllerListenerGeneral
     */    
     public function lista(Request $request)
     {
-        $paginator = $this->get('knp_paginator');
+
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $session = new Session();
-        $form = $this->createFormBuilder()
-            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTteMovMonitoreoFiltroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteMovMonitoreoFechaDesde'))])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteMovMonitoreoFechaHasta'))])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroTteMovMonitoreoFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
-                $session->set('filtroTteMovMonitoreoFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
-                $session->set('filtroTteMovMonitoreoFiltroFecha', $form->get('filtrarFecha')->getData());
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
             }
         }
-        $arMonitoreos = $paginator->paginate($em->getRepository(TteMonitoreo::class)->lista(), $request->query->getInt('page', 1), 30);
-        return $this->render('transporte/movimiento/monitoreo/monitoreo/lista.html.twig', ['arMonitoreos' => $arMonitoreos, 'form' => $form->createView()]);
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Monitoreo");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+//                $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('transporte_movimiento_monitoreo_monitoreo_lista'));
+            }
+        }
+
+        return $this->render('transporte/movimiento/monitoreo/monitoreo/lista.html.twig', [
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
+        ]);
+
     }
 
     /**
-     * @Route("/transporte/movimiento/monitoreo/monitoreo/detalle/{codigoMonitoreo}", name="transporte_movimiento_monitoreo_monitoreo_detalle")
+     * @Route("/transporte/movimiento/monitoreo/monitoreo/nuevo/{id}", name="transporte_movimiento_monitoreo_monitoreo_nuevo")
      */
-    public function detalle(Request $request, $codigoMonitoreo)
+    public function nuevo(){
+        return $this->redirect($this->generateUrl('transporte_movimiento_monitoreo_monitoreo_lista'));
+    }
+
+
+    /**
+     * @Route("/transporte/movimiento/monitoreo/monitoreo/detalle/{id}", name="transporte_movimiento_monitoreo_monitoreo_detalle")
+     */
+    public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arMonitoreo = $em->getRepository(TteMonitoreo::class)->find($codigoMonitoreo);
+        $arMonitoreo = $em->getRepository(TteMonitoreo::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnRetirarDetalle', SubmitType::class, array('label' => 'Retirar'))
             ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
@@ -71,11 +93,11 @@ class MonitoreoController extends ControllerListenerGeneral
             if ($form->get('btnRetirarDetalle')->isClicked()) {
                 $arrMonitoreoDetalle = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteMonitoreoDetalle::class)->eliminar($arrMonitoreoDetalle);
-                return $this->redirect($this->generateUrl('transporte_movimiento_monitoreo_monitoreo_detalle', ['codigoMonitoreo' => $codigoMonitoreo]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_monitoreo_monitoreo_detalle', ['id' => $id]));
             }
         }
-        $arMonitoreoDetalles = $this->getDoctrine()->getRepository(TteMonitoreoDetalle::class)->monitoreo($codigoMonitoreo);
-        $arMonitoreoRegistros = $this->getDoctrine()->getRepository(TteMonitoreoRegistro::class)->monitoreo($codigoMonitoreo);
+        $arMonitoreoDetalles = $this->getDoctrine()->getRepository(TteMonitoreoDetalle::class)->monitoreo($id);
+        $arMonitoreoRegistros = $this->getDoctrine()->getRepository(TteMonitoreoRegistro::class)->monitoreo($id);
         return $this->render('transporte/movimiento/monitoreo/monitoreo/detalle.html.twig', [
             'arMonitoreo' => $arMonitoreo,
             'arMonitoreoDetalles' => $arMonitoreoDetalles,

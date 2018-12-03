@@ -1,0 +1,19 @@
+<div class="panel panel-default">
+    <div class="panel-heading">Filtro busqueda</div>
+    <div class="panel-body">
+        {% include 'estructura/buscarTerceroInventario.html.twig' %}
+        <div class="form-group form-group-sm">
+            <label for="" class="control-label col-sm-1">No.documento:</label>
+            <div class="col-sm-2">
+                {{ form_widget(formFiltro.numero) }}
+            </div>
+            <label for="" class="control-label col-sm-1">No.referencia:</label>
+            <div class="col-sm-2">
+                {{ form_widget(formFiltro.codigoImportacionTipoFk) }}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_end(formFiltro) }}
+    </div>
+</div>

@@ -49,12 +49,29 @@ class EgresoType extends AbstractType
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
-            {"campo":"codigoEgresoPk",     "tipo":"pk",        "ayuda":"Codigo de compra",   "titulo":"ID"},
-            {"campo":"numero",              "tipo":"entero",    "ayuda":"",                     "titulo":"NUMERO"},
-            {"campo":"fecha",               "tipo":"fecha",     "ayuda":"Fecha de registro",    "titulo":"FECHA"},
-            {"campo":"estadoAutorizado",    "tipo":"bool",      "ayuda":"",                     "titulo":"AUT"},
-            {"campo":"estadoAprobado",      "tipo":"bool",      "ayuda":"",                     "titulo":"APR"},
-            {"campo":"estadoAnulado",       "tipo":"bool",      "ayuda":"",                     "titulo":"ANU"}                                
+            {"campo":"codigoEgresoPk",      "tipo":"pk",    "ayuda":"Codigo del registro",                 "titulo":"ID"},
+            {"campo":"numero",              "tipo":"entero","ayuda":"Numero del consecutivo de aprobación","titulo":"NUMERO"},
+            {"campo":"egresoTipoRel.nombre","tipo":"texto", "ayuda":"Tipo de registro",                    "titulo":"TIPO","relacion":""},
+            {"campo":"fecha",               "tipo":"fecha", "ayuda":"Fecha de registro",                   "titulo":"FECHA"},
+            {"campo":"estadoAutorizado",    "tipo":"bool",  "ayuda":"Estado autorizado",                   "titulo":"AUT"},
+            {"campo":"estadoAprobado",      "tipo":"bool",  "ayuda":"Estado aprobado",                     "titulo":"APR"},
+            {"campo":"estadoAnulado",       "tipo":"bool",  "ayuda":"Estado anulado",                      "titulo":"ANU"}                                
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"codigoEgresoPk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
+            {"child":"codigoProveedorFk",  "tipo":"TextType",    "propiedades":{"label":"Codigo proveedor"}},
+            {"child":"numero",             "tipo":"TextType",          "propiedades":{"label":"Numero"}},
+            {"child":"codigoEgresoTipoFk", "tipo":"TextType",      "propiedades":{"label":"Codigo egreso tipo"}},
+            {"child":"fechaDesde",  "tipo":"DateType",           "propiedades":{"label":"Fecha desde"}},
+            {"child":"fechaHasta",  "tipo":"DateType",           "propiedades":{"label":"Fecha hasta"}},
+            {"child":"estadoAutorizado",   "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",     "tipo":"ChoiceType",  "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",      "tipo":"ChoiceType",  "propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
         ]';
         return $campos;
     }

@@ -1,92 +1,52 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_start(formFiltro, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
+            {% include 'estructura/buscarProveedorCompra.html.twig' %}
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Numero:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtNumero, { 'attr': {'class': 'form-control'} }) }}
+                <label for="" class="control-label col-sm-1">Codigo</label>
+                <div class="col-sm-2">
+                    {{ form_widget(formFiltro.codigoCuentaPagarPk) }}
                 </div>
-                <label class="col-sm-1 control-label">Tipo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.cboCuentaPagarTipo, { 'attr': {'class': 'form-control'} }) }}
+                <label for="" class="control-label col-sm-1">No.Documento</label>
+                <div class="col-sm-2">
+                    {{ form_widget(formFiltro.numeroDocumento) }}
                 </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Fecha desde:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.fechaDesde) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Fecha hasta:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.fechaHasta) }}
+                <label for="" class="control-label col-sm-1">Autorizado</label>
+                <div class="col-sm-5">
+                    {{ form_widget(formFiltro.estadoAutorizado) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.filtrarPorFecha) }}
+                <label for="" class="control-label col-sm-1">Factura desde</label>
+                <div class="col-sm-5">
+                    {{ form_widget(formFiltro.fechaFacturaDesde) }}
+                </div>
+                <label for="" class="control-label col-sm-1">Aprobado</label>
+                <div class="col-sm-5">
+                    {{ form_widget(formFiltro.estadoAprobado) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-1">Factura hasta</label>
+                <div class="col-sm-5">
+                    {{ form_widget(formFiltro.fechaFacturaHasta) }}
+                </div>
+                <label for="" class="control-label col-sm-1">Anulado</label>
+                <div class="col-sm-5">
+                    {{ form_widget(formFiltro.estadoAnulado) }}
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            {{ form_widget(form.btnFiltrar) }}
+            {{ form_end(formFiltro) }}
         </div>
     </div>
-    <table class="table table-striped table-bordered table-hover">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>NUMERO</th>
-            <th>TIPO</th>
-            <th>FECHA</th>
-            <th>VENCE</th>
-            <th>NIT</th>
-            <th>CLIENTE</th>
-            <th>PLAZO</th>
-            <th>TOTAL</th>
-            <th>ABONO</th>
-            <th>SALDO</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for arCuentaPagar in arCuentaPagar %}
-            <tr>
-                <td>{{ arCuentaPagar.codigoCuentaPagarPk }}</td>
-                <td>{{ arCuentaPagar.numeroDocumento }}</td>
-                <td>{{ arCuentaPagar.tipo }}</td>
-                <td>{{ arCuentaPagar.fechaFactura | date('Y-m-d') }}</td>
-                <td>{{ arCuentaPagar.fechaVence | date('Y-m-d') }}</td>
-                <td>{{ arCuentaPagar.numeroIdentificacion }}</td>
-                <td>{{ arCuentaPagar.nombreCorto }}</td>
-                <td>{{ arCuentaPagar.plazo }}</td>
-                <td class="numero">{{ arCuentaPagar.vrTotal| number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arCuentaPagar.vrAbono| number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arCuentaPagar.vrSaldo| number_format(0, '.', ',') }}</td>
-                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
-                                                       value="{{ arCuentaPagar.codigoCuentaPagarPk }}"/></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="btn-group" style="float: left">
-        <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span
-                        class="badge">{{ arCuentaPagar.getTotalItemCount }}</span></div>
-        </div>
-    </div>
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-        {{ knp_pagination_render(arCuentaPagar) }}
-    </div>
-    <div class="btn-group" style="float: right">
-        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-    </div>
-    {{ form_end(form) }}
+    {{ form_start(formBotonera) }}
+    {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
+    {% include 'estructura/movimiento/botoneraGeneral.html.twig' %}
+    {{ form_end(formBotonera) }}
 {% endblock %}
 

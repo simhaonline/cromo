@@ -172,7 +172,7 @@ class RemisionController extends ControllerListenerGeneral
             $arrControles = $request->request->all();
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(InvRemision::class)->actualizarDetalles($id, $arrControles);
-                $em->getRepository(InvRemision::class)->autorizar($arRemision);
+                $em->getRepository(InvRemision::class)->autorizar($arRemision, $this->getUser()->getUsername());
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(InvRemision::class)->desautorizar($arRemision);

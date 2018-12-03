@@ -62,39 +62,7 @@ class RecaudoDevolucionController extends ControllerListenerGeneral
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
         ]);
-//        $em = $this->getDoctrine()->getManager();
-//        $paginator  = $this->get('knp_paginator');
-//        $session = new Session();
-//        $form = $this->createFormBuilder()
-//            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-//            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
-//            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-//            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-//            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-//            ->getForm();
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            if ($form->get('btnFiltrar')->isClicked()) {
-//                if ($form->get('txtCodigoCliente')->getData() != '') {
-//                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-//                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-//                } else {
-//                    $session->set('filtroTteCodigoCliente', null);
-//                    $session->set('filtroTteNombreCliente', null);
-//                }
-//            }
-//            if($form->get('btnEliminar')->isClicked()){
-//                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                $em->getRepository(TteRecaudoDevolucion::class)->eliminar($arrSeleccionados);
-//            }
-//            if ($form->get('btnExcel')->isClicked()) {
-//                General::get()->setExportar($em->createQuery($em->getRepository(TteRecaudoDevolucion::class)->lista())->execute(), "Guias");
-//            }
-//        }
-//        $arRecaudos = $paginator->paginate($em->getRepository(TteRecaudoDevolucion::class)->lista(), $request->query->getInt('page', 1),40);
-//        return $this->render('transporte/movimiento/transporte/recaudoDevolucion/lista.html.twig', [
-//            'arRecaudos' => $arRecaudos,
-//            'form' => $form->createView()]);
+
     }
 
     /**

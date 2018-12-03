@@ -11,33 +11,43 @@
                 <div class="panel-body">
                     {% include 'estructura/buscarClienteCartera.html.twig' %}
                     <div class="form-group form-group-sm">
-                        <label for="" class="control-label col-sm-1">No.documento:</label>
+                        <label class="col-sm-1 control-label">Numero:</label>
                         <div class="col-sm-2">
-                            {{ form_widget(formFiltro.numeroDocumento) }}
+                            {{ form_widget(formFiltro.numero, { 'attr': {'class': 'form-control'} }) }}
                         </div>
-                        <label for="" class="control-label col-sm-1">No.referencia:</label>
+                        <label class="col-sm-1 control-label">Codigo:</label>
                         <div class="col-sm-2">
-                            {{ form_widget(formFiltro.numeroReferencia) }}
+                            {{ form_widget(formFiltro.codigoReciboPk, { 'attr': {'class': 'form-control'} }) }}
                         </div>
-                        <label for="" class="control-label col-sm-1">Código:</label>
+                        <label class="col-sm-1 control-label">Tipo:</label>
                         <div class="col-sm-5">
-                            {{ form_widget(formFiltro.codigoCuentaCobrarPk) }}
+                            {{ form_widget(formFiltro.codigoReciboTipoFk, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label for="" class="control-label col-sm-1">Desde</label>
+                        <label class="col-sm-1 control-label">Desde:</label>
                         <div class="col-sm-5">
                             {{ form_widget(formFiltro.fechaDesde) }}
                         </div>
-                        <label for="" class="control-label col-sm-1">Tipo:</label>
+                        <label class="col-sm-1 control-label">Autorizado:</label>
                         <div class="col-sm-5">
-                            {{ form_widget(formFiltro.codigoCuentaCobrarTipoFk) }}
+                            {{ form_widget(formFiltro.estadoAutorizado, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label for="" class="control-label col-sm-1">Hasta</label>
+                        <label class="col-sm-1 control-label">Hasta:</label>
                         <div class="col-sm-5">
                             {{ form_widget(formFiltro.fechaHasta) }}
+                        </div>
+                        <label class="col-sm-1 control-label">Anulado:</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(formFiltro.estadoAnulado, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-1 col-sm-offset-6 control-label">Aprobado:</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(formFiltro.estadoAprobado, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                     </div>
                 </div>

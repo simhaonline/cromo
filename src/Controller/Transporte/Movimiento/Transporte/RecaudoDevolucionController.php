@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
@@ -21,54 +22,83 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RecaudoDevolucionController extends ControllerListenerGeneral
 {
-    protected $class= TteRecaudoDevolucion::class;
+    protected $clase= TteRecaudoDevolucion::class;
     protected $claseNombre = "TteRecaudoDevolucion";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
     protected $grupo = "Transporte";
-    protected $nombre = "Recaudo devolucion";
+    protected $nombre = "RecaudoDevolucion";
    /**
     * @Route("/transporte/movimiento/transporte/recaudoDevolucion/lista", name="transporte_movimiento_transporte_recaudo_devolucion_lista")
     */    
     public function lista(Request $request)
     {
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
-        $session = new Session();
-        $form = $this->createFormBuilder()
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
-            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                if ($form->get('txtCodigoCliente')->getData() != '') {
-                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-                } else {
-                    $session->set('filtroTteCodigoCliente', null);
-                    $session->set('filtroTteNombreCliente', null);
-                }
-            }
-            if($form->get('btnEliminar')->isClicked()){
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteRecaudoDevolucion::class)->eliminar($arrSeleccionados);
-            }
-            if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(TteRecaudoDevolucion::class)->lista())->execute(), "Guias");
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
             }
         }
-        $arRecaudos = $paginator->paginate($em->getRepository(TteRecaudoDevolucion::class)->lista(), $request->query->getInt('page', 1),40);
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Recaudo devolucion");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteRecaudoDevolucion::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_devolucion_lista'));
+            }
+
+        }
+
         return $this->render('transporte/movimiento/transporte/recaudoDevolucion/lista.html.twig', [
-            'arRecaudos' => $arRecaudos,
-            'form' => $form->createView()]);
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
+        ]);
+//        $em = $this->getDoctrine()->getManager();
+//        $paginator  = $this->get('knp_paginator');
+//        $session = new Session();
+//        $form = $this->createFormBuilder()
+//            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+//            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
+//            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+//            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+//            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+//            ->getForm();
+//        $form->handleRequest($request);
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            if ($form->get('btnFiltrar')->isClicked()) {
+//                if ($form->get('txtCodigoCliente')->getData() != '') {
+//                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+//                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+//                } else {
+//                    $session->set('filtroTteCodigoCliente', null);
+//                    $session->set('filtroTteNombreCliente', null);
+//                }
+//            }
+//            if($form->get('btnEliminar')->isClicked()){
+//                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+//                $em->getRepository(TteRecaudoDevolucion::class)->eliminar($arrSeleccionados);
+//            }
+//            if ($form->get('btnExcel')->isClicked()) {
+//                General::get()->setExportar($em->createQuery($em->getRepository(TteRecaudoDevolucion::class)->lista())->execute(), "Guias");
+//            }
+//        }
+//        $arRecaudos = $paginator->paginate($em->getRepository(TteRecaudoDevolucion::class)->lista(), $request->query->getInt('page', 1),40);
+//        return $this->render('transporte/movimiento/transporte/recaudoDevolucion/lista.html.twig', [
+//            'arRecaudos' => $arRecaudos,
+//            'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/recaudoDevolucion/detalle/{id}", name="transporte_movimiento_transporte_recaudo_devolucion_detalle")
+     * @Route("/transporte/movimiento/transporte/recaudoDevolucion/detalle/{id}", name="transporte_movimiento_transporte_recaudodevolucion_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -154,7 +184,7 @@ class RecaudoDevolucionController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/recaudoDevolucion/nuevo/{id}", name="transporte_movimiento_transporte_recaudo_devolucion_nuevo")
+     * @Route("/transporte/movimiento/transporte/recaudoDevolucion/nuevo/{id}", name="transporte_movimiento_transporte_recaudodevolucion_nuevo")
      */
     public function nuevo(Request $request, $id)
     {

@@ -15,7 +15,7 @@ class InicioController extends Controller
     public function inicio(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        return $this->render('base_general.html.twig');
+        return $this->render('base.html.twig');
     }
 }
 

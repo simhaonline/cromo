@@ -1,123 +1,190 @@
-{% extends 'base_transporte.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    <div class="panel panel-default">
-        <div class="panel-heading">Informacion general</div>
-        <div class="panel-body">
-            <div class="form-group form-group-sm">
-                <label for="txtNit" class="col-sm-2 control-label">Conductor:</label>
-                <div class="col-sm-10">
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <div class="input-group">
-                                <input id="txtCodigoCliente"  name="txtCodigoConductor"  type="text" class="form-control" value="{{ arDespacho.codigoConductorFk |default('') }}"/>
+    <div id="content">
+        <section id="widget-grid" class="">
+
+            <div class="row">
+
+                <!-- NEW WIDGET START -->
+                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <!-- Widget ID (each widget will need unique ID)-->
+                    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+                         data-widget-fullscreenbutton="true">
+                        <!-- widget options:
+                        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                        data-widget-colorbutton="false"
+                        data-widget-editbutton="false"
+                        data-widget-togglebutton="false"
+                        data-widget-deletebutton="false"
+                        data-widget-fullscreenbutton="true"
+                        data-widget-custombutton="false"
+                        data-widget-collapsed="true"
+                        data-widget-sortable="false"
+
+                        -->
+                        <header>
+                            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                            <h2>Informacion general</h2>
+                        </header>
+
+                        <!-- widget div-->
+                        <div>
+
+                            <!-- widget edit box -->
+                            <div class="jarviswidget-editbox">
+                                <!-- This area used as dropdown edit box -->
+
                             </div>
-                        </div>
-                        <div class="col-lg-10">
-                            <div class="input-group">
-                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="{{ arDespacho.conductorRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
-                                <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_conductor', { 'campoCodigo': 'txtCodigoCliente', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                            <!-- end widget edit box -->
+
+                            <!-- widget content -->
+                            <div class="widget-body no-padding">
+                                {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="form-group form-group-sm">
+                                            <label for="txtNit" class="col-sm-2 control-label">Conductor:</label>
+                                            <div class="col-sm-10">
+                                                <div class="row">
+                                                    <div class="col-lg-2">
+                                                        <div class="input-group">
+                                                            <input id="txtCodigoCliente" name="txtCodigoConductor"
+                                                                   type="text" class="form-control"
+                                                                   value="{{ arDespacho.codigoConductorFk |default('') }}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-10">
+                                                        <div class="input-group">
+                                                            <input id="txtNombreCorto" name="txtNombreCorto" type="text"
+                                                                   class="form-control"
+                                                                   value="{{ arDespacho.conductorRel.nombreCorto |default('') }}"
+                                                                   readOnly="ReadOnly"/>
+                                                            <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('transporte_bus_conductor', { 'campoCodigo': 'txtCodigoCliente', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                     </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Tipo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.despachoTipoRel, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Vehiculo:</label>
-                <div class="col-sm-4">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="input-group">
-                                <input id="txtCodigoVehiculo"  name="txtCodigoVehiculo"  type="text" class="form-control" value="{{ arDespacho.codigoVehiculoFk |default('') }}"/>
-                                <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_vehiculo', { 'campoCodigo': 'txtCodigoVehiculo'}) }}', 'buscarVehiculo', 600, 900)">Buscar</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <label for="form_recogidaTipoRel"
+                                                   class="col-sm-2 control-label">Tipo:</label>
+                                            <div class="col-sm-4">
+                                                {{ form_widget(form.despachoTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                                            </div>
+                                            <label class="col-sm-2 control-label">Vehiculo:</label>
+                                            <div class="col-sm-4">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="input-group">
+                                                            <input id="txtCodigoVehiculo" name="txtCodigoVehiculo"
+                                                                   type="text" class="form-control"
+                                                                   value="{{ arDespacho.codigoVehiculoFk |default('') }}"/>
+                                                            <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('transporte_bus_vehiculo', { 'campoCodigo': 'txtCodigoVehiculo'}) }}', 'buscarVehiculo', 600, 900)">Buscar</a>
                                     </span>
-                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group form-group-sm">
+                                            <label for="form_recogidaTipoRel"
+                                                   class="col-sm-2 control-label">Ruta:</label>
+                                            <div class="col-sm-4">
+                                                {{ form_widget(form.rutaRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                                            </div>
+                                            <label class="col-sm-2 control-label">Flete:</label>
+                                            <div class="col-sm-4">
+                                                {{ form_widget(form.vrFletePago, { 'attr': {'class': 'form-control'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <label for="form_recogidaTipoRel"
+                                                   class="col-sm-2 control-label">Origen:</label>
+                                            <div class="col-sm-4">
+                                                {{ form_widget(form.ciudadOrigenRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                                            </div>
+                                            <label class="col-sm-2 control-label">Anticipo:</label>
+                                            <div class="col-sm-4">
+                                                {{ form_widget(form.vrAnticipo, { 'attr': {'class': 'form-control'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <label for="form_recogidaTipoRel"
+                                                   class="col-sm-2 control-label">Destino:</label>
+                                            <div class="col-sm-4">
+                                                {{ form_widget(form.ciudadDestinoRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                                            </div>
+                                            <label class="col-sm-2 control-label">Papeleria:</label>
+                                            <div class="col-sm-4">
+                                                {{ form_widget(form.vrDescuentoPapeleria, { 'attr': {'class': 'form-control'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <label for="form_recogidaTipoRel" class="col-sm-2 control-label"></label>
+                                            <div class="col-sm-4">
+
+                                            </div>
+                                            <label class="col-sm-2 control-label">Seguridad:</label>
+                                            <div class="col-sm-4">
+                                                {{ form_widget(form.vrDescuentoSeguridad, { 'attr': {'class': 'form-control'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <label for="form_recogidaTipoRel" class="col-sm-2 control-label"></label>
+                                            <div class="col-sm-4">
+
+                                            </div>
+                                            <label class="col-sm-2 control-label">Cargue:</label>
+                                            <div class="col-sm-4">
+                                                {{ form_widget(form.vrDescuentoCargue, { 'attr': {'class': 'form-control'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <label for="form_recogidaTipoRel" class="col-sm-2 control-label"></label>
+                                            <div class="col-sm-4">
+
+                                            </div>
+                                            <label class="col-sm-2 control-label">Estampilla:</label>
+                                            <div class="col-sm-4">
+                                                {{ form_widget(form.vrDescuentoEstampilla, { 'attr': {'class': 'form-control'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Comentario:</label>
+                                            <div class="col-sm-10">
+                                                {{ form_widget(form.comentario, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a class="btn btn-default btn-sm"
+                                       href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Cancelar</a>
+                                    {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+                                    {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+                                </div>
+                                {{ form_end(form) }}</div>
+                            <!-- end widget content -->
+
                         </div>
+                        <!-- end widget div -->
+
                     </div>
-                </div>
-            </div>
+                    <!-- end widget -->
 
-
-            <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Ruta:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.rutaRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Flete:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.vrFletePago, { 'attr': {'class': 'form-control'} }) }}
-                </div>
+                </article>
+                <!-- WIDGET END -->
             </div>
-            <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Origen:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.ciudadOrigenRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Anticipo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.vrAnticipo, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Destino:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.ciudadDestinoRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Papeleria:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.vrDescuentoPapeleria, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-
-                </div>
-                <label class="col-sm-2 control-label">Seguridad:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.vrDescuentoSeguridad, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-
-                </div>
-                <label class="col-sm-2 control-label">Cargue:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.vrDescuentoCargue, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-
-                </div>
-                <label class="col-sm-2 control-label">Estampilla:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.vrDescuentoEstampilla, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Comentario:</label>
-                <div class="col-sm-10">
-                    {{ form_widget(form.comentario, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-            </div>
-        </div>
+            <!-- end row -->
+        </section>
     </div>
-    <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Cancelar</a>
-        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
-        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
-    </div>
-    {{ form_end(form) }}
 
 {% endblock %}

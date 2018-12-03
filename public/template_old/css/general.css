@@ -1,0 +1,48 @@
+.pagination {
+    margin: 0px 0;
+}
+
+table tr {
+    font-size: 10px;
+    padding: 2px;
+}
+
+.table tr {
+    padding: 2px;
+}
+
+.table > thead > tr > td, .table > thead > tr > th {
+    padding: 2px;
+    text-align: center;
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th {
+    padding: 2px;
+}
+
+td.estado {
+    text-align: center;
+}
+
+td.numero {
+    text-align: right;
+}
+
+td.seleccion {
+    text-align: center;
+}
+
+.link-black {
+    color: black;
+    text-decoration: none;
+}
+
+.link-grey {
+    color: grey;
+    text-decoration: none;
+}
+
+.input-valor{
+    text-align: right;
+
+}

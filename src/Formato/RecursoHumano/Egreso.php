@@ -109,7 +109,7 @@ class Egreso extends \FPDF
     {
 
         $this->Ln(14);
-        $header = array('ID', 'NUMERO', 'IDENTIFICACION', 'NOMBRE', 'BANCO', 'CUENTA', 'VR PAGO');
+        $header = array('ID', 'PAGO','NUMERO', 'IDENTIFICACION', 'NOMBRE', 'BANCO', 'CUENTA', 'VR PAGO');
         $this->SetFillColor(200, 200, 200);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
@@ -117,7 +117,7 @@ class Egreso extends \FPDF
         $this->SetFont('', 'B', 7);
 
         //Creamos la cabecera de la tabla.
-        $w = array(15, 15, 30, 60, 25, 25, 20);
+        $w = array(10,10 ,15, 30, 60, 25, 20, 20);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1) {
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -143,12 +143,13 @@ class Egreso extends \FPDF
         /** @var  $arEgresoDetalle RhuEgresoDetalle */
         foreach ($arEgresoDetalles as $arEgresoDetalle) {
             $vrTotal += $arEgresoDetalle->getVrPago();
-            $pdf->Cell(15, 4, $arEgresoDetalle->getCodigoEgresoDetallePk(), 1, 0, 'L');
-            $pdf->Cell(15, 4, $arEgresoDetalle->getCodigoPagoFk(), 1, 0, 'L');
+            $pdf->Cell(10, 4, $arEgresoDetalle->getCodigoEgresoDetallePk(), 1, 0, 'L');
+            $pdf->Cell(10, 4, $arEgresoDetalle->getCodigoPagoFk(), 1, 0, 'L');
+            $pdf->Cell(15, 4, $arEgresoDetalle->getPagoRel()->getNumero(), 1, 0, 'L');
             $pdf->Cell(30, 4, $arEgresoDetalle->getEmpleadoRel()->getNumeroIdentificacion(), 1, 0, 'L');
             $pdf->Cell(60, 4, strtoupper(utf8_decode($arEgresoDetalle->getEmpleadoRel()->getNombreCorto())), 1, 0, 'L');
             $pdf->Cell(25, 4, strtoupper(utf8_decode($arEgresoDetalle->getBancoRel() ? $arEgresoDetalle->getBancoRel()->getNombre() : '')), 1, 0, 'L');
-            $pdf->Cell(25, 4, $arEgresoDetalle->getCuenta(), 1, 0, 'L');
+            $pdf->Cell(20, 4, $arEgresoDetalle->getCuenta(), 1, 0, 'L');
             $pdf->Cell(20, 4, number_format($arEgresoDetalle->getVrPago(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);

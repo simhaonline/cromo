@@ -1,564 +1,461 @@
-<!DOCTYPE html>
-<html>
-{{ include('base_cabecera_enlace.html.twig') }}
-<body>
-<div id="wrapper">
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{{ path('inicio') }}">Cromo v2.0</a>
-        </div>
-        <!-- /.navbar-header -->
+{% include('base_menu_inicio.html.twig') %}
+<nav>
+    <ul>
+        <li>
+            <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Recogida <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('transporte_movimiento_recogida_recogida_lista') }}">Recogida</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('transporte_movimiento_recogida_despacho_lista') }}">Despacho</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Transporte <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('transporte_movimiento_transporte_guia_lista') }}">Guia</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Despacho</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('transporte_movimiento_transporte_cumplido_lista') }}">Cumplido</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('transporte_movimiento_transporte_novedad_lista') }}">Novedad</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('transporte_movimiento_transporte_recaudo_devolucion_lista') }}">Recaudo
+                                devolucion</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('transporte_movimiento_transporte_recaudo_cobro_lista') }}">Recaudo
+                                cobro</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Control <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('transporte_movimiento_control_relacioncaja_lista') }}">Relacion
+                                caja</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Monitoreo <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('transporte_movimiento_monitoreo_monitoreo_lista') }}">Monitoreo</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Comercial <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('transporte_movimiento_comercial_factura_lista') }}">Factura</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Transporte <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="#">Vehiculo <span class="fa arrow"></span></a>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'aseguradora'}) }}">Aseguradora</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'poseedor'}) }}">Poseedor</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('transporte_administracion_transporte_conductor_lista') }}">Conductor</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('transporte_administracion_transporte_vehiculo_lista') }}">Vehículo</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'tipoCombustible'}) }}">Tipo
+                                        combustible</a></li>
+                                <li>
+                                    <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'linea'}) }}">Linea</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'marca'}) }}">Marca</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'color'}) }}">Color</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'tipoCarroceria'}) }}">Carrocería
+                                        tipo </a></li>
+                            </ul>
+                            <!-- /.nav-third-level -->
+                        </li>
+                        <li>
+                            <a href="#">Guia <span class="fa arrow"></span></a>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'guiaTipo'}) }}">Guía
+                                        tipo</a></li>
+                                <li>
+                                    <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'producto'}) }}">Producto</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-third-level -->
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Ruta</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'novedadTipo'}) }}">Novedad
+                                tipo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'auxiliar'}) }}">Auxiliar</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'despachoTipo'}) }}">Despacho
+                                tipo</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">General <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'operacion'}) }}">Operacion</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'consecutivo'}) }}">Consecutivo</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'departamento'}) }}">Departamento</a>
+                        </li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'ciudad'}) }}">Ciudad</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Comercial <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('transporte_administracion_comercial_cliente_lista') }}">Cliente</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('transporte_administracion_comercial_precio_lista') }}">Precio</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('transporte_administracion_comercial_condicion_lista') }}">Condicion
+                            </a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'facturaTipo'}) }}">Factura
+                                tipo</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Recogida <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'despachoRecogidaTipo'}) }}">Despacho
+                                recogida tipo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'rutaRecogida'}) }}">Ruta
+                                recogida</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-retweet fa-fw"></i> Proceso<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Recogida <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('transporte_proceso_recogida_recogida_programada') }}">Programada</a>
+                        </li>
+                        <li><a href="{{ path('transporte_proceso_recogida_recogida_recoge') }}">Recoge</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('transporte_proceso_recogida_recogida_descarga') }}">Descarga</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Transporte <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="#">Guia <span class="fa arrow"></span></a>
+                            <ul>
+                                <li><a href="{{ path('transporte_proceso_transporte_guia_entrega') }}">Entrega
+                                        guia</a></li>
+                                <li><a href="{{ path('transporte_proceso_transporte_guia_soporte') }}">Soporte
+                                        guia</a></li>
+                                <li>
+                                    <a href="{{ path('transporte_proceso_transporte_guia_redespacho') }}">Re-despacho</a>
+                                </li>
+                                <li><a href="{{ path('transporte_proceso_transporte_guia_cortesia') }}">Cortesia</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('transporte_proceso_transporte_guia_generarfactura') }}">Generar
+                                        factura</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Despacho <span class="fa arrow"></span></a>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('transporte_proceso_transporte_despacho_cumplirrndc') }}">Cumplir
+                                        rndc</a></li>
+                                <li><a href="{{ path('transporte_proceso_transporte_despacho_soporte') }}">Soporte
+                                        despacho</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">General <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('transporte_proceso_transporte_general_intermediacion') }}">Intermediacion</a>
+                            <a href="{{ path('transporte_proceso_transporte_general_cierre') }}">Cierre</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Contabilidad <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('transporte_proceso_contabilidad_factura_lista') }}">Factura</a>
+                        </li>
 
-        <ul class="nav navbar-top-links navbar-right">
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-alerts">
-                    <li>
-                        <a href="#">
-                            <div>
-                                <i class="fa fa-comment fa-fw"></i> Recogidas
-                                <span class="pull-right text-muted small">4 minutes ago</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li><a href="{{ path('transporte_tablero_transporte_guia_pendiente') }}">
-                            <div>
-                                <i class="fa fa-comment fa-fw"></i> Guias
-                                <span class="pull-right text-muted small">4 minutes ago</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a class="text-center" href="#">
-                            <strong>See All Alerts</strong>
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                    </li>
-                </ul>
-                <!-- /.dropdown-alerts -->
-            </li>
-            <li class="dropdown">
-                <a class="notificacionPendiente dropdown-toggle" data-toggle="dropdown" href="" onclick="verNotificacionesPendientes()">
-                    <i class="fa fa-bell fa-fw"></i><i class="fa fa-caret-down"></i>
-                </a>
-                <ul class="notificaciones dropdown-menu dropdown-alerts">
-                    <li><a href="#"><div><i class="fa fa-comment fa-fw"></i><span style="font-size: 13px"> No tiene notificaciones</span></div></a></li><li class="divider"></li>
-                    <li><a class="text-center" href="{{ path('general_administracion_notificacion__todasNotificaciones') }}"><strong>Ver todas </strong><i class="fa fa-angle-right"></i></a></li>
-                </ul>
-                <!-- /.dropdown-alerts -->
-            </li>
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-user">
-                    <li><a href="#"><i class="fa fa-user fa-fw"></i> Perfil</a>
-                    </li>
-                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Configuracion</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li><a href="{{ path('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Salir</a>
-                    </li>
-                </ul>
-                <!-- /.dropdown-user -->
-            </li>
-        </ul>
-        <!-- /.navbar-top-links -->
+                        <li>
+                            <a href="{{ path('transporte_proceso_contabilidad_despacho_lista') }}">Despacho</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('transporte_proceso_contabilidad_despachorecogida_lista') }}">Despacho
+                                recogida</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('transporte_proceso_contabilidad_intermediacion_lista') }}">Intermediacion</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('transporte_proceso_contabilidad_recaudo_lista') }}">Recaudo</a>
+                        </li>
 
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-                    <li class="sidebar-search">
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                        <!-- /input-group -->
-                    </li>
-                    <li>
-                        <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Recogida <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('transporte_movimiento_recogida_recogida_lista') }}">Recogida</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_movimiento_recogida_despacho_lista') }}">Despacho</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Transporte <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_movimiento_transporte_guia_lista') }}">Guia</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Despacho</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_movimiento_transporte_cumplido_lista') }}">Cumplido</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_movimiento_transporte_novedad_lista') }}">Novedad</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_movimiento_transporte_recaudo_devolucion_lista') }}">Recaudo
-                                            devolucion</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_movimiento_transporte_recaudo_cobro_lista') }}">Recaudo
-                                            cobro</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Control <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_movimiento_control_relacioncaja_lista') }}">Relacion
-                                            caja</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Monitoreo <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_movimiento_monitoreo_monitoreo_lista') }}">Monitoreo</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Comercial <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('transporte_movimiento_comercial_factura_lista') }}">Factura</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Transporte <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="#">Vehiculo <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li>
-                                                <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'aseguradora'}) }}">Aseguradora</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'poseedor'}) }}">Poseedor</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('transporte_administracion_transporte_conductor_lista') }}">Conductor</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('transporte_administracion_transporte_vehiculo_lista') }}">Vehículo</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'tipoCombustible'}) }}">Tipo
-                                                    combustible</a></li>
-                                            <li>
-                                                <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'linea'}) }}">Linea</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'marca'}) }}">Marca</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'color'}) }}">Color</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'tipoCarroceria'}) }}">Carrocería
-                                                    tipo </a></li>
-                                        </ul>
-                                        <!-- /.nav-third-level -->
-                                    </li>
-                                    <li>
-                                        <a href="#">Guia <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li>
-                                                <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'guiaTipo'}) }}">Guía
-                                                    tipo</a></li>
-                                            <li>
-                                                <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'producto'}) }}">Producto</a>
-                                            </li>
-                                        </ul>
-                                        <!-- /.nav-third-level -->
-                                    </li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'ruta'}) }}">Ruta</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'novedadTipo'}) }}">Novedad
-                                            tipo</a></li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'auxiliar'}) }}">Auxiliar</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'despachoTipo'}) }}">Despacho
-                                            tipo</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">General <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'operacion'}) }}">Operacion</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'consecutivo'}) }}">Consecutivo</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'departamento'}) }}">Departamento</a>
-                                    </li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'ciudad'}) }}">Ciudad</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Comercial <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_administracion_comercial_cliente_lista') }}">Cliente</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_administracion_comercial_precio_lista') }}">Precio</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_administracion_comercial_condicion_lista') }}">Condicion
-                                        </a></li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'facturaTipo'}) }}">Factura
-                                            tipo</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Recogida <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'despachoRecogidaTipo'}) }}">Despacho
-                                            recogida tipo</a></li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'rutaRecogida'}) }}">Ruta
-                                            recogida</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-retweet fa-fw"></i> Proceso<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Recogida <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('transporte_proceso_recogida_recogida_programada') }}">Programada</a>
-                                    </li>
-                                    <li><a href="{{ path('transporte_proceso_recogida_recogida_recoge') }}">Recoge</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_proceso_recogida_recogida_descarga') }}">Descarga</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Transporte <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="#">Guia <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li><a href="{{ path('transporte_proceso_transporte_guia_entrega') }}">Entrega
-                                                    guia</a></li>
-                                            <li><a href="{{ path('transporte_proceso_transporte_guia_soporte') }}">Soporte
-                                                    guia</a></li>
-                                            <li><a href="{{ path('transporte_proceso_transporte_guia_redespacho') }}">Re-despacho</a>
-                                            </li>
-                                            <li><a href="{{ path('transporte_proceso_transporte_guia_cortesia') }}">Cortesia</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('transporte_proceso_transporte_guia_generarfactura') }}">Generar
-                                                    factura</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">Despacho <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li>
-                                                <a href="{{ path('transporte_proceso_transporte_despacho_cumplirrndc') }}">Cumplir
-                                                    rndc</a></li>
-                                            <li><a href="{{ path('transporte_proceso_transporte_despacho_soporte') }}">Soporte
-                                                    despacho</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">General <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('transporte_proceso_transporte_general_intermediacion') }}">Intermediacion</a>
-                                        <a href="{{ path('transporte_proceso_transporte_general_cierre') }}">Cierre</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Contabilidad <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('transporte_proceso_contabilidad_factura_lista') }}">Factura</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="{{ path('transporte_proceso_contabilidad_despacho_lista') }}">Despacho</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_proceso_contabilidad_despachorecogida_lista') }}">Despacho
-                                            recogida</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_proceso_contabilidad_intermediacion_lista') }}">Intermediacion</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('transporte_proceso_contabilidad_recaudo_lista') }}">Recaudo</a>
-                                    </li>
-
-                                </ul>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-wrench"></i> Utilidad<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Servicio <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_uti_servicio_novedad_notificar') }}">Notificar
-                                            novedad</a></li>
-                                    <li><a href="{{ path('transporte_utilidad_servicio_guia_entrega') }}">Notificar
-                                            entrega</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Transporte <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_utilidad_transporte_correccion_guia_lista') }}">Correcion
-                                            guia</a></li>
-                                    <li>
-                                        <a href="{{ path('transporte_utilidad_transporte_cargarinformacionguias_lista') }}">Cargar
-                                            info. guias</a></li>
-                                    <li><a href="{{ path('transporte_proceso_transporte_precio_reexpedicion') }}">Precio
-                                            reexpedicion</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-clipboard"></i> Informe<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Servicio <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_inf_servicio_novedad_pendiente_atender') }}">Pendiente atender</a></li>
-                                    <li><a href="{{ path('transporte_inf_servicio_novedad_pendiente_solucionar') }}">Pendiente solucionar</a></li>
-                                    <li><a href="{{ path('transporte_informe_servicio_novedad_reporte_novedad') }}">Reporte de novedades</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Transporte <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="#">Despacho <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li><a href="{{ path('transporte_informe_transporte_despacho_detalle') }}">Detalle</a>
-                                            </li>
-                                        </ul>
-                                        <!-- /.nav-third-level -->
-                                    </li>
-                                    <li>
-                                        <a href="#">Redespacho <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li><a href="{{ path('transporte_informe_transporte_redespacho_redespacho') }}">Lista</a>
-                                            </li>
-                                        </ul>
-                                        <!-- /.nav-third-level -->
-                                    </li>
-                                    <li>
-                                        <a href="#">Guia <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li>
-                                                <a href="{{ path('transporte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho
-                                                    pendiente ruta</a></li>
-                                            <li>
-                                                <a href="{{ path('transporte_inf_transporte_guia_pendiente_conductor') }}">Pendiente
-                                                    conductor</a></li>
-                                            <li><a href="{{ path('transporte_informe_transporte_guia_pendiente_soporte') }}">Pendiente soporte</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('transporte_informe_transporte_guia_pendiente_entrega') }}">Pendiente
-                                                    entrega</a></li>
-                                            <li>
-                                                <a href="{{ path('transporte_informe_transporte_guia_guias_cliente') }}">Guias
-                                                    cliente</a></li>
-                                            <li>
-                                                <a href="{{ path('transporte_informe_transporte_guia_pendiente_recaudo_devolucion') }}">Pendiente
-                                                    recaudo devolucion</a></li>
-                                            <li>
-                                                <a href="{{ path('transporte_informe_transporte_guia_pendiente_recaudo_cobro') }}">Pendiente
-                                                    recaudo cobro</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">Costo <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li>
-                                                <a href="{{ path('transporte_inf_transporte_costo_general') }}">Costos</a>
-                                            </li>
-                                        </ul>
-                                        <!-- /.nav-third-level -->
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Recogida <span class="fa arrow"></span></a>
-                                <ul class="nav nav-four-level">
-                                    <li><a href="{{ path('transporte_informe_recogida_recogida_pendiente_programar') }}">Pendiente programar</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Comercial <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_informe_comercial_guia_produccion') }}">Produccion(cliente)</a></li>
-                                    <li><a href="{{ path('transporte_informe_comercial_facturacion_factura') }}">Factura</a></li>
-                                    <li><a href="{{ path('transporte_informe_comercial_facturacion_detalle') }}">Facturadetalle</a></li>
-                                    <li><a href="{{ path('transporte_informe_comercial_facturacion_pendienteFactura') }}">Pendientefacturar</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Control <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_informe_control_comercial_factura') }}">Factura</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Financiero <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('transporte_informe_financiero_despacho_rentabilidad') }}">Rentabilidad
-                                            (despacho)</a></li>
-                                    <li><a href="{{ path('transporte_informe_financiero_general_costos') }}">Costos</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-bar-chart"></i> Tablero<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Recogida <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('transporte_tablero_recogida_recogida_resumen') }}">Recogida</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Transporte <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="#">Guia <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li><a href="{{ path('transporte_tablero_transporte_guia_pendiente') }}">Pendiente</a></li>
-                                            <li><a href="{{ path('transporte_tablero_transporte_guia_produccion') }}">Produccion</a></li>
-                                            <li><a href="{{ path('transporte_tablero_transporte_guia_costo') }}">Costos</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">Novedad <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li><a href="{{ path('transporte_tablero_transporte_novedad_mes') }}">Novedad
-                                                    por mes</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">Despacho <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li><a href="{{ path('transporte_tablero_transporte_despacho_mes') }}">Despacho
-                                                    por mes</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-cogs"></i> Configuracion<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="{{ path('transporte_administracion_configuracion_configuracion_lista', {'id': 1}) }}">Configuracion</a>
-                            <li>
-
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                </ul>
-            </div>
-            <!-- /.sidebar-collapse -->
-        </div>
-        <!-- /.navbar-static-side -->
-    </nav>
-    {% block body %}
-
-        <div id="page-wrapper">
-            {{ include('base_cuerpo.html.twig') }}
-            {% block content %}
-
-            {% endblock %}
-        </div>
-    {% endblock %}
-</div>
-{% block javascripts %}
-    {{ include('base_pie_script.html.twig') }}
-{% endblock %}
-</body>
-</html>
+                    </ul>
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-wrench"></i> Utilidad<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Servicio <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('transporte_uti_servicio_novedad_notificar') }}">Notificar
+                                novedad</a></li>
+                        <li><a href="{{ path('transporte_utilidad_servicio_guia_entrega') }}">Notificar
+                                entrega</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Transporte <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('transporte_utilidad_transporte_correccion_guia_lista') }}">Correcion
+                                guia</a></li>
+                        <li>
+                            <a href="{{ path('transporte_utilidad_transporte_cargarinformacionguias_lista') }}">Cargar
+                                info. guias</a></li>
+                        <li><a href="{{ path('transporte_proceso_transporte_precio_reexpedicion') }}">Precio
+                                reexpedicion</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-clipboard"></i> Informe<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Servicio <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('transporte_inf_servicio_novedad_pendiente_atender') }}">Pendiente
+                                atender</a></li>
+                        <li><a href="{{ path('transporte_inf_servicio_novedad_pendiente_solucionar') }}">Pendiente
+                                solucionar</a></li>
+                        <li><a href="{{ path('transporte_informe_servicio_novedad_reporte_novedad') }}">Reporte de
+                                novedades</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Transporte <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="#">Despacho <span class="fa arrow"></span></a>
+                            <ul>
+                                <li><a href="{{ path('transporte_informe_transporte_despacho_detalle') }}">Detalle</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-third-level -->
+                        </li>
+                        <li>
+                            <a href="#">Redespacho <span class="fa arrow"></span></a>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('transporte_informe_transporte_redespacho_redespacho') }}">Lista</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-third-level -->
+                        </li>
+                        <li>
+                            <a href="#">Guia <span class="fa arrow"></span></a>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('transporte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho
+                                        pendiente ruta</a></li>
+                                <li>
+                                    <a href="{{ path('transporte_inf_transporte_guia_pendiente_conductor') }}">Pendiente
+                                        conductor</a></li>
+                                <li><a href="{{ path('transporte_informe_transporte_guia_pendiente_soporte') }}">Pendiente
+                                        soporte</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('transporte_informe_transporte_guia_pendiente_entrega') }}">Pendiente
+                                        entrega</a></li>
+                                <li>
+                                    <a href="{{ path('transporte_informe_transporte_guia_guias_cliente') }}">Guias
+                                        cliente</a></li>
+                                <li>
+                                    <a href="{{ path('transporte_informe_transporte_guia_pendiente_recaudo_devolucion') }}">Pendiente
+                                        recaudo devolucion</a></li>
+                                <li>
+                                    <a href="{{ path('transporte_informe_transporte_guia_pendiente_recaudo_cobro') }}">Pendiente
+                                        recaudo cobro</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Costo <span class="fa arrow"></span></a>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('transporte_inf_transporte_costo_general') }}">Costos</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-third-level -->
+                        </li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Recogida <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('transporte_informe_recogida_recogida_pendiente_programar') }}">Pendiente
+                                programar</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Comercial <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('transporte_informe_comercial_guia_produccion') }}">Produccion(cliente)</a>
+                        </li>
+                        <li><a href="{{ path('transporte_informe_comercial_facturacion_factura') }}">Factura</a></li>
+                        <li><a href="{{ path('transporte_informe_comercial_facturacion_detalle') }}">Facturadetalle</a>
+                        </li>
+                        <li><a href="{{ path('transporte_informe_comercial_facturacion_pendienteFactura') }}">Pendientefacturar</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Control <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('transporte_informe_control_comercial_factura') }}">Factura</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Financiero <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('transporte_informe_financiero_despacho_rentabilidad') }}">Rentabilidad
+                                (despacho)</a></li>
+                        <li><a href="{{ path('transporte_informe_financiero_general_costos') }}">Costos</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-bar-chart"></i> Tablero<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Recogida <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('transporte_tablero_recogida_recogida_resumen') }}">Recogida</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Transporte <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="#">Guia <span class="fa arrow"></span></a>
+                            <ul>
+                                <li><a href="{{ path('transporte_tablero_transporte_guia_pendiente') }}">Pendiente</a>
+                                </li>
+                                <li><a href="{{ path('transporte_tablero_transporte_guia_produccion') }}">Produccion</a>
+                                </li>
+                                <li><a href="{{ path('transporte_tablero_transporte_guia_costo') }}">Costos</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Novedad <span class="fa arrow"></span></a>
+                            <ul>
+                                <li><a href="{{ path('transporte_tablero_transporte_novedad_mes') }}">Novedad
+                                        por mes</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Despacho <span class="fa arrow"></span></a>
+                            <ul>
+                                <li><a href="{{ path('transporte_tablero_transporte_despacho_mes') }}">Despacho
+                                        por mes</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-cogs"></i> Configuracion<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="{{ path('transporte_administracion_configuracion_configuracion_lista', {'id': 1}) }}">Configuracion</a>
+                <li>
+            </ul>
+        </li>
+    </ul>
+</nav>

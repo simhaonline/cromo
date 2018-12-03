@@ -1,121 +1,86 @@
-<!DOCTYPE html>
-<html>
-{{ include('base_cabecera_enlace.html.twig') }}
-<body>
-<div id="wrapper">
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        {{ include('base_cabecera_navegacion.html.twig') }}
-        <!-- /.navbar-top-links -->
+{% include('base_menu_inicio.html.twig') %}
+<nav>
+    <ul>
+        <li>
+            <a href="#">
+                <i class="fa fa-cubes fa-fw"></i> Movimiento
+            </a>
+            <ul>
+                <li>
 
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-                    <li class="sidebar-search">
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                        <!-- /input-group -->
-                    </li>
-                    <li>
-                        <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
+                </li>
+                <li>
+                    <a href="#">Recibo <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('cartera_movimiento_recibo_recibo_lista') }}">Recibo</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Cuenta cobrar <span class="fa arrow"></span></a>
+                    <ul>
+                        {#<li><a href="{{ path('cartera_movimiento_cuenta_cobrar_lista') }}">Cuenta cobrar</a>#}
+                    </ul>
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
+            <ul>
+                <li>
 
-                            </li>
-                            <li>
-                                <a href="#">Recibo <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('cartera_movimiento_recibo_recibo_lista') }}">Recibo</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Cuenta cobrar <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('cartera_movimiento_cartera_cuentacobrar_lista') }}">Cuenta cobrar</a>
-                                </ul>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-bars fa-fw"></i> Administracion<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-
-                            </li>
-                            <li>
-                                <a href="#">General <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'cartera','entidad':'reciboTipo'}) }}">Tipo recibo</a></li>
-                                    <li><a href="{{ path('administracion_lista',{'modulo':'cartera','entidad':'cliente'}) }}">Cliente</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-retweet fa-fw"></i> Proceso<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Contabilidad <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('cartera_proceso_contabilidad_recibo_lista') }}">Recibo</a></li></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-clipboard"></i> Informe<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Cuenta cobrar <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('cartera_informe_cuentaCobrar_cuentaCobrar_lista') }}">Pendientes</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                        </ul>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Recibo<span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('cartera_informe_recibo_recibo_lista') }}">Recibo</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                </ul>
-            </div>
-            <!-- /.sidebar-collapse -->
-        </div>
-        <!-- /.navbar-static-side -->
-    </nav>
-    {% block body %}
-
-        <div id="page-wrapper">
-            {{ include('base_cuerpo.html.twig') }}
-            {% block content %}
-
-            {% endblock %}
-        </div>
-    {% endblock %}
-</div>
-{% block javascripts %}
-    {{ include('base_pie_script.html.twig') }}
-{% endblock %}
-</body>
-</html>
+                </li>
+                <li>
+                    <a href="#">General <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'cartera','entidad':'reciboTipo'}) }}">Tipo
+                                recibo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'cartera','entidad':'cliente'}) }}">Cliente</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-retweet fa-fw"></i> Proceso<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Contabilidad <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('cartera_proceso_contabilidad_recibo_lista') }}">Recibo</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-clipboard"></i> Informe<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Cuenta cobrar <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('cartera_informe_cuentaCobrar_cuentaCobrar_lista') }}">Pendientes</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <a href="#">Recibo<span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('cartera_informe_recibo_recibo_lista') }}">Recibo</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
+    </ul>
+</nav>

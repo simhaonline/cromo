@@ -12,9 +12,6 @@ class InicioController extends Controller
      */
     public function lista()
     {
-
-
-        return $this->render('compra/general/inicio.html.twig'
-        );
+        return $this->render('base.html.twig');
     }
 }

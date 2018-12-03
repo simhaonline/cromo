@@ -1,283 +1,267 @@
-<!DOCTYPE html>
-<html>
-{{ include('base_cabecera_enlace.html.twig') }}
-<body>
-<div id="wrapper">
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        {{ include('base_cabecera_navegacion.html.twig') }}
+{% include('base_menu_inicio.html.twig') %}
+<nav>
+    <ul>
+        <li>
+            <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Extranjero <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('inventario_movimiento_extranjero_importacion_lista') }}">Importacion</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Inventario <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'ENT'}) }}">Entrada</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'SAL'}) }}">Salida</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'TRA'}) }}">Traslado</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'FAC'}) }}">Factura</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Compra <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('inventario_movimiento_compra_solicitud_lista') }}">Solicitud</a></li>
+                        <li><a href="{{ path('inventario_movimiento_compra_orden_lista') }}">Orden</a></li>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Comercial <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('inventario_movimiento_comercial_cotizacion_lista') }}">Cotización</a></li>
+                        <li><a href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Pedido</a></li>
+                        <li><a href="{{ path('inventario_movimiento_comercial_remision_lista') }}">Remision</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">General <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('inventario_administracion_general_tercero_lista') }}">
+                                Tercero
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('inventario_administracion_general_precio_lista') }}">Precio
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'inventario','entidad':'sucursal'}) }}">Sucursal
+                            </a>
+                        </li>
+                    </ul>
+                <li/>
+                <li>
+                    <a href="#">Extranjero <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'importacionTipo'}) }}">
+                                Importacion tipo</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'importacionCostoConcepto'}) }}">
+                                Importacion costo concepto</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Inventario <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('inventario_administracion_inventario_item_lista') }}">Item
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'linea'}) }}">
+                                Linea</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'grupo'}) }}">
+                                Grupo</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'subgrupo'}) }}">
+                                Subgrupo</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'marca'}) }}">
+                                Marca</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'bodega'}) }}">
+                                Bodega</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'facturaTipo'}) }}">
+                                Factura tipo</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('inventario_administracion_inventario_documento_lista') }}">Documento</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario','entidad':'bodegaUsuario'}) }}">
+                                Bodega usuario</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Compras <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario','entidad' : 'solicitudTipo'}) }}">
+                                Solicitud tipo</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario','entidad':'ordenTipo'}) }}">
+                                Orden tipo</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Comercial <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario','entidad' : 'pedidoTipo'}) }}">Pedido
+                                tipo</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario','entidad' : 'remisionTipo'}) }}">Remision
+                                tipo</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo' : 'inventario','entidad' : 'cotizacionTipo'}) }}">Cotización
+                                tipo</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
 
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-                    <li class="sidebar-search">
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                        <!-- /input-group -->
-                    </li>
-                    <li>
-                        <a href="{{ path('inicio') }}"><i class="fa fa-dashboard fa-fw"></i> Inicio</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-cubes fa-fw"></i> Movimiento<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Extranjero <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('inventario_movimiento_extranjero_importacion_lista') }}">Importacion</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Inventario <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'ENT'}) }}">Entrada</a></li>
-                                    <li><a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'SAL'}) }}">Salida</a></li>
-                                    <li><a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'TRA'}) }}">Traslado</a></li>
-                                    <li><a href="{{ path('inventario_movimiento_inventario_movimiento_documentos_lista',{'tipoDocumento':'FAC'}) }}">Factura</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Compra <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('inventario_movimiento_compra_solicitud_lista') }}">Solicitud</a></li>
-                                    <li><a href="{{ path('inventario_movimiento_compra_orden_lista') }}">Orden</a></li>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Comercial <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('inventario_movimiento_comercial_cotizacion_lista') }}">Cotización</a></li>
-                                    <li><a href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Pedido</a></li>
-                                    <li><a href="{{ path('inventario_movimiento_comercial_remision_lista') }}">Remision</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-bars fa-fw"></i> Administración<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">General <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('inventario_administracion_general_tercero_lista') }}">
-                                            Tercero
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('inventario_administracion_general_precio_lista') }}">Precio
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo':'inventario','entidad':'sucursal'}) }}">Sucursal
-                                        </a>
-                                    </li>
-                                </ul>
-                            <li/>
-                            <li>
-                                <a href="#">Extranjero <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'importacionTipo'}) }}">
-                                            Importacion tipo</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'importacionCostoConcepto'}) }}">
-                                            Importacion costo concepto</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Inventario <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('inventario_administracion_inventario_item_lista') }}">Item
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'linea'}) }}">
-                                            Linea</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'grupo'}) }}">
-                                            Grupo</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'subgrupo'}) }}">
-                                            Subgrupo</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'marca'}) }}">
-                                            Marca</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'bodega'}) }}">
-                                            Bodega</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario', 'entidad' : 'facturaTipo'}) }}">
-                                            Factura tipo</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('inventario_administracion_inventario_documento_lista') }}">Documento</a></li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario','entidad':'bodegaUsuario'}) }}">
-                                            Bodega usuario</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Compras <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario','entidad' : 'solicitudTipo'}) }}">
-                                            Solicitud tipo</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario','entidad':'ordenTipo'}) }}">
-                                            Orden tipo</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Comercial <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario','entidad' : 'pedidoTipo'}) }}">Pedido tipo</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario','entidad' : 'remisionTipo'}) }}">Remision tipo</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administracion_lista',{'modulo' : 'inventario','entidad' : 'cotizacionTipo'}) }}">Cotización tipo</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-retweet fa-fw"></i> Proceso<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Inventario <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('inventario_proceso_inventario_regenerar_lista') }}">
+                                Regenerar</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Contabilidad <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('inventario_proceso_contabilidad_movimiento_lista') }}">
+                                Movimiento</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-wrench"></i> Utilidad<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Inventario <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('inventario_utilidad_inventario_reliquidar_lista') }}">Re-liquidar</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-clipboard"></i> Informe<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="#">Inventario <span class="fa arrow"></span></a>
+                    <ul>
 
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-retweet fa-fw"></i> Proceso<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Inventario <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('inventario_proceso_inventario_regenerar_lista') }}">
-                                            Regenerar</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Contabilidad <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('inventario_proceso_contabilidad_movimiento_lista') }}">
-                                            Movimiento</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-wrench"></i> Utilidad<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Inventario <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('inventario_utilidad_inventario_reliquidar_lista') }}">Re-liquidar</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-clipboard"></i> Informe<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Inventario <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-
-                                    <li>
-                                        <a href="#">Lote <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li><a href="{{ path('inventario_informe_inventario_lote_existencia') }}">Existencia</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">Movimiento <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li><a href="{{ path('inventario_informe_inventario_movimiento_kardex') }}">Kardex</a></li>
-                                            <li><a href="{{ path('inventario_informe_inventario_movimiento_inventariovalorizado') }}">Inventario valorizado</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">Remision <span class="fa arrow"></span></a>
-                                        <ul class="nav nav-four-level">
-                                            <li><a href="{{ path('inventario_informe_inventario_remision_kardex') }}">Kardex</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Comercial <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('inventario_informe_inventario_comercial_precio_detalle') }}">Precio detalle</a></li>
-                                    <li><a href="{{ path('inventario_informe_inventario_comercial_pedido_pendiente') }}">Pedidos pendientes</a></li>
-                                    <li><a href="{{ path('inventario_informe_inventario_comercial_remision_pendiente') }}">Remisiones pendientes</a></li>
-                                    <li><a href="{{ path('inventario_informe_inventario_comercial_remision_detalle') }}">Remisiones detalles</a></li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Compras <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li><a href="{{ path('inventario_informe_inventario_compra_solicitud_pendiente') }}">Solicitud pendiente</a></li>
-                                    <li><a href="{{ path('inventario_informe_inventario_compra_orden_pendiente') }}">Orden pendientes</a>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-cogs"></i> Configuracion<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="{{ path('inventario_administracion_configuracion_configuracion_lista') }}">Configuracion</a>
-                            <li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                </ul>
-            </div>
-            <!-- /.sidebar-collapse -->
-        </div>
-        <!-- /.navbar-static-side -->
-    </nav>
-    {% block body %}
-
-        <div id="page-wrapper">
-            {{ include('base_cuerpo.html.twig') }}
-            {% block content %}
-
-            {% endblock %}
-        </div>
-    {% endblock %}
-</div>
-{% block javascripts %}
-    {{ include('base_pie_script.html.twig') }}
-{% endblock %}
-</body>
-</html>
-
+                        <li>
+                            <a href="#">Lote <span class="fa arrow"></span></a>
+                            <ul>
+                                <li><a href="{{ path('inventario_informe_inventario_lote_existencia') }}">Existencia</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Movimiento <span class="fa arrow"></span></a>
+                            <ul>
+                                <li><a href="{{ path('inventario_informe_inventario_movimiento_kardex') }}">Kardex</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('inventario_informe_inventario_movimiento_inventariovalorizado') }}">Inventario
+                                        valorizado</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Remision <span class="fa arrow"></span></a>
+                            <ul>
+                                <li><a href="{{ path('inventario_informe_inventario_remision_kardex') }}">Kardex</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Comercial <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('inventario_informe_inventario_comercial_precio_detalle') }}">Precio
+                                detalle</a></li>
+                        <li><a href="{{ path('inventario_informe_inventario_comercial_pedido_pendiente') }}">Pedidos
+                                pendientes</a></li>
+                        <li><a href="{{ path('inventario_informe_inventario_comercial_remision_pendiente') }}">Remisiones
+                                pendientes</a></li>
+                        <li><a href="{{ path('inventario_informe_inventario_comercial_remision_detalle') }}">Remisiones
+                                detalles</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Compras <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('inventario_informe_inventario_compra_solicitud_pendiente') }}">Solicitud
+                                pendiente</a></li>
+                        <li><a href="{{ path('inventario_informe_inventario_compra_orden_pendiente') }}">Orden
+                                pendientes</a>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-cogs"></i> Configuracion<span class="fa arrow"></span></a>
+            <ul>
+                <li>
+                    <a href="{{ path('inventario_administracion_configuracion_configuracion_lista') }}">Configuracion</a>
+                <li>
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
+    </ul>
+    </div>
+    <!-- /.sidebar-collapse -->
+    </div>
+    <!-- /.navbar-static-side -->
+</nav>

@@ -38,6 +38,11 @@ class GenConfiguracion
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
+     */
+    private $codigoCiudadFk;
+
+    /**
      * @ORM\Column(name="ruta_temporal", type="string", length=100, nullable=true)
      */
     private $rutaTemporal;
@@ -65,6 +70,28 @@ class GenConfiguracion
      * @ORM\Column(name="codigo_cliente_oro", type="integer", nullable=true)
      */
     private $codigoClienteOro;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GenCiudad", inversedBy="configuracionesCiudadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -128,6 +155,22 @@ class GenConfiguracion
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadFk()
+    {
+        return $this->codigoCiudadFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadFk
+     */
+    public function setCodigoCiudadFk($codigoCiudadFk): void
+    {
+        $this->codigoCiudadFk = $codigoCiudadFk;
     }
 
     /**
@@ -226,5 +269,20 @@ class GenConfiguracion
         $this->codigoClienteOro = $codigoClienteOro;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
+    }
 }
 

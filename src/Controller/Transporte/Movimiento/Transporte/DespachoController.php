@@ -2,7 +2,9 @@
 
 namespace App\Controller\Transporte\Movimiento\Transporte;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
@@ -39,11 +41,10 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use SoapClient;
 
 class DespachoController extends ControllerListenerGeneral
 {
-    protected $class= TteDespacho::class;
+    protected $clase= TteDespacho::class;
     protected $claseNombre = "TteDespacho";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
@@ -58,76 +59,36 @@ class DespachoController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
-        $paginator = $this->get('knp_paginator');
-        $em = $this->getDoctrine()->getManager();
+        $this->request = $request;
         $session = new Session();
-        $form = $this->createFormBuilder()
-            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTteMovDespachoFiltroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteMovDespachoFechaDesde'))])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteMovDespachoFechaHasta'))])
-            ->add('txtVehiculo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigoVehiculo')])
-            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigo')])
-            ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoNumero')])
-            ->add('cboOperacion', EntityType::class, $em->getRepository(TteOperacion::class)->llenarCombo())
-            ->add('cboCiudadOrigenRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo('origen'))
-            ->add('cboCiudadDestinoRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo('destino'))
-            ->add('cboDespachoTipoRel', EntityType::class, $em->getRepository(TteDespachoTipo::class)->llenarCombo('destino'))
-            ->add('txtCodigoConductor', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoCodigoVehiculo'), 'attr' => ['class' => 'form-control']])
-            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoNombreConductor'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-            ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteDespachoEstadoAprobado'), 'required' => false])
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
-                $session->set('filtroTteMovDespachoFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
-                $session->set('filtroTteMovDespachoFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
-                $session->set('filtroTteMovDespachoFiltroFecha', $form->get('filtrarFecha')->getData());
-                $session->set('filtroTteDespachoEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
-                $session->set('filtroTteDespachoCodigoVehiculo', $form->get('txtVehiculo')->getData());
-                $session->set('filtroTteDespachoNumero', $form->get('txtNumero')->getData());
-                $session->set('filtroTteDespachoCodigo', $form->get('txtCodigo')->getData());
-                if ($form->get('cboCiudadOrigenRel')->getData() != '') {
-                    $session->set('filtroTteDespachoCodigoCiudadOrigen', $form->get('cboCiudadOrigenRel')->getData()->getCodigoCiudadPk());
-                } else {
-                    $session->set('filtroTteDespachoCodigoCiudadOrigen', null);
-                }
-                if ($form->get('cboCiudadDestinoRel')->getData() != '') {
-                    $session->set('filtroTteDespachoCodigoCiudadDestino', $form->get('cboCiudadDestinoRel')->getData()->getCodigoCiudadPk());
-                } else {
-                    $session->set('filtroTteDespachoCodigoCiudadDestino', null);
-                }
-                if ($form->get('cboDespachoTipoRel')->getData() != '') {
-                    $session->set('filtroTteDespachoTipo', $form->get('cboDespachoTipoRel')->getData()->getCodigoDespachoTipoPk());
-                } else {
-                    $session->set('filtroTteDespachoTipo', null);
-                }
-                if ($form->get('cboOperacion')->getData() != '') {
-                    $session->set('filtroTteDespachoOperacion', $form->get('cboOperacion')->getData()->getCodigoOperacionPk());
-                } else {
-                    $session->set('filtroTteDespachoOperacion', null);
-                }
-                if ($form->get('txtCodigoConductor')->getData() != '') {
-                    $session->set('filtroTteDespachoCodigoConductor', $form->get('txtCodigoConductor')->getData());
-                    $session->set('filtroTteDespachoNombreConductor', $form->get('txtNombreCorto')->getData());
-                } else {
-                    $session->set('filtroTteDespachoCodigoConductor', null);
-                    $session->set('filtroTteDespachoNombreConductor', null);
-                }
+        $em = $this->getDoctrine()->getManager();
+
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+//                $datos = $this->getDatosLista();
             }
-            if($form->get('btnEliminar')->isClicked()){
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteDespacho::class)->eliminar($arrSeleccionados);
+        }
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Despacho");
             }
-            if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(TteDespacho::class)->lista())->execute(), "Despachos");
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+
             }
         }
 
-        $arDespachos = $paginator->paginate($this->getDoctrine()->getRepository(TteDespacho::class)->lista(), $request->query->getInt('page', 1), 30);
-        return $this->render('transporte/movimiento/transporte/despacho/lista.html.twig', ['arDespachos' => $arDespachos, 'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/transporte/despacho/lista.html.twig', [
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
+        ]);
+
     }
 
     /**

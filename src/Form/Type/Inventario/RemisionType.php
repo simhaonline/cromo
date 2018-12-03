@@ -25,7 +25,7 @@ class RemisionType extends AbstractType
                 'class' => InvRemisionTipo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('rt')
-                        ->orderBy('rt.nombre', 'ASC');
+                        ->orderBy('rt.orden', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Remision tipo:'

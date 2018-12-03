@@ -114,12 +114,12 @@ class RegistroType extends AbstractType
     {
 
         $campos = '[
-            {"child":"codigoTerceroPk", "tipo":"Tercero"},
+            {"child":"codigoTerceroFk", "tipo":"TextType" , "propiedades":{"label":"Tercero"}},
             {"child":"numero", "tipo":"TextType", "propiedades":{"label":"Numero"}},
             {"child":"codigoComprobanteFk","tipo":"EntityType","propiedades":{"class":"FinComprobante","choice_label":"nombre","label":"Comprobante"}},
             {"child":"fechaDesde","tipo":"DateType","propiedades":{"label":"Fecha Desde"}},
             {"child":"fechaHasta","tipo":"DateType","propiedades":{"label":"Fecha Hasta"}},
-            {"child":"filtrarFecha","tipo":"CheckboxType","propiedades":{"label":"Filtrar Fecha"}}
+            {"child":"estadoIntercambio","tipo":"ChoiceType","propiedades":{"label":"Intercambio","choices":{"SI":true,"NO":false}}}
         ]';
 
         return $campos;

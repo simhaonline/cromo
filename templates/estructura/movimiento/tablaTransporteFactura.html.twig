@@ -3,7 +3,9 @@
         <thead>
         <tr>
             {% for campo in arrDatosLista.arrCampos %}
+                {% if campo.campo!="codigoFacturaClaseFk" %}
                 <th title="{{ campo.ayuda }}">{{ campo.titulo }}</th>
+                {% endif %}
             {% endfor %}
             <th></th>
             <th></th>
@@ -14,6 +16,7 @@
         {% for arDato in arrDatosLista.arDatos %}
             <tr>
                 {% for campo in arrDatosLista.arrCampos %}
+                    {% if campo.campo!="codigoFacturaClaseFk" %}
                     {% if campo.relacion is defined %}
                         {% set campoNombre = (campo.campo|split('.')) %}
                         {% set alias = campoNombre[0]  ~ 'Rel' ~ campoNombre[1] %}
@@ -29,10 +32,10 @@
                         {% endif %}
                     {% elseif campo.tipo == "fecha" %}
                         {% if dato %}
-                        <td>{{ dato  | date('Y-m-d') }} </td>
+                            <td>{{ dato  | date('Y-m-d') }} </td>
                         {% else %}
                             <td></td>
-                            {% endif %}
+                        {% endif %}
                     {% elseif campo.tipo == "moneda" %}
                         <td class="numero">{{ dato | number_format(0, '.', ',') }}</td>
                     {% elseif campo.tipo == "bool" %}
@@ -40,18 +43,19 @@
                     {% else %}
                         <td>{{ dato }}</td>
                     {% endif %}
+                    {% endif %}
                 {% endfor %}
                 <td style="text-align: center;">
                     {% if arDato.estadoAutorizado is defined %}
                         {% if arDato.estadoAutorizado == 0 %}
-                            <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
+                            {% for campo in arrDatosLista.arrCampos %}
+                                {% if campo.campo=="codigoFacturaClaseFk"%}
+                                        <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] , 'clase':arDato[campo.campo]}) }}"><i
                                         title="Editar el registro" class="fa fa-edit"
                                         style="font-size: large;color: black;"></i></a>
-                        {% endif %}
-                    {% else %}
-                        <a href="{{ path(arrDatosLista.ruta ~ '_nuevo',{'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
-                                    title="Editar el registro" class="fa fa-edit"
-                                    style="font-size: large;color: black;"></i></a>
+                                {% endif %}
+                            {% endfor %}
+                    {% endif %}
                     {% endif %}
                 </td>
                 <td style="text-align: center"><a

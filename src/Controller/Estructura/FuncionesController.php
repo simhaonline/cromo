@@ -164,4 +164,25 @@ final class FuncionesController
             //Error
         }
     }
+
+    public static function generarSession( $modulo, $nombre, $claseNombre, $formFiltro){
+        $namespaceType = "\\App\\Form\\Type\\{$modulo}\\{$nombre}Type";
+        $campos = json_decode($namespaceType::getEstructuraPropiedadesFiltro(), true);
+        $session=new Session();
+        foreach ($campos as $campo){
+//            if($campo['tipo']==="Tercero"){
+//        $session->set($claseNombre . '_'.$campo['child'], $formFiltro->get('txtCodigoTercero')->getData());
+//        $session->set($claseNombre . '_nombreCorto', $formFiltro->get('txtNombreCorto')->getData());
+//            }
+            if(substr($campo['child'], -2)=="Fk" && $campo['tipo']=="EntityType"){
+                $session->set($claseNombre . '_'.$campo['child'], $formFiltro->get($campo['child'])->getData() != "" ? call_user_func(array($formFiltro->get($campo['child'])->getData(), 'get'.substr($campo['child'], 0,-2).'Pk')): "");
+            }
+            else if(strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha"){
+                $session->set($claseNombre . '_'.$campo['child'], $formFiltro->get($campo['child'])->getData()!=null?$formFiltro->get($campo['child'])->getData()->format('Y-m-d'):null);
+            }
+            else{
+                $session->set($claseNombre . '_'.$campo['child'], $formFiltro->get($campo['child'])->getData());
+            }
+        }
+    }
 }

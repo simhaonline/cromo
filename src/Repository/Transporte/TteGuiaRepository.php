@@ -8,6 +8,7 @@ use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\General\GenFormaPago;
 use App\Entity\General\GenIdentificacion;
+use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
@@ -1078,6 +1079,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
             ->select('g.codigoGuiaPk')
             ->addSelect('g.numero')
+            ->addSelect('g.documentoCliente')
             ->addSelect('g.codigoGuiaTipoFk')
             ->addSelect('g.codigoServicioFk')
             ->addSelect('g.fechaIngreso')

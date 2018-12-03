@@ -2,9 +2,9 @@
 
 namespace App\Controller\Transporte\Movimiento\Comercial\Factura;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
-use App\Controller\Estructura\MensajesController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteCumplido;
@@ -12,34 +12,33 @@ use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaOtro;
 use App\Entity\Transporte\TteFacturaPlanilla;
-use App\Entity\Transporte\TteFacturaTipo;
+
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
+
 use App\Form\Type\Transporte\FacturaNotaCreditoType;
 use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
+
 use App\Formato\Transporte\ListaFactura;
 use App\Formato\Transporte\NotaCredito;
 use App\General\General;
 use App\Utilidades\Estandares;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use App\Utilidades\Mensajes;
 
 class FacturaController extends ControllerListenerGeneral
 {
-    protected $class= TteFactura::class;
+    protected $clase= TteFactura::class;
     protected $claseNombre = "TteFactura";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
@@ -54,63 +53,45 @@ class FacturaController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
-        $session = new Session();
-        $form = $this->createFormBuilder()
-            ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
-            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
-            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaCodigo')])
-            ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaNumero')])
-            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
-            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-            ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteFacturaEstadoAprobado'), 'required' => false])
-            ->add('chkEstadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteFacturaEstadoAnulado'), 'required' => false])
-            ->add('cboFacturaTipoRel', EntityType::class, $em->getRepository(TteFacturaTipo::class)->llenarCombo())
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroTteFacturaEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
-                $session->set('filtroTteFacturaEstadoAnulado', $form->get('chkEstadoAnulado')->getData());
-                $session->set('filtroTteFacturaNumero', $form->get('txtNumero')->getData());
-                $session->set('filtroTteFacturaCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
-                $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
-                $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
-
-                if ($form->get('txtCodigoCliente')->getData() != '') {
-                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-                } else {
-                    $session->set('filtroTteCodigoCliente', null);
-                    $session->set('filtroTteNombreCliente', null);
-                }
-
-                $arFacturaTipo = $form->get('cboFacturaTipoRel')->getData();
-                if ($arFacturaTipo) {
-                    $session->set('filtroTteFacturaCodigoFacturaTipo', $arFacturaTipo->getCodigoFacturaTipoPk());
-                } else {
-                    $session->set('filtroTteFacturaCodigoFacturaTipo', null);
-                }
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->add('btnPdf','Symfony\Component\Form\Extension\Core\Type\SubmitType',[
+           'attr'=>['class'=>'btn btn-default btn-sm'],
+            'label'=>'Pdf'
+        ]);
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+//                $datos = $this->getDatosLista();
             }
-            if($form->get('btnEliminar')->isClicked()){
+        }
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Facturas");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_lista'));
             }
-            if ($form->get('btnPdf')->isClicked()) {
+
+            if ($formBotonera->get('btnPdf')->isClicked()) {
                 $formato = new ListaFactura();
                 $formato->Generar($em);
             }
         }
-        $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->lista(), $request->query->getInt('page', 1), 50);
+
         return $this->render('transporte/movimiento/comercial/factura/lista.html.twig', [
-            'arFacturas' => $arFacturas,
-            'form' => $form->createView() ]);
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
+        ]);
+
     }
 
     /**
@@ -491,12 +472,14 @@ class FacturaController extends ControllerListenerGeneral
         } else {
             $arFactura->setCodigoFacturaClaseFk($clase);
         }
+
         if($clase == "FA") {
             $form = $this->createForm(FacturaType::class, $arFactura);
         }
         if($clase == "NC") {
             $form = $this->createForm(FacturaNotaCreditoType::class, $arFactura);
         }
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $txtCodigoCliente = $request->request->get('txtCodigoCliente');

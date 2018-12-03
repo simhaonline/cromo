@@ -27,6 +27,7 @@ class MovimientoType extends AbstractType
                 'choice_label' => 'nombre'
             ])
             ->add('soporte', TextType::class, ['required' => false,'label' => 'Soporte:'])
+            ->add('guia', TextType::class, ['required' => false,'label' => 'Guia:'])
             ->add('comentarios', TextareaType::class, ['required' => false,'label' => 'Comentario:'])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo',SubmitType::class,['label' => 'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])

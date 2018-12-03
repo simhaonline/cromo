@@ -59,6 +59,11 @@ class TteIntermediacionDetalle
     private $codigoFacturaTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_despacho_tipo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoDespachoTipoFk;
+
+    /**
      * @ORM\Column(name="vr_flete", type="float", options={"default" : 0}, nullable=true)
      */
     private $vrFlete = 0;
@@ -110,6 +115,12 @@ class TteIntermediacionDetalle
      * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
      */
     private $clienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDespachoTipo", inversedBy="intermediacionesDetallesDespachoTipoRel")
+     * @ORM\JoinColumn(name="codigo_despacho_tipo_fk", referencedColumnName="codigo_despacho_tipo_pk")
+     */
+    private $despachoTipoRel;
 
     /**
      * @return mixed
@@ -397,6 +408,38 @@ class TteIntermediacionDetalle
     public function setNumero( $numero ): void
     {
         $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoTipoFk()
+    {
+        return $this->codigoDespachoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoTipoFk
+     */
+    public function setCodigoDespachoTipoFk( $codigoDespachoTipoFk ): void
+    {
+        $this->codigoDespachoTipoFk = $codigoDespachoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoTipoRel()
+    {
+        return $this->despachoTipoRel;
+    }
+
+    /**
+     * @param mixed $despachoTipoRel
+     */
+    public function setDespachoTipoRel( $despachoTipoRel ): void
+    {
+        $this->despachoTipoRel = $despachoTipoRel;
     }
 
 

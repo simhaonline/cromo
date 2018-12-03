@@ -42,6 +42,7 @@ services:
       tags:
       - {name: kernel.event_listener, event: kernel.exception, method: getException}
       arguments: ['@service_container','@doctrine.orm.entity_manager','@security.token_storage']
+      
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

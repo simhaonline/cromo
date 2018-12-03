@@ -3,6 +3,7 @@
 namespace App\Controller\Compra\Movimiento;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Compra\ComCompra;
 use App\Entity\Compra\ComCompraDetalle;
 use App\Entity\Compra\ComConcepto;
@@ -41,18 +42,29 @@ class CompraController extends BaseController
         $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+            }
+        }
+        $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Compras");
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Compras");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(ComCompra::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
             }
         }
-        return $this->render('compra/movimiento/Compra/lista.html.twig', [
-            'arrDatosLista' => $this->getDatosLista(),
-            'formBotonera' => $formBotonera->createView()
+        return $this->render('compra/movimiento/compra/lista.html.twig', [
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView()
         ]);
     }
 
@@ -96,7 +108,7 @@ class CompraController extends BaseController
                 }
             }
         }
-        return $this->render('compra/movimiento/Compra/nuevo.html.twig', [
+        return $this->render('compra/movimiento/compra/nuevo.html.twig', [
             'arCompra' => $arCompra,
             'form' => $form->createView()
         ]);
@@ -162,7 +174,7 @@ class CompraController extends BaseController
             return $this->redirect($this->generateUrl('compra_movimiento_compra_compra_detalle', ['id' => $id]));
         }
         $arCompraDetalles = $paginator->paginate($em->getRepository(ComCompraDetalle::class)->lista($arCompra->getCodigoCompraPk()), $request->query->getInt('page', 1), 30);
-        return $this->render('compra/movimiento/Compra/detalle.html.twig', [
+        return $this->render('compra/movimiento/compra/detalle.html.twig', [
             'arCompraDetalles' => $arCompraDetalles,
             'arCompra' => $arCompra,
             'form' => $form->createView()
@@ -213,7 +225,7 @@ class CompraController extends BaseController
             }
         }
         $arConceptos = $paginator->paginate($em->getRepository(ComConcepto::class)->lista(), $request->query->getInt('page', 1), 10);
-        return $this->render('compra/movimiento/Compra/detalleNuevo.html.twig', [
+        return $this->render('compra/movimiento/compra/detalleNuevo.html.twig', [
             'arConceptos' => $arConceptos,
             'form' => $form->createView()
         ]);

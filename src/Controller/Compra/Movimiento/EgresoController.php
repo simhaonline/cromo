@@ -3,6 +3,7 @@
 namespace App\Controller\Compra\Movimiento;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Compra\ComCuentaPagar;
 use App\Entity\Compra\ComEgreso;
 use App\Entity\Compra\ComEgresoDetalle;
@@ -43,18 +44,29 @@ class EgresoController extends BaseController
         $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+            }
+        }
+        $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Egreso");
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Compras");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(ComEgreso::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
             }
         }
-        return $this->render('compra/movimiento/Egreso/lista.html.twig', [
-            'arrDatosLista' => $this->getDatosLista(),
-            'formBotonera' => $formBotonera->createView()
+        return $this->render('compra/movimiento/egreso/lista.html.twig', [
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView()
         ]);
     }
 
@@ -95,7 +107,7 @@ class EgresoController extends BaseController
                 }
             }
         }
-        return $this->render('compra/movimiento/Egreso/nuevo.html.twig', [
+        return $this->render('compra/movimiento/egreso/nuevo.html.twig', [
             'arEgreso' => $arEgreso,
             'form' => $form->createView()
         ]);
@@ -168,7 +180,7 @@ class EgresoController extends BaseController
             return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
         }
         $arEgresoDetalles = $paginator->paginate($em->getRepository(ComEgresoDetalle::class)->lista($arEgreso->getCodigoEgresoPk()), $request->query->getInt('page', 1), 30);
-        return $this->render('compra/movimiento/Egreso/detalle.html.twig', [
+        return $this->render('compra/movimiento/egreso/detalle.html.twig', [
             'arEgresoDetalles' => $arEgresoDetalles,
             'arEgreso' => $arEgreso,
             'form' => $form->createView()
@@ -233,7 +245,7 @@ class EgresoController extends BaseController
             }
         }
         $arCuentasPagar = $paginator->paginate($em->getRepository(ComCuentaPagar::class)->pendiente(), $request->query->getInt('page', 1), 10);
-        return $this->render('compra/movimiento/Egreso/detalleNuevo.html.twig', [
+        return $this->render('compra/movimiento/egreso/detalleNuevo.html.twig', [
             'arCuentasPagar' => $arCuentasPagar,
             'form' => $form->createView()
         ]);

@@ -117,6 +117,16 @@ class ComCuentaPagar
     private $vrRetencionIva = 0;
 
     /**
+     * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoAutorizado = false;
+
+    /**
+     * @ORM\Column(name="estado_aprobado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoAprobado = false;
+
+    /**
      * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoAnulado = false;
@@ -210,6 +220,38 @@ class ComCuentaPagar
     public function setCodigoDocumento($codigoDocumento): void
     {
         $this->codigoDocumento = $codigoDocumento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
     }
 
     /**

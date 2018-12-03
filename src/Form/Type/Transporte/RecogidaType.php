@@ -110,6 +110,13 @@ class RecogidaType extends AbstractType {
         return $campos;
     }
 
+    public function getOrdenamiento(){
+        $campos ='[
+            {"campo":"fecha","tipo":"DESC"}
+        ]';
+        return $campos;
+    }
+
     /**
      * {@inheritdoc}
      */

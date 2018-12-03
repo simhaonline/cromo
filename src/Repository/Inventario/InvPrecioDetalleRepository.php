@@ -122,14 +122,17 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
      */
     public function obtenerPrecio($codigoPrecio, $codigoItem)
     {
+        $precio = 0;
         if ($codigoPrecio) {
             $qb = $this->getEntityManager()->createQueryBuilder()->from(InvPrecioDetalle::class, 'pd')
                 ->select('pd.vrPrecio as precio')
                 ->where("pd.codigoPrecioFk = {$codigoPrecio}")
                 ->andWhere("pd.codigoItemFk = {$codigoItem}");
-            return $qb->getQuery()->getOneOrNullResult();
-        } else{
-            return null;
+            $arPrecioDetalle = $qb->getQuery()->getResult();
+            if($arPrecioDetalle) {
+                $precio = $arPrecioDetalle[0]['precio'];
+            }
         }
+        return $precio;
     }
 }

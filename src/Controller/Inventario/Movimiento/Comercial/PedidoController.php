@@ -226,7 +226,7 @@ class PedidoController extends ControllerListenerGeneral
                             $arPedidoDetalle->setItemRel($arItem);
                             $arPedidoDetalle->setCantidad($cantidad);
                             $arPedidoDetalle->setCantidadPendiente($cantidad);
-                            $arPedidoDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
+                            $arPedidoDetalle->setVrPrecio($precioVenta);
                             $arPedidoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
                             $em->persist($arPedidoDetalle);
                         }

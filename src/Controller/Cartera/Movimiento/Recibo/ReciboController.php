@@ -2,7 +2,9 @@
 
 namespace App\Controller\Cartera\Movimiento\Recibo;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
@@ -11,6 +13,7 @@ use App\Entity\Cartera\CarReciboTipo;
 use App\Entity\Transporte\TteRecibo;
 use App\Form\Type\Cartera\ReciboType;
 use App\Formato\Cartera\Recibo;
+use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -28,7 +31,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class ReciboController extends ControllerListenerGeneral
 {
-    protected $class= CarRecibo::class;
+    protected $clase = CarRecibo::class;
     protected $claseNombre = "CarRecibo";
     protected $modulo = "Cartera";
     protected $funcion = "Movimiento";
@@ -37,59 +40,42 @@ class ReciboController extends ControllerListenerGeneral
 
     /**
      * @param Request $request
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws \Doctrine\ORM\ORMException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/cartera/movimiento/recibo/recibo/lista", name="cartera_movimiento_recibo_recibo_lista")
      */
     public function lista(Request $request)
     {
-        $session = new Session();
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
-        $form = $this->createFormBuilder()
-            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroCarCodigoCliente'), 'attr' => ['class' => 'form-control']])
-            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroCarNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-            ->add('txtNumero', NumberType::class, ['label' => 'Numero: ', 'required' => false, 'data' => $session->get('filtroCarReciboNumero')])
-            ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroCarReciboEstadoAprobado'), 'required' => false])
-            ->add('cboReciboTipo', EntityType::class, $em->getRepository(CarReciboTipo::class)->llenarCombo())
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroCarReciboNumero', $form->get('txtNumero')->getData());
-                $session->set('filtroCarReciboEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
-                if ($form->get('txtCodigoCliente')->getData() != '') {
-                    $session->set('filtroCarCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                    $session->set('filtroCarNombreCliente', $form->get('txtNombreCorto')->getData());
-                } else {
-                    $session->set('filtroCarCodigoCliente', null);
-                    $session->set('filtroCarNombreCliente', null);
-                }
-                $arReciboTipo = $form->get('cboReciboTipo')->getData();
-                if ($arReciboTipo) {
-                    $session->set('filtroCarReciboTipo', $arReciboTipo->getCodigoReciboTipoPk());
-                } else {
-                    $session->set('filtroCarReciboTipo', null);
-                }
-                $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
-                $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
-                $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
-            }
-            if($form->get('btnEliminar')->isClicked()){
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(CarRecibo::class)->eliminar($arrSeleccionados);
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
             }
         }
-
-        $arRecibo = $paginator->paginate($em->getRepository(CarRecibo::class)->lista(), $request->query->getInt('page', 1),30);
-        return $this->render('cartera/movimiento/recibo/lista.html.twig',
-            ['arRecibo' => $arRecibo,
-            'form' => $form->createView()]);
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Recibos");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(CarRecibo::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
+            }
+        }
+        return $this->render('cartera/movimiento/recibo/lista.html.twig', [
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
+        ]);
     }
 
     /**

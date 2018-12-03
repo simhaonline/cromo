@@ -1,144 +1,59 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_start(formFiltro, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
-            <div class="form-group form-group-sm">
-                <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
-                <div class="col-sm-11">
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <div class="input-group">
-                                {{ form_widget(form.txtCodigoCliente) }}
-                            </div>
-                        </div>
-                        <div class="col-lg-10">
-                            <div class="input-group">
-                                {{ form_widget(form.txtNombreCorto) }}
-                                <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm"
-                                           href="javascript:abrirVentana3('{{ path('cartera_buscar_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
-                                    </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% include 'estructura/buscarClienteCartera.html.twig' %}
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Numero:</label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.txtNumero, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(formFiltro.numero, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-1 control-label">Tipo</label>
+                <label class="col-sm-1 control-label">Codigo:</label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.cboReciboTipo, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(formFiltro.codigoReciboPk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-1 control-label">Aprobado:</label>
+                <label class="col-sm-1 control-label">Tipo:</label>
                 <div class="col-sm-5">
-                    {{ form_widget(form.chkEstadoAprobado, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(formFiltro.codigoReciboTipoFk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Desde:</label>
                 <div class="col-sm-5">
-                    {{ form_widget(form.fechaDesde) }}
+                    {{ form_widget(formFiltro.fechaDesde) }}
+                </div>
+                <label class="col-sm-1 control-label">Autorizado:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(formFiltro.estadoAutorizado, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Hasta:</label>
                 <div class="col-sm-5">
-                    {{ form_widget(form.fechaHasta) }}
+                    {{ form_widget(formFiltro.fechaHasta) }}
+                </div>
+                <label class="col-sm-1 control-label">Anulado:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(formFiltro.estadoAnulado, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 col-sm-offset-6 control-label">Aprobado:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(formFiltro.estadoAprobado, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
         </div>
-        <div class="form-group form-group-sm">
-            <label class="col-sm-1 control-label"></label>
-            <div class="col-sm-5">
-                {{ form_widget(form.filtrarFecha) }}
-            </div>
-        </div>
         <div class="modal-footer">
-            {{ form_widget(form.btnFiltrar) }}
+            {{ form_end(formFiltro) }}
         </div>
     </div>
-    <table class="table table-striped table-bordered table-hover">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>NUMERO</th>
-            <th>TIPO</th>
-            <th>FECHA</th>
-            <th>FECHA PAGO</th>
-            <th>NIT</th>
-            <th>CLIENTE</th>
-            <th>CUENTA</th>
-            <th>TOTAL</th>
-            <th>USUARIO</th>
-            <th>ANU</th>
-            <th>AUT</th>
-            <th>APR</th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for arRecibo in arRecibo %}
-            <tr>
-                <td>{{ arRecibo.codigoReciboPk }}</td>
-                <td>{{ arRecibo.numero }}</td>
-                <td>{{ arRecibo.tipo }}</td>
-                <td>{{ arRecibo.fecha | date('Y-m-d') }}</td>
-                <td>{{ arRecibo.fechaPago | date('Y-m-d') }}</td>
-                <td>{{ arRecibo.numeroIdentificacion }}</td>
-                <td>{{ arRecibo.nombreCorto }}</td>
-                <td>{{ arRecibo.nombre }}</td>
-                <td class="numero">{{ arRecibo.vrPagoTotal | number_format(0, '.', ',') }}</td>
-                <td>{{ arRecibo.usuario }}</td>
-                {{ validarTipo(arRecibo.estadoAnulado) }}
-                {{ validarTipo(arRecibo.estadoAutorizado) }}
-                {{ validarTipo(arRecibo.estadoAprobado) }}
-                <td style="text-align: center;">
-                    {% if arRecibo.estadoAutorizado == 0 %}
-                        <a href="{{ path('cartera_movimiento_recibo_recibo_nuevo',{'id' : arRecibo.codigoReciboPk}) }}">
-                            <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
-                            </i>
-                        </a>
-                    {% endif %}
-                </td>
-                <td style="text-align: center;">
-                    <a href="{{ path('cartera_movimiento_recibo_recibo_detalle',{'id' : arRecibo.codigoReciboPk}) }}">
-                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
-                        </i>
-                    </a>
-                </td>
-                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
-                                                       value="{{ arRecibo.codigoReciboPk }}"/></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="btn-group" style="float: left">
-        <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRecibo.getTotalItemCount }}</span>
-            </div>
-        </div>
-    </div>
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-        {{ knp_pagination_render(arRecibo) }}
-    </div>
-
-    <div class="btn-toolbar" style="float: right">
-        <div class="btn-group" style="float: right;">
-            {{ form_widget(form.btnEliminar) }}
-        </div>
-        <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('cartera_movimiento_recibo_recibo_nuevo', {'id': 0}) }}">Nuevo</a>
-        </div>
-    </div>
-    {{ form_end(form) }}
+    {{ form_start(formBotonera) }}
+    {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
+    {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
+    {{ form_end(formBotonera) }}
 {% endblock %}
 
 

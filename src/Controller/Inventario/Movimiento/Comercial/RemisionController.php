@@ -255,7 +255,7 @@ class RemisionController extends ControllerListenerGeneral
                             $arRemisionDetalle->setCantidad($cantidad);
                             $arRemisionDetalle->setCantidadPendiente($cantidad);
                             $arRemisionDetalle->setCantidadOperada($cantidad * $arRemision->getOperacionInventario());
-                            $arRemisionDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
+                            $arRemisionDetalle->setVrPrecio($precioVenta);
                             $arRemisionDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
                             $arRemisionDetalle->setOperacionInventario($arRemision->getOperacionInventario());
                             $em->persist($arRemisionDetalle);
@@ -279,7 +279,7 @@ class RemisionController extends ControllerListenerGeneral
                             $arRemisionDetalle->setCantidad($cantidad);
                             $arRemisionDetalle->setCantidadPendiente($cantidad);
                             $arRemisionDetalle->setCantidadOperada($cantidad * $arRemision->getOperacionInventario());
-                            $arRemisionDetalle->setVrPrecio(is_array($precioVenta) ? $precioVenta['precio'] : 0);
+                            $arRemisionDetalle->setVrPrecio($precioVenta);
                             $arRemisionDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
                             $arRemisionDetalle->setOperacionInventario($arRemision->getOperacionInventario());
                             $em->persist($arRemisionDetalle);

@@ -1,0 +1,21 @@
+<div class="form-group form-group-sm">
+    <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+    <div class="col-sm-11">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="input-group">
+                    {{ form_widget(formFiltro.codigoClienteFk) }}
+                </div>
+            </div>
+            <div class="col-lg-10">
+                <div class="input-group">
+                    <input id="form_txtNombreCorto" class="form-control" readonly>
+                    <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('cartera_buscar_cliente', { 'campoCodigo': 'form_codigoClienteFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -59,13 +59,31 @@ class CompraType extends AbstractType
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
-            {"campo":"codigoCompraPk",     "tipo":"pk",        "ayuda":"Codigo de compra",   "titulo":"ID"},
-            {"campo":"numeroCompra",              "tipo":"entero",    "ayuda":"",                     "titulo":"NUMERO"},
-            {"campo":"codigoCompraTipoFk", "tipo":"texto",     "ayuda":"",                     "titulo":"COMP"},
-            {"campo":"fechaFactura",               "tipo":"fecha",     "ayuda":"Fecha de registro",    "titulo":"FECHA"},
-            {"campo":"estadoAutorizado",    "tipo":"bool",      "ayuda":"",                     "titulo":"AUT"},
-            {"campo":"estadoAprobado",      "tipo":"bool",      "ayuda":"",                     "titulo":"APR"},
-            {"campo":"estadoAnulado",       "tipo":"bool",      "ayuda":"",                     "titulo":"ANU"}                                
+            {"campo":"codigoCompraPk",                    "tipo":"pk",    "ayuda":"Codigo de compra",                       "titulo":"ID"},
+            {"campo":"numeroCompra",                      "tipo":"entero","ayuda":"",                                       "titulo":"NUMERO"},
+            {"campo":"proveedorRel.nombreCorto",          "tipo":"entero","ayuda":"Nombre del proveedor",                   "titulo":"NOMBRE","relacion":""},
+            {"campo":"proveedorRel.numeroIdentificacion", "tipo":"entero","ayuda":"Numero de identificacion del proveedor", "titulo":"IDENTIFICACION","relacion":""},
+            {"campo":"compraTipoRel.nombre",              "tipo":"texto", "ayuda":"",                                       "titulo":"TIPO", "relacion":""},
+            {"campo":"fechaFactura",                      "tipo":"fecha", "ayuda":"Fecha de registro",                      "titulo":"FECHA"},
+            {"campo":"estadoAutorizado",                  "tipo":"bool",  "ayuda":"",                                       "titulo":"AUT"},
+            {"campo":"estadoAprobado",                    "tipo":"bool",  "ayuda":"",                                       "titulo":"APR"},
+            {"campo":"estadoAnulado",                     "tipo":"bool",  "ayuda":"",                                       "titulo":"ANU"}                                
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"codigoCompraPk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
+            {"child":"codigoProveedorFk",  "tipo":"TextType",    "propiedades":{"label":"Codigo proveedor"}},
+            {"child":"numeroCompra",       "tipo":"TextType",    "propiedades":{"label":"Numero compra"}},
+            {"child":"codigoCompraTipoFk", "tipo":"TextType",    "propiedades":{"label":"Codigo compra tipo"}},
+            {"child":"fechaFacturaDesde",  "tipo":"DateType",    "propiedades":{"label":"Fecha factura desde"}},
+            {"child":"fechaFacturaHasta",  "tipo":"DateType",    "propiedades":{"label":"Fecha factura hasta"}},
+            {"child":"estadoAutorizado",   "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",     "tipo":"ChoiceType",  "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",      "tipo":"ChoiceType",  "propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
         ]';
         return $campos;
     }

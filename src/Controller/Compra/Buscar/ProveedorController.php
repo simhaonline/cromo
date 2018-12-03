@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class ProveedorController extends Controller
 {
     /**
-     * @Route("/com/bus/proveedor/{campoCodigo}/{campoNombre}/{tipo}", name="compra_bus_proveedor")
+     * @Route("/compra/buscar/proveedor/{campoCodigo}/{campoNombre}/{tipo}", name="compra_buscar_proveedor")
      */
     public function lista(Request $request, $campoCodigo, $campoNombre, $tipo = null)
     {

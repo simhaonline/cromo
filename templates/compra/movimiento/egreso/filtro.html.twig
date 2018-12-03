@@ -7,21 +7,20 @@
     <div>
         <div class="widget-body no-padding">
             <div class="panel panel-default no-padding">
-                {#<div class="panel-heading">Filtros</div>#}
                 <div class="panel-body">
-                    {% include 'estructura/buscarClienteCartera.html.twig' %}
+                    {% include 'estructura/buscarProveedorCompra.html.twig' %}
                     <div class="form-group form-group-sm">
-                        <label for="" class="control-label col-sm-1">No.documento:</label>
+                        <label for="" class="control-label col-sm-1">Numero</label>
                         <div class="col-sm-2">
-                            {{ form_widget(formFiltro.numeroDocumento) }}
+                            {{ form_widget(formFiltro.numero) }}
                         </div>
-                        <label for="" class="control-label col-sm-1">No.referencia:</label>
+                        <label for="" class="control-label col-sm-1">Codigo</label>
                         <div class="col-sm-2">
-                            {{ form_widget(formFiltro.numeroReferencia) }}
+                            {{ form_widget(formFiltro.codigoEgresoPk) }}
                         </div>
-                        <label for="" class="control-label col-sm-1">Código:</label>
+                        <label for="" class="control-label col-sm-1">Tipo</label>
                         <div class="col-sm-5">
-                            {{ form_widget(formFiltro.codigoCuentaCobrarPk) }}
+                            {{ form_widget(formFiltro.codigoEgresoTipoFk) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
@@ -29,15 +28,25 @@
                         <div class="col-sm-5">
                             {{ form_widget(formFiltro.fechaDesde) }}
                         </div>
-                        <label for="" class="control-label col-sm-1">Tipo:</label>
+                        <label for="" class="control-label col-sm-1">Autorizado</label>
                         <div class="col-sm-5">
-                            {{ form_widget(formFiltro.codigoCuentaCobrarTipoFk) }}
+                            {{ form_widget(formFiltro.estadoAutorizado) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
                         <label for="" class="control-label col-sm-1">Hasta</label>
                         <div class="col-sm-5">
                             {{ form_widget(formFiltro.fechaHasta) }}
+                        </div>
+                        <label for="" class="control-label col-sm-1">Aprobado</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(formFiltro.estadoAprobado) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-offset-6 col-sm-1">Anulado</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(formFiltro.estadoAnulado) }}
                         </div>
                     </div>
                 </div>

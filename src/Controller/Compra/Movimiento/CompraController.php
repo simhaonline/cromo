@@ -61,7 +61,7 @@ class CompraController extends BaseController
                 return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
             }
         }
-        return $this->render('compra/movimiento/Compra/lista.html.twig', [
+        return $this->render('compra/movimiento/compra/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView()
@@ -108,7 +108,7 @@ class CompraController extends BaseController
                 }
             }
         }
-        return $this->render('compra/movimiento/Compra/nuevo.html.twig', [
+        return $this->render('compra/movimiento/compra/nuevo.html.twig', [
             'arCompra' => $arCompra,
             'form' => $form->createView()
         ]);
@@ -174,7 +174,7 @@ class CompraController extends BaseController
             return $this->redirect($this->generateUrl('compra_movimiento_compra_compra_detalle', ['id' => $id]));
         }
         $arCompraDetalles = $paginator->paginate($em->getRepository(ComCompraDetalle::class)->lista($arCompra->getCodigoCompraPk()), $request->query->getInt('page', 1), 30);
-        return $this->render('compra/movimiento/Compra/detalle.html.twig', [
+        return $this->render('compra/movimiento/compra/detalle.html.twig', [
             'arCompraDetalles' => $arCompraDetalles,
             'arCompra' => $arCompra,
             'form' => $form->createView()
@@ -225,7 +225,7 @@ class CompraController extends BaseController
             }
         }
         $arConceptos = $paginator->paginate($em->getRepository(ComConcepto::class)->lista(), $request->query->getInt('page', 1), 10);
-        return $this->render('compra/movimiento/Compra/detalleNuevo.html.twig', [
+        return $this->render('compra/movimiento/compra/detalleNuevo.html.twig', [
             'arConceptos' => $arConceptos,
             'form' => $form->createView()
         ]);

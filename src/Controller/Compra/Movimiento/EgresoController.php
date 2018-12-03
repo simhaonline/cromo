@@ -63,7 +63,7 @@ class EgresoController extends BaseController
                 return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
             }
         }
-        return $this->render('compra/movimiento/Egreso/lista.html.twig', [
+        return $this->render('compra/movimiento/egreso/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView()
@@ -107,7 +107,7 @@ class EgresoController extends BaseController
                 }
             }
         }
-        return $this->render('compra/movimiento/Egreso/nuevo.html.twig', [
+        return $this->render('compra/movimiento/egreso/nuevo.html.twig', [
             'arEgreso' => $arEgreso,
             'form' => $form->createView()
         ]);
@@ -180,7 +180,7 @@ class EgresoController extends BaseController
             return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
         }
         $arEgresoDetalles = $paginator->paginate($em->getRepository(ComEgresoDetalle::class)->lista($arEgreso->getCodigoEgresoPk()), $request->query->getInt('page', 1), 30);
-        return $this->render('compra/movimiento/Egreso/detalle.html.twig', [
+        return $this->render('compra/movimiento/egreso/detalle.html.twig', [
             'arEgresoDetalles' => $arEgresoDetalles,
             'arEgreso' => $arEgreso,
             'form' => $form->createView()
@@ -245,7 +245,7 @@ class EgresoController extends BaseController
             }
         }
         $arCuentasPagar = $paginator->paginate($em->getRepository(ComCuentaPagar::class)->pendiente(), $request->query->getInt('page', 1), 10);
-        return $this->render('compra/movimiento/Egreso/detalleNuevo.html.twig', [
+        return $this->render('compra/movimiento/egreso/detalleNuevo.html.twig', [
             'arCuentasPagar' => $arCuentasPagar,
             'form' => $form->createView()
         ]);

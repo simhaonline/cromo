@@ -2,7 +2,9 @@
 
 namespace App\Controller\Transporte\Movimiento\Recogida\Despacho;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
@@ -32,15 +34,15 @@ use Symfony\Component\Validator\Constraints\Count;
 
 class DespachoRecogidaController extends ControllerListenerGeneral
 {
-    protected $class= TteDespachoRecogida::class;
+    protected $clase= TteDespachoRecogida::class;
     protected $claseNombre = "TteDespachoRecogida";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
     protected $grupo = "Recogida";
-    protected $nombre = "Despacho recogida";
+    protected $nombre = "DespachoRecogida";
 
     /**
-     * @Route("/transporte/movimiento/recogida/despacho/nuevo/{id}", name="transporte_movimiento_recogida_despacho_nuevo")
+     * @Route("/transporte/movimiento/recogida/despacho/nuevo/{id}", name="transporte_movimiento_recogida_despachorecogida_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -84,7 +86,7 @@ class DespachoRecogidaController extends ControllerListenerGeneral
 
                                 $em->persist($arDespachoRecogida);
                                 $em->flush();
-                                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_detalle', ['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
+                                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle', ['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
                             } else {
                                 Mensajes::error('No se ha encontrado un vehiculo con el codigo ingresado');
                             }
@@ -115,51 +117,34 @@ class DespachoRecogidaController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
-        $session = new Session();
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
-        $form = $this->createFormBuilder()
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTteDespachoRecogidaFiltroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteDespachoRecogidaFechaDesde'))])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteDespachoRecogidaFechaHasta'))])
-            ->add('txtVehiculo', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control'], 'data' => $session->get('filtroTteDespachoRecogidaVehiculoCodigo')])
-            ->add('cboOperacion', EntityType::class, $em->getRepository(TteOperacion::class)->llenarCombo())
-            ->add('txtCodigoDespachoRecogida', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control'], 'data' => $session->get('filtroTteCodigoDespachoRecogida')])
-            ->add('txtNumeroDespachoRecogida', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control'], 'data' => $session->get('filtroTteNumeroDespachoRecogida')])
-            ->add('choEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false,'data' => $session->get('filtroTteDespachoRecogidaEstadoAprobado')])
-            ->add('choEstadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false,'data' => $session->get('filtroTteDespachoRecogidaEstadoAutorizado')])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $arOperacion = $form->get('cboOperacion')->getData();
-                if ($arOperacion) {
-                    $session->set('filtroTteOperacion', $arOperacion->getCodigoOperacionPk());
-                } else {
-                    $session->set('filtroTteOperacion', null);
-                }
-                $session->set('filtroTteDespachoRecogidaFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
-                $session->set('filtroTteDespachoRecogidaFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
-                $session->set('filtroTteDespachoRecogidaFiltroFecha', $form->get('filtrarFecha')->getData());
-                $session->set('filtroTteDespachoRecogidaVehiculoCodigo', $form->get('txtVehiculo')->getData());
-                $session->set('filtroTteCodigoDespachoRecogida', $form->get('txtCodigoDespachoRecogida')->getData());
-                $session->set('filtroTteNumeroDespachoRecogida', $form->get('txtNumeroDespachoRecogida')->getData());
-                $session->set('filtroTteDespachoRecogidaEstadoAprobado', $form->get('choEstadoAprobado')->getData());
-                $session->set('filtroTteDespachoRecogidaEstadoAutorizado', $form->get('choEstadoAutorizado')->getData());
-            }
-            if($form->get('btnEliminar')->isClicked()){
-                $arrSeleccionados = $request->request->get('ChkSeleccionados');
-                $em->getRepository(TteDespachoRecogida::class)->eliminar($arrSeleccionados);
-            }
-            if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(TteDespachoRecogida::class)->lista())->execute(), "Despacho recogidas");
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
             }
         }
-        $arDespachosRecogida = $paginator->paginate($this->getDoctrine()->getRepository(TteDespachoRecogida::class)->lista(), $request->query->getInt('page', 1), 20);
-        return $this->render('transporte/movimiento/recogida/despacho/lista.html.twig', ['arDespachosRecogida' => $arDespachosRecogida, 'form' => $form->createView()]);
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Despacho recogidas");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteDespachoRecogida::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_lista'));
+            }
+        }
+
+        return $this->render('transporte/movimiento/recogida/despacho/lista.html.twig', [
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
+        ]);
     }
 
     /**
@@ -168,7 +153,7 @@ class DespachoRecogidaController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @Route("/transporte/movimiento/recogida/despacho/detalle/{id}", name="transporte_movimiento_recogida_despacho_detalle")
+     * @Route("/transporte/movimiento/recogida/despacho/detalle/{id}", name="transporte_movimiento_recogida_despachorecogida_detalle")
      */
     public function detalle(Request $request, $id)
     {

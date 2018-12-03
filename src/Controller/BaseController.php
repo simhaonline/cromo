@@ -61,7 +61,6 @@ abstract class BaseController extends Controller
                     $em=$this->getDoctrine()->getManager();
                     $entidad = $campo['propiedades']['class'];
                     $nombreRepositorio = "App:{$this->modulo}\\{$entidad}";
-//
                     $form->add($campo['child'], EntityType::class,
                         [
                             'label' => $campo['propiedades']['label'],
@@ -70,11 +69,9 @@ abstract class BaseController extends Controller
                             'choice_label' => $campo['propiedades']['choice_label'],
                             'placeholder' => "TODO",
                             'data'=>$session->get($this->claseNombre . "_" . $campo['child'])?$em->getReference($nombreRepositorio,$session->get($this->claseNombre . "_" . $campo['child'])):"",
-//                            'auto_initialize'=>"COR"
 
                         ]);
                 } else if ($campo['tipo'] == "DateType") {
-//                    $dateFecha = new \DateTime('now');
                     $form->add($campo['child'], $tipo,
                         [
                             'required' => false,
@@ -84,10 +81,6 @@ abstract class BaseController extends Controller
                             'attr' => array('class' => 'date')
                         ]);
                 }
-//                else if($campo['tipo'] == "Tercero"){
-//                    $form->add("txtCodigoTercero", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_'.$campo['child'])??""])
-//                        ->add("txtNombreCorto", TextType::class, ['required' => false, 'data' => $session->get($this->claseNombre . '_nombreCorto')??"", 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']]);
-//                }
                  else if ($campo['tipo'] != "SubmitType" && $campo['tipo'] != "CheckboxType" && $campo['tipo'] != "ChoiceType") {
 
                     $form->add($campo['child'], $tipo, ['label' => $campo['propiedades']['label'], 'required' => false, 'data' => $session->get($this->claseNombre . "_" . $campo['child']) ?? ""]);

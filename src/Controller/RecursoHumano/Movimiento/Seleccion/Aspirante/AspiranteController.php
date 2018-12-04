@@ -46,12 +46,12 @@ class AspiranteController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Aspirante");
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Aspirantes");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(RhuAspirante::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_lista'));
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
             }
         }
         return $this->render('recursoHumano/movimiento/seleccion/aspirante/lista.html.twig', [

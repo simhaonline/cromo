@@ -130,9 +130,7 @@ class SeleccionType extends AbstractType
             ->add('correo', TextType::class, array('required' => true))
             ->add('fechaNacimiento', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd','attr' => array('class' => 'date',)))
             ->add('comentarios', TextType::class, array('required' => true))
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
-        ;
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -140,5 +138,30 @@ class SeleccionType extends AbstractType
         $resolver->setDefaults([
             'data_class' => RhuSeleccion::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoSeleccionPk",     "tipo":"pk"      ,"ayuda":"Codigo del aspirante",                  "titulo":"ID"},
+            {"campo":"numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del aspirante","titulo":"IDENTIFICACION"},
+            {"campo":"nombreCorto",           "tipo":"texto"   ,"ayuda":"Nombre del aspirante",                  "titulo":"NOMBRE"},
+            {"campo":"telefono",              "tipo":"texto"   ,"ayuda":"Telefono del aspirante",                "titulo":"TELEFONO"},
+            {"campo":"celular",               "tipo":"texto"   ,"ayuda":"Celular del aspirante",                 "titulo":"TELEFONO"},
+            {"campo":"correo",                "tipo":"texto"   ,"ayuda":"Correo del aspirante",                  "titulo":"CORREO"},
+            {"campo":"direccion",             "tipo":"texto"   ,"ayuda":"Direccion de residencia del aspirante", "titulo":"DIRECCION"}             
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"codigoSeleccionPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
+            {"child":"nombreCorto",       "tipo":"TextType",   "propiedades":{"label":"Nombre corto"}},
+            {"child":"estadoAutorizado",  "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",    "tipo":"ChoiceType", "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}}
+        ]';
+        return $campos;
     }
 }

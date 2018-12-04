@@ -1,4 +1,4 @@
-{% extends 'base_general.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate':'novalidate'} }) }}
     {{ form_errors(form) }}
@@ -78,7 +78,7 @@
         {{ form_widget(form.btnGuardar) }}
     </div>
     <div>
-        <a class="btn btn-sm btn-default" href="{{ path('gen_seguridad_usuario_lista') }}">Cancelar</a>
+        <a class="btn btn-sm btn-default" href="{{ path('general_seguridad_usuario_lista') }}">Cancelar</a>
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}

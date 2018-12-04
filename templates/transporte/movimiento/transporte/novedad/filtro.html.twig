@@ -1,0 +1,12 @@
+{{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
+<div class="form-group form-group-sm">
+    <label class="col-sm-1 control-label">GUIA:</label>
+    <div class="col-sm-4">
+        {{ form_widget(formFiltro.guiaRelnumero, { 'attr': {'class': 'form-control'} }) }}
+    </div>
+    <label class="col-sm-1 control-label">Tipo:</label>
+    <div class="col-sm-4">
+        {{ form_widget(formFiltro.codigoNovedadTipoFk, { 'attr': {'class': 'form-control'} }) }}
+    </div>
+</div>
+{{ form_end(formFiltro) }}

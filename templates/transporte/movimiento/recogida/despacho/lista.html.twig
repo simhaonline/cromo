@@ -1,73 +1,30 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <div class="panel panel-default">
-        <div class="panel-heading">Filtros</div>
-        <div class="panel-body">
-            {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
-            {#{% include ('estructura/buscarClienteTransporte.html.twig') %}#}
-            <div class="form-group form-group-sm">
-                <label for="form_txtVehiculo" class="col-sm-1 control-label">Vehiculo:</label>
-                <div class="col-sm-4">
-                    <div class="input-group">
-                        {{ form_widget(formFiltro.codigoVehiculoFk) }}
-                        <span class="input-group-btn">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_vehiculo', { 'campoCodigo': 'form_codigoVehiculoFk'}) }}', 'buscarVehiclo', 600, 900)">Buscar</a>
-                    </span>
+    <div id="content">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false" data-widget-fullscreenbutton="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>Lista</h2>
+            </header>
+            <div>
+                <div class="widget-body no-padding">
+                    <div class="panel panel-default no-padding">
+                        {#<div class="panel-heading">Filtros</div>#}
+                        <div class="panel-body">
+                            {% include ('transporte/movimiento/recogida/despacho/filtro.html.twig') %}
+                        </div>
                     </div>
                 </div>
-                <label for="form_choEstadoAutorizado" class="col-sm-2 control-label">Autorizado:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(formFiltro.estadoAutorizado) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_txtCodigoDespachoRecogida" class="col-sm-1 control-label">Codigo:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(formFiltro.codigoDespachoRecogidaPk) }}
-                </div>
-                <label for="" class="col-sm-offset-3 col-sm-1 control-label">Aprobado:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(formFiltro.estadoAprobado) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_txtNumeroDespachoRecogida" class="col-sm-1 control-label">Numero:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(formFiltro.numero) }}
-                </div>
-                <label for="" class="col-sm-offset-3 col-sm-1 control-label">Anulado:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(formFiltro.estadoAnulado) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_fechaDesde" class="col-sm-1 control-label">Desde:</label>
-                <div class="col-sm-5">
-                    {{ form_widget(formFiltro.fechaDesde) }}
-                </div>
-                <label for="" class=" col-sm-1 control-label">Operacion:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(formFiltro.codigoOperacionFk) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_fechaHasta" class="col-sm-1 control-label">Hasta:</label>
-                <div class="col-sm-5">
-                    {{ form_widget(formFiltro.fechaHasta) }}
-                </div>
-                <label for="form_fechaHasta" class="col-sm-1 control-label"></label>
-                <div class="col-sm-5">
-
-                </div>
             </div>
         </div>
-        <div class="modal-footer">
-            {{ form_end(formFiltro) }}
+
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false" data-widget-fullscreenbutton="true">
+            <div class="table-responsive" style="padding:0px;">
+                {{ form_start(formBotonera) }}
+                {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
+                {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
+                {{ form_end(formBotonera) }}
+            </div>
         </div>
     </div>
-    {{ form_start(formBotonera) }}
-    {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-    {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
-    {{ form_end(formBotonera) }}
-
 {% endblock %}

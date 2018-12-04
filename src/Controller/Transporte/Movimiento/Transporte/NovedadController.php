@@ -61,31 +61,7 @@ class NovedadController extends ControllerListenerGeneral
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
         ]);
-//        $session = new Session();
-//        $em = $this->getDoctrine()->getManager();
-//        $paginator  = $this->get('knp_paginator');
-//        $form = $this->createFormBuilder()
-//            ->add('guia', TextType::class, ['label' => 'GUIA: ', 'required' => false, 'data' => $session->get('filtroNombreCondicion')])
-//            ->add('cboNovedadTipoRel', EntityType::class, $em->getRepository(TteNovedadTipo::class)->llenarCombo())
-//            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-//            ->getForm();
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            if ($form->get('btnFiltrar')->isClicked()) {
-//                $session->set('filtroNumeroGuia', $form->get('guia')->getData());
-//                $novedadTipo = $form->get('cboNovedadTipoRel')->getData();
-//                if ($novedadTipo != '') {
-//                    $session->set('filtroTteCodigoNovedadTipo', $form->get('cboNovedadTipoRel')->getData()->getCodigoNovedadTipoPk());
-//                } else {
-//                    $session->set('filtroTteCodigoNovedadTipo', null);
-//                }
-//            }
-//        }
-//        $arNovedad = $paginator->paginate($em->getRepository(TteNovedad::class)->lista(), $request->query->getInt('page', 1),10);
-//        return $this->render('transporte/movimiento/transporte/novedad/lista.html.twig',
-//            ['arNovedades' => $arNovedad,
-//            'form' => $form->createView()
-//        ]);
+
     }
 
     /**

@@ -1,0 +1,33 @@
+{{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
+<div class="form-group form-group-sm">
+    <label class="col-sm-1 control-label">Desde:</label>
+    <div class="col-sm-5">
+        {{ form_widget(formFiltro.fechaInicioDesde) }}
+    </div>
+    <label class="col-sm-1 control-label">Autorizado:</label>
+    <div class="col-sm-5">
+        {{ form_widget(formFiltro.estadoAutorizado, { 'attr': {'class': 'form-control'} }) }}
+    </div>
+</div>
+<div class="form-group form-group-sm">
+    <label class="col-sm-1 control-label">Hasta:</label>
+    <div class="col-sm-5">
+        {{ form_widget(formFiltro.fechaFinHasta) }}
+    </div>
+    <label class="col-sm-1 control-label">Aprobado:</label>
+    <div class="col-sm-5">
+        {{ form_widget(formFiltro.estadoAprobado, { 'attr': {'class': 'form-control'} }) }}
+    </div>
+</div>
+
+<div class="form-group form-group-sm">
+    <label class="col-sm-1 control-label"></label>
+    <div class="col-sm-5">
+    </div>
+    <label class="col-sm-1 control-label">Anulado:</label>
+    <div class="col-sm-5">
+        {{ form_widget(formFiltro.estadoAnulado, { 'attr': {'class': 'form-control'} }) }}
+    </div>
+</div>
+
+{{ form_end(formFiltro) }}

@@ -66,37 +66,6 @@ class RecaudoCobroController extends ControllerListenerGeneral
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
         ]);
-//        $em = $this->getDoctrine()->getManager();
-//        $paginator  = $this->get('knp_paginator');
-//        $session = new Session();
-//        $form = $this->createFormBuilder()
-//            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-//            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-//            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-//            ->getForm();
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            if ($form->get('btnFiltrar')->isClicked()) {
-//                if ($form->get('txtCodigoCliente')->getData() != '') {
-//                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-//                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-//                } else {
-//                    $session->set('filtroTteCodigoCliente', null);
-//                    $session->set('filtroTteNombreCliente', null);
-//                }
-//            }
-//            if($form->get('btnEliminar')->isClicked()){
-//                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                $em->getRepository(TteRecaudoCobro::class)->eliminar($arrSeleccionados);
-//            }
-//            if ($form->get('btnExcel')->isClicked()) {
-//                General::get()->setExportar($em->createQuery($em->getRepository(TteRecaudoCobro::class)->lista())->execute(), "Guias");
-//            }
-//        }
-//        $arRecaudoCobros = $paginator->paginate($em->getRepository(TteRecaudoCobro::class)->lista(), $request->query->getInt('page', 1),40);
-//        return $this->render('transporte/movimiento/transporte/recaudoCobro/lista.html.twig', [
-//            'arRecaudoCobros' => $arRecaudoCobros,
-//            'form' => $form->createView()]);
     }
 
     /**

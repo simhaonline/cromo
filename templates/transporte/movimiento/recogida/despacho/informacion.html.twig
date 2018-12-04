@@ -1,0 +1,35 @@
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>REG</th>
+        <th>FECHA</th>
+        <th>HORA</th>
+        <th>CLIENTE</th>
+        <th>CIUDAD</th>
+        <th>UND</th>
+        <th>PES</th>
+        <th>VOL</th>
+        <th>R</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for arRecogida in arRecogidas %}
+        <tr>
+            <td>{{ arRecogida.codigoRecogidaPk }}</td>
+            <td>{{ arRecogida.fechaRegistro | date('Y-m-d') }}</td>
+            <td>{{ arRecogida.fecha | date('Y-m-d') }}</td>
+            <td>{{ arRecogida.fecha | date('H:i') }}</td>
+            <td>{{ arRecogida.clienteNombreCorto }}</td>
+            <td>{{ arRecogida.ciudad }}</td>
+            <td style="text-align: right">{{ arRecogida.unidades }}</td>
+            <td style="text-align: right">{{ arRecogida.pesoReal }}</td>
+            <td style="text-align: right">{{ arRecogida.pesoVolumen }}</td>
+            <td>{{ arRecogida.estadoRecogido?'SI':'NO' }}</td>
+            <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]"
+                                                  value="{{ arRecogida.codigoRecogidaPk }}"/></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

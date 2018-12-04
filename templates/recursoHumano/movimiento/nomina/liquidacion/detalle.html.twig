@@ -19,7 +19,12 @@
         <div class="tab-pane active" id="detalles">
             <div id="detalles" style="width: 100%"><br>
                 <div class="table-responsive">
-                    {% include 'recursoHumano/movimiento/nomina/liquidacion/informacion.html.twig' %}
+                    <table width="100%" class="table table-condensed table-bordered">
+                        <tr>
+                            <td class="titulo">CODIGO:</td>
+                            <td class="td-in-well">{{ arRegistro.codigoLiquidacionPk }}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>

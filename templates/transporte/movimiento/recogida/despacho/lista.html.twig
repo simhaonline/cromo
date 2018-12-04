@@ -1,10 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-
-                            {% include ('transporte/movimiento/recogida/despacho/filtro.html.twig') %}
-
-
-        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false" data-widget-fullscreenbutton="true">
+    <div id="content">
+        {% include ('transporte/movimiento/recogida/despacho/filtro.html.twig') %}
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+             data-widget-fullscreenbutton="true">
             <div class="table-responsive" style="padding:0px;">
                 {{ form_start(formBotonera) }}
                 {% include 'estructura/movimiento/tablaGeneral.html.twig' %}

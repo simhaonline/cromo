@@ -12,7 +12,7 @@ class GenImagen
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer", name="codigo_imagen_pk", )
+     * @ORM\Column(type="string", name="codigo_imagen_pk", nullable=false)
      */
     private $codigoImagenPk;
 

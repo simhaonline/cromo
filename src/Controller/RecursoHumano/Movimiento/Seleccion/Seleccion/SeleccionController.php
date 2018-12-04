@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\RecursoHumano\Movimiento\Seleccion;
+namespace App\Controller\RecursoHumano\Movimiento\Seleccion\Seleccion;
 
 
 use App\Entity\RecursoHumano\RhuSeleccion;

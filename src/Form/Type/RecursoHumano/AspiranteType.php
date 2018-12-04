@@ -117,4 +117,31 @@ class AspiranteType extends AbstractType
             'data_class' => RhuAspirante::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoAspirantePk",      "tipo":"pk"      ,"ayuda":"Codigo del empleado"                   ,"titulo":"ID"},
+            {"campo":"numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del empleado" ,"titulo":"IDENTIFICACION"},
+            {"campo":"nombreCorto",           "tipo":"texto"   ,"ayuda":"Nombre del empleado"                   ,"titulo":"NOMBRE"},
+            {"campo":"telefono",              "tipo":"texto"   ,"ayuda":"Telefono del empleado"                 ,"titulo":"TELEFONO"},
+            {"campo":"correo",                "tipo":"texto"   ,"ayuda":"Correo del empleado"                   ,"titulo":"CORREO"},
+            {"campo":"direccion",             "tipo":"texto"   ,"ayuda":"Direccion de residencia del empleado"  ,"titulo":"DIRECCION"},                     
+            {"campo":"estadoContrato",        "tipo":"bool"    ,"ayuda":"Posee contrato activo"                 ,"titulo":"E_C"}                     
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"codigoAspirantePk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
+            {"child":"nombreCorto",       "tipo":"EntityType", "propiedades":{"class":"RhuEgresoTipo","choice_label":"nombre","label":"Tipo"}},
+            {"child":"numero",            "tipo":"TextType",   "propiedades":{"label":"Numero"}},
+            {"child":"estadoAutorizado",  "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",    "tipo":"ChoiceType", "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoCerrado",     "tipo":"ChoiceType", "propiedades":{"label":"Cerrado",        "choices":{"SI":true,"NO":false}}}
+        ]';
+        return $campos;
+    }
 }

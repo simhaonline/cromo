@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Pago;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
@@ -14,7 +15,7 @@ use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class PagoController extends BaseController
+class PagoController extends ControllerListenerGeneral
 {
     protected $clase = RhuPago::class;
     protected $claseFormulario = PagoType::class;

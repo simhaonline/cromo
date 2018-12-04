@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Embargo;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuEmbargo;
 use App\Entity\RecursoHumano\RhuEmbargoJuzgado;
@@ -13,7 +14,7 @@ use App\Utilidades\Estandares;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class EmbargoController extends BaseController
+class EmbargoController extends ControllerListenerGeneral
 {
     protected $clase = RhuEmbargo::class;
     protected $claseFormulario = EmbargoType::class;

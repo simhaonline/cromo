@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\RecursoHumano\Movimiento\Seleccion;
+namespace App\Controller\RecursoHumano\Movimiento\Seleccion\Solicitud;
 
 
 use App\Entity\RecursoHumano\RhuSolicitud;
@@ -45,4 +45,3 @@ class SolicitudController extends Controller
         ]);
     }
 }
-

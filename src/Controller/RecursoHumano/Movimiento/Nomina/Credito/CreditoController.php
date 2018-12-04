@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Credito;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
@@ -14,7 +15,7 @@ use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class CreditoController extends BaseController
+class CreditoController extends ControllerListenerGeneral
 {
     protected $clase = RhuCredito::class;
     protected $claseFormulario = CreditoType::class;

@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Vacaciones;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
@@ -14,7 +15,7 @@ use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class VacacionesController extends BaseController
+class VacacionesController extends ControllerListenerGeneral
 {
     protected $clase = RhuVacacion::class;
     protected $claseFormulario = VacacionType::class;

@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Programacion;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\RecursoHumano\RhuContrato;
@@ -20,7 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class ProgramacionController extends BaseController
+class ProgramacionController extends ControllerListenerGeneral
 {
     protected $clase = RhuProgramacion::class;
     protected $claseNombre = "RhuProgramacion";

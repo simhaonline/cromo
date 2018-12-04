@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Novedad;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
@@ -14,7 +15,7 @@ use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class NovedadController extends BaseController
+class NovedadController extends ControllerListenerGeneral
 {
     protected $clase = RhuNovedad::class;
     protected $claseFormulario = NovedadType::class;

@@ -204,6 +204,11 @@ class RhuAspirante
     private $codigoCargoFk;
 
     /**
+     * @ORM\Column(name="estado_autorizado", type="boolean")
+     */
+    private $estadoAutorizado = false;
+
+    /**
      * @ORM\Column(name="estado_aprobado", type="boolean")
      */
     private $estadoAprobado = false;
@@ -212,11 +217,6 @@ class RhuAspirante
      * @ORM\Column(name="estado_cerrado", type="boolean")
      */
     private $estadoCerrado = false;
-
-    /**
-     * @ORM\Column(name="estado_autorizado", type="boolean")
-     */
-    private $estadoAutorizado = false;
 
     /**
      * @ORM\Column(name="estado_bloqueado", type="boolean")

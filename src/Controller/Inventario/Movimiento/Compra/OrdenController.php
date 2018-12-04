@@ -2,7 +2,9 @@
 
 namespace App\Controller\Inventario\Movimiento\Compra;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvOrden;
 use App\Entity\Inventario\InvOrdenDetalle;
@@ -45,41 +47,33 @@ class OrdenController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
-        $session = new Session();
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
-        $form = $this->createFormBuilder()
-            ->add('txtNumero', NumberType::class, ['required' => false, 'data' => $session->get('filtroInvSolicitudNumero')])
-            ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvSolicitudEstadoAprobado'), 'required' => false])
-            ->add('cboOrdenTipoRel', EntityType::class, $em->getRepository(InvOrdenTipo::class)->llenarCombo())
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvOrdenNumero', $form->get('txtNumero')->getData());
-                $session->set('filtroInvOrdenEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
-                $solicitudTipo = $form->get('cboOrdenTipoRel')->getData();
-                if($solicitudTipo != ''){
-                    $session->set('filtroInvOrdenCodigoOrdenTipo', $form->get('cboOrdenTipoRel')->getData()->getCodigoOrdenTipoPk());
-                } else {
-                    $session->set('filtroInvOrdenCodigoOrdenTipo', null);
-                }
-            }
-            if($form->get('btnEliminar')->isClicked()){
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(InvOrden::class)->eliminar($arrSeleccionados);
-            }
-            if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvOrden::class)->lista())->execute(), "Ordenes");
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
-        $arOrdenes = $paginator->paginate($em->getRepository(InvOrden::class)->lista(), $request->query->getInt('page', 1), 30);
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Importacion");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(InvOrden::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('inventario_movimiento_compra_orden_lista'));
+            }
+        }
         return $this->render('inventario/movimiento/compra/orden/lista.html.twig', [
-            'arOrdenes' => $arOrdenes,
-            'form' => $form->createView()
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
         ]);
     }
 

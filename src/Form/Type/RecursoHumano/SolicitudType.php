@@ -139,9 +139,7 @@ class SolicitudType extends AbstractType
             ->add('codigoLicenciaMotoFk', ChoiceType::class, array('choices'   => array('SI' => '1', 'NO' => '2', 'NO APLICA' => '0')))
             ->add('disponbilidad',TextType::class,['required' => false,'label' => 'Disponibilidad:'])
             ->add('comentarios', TextareaType::class, array('required' => false))
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
-        ;
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -149,5 +147,29 @@ class SolicitudType extends AbstractType
         $resolver->setDefaults([
             'data_class' => RhuSolicitud::class,
         ]);
+    }
+
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoSolicitudPk",   "tipo":"pk"      ,"ayuda":"Codigo de la solicitud", "titulo":"ID"},
+            {"campo":"cantidadSolicitada", "tipo":"texto"   ,"ayuda":"Cantidad solicitdad",    "titulo":"CANTIDAD"},
+            {"campo":"nombre",              "tipo":"texto"   ,"ayuda":"Nombre de la seleccion", "titulo":"NOMBRE"},
+            {"campo":"salarioFijo",         "tipo":"texto"   ,"ayuda":"Salario fijo",           "titulo":"S_FIJO"},
+            {"campo":"salarioVariable",     "tipo":"texto"   ,"ayuda":"Salario variable",       "titulo":"S_VARIABLE"},
+            {"campo":"edadMinima",          "tipo":"texto"   ,"ayuda":"Edad minima",            "titulo":"E_MIN"},
+            {"campo":"edadMaxima",          "tipo":"texto"   ,"ayuda":"Edad maxima",            "titulo":"E_MAX"}            
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"codigoSolicitudPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
+            {"child":"nombre",            "tipo":"TextType",   "propiedades":{"label":"Nombre corto"}}
+        ]';
+        return $campos;
     }
 }

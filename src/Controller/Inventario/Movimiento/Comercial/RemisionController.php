@@ -2,7 +2,9 @@
 
 namespace App\Controller\Inventario\Movimiento\Comercial;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenAsesor;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvItem;
@@ -50,54 +52,34 @@ class RemisionController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
-        $session = new Session();
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
-        $form = $this->createFormBuilder()
-            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
-            ->add('cboRemisionTipo', EntityType::class, $em->getRepository(InvRemisionTipo::class)->llenarCombo())
-            ->add('cboAsesor', EntityType::class, $em->getRepository(GenAsesor::class)->llenarCombo())
-            ->add('chkEstadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvRemisionEstadoAutorizado'), 'required' => false])
-            ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvRemisionEstadoAprobado'), 'required' => false])
-            ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvRemisionNumero')))
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
-                    $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
-                    $session->set('filtroInvRemisionNumero', $form->get('txtNumero')->getData());
-                    $session->set('filtroInvRemisionEstadoAutorizado', $form->get('chkEstadoAutorizado')->getData());
-                    $session->set('filtroInvRemisionEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
-                    $arRemisionTipo = $form->get('cboRemisionTipo')->getData();
-                    if($arRemisionTipo != ''){
-                        $session->set('filtroInvRemisionTipo', $form->get('cboRemisionTipo')->getData()->getCodigoRemisionTipoPk());
-                    } else {
-                        $session->set('filtroInvRemisionTipo', null);
-                    }
-                    $arAsesor = $form->get('cboAsesor')->getData();
-                    if($arAsesor != ''){
-                        $session->set('filtroGenAsesor', $form->get('cboAsesor')->getData()->getCodigoAsesorPk());
-                    } else {
-                        $session->set('filtroGenAsesor', null);
-                    }
-                }
-                if ($form->get('btnExcel')->isClicked()) {
-                    General::get()->setExportar($em->createQuery($em->getRepository(InvRemision::class)->lista())->execute(), "Remisiones");
-                }
-                if($form->get('btnEliminar')->isClicked()){
-                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                    $em->getRepository(InvRemision::class)->eliminar($arrSeleccionados);
-                }
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
-        $arRemision = $paginator->paginate($this->getDoctrine()->getRepository(InvRemision::class)->lista(), $request->query->getInt('page', 1), 100);
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Importacion");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(InvRemision::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_remision_lista'));
+            }
+        }
         return $this->render('inventario/movimiento/comercial/remision/lista.html.twig', [
-            'arRemisiones' => $arRemision,
-            'form' => $form->createView()]);
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
+        ]);
     }
 
     /**

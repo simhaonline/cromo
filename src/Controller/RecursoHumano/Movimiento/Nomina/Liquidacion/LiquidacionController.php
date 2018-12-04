@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Liquidacion;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuPago;
@@ -13,7 +14,7 @@ use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class LiquidacionController extends BaseController
+class LiquidacionController extends ControllerListenerGeneral
 {
     protected $clase = RhuLiquidacion::class;
     protected $claseFormulario = LiquidacionType::class;

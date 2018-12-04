@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Egreso;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuEgreso;
 use App\Entity\RecursoHumano\RhuEgresoDetalle;
@@ -18,7 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class EgresoController extends BaseController
+class EgresoController extends ControllerListenerGeneral
 {
     protected $clase = RhuEgreso::class;
     protected $claseNombre = "RhuEgreso";

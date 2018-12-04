@@ -19,7 +19,7 @@ class AspiranteController extends ControllerListenerGeneral
     protected $claseFormulario = AspiranteType::class;
     protected $claseNombre = "RhuAspirante";
     protected $modulo = "RecursoHumano";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "Seleccion";
     protected $nombre = "Aspirante";
 
@@ -62,7 +62,10 @@ class AspiranteController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("rhu/mov/seleccion/aspirante/nuevo/{id}", name="recursoHumano_movimiento_seleccion_aspirante_nuevo")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("recursohumano/movimiento/seleccion/aspirante/nuevo/{id}", name="recursohumano_movimiento_seleccion_aspirante_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -71,27 +74,32 @@ class AspiranteController extends ControllerListenerGeneral
         if ($id != 0) {
             $arAspirante = $em->getRepository('App:RecursoHumano\RhuAspirante')->find($id);
             if (!$arAspirante) {
-                return $this->redirect($this->generateUrl('admin_lista', ['modulo' => 'recursoHumano', 'entidad' => 'aspirante']));
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
             }
+        } else {
+            $arAspirante->setFecha(new \DateTime('now'));
         }
         $form = $this->createForm(AspiranteType::class, $arAspirante);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arAspirante->setFecha(new \DateTime('now'));
+                $arAspirante->setNombreCorto($arAspirante->getNombre1().' '.$arAspirante->getNombre2().' '.$arAspirante->getApellido1().' '.$arAspirante->getApellido2());
                 $em->persist($arAspirante);
                 $em->flush();
-                return $this->redirect($this->generateUrl('admin_lista', ['modulo' => 'recursoHumano','entidad' => 'aspirante']));
-            }
-            if ($form->get('guardarnuevo')->isClicked()) {
-                $em->persist($arAspirante);
-                $em->flush($arAspirante);
-                return $this->redirect($this->generateUrl('recursoHumano_movimiento_seleccion_aspirante_nuevo', ['codigoAspirante' => 0]));
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
             }
         }
         return $this->render('recursoHumano/movimiento/seleccion/aspirante/nuevo.html.twig', [
-            'form' => $form->createView(), 'arSolicitud' => $arAspirante
+            'form' => $form->createView(), 'arAspirante' => $arAspirante
         ]);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route("recursohumano/movimiento/seleccion/aspirante/detalle/{id}", name="recursohumano_movimiento_seleccion_aspirante_detalle")
+     */
+    public function detalle(){
+        return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
     }
 }
 

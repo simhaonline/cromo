@@ -1,8 +1,45 @@
-<div class="panel-body">
-    <div class="form-group form-group-sm">
-        <label for="" class="control-label col-sm-1"></label>
-        <div class="col-sm-5">
-
+{{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
+<div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+     data-widget-fullscreenbutton="true">
+    <header>
+        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+        <h2>Lista</h2>
+    </header>
+    <div>
+        <div class="widget-body no-padding">
+            <div class="panel-body">
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label col-sm-1">Codigo</label>
+                    <div class="col-sm-5">
+                        {{ form_widget(formFiltro.codigoAspirantePk) }}
+                    </div>
+                    <label for="" class="control-label col-sm-1">Tipo</label>
+                    <div class="col-sm-5">
+                        {{ form_widget(formFiltro.nombreCorto) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label col-sm-offset-6 col-sm-1">Autorizado</label>
+                    <div class="col-sm-5">
+                        {{ form_widget(formFiltro.estadoAutorizado) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label col-sm-offset-6 col-sm-1">Aprobado</label>
+                    <div class="col-sm-5">
+                        {{ form_widget(formFiltro.estadoAprobado) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label col-sm-offset-6 col-sm-1">Cerrado</label>
+                    <div class="col-sm-5">
+                        {{ form_widget(formFiltro.estadoCerrado) }}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                {{ form_end(formFiltro) }}
+            </div>
         </div>
     </div>
 </div>

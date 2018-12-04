@@ -106,9 +106,7 @@ class AspiranteType extends AbstractType
             ->add('cargoAspira',TextType::class,['required' => true,'label' => 'Cargo aspira:'])
             ->add('recomendado',TextType::class,['required' => true,'label' => 'Recomendado:'])
             ->add('reintegro', CheckboxType::class, array('required'  => false))
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
-        ;
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -121,13 +119,13 @@ class AspiranteType extends AbstractType
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
-            {"campo":"codigoAspirantePk",      "tipo":"pk"      ,"ayuda":"Codigo del empleado"                   ,"titulo":"ID"},
-            {"campo":"numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del empleado" ,"titulo":"IDENTIFICACION"},
-            {"campo":"nombreCorto",           "tipo":"texto"   ,"ayuda":"Nombre del empleado"                   ,"titulo":"NOMBRE"},
-            {"campo":"telefono",              "tipo":"texto"   ,"ayuda":"Telefono del empleado"                 ,"titulo":"TELEFONO"},
-            {"campo":"correo",                "tipo":"texto"   ,"ayuda":"Correo del empleado"                   ,"titulo":"CORREO"},
-            {"campo":"direccion",             "tipo":"texto"   ,"ayuda":"Direccion de residencia del empleado"  ,"titulo":"DIRECCION"},                     
-            {"campo":"estadoContrato",        "tipo":"bool"    ,"ayuda":"Posee contrato activo"                 ,"titulo":"E_C"}                     
+            {"campo":"codigoAspirantePk",     "tipo":"pk"      ,"ayuda":"Codigo del aspirante",                  "titulo":"ID"},
+            {"campo":"numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del aspirante","titulo":"IDENTIFICACION"},
+            {"campo":"nombreCorto",           "tipo":"texto"   ,"ayuda":"Nombre del aspirante",                  "titulo":"NOMBRE"},
+            {"campo":"telefono",              "tipo":"texto"   ,"ayuda":"Telefono del aspirante",                "titulo":"TELEFONO"},
+            {"campo":"celular",               "tipo":"texto"   ,"ayuda":"Celular del aspirante",                 "titulo":"TELEFONO"},
+            {"campo":"correo",                "tipo":"texto"   ,"ayuda":"Correo del aspirante",                  "titulo":"CORREO"},
+            {"campo":"direccion",             "tipo":"texto"   ,"ayuda":"Direccion de residencia del aspirante", "titulo":"DIRECCION"}             
         ]';
         return $campos;
     }
@@ -136,8 +134,7 @@ class AspiranteType extends AbstractType
     {
         $campos = '[
             {"child":"codigoAspirantePk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"nombreCorto",       "tipo":"EntityType", "propiedades":{"class":"RhuEgresoTipo","choice_label":"nombre","label":"Tipo"}},
-            {"child":"numero",            "tipo":"TextType",   "propiedades":{"label":"Numero"}},
+            {"child":"nombreCorto",       "tipo":"TextType",   "propiedades":{"label":"Nombre corto"}},
             {"child":"estadoAutorizado",  "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAprobado",    "tipo":"ChoiceType", "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
             {"child":"estadoCerrado",     "tipo":"ChoiceType", "propiedades":{"label":"Cerrado",        "choices":{"SI":true,"NO":false}}}

@@ -1,4 +1,5 @@
-<table class="table table-bordered table-striped" style="border: 1px solid #c9c9c9 !important;margin-bottom: 10px !important;">
+<table class="table table-bordered table-striped"
+       style="border: 1px solid #c9c9c9 !important;margin-bottom: 10px !important;">
     <thead>
     <tr>
         {% for campo in arrDatosLista.arrCampos %}
@@ -22,7 +23,9 @@
                 {% endif %}
                 {% if campo.tipo == "pk" %}
                     {% if validarRuta(arrDatosLista.ruta ~ '_referencia') %}
-                        <td><a href="javascript:abrirVentana3('{{ path(arrDatosLista.ruta ~ '_referencia',{'id': dato }) }}','referencia',600,900)">{{ dato }}</a></td>
+                        <td>
+                            <a href="javascript:abrirVentana3('{{ path(arrDatosLista.ruta ~ '_referencia',{'id': dato }) }}','referencia',600,900)">{{ dato }}</a>
+                        </td>
                     {% else %}
                         <td>{{ dato }}</td>
                     {% endif %}
@@ -62,17 +65,18 @@
             <td style="text-align: center"><a
                         href="{{ path(arrDatosLista.ruta ~ '_detalle', { 'id': arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
                             style="font-size: large;color: black;" class="fa fa-share-square-o"></i></a></td>
-            <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDato[arrDatosLista.arrCampos[0].campo] }}"/></td>
+            <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                   value="{{ arDato[arrDatosLista.arrCampos[0].campo] }}"/></td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
-<div class="btn-group" style="float: left">
-    <div class="btn btn-default btn-sm">Registros <span
-                class="badge">{{ arrDatosLista.arDatos.getTotalItemCount }}</span>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arrDatosLista.arDatos.getTotalItemCount }}
+            </span>
+        </div>
     </div>
-</div>
-
-<div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-    {{ knp_pagination_render(arrDatosLista.arDatos) }}
-</div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arrDatosLista.arDatos) }}
+    </div>

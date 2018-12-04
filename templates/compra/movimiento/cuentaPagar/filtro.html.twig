@@ -7,47 +7,45 @@
     </header>
     <div>
         <div class="widget-body no-padding">
-            <div class="panel panel-default no-padding">
-                <div class="panel-body">
-                    {% include 'estructura/buscarProveedorCompra.html.twig' %}
-                    <div class="form-group form-group-sm">
-                        <label for="" class="control-label col-sm-1">Codigo</label>
-                        <div class="col-sm-2">
-                            {{ form_widget(formFiltro.codigoCuentaPagarPk) }}
-                        </div>
-                        <label for="" class="control-label col-sm-1">No.Documento</label>
-                        <div class="col-sm-2">
-                            {{ form_widget(formFiltro.numeroDocumento) }}
-                        </div>
-                        <label for="" class="control-label col-sm-1">Autorizado</label>
-                        <div class="col-sm-5">
-                            {{ form_widget(formFiltro.estadoAutorizado) }}
-                        </div>
+            <div class="panel-body">
+                {% include 'estructura/buscarProveedorCompra.html.twig' %}
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label col-sm-1">Codigo</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.codigoCuentaPagarPk) }}
                     </div>
-                    <div class="form-group form-group-sm">
-                        <label for="" class="control-label col-sm-1">Factura desde</label>
-                        <div class="col-sm-5">
-                            {{ form_widget(formFiltro.fechaFacturaDesde) }}
-                        </div>
-                        <label for="" class="control-label col-sm-1">Aprobado</label>
-                        <div class="col-sm-5">
-                            {{ form_widget(formFiltro.estadoAprobado) }}
-                        </div>
+                    <label for="" class="control-label col-sm-1">No.Documento</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.numeroDocumento) }}
                     </div>
-                    <div class="form-group form-group-sm">
-                        <label for="" class="control-label col-sm-1">Factura hasta</label>
-                        <div class="col-sm-5">
-                            {{ form_widget(formFiltro.fechaFacturaHasta) }}
-                        </div>
-                        <label for="" class="control-label col-sm-1">Anulado</label>
-                        <div class="col-sm-5">
-                            {{ form_widget(formFiltro.estadoAnulado) }}
-                        </div>
+                    <label for="" class="control-label col-sm-1">Autorizado</label>
+                    <div class="col-sm-5">
+                        {{ form_widget(formFiltro.estadoAutorizado) }}
                     </div>
                 </div>
-                <div class="modal-footer">
-                    {{ form_end(formFiltro) }}
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label col-sm-1">Factura desde</label>
+                    <div class="col-sm-5">
+                        {{ form_widget(formFiltro.fechaFacturaDesde) }}
+                    </div>
+                    <label for="" class="control-label col-sm-1">Aprobado</label>
+                    <div class="col-sm-5">
+                        {{ form_widget(formFiltro.estadoAprobado) }}
+                    </div>
                 </div>
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label col-sm-1">Factura hasta</label>
+                    <div class="col-sm-5">
+                        {{ form_widget(formFiltro.fechaFacturaHasta) }}
+                    </div>
+                    <label for="" class="control-label col-sm-1">Anulado</label>
+                    <div class="col-sm-5">
+                        {{ form_widget(formFiltro.estadoAnulado) }}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                {{ form_end(formFiltro) }}
             </div>
         </div>
     </div>

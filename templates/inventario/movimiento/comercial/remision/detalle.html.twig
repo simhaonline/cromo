@@ -17,44 +17,7 @@
         {% if arRemision.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    <table width="100%" class="table table-condensed table-bordered">
-        <tr>
-            <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arRemision.codigoRemisionPk }}</td>
-            <td class="titulo">USUARIO:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arRemision.usuario }}</td>
-            <td class="titulo">SUBTOTAL:</td>
-            <td align="right">{{ arRemision.vrSubtotal | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arRemision.numero }}</td>
-            <td class="titulo">FECHA:</td>
-            <td class="td-in-well">{{ arRemision.fecha |date("Y-m-d H:i:s") }}</td>
-            <td class="titulo">IVA:</td>
-            <td align="right">{{ arRemision.vrIva | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">CLIENTE:</td>
-            <td class="td-in-well">{{ arRemision.terceroRel.nombreCorto }}</td>
-            <td class="titulo">SOPORTE:</td>
-            <td class="td-in-well">{{ arRemision.soporte }}</td>
-            <td class="titulo">NETO:</td>
-            <td align="right">{{ arRemision.vrTotal | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">ASESOR</td>
-            <td class="td-in-well">{{ arRemision.asesorRel.nombre }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">TOTAL:</td>
-            <td align="right">{{ arRemision.vrTotal | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">COMENTARIO:</td>
-            <td class="td-in-well" colspan="5">{{ arRemision.comentario }}</td>
-        </tr>
-    </table>
+    {% include 'inventario/movimiento/comercial/remision/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>
@@ -88,8 +51,8 @@
                         {% for arRemisionDetalle in arRemisionDetalles %}
                             <tr>
                                 <td>{{ arRemisionDetalle.codigoRemisionDetallePk }}<input type="hidden"
-                                                                                      name="TxtCodigo[]"
-                                                                                      value="{{ arRemisionDetalle.codigoRemisionDetallePk }}"></td>
+                                                                                          name="TxtCodigo[]"
+                                                                                          value="{{ arRemisionDetalle.codigoRemisionDetallePk }}"></td>
                                 <td>{{ arRemisionDetalle.codigoItemFk }}</td>
                                 <td>{{ arRemisionDetalle.itemNombre | default('') }}</td>
                                 <td>{{ arRemisionDetalle.itemReferencia | default('') }}</td>

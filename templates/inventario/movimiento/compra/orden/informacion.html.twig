@@ -1,0 +1,32 @@
+<table width="100%" class="table table-condensed table-bordered">
+    <tr>
+        <td class="titulo">ORDEN COMPRA:</td>
+        <td class="td-in-well">{{ arOrden.codigoOrdenPk }}</td>
+        <td class="titulo">USUARIO:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arOrden.usuario }}</td>
+        <td class="titulo">SUBTOTAL:</td>
+        <td class="td-in-well" style="text-align: right;">{{ arOrden.vrSubtotal |number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">NUMERO:</td>
+        <td class="td-in-well">{{ arOrden.numero }}</td>
+        <td class="titulo">FECHA:</td>
+        <td class="td-in-well">{{ arOrden.fecha | date('Y-m-d') }}</td>
+        <td class="titulo">IVA:</td>
+        <td class="td-in-well" style="text-align: right;">{{ arOrden.vrIva |number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">TERCERO:</td>
+        <td class="td-in-well">{{ arOrden.terceroRel.nombreCorto }}</td>
+        <td class="titulo">SOPORTE:</td>
+        <td class="td-in-well">{{ arOrden.soporte }}</td>
+        <td class="titulo">DESCUENTO:</td>
+        <td class="td-in-well" style="text-align: right;">{{ arOrden.vrDescuento |number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">COMENTARIO:</td>
+        <td class="td-in-well" colspan="3">{{ arOrden.comentarios }}</td>
+        <td class="titulo">TOTAL:</td>
+        <td class="td-in-well" style="text-align: right;">{{ arOrden.vrTotal |number_format(0, '.', ',') }}</td>
+    </tr>
+</table>

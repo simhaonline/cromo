@@ -1,0 +1,38 @@
+<table width="100%" class="table table-condensed table-bordered">
+    <tr>
+        <td class="titulo">CODIGO:</td>
+        <td class="td-in-well">{{ arRemision.codigoRemisionPk }}</td>
+        <td class="titulo">USUARIO:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arRemision.usuario }}</td>
+        <td class="titulo">SUBTOTAL:</td>
+        <td align="right">{{ arRemision.vrSubtotal | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">NUMERO:</td>
+        <td class="td-in-well">{{ arRemision.numero }}</td>
+        <td class="titulo">FECHA:</td>
+        <td class="td-in-well">{{ arRemision.fecha |date("Y-m-d H:i:s") }}</td>
+        <td class="titulo">IVA:</td>
+        <td align="right">{{ arRemision.vrIva | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">CLIENTE:</td>
+        <td class="td-in-well">{{ arRemision.terceroRel.nombreCorto }}</td>
+        <td class="titulo">SOPORTE:</td>
+        <td class="td-in-well">{{ arRemision.soporte }}</td>
+        <td class="titulo">NETO:</td>
+        <td align="right">{{ arRemision.vrTotal | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">ASESOR</td>
+        <td class="td-in-well">{{ arRemision.asesorRel.nombre }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo">TOTAL:</td>
+        <td align="right">{{ arRemision.vrTotal | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">COMENTARIO:</td>
+        <td class="td-in-well" colspan="5">{{ arRemision.comentario }}</td>
+    </tr>
+</table>

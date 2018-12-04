@@ -18,37 +18,7 @@
         {% if arSolicitud.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    <table width="100%" class="table table-condensed table-bordered">
-        <tr>
-            <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arSolicitud.codigoSolicitudPk }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
-
-        </tr>
-        <tr>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arSolicitud.numero }}</td>
-            <td class="titulo">TIPO:</td>
-            <td class="td-in-well">{{ arSolicitud.solicitudTipoRel.nombre }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">FECHA:</td>
-            <td class="td-in-well">{{ arSolicitud.fecha | date('Y-m-d') }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-        </tr>
-        <tr>
-            <td class="titulo">SOPORTE:</td>
-            <td class="td-in-well">{{ arSolicitud.soporte }}</td>
-            <td class="titulo">USUARIO:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arSolicitud.usuario }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">COMENTARIO:</td>
-            <td class="td-in-well" colspan="5">{{ arSolicitud.comentarios }}</td>
-        </tr>
-    </table>
+    {% include 'inventario/movimiento/compra/solicitud/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>
@@ -83,7 +53,6 @@
                         </tbody>
                     </table>
                 </div>
-                {#<div class="separador-1"></div>#}
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
                         {% if arSolicitud.estadoAutorizado == true %}

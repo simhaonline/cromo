@@ -19,46 +19,7 @@
         {% if arCotizacion.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    <table width="100%" class="table table-condensed table-bordered">
-        <tr>
-            <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arCotizacion.codigoCotizacionPk }}</td>
-            <td class="titulo">CLIENTE:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arCotizacion.terceroRel.nombreCorto }}</td>
-            <td class="titulo">SUBTOTAL:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arCotizacion.vrSubtotal |number_format(0, '.', ',') }}</td>
-
-        </tr>
-        <tr>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arCotizacion.numero }}</td>
-            <td class="titulo">USUARIO:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arCotizacion.usuario }}</td>
-            <td class="titulo">IVA:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arCotizacion.vrIva |number_format(0, '.', ',') }}</td>
-
-        </tr>
-        <tr>
-            <td class="titulo">SOPORTE:</td>
-            <td class="td-in-well" >{{ arCotizacion.soporte }}</td>
-            <td class="titulo">FECHA:</td>
-            <td class="td-in-well">{{ arCotizacion.fecha | date('Y-m-d') }}</td>
-            <td class="titulo">DESCUENTO:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arCotizacion.vrDescuento |number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"></td>
-            <td></td>
-            <td class="titulo"></td>
-            <td></td>
-            <td class="titulo">TOTAL:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arCotizacion.vrTotal |number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">COMENTARIO:</td>
-            <td class="td-in-well" colspan="6">{{ arCotizacion.comentarios }}</td>
-        </tr>
-    </table>
+    {% include 'inventario/movimiento/comercial/cotizacion/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>

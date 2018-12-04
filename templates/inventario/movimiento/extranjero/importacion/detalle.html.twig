@@ -17,52 +17,7 @@
         {% if arImportacion.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    <table width="100%" class="table table-condensed table-bordered">
-        <tr>
-            <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arImportacion.codigoImportacionPk }}</td>
-            <td class="titulo">USUARIO:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arImportacion.usuario }}</td>
-            <td class="titulo">SUBTOTAL:</td>
-            <td align="right">{{ arImportacion.vrSubtotalExtranjero | number_format(0, '.', ',') }}</td>
-            <td class="titulo">SUBTOTAL:</td>
-            <td align="right">{{ arImportacion.vrSubtotalLocal | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arImportacion.numero }}</td>
-            <td class="titulo">FECHA:</td>
-            <td class="td-in-well">{{ arImportacion.fecha | date("Y-m-d H:i:s") }}</td>
-            <td class="titulo">IVA:</td>
-            <td align="right">{{ arImportacion.vrIvaExtranjero | number_format(0, '.', ',') }}</td>
-            <td class="titulo">IVA:</td>
-            <td align="right">{{ arImportacion.vrIvaLocal | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">PROVEEDOR:</td>
-            <td class="td-in-well">{{ arImportacion.terceroRel.nombreCorto }}</td>
-            <td class="titulo">SOPORTE:</td>
-            <td class="td-in-well">{{ arImportacion.soporte }}</td>
-            <td class="titulo">TOTAL:</td>
-            <td align="right">{{ arImportacion.vrTotalExtranjero | number_format(0, '.', ',') }}</td>
-            <td class="titulo">TOTAL:</td>
-            <td align="right">{{ arImportacion.vrTotalLocal | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">TRM:</td>
-            <td class="td-in-well">{{ arImportacion.tasaRepresentativaMercado }}</td>
-            <td class="titulo">MONEDA:</td>
-            <td class="td-in-well">{{ arImportacion.monedaRel.nombre }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">TOTAL COSTOS:</td>
-            <td align="right">{{ arImportacion.vrTotalCosto | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">COMENTARIO:</td>
-            <td class="td-in-well" colspan="7">{{ arImportacion.comentario }}</td>
-        </tr>
-    </table>
+    {% include 'inventario/movimiento/extranjero/importacion/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
         <li><a href="#costos" data-toggle="tab">Costos</a></li>

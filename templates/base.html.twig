@@ -90,7 +90,7 @@
     <!-- end user info -->
 
     {% set arrRuta = app.request.attributes.get('_route')|split('_') %}
-    {% if arrRuta | length > 0 and arrRuta.0 is defined and arrRuta.0 != 'admin' %}
+    {% if arrRuta | length > 0 and arrRuta.0 is defined and arrRuta.0 != 'administracion' %}
         {#{{ dump(arrRuta) }}#}
         {% if arrRuta.0 == 'inicio' %}
             {% include('base_menu_inicio.html.twig') %}
@@ -122,8 +122,41 @@
         {% if arrRuta.0 == 'general' %}
             {% include('base_general.html.twig') %}
         {% endif %}
+    {% elseif arrRuta.0 == 'administracion' %}
+        {%  set modulo = app.request.attributes.get('modulo') %}
+        {% if modulo == 'inicio' %}
+            {% include('base_menu_inicio.html.twig') %}
+        {% endif %}
+        {% if modulo == 'transporte' %}
+            {% include('base_transporte.html.twig') %}
+        {% endif %}
+        {% if modulo == 'recursoHumano' %}
+            {% include('base_recursoHumano.html.twig') %}
+        {% endif %}
+        {% if modulo == 'turno' %}
+            {% include('base_turno.html.twig') %}
+        {% endif %}
+        {% if modulo == 'cartera' %}
+            {% include('base_cartera.html.twig') %}
+        {% endif %}
+        {% if modulo == 'compra' %}
+            {% include('base_compra.html.twig') %}
+        {% endif %}
+        {% if modulo == 'inventario' %}
+            {% include('base_inventario.html.twig') %}
+        {% endif %}
+        {% if modulo == 'financiero' %}
+            {% include('base_financiero.html.twig') %}
+        {% endif %}
+        {% if modulo == 'documental' %}
+            {% include('base_documental.html.twig') %}
+        {% endif %}
+        {% if modulo == 'general' %}
+            {% include('base_general.html.twig') %}
+        {% endif %}
+        
     {% endif %}
-
+    
     {#<nav>#}
     {#<ul>#}
     {#<li class="">#}

@@ -51,4 +51,38 @@ class CotizacionType extends AbstractType {
         return 'App_solicitud';
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoCotizacionPk",              "tipo":"pk",        "ayuda":"Codigo del registro",                  "titulo":"ID"},
+            {"campo":"cotizacionTipoRel.nombre",        "tipo":"texto",     "ayuda":"Tipo de cotizacion",                   "titulo":"COTIZACION TIPO",         "relacion":""},
+            {"campo":"terceroRel.nombreCorto",            "tipo":"texto",     "ayuda":"Tercero",                              "titulo":"TERCERO",         "relacion":""},
+            {"campo":"numero",                          "tipo":"texto",     "ayuda":"Numero del registro",                  "titulo":"NUMERO"},
+            {"campo":"fecha",                           "tipo":"fecha",     "ayuda":"Fecha del registro",                   "titulo":"FECHA"},
+            {"campo":"vrSubtotal",                      "tipo":"moneda",    "ayuda":"Subtotal",                             "titulo":"SUBTOTAL"},
+            {"campo":"vrIva",                           "tipo":"moneda",    "ayuda":"vrIva",                                "titulo":"IVA"},
+            {"campo":"vrNeto",                          "tipo":"moneda",    "ayuda":"vrNeto",                               "titulo":"NETO"},
+            {"campo":"vrTotal",                         "tipo":"moneda",    "ayuda":"Total",                                "titulo":"TOTAL"},
+            {"campo":"estadoAutorizado",                "tipo":"bool",      "ayuda":"Autorizdo",                            "titulo":"AUT"},
+            {"campo":"estadoAprobado",                  "tipo":"bool",      "ayuda":"Aprobado",                             "titulo":"APR"},
+            {"campo":"estadoAnulado",                   "tipo":"bool",      "ayuda":"Anulado",                              "titulo":"ANU"}
+                                     
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"numero",                  "tipo":"TextType",    "propiedades":{"label":"Numero"}},
+            {"child":"codigoCotizacionPk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
+            {"child":"codigoTerceroFk",         "tipo":"TextType",    "propiedades":{"label":"Codigo cliente"}},
+            {"child":"codigoCotizacionTipoFk", "tipo":"EntityType",  "propiedades":{"class":"InvCotizacionTipo","choice_label":"nombre","label":"Tipo"}},
+            {"child":"estadoAutorizado",        "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",          "tipo":"ChoiceType",  "propiedades":{"label":"Aprobado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",           "tipo":"ChoiceType",  "propiedades":{"label":"Anulado",     "choices":{"SI":true,"NO":false}}}
+        ]';
+        return $campos;
+    }
+
 }

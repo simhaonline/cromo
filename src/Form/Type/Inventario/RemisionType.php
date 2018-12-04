@@ -65,6 +65,7 @@ class RemisionType extends AbstractType
         $campos = '[
             {"campo":"codigoRemisionPk",                "tipo":"pk",        "ayuda":"Codigo del registro",                  "titulo":"ID"},
             {"campo":"remisionTipoRel.nombre",          "tipo":"texto",     "ayuda":"Tipo de remision",                     "titulo":"REMISION TIPO",         "relacion":""},
+            {"campo":"terceroRel.nombreCorto",          "tipo":"texto",     "ayuda":"Tercero",                              "titulo":"TERCERO",         "relacion":""},
             {"campo":"numero",                          "tipo":"texto",     "ayuda":"Numero del registro",                  "titulo":"NUMERO"},
             {"campo":"fecha",                           "tipo":"fecha",     "ayuda":"Fecha del registro",                   "titulo":"FECHA"},
             {"campo":"vrSubtotal",                      "tipo":"moneda",    "ayuda":"Subtotal",                             "titulo":"SUBTOTAL"},
@@ -85,7 +86,12 @@ class RemisionType extends AbstractType
             {"child":"numero",                  "tipo":"TextType",    "propiedades":{"label":"Numero"}},
             {"child":"codigoRemisionPk",        "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
             {"child":"codigoTerceroFk",         "tipo":"TextType",    "propiedades":{"label":"Codigo cliente"}},
-            {"child":"codigoRemisionTipoFk",    "tipo":"EntityType",  "propiedades":{"class":"InvRemisionTipo","choice_label":"nombre","label":"Tipo"}}
+            {"child":"codigoRemisionTipoFk",    "tipo":"EntityType",  "propiedades":{"class":"InvRemisionTipo","choice_label":"nombre","label":"Tipo"}},
+            {"child":"codigoAsesorFk",          "tipo":"EntityType",  "propiedades":{"class":"GenAsesor","choice_label":"nombre","label":"Asesor"}},
+            {"child":"estadoAutorizado",        "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",          "tipo":"ChoiceType",  "propiedades":{"label":"Aprobado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",           "tipo":"ChoiceType",  "propiedades":{"label":"Anulado",     "choices":{"SI":true,"NO":false}}}
+            
         ]';
         return $campos;
     }

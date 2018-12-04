@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints\Regex;
 class SeguridadController extends Controller
 {
     /**
-     * @Route("/gen/seguridad/usuario/lista", name="gen_seguridad_usuario_lista")
+     * @Route("/general/seguridad/usuario/lista", name="general_seguridad_usuario_lista")
      */
     public function lista(Request $request)
     {
@@ -63,7 +63,7 @@ class SeguridadController extends Controller
     }
 
     /**
-     * @Route("/gen/seguridad/usuario/nuevo/{hash}", name="gen_seguridad_usuario_nuevo")
+     * @Route("/general/seguridad/usuario/nuevo/{hash}", name="general_seguridad_usuario_nuevo")
      */
     public function nuevo(Request $request, $hash)
     {
@@ -75,7 +75,7 @@ class SeguridadController extends Controller
         if ($id != "") {
             $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
             if (!$arUsuario) {
-                return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
+                return $this->redirect($this->generateUrl('general_seguridad_usuario_lista'));
             } else {
                 $arrPropiedadesClaves = ['attr' => ['readonly' => 'readonly']];
             }
@@ -143,7 +143,7 @@ class SeguridadController extends Controller
                 $em->persist($arUsuario);
                 try {
                     $em->flush();
-                    return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
+                    return $this->redirect($this->generateUrl('general_seguridad_usuario_lista'));
                 } catch (\Exception $e) {
                     Mensajes::error('El usuario ingresado ya se encuentra registrado');
 
@@ -157,7 +157,7 @@ class SeguridadController extends Controller
     }
 
     /**
-     * @Route("/gen/seguridad/usuario/nuevo/clave/{hash}", name="gen_seguridad_usuario_nuevo_clave")
+     * @Route("/general/seguridad/usuario/nuevo/clave/{hash}", name="general_seguridad_usuario_nuevo_clave")
      */
     public function cambiarClave(Request $request, $hash)
     {
@@ -167,7 +167,7 @@ class SeguridadController extends Controller
         if ($id != 0) {
             $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
             if (!$arUsuario) {
-                return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
+                return $this->redirect($this->generateUrl('general_seguridad_usuario_lista'));
             }
         }
         $form = $this->createFormBuilder()

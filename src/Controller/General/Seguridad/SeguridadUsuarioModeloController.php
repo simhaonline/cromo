@@ -25,7 +25,7 @@ class SeguridadUsuarioModeloController extends AbstractController
     protected $nombre = "SegUsuarioModelo";
 
     /**
-     * @Route("/gen/seguridad/usuario/modelo/lista/{hash}", name="general_seguridad_usuario_modelo_lista")
+     * @Route("/general/seguridad/usuario/modelo/lista/{hash}", name="general_seguridad_usuario_modelo_lista")
      */
     public function lista($hash, Request $request)
     {
@@ -78,7 +78,7 @@ class SeguridadUsuarioModeloController extends AbstractController
         if ($id != "") {
             $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
             if (!$arUsuario) {
-                return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
+                return $this->redirect($this->generateUrl('general_seguridad_usuario_modelo_lista'));
             }
             $arSeguridadUsuarioModelo=$em->getRepository('App:Seguridad\SegUsuarioModelo')->lista($arUsuario->getUsername());
             $arSeguridadUsuarioProceso=$em->getRepository('App:Seguridad\SegUsuarioProceso')->lista($arUsuario->getUsername());
@@ -95,7 +95,7 @@ class SeguridadUsuarioModeloController extends AbstractController
     }
 
     /**
-     * @Route("/gen/seguridad/usuario/modelo/nuevo/{hash}", name="general_seguridad_usuario_modelo_nuevo")
+     * @Route("/general/seguridad/usuario/modelo/nuevo/{hash}", name="general_seguridad_usuario_modelo_nuevo")
      */
     public function nuevo(Request $request, $hash){
         $em=$this->getDoctrine()->getManager();
@@ -183,7 +183,7 @@ class SeguridadUsuarioModeloController extends AbstractController
     }
 
     /**
-     * @Route("/gen/seguridad/usuario/modelo/editar/{hash}/{codigoSeguridadUsuarioModelo}", name="general_seguridad_usuario_modelo_editar")
+     * @Route("/general/seguridad/usuario/modelo/editar/{hash}/{codigoSeguridadUsuarioModelo}", name="general_seguridad_usuario_modelo_editar")
      */
     public function editarPermisos(Request $request, $hash, $codigoSeguridadUsuarioModelo){
         $em=$this->getDoctrine()->getManager();
@@ -191,7 +191,7 @@ class SeguridadUsuarioModeloController extends AbstractController
         if ($id != "") {
             $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
             if (!$arUsuario) {
-                return $this->redirect($this->generateUrl('gen_seguridad_usuario_lista'));
+                return $this->redirect($this->generateUrl('general_seguridad_usuario_modelo_lista'));
             }
         }
         if ($codigoSeguridadUsuarioModelo != 0) {

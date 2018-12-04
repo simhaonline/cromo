@@ -22,17 +22,17 @@ class TerceroController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('TxtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroInvTerceroNombre')])
-            ->add('TxtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroInvTerceroCodigo')])
-            ->add('TxtNit', TextType::class, ['required'  => false,'data' => $session->get('filtroInvTerceroIdentificacion')])
+            ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroInvTerceroNombre')])
+            ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroInvTerceroCodigo')])
+            ->add('txtNit', TextType::class, ['required'  => false,'data' => $session->get('filtroInvTerceroIdentificacion')])
             ->add('BtnFiltrar', SubmitType::class, ['label'  => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('BtnFiltrar')->isClicked()) {
-                $session->set('filtroInvTerceroCodigo',$form->get('TxtCodigo')->getData());
-                $session->set('filtroInvTerceroNombre',$form->get('TxtNombre')->getData());
-                $session->set('filtroInvTerceroIdentificacion',$form->get('TxtNit')->getData());
+                $session->set('filtroInvTerceroCodigo',$form->get('txtCodigo')->getData());
+                $session->set('filtroInvTerceroNombre',$form->get('txtNombre')->getData());
+                $session->set('filtroInvTerceroIdentificacion',$form->get('txtNit')->getData());
             }
         }
         $arTerceros = $paginator->paginate($em->getRepository(InvTercero::class)->lista($tipo), $request->query->get('page', 1), 20);

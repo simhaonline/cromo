@@ -61,9 +61,42 @@ abstract class BaseController extends Controller
                 $tipoNombre = $campo['tipo'];
                 $tipo = "Symfony\\Component\Form\Extension\\Core\\Type\\{$tipoNombre}";
                 if ($campo['tipo'] == "EntityType") {
+                    $modulo = '';
+                    switch (substr($campo['propiedades']['class'],0,3)){
+                        case 'Inv':
+                            $modulo = 'Inventario';
+                            break;
+                        case 'Tte':
+                            $modulo = 'Transporte';
+                            break;
+                        case 'Gen':
+                            $modulo = 'General';
+                            break;
+                        case 'Car':
+                            $modulo = 'Cartera';
+                            break;
+                        case 'Fin':
+                            $modulo = 'Financiero';
+                            break;
+                        case 'Tur':
+                            $modulo = 'Turno';
+                            break;
+                        case 'Doc':
+                            $modulo = 'Documental';
+                            break;
+                        case 'Com':
+                            $modulo = 'Compra';
+                            break;
+                        case 'Seg':
+                            $modulo = 'Seguridad';
+                            break;
+                        case 'Rhu':
+                            $modulo = 'RecursoHumano';
+                            break;
+                    }
                     $em=$this->getDoctrine()->getManager();
                     $entidad = $campo['propiedades']['class'];
-                    $nombreRepositorio = "App:{$this->modulo}\\{$entidad}";
+                    $nombreRepositorio = "App:{$modulo}\\{$entidad}";
                     $form->add($campo['child'], EntityType::class,
                         [
                             'label' => $campo['propiedades']['label'],

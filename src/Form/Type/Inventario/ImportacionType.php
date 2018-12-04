@@ -91,7 +91,10 @@ class ImportacionType extends AbstractType {
             {"child":"numero",                  "tipo":"TextType",    "propiedades":{"label":"Numero"}},
             {"child":"codigoImportacionPk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
             {"child":"codigoTerceroFk",         "tipo":"TextType",    "propiedades":{"label":"Codigo cliente"}},
-            {"child":"codigoImportacionTipoFk", "tipo":"EntityType",  "propiedades":{"class":"InvImportacionTipo","choice_label":"nombre","label":"Tipo"}}
+            {"child":"codigoImportacionTipoFk", "tipo":"EntityType",  "propiedades":{"class":"InvImportacionTipo","choice_label":"nombre","label":"Tipo"}},
+            {"child":"estadoAutorizado",        "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",          "tipo":"ChoiceType",  "propiedades":{"label":"Aprobado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",           "tipo":"ChoiceType",  "propiedades":{"label":"Anulado",     "choices":{"SI":true,"NO":false}}}
         ]';
         return $campos;
     }

@@ -1,30 +1,16 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <div id="content">
-        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false" data-widget-fullscreenbutton="true">
-            <header>
-                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                <h2>Lista</h2>
-            </header>
-            <div>
-                <div class="widget-body no-padding">
-                    <div class="panel panel-default no-padding">
-                        {#<div class="panel-heading">Filtros</div>#}
-                        <div class="panel-body">
-                            {% include ('transporte/movimiento/transporte/recaudoCobro/filtro.html.twig') %}
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+    {% include ('transporte/movimiento/transporte/recaudoCobro/filtro.html.twig') %}
+
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false" data-widget-fullscreenbutton="true">
+        <div class="table-responsive" style="padding:0px;">
+            {{ form_start(formBotonera) }}
+            {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
+            {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
+            {{ form_end(formBotonera) }}
         </div>
-        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false" data-widget-fullscreenbutton="true">
-            <div class="table-responsive" style="padding:0px;">
-                {{ form_start(formBotonera) }}
-                {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-                {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
-                {{ form_end(formBotonera) }}
-            </div>
-        </div>
+    </div>
     </div>
 {% endblock %}
 

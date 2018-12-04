@@ -88,7 +88,7 @@ final class Estandares
      * @param $pdf
      * @param string $titulo
      */
-    public static function generarEncabezado($pdf, $titulo = ' ')
+    public static function generarEncabezado($pdf, $titulo = ' ',$em)
     {
         /** @var  $arConfiguracion GenConfiguracion */
         $arConfiguracion = BaseDatos::getEm()->getRepository(GenConfiguracion::class)->find(1);
@@ -100,7 +100,8 @@ final class Estandares
         //Logo
         $pdf->SetXY(53, 10);
         try {
-            $pdf->Image('../public/img/empresa/logo.jpg', 12, 13, 40, 25);
+            $logo=$em->getRepository('App\Entity\General\GenImagen')->findAll();
+            $pdf->Image("data:image/'{$logo[0]->getExtension()}';base64,".base64_encode(stream_get_contents($logo[0]->getLogo())), 12, 13, 40, 25,$logo[0]->getExtension());
         } catch (\Exception $exception) {
         }
         //INFORMACIÓN EMPRESA

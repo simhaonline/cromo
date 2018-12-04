@@ -1,3 +1,19 @@
-{{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
-{% include ('estructura/buscarClienteTransporte.html.twig') %}
-{{ form_end(formFiltro) }}
+<div id="content">
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false" data-widget-fullscreenbutton="true">
+        <header>
+            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+            <h2>Lista</h2>
+        </header>
+        <div>
+            <div class="widget-body no-padding">
+                <div class="panel panel-default no-padding">
+                    {#<div class="panel-heading">Filtros</div>#}
+                    <div class="panel-body">
+                        {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
+                        {% include ('estructura/buscarClienteTransporte.html.twig') %}
+                        {{ form_end(formFiltro) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

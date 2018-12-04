@@ -257,6 +257,7 @@ class DespachoController extends ControllerListenerGeneral
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new Despacho();
                 $formato->Generar($em, $id);
+
             }
             if ($form->get('btnImprimirManifiesto')->isClicked()) {
                 if($arDespacho->getDespachoTipoRel()->getViaje () != 1){

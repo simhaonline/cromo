@@ -59,4 +59,34 @@ class RemisionType extends AbstractType
     public function getBlockPrefix() {
         return 'App_remision';
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoRemisionPk",                "tipo":"pk",        "ayuda":"Codigo del registro",                  "titulo":"ID"},
+            {"campo":"remisionTipoRel.nombre",          "tipo":"texto",     "ayuda":"Tipo de remision",                     "titulo":"REMISION TIPO",         "relacion":""},
+            {"campo":"numero",                          "tipo":"texto",     "ayuda":"Numero del registro",                  "titulo":"NUMERO"},
+            {"campo":"fecha",                           "tipo":"fecha",     "ayuda":"Fecha del registro",                   "titulo":"FECHA"},
+            {"campo":"vrSubtotal",                      "tipo":"moneda",    "ayuda":"Subtotal",                             "titulo":"SUBTOTAL"},
+            {"campo":"vrIva",                           "tipo":"moneda",    "ayuda":"vrIva",                                "titulo":"IVA"},
+            {"campo":"vrNeto",                          "tipo":"moneda",    "ayuda":"vrNeto",                               "titulo":"NETO"},
+            {"campo":"vrTotal",                         "tipo":"moneda",    "ayuda":"Total",                                "titulo":"TOTAL"},
+            {"campo":"estadoAutorizado",                "tipo":"bool",      "ayuda":"Autorizado",                            "titulo":"AUT"},
+            {"campo":"estadoAprobado",                  "tipo":"bool",      "ayuda":"Aprobado",                             "titulo":"APR"},
+            {"campo":"estadoAnulado",                   "tipo":"bool",      "ayuda":"Anulado",                              "titulo":"ANU"}
+                                     
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"numero",                  "tipo":"TextType",    "propiedades":{"label":"Numero"}},
+            {"child":"codigoRemisionPk",        "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
+            {"child":"codigoTerceroFk",         "tipo":"TextType",    "propiedades":{"label":"Codigo cliente"}},
+            {"child":"codigoRemisionTipoFk",    "tipo":"EntityType",  "propiedades":{"class":"InvRemisionTipo","choice_label":"nombre","label":"Tipo"}}
+        ]';
+        return $campos;
+    }
 }

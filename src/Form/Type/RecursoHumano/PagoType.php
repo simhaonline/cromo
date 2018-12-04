@@ -65,4 +65,17 @@ class PagoType extends AbstractType
         ]';
         return $campos;
     }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"codigoEmpleadoFk",     "tipo":"TextType",  "propiedades":{"label":"Empleado"}},
+            {"child":"codigoPagoPk", "tipo": "TextType",  "propiedades":{"label":"Codigo"}},
+            {"child":"codigoPagoTipoFk",     "tipo":"EntityType","propiedades":{"class":"RhuPagoTipo","choice_label":"nombre","label":"Tipo"}},
+            {"child":"numero",               "tipo":"TextType",  "propiedades":{"label":"Numero"}},
+            {"child":"fechaDesdeDesde",      "tipo":"DateType",  "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaHastaHasta",      "tipo":"DateType",  "propiedades":{"label":"Fecha Hasta"}}
+        ]';
+        return $campos;
+    }
 }

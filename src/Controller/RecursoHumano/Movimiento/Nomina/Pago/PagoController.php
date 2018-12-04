@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Pago;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Form\Type\RecursoHumano\PagoType;
@@ -34,19 +35,31 @@ class PagoController extends BaseController
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = $this->botoneraLista();
+        $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+            }
+        }
+        $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Pagos");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuPago::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_pago_lista'));
             }
         }
         return $this->render('recursoHumano/movimiento/nomina/pago/lista.html.twig', [
-            'arrDatosLista' => $this->getDatosLista(),
-            'formBotonera' => $formBotonera->createView()
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
         ]);
     }
 

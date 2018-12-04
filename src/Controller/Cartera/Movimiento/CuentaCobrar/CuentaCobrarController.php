@@ -51,7 +51,7 @@ class CuentaCobrarController extends ControllerListenerGeneral
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(CarCuentaCobrar::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
+                return $this->redirect($this->generateUrl('cartera_movimiento_cartera_cuentacobrar_lista'));
             }
         }
         return $this->render('cartera/movimiento/cuentaCobrar/lista.html.twig', [

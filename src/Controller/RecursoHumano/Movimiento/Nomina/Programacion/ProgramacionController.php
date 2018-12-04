@@ -3,6 +3,8 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Programacion;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\FuncionesController;
+use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
@@ -21,7 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
 class ProgramacionController extends BaseController
 {
     protected $clase = RhuProgramacion::class;
-    protected $claseFormulario = ProgramacionType::class;
     protected $claseNombre = "RhuProgramacion";
     protected $modulo = "RecursoHumano";
     protected $funcion = "movimiento";
@@ -30,7 +31,7 @@ class ProgramacionController extends BaseController
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
@@ -41,20 +42,31 @@ class ProgramacionController extends BaseController
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = $this->botoneraLista();
+        $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+            }
+        }
+        $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Programaciones");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(RhuProgramacion::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_lista'));
             }
         }
         return $this->render('recursoHumano/movimiento/nomina/programacion/lista.html.twig', [
-            'arrDatosLista' => $this->getDatosLista(),
-            'formBotonera' => $formBotonera->createView()
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
         ]);
     }
 

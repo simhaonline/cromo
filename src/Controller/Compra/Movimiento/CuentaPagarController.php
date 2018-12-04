@@ -43,12 +43,12 @@ class CuentaPagarController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Recibos");
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Cuentas pagar");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(ComCuentaPagar::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
+                return $this->redirect($this->generateUrl('compra_movimiento_cuentapagar_cuentapagar_lista'));
             }
         }
         return $this->render('compra/movimiento/cuentaPagar/lista.html.twig', [

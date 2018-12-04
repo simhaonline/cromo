@@ -58,7 +58,7 @@ class CompraController extends BaseController
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(ComCompra::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
+                return $this->redirect($this->generateUrl('compra_movimiento_compra_compra_lista'));
             }
         }
         return $this->render('compra/movimiento/compra/lista.html.twig', [

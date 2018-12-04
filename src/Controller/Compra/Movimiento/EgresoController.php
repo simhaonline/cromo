@@ -55,12 +55,12 @@ class EgresoController extends BaseController
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Compras");
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Egresos");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(ComEgreso::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
+                return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_lista'));
             }
         }
         return $this->render('compra/movimiento/egreso/lista.html.twig', [

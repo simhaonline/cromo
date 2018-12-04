@@ -53,12 +53,12 @@ class AsientoController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "CuentasCobrar");
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Asientos");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(FinAsiento::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
+                return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_lista'));
             }
         }
         return $this->render('financiero/movimiento/contabilidad/asiento/lista.html.twig', [

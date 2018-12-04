@@ -1,9 +1,15 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <br>
-    <br>
-    {{ form_start(formBotonera) }}
-    {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-    {% include 'estructura/movimiento/botoneraGeneral.html.twig' %}
-    {{ form_end(formBotonera) }}
+    <div id="content">
+        {% include 'recursoHumano/movimiento/nomina/reclamo/filtro.html.twig' %}
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+             data-widget-fullscreenbutton="true">
+            <div class="table-responsive" style="padding:0px;">
+                {{ form_start(formBotonera) }}
+                {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
+                {% include 'estructura/movimiento/botoneraGeneral.html.twig' %}
+                {{ form_end(formBotonera) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}

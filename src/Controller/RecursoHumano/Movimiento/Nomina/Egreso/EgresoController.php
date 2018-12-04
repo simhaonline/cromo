@@ -3,19 +3,17 @@
 namespace App\Controller\RecursoHumano\Movimiento\Nomina\Egreso;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuEgreso;
 use App\Entity\RecursoHumano\RhuEgresoDetalle;
-use App\Entity\RecursoHumano\RhuGrupo;
-use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Form\Type\RecursoHumano\EgresoType;
+use App\Form\Type\RecursoHumano\ProgramacionType;
 use App\Formato\RecursoHumano\Egreso;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 class EgresoController extends BaseController
 {
     protected $clase = RhuEgreso::class;
-    protected $claseFormulario = EgresoType::class;
     protected $claseNombre = "RhuEgreso";
     protected $modulo = "RecursoHumano";
     protected $funcion = "movimiento";
@@ -32,7 +29,7 @@ class EgresoController extends BaseController
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/movimiento/nomina/egreso/lista", name="recursohumano_movimiento_nomina_egreso_lista")
@@ -41,19 +38,31 @@ class EgresoController extends BaseController
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = $this->botoneraLista();
+        $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+            }
+        }
+        $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Egresos");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuEgreso::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_egreso_lista'));
             }
         }
         return $this->render('recursoHumano/movimiento/nomina/egreso/lista.html.twig', [
-            'arrDatosLista' => $this->getDatosLista(),
-            'formBotonera' => $formBotonera->createView()
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
         ]);
     }
 

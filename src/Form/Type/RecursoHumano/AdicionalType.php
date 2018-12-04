@@ -68,21 +68,17 @@ class AdicionalType extends AbstractType
         return $campos;
     }
 
-    public function getEstructuraPropiedadesExportar()
+    public function getEstructuraPropiedadesFiltro()
     {
         $campos = '[
-            {"campo":"codigoAdicionalPk","tipo":"pk"    ,"ayuda":"Codigo del registro" ,"titulo":"ID"},
-            {"campo":"codigoConceptoFk", "tipo":"texto" ,"ayuda":"Codigo del concepto" ,"titulo":"CONCEPTO"},
-            {"campo":"detalle",          "tipo":"fecha" ,"ayuda":"Detalle del registro","titulo":"DETALLE"},
-            {"campo":"codigoEmpleadoFk", "tipo":"texto" ,"ayuda":"Codigo del empleado" ,"titulo":"EMPLEADO"},
-            {"campo":"codigoContratoFk", "tipo":"texto" ,"ayuda":"Codigo del contrato" ,"titulo":"CONTRATO"},
-            {"campo":"fecha",            "tipo":"fecha" ,"ayuda":"Fecha"               ,"titulo":"FECHA"},
-            {"campo":"vrValor",          "tipo":"moneda","ayuda":"Valor del anticipo"  ,"titulo":"VALOR"},
-            {"campo":"permanente",       "tipo":"bool"  ,"ayuda":"Permanente"          ,"titulo":"PER"},
-            {"campo":"estadoAutorizado", "tipo":"bool"  ,"ayuda":"Estado autorizado"   ,"titulo":"AUT"},                     
-            {"campo":"estadoAprobado",   "tipo":"bool"  ,"ayuda":"Estado aprobado"     ,"titulo":"APR"},                     
-            {"campo":"estadoAnulado",    "tipo":"bool"  ,"ayuda":"Estado anulado"      ,"titulo":"ANU"}
+            {"child":"codigoAdicionalPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
+            {"child":"codigoConceptoFk",  "tipo":"EntityType", "propiedades":{"class":"RhuConcepto","choice_label":"nombre","label":"Concepto"}},
+            {"child":"codigoEmpleadoFk",  "tipo":"TextType",   "propiedades":{"label":"Empleado"}},
+            {"child":"fechaDesde",        "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaHasta",        "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
+            {"child":"estadoInactivo",    "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}}
         ]';
+
         return $campos;
     }
 }

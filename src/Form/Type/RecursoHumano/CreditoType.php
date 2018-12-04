@@ -85,22 +85,18 @@ class CreditoType extends AbstractType
         return $campos;
     }
 
-    public function getEstructuraPropiedadesExportar()
+    public function getEstructuraPropiedadesFiltro()
     {
         $campos = '[
-            {"campo":"codigoCreditoPk"                 ,"tipo":"pk"     ,"ayuda":"Codigo del registro"                   ,"titulo":"ID"},
-            {"campo":"creditoTipoRel.nombre"           ,"tipo":"texto"  ,"ayuda":"Tipo de credito"                       ,"titulo":"TIPO"           ,"relacion":"SI"},
-            {"campo":"codigoEmpleadoFk"                ,"tipo":"texto"  ,"ayuda":"Codigo del empleado"                   ,"titulo":"COD.EMPLEADO"},
-            {"campo":"empleadoRel.nombreCorto"         ,"tipo":"texto"  ,"ayuda":"Nombre del empleado"                   ,"titulo":"NOMBRE"         ,"relacion":"SI"},
-            {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto"  ,"ayuda":"Numero de identificacion del empleado" ,"titulo":"IDENTIFICACION" ,"relacion":"SI"},
-            {"campo":"empleadoRel.estadoContrato"      ,"tipo":"bool"   ,"ayuda":"Si el empleado se encuentra contratado","titulo":"CON"            ,"relacion":"SI"},
-            {"campo":"grupoRel.nombre"                 ,"tipo":"texto"  ,"ayuda":"Nombre del grupo del empleado"         ,"titulo":"GRUPO"          ,"relacion":"SI"},
-            {"campo":"fecha"                           ,"tipo":"fecha"  ,"ayuda":"Fecha"                                 ,"titulo":"FECHA"},
-            {"campo":"vrCuota"                         ,"tipo":"moneda" ,"ayuda":"Valor de la cuota"                     ,"titulo":"V.CUOTA"},
-            {"campo":"numeroCuotaActual"               ,"tipo":"text"   ,"ayuda":"Numero de la cuota actual"             ,"titulo":"CUOTA ACTUAL"},
-            {"campo":"numeroCuotas"                    ,"tipo":"texto"  ,"ayuda":"Cantidad de cuotas"                    ,"titulo":"CUOTAS"},
-            {"campo":"estadoPagado"                    ,"tipo":"bool"   ,"ayuda":"Estado pagado"                         ,"titulo":"PAG"},
-            {"campo":"estadoSuspendido"                ,"tipo":"bool"   ,"ayuda":"Estado suspendido"                     ,"titulo":"SUS"}]';
+            {"child":"codigoCreditoPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
+            {"child":"codigoCreditoTipoFk",       "tipo":"EntityType", "propiedades":{"class":"RhuCreditoTipo","choice_label":"nombre","label":"Tipo"}},
+            {"child":"codigoEmpleadoFk",    "tipo":"TextType",   "propiedades":{"label":"Empleado"}},
+            {"child":"fechaDesde",          "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaHasta",          "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
+            {"child":"estadoPagado",    "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoSuspendido",      "tipo":"ChoiceType", "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}}
+        ]';
+
         return $campos;
     }
 }

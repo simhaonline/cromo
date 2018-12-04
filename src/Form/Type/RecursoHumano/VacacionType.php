@@ -64,28 +64,20 @@ class VacacionType extends AbstractType
         return $campos;
     }
 
-    public function getEstructuraPropiedadesExportar()
+    public function getEstructuraPropiedadesFiltro()
     {
         $campos = '[
-            {"campo":"codigoVacacionPk",      "tipo":"pk"     ,"ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"numero",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro","titulo":"NUMERO"},
-            {"campo":"fecha",                 "tipo":"fecha"  ,"ayuda":"Fecha de registro","titulo":"FECHA"},
-            {"campo":"grupoRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre del grupo al cual pertence el mepleado" , "titulo":"GRUPO", "relacion":""},
-            {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto"  ,"ayuda":"Codigo del empleado",    "titulo":"IDENTIFICACION", "relacion":""},
-            {"campo":"empleadoRel.nombreCorto","tipo":"texto"  ,"ayuda":"Codigo del empleado",       "titulo":"EMPLEADO", "relacion":""},
-            {"campo":"fechaDesdePeriodo",     "tipo":"fecha"  ,"ayuda":"Fecha desde periodo",        "titulo":"P.DESDE"},                     
-            {"campo":"fechaHastaPeriodo",     "tipo":"fecha"  ,"ayuda":"Fecha hasta periodo",        "titulo":"P.HASTA"},                     
-            {"campo":"fechaDesdeDisfrute",    "tipo":"fecha"  ,"ayuda":"Fecha desde disfrute",       "titulo":"DESDE"},                     
-            {"campo":"fechaHastaDisfrute",    "tipo":"fecha"  ,"ayuda":"Fecha desde disfrute",       "titulo":"HASTA"},
-            {"campo":"fechaInicioLabor",      "tipo":"fecha"  ,"ayuda":"Fecha inicio labores",       "titulo":"INICIO"},
-            {"campo":"diasPagados",           "tipo":"texto"  ,"ayuda":"Dias pagados",               "titulo":"D.P"},
-            {"campo":"diasDisfrutados",       "tipo":"texto"  ,"ayuda":"Dias disfrutados" ,          "titulo":"D.D"},                     
-            {"campo":"diasDisfrutadosReales", "tipo":"texto"  ,"ayuda":"Dias disfrutados reales",    "titulo":"D.D.R"},                                        
-            {"campo":"vrTotal",               "tipo":"moneda" ,"ayuda":"Valor total de la vacacion", "titulo":"TOTAL"},                                        
-            {"campo":"estadoAutorizado",      "tipo":"bool"   ,"ayuda":"Estado autorizado", "titulo":"AUT"},                                        
-            {"campo":"estadoPagado",          "tipo":"bool"   ,"ayuda":"Estado pagado",     "titulo":"PAG"},                                        
-            {"campo":"estadoAnulado",         "tipo":"bool"   ,"ayuda":"Estado anulado",    "titulo":"ANU"}                                        
+            {"child":"codigoVacacionPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
+            {"child":"codigoGrupoFk",       "tipo":"EntityType", "propiedades":{"class":"RhuGrupo","choice_label":"nombre","label":"Grupo"}},
+            {"child":"numero",              "tipo":"TextType",   "propiedades":{"label":"Numero"}},
+            {"child":"codigoEmpleadoFk",    "tipo":"TextType",   "propiedades":{"label":"Empleado"}},
+            {"child":"fechaDesde",          "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaHasta",          "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
+            {"child":"estadoAutorizado",    "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",      "tipo":"ChoiceType", "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",       "tipo":"ChoiceType", "propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
         ]';
+
         return $campos;
     }
 }

@@ -63,4 +63,21 @@ class LiquidacionType extends AbstractType
         ]';
         return $campos;
     }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"codigoLiquidacionPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
+            {"child":"codigoGrupoFk",       "tipo":"EntityType", "propiedades":{"class":"RhuGrupo","choice_label":"nombre","label":"Grupo"}},
+            {"child":"numero",              "tipo":"TextType",   "propiedades":{"label":"Numero"}},
+            {"child":"codigoEmpleadoFk",    "tipo":"TextType",   "propiedades":{"label":"Empleado"}},
+            {"child":"fechaDesde",          "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaHasta",          "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
+            {"child":"estadoAutorizado",    "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",      "tipo":"ChoiceType", "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",       "tipo":"ChoiceType", "propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
+        ]';
+
+        return $campos;
+    }
 }

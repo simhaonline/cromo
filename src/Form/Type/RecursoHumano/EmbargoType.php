@@ -101,4 +101,19 @@ class EmbargoType extends AbstractType
         ]';
         return $campos;
     }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"codigoEmbargoPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
+            {"child":"codigoEmbargoTipoFk",       "tipo":"EntityType", "propiedades":{"class":"RhuEmbargoTipo","choice_label":"nombre","label":"Tipo"}},
+            {"child":"numero",              "tipo":"TextType",   "propiedades":{"label":"Numero"}},
+            {"child":"codigoEmpleadoFk",    "tipo":"TextType",   "propiedades":{"label":"Empleado"}},
+            {"child":"fechaDesde",          "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaHasta",          "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
+            {"child":"estadoActivo",    "tipo":"ChoiceType", "propiedades":{"label":"Activo",     "choices":{"SI":true,"NO":false}}}
+        ]';
+
+        return $campos;
+    }
 }

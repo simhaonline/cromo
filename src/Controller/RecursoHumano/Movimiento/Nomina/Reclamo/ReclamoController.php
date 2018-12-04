@@ -4,6 +4,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina\Reclamo;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuReclamo;
 use App\Form\Type\RecursoHumano\ReclamoType;
@@ -32,20 +33,32 @@ class ReclamoController extends ControllerListenerGeneral
     public function lista(Request $request)
     {
         $this->request = $request;
+        $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
-        $datos = $this->getDatosLista();
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+            }
+        }
+        $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                $this->getDatosExportar($formBotonera->getClickedButton()->getName(), $this->nombre);
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Reclamos");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuReclamo::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_reclamo_lista'));
             }
         }
         return $this->render('recursoHumano/movimiento/nomina/reclamo/lista.html.twig', [
             'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView()
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
         ]);
     }
 

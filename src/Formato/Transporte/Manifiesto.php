@@ -27,7 +27,16 @@ class Manifiesto extends \FPDF {
         $arDespacho = self::$em->getRepository(TteDespacho::class)->find(self::$codigoDespacho);
         $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->find(1);
         $this->Image('../public/img/recursos/transporte/logo_min_transporte.jpg', 15, 10, 70, 38);
-        $this->Image('../public/img/empresa/logo.jpg', 90, 30, 40, 15);
+        try {
+            $logo=self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+            if($logo ){
+
+                $this->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 90, 30, 40, 15,$logo->getExtension());
+            }
+        } catch (\Exception $exception) {
+        }
+
+        //$this->Image('../public/img/empresa/logo.jpg', 90, 30, 40, 15);
         $this->SetFont('Arial', 'b', 14);
         $this->Text(90, 15, "MANIFIESTO ELECTRONICO DE CARGA");
         $this->Text(90, 20, $arConfiguracion->getNombre());

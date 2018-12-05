@@ -93,6 +93,22 @@
     <!-- end user info -->
 
     {% set arrRuta = app.request.attributes.get('_route')|split('_') %}
+    {% set modulo = '' %}
+    {% set funcion = '' %}
+    {% set grupo = '' %}
+    {% set entidad = '' %}
+    {% if arrRuta | length > 0 and arrRuta.0 is defined and arrRuta.0 != 'administracion' %}
+        {% set modulo = arrRuta.0 %}
+        {% if arrRuta | length > 1 and arrRuta.1 is defined %}
+            {% set funcion = arrRuta.1 %}
+        {% endif %}
+        {% if arrRuta | length > 2 and arrRuta.2 is defined %}
+            {% set grupo = arrRuta.2 %}
+        {% endif %}
+        {% if arrRuta | length > 3 and arrRuta.3 is defined %}
+            {% set entidad = arrRuta.3 %}
+        {% endif %}
+    {% endif %}
     {% if arrRuta | length > 0 and arrRuta.0 is defined and arrRuta.0 != 'administracion' %}
         {#{{ dump(arrRuta) }}#}
         {% if arrRuta.0 == 'inicio' %}

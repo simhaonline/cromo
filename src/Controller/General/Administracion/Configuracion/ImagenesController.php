@@ -5,7 +5,7 @@ namespace App\Controller\General\Administracion\Configuracion;
 use App\Controller\BaseController;
 
 
-use Symfony\Component\Form\Extension\Core\Type\FileType;e;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

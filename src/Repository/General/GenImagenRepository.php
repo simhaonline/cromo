@@ -19,6 +19,15 @@ class GenImagenRepository extends ServiceEntityRepository
         parent::__construct($registry, GenImagen::class);
     }
 
+    public function lista(){
+        $em=$this->getEntityManager();
+        $arImagenes=$em->createQueryBuilder()
+            ->from('App:General\GenImagen','gi')
+            ->select('gi.codigoImagenPk','gi.imagen','gi.extension')->getQuery()->getResult();
+
+        return $arImagenes;
+    }
+
 //    /**
 //     * @return GenImagen[] Returns an array of GenImagen objects
 //     */

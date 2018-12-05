@@ -1,2 +1,38 @@
+{% extends ('base.html.twig') %}
+{% block content %}
 {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_errors(form) }}
+    <table class="table table-bordered table-striped tabla-datos"
+           style="">
+        <thead>
+        <tr>
+            <th>NOMBRE</th>
+            <th>IMAGEN</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arImagen in arImagenes %}
+            <tr>
+                <td>
+                    {{ arImagen.codigoImagenPk }}
+                </td>
+                <td style="text-align: center">
+                    <img src="{{ arImagen.imagen }}" width="100px">
+                </td>
+                <td>
+                    <div class="control-group">
+
+        {{ form_widget(form.logo, { 'attr': {'style': 'margin-right:15%'} }) }}
+                    </div>
+
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ form_widget(form.btnGuardar, { 'attr': {'style': 'aling-text:center; float:right'} }) }}
+
+    {{ form_rest(form) }}
 {{ form_end(form) }}
+{% endblock %}

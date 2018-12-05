@@ -37,7 +37,7 @@ class Recibo extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this,'RECIBO');
+        Estandares::generarEncabezado($this,'RECIBO', self::$em);
         $arRecibo= self::$em->getRepository(CarRecibo::class)->find(self::$codigoRecibo);
         $this->SetFillColor(236, 236, 236);
         $this->SetFont('Arial', 'B', 10);

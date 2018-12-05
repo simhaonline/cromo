@@ -40,7 +40,7 @@ class RecaudoCobro extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this,'RELACION RECAUDO COBRO');
+        Estandares::generarEncabezado($this,'RELACION RECAUDO COBRO', self::$em);
         $arRecaudoCobro = new TteRecaudoCobro();
         $arRecaudoCobro = self::$em->getRepository(TteRecaudoCobro::class)->find(self::$id);
         $this->SetFillColor(236, 236, 236);

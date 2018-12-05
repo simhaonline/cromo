@@ -29,7 +29,7 @@ class RelacionCaja extends \FPDF {
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
 
-        Estandares::generarEncabezado($this,'RELACION CAJA');
+        Estandares::generarEncabezado($this,'RELACION CAJA', self::$em);
 
         $this->EncabezadoDetalles();
 

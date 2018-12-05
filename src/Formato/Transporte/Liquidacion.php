@@ -29,7 +29,7 @@ class Liquidacion extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this,'LIQUIDACION');
+        Estandares::generarEncabezado($this,'LIQUIDACION', self::$em);
         $arDespacho = new TteDespacho();
         $arDespacho = self::$em->getRepository(TteDespacho::class)->find(self::$codigoDespacho);
         //linea1

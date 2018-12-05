@@ -21,7 +21,7 @@ class FacturaInforme extends \FPDF {
     }
 
     public function Header() {
-        Estandares::generarEncabezado($this,'FACTURTA INFORME');
+        Estandares::generarEncabezado($this,'FACTURTA INFORME', self::$em);
         $this->EncabezadoDetalles();
     }
 

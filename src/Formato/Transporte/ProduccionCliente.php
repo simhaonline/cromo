@@ -27,7 +27,7 @@ class ProduccionCliente extends \FPDF {
     }
 
     public function Header() {
-        Estandares::generarEncabezado($this,'PRODUCCION CLIENTE');
+        Estandares::generarEncabezado($this,'PRODUCCION CLIENTE', self::$em);
         $this->EncabezadoDetalles();
     }
 

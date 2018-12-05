@@ -45,7 +45,7 @@ class Programacion extends \FPDF
     {
         /** @var  $arProgramacion RhuProgramacion */
         $arProgramacion = self::$em->getRepository(RhuProgramacion::class)->find(self::$codigoProgramacion);
-        Estandares::generarEncabezado($this, 'PROGRAMACION PAGO');
+        Estandares::generarEncabezado($this, 'PROGRAMACION PAGO', self::$em);
         $intY = 40;
         $this->SetXY(10, $intY);
         $this->SetFont('Arial', 'B', 7);

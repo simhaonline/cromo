@@ -24,7 +24,7 @@ class CarteraEdadCliente extends \FPDF {
     }
 
     public function Header() {
-        Estandares::generarEncabezado($this,'CARTERA EDADES (CLIENTE)');
+        Estandares::generarEncabezado($this,'CARTERA EDADES (CLIENTE)', self::$em);
         $this->EncabezadoDetalles();
     }
 

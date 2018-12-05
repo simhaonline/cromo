@@ -52,4 +52,12 @@ class NotificacionController extends Controller
         return $this->render('general/administracion/notificacion/notificacion/lista.html.twig',
             ['arGenNotificacion' => $arGenNotificacion]);
     }
+
+    /**
+     *  @Route("/notificaciones", name="notificaciones")
+     */
+    public function notificaciones(){
+
+        return $this->render('estructura/notificacion.html.twig');
+    }
 }

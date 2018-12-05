@@ -1,14 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {% include ('transporte/movimiento/comercial/factura/filtro.html.twig') %}
-    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false" data-widget-fullscreenbutton="true">
+    {% include (modulo~'/'~funcion~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}
         <div class="table-responsive" style="padding:0px;">
             {{ form_start(formBotonera) }}
             {% include 'estructura/movimiento/tablaTransporteFactura.html.twig' %}
             {% include ('estructura/movimiento/botoneraTransporteFactura.html.twig') %}
             {{ form_end(formBotonera) }}
         </div>
-    </div>
-    </div>
+
 {% endblock %}
 

@@ -2,8 +2,8 @@
 {% block content %}
     {% include (modulo~'/'~funcion~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}
         <div class="table-responsive" style="padding:0px;">
-            {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
             {{ form_start(formBotonera) }}
+            {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
             {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
             {{ form_end(formBotonera) }}
         </div>

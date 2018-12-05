@@ -33,7 +33,7 @@ class RecaudoCobroController extends ControllerListenerGeneral
     protected $nombre = "RecaudoCobro";
 
    /**
-    * @Route("/transporte/movimiento/transporte/recaudoCobro/lista", name="transporte_movimiento_transporte_recaudo_cobro_lista")
+    * @Route("/transporte/movimiento/transporte/recaudoCobro/lista", name="transporte_movimiento_transporte_recaudoCobro_lista")
     */    
     public function lista(Request $request)
     {
@@ -69,7 +69,7 @@ class RecaudoCobroController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/recaudoCobro/detalle/{id}", name="transporte_movimiento_transporte_recaudocobro_detalle")
+     * @Route("/transporte/movimiento/transporte/recaudoCobro/detalle/{id}", name="transporte_movimiento_transporte_recaudoCobro_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -90,15 +90,15 @@ class RecaudoCobroController extends ControllerListenerGeneral
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteRecaudoCobro::class)->autorizar($arRecaudoCobro);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_cobro_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoCobro_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(TteRecaudoCobro::class)->desAutorizar($arRecaudoCobro);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_cobro_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoCobro_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TteRecaudoCobro::class)->Aprobar($arRecaudoCobro);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_cobro_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoCobro_detalle', ['id' => $id]));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
@@ -107,7 +107,7 @@ class RecaudoCobroController extends ControllerListenerGeneral
                     $em->flush();
                     $em->getRepository(TteRecaudoCobro::class)->liquidar($id);
                 }
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_cobro_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoCobro_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new RecaudoCobro();
@@ -155,7 +155,7 @@ class RecaudoCobroController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/recaudoCobro/nuevo/{id}", name="transporte_movimiento_transporte_recaudocobro_nuevo")
+     * @Route("/transporte/movimiento/transporte/recaudoCobro/nuevo/{id}", name="transporte_movimiento_transporte_recaudoCobro_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -173,9 +173,9 @@ class RecaudoCobroController extends ControllerListenerGeneral
             $em->persist($arRecaudoCobro);
             $em->flush();
             if ($form->get('guardarnuevo')->isClicked()) {
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_cobro_nuevo', array('codigoRecaudoCobro' => 0)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoCobro_nuevo', array('id' => 0)));
             } else {
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudo_cobro_detalle', ['id' => $arRecaudoCobro->getCodigoRecaudoCobroPk()]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoCobro_detalle', ['id' => $arRecaudoCobro->getCodigoRecaudoCobroPk()]));
             }
         }
         return $this->render('transporte/movimiento/transporte/recaudoCobro/nuevo.html.twig', [

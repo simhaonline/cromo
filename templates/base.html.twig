@@ -336,6 +336,7 @@
                         notificacionesGeneral.append(respuestas['notificacionesPendientes']);
                     }
                     else{
+                        numeroNotificaciones.html(`(${0})`);
                         notificacionesGeneral.append(respuestas['notificacionesPendientes']);
                     }
                 },
@@ -359,7 +360,7 @@
                         selector.append('<i class="fa fa-bell fa-fw"></i><span class="badge badge-notify" style="margin-top:-22px;margin-left:-24px">' + " " + respuestas['notificacionesPendientes'] + '</span> <i class="fa fa-caret-down"></i>');
                         $.each(respuestas['notificaciones'], (key, notificacion) => {
                             if (key < 7) {
-                                notificaciones.append('<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span>2 new users just signed up! <span class="text-primary">martin.luther</span> and <span class="text-primary">kevin.reliey</span><br><span class="pull-right font-xs text-muted"><i>' + moment(notificacion['fecha'], "YYYYMMDDhms").fromNow() + '</i></span></span></span></li>');
+                                notificaciones.append('<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >'+notificacion['nombre']+'<span class="pull-right font-xs text-muted"><i>' + moment(notificacion['fecha'], "YYYYMMDDhms").fromNow() + '</i></span></span></span></li>');
                             }
                         });
                         notificaciones.append('<li><a class="text-center" href="{{ path('general_administracion_notificacion__todasNotificaciones') }}"><strong>Ver todas </strong><i class="fa fa-angle-right"></i></a></li>');
@@ -381,6 +382,20 @@
                 dataType: "JSON",
                 success: function (respuestas) {
                     notificacionesGeneral.html(0);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function actualizarNotificaciones() {
+            $.ajax({
+                url: "{{ path('notificaciones') }}",
+                type: "GET",
+                dataType: "JSON",
+                success: function (respuestas) {
+
                 },
                 error: function (error) {
                     console.log(error);

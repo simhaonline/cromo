@@ -68,9 +68,10 @@ final class AdministracionController extends BaseController
                 $this->getDatosExportar($form->getClickedButton()->getName(), $this->nombre);
             }
         }
+
         return $this->render('estructura/administracion/lista.html.twig', [
             'modulo' => $modulo,
-            'entidad' => $entidad,
+            'nombreEntidad' => $entidad,
             'arrDatosLista' => $this->getDatosLista(),
             'form' => $form->createView()
         ]);

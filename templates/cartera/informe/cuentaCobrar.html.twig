@@ -40,6 +40,12 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Asesor:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.cboAsesor) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Desde:</label>
                 <div class="col-sm-5">
                     {{ form_widget(form.fechaDesde) }}
@@ -88,7 +94,8 @@
         <tbody>
         {% for arCuentaCobrar in arCuentasCobrar %}
             <tr>
-                <td><a href="javascript:abrirVentana3('{{ path('cartera_movimiento_cartera_cuentacobrar_referencia',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</a></td>
+                <td>{{ arCuentaCobrar.codigoCuentaCobrarPk }}</td>
+                {#<td><a href="javascript:abrirVentana3('{{ path('cartera_movimiento_cartera_cuentacobrar_referencia',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</a></td>#}
                 <td>{{ arCuentaCobrar.numeroDocumento }}</td>
                 <td>{{ arCuentaCobrar.numeroReferencia }}</td>
                 <td>{{ arCuentaCobrar.tipo }}</td>
@@ -129,7 +136,7 @@
     <div class="btn-toolbar" style="float: right">
 
     </div>
-
+<br><br><br>
 
     {{ form_rest(form) }}
     {{ form_end(form) }}

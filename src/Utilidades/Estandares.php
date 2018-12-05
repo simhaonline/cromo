@@ -100,10 +100,10 @@ final class Estandares
         //Logo
         $pdf->SetXY(53, 10);
         try {
-            $logo=$em->getRepository('App\Entity\General\GenImagen')->find('logo');
+            $logo=$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
             if($logo ){
 
-                $pdf->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getLogo())), 12, 13, 40, 25,$logo->getExtension());
+                $pdf->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 12, 13, 40, 25,$logo->getExtension());
             }
         } catch (\Exception $exception) {
         }

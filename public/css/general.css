@@ -1,48 +1,51 @@
-.pagination {
-    margin: 0px 0;
+.tabla-datos {
+    /*padding: 0px;*/
+    /*margin: 0px;*/
+    border: 1px solid #c9c9c9 !important;
+    margin-bottom: 10px !important;
 }
 
-table tr {
-    font-size: 10px;
-    padding: 2px;
-}
-
-.table tr {
-    padding: 2px;
-}
-
-.table > thead > tr > td, .table > thead > tr > th {
-    padding: 2px;
+.tabla-datos > thead > tr > td, .tabla-datos > thead > tr > th {
+    padding: 5px 4px !important;
+    background-color: #e1e1e1;
     text-align: center;
+    font-size: 10px !important;
 }
 
-.table > tbody > tr > td, .table > tbody > tr > th {
-    padding: 2px;
+.tabla-datos > tbody > tr > td, .tabla-datos > tbody > tr > th, .tabla-datos > tfoot > tr > td, .tabla-datos > tfoot > tr > th {
+    padding: 2px 3px !important;
+    font-size: 10px !important;
 }
 
-td.estado {
+.tabla-datos > tbody > tr:hover{
+    background-color: #e3e3e3 !important;
+    color: #3276b1;
+}
+
+.numero{
+    text-align: right !important;
+}
+
+/* Tabla información */
+.tabla-informacion {
+    border: 1px solid #c9c9c9 !important;
+    margin-bottom: 10px !important;
+}
+
+.tabla-informacion > thead > tr > td, .tabla-informacion > thead > tr > th {
+    padding: 5px 4px !important;
+    background-color: #e1e1e1;
     text-align: center;
+    font-size: 10px !important;
 }
 
-td.numero {
-    text-align: right;
+.tabla-informacion > tbody > tr > td, .tabla-informacion > tbody > tr > th, .tabla-informacion > tfoot > tr > td, .tabla-informacion > tfoot > tr > th {
+    padding: 2px 3px !important;
+    font-size: 10px !important;
 }
 
-td.seleccion {
-    text-align: center;
+.tabla-informacion .titulo{
+    font-weight: bold !important;
+    background-color: #e3e3e3 !important;
 }
 
-.link-black {
-    color: black;
-    text-decoration: none;
-}
-
-.link-grey {
-    color: grey;
-    text-decoration: none;
-}
-
-.input-valor{
-    text-align: right;
-
-}

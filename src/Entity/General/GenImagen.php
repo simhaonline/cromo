@@ -11,18 +11,18 @@ class GenImagen
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\Column(type="string", name="codigo_imagen_pk", nullable=false)
      */
     private $codigoImagenPk;
 
     /**
-     * @ORM\Column(type="blob", length=500, name="logo", nullable=false)
+     * @ORM\Column(type="blob", length=500, name="imagen", nullable=true)
      */
-    private $logo;
+    private $imagen;
 
     /**
-     * @ORM\Column(type="string", length=5, name="extension", nullable=false)
+     * @ORM\Column(type="string", length=5, name="extension", nullable=true)
      */
     private $extension;
 
@@ -46,17 +46,17 @@ class GenImagen
     /**
      * @return mixed
      */
-    public function getLogo()
+    public function getImagen()
     {
-        return $this->logo;
+        return $this->imagen;
     }
 
     /**
-     * @param mixed $logo
+     * @param mixed $imagen
      */
-    public function setLogo($logo)
+    public function setImagen($imagen)
     {
-        $this->logo = $logo;
+        $this->imagen = $imagen;
         return $this;
     }
 

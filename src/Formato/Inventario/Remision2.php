@@ -43,9 +43,8 @@ class Remision2 extends \FPDF
 
     public function Header()
     {
-
         $arRemision = self::$em->getRepository(InvRemision::class)->find(self::$codigoRemision);
-        Estandares::generarEncabezado($this, 'REMISION');
+        Estandares::generarEncabezado($this, 'REMISION',self::$em);
         $this->SetXY(165, 18);
         $this->SetFont('Arial', 'B', 9);
         $this->Cell(35, 5.333333, "CODIGO: F-CO-05", 0, 0, 'L', 1);

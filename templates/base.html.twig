@@ -27,12 +27,15 @@
              specific styles this will also ensure you retrain your customization with each SmartAdmin update.
         <link rel="stylesheet" type="text/css" media="screen" href="css/your_style.css"> -->
 
+        <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/demo.min.css') }}">
+
         <!-- #FAVICONS -->
         <link rel="shortcut icon" href="{{ asset('img/favicon/favicon.ico') }}" type="image/x-icon">
         <link rel="icon" href="{{ asset('img/favicon/favicon.ico') }}" type="image/x-icon">
 
         <!-- #GOOGLE FONT -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
 
         <!-- #APP SCREEN / ICONS -->
         <!-- Specifying a Webpage Icon for Web Clip
@@ -123,7 +126,7 @@
             {% include('base_general.html.twig') %}
         {% endif %}
     {% elseif arrRuta.0 == 'administracion' %}
-        {%  set modulo = app.request.attributes.get('modulo') %}
+        {% set modulo = app.request.attributes.get('modulo') %}
         {% if modulo == 'inicio' %}
             {% include('base_menu_inicio.html.twig') %}
         {% endif %}
@@ -154,9 +157,9 @@
         {% if modulo == 'general' %}
             {% include('base_general.html.twig') %}
         {% endif %}
-        
+
     {% endif %}
-    
+
     {#<nav>#}
     {#<ul>#}
     {#<li class="">#}
@@ -255,7 +258,7 @@
     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>#}
     {#<script src="{{ asset('vendor/moment/moment.min.js') }}"></script>#}
     {#<script src="{{ asset('plugins/select2/js/select2.full.js') }}"></script>#}
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
         if (!window.jQuery) {
             document.write('<script src="{{ asset('js/libs/jquery-3.2.1.min.js') }}"><\/script>');
@@ -272,9 +275,35 @@
     <!-- BOOTSTRAP JS -->
     <script src="{{ asset('js/plugin/jquery-touch/jquery.ui.touch-punch.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap/bootstrap.min.js') }}"></script>
+    <!-- CUSTOM NOTIFICATION -->
+    <script src="{{ asset('js/notification/SmartNotification.min.js') }}"></script>
     <script src="{{ asset('js/smartwidgets/jarvis.widget.min.js') }}"></script>
-    <script src="{{ asset('js/app.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/sparkline/jquery.sparkline.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/jquery-validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/masked-input/jquery.maskedinput.min.js') }}"></script>
     <script src="{{ asset('plugins/select2/js/select2.full.js') }}"></script>
+    <script src="{{ asset('js/plugin/bootstrap-slider/bootstrap-slider.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/msie-fix/jquery.mb.browser.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/fastclick/fastclick.min.js') }}"></script>
+    <script src="{{ asset('js/demo.min.js') }}"></script>
+    <script src="{{ asset('js/app.min.js') }}"></script>
+
+    <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
+    <!-- Voice command : plugin -->
+    <script src="{{ asset('js/speech/voicecommand.min.js') }}"></script>
+
+    <!-- SmartChat UI : plugin -->
+    <script src="{{ asset('js/smart-chat-ui/smart.chat.ui.min.js') }}"></script>
+    <script src="{{ asset('js/smart-chat-ui/smart.chat.manager.min.js') }}"></script>
+
+    <script>
+        // DO NOT REMOVE : GLOBAL FUNCTIONS!
+        $(document).ready(function () {
+            pageSetUp();
+        });
+    </script>
+
     <script src="{{ asset('js/general.js') }}"></script>
     <script>
         $(document).ready(function () {

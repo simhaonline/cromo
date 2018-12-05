@@ -17,44 +17,7 @@
         {% if arPedido.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    <table width="100%" class="table table-condensed table-bordered">
-        <tr>
-            <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arPedido.codigoPedidoPk }}</td>
-            <td class="titulo">USUARIO:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arPedido.usuario }}</td>
-            <td class="titulo">SUBTOTAL:</td>
-            <td align="right">{{ arPedido.vrSubtotal | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arPedido.numero }}</td>
-            <td class="titulo">FECHA:</td>
-            <td class="td-in-well">{{ arPedido.fecha | date("Y-m-d H:i:s") }}</td>
-            <td class="titulo">IVA:</td>
-            <td align="right">{{ arPedido.vrIva | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">CLIENTE:</td>
-            <td class="td-in-well">{{ arPedido.terceroRel.nombreCorto }}</td>
-            <td class="titulo">SOPORTE:</td>
-            <td class="td-in-well">{{ arPedido.soporte }}</td>
-            <td class="titulo">NETO:</td>
-            <td align="right">{{ arPedido.vrTotal | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">TOTAL:</td>
-            <td align="right">{{ arPedido.vrTotal | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">COMENTARIO:</td>
-            <td class="td-in-well" colspan="5">{{ arPedido.comentario }}</td>
-        </tr>
-    </table>
+    {% include 'inventario/movimiento/comercial/pedido/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>

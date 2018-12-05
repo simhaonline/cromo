@@ -30,7 +30,7 @@ class Cumplido extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this,'RELACION CUMPLIDOS');
+        Estandares::generarEncabezado($this,'RELACION CUMPLIDOS', self::$em);
         $arCumplido = new TteCumplido();
         $arCumplido = self::$em->getRepository(TteCumplido::class)->find(self::$codigoCumplido);
         $this->SetFillColor(236, 236, 236);

@@ -24,7 +24,7 @@ class CuentaCobrar extends \FPDF {
     }
 
     public function Header() {
-        Estandares::generarEncabezado($this,'CUENTAS POR COBRAR');
+        Estandares::generarEncabezado($this,'CUENTAS POR COBRAR', self::$em);
 
         $this->EncabezadoDetalles();
 

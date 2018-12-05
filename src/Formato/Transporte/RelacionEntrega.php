@@ -30,7 +30,7 @@ class RelacionEntrega extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this,'RELACION ENTREGA');
+        Estandares::generarEncabezado($this,'RELACION ENTREGA', self::$em);
         $arDespacho = new TteDespacho();
         $arDespacho = self::$em->getRepository(TteDespacho::class)->find(self::$codigoDespacho);
         $this->SetFillColor(236, 236, 236);

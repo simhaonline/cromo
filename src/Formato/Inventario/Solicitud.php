@@ -44,7 +44,7 @@ class Solicitud extends \FPDF
     {
         /** @var  $arSolicitud InvSolicitud */
         $arSolicitud = self::$em->getRepository(InvSolicitud::class)->find(self::$codigoSolicitud);
-        Estandares::generarEncabezado($this, 'SOLICITUD');
+        Estandares::generarEncabezado($this, 'SOLICITUD', self::$em);
         $intY = 40;
         $this->SetXY(10, $intY);
         $this->SetFont('Arial', 'B', 8);

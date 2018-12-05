@@ -31,7 +31,7 @@ class NotaCredito extends \FPDF {
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
 
-        Estandares::generarEncabezado($this,'NOTA CREDITO');
+        Estandares::generarEncabezado($this,'NOTA CREDITO', self::$em);
 
         $arNotaCredito = self::$em->getRepository('App:Transporte\TteFactura')->find(self::$codigoNotaCredito);
         $this->SetFillColor(200, 200, 200);

@@ -42,7 +42,7 @@ class Compras extends \FPDF
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this, 'Compra');
+        Estandares::generarEncabezado($this, 'Compra', self::$em);
         $arCompra = self::$em->getRepository(ComCompra::class)->find(self::$codigoCompra);
         $this->SetFillColor(236, 236, 236);
         $this->SetFont('Arial', 'B', 10);

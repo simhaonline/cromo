@@ -33,7 +33,7 @@ class ControlFactura extends \FPDF
         //Logo
 
 
-        Estandares::generarEncabezado($this, 'COMPROBANTE INFORME DIARIO');
+        Estandares::generarEncabezado($this, 'COMPROBANTE INFORME DIARIO', self::$em);
 
         $this->SetXY(53, 34);
         $this->Cell(20, 4, 'FECHA:', 0, 0, 'L', 1);

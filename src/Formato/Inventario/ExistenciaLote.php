@@ -28,7 +28,7 @@ class ExistenciaLote extends \FPDF {
 
     public function Header() {
 
-        Estandares::generarEncabezado($this, 'ORDEN DE COMPRA');
+        Estandares::generarEncabezado($this, 'ORDEN DE COMPRA', self::$em);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
         //Logo

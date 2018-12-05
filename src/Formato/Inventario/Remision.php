@@ -44,7 +44,7 @@ class Remision extends \FPDF
     {
 
         $arRemision = self::$em->getRepository(InvRemision::class)->find(self::$codigoRemision);
-        Estandares::generarEncabezado($this, 'REMISION');
+        Estandares::generarEncabezado($this, 'REMISION', self::$em);
         $intY = 40;
         $this->SetXY(10, $intY);
         $this->SetFont('Arial', 'B', 8);

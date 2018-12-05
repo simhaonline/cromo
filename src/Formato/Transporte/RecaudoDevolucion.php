@@ -39,7 +39,7 @@ class RecaudoDevolucion extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this,'RELACION RECAUDO DEVOLUCION');
+        Estandares::generarEncabezado($this,'RELACION RECAUDO DEVOLUCION', self::$em);
         $arRecaudo = new TteRecaudoDevolucion();
         $arRecaudo = self::$em->getRepository(TteRecaudoDevolucion::class)->find(self::$id);
         $this->SetFillColor(236, 236, 236);

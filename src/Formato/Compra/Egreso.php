@@ -41,7 +41,7 @@ class Egreso extends \FPDF
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this, 'Egreso');
+        Estandares::generarEncabezado($this, 'Egreso', self::$em);
         $arEgreso = self::$em->getRepository(ComEgreso::class)->find(self::$codigoEgreso);
         $this->SetFillColor(236, 236, 236);
         $this->SetFont('Arial', 'B', 10);

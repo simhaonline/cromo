@@ -47,7 +47,7 @@ class Egreso extends \FPDF
     {
         /** @var  $arEgreso RhuEgreso */
         $arEgreso = self::$em->getRepository(RhuEgreso::class)->find(self::$codigoEgreso);
-        Estandares::generarEncabezado($this, 'EGRESO');
+        Estandares::generarEncabezado($this, 'EGRESO', self::$em);
         $intY = 40;
         $this->SetXY(10, $intY);
         $this->SetFont('Arial', 'B', 8);

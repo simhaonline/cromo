@@ -24,60 +24,7 @@
         {% if arRecibo.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br /><br />
-    <table width="100%" class="table table-condensed table-bordered">
-        <tr>
-            <td class="titulo"><b>CODIGO:</b></td>
-            <td class="td-in-well">{{ arRecibo.codigoReciboPk }}</td>
-            <td class="titulo"><b>NUMERO:</b></td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arRecibo.numero }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"><b>CLIENTE:</b></td>
-            <td class="td-in-well">{{ arRecibo.clienteRel.nombreCorto }}</td>
-            <td class="titulo"><b>DESCUENTO:</b></td>
-            <td class="td-in-well"  align="right">{{ arRecibo.vrTotalDescuento | number_format }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"><b>CUENTA:</b></td>
-            <td class="td-in-well">{{ arRecibo.cuentaRel.nombre | default('') }}</td>
-            <td class="titulo"><b>TOTAL AJUSTE PESO:</b></td>
-            <td class="td-in-well"  align="right">{{ arRecibo.vrTotalAjustePeso | number_format }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"><b>FECHA:</b></td>
-            <td class="td-in-well">{{ arRecibo.fecha | date('Y-m-d') }}</td>
-            <td class="titulo"><b>RETENCION ICA:</b></td>
-            <td class="td-in-well"  align="right">{{ arRecibo.vrTotalRetencionIca | number_format }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"><b>FECHA PAGO:</b></td>
-            <td class="td-in-well">{{ arRecibo.fechaPago | date('Y-m-d') }}</td>
-            <td class="titulo"><b>RETENCION IVA:</b></td>
-            <td class="td-in-well"  align="right">{{ arRecibo.vrTotalRetencionIva | number_format }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"><b>USUARIO:</b></td>
-            <td class="td-in-well">{{ arRecibo.usuario }}</td>
-            <td class="titulo"><b>RETENCION FUENTE:</b></td>
-            <td class="td-in-well"  align="right">{{ arRecibo.vrTotalRetencionFuente | number_format }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"><b>SOPORTE:</b></td>
-            <td class="td-in-well">{{ arRecibo.soporte }}</td>
-            <td class="titulo"><b>PAGO:</b></td>
-            <td class="td-in-well"  align="right">{{ arRecibo.vrPago | number_format }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"><b>NUMERO DOCUMENTO:</b></td>
-            <td class="td-in-well">{{ arRecibo.numeroDocumento }}</td>
-            <td class="titulo"><b>TOTAL:</b></td>
-            <td class="td-in-well"  align="right">{{ arRecibo.vrPagoTotal | number_format }}</td>
-        </tr>
-        <tr>
-            <td class="titulo" ><b>COMENTARIOS:</b></td>
-            <td class="td-in-well" colspan="5">{{ arRecibo.comentarios }}</td>
-        </tr>
-    </table>
+    {% include 'cartera/movimiento/recibo/informacion.html.twig' %}
     <table class="table table-striped table-bordered table-condensed">
         <thead>
         <tr>

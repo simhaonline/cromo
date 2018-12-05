@@ -1,0 +1,25 @@
+<table width="100%" class="table table-condensed table-bordered">
+    <tr>
+        <td class="titulo">CODIGO:</td>
+        <td class="td-in-well">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</td>
+        <td class="titulo">NUMERO DOCUMENTO:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arCuentaCobrar.numeroDocumento }}</td>
+        <td class="titulo">ABONO:</td>
+        <td align="right">{{ arCuentaCobrar.vrAbono | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">TIPO:</td>
+        <td class="td-in-well">{{ arCuentaCobrar.codigoCuentaCobrarTipoFk }}</td>
+        <td class="titulo">FECHA:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arCuentaCobrar.fecha | date('Y-m-d') }}</td>
+        <td class="titulo">SALDO:</td>
+        <td align="right">{{ arCuentaCobrar.vrSaldo | number_format(0, '.', ',') }}</td>
+    </tr><tr>
+        <td class="titulo">NUMERO REFERENCIA:</td>
+        <td class="td-in-well">{{ arCuentaCobrar.numeroReferencia }}</td>
+        <td class="titulo">VENCE:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arCuentaCobrar.fechaVence | date('Y-m-d') }}</td>
+        <td class="titulo">TOTAL:</td>
+        <td align="right">{{ arCuentaCobrar.vrTotal | number_format(0, '.', ',') }}</td>
+    </tr>
+</table>

@@ -1,0 +1,86 @@
+<table width="100%" class="table table-condensed table-bordered">
+    <tr>
+        <td class="titulo">NUMERO:</td>
+        <td class="td-in-well">{{ arDespachoRecogida.numero }}</td>
+        <td class="titulo">FECHA:</td>
+        <td class="td-in-well">{{ arDespachoRecogida.fecha |date("Y/m/d") }}</td>
+        <td class="titulo">FLETE:</td>
+        <td align="right">{{ arDespachoRecogida.vrFletePago | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">VEHICULO:</td>
+        <td class="td-in-well">{{ arDespachoRecogida.codigoVehiculoFk }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo" >(-)ANTICIPO:</td>
+        <td align="right">{{ arDespachoRecogida.vrAnticipo | number_format(0, '.', ',')  }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">CONDUCTOR:</td>
+        <td class="td-in-well">{{ arDespachoRecogida.conductorRel.nombreCorto | default('') }}</td>
+        <td class="titulo">CANTIDAD:</td>
+        <td align="right">{{ arDespachoRecogida.cantidad }}</td>
+        <td class="titulo" >(-)INDUSTRIA COMERCIO</td>
+        <td align="right">{{ arDespachoRecogida.vrIndustriaComercio | number_format(0, '.', ',')  }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">RUTA:</td>
+        <td class="td-in-well">{{ arDespachoRecogida.rutaRecogidaRel.nombre| default('') }}</td>
+        <td class="titulo">UNIDADES:</td>
+        <td align="right">{{ arDespachoRecogida.unidades }}</td>
+        <td class="titulo" >(-)RETENCION FUENTE</td>
+        <td align="right">{{ arDespachoRecogida.vrRetencionFuente | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo">PESO:</td>
+        <td align="right">{{ arDespachoRecogida.pesoReal }}</td>
+        <td class="titulo" >TOTAL</td>
+        <td align="right">{{ arDespachoRecogida.vrTotal | number_format(0, '.', ',')  }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo"></td>
+        <td align="right"></td>
+        <td class="titulo" >PAPELERIA:</td>
+        <td align="right">{{ arDespachoRecogida.vrDescuentoPapeleria | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo"></td>
+        <td align="right"></td>
+        <td class="titulo">SEGURIDAD:</td>
+        <td align="right">{{ arDespachoRecogida.vrDescuentoSeguridad | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo"></td>
+        <td align="right"></td>
+        <td class="titulo" >CARGUE:</td>
+        <td align="right">{{ arDespachoRecogida.vrDescuentoCargue | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo"></td>
+        <td align="right"></td>
+        <td class="titulo" >ESTAMPILLA:</td>
+        <td align="right">{{ arDespachoRecogida.vrDescuentoEstampilla | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo"></td>
+        <td align="right"></td>
+        <td class="titulo" >SALDO:</td>
+        <td align="right">{{ arDespachoRecogida.vrSaldo | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">COMENTARIO:</td>
+        <td class="td-in-well" colspan="5">{{ arDespachoRecogida.comentario }}</td>
+    </tr>
+</table>

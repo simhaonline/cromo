@@ -1,0 +1,18 @@
+<table width="100%" class="table table-condensed table-bordered">
+    <tr>
+        <td class="titulo">CODIGO:</td>
+        <td class="td-in-well">{{ arAsiento.codigoAsientoPk }}</td>
+        <td class="titulo">NUMERO:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arAsiento.numero }}</td>
+        <td class="titulo">DEBITO:</td>
+        <td align="right">{{ arAsiento.vrDebito | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">COMPROBANTE:</td>
+        <td class="td-in-well">{{ arAsiento.codigoComprobanteFk }}-{{ arAsiento.comprobanteRel.nombre }}</td>
+        <td class="titulo">FECHA:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arAsiento.fechaContable | date('Y-m-d') }}</td>
+        <td class="titulo">CREDITO:</td>
+        <td align="right">{{ arAsiento.vrCredito | number_format(0, '.', ',') }}</td>
+    </tr>
+</table>

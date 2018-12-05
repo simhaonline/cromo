@@ -19,7 +19,7 @@ class CuentaCobrarController extends ControllerListenerGeneral
     protected $claseNombre = "CarCuentaCobrar";
     protected $modulo = "Cartera";
     protected $funcion = "Movimiento";
-    protected $grupo = "Cartera";
+    protected $grupo = "CuentaCobrar";
     protected $nombre = "CuentaCobrar";
 
     /**
@@ -27,7 +27,7 @@ class CuentaCobrarController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/cartera/movimiento/cartera/cuentacobrar/lista", name="cartera_movimiento_cartera_cuentacobrar_lista")
+     * @Route("/cartera/movimiento/cartera/cuentacobrar/lista", name="cartera_movimiento_cuentacobrar_cuentacobrar_lista")
      */
     public function lista(Request $request)
     {
@@ -51,10 +51,10 @@ class CuentaCobrarController extends ControllerListenerGeneral
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(CarCuentaCobrar::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('cartera_movimiento_cartera_cuentacobrar_lista'));
+                return $this->redirect($this->generateUrl('cartera_movimiento_cuentacobrar_cuentacobrar_lista'));
             }
         }
-        return $this->render('cartera/movimiento/cuentaCobrar/lista.html.twig', [
+        return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -63,18 +63,18 @@ class CuentaCobrarController extends ControllerListenerGeneral
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/cartera/movimiento/cartera/cuentacobrar/nuevo/{id}", name="cartera_movimiento_cartera_cuentacobrar_nuevo")
+     * @Route("/cartera/movimiento/cartera/cuentacobrar/nuevo/{id}", name="cartera_movimiento_cuentacobrar_cuentacobrar_nuevo")
      */
     public function nuevo()
     {
-        return $this->redirect($this->generateUrl('cartera_movimiento_cartera_cuentacobrar_lista'));
+        return $this->redirect($this->generateUrl('cartera_movimiento_cuentacobrar_cuentacobrar_lista'));
     }
 
     /**
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/cartera/movimiento/cartera/cuentacobrar/detalle/{id}", name="cartera_movimiento_cartera_cuentacobrar_detalle")
+     * @Route("/cartera/movimiento/cartera/cuentacobrar/detalle/{id}", name="cartera_movimiento_cuentacobrar_cuentacobrar_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -82,7 +82,7 @@ class CuentaCobrarController extends ControllerListenerGeneral
         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
         $form = Estandares::botonera(false,false,false);
         $form->handleRequest($request);
-        return $this->render('cartera/movimiento/cuentaCobrar/detalle.html.twig', [
+        return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/detalle.html.twig', [
             'arCuentaCobrar' => $arCuentaCobrar,
             'form' => $form->createView()
         ]);
@@ -91,13 +91,13 @@ class CuentaCobrarController extends ControllerListenerGeneral
     /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/cartera/movimiento/cartera/cuentacobrar/referencia/{id}", name="cartera_movimiento_cartera_cuentacobrar_referencia")
+     * @Route("/cartera/movimiento/cartera/cuentacobrar/referencia/{id}", name="cartera_movimiento_cuentacobrar_cuentacobrar_referencia")
      */
     public function referencia($id){
         $em = $this->getDoctrine()->getManager();
         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
         $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(['codigoCuentaCobrarFk' => $id]);
-        return $this->render('cartera/movimiento/cuentaCobrar/referencia.html.twig',[
+        return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/referencia.html.twig',[
             'arCuentaCobrar' => $arCuentaCobrar,
             'arReciboDetalles' => $arReciboDetalles
         ]);

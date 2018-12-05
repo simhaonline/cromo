@@ -46,17 +46,21 @@ class FormatoMovimientoTraslado extends \FPDF
     public function Header()
     {
         /** @var  $arMovimiento InvMovimiento */
+        $em = self::$em;
         $arMovimiento = self::$em->getRepository(InvMovimiento::class)->find(self::$codigoMovimiento);
         /** @var  $arConfiguracion GenConfiguracion */
         $this->SetFont('Arial', '', 5);
         $date = new \DateTime('now');
         $this->Text(168, 8, $date->format('Y-m-d H:i:s') . ' [Cromo | Inventario]');
         $this->SetFillColor(200, 200, 200);
-        $this->SetFont('Arial', 'B', 10);
         //Logo
         $this->SetXY(53, 10);
         try {
-            $this->Image('../public/img/empresa/logo.jpg', 12, 13, 40, 25);
+            $logo=$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+            if($logo ){
+
+                $this->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 10, 13, 55, 25,$logo->getExtension());
+            }
         } catch (\Exception $exception) {
         }
 

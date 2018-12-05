@@ -53,7 +53,62 @@
         <div class="tab-pane active" id="detalles">
             <div id="detalles" style="width: 100%"><br>
                 <div class="table-responsive">
-                    {% include 'recursoHumano/movimiento/nomina/programacion/informacion.html.twig'%}
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>DOC</th>
+                            <th>NOMBRE</th>
+                            <th>DESDE</th>
+                            <th>HASTA</th>
+                            <th>SALARIO</th>
+                            <th title="Horas diurnas">D</th>
+                            <th title="Horas nocturnas">N</th>
+                            <th title="Horas festivas diurnas">FD</th>
+                            <th title="Horas festivas nocturnas">FN</th>
+                            <th title="Horas extras diurnas">ED</th>
+                            <th title="Horas extras nocturnas">EN</th>
+                            <th title="Horas extras festivas diurnas">EFD</th>
+                            <th title="Horas extras festivas nocturnas">EFN</th>
+                            <th title="Recargos nocturnos">RN</th>
+                            <th title="Recargo festivo diurno">RFD</th>
+                            <th title="Recargo festivo nocturno">RFN</th>
+                            <th>VR.NETO</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arProgramacionDetalle in arProgramacionDetalles %}
+                            <tr>
+                                <td>{{ arProgramacionDetalle.codigoProgramacionDetallePk }}</td>
+                                <td>{{ arProgramacionDetalle.numeroIdentificacion }}</td>
+                                <td>{{ arProgramacionDetalle.nombreCorto }}</td>
+                                <td>{{ arProgramacionDetalle.fechaDesdeContrato | date('Y-m-d') }}</td>
+                                <td>{{ arProgramacionDetalle.fechaHastaContrato | date('Y-m-d') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.horasDiurnas | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.horasNocturnas | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.horasFestivasDiurnas | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.horasFestivasNocturnas | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.horasExtrasOrdinariasDiurnas | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.horasExtrasOrdinariasNocturnas | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.horasExtrasFestivasDiurnas | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.horasExtrasFestivasNocturnas | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoNocturno | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoFestivoDiurno | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoFestivoNocturno | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.vrNeto | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: center;"><a
+                                            href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_detalle_resumen',{ 'id': arProgramacionDetalle.codigoProgramacionDetallePk }) }}','resumen',600,900)"><i
+                                                class="fa fa-table" style="color: black;font-size: large;"></i></a></td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                                       value="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}">
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

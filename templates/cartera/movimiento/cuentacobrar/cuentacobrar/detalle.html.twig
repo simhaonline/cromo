@@ -3,14 +3,14 @@
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('financiero_movimiento_contabilidad_registro_lista') }}">Volver</a>&nbsp;&nbsp;
+            <a class="btn btn-default btn-sm" href="{{ path('cartera_movimiento_cartera_cuentacobrar_lista') }}">Volver</a>&nbsp;&nbsp;
         </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
     <br/><br/>
-    {% include 'financiero/movimiento/contabilidad/registro/informacion.html.twig' %}
+    {% include 'cartera/movimiento/cuentaCobrar/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>

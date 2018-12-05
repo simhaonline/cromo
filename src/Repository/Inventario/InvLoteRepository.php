@@ -72,6 +72,7 @@ class InvLoteRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvLote::class,'l')
             ->select('l.codigoLotePk')
             ->addSelect('l.loteFk')
+            ->addSelect('l.fechaVencimiento')
             ->addSelect('l.codigoBodegaFk')
             ->addSelect('l.cantidadExistencia')
             ->addSelect('l.cantidadDisponible')

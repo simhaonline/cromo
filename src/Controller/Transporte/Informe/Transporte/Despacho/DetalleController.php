@@ -19,9 +19,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class DetalleController extends Controller
 {
-   /**
-    * @Route("/transporte/informe/transporte/despacho/detalle", name="transporte_informe_transporte_despacho_detalle")
-    */
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/transporte/informe/transporte/despacho/detalle", name="transporte_informe_transporte_despacho_detalle")
+     */
     public function lista(Request $request)
     {
         set_time_limit(0);

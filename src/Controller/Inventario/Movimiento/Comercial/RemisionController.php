@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenAsesor;
+use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvPedido;
@@ -389,6 +390,8 @@ class RemisionController extends ControllerListenerGeneral
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtNumero', TextType::class, array('required' => false))
+            ->add('txtLote', TextType::class, array('required' => false))
+            ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnGuardarCerrar', SubmitType::class, ['label' => 'Guardar y cerrar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -397,7 +400,14 @@ class RemisionController extends ControllerListenerGeneral
         $arRemision = $em->getRepository(InvRemision::class)->find($id);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvPedidoNumero', $form->get('txtNumero')->getData());
+                $session->set('filtroInvRemisionNumero', $form->get('txtNumero')->getData());
+                $session->set('filtroInvRemisionDetalleLote', $form->get('txtLote')->getData());
+                $arBodega = $form->get('cboBodega')->getData();
+                if ($arBodega != '') {
+                    $session->set('filtroInvBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());
+                } else {
+                    $session->set('filtroInvBodega', null);
+                }
             }
             if ($form->get('btnGuardar')->isClicked() || $form->get('btnGuardarCerrar')->isClicked()) {
                 $arrDetalles = $request->request->get('itemCantidad');
@@ -440,7 +450,7 @@ class RemisionController extends ControllerListenerGeneral
                 }
             }
         }
-        $arRemisionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvRemisionDetalle::class)->listarDetallesPendientes($arRemision->getCodigoTerceroFk()), $request->query->getInt('page', 1), 10);
+        $arRemisionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvRemisionDetalle::class)->listarDetallesPendientes($arRemision->getCodigoTerceroFk()), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/movimiento/comercial/remision/detalleNuevoRemision.html.twig', [
             'form' => $form->createView(),
             'arRemisionDetalles' => $arRemisionDetalles

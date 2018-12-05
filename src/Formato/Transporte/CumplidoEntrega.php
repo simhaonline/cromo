@@ -27,13 +27,13 @@ class CumplidoEntrega extends \FPDF {
 
     public function Header() {
 
-        $arCumplido = self::$em->getRepository(TteCumplido::class)->find(self::$codigoCumplido);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
         Estandares::generarEncabezado($this,'RELACION CUMPLIDOS (ENTREGA)', self::$em);
         $arCumplido = new TteCumplido();
+        $arCumplido = self::$em->getRepository(TteCumplido::class)->find(self::$codigoCumplido);
         $this->SetFillColor(236, 236, 236);
         $this->SetFont('Arial', 'B', 10);
         //linea 1

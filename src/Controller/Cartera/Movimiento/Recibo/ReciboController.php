@@ -61,7 +61,7 @@ class ReciboController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
             }
         }
-        return $this->render('cartera/movimiento/recibo/lista.html.twig', [
+        return $this->render('cartera/movimiento/recibo/recibo/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -104,7 +104,7 @@ class ReciboController extends ControllerListenerGeneral
 
             }
         }
-        return $this->render('cartera/movimiento/recibo/nuevo.html.twig', [
+        return $this->render('cartera/movimiento/recibo/recibo/nuevo.html.twig', [
             'arRecibo' => $arRecibo,
             'form' => $form->createView()
         ]);
@@ -170,7 +170,7 @@ class ReciboController extends ControllerListenerGeneral
         }
 
         $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $id));
-        return $this->render('cartera/movimiento/recibo/detalle.html.twig', array(
+        return $this->render('cartera/movimiento/recibo/recibo/detalle.html.twig', array(
             'arRecibo'=> $arRecibo,
             'arReciboDetalle'=> $arReciboDetalle,
             'form' => $form->createView()
@@ -225,7 +225,7 @@ class ReciboController extends ControllerListenerGeneral
         }
         $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->cuentasCobrar($arRecibo->getCodigoClienteFk());
         $arCuentasCobrar = $paginator->paginate($arCuentasCobrar, $request->query->get('page', 1), 50);
-        return $this->render('cartera/movimiento/recibo/detalleNuevo.html.twig', array(
+        return $this->render('cartera/movimiento/recibo/recibo/detalleNuevo.html.twig', array(
             'arCuentasCobrar' => $arCuentasCobrar,
             'arRecibo' => $arRecibo,
             'form' => $form->createView()));
@@ -269,7 +269,7 @@ class ReciboController extends ControllerListenerGeneral
             }
             $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->cuentasCobrarAplicar($arReciboDetalle->getReciboRel()->getCodigoClienteFk());
             $arCuentasCobrar = $paginator->paginate($arCuentasCobrar, $request->query->get('page', 1), 50);
-            return $this->render('cartera/movimiento/recibo/detalleaAplicar.html.twig', array(
+            return $this->render('cartera/movimiento/recibo/recibo/detalleaAplicar.html.twig', array(
                 'arCuentasCobrar' => $arCuentasCobrar,
                 'form' => $form->createView()));
         }

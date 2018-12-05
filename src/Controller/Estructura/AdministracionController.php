@@ -43,7 +43,6 @@ final class AdministracionController extends BaseController
         $em = $this->getDoctrine()->getManager();
         $this->request = $request;
         $this->modulo = ucfirst($modulo);
-        $this->nombre = ucfirst($entidad);
         $prefijo = $this->obtenerPrefijo($modulo);
         $clase = "\\App\\Entity\\" . ucfirst($modulo) . "\\" . ucfirst($prefijo) . ucfirst($entidad);
         $this->claseNombre = ucfirst($prefijo) . ucfirst($entidad);

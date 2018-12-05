@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Desde:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-4">
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-4">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.btnFiltrar) }}
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>FECHA</th>
+            <th>DOC CLIENTE</th>
+            <th>CIUDAD ORIGEN</th>
+            <th>CIUDAD DESTINO</th>
+            <th>PLACA</th>
+            <th>TIPO IDENTIFICACION</th>
+            <th>IDENTIFICACION</th>
+            <th>PROPIETARIO</th>
+            {#<th>PESO VOLUMEN</th>#}
+            {#<th>DECLARA</th>#}
+            {#<th>FLETE</th>#}
+        </tr>
+        </thead>
+        <tbody>
+        {% for arDespachoDetalles in arDespachoDetalles %}
+            <tr>
+                <td>{{ arDespachoDetalles.codigoDespachoDetallePk }}</td>
+                <td>{{ arDespachoDetalles.fechaRegistro | date('Y-m-d') }}</td>
+                <td>{{ arDespachoDetalles.documentoCliente }}</td>
+                <td>{{ arDespachoDetalles.ciudadOrigen }}</td>
+                <td>{{ arDespachoDetalles.ciudadDestino }}</td>
+                <td>{{ arDespachoDetalles.codigoVehiculoFk }}</td>
+                <td>{{ arDespachoDetalles.codigoIdentificacionPropietario }}</td>
+                <td>{{ arDespachoDetalles.identificacionPropietario }}</td>
+                <td>{{ arDespachoDetalles.propietario }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arDespachoDetalles.getTotalItemCount }}</span></div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arDespachoDetalles) }}
+    </div>
+    <div class="btn-group">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}
+

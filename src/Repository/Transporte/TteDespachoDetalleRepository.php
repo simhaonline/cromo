@@ -180,4 +180,58 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('dd.guiaRel', 'g');
         return $queryBuilder->getQuery()->execute();
     }
+
+    public function siplatf()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class,'tdd')
+            ->select('tdd.codigoDespachoDetallePk')
+            ->addSelect('d.fechaRegistro')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('co.codigoDivision AS ciudadOrigen')
+            ->addSelect('cd.codigoDivision AS ciudadDestino')
+            ->addSelect('d.codigoVehiculoFk')
+            ->addSelect('p.codigoIdentificacionFk AS codigoIdentificacionPropietario')
+            ->addSelect('p.numeroIdentificacion AS identificacionPropietario')
+            ->addSelect('p.nombreCorto AS propietario')
+            ->addSelect('ps.codigoIdentificacionFk AS codigoIdentificacionPoseedor')
+            ->addSelect('ps.numeroIdentificacion AS identificacionPoseedor')
+            ->addSelect('ps.nombreCorto AS poseedor')
+            ->addSelect('c.codigoIdentificacionFk AS codigoIdentificacionConductor')
+            ->addSelect('c.numeroIdentificacion AS identificacionConductor')
+            ->addSelect('c.nombreCorto AS conductor')
+            ->addSelect('cl.numeroIdentificacion AS identificacionCliente')
+            ->addSelect('cl.nombreCorto AS cliente')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('tdd.vrFlete')
+            ->addSelect('tdd.vrFlete AS fleteSinManejo')
+            ->addSelect('d.comentario')
+            ->addSelect('cd.codigoDivision AS codigoCiudadDestino')
+            ->leftJoin('tdd.despachoRel','d')
+            ->leftJoin('tdd.guiaRel','g')
+            ->leftJoin('d.ciudadOrigenRel','co')
+            ->leftJoin('d.ciudadDestinoRel','cd')
+            ->leftJoin('d.vehiculoRel','v')
+            ->leftJoin('v.propietarioRel','p')
+            ->leftJoin('v.poseedorRel','ps')
+            ->leftJoin('d.conductorRel', 'c')
+            ->leftJoin('g.clienteRel', 'cl')
+            ->orderBy('tdd.codigoDespachoDetallePk', 'ASC');
+        if($session->get('filtroInvInformeRemisionDetalleCodigoTercero')){
+            $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroInvInformeRemisionDetalleCodigoTercero')}");
+        }
+        $fecha = new \DateTime('now');
+        if ($session->get('filtroTteDespachoSiplatfFechaDesde') != null) {
+            $queryBuilder->andWhere("d.fechaRegistro >= '{$session->get('filtroTteDespachoSiplatfFechaDesde')} 00:00:00'");
+        } else {
+            $queryBuilder->andWhere("d.fechaRegistro >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+        }
+        if ($session->get('filtroTteDespachoSiplatfFechaHasta') != null) {
+            $queryBuilder->andWhere("d.fechaRegistro <= '{$session->get('filtroTteDespachoSiplatfFechaHasta')} 23:59:59'");
+        } else {
+            $queryBuilder->andWhere("d.fechaRegistro <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+        }
+
+        return $queryBuilder;
+    }
 }

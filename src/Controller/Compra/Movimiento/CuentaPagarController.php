@@ -51,7 +51,7 @@ class CuentaPagarController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('compra_movimiento_cuentapagar_cuentapagar_lista'));
             }
         }
-        return $this->render('compra/movimiento/cuentaPagar/lista.html.twig', [
+        return $this->render('compra/movimiento/cuentapagar/cuentapagar/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),

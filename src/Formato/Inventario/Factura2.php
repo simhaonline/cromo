@@ -5,6 +5,8 @@ namespace App\Formato\Inventario;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvTercero;
+use App\Utilidades\BaseDatos;
+use App\Entity\General\GenConfiguracion;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class Factura2 extends \FPDF
@@ -45,6 +47,7 @@ class Factura2 extends \FPDF
         /** @var  $em ObjectManager */
         $em = self::$em;
         /** @var  $arMovimiento InvMovimiento */
+        $arConfiguracion = BaseDatos::getEm()->getRepository(GenConfiguracion::class)->find(1);
         $arMovimiento = $em->getRepository('App:Inventario\InvMovimiento')->find(self::$codigoMovimiento);
 
         $this->SetFont('Arial', '', 5);
@@ -65,12 +68,12 @@ class Factura2 extends \FPDF
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
         //Logo
-        $this->SetXY(50, 10);
+        $this->SetXY(53, 10);
         try {
             $logo=$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
             if($logo ){
 
-                $this->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 12, 13, 40, 25,$logo->getExtension());
+                $this->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 20, 13, 65, 25,$logo->getExtension());
             }
         } catch (\Exception $exception) {
         }

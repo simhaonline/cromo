@@ -66,7 +66,14 @@ class Factura2 extends \FPDF
         $this->SetFont('Arial', 'B', 10);
         //Logo
         $this->SetXY(50, 10);
-        $this->Image('../public/img/empresa/logo.jpg', 15, 13, 50, 30);
+        try {
+            $logo=$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+            if($logo ){
+
+                $this->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 12, 13, 40, 25,$logo->getExtension());
+            }
+        } catch (\Exception $exception) {
+        }
 
         $this->SetFont('Arial', 'B', 10);
         $this->SetXY(18.5, 44);

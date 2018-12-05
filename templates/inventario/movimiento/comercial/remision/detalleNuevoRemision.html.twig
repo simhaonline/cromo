@@ -7,12 +7,17 @@
         <div class="panel-heading"><h5> Filtros</h5></div>
         <br>
         <div class="form-group form-group-sm">
-            <label for="form_nombre" class="col-sm-2 control-label">Numero:</label>
+            <label for="form_numero" class="col-sm-1 control-label">Numero:</label>
             <div class="col-sm-3">
                 {{ form_widget(form.txtNumero,{'attr':{'class':'form-control'}}) }}
             </div>
-            <label for="form_codigoBarras" class="col-sm-2 control-label"></label>
+            <label for="form_numero" class="col-sm-1 control-label">Lote:</label>
             <div class="col-sm-3">
+                {{ form_widget(form.txtLote,{'attr':{'class':'form-control'}}) }}
+            </div>
+            <label for="form_cboBodega" class="col-sm-1 control-label">Bodega</label>
+            <div class="col-sm-3">
+                {{ form_widget(form.cboBodega,{'attr':{'class':'form-control'}}) }}
             </div>
         </div>
         <div class="panel-footer">
@@ -52,6 +57,23 @@
             {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRemisionDetalles.getTotalItemCount }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arRemisionDetalles) }}
+    </div>
+    <div class="btn-toolbar" style="float: right;">
+        <div class="btn-group btn-group-sm">
+            {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+        </div>
+        <div class="btn-group btn-group-sm">
+            {{ form_widget(form.btnGuardarCerrar,{'attr':{'style':'float: right;'}}) }}
+        </div>
     </div>
     {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
     {{ form_end(form) }}

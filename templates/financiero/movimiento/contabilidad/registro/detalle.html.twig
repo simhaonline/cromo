@@ -10,24 +10,7 @@
         </div>
     </div>
     <br/><br/>
-    <table width="100%" class="table table-condensed table-bordered">
-        <tr>
-            <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arRegistro.codigoRegistroPk }}</td>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arRegistro.numero }}</td>
-            <td class="titulo">DEBITO:</td>
-            <td align="right">{{ arRegistro.vrDebito | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">COMPROBANTE:</td>
-            <td class="td-in-well">{{ arRegistro.codigoComprobanteFk }} - {{ arRegistro.comprobanteRel ? arRegistro.comprobanteRel.nombre : '' }}</td>
-            <td class="titulo">FECHA:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arRegistro.fecha | date('Y-m-d') }}</td>
-            <td class="titulo">CREDITO:</td>
-            <td align="right">{{ arRegistro.vrCredito | number_format(0, '.', ',') }}</td>
-        </tr>
-    </table>
+    {% include 'financiero/movimiento/contabilidad/registro/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>

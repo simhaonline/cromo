@@ -42,7 +42,7 @@ class OrdenCompra extends \FPDF
     {
 
         $arOrdenCompra = self::$em->getRepository(InvOrden::class)->find(self::$codigoOrdenCompra);
-        Estandares::generarEncabezado($this, 'ORDEN DE COMPRA');
+        Estandares::generarEncabezado($this, 'ORDEN DE COMPRA', self::$em);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
         //Logo

@@ -24,7 +24,7 @@ class ListaFactura extends \FPDF {
     }
 
     public function Header() {
-        Estandares::generarEncabezado($this,'RELACION FACTURAS');
+        Estandares::generarEncabezado($this,'RELACION FACTURAS', self::$em);
 
         $this->EncabezadoDetalles();
 

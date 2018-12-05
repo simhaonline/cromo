@@ -27,7 +27,7 @@ class Rentabilidad extends \FPDF {
     }
 
     public function Header() {
-        Estandares::generarEncabezado($this,'RENTABILIDAD DESPACHO');
+        Estandares::generarEncabezado($this,'RENTABILIDAD DESPACHO', self::$em);
 
         $this->EncabezadoDetalles();
 

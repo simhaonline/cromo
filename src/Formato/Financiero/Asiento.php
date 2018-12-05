@@ -32,7 +32,7 @@ class Asiento extends \FPDF
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this, 'ASIENTO');
+        Estandares::generarEncabezado($this, 'ASIENTO', self::$em);
         $arAsiento = new FinAsiento();
         $arAsiento = self::$em->getRepository(FinAsiento::class)->find(self::$codigoAsiento);
         $this->SetFillColor(236, 236, 236);

@@ -43,7 +43,7 @@ class Cotizacion extends \FPDF
     {
 
         $arCotizacion = self::$em->getRepository(InvCotizacion::class)->find(self::$codigoCotizacion);
-        Estandares::generarEncabezado($this, 'COTIZACION');
+        Estandares::generarEncabezado($this, 'COTIZACION', self::$em);
         $intY = 40;
         $this->SetXY(10, $intY);
         $this->SetFont('Arial', 'B', 8);

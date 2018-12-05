@@ -30,8 +30,8 @@ class ImagenesController extends BaseController
             $arImagenes[$i]['imagen']="data:image/'{$arImagenes[$i]['extension']}';base64,".base64_encode(stream_get_contents($arImagenes[$i]['imagen']));
         }
         $form = $this->createFormBuilder()
-            ->add('logo',FileType::class,['attr'=>['class'=>'btn btn-default'],'required'=>false])
-            ->add("btnGuardar", SubmitType::class, ['label' => " Guardar", 'attr' => ['class' => 'btn btn-default btn-sm']])
+            ->add('logo',FileType::class,['attr'=>['class'=>'btn btn-default btn-sm'],'required'=>false])
+            ->add("btnGuardar", SubmitType::class, ['label' => " Guardar", 'attr' => ['class' => 'btn btn-default']])
             ->getForm();
         $form->handleRequest($request);
 

@@ -45,7 +45,7 @@ class Pago extends \FPDF
     {
         /** @var  $arPago RhuPago */
         $arPago = self::$em->getRepository(RhuPago::class)->find(self::$codigoPago);
-        Estandares::generarEncabezado($this, 'COMPROBANTE DE PAGO DE NOMINA');
+        Estandares::generarEncabezado($this, 'COMPROBANTE DE PAGO DE NOMINA', self::$em);
         $intY = 40;
         $this->SetXY(10, $intY);
         $this->SetFont('Arial', 'B', 7);

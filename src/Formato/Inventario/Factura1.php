@@ -87,8 +87,14 @@ class Factura1 extends \FPDF
         $this->SetFont('Arial', 'B', 10);
         //Logo
         $this->SetXY(53, 10);
-        $this->Image('../public/img/empresa/logo.jpg', 20, 13, 50, 30);
-
+        //$this->Image('../public/img/empresa/logo.jpg', 20, 13, 50, 30);
+        try {
+            $logo=$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+            if($logo ){
+                $this->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 12, 13, 40, 25,$logo->getExtension());
+            }
+        } catch (\Exception $exception) {
+        }
         $this->SetFont('Arial', '', 5);
         $date = new \DateTime('now');
         $this->Text(170, 10, $date->format('Y-m-d H:i:s') . ' [Cromo | Inventario]');

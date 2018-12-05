@@ -45,7 +45,14 @@ class Recogida extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
         //Logo
         $this->SetXY(53, 10);
-        $this->Image('../public/img/empresa/logo.jpg', 12, 13, 40, 25);
+        //$this->Image('../public/img/empresa/logo.jpg', 12, 13, 40, 25);
+        try {
+            $logo=self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+            if($logo ){
+                $this->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 12, 13, 40, 25,$logo->getExtension());
+            }
+        } catch (\Exception $exception) {
+        }
         $this->Cell(147, 7, utf8_decode("RECOGIDA"), 0, 0, 'C', 1);
         $this->SetXY(53, 18);
         $this->SetFont('Arial', 'B', 9);

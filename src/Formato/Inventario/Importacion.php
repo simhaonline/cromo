@@ -54,7 +54,10 @@ class Importacion extends \FPDF
         //Logo
         $this->SetXY(53, 10);
         try {
-            $this->Image('../public/img/empresa/logo.jpg', 12, 13, 40, 25);
+            $logo=self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+            if($logo ){
+                $this->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 12, 13, 40, 25,$logo->getExtension());
+            }
         } catch (\Exception $exception) {
         }
 

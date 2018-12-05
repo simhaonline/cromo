@@ -4,6 +4,7 @@ namespace App\Controller\Cartera\Informe\CuentaCobrar\CuentaCobrar;
 
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
+use App\Entity\General\GenAsesor;
 use App\Formato\Cartera\CarteraEdad;
 use App\Formato\Cartera\CarteraEdadCliente;
 use App\Formato\Cartera\CuentaCobrar;
@@ -21,9 +22,14 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class CuentaCobrarController extends Controller
 {
-   /**
-    * @Route("/Cartera/informe/cuentaCobrar/CuentaCobrar/lista", name="cartera_informe_cuentaCobrar_cuentaCobrar_lista")
-    */
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/Cartera/informe/cuentaCobrar/CuentaCobrar/lista", name="cartera_informe_cuentaCobrar_cuentaCobrar_lista")
+     */
     public function lista(Request $request)
     {
         set_time_limit(0);
@@ -37,6 +43,7 @@ class CuentaCobrarController extends Controller
             ->add('btnCarteraEdadesCliente', SubmitType::class, array('label' => 'Cartera edades'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('cboTipoCuentaRel', EntityType::class, $em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
+            ->add('cboAsesor', EntityType::class, $em->getRepository(GenAsesor::class)->llenarCombo())
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
@@ -53,6 +60,12 @@ class CuentaCobrarController extends Controller
                 $session->set('filtroCarCuentaCobrarTipo', $arCuentaCobrarTipo->getCodigoCuentaCobrarTipoPk());
             } else {
                 $session->set('filtroCarCuentaCobrarTipo', null);
+            }
+            $arAsesor = $form->get('cboAsesor')->getData();
+            if ($arAsesor != '') {
+                $session->set('filtroGenAsesor', $form->get('cboAsesor')->getData()->getCodigoAsesorPk());
+            } else {
+                $session->set('filtroGenAsesor', null);
             }
             $session->set('filtroCarNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
             $session->set('filtroCarCuentaCobrarNumero', $form->get('txtNumero')->getData());

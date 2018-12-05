@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-
-    {% include ('transporte/movimiento/transporte/despacho/filtro.html.twig') %}
+    {% include (modulo~'/'~funcion~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}
         <div class="table-responsive" style="padding:0px;">
             {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
             {{ form_start(formBotonera) }}

@@ -1,16 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <div id="content">
-        {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
-        {% include 'inventario/movimiento/compra/orden/filtro.html.twig' %}
+    {% include (modulo~'/'~funcion~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}
+    <div class="table-responsive" style="padding:0px;">
+        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
         {{ form_start(formBotonera) }}
-        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
-             data-widget-fullscreenbutton="true">
-            <div class="table-responsive" style="padding:0px;">
-                {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-                {% include 'estructura/movimiento/botoneraGeneral.html.twig' %}
-            </div>
-        </div>
+        {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
         {{ form_end(formBotonera) }}
     </div>
 {% endblock %}

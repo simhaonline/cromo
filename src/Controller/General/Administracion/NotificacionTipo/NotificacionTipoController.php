@@ -30,8 +30,9 @@ class NotificacionTipoController extends BaseController
     /**
      * @Route("/general/administracion/notificaciontipo/lista", name="general_administracion_notificacion_tipo_lista")
      */
-    public function lista(Request $request){
+    public function lista(Request $request, TokenStorageInterface $user){
         $em=$this->getDoctrine()->getManager();
+        $usuario=$user->getToken()->getUser();
         $session=new Session();
         $form=$this->createFormBuilder()
             ->add('cbFiltroModulo', EntityType::class, array(
@@ -62,7 +63,7 @@ class NotificacionTipoController extends BaseController
             $session->set('arGenNotificacionTipoFiltroModelo', $arModeloSelect);
         }
         if($form->get('btnPrueba')->isClicked()){
-            FuncionesController::crearNotificacion(1,array('semantica'));
+            FuncionesController::crearNotificacion(1);
             return $this->redirectToRoute('general_administracion_notificacion_tipo_lista');
         }
         $arNotificacionTipo=$em->getRepository('App:General\GenNotificacionTipo')->lista();

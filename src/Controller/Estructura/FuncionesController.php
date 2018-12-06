@@ -132,15 +132,14 @@ final class FuncionesController
         return $fechaHasta;
     }
 
-    public static function crearNotificacion($id, $usuarios)
+    public static function crearNotificacion($id)
     {
         try {
             $em = BaseDatos::getEm();
             $arNotificacionTipoPrueba = $em->getRepository('App:General\GenNotificacionTipo')->find($id);
             if ($arNotificacionTipoPrueba->getEstadoActivo()) {
-                if (!$usuarios) {
-                    $usuarios = json_decode($arNotificacionTipoPrueba->getUsuarios(), true);
-                }
+                $usuarios = json_decode($arNotificacionTipoPrueba->getUsuarios(), true);
+
                 if ($usuarios) {
                     foreach ($usuarios as $user) {
                         $arUsuario = $em->getRepository('App:Seguridad\Usuario')->findOneBy(['username' => $user]);

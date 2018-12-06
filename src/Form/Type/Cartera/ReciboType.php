@@ -93,6 +93,7 @@ class ReciboType extends AbstractType
             {"child":"numero",             "tipo":"TextType",  "propiedades":{"label":"Numero"}},
             {"child":"codigoReciboPk",     "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
             {"child":"codigoReciboTipoFk", "tipo":"EntityType","propiedades":{"class":"CarReciboTipo","choice_label":"nombre", "label":"TODOS"}},
+            {"child":"codigoAsesorFk",     "tipo":"EntityType","propiedades":{"class":"GenAsesor","choice_label":"nombre", "label":"TODOS"}},
             {"child":"fechaDesde",         "tipo":"DateType",  "propiedades":{"label":"Fecha Desde"}},
             {"child":"fechaHasta",         "tipo":"DateType",  "propiedades":{"label":"Fecha Hasta"}},
             {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},

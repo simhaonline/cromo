@@ -36,10 +36,10 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_nombre1" class="col-sm-2 control-label">Soporte:</label>
+                <label for="form_nombre1" class="col-sm-2 control-label">Asesor:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.soporte) }}
-                    {{ form_errors(form.soporte) }}
+                    {{ form_widget(form.asesorRel) }}
+                    {{ form_errors(form.asesorRel) }}
                 </div>
                 <label for="form_nombre1" class="col-sm-2 control-label">Fecha pago:</label>
                 <div class="col-sm-4">
@@ -47,6 +47,11 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_soporte" class="col-sm-2 control-label">Soporte:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.soporte) }}
+                    {{ form_errors(form.soporte) }}
+                </div>
                 <label for="form_nombre1" class="col-sm-2 control-label">Numero documento:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.numeroDocumento) }}

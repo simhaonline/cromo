@@ -93,6 +93,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cct.nombre AS tipo')
             ->addSelect('cc.fecha')
             ->addSelect('cc.fechaVence')
+            ->addSelect('a.nombre AS asesor')
             ->addSelect('cc.soporte')
             ->addSelect('cl.numeroIdentificacion')
             ->addSelect('cl.nombreCorto')
@@ -102,6 +103,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.vrSaldo')
             ->addSelect('cc.vrSaldoOperado')
             ->addSelect('cc.comentario')
+            ->leftJoin('cc.asesorRel', 'a')
             ->where('cc.codigoCuentaCobrarPk <> 0')
             ->andWhere('cc.vrSaldo > 0')
             ->orderBy('cc.codigoCuentaCobrarPk', 'DESC');

@@ -64,7 +64,7 @@ class ProgramacionController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/programacion/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/programacion/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -105,7 +105,7 @@ class ProgramacionController extends ControllerListenerGeneral
                 }
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/programacion/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/programacion/nuevo.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -184,7 +184,7 @@ class ProgramacionController extends ControllerListenerGeneral
             return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
         }
         $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->lista($arProgramacion->getCodigoProgramacionPk());
-        return $this->render('recursoHumano/movimiento/nomina/programacion/detalle.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/programacion/detalle.html.twig', [
             'form' => $form->createView(),
             'arProgramacion' => $arProgramacion,
             'arProgramacionDetalles' => $arProgramacionDetalles
@@ -206,7 +206,7 @@ class ProgramacionController extends ControllerListenerGeneral
         }
         $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoProgramacionDetalleFk' => $id));
         $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->lista($arPago->getCodigoPagoPk());
-        return $this->render('recursoHumano/movimiento/nomina/programacion/resumen.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/programacion/resumen.html.twig', [
             'arProgramacionDetalle' => $arProgramacionDetalle,
             'arPago' => $arPago,
             'arPagoDetalles' => $arPagoDetalles

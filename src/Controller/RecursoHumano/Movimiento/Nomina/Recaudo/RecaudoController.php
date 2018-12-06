@@ -54,7 +54,7 @@ class RecaudoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_recaudo_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/recaudo/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/recaudo/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -82,7 +82,7 @@ class RecaudoController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->clase)->find($id);
-        return $this->render('recursoHumano/movimiento/nomina/recaudo/detalle.html.twig',[
+        return $this->render('recursohumano/movimiento/nomina/recaudo/detalle.html.twig',[
             'arRegistro' => $arRegistro
         ]);
     }

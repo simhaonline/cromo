@@ -59,7 +59,7 @@ class CreditoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_credito_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/credito/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/credito/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -115,7 +115,7 @@ class CreditoController extends ControllerListenerGeneral
                 }
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/credito/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/credito/nuevo.html.twig', [
             'form' => $form->createView(),
             'arCredito' => $arCredito
         ]);
@@ -133,7 +133,7 @@ class CreditoController extends ControllerListenerGeneral
         $arRegistro = $em->getRepository($this->clase)->find($id);
         $form = Estandares::botonera($arRegistro->getEstadoAutorizado(), $arRegistro->getEstadoAprobado(), $arRegistro->getEstadoAnulado());
         $form->handleRequest($request);
-        return $this->render('recursoHumano/movimiento/nomina/credito/detalle.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/credito/detalle.html.twig', [
             'arRegistro' => $arRegistro,
             'form' => $form->createView()
         ]);

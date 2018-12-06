@@ -60,7 +60,7 @@ class EgresoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_egreso_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/egreso/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/egreso/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -102,7 +102,7 @@ class EgresoController extends ControllerListenerGeneral
                 Mensajes::error('Debe seleccionar un tipo de egreso');
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/egreso/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/egreso/nuevo.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -163,7 +163,7 @@ class EgresoController extends ControllerListenerGeneral
             return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_egreso_detalle',['id' => $id]));
         }
         $arEgresoDetalles = $em->getRepository(RhuEgresoDetalle::class)->listaEgresosDetalle($id);
-        return $this->render('recursoHumano/movimiento/nomina/egreso/detalle.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/egreso/detalle.html.twig', [
             'arEgreso' => $arEgreso,
             'arEgresoDetalles' => $arEgresoDetalles,
             'form' => $form->createView()
@@ -214,7 +214,7 @@ class EgresoController extends ControllerListenerGeneral
                 }
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/egreso/detalleNuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/egreso/detalleNuevo.html.twig', [
             'arPagos' => $arPagos,
             'form' => $form->createView()
         ]);

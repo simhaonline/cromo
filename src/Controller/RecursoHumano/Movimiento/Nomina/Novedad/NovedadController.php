@@ -57,7 +57,7 @@ class NovedadController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_novedad_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/novedad/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/novedad/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -108,7 +108,7 @@ class NovedadController extends ControllerListenerGeneral
                 }
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/novedad/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/novedad/nuevo.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -142,7 +142,7 @@ class NovedadController extends ControllerListenerGeneral
 
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/novedad/detalle.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/novedad/detalle.html.twig', [
             'arNovedad' => $arNovedad,
             'form' => $form->createView()
         ]);

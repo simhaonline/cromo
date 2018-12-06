@@ -43,7 +43,7 @@ class ContratoController extends BaseController
 
             }
         }
-        return $this->render('recursoHumano/administracion/recurso/contrato/lista.html.twig', [
+        return $this->render('recursohumano/administracion/recurso/contrato/lista.html.twig', [
             'arrDatosLista' => $this->getDatosLista(),
             'formBotonera' => $formBotonera->createView()
         ]);
@@ -65,7 +65,7 @@ class ContratoController extends BaseController
                 return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_contrato_lista'));
             }
         }
-        return $this->render('recursoHumano/administracion/recurso/contrato/detalle.html.twig', [
+        return $this->render('recursohumano/administracion/recurso/contrato/detalle.html.twig', [
             'arContrato' => $arContrato
         ]);
     }
@@ -99,7 +99,7 @@ class ContratoController extends BaseController
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        return $this->render('recursoHumano/administracion/recurso/contrato/parametrosIniciales.html.twig', [
+        return $this->render('recursohumano/administracion/recurso/contrato/parametrosIniciales.html.twig', [
             'arContrato' => $arContrato,
             'form' => $form->createView()
         ]);

@@ -58,7 +58,7 @@ class EmbargoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/embargo/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/embargo/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -95,7 +95,7 @@ class EmbargoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/embargo/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/embargo/nuevo.html.twig', [
             'form' => $form->createView(),
             'arEmbargo' => $arEmbargo
         ]);
@@ -113,7 +113,7 @@ class EmbargoController extends ControllerListenerGeneral
         $arEmbargo = $em->getRepository($this->clase)->find($id);
         $form = Estandares::botonera($arEmbargo->getEstadoAutorizado(), $arEmbargo->getEstadoAprobado(), $arEmbargo->getEstadoAnulado());
         $form->handleRequest($request);
-        return $this->render('recursoHumano/movimiento/nomina/embargo/detalle.html.twig',[
+        return $this->render('recursohumano/movimiento/nomina/embargo/detalle.html.twig',[
             'arEmbargo' => $arEmbargo
         ]);
     }

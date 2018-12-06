@@ -57,7 +57,7 @@ class PagoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_pago_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/pago/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/pago/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -96,7 +96,7 @@ class PagoController extends ControllerListenerGeneral
             }
         }
         $arPagoDetalles = $paginator->paginate($em->getRepository(RhuPagoDetalle::class)->lista($id), $request->query->getInt('page', 1), 30);
-        return $this->render('recursoHumano/movimiento/nomina/pago/detalle.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/pago/detalle.html.twig', [
             'arPago' => $arPago,
             'arPagoDetalles' => $arPagoDetalles,
             'form' => $form->createView()

@@ -55,7 +55,7 @@ class ReclamoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_reclamo_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/reclamo/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/reclamo/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -100,7 +100,7 @@ class ReclamoController extends ControllerListenerGeneral
 
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/reclamo/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/reclamo/nuevo.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -117,7 +117,7 @@ class ReclamoController extends ControllerListenerGeneral
         $arReclamo = $em->getRepository($this->class)->find($id);
         $form = Estandares::botonera($arReclamo->getEstadoAutorizado(),$arReclamo->getEstadoAprobado(),$arReclamo->getEstadoAnulado());
         $form->handleRequest($request);
-        return $this->render('recursoHumano/movimiento/nomina/reclamo/detalle.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/reclamo/detalle.html.twig', [
             'arReclamo' => $arReclamo,
             'form' => $form->createView()
         ]);

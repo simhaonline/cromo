@@ -57,7 +57,7 @@ class VacacionesController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/vacacion/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/vacacion/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -100,7 +100,7 @@ class VacacionesController extends ControllerListenerGeneral
                 }
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/vacacion/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/vacacion/nuevo.html.twig', [
             'form' => $form->createView(),
             'arVacacion' => $arVacacion
         ]);
@@ -117,7 +117,7 @@ class VacacionesController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arVacacion = $em->getRepository($this->clase)->find($id);
         $form = Estandares::botonera($arVacacion->getEstadoAutorizado(), $arVacacion->getEstadoAprobado(), $arVacacion->getEstadoAnulado());
-        return $this->render('recursoHumano/movimiento/nomina/vacacion/detalle.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/vacacion/detalle.html.twig', [
             'arVacacion' => $arVacacion,
             'form' => $form->createView()
         ]);

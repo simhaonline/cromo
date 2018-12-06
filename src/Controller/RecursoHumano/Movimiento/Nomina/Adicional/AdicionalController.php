@@ -56,7 +56,7 @@ class AdicionalController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicional_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/adicional/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/adicional/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -99,7 +99,7 @@ class AdicionalController extends ControllerListenerGeneral
                 }
             }
         }
-        return $this->render('recursoHumano/movimiento/nomina/adicional/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/adicional/nuevo.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -114,7 +114,7 @@ class AdicionalController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->clase)->find($id);
-        return $this->render('recursoHumano/movimiento/nomina/adicional/detalle.html.twig', [
+        return $this->render('recursohumano/movimiento/nomina/adicional/detalle.html.twig', [
             'arRegistro' => $arRegistro
         ]);
     }

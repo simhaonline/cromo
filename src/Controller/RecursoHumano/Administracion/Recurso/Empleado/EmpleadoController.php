@@ -44,7 +44,7 @@ class EmpleadoController extends BaseController
 
             }
         }
-        return $this->render('recursoHumano/administracion/recurso/empleado/lista.html.twig', [
+        return $this->render('recursohumano/administracion/recurso/empleado/lista.html.twig', [
             'arrDatosLista' => $this->getDatosLista(),
             'formBotonera' => $formBotonera->createView()
         ]);
@@ -89,7 +89,7 @@ class EmpleadoController extends BaseController
                 }
             }
         }
-        return $this->render('recursoHumano/administracion/recurso/empleado/nuevo.html.twig', [
+        return $this->render('recursohumano/administracion/recurso/empleado/nuevo.html.twig', [
             'form' => $form->createView(), 'arEmpleado' => $arEmpleado
         ]);
     }
@@ -111,7 +111,7 @@ class EmpleadoController extends BaseController
             }
         }
         $arContratos = $em->getRepository(RhuContrato::class)->contratosEmpleado($arEmpleado->getCodigoEmpleadoPk());
-        return $this->render('recursoHumano/administracion/recurso/empleado/detalle.html.twig', [
+        return $this->render('recursohumano/administracion/recurso/empleado/detalle.html.twig', [
             'arEmpleado' => $arEmpleado,
             'arContratos' => $arContratos
         ]);
@@ -167,7 +167,7 @@ class EmpleadoController extends BaseController
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
-        return $this->render('recursoHumano/administracion/recurso/empleado/nuevoContrato.html.twig', [
+        return $this->render('recursohumano/administracion/recurso/empleado/nuevoContrato.html.twig', [
             'form' => $form->createView()
         ]);
     }

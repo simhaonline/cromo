@@ -45,7 +45,7 @@ class EmpleadoController extends Controller
             }
         }
         $arEmpleados = $paginator->paginate($em->getRepository(RhuEmpleado::class)->lista(), $request->query->get('page', 1), 20);
-        return $this->render('recursoHumano/buscar/empleado.html.twig', array(
+        return $this->render('recursohumano/buscar/empleado.html.twig', array(
             'arEmpleados' => $arEmpleados,
             'campoCodigo' => $campoCodigo,
             'campoNombre' => $campoNombre,

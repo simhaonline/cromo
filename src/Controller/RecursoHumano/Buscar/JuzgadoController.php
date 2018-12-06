@@ -42,7 +42,7 @@ class JuzgadoController extends Controller
             }
         }
         $arJuzgados = $paginator->paginate($em->getRepository(RhuEmbargoJuzgado::class)->lista(), $request->query->get('page', 1), 20);
-        return $this->render('recursoHumano/buscar/juzgado.html.twig', array(
+        return $this->render('recursohumano/buscar/juzgado.html.twig', array(
             'arJuzgados' => $arJuzgados,
             'campoCodigo' => $campoCodigo,
             'campoNombre' => $campoNombre,

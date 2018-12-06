@@ -67,7 +67,7 @@ class CarCuentaCobrar
     private $fechaVence;
 
     /**
-     * @ORM\Column(name="soporte", type="string", length=30, nullable=true)
+     * @ORM\Column(name="soporte", type="string", length=300, nullable=true)
      */
     private $soporte;
 

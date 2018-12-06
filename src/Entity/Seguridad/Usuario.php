@@ -84,6 +84,11 @@ class Usuario implements UserInterface, \Serializable
     private $rol = 'ROLE_USER';
 
     /**
+     * @ORM\Column(name="foto", type="blob", length=2048, nullable=true)
+     */
+    private $foto;
+
+    /**
      * @ORM\Column(name="notificaciones_pendientes", type="integer", options={"default":0})
      */
     private $notificacionesPendientes=0;
@@ -354,6 +359,24 @@ class Usuario implements UserInterface, \Serializable
         $this->rol = $rol;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFoto()
+    {
+        return $this->foto;
+    }
+
+    /**
+     * @param mixed $foto
+     */
+    public function setFoto($foto)
+    {
+        $this->foto = $foto;
+        return $this;
+    }
+
 
 
 }

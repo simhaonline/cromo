@@ -29,7 +29,7 @@ class RecaudoDevolucionController extends ControllerListenerGeneral
     protected $grupo = "Transporte";
     protected $nombre = "RecaudoDevolucion";
    /**
-    * @Route("/transporte/movimiento/transporte/recaudoDevolucion/lista", name="transporte_movimiento_transporte_recaudoDevolucion_lista")
+    * @Route("/transporte/movimiento/transporte/recaudodevolucion/lista", name="transporte_movimiento_transporte_recaudodevolucion_lista")
     */    
     public function lista(Request $request)
     {
@@ -52,12 +52,12 @@ class RecaudoDevolucionController extends ControllerListenerGeneral
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteRecaudoDevolucion::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoDevolucion_lista'));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudodevolucion_lista'));
             }
 
         }
 
-        return $this->render('transporte/movimiento/transporte/recaudoDevolucion/lista.html.twig', [
+        return $this->render('transporte/movimiento/transporte/recaudodevolucion/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -66,7 +66,7 @@ class RecaudoDevolucionController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/recaudoDevolucion/detalle/{id}", name="transporte_movimiento_transporte_recaudoDevolucion_detalle")
+     * @Route("/transporte/movimiento/transporte/recaudodevolucion/detalle/{id}", name="transporte_movimiento_transporte_recaudodevolucion_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -87,15 +87,15 @@ class RecaudoDevolucionController extends ControllerListenerGeneral
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteRecaudoDevolucion::class)->autorizar($arRecaudo);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoDevolucion_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudodevolucion_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(TteRecaudoDevolucion::class)->desAutorizar($arRecaudo);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoDevolucion_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudodevolucion_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TteRecaudoDevolucion::class)->Aprobar($arRecaudo);
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoDevolucion_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudodevolucion_detalle', ['id' => $id]));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
@@ -104,7 +104,7 @@ class RecaudoDevolucionController extends ControllerListenerGeneral
                     $em->flush();
                     $em->getRepository(TteRecaudoDevolucion::class)->liquidar($id);
                 }
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoDevolucion_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudodevolucion_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new RecaudoDevolucion();
@@ -116,7 +116,7 @@ class RecaudoDevolucionController extends ControllerListenerGeneral
         }
 
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->recaudo($id);
-        return $this->render('transporte/movimiento/transporte/recaudoDevolucion/detalle.html.twig', [
+        return $this->render('transporte/movimiento/transporte/recaudodevolucion/detalle.html.twig', [
             'arRecaudo' => $arRecaudo,
             'arGuias' => $arGuias,
             'form' => $form->createView()]);
@@ -148,11 +148,11 @@ class RecaudoDevolucionController extends ControllerListenerGeneral
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->recaudoPendiente($arRecaudo->getCodigoClienteFk());
-        return $this->render('transporte/movimiento/transporte/recaudoDevolucion/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/transporte/recaudodevolucion/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/transporte/movimiento/transporte/recaudoDevolucion/nuevo/{id}", name="transporte_movimiento_transporte_recaudoDevolucion_nuevo")
+     * @Route("/transporte/movimiento/transporte/recaudodevolucion/nuevo/{id}", name="transporte_movimiento_transporte_recaudodevolucion_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -176,14 +176,14 @@ class RecaudoDevolucionController extends ControllerListenerGeneral
                     $em->persist($arRecaudoDevolucion);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoDevolucion_nuevo', array('codigoRecaudo' => 0)));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudodevolucion_nuevo', array('codigoRecaudo' => 0)));
                     } else {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudoDevolucion_detalle', ['id' => $arRecaudoDevolucion->getCodigoRecaudoDevolucionPk()]));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudodevolucion_detalle', ['id' => $arRecaudoDevolucion->getCodigoRecaudoDevolucionPk()]));
                     }
                 }
             }
         }
-        return $this->render('transporte/movimiento/transporte/recaudoDevolucion/nuevo.html.twig', [
+        return $this->render('transporte/movimiento/transporte/recaudodevolucion/nuevo.html.twig', [
             'arRecaudo' => $arRecaudoDevolucion,
             'form' => $form->createView()]);
     }

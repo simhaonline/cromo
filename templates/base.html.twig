@@ -435,6 +435,19 @@ you can add as many as you like
             });
         }
 
+        function fotoPerfi() {
+            $.ajax({
+                url: "{{ path('social_perfil_foto_ver') }}",
+                type: "GET",
+                dataType: "JSON",
+                success: function (respuestas) {
+                    console.log(respuestas,"hola");
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
 
     </script>
 

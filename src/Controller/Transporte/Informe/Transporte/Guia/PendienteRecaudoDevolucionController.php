@@ -20,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class PendienteRecaudoDevolucionController extends Controller
 {
    /**
-    * @Route("/transporte/informe/transporte/guia/pendiente/recaudoDevolucion", name="transporte_informe_transporte_guia_pendiente_recaudo_devolucion")
+    * @Route("/transporte/informe/transporte/guia/pendiente/recaudodevolucion", name="transporte_informe_transporte_guia_pendiente_recaudo_devolucion")
     */    
     public function lista(Request $request)
     {

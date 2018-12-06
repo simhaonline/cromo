@@ -78,7 +78,7 @@ class InvMovimiento
     private $codigoTerceroFk;
 
     /**
-     * @ORM\Column(name="soporte", type="string", length=50, nullable=true)
+     * @ORM\Column(name="soporte", type="string", length=300, nullable=true)
      */
     private $soporte;
 

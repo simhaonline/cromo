@@ -40,6 +40,16 @@ class ReciboType extends AbstractType
                 'label' => 'Tipo recibo:',
                 'required' => true
             ])
+            ->add('asesorRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\General\GenAsesor',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Asesor:'
+            ])
             ->add('numeroDocumento', TextType::class, array('required' => false))
             ->add('soporte', TextType::class, array('required' => false))
             ->add('fechaPago', DateType::class, array('format' => 'yyyyMMdd'))

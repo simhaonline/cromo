@@ -174,6 +174,13 @@ class CarRecibo
     protected $recibosDetallesRecibosRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="reciboAsesorRel")
+     * @ORM\JoinColumn(name="codigo_asesor_fk", referencedColumnName="codigo_asesor_pk")
+
+     */
+    protected $asesorRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoReciboPk()
@@ -636,6 +643,39 @@ class CarRecibo
     {
         $this->numeroDocumento = $numeroDocumento;
     }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsesorRel()
+    {
+        return $this->asesorRel;
+    }
+
+    /**
+     * @param mixed $asesorRel
+     */
+    public function setAsesorRel($asesorRel): void
+    {
+        $this->asesorRel = $asesorRel;
+    }
+
 
 
 }

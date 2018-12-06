@@ -129,7 +129,7 @@ class NotificacionTipoController extends BaseController
         $arUsuarioNotificacion=$em->getRepository('App:General\GenNotificacionTipo')->find($codigoNotificacion)->getUsuarios();
         $arUsuarioNotificacion=json_decode($arUsuarioNotificacion);
 
-        $arUsuario=$em->getRepository('App:General\GenNotificacionTipo')->listaUsuarios($usuario->getUsername()());
+        $arUsuario=$em->getRepository('App:General\GenNotificacionTipo')->listaUsuarios($usuario->getUsername());
         return $this->render('general/administracion/notificacion_tipo/notificacion_tipo/nuevo.html.twig',[
             'form'=>$form->createView(),
             'arUsuario'=>$arUsuario,

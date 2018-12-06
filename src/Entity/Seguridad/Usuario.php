@@ -39,7 +39,7 @@ class Usuario implements UserInterface, \Serializable
     private $numeroIdentificacion;
 
     /**
-     * @ORM\Column(name="cargo", type="string", length=255,nullable=true)
+     * @ORM\Column(name="cargo", type="string", length=255, nullable=true)
      */
     private $cargo;
 

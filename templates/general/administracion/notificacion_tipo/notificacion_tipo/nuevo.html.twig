@@ -34,19 +34,19 @@
             {%for arUsuario in arUsuario %}
                 {% set aux=0 %}
                 <tr>
-                    <td>{{  arUsuario.id}}</td>
+                    <td>{{  arUsuario.username}}</td>
                     <td>{{  arUsuario.nombreCorto}}</td>
                     {% if arUsuarioNotificacion|length >0 %}
                         {% for key, arUsuarioNotif in arUsuarioNotificacion %}
                         {% if arUsuarioNotif == arUsuario.username%}
                         {% set aux=1 %}
-                    <td align="center"><input type="checkbox" checked name="ChkSeleccionar[]" value="{{ arUsuario.id }}"/></td>
+                    <td align="center"><input type="checkbox" checked name="ChkSeleccionar[]" value="{{ arUsuario.username }}"/></td>
                     {% elseif  aux==0 and arUsuarioNotificacion | length == key+1  %}
-                        <td align="center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arUsuario.id }}"/></td>
+                        <td align="center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arUsuario.username }}"/></td>
                     {% endif %}
                     {% endfor %}
                     {% else %}
-                        <td align="center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arUsuario.id }}"/></td>
+                        <td align="center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arUsuario.username }}"/></td>
                         {% endif %}
                 </tr>
             {% endfor %}

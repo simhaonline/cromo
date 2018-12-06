@@ -53,7 +53,7 @@ class GenNotificacionTipoRepository extends ServiceEntityRepository
         $em=$this->getEntityManager();
         $arUsuarios=$em->createQueryBuilder()
             ->from('App:Seguridad\Usuario','u')
-            ->select('u.id')
+            ->select('u.username')
             ->addSelect('u.nombreCorto')
             ->addSelect('u.username');
 

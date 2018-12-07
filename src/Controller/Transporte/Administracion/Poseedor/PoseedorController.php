@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Administracion\Poseedor;
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TtePoseedor;
+use App\Form\Type\Transporte\PoseedorType;
 use App\General\General;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -54,9 +55,40 @@ class PoseedorController extends BaseController
     /**
      * @Route("/transporte/administracion/poseedor/nuevo/{id}", name="transporte_administracion_transporte_poseedor_nuevo")
      */
-    public function nuevo()
+    public function nuevo(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('transporte_administracion_poseedor_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arPoseedor = new TtePoseedor();
+        if ($id != '0') {
+            $arPoseedor = $em->getRepository(TtePoseedor::class)->find($id);
+            if (!$arPoseedor) {
+                return $this->redirect($this->generateUrl('transporte_administracion_poseedor_lista'));
+            }
+        }
+        $form = $this->createForm(PoseedorType::class, $arPoseedor);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arPoseedor->setNombre1($form->get('nombre1')->getData());
+                $arPoseedor->setNombre2($form->get('nombre2')->getData());
+                $arPoseedor->setApellido1($form->get('apellido1')->getData());
+                $arPoseedor->setApellido2($form->get('apellido2')->getData());
+                $arPoseedor->setCodigoIdentificacionFk($form->get('identificacionRel')->getData()->getCodigoIdentificacionPk());
+                $arPoseedor->setNumeroIdentificacion($form->get('numeroIdentificacion')->getData());
+                $arPoseedor->setDireccion($form->get('direccion')->getData());
+                $arPoseedor->setCorreo($form->get('correo')->getData());
+                $arPoseedor->setTelefono($form->get('telefono')->getData());
+                $arPoseedor->setMovil($form->get('movil')->getData());
+                $arPoseedor->setNombreCorto($arPoseedor->getNombre1() . " " . $arPoseedor->getNombre2() . " " . $arPoseedor->getApellido1() . " " . $arPoseedor->getApellido2());
+                $em->persist($arPoseedor);
+                $em->flush();
+                return $this->redirect($this->generateUrl('transporte_administracion_poseedor_lista'));
+            }
+        }
+        return $this->render('transporte/administracion/poseedor/nuevo.html.twig', [
+            'arPoseedor' => $arPoseedor,
+            'form' => $form->createView()
+        ]);
     }
 
     /**

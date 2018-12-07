@@ -270,22 +270,30 @@ you can add as many as you like
 <div id="shortcut">
     <ul>
         <li>
-            <a href="inbox.html" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i class="fa fa-envelope fa-4x"></i> <span>Mail <span class="label pull-right bg-color-darken">14</span></span> </span> </a>
+            <a href="inbox.html" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i
+                            class="fa fa-envelope fa-4x"></i> <span>Mail <span class="label pull-right bg-color-darken">14</span></span> </span>
+            </a>
         </li>
         <li>
-            <a href="calendar.html" class="jarvismetro-tile big-cubes bg-color-orangeDark"> <span class="iconbox"> <i class="fa fa-calendar fa-4x"></i> <span>Calendar</span> </span> </a>
+            <a href="{{ path('calendario_lista') }}" class="jarvismetro-tile big-cubes bg-color-orangeDark"> <span
+                        class="iconbox"> <i class="fa fa-calendar fa-4x"></i> <span>Calendario</span> </span> </a>
         </li>
         <li>
-            <a href="gmap-xml.html" class="jarvismetro-tile big-cubes bg-color-purple"> <span class="iconbox"> <i class="fa fa-map-marker fa-4x"></i> <span>Maps</span> </span> </a>
+            <a href="gmap-xml.html" class="jarvismetro-tile big-cubes bg-color-purple"> <span class="iconbox"> <i
+                            class="fa fa-map-marker fa-4x"></i> <span>Maps</span> </span> </a>
         </li>
         <li>
-            <a href="invoice.html" class="jarvismetro-tile big-cubes bg-color-blueDark"> <span class="iconbox"> <i class="fa fa-book fa-4x"></i> <span>Invoice <span class="label pull-right bg-color-darken">99</span></span> </span> </a>
+            <a href="invoice.html" class="jarvismetro-tile big-cubes bg-color-blueDark"> <span class="iconbox"> <i
+                            class="fa fa-book fa-4x"></i> <span>Invoice <span class="label pull-right bg-color-darken">99</span></span> </span>
+            </a>
         </li>
         <li>
-            <a href="gallery.html" class="jarvismetro-tile big-cubes bg-color-greenLight"> <span class="iconbox"> <i class="fa fa-picture-o fa-4x"></i> <span>Gallery </span> </span> </a>
+            <a href="gallery.html" class="jarvismetro-tile big-cubes bg-color-greenLight"> <span class="iconbox"> <i
+                            class="fa fa-picture-o fa-4x"></i> <span>Gallery </span> </span> </a>
         </li>
         <li>
-            <a href="{{ path('social_perfil_ver') }}" class="jarvismetro-tile big-cubes selected bg-color-pinkDark"> <span class="iconbox"> <i class="fa fa-user fa-4x"></i> <span>My Profile </span> </span> </a>
+            <a href="{{ path('social_perfil_ver') }}" class="jarvismetro-tile big-cubes selected bg-color-pinkDark">
+                <span class="iconbox"> <i class="fa fa-user fa-4x"></i> <span>My Profile </span> </span> </a>
         </li>
     </ul>
 </div>
@@ -343,8 +351,8 @@ you can add as many as you like
     <script src="{{ asset('js/smart-chat-ui/smart.chat.ui.min.js') }}"></script>
     <script src="{{ asset('js/smart-chat-ui/smart.chat.manager.min.js') }}"></script>
     <script src="{{ asset('js/plugin/moment/moment.min.js') }}"></script>
-    <script src={{  asset('js/plugin/fullcalendar/fullcalendar.min.js') }}></script>
-    <script src={{  asset('js/plugin/fullcalendar/locale-all.min.js') }}></script>
+    <script src={{ asset('js/plugin/fullcalendar/fullcalendar.min.js') }}></script>
+    <script src={{ asset('js/plugin/fullcalendar/locale-all.min.js') }}></script>
 
     <script>
         // DO NOT REMOVE : GLOBAL FUNCTIONS!
@@ -355,7 +363,7 @@ you can add as many as you like
 
     <script src="{{ asset('js/general.js') }}"></script>
     <script>
-        var guardarNotificacion="";
+        var guardarNotificacion = "";
         $(document).ready(function () {
             var notificacionesGeneral = $('.notificacionesGeneral');
             var numeroNotificaciones = $('.numeroNotificaciones');
@@ -368,7 +376,7 @@ you can add as many as you like
                         numeroNotificaciones.html(`(${respuestas['notificacionesPendientes']})`);
                         notificacionesGeneral.append(respuestas['notificacionesPendientes']);
                     }
-                    else{
+                    else {
                         notificacionesGeneral.html(0);
                         numeroNotificaciones.html(`(${0})`);
                     }
@@ -392,21 +400,21 @@ you can add as many as you like
                         notificaciones.html("<ul class='notificaciones notification-body' id='notificaciones'></ul>");
                         $.each(respuestas['notificaciones'], (key, notificacion) => {
                             if (key < 7) {
-                                notificaciones.append('<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >'+notificacion['nombre']+'<span class="pull-right font-xs text-muted"><i>' + moment(notificacion['fecha'], "YYYYMMDDhms").fromNow() + '</i></span></span></span></li>');
-                                guardarNotificacion+='<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >'+notificacion['nombre']+'<span class="pull-right font-xs text-muted"><i>' + moment(notificacion['fecha'], "YYYYMMDDhms").fromNow() + '</i></span></span></span></li>';
+                                notificaciones.append('<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >' + notificacion['nombre'] + '<span class="pull-right font-xs text-muted"><i>' + moment(notificacion['fecha'], "YYYYMMDDhms").fromNow() + '</i></span></span></span></li>');
+                                guardarNotificacion += '<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >' + notificacion['nombre'] + '<span class="pull-right font-xs text-muted"><i>' + moment(notificacion['fecha'], "YYYYMMDDhms").fromNow() + '</i></span></span></span></li>';
                             }
                         });
-                        if(guardarNotificacion!==""){
+                        if (guardarNotificacion !== "") {
                             notificaciones.html(guardarNotificacion);
                         }
                         notificaciones.append('<li><a class="text-center" href="{{ path('general_administracion_notificacion__todasNotificaciones') }}"><strong>Ver todas </strong><i class="fa fa-angle-right"></i></a></li>');
                     }
-                    else{
-                        if(guardarNotificacion!==""){
+                    else {
+                        if (guardarNotificacion !== "") {
                             notificaciones.html(guardarNotificacion);
                             notificaciones.append('<li><a class="text-center" href="{{ path('general_administracion_notificacion__todasNotificaciones') }}"><strong>Ver todas </strong><i class="fa fa-angle-right"></i></a></li>');
                         }
-                        else{
+                        else {
                             notificaciones.html('<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >Sin notificaciones</span></span></li>');
                         }
                     }
@@ -429,7 +437,7 @@ you can add as many as you like
                 success: function (respuestas) {
                     notificacionesGeneral.html(0);
                     numeroNotificaciones.html(`(${0})`);
-                    if(guardarNotificacion!==""){
+                    if (guardarNotificacion !== "") {
                         notificaciones.html(guardarNotificacion);
                     }
                 },
@@ -440,7 +448,7 @@ you can add as many as you like
         }
 
         //funcion para subir foto de perfil
-        function cambiarFotoPerfil(){
+        function cambiarFotoPerfil() {
             $("#form_foto_perfil_subir").trigger('click');
         }
 
@@ -456,9 +464,9 @@ you can add as many as you like
 
                 //Solo admitimos imágenes.
 
-                reader.onload = (function(theFile) {
-                    return function(e) {
-                console.log(e.target.result);
+                reader.onload = (function (theFile) {
+                    return function (e) {
+                        console.log(e.target.result);
                         // Insertamos la imagen
                         document.getElementById("previsualizar_foto").src = `${e.target.result}`;
                     };

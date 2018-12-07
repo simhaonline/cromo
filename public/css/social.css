@@ -16,3 +16,24 @@
     overflow: hidden;
     width: 100%;
 }
+
+.user{
+    width: 47%;
+    border: 1px solid #E9EBEE;
+    display: flex;
+    justify-content: space-between;
+}
+
+.user img{
+    width: 63px;
+}
+
+.botonAmigos{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 3%;
+}
+
+.amigoDescripcion{
+    flex: 1;
+}

@@ -11,7 +11,7 @@
 
         <div class="row">
 
-            <div class="col-sm-8 col-lg-offset-2">
+            <div class="col-sm-10 col-lg-offset-1">
 
 
                 <div class="well well-sm">
@@ -43,8 +43,8 @@
                                         <div class="row">
 
 
-                                            <div id="photo_container" class="col-sm-3 profile-pic">
-                                                <img id="foto_perfil" src="{{ app.session.get('foto_perfil') }}" style="cursor: pointer" alt="demo user" data-toggle="modal" data-target="#exampleModal">
+                                            <div id="photo_container" class="col-sm-3 profile-pic" style="text-align: left; top:-30px">
+                                                <img id="foto_perfil" src="{{ app.session.get('foto_perfil') }}" style="cursor: pointer; max-width: 100%" alt="demo user" data-toggle="modal" data-target="#exampleModal">
                                                 <div class="padding-10">
                                                     <h4 class="font-md"><strong>1,543</strong>
                                                         <br>
@@ -158,11 +158,11 @@
                                                     {#<a href="#a1" data-toggle="tab">Recent Articles</a>#}
                                                 {#</li>#}
                                                 <li class="active">
-                                                    <a href="#a1" data-toggle="tab">Nuevos amigos</a>
+                                                    <a href="#a1" data-toggle="tab">Amigos</a>
                                                 </li>
-                                                <li class="pull-left">
-                                                    <span class="margin-top-10 display-inline"><i class="fa fa-rss text-success"></i> Actividad</span>
-                                                </li>
+                                                {#<li class="pull-left">#}
+                                                    {#<span class="margin-top-10 display-inline"><i class="fa fa-rss text-success"></i> Actividad</span>#}
+                                                {#</li>#}
                                             </ul>
 
                                             <div class="tab-content padding-top-10">
@@ -227,72 +227,153 @@
                                                         {#<strong>51 new members </strong>joined today!#}
                                                     {#</div>#}
 
-                                                    <div class="user" title="email@company.com">
-                                                        <img src="{{ asset('img/avatars/female.png') }}" alt="demo user"><a href="javascript:void(0);">Jenn Wilson</a>
-                                                        <div class="email">
-                                                            travis@company.com
+                                                    <div class="user">
+                                                        <div class="amigoDescripcion">
+                                                            <img  src="{{ asset('img/avatars/female.png') }}" alt="demo user">
+                                                            <a href="javascript:void(0);">Jenn Wilson</a>
+                                                            <div class="email">
+                                                                travis@company.com
+                                                            </div>
+                                                        </div>
+                                                        <div class="botonAmigos">
+                                                            <button class="btn btn-default">
+                                                               <li class="fa fa-user font-md"></li>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="user" >
+                                                        <div class="amigoDescripcion">
+                                                            <img  src="{{ asset('img/avatars/male.png') }}" alt="demo user">
+                                                            <a href="javascript:void(0);">Marshall Hitt</a>
+                                                            <div class="email">
+                                                                arshall@company.com
+                                                            </div>
+                                                        </div>
+                                                        <div class="botonAmigos">
+                                                            <button class="btn btn-default">
+                                                                <li class="fa fa-user font-md"></li>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                     <div class="user" title="email@company.com">
-                                                        <img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);">Marshall Hitt</a>
-                                                        <div class="email">
-                                                            marshall@company.com
+                                                        <div class="amigoDescripcion">
+                                                            <img  src="{{ asset('img/avatars/male.png') }}" alt="demo user">
+                                                            <a href="javascript:void(0);">Marshall Hitt</a>
+                                                            <div class="email">
+                                                                arshall@company.com
+                                                            </div>
+                                                        </div>
+                                                        <div class="botonAmigos" >
+                                                            <button class="btn btn-default">
+                                                                <li class="fa fa-user font-md"></li>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                     <div class="user" title="email@company.com">
-                                                        <img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);">Joe Cadena</a>
-                                                        <div class="email">
-                                                            joe@company.com
+                                                        <div class="amigoDescripcion">
+                                                            <img  src="{{ asset('img/avatars/male.png') }}" alt="demo user">
+                                                            <a href="javascript:void(0);">Marshall Hitt</a>
+                                                            <div class="email">
+                                                                arshall@company.com
+                                                            </div>
+                                                        </div>
+                                                        <div class="botonAmigos">
+                                                            <button class="btn btn-default">
+                                                                <li class="fa fa-user font-md"></li>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                     <div class="user" title="email@company.com">
-                                                        <img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);">Mike McBride</a>
-                                                        <div class="email">
-                                                            mike@company.com
+                                                        <div class="amigoDescripcion">
+                                                            <img  src="{{ asset('img/avatars/male.png') }}" alt="demo user">
+                                                            <a href="javascript:void(0);">Marshall Hitt</a>
+                                                            <div class="email">
+                                                                arshall@company.com
+                                                            </div>
+                                                        </div>
+                                                        <div class="botonAmigos">
+                                                            <button class="btn btn-default">
+                                                                <li class="fa fa-user font-md"></li>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                     <div class="user" title="email@company.com">
-                                                        <img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);">Travis Wilson</a>
-                                                        <div class="email">
-                                                            travis@company.com
+                                                        <div class="amigoDescripcion">
+                                                            <img  src="{{ asset('img/avatars/male.png') }}" alt="demo user">
+                                                            <a href="javascript:void(0);">Marshall Hitt</a>
+                                                            <div class="email">
+                                                                arshall@company.com
+                                                            </div>
+                                                        </div>
+                                                        <div class="botonAmigos">
+                                                            <button class="btn btn-default">
+                                                                <li class="fa fa-user font-md"></li>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                     <div class="user" title="email@company.com">
-                                                        <img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);">Marshall Hitt</a>
-                                                        <div class="email">
-                                                            marshall@company.com
+                                                        <div class="amigoDescripcion">
+                                                            <img  src="{{ asset('img/avatars/male.png') }}" alt="demo user">
+                                                            <a href="javascript:void(0);">Marshall Hitt</a>
+                                                            <div class="email">
+                                                                arshall@company.com
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="user" title="Joe Cadena joe@company.com">
-                                                        <img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);">Joe Cadena</a>
-                                                        <div class="email">
-                                                            joe@company.com
-                                                        </div>
-                                                    </div>
-                                                    <div class="user" title="email@company.com">
-                                                        <img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);">Mike McBride</a>
-                                                        <div class="email">
-                                                            mike@company.com
+                                                        <div class="botonAmigos">
+                                                            <button class="btn btn-default">
+                                                                <li class="fa fa-user font-md"></li>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                     <div class="user" title="email@company.com">
-                                                        <img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);">Marshall Hitt</a>
-                                                        <div class="email">
-                                                            marshall@company.com
+                                                        <div class="amigoDescripcion">
+                                                            <img  src="{{ asset('img/avatars/male.png') }}" alt="demo user">
+                                                            <a href="javascript:void(0);">Marshall Hitt</a>
+                                                            <div class="email">
+                                                                arshall@company.com
+                                                            </div>
+                                                        </div>
+                                                        <div class="botonAmigos">
+                                                            <button class="btn btn-default">
+                                                                <li class="fa fa-user font-md"></li>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                     <div class="user" title="email@company.com">
-                                                        <img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);">Joe Cadena</a>
-                                                        <div class="email">
-                                                            joe@company.com
+                                                        <div class="amigoDescripcion">
+                                                            <img  src="{{ asset('img/avatars/male.png') }}" alt="demo user">
+                                                            <a href="javascript:void(0);">Marshall Hitt</a>
+                                                            <div class="email">
+                                                                arshall@company.com
+                                                            </div>
+                                                        </div>
+                                                        <div class="botonAmigos">
+                                                            <button class="btn btn-default">
+                                                                <li class="fa fa-user font-md"></li>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                     <div class="user" title="email@company.com">
-                                                        <img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);"> Mike McBride</a>
-                                                        <div class="email">
-                                                            mike@company.com
+                                                        <div class="amigoDescripcion">
+                                                            <img  src="{{ asset('img/avatars/male.png') }}" alt="demo user">
+                                                            <a href="javascript:void(0);">Marshall Hitt</a>
+                                                            <div class="email">
+                                                                arshall@company.com
+                                                            </div>
+                                                        </div>
+                                                        <div class="botonAmigos">
+                                                            <button class="btn btn-default">
+                                                                <li class="fa fa-user font-md"></li>
+                                                            </button>
                                                         </div>
                                                     </div>
+
+                                                    {#<div class="user" title="email@company.com">#}
+                                                        {#<img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);"> Mike McBride</a>#}
+                                                        {#<div class="email">#}
+                                                            {#mike@company.com#}
+                                                        {#</div>#}
+                                                    {#</div>#}
 
 
 
@@ -333,13 +414,13 @@
                             </div>
 
                         </div>
-                        <div class="col-sm-12 col-md-12 col-lg-12" style="margin-top: 15%">
+                        <div class="col-sm-12 col-md-12 col-lg-12" style="margin-top: 5%">
 
                             <form method="post" class="well padding-bottom-10" onsubmit="return false;">
-                                <textarea rows="2" class="form-control" placeholder="What are you thinking?"></textarea>
+                                <textarea rows="2" class="form-control" placeholder="¿Qué estas pensando?"></textarea>
                                 <div class="margin-top-10">
                                     <button type="submit" class="btn btn-sm btn-primary pull-right">
-                                        Post
+                                        Publicar
                                     </button>
                                     <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Add Location"><i class="fa fa-location-arrow"></i></a>
                                     <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Add Voice"><i class="fa fa-microphone"></i></a>

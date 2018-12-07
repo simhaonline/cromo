@@ -2,9 +2,12 @@
 
 namespace App\Controller\Transporte\Administracion\Conductor;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteConductor;
 use App\Form\Type\Transporte\ConductorType;
+use App\General\General;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -29,25 +32,34 @@ class ConductorController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
+        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $session = new Session();
-        $paginator  = $this->get('knp_paginator');
-        $form = $this->createFormBuilder()
-            ->add('txtNombre', TextType::class, array('data' => $session->get('filtroTteConductorNombre')))
-            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
-                    $session->set('filtroTteConductorNombre', $form->get('txtNombre')->getData());
-                }
+        $formBotonera = BaseController::botoneraLista();
+        $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
             }
         }
-        $arConductor = $paginator->paginate($em->getRepository(TteConductor::class)->lista(), $request->query->getInt('page', 1),40);
+        $datos = $this->getDatosLista(true);
+        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Conductores");
+            }
+            if ($formBotonera->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+//                $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
+            }
+
+        }
         return $this->render('transporte/administracion/conductor/lista.html.twig', [
-            'arConductor' => $arConductor,
-            'form' => $form->createView() ]);
+            'arrDatosLista' => $datos,
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
+        ]);
     }
 
     /**
@@ -70,13 +82,20 @@ class ConductorController extends ControllerListenerGeneral
                 $arConductor->setNombreCorto($arConductor->getNombre1() . " " . $arConductor->getNombre2() . " " . $arConductor->getApellido1() . " " . $arConductor->getApellido2());
                 $em->persist($arConductor);
                 $em->flush();
-                return $this->redirect($this->generateUrl('admin_detalle', ['modulo' => 'transporte','entidad' => 'conductor','id'=> $arConductor->getCodigoConductorPk()]));
+                return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
             }
         }
         return $this->render('transporte/administracion/conductor/nuevo.html.twig', [
             'arConductor' => $arConductor,
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/transporte/administracion/conductor/detalle/{id}", name="transporte_administracion_transporte_conductor_detalle")
+     */
+    public function detalle(){
+        return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
     }
 
 }

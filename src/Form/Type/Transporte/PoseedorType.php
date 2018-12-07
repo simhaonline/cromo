@@ -66,7 +66,6 @@ class PoseedorType extends AbstractType
             {"campo":"digitoVerificacion",          "tipo":"texto",     "ayuda":"Digito verificacion",     "titulo":"DIGITO VERIFICACION"},
             {"campo":"nombreCorto",                 "tipo":"texto",     "ayuda":"Nombre corto",            "titulo":"NOMBRE CORTO"},
             {"campo":"nombre1",                     "tipo":"texto",     "ayuda":"Nombre1",                 "titulo":"NOMBRE1"},
-            {"campo":"nombre1",                     "tipo":"texto",     "ayuda":"Nombre1",                 "titulo":"NOMBRE1"},
             {"campo":"nombre2",                     "tipo":"texto",     "ayuda":"Nombre2",                 "titulo":"NOMBRE2"},
             {"campo":"apellido1",                   "tipo":"texto",     "ayuda":"Apellido1",               "titulo":"APELLIDO1"},
             {"campo":"apellido2",                   "tipo":"texto",     "ayuda":"Apellido2",               "titulo":"APELLIDO2"},
@@ -76,6 +75,18 @@ class PoseedorType extends AbstractType
             {"campo":"movil",                       "tipo":"texto",     "ayuda":"Movil",                   "titulo":"MOVIL"},
             {"campo":"correo",                      "tipo":"texto",     "ayuda":"Correo",                  "titulo":"CORREO"}
         ]';
+    }
+
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+            {"child":"nombreCorto",               "tipo":"TextType",   "propiedades":{"label":"Nombre"},        "operador":"like"}
+
+        ]';
+
+        return $campos;
     }
 
     public function getEstructuraPropiedadesExportar(){

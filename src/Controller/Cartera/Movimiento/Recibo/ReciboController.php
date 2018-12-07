@@ -9,6 +9,7 @@ use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
+use App\Entity\Financiero\FinTercero;
 use App\Form\Type\Cartera\ReciboType;
 use App\Formato\Cartera\Recibo;
 use App\General\General;
@@ -92,6 +93,11 @@ class ReciboController extends ControllerListenerGeneral
                 if($txtCodigoCliente != '') {
                     $arCliente = $em->getRepository(CarCliente::class)->find($txtCodigoCliente);
                     if ($arCliente) {
+                        $txtCodigoTercero = $request->request->get('txtCodigoTercero');
+                        if($txtCodigoTercero != '') {
+                            $arTercero = $em->getRepository(FinTercero::class)->find($txtCodigoTercero);
+                            $arRecibo->setTerceroRel($arTercero);
+                        }
                         if ($id == 0) {
                             $arRecibo->setFecha(new \DateTime('now'));
                         }

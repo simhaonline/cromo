@@ -183,6 +183,11 @@ class FinTercero
     protected $asientosDetallesTerceroRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarRecibo", mappedBy="terceroRel")
+     */
+    protected $carRecibosTerceroRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoTerceroPk()
@@ -500,6 +505,22 @@ class FinTercero
     public function setAsientosDetallesTerceroRel($asientosDetallesTerceroRel): void
     {
         $this->asientosDetallesTerceroRel = $asientosDetallesTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCarRecibosTerceroRel()
+    {
+        return $this->carRecibosTerceroRel;
+    }
+
+    /**
+     * @param mixed $carRecibosTerceroRel
+     */
+    public function setCarRecibosTerceroRel( $carRecibosTerceroRel ): void
+    {
+        $this->carRecibosTerceroRel = $carRecibosTerceroRel;
     }
 
 

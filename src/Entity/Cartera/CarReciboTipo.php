@@ -44,6 +44,11 @@ class CarReciboTipo
     private $orden = 0;
 
     /**
+     * @ORM\Column(name="cruce_cuentas", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $cruceCuentas = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="CarRecibo", mappedBy="reciboTipoRel")
      */
     protected $recibosReciboTipoRel;
@@ -142,6 +147,22 @@ class CarReciboTipo
     public function setOrden($orden): void
     {
         $this->orden = $orden;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCruceCuentas()
+    {
+        return $this->cruceCuentas;
+    }
+
+    /**
+     * @param mixed $cruceCuentas
+     */
+    public function setCruceCuentas( $cruceCuentas ): void
+    {
+        $this->cruceCuentas = $cruceCuentas;
     }
 
 

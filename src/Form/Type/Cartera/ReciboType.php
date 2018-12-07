@@ -6,6 +6,7 @@ use App\Entity\Cartera\CarRecibo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -50,10 +51,11 @@ class ReciboType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Asesor:'
             ])
-            ->add('numeroDocumento', TextType::class, array('required' => false))
             ->add('soporte', TextType::class, array('required' => false))
             ->add('fechaPago', DateType::class, array('format' => 'yyyyMMdd'))
             ->add('comentarios',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
+            ->add('numeroReferencia', NumberType::class, array('required' => false))
+            ->add('numeroReferenciaPrefijo', TextType::class, array('required' => false))
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

@@ -1,54 +1,60 @@
-<table width="100%" class="table table-condensed table-bordered">
+<table width="100%" class="table table-condensed table-bordered tabla-informacion">
     <tr>
-        <td class="titulo"><b>CODIGO:</b></td>
+        <td class="titulo">CODIGO:</td>
         <td class="td-in-well">{{ arRecibo.codigoReciboPk }}</td>
-        <td class="titulo"><b>NUMERO:</b></td>
+        <td class="titulo">NUMERO:</td>
         <td class="td-in-well" style="text-transform: uppercase;">{{ arRecibo.numero }}</td>
     </tr>
     <tr>
-        <td class="titulo"><b>CLIENTE:</b></td>
+        <td class="titulo">CLIENTE:</td>
         <td class="td-in-well">{{ arRecibo.clienteRel.nombreCorto }}</td>
-        <td class="titulo"><b>DESCUENTO:</b></td>
+        <td class="titulo">DESCUENTO:</td>
         <td class="td-in-well"  align="right">{{ arRecibo.vrTotalDescuento | number_format }}</td>
     </tr>
     <tr>
-        <td class="titulo"><b>CUENTA:</b></td>
+        <td class="titulo">CUENTA:</td>
         <td class="td-in-well">{{ arRecibo.cuentaRel.nombre | default('') }}</td>
-        <td class="titulo"><b>TOTAL AJUSTE PESO:</b></td>
+        <td class="titulo">TOTAL AJUSTE PESO:</td>
         <td class="td-in-well"  align="right">{{ arRecibo.vrTotalAjustePeso | number_format }}</td>
     </tr>
     <tr>
-        <td class="titulo"><b>FECHA:</b></td>
+        <td class="titulo">FECHA:</td>
         <td class="td-in-well">{{ arRecibo.fecha | date('Y-m-d') }}</td>
-        <td class="titulo"><b>RETENCION ICA:</b></td>
+        <td class="titulo">RETENCION ICA:</td>
         <td class="td-in-well"  align="right">{{ arRecibo.vrTotalRetencionIca | number_format }}</td>
     </tr>
     <tr>
-        <td class="titulo"><b>FECHA PAGO:</b></td>
+        <td class="titulo">FECHA PAGO:</td>
         <td class="td-in-well">{{ arRecibo.fechaPago | date('Y-m-d') }}</td>
-        <td class="titulo"><b>RETENCION IVA:</b></td>
+        <td class="titulo">RETENCION IVA:</td>
         <td class="td-in-well"  align="right">{{ arRecibo.vrTotalRetencionIva | number_format }}</td>
     </tr>
     <tr>
-        <td class="titulo"><b>USUARIO:</b></td>
+        <td class="titulo">USUARIO:</td>
         <td class="td-in-well">{{ arRecibo.usuario }}</td>
-        <td class="titulo"><b>RETENCION FUENTE:</b></td>
+        <td class="titulo">RETENCION FUENTE:</td>
         <td class="td-in-well"  align="right">{{ arRecibo.vrTotalRetencionFuente | number_format }}</td>
     </tr>
     <tr>
-        <td class="titulo"><b>SOPORTE:</b></td>
+        <td class="titulo">SOPORTE:</td>
         <td class="td-in-well">{{ arRecibo.soporte }}</td>
-        <td class="titulo"><b>PAGO:</b></td>
+        <td class="titulo">PAGO:</td>
         <td class="td-in-well"  align="right">{{ arRecibo.vrPago | number_format }}</td>
     </tr>
     <tr>
-        <td class="titulo"><b>NUMERO DOCUMENTO:</b></td>
-        <td class="td-in-well">{{ arRecibo.numeroDocumento }}</td>
-        <td class="titulo"><b>TOTAL:</b></td>
+        <td class="titulo">Documento cruce:</td>
+        <td class="td-in-well">{{ arRecibo.numeroReferenciaPrefijo }}{{ arRecibo.numeroReferencia }}</td>
+        <td class="titulo">TOTAL:</td>
         <td class="td-in-well"  align="right">{{ arRecibo.vrPagoTotal | number_format }}</td>
     </tr>
     <tr>
-        <td class="titulo" ><b>COMENTARIOS:</b></td>
+        <td class="titulo">Tercero cruce:</td>
+        <td class="td-in-well">{{ arRecibo.terceroRel.nombreCorto | default('') }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"  align="right"></td>
+    </tr>
+    <tr>
+        <td class="titulo" >COMENTARIOS:</td>
         <td class="td-in-well" colspan="5">{{ arRecibo.comentarios }}</td>
     </tr>
 </table>

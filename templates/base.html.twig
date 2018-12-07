@@ -12,6 +12,7 @@
         {#<link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}">#}
         {#<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.css') }}">#}
         <link rel="stylesheet" href="{{ asset('css/general.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/social.css') }}">
         {#<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>#}
 
         <!-- #CSS Links -->
@@ -438,19 +439,36 @@ you can add as many as you like
             });
         }
 
-        function fotoPerfi() {
-            $.ajax({
-                url: "{{ path('social_perfil_foto_ver') }}",
-                type: "GET",
-                dataType: "JSON",
-                success: function (respuestas) {
-                    console.log(respuestas,"hola");
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
+        //funcion para subir foto de perfil
+        function cambiarFotoPerfil(){
+            $("#form_foto_perfil_subir").trigger('click');
         }
+
+        function foto_perfil_subir(evt) {
+            var foto_perfil_subir = evt.target.files; // FileList object
+            // Obtenemos la imagen del campo "file".
+
+            for (var i = 0, f; f = foto_perfil_subir[i]; i++) {
+                if (!f.type.match('image.*')) {
+                    continue;
+                }
+                var reader = new FileReader();
+
+                //Solo admitimos imágenes.
+
+                reader.onload = (function(theFile) {
+                    return function(e) {
+                console.log(e.target.result);
+                        // Insertamos la imagen
+                        document.getElementById("previsualizar_foto").src = `${e.target.result}`;
+                    };
+                })(f);
+
+                reader.readAsDataURL(f);
+            }
+        }
+
+        document.getElementById('form_foto_perfil_subir').addEventListener('change', foto_perfil_subir, false);
 
     </script>
 

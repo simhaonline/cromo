@@ -1,0 +1,18 @@
+.foto_perfil{
+    width: 54px;
+    height: 50px;
+    align-self: flex-start;
+    cursor: pointer;
+}
+
+.foto_perfil_subir{
+    display: none;
+}
+
+
+
+.fondo{
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}

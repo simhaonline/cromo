@@ -1,75 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    <div class="panel panel-default">
-        <div class="panel-heading">Filtros</div>
-        <div class="panel-body">
-            <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Placa:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtPlaca, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            {{ form_widget(form.btnFiltrar) }}
-        </div>
+    {% include (modulo~'/'~funcion~'/'~entidad~'/filtro.html.twig') %}
+    <div class="table-responsive" style="padding:0px;">
+        {{ form_start(formBotonera) }}
+        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
+        {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
+        {{ form_end(formBotonera) }}
     </div>
-    <table class="table table-striped table-bordered table-hover">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>PLACA</th>
-            <th>PLACA REMOLQUE</th>
-            <th>MARCA</th>
-            <th>MODELO</th>
-            <th>MOTOR</th>
-            <th>NUMERO EJES</th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for arVehiculo in arVehiculo %}
-            <tr>
-                <td>{{ arVehiculo.codigoVehiculoPk }}</td>
-                <td style="text-align: center">{{ arVehiculo.placa }}</td>
-                <td>{{ arVehiculo.placaRemolque }}</td>
-                <td>{{ arVehiculo.nombre }}</td>
-                <td>{{ arVehiculo.modelo }}</td>
-                <td>{{ arVehiculo.motor }}</td>
-                <td>{{ arVehiculo.numeroEjes }}</td>
-                <td style="text-align: center;">
-                        <a href="{{ path('transporte_administracion_transporte_vehiculo_nuevo',{'id' : arVehiculo.codigoVehiculoPk}) }}">
-                            <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
-                            </i>
-                        </a>
-                </td>
-                <td style="text-align: center;">
-                    <a href="{{ path('transporte_administracion_transporte_vehiculo_detalle',{'id' : arVehiculo.codigoVehiculoPk}) }}">
-                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
-                        </i>
-                    </a>
-                </td>
-                {#<td style="text-align: center"><a href="{{ path('admin_detalle',{'modulo':'transporte','entidad':'vehiculo','id': arVehiculo.codigoVehiculoPk }) }}"><i class="fa fa-share-square-o" style="font-size: large;color: black;">#}
-                {#</i></a></td>#}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <div class="btn-group" style="float: left">
-        <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arVehiculo.getTotalItemCount }}</span></div>
-        </div>
-    </div>
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-        {{ knp_pagination_render(arVehiculo) }}
-    </div>
-    <div class="btn-toolbar" style="float: right">
-        <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_transporte_vehiculo_nuevo', {'id': 0}) }}">Nuevo</a>
-        </div>
-    </div>
-    {{ form_end(form) }}
 {% endblock %}
-

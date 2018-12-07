@@ -4,6 +4,8 @@
 namespace App\Entity\Seguridad;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -16,6 +18,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  */
 class Usuario implements UserInterface, \Serializable
 {
+
+
     public $infoLog = [
         "primaryKey" => "username",
         "todos"     => true,
@@ -84,7 +88,7 @@ class Usuario implements UserInterface, \Serializable
     private $rol = 'ROLE_USER';
 
     /**
-     * @ORM\Column(name="foto", type="blob", length=2048, nullable=true)
+     * @ORM\Column(name="foto", type="blob", columnDefinition="longblob",  nullable=true)
      */
     private $foto;
 
@@ -102,9 +106,12 @@ class Usuario implements UserInterface, \Serializable
     public function __construct()
     {
         $this->isActive = true;
+
         // may not be needed, see section on salt below
         // $this->salt = md5(uniqid('', true));
     }
+
+
 
     public function getUsername()
     {

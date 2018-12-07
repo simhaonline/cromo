@@ -90,7 +90,7 @@ class InvImportacionRepository extends ServiceEntityRepository
             if($vrTotalCosto > 0) {
                 if($subtotalGeneralExtranjeroTemporal > 0) {
                     $porcentajeParticipaCosto = ($arImportacionDetalle->getVrSubtotalExtranjero() / $subtotalGeneralExtranjeroTemporal) * 100;
-                    $costoParticipa = ($vrTotalCosto * $porcentajeParticipaCosto) / 100;
+                    $costoParticipa = (($vrTotalCosto * $porcentajeParticipaCosto) / 100) / $arImportacionDetalle->getCantidad();
                 }
 
             }

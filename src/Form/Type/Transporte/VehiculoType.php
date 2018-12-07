@@ -131,4 +131,30 @@ class VehiculoType extends AbstractType
             'data_class' => TteVehiculo::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoVehiculoPk",                        "tipo":"pk",        "ayuda":"Codigo de vehiculo",                       "titulo":"ID"},
+            {"campo":"placa",                                   "tipo":"texto",     "ayuda":"placa",                                    "titulo":"PLACA"},
+            {"campo":"placaRemolque",                           "tipo":"texto",     "ayuda":"Placa remolque",                           "titulo":"PLACA REMOLQUE"},
+            {"campo":"marcaRel.nombre",                         "tipo":"texto",     "ayuda":"Marca",                                    "titulo":"MARCA",                   "relacion":""},
+            {"campo":"modelo",                                  "tipo":"texto",     "ayuda":"Modelo",                                   "titulo":"MODELO"},
+            {"campo":"motor",                                   "tipo":"texto",     "ayuda":"Motor",                                    "titulo":"MOTOR"},
+            {"campo":"numeroEjes",                              "tipo":"entero",    "ayuda":"Numero ejes",                              "titulo":"NUMERO EJES"}
+        ]';
+        return $campos;
+
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+            {"child":"placa",               "tipo":"TextType",   "propiedades":{"label":"Placa"},   "operador":"like"}
+
+        ]';
+
+        return $campos;
+    }
 }

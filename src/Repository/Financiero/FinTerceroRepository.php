@@ -24,14 +24,14 @@ class FinTerceroRepository extends ServiceEntityRepository
             ->addSelect('t.numeroIdentificacion')
             ->where('t.codigoTerceroPk <> 0')
             ->orderBy('t.codigoTerceroPk', 'DESC');
-        if ($session->get('filtroCtbNombreTercero') != '') {
-            $queryBuilder->andWhere("t.nombreCorto LIKE '%{$session->get('filtroCtbNombreTercero')}%' ");
+        if ($session->get('filtroFinNombreTercero') != '') {
+            $queryBuilder->andWhere("t.nombreCorto LIKE '%{$session->get('filtroFinNombreTercero')}%' ");
         }
-        if ($session->get('filtroNitTercero') != '') {
-            $queryBuilder->andWhere("t.numeroIdentificacion LIKE '%{$session->get('filtroNitTercero')}%' ");
+        if ($session->get('filtroFinNitTercero') != '') {
+            $queryBuilder->andWhere("t.numeroIdentificacion LIKE '%{$session->get('filtroFinNitTercero')}%' ");
         }
-        if ($session->get('filtroCtbCodigoTercero') != '') {
-            $queryBuilder->andWhere("t.codigoTerceroPk LIKE '%{$session->get('filtroCtbCodigoTercero')}%' ");
+        if ($session->get('filtroFinCodigoTercero') != '') {
+            $queryBuilder->andWhere("t.codigoTerceroPk LIKE '%{$session->get('filtroFinCodigoTercero')}%' ");
         }
 
         return $queryBuilder;

@@ -6,6 +6,7 @@ use App\Entity\Cartera\CarRecibo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -40,10 +41,21 @@ class ReciboType extends AbstractType
                 'label' => 'Tipo recibo:',
                 'required' => true
             ])
-            ->add('numeroDocumento', TextType::class, array('required' => false))
+            ->add('asesorRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\General\GenAsesor',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Asesor:'
+            ])
             ->add('soporte', TextType::class, array('required' => false))
             ->add('fechaPago', DateType::class, array('format' => 'yyyyMMdd'))
             ->add('comentarios',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
+            ->add('numeroReferencia', NumberType::class, array('required' => false))
+            ->add('numeroReferenciaPrefijo', TextType::class, array('required' => false))
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
@@ -66,7 +78,8 @@ class ReciboType extends AbstractType
             {"campo":"clienteRel.numeroIdentificacion","tipo":"texto", "ayuda":"Numero de identificacion del tercero", "titulo":"IDENTIFICACION","relacion":""},
             {"campo":"clienteRel.nombreCorto",         "tipo":"texto", "ayuda":"Nombre del tercero",                   "titulo":"NOMBRE",        "relacion":""},
             {"campo":"cuentaRel.nombre",               "tipo":"texto", "ayuda":"Nombre de la cuenta",                  "titulo":"CUENTA",        "relacion":""},
-            {"campo":"vrPagoTotal",                        "tipo":"moneda","ayuda":"Total",                                "titulo":"TOTAL"},
+            {"campo":"vrPago",                         "tipo":"moneda","ayuda":"Pago que realizo el cliente",          "titulo":"PAGO"},
+            {"campo":"vrPagoTotal",                    "tipo":"moneda","ayuda":"Total",                                "titulo":"TOTAL"},
             {"campo":"usuario",                        "tipo":"texto", "ayuda":"Usuario",                              "titulo":"USU"},
             {"campo":"estadoAutorizado",               "tipo":"bool",  "ayuda":"Autorizado",                           "titulo":"AUT"},
             {"campo":"estadoAprobado",                 "tipo":"bool",  "ayuda":"Aprobado",                             "titulo":"APR"},
@@ -83,6 +96,7 @@ class ReciboType extends AbstractType
             {"child":"numero",             "tipo":"TextType",  "propiedades":{"label":"Numero"}},
             {"child":"codigoReciboPk",     "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
             {"child":"codigoReciboTipoFk", "tipo":"EntityType","propiedades":{"class":"CarReciboTipo","choice_label":"nombre", "label":"TODOS"}},
+            {"child":"codigoAsesorFk",     "tipo":"EntityType","propiedades":{"class":"GenAsesor","choice_label":"nombre", "label":"TODOS"}},
             {"child":"fechaDesde",         "tipo":"DateType",  "propiedades":{"label":"Fecha Desde"}},
             {"child":"fechaHasta",         "tipo":"DateType",  "propiedades":{"label":"Fecha Hasta"}},
             {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},

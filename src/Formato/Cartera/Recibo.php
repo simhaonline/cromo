@@ -132,18 +132,38 @@ class Recibo extends \FPDF {
         $this->SetXY(10, 76);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 6, 'NUM DOCUMENTO', 1, 0, 'L', 1);
+        $this->Cell(30, 6, 'NUM REF', 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial','', 8);
-        $this->Cell(66, 6, $arRecibo->getNumeroDocumento() , 1, 0, 'L', 1);
+        $this->Cell(66, 6, $arRecibo->getNumeroReferencia() , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 6, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(65, 6, '', 1, 0, 'R', 1);
+
         //linea 8
         $this->SetXY(10, 82);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 6, 'TERCERO(CRUCE)', 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial','', 8);
+        $tercero = "";
+        if($arRecibo->getCodigoTerceroFk()) {
+            $tercero = $arRecibo->getTerceroRel()->getNombreCorto();
+        }
+        $this->Cell(66, 6, $tercero , 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 6, "", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 6, '', 1, 0, 'R', 1);
+
+        //linea 9
+        $this->SetXY(10, 88);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, "COMENTARIOS:", 1, 0, 'L', 1);

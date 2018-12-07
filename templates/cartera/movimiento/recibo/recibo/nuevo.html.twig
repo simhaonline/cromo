@@ -36,10 +36,10 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_nombre1" class="col-sm-2 control-label">Soporte:</label>
+                <label for="form_nombre1" class="col-sm-2 control-label">Asesor:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.soporte) }}
-                    {{ form_errors(form.soporte) }}
+                    {{ form_widget(form.asesorRel) }}
+                    {{ form_errors(form.asesorRel) }}
                 </div>
                 <label for="form_nombre1" class="col-sm-2 control-label">Fecha pago:</label>
                 <div class="col-sm-4">
@@ -47,10 +47,14 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_nombre1" class="col-sm-2 control-label">Numero documento:</label>
+                <label for="form_soporte" class="col-sm-2 control-label">Soporte:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numeroDocumento) }}
-                    {{ form_errors(form.numeroDocumento) }}
+                    {{ form_widget(form.soporte) }}
+                    {{ form_errors(form.soporte) }}
+                </div>
+                <label for="form_nombre1" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
                 </div>
             </div>
             <div class="form-group">
@@ -61,6 +65,44 @@
             </div>
         </div>
     </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Cruce de cuentas</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-2 control-label">Tercero:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                <input id="txtCodigoTercero"  name="txtCodigoTercero"  type="text" class="form-control" value="{{ arRecibo.codigoTerceroFk |default('') }}"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="txtNombreCortoTercero"  name="txtNombreCortoTercero"  type="text" class="form-control" value="{{ arRecibo.terceroRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('financiero_buscar_tercero', { 'campoCodigo': 'txtCodigoTercero', 'campoNombre': 'txtNombreCortoTercero' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_soporte" class="col-sm-2 control-label">Prefijo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroReferenciaPrefijo) }}
+                    {{ form_errors(form.numeroReferenciaPrefijo) }}
+                </div>
+                <label for="form_soporte" class="col-sm-2 control-label">Numero documento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroReferencia) }}
+                    {{ form_errors(form.numeroReferencia) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-footer">
         <a class="btn btn-default btn-sm" href="{{ path('cartera_movimiento_recibo_recibo_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}

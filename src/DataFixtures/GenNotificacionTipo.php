@@ -13,14 +13,12 @@ class GenNotificacionTipo extends Fixture
         if($genModelo) {
             $genNotificacionTipo=$manager->getRepository('App:General\GenNotificacionTipo')->find(1);
             if(!$genNotificacionTipo){
-            $usuarios=array("usuario1","usuario2");
-            $usuarios=json_encode($usuarios);
+
             $genNotificacionTipo = new \App\Entity\General\GenNotificacionTipo();
             $genNotificacionTipo->setCodigoNotificacionTipoPk(1);
             $genNotificacionTipo->setNombre("prueba");
             $genNotificacionTipo->setEstadoActivo(1);
             $genNotificacionTipo->setModeloRel($genModelo);
-            $genNotificacionTipo->setUsuarios($usuarios);
             $manager->persist($genNotificacionTipo);
             $manager->flush();
             }

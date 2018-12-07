@@ -62,15 +62,6 @@ class CarRecibo
     private $soporte;
 
     /**
-     * @ORM\Column(name="numero_documento", type="string", length=20, nullable=true)
-     * @Assert\Length(
-     *     max=30,
-     *     maxMessage="El campo no puede tener mas de 20 caracteres"
-     * )
-     */
-    private $numeroDocumento;
-
-    /**
      * @ORM\Column(name="fecha_pago", type="date", nullable=true)
      */
     private $fechaPago;
@@ -109,6 +100,21 @@ class CarRecibo
      * @ORM\Column(name="vr_pago_total", type="float")
      */
     private $vrPagoTotal = 0;
+
+    /**
+     * @ORM\Column(name="numero_referencia", type="integer", nullable=true)
+     */
+    private $numeroReferencia = 0;
+
+    /**
+     * @ORM\Column(name="numero_referencia_prefijo", type="string", length=20, nullable=true)
+     */
+    private $numeroReferenciaPrefijo;
+
+    /**
+     * @ORM\Column(name="codigo_tercero_fk", type="integer", nullable=true)
+     */
+    private $codigoTerceroFk;
 
     /**
      * @ORM\Column(name="estado_impreso", type="boolean")
@@ -169,9 +175,10 @@ class CarRecibo
     protected $cuentaRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="CarReciboDetalle", mappedBy="reciboRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinTercero", inversedBy="carRecibosTerceroRel")
+     * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
      */
-    protected $recibosDetallesRecibosRel;
+    protected $terceroRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="reciboAsesorRel")
@@ -179,6 +186,11 @@ class CarRecibo
 
      */
     protected $asesorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="CarReciboDetalle", mappedBy="reciboRel")
+     */
+    protected $recibosDetallesRecibosRel;
 
     /**
      * @return mixed
@@ -191,7 +203,7 @@ class CarRecibo
     /**
      * @param mixed $codigoReciboPk
      */
-    public function setCodigoReciboPk($codigoReciboPk): void
+    public function setCodigoReciboPk( $codigoReciboPk ): void
     {
         $this->codigoReciboPk = $codigoReciboPk;
     }
@@ -207,7 +219,7 @@ class CarRecibo
     /**
      * @param mixed $fecha
      */
-    public function setFecha($fecha): void
+    public function setFecha( $fecha ): void
     {
         $this->fecha = $fecha;
     }
@@ -223,7 +235,7 @@ class CarRecibo
     /**
      * @param mixed $codigoClienteFk
      */
-    public function setCodigoClienteFk($codigoClienteFk): void
+    public function setCodigoClienteFk( $codigoClienteFk ): void
     {
         $this->codigoClienteFk = $codigoClienteFk;
     }
@@ -239,7 +251,7 @@ class CarRecibo
     /**
      * @param mixed $codigoCuentaFk
      */
-    public function setCodigoCuentaFk($codigoCuentaFk): void
+    public function setCodigoCuentaFk( $codigoCuentaFk ): void
     {
         $this->codigoCuentaFk = $codigoCuentaFk;
     }
@@ -255,7 +267,7 @@ class CarRecibo
     /**
      * @param mixed $codigoAsesorFk
      */
-    public function setCodigoAsesorFk($codigoAsesorFk): void
+    public function setCodigoAsesorFk( $codigoAsesorFk ): void
     {
         $this->codigoAsesorFk = $codigoAsesorFk;
     }
@@ -271,7 +283,7 @@ class CarRecibo
     /**
      * @param mixed $codigoReciboTipoFk
      */
-    public function setCodigoReciboTipoFk($codigoReciboTipoFk): void
+    public function setCodigoReciboTipoFk( $codigoReciboTipoFk ): void
     {
         $this->codigoReciboTipoFk = $codigoReciboTipoFk;
     }
@@ -287,9 +299,25 @@ class CarRecibo
     /**
      * @param mixed $numero
      */
-    public function setNumero($numero): void
+    public function setNumero( $numero ): void
     {
         $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoporte()
+    {
+        return $this->soporte;
+    }
+
+    /**
+     * @param mixed $soporte
+     */
+    public function setSoporte( $soporte ): void
+    {
+        $this->soporte = $soporte;
     }
 
     /**
@@ -303,7 +331,7 @@ class CarRecibo
     /**
      * @param mixed $fechaPago
      */
-    public function setFechaPago($fechaPago): void
+    public function setFechaPago( $fechaPago ): void
     {
         $this->fechaPago = $fechaPago;
     }
@@ -319,7 +347,7 @@ class CarRecibo
     /**
      * @param mixed $vrTotalDescuento
      */
-    public function setVrTotalDescuento($vrTotalDescuento): void
+    public function setVrTotalDescuento( $vrTotalDescuento ): void
     {
         $this->vrTotalDescuento = $vrTotalDescuento;
     }
@@ -335,7 +363,7 @@ class CarRecibo
     /**
      * @param mixed $vrTotalAjustePeso
      */
-    public function setVrTotalAjustePeso($vrTotalAjustePeso): void
+    public function setVrTotalAjustePeso( $vrTotalAjustePeso ): void
     {
         $this->vrTotalAjustePeso = $vrTotalAjustePeso;
     }
@@ -351,7 +379,7 @@ class CarRecibo
     /**
      * @param mixed $vrTotalRetencionIca
      */
-    public function setVrTotalRetencionIca($vrTotalRetencionIca): void
+    public function setVrTotalRetencionIca( $vrTotalRetencionIca ): void
     {
         $this->vrTotalRetencionIca = $vrTotalRetencionIca;
     }
@@ -367,7 +395,7 @@ class CarRecibo
     /**
      * @param mixed $vrTotalRetencionIva
      */
-    public function setVrTotalRetencionIva($vrTotalRetencionIva): void
+    public function setVrTotalRetencionIva( $vrTotalRetencionIva ): void
     {
         $this->vrTotalRetencionIva = $vrTotalRetencionIva;
     }
@@ -383,7 +411,7 @@ class CarRecibo
     /**
      * @param mixed $vrTotalRetencionFuente
      */
-    public function setVrTotalRetencionFuente($vrTotalRetencionFuente): void
+    public function setVrTotalRetencionFuente( $vrTotalRetencionFuente ): void
     {
         $this->vrTotalRetencionFuente = $vrTotalRetencionFuente;
     }
@@ -399,7 +427,7 @@ class CarRecibo
     /**
      * @param mixed $vrPago
      */
-    public function setVrPago($vrPago): void
+    public function setVrPago( $vrPago ): void
     {
         $this->vrPago = $vrPago;
     }
@@ -415,9 +443,57 @@ class CarRecibo
     /**
      * @param mixed $vrPagoTotal
      */
-    public function setVrPagoTotal($vrPagoTotal): void
+    public function setVrPagoTotal( $vrPagoTotal ): void
     {
         $this->vrPagoTotal = $vrPagoTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroReferencia()
+    {
+        return $this->numeroReferencia;
+    }
+
+    /**
+     * @param mixed $numeroReferencia
+     */
+    public function setNumeroReferencia( $numeroReferencia ): void
+    {
+        $this->numeroReferencia = $numeroReferencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroReferenciaPrefijo()
+    {
+        return $this->numeroReferenciaPrefijo;
+    }
+
+    /**
+     * @param mixed $numeroReferenciaPrefijo
+     */
+    public function setNumeroReferenciaPrefijo( $numeroReferenciaPrefijo ): void
+    {
+        $this->numeroReferenciaPrefijo = $numeroReferenciaPrefijo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTerceroFk()
+    {
+        return $this->codigoTerceroFk;
+    }
+
+    /**
+     * @param mixed $codigoTerceroFk
+     */
+    public function setCodigoTerceroFk( $codigoTerceroFk ): void
+    {
+        $this->codigoTerceroFk = $codigoTerceroFk;
     }
 
     /**
@@ -431,7 +507,7 @@ class CarRecibo
     /**
      * @param mixed $estadoImpreso
      */
-    public function setEstadoImpreso($estadoImpreso): void
+    public function setEstadoImpreso( $estadoImpreso ): void
     {
         $this->estadoImpreso = $estadoImpreso;
     }
@@ -447,7 +523,7 @@ class CarRecibo
     /**
      * @param mixed $estadoAnulado
      */
-    public function setEstadoAnulado($estadoAnulado): void
+    public function setEstadoAnulado( $estadoAnulado ): void
     {
         $this->estadoAnulado = $estadoAnulado;
     }
@@ -463,7 +539,7 @@ class CarRecibo
     /**
      * @param mixed $estadoExportado
      */
-    public function setEstadoExportado($estadoExportado): void
+    public function setEstadoExportado( $estadoExportado ): void
     {
         $this->estadoExportado = $estadoExportado;
     }
@@ -479,7 +555,7 @@ class CarRecibo
     /**
      * @param mixed $estadoAprobado
      */
-    public function setEstadoAprobado($estadoAprobado): void
+    public function setEstadoAprobado( $estadoAprobado ): void
     {
         $this->estadoAprobado = $estadoAprobado;
     }
@@ -495,7 +571,7 @@ class CarRecibo
     /**
      * @param mixed $estadoAutorizado
      */
-    public function setEstadoAutorizado($estadoAutorizado): void
+    public function setEstadoAutorizado( $estadoAutorizado ): void
     {
         $this->estadoAutorizado = $estadoAutorizado;
     }
@@ -511,7 +587,7 @@ class CarRecibo
     /**
      * @param mixed $estadoContabilizado
      */
-    public function setEstadoContabilizado($estadoContabilizado): void
+    public function setEstadoContabilizado( $estadoContabilizado ): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
     }
@@ -527,7 +603,7 @@ class CarRecibo
     /**
      * @param mixed $comentarios
      */
-    public function setComentarios($comentarios): void
+    public function setComentarios( $comentarios ): void
     {
         $this->comentarios = $comentarios;
     }
@@ -543,7 +619,7 @@ class CarRecibo
     /**
      * @param mixed $usuario
      */
-    public function setUsuario($usuario): void
+    public function setUsuario( $usuario ): void
     {
         $this->usuario = $usuario;
     }
@@ -559,7 +635,7 @@ class CarRecibo
     /**
      * @param mixed $clienteRel
      */
-    public function setClienteRel($clienteRel): void
+    public function setClienteRel( $clienteRel ): void
     {
         $this->clienteRel = $clienteRel;
     }
@@ -575,7 +651,7 @@ class CarRecibo
     /**
      * @param mixed $reciboTipoRel
      */
-    public function setReciboTipoRel($reciboTipoRel): void
+    public function setReciboTipoRel( $reciboTipoRel ): void
     {
         $this->reciboTipoRel = $reciboTipoRel;
     }
@@ -591,7 +667,7 @@ class CarRecibo
     /**
      * @param mixed $cuentaRel
      */
-    public function setCuentaRel($cuentaRel): void
+    public function setCuentaRel( $cuentaRel ): void
     {
         $this->cuentaRel = $cuentaRel;
     }
@@ -599,65 +675,17 @@ class CarRecibo
     /**
      * @return mixed
      */
-    public function getRecibosDetallesRecibosRel()
+    public function getTerceroRel()
     {
-        return $this->recibosDetallesRecibosRel;
+        return $this->terceroRel;
     }
 
     /**
-     * @param mixed $recibosDetallesRecibosRel
+     * @param mixed $terceroRel
      */
-    public function setRecibosDetallesRecibosRel($recibosDetallesRecibosRel): void
+    public function setTerceroRel( $terceroRel ): void
     {
-        $this->recibosDetallesRecibosRel = $recibosDetallesRecibosRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSoporte()
-    {
-        return $this->soporte;
-    }
-
-    /**
-     * @param mixed $soporte
-     */
-    public function setSoporte($soporte): void
-    {
-        $this->soporte = $soporte;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumeroDocumento()
-    {
-        return $this->numeroDocumento;
-    }
-
-    /**
-     * @param mixed $numeroDocumento
-     */
-    public function setNumeroDocumento($numeroDocumento): void
-    {
-        $this->numeroDocumento = $numeroDocumento;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
+        $this->terceroRel = $terceroRel;
     }
 
     /**
@@ -671,9 +699,25 @@ class CarRecibo
     /**
      * @param mixed $asesorRel
      */
-    public function setAsesorRel($asesorRel): void
+    public function setAsesorRel( $asesorRel ): void
     {
         $this->asesorRel = $asesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecibosDetallesRecibosRel()
+    {
+        return $this->recibosDetallesRecibosRel;
+    }
+
+    /**
+     * @param mixed $recibosDetallesRecibosRel
+     */
+    public function setRecibosDetallesRecibosRel( $recibosDetallesRecibosRel ): void
+    {
+        $this->recibosDetallesRecibosRel = $recibosDetallesRecibosRel;
     }
 
 

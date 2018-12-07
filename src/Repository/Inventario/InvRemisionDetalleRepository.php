@@ -80,6 +80,12 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         if($session->get('filtroInvInformeRemisionDetalleCodigoTercero')){
             $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroInvInformeRemisionDetalleCodigoTercero')}");
         }
+        if($session->get('filtroInvBodega')) {
+            $queryBuilder->andWhere("rd.codigoBodegaFk = '{$session->get('filtroInvBodega')}'");
+        }
+        if($session->get('filtroInvRemisionDetalleLote')){
+            $queryBuilder->andWhere("rd.loteFk = '{$session->get('filtroInvRemisionDetalleLote')}'");
+        }
 
         return $queryBuilder;
     }
@@ -168,8 +174,17 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->where('r.estadoAprobado = 1')
             ->andWhere('r.estadoAnulado = 0')
             ->andWhere('rd.cantidadPendiente > 0');
+        if($session->get('filtroInvInformeRemisionPendienteCodigoTercero')){
+            $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroInvInformeRemisionPendienteCodigoTercero')}");
+        }
         if($session->get('filtroInvRemisionTipo')){
             $queryBuilder->andWhere("r.codigoRemisionTipoFk = '{$session->get('filtroInvRemisionTipo')}'");
+        }
+        if($session->get('filtroInvBodega')) {
+            $queryBuilder->andWhere("rd.codigoBodegaFk = '{$session->get('filtroInvBodega')}'");
+        }
+        if($session->get('filtroInvRemisionDetalleLote')){
+            $queryBuilder->andWhere("rd.loteFk = '{$session->get('filtroInvRemisionDetalleLote')}'");
         }
         return $queryBuilder->getQuery();
     }

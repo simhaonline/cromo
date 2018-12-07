@@ -39,7 +39,7 @@ class Usuario implements UserInterface, \Serializable
     private $numeroIdentificacion;
 
     /**
-     * @ORM\Column(name="cargo", type="string", length=255,nullable=true)
+     * @ORM\Column(name="cargo", type="string", length=255, nullable=true)
      */
     private $cargo;
 
@@ -82,6 +82,11 @@ class Usuario implements UserInterface, \Serializable
      * @ORM\Column(name="rol", type="string", length=20, options={"default":"ROLE_USER"})
      */
     private $rol = 'ROLE_USER';
+
+    /**
+     * @ORM\Column(name="foto", type="blob", length=2048, nullable=true)
+     */
+    private $foto;
 
     /**
      * @ORM\Column(name="notificaciones_pendientes", type="integer", options={"default":0})
@@ -354,6 +359,24 @@ class Usuario implements UserInterface, \Serializable
         $this->rol = $rol;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFoto()
+    {
+        return $this->foto;
+    }
+
+    /**
+     * @param mixed $foto
+     */
+    public function setFoto($foto)
+    {
+        $this->foto = $foto;
+        return $this;
+    }
+
 
 
 }

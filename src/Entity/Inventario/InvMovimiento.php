@@ -78,7 +78,7 @@ class InvMovimiento
     private $codigoTerceroFk;
 
     /**
-     * @ORM\Column(name="soporte", type="string", length=50, nullable=true)
+     * @ORM\Column(name="soporte", type="string", length=300, nullable=true)
      */
     private $soporte;
 
@@ -213,6 +213,22 @@ class InvMovimiento
     protected $sucursalRel;
 
     /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoMovimientoPk()
@@ -258,6 +274,22 @@ class InvMovimiento
     public function setCodigoFacturaTipoFk($codigoFacturaTipoFk): void
     {
         $this->codigoFacturaTipoFk = $codigoFacturaTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAsesorFk()
+    {
+        return $this->codigoAsesorFk;
+    }
+
+    /**
+     * @param mixed $codigoAsesorFk
+     */
+    public function setCodigoAsesorFk($codigoAsesorFk): void
+    {
+        $this->codigoAsesorFk = $codigoAsesorFk;
     }
 
     /**
@@ -402,6 +434,22 @@ class InvMovimiento
     public function setSoporte($soporte): void
     {
         $this->soporte = $soporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuia()
+    {
+        return $this->guia;
+    }
+
+    /**
+     * @param mixed $guia
+     */
+    public function setGuia($guia): void
+    {
+        $this->guia = $guia;
     }
 
     /**
@@ -711,6 +759,38 @@ class InvMovimiento
     /**
      * @return mixed
      */
+    public function getAsesorRel()
+    {
+        return $this->asesorRel;
+    }
+
+    /**
+     * @param mixed $asesorRel
+     */
+    public function setAsesorRel($asesorRel): void
+    {
+        $this->asesorRel = $asesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaTipoRel()
+    {
+        return $this->facturaTipoRel;
+    }
+
+    /**
+     * @param mixed $facturaTipoRel
+     */
+    public function setFacturaTipoRel($facturaTipoRel): void
+    {
+        $this->facturaTipoRel = $facturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getMovimientosDetallesMovimientoRel()
     {
         return $this->movimientosDetallesMovimientoRel;
@@ -738,86 +818,6 @@ class InvMovimiento
     public function setSucursalRel($sucursalRel): void
     {
         $this->sucursalRel = $sucursalRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturaTipoRel()
-    {
-        return $this->facturaTipoRel;
-    }
-
-    /**
-     * @param mixed $facturaTipoRel
-     */
-    public function setFacturaTipoRel($facturaTipoRel): void
-    {
-        $this->facturaTipoRel = $facturaTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoAsesorFk()
-    {
-        return $this->codigoAsesorFk;
-    }
-
-    /**
-     * @param mixed $codigoAsesorFk
-     */
-    public function setCodigoAsesorFk($codigoAsesorFk): void
-    {
-        $this->codigoAsesorFk = $codigoAsesorFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAsesorRel()
-    {
-        return $this->asesorRel;
-    }
-
-    /**
-     * @param mixed $asesorRel
-     */
-    public function setAsesorRel($asesorRel): void
-    {
-        $this->asesorRel = $asesorRel;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuia()
-    {
-        return $this->guia;
-    }
-
-    /**
-     * @param mixed $guia
-     */
-    public function setGuia($guia): void
-    {
-        $this->guia = $guia;
     }
 
 

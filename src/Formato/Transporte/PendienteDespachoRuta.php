@@ -146,11 +146,11 @@ class PendienteDespachoRuta extends \FPDF {
                 }
                 if($arGuia['codigoRutaFk'] != $ruta){
                     $pdf->SetX(150);
-                    $pdf->Cell(15,4,$vrTotalDeclara,1,0,'R');
-                    $pdf->Cell(15,4,$vrTotalFlete,1,0,'R');
-                    $pdf->Cell(8,4,$vrTotalUnidad,1,0,'R');
-                    $pdf->Cell(8,4,$vrTotalPeso,1,0,'R');
-                    $pdf->Cell(8,4,$vrTotalVolumen,1,0,'R');
+                    $pdf->Cell(15,4,number_format($vrTotalDeclara, 0, '.', ',') ,1,0,'R');
+                    $pdf->Cell(15,4,number_format($vrTotalFlete, 0, '.', ','),1,0,'R');
+                    $pdf->Cell(8,4,number_format($vrTotalUnidad, 0, '.', ','),1,0,'R');
+                    $pdf->Cell(8,4,number_format($vrTotalPeso, 0, '.', ','),1,0,'R');
+                    $pdf->Cell(8,4,number_format($vrTotalVolumen, 0, '.', ','),1,0,'R');
                     $pdf->Ln(4);
                     $pdf->Cell(194,4,$arGuia['nombreRuta'],1,0,'L');
                     $ruta = $arGuia['codigoRutaFk'];

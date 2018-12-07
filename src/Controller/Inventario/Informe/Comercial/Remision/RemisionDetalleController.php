@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Informe\Comercial\Remision;
 
+use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvRemisionTipo;
 use App\General\General;
@@ -19,6 +20,7 @@ class RemisionDetalleController extends Controller
     /**
      * @param Request $request
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/comercial/remision/detalle", name="inventario_informe_inventario_comercial_remision_detalle")
@@ -30,13 +32,22 @@ class RemisionDetalleController extends Controller
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
+            ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
+            ->add('txtLote', TextType::class, array('required' => false))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvRemisionDetalleLote', $form->get('txtLote')->getData());
                 $session->set('filtroInvInformeRemisionDetalleCodigoTercero', $form->get('txtCodigoTercero')->getData());
+                $arBodega = $form->get('cboBodega')->getData();
+                if ($arBodega != '') {
+                    $session->set('filtroInvBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());
+                } else {
+                    $session->set('filtroInvBodega', null);
+                }
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->createQuery($em->getRepository(InvRemisionDetalle::class)->informeDetalles())->execute(), "Informe remisiones pendientes");

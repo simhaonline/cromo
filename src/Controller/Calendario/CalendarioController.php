@@ -19,13 +19,13 @@ class CalendarioController extends Controller
      */
     public function lista(Request $request)
     {
-        return $this->render('calendario/calendar.html.twig');
+        return $this->render('calendario/calendario.html.twig');
     }
 
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/calendario/guardar/evento/", name="calendario_guardar_evento")
+     * @Route("/calendario/evento/guardar", name="calendario_evento_guardar")
      */
     public function guardarEvento(Request $request)
     {
@@ -51,24 +51,34 @@ class CalendarioController extends Controller
         try {
             $em->flush();
         } catch (\Exception $exception) {
-            if ($exception) {
-                dump($exception);
-                die();
-            }
         }
         return new JsonResponse($respuesta);
     }
 
     /**
-     * @param Request $request
      * @return JsonResponse
-     * @Route("/calendario/listar/evento/", name="calendario_listar_evento")
+     * @Route("/calendario/evento/listar", name="calendario_evento_listar")
      */
-    public function cargarEventos(Request $request)
+    public function cargarEventos()
     {
         $em = $this->getDoctrine()->getManager();
         $arEventos = $em->getRepository(GenEvento::class)->jsonEventos($this->getUser()->getUsername());
         return new JsonResponse($arEventos);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     * @Route("/calendario/evento/eliminar", name="calendario_evento_eliminar")
+     */
+    public function eliminarEventos(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->query->get('id');
+        $em->getRepository(GenEvento::class)->eliminar($id);
+        return new JsonResponse(true);
     }
 }
 

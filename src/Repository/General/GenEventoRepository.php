@@ -24,6 +24,7 @@ class GenEventoRepository extends ServiceEntityRepository
         if($arEventos){
             /** @var  $arEvento GenEvento */
             foreach ($arEventos as $arEvento){
+                $arrEvento['pk'] = $arEvento->getCodigoEventoPk();
                 $arrEvento['title'] = $arEvento->getTitulo();
                 $arrEvento['start'] = $arEvento->getFechaDesde()->format('Y/m/d H:i:s');
                 $arrEvento['end'] = $arEvento->getFechaHasta()->format('Y/m/d H:i:s');
@@ -34,6 +35,25 @@ class GenEventoRepository extends ServiceEntityRepository
             }
         }
         return $json;
+    }
+
+    /**
+     * @param $id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     */
+    public function eliminar($id){
+        $em = $this->getEntityManager();
+        $arEvento = $em->find(GenEvento::class,$id);
+        if($arEvento){
+            $em->remove($arEvento);
+        }
+        try{
+            $em->flush();
+        }catch (\Exception $exception){
+
+        }
     }
 
 }

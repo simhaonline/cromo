@@ -19,12 +19,19 @@ class SocPerfilRepository extends ServiceEntityRepository
         parent::__construct($registry, SocPerfil::class);
     }
 
-    public function listaPerfil(){
+    public function listaPerfil($nombre, $usuario){
         $em=$this->getEntityManager();
 
-//        $arPerfil=$em->createQueryBuilder()
-//            ->from('App:Social\SocPerfil','p')
-//            ->addSelect('p.')
+        $arPerfil=$em->createQueryBuilder()
+            ->from('App:Social\SocPerfil','p')
+            ->leftJoin('p.usuarioRel','u')
+            ->addSelect('u.nombreCorto as nombre')
+            ->addSelect('u.foto')
+            ->where("u.nombreCorto LIKE '%{$nombre}%'")
+            ->andWhere("u.username!='{$usuario}'")
+            ->getQuery()->getResult();
+
+        return $arPerfil;
     }
 
 //    /**

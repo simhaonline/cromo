@@ -142,8 +142,8 @@
         {% if arrRuta.0 == 'general' %}
             {% include('base_general.html.twig') %}
         {% endif %}
-        {% if modulo == 'social' %}
-            {% include('base_social.html.twig') %}
+        {% if arrRuta.0 == 'social' %}
+            {% include('base_menu_inicio.html.twig') %}
         {% endif %}
     {% elseif arrRuta.0 == 'administracion' %}
         {% set modulo = app.request.attributes.get('modulo') %}

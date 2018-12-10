@@ -62,6 +62,11 @@ class GenConfiguracion
     private $logo;
 
     /**
+     * @ORM\Column(name="url", type="text", nullable=true)
+     */
+    private $url;
+
+    /**
      * @ORM\Column(name="web_service_oro_url", type="string", nullable=true)
      */
     private $webServiceOroUrl;
@@ -235,6 +240,22 @@ class GenConfiguracion
     public function setLogo($logo): void
     {
         $this->logo = $logo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url): void
+    {
+        $this->url = $url;
     }
 
     /**

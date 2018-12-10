@@ -108,8 +108,8 @@
                             <th>CAN</th>
                             <th title="Precio por unidad">PRECIO</th>
                             <th>SUBTOTAL</th>
-                            <th>%D</th>
-                            <th>DESCUENTO</th>
+                            <th title="Porcentaje descuento">%D</th>
+                            <th title="Descuento">DSC</th>
                             <th>%IVA</th>
                             <th>IVA</th>
                             <th title="Codigo de la retencion">RET</th>
@@ -117,6 +117,7 @@
                             <th title="Remision detalle">R</th>
                             <th title="Pedido detalle">P</th>
                             <th title="Importacion detalle">I</th>
+                            <th title="Movimiento detalle">M</th>
                             <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -219,6 +220,7 @@
                                 <td>{{ arMovimientoDetalle.codigoRemisionDetalleFk }}</td>
                                 <td>{{ arMovimientoDetalle.codigoPedidoDetalleFk }}</td>
                                 <td>{{ arMovimientoDetalle.codigoImportacionDetalleFk }}</td>
+                                <td>{{ arMovimientoDetalle.codigoMovimientoDetalleFk }}</td>
                                 <td>
                                     <a href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_remision_distribucion_cargar',{'id' : arMovimientoDetalle.codigoMovimientoDetallePk }) }}','cargarDistribucion',400,600)">
                                         <li title="Carga rapida de datos" class="fa fa-bolt"

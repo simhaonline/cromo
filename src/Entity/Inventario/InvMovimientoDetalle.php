@@ -148,6 +148,11 @@ class InvMovimientoDetalle
     private $codigoImportacionDetalleFk;
 
     /**
+     * @ORM\Column(name="codigo_movimiento_detalle_fk", type="integer", nullable=true)
+     */
+    private $codigoMovimientoDetalleFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvMovimiento", inversedBy="movimientosDetallesMovimientoRel")
      * @ORM\JoinColumn(name="codigo_movimiento_fk", referencedColumnName="codigo_movimiento_pk")
      */
@@ -182,6 +187,17 @@ class InvMovimientoDetalle
      * @ORM\JoinColumn(name="codigo_importacion_detalle_fk", referencedColumnName="codigo_importacion_detalle_pk")
      */
     protected $importacionDetalleRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inventario\InvMovimientoDetalle", inversedBy="movimientosDetallesMovimientoDetalleRel")
+     * @ORM\JoinColumn(name="codigo_movimiento_detalle_fk", referencedColumnName="codigo_movimiento_detalle_pk")
+     */
+    protected $movimientoDetalleRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimientoDetalle", mappedBy="movimientoDetalleRel")
+     */
+    protected $movimientosDetallesMovimientoDetalleRel;
 
     /**
      * @return mixed
@@ -693,6 +709,54 @@ class InvMovimientoDetalle
     public function setImportacionDetalleRel($importacionDetalleRel): void
     {
         $this->importacionDetalleRel = $importacionDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoMovimientoDetalleFk()
+    {
+        return $this->codigoMovimientoDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoMovimientoDetalleFk
+     */
+    public function setCodigoMovimientoDetalleFk( $codigoMovimientoDetalleFk ): void
+    {
+        $this->codigoMovimientoDetalleFk = $codigoMovimientoDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientoDetalleRel()
+    {
+        return $this->movimientoDetalleRel;
+    }
+
+    /**
+     * @param mixed $movimientoDetalleRel
+     */
+    public function setMovimientoDetalleRel( $movimientoDetalleRel ): void
+    {
+        $this->movimientoDetalleRel = $movimientoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosDetallesMovimientoDetalleRel()
+    {
+        return $this->movimientosDetallesMovimientoDetalleRel;
+    }
+
+    /**
+     * @param mixed $movimientosDetallesMovimientoDetalleRel
+     */
+    public function setMovimientosDetallesMovimientoDetalleRel( $movimientosDetallesMovimientoDetalleRel ): void
+    {
+        $this->movimientosDetallesMovimientoDetalleRel = $movimientosDetallesMovimientoDetalleRel;
     }
 
 

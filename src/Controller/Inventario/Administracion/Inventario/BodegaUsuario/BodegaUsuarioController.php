@@ -3,25 +3,52 @@
 namespace App\Controller\Inventario\Administracion\Inventario\BodegaUsuario;
 
 
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvBodegaUsuario;
 use App\Entity\Seguridad\Usuario;
 use App\Form\Type\RecursoHumano\BodegaUsuarioType;
+use App\General\General;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BodegaUsuarioController extends Controller
 {
     /**
+     * @Route("/inventario/administracion/inventario/bodegausuario/lista", name="inventario_administracion_inventario_bodegausuario_lista")
+     */
+    public function lista(Request $request)
+    {
+        $session = new Session();
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $session->set('filtroInvNombrePrecio', $form->get('txtNombre')->getData());
+            $session->set('filtroInvTipoPrecio', $form->get('chkTipoPrecio')->getData());
+        }
+        $query = $this->getDoctrine()->getRepository(InvBodegaUsuario::class)->lista();
+        $arBodegaUsuario = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
+        return $this->render('inventario/administracion/inventario/bodegaUsuario/lista.html.twig', [
+            'arBodegaUsuario' => $arBodegaUsuario,
+            'form' => $form->createView()]);
+    }
+
+    /**
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/inventario/administracion/inventario/bodegaUsuario/nuevo/{id}",name="inventario_admin_inventario_bodegaUsuario_nuevo")
+     * @Route("/inventario/administracion/inventario/bodegaUsuario/nuevo/{id}",name="inventario_administracion_inventario_bodegausuario_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -63,7 +90,7 @@ class BodegaUsuarioController extends Controller
                     $arBodegaUsuario->setBodegaRel($form->get('bodegaRel')->getData());
                     $em->persist($arBodegaUsuario);
                     $em->flush();
-                    return $this->redirect($this->generateUrl('admin_detalle',['modulo' => 'inventario','entidad' => 'bodegaUsuario','id' => $arBodegaUsuario->getCodigoBodegaUsuarioPk()]));
+                    return $this->redirect($this->generateUrl('inventario_administracion_inventario_bodegausuario_lista'));
                 } else {
                     Mensajes::error('El usuario seleccionado ya tiene acceso a esta bodega');
                 }
@@ -73,4 +100,6 @@ class BodegaUsuarioController extends Controller
             'form' => $form->createView()
         ]);
     }
+
+
 }

@@ -142,6 +142,11 @@
         {% if arrRuta.0 == 'general' %}
             {% include('base_general.html.twig') %}
         {% endif %}
+        {% if arrRuta.0 == 'calendario' %}
+            {% include('base_calendario.html.twig') %}
+        {% endif %}
+        {% if modulo == 'social' %}
+            {% include('base_social.html.twig') %}
         {% if arrRuta.0 == 'social' %}
             {% include('base_menu_inicio.html.twig') %}
         {% endif %}
@@ -179,14 +184,7 @@
         {% endif %}
     {% endif %}
 
-    {#<nav>#}
-    {#<ul>#}
-    {#<li class="">#}
-    {#<a href="index.html" title="blank_"><i class="fa fa-lg fa-fw fa-home"></i> <span#}
-    {#class="menu-item-parent">Blank</span></a>#}
-    {#</li>#}
-    {#</ul>#}
-    {#</nav>#}
+    {% include 'base_opcion_calendario.html.twig' %}
 
     <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
 
@@ -213,12 +211,15 @@
                 {% if arrRuta.2 is defined %}
                     <li>{{ arrRuta.2 | capitalize }}
 
-                        : {% if arrRuta.3 is defined %}{{ arrRuta.3 }} {% if arrRuta.4 is defined %}{{ arrRuta.4 }}{% endif %}{% endif %}</li>
+                        : {% if arrRuta.3 is defined %}{{ arrRuta.3 }} {% if arrRuta.4 is defined %}{{ arrRuta.4 }}{% endif %}{% endif %}
+                    </li>
                 {% endif %}
                 {#</h3>#}
                 {#</div>#}
                 {#<!-- /.col-lg-12 -->#}
                 {#</div>#}
+                &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" style="color: white!important;">Reportar un problema</a>&nbsp;&nbsp;<span
+                        class="fa fa-exclamation-triangle" style="color: white!important;"></span>
             </ol>
         {% endif %}
         {{ notificar()|raw }}

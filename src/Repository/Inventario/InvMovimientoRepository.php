@@ -140,6 +140,25 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $queryBuilder->addOrderBy('m.fecha', 'DESC');
         return $queryBuilder;
     }
+
+    public function listarPendientesNotaCredito($codigoCliente)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm');
+        $queryBuilder
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('m.numero')
+            ->addSelect('m.fecha')
+            ->addSelect('m.vrSubtotal')
+            ->leftJoin('m.terceroRel', 't')
+            ->where("m.codigoDocumentoTipoFk = 'FAC'")
+            ->andWhere('m.codigoTerceroFk = ' . $codigoCliente)
+            ->andWhere('m.estadoAprobado = 1')
+            ->andWhere('m.estadoAnulado = 0');
+        $queryBuilder->addOrderBy('m.fecha', 'DESC');
+        return $queryBuilder;
+    }
+
     /**
      * @param $arMovimiento InvMovimiento
      * @throws \Doctrine\ORM\ORMException

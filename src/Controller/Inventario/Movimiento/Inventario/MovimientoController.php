@@ -676,6 +676,76 @@ class MovimientoController extends ControllerListenerGeneral
     }
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @Route("/inventario/movimiento/inventario/movimiento/movimiento/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_movimiento_nuevo")
+     */
+    public function detalleNuevoMovimiento(Request $request, $id)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNumero', TextType::class, array('required' => false))
+            ->add('txtLote', TextType::class, array('required' => false))
+            ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
+                $session->set('filtroInvRemisionNumero', $form->get('txtNumero')->getData());
+                $session->set('filtroInvRemisionDetalleLote', $form->get('txtLote')->getData());
+                $arBodega = $form->get('cboBodega')->getData();
+                if ($arBodega != '') {
+                    $session->set('filtroInvBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());
+                } else {
+                    $session->set('filtroInvBodega', null);
+                }
+            }
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados as $codigo) {
+                        $arMovimientoDetallesOrigen = $em->getRepository(InvMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $codigo));
+                        foreach ($arMovimientoDetallesOrigen as $arMovimientoDetalleOrigen) {
+                            $arMovimientoDetalle = new InvMovimientoDetalle();
+                            $arMovimientoDetalle->setMovimientoRel($arMovimiento);
+                            $arMovimientoDetalle->setItemRel($arMovimientoDetalleOrigen->getItemRel());
+                            $arMovimientoDetalle->setOperacionInventario($arMovimiento->getOperacionInventario());
+                            $cantidad = $arMovimientoDetalleOrigen->getCantidad();
+                            $arMovimientoDetalle->setCantidad($cantidad);
+                            $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
+                            $arMovimientoDetalle->setVrPrecio($arMovimientoDetalleOrigen->getVrPrecio());
+                            $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arMovimientoDetalleOrigen->getItemRel()->getCodigoImpuestoRetencionFk());
+                            $arMovimientoDetalle->setPorcentajeIva($arMovimientoDetalleOrigen->getPorcentajeIva());
+                            //$arMovimientoDetalle->setRemisionDetalleRel($arMovimientoDetalleOrigen);
+                            $arMovimientoDetalle->setLoteFk($arMovimientoDetalleOrigen->getLoteFk());
+                            $arMovimientoDetalle->setCodigoBodegaFk($arMovimientoDetalleOrigen->getCodigoBodegaFk());
+                            $em->persist($arMovimientoDetalle);
+                        }
+                    }
+                    $em->flush();
+                    $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                }
+            }
+        }
+        $arMovimientos = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvMovimiento::class)->listarPendientesNotaCredito($arMovimiento->getCodigoTerceroFk()), $request->query->getInt('page', 1), 500);
+        return $this->render('inventario/movimiento/inventario/detalleNuevoMovimiento.html.twig', [
+            'form' => $form->createView(),
+            'arMovimientos' => $arMovimientos
+        ]);
+    }
+
+    /**
      * @Route("/inventario/movimiento/inventario/movimiento/detalle/distrubucion/cargar/{id}", name="inventario_movimiento_inventario_movimiento_remision_distribucion_cargar")
      */
     public function cargarDatosDistribuidos(Request $request, $id)

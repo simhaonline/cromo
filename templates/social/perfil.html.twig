@@ -1,6 +1,6 @@
 {% extends ('base.html.twig') %}
 {% block content %}
-<!-- MAIN PANEL -->
+    <!-- MAIN PANEL -->
 
     <!-- MAIN CONTENT -->
     <div id="content">
@@ -10,7 +10,11 @@
         <!-- row -->
 
         <div class="row">
-
+            {{ form_start(formBusqueda) }}
+            {{ form_errors(formBusqueda) }}
+            {% include ('social/buscardor.html.twig') %}
+            {{ form_rest(formBusqueda) }}
+            {{ form_end(formBusqueda) }}
             <div class="col-sm-10 col-lg-offset-1">
 
 
@@ -20,14 +24,14 @@
 
                         <div class="col-sm-12 col-md-12 col-lg-12">
                             <div class="well well-light well-sm no-margin no-padding">
-
                                 <div class="row">
 
                                     <div class="col-sm-12">
                                         <div id="myCarousel" class="carousel fade profile-carousel">
-                                            <div class="air air-bottom-right padding-10">
-                                                <a href="javascript:void(0);" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-check"></i> Follow</a>&nbsp; <a href="javascript:void(0);" class="btn txt-color-white bg-color-pinkDark btn-sm"><i class="fa fa-link"></i> Connect</a>
-                                            </div>
+                                            {#<div class="air air-bottom-right padding-10">#}
+                                            {#<a href="javascript:void(0);" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-check"></i> <b class="badge">0</b></a>#}
+                                            {#&nbsp; <a href="javascript:void(0);" class="btn txt-color-white bg-color-pinkDark btn-sm"><i class="fa fa-link"></i> Connect</a>#}
+                                            {#</div>#}
 
                                             <div class="carousel-inner" style="min-height: 260px">
                                                 <!-- Slide 1 -->
@@ -51,8 +55,8 @@
                                                         <small>Amigos</small></h4>
                                                     <br>
                                                     {#<h4 class="font-md"><strong>419</strong>#}
-                                                        {#<br>#}
-                                                        {#<small>Connections</small></h4>#}
+                                                    {#<br>#}
+                                                    {#<small>Connections</small></h4>#}
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
@@ -72,29 +76,29 @@
                                                         </p>
                                                     </li>
                                                     {#<li>#}
-                                                        {#<p class="text-muted">#}
-                                                            {#<i class="fa fa-skype"></i>&nbsp;&nbsp;<span class="txt-color-darken">john12</span>#}
-                                                        {#</p>#}
+                                                    {#<p class="text-muted">#}
+                                                    {#<i class="fa fa-skype"></i>&nbsp;&nbsp;<span class="txt-color-darken">john12</span>#}
+                                                    {#</p>#}
                                                     {#</li>#}
                                                     {#<li>#}
-                                                        {#<p class="text-muted">#}
-                                                            {#<i class="fa fa-calendar"></i>&nbsp;&nbsp;<span class="txt-color-darken">Free after <a href="javascript:void(0);" rel="tooltip" title="" data-placement="top" data-original-title="Create an Appointment">4:30 PM</a></span>#}
-                                                        {#</p>#}
+                                                    {#<p class="text-muted">#}
+                                                    {#<i class="fa fa-calendar"></i>&nbsp;&nbsp;<span class="txt-color-darken">Free after <a href="javascript:void(0);" rel="tooltip" title="" data-placement="top" data-original-title="Create an Appointment">4:30 PM</a></span>#}
+                                                    {#</p>#}
                                                     {#</li>#}
                                                 </ul>
                                                 <div style="margin-top: 80px">
 
-                                                <p class="font-md">
-                                                    <i>Un poco a cerca de mi...</i>
-                                                </p>
-                                                <p>
+                                                    <p class="font-md">
+                                                        <i>Un poco a cerca de mi...</i>
+                                                    </p>
+                                                    <p>
 
-                                                    Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
-                                                    cumque nihil impedit quo minus id quod maxime placeat facere
+                                                        Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
+                                                        cumque nihil impedit quo minus id quod maxime placeat facere
 
-                                                </p>
-                                                <br>
-                                                {#<a href="javascript:void(0);" class="btn btn-default btn-xs"><i class="fa fa-envelope-o"></i> Send Message</a>#}
+                                                    </p>
+                                                    <br>
+                                                    {#<a href="javascript:void(0);" class="btn btn-default btn-xs"><i class="fa fa-envelope-o"></i> Send Message</a>#}
                                                 </div>
 
                                             </div>
@@ -155,76 +159,76 @@
 
                                             <ul class="nav nav-tabs tabs-pull-right">
                                                 {#<li class="active">#}
-                                                    {#<a href="#a1" data-toggle="tab">Recent Articles</a>#}
+                                                {#<a href="#a1" data-toggle="tab">Recent Articles</a>#}
                                                 {#</li>#}
                                                 <li class="active">
                                                     <a href="#a1" data-toggle="tab">Amigos</a>
                                                 </li>
                                                 {#<li class="pull-left">#}
-                                                    {#<span class="margin-top-10 display-inline"><i class="fa fa-rss text-success"></i> Actividad</span>#}
+                                                {#<span class="margin-top-10 display-inline"><i class="fa fa-rss text-success"></i> Actividad</span>#}
                                                 {#</li>#}
                                             </ul>
 
                                             <div class="tab-content padding-top-10">
                                                 {#<div class="tab-pane fade in active" id="a1">#}
 
-                                                    {#<div class="row">#}
+                                                {#<div class="row">#}
 
-                                                        {#<div class="col-xs-2 col-sm-1">#}
-                                                            {#<time datetime="2014-09-20" class="icon">#}
-                                                                {#<strong>Jan</strong>#}
-                                                                {#<span>10</span>#}
-                                                            {#</time>#}
-                                                        {#</div>#}
+                                                {#<div class="col-xs-2 col-sm-1">#}
+                                                {#<time datetime="2014-09-20" class="icon">#}
+                                                {#<strong>Jan</strong>#}
+                                                {#<span>10</span>#}
+                                                {#</time>#}
+                                                {#</div>#}
 
-                                                        {#<div class="col-xs-10 col-sm-11">#}
-                                                            {#<h6 class="no-margin"><a href="javascript:void(0);">Allice in Wonderland</a></h6>#}
-                                                            {#<p>#}
-                                                                {#Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi Nam eget dui.#}
-                                                                {#Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero,#}
-                                                                {#sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel.#}
-                                                            {#</p>#}
-                                                        {#</div>#}
+                                                {#<div class="col-xs-10 col-sm-11">#}
+                                                {#<h6 class="no-margin"><a href="javascript:void(0);">Allice in Wonderland</a></h6>#}
+                                                {#<p>#}
+                                                {#Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi Nam eget dui.#}
+                                                {#Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero,#}
+                                                {#sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel.#}
+                                                {#</p>#}
+                                                {#</div>#}
 
-                                                        {#<div class="col-sm-12">#}
+                                                {#<div class="col-sm-12">#}
 
-                                                            {#<hr>#}
+                                                {#<hr>#}
 
-                                                        {#</div>#}
+                                                {#</div>#}
 
-                                                        {#<div class="col-xs-2 col-sm-1">#}
-                                                            {#<time datetime="2014-09-20" class="icon">#}
-                                                                {#<strong>Jan</strong>#}
-                                                                {#<span>10</span>#}
-                                                            {#</time>#}
-                                                        {#</div>#}
+                                                {#<div class="col-xs-2 col-sm-1">#}
+                                                {#<time datetime="2014-09-20" class="icon">#}
+                                                {#<strong>Jan</strong>#}
+                                                {#<span>10</span>#}
+                                                {#</time>#}
+                                                {#</div>#}
 
-                                                        {#<div class="col-xs-10 col-sm-11">#}
-                                                            {#<h6 class="no-margin"><a href="javascript:void(0);">World Report</a></h6>#}
-                                                            {#<p>#}
-                                                                {#Morning our be dry. Life also third land after first beginning to evening cattle created let subdue you'll winged don't Face firmament.#}
-                                                                {#You winged you're was Fruit divided signs lights i living cattle yielding over light life life sea, so deep.#}
-                                                                {#Abundantly given years bring were after. Greater you're meat beast creeping behold he unto She'd doesn't. Replenish brought kind gathering Meat.#}
-                                                            {#</p>#}
-                                                        {#</div>#}
+                                                {#<div class="col-xs-10 col-sm-11">#}
+                                                {#<h6 class="no-margin"><a href="javascript:void(0);">World Report</a></h6>#}
+                                                {#<p>#}
+                                                {#Morning our be dry. Life also third land after first beginning to evening cattle created let subdue you'll winged don't Face firmament.#}
+                                                {#You winged you're was Fruit divided signs lights i living cattle yielding over light life life sea, so deep.#}
+                                                {#Abundantly given years bring were after. Greater you're meat beast creeping behold he unto She'd doesn't. Replenish brought kind gathering Meat.#}
+                                                {#</p>#}
+                                                {#</div>#}
 
-                                                        {#<div class="col-sm-12">#}
+                                                {#<div class="col-sm-12">#}
 
-                                                            {#<br>#}
+                                                {#<br>#}
 
-                                                        {#</div>#}
+                                                {#</div>#}
 
-                                                    {#</div>#}
+                                                {#</div>#}
 
                                                 {#</div>#}
                                                 <div class="tab-pane fade in active" id="a1">
 
                                                     {#<div class="alert alert-info fade in">#}
-                                                        {#<button class="close" data-dismiss="alert">#}
-                                                            {#×#}
-                                                        {#</button>#}
-                                                        {#<i class="fa-fw fa fa-info"></i>#}
-                                                        {#<strong>51 new members </strong>joined today!#}
+                                                    {#<button class="close" data-dismiss="alert">#}
+                                                    {#×#}
+                                                    {#</button>#}
+                                                    {#<i class="fa-fw fa fa-info"></i>#}
+                                                    {#<strong>51 new members </strong>joined today!#}
                                                     {#</div>#}
 
                                                     <div class="user">
@@ -237,7 +241,7 @@
                                                         </div>
                                                         <div class="botonAmigos">
                                                             <button class="btn btn-default">
-                                                               <li class="fa fa-user font-md"></li>
+                                                                <li class="fa fa-user font-md"></li>
                                                             </button>
                                                         </div>
                                                     </div>
@@ -369,10 +373,10 @@
                                                     </div>
 
                                                     {#<div class="user" title="email@company.com">#}
-                                                        {#<img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);"> Mike McBride</a>#}
-                                                        {#<div class="email">#}
-                                                            {#mike@company.com#}
-                                                        {#</div>#}
+                                                    {#<img src="{{ asset('img/avatars/male.png') }}" alt="demo user"><a href="javascript:void(0);"> Mike McBride</a>#}
+                                                    {#<div class="email">#}
+                                                    {#mike@company.com#}
+                                                    {#</div>#}
                                                     {#</div>#}
 
 
@@ -416,7 +420,8 @@
                         </div>
                         <div class="col-sm-12 col-md-12 col-lg-12" style="margin-top: 5%">
 
-                            <form method="post" class="well padding-bottom-10" onsubmit="return false;">
+                            {#<form method="post" class="well padding-bottom-10" onsubmit="return false;">#}
+                            <div>
                                 <textarea rows="2" class="form-control" placeholder="¿Qué estas pensando?"></textarea>
                                 <div class="margin-top-10">
                                     <button type="submit" class="btn btn-sm btn-primary pull-right">
@@ -427,7 +432,7 @@
                                     <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Add Photo"><i class="fa fa-camera"></i></a>
                                     <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Add File"><i class="fa fa-file"></i></a>
                                 </div>
-                            </form>
+                            </div>
 
                             <div class="timeline-seperator text-center"> <span>10:30PM January 1st, 2013</span>
                                 <div class="btn-group pull-right">
@@ -608,7 +613,7 @@
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                   <img  style="width: 100%" src="{{ app.session.get('foto_perfil')}}" class="img-thumbnail"  id="previsualizar_foto">
+                    <img  style="width: 100%" src="{{ app.session.get('foto_perfil')}}" class="img-thumbnail"  id="previsualizar_foto">
                     <div class="modal-body" style="text-align: center">
                         <button type="button" class="btn btn-success" onclick="cambiarFotoPerfil()">Subir foto</button>
                         {#<input id="foto_perfil_subir"  accept="image/*" type="file" style="display: none" name="files[]"/>#}
@@ -630,7 +635,7 @@
     </div>
     <!-- END MAIN CONTENT -->
 
-<!-- END MAIN PANEL -->
+    <!-- END MAIN PANEL -->
 
 {% endblock %}
 

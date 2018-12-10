@@ -4,8 +4,10 @@ namespace App\Controller\Social;
 
 use App\Controller\BaseController;
 use App\Entity\Seguridad\Usuario;
+use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,6 +30,30 @@ class PerfilController extends BaseController
             'extension'     =>$usuario->getExtension(),
             'telefono'      =>$usuario->getTelefono(),
         ];
+
+        $formBusqueda=$this->createFormBuilder()
+            ->add('busqueda',TextType::class,
+                [
+                    'attr'=>['class'=>'form-control'],
+                    'required'=>false
+                ])
+            ->add('btnBuscar',SubmitType::class,[
+                'attr'=>['class'=>'btn btn-default btn-sm'],
+                'label'=>'Buscar'
+            ])->getForm();
+        $formBusqueda->handleRequest($request);
+
+        if($formBusqueda->isSubmitted() && $formBusqueda->isValid()){
+            if($formBusqueda->get('btnBuscar')->isSubmitted()){
+                if($formBusqueda->get('busqueda')->getData()!=""){
+                    return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$formBusqueda->get('busqueda')->getData()]));
+                }
+                else{
+                    Mensajes::error("Debes ingresar una palabra o frase para iniciar la busqueda");
+                }
+            }
+        }
+
         $form= $this->createFormBuilder()
             ->add('foto_perfil_subir',FileType::class,[
                 'required'=>true,
@@ -51,9 +77,15 @@ class PerfilController extends BaseController
                 $session->set('foto_perfil',"data:image/jpeg;base64,{$imagen}");
                 return $this->redirect($this->generateUrl('social_perfil_ver'));
             }
+
+            if($form->get('btnBuscar')->isSubmitted()){
+                dump("hola");
+                exit();
+            }
         }
         return $this->render('social/perfil.html.twig',[
             'form'=>$form->createView(),
+            'formBusqueda'=>$formBusqueda->createView(),
             'arUsuario'=>$informacionUsuario,
         ]);
     }

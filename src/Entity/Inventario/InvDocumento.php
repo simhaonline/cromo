@@ -208,6 +208,11 @@ class InvDocumento
     private $adicionarOrden = false;
 
     /**
+     * @ORM\Column(name="nota_credito", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $notaCredito = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentosDocumentoTipoRel")
      * @ORM\JoinColumn(name="codigo_documento_tipo_fk", referencedColumnName="codigo_documento_tipo_pk")
      */
@@ -776,6 +781,22 @@ class InvDocumento
     public function setAdicionar($adicionar): void
     {
         $this->adicionar = $adicionar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotaCredito()
+    {
+        return $this->notaCredito;
+    }
+
+    /**
+     * @param mixed $notaCredito
+     */
+    public function setNotaCredito( $notaCredito ): void
+    {
+        $this->notaCredito = $notaCredito;
     }
 
 

@@ -223,7 +223,7 @@ class Factura2 extends \FPDF
             $pdf->Cell(15, 4, number_format($arMovimientoDetalle->getVrTotal()), 1, 0, 'R');
             $pdf->Cell(50, 4, '', 1, 0, 'C');
             $pdf->Ln();
-            $pdf->SetAutoPageBreak(true, 105);
+            $pdf->SetAutoPageBreak(true, 95);
         }
         $pdf->Ln();
         $pdf->SetX(155);

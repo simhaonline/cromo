@@ -17,7 +17,7 @@
         {% if arMovimiento.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    <table width="100%" class="table table-condensed table-bordered">
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo">CODIGO:</td>
             <td class="td-in-well">{{ arMovimiento.codigoMovimientoPk }}</td>
@@ -92,7 +92,7 @@
         <div class="tab-pane active" id="detalles">
             <div id="detalles" style="width: 100%"><br>
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -258,6 +258,12 @@
                         {% endif %}
 
                         {% if arMovimiento.codigoDocumentoTipoFk == 'FAC' %}
+                            {% if arMovimiento.documentoRel.notaCredito == 1 %}
+                                <div class="btn-group">
+                                    <a class="btn btn-default btn-sm"
+                                       href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_movimiento_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 900)">Nuevo</a>
+                                </div>
+                            {% endif %}
                             {% if arMovimiento.documentoRel.adicionarPedido == 1 %}
                                 <div class="btn-group"><a class="btn btn-default btn-sm"
                                                           href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_pedido_detalle_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 1200)">Nuevo

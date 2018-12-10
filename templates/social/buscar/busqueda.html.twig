@@ -1,0 +1,37 @@
+{% extends ('base.html.twig') %}
+{% block content %}
+
+    <div id="content">
+        <div class="row">
+            {#{% include('social/buscardor.html.twig') %}#}
+            <div class="col-sm-10 col-lg-offset-1">
+
+            {% if perfil|length >0 %}
+                <div class="well well-sm">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            {% for perfil in perfil %}
+                            <div class="user" style="width: 100%">
+                                <div class="amigoDescripcion">
+                                    <img  src="{{ perfil.foto }}" style="width: 100px; height: 100px" class="img-rounded" alt="demo user">
+                                    <a href="javascript:void(0);">{{ perfil.nombre }}</a>
+                                    <div class="email">
+                                        travis@company.com
+                                    </div>
+                                </div>
+                                <div class="botonAmigos">
+                                    <button class="btn btn-default">
+                                        <li class="fa fa-user font-md"></li>
+                                    </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+            {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

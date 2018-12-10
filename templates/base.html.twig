@@ -83,7 +83,7 @@
 					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
 						<img src="{{ asset('img/avatars/sunny.png') }}" alt="me" class="online"/>
                         {#<img src="{{ app.session.get('foto_perfil')}}" alt="me" class="online"/>#}
-                        <span>
+						<span>
 							{{ app.user.username }}
 						</span>
 						<i class="fa fa-angle-down"></i>
@@ -145,8 +145,9 @@
         {% if arrRuta.0 == 'calendario' %}
             {% include('base_calendario.html.twig') %}
         {% endif %}
-        {% if modulo == 'social' %}
-            {% include('base_social.html.twig') %}
+
+        {% if arrRuta.0 == 'social' %}
+            {% include('base_menu_inicio.html.twig') %}
         {% endif %}
     {% elseif arrRuta.0 == 'administracion' %}
         {% set modulo = app.request.attributes.get('modulo') %}

@@ -9,6 +9,21 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvBodegaUsuarioRepository extends ServiceEntityRepository
 {
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(InvBodegaUsuario::class, 'bu')
+            ->select('bu.codigoBodegaUsuarioPk')
+            ->addSelect('bu.usuario')
+            ->addSelect('b.nombre AS bodega')
+            ->where('bu.codigoBodegaUsuarioPk <> 0')
+            ->leftJoin('bu.bodegaRel', 'b')
+            ->addOrderBy('bu.codigoBodegaUsuarioPk', 'ASC');
+
+
+        return $queryBuilder;
+    }
+
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, InvBodegaUsuario::class);

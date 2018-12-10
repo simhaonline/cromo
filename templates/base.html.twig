@@ -82,6 +82,7 @@
 
 					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
 						<img src="{{ asset('img/avatars/sunny.png') }}" alt="me" class="online"/>
+                        {#<img src="{{ app.session.get('foto_perfil')}}" alt="me" class="online"/>#}
 						<span>
 							{{ app.user.username }}
 						</span>
@@ -173,7 +174,9 @@
         {% if modulo == 'general' %}
             {% include('base_general.html.twig') %}
         {% endif %}
-
+        {% if modulo == 'social' %}
+            {% include('base_social.html.twig') %}
+        {% endif %}
     {% endif %}
 
     {#<nav>#}

@@ -62,11 +62,6 @@ class GenConfiguracion
     private $logo;
 
     /**
-     * @ORM\Column(name="url", type="text", nullable=true)
-     */
-    private $url;
-
-    /**
      * @ORM\Column(name="web_service_oro_url", type="string", nullable=true)
      */
     private $webServiceOroUrl;
@@ -81,22 +76,6 @@ class GenConfiguracion
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     protected $ciudadRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -240,22 +219,6 @@ class GenConfiguracion
     public function setLogo($logo): void
     {
         $this->logo = $logo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param mixed $url
-     */
-    public function setUrl($url): void
-    {
-        $this->url = $url;
     }
 
     /**

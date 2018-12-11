@@ -68,57 +68,57 @@ class TteFactura
     private $soporte;
 
     /**
-     * @ORM\Column(name="vr_flete", type="float")
+     * @ORM\Column(name="vr_flete", type="float", options={"default" : 0})
      */
     private $vrFlete = 0;
 
     /**
-     * @ORM\Column(name="vr_manejo", type="float")
+     * @ORM\Column(name="vr_manejo", type="float", options={"default" : 0})
      */
     private $vrManejo = 0;
 
     /**
-     * @ORM\Column(name="vr_otros", type="float")
+     * @ORM\Column(name="vr_otros", type="float", options={"default" : 0})
      */
     private $vrOtros = 0;
 
     /**
-     * @ORM\Column(name="vr_iva", type="float")
+     * @ORM\Column(name="vr_iva", type="float", options={"default" : 0})
      */
     private $vrIva = 0;
 
     /**
-     * @ORM\Column(name="vr_subtotal", type="float")
+     * @ORM\Column(name="vr_subtotal", type="float", options={"default" : 0})
      */
     private $vrSubtotal = 0;
 
     /**
-     * @ORM\Column(name="vr_retencion_fuente", type="float")
+     * @ORM\Column(name="vr_retencion_fuente", type="float", options={"default" : 0})
      */
     private $vrRetencionFuente = 0;
 
     /**
-     * @ORM\Column(name="vr_total", type="float")
+     * @ORM\Column(name="vr_total", type="float", options={"default" : 0})
      */
     private $vrTotal = 0;
 
     /**
-     * @ORM\Column(name="vr_total_neto", type="float")
+     * @ORM\Column(name="vr_total_neto", type="float", options={"default" : 0})
      */
     private $vrTotalNeto = 0;
 
     /**
-     * @ORM\Column(name="vr_total_operado", type="float")
+     * @ORM\Column(name="vr_total_operado", type="float", options={"default" : 0})
      */
     private $vrTotalOperado = 0;
 
     /**
-     * @ORM\Column(name="guias", type="integer", nullable=true)
+     * @ORM\Column(name="guias", type="integer", nullable=true, options={"default" : 0})
      */
     private $guias;
 
     /**
-     * @ORM\Column(name="plazo_pago", type="float")
+     * @ORM\Column(name="plazo_pago", type="float", options={"default" : 0})
      */
     private $plazoPago = 0;
 

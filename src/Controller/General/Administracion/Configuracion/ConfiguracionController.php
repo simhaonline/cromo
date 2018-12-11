@@ -20,7 +20,7 @@ class ConfiguracionController extends Controller
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
+        $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find($id);
             $form = $this->createForm(ConfiguracionType::class, $arConfiguracion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

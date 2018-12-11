@@ -1,4 +1,4 @@
-{% extends 'base_general.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
@@ -44,9 +44,15 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoClienteOro) }}
                 </div>
-                <label for="form_rutaTemporal" class="col-sm-2 control-label">Url web service:</label>
+                <label for="form_rutaTemporal" class="col-sm-2 control-label">Url web service oro:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.webServiceOroUrl) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_rutaTemporal" class="col-sm-2 control-label">Url web service cesio:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.webServiceCesioUrl) }}
                 </div>
             </div>
         </div>

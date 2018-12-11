@@ -32,7 +32,7 @@ class PerfilController extends BaseController
             CURLOPT_POST => 1,
             CURLOPT_POSTFIELDS => $data,
             //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
-            CURLOPT_URL => 'http://localhost/soga/cesio/public/index.php' . '/api/social/conexion/' .$usuario->getUsername(),
+            CURLOPT_URL => $em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl() . '/api/social/conexion/' .$usuario->getUsername(),
         ));
         $conexion = json_decode(curl_exec($curl), true);
         curl_close($curl);
@@ -112,6 +112,7 @@ class PerfilController extends BaseController
      * @Route("/social/perfil/conexion/{username}/{registro}", name="social_perfil_conexion")
      */
     public function conexionUsuario($username, $registro=false){
+        $em=$this->getDoctrine()->getManager();
         set_time_limit(0);
         ini_set("memory_limit", -1);
         if($registro){
@@ -123,7 +124,7 @@ class PerfilController extends BaseController
             CURLOPT_POST => 1,
             CURLOPT_POSTFIELDS => $data,
             //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
-            CURLOPT_URL => 'http://localhost/soga/cesio/public/index.php' . '/api/social/conexion/' .$username ,
+            CURLOPT_URL =>  $em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl() . '/api/social/conexion/' .$username ,
         ));
         }
         else{
@@ -132,10 +133,10 @@ class PerfilController extends BaseController
                 CURLOPT_RETURNTRANSFER => 1,
                 CURLOPT_POST => 1,
                 //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
-                CURLOPT_URL => 'http://localhost/soga/cesio/public/index.php' . '/api/social/conexion/' .$username ,
+                CURLOPT_URL =>  $em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl() . '/api/social/conexion/' .$username ,
             ));
         }
-
+        curl_exec($curl);
         curl_close($curl);
 
         return $this->redirect($this->generateUrl('social_perfil_ver'));

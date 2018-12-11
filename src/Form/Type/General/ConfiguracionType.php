@@ -24,6 +24,7 @@ class ConfiguracionType extends AbstractType
             ->add('direccion', TextType::class, ['required' => true])
             ->add('codigoClienteOro', IntegerType::class, ['required' => true])
             ->add('webServiceOroUrl', TextType::class, ['required' => false])
+            ->add('webServiceCesioUrl', TextType::class, ['required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Actualizar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

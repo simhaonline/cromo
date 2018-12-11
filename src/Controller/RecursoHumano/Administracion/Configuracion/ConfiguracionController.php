@@ -84,7 +84,7 @@ class ConfiguracionController extends Controller
             Mensajes::success('Configuracion actualizada correctamente');
         }
 
-        return $this->render('transporte/administracion/configuracion/configuracion.html.twig', [
+        return $this->render('recursohumano/administracion/configuracion/configuracion.html.twig', [
             'arConfiguracion' => $arConfiguracion,
             'formConceptoHora' => $formConceptoHora->createView(),
             'formConfiguracion' => $formConfiguracion->createView()

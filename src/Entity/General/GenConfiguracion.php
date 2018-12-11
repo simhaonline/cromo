@@ -17,7 +17,7 @@ class GenConfiguracion
     ];
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\Column(type="integer")
      */
     private $codigoConfiguracionPk;
@@ -65,6 +65,11 @@ class GenConfiguracion
      * @ORM\Column(name="web_service_oro_url", type="string", nullable=true)
      */
     private $webServiceOroUrl;
+
+    /**
+     * @ORM\Column(name="web_service_cesio_url", type="string", nullable=true)
+     */
+    private $webServiceCesioUrl;
 
     /**
      * @ORM\Column(name="codigo_cliente_oro", type="integer", nullable=true)
@@ -268,5 +273,23 @@ class GenConfiguracion
     {
         $this->ciudadRel = $ciudadRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getWebServiceCesioUrl()
+    {
+        return $this->webServiceCesioUrl;
+    }
+
+    /**
+     * @param mixed $webServiceCesioUrl
+     */
+    public function setWebServiceCesioUrl($webServiceCesioUrl): void
+    {
+        $this->webServiceCesioUrl = $webServiceCesioUrl;
+    }
+
+
 }
 

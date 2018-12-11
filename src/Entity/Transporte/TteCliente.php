@@ -88,7 +88,7 @@ class TteCliente
     private $movil;
 
     /**
-     * @ORM\Column(name="plazo_pago", type="integer")
+     * @ORM\Column(name="plazo_pago", type="integer", options={"default" : 0})
      */
     private $plazoPago = 0;
 
@@ -113,7 +113,7 @@ class TteCliente
     private $codigoFormaPagoFk;
 
     /**
-     * @ORM\Column(name="retencionFuenteSinBase", type="boolean",options={"default" : false}, nullable=true)
+     * @ORM\Column(name="retencion_fuente_sin_base", type="boolean",options={"default" : false}, nullable=true)
      */
     private $retencionFuenteSinBase = false;
 
@@ -498,6 +498,22 @@ class TteCliente
     /**
      * @return mixed
      */
+    public function getRetencionFuenteSinBase()
+    {
+        return $this->retencionFuenteSinBase;
+    }
+
+    /**
+     * @param mixed $retencionFuenteSinBase
+     */
+    public function setRetencionFuenteSinBase( $retencionFuenteSinBase ): void
+    {
+        $this->retencionFuenteSinBase = $retencionFuenteSinBase;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -717,22 +733,6 @@ class TteCliente
     public function setIntermediacionesDetallesClienteRel( $intermediacionesDetallesClienteRel ): void
     {
         $this->intermediacionesDetallesClienteRel = $intermediacionesDetallesClienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRetencionFuenteSinBase()
-    {
-        return $this->retencionFuenteSinBase;
-    }
-
-    /**
-     * @param mixed $retencionFuenteSinBase
-     */
-    public function setRetencionFuenteSinBase( $retencionFuenteSinBase ): void
-    {
-        $this->retencionFuenteSinBase = $retencionFuenteSinBase;
     }
 
 

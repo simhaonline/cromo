@@ -1,11 +1,16 @@
 {% extends 'base_sin_menu.html.twig' %}
 {% block content %}
     {{ form_start(form,{'attr':{'class' : 'form-horizontal'}}) }}
-    <div class="panel panel-default">
-        <div class="panel-heading">Reporte</div>
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+         data-widget-fullscreenbutton="true">
+    <header>
+        <span class="widget-icon"> <i class="fa fa-exclamation-triangle"></i> </span>
+        <h2>Reportar</h2>
+    </header>
+    <div>
         <div class="panel-body">
             <h4>Información del contacto</h4>
-            <br>
+            <hr>
             <div class="form-group form-group-sm">
                 <label class="control-label col-sm-1">Usuario:</label>
                 <label class="control-label col-sm-1"><span

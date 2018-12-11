@@ -1,51 +1,56 @@
-{% extends 'base_general.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, {'attr':{'class':'form-horizontal'}}) }}
-    <div class="panel panel-default">
-        <div class="panel-heading">Filtros</div>
-        <div class="panel-body">
-            <div class="form-group form-group-sm">
-                {#<label for="txtCodigoConductor" class="col-sm-1 control-label">Código:</label>#}
-                <label for="form_TxtNumero" class="col-sm-2 control-label">Código:</label>
-                <div class="col-sm-2">
-                    <i class="fa fa-info-circle" title="Código del registro modificado, en su respectiva entidad" style="float: right;color: gray; padding-top: 9px;padding-right: 16px; position: absolute;right: 0px;">&nbsp;</i>
-                    {{ form_widget(form.txtCodigoRegistro) }}
-                </div>
-                <div class="col-sm-1"></div>
-                <label class="col-sm-2 control-label">Entidad:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.SelModelo, { 'attr': {'class': 'form-control'} }) }}
-                </div>
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        {#<label for="txtCodigoConductor" class="col-sm-1 control-label">Código:</label>#}
+                        <label for="form_TxtNumero" class="col-sm-2 control-label">Código:</label>
+                        <div class="col-sm-2">
+                            <i class="fa fa-info-circle" title="Código del registro modificado, en su respectiva entidad" style="float: right;color: gray; padding-top: 9px;padding-right: 16px; position: absolute;right: 0px;">&nbsp;</i>
+                            {{ form_widget(form.txtCodigoRegistro) }}
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <label class="col-sm-2 control-label">Entidad:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.SelModelo, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
 
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Fecha Desde:</label>
-                <div class="col-sm-3">
-                    {{ form_widget(form.dtmFechaDesde) }}
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">Fecha Desde:</label>
+                        <div class="col-sm-3">
+                            {{ form_widget(form.dtmFechaDesde) }}
+                        </div>
+                        <label class="col-sm-2 control-label">Acción:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.SelAccion, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">Fecha Hasta:</label>
+                        <div class="col-sm-3">
+                            {{ form_widget(form.dtmFechaHasta) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-3">
+                            {{ form_widget(form.filtrarFecha) }}
+                        </div>
+                    </div>
+                    {{ form_widget(form.btnFiltrar, {'attr':{'style':'float:right; margin-bottom:15px'}}) }}
                 </div>
-                <label class="col-sm-2 control-label">Acción:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.SelAccion, { 'attr': {'class': 'form-control'} }) }}
-                </div>
             </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Fecha Hasta:</label>
-                <div class="col-sm-3">
-                    {{ form_widget(form.dtmFechaHasta) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-3">
-                    {{ form_widget(form.filtrarFecha) }}
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-        {{ form_widget(form.btnFiltrar) }}
         </div>
     </div>
-    <table class="table table-striped table-bordered table-hover">
+    <table class="table table-striped table-bordered table-hover tabla-datos">
         <thead>
         <tr>
             <th>ID</th>
@@ -85,7 +90,7 @@
             <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arGenLog.getTotalItemCount }}</span></div>
         </div>
     </div>
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arGenLog) }}
     </div>
     <div class="btn-group" style="float: right">

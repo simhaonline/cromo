@@ -1,7 +1,6 @@
 {% extends ('base.html.twig') %}
 {% block content %}
     <!-- MAIN PANEL -->
-
     <!-- MAIN CONTENT -->
     <div id="content">
 
@@ -29,10 +28,16 @@
                                     <div class="col-sm-12">
                                         <div id="myCarousel" class="carousel fade profile-carousel">
                                             <div class="air air-bottom-right padding-10">
-                                            {#<a href="javascript:void(0);" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-check"></i> <b class="badge">0</b></a>#}
-                                            {#&nbsp; #}
-                                                <a href="javascript:void(0);" class="btn txt-color-white bg-color-redLight btn-sm"><i class="fa fa-link"></i> Desconectado</a>
-                                                {#<a href="javascript:void(0);" class="btn txt-color-white bg-color-greenLight btn-sm"><i class="fa fa-link"></i> Conectado</a>#}
+                                                {% if conexion.usuario %}
+                                                    {% if conexion.conectado %}
+                                                        <a href="{{ path('social_perfil_conexion',{'username': app.user.username}) }}" class="btn txt-color-white bg-color-greenLight btn-sm"><i class="fa fa-link"></i> Conectado</a>
+                                                    {% else %}
+                                                        <a href="{{ path('social_perfil_conexion',{'username': app.user.username}) }}" class="btn txt-color-white bg-color-redLight btn-sm"><i class="fa fa-link"></i> Desconectado</a>
+                                                    {% endif %}
+                                                {% else %}
+                                                        <a  class="btn txt-color-white bg-color-redLight btn-sm" data-toggle="modal" data-target="#advertencia_social"><i class="fa fa-link"></i> Desconectado</a>
+                                                {% endif %}
+
                                             </div>
 
                                             <div class="carousel-inner" style="min-height: 260px">
@@ -629,8 +634,24 @@
                 </div>
             </div>
         </div>
+        <!--endmodal-->
+
         {{ form_rest(form) }}
         {{ form_end(form) }}
+
+        <!--modal registro a social-->
+        <div class="modal fade" id="advertencia_social" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <span>Se esta conectando por primera vez a la social... esta de acuerdo...?</span>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <a href="{{ path('social_perfil_conexion',{'username': app.user.username,'registro':'true'})}}"  type="button" class="btn btn-primary">Aceptar</a>
+                        {#{{ form_widget(form.btnSubirFoto) }}#}
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--end modal-->
         <!-- end row -->
 

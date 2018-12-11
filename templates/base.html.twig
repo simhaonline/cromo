@@ -368,7 +368,7 @@ you can add as many as you like
     <script>
         var guardarNotificacion = "";
         $(document).ready(function () {
-            {#conexion('{{ app.user.username }}');#}
+
             var notificacionesGeneral = $('.notificacionesGeneral');
             var numeroNotificaciones = $('.numeroNotificaciones');
             $.ajax({
@@ -480,7 +480,8 @@ you can add as many as you like
             }
         }
 
-        document.getElementById('form_foto_perfil_subir').addEventListener('change', foto_perfil_subir?foto_perfil_subir:false, false);
+
+        document.getElementById('form_foto_perfil_subir').addEventListener('change', foto_perfil_subir, false);
 
     </script>
 

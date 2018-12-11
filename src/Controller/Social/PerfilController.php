@@ -5,6 +5,7 @@ namespace App\Controller\Social;
 use App\Controller\BaseController;
 use App\Entity\Seguridad\Usuario;
 use App\Utilidades\Mensajes;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,6 +23,21 @@ class PerfilController extends BaseController
     {
         $em=$this->getDoctrine()->getManager();
         $usuario=$this->container->get('security.token_storage')->getToken()->getUser();
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $data=json_encode(['data'=>['estado'=>'']]);
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_POST => 1,
+            CURLOPT_POSTFIELDS => $data,
+            //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
+            CURLOPT_URL => 'http://localhost/soga/cesio/public/index.php' . '/api/social/conexion/' .$usuario->getUsername(),
+        ));
+        $conexion = json_decode(curl_exec($curl), true);
+        curl_close($curl);
+
+
         $informacionUsuario= [
             'nombreCorto'   =>$usuario->getNombreCorto(),
 //            'rol'           =>$usuario->getRoles()[0]=="ROLE_ADMIN"?"Administrador":"Usuario",
@@ -40,7 +56,8 @@ class PerfilController extends BaseController
             ->add('btnBuscar',SubmitType::class,[
                 'attr'=>['class'=>'btn btn-default btn-sm'],
                 'label'=>'Buscar'
-            ])->getForm();
+            ])
+            ->getForm();
         $formBusqueda->handleRequest($request);
 
         if($formBusqueda->isSubmitted() && $formBusqueda->isValid()){
@@ -87,7 +104,41 @@ class PerfilController extends BaseController
             'form'=>$form->createView(),
             'formBusqueda'=>$formBusqueda->createView(),
             'arUsuario'=>$informacionUsuario,
+            'conexion'=>$conexion,
         ]);
+    }
+
+    /**
+     * @Route("/social/perfil/conexion/{username}/{registro}", name="social_perfil_conexion")
+     */
+    public function conexionUsuario($username, $registro=false){
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if($registro){
+
+        $data=json_encode(['data'=>['clave'=>'123456']]);
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_POST => 1,
+            CURLOPT_POSTFIELDS => $data,
+            //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
+            CURLOPT_URL => 'http://localhost/soga/cesio/public/index.php' . '/api/social/conexion/' .$username ,
+        ));
+        }
+        else{
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_POST => 1,
+                //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
+                CURLOPT_URL => 'http://localhost/soga/cesio/public/index.php' . '/api/social/conexion/' .$username ,
+            ));
+        }
+
+        curl_close($curl);
+
+        return $this->redirect($this->generateUrl('social_perfil_ver'));
     }
 
 

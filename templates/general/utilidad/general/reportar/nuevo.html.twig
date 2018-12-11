@@ -1,7 +1,52 @@
 {% extends 'base_sin_menu.html.twig' %}
 {% block content %}
-    <div class="panel panel-body">
-        <div class="panel-heading">Información general</div>
-        <div class="panel-body"></div>
+    {{ form_start(form,{'attr':{'class' : 'form-horizontal'}}) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Reporte</div>
+        <div class="panel-body">
+            <h4>Información del contacto</h4>
+            <br>
+            <div class="form-group form-group-sm">
+                <label class="control-label col-sm-1">Usuario:</label>
+                <label class="control-label col-sm-1"><span
+                            class="badge">{{ app.user.username | capitalize }}</span></label>
+                <label class="control-label col-sm-2">Correo:</label>
+                <label class="control-label col-sm-1"><span
+                            class="badge">{{ app.user.email }}</span></label>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="control-label col-sm-1">Telefono:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.telefono) }}
+                </div>
+                <label class="control-label col-sm-1">Extension:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.extension) }}
+                </div>
+            </div>
+            <hr>
+            <div class="form-group form-group-sm">
+                <label class="control-label col-sm-1">Ruta:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.ruta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="control-label col-sm-1">Asunto:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.asunto) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="control-label col-sm-1">Descripción:</label>
+                <div class="col-sm-11">
+                    {{ form_widget(form.descripcion) }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.guardar) }}
+        </div>
     </div>
+    {{ form_end(form) }}
 {% endblock %}

@@ -22,7 +22,7 @@ class GenEvento
     private $icono;
 
     /**
-     * @ORM\Column(type="string", length=20, name="titulo",nullable=true)
+     * @ORM\Column(type="string", length=60, name="titulo",nullable=true)
      */
     private $titulo;
 

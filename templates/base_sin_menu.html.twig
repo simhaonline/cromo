@@ -73,15 +73,45 @@
     {% endblock %}
     </div>
 {% block javascripts %}
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('vendor/metisMenu/metisMenu.min.js') }}"></script>
-    <script src="{{ asset('vendor/raphael/raphael.min.js') }}"></script>
-    <script src="{{ asset('vendor/morrisjs/morris.min.js') }}"></script>
-    {#<script src="{{ asset('data/morris-data.js') }}"></script>#}
-    <script src="{{ asset('dist/js/sb-admin-2.js') }}"></script>
-    <script src="{{ asset('js/general.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        if (!window.jQuery) {
+            document.write('<script src="{{ asset('js/libs/jquery-3.2.1.min.js') }}"><\/script>');
+        }
+    </script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        if (!window.jQuery.ui) {
+            document.write('<script src="{{ asset('js/libs/jquery-ui.min.js') }}"><\/script>');
+        }
+    </script>
+    <!-- IMPORTANT: APP CONFIG -->
+    <script src="{{ asset('js/app.config.js') }}"></script>
+    <!-- BOOTSTRAP JS -->
+    <script src="{{ asset('js/plugin/jquery-touch/jquery.ui.touch-punch.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap/bootstrap.min.js') }}"></script>
+    <!-- CUSTOM NOTIFICATION -->
+    <script src="{{ asset('js/notification/SmartNotification.min.js') }}"></script>
+    <script src="{{ asset('js/smartwidgets/jarvis.widget.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/sparkline/jquery.sparkline.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/jquery-validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/masked-input/jquery.maskedinput.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.full.js') }}"></script>
+    <script src="{{ asset('js/plugin/bootstrap-slider/bootstrap-slider.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/msie-fix/jquery.mb.browser.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/fastclick/fastclick.min.js') }}"></script>
+    <script src="{{ asset('js/demo.min.js') }}"></script>
+    <script src="{{ asset('js/app.min.js') }}"></script>
+    <script src="{{ asset('js/moment.min.js') }}"></script>
+    <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
+    <!-- Voice command : plugin -->
+    <script src="{{ asset('js/speech/voicecommand.min.js') }}"></script>
+    <!-- SmartChat UI : plugin -->
+    <script src="{{ asset('js/smart-chat-ui/smart.chat.ui.min.js') }}"></script>
+    <script src="{{ asset('js/smart-chat-ui/smart.chat.manager.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/moment/moment.min.js') }}"></script>
+    <script src={{ asset('js/plugin/fullcalendar/fullcalendar.min.js') }}></script>
 {% endblock %}
 </body>
 </html>

@@ -289,7 +289,7 @@ class AppExtension extends AbstractExtension
             foreach ($messages AS $message) {
                 $span = $this->createTag("span", "&times;", ['aria-hidden' => 'true']);
                 $button = $this->createTag("button", $span, ['class' => 'close', 'data-dismiss' => 'alert', 'aria-label' => 'Close']);
-                $alert = $this->createTag("div", $button . $message, ['class' => "alert alert-{$type}", 'data']);
+                $alert = $this->createTag("div", $button . $message, ['class' => "alert alert-{$type}", 'data','style' => 'margin-top:5px;margin-bottom:2px;margin-left:5px;margin-right:5px;']);
                 $html[] = $alert;
             }
         }

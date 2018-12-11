@@ -41,7 +41,7 @@ class PerfilController extends BaseController
         $informacionUsuario= [
             'nombreCorto'   =>$usuario->getNombreCorto(),
 //            'rol'           =>$usuario->getRoles()[0]=="ROLE_ADMIN"?"Administrador":"Usuario",
-//            'cargo'         =>$usuario->getCargo(),
+//            'cargo'         =>$usuario->getCargo(),r4e
             'correo'        =>$usuario->getEmail(),
             'extension'     =>$usuario->getExtension(),
             'telefono'      =>$usuario->getTelefono(),

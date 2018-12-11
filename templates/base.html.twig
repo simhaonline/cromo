@@ -142,9 +142,9 @@
         {% if arrRuta.0 == 'general' %}
             {% include('base_general.html.twig') %}
         {% endif %}
-        {% if arrRuta.0 == 'calendario' %}
-            {% include('base_calendario.html.twig') %}
-        {% endif %}
+        {#{% if arrRuta.0 == 'calendario' %}#}
+            {#{% include('base_calendario.html.twig') %}#}
+        {#{% endif %}#}
 
         {% if arrRuta.0 == 'social' %}
             {% include('base_menu_inicio.html.twig') %}
@@ -217,7 +217,7 @@
                 {#</div>#}
                 {#<!-- /.col-lg-12 -->#}
                 {#</div>#}
-                &nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ path('general_utilidad_general_reportar_lista',{'ruta' : arrRuta }) }}" style="color: white!important;">Reportar un problema</a>&nbsp;&nbsp;<span
+                &nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ path('general_utilidad_general_reportar_lista',{'ruta' : app.request.attributes.get('_route') }) }}" style="color: white!important;">Reportar un problema</a>&nbsp;&nbsp;<span
                         class="fa fa-exclamation-triangle" style="color: white!important;"></span>
             </ol>
         {% endif %}

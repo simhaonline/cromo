@@ -68,7 +68,7 @@ class PoseedorController extends BaseController
         $form = $this->createForm(PoseedorType::class, $arPoseedor);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
+            if ($form->get('guardar')->isClicked() || $form->get('guardarnuevo')->isClicked()) {
                 $arPoseedor->setNombre1($form->get('nombre1')->getData());
                 $arPoseedor->setNombre2($form->get('nombre2')->getData());
                 $arPoseedor->setApellido1($form->get('apellido1')->getData());
@@ -82,7 +82,13 @@ class PoseedorController extends BaseController
                 $arPoseedor->setNombreCorto($arPoseedor->getNombre1() . " " . $arPoseedor->getNombre2() . " " . $arPoseedor->getApellido1() . " " . $arPoseedor->getApellido2());
                 $em->persist($arPoseedor);
                 $em->flush();
-                return $this->redirect($this->generateUrl('transporte_administracion_poseedor_lista'));
+                if($form->get('guardarnuevo')->isClicked()){
+                    return $this->redirect($this->generateUrl('transporte_administracion_transporte_poseedor_nuevo',['id'=>0]));
+                }
+                else{
+
+                    return $this->redirect($this->generateUrl('transporte_administracion_poseedor_lista'));
+                }
             }
         }
         return $this->render('transporte/administracion/poseedor/nuevo.html.twig', [

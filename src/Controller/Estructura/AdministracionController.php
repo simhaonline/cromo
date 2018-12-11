@@ -42,6 +42,7 @@ final class AdministracionController extends BaseController
     {
         $em = $this->getDoctrine()->getManager();
         $this->request = $request;
+        $this->nombre=ucfirst($entidad);//añadido alex
         $this->modulo = ucfirst($modulo);
         $prefijo = $this->obtenerPrefijo($modulo);
         $clase = "\\App\\Entity\\" . ucfirst($modulo) . "\\" . ucfirst($prefijo) . ucfirst($entidad);
@@ -106,7 +107,7 @@ final class AdministracionController extends BaseController
         }
         return $this->render('estructura/administracion/nuevo.html.twig', [
             'modulo' => $modulo,
-            'entidad' => $entidad,
+            'nombreEntidad' => $entidad,
             'form' => $form->createView()
         ]);
     }
@@ -127,7 +128,7 @@ final class AdministracionController extends BaseController
         $arRegistro = $em->find($clase, $id);
         return $this->render('estructura/administracion/detalle.html.twig', [
             'modulo' => $modulo,
-            'entidad' => $entidad,
+            'nombreEntidad' => $entidad,
             'arRegistro' => $arRegistro
         ]);
     }

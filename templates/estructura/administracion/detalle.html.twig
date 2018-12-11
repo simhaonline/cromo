@@ -1,9 +1,9 @@
-{% extends 'base_'~ modulo ~'.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block content %}
     <div class="btn-toolbar">
         <div class="btn-group" style="float: left;">
             <a class="btn btn-sm btn-default"
-               href="{{ path('administracion_lista',{'modulo' : modulo,'entidad' : entidad }) }}">Volver</a>
+               href="{{ path('administracion_lista',{'modulo' : modulo,'entidad' : nombreEntidad }) }}">Volver</a>
         </div>
     </div>
     <br>

@@ -86,6 +86,11 @@ class VehiculoController extends ControllerListenerGeneral
                 $em->flush();
                 return $this->redirect($this->generateUrl('transporte_administracion_transporte_vehiculo_lista'));
             }
+            if ($form->get('guardarnuevo')->isClicked()) {
+                $em->persist($arVehiculo);
+                $em->flush();
+                return $this->redirect($this->generateUrl('transporte_administracion_transporte_vehiculo_nuevo',['id'=>0]));
+            }
         }
         return $this->render('transporte/administracion/vehiculo/nuevo.html.twig', [
             'arVehiculo' => $arVehiculo,

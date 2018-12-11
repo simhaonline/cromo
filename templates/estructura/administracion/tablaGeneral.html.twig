@@ -35,19 +35,19 @@
                     {% if arDato.estadoAutorizado is defined %}
                         {% if arDato.estadoAutorizado == 0 %}
                             <a
-                                    href="{{ path('administracion_nuevo',{'modulo' : modulo,'entidad' : entidad, 'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
+                                    href="{{ path('administracion_nuevo',{'modulo' : modulo,'entidad' : nombreEntidad, 'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
                                         title="Editar el registro" class="fa fa-edit"
                                         style="font-size: large;color: black;"></i></a>
                         {% endif %}
                     {% else %}
                         <a
-                                href="{{ path('administracion_nuevo',{'modulo' : modulo,'entidad' : entidad, 'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
+                                href="{{ path('administracion_nuevo',{'modulo' : modulo,'entidad' : nombreEntidad, 'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
                                     title="Editar el registro" class="fa fa-edit"
                                     style="font-size: large;color: black;"></i></a>
                     {% endif %}
                 </td>
                 <td style="text-align: center">
-                    <a href="{{ path('administracion_detalle',{'modulo' : modulo,'entidad' : entidad, 'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
+                    <a href="{{ path('administracion_detalle',{'modulo' : modulo,'entidad' : nombreEntidad, 'id' : arDato[arrDatosLista.arrCampos[0].campo] }) }}"><i
                             style="font-size: large;color: black;" class="fa fa-share-square-o"></i></a>
                 </td>
                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"

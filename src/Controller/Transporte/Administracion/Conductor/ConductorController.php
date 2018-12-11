@@ -84,6 +84,13 @@ class ConductorController extends ControllerListenerGeneral
                 $em->flush();
                 return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
             }
+            if($form->get('guardarnuevo')->isClicked()){
+                $arConductor->setNombreCorto($arConductor->getNombre1() . " " . $arConductor->getNombre2() . " " . $arConductor->getApellido1() . " " . $arConductor->getApellido2());
+                $em->persist($arConductor);
+                $em->flush();
+                return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_nuevo',['id'=>0]));
+            }
+
         }
         return $this->render('transporte/administracion/conductor/nuevo.html.twig', [
             'arConductor' => $arConductor,

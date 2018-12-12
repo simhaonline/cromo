@@ -27,11 +27,12 @@
         </div>
     </div>
     <div>
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover tabla-datos">
             <thead>
             <tr>
                 <th>ID</th>
                 <th title="NUMERO PEDIDO">NUMERO</th>
+                <th title="">FECHA</th>
                 <th title="CODIGO ITEM">ITEM</th>
                 <th>NOMBRE</th>
                 <th>LOTE</th>
@@ -46,6 +47,7 @@
                 <tr>
                     <td style="text-align: right;">{{ arRemisionDetalle.codigoRemisionDetallePk }}</td>
                     <td style="text-align: right;">{{ arRemisionDetalle.numero }}</td>
+                    <td>{{ arRemisionDetalle.fecha | date('Y-m-d') }}</td>
                     <td style="text-align: right;">{{ arRemisionDetalle.codigoItemFk }}</td>
                     <td style="text-align: left;">{{ arRemisionDetalle.itemNombre }}</td>
                     <td>{{ arRemisionDetalle.loteFk }}</td>

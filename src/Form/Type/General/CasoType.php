@@ -14,12 +14,10 @@ class CasoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add ('asunto', TextType::class,['data' => 'Reporte de problema en la ruta'])
-            ->add ('telefono', TextType::class,['data' => $options['data']['telefono'] ? $options['data']['telefono'] : 0,'required' => false])
-            ->add ('extension', TextType::class,['required' => false,'data' => 0])
-            ->add ('ruta', TextType::class,['data' => $options['data']['ruta']])
-            ->add ('descripcion', TextareaType::class,['attr' => ['rows' => '8']])
-            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('asunto', TextType::class, ['data' => 'Reporte de ruta'])
+            ->add('telefono', TextType::class, ['data' => $options['data']['telefono'] ? $options['data']['telefono'] : 0, 'required' => false])
+            ->add('extension', TextType::class, ['required' => false, 'data' => 0])
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

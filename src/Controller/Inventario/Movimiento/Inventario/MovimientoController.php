@@ -20,6 +20,7 @@ use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvSucursal;
 use App\Formato\Inventario\FormatoMovimientoTraslado;
+use App\Formato\Inventario\NotaCredito;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvMovimiento;
@@ -276,7 +277,7 @@ class MovimientoController extends ControllerListenerGeneral
                 $em->getRepository(InvMovimiento::class)->desautorizar($arMovimiento);
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC') {
+                if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC' && $arMovimiento->getDocumentoRel()->getNotaCredito() == 0) {
                     $codigoFactura = $em->getRepository(InvConfiguracion::class)->find(1)->getCodigoFormatoMovimiento();
                     if ($codigoFactura == 1) {
                         $objFormato = new Factura1();
@@ -292,6 +293,10 @@ class MovimientoController extends ControllerListenerGeneral
                     }
                 } elseif ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'TRA') {
                     $objFormato = new FormatoMovimientoTraslado();
+                    $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
+
+                } elseif ($arMovimiento->getDocumentoRel()->getNotaCredito() == 1) {
+                    $objFormato = new NotaCredito();
                     $objFormato->Generar($em, $arMovimiento->getCodigoMovimientoPk());
                 } else {
                     $objFormato = new FormatoMovimiento();

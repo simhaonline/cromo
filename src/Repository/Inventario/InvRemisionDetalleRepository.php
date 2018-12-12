@@ -117,7 +117,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         }
     }
 
-    public function listarDetallesPendientes()
+    public function listarDetallesPendientes($codigoTercero)
     {
         $session = new Session();
         $queryBuilder = $this->_em->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
@@ -127,6 +127,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->addSelect('rd.cantidadPendiente')
             ->addSelect('i.nombre AS itemNombre')
             ->addSelect('r.numero')
+            ->addSelect('r.fecha')
             ->addSelect('rd.loteFk')
             ->addSelect('rd.codigoBodegaFk')
             ->addSelect('t.nombreCorto AS tercero')
@@ -136,6 +137,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->where('r.estadoAnulado = 0')
             ->andWhere('r.estadoAprobado = 1')
             ->andWhere('rd.cantidadPendiente > 0')
+            ->andWhere('r.codigoTerceroFk = ' . $codigoTercero)
             ->orderBy('r.numero', 'ASC');
         if($session->get('filtroInvRemisionNumero')){
             $queryBuilder->andWhere("r.numero = '{$session->get('filtroInvRemisionNumero')}'");
@@ -234,7 +236,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->leftJoin('rd.itemRel', 'i')
             ->leftJoin('rd.remisionRel', 'r')
             ->where('i.afectaInventario = 1')
-            ->andWhere('rd.operacionInventario <> 0')
+            ->andWhere('rd.operacionInventario = 1')
             ->andWhere('r.estadoAprobado = 1')
             ->groupBy('rd.codigoItemFk')
             ->addGroupBy('rd.loteFk')
@@ -268,6 +270,8 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         foreach ($arRemisionsDetalles as $arRemisionDetalle) {
             $cantidad = $arRemisionDetalle['cantidad'];
             $cantidadAfectada = $em->getRepository(InvMovimientoDetalle::class)->cantidadAfectaRemision($arRemisionDetalle['codigoRemisionDetallePk']);
+            $cantidadAfectadaDevolucion = $em->getRepository(InvRemisionDetalle::class)->cantidadAfectaDovolucion($arRemisionDetalle['codigoRemisionDetallePk']);
+            $cantidadAfectada+=$cantidadAfectadaDevolucion;
             $cantidadPendiente = $cantidad - $cantidadAfectada;
             if($cantidadAfectada != $arRemisionDetalle['cantidadAfectada'] || $cantidadPendiente != $arRemisionDetalle['cantidadPendiente']) {
                 $arRemisionDetalleAct = $em->getRepository(InvRemisionDetalle::class)->find($arRemisionDetalle['codigoRemisionDetallePk']);
@@ -362,6 +366,24 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->groupBy('rd.codigoBodegaFk');
         $arrDetalles = $queryBuilder->getQuery()->getResult();
         return $arrDetalles;
+    }
+
+    public function cantidadAfectaDovolucion($codigoRemisionDetalle)
+    {
+        $em = $this->getEntityManager();
+        $cantidad = 0;
+        $queryBuilder = $em->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
+            ->select("SUM(rd.cantidad)")
+            ->leftJoin("rd.remisionRel", "r")
+            ->where("rd.codigoRemisionDetalleFk = {$codigoRemisionDetalle} ")
+            ->andWhere('r.estadoAutorizado = 1')
+        ->andWhere('r.estadoAprobado = 1')
+        ->andWhere('r.estadoAnulado = 0');
+        $resultado = $queryBuilder->getQuery()->getSingleResult();
+        if ($resultado[1]) {
+            $cantidad = $resultado[1];
+        }
+        return $cantidad;
     }
 
 }

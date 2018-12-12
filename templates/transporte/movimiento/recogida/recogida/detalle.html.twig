@@ -1,35 +1,57 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    <div class="btn-toolbar" style="float: left">
-        <div class="btn-group">
-            <a class="btn btn-default btn-sm"
-               href="{{ path('transporte_movimiento_recogida_recogida_lista') }}">Volver</a> &nbsp;&nbsp;
-        </div>
+    <div id="content">
+        <section id="widget-grid" class="">
+            <div class="row">
+                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+                    <div class="btn-toolbar" style="float:left">
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm"
+                               href="{{ path('transporte_movimiento_recogida_recogida_lista') }}">Volver</a> &nbsp;&nbsp;
+                        </div>
+                        <div class="btn-group">
+                            {{ form_widget(form.btnAutorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                            {{ form_widget(form.btnDesautorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                            {{ form_widget(form.btnAprobar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                            {{ form_widget(form.btnAnular,  { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular el registro?")'} }) }}
+                            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                        </div>
+                    </div>
+                    {% if arRecogida.codigoDespachoRecogidaFk is null %}
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('transporte_movimiento_recogida_reprogramar_nuevo',{'id' : arRecogida.codigoRecogidaPk }) }}','ReprogramarRecogida', 300, 500)">Reprogramar</a>
+                        </div>
+                    {% endif %}
+                    <div style="float:right">
+                        {% if arRecogida.estadoAutorizado == true %}<span
+                                class="label label-default">Autorizado</span>{% endif %}
+                        {% if arRecogida.estadoAprobado == true %}<span
+                                class="label label-default">Aprobado</span>{% endif %}
+                        {% if arRecogida.estadoAnulado == true %}<span
+                                class="label label-default">Anulado</span>{% endif %}
+                        {% if arRecogida.estadoProgramado == 1 %}<span
+                                class="label label-default">Programado</span>{% endif %}
+                        {% if arRecogida.estadoRecogido == 1 %}<span
+                                class="label label-default">Recogida</span>{% endif %}
+                    </div>
+                    <br/><br/>
+                    {% include 'transporte/movimiento/recogida/recogida/informacion.html.twig' %}
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="detalles">
+                            <div id="detalles" style="width: 100%"><br>
+                                <div class="table-responsive">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                </article>
+            </div>
+        </section>
     </div>
-    <div class="btn-toolbar" style="float:left">
-        <div class="btn-group">
-            {{ form_widget(form.btnAutorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnDesautorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnAprobar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnAnular,  { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular el registro?")'} }) }}
-            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-        </div>
-    {% if arRecogida.codigoDespachoRecogidaFk is null %}
-        <div class="btn-group">
-            <a class="btn btn-default btn-sm"
-               href="javascript:abrirVentana3('{{ path('transporte_movimiento_recogida_reprogramar_nuevo',{'id' : arRecogida.codigoRecogidaPk }) }}','ReprogramarRecogida', 300, 500)">Reprogramar</a>
-        </div>
-    {% endif %}
-    </div>
-    <div style="float:right">
-        {% if arRecogida.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
-        {% if arRecogida.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
-        {% if arRecogida.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
-        {% if arRecogida.estadoProgramado == 1 %}<span class="label label-default">Programado</span>{% endif %}
-        {% if arRecogida.estadoRecogido == 1 %}<span class="label label-default">Recogida</span>{% endif %}
-    </div>
-    <br/><br/>
-    {% include 'transporte/movimiento/recogida/recogida/informacion.html.twig' %}
-    {{ form_end(form) }}
 {% endblock %}

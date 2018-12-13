@@ -3,6 +3,7 @@
 namespace App\Controller\Social;
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Seguridad\Usuario;
 use App\Utilidades\Mensajes;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -25,19 +26,9 @@ class PerfilController extends BaseController
         $usuario=$this->container->get('security.token_storage')->getToken()->getUser();
         set_time_limit(0);
         ini_set("memory_limit", -1);
-        $data=json_encode(['data'=>['estado'=>'']]);
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_POST => 1,
-            CURLOPT_POSTFIELDS => $data,
-            //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
-            CURLOPT_URL => $em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl() . '/api/social/conexion/' .$usuario->getUsername(),
-        ));
-        $conexion = json_decode(curl_exec($curl), true);
-        curl_close($curl);
+        $datos=json_encode(['datos'=>['estado'=>'']]);
 
-
+        $conexion= FuncionesController::solicitudesPost($datos,ApiSocial::getApi('conexion') .$usuario->getUsername());
         $informacionUsuario= [
             'nombreCorto'   =>$usuario->getNombreCorto(),
 //            'rol'           =>$usuario->getRoles()[0]=="ROLE_ADMIN"?"Administrador":"Usuario",
@@ -63,6 +54,7 @@ class PerfilController extends BaseController
         if($formBusqueda->isSubmitted() && $formBusqueda->isValid()){
             if($formBusqueda->get('btnBuscar')->isSubmitted()){
                 if($formBusqueda->get('busqueda')->getData()!=""){
+
                     return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$formBusqueda->get('busqueda')->getData()]));
                 }
                 else{
@@ -95,10 +87,6 @@ class PerfilController extends BaseController
                 return $this->redirect($this->generateUrl('social_perfil_ver'));
             }
 
-            if($form->get('btnBuscar')->isSubmitted()){
-                dump("hola");
-                exit();
-            }
         }
         return $this->render('social/perfil.html.twig',[
             'form'=>$form->createView(),
@@ -117,27 +105,13 @@ class PerfilController extends BaseController
         ini_set("memory_limit", -1);
         if($registro){
 
-        $data=json_encode(['data'=>['clave'=>'123456']]);
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_POST => 1,
-            CURLOPT_POSTFIELDS => $data,
-            //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
-            CURLOPT_URL =>  $em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl() . '/api/social/conexion/' .$username ,
-        ));
+        $datos=json_encode(['datos'=>['clave'=>'123456']]);
+            FuncionesController::solicitudesPost($datos,ApiSocial::getApi('conexion').$username);
         }
         else{
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-                CURLOPT_RETURNTRANSFER => 1,
-                CURLOPT_POST => 1,
-                //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
-                CURLOPT_URL =>  $em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl() . '/api/social/conexion/' .$username ,
-            ));
+            FuncionesController::solicitudesPost([],ApiSocial::getApi('conexion').$username);
         }
-        curl_exec($curl);
-        curl_close($curl);
+
 
         return $this->redirect($this->generateUrl('social_perfil_ver'));
     }

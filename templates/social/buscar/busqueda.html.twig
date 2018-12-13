@@ -3,34 +3,82 @@
 
     <div id="content">
         <div class="row">
-            {#{% include('social/buscardor.html.twig') %}#}
+            {{ form_start(formBusqueda) }}
+            {{ form_errors(formBusqueda) }}
+            {% include ('social/buscardor.html.twig') %}
+            {{ form_rest(formBusqueda) }}
+            {{ form_end(formBusqueda) }}
             <div class="col-sm-10 col-lg-offset-1">
 
-            {% if perfil|length >0 %}
-                <div class="well well-sm">
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12 col-lg-12">
-                            {% for perfil in perfil %}
-                            <div class="user" style="width: 100%">
-                                <div class="amigoDescripcion">
-                                    <img  src="{{ perfil.foto }}" style="width: 100px; height: 100px" class="img-rounded" alt="demo user">
-                                    <a href="javascript:void(0);">{{ perfil.nombre }}</a>
-                                    <div class="email">
-                                        travis@company.com
-                                    </div>
-                                </div>
-                                <div class="botonAmigos">
-                                    <button class="btn btn-default">
-                                        <li class="fa fa-user font-md"></li>
-                                    </button>
-                                </div>
+                {% if perfil|length >0 %}
+                    <div class="well well-sm">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                {% for perfil in perfil %}
+
+                                        <div class="user" style="width: 100%; overflow: visible">
+                                            <div class="amigoDescripcion">
+                                                {% if perfil.foto is defined %}
+                                                    <img  src="{{ perfil.foto }}" style="width: 100px; height: 100px" class="img-rounded" alt="demo user">
+                                                {% else %}
+                                                    <img  src="{{ asset('img/avatars/sunny.png') }}" style="width: 100px; height: 100px" class="img-rounded" alt="demo user">
+                                                {% endif %}
+                                                <a href="javascript:void(0);">{{ perfil.nombre }}</a>
+                                                <div class="email">
+                                                    travis@company.com
+                                                </div>
+                                            </div>
+                                            <div class="botonAmigos">
+                                                {#<div class="dropdown">#}
+                                                <div class="dropdown" >
+                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                        ...
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" style="min-width: 100px">
+
+                                                        {% if perfil.estado=='null' %}
+                                                            <li><a href="{{ path('social_enviar_solicitud',{'usernameSolicitado':perfil.username,'clave':clave}) }}"><i class="fa fa-user-plus"></i> Agregar</a></li>
+                                                        {% elseif perfil.estado=="amigo" %}
+                                                            <li><a href="{{ path('social_eliminar_amigo',{'usernameSolicitado':perfil.username,'clave':clave}) }}"><i class="fa fa-trash"></i> Eliminar</a></li>
+                                                        {% elseif perfil.estado=="solicitud" %}
+                                                            {% if perfil.codigoUsuarioFk==username%}
+                                                            <li><a href="{{ path('social_cancelar_solicitud',{'usernameSolicitado':perfil.username,'clave':clave}) }}"><i class="fa fa-user-times"></i> Cancelar</a></li>
+                                                                {% else %}
+                                                                    <li><a href="#"><i class="fa fa-user-plus"></i> Aceptar</a></li>
+                                                                    <li><a href="{{ path('social_cancelar_solicitud',{'usernameSolicitado':perfil.username,'clave':clave}) }}"><i class="fa fa-user-times"></i> Cancelar</a></li>
+                                                                {% endif %}
+                                                        {% endif %}
+
+                                                        {#<li><a href="#">Another action</a></li>#}
+                                                        {#<li><a href="#">Something else here</a></li>#}
+                                                        {#<li role="separator" class="divider"></li>#}
+                                                        {#<li><a href="#">Separated link</a></li>#}
+                                                    </ul>
+                                                </div>
+                                                {#<button class="btn btn-default" data-toggle="dropdown">#}
+                                                {#<li class="fa fa-user font-md"></li>#}
+                                                {#</button>#}
+                                                {#<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+                                                {#Dropdown button#}
+                                                {#</button>#}
+                                                {#<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">#}
+                                                {#<a class="dropdown-item" href="#">Action</a>#}
+                                                {#<a class="dropdown-item" href="#">Another action</a>#}
+                                                {#<a class="dropdown-item" href="#">Something else here</a>#}
+                                                {#</ul>#}
+                                                {#</div>#}
+                                                {#<button class="btn btn-default">#}
+                                                {#<li class="fa fa-user font-md"></li>#}
+                                                {#</button>#}
+                                            </div>
+                                        </div>
+
+                                {% endfor %}
                             </div>
-                            {% endfor %}
                         </div>
                     </div>
-                </div>
 
-            {% endif %}
+                {% endif %}
             </div>
         </div>
     </div>

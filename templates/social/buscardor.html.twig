@@ -1,10 +1,15 @@
-<div class="col-lg-offset-1 col-lg-10" style="margin-bottom: 1%">
-    <div class="input-group" style="margin-left: 10%; margin-right: 40%">
+<div class="col-lg-offset-1 col-lg-10" style=" align-items: center; display: flex; margin-bottom: 1%">
+    <div class="col-md-6 col-lg-offset-2">
+    <div class="input-group" >
         {#<input id="form_buscarAmigos" class="form-control">#}
         {{ form_widget(formBusqueda.busqueda) }}
         <span class="input-group-btn">
             {{ form_widget(formBusqueda.btnBuscar) }}
         </span>
+    </div>
+    </div>
+    <div class="col-md-2">
+        <a class=" " style="cursor: pointer"><i class="fas fa-2x fa-user-friends"></i><div><b class="badge" >2</b></div></a>
     </div>
 </div>
 {#{% block javascript %}#}

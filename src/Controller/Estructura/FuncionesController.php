@@ -186,4 +186,49 @@ final class FuncionesController
             }
         }
     }
+
+    public static function solicitudesGet($ruta){
+        try{
+
+        $em=BaseDatos::getEm();
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl() . $ruta);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $respuesta = json_decode(curl_exec($curl), true);
+        curl_close($curl);
+
+        return $respuesta;
+        }
+        catch (\Exception $exception){
+            return[
+                'estado'=>false,
+                'error'=>$exception->getMessage(),
+            ];
+        }
+    }
+
+    public static function solicitudesPost($datos=[], $ruta){
+        try{
+        $em=BaseDatos::getEm();
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_POST => 1,
+            CURLOPT_POSTFIELDS => $datos,
+            //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
+            CURLOPT_URL => $em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl() . $ruta,
+        ));
+        $respuesta = json_decode(curl_exec($curl), true);
+        curl_close($curl);
+
+        return $respuesta;
+        }
+        catch (\Exception $exception){
+            return[
+                'estado'=>false,
+                'error'=>$exception->getMessage(),
+            ];
+        }
+    }
 }

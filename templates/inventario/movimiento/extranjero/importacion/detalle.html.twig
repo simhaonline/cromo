@@ -152,7 +152,7 @@
                                 <td>{{ arCosto.vrValor | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;">
                                     {% if not arImportacion.estadoAutorizado %}
-                                        <a href="javascript:abrirVentana3('{{ path('inventario_movimiento_extranjero_importacion_costo_nuevo',{'id': arCosto.id,'codigoImportacion': arImportacion.codigoImportacionPk }) }}','costoNuevo',500, 600)">
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_movimiento_extranjero_importacion_costo_nuevo',{'id': arCosto.id,'codigoImportacion': arImportacion.codigoImportacionPk }) }}','costoNuevo',600, 800)">
                                             <li class="fa fa-edit" style="color: black;font-size: large;"></li>
                                         </a>
                                     {% endif %}

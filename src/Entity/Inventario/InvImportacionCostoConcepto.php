@@ -28,6 +28,11 @@ class InvImportacionCostoConcepto
     private $nombre;
 
     /**
+     * @ORM\Column(name="afecta_costo", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $afectaCosto = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvImportacionCosto", mappedBy="importacionCostoConceptoRel")
      */
     protected $importacionesCostosImportacionCostoConceptoRel;
@@ -79,4 +84,23 @@ class InvImportacionCostoConcepto
     {
         $this->importacionesCostosImportacionCostoConceptoRel = $importacionesCostosImportacionCostoConceptoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAfectaCosto()
+    {
+        return $this->afectaCosto;
+    }
+
+    /**
+     * @param mixed $afectaCosto
+     */
+    public function setAfectaCosto($afectaCosto): void
+    {
+        $this->afectaCosto = $afectaCosto;
+    }
+
+
+
 }

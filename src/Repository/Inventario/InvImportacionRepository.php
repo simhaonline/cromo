@@ -153,11 +153,13 @@ class InvImportacionRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arImportacion->getEstadoAutorizado() && !$arImportacion->getEstadoAnulado()) {
-            $arImportacionTipo = $this->getEntityManager()->getRepository(InvImportacionTipo::class)->find($arImportacion->getCodigoImportacionTipoFk());
-            if($arImportacionTipo){
-                $arImportacionTipo->setConsecutivo($arImportacionTipo->getConsecutivo() + 1);
-                $arImportacion->setNumero($arImportacionTipo->getConsecutivo());
-                $em->persist($arImportacionTipo);
+            if($arImportacion->getNumero() == 0 || $arImportacion->getNumero() == "") {
+                $arImportacionTipo = $this->getEntityManager()->getRepository(InvImportacionTipo::class)->find($arImportacion->getCodigoImportacionTipoFk());
+                if($arImportacionTipo){
+                    $arImportacionTipo->setConsecutivo($arImportacionTipo->getConsecutivo() + 1);
+                    $arImportacion->setNumero($arImportacionTipo->getConsecutivo());
+                    $em->persist($arImportacionTipo);
+                }
             }
             $arImportacion->setEstadoAprobado(1);
             $em->persist($arImportacion);

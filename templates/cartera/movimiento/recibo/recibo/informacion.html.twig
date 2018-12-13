@@ -48,6 +48,12 @@
         <td class="td-in-well"  align="right">{{ arRecibo.vrPagoTotal | number_format }}</td>
     </tr>
     <tr>
+        <td class="titulo">Asesor:</td>
+        <td class="td-in-well">{{ arRecibo.asesorRel.nombre | default('') }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"  align="right"></td>
+    </tr>
+    <tr>
         <td class="titulo">Tercero cruce:</td>
         <td class="td-in-well">{{ arRecibo.terceroRel.nombreCorto | default('') }}</td>
         <td class="titulo"></td>

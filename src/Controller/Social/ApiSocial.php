@@ -20,7 +20,8 @@ public static function getApi($ruta){
         'enviarSolicitud'   =>'/api/social/enviarSolicitud/',
         'cancelarSolicitud' =>'/api/social/cancelarSolicitud/',
         'eliminarAmigo'     =>'/api/social/eliminarAmigo/',
-        'agregarAmigo'      =>'/api/social/agregarAmigo/'
+        'agregarAmigo'      =>'/api/social/agregarAmigo/',
+        'solicitudes'      =>'/api/social/solicitudesPendientes/'
     ];
 
     return $api[$ruta];

@@ -50,7 +50,7 @@ class PerfilController extends BaseController
             ])
             ->getForm();
         $formBusqueda->handleRequest($request);
-
+        $misSolicitudes=(new BuscarController())->misSolicitudesPendientes($usuario->getUsername());
         if($formBusqueda->isSubmitted() && $formBusqueda->isValid()){
             if($formBusqueda->get('btnBuscar')->isSubmitted()){
                 if($formBusqueda->get('busqueda')->getData()!=""){
@@ -93,6 +93,7 @@ class PerfilController extends BaseController
             'formBusqueda'=>$formBusqueda->createView(),
             'arUsuario'=>$informacionUsuario,
             'conexion'=>$conexion,
+            'misSolicitudes'=>$misSolicitudes['datos'],
         ]);
     }
 

@@ -57,7 +57,8 @@ class RecogidaController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Facturas");
+                $fechaActual = new \DateTime('now');
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "recogida".$fechaActual->format('ymd'));
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

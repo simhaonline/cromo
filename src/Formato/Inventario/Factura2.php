@@ -218,7 +218,7 @@ class Factura2 extends \FPDF
             $pdf->Cell(20, 4, $arMovimientoDetalle->getItemRel()->getReferencia(), 1, 0, 'L');
             $pdf->Cell(15, 4, $arMovimientoDetalle->getLoteFk(), 1, 0, 'L');
             $pdf->Cell(10, 4, $arMovimientoDetalle->getCantidad(), 1, 0, 'C');
-            $pdf->Cell(15, 4, number_format($arMovimientoDetalle->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($arMovimientoDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(10, 4, $arMovimientoDetalle->getPorcentajeIva() . '%', 1, 0, 'C');
             $pdf->Cell(15, 4, number_format($arMovimientoDetalle->getVrTotal()), 1, 0, 'R');
             $pdf->Cell(50, 4, '', 1, 0, 'C');

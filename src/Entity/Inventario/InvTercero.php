@@ -202,6 +202,11 @@ class InvTercero
     protected $importacionesTerceroRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvImportacionCosto",mappedBy="terceroRel")
+     */
+    protected $importacionesCostosTerceroRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad",inversedBy="invTercerosCiuidadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk",referencedColumnName="codigo_ciudad_pk")
      */
@@ -813,6 +818,22 @@ class InvTercero
     public function setImportacionesTerceroRel( $importacionesTerceroRel ): void
     {
         $this->importacionesTerceroRel = $importacionesTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImportacionesCostosTerceroRel()
+    {
+        return $this->importacionesCostosTerceroRel;
+    }
+
+    /**
+     * @param mixed $importacionesCostosTerceroRel
+     */
+    public function setImportacionesCostosTerceroRel($importacionesCostosTerceroRel): void
+    {
+        $this->importacionesCostosTerceroRel = $importacionesCostosTerceroRel;
     }
 
 

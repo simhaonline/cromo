@@ -153,11 +153,13 @@ class InvImportacionRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arImportacion->getEstadoAutorizado() && !$arImportacion->getEstadoAnulado()) {
-            $arImportacionTipo = $this->getEntityManager()->getRepository(InvImportacionTipo::class)->find($arImportacion->getCodigoImportacionTipoFk());
-            if($arImportacionTipo){
-                $arImportacionTipo->setConsecutivo($arImportacionTipo->getConsecutivo() + 1);
-                $arImportacion->setNumero($arImportacionTipo->getConsecutivo());
-                $em->persist($arImportacionTipo);
+            if($arImportacion->getNumero() == 0 || $arImportacion->getNumero() == "") {
+                $arImportacionTipo = $this->getEntityManager()->getRepository(InvImportacionTipo::class)->find($arImportacion->getCodigoImportacionTipoFk());
+                if($arImportacionTipo){
+                    $arImportacionTipo->setConsecutivo($arImportacionTipo->getConsecutivo() + 1);
+                    $arImportacion->setNumero($arImportacionTipo->getConsecutivo());
+                    $em->persist($arImportacionTipo);
+                }
             }
             $arImportacion->setEstadoAprobado(1);
             $em->persist($arImportacion);
@@ -266,4 +268,62 @@ class InvImportacionRepository extends ServiceEntityRepository
             ->select('COUNT(imd.codigoImportacionDetallePk)')
             ->where("imd.codigoImportacionFk = {$codigoImportacion}")->getQuery()->getSingleResult()[1];
     }
+
+    public function listaContabilizar()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvImportacion::class, 'i');
+        $queryBuilder
+            ->select('i.codigoImportacionPk')
+            ->addSelect('i.numero')
+            ->addSelect('i.soporte')
+            ->addSelect('t.nombreCorto AS terceroNombreCorto')
+            ->addSelect('i.fecha')
+            ->addSelect('i.vrSubtotalLocal')
+            ->addSelect('i.vrTotalLocal')
+            ->addSelect('i.vrSubtotalExtranjero')
+            ->addSelect('i.vrTotalExtranjero')
+            ->addSelect('i.tasaRepresentativaMercado')
+            ->addSelect('i.estadoAnulado')
+            ->addSelect('i.estadoAprobado')
+            ->addSelect('i.estadoAutorizado')
+            ->addSelect('it.nombre as importacionTipoNombre')
+            ->addSelect('m.nombre as monedaNombre')
+            ->leftJoin('i.terceroRel', 't')
+            ->leftJoin('i.importacionTipoRel', 'it')
+            ->leftJoin('i.monedaRel', 'm')
+            ->where("i.codigoImportacionPk <> 0 ");
+        if ($session->get('filtroInvImportacionNumero') != "") {
+            $queryBuilder->andWhere("i.numero = " . $session->get('filtroInvImportacionNumero'));
+        }
+        if ($session->get('filtroInvImportacionCodigo') != "") {
+            $queryBuilder->andWhere("i.codigoImportacionPk = " . $session->get('filtroInvImportacionCodigo'));
+        }
+        if($session->get('filtroInvCodigoTercero')){
+            $queryBuilder->andWhere("i.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
+        }
+        switch ($session->get('filtroInvImportacionEstadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoAutorizado = 1");
+                break;
+        }
+        switch ($session->get('filtroInvImportacionEstadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoAprobado= 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoAprobado = 1");
+                break;
+        }
+        if($session->get('filtroGenAsesor')) {
+            $queryBuilder->andWhere("i.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
+        }
+        $queryBuilder->orderBy('i.estadoAprobado', 'ASC');
+        $queryBuilder->addOrderBy('i.fecha', 'DESC');
+        return $queryBuilder;
+    }    
+    
 }

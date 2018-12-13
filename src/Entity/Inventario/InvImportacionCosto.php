@@ -37,6 +37,11 @@ class InvImportacionCosto
     private $vrValor = 0;
 
     /**
+     * @ORM\Column(name="codigo_tercero_fk", type="integer", nullable=true)
+     */
+    private $codigoTerceroFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvImportacionCostoConcepto", inversedBy="importacionesCostosImportacionCostoConceptoRel")
      * @ORM\JoinColumn(name="codigo_importacion_costo_concepto_fk", referencedColumnName="codigo_importacion_costo_concepto_pk")
      */
@@ -47,6 +52,12 @@ class InvImportacionCosto
      * @ORM\JoinColumn(name="codigo_importacion_fk", referencedColumnName="codigo_importacion_pk")
      */
     protected $importacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="importacionesCostosTerceroRel")
+     * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
+     */
+    protected $terceroRel;
 
     /**
      * @return mixed
@@ -115,6 +126,22 @@ class InvImportacionCosto
     /**
      * @return mixed
      */
+    public function getCodigoTerceroFk()
+    {
+        return $this->codigoTerceroFk;
+    }
+
+    /**
+     * @param mixed $codigoTerceroFk
+     */
+    public function setCodigoTerceroFk($codigoTerceroFk): void
+    {
+        $this->codigoTerceroFk = $codigoTerceroFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getImportacionCostoConceptoRel()
     {
         return $this->importacionCostoConceptoRel;
@@ -143,4 +170,23 @@ class InvImportacionCosto
     {
         $this->importacionRel = $importacionRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTerceroRel()
+    {
+        return $this->terceroRel;
+    }
+
+    /**
+     * @param mixed $terceroRel
+     */
+    public function setTerceroRel($terceroRel): void
+    {
+        $this->terceroRel = $terceroRel;
+    }
+
+
+
 }

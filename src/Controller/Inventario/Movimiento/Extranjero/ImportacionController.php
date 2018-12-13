@@ -279,6 +279,13 @@ class ImportacionController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
+                $txtCodigoTercero = $request->request->get('txtCodigoTercero');
+                if ($txtCodigoTercero != '') {
+                    $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
+                    if ($arTercero) {
+                        $arImportacionCosto->setTerceroRel($arTercero);
+                    }
+                }
                 $arImportacionCosto->setImportacionRel($em->find(InvImportacion::class, $codigoImportacion));
                 $em->persist($arImportacionCosto);
                 $em->flush();

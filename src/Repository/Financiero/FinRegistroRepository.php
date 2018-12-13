@@ -78,7 +78,7 @@ class FinRegistroRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function listaIntercambio($pendientes)
+    public function listaIntercambio()
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
@@ -102,10 +102,10 @@ class FinRegistroRepository extends ServiceEntityRepository
             ->addSelect('t.nombreCorto')
             ->leftJoin('r.terceroRel', 't')
             ->leftJoin('r.comprobanteRel', 'c');
-        if($pendientes == true){
-            $queryBuilder->andWhere('r.estadoIntercambio = 0');
-        }
         $fecha = new \DateTime('now');
+        if ($session->get('filtroFinRegistrosTodos') == false) {
+            $queryBuilder->andWhere("r.estadoIntercambio = 0");
+        }
         if ($session->get('filtroFinCodigoTercero')) {
             $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroFinCodigoTercero')}");
         }
@@ -120,6 +120,9 @@ class FinRegistroRepository extends ServiceEntityRepository
         }
         if ($session->get('filtroFinCuenta') != '') {
             $queryBuilder->andWhere("r.codigoCuentaFk = {$session->get('filtroFinCuenta')}");
+        }
+        if ($session->get('filtroFinCentroCosto') != '') {
+            $queryBuilder->andWhere("r.codigoCentroCostoFk = {$session->get('filtroFinCentroCosto')}");
         }
         if ($session->get('filtroFinCentroCosto') != '') {
             $queryBuilder->andWhere("r.codigoCentroCostoFk = {$session->get('filtroFinCentroCosto')}");

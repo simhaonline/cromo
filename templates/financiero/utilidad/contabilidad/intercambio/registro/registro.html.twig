@@ -67,17 +67,21 @@
                     {{ form_widget(form.txtNumeroReferencia) }}
                 </div>
             </div>
-            <div class="modal-footer">
-                <div class="btn-group">
-                    {{ form_widget(form.btnGenerarTodos, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.chkTodos) }}
                 </div>
+            </div>
+            <div class="modal-footer">
+                {{ form_widget(form.btnFiltrar) }}
                 <div class="btn-group">
-                    {{ form_widget(form.btnGenerarPendientes, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                    {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
                 </div>
                 <div class="btn-group">
                     {{ form_widget(form.btnDescargar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
                 </div>
-                {{ form_widget(form.btnFiltrar) }}
+
             </div>
         </div>
     </div>

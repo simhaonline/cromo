@@ -38,17 +38,18 @@ class RegistroController extends Controller
             ->add('txtCentroCosto', TextType::class, ['required' => false, 'data' => $session->get('filtroFinCentroCosto'), 'attr' => ['class' => 'form-control']])
             ->add('txtNumeroReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroReferencia'), 'attr' => ['class' => 'form-control']])
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFinRegistroFiltroFecha')))
+            ->add('chkTodos', CheckboxType::class, array('label' => 'Todos', 'required' => false, 'data' => $session->get('filtroFinRegistrosTodos')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFinRegistroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFinRegistroFechaHasta'))])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->add('btnDescargar', SubmitType::class, ['label' => 'Descargar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnGenerarPendientes', SubmitType::class, ['label' => 'Generar pendientes', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnGenerarTodos', SubmitType::class, ['label' => 'Generar todos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnDescargar', SubmitType::class, ['label' => 'Descargar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnGenerar', SubmitType::class, ['label' => 'Generar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnGenerarPendientes')->isClicked() || $form->get('btnGenerarTodos')->isClicked() || $form->get('btnDescargar')->isClicked()) {
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnGenerar')->isClicked()  || $form->get('btnDescargar')->isClicked()) {
+                $session->set('filtroFinRegistrosTodos', $form->get('chkTodos')->getData());
                 $session->set('filtroFinCodigoTercero', $form->get('txtCodigoTercero')->getData());
                 $session->set('filtroFinComprobante', $form->get('txtComprobante')->getData());
                 $session->set('filtroFinNumeroDesde', $form->get('txtNumeroDesde')->getData());
@@ -60,24 +61,21 @@ class RegistroController extends Controller
                 $session->set('filtroFinRegistroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroFinRegistroFiltroFecha', $form->get('filtrarFecha')->getData());
             }
-            if ($form->get('btnGenerarPendientes')->isClicked()) {
-                $this->ilimitada(true);
-            }
-            if ($form->get('btnGenerarTodos')->isClicked()) {
-                $this->ilimitada(false);
+            if ($form->get('btnGenerar')->isClicked()) {
+                $this->ilimitada();
             }
             if ($form->get('btnDescargar')->isClicked()) {
                 $em->getRepository(FinRegistro::class)->aplicarIntercambio();
             }
 
         }
-        $arRegistros = $paginator->paginate($em->getRepository(FinRegistro::class)->listaIntercambio(true), $request->query->getInt('page', 1),20);
+        $arRegistros = $paginator->paginate($em->getRepository(FinRegistro::class)->listaIntercambio(), $request->query->getInt('page', 1),20);
         return $this->render('financiero/utilidad/contabilidad/intercambio/registro/registro.html.twig',
             ['arRegistros' => $arRegistros,
             'form' => $form->createView()]);
     }
 
-    private function ilimitada($pendientes =  true)
+    private function ilimitada()
     {
         $em = $this->getDoctrine()->getManager();
         $rutaTemporal = $em->getRepository(GenConfiguracion::class)->parametro('rutaTemporal');
@@ -85,7 +83,7 @@ class RegistroController extends Controller
         $strArchivo = $rutaTemporal . $strNombreArchivo;
         $ar = fopen($strArchivo, "a") or
         die("Problemas en la creacion del archivo plano");
-        $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio($pendientes)->getQuery()->getResult();
+        $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
         foreach ($arRegistros as $arRegistro) {
             $valor = 0;
             $naturaleza = "1";

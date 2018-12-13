@@ -5,6 +5,27 @@
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-1 control-label">Tercero:</label>
+                <div class="col-sm-11">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtCodigoTercero) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                {{ form_widget(form.txtNombreCorto) }}
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('financiero_buscar_tercero', { 'campoCodigo': 'form_txtCodigoTercero', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Desde:</label>
                 <div class="col-sm-5">
                     {{ form_widget(form.fechaDesde) }}
@@ -13,9 +34,9 @@
                 <div class="col-sm-2">
                     {{ form_widget(form.txtComprobante) }}
                 </div>
-                <label class="col-sm-1 control-label"></label>
+                <label class="col-sm-1 control-label">Numero desde:</label>
                 <div class="col-sm-2">
-
+                    {{ form_widget(form.txtNumeroDesde) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -23,13 +44,13 @@
                 <div class="col-sm-5">
                     {{ form_widget(form.fechaHasta) }}
                 </div>
-                <label class="col-sm-1 control-label"></label>
+                <label class="col-sm-1 control-label">Cuenta:</label>
                 <div class="col-sm-2">
-
+                    {{ form_widget(form.txtCuenta) }}
                 </div>
-                <label class="col-sm-1 control-label"></label>
+                <label class="col-sm-1 control-label">Numero Hasta:</label>
                 <div class="col-sm-2">
-
+                    {{ form_widget(form.txtNumeroHasta) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -37,27 +58,34 @@
                 <div class="col-sm-5">
                     {{ form_widget(form.filtrarFecha) }}
                 </div>
-                <label class="col-sm-1 control-label"></label>
+                <label class="col-sm-1 control-label">Centro costo:</label>
                 <div class="col-sm-2">
-
+                    {{ form_widget(form.txtCentroCosto) }}
                 </div>
-                <label class="col-sm-1 control-label"></label>
+                <label class="col-sm-1 control-label">Numero referencia:</label>
                 <div class="col-sm-2">
-
+                    {{ form_widget(form.txtNumeroReferencia) }}
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            <div class="btn-group">
-                {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.chkTodos) }}
+                </div>
             </div>
-            <div class="btn-group">
-                {{ form_widget(form.btnDescargar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            <div class="modal-footer">
+                {{ form_widget(form.btnFiltrar) }}
+                <div class="btn-group">
+                    {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                </div>
+                <div class="btn-group">
+                    {{ form_widget(form.btnDescargar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                </div>
+
             </div>
-            {{ form_widget(form.btnFiltrar) }}
         </div>
     </div>
-    <table class="table table-striped table-bordered table-hover">
+    <table class="table table-striped table-bordered table-hover tabla-informacion">
         <thead>
         <tr>
             <th>COD</th>
@@ -84,21 +112,22 @@
                 <td>{{ arRegistro.numero }}</td>
                 <td>{{ arRegistro.numeroReferencia }}</td>
                 <td>{{ arRegistro.fecha | date('Y-m-d') }}</td>
-                <td>{{ arRegistro.codigoComprobanteFk  }} - {{ arRegistro.nombre  }}</td>
+                <td>{{ arRegistro.codigoComprobanteFk }} - {{ arRegistro.nombre }}</td>
                 <td>{{ arRegistro.codigoCuentaFk }}</td>
                 <td>{{ arRegistro.codigoCentroCostoFk }}</td>
                 <td>{{ arRegistro.numeroIdentificacion }}</td>
                 <td>{{ arRegistro.nombreCorto }}</td>
-                <td class="numero">{{ arRegistro.vrDebito | number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arRegistro.vrCredito | number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arRegistro.vrBase | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arRegistro.vrDebito | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arRegistro.vrCredito | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arRegistro.vrBase | number_format(0, '.', ',') }}</td>
                 <td>{{ arRegistro.descripcion }}</td>
             </tr>
         {% endfor %}
     </table>
     <div>
         <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRegistros.getTotalItemCount }}</span></div>
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRegistros.getTotalItemCount }}</span>
+            </div>
         </div>
 
         <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
@@ -106,7 +135,7 @@
         </div>
         <div class="btn-toolbar" style="float: right">
             <div class="btn-group">
-                {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             </div>
         </div>
     </div>

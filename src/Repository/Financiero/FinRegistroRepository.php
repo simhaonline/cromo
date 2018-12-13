@@ -101,11 +101,34 @@ class FinRegistroRepository extends ServiceEntityRepository
             ->addSelect('t.numeroIdentificacion')
             ->addSelect('t.nombreCorto')
             ->leftJoin('r.terceroRel', 't')
-            ->leftJoin('r.comprobanteRel', 'c')
-            ->where('r.estadoIntercambio = 0');
+            ->leftJoin('r.comprobanteRel', 'c');
         $fecha = new \DateTime('now');
+        if ($session->get('filtroFinRegistrosTodos') == false) {
+            $queryBuilder->andWhere("r.estadoIntercambio = 0");
+        }
+        if ($session->get('filtroFinCodigoTercero')) {
+            $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroFinCodigoTercero')}");
+        }
         if ($session->get('filtroFinComprobante') != '') {
             $queryBuilder->andWhere("r.codigoComprobanteFk = {$session->get('filtroFinComprobante')}");
+        }
+        if ($session->get('filtroFinNumeroDesde') != '') {
+            $queryBuilder->andWhere("r.numero >= {$session->get('filtroFinNumeroDesde')}");
+        }
+        if ($session->get('filtroFinNumeroHasta') != '') {
+            $queryBuilder->andWhere("r.numero <= {$session->get('filtroFinNumeroHasta')}");
+        }
+        if ($session->get('filtroFinCuenta') != '') {
+            $queryBuilder->andWhere("r.codigoCuentaFk = {$session->get('filtroFinCuenta')}");
+        }
+        if ($session->get('filtroFinCentroCosto') != '') {
+            $queryBuilder->andWhere("r.codigoCentroCostoFk = {$session->get('filtroFinCentroCosto')}");
+        }
+        if ($session->get('filtroFinCentroCosto') != '') {
+            $queryBuilder->andWhere("r.codigoCentroCostoFk = {$session->get('filtroFinCentroCosto')}");
+        }
+        if ($session->get('filtroFinNumeroReferencia') != '') {
+            $queryBuilder->andWhere("r.numeroReferencia = {$session->get('filtroFinNumeroReferencia')}");
         }
         if ($session->get('filtroFinRegistroFiltroFecha') == true) {
             if ($session->get('filtroFinRegistroFechaDesde') != null) {
@@ -121,7 +144,6 @@ class FinRegistroRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
-
     public function aplicarIntercambio()
     {
         $session = new Session();

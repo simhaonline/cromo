@@ -14,14 +14,15 @@ class InvImportacionCostoRepository extends ServiceEntityRepository
     }
 
     public function lista($codigoImportacion){
-        return $this->_em->createQueryBuilder()
-            ->select('iic.codigoImportacionCostoPk AS id')
-            ->addSelect('iic.codigoImportacionCostoConceptoFk AS concepto')
-            ->addSelect('c.nombre')
-            ->addSelect('iic.vrValor')
-            ->from(InvImportacionCosto::class,'iic')
-            ->leftJoin('iic.importacionCostoConceptoRel','c')
-            ->where("iic.codigoImportacionFk = {$codigoImportacion}");
+        return $this->_em->createQueryBuilder()->from(InvImportacionCosto::class,'ic')
+            ->select('ic.codigoImportacionCostoPk')
+            ->addSelect('ic.codigoImportacionCostoConceptoFk')
+            ->addSelect('icc.nombre as importacionCostoConceptoNombre')
+            ->addSelect('ic.vrValor')
+            ->addSelect('t.nombreCorto as terceroNombreCorto')
+            ->leftJoin('ic.importacionCostoConceptoRel','icc')
+            ->leftJoin('ic.terceroRel', 't')
+            ->where("ic.codigoImportacionFk = {$codigoImportacion}");
     }
 
     /**

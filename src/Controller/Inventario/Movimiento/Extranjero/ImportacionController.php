@@ -178,12 +178,12 @@ class ImportacionController extends ControllerListenerGeneral
             return $this->redirect($this->generateUrl('inventario_movimiento_extranjero_importacion_detalle', ['id' => $id]));
         }
         $arImportacionDetalles = $paginator->paginate($em->getRepository(InvImportacionDetalle::class)->importacion($id), $request->query->getInt('page', 1), 10);
-        $arCostos = $paginator->paginate($em->getRepository(InvImportacionCosto::class)->lista($id), $request->query->getInt('page', 1), 10);
+        $arImportacionCostos = $paginator->paginate($em->getRepository(InvImportacionCosto::class)->lista($id), $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/extranjero/importacion/detalle.html.twig', [
             'form' => $form->createView(),
             'arImportacionDetalles' => $arImportacionDetalles,
             'arImportacion' => $arImportacion,
-            'arCostos' => $arCostos
+            'arImportacionCostos' => $arImportacionCostos
         ]);
     }
 

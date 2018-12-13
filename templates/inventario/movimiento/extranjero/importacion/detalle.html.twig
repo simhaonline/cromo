@@ -95,7 +95,7 @@
                                 <td class="numero">{{ arImportacionDetalle.vrSubtotalExtranjero | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arImportacionDetalle.vrTotalExtranjero | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arImportacionDetalle.vrPrecioLocal | number_format(0, '.', ',') }}</td>
-                                <td class="numero">{{ arImportacionDetalle.porcentajeParticipaCosto }}</td>
+                                <td class="numero">{{ arImportacionDetalle.porcentajeParticipaCosto | number_format(2, '.', ',') }}</td>
                                 <td class="numero">{{ arImportacionDetalle.vrCostoParticipa | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arImportacionDetalle.vrPrecioLocalTotal | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arImportacionDetalle.porcentajeIvaLocal }}</td>
@@ -135,6 +135,7 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>TERCERO</th>
                             <th>CODIGO</th>
                             <th>CONCEPTO</th>
                             <th>VALOR</th>
@@ -144,21 +145,22 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for arCosto in arCostos %}
+                        {% for arImportacionCosto in arImportacionCostos %}
                             <tr>
-                                <td>{{ arCosto.id }}</td>
-                                <td>{{ arCosto.concepto }}</td>
-                                <td>{{ arCosto.nombre }}</td>
-                                <td>{{ arCosto.vrValor | number_format(0, '.', ',') }}</td>
+                                <td>{{ arImportacionCosto.codigoImportacionCostoPk }}</td>
+                                <td>{{ arImportacionCosto.terceroNombreCorto }}</td>
+                                <td>{{ arImportacionCosto.codigoImportacionCostoConceptoFk }}</td>
+                                <td>{{ arImportacionCosto.importacionCostoConceptoNombre }}</td>
+                                <td>{{ arImportacionCosto.vrValor | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;">
                                     {% if not arImportacion.estadoAutorizado %}
-                                        <a href="javascript:abrirVentana3('{{ path('inventario_movimiento_extranjero_importacion_costo_nuevo',{'id': arCosto.id,'codigoImportacion': arImportacion.codigoImportacionPk }) }}','costoNuevo',600, 800)">
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_movimiento_extranjero_importacion_costo_nuevo',{'id': arImportacionCosto.codigoImportacionCostoPk,'codigoImportacion': arImportacion.codigoImportacionPk }) }}','costoNuevo',600, 800)">
                                             <li class="fa fa-edit" style="color: black;font-size: large;"></li>
                                         </a>
                                     {% endif %}
                                 </td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionarCosto[]"
-                                                                       value="{{ arCosto.id }}"></td>
+                                                                       value="{{ arImportacionCosto.codigoImportacionCostoPk }}"></td>
                             </tr>
                         {% endfor %}
                         </tbody>

@@ -29,37 +29,55 @@ class RegistroController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroFinCodigoTercero'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+            ->add('txtComprobante', TextType::class, ['required' => false, 'data' => $session->get('filtroFinComprobante'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNumeroDesde', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroDesde'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNumeroHasta', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroHasta'), 'attr' => ['class' => 'form-control']])
+            ->add('txtCuenta', TextType::class, ['required' => false, 'data' => $session->get('filtroFinCuenta'), 'attr' => ['class' => 'form-control']])
+            ->add('txtCentroCosto', TextType::class, ['required' => false, 'data' => $session->get('filtroFinCentroCosto'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNumeroReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroReferencia'), 'attr' => ['class' => 'form-control']])
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFinRegistroFiltroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFinRegistroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFinRegistroFechaHasta'))])
-            ->add('txtComprobante', TextType::class, ['required' => false, 'data' => $session->get('filtroFinComprobante'), 'attr' => ['class' => 'form-control']])
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnDescargar', SubmitType::class, ['label' => 'Descargar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnGenerar', SubmitType::class, ['label' => 'Generar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnGenerarPendientes', SubmitType::class, ['label' => 'Generar pendientes', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnGenerarTodos', SubmitType::class, ['label' => 'Generar todos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnGenerar')->isClicked() || $form->get('btnDescargar')->isClicked()) {
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnGenerarPendientes')->isClicked() || $form->get('btnGenerarTodos')->isClicked() || $form->get('btnDescargar')->isClicked()) {
+                $session->set('filtroFinCodigoTercero', $form->get('txtCodigoTercero')->getData());
+                $session->set('filtroFinComprobante', $form->get('txtComprobante')->getData());
+                $session->set('filtroFinNumeroDesde', $form->get('txtNumeroDesde')->getData());
+                $session->set('filtroFinNumeroHasta', $form->get('txtNumeroHasta')->getData());
+                $session->set('filtroFinCuenta', $form->get('txtCuenta')->getData());
+                $session->set('filtroFinCentroCosto', $form->get('txtCentroCosto')->getData());
+                $session->set('filtroFinNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
                 $session->set('filtroFinRegistroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
                 $session->set('filtroFinRegistroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroFinRegistroFiltroFecha', $form->get('filtrarFecha')->getData());
-                $session->set('filtroFinComprobante', $form->get('txtComprobante')->getData());
             }
-            if ($form->get('btnGenerar')->isClicked()) {
-                $this->ilimitada();
+            if ($form->get('btnGenerarPendientes')->isClicked()) {
+                $this->ilimitada(true);
+            }
+            if ($form->get('btnGenerarTodos')->isClicked()) {
+                $this->ilimitada(false);
             }
             if ($form->get('btnDescargar')->isClicked()) {
                 $em->getRepository(FinRegistro::class)->aplicarIntercambio();
             }
 
         }
-        $arRegistros = $paginator->paginate($em->getRepository(FinRegistro::class)->listaIntercambio(), $request->query->getInt('page', 1),20);
+        $arRegistros = $paginator->paginate($em->getRepository(FinRegistro::class)->listaIntercambio(true), $request->query->getInt('page', 1),20);
         return $this->render('financiero/utilidad/contabilidad/intercambio/registro/registro.html.twig',
             ['arRegistros' => $arRegistros,
             'form' => $form->createView()]);
     }
 
-    private function ilimitada()
+    private function ilimitada($pendientes =  true)
     {
         $em = $this->getDoctrine()->getManager();
         $rutaTemporal = $em->getRepository(GenConfiguracion::class)->parametro('rutaTemporal');
@@ -67,7 +85,7 @@ class RegistroController extends Controller
         $strArchivo = $rutaTemporal . $strNombreArchivo;
         $ar = fopen($strArchivo, "a") or
         die("Problemas en la creacion del archivo plano");
-        $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
+        $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio($pendientes)->getQuery()->getResult();
         foreach ($arRegistros as $arRegistro) {
             $valor = 0;
             $naturaleza = "1";

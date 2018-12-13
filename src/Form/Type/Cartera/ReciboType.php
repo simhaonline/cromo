@@ -97,8 +97,8 @@ class ReciboType extends AbstractType
             {"child":"codigoReciboPk",     "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
             {"child":"codigoReciboTipoFk", "tipo":"EntityType","propiedades":{"class":"CarReciboTipo","choice_label":"nombre", "label":"TODOS"}},
             {"child":"codigoAsesorFk",     "tipo":"EntityType","propiedades":{"class":"GenAsesor","choice_label":"nombre", "label":"TODOS"}},
-            {"child":"fechaDesde",         "tipo":"DateType",  "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHasta",         "tipo":"DateType",  "propiedades":{"label":"Fecha Hasta"}},
+            {"child":"fechaPagoDesde",         "tipo":"DateType",  "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaPagoHasta",         "tipo":"DateType",  "propiedades":{"label":"Fecha Hasta"}},
             {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAprobado",     "tipo":"ChoiceType","propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAnulado",      "tipo":"ChoiceType","propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}

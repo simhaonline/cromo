@@ -1,0 +1,9 @@
+{% extends 'modal/baseModal.html.twig' %}
+{% block modalHeader %}
+    <h4 style="font-size: 15px;"><strong>Video guia</strong> <i class="fa fa-video-camera"></i></h4>
+{% endblock %}
+{% block modalBody %}
+    <iframe width="100%" height="500"
+            src="{{ url }}">
+    </iframe>
+{% endblock %}

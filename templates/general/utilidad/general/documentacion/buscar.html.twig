@@ -31,57 +31,72 @@
         {% set cantResultados = arTemas|length %}
         <h1 class="font-md"> Resultados de busqueda por <span class="semi-bold">Titulo</span>
             <small class="text-danger">
-                &nbsp;&nbsp;({{ cantResultados }} {% if cantResultados > 1 or cantResultados == 0 %} resultados {% else %}resultado{% endif %})
+                &nbsp;&nbsp;({{ cantResultados }} {% if cantResultados > 1 or cantResultados == 0 %} resultados {% else %}resultado{% endif %}
+                )
             </small>
         </h1>
         {% for arTema in arTemas %}
             <div class="search-results clearfix smart-form">
-                <h4><a href="#">{{ arTema.titulo }}</a><label hidden id="codigoTemaPk">{{ arTema.codigoTemaPk }}</label></h4>
+                <h4><a href="#">{{ arTema.titulo }}</a></h4>
                 <div>
-                    <div class="rating display-inline" onchange="actualizarCalificacion()">
-                        <input type="radio" name="calificacion" id="estrella-5">
-                        <label for="estrella-5"><i class="fa fa-star"></i></label>
-                        <input type="radio" name="calificacion" id="estrella-4">
-                        <label for="estrella-4"><i class="fa fa-star"></i></label>
-                        <input type="radio" name="calificacion" id="estrella-3">
-                        <label for="estrella-3"><i class="fa fa-star"></i></label>
-                        <input type="radio" name="calificacion" id="estrella-2">
-                        <label for="estrella-2"><i class="fa fa-star"></i></label>
-                        <input type="radio" name="calificacion" id="estrella-1">
-                        <label for="estrella-1"><i class="fa fa-star"></i></label>
+                    {% set nombre = 'estrella-' ~ arTema.codigoTemaPk %}
+                    <div data-id="{{ arTema.codigoTemaPk }}" class="rating display-inline calificar-estrellas"
+                         id="calificar-{{ arTema.codigoTemaPk }}">
+                        <input type="radio" name="calificacion-{{ arTema.codigoTemaPk }}"
+                               id="{{ nombre }}-5" {% if arTema.calificacion == 5 %} checked {% endif %}>
+                        <label for="{{ nombre }}-5"><i class="fa fa-star"></i></label>
+                        <input type="radio" name="calificacion-{{ arTema.codigoTemaPk }}"
+                               id="{{ nombre }}-4" {% if arTema.calificacion == 4 %} checked {% endif %}>
+                        <label for="{{ nombre }}-4"><i class="fa fa-star"></i></label>
+                        <input type="radio" name="calificacion-{{ arTema.codigoTemaPk }}"
+                               id="{{ nombre }}-3" {% if arTema.calificacion == 3 %} checked {% endif %}>
+                        <label for="{{ nombre }}-3"><i class="fa fa-star"></i></label>
+                        <input type="radio" name="calificacion-{{ arTema.codigoTemaPk }}"
+                               id="{{ nombre }}-2" {% if arTema.calificacion == 2 %} checked {% endif %}>
+                        <label for="{{ nombre }}-2"><i class="fa fa-star"></i></label>
+                        <input type="radio" name="calificacion-{{ arTema.codigoTemaPk }}"
+                               id="{{ nombre }}-1" {% if arTema.calificacion == 1 %} checked {% endif %}>
+                        <label for="{{ nombre }}-1"><i class="fa fa-star"></i></label>
                     </div>
                     <p class="note">
                         <a href="#"><i class="fa fa-thumbs-up"></i> Me gusta&nbsp;&nbsp;</a>
                         <a href="#"><i class="fa fa-chain"></i> Compartir&nbsp;&nbsp;</a>
                         <a href="#"><i class="fa fa-star txt-color-yellow"></i> Favorito&nbsp;&nbsp;</a>
-                        <a href="#"><i class="fa fa-video-camera txt-color-blue"></i> Video&nbsp;&nbsp;</a>
+                        {% if arTema.video != '' %}
+                            <button style="margin-bottom: 4px;"
+                                    href="{{ path('documentacion_video', {'url': arTema.video|urlVideo }) }}"
+                                    type="button" class="fa fa-video-camera txt-color-blue modal-open btn btn-xs">Video
+                            </button>
+                        {% endif %}
                     </p>
-                    <div class="url text-success">
-                        {{ arTema.url }}<i class="fa fa-caret-down"></i>
+                    <div>
+                        <a href="{{ arTema.url }}" class="url text-success" target="_blank">{{ arTema.url }}</a></i>
                     </div>
-                    <p class="description">
+                    <p class="description" style="color: black;">
                         {{ arTema.descripcion }}
+                        <cite style="color: grey!important;font-size: 12px;"> -- Ultima actualización
+                            --{{ arTema.fechaActualizacion|date('Y-m-d') }}</cite>
                     </p>
                 </div>
             </div>
         {% endfor %}
     </div>
     {{ form_end(form) }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
     <script>
-        function actualizarCalificacion() {
+        $(".calificar-estrellas").change(function () {
             $.ajax({
                 url: "{{ path('documentacion_calificar') }}",
                 type: "GET",
                 dataType: "JSON",
                 data: {
-                    calificacion: $('input:radio[name=calificacion]:checked').attr("id"),
-                    id: $('#codigoTemaPk').text(),
-                }, success:function (respuesta) {
-                    console.log(respuesta);
-                }, error:function (respuesta) {
-                    console.log(respuesta);
+                    calificacion: $('input:radio[name=calificacion-' + $(this).attr("data-id") + ']:checked').attr("id")
+                }, success: function () {
+                    console.log(true);
                 }
             })
-        }
+        });
     </script>
 {% endblock %}

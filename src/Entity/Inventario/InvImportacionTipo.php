@@ -39,11 +39,6 @@ class InvImportacionTipo
     private $codigoComprobanteFk;
 
     /**
-     * @ORM\Column(name="codigo_cuenta_inventario_transito_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCuentaInventarioTransitoFk;
-
-    /**
      * @ORM\OneToMany(targetEntity="InvImportacion", mappedBy="importacionTipoRel")
      */
     protected $importacionesImportacionTipoRel;
@@ -59,7 +54,7 @@ class InvImportacionTipo
     /**
      * @param mixed $codigoImportacionTipoPk
      */
-    public function setCodigoImportacionTipoPk( $codigoImportacionTipoPk ): void
+    public function setCodigoImportacionTipoPk($codigoImportacionTipoPk): void
     {
         $this->codigoImportacionTipoPk = $codigoImportacionTipoPk;
     }
@@ -75,7 +70,7 @@ class InvImportacionTipo
     /**
      * @param mixed $nombre
      */
-    public function setNombre( $nombre ): void
+    public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
     }
@@ -91,25 +86,9 @@ class InvImportacionTipo
     /**
      * @param mixed $consecutivo
      */
-    public function setConsecutivo( $consecutivo ): void
+    public function setConsecutivo($consecutivo): void
     {
         $this->consecutivo = $consecutivo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getImportacionesImportacionTipoRel()
-    {
-        return $this->importacionesImportacionTipoRel;
-    }
-
-    /**
-     * @param mixed $importacionesImportacionTipoRel
-     */
-    public function setImportacionesImportacionTipoRel( $importacionesImportacionTipoRel ): void
-    {
-        $this->importacionesImportacionTipoRel = $importacionesImportacionTipoRel;
     }
 
     /**
@@ -131,18 +110,19 @@ class InvImportacionTipo
     /**
      * @return mixed
      */
-    public function getCodigoCuentaInventarioTransitoFk()
+    public function getImportacionesImportacionTipoRel()
     {
-        return $this->codigoCuentaInventarioTransitoFk;
+        return $this->importacionesImportacionTipoRel;
     }
 
     /**
-     * @param mixed $codigoCuentaInventarioTransitoFk
+     * @param mixed $importacionesImportacionTipoRel
      */
-    public function setCodigoCuentaInventarioTransitoFk($codigoCuentaInventarioTransitoFk): void
+    public function setImportacionesImportacionTipoRel($importacionesImportacionTipoRel): void
     {
-        $this->codigoCuentaInventarioTransitoFk = $codigoCuentaInventarioTransitoFk;
+        $this->importacionesImportacionTipoRel = $importacionesImportacionTipoRel;
     }
+
 
 
 

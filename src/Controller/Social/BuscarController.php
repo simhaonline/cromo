@@ -22,6 +22,7 @@ class BuscarController extends BaseController
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
         $arPerfil=FuncionesController::solicitudesGet(ApiSocial::getApi('buscarAmigos').$usuario.'/'.$clave);
         $em=$this->getDoctrine()->getManager();
+        $misSolicitudes=BuscarController::misSolicitudesPendientes($usuario);
         $formBusqueda=$this->createFormBuilder()
             ->add('busqueda',TextType::class,
                 [
@@ -56,6 +57,7 @@ class BuscarController extends BaseController
             'clave'=>$clave,
             'username'=>$usuario,
             'formBusqueda'=>$formBusqueda->createView(),
+            'misSolicitudes'=>$misSolicitudes['datos'],
         ]);
     }
 
@@ -84,13 +86,17 @@ class BuscarController extends BaseController
 
 
     /**
-     * @Route("/social/buscar/agregarAmigo/{usernameSolicitado}/{clave}", name="social_agregar_amigo")
+     * @Route("/social/buscar/agregarAmigo/{usernameSolicitado}/{clave}/{notificacion}", name="social_agregar_amigo")
      */
-    public function agregarAmigo($usernameSolicitado, $clave){
+    public function agregarAmigo($usernameSolicitado, $clave, $notificacion=false){
+        $notificacion=(boolean)$notificacion;
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
-        $agregarAmigo=FuncionesController::solicitudesGet(ApiSocial::getApi('agregarAmigo').$usuario.'/'.$usernameSolicitado);
-        if($agregarAmigo['estado']){
+        $agregarAmigo=FuncionesController::solicitudesGet(ApiSocial::getApi('aceptarAmigo').$usuario.'/'.$usernameSolicitado);
+        if($agregarAmigo['estado'] && !$notificacion){
             return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$clave]));
+        }
+        else{
+            return $this->redirect($this->generateUrl('social_perfil_ver'));
         }
     }
 
@@ -102,6 +108,15 @@ class BuscarController extends BaseController
         $cancelarSolicitud=FuncionesController::solicitudesGet(ApiSocial::getApi('cancelarSolicitud').$usuario.'/'.$usernameSolicitado);
         if($cancelarSolicitud['estado']){
             return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$clave]));
+        }
+    }
+
+
+    public function misSolicitudesPendientes($username){
+
+        $solicitudes=FuncionesController::solicitudesGet(ApiSocial::getApi('solicitudes').$username);
+        if($solicitudes['estado']){
+            return $solicitudes;
         }
     }
 }

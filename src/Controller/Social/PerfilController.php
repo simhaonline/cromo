@@ -29,6 +29,7 @@ class PerfilController extends BaseController
         $datos=json_encode(['datos'=>['estado'=>'']]);
 
         $conexion= FuncionesController::solicitudesPost($datos,ApiSocial::getApi('conexion') .$usuario->getUsername());
+        $amigos= FuncionesController::solicitudesGet(ApiSocial::getApi('misAmigos') .$usuario->getUsername());
         $informacionUsuario= [
             'nombreCorto'   =>$usuario->getNombreCorto(),
 //            'rol'           =>$usuario->getRoles()[0]=="ROLE_ADMIN"?"Administrador":"Usuario",
@@ -50,7 +51,7 @@ class PerfilController extends BaseController
             ])
             ->getForm();
         $formBusqueda->handleRequest($request);
-
+        $misSolicitudes=(new BuscarController())->misSolicitudesPendientes($usuario->getUsername());
         if($formBusqueda->isSubmitted() && $formBusqueda->isValid()){
             if($formBusqueda->get('btnBuscar')->isSubmitted()){
                 if($formBusqueda->get('busqueda')->getData()!=""){
@@ -93,6 +94,8 @@ class PerfilController extends BaseController
             'formBusqueda'=>$formBusqueda->createView(),
             'arUsuario'=>$informacionUsuario,
             'conexion'=>$conexion,
+            'misSolicitudes'=>$misSolicitudes['datos'],
+            'amigos'=>$amigos['datos'],
         ]);
     }
 
@@ -103,9 +106,9 @@ class PerfilController extends BaseController
         $em=$this->getDoctrine()->getManager();
         set_time_limit(0);
         ini_set("memory_limit", -1);
-        if($registro){
-
-        $datos=json_encode(['datos'=>['clave'=>'123456']]);
+        if($registro=='true'){
+        $nombreCorto=$em->getRepository('App:Seguridad\Usuario')->find($username)->getNombreCorto();
+        $datos=json_encode(['datos'=>['clave'=>'123456','nombreCorto'=>$nombreCorto]]);
             FuncionesController::solicitudesPost($datos,ApiSocial::getApi('conexion').$username);
         }
         else{

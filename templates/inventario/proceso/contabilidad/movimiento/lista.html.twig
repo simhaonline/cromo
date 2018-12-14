@@ -65,6 +65,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>DOCUMENTO</th>
             <th>NUMERO</th>
             <th>TERCERO</th>
             <th>FECHA</th>
@@ -83,6 +84,7 @@
         {% for arMovimiento in arMovimientos %}
             <tr>
                 {{ validarTipo(arMovimiento.codigoMovimientoPk ) }}
+                <td>{{ arMovimiento.documentoNombre }}</td>
                 {{ validarTipo(arMovimiento.numero) }}
                 {{ validarTipo(arMovimiento.terceroNombreCorto ) }}
                 {{ validarTipo(arMovimiento.fecha) }}

@@ -485,4 +485,15 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $arrDetalles;
     }
 
+    public function cuentaInventarioTransito($codigo){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('i.codigoCuentaInventarioTransitoFk')
+            ->addSelect('SUM(md.vrSubtotal) as vrSubtotal')
+            ->leftJoin('md.itemRel', 'i')
+            ->where('md.codigoMovimientoFk = ' . $codigo)
+            ->groupBy('i.codigoCuentaInventarioTransitoFk');
+        $arrCuentas = $queryBuilder->getQuery()->getResult();
+        return $arrCuentas;
+    }
+
 }

@@ -33,8 +33,8 @@ class MovimientoController extends Controller
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
-            ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoCodigo')))
-            ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvMovimientoNumero')))
+            ->add('txtCodigo', TextType::class, array('required' => false,'data' => $session->get('filtroInvMovimientoCodigo')))
+            ->add('txtNumero', TextType::class, array('required' => false, 'data' => $session->get('filtroInvMovimientoNumero')))
             ->add('cboAsesor', EntityType::class, $em->getRepository(GenAsesor::class)->llenarCombo())
             ->add('chkEstadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvMovimientoEstadoAutorizado'), 'required' => false])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvMovimientoEstadoAprobado'), 'required' => false])
@@ -44,7 +44,7 @@ class MovimientoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                /*$session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
                 $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
                 if ($form->get('txtCodigoCliente')->getData() != '') {
@@ -59,11 +59,11 @@ class MovimientoController extends Controller
                     $session->set('filtroTteFacturaCodigoFacturaTipo', $arFacturaTipo->getCodigoFacturaTipoPk());
                 } else {
                     $session->set('filtroTteFacturaCodigoFacturaTipo', null);
-                }
+                }*/
             }
             if ($form->get('btnContabilizar')->isClicked()) {
                 $arr = $request->request->get('ChkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->contabilizar($arr);
+                $respuesta = $this->getDoctrine()->getRepository(InvMovimiento::class)->contabilizar($arr);
             }
         }
         $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->listaContabilizar(), $request->query->getInt('page', 1), 100);

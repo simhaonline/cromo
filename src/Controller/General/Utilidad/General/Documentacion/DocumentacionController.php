@@ -75,14 +75,14 @@ class DocumentacionController extends Controller
         return new JsonResponse($respuesta);
     }
 
-    /**
-     * @Route("/documentacion/video/{url}", name="documentacion_video")
-     */
-    public function modalVideo($url)
-    {
-        return $this->render('general/utilidad/general/documentacion/video.html.twig', [
-            'url' => str_replace('&','/',$url),
-        ]);
-    }
+//    /**
+//     * @Route("/documentacion/video/{url}", name="documentacion_video")
+//     */
+//    public function modalVideo($url)
+//    {
+//        return $this->render('general/utilidad/general/documentacion/video.html.twig', [
+//            'url' => str_replace('&','/',$url),
+//        ]);
+//    }
 }
 

@@ -62,12 +62,12 @@
                         <a href="#"><i class="fa fa-thumbs-up"></i> Me gusta&nbsp;&nbsp;</a>
                         <a href="#"><i class="fa fa-chain"></i> Compartir&nbsp;&nbsp;</a>
                         <a href="#"><i class="fa fa-star txt-color-yellow"></i> Favorito&nbsp;&nbsp;</a>
-                        {% if arTema.video != '' %}
-                            <button style="margin-bottom: 4px;"
-                                    href="{{ path('documentacion_video', {'url': arTema.video|urlVideo }) }}"
-                                    type="button" class="fa fa-video-camera txt-color-blue modal-open btn btn-xs">Video
-                            </button>
-                        {% endif %}
+                        {#{% if arTema.video != '' %}#}
+                            {#<button style="margin-bottom: 4px;"#}
+                                    {#href="{{ path('documentacion_video', {'url': arTema.video|urlVideo }) }}"#}
+                                    {#type="button" class="fa fa-video-camera txt-color-blue modal-open btn btn-xs">Video#}
+                            {#</button>#}
+                        {#{% endif %}#}
                     </p>
                     <div>
                         <a href="{{ arTema.url }}" class="url text-success" target="_blank">{{ arTema.url }}</a></i>

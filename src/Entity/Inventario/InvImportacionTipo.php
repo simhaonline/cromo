@@ -34,6 +34,16 @@ class InvImportacionTipo
     private $consecutivo = 0;
 
     /**
+     * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoComprobanteFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_inventario_transito_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaInventarioTransitoFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvImportacion", mappedBy="importacionTipoRel")
      */
     protected $importacionesImportacionTipoRel;
@@ -100,6 +110,38 @@ class InvImportacionTipo
     public function setImportacionesImportacionTipoRel( $importacionesImportacionTipoRel ): void
     {
         $this->importacionesImportacionTipoRel = $importacionesImportacionTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteFk()
+    {
+        return $this->codigoComprobanteFk;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteFk
+     */
+    public function setCodigoComprobanteFk($codigoComprobanteFk): void
+    {
+        $this->codigoComprobanteFk = $codigoComprobanteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaInventarioTransitoFk()
+    {
+        return $this->codigoCuentaInventarioTransitoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaInventarioTransitoFk
+     */
+    public function setCodigoCuentaInventarioTransitoFk($codigoCuentaInventarioTransitoFk): void
+    {
+        $this->codigoCuentaInventarioTransitoFk = $codigoCuentaInventarioTransitoFk;
     }
 
 

@@ -67,7 +67,7 @@ class MovimientoController extends Controller
             }
         }
         $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->listaContabilizar(), $request->query->getInt('page', 1), 100);
-        return $this->render('transporte/proceso/contabilidad/factura/lista.html.twig',
+        return $this->render('inventario/proceso/contabilidad/movimiento/lista.html.twig',
             ['arMovimientos' => $arMovimientos,
             'form' => $form->createView()]);
     }

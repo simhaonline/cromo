@@ -116,6 +116,16 @@ class FinRegistro
     private $estadoIntercambio = 0;
 
     /**
+     * @ORM\Column(name="codigo_modelo_fk", type="string", length=80, nullable=true, options={"default" : NULL})
+     */
+    private $codigoModeloFk;
+
+    /**
+     * @ORM\Column(name="codigo_documento", type="integer", nullable=true)
+     */
+    private $codigoDocumento;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCuenta", inversedBy="registrosCuentaRel")
      * @ORM\JoinColumn(name="codigo_cuenta_fk", referencedColumnName="codigo_cuenta_pk")
      */
@@ -446,6 +456,38 @@ class FinRegistro
     /**
      * @return mixed
      */
+    public function getCodigoModeloFk()
+    {
+        return $this->codigoModeloFk;
+    }
+
+    /**
+     * @param mixed $codigoModeloFk
+     */
+    public function setCodigoModeloFk($codigoModeloFk): void
+    {
+        $this->codigoModeloFk = $codigoModeloFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDocumento()
+    {
+        return $this->codigoDocumento;
+    }
+
+    /**
+     * @param mixed $codigoDocumento
+     */
+    public function setCodigoDocumento($codigoDocumento): void
+    {
+        $this->codigoDocumento = $codigoDocumento;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCuentaRel()
     {
         return $this->cuentaRel;
@@ -506,5 +548,7 @@ class FinRegistro
     {
         $this->centroCostoRel = $centroCostoRel;
     }
+
+
 }
 

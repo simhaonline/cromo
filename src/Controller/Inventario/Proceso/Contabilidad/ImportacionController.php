@@ -35,33 +35,25 @@ class ImportacionController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('cboImportacionTipo', EntityType::class, $em->getRepository(InvImportacionTipo::class)->llenarCombo())
-            ->add('numero', TextType::class, array('data' => $session->get('filtroInvImportacionImportacionNumero')))
+            ->add('numero', TextType::class, array('required' => false, 'data' => $session->get('filtroInvImportacionImportacionNumero')))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnContabilizar', SubmitType::class, array('label' => 'Contabilizar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
-                $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
-                $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
-                if ($form->get('txtCodigoCliente')->getData() != '') {
-                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+                $session->set('filtroInvImportacionImportacionNumero', $form->get('numero')->getData());
+                $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
+                $importacionTipo = $form->get('cboImportacionTipo')->getData();
+                if ($importacionTipo != '') {
+                    $session->set('filtroInvImportacionTipo', $form->get('cboImportacionTipo')->getData()->getCodigoImportacionTipoPk());
                 } else {
-                    $session->set('filtroTteCodigoCliente', null);
-                    $session->set('filtroTteNombreCliente', null);
-                }
-                $arFacturaTipo = $form->get('cboFacturaTipoRel')->getData();
-                if ($arFacturaTipo) {
-                    $session->set('filtroTteFacturaCodigoFacturaTipo', $arFacturaTipo->getCodigoFacturaTipoPk());
-                } else {
-                    $session->set('filtroTteFacturaCodigoFacturaTipo', null);
+                    $session->set('filtroInvImportacionTipo', null);
                 }
             }
             if ($form->get('btnContabilizar')->isClicked()) {
                 $arr = $request->request->get('ChkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->contabilizar($arr);
+                $respuesta = $this->getDoctrine()->getRepository(InvImportacion::class)->contabilizar($arr);
             }
         }
         $arImportaciones = $paginator->paginate($em->getRepository(InvImportacion::class)->listaContabilizar(), $request->query->getInt('page', 1), 100);

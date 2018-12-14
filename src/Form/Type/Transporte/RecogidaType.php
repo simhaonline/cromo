@@ -56,7 +56,8 @@ class RecogidaType extends AbstractType {
             ->add('pesoReal', NumberType::class)
             ->add('pesoVolumen', NumberType::class)
             ->add('comentario', TextareaType::class)
-            ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
+            ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
+            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     /**

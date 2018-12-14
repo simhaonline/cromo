@@ -1691,7 +1691,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $arrDespachoDetalles = $em->getRepository(TteDespachoDetalle::class)->validarGuiasSoporte($codigoDespacho);
         $arrGuiasSinSoporte = [];
         foreach ($arrDespachoDetalles AS $arDespachoDetalle) {
-            if ($arDespachoDetalle['estadoSoporte'] == false) {
+            if ($arDespachoDetalle['estadoSoporte'] == false && $arDespachoDetalle['codigoDespachoGuiaFk'] == $codigoDespacho) {
                 $arrGuiasSinSoporte[] = $arDespachoDetalle['codigoGuiaFk'];
             }
         }

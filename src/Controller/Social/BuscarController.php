@@ -86,13 +86,17 @@ class BuscarController extends BaseController
 
 
     /**
-     * @Route("/social/buscar/agregarAmigo/{usernameSolicitado}/{clave}", name="social_agregar_amigo")
+     * @Route("/social/buscar/agregarAmigo/{usernameSolicitado}/{clave}/{notificacion}", name="social_agregar_amigo")
      */
-    public function agregarAmigo($usernameSolicitado, $clave){
+    public function agregarAmigo($usernameSolicitado, $clave, $notificacion=false){
+        $notificacion=(boolean)$notificacion;
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
-        $agregarAmigo=FuncionesController::solicitudesGet(ApiSocial::getApi('agregarAmigo').$usuario.'/'.$usernameSolicitado);
-        if($agregarAmigo['estado']){
+        $agregarAmigo=FuncionesController::solicitudesGet(ApiSocial::getApi('aceptarAmigo').$usuario.'/'.$usernameSolicitado);
+        if($agregarAmigo['estado'] && !$notificacion){
             return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$clave]));
+        }
+        else{
+            return $this->redirect($this->generateUrl('social_perfil_ver'));
         }
     }
 

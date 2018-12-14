@@ -27,9 +27,9 @@ class PerfilController extends BaseController
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $datos=json_encode(['datos'=>['estado'=>'']]);
-
+        $dato=json_encode(['datos'=>['maximo_resultado'=>10]]);
         $conexion= FuncionesController::solicitudesPost($datos,ApiSocial::getApi('conexion') .$usuario->getUsername());
-        $amigos= FuncionesController::solicitudesGet(ApiSocial::getApi('misAmigos') .$usuario->getUsername());
+        $amigos= FuncionesController::solicitudesPost($dato,ApiSocial::getApi('misAmigos') .$usuario->getUsername());
         $informacionUsuario= [
             'nombreCorto'   =>$usuario->getNombreCorto(),
 //            'rol'           =>$usuario->getRoles()[0]=="ROLE_ADMIN"?"Administrador":"Usuario",
@@ -117,6 +117,13 @@ class PerfilController extends BaseController
 
 
         return $this->redirect($this->generateUrl('social_perfil_ver'));
+    }
+
+    /**
+     * @Route("/social/perfil/verAmigos/{$username}", name="social_perfil_verAmigos")
+     */
+    public function verAmigos(){
+
     }
 
 

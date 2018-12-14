@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <ul id="myTab1" class="nav nav-tabs bordered">
+        <li class="active">
+            <a href="#busqueda" data-toggle="tab">Buscar <i class="fa fa-caret-down"></i></a>
+        </li>
+        <li>
+            <a href="#" data-toggle="tab">Usuarios</a>
+        </li>
+        <li>
+            <a href="#" data-toggle="tab">Historial de busqueda</a>
+        </li>
+    </ul>
+    <div id="myTabContent1" class="tab-content bg-color-white padding-10">
+        <div class="tab-pane fade in active" id="busqueda">
+            <h1><span class="semi-bold"> Buscar</span> documentación</h1>
+            <br>
+            <div class="input-group input-group-lg hidden-mobile">
+                <div class="input-group-btn">
+                    {{ form_widget(form.choBusquedaTipo) }}
+                </div>
+                {{ form_widget(form.txtBusqueda) }}
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default">
+                        &nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-search fa-lg"></i>&nbsp;&nbsp;&nbsp;
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% set cantResultados = arTemas|length %}
+        <h1 class="font-md"> Resultados de busqueda por <span class="semi-bold">Titulo</span>
+            <small class="text-danger">
+                &nbsp;&nbsp;({{ cantResultados }} {% if cantResultados > 1 or cantResultados == 0 %} resultados {% else %}resultado{% endif %})
+            </small>
+        </h1>
+        {% for arTema in arTemas %}
+            <div class="search-results clearfix smart-form">
+                <h4><a href="#">{{ arTema.titulo }}</a><label hidden id="codigoTemaPk">{{ arTema.codigoTemaPk }}</label></h4>
+                <div>
+                    <div class="rating display-inline" onchange="actualizarCalificacion()">
+                        <input type="radio" name="calificacion" id="estrella-5">
+                        <label for="estrella-5"><i class="fa fa-star"></i></label>
+                        <input type="radio" name="calificacion" id="estrella-4">
+                        <label for="estrella-4"><i class="fa fa-star"></i></label>
+                        <input type="radio" name="calificacion" id="estrella-3">
+                        <label for="estrella-3"><i class="fa fa-star"></i></label>
+                        <input type="radio" name="calificacion" id="estrella-2">
+                        <label for="estrella-2"><i class="fa fa-star"></i></label>
+                        <input type="radio" name="calificacion" id="estrella-1">
+                        <label for="estrella-1"><i class="fa fa-star"></i></label>
+                    </div>
+                    <p class="note">
+                        <a href="#"><i class="fa fa-thumbs-up"></i> Me gusta&nbsp;&nbsp;</a>
+                        <a href="#"><i class="fa fa-chain"></i> Compartir&nbsp;&nbsp;</a>
+                        <a href="#"><i class="fa fa-star txt-color-yellow"></i> Favorito&nbsp;&nbsp;</a>
+                        <a href="#"><i class="fa fa-video-camera txt-color-blue"></i> Video&nbsp;&nbsp;</a>
+                    </p>
+                    <div class="url text-success">
+                        {{ arTema.url }}<i class="fa fa-caret-down"></i>
+                    </div>
+                    <p class="description">
+                        {{ arTema.descripcion }}
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {{ form_end(form) }}
+    <script>
+        function actualizarCalificacion() {
+            $.ajax({
+                url: "{{ path('documentacion_calificar') }}",
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    calificacion: $('input:radio[name=calificacion]:checked').attr("id"),
+                    id: $('#codigoTemaPk').text(),
+                }, success:function (respuesta) {
+                    console.log(respuesta);
+                }, error:function (respuesta) {
+                    console.log(respuesta);
+                }
+            })
+        }
+    </script>
+{% endblock %}

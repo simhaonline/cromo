@@ -2,10 +2,14 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
 use App\Entity\Inventario\InvImportacion;
 use App\Entity\Inventario\InvImportacionCosto;
 use App\Entity\Inventario\InvImportacionDetalle;
 use App\Entity\Inventario\InvImportacionTipo;
+use App\Entity\Inventario\InvTercero;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -292,7 +296,7 @@ class InvImportacionRepository extends ServiceEntityRepository
             ->leftJoin('i.terceroRel', 't')
             ->leftJoin('i.importacionTipoRel', 'it')
             ->leftJoin('i.monedaRel', 'm')
-            ->where("i.codigoImportacionPk <> 0 ");
+            ->where("i.estadoAprobado = 1 ");
         if ($session->get('filtroInvImportacionNumero') != "") {
             $queryBuilder->andWhere("i.numero = " . $session->get('filtroInvImportacionNumero'));
         }
@@ -324,6 +328,120 @@ class InvImportacionRepository extends ServiceEntityRepository
         $queryBuilder->orderBy('i.estadoAprobado', 'ASC');
         $queryBuilder->addOrderBy('i.fecha', 'DESC');
         return $queryBuilder;
+    }
+
+    public function registroContabilizar($codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvImportacion::class, 'i')
+            ->select('i.codigoImportacionPk')
+            ->addSelect('i.codigoTerceroFk')
+            ->addSelect('i.numero')
+            ->addSelect('i.fecha')
+            ->addSelect('i.estadoAprobado')
+            ->addSelect('i.estadoContabilizado')
+            ->addSelect('i.vrSubtotalLocal')
+            ->addSelect('it.codigoComprobanteFk')
+            ->addSelect('it.codigoCuentaInventarioTransitoFk')
+//            ->addSelect('ft.codigoCuentaIngresoTerceroFk')
+            ->leftJoin('i.importacionTipoRel', 'it')
+            ->where('i.codigoImportacionPk = ' . $codigo);
+        $arImportacion = $queryBuilder->getQuery()->getSingleResult();
+        return $arImportacion;
+    }
+
+    public function contabilizar($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $error = "";
+            foreach ($arr AS $codigo) {
+                $arImportacion = $em->getRepository(InvImportacion::class)->registroContabilizar($codigo);
+                if($arImportacion) {
+                    if($arImportacion['estadoAprobado'] == 1 && $arImportacion['estadoContabilizado'] == 0) {
+                        $arComprobante = $em->getRepository(FinComprobante::class)->find($arImportacion['codigoComprobanteFk']);
+                        $arTercero = $em->getRepository(InvTercero::class)->terceroFinanciero($arImportacion['codigoTerceroFk']);
+
+                        $arrCompras = $em->getRepository(InvImportacionDetalle::class)->cuentaCompra($codigo);
+                        foreach ($arrCompras as $arrCompra) {
+                            if($arrCompra['codigoCuentaCompraFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCompra['codigoCuentaCompraFk']);
+                                if(!$arCuenta) {
+                                    $error = "No se encuentra la cuenta " . $arrCompra['codigoCuentaCompraFk'];
+                                    break 2;
+                                }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                /*if($arCuenta->getExigeCentroCosto()) {
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arImportacion['codigoCentroCostoFk']);
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }*/
+                                //$arRegistro->setNumeroPrefijo($arImportacion['prefijo']);
+                                $arRegistro->setNumero($arImportacion['numero']);
+                                //$arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
+                                //$arRegistro->setNumeroReferencia($numeroReferencia);
+                                $arRegistro->setFecha($arImportacion['fecha']);
+                                $arRegistro->setVrDebito($arrCompra['vrSubtotalLocal']);
+                                $arRegistro->setNaturaleza('D');
+                                $arRegistro->setDescripcion('COMPRA/IMPORTACION');
+                                $arRegistro->setCodigoModeloFk('InvImportacion');
+                                $arRegistro->setCodigoDocumento($arImportacion['codigoImportacionPk']);
+                                $em->persist($arRegistro);
+                            } else {
+                                $error = "No tiene configurada la cuenta de compra para el los item de esta importacion";
+                                break;
+                            }
+                        }
+                        //Cuenta de inventario en transito
+                        if($arImportacion['codigoCuentaInventarioTransitoFk']) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arImportacion['codigoCuentaInventarioTransitoFk']);
+                            if(!$arCuenta) {
+                                $error = "No se encuentra la cuenta de inventario en transito " . $arImportacion['codigoCuentaInventarioTransitoFk'];
+                                break;
+                            }
+                            $arRegistro = new FinRegistro();
+                            $arRegistro->setTerceroRel($arTercero);
+                            $arRegistro->setCuentaRel($arCuenta);
+                            $arRegistro->setComprobanteRel($arComprobante);
+                            /*if($arCuenta->getExigeCentroCosto()) {
+                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arImportacion['codigoCentroCostoFk']);
+                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                            }*/
+                            //$arRegistro->setNumeroPrefijo($arImportacion['prefijo']);
+                            $arRegistro->setNumero($arImportacion['numero']);
+                            //$arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
+                            //$arRegistro->setNumeroReferencia($numeroReferencia);
+                            $arRegistro->setFecha($arImportacion['fecha']);
+                            $arRegistro->setVrCredito($arImportacion['vrSubtotalLocal']);
+                            $arRegistro->setNaturaleza('C');
+                            $arRegistro->setDescripcion('COMPRA/IMPORTACION');
+                            $arRegistro->setCodigoModeloFk('InvImportacion');
+                            $arRegistro->setCodigoDocumento($arImportacion['codigoImportacionPk']);
+                            $em->persist($arRegistro);
+                        } else {
+                            $error = "No tiene configurada la cuenta de compra para el los item de esta importacion";
+                            break;
+                        }
+
+                        $arImportacionAct = $em->getRepository(InvImportacion::class)->find($arImportacion['codigoImportacionPk']);
+                        //$arImportacionAct->setEstadoContabilizado(1);
+                        $em->persist($arImportacionAct);
+                    }
+                } else {
+                    $error = "La importacion codigo " . $codigo . " no existe";
+                    break;
+                }
+            }
+            if($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+
+        }
+        return true;
     }    
     
 }

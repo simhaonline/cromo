@@ -151,7 +151,7 @@
                                 <td>{{ arImportacionCosto.terceroNombreCorto }}</td>
                                 <td>{{ arImportacionCosto.codigoImportacionCostoConceptoFk }}</td>
                                 <td>{{ arImportacionCosto.importacionCostoConceptoNombre }}</td>
-                                <td>{{ arImportacionCosto.vrValor | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arImportacionCosto.vrValor | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;">
                                     {% if not arImportacion.estadoAutorizado %}
                                         <a href="javascript:abrirVentana3('{{ path('inventario_movimiento_extranjero_importacion_costo_nuevo',{'id': arImportacionCosto.codigoImportacionCostoPk,'codigoImportacion': arImportacion.codigoImportacionPk }) }}','costoNuevo',600, 800)">

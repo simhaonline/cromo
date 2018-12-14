@@ -162,6 +162,36 @@ class InvItem
     private $stockMaximo = 0;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_venta_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaVentaFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_venta_devolucion_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaVentaDevolucionFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_compra_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaCompraFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_compra_devolucion_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaCompraDevolucionFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_costo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaCostoFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_inventario_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaInventarioFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvMarca", inversedBy="itemsMarcaRel")
      * @ORM\JoinColumn(name="codigo_marca_fk",referencedColumnName="codigo_marca_pk")
      * @Assert\NotBlank(
@@ -695,6 +725,102 @@ class InvItem
     /**
      * @return mixed
      */
+    public function getCodigoCuentaVentaFk()
+    {
+        return $this->codigoCuentaVentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaVentaFk
+     */
+    public function setCodigoCuentaVentaFk($codigoCuentaVentaFk): void
+    {
+        $this->codigoCuentaVentaFk = $codigoCuentaVentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaVentaDevolucionFk()
+    {
+        return $this->codigoCuentaVentaDevolucionFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaVentaDevolucionFk
+     */
+    public function setCodigoCuentaVentaDevolucionFk($codigoCuentaVentaDevolucionFk): void
+    {
+        $this->codigoCuentaVentaDevolucionFk = $codigoCuentaVentaDevolucionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCompraFk()
+    {
+        return $this->codigoCuentaCompraFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCompraFk
+     */
+    public function setCodigoCuentaCompraFk($codigoCuentaCompraFk): void
+    {
+        $this->codigoCuentaCompraFk = $codigoCuentaCompraFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCompraDevolucionFk()
+    {
+        return $this->codigoCuentaCompraDevolucionFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCompraDevolucionFk
+     */
+    public function setCodigoCuentaCompraDevolucionFk($codigoCuentaCompraDevolucionFk): void
+    {
+        $this->codigoCuentaCompraDevolucionFk = $codigoCuentaCompraDevolucionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCostoFk()
+    {
+        return $this->codigoCuentaCostoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCostoFk
+     */
+    public function setCodigoCuentaCostoFk($codigoCuentaCostoFk): void
+    {
+        $this->codigoCuentaCostoFk = $codigoCuentaCostoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaInventarioFk()
+    {
+        return $this->codigoCuentaInventarioFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaInventarioFk
+     */
+    public function setCodigoCuentaInventarioFk($codigoCuentaInventarioFk): void
+    {
+        $this->codigoCuentaInventarioFk = $codigoCuentaInventarioFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getMarcaRel()
     {
         return $this->marcaRel;
@@ -931,7 +1057,6 @@ class InvItem
     {
         $this->importacionesDetallesItemRel = $importacionesDetallesItemRel;
     }
-
 
 
 

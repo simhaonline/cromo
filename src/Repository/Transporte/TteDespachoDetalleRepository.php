@@ -176,8 +176,9 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->_em->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
             ->select('g.estadoSoporte')
             ->addSelect('dd.codigoGuiaFk')
+            ->leftJoin('dd.guiaRel', 'g')
             ->where('dd.codigoDespachoFk ='  .$codigoDespacho)
-            ->leftJoin('dd.guiaRel', 'g');
+            ->andWhere('dd.codigoDespachoFk = g.codigoDespachoFk');
         return $queryBuilder->getQuery()->execute();
     }
 

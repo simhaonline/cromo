@@ -127,6 +127,11 @@ class InvImportacion
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="estado_contabilizado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoContabilizado = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=500, nullable=true)
      * @Assert\Length(
      *     max=500,
@@ -614,6 +619,22 @@ class InvImportacion
     public function setCodigoImportacionTipoFk( $codigoImportacionTipoFk ): void
     {
         $this->codigoImportacionTipoFk = $codigoImportacionTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
     }
 
 

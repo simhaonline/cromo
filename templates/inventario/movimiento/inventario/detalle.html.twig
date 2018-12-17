@@ -4,17 +4,18 @@
     {{ notificar()|raw }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            {{ form_widget(form.btnAutorizar) }}
-            {{ form_widget(form.btnDesautorizar) }}
-            {{ form_widget(form.btnImprimir) }}
-            {{ form_widget(form.btnAprobar) }}
-            {{ form_widget(form.btnAnular,  { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular el registro?")'} }) }}
+            <a class="btn btn-sm btn-default"
+               href="{{ path('inventario_movimiento_inventario_movimiento_lista',{'tipoDocumento': arMovimiento.documentoRel.documentoTipoRel.codigoDocumentoTipoPk,'codigoDocumento': arMovimiento.documentoRel.codigoDocumentoPk }) }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
     <div style="float:right">
         {% if arMovimiento.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
         {% if arMovimiento.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arMovimiento.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arMovimiento.estadoContabilizado == true %}<span class="label label-success">Contabilizado</span>{% endif %}
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
@@ -281,6 +282,9 @@
                         {% endif %}
                     {% endif %}
                     <div class="btn-group">
+                        {{ form_widget(form.btnActualizarImportacion) }}
+                    </div>
+                    <div class="btn-group">
                         {{ form_widget(form.btnActualizar) }}
                     </div>
                     <div class="btn-group">
@@ -292,8 +296,5 @@
         </div>
     </div>
     {{ form_end(form) }}
-    <div class="btn-group">
-        <a class="btn btn-sm btn-default"
-           href="{{ path('inventario_movimiento_inventario_movimiento_lista',{'tipoDocumento': arMovimiento.documentoRel.documentoTipoRel.codigoDocumentoTipoPk,'codigoDocumento': arMovimiento.documentoRel.codigoDocumentoPk }) }}">Volver</a>
-    </div>
+    <br/><br/>
 {% endblock %}

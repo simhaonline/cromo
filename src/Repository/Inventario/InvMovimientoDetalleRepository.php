@@ -496,4 +496,21 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $arrCuentas;
     }
 
+    public function actualizarImportacion($arMovimiento)
+    {
+        $em = $this->getEntityManager();
+        if(!$arMovimiento->getEstadoContabilizado()) {
+            $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
+            foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+                if($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
+                    $arMovimientoDetalle->setVrPrecio($arMovimientoDetalle->getImportacionDetalleRel()->getVrPrecioLocalTotal());
+                    $em->persist($arMovimientoDetalle);
+                }
+            }
+            $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
+        } else {
+            Mensajes::error('El documento no se puede actualizar porque esta contabilizado');
+        }
+
+    }
 }

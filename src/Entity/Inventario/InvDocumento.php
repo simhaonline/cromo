@@ -120,6 +120,11 @@ class InvDocumento
     private $codigoCuentaProveedorFk;
 
     /**
+     * @ORM\Column(name="compra_extranjera", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $compraExtranjera = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentosDocumentoTipoRel")
      * @ORM\JoinColumn(name="codigo_documento_tipo_fk", referencedColumnName="codigo_documento_tipo_pk")
      */
@@ -480,6 +485,22 @@ class InvDocumento
     public function setCodigoCuentaProveedorFk($codigoCuentaProveedorFk): void
     {
         $this->codigoCuentaProveedorFk = $codigoCuentaProveedorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompraExtranjera()
+    {
+        return $this->compraExtranjera;
+    }
+
+    /**
+     * @param mixed $compraExtranjera
+     */
+    public function setCompraExtranjera($compraExtranjera): void
+    {
+        $this->compraExtranjera = $compraExtranjera;
     }
 
 

@@ -911,7 +911,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         }
 
                         $arMovimientoAct = $em->getRepository(InvMovimiento::class)->find($arMovimiento['codigoMovimientoPk']);
-                        //$arMovimientoAct->setEstadoContabilizado(1);
+                        $arMovimientoAct->setEstadoContabilizado(1);
                         $em->persist($arMovimientoAct);
                     }
                 } else {

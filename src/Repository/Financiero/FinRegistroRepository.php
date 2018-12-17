@@ -84,6 +84,7 @@ class FinRegistroRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
             ->select('r.codigoRegistroPk')
             ->addSelect('r.numero')
+            ->addSelect('r.fecha')
             ->addSelect('r.numeroReferencia')
             ->addSelect('r.numeroPrefijo')
             ->addSelect('r.numeroReferenciaPrefijo')

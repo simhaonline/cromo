@@ -75,8 +75,17 @@
             </div>
             <div class="modal-footer">
                 {{ form_widget(form.btnFiltrar) }}
-                <div class="btn-group">
-                    {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                <div class="btn-group btn-group-sm">
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="generar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Generar
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="generar">
+                            <li><a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro_ilimitada') }}">Ilimitada</a></li>
+                            <li><a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro_worldOffice') }}">World Office</a></li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="btn-group">
                     {{ form_widget(form.btnDescargar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}

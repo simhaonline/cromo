@@ -92,10 +92,8 @@ class PerfilController extends BaseController
             }
 
         }
-        $unknown->getVoid();
-//        $response = new \Symfony\Component\HttpFoundation\Response();
-//        $response->setStatusCode(500);
-//        return $response;
+//        $unknown->getVoid();
+
 
         return $this->render('comunidad/perfil.html.twig',[
             'form'=>$form->createView(),

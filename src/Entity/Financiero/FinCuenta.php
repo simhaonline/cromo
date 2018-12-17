@@ -50,22 +50,22 @@ class FinCuenta
     private $codigo_cuenta_padre_fk;
 
     /**
-     * @ORM\Column(name="permite_movimiento", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="permite_movimiento", type="boolean", nullable=true, options={"default":false})
      */
     private $permiteMovimiento = false;
 
     /**
-     * @ORM\Column(name="exige_tercero", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="exige_tercero", type="boolean", nullable=true, options={"default":false})
      */
     private $exigeTercero = false;
 
     /**
-     * @ORM\Column(name="exige_centro_costo", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="exige_centro_costo", type="boolean", nullable=true, options={"default":false})
      */
     private $exigeCentroCosto = false;
 
     /**
-     * @ORM\Column(name="exige_base", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="exige_base", type="boolean", nullable=true, options={"default":false})
      */
     private $exigeBase = false;
 

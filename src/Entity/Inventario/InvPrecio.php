@@ -50,12 +50,12 @@ class InvPrecio
     protected $tercerosPrecioCompraRel;
 
     /**
-     * @ORM\Column(name="compra", type="boolean", nullable=true)
+     * @ORM\Column(name="compra", type="boolean", nullable=true, options={"default":false})
      */
     private $compra = false;
 
     /**
-     * @ORM\Column(name="venta", type="boolean", nullable=true)
+     * @ORM\Column(name="venta", type="boolean", nullable=true, options={"default":false})
      */
     private $venta = false;
 

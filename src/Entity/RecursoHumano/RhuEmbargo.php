@@ -48,7 +48,7 @@ class RhuEmbargo
     private $codigoEmpleadoFk;
 
     /**
-     * @ORM\Column(name="estado_activo", type="boolean")
+     * @ORM\Column(name="estado_activo", type="boolean",options={"default":false})
      */
     private $estadoActivo = false;
 
@@ -68,7 +68,7 @@ class RhuEmbargo
     private $estadoAnulado = false;
 
     /**
-     * @ORM\Column(name="valor_fijo", type="boolean", nullable=true))
+     * @ORM\Column(name="valor_fijo", type="boolean", nullable=true,options={"default":false})
      */
     private $valorFijo = false;
 
@@ -100,52 +100,52 @@ class RhuEmbargo
     private $codigoInstancia;
 
     /**
-     * @ORM\Column(name="porcentaje_devengado", type="boolean", nullable=true))
+     * @ORM\Column(name="porcentaje_devengado", type="boolean", nullable=true,options={"default":false})
      */
     private $porcentajeDevengado = false;
 
     /**
-     * @ORM\Column(name="porcentaje_devengado_prestacional", type="boolean", nullable=true))
+     * @ORM\Column(name="porcentaje_devengado_prestacional", type="boolean", nullable=true,options={"default":false})
      */
     private $porcentajeDevengadoPrestacional = false;
 
     /**
-     * @ORM\Column(name="porcentaje_devengado_prestacional_menos_descuento_ley", type="boolean", nullable=true))
+     * @ORM\Column(name="porcentaje_devengado_prestacional_menos_descuento_ley", type="boolean", nullable=true,options={"default":false})
      */
     private $porcentajeDevengadoPrestacionalMenosDescuentoLey = false;
 
     /**
-     * @ORM\Column(name="porcentaje_devengado_prestacional_menos_descuento_ley_transporte", type="boolean", nullable=true))
+     * @ORM\Column(name="porcentaje_devengado_prestacional_menos_descuento_ley_transporte", type="boolean", nullable=true,options={"default":false})
      */
     private $porcentajeDevengadoPrestacionalMenosDescuentoLeyTransporte = false;
 
     /**
-     * @ORM\Column(name="porcentaje_devengado_menos_descuento_ley", type="boolean", nullable=true))
+     * @ORM\Column(name="porcentaje_devengado_menos_descuento_ley", type="boolean", nullable=true,options={"default":false})
      */
     private $porcentajeDevengadoMenosDescuentoLey = false;
 
     /**
-     * @ORM\Column(name="porcentaje_devengado_menos_descuento_ley_transporte", type="boolean", nullable=true))
+     * @ORM\Column(name="porcentaje_devengado_menos_descuento_ley_transporte", type="boolean", nullable=true,options={"default":false})
      */
     private $porcentajeDevengadoMenosDescuentoLeyTransporte = false;
 
     /**
-     * @ORM\Column(name="porcentaje_exceda_salario_minimo", type="boolean", nullable=true))
+     * @ORM\Column(name="porcentaje_exceda_salario_minimo", type="boolean", nullable=true,options={"default":false})
      */
     private $porcentajeExcedaSalarioMinimo = false;
 
     /**
-     * @ORM\Column(name="porcentaje_salario_minimo", type="boolean", nullable=true, nullable=true))
+     * @ORM\Column(name="porcentaje_salario_minimo", type="boolean", nullable=true,options={"default":false})
      */
     private $porcentajeSalarioMinimo = false;
 
     /**
-     * @ORM\Column(name="partes_exceda_salario_minimo", type="boolean", nullable=true))
+     * @ORM\Column(name="partes_exceda_salario_minimo", type="boolean", nullable=true,options={"default":false})
      */
     private $partesExcedaSalarioMinimo = false;
 
     /**
-     * @ORM\Column(name="partes_exceda_salario_minimo_menos_descuento_ley", type="boolean", nullable=true, nullable=true))
+     * @ORM\Column(name="partes_exceda_salario_minimo_menos_descuento_ley", type="boolean", nullable=true,options={"default":false})
      */
     private $partesExcedaSalarioMinimoMenosDescuentoLey = false;
 
@@ -269,7 +269,7 @@ class RhuEmbargo
     private $descuento;
 
     /**
-     * @ORM\Column(name="validar_monto_maximo", type="boolean", nullable=true)
+     * @ORM\Column(name="validar_monto_maximo", type="boolean", nullable=true,options={"default":false})
      */
     private $validarMontoMaximo = false;
 
@@ -280,32 +280,32 @@ class RhuEmbargo
     private $nombreCortoBeneficiario;
 
     /**
-     * @ORM\Column(name="afecta_nomina", type="boolean", nullable=true)
+     * @ORM\Column(name="afecta_nomina", type="boolean", nullable=true,options={"default":false})
      */
     private $afectaNomina = false;
 
     /**
-     * @ORM\Column(name="afecta_vacacion", type="boolean", nullable=true)
+     * @ORM\Column(name="afecta_vacacion", type="boolean", nullable=true,options={"default":false})
      */
     private $afectaVacacion = false;
 
     /**
-     * @ORM\Column(name="afecta_prima", type="boolean", nullable=true)
+     * @ORM\Column(name="afecta_prima", type="boolean", nullable=true,options={"default":false})
      */
     private $afectaPrima = false;
 
     /**
-     * @ORM\Column(name="afecta_liquidacion", type="boolean", nullable=true)
+     * @ORM\Column(name="afecta_liquidacion", type="boolean", nullable=true,options={"default":false})
      */
     private $afectaLiquidacion = false;
 
     /**
-     * @ORM\Column(name="afecta_cesantia", type="boolean", nullable=true)
+     * @ORM\Column(name="afecta_cesantia", type="boolean", nullable=true,options={"default":false})
      */
     private $afectaCesantia = false;
 
     /**
-     * @ORM\Column(name="afecta_indemnizacion", type="boolean", nullable=true)
+     * @ORM\Column(name="afecta_indemnizacion", type="boolean", nullable=true,options={"default":false})
      */
     private $afectaIndemnizacion = false;
 

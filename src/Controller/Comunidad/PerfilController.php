@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Social;
+namespace App\Controller\Comunidad;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
@@ -30,6 +30,7 @@ class PerfilController extends BaseController
         $dato=json_encode(['datos'=>['maximo_resultado'=>10]]);
         $conexion= FuncionesController::solicitudesPost($datos,ApiComunidad::getApi('conexion') .$usuario->getUsername());
         $amigos= FuncionesController::solicitudesPost($dato,ApiComunidad::getApi('misAmigos') .$usuario->getUsername());
+        $publicaciones=(new PublicacionController())->misPublicaciones($usuario->getUsername());
         $informacionUsuario= [
             'nombreCorto'   =>$usuario->getNombreCorto(),
 //            'rol'           =>$usuario->getRoles()[0]=="ROLE_ADMIN"?"Administrador":"Usuario",
@@ -96,6 +97,7 @@ class PerfilController extends BaseController
             'conexion'=>$conexion,
             'misSolicitudes'=>$misSolicitudes['datos'],
             'amigos'=>$amigos['datos'],
+            'publicaciones'=>$publicaciones['datos']
         ]);
     }
 

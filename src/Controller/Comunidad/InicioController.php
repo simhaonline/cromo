@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Social;
+namespace App\Controller\Comunidad;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;

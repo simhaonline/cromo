@@ -48,17 +48,17 @@ class TteCondicion
     private $manejoMinimoDespacho = 0;
 
     /**
-     * @ORM\Column(name="precio_peso", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="precio_peso", type="boolean", nullable=true,options={"default":false})
      */
     private $precioPeso = false;
 
     /**
-     * @ORM\Column(name="precio_unidad", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="precio_unidad", type="boolean", nullable=true,options={"default":false})
      */
     private $precioUnidad = false;
 
     /**
-     * @ORM\Column(name="precio_adicional", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="precio_adicional", type="boolean", nullable=true,options={"default":false})
      */
     private $precioAdicional = false;
 
@@ -93,7 +93,7 @@ class TteCondicion
     private $redondearFlete = false;
 
     /**
-     * @ORM\Column(name="limitar_descuento_reexpedicion", type="boolean", nullable=true)
+     * @ORM\Column(name="limitar_descuento_reexpedicion", type="boolean", nullable=true,options={"default":false})
      */
     private $limitarDescuentoReexpedicion = false;
 

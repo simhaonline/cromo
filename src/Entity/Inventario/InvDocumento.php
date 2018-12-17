@@ -49,12 +49,12 @@ class InvDocumento
     private $operacionComercial = 0;
 
     /**
-     * @ORM\Column(name="genera_cartera", type="boolean")
+     * @ORM\Column(name="genera_cartera", type="boolean", options={"default":false})
      */
     private $generaCartera = false;
 
     /**
-     * @ORM\Column(name="genera_tesoreria", type="boolean")
+     * @ORM\Column(name="genera_tesoreria", type="boolean", options={"default":false})
      */
     private $generaTesoreria = false;
 
@@ -65,7 +65,7 @@ class InvDocumento
 
     /**
      * @internal Para saber si el documento genera costo promedio
-     * @ORM\Column(name="genera_costo_promedio", type="boolean")
+     * @ORM\Column(name="genera_costo_promedio", type="boolean", options={"default":false})
      */
     private $generaCostoPromedio = false;
 
@@ -100,12 +100,12 @@ class InvDocumento
     private $adicionarOrden = false;
 
     /**
-     * @ORM\Column(name="nota_credito", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="nota_credito", type="boolean", nullable=true, options={"default":false})
      */
     private $notaCredito = 0;
 
     /**
-     * @ORM\Column(name="contabilizar", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="contabilizar", type="boolean", nullable=true, options={"default":false})
      */
     private $contabilizar = 0;
 
@@ -120,7 +120,7 @@ class InvDocumento
     private $codigoCuentaProveedorFk;
 
     /**
-     * @ORM\Column(name="compra_extranjera", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="compra_extranjera", type="boolean", nullable=true, options={"default":false})
      */
     private $compraExtranjera = 0;
 

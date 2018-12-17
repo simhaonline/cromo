@@ -113,7 +113,7 @@ class RhuContrato
     private $vrAdicionalPrestacional = 0;
 
     /**
-     * @ORM\Column(name="estado_terminado", type="boolean")
+     * @ORM\Column(name="estado_terminado", type="boolean",options={"default":false})
      */
     private $estadoTerminado = false;
 
@@ -163,7 +163,7 @@ class RhuContrato
     private $codigoSubtipoCotizanteFk;
 
     /**
-     * @ORM\Column(name="salario_integral", type="boolean")
+     * @ORM\Column(name="salario_integral", type="boolean",options={"default":false})
      */
     private $salarioIntegral = false;
 
@@ -228,7 +228,7 @@ class RhuContrato
     private $codigoSucursalFk;
 
     /**
-     * @ORM\Column(name="auxilio_transporte", type="boolean")
+     * @ORM\Column(name="auxilio_transporte", type="boolean",options={"default":false})
      */
     private $auxilioTransporte = false;
 

@@ -26,7 +26,7 @@ class RhuContratoClase
     private $nombre;                      
     
     /**     
-     * @ORM\Column(name="indefinido", type="boolean")
+     * @ORM\Column(name="indefinido", type="boolean",options={"default":false})
      */    
     private $indefinido = false;
     

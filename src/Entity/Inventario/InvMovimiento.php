@@ -138,22 +138,22 @@ class InvMovimiento
     private $usuario;
 
     /**
-     * @ORM\Column(name="estado_autorizado", type="boolean")
+     * @ORM\Column(name="estado_autorizado", type="boolean", options={"default":false})
      */
     private $estadoAutorizado = false;
 
     /**
-     * @ORM\Column(name="estado_aprobado", type="boolean")
+     * @ORM\Column(name="estado_aprobado", type="boolean", options={"default":false})
      */
     private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="estado_anulado", type="boolean")
+     * @ORM\Column(name="estado_anulado", type="boolean", options={"default":false})
      */
     private $estadoAnulado = false;
 
     /**
-     * @ORM\Column(name="estado_contabilizado", type="boolean")
+     * @ORM\Column(name="estado_contabilizado", type="boolean", options={"default":false})
      */
     private $estadoContabilizado = false;
 
@@ -164,7 +164,7 @@ class InvMovimiento
 
     /**
      * @internal Para saber si el documento genera costo promedio
-     * @ORM\Column(name="genera_costo_promedio", type="boolean")
+     * @ORM\Column(name="genera_costo_promedio", type="boolean", options={"default":false})
      */
     private $generaCostoPromedio = false;
 

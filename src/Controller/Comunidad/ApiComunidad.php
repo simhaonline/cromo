@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Social;
+namespace App\Controller\Comunidad;
 final class ApiComunidad
 {
 
@@ -22,7 +22,8 @@ public static function getApi($ruta){
         'eliminarAmigo'     =>'/api/comunidad/eliminarAmigo/',
         'aceptarAmigo'      =>'/api/comunidad/aceptarAmigo/',
         'solicitudes'       =>'/api/comunidad/solicitudesPendientes/',
-        'misAmigos'         =>'/api/comunidad/misAmigos/'
+        'misAmigos'         =>'/api/comunidad/misAmigos/',
+        'misPublicaciones'  =>'/api/comunidad/pubicacion/misPublicaciones/'
     ];
 
     return $api[$ruta];

@@ -194,7 +194,7 @@ class RhuAspirante
     private $recomendado;
 
     /**
-     * @ORM\Column(name="reintegro", type="boolean")
+     * @ORM\Column(name="reintegro", type="boolean", options={"default":false})
      */
     private $reintegro = false;
 
@@ -204,22 +204,22 @@ class RhuAspirante
     private $codigoCargoFk;
 
     /**
-     * @ORM\Column(name="estado_autorizado", type="boolean")
+     * @ORM\Column(name="estado_autorizado", type="boolean", options={"default":false})
      */
     private $estadoAutorizado = false;
 
     /**
-     * @ORM\Column(name="estado_aprobado", type="boolean")
+     * @ORM\Column(name="estado_aprobado", type="boolean", options={"default":false})
      */
     private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="estado_cerrado", type="boolean")
+     * @ORM\Column(name="estado_cerrado", type="boolean", options={"default":false})
      */
     private $estadoCerrado = false;
 
     /**
-     * @ORM\Column(name="estado_bloqueado", type="boolean")
+     * @ORM\Column(name="estado_bloqueado", type="boolean", options={"default":false})
      */
     private $estadoBloqueado = false;
 

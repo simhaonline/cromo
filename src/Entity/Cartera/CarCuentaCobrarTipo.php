@@ -31,7 +31,7 @@ class CarCuentaCobrarTipo
     private $operacion = 0;
 
     /**
-     * @ORM\Column(name="saldo_inicial", type="boolean")
+     * @ORM\Column(name="saldo_inicial", type="boolean", options={"default":false})
      */
     private $saldoInicial = 0;
 

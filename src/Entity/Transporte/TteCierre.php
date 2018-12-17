@@ -34,12 +34,12 @@ class TteCierre
     private $mes;
 
     /**
-     * @ORM\Column(name="estado_generado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_generado", type="boolean", nullable=true,options={"default":false})
      */
     private $estadoGenerado = false;
 
     /**
-     * @ORM\Column(name="estado_cerrado", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_cerrado", type="boolean", nullable=true,options={"default":false})
      */
     private $estadoCerrado = false;
 

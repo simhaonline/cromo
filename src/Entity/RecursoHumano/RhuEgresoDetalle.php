@@ -52,7 +52,7 @@ class RhuEgresoDetalle
     private $cuenta;
 
     /**
-     * @ORM\Column(name="estado_contabilizado", type="boolean")
+     * @ORM\Column(name="estado_contabilizado", type="boolean",options={"default":false})
      */
     private $estadoContabilizado = false;
 

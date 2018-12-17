@@ -78,7 +78,7 @@ class Usuario implements UserInterface, \Serializable
     private $codigoOperacionFk;
 
     /**
-     * @ORM\Column(name="is_active", type="boolean")
+     * @ORM\Column(name="is_active", type="boolean",options={"default":false})
      */
     private $isActive;
 

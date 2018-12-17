@@ -29,7 +29,7 @@ class RhuCostoClase
     private $nombre;
 
     /**
-     * @ORM\Column(name="operativo", type="boolean", nullable=true)
+     * @ORM\Column(name="operativo", type="boolean", nullable=true,options={"default":false})
      */
     private $operativo = false;
 

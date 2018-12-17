@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Social;
+namespace App\Controller\Comunidad;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class BuscarController extends BaseController
 {
     /**
-     * @Route("/social/buscar/general/{clave}", name="social_buscar_general")
+     * @Route("/comunidad/buscar/general/{clave}", name="comunidad_buscar_general")
      */
     public function buscar(Request $request, $clave)
     {
@@ -41,7 +41,7 @@ class BuscarController extends BaseController
             if($formBusqueda->get('btnBuscar')->isSubmitted()){
                 if($formBusqueda->get('busqueda')->getData()!=""){
 
-                    return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$formBusqueda->get('busqueda')->getData()]));
+                    return $this->redirect($this->generateUrl('comunidad_buscar_general',['clave'=>$formBusqueda->get('busqueda')->getData()]));
                 }
                 else{
                     Mensajes::error("Debes ingresar una palabra o frase para iniciar la busqueda");
@@ -52,7 +52,7 @@ class BuscarController extends BaseController
 //        for($i=0;$i<count($arPerfil);$i++){
 //            $arPerfil[$i]['foto']="data:image/'jpeg';base64,".base64_encode(stream_get_contents($arPerfil[$i]['foto']));
 //        }
-        return $this->render('social/buscar/busqueda.html.twig',[
+        return $this->render('comunidad/buscar/busqueda.html.twig',[
             'perfil'=>$arPerfil['datos'],
             'clave'=>$clave,
             'username'=>$usuario,
@@ -63,51 +63,51 @@ class BuscarController extends BaseController
 
 
     /**
-     * @Route("/social/buscar/enviarSolicitud/{usernameSolicitado}/{clave}", name="social_enviar_solicitud")
+     * @Route("/comunidad/buscar/enviarSolicitud/{usernameSolicitado}/{clave}", name="comunidad_enviar_solicitud")
      */
     public function enviarSolicitud($usernameSolicitado, $clave){
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
         $enviarSolicitud=FuncionesController::solicitudesGet(ApiComunidad::getApi('enviarSolicitud').$usuario.'/'.$usernameSolicitado);
         if($enviarSolicitud['estado']){
-            return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$clave]));
+            return $this->redirect($this->generateUrl('comunidad_buscar_general',['clave'=>$clave]));
         }
     }
 
     /**
-     * @Route("/social/buscar/eliminarAmigo/{usernameSolicitado}/{clave}", name="social_eliminar_amigo")
+     * @Route("/comunidad/buscar/eliminarAmigo/{usernameSolicitado}/{clave}", name="comunidad_eliminar_amigo")
      */
     public function eliminarAmigo($usernameSolicitado, $clave){
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
         $eliminarAmigo=FuncionesController::solicitudesGet(ApiComunidad::getApi('eliminarAmigo').$usuario.'/'.$usernameSolicitado);
         if($eliminarAmigo['estado']){
-            return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$clave]));
+            return $this->redirect($this->generateUrl('comunidad_buscar_general',['clave'=>$clave]));
         }
     }
 
 
     /**
-     * @Route("/social/buscar/agregarAmigo/{usernameSolicitado}/{clave}/{notificacion}", name="social_agregar_amigo")
+     * @Route("/comunidad/buscar/agregarAmigo/{usernameSolicitado}/{clave}/{notificacion}", name="comunidad_agregar_amigo")
      */
     public function agregarAmigo($usernameSolicitado, $clave, $notificacion=false){
         $notificacion=(boolean)$notificacion;
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
         $agregarAmigo=FuncionesController::solicitudesGet(ApiComunidad::getApi('aceptarAmigo').$usuario.'/'.$usernameSolicitado);
         if($agregarAmigo['estado'] && !$notificacion){
-            return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$clave]));
+            return $this->redirect($this->generateUrl('comunidad_buscar_general',['clave'=>$clave]));
         }
         else{
-            return $this->redirect($this->generateUrl('social_perfil_ver'));
+            return $this->redirect($this->generateUrl('comunidad_perfil_ver'));
         }
     }
 
     /**
-     * @Route("/social/buscar/cancelarSolicitud/{usernameSolicitado}/{clave}", name="social_cancelar_solicitud")
+     * @Route("/comunidad/buscar/cancelarSolicitud/{usernameSolicitado}/{clave}", name="comunidad_cancelar_solicitud")
      */
     public function cancelarSolicitud($usernameSolicitado, $clave){
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
         $cancelarSolicitud=FuncionesController::solicitudesGet(ApiComunidad::getApi('cancelarSolicitud').$usuario.'/'.$usernameSolicitado);
         if($cancelarSolicitud['estado']){
-            return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$clave]));
+            return $this->redirect($this->generateUrl('comunidad_buscar_general',['clave'=>$clave]));
         }
     }
 

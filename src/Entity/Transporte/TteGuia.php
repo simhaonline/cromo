@@ -176,22 +176,22 @@ class TteGuia
     private $vrCostoReexpedicion = 0;
 
     /**
-     * @ORM\Column(name="estado_impreso", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_impreso", type="boolean",options={"default":false})
      */
     private $estadoImpreso = false;
 
     /**
-     * @ORM\Column(name="estado_embarcado", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_embarcado", type="boolean",options={"default":false})
      */
     private $estadoEmbarcado = false;
 
     /**
-     * @ORM\Column(name="estado_despachado", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_despachado", type="boolean",options={"default":false})
      */
     private $estadoDespachado = false;
 
     /**
-     * @ORM\Column(name="estado_entregado", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_entregado", type="boolean",options={"default":false})
      */
     private $estadoEntregado = false;
 
@@ -206,57 +206,57 @@ class TteGuia
     private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="estado_soporte", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_soporte", type="boolean",options={"default":false})
      */
     private $estadoSoporte = false;
 
     /**
-     * @ORM\Column(name="estado_cumplido", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_cumplido", type="boolean",options={"default":false})
      */
     private $estadoCumplido = false;
 
     /**
-     * @ORM\Column(name="estado_recaudo_devolucion", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_recaudo_devolucion", type="boolean",options={"default":false})
      */
     private $estadoRecaudoDevolucion = false;
 
     /**
-     * @ORM\Column(name="estado_recaudo_cobro", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_recaudo_cobro", type="boolean",options={"default":false})
      */
     private $estadoRecaudoCobro = false;
 
     /**
-     * @ORM\Column(name="estado_facturado", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_facturado", type="boolean",options={"default":false})
      */
     private $estadoFacturado = false;
 
     /**
-     * @ORM\Column(name="estado_factura_generada", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_factura_generada", type="boolean",options={"default":false})
      */
     private $estadoFacturaGenerada = false;
 
     /**
-     * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_anulado", type="boolean",options={"default":false})
      */
     private $estadoAnulado = false;
 
     /**
-     * @ORM\Column(name="estado_novedad", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_novedad", type="boolean",options={"default":false})
      */
     private $estadoNovedad = false;
 
     /**
-     * @ORM\Column(name="estado_novedad_solucion", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_novedad_solucion", type="boolean",options={"default":false})
      */
     private $estadoNovedadSolucion = false;
 
     /**
-     * @ORM\Column(name="estado_factura_exportado", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_factura_exportado", type="boolean",options={"default":false})
      */
     private $estadoFacturaExportado = false;
 
     /**
-     * @ORM\Column(name="estado_contabilizado_recaudo", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="estado_contabilizado_recaudo", type="boolean",options={"default":false})
      */
     private $estadoContabilizadoRecaudo = false;
 
@@ -301,7 +301,7 @@ class TteGuia
     private $ordenRuta = 0;
 
     /**
-     * @ORM\Column(name="factura", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="factura", type="boolean",options={"default":false})
      */
     private $factura = false;
 
@@ -326,12 +326,12 @@ class TteGuia
     private $codigoCondicionFk;
 
     /**
-     * @ORM\Column(name="reexpedicion", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="reexpedicion", type="boolean",options={"default":false})
      */
     private $reexpedicion = false;
 
     /**
-     * @ORM\Column(name="cortesia", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="cortesia", type="boolean",options={"default":false})
      */
     private $cortesia = false;
 

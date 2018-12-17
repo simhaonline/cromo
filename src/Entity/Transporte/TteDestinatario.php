@@ -88,7 +88,7 @@ class TteDestinatario
     private $correo;
 
     /**
-     * @ORM\Column(name="estado_inactivo", type="boolean", nullable=true)
+     * @ORM\Column(name="estado_inactivo", type="boolean", nullable=true,options={"default":false})
      */
     private $estadoInactivo = false;
 

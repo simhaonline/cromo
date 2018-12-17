@@ -16,7 +16,7 @@ class TteRuta
         "todos"     => true,
     ];
     /**
-     * @ORM\Id
+     * @ORM\Idf
      * @ORM\Column(type="string", length=20, nullable=false, unique=true)
      */
     private $codigoRutaPk;

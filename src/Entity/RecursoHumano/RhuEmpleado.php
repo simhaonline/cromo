@@ -58,32 +58,32 @@ class RhuEmpleado
     private $numeroIdentificacion;
 
     /**
-     * @ORM\Column(name="discapacidad", type="boolean", nullable=false)
+     * @ORM\Column(name="discapacidad", type="boolean", nullable=false,options={"default":false})
      */
     private $discapacidad = false;
 
     /**
-     * @ORM\Column(name="estado_contrato", type="boolean", nullable=false)
+     * @ORM\Column(name="estado_contrato", type="boolean", nullable=false,options={"default":false})
      */
     private $estadoContrato = false;
 
     /**
-     * @ORM\Column(name="carro", type="boolean",options={"default":0}, nullable=false)
+     * @ORM\Column(name="carro", type="boolean",options={"default":false}, nullable=false)
      */
     private $carro = false;
 
     /**
-     * @ORM\Column(name="moto", type="boolean",options={"default":0}, nullable=false)
+     * @ORM\Column(name="moto", type="boolean",options={"default":false}, nullable=false)
      */
     private $moto = false;
 
     /**
-     * @ORM\Column(name="padre_familia", type="boolean", nullable=false)
+     * @ORM\Column(name="padre_familia", type="boolean", nullable=false,options={"default":false})
      */
     private $padreFamilia = false;
 
     /**
-     * @ORM\Column(name="cabeza_hogar", type="boolean", nullable=false)
+     * @ORM\Column(name="cabeza_hogar", type="boolean", nullable=false,options={"default":false})
      */
     private $cabezaHogar = false;
 

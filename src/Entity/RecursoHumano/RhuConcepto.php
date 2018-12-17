@@ -44,7 +44,7 @@ class RhuConcepto
     private $generaIngresoBaseCotizacion = false;
 
     /**
-     * @ORM\Column(name="operacion", type="integer",options={"default":0} , nullable=true)
+     * @ORM\Column(name="operacion", type="integer",options={"default":false} , nullable=true)
      */
     private $operacion = 0;
 

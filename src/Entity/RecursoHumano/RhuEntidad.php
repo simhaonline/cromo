@@ -48,27 +48,27 @@ class RhuEntidad
     private $telefono;
 
     /**
-     * @ORM\Column(name="eps", type="boolean", nullable=true)
+     * @ORM\Column(name="eps", type="boolean", nullable=true,options={"default":false})
      */
     private $eps = false;
 
     /**
-     * @ORM\Column(name="arl", type="boolean", nullable=true)
+     * @ORM\Column(name="arl", type="boolean", nullable=true,options={"default":false})
      */
     private $arl = false;
 
     /**
-     * @ORM\Column(name="ccf", type="boolean", nullable=true)
+     * @ORM\Column(name="ccf", type="boolean", nullable=true,options={"default":false})
      */
     private $ccf = false;
 
     /**
-     * @ORM\Column(name="ces", type="boolean", nullable=true)
+     * @ORM\Column(name="ces", type="boolean", nullable=true,options={"default":false})
      */
     private $ces = false;
 
     /**
-     * @ORM\Column(name="pen", type="boolean", nullable=true)
+     * @ORM\Column(name="pen", type="boolean", nullable=true,options={"default":false})
      */
     private $pen = false;
 

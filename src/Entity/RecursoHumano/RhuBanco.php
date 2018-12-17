@@ -26,7 +26,7 @@ class RhuBanco {
     private $nombre;
 
     /**
-     * @ORM\Column(name="convenio_nomina", type="boolean")
+     * @ORM\Column(name="convenio_nomina", type="boolean", options={"default":false})
      */
     private $convenioNomina = 0;
 

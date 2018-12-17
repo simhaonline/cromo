@@ -98,22 +98,22 @@ class TteRecogida
     private $vrDeclara = 0;
 
     /**
-         * @ORM\Column(name="estado_planificado", type="boolean", options={"default" : 0})
+         * @ORM\Column(name="estado_planificado", type="boolean",options={"default":false})
      */
     private $estadoPlanificado = false;
 
     /**
-     * @ORM\Column(name="estado_programado", type="boolean", options={"default" : 0})
+     * @ORM\Column(name="estado_programado", type="boolean",options={"default":false})
      */
     private $estadoProgramado = false;
 
     /**
-     * @ORM\Column(name="estado_recogido", type="boolean", options={"default" : 0})
+     * @ORM\Column(name="estado_recogido", type="boolean",options={"default":false})
      */
     private $estadoRecogido = false;
 
     /**
-     * @ORM\Column(name="estado_descargado", type="boolean", options={"default" : 0})
+     * @ORM\Column(name="estado_descargado", type="boolean",options={"default":false})
      */
     private $estadoDescargado = false;
 

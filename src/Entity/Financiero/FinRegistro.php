@@ -111,7 +111,7 @@ class FinRegistro
     private $descripcion;
 
     /**
-     * @ORM\Column(name="estado_intercambio", type="boolean", options={"default" : 0})
+     * @ORM\Column(name="estado_intercambio", type="boolean", options={"default":false})
      */
     private $estadoIntercambio = 0;
 

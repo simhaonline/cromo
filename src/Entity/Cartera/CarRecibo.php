@@ -117,32 +117,32 @@ class CarRecibo
     private $codigoTerceroFk;
 
     /**
-     * @ORM\Column(name="estado_impreso", type="boolean")
+     * @ORM\Column(name="estado_impreso", type="boolean", options={"default":false})
      */
     private $estadoImpreso = 0;
 
     /**
-     * @ORM\Column(name="estado_anulado", type="boolean")
+     * @ORM\Column(name="estado_anulado", type="boolean", options={"default":false})
      */
     private $estadoAnulado = 0;
 
     /**
-     * @ORM\Column(name="estado_exportado", type="boolean")
+     * @ORM\Column(name="estado_exportado", type="boolean", options={"default":false})
      */
     private $estadoExportado = 0;
 
     /**
-     * @ORM\Column(name="estado_aprobado", type="boolean")
+     * @ORM\Column(name="estado_aprobado", type="boolean", options={"default":false})
      */
     private $estadoAprobado = 0;
 
     /**
-     * @ORM\Column(name="estado_autorizado", type="boolean")
+     * @ORM\Column(name="estado_autorizado", type="boolean", options={"default":false})
      */
     private $estadoAutorizado = 0;
 
     /**
-     * @ORM\Column(name="estado_contabilizado", type="boolean")
+     * @ORM\Column(name="estado_contabilizado", type="boolean", options={"default":false})
      */
     private $estadoContabilizado = 0;
 

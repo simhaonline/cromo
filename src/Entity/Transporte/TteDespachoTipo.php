@@ -32,12 +32,12 @@ class TteDespachoTipo
     private $consecutivo = 0;
 
     /**
-     * @ORM\Column(name="viaje", type="boolean", nullable=true)
+     * @ORM\Column(name="viaje", type="boolean", nullable=true,options={"default":false})
      */
     private $viaje = false;
 
     /**
-     * @ORM\Column(name="exige_numero", type="boolean", nullable=true)
+     * @ORM\Column(name="exige_numero", type="boolean", nullable=true,options={"default":false})
      */
     private $exigeNumero = false;
 

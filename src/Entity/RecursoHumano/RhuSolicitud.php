@@ -115,12 +115,12 @@ class RhuSolicitud
     private $VrNoSalarial = 0;
 
     /**
-     * @ORM\Column(name="salario_fijo", type="boolean")
+     * @ORM\Column(name="salario_fijo", type="boolean",options={"default":false})
      */
     private $salarioFijo = false;
 
     /**
-     * @ORM\Column(name="salario_variable", type="boolean")
+     * @ORM\Column(name="salario_variable", type="boolean",options={"default":false})
      */
     private $salarioVariable = false;
 
@@ -174,17 +174,17 @@ class RhuSolicitud
     private $comentarios;
 
     /**
-     * @ORM\Column(name="estado_autorizado", type="boolean")
+     * @ORM\Column(name="estado_autorizado", type="boolean",options={"default":false})
      */
     private $estadoAutorizado = false;
 
     /**
-     * @ORM\Column(name="estado_aprobado", type="boolean")
+     * @ORM\Column(name="estado_aprobado", type="boolean",options={"default":false})
      */
     private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="estado_cerrado", type="boolean")
+     * @ORM\Column(name="estado_cerrado", type="boolean",options={"default":false})
      */
     private $estadoCerrado = false;
 

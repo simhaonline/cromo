@@ -138,7 +138,7 @@ class InvItem
     private $cantidadPedido = 0;
 
     /**
-     * @ORM\Column(name="afecta_inventario", type="boolean", nullable=true)
+     * @ORM\Column(name="afecta_inventario", type="boolean", nullable=true, options={"default":false})
      */
     private $afectaInventario = true;
 

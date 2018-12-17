@@ -27,7 +27,7 @@ class TteGuiaTipo
     private $nombre;
 
     /**
-     * @ORM\Column(name="factura", type="boolean", nullable=true)
+     * @ORM\Column(name="factura", type="boolean", nullable=true,options={"default":false})
      */
     private $factura = false;
 
@@ -42,27 +42,27 @@ class TteGuiaTipo
     private $codigoFacturaTipoFk;
 
     /**
-     * @ORM\Column(name="exige_numero", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="exige_numero", type="boolean", nullable=true,options={"default":false})
      */
     private $exigeNumero = false;
 
     /**
-     * @ORM\Column(name="orden", type="integer", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="orden", type="integer", nullable=true,options={"default":false})
      */
     private $orden = 0;
 
     /**
-     * @ORM\Column(name="validar_flete", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="validar_flete", type="boolean", nullable=true,options={"default":false})
      */
     private $validarFlete = false;
 
     /**
-     * @ORM\Column(name="validar_rango", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="validar_rango", type="boolean", nullable=true,options={"default":false})
      */
     private $validarRango = false;
 
     /**
-     * @ORM\Column(name="cortesia", type="boolean", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="cortesia", type="boolean", nullable=true,options={"default":false})
      */
     private $cortesia = false;
 

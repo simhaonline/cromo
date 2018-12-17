@@ -186,17 +186,17 @@ class RhuSeleccion
     private $comentarios;
 
     /**
-     * @ORM\Column(name="estado_aprobado", type="boolean")
+     * @ORM\Column(name="estado_aprobado", type="boolean",options={"default":false})
      */
     private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="presenta_pruebas", type="boolean")
+     * @ORM\Column(name="presenta_pruebas", type="boolean",options={"default":false})
      */
     private $presentaPruebas = false;
 
     /**
-     * @ORM\Column(name="referencias_verificadas", type="boolean")
+     * @ORM\Column(name="referencias_verificadas", type="boolean",options={"default":false})
      */
     private $referenciasVerificadas = false;
 
@@ -211,7 +211,7 @@ class RhuSeleccion
     private $fechaPrueba;
 
     /**
-     * @ORM\Column(name="estado_autorizado", type="boolean")
+     * @ORM\Column(name="estado_autorizado", type="boolean",options={"default":false})
      */
     private $estadoAutorizado = false;
 

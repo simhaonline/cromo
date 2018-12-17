@@ -28,7 +28,7 @@ class RhuSucursal {
     private $nombre;
 
     /**
-     * @ORM\Column(name="estado_activo",type="boolean", nullable=true)
+     * @ORM\Column(name="estado_activo",type="boolean", nullable=true,options={"default":false})
      */
     private $estadoActivo = 0;
 

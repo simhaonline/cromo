@@ -98,22 +98,22 @@ class InvTercero
     private $email;
 
     /**
-     * @ORM\Column(name="autoretenedor", type="boolean", nullable=true)
+     * @ORM\Column(name="autoretenedor", type="boolean", nullable=true, options={"default":false})
      */
     private $autoretenedor = false;
 
     /**
-     * @ORM\Column(name="retencion_iva", type="boolean")
+     * @ORM\Column(name="retencion_iva", type="boolean", options={"default":false})
      */
     private $retencionIva = false;
 
     /**
-     * @ORM\Column(name="retencion_fuente", type="boolean")
+     * @ORM\Column(name="retencion_fuente", type="boolean", options={"default":false})
      */
     private $retencionFuente = false;
 
     /**
-     * @ORM\Column(name="retencion_fuente_sin_base", type="boolean")
+     * @ORM\Column(name="retencion_fuente_sin_base", type="boolean", options={"default":false})
      */
     private $retencionFuenteSinBase = false;
 

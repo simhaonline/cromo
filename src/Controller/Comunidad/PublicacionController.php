@@ -11,7 +11,7 @@ class PublicacionController extends AbstractController
     public function misPublicaciones($usuario)
     {
         $misPublicaciones=FuncionesController::solicitudesGet(ApiComunidad::getApi('misPublicaciones').$usuario);
-        dump($misPublicaciones);
+//        dump($misPublicaciones);
         if($misPublicaciones['estado']){
             return $misPublicaciones;
         }

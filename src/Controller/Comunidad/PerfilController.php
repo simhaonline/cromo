@@ -7,6 +7,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Seguridad\Usuario;
 use App\Utilidades\Mensajes;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use http\Env\Response;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,6 +23,7 @@ class PerfilController extends BaseController
      */
     public function verPerfil(Request $request)
     {
+
         $em=$this->getDoctrine()->getManager();
         $usuario=$this->container->get('security.token_storage')->getToken()->getUser();
         set_time_limit(0);
@@ -90,6 +92,11 @@ class PerfilController extends BaseController
             }
 
         }
+        $unknown->getVoid();
+//        $response = new \Symfony\Component\HttpFoundation\Response();
+//        $response->setStatusCode(500);
+//        return $response;
+
         return $this->render('comunidad/perfil.html.twig',[
             'form'=>$form->createView(),
             'formBusqueda'=>$formBusqueda->createView(),

@@ -29,6 +29,8 @@ class GenModelo extends Fixture
                 'CarRecibo',
                 'CarReciboDetalle',
                 'CarReciboTipo',
+                'CarAnticipo',
+                'CarAnticipoTipo',
             )),
             array('modulo'=>'Compra','modelo'=>array(
                 'ComCompra',

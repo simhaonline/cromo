@@ -58,6 +58,11 @@ class GenCuenta
     protected $recibosCuentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarAnticipo", mappedBy="cuentaRel")
+     */
+    protected $anticiposCuentaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComEgreso" , mappedBy="cuentaRel")
      */
     protected $egresosCuentaRel;
@@ -66,6 +71,22 @@ class GenCuenta
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEgreso" , mappedBy="cuentaRel")
      */
     protected $rhuEgresosCuentaRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -198,6 +219,22 @@ class GenCuenta
     /**
      * @return mixed
      */
+    public function getAnticiposCuentaRel()
+    {
+        return $this->anticiposCuentaRel;
+    }
+
+    /**
+     * @param mixed $anticiposCuentaRel
+     */
+    public function setAnticiposCuentaRel($anticiposCuentaRel): void
+    {
+        $this->anticiposCuentaRel = $anticiposCuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEgresosCuentaRel()
     {
         return $this->egresosCuentaRel;
@@ -226,5 +263,7 @@ class GenCuenta
     {
         $this->rhuEgresosCuentaRel = $rhuEgresosCuentaRel;
     }
+
+
 }
 

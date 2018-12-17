@@ -16,9 +16,11 @@ class ImportacionTipoType extends AbstractType
     {
         $builder
             ->add('codigoImportacionTipoPk', TextType::class, ['label'=> 'Codigo importacion tipo pk', 'required' => true])
+            ->add('codigoComprobanteFk', TextType::class, ['label' => 'comprobante','required' => false])
             ->add('nombre', TextType::class, ['label' => 'Nombre', 'required' => true])
             ->add('consecutivo', NumberType::class, ['label' => 'Consecutivo','required' => true])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 

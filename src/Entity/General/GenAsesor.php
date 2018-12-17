@@ -73,6 +73,11 @@ class GenAsesor
     protected $reciboAsesorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarAnticipo",mappedBy="asesorRel")
+     */
+    protected $anticipoAsesorRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoAsesorPk()
@@ -262,6 +267,22 @@ class GenAsesor
     public function setReciboAsesorRel($reciboAsesorRel): void
     {
         $this->reciboAsesorRel = $reciboAsesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnticipoAsesorRel()
+    {
+        return $this->anticipoAsesorRel;
+    }
+
+    /**
+     * @param mixed $anticipoAsesorRel
+     */
+    public function setAnticipoAsesorRel($anticipoAsesorRel): void
+    {
+        $this->anticipoAsesorRel = $anticipoAsesorRel;
     }
 
 

@@ -186,9 +186,11 @@ class InvRemisionRepository extends ServiceEntityRepository
             if($this->afectar($arRemision)) {
                 $arRemisionTipo = $this->getEntityManager()->getRepository(InvRemisionTipo::class)->find($arRemision->getCodigoRemisionTipoFk());
                 if($arRemisionTipo){
-                    $arRemisionTipo->setConsecutivo($arRemisionTipo->getConsecutivo() + 1);
-                    $arRemision->setNumero($arRemisionTipo->getConsecutivo());
-                    $this->getEntityManager()->persist($arRemisionTipo);
+                    if ($arRemision->getNumero() == 0 || $arRemision->getNumero() == "") {
+                        $arRemisionTipo->setConsecutivo($arRemisionTipo->getConsecutivo() + 1);
+                        $arRemision->setNumero($arRemisionTipo->getConsecutivo());
+                        $this->getEntityManager()->persist($arRemisionTipo);
+                    }
                 }
                 $arRemision->setEstadoAprobado(1);
                 $this->getEntityManager()->persist($arRemision);

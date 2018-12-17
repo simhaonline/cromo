@@ -47,7 +47,7 @@ class TteGuiaTipo
     private $exigeNumero = false;
 
     /**
-     * @ORM\Column(name="orden", type="integer", nullable=true,options={"default":false})
+     * @ORM\Column(name="orden", type="integer", nullable=true,options={"default":0})
      */
     private $orden = 0;
 
@@ -57,7 +57,7 @@ class TteGuiaTipo
     private $validarFlete = false;
 
     /**
-     * @ORM\Column(name="validar_rango", type="boolean", nullable=true,options={"default":false})
+     * @ORM\Column(name="validar_rango", type="boolean", nullable=true, options={"default":false})
      */
     private $validarRango = false;
 

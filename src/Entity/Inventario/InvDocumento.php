@@ -122,7 +122,7 @@ class InvDocumento
     /**
      * @ORM\Column(name="compra_extranjera", type="boolean", nullable=true, options={"default":false})
      */
-    private $compraExtranjera = 0;
+    private $compraExtranjera = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentosDocumentoTipoRel")

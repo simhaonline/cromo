@@ -111,11 +111,11 @@ class InvSolicitudRepository extends ServiceEntityRepository
     {
         $arSolicitudTipo = $this->getEntityManager()->getRepository('App:Inventario\InvSolicitudTipo')->findOneBy(['codigoSolicitudTipoPk' => $arSolicitud->getCodigoSolicitudTipoFk()]);
         if (!$arSolicitud->getEstadoAprobado()) {
-            $arSolicitudTipo->setConsecutivo($arSolicitudTipo->getConsecutivo() + 1);
-            $arSolicitud->setEstadoAprobado(1);
-            $arSolicitud->setNumero($arSolicitudTipo->getConsecutivo());
-            $this->getEntityManager()->persist($arSolicitudTipo);
-            $this->getEntityManager()->persist($arSolicitud);
+            if($arSolicitud->getNumero() == 0 || $arSolicitud->getNumero() == "") {
+                $arSolicitudTipo->setConsecutivo($arSolicitudTipo->getConsecutivo() + 1);
+                $arSolicitud->setNumero($arSolicitudTipo->getConsecutivo());
+                $this->getEntityManager()->persist($arSolicitudTipo);
+            }
         }
         $arSolicitudDetalles = $this->getEntityManager()->getRepository('App:Inventario\InvSolicitudDetalle')->findBy(['codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk()]);
         foreach ($arSolicitudDetalles as $arSolicitudDetalle) {
@@ -123,6 +123,9 @@ class InvSolicitudRepository extends ServiceEntityRepository
             $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() + $arSolicitudDetalle->getCantidad());
             $this->getEntityManager()->persist($arItem);
         }
+
+        $arSolicitud->setEstadoAprobado(1);
+        $this->getEntityManager()->persist($arSolicitud);
         $this->getEntityManager()->flush();
     }
 

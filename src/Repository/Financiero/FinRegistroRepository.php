@@ -144,6 +144,7 @@ class FinRegistroRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
     public function aplicarIntercambio()
     {
         $session = new Session();
@@ -166,4 +167,31 @@ class FinRegistroRepository extends ServiceEntityRepository
 
     }
 
+    public function listaVerMovimiento($clase, $id)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
+            ->select('r.codigoRegistroPk AS id')
+            ->addSelect('r.numero')
+            ->addSelect('r.numeroPrefijo')
+            ->addSelect('r.numeroReferencia')
+            ->addSelect('r.numeroReferenciaPrefijo')
+            ->addSelect('r.fecha')
+            ->addSelect('r.codigoComprobanteFk AS idComprobante')
+            ->addSelect('c.nombre AS comprobante')
+            ->addSelect('r.codigoCuentaFk AS cuenta')
+            ->addSelect('r.codigoCentroCostoFk AS c_c')
+            ->addSelect('t.numeroIdentificacion AS nit')
+            ->addSelect('t.nombreCorto AS tercero')
+            ->addSelect('r.vrDebito')
+            ->addSelect('r.vrCredito')
+            ->addSelect('r.vrBase')
+            ->addSelect('r.descripcion')
+            ->leftJoin('r.terceroRel', 't')
+            ->leftJoin('r.comprobanteRel', 'c')
+            ->where("r.codigoModeloFk ='" . $clase . "'")
+            ->andWhere('r.codigoDocumento = ' . $id)
+            ->orderBy('r.numero', 'DESC')
+            ->addOrderBy('r.codigoComprobanteFk', 'DESC');
+        return $queryBuilder;
+    }
 }

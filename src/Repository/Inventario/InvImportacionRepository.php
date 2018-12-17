@@ -349,11 +349,11 @@ class InvImportacionRepository extends ServiceEntityRepository
         return $arImportacion;
     }
 
-    public function contabilizar($arr): bool
+    public function contabilizar($arr = null)
     {
         $em = $this->getEntityManager();
+        $error = "";
         if ($arr) {
-            $error = "";
             foreach ($arr AS $codigo) {
                 $arImportacion = $em->getRepository(InvImportacion::class)->registroContabilizar($codigo);
                 if($arImportacion) {
@@ -429,7 +429,7 @@ class InvImportacionRepository extends ServiceEntityRepository
                         }
 
                         $arImportacionAct = $em->getRepository(InvImportacion::class)->find($arImportacion['codigoImportacionPk']);
-                        //$arImportacionAct->setEstadoContabilizado(1);
+                        $arImportacionAct->setEstadoContabilizado(1);
                         $em->persist($arImportacionAct);
                     }
                 } else {
@@ -442,9 +442,10 @@ class InvImportacionRepository extends ServiceEntityRepository
             } else {
                 Mensajes::error($error);
             }
-
+        } else {
+            $error = "No se seleccionaron registros para contabilizar";
         }
-        return true;
+        return $error;
     }    
     
 }

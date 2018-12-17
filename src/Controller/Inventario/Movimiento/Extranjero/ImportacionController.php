@@ -183,7 +183,8 @@ class ImportacionController extends ControllerListenerGeneral
             'form' => $form->createView(),
             'arImportacionDetalles' => $arImportacionDetalles,
             'arImportacion' => $arImportacion,
-            'arImportacionCostos' => $arImportacionCostos
+            'arImportacionCostos' => $arImportacionCostos,
+            'clase' => array('clase'=>'InvImportacion', 'codigo' => $id),
         ]);
     }
 

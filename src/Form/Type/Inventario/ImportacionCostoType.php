@@ -7,6 +7,7 @@ use App\Entity\Inventario\InvImportacionCostoConcepto;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,7 +18,8 @@ class ImportacionCostoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('vrValor', TextType::class, ['required' => true])
+            ->add('soporte', TextType::class, ['required' => true])
+            ->add('vrValor', NumberType::class, ['required' => true])
             ->add('importacionCostoConceptoRel',EntityType::class,[
                 'class' => InvImportacionCostoConcepto::class,
                 'query_builder' => function(EntityRepository $er){

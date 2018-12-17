@@ -15,6 +15,7 @@
         {% if arImportacion.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
         {% if arImportacion.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arImportacion.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arImportacion.estadoContabilizado == true %}<span class="label label-success">Contabilizado</span>{% endif %}
     </div>
     <br/><br/>
     {% include 'inventario/movimiento/extranjero/importacion/informacion.html.twig' %}
@@ -116,7 +117,7 @@
                                    value="Nuevo"/>
                         {% else %}
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_extranjero_importacion_detalle_nuevo', {'codigoImportacion':arImportacion.codigoImportacionPk }) }}', 'ImportacionAdicionarDetalle', 600, 900)">Nuevo</a>
+                               href="javascript:abrirVentana3('{{ path('inventario_movimiento_extranjero_importacion_detalle_nuevo', {'codigoImportacion':arImportacion.codigoImportacionPk }) }}', 'ImportacionAdicionarDetalle', 600, 1200)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">
@@ -136,6 +137,7 @@
                         <tr>
                             <th>ID</th>
                             <th>TERCERO</th>
+                            <th>SOPORTE</th>
                             <th>CODIGO</th>
                             <th>CONCEPTO</th>
                             <th>VALOR</th>
@@ -149,6 +151,7 @@
                             <tr>
                                 <td>{{ arImportacionCosto.codigoImportacionCostoPk }}</td>
                                 <td>{{ arImportacionCosto.terceroNombreCorto }}</td>
+                                <td>{{ arImportacionCosto.soporte }}</td>
                                 <td>{{ arImportacionCosto.codigoImportacionCostoConceptoFk }}</td>
                                 <td>{{ arImportacionCosto.importacionCostoConceptoNombre }}</td>
                                 <td class="numero">{{ arImportacionCosto.vrValor | number_format(0, '.', ',') }}</td>

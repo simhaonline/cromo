@@ -67,9 +67,10 @@ class InvLoteRepository extends ServiceEntityRepository
         return $respuesta;
     }
 
-    public function lista(){
+    public function lista()
+    {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvLote::class,'l')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvLote::class, 'l')
             ->select('l.codigoLotePk')
             ->addSelect('l.loteFk')
             ->addSelect('l.fechaVencimiento')
@@ -104,9 +105,9 @@ class InvLoteRepository extends ServiceEntityRepository
             ->leftJoin('l.itemRel', 'i')
             ->leftJoin('i.marcaRel', 'm')
             ->where('l.cantidadExistencia > 0')
-        ->orderBy('l.codigoItemFk', "ASC")
+            ->orderBy('l.codigoItemFk', "ASC")
             ->addOrderBy('l.codigoBodegaFk', "ASC")
-        ->addOrderBy('l.codigoItemFk', "ASC");
+            ->addOrderBy('l.codigoItemFk', "ASC");
         if ($session->get('filtroInvInformeItemCodigo') != '') {
             $queryBuilder->andWhere("l.codigoItemFk = {$session->get('filtroInvInformeItemCodigo')}");
         }

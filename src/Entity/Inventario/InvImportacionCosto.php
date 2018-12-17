@@ -42,6 +42,11 @@ class InvImportacionCosto
     private $codigoTerceroFk;
 
     /**
+     * @ORM\Column(name="soporte", type="string", length=50, nullable=true)
+     */
+    private $soporte;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvImportacionCostoConcepto", inversedBy="importacionesCostosImportacionCostoConceptoRel")
      * @ORM\JoinColumn(name="codigo_importacion_costo_concepto_fk", referencedColumnName="codigo_importacion_costo_concepto_pk")
      */
@@ -185,6 +190,22 @@ class InvImportacionCosto
     public function setTerceroRel($terceroRel): void
     {
         $this->terceroRel = $terceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoporte()
+    {
+        return $this->soporte;
+    }
+
+    /**
+     * @param mixed $soporte
+     */
+    public function setSoporte($soporte): void
+    {
+        $this->soporte = $soporte;
     }
 
 

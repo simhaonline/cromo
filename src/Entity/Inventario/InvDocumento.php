@@ -54,122 +54,14 @@ class InvDocumento
     private $generaCartera = false;
 
     /**
-     * @ORM\Column(name="tipo_asiento_cartera", type="smallint", nullable=true)
-     * 1 - Debito
-     * 2 - Credito
-     */
-    private $tipoAsientoCartera;
-
-    /**
      * @ORM\Column(name="genera_tesoreria", type="boolean")
      */
     private $generaTesoreria = false;
 
     /**
-     * @ORM\Column(name="tipo_asiento_tesoreria", type="smallint", nullable=true)
-     * 1 - Debito
-     * 2 - Credito
-     */
-    private $tipoAsientoTesoreria;
-
-    /**
-     * @ORM\Column(name="tipo_valor", type="smallint")
-     * 0 - Ninguno
-     * 1 - Compra
-     * 2 - Venta
-     */
-    private $tipoValor = 0;
-
-    /**
      * @ORM\Column(name="consecutivo", type="integer")
      */
     private $consecutivo = 0;
-
-    /**
-     * @ORM\Column(name="tipo_cuenta_ingreso", type="smallint", nullable=true)
-     * 1 - Debito
-     * 2 - Credito
-     */
-    private $tipoCuentaIngreso = 0;
-
-    /**
-     * @ORM\Column(name="tipo_cuenta_costo", type="smallint", nullable=true)
-     * 1 - Debito
-     * 2 - Credito
-     */
-    private $tipoCuentaCosto = 0;
-
-    /**
-     * @ORM\Column(name="tipo_cuenta_iva", type="smallint", nullable=true)
-     * 1 - Debito
-     * 2 - Credito
-     */
-    private $tipoCuentaIva = 0;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_iva_fk", type="string", length=15, nullable=true)
-     */
-    private $codigo_cuenta_iva_fk;
-
-    /**
-     * @ORM\Column(name="tipo_cuenta_retencion_fuente", type="smallint", nullable=true)
-     * 1 - Debito
-     * 2 - Credito
-     */
-    private $tipoCuentaRetencionFuente = 0;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_retencion_fuente_fk", type="string", length=15, nullable=true)
-     */
-    private $codigoCuentaRetencionFuenteFk;
-
-    /**
-     * @ORM\Column(name="tipo_cuenta_retencion_cree", type="smallint", nullable=true)
-     * 1 - Debito
-     * 2 - Credito
-     */
-    private $tipoCuentaRetencionCREE = 0;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_retencion_cree_fk", type="string", length=15, nullable=true)
-     */
-    private $codigoCuentaRetencionCREEFk;
-
-    /**
-     * @ORM\Column(name="tipo_cuenta_retencion_iva", type="smallint", nullable=true)
-     * 1 - Debito
-     * 2 - Credito
-     */
-    private $tipoCuentaRetencionIva = 0;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_retencion_iva_fk", type="string", length=15, nullable=true)
-     */
-    private $codigoCuentaRetencionIvaFk;
-
-    /**
-     * @ORM\Column(name="tipo_cuenta_tesoreria", type="smallint", nullable=true)
-     * 1 - Debito
-     * 2 - Credito
-     */
-    private $tipoCuentaTesoreria = 0;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_tesoreria_fk", type="string", length=15, nullable=true)
-     */
-    private $codigoCuentaTesoreriaFk;
-
-    /**
-     * @ORM\Column(name="tipo_cuenta_cartera", type="smallint", nullable=true)
-     * 1 - Debito
-     * 2 - Credito
-     */
-    private $tipoCuentaCartera = 0;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_cartera_fk", type="string", length=15, nullable=true)
-     */
-    private $codigoCuentaCarteraFk;
 
     /**
      * @internal Para saber si el documento genera costo promedio
@@ -211,6 +103,26 @@ class InvDocumento
      * @ORM\Column(name="nota_credito", type="boolean", nullable=true, options={"default" : 0})
      */
     private $notaCredito = 0;
+
+    /**
+     * @ORM\Column(name="contabilizar", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $contabilizar = 0;
+
+    /**
+     * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoComprobanteFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_proveedor_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaProveedorFk;
+
+    /**
+     * @ORM\Column(name="compra_extranjera", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $compraExtranjera = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvDocumentoTipo", inversedBy="documentosDocumentoTipoRel")
@@ -338,22 +250,6 @@ class InvDocumento
     /**
      * @return mixed
      */
-    public function getTipoAsientoCartera()
-    {
-        return $this->tipoAsientoCartera;
-    }
-
-    /**
-     * @param mixed $tipoAsientoCartera
-     */
-    public function setTipoAsientoCartera($tipoAsientoCartera): void
-    {
-        $this->tipoAsientoCartera = $tipoAsientoCartera;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getGeneraTesoreria()
     {
         return $this->generaTesoreria;
@@ -365,38 +261,6 @@ class InvDocumento
     public function setGeneraTesoreria($generaTesoreria): void
     {
         $this->generaTesoreria = $generaTesoreria;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipoAsientoTesoreria()
-    {
-        return $this->tipoAsientoTesoreria;
-    }
-
-    /**
-     * @param mixed $tipoAsientoTesoreria
-     */
-    public function setTipoAsientoTesoreria($tipoAsientoTesoreria): void
-    {
-        $this->tipoAsientoTesoreria = $tipoAsientoTesoreria;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipoValor()
-    {
-        return $this->tipoValor;
-    }
-
-    /**
-     * @param mixed $tipoValor
-     */
-    public function setTipoValor($tipoValor): void
-    {
-        $this->tipoValor = $tipoValor;
     }
 
     /**
@@ -418,230 +282,6 @@ class InvDocumento
     /**
      * @return mixed
      */
-    public function getTipoCuentaIngreso()
-    {
-        return $this->tipoCuentaIngreso;
-    }
-
-    /**
-     * @param mixed $tipoCuentaIngreso
-     */
-    public function setTipoCuentaIngreso($tipoCuentaIngreso): void
-    {
-        $this->tipoCuentaIngreso = $tipoCuentaIngreso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipoCuentaCosto()
-    {
-        return $this->tipoCuentaCosto;
-    }
-
-    /**
-     * @param mixed $tipoCuentaCosto
-     */
-    public function setTipoCuentaCosto($tipoCuentaCosto): void
-    {
-        $this->tipoCuentaCosto = $tipoCuentaCosto;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipoCuentaIva()
-    {
-        return $this->tipoCuentaIva;
-    }
-
-    /**
-     * @param mixed $tipoCuentaIva
-     */
-    public function setTipoCuentaIva($tipoCuentaIva): void
-    {
-        $this->tipoCuentaIva = $tipoCuentaIva;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaIvaFk()
-    {
-        return $this->codigo_cuenta_iva_fk;
-    }
-
-    /**
-     * @param mixed $codigo_cuenta_iva_fk
-     */
-    public function setCodigoCuentaIvaFk($codigo_cuenta_iva_fk): void
-    {
-        $this->codigo_cuenta_iva_fk = $codigo_cuenta_iva_fk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipoCuentaRetencionFuente()
-    {
-        return $this->tipoCuentaRetencionFuente;
-    }
-
-    /**
-     * @param mixed $tipoCuentaRetencionFuente
-     */
-    public function setTipoCuentaRetencionFuente($tipoCuentaRetencionFuente): void
-    {
-        $this->tipoCuentaRetencionFuente = $tipoCuentaRetencionFuente;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaRetencionFuenteFk()
-    {
-        return $this->codigoCuentaRetencionFuenteFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaRetencionFuenteFk
-     */
-    public function setCodigoCuentaRetencionFuenteFk($codigoCuentaRetencionFuenteFk): void
-    {
-        $this->codigoCuentaRetencionFuenteFk = $codigoCuentaRetencionFuenteFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipoCuentaRetencionCREE()
-    {
-        return $this->tipoCuentaRetencionCREE;
-    }
-
-    /**
-     * @param mixed $tipoCuentaRetencionCREE
-     */
-    public function setTipoCuentaRetencionCREE($tipoCuentaRetencionCREE): void
-    {
-        $this->tipoCuentaRetencionCREE = $tipoCuentaRetencionCREE;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaRetencionCREEFk()
-    {
-        return $this->codigoCuentaRetencionCREEFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaRetencionCREEFk
-     */
-    public function setCodigoCuentaRetencionCREEFk($codigoCuentaRetencionCREEFk): void
-    {
-        $this->codigoCuentaRetencionCREEFk = $codigoCuentaRetencionCREEFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipoCuentaRetencionIva()
-    {
-        return $this->tipoCuentaRetencionIva;
-    }
-
-    /**
-     * @param mixed $tipoCuentaRetencionIva
-     */
-    public function setTipoCuentaRetencionIva($tipoCuentaRetencionIva): void
-    {
-        $this->tipoCuentaRetencionIva = $tipoCuentaRetencionIva;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaRetencionIvaFk()
-    {
-        return $this->codigoCuentaRetencionIvaFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaRetencionIvaFk
-     */
-    public function setCodigoCuentaRetencionIvaFk($codigoCuentaRetencionIvaFk): void
-    {
-        $this->codigoCuentaRetencionIvaFk = $codigoCuentaRetencionIvaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipoCuentaTesoreria()
-    {
-        return $this->tipoCuentaTesoreria;
-    }
-
-    /**
-     * @param mixed $tipoCuentaTesoreria
-     */
-    public function setTipoCuentaTesoreria($tipoCuentaTesoreria): void
-    {
-        $this->tipoCuentaTesoreria = $tipoCuentaTesoreria;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaTesoreriaFk()
-    {
-        return $this->codigoCuentaTesoreriaFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaTesoreriaFk
-     */
-    public function setCodigoCuentaTesoreriaFk($codigoCuentaTesoreriaFk): void
-    {
-        $this->codigoCuentaTesoreriaFk = $codigoCuentaTesoreriaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipoCuentaCartera()
-    {
-        return $this->tipoCuentaCartera;
-    }
-
-    /**
-     * @param mixed $tipoCuentaCartera
-     */
-    public function setTipoCuentaCartera($tipoCuentaCartera): void
-    {
-        $this->tipoCuentaCartera = $tipoCuentaCartera;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaCarteraFk()
-    {
-        return $this->codigoCuentaCarteraFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaCarteraFk
-     */
-    public function setCodigoCuentaCarteraFk($codigoCuentaCarteraFk): void
-    {
-        $this->codigoCuentaCarteraFk = $codigoCuentaCarteraFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getGeneraCostoPromedio()
     {
         return $this->generaCostoPromedio;
@@ -658,38 +298,6 @@ class InvDocumento
     /**
      * @return mixed
      */
-    public function getDocumentoTipoRel()
-    {
-        return $this->documentoTipoRel;
-    }
-
-    /**
-     * @param mixed $documentoTipoRel
-     */
-    public function setDocumentoTipoRel($documentoTipoRel): void
-    {
-        $this->documentoTipoRel = $documentoTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMovimientosDocumentoRel()
-    {
-        return $this->movimientosDocumentoRel;
-    }
-
-    /**
-     * @param mixed $movimientosDocumentoRel
-     */
-    public function setMovimientosDocumentoRel($movimientosDocumentoRel): void
-    {
-        $this->movimientosDocumentoRel = $movimientosDocumentoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCodigoCuentaCobrarTipoFk()
     {
         return $this->codigoCuentaCobrarTipoFk;
@@ -701,6 +309,22 @@ class InvDocumento
     public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
     {
         $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionar()
+    {
+        return $this->adicionar;
+    }
+
+    /**
+     * @param mixed $adicionar
+     */
+    public function setAdicionar($adicionar): void
+    {
+        $this->adicionar = $adicionar;
     }
 
     /**
@@ -770,22 +394,6 @@ class InvDocumento
     /**
      * @return mixed
      */
-    public function getAdicionar()
-    {
-        return $this->adicionar;
-    }
-
-    /**
-     * @param mixed $adicionar
-     */
-    public function setAdicionar($adicionar): void
-    {
-        $this->adicionar = $adicionar;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getNotaCredito()
     {
         return $this->notaCredito;
@@ -794,9 +402,105 @@ class InvDocumento
     /**
      * @param mixed $notaCredito
      */
-    public function setNotaCredito( $notaCredito ): void
+    public function setNotaCredito($notaCredito): void
     {
         $this->notaCredito = $notaCredito;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContabilizar()
+    {
+        return $this->contabilizar;
+    }
+
+    /**
+     * @param mixed $contabilizar
+     */
+    public function setContabilizar($contabilizar): void
+    {
+        $this->contabilizar = $contabilizar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteFk()
+    {
+        return $this->codigoComprobanteFk;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteFk
+     */
+    public function setCodigoComprobanteFk($codigoComprobanteFk): void
+    {
+        $this->codigoComprobanteFk = $codigoComprobanteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentoTipoRel()
+    {
+        return $this->documentoTipoRel;
+    }
+
+    /**
+     * @param mixed $documentoTipoRel
+     */
+    public function setDocumentoTipoRel($documentoTipoRel): void
+    {
+        $this->documentoTipoRel = $documentoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosDocumentoRel()
+    {
+        return $this->movimientosDocumentoRel;
+    }
+
+    /**
+     * @param mixed $movimientosDocumentoRel
+     */
+    public function setMovimientosDocumentoRel($movimientosDocumentoRel): void
+    {
+        $this->movimientosDocumentoRel = $movimientosDocumentoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaProveedorFk()
+    {
+        return $this->codigoCuentaProveedorFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaProveedorFk
+     */
+    public function setCodigoCuentaProveedorFk($codigoCuentaProveedorFk): void
+    {
+        $this->codigoCuentaProveedorFk = $codigoCuentaProveedorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompraExtranjera()
+    {
+        return $this->compraExtranjera;
+    }
+
+    /**
+     * @param mixed $compraExtranjera
+     */
+    public function setCompraExtranjera($compraExtranjera): void
+    {
+        $this->compraExtranjera = $compraExtranjera;
     }
 
 

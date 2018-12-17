@@ -16,7 +16,7 @@
             <tr>
                 <td>{{ arPrecio.codigoPrecioPk }}</td>
                 <td>{{ arPrecio.nombre }}</td>
-                {{ validarTipo(arPrecio.fechaVence) }}
+                <td>{{ arPrecio.fechaVence | date('Y-m-d') }}</td>
                 <td>{{ arPrecio.comentario }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('transporte_administracion_comercial_precio_nuevo',{'id' : arPrecio.codigoPrecioPk}) }}">

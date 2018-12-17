@@ -192,6 +192,11 @@ class InvItem
     private $codigoCuentaInventarioFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_inventario_transito_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaInventarioTransitoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvMarca", inversedBy="itemsMarcaRel")
      * @ORM\JoinColumn(name="codigo_marca_fk",referencedColumnName="codigo_marca_pk")
      * @Assert\NotBlank(
@@ -1056,6 +1061,22 @@ class InvItem
     public function setImportacionesDetallesItemRel($importacionesDetallesItemRel): void
     {
         $this->importacionesDetallesItemRel = $importacionesDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaInventarioTransitoFk()
+    {
+        return $this->codigoCuentaInventarioTransitoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaInventarioTransitoFk
+     */
+    public function setCodigoCuentaInventarioTransitoFk($codigoCuentaInventarioTransitoFk): void
+    {
+        $this->codigoCuentaInventarioTransitoFk = $codigoCuentaInventarioTransitoFk;
     }
 
 

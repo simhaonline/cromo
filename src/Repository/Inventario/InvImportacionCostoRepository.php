@@ -16,6 +16,7 @@ class InvImportacionCostoRepository extends ServiceEntityRepository
     public function lista($codigoImportacion){
         return $this->_em->createQueryBuilder()->from(InvImportacionCosto::class,'ic')
             ->select('ic.codigoImportacionCostoPk')
+            ->addSelect('ic.soporte')
             ->addSelect('ic.codigoImportacionCostoConceptoFk')
             ->addSelect('icc.nombre as importacionCostoConceptoNombre')
             ->addSelect('ic.vrValor')

@@ -128,4 +128,15 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
         return $arrCuentas;
     }
 
+    public function cuentaInventarioTransito($codigo){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvImportacionDetalle::class, 'id')
+            ->select('i.codigoCuentaInventarioTransitoFk')
+            ->addSelect('SUM(id.vrSubtotalLocal) as vrSubtotalLocal')
+            ->leftJoin('id.itemRel', 'i')
+            ->where('id.codigoImportacionFk = ' . $codigo)
+            ->groupBy('i.codigoCuentaInventarioTransitoFk');
+        $arrCuentas = $queryBuilder->getQuery()->getResult();
+        return $arrCuentas;
+    }
+
 }

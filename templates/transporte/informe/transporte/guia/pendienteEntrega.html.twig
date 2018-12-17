@@ -91,9 +91,9 @@
                 <td class="numero">{{ arGuia.pesoReal }}</td>
                 <td class="numero">{{ arGuia.pesoVolumen }}</td>
                 <td class="numero">{{ arGuia.vrFlete }}</td>
-                {{ validarTipo(arGuia.estadoNovedad) }}
-                {{ validarTipo(arGuia.estadoNovedadSolucion) }}
-                {{ validarTipo(arGuia.estadoCumplido) }}
+                <td>{{ arGuia.estadoNovedad ? 'SI':'NO' }}</td>
+                <td>{{ arGuia.estadoNovedadSolucion ? 'SI':'NO' }}</td>
+                <td>{{ arGuia.estadoCumplido ? 'SI' :'NO'}}</td>
             </tr>
         {% endfor %}
         </tbody>

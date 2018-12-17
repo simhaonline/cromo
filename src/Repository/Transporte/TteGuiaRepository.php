@@ -1270,6 +1270,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.numero')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
             ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('d.codigoConductorFk')
+            ->addSelect('con.nombreCorto AS conductor')
             ->addSelect('g.unidades')
             ->addSelect('g.pesoReal')
             ->addSelect('g.pesoVolumen')
@@ -1277,12 +1279,18 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.vrFlete')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.despachoRel', 'd')
+            ->leftJoin('d.conductorRel', 'con')
             ->where('g.estadoDespachado = 1')
             ->andWhere('g.estadoAnulado = 0')
             ->andWhere('g.estadoSoporte = 0')
             ->andWhere('g.codigoDespachoFk <> 0')
-            ->orderBy('g.fechaIngreso', 'DESC');
+            ->groupBy('d.codigoConductorFk')
+            ->addGroupBy('g.codigoGuiaPk');
         $fecha = new \DateTime('now');
+        if ($session->get('filtroTteCodigoConductor')) {
+            $queryBuilder->andWhere("d.codigoConductorFk = '" . $session->get('filtroTteCodigoConductor') . "'");
+        }
         if ($session->get('filtroTtePendienteSoporteFechaDesde') != null) {
             $queryBuilder->andWhere("g.fechaIngreso >= '{$session->get('filtroTtePendienteSoporteFechaDesde')} 00:00:00'");
         } else {

@@ -18,7 +18,7 @@
         </tr>
         <tr>
             <td class="titulo">MARCA:</td>
-            <td class="td-in-well">{{ arItem.marcaRel.nombre  }}</td>
+            <td class="td-in-well">{{ arItem.marcaRel.nombre }}</td>
             <td class="titulo">GRUPO:</td>
             <td class="td-in-well">{{ arItem.grupoRel.nombre | default('') }}</td>
             <td class="titulo">SUBGRUPO:</td>
@@ -26,15 +26,15 @@
         </tr>
         <tr>
             <td class="titulo">CODIGO EAN:</td>
-            <td class="td-in-well">{{ arItem.codigoEAN  }}</td>
+            <td class="td-in-well">{{ arItem.codigoEAN }}</td>
             <td class="titulo">CODIGO BARRAS:</td>
             <td class="td-in-well">{{ arItem.codigoBarras }}</td>
             <td class="titulo">AFECTA INVENTARIO:</td>
-            {{ validarTipo(arItem.afectaInventario) }}
+            <td class="td-in-well">{{ arItem.afectaInventario ? 'SI' : 'NO' }}</td>
         </tr>
         <tr>
             <td class="titulo">PORCENTAJE IVA:</td>
-            <td class="td-in-well">{{ arItem.porcentajeIva  }}</td>
+            <td class="td-in-well">{{ arItem.porcentajeIva }}</td>
             <td class="titulo">UNIDAD MEDIDA:</td>
             <td class="td-in-well">{{ arItem.codigoUnidadMedidaFk }}</td>
             <td class="titulo">MODELO:</td>

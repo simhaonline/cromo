@@ -61,9 +61,6 @@
             <th>NIT</th>
             <th>CLIENTE</th>
             <th>TOTAL</th>
-            {#<th>ANU</th>#}
-            {#<th>AUT</th>#}
-            {#<th>APR</th>#}
             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
@@ -77,9 +74,6 @@
                 <td>{{ arEgreso.numeroIdentificacion }}</td>
                 <td>{{ arEgreso.nombreCorto }}</td>
                 <td class="numero">{{ arEgreso.vrPago | number_format(0, '.', ',') }}</td>
-                {#{{ validarTipo(arEgreso.estadoAnulado) }}#}
-                {#{{ validarTipo(arEgreso.estadoAutorizado) }}#}
-                {#{{ validarTipo(arEgreso.estadoAprobado) }}#}
                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                        value="{{ arEgreso.codigoEgresoPk }}"/></td>
             </tr>

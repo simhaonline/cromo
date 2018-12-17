@@ -254,7 +254,7 @@ class MovimientoController extends ControllerListenerGeneral
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDuplicar = ['label' => 'Duplicar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-
+        $arrBtnActualizarImportacion = ['label' => 'Actualizar precio importacion', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         if ($arMovimiento->getEstadoAutorizado()) {
             $arrBtnEliminar['disabled'] = true;
             $arrBtnActualizar['disabled'] = true;
@@ -263,7 +263,8 @@ class MovimientoController extends ControllerListenerGeneral
         $form
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
-            ->add('btnDuplicar', SubmitType::class, $arrBtnDuplicar);
+            ->add('btnDuplicar', SubmitType::class, $arrBtnDuplicar)
+            ->add('btnActualizarImportacion', SubmitType::class, $arrBtnActualizarImportacion);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -314,6 +315,9 @@ class MovimientoController extends ControllerListenerGeneral
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(InvMovimientoDetalle::class)->actualizarDetalles($arrControles, $form, $arMovimiento);
             }
+            if ($form->get('btnActualizarImportacion')->isClicked()) {
+                $em->getRepository(InvMovimientoDetalle::class)->actualizarImportacion($arMovimiento);
+            }
             if ($form->get('btnAnular')->isClicked()) {
                 $em->getRepository(InvMovimiento::class)->anular($arMovimiento);
             }
@@ -331,7 +335,8 @@ class MovimientoController extends ControllerListenerGeneral
         return $this->render('inventario/movimiento/inventario/detalle.html.twig', [
             'form' => $form->createView(),
             'arMovimientoDetalles' => $arMovimientoDetalles,
-            'arMovimiento' => $arMovimiento
+            'arMovimiento' => $arMovimiento,
+            'clase' => array('clase'=>'InvMovimiento', 'codigo' => $id),
         ]);
     }
 

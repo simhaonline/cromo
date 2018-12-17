@@ -46,6 +46,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new \Twig_Filter('objectToArray', [$this, 'objectToArray']),
+            new \Twig_Filter('urlVideo', [$this, 'urlVideo']),
         ];
     }
 
@@ -315,6 +316,10 @@ class AppExtension extends AbstractExtension
             }
         }
         return $arrRegistro;
+    }
+
+    public function urlVideo($url){
+        return str_replace('/','&',$url);
     }
 
     /**

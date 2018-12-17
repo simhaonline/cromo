@@ -5,6 +5,9 @@ namespace App\Repository\Inventario;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenImpuesto;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvBodegaUsuario;
@@ -17,6 +20,7 @@ use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvRemisionDetalle;
+use App\Entity\Inventario\InvTercero;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimiento;
@@ -106,8 +110,11 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.estadoAnulado')
             ->addSelect('m.estadoAprobado')
             ->addSelect('m.estadoAutorizado')
+            ->addSelect('d.nombre as documentoNombre')
             ->leftJoin('m.terceroRel', 't')
-            ->where("m.codigoMovimientoPk <> 0 ");
+            ->leftJoin('m.documentoRel', 'd')
+            ->where("m.estadoAprobado = 1 ")
+            ->andWhere('d.contabilizar = 1');
         if ($session->get('filtroInvMovimientoNumero') != "") {
             $queryBuilder->andWhere("m.numero = " . $session->get('filtroInvMovimientoNumero'));
         }
@@ -816,5 +823,111 @@ class InvMovimientoRepository extends ServiceEntityRepository
             }
         }
     }
+
+    public function registroContabilizar($codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm')
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('m.codigoTerceroFk')
+            ->addSelect('m.numero')
+            ->addSelect('m.fecha')
+            ->addSelect('m.estadoAprobado')
+            ->addSelect('m.estadoContabilizado')
+            ->addSelect('m.vrSubtotal')
+            ->addSelect('d.codigoComprobanteFk')
+            ->addSelect('d.codigoCuentaProveedorFk')
+            ->leftJoin('m.documentoRel', 'd')
+            ->where('m.codigoMovimientoPk = ' . $codigo);
+        $arMovimiento = $queryBuilder->getQuery()->getSingleResult();
+        return $arMovimiento;
+    }
+
+    public function contabilizar($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $error = "";
+            foreach ($arr AS $codigo) {
+                $arMovimiento = $em->getRepository(InvMovimiento::class)->registroContabilizar($codigo);
+                if($arMovimiento) {
+                    if($arMovimiento['estadoAprobado'] == 1 && $arMovimiento['estadoContabilizado'] == 0) {
+                        if(!$arMovimiento['codigoComprobanteFk']) {
+                            $error = "El comprobante no esta configurado";
+                            break;
+                        }
+                        $arComprobante = $em->getRepository(FinComprobante::class)->find($arMovimiento['codigoComprobanteFk']);
+                        $arTercero = $em->getRepository(InvTercero::class)->terceroFinanciero($arMovimiento['codigoTerceroFk']);
+
+                        //Cuenta inventario transito
+                        $arrInventariosTransito = $em->getRepository(InvMovimientoDetalle::class)->cuentaInventarioTransito($codigo);
+                        foreach ($arrInventariosTransito as $arrInventarioTransito) {
+                            if($arrInventarioTransito['codigoCuentaInventarioTransitoFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrInventarioTransito['codigoCuentaInventarioTransitoFk']);
+                                if(!$arCuenta) {
+                                    $error = "No se encuentra la cuenta " . $arrInventarioTransito['codigoCuentaInventarioTransitoFk'];
+                                    break 2;
+                                }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                $arRegistro->setNumero($arMovimiento['numero']);
+                                $arRegistro->setFecha($arMovimiento['fecha']);
+                                $arRegistro->setVrDebito($arrInventarioTransito['vrSubtotal']);
+                                $arRegistro->setNaturaleza('D');
+                                $arRegistro->setDescripcion('INVENTARIO TRANSITO');
+                                $arRegistro->setCodigoModeloFk('InvMovimiento');
+                                $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                $em->persist($arRegistro);
+                            } else {
+                                $error = "No tiene configurada la cuenta de compra para el los item";
+                                break;
+                            }
+                        }
+
+                        //Proveedor
+                        if($arMovimiento['codigoCuentaProveedorFk']) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arMovimiento['codigoCuentaProveedorFk']);
+                            if(!$arCuenta) {
+                                $error = "No se encuentra la cuenta " . $arMovimiento['codigoCuentaProveedorFk'];
+                                break;
+                            }
+                            $arRegistro = new FinRegistro();
+                            $arRegistro->setTerceroRel($arTercero);
+                            $arRegistro->setCuentaRel($arCuenta);
+                            $arRegistro->setComprobanteRel($arComprobante);
+                            $arRegistro->setNumero($arMovimiento['numero']);
+                            $arRegistro->setFecha($arMovimiento['fecha']);
+                            $arRegistro->setVrCredito($arMovimiento['vrSubtotal']);
+                            $arRegistro->setNaturaleza('C');
+                            $arRegistro->setDescripcion('PROVEEDORES EXTRANJEROS');
+                            $arRegistro->setCodigoModeloFk('InvMovimiento');
+                            $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                            $em->persist($arRegistro);
+                        } else {
+                            $error = "No tiene configurada la cuenta de proveedores en el documento";
+                            break;
+                        }
+
+                        $arMovimientoAct = $em->getRepository(InvMovimiento::class)->find($arMovimiento['codigoMovimientoPk']);
+                        $arMovimientoAct->setEstadoContabilizado(1);
+                        $em->persist($arMovimientoAct);
+                    }
+                } else {
+                    $error = "La importacion codigo " . $codigo . " no existe";
+                    break;
+                }
+            }
+            if($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+
+        }
+        return true;
+    }
+
 
 }

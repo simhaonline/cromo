@@ -60,7 +60,7 @@
                 <td class="numero">{{ arGuia.vrFlete | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arGuia.vrManejo | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arGuia.vrAbono | number_format(0, '.', ',') }}</td>
-                {{ validarTipo(arGuia.estadoNovedad) }}
+                <td>{{ arGuia.estadoNovedad ? 'SI':'NO' }}</td>
                 <td class="seleccion"><input type="checkbox" name="chkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
             </tr>
         {% endfor %}

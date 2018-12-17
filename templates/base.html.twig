@@ -149,7 +149,7 @@
             {#{% include('base_calendario.html.twig') %}#}
         {#{% endif %}#}
 
-        {% if arrRuta.0 == 'comunidad' %}
+        {% if arrRuta.0 == 'social' %}
             {% include('base_menu_inicio.html.twig') %}
         {% endif %}
     {% elseif arrRuta.0 == 'administracion' %}
@@ -187,7 +187,7 @@
     {% endif %}
 
     {% include 'base_opcion_calendario.html.twig' %}
-    {% include 'base_comunidad.html.twig' %}
+    {% include 'base_social.html.twig' %}
 
     <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
 

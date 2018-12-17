@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <ul id="myTab1" class="nav nav-tabs bordered">
+        <li class="active">
+            <a href="#busqueda" data-toggle="tab">Buscar <i class="fa fa-caret-down"></i></a>
+        </li>
+        <li>
+            <a href="#" data-toggle="tab">Usuarios</a>
+        </li>
+        <li>
+            <a href="#" data-toggle="tab">Historial de busqueda</a>
+        </li>
+    </ul>
+    <div id="myTabContent1" class="tab-content bg-color-white padding-10">
+        <div class="tab-pane fade in active" id="busqueda">
+            <h1><span class="semi-bold"> Buscar</span> documentación</h1>
+            <br>
+            <div class="input-group input-group-lg hidden-mobile">
+                <div class="input-group-btn">
+                    {{ form_widget(form.choBusquedaTipo) }}
+                </div>
+                {{ form_widget(form.txtBusqueda) }}
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default">
+                        &nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-search fa-lg"></i>&nbsp;&nbsp;&nbsp;
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% set cantResultados = arTemas|length %}
+        <h1 class="font-md"> Resultados de busqueda por <span class="semi-bold">Titulo</span>
+            <small class="text-danger">
+                &nbsp;&nbsp;({{ cantResultados }} {% if cantResultados > 1 or cantResultados == 0 %} resultados {% else %}resultado{% endif %}
+                )
+            </small>
+        </h1>
+        {% for arTema in arTemas %}
+            <div class="search-results clearfix smart-form">
+                <h4><a href="#">{{ arTema.titulo }}</a></h4>
+                <div>
+                    {% set nombre = 'estrella-' ~ arTema.codigoTemaPk %}
+                    <div data-id="{{ arTema.codigoTemaPk }}" class="rating display-inline calificar-estrellas"
+                         id="calificar-{{ arTema.codigoTemaPk }}">
+                        <input type="radio" name="calificacion-{{ arTema.codigoTemaPk }}"
+                               id="{{ nombre }}-5" {% if arTema.calificacion == 5 %} checked {% endif %}>
+                        <label for="{{ nombre }}-5"><i class="fa fa-star"></i></label>
+                        <input type="radio" name="calificacion-{{ arTema.codigoTemaPk }}"
+                               id="{{ nombre }}-4" {% if arTema.calificacion == 4 %} checked {% endif %}>
+                        <label for="{{ nombre }}-4"><i class="fa fa-star"></i></label>
+                        <input type="radio" name="calificacion-{{ arTema.codigoTemaPk }}"
+                               id="{{ nombre }}-3" {% if arTema.calificacion == 3 %} checked {% endif %}>
+                        <label for="{{ nombre }}-3"><i class="fa fa-star"></i></label>
+                        <input type="radio" name="calificacion-{{ arTema.codigoTemaPk }}"
+                               id="{{ nombre }}-2" {% if arTema.calificacion == 2 %} checked {% endif %}>
+                        <label for="{{ nombre }}-2"><i class="fa fa-star"></i></label>
+                        <input type="radio" name="calificacion-{{ arTema.codigoTemaPk }}"
+                               id="{{ nombre }}-1" {% if arTema.calificacion == 1 %} checked {% endif %}>
+                        <label for="{{ nombre }}-1"><i class="fa fa-star"></i></label>
+                    </div>
+                    <p class="note">
+                        <a href="#"><i class="fa fa-thumbs-up"></i> Me gusta&nbsp;&nbsp;</a>
+                        <a href="#"><i class="fa fa-chain"></i> Compartir&nbsp;&nbsp;</a>
+                        <a href="#"><i class="fa fa-star txt-color-yellow"></i> Favorito&nbsp;&nbsp;</a>
+                        {% if arTema.video != '' %}
+                            <a class="fa fa-video-camera txt-color-blue modal-open btn btn-xs video-modal"
+                               onclick="actualizarUrlVideo('{{ arTema.video }}')" data-toggle="modal"
+                               data-target="#myModal">Video
+                            </a>
+                        {% endif %}
+                    </p>
+                    <div>
+                        <a href="{{ arTema.url }}" class="url text-success" target="_blank">{{ arTema.url }}</a></i>
+                    </div>
+                    <p class="description" style="color: black;">
+                        {{ arTema.descripcion }}
+                        <cite style="color: grey!important;font-size: 12px;"> -- Ultima actualización
+                            --{{ arTema.fechaActualizacion|date('Y-m-d') }}</cite>
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% include 'general/utilidad/general/documentacion/video.html.twig' %}
+    {{ form_end(form) }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(".calificar-estrellas").change(function () {
+            $.ajax({
+                url: "{{ path('documentacion_calificar') }}",
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    calificacion: $('input:radio[name=calificacion-' + $(this).attr("data-id") + ']:checked').attr("id")
+                }, success: function () {
+                    console.log(true);
+                }
+            })
+        });
+        function actualizarUrlVideo(urlVideo) {
+            $(".modal-body").html("<iframe name='video' width='100%' height='500' src=" + urlVideo + " > </iframe>");
+        }
+    </script>
+{% endblock %}

@@ -38,8 +38,8 @@
                 <td>{{ arPrecio.codigoPrecioPk }}</td>
                 <td>{{ arPrecio.nombre }}</td>
                 <td>{{ arPrecio.fechaVence | date('Y-m-d') }}</td>
-                {{ validarTipo(arPrecio.venta) }}
-                {{ validarTipo(arPrecio.compra) }}
+                <td class="numero">{{ arPrecio.venta }}</td>
+                <td class="numero">{{ arPrecio.compra }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('inventario_administracion_general_precio_nuevo',{'id' : arPrecio.codigoPrecioPk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">

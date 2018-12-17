@@ -342,7 +342,6 @@ class InvImportacionRepository extends ServiceEntityRepository
             ->addSelect('i.estadoContabilizado')
             ->addSelect('i.vrSubtotalLocal')
             ->addSelect('it.codigoComprobanteFk')
-            ->addSelect('it.codigoCuentaInventarioTransitoFk')
 //            ->addSelect('ft.codigoCuentaIngresoTerceroFk')
             ->leftJoin('i.importacionTipoRel', 'it')
             ->where('i.codigoImportacionPk = ' . $codigo);
@@ -350,11 +349,11 @@ class InvImportacionRepository extends ServiceEntityRepository
         return $arImportacion;
     }
 
-    public function contabilizar($arr): bool
+    public function contabilizar($arr = null)
     {
         $em = $this->getEntityManager();
+        $error = "";
         if ($arr) {
-            $error = "";
             foreach ($arr AS $codigo) {
                 $arImportacion = $em->getRepository(InvImportacion::class)->registroContabilizar($codigo);
                 if($arImportacion) {
@@ -394,39 +393,43 @@ class InvImportacionRepository extends ServiceEntityRepository
                                 break;
                             }
                         }
-                        //Cuenta de inventario en transito
-                        if($arImportacion['codigoCuentaInventarioTransitoFk']) {
-                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arImportacion['codigoCuentaInventarioTransitoFk']);
-                            if(!$arCuenta) {
-                                $error = "No se encuentra la cuenta de inventario en transito " . $arImportacion['codigoCuentaInventarioTransitoFk'];
+
+                        //Cuenta inventario transito
+                        $arrInventariosTransito = $em->getRepository(InvImportacionDetalle::class)->cuentaInventarioTransito($codigo);
+                        foreach ($arrInventariosTransito as $arrInventarioTransito) {
+                            if($arrInventarioTransito['codigoCuentaInventarioTransitoFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrInventarioTransito['codigoCuentaInventarioTransitoFk']);
+                                if(!$arCuenta) {
+                                    $error = "No se encuentra la cuenta " . $arrInventarioTransito['codigoCuentaInventarioTransitoFk'];
+                                    break 2;
+                                }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                /*if($arCuenta->getExigeCentroCosto()) {
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arImportacion['codigoCentroCostoFk']);
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }*/
+                                //$arRegistro->setNumeroPrefijo($arImportacion['prefijo']);
+                                $arRegistro->setNumero($arImportacion['numero']);
+                                //$arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
+                                //$arRegistro->setNumeroReferencia($numeroReferencia);
+                                $arRegistro->setFecha($arImportacion['fecha']);
+                                $arRegistro->setVrCredito($arrInventarioTransito['vrSubtotalLocal']);
+                                $arRegistro->setNaturaleza('C');
+                                $arRegistro->setDescripcion('INVENTARIO TRANSITO');
+                                $arRegistro->setCodigoModeloFk('InvImportacion');
+                                $arRegistro->setCodigoDocumento($arImportacion['codigoImportacionPk']);
+                                $em->persist($arRegistro);
+                            } else {
+                                $error = "No tiene configurada la cuenta de compra para el los item de esta importacion";
                                 break;
                             }
-                            $arRegistro = new FinRegistro();
-                            $arRegistro->setTerceroRel($arTercero);
-                            $arRegistro->setCuentaRel($arCuenta);
-                            $arRegistro->setComprobanteRel($arComprobante);
-                            /*if($arCuenta->getExigeCentroCosto()) {
-                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arImportacion['codigoCentroCostoFk']);
-                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                            }*/
-                            //$arRegistro->setNumeroPrefijo($arImportacion['prefijo']);
-                            $arRegistro->setNumero($arImportacion['numero']);
-                            //$arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
-                            //$arRegistro->setNumeroReferencia($numeroReferencia);
-                            $arRegistro->setFecha($arImportacion['fecha']);
-                            $arRegistro->setVrCredito($arImportacion['vrSubtotalLocal']);
-                            $arRegistro->setNaturaleza('C');
-                            $arRegistro->setDescripcion('COMPRA/IMPORTACION');
-                            $arRegistro->setCodigoModeloFk('InvImportacion');
-                            $arRegistro->setCodigoDocumento($arImportacion['codigoImportacionPk']);
-                            $em->persist($arRegistro);
-                        } else {
-                            $error = "No tiene configurada la cuenta de compra para el los item de esta importacion";
-                            break;
                         }
 
                         $arImportacionAct = $em->getRepository(InvImportacion::class)->find($arImportacion['codigoImportacionPk']);
-                        //$arImportacionAct->setEstadoContabilizado(1);
+                        $arImportacionAct->setEstadoContabilizado(1);
                         $em->persist($arImportacionAct);
                     }
                 } else {
@@ -439,9 +442,10 @@ class InvImportacionRepository extends ServiceEntityRepository
             } else {
                 Mensajes::error($error);
             }
-
+        } else {
+            $error = "No se seleccionaron registros para contabilizar";
         }
-        return true;
+        return $error;
     }    
     
 }

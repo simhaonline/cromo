@@ -38,7 +38,7 @@ class TerceroType extends AbstractType
             ])
             ->add('numeroIdentificacion', TextType::class, ['label' => 'Identificación:'])
             ->add('digitoVerificacion', NumberType::class, ['label' => 'Digito verificación:'])
-            ->add('razonSocial', TextType::class, ['label' => 'Razón social:'])
+            ->add('razonSocial', TextType::class, ['label' => 'Razón comunidad:'])
             ->add('ciudadRel', EntityType::class, [
                 'required' => true,
                 'class' => GenCiudad::class,

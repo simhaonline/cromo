@@ -20,7 +20,7 @@ class BuscarController extends BaseController
     public function buscar(Request $request, $clave)
     {
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
-        $arPerfil=FuncionesController::solicitudesGet(ApiSocial::getApi('buscarAmigos').$usuario.'/'.$clave);
+        $arPerfil=FuncionesController::solicitudesGet(ApiComunidad::getApi('buscarAmigos').$usuario.'/'.$clave);
         $em=$this->getDoctrine()->getManager();
         $misSolicitudes=BuscarController::misSolicitudesPendientes($usuario);
         $formBusqueda=$this->createFormBuilder()
@@ -67,7 +67,7 @@ class BuscarController extends BaseController
      */
     public function enviarSolicitud($usernameSolicitado, $clave){
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
-        $enviarSolicitud=FuncionesController::solicitudesGet(ApiSocial::getApi('enviarSolicitud').$usuario.'/'.$usernameSolicitado);
+        $enviarSolicitud=FuncionesController::solicitudesGet(ApiComunidad::getApi('enviarSolicitud').$usuario.'/'.$usernameSolicitado);
         if($enviarSolicitud['estado']){
             return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$clave]));
         }
@@ -78,7 +78,7 @@ class BuscarController extends BaseController
      */
     public function eliminarAmigo($usernameSolicitado, $clave){
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
-        $eliminarAmigo=FuncionesController::solicitudesGet(ApiSocial::getApi('eliminarAmigo').$usuario.'/'.$usernameSolicitado);
+        $eliminarAmigo=FuncionesController::solicitudesGet(ApiComunidad::getApi('eliminarAmigo').$usuario.'/'.$usernameSolicitado);
         if($eliminarAmigo['estado']){
             return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$clave]));
         }
@@ -91,7 +91,7 @@ class BuscarController extends BaseController
     public function agregarAmigo($usernameSolicitado, $clave, $notificacion=false){
         $notificacion=(boolean)$notificacion;
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
-        $agregarAmigo=FuncionesController::solicitudesGet(ApiSocial::getApi('aceptarAmigo').$usuario.'/'.$usernameSolicitado);
+        $agregarAmigo=FuncionesController::solicitudesGet(ApiComunidad::getApi('aceptarAmigo').$usuario.'/'.$usernameSolicitado);
         if($agregarAmigo['estado'] && !$notificacion){
             return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$clave]));
         }
@@ -105,7 +105,7 @@ class BuscarController extends BaseController
      */
     public function cancelarSolicitud($usernameSolicitado, $clave){
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
-        $cancelarSolicitud=FuncionesController::solicitudesGet(ApiSocial::getApi('cancelarSolicitud').$usuario.'/'.$usernameSolicitado);
+        $cancelarSolicitud=FuncionesController::solicitudesGet(ApiComunidad::getApi('cancelarSolicitud').$usuario.'/'.$usernameSolicitado);
         if($cancelarSolicitud['estado']){
             return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$clave]));
         }
@@ -114,7 +114,7 @@ class BuscarController extends BaseController
 
     public function misSolicitudesPendientes($username){
 
-        $solicitudes=FuncionesController::solicitudesGet(ApiSocial::getApi('solicitudes').$username);
+        $solicitudes=FuncionesController::solicitudesGet(ApiComunidad::getApi('solicitudes').$username);
         if($solicitudes['estado']){
             return $solicitudes;
         }

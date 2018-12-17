@@ -11,7 +11,7 @@
         <div class="row">
             {{ form_start(formBusqueda) }}
             {{ form_errors(formBusqueda) }}
-            {% include ('social/buscardor.html.twig') %}
+            {% include ('comunidad/buscardor.html.twig') %}
             {{ form_rest(formBusqueda) }}
             {{ form_end(formBusqueda) }}
             <div class="col-sm-10 col-lg-offset-1">
@@ -30,9 +30,9 @@
                                             <div class="air air-bottom-right padding-10">
                                                 {% if conexion.usuario %}
                                                     {% if conexion.conectado %}
-                                                        <a href="{{ path('social_perfil_conexion',{'username': app.user.username}) }}" class="btn txt-color-white bg-color-greenLight btn-sm"><i class="fa fa-link"></i> Conectado</a>
+                                                        <a href="{{ path('comunidad_perfil_conexion',{'username': app.user.username}) }}" class="btn txt-color-white bg-color-greenLight btn-sm"><i class="fa fa-link"></i> Conectado</a>
                                                     {% else %}
-                                                        <a href="{{ path('social_perfil_conexion',{'username': app.user.username}) }}" class="btn txt-color-white bg-color-redLight btn-sm"><i class="fa fa-link"></i> Desconectado</a>
+                                                        <a href="{{ path('comunidad_perfil_conexion',{'username': app.user.username}) }}" class="btn txt-color-white bg-color-redLight btn-sm"><i class="fa fa-link"></i> Desconectado</a>
                                                     {% endif %}
                                                 {% else %}
                                                     <a  class="btn txt-color-white bg-color-redLight btn-sm" data-toggle="modal" data-target="#advertencia_social"><i class="fa fa-link"></i> Desconectado</a>
@@ -161,7 +161,7 @@
                                         <a id="amigos" onclick="amigos()" href="#a2" data-toggle="tab">Amigos</a>
                                     </li>
                                     <li class="active">
-                                        <a href="comentarios" onclick="comentarios()" data-toggle="tab">Recent Articles</a>
+                                        <a href="#a1" onclick="comentarios()" data-toggle="tab">Recent Articles</a>
                                     </li>
                                     {#<li class="pull-left">#}
                                     {#<span class="margin-top-10 display-inline"><i class="fa fa-rss text-success"></i> Actividad</span>#}
@@ -178,7 +178,7 @@
                 </div>
                 <div class="well well-sm" style="margin-top:5% ">
                         <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-12" style="padding-left: 3%">
 
                         <hr>
 
@@ -187,6 +187,10 @@
 
 
                             <div class="tab-content padding-top-10">
+                                <div class="tab-pane fade  myScroll" id="a2">
+
+
+                                </div><!-- end tab -->
                                 <div class="tab-pane fade in active" id="a1">
 
                                     <div class="col-sm-12 col-md-12 col-lg-12" >
@@ -372,53 +376,6 @@
                                     </div>
 
                                 </div>
-                                <div class="tab-pane fade myScroll" id="a2">
-
-                                    {#<div class="alert alert-info fade in">#}
-                                    {#<button class="close" data-dismiss="alert">#}
-                                    {#×#}
-                                    {#</button>#}
-                                    {#<i class="fa-fw fa fa-info"></i>#}
-                                    {#<strong>51 new members </strong>joined today!#}
-                                    {#</div>#}
-                                    {#{% set tieneAmigos=0 %}#}
-                                    {#{% if amigos |length >0 %}#}
-                                    {#{% for amigos in amigos %}#}
-                                    {#{% if amigos.nombre !='null'%}#}
-                                    {#{% set tieneAmigos=1 %}#}
-                                    {#<div class="user" >#}
-                                    {#<div class="amigoDescripcion">#}
-                                    {#{% if amigos.foto is defined %}#}
-                                    {#<img  src="{{ amigos.foto}}" alt="demo user">#}
-                                    {#{% else %}#}
-                                    {#<img  src="{{ asset('img/avatars/female.png') }}" alt="demo user">#}
-                                    {#{% endif %}#}
-                                    {#<a href="javascript:void(0);">{{ amigos.nombre }}</a>#}
-                                    {#<div class="email">#}
-                                    {#travis@company.com#}
-                                    {#</div>#}
-                                    {#</div>#}
-                                    {#<div class="botonAmigos">#}
-                                    {#<button class="btn btn-default">#}
-                                    {#<li class="fa fa-user font-md"></li>#}
-                                    {#</button>#}
-                                    {#</div>#}
-                                    {#</div>#}
-                                    {#{% endif %}#}
-                                    {#{% endfor %}#}
-                                    {#{% endif %}#}
-
-
-                                    {#{% if tieneAmigos==0 %}#}
-                                    {#<div  style="border: 0; display: flex; align-items: baseline; width: 100%">#}
-                                    {#<h5 style="font-size: 15px; margin-right: auto; margin-left: auto"><i  style="font-size: 21px" class="fas fa-user-slash" ></i> Aun no tienes amigos</h5>#}
-                                    {#</div>#}
-                                    {#{% endif %}#}
-
-
-
-
-                                </div><!-- end tab -->
                             </div>
                             <div class="text-center">
                                 {#<ul class="pagination pagination-sm">#}
@@ -486,7 +443,7 @@
                         <span>Se esta conectando por primera vez a la social... esta de acuerdo...?</span>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <a href="{{ path('social_perfil_conexion',{'username': app.user.username,'registro':'true'})}}"  type="button" class="btn btn-primary">Aceptar</a>
+                            <a href="{{ path('comunidad_perfil_conexion',{'username': app.user.username,'registro':'true'})}}"  type="button" class="btn btn-primary">Aceptar</a>
                             {#{{ form_widget(form.btnSubirFoto) }}#}
                         </div>
                     </div>
@@ -504,7 +461,10 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+        var aux=0;
+        var auxAmigos=20;
         function  amigos(){
+            aux=0;
             $('.myScroll').html('');
             verAmigos();
         }
@@ -515,7 +475,7 @@
             console.log(data);
             for(var i=0;i<=data.length;i++ ){
                 var html;
-                if(data[i].nombre!=='null') {
+                if(data[i].nombre!=='null'&& i<20) {
                     html="<div class='user' ><div class='amigoDescripcion'>";
                     if (typeof data[i].foto !== 'undefined') {
                         html+="<img  src=" + data[i].foto + " alt='demo user'>";
@@ -536,15 +496,28 @@
 
 
         $(window).scroll(function () {
-            console.log("hola");
-            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+            aux++;
+            if ($(window).scrollTop() == $(document).height() - $(window).height() && aux>1) {
                 appendData();
             }
         });
         function appendData() {
+            var data={{ amigos|json_encode|raw }};
             var html = '';
-            for (var i = 0; i < 10; i++) {
-                html+="<div  style='border: 0; display: flex; align-items: baseline; width: 100%'><h5 style='font-size: 15px; margin-right: auto; margin-left: auto'><i  style='font-size: 21px' class='fas fa-user-slash' ></i> Aun no tienes amigos</h5></div>";
+            var iHasta=auxAmigos+20;
+            for (var i = auxAmigos; i<=iHasta; i++) {
+                auxAmigos++;
+                if(data[i].nombre!=='null' && data[i]!=='undefined') {
+                    html = "<div class='user' ><div class='amigoDescripcion'>";
+                    if (typeof data[i].foto !== 'undefined') {
+                        html += "<img  src=" + data[i].foto + " alt='demo user'>";
+                    }
+                    else {
+                        html += "<img  src='{{ asset('img/avatars/female.png') }}' alt='demo user'>";
+                    }
+                    html += "<a href=''>" + data[i].nombre + "</a><div class='email'>travis@company.com</div></div><div class='botonAmigos'><button class='btn btn-default'><li class='fa fa-user font-md'></li></button></div></div>";
+                    $('.myScroll').append(html);
+                }
             }
             $('.myScroll').append(html);
         }

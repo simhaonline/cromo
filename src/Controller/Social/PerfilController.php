@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PerfilController extends BaseController
 {
     /**
-     * @Route("/social/perfil/ver", name="social_perfil_ver")
+     * @Route("/comunidad/perfil/ver", name="comunidad_perfil_ver")
      * @param $usuario Usuario
      */
     public function verPerfil(Request $request)
@@ -28,8 +28,8 @@ class PerfilController extends BaseController
         ini_set("memory_limit", -1);
         $datos=json_encode(['datos'=>['estado'=>'']]);
         $dato=json_encode(['datos'=>['maximo_resultado'=>10]]);
-        $conexion= FuncionesController::solicitudesPost($datos,ApiSocial::getApi('conexion') .$usuario->getUsername());
-        $amigos= FuncionesController::solicitudesPost($dato,ApiSocial::getApi('misAmigos') .$usuario->getUsername());
+        $conexion= FuncionesController::solicitudesPost($datos,ApiComunidad::getApi('conexion') .$usuario->getUsername());
+        $amigos= FuncionesController::solicitudesPost($dato,ApiComunidad::getApi('misAmigos') .$usuario->getUsername());
         $informacionUsuario= [
             'nombreCorto'   =>$usuario->getNombreCorto(),
 //            'rol'           =>$usuario->getRoles()[0]=="ROLE_ADMIN"?"Administrador":"Usuario",
@@ -56,7 +56,7 @@ class PerfilController extends BaseController
             if($formBusqueda->get('btnBuscar')->isSubmitted()){
                 if($formBusqueda->get('busqueda')->getData()!=""){
 
-                    return $this->redirect($this->generateUrl('social_buscar_general',['clave'=>$formBusqueda->get('busqueda')->getData()]));
+                    return $this->redirect($this->generateUrl('comunidad_buscar_general',['clave'=>$formBusqueda->get('busqueda')->getData()]));
                 }
                 else{
                     Mensajes::error("Debes ingresar una palabra o frase para iniciar la busqueda");
@@ -85,11 +85,11 @@ class PerfilController extends BaseController
                 $imagen=base64_encode($arUsuario->getFoto());
                 $session=new Session();
                 $session->set('foto_perfil',"data:image/jpeg;base64,{$imagen}");
-                return $this->redirect($this->generateUrl('social_perfil_ver'));
+                return $this->redirect($this->generateUrl('comunidad_perfil_ver'));
             }
 
         }
-        return $this->render('social/perfil.html.twig',[
+        return $this->render('comunidad/perfil.html.twig',[
             'form'=>$form->createView(),
             'formBusqueda'=>$formBusqueda->createView(),
             'arUsuario'=>$informacionUsuario,
@@ -100,7 +100,7 @@ class PerfilController extends BaseController
     }
 
     /**
-     * @Route("/social/perfil/conexion/{username}/{registro}", name="social_perfil_conexion")
+     * @Route("/comunidad/perfil/conexion/{username}/{registro}", name="comunidad_perfil_conexion")
      */
     public function conexionUsuario($username, $registro=false){
         $em=$this->getDoctrine()->getManager();
@@ -109,18 +109,18 @@ class PerfilController extends BaseController
         if($registro=='true'){
         $nombreCorto=$em->getRepository('App:Seguridad\Usuario')->find($username)->getNombreCorto();
         $datos=json_encode(['datos'=>['clave'=>'123456','nombreCorto'=>$nombreCorto]]);
-            FuncionesController::solicitudesPost($datos,ApiSocial::getApi('conexion').$username);
+            FuncionesController::solicitudesPost($datos,ApiComunidad::getApi('conexion').$username);
         }
         else{
-            FuncionesController::solicitudesPost([],ApiSocial::getApi('conexion').$username);
+            FuncionesController::solicitudesPost([],ApiComunidad::getApi('conexion').$username);
         }
 
 
-        return $this->redirect($this->generateUrl('social_perfil_ver'));
+        return $this->redirect($this->generateUrl('comunidad_perfil_ver'));
     }
 
     /**
-     * @Route("/social/perfil/verAmigos/{$username}", name="social_perfil_verAmigos")
+     * @Route("/comunidad/perfil/verAmigos/{$username}", name="comunidad_perfil_verAmigos")
      */
     public function verAmigos(){
 

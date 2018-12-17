@@ -57,7 +57,7 @@
               media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
         <link rel="apple-touch-startup-image" href="{{ asset('img/splash/iphone.png') }}"
               media="screen and (max-device-width: 320px)">
-        <link rel="stylesheet" href="{{ asset('css/social.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/comunidad.css') }}">
 
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('plugins/fontawesome/css/all.min.css') }}">
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/font-awesome.min.css') }}">
@@ -149,7 +149,7 @@
             {#{% include('base_calendario.html.twig') %}#}
         {#{% endif %}#}
 
-        {% if arrRuta.0 == 'social' %}
+        {% if arrRuta.0 == 'comunidad' %}
             {% include('base_menu_inicio.html.twig') %}
         {% endif %}
     {% elseif arrRuta.0 == 'administracion' %}
@@ -187,7 +187,7 @@
     {% endif %}
 
     {% include 'base_opcion_calendario.html.twig' %}
-    {% include 'base_social.html.twig' %}
+    {% include 'base_comunidad.html.twig' %}
 
     <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
 
@@ -299,8 +299,8 @@ you can add as many as you like
                             class="fa fa-picture-o fa-4x"></i> <span>Gallery </span> </span> </a>
         </li>
         <li>
-            <a href="{{ path('social_perfil_ver') }}" class="jarvismetro-tile big-cubes selected bg-color-pinkDark">
-                <span class="iconbox"> <i class="fa fa-user fa-4x"></i> <span>My Profile </span> </span> </a>
+            <a href="{{ path('comunidad_perfil_ver') }}" class="jarvismetro-tile big-cubes selected bg-color-pinkDark">
+                <span class="iconbox"> <i class="fa fa-user fa-4x"></i> <span>Mi Perfil </span> </span> </a>
         </li>
     </ul>
 </div>
@@ -360,7 +360,7 @@ you can add as many as you like
     <script src="{{ asset('js/plugin/moment/moment.min.js') }}"></script>
     <script src="{{ asset('js/plugin/fullcalendar/fullcalendar.min.js') }}"></script>
     <script src="{{ asset('js/fontawesome.min.js') }}"></script>
-    <script src="{{ asset('js/social.js') }}"></script>
+    <script src="{{ asset('js/comunidad.js') }}"></script>
 
     <script>
         // DO NOT REMOVE : GLOBAL FUNCTIONS!

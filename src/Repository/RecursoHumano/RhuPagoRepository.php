@@ -181,7 +181,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             $arConcepto = $arSalud->getConceptoRel();
             if ($arConcepto) {
                 /*
-                 * La base de aportes a seguridad social tanto en salud como en pensión,
+                 * La base de aportes a seguridad comunidad tanto en salud como en pensión,
                  * no puede ser inferior al salario mínimo ni superior a los 25 salarios mínimos mensuales.
                  * Esta limitación está dada por el artículo 5 de la ley 797 de 2003, reglamentado por el decreto 510 de 2003 en su artículo 3:
                  */
@@ -209,7 +209,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             $arConcepto = $arPension->getConceptoRel();
             if ($arConcepto) {
                 /*
-                 * La base de aportes a seguridad social tanto en salud como en pensión,
+                 * La base de aportes a seguridad comunidad tanto en salud como en pensión,
                  * no puede ser inferior al salario mínimo ni superior a los 25 salarios mínimos mensuales.
                  * Esta limitación está dada por el artículo 5 de la ley 797 de 2003, reglamentado por el decreto 510 de 2003 en su artículo 3:
                  */

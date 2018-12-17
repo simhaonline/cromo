@@ -85,10 +85,10 @@
             <tbody>
             {% for arMovimiento in arMovimientos %}
                 <tr>
-                    {{ validarTipo(arMovimiento.codigoMovimientoPk ) }}
-                    {{ validarTipo(arMovimiento.numero) }}
-                    {{ validarTipo(arMovimiento.terceroNombreCorto ) }}
-                    {{ validarTipo(arMovimiento.fecha) }}
+                    <td>{{ arMovimiento.codigoMovimientoPk }}</td>
+                    <td>{{ arMovimiento.numero }}</td>
+                    <td>{{ arMovimiento.terceroNombreCorto }}</td>
+                    <td>{{ arMovimiento.fecha | date('Y-m-d') }}</td>
                     <td class="numero">{{ arMovimiento.vrSubtotal | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arMovimiento.vrIva | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arMovimiento.vrDescuento | number_format(0, '.', ',') }}</td>

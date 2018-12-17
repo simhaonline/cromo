@@ -24,33 +24,33 @@
         </tr>
         <tr>
             <td class="titulo"><b>PRECIO PESO:</b></td>
-            {{ validarTipo(arCondicion.precioPeso) }}
+            <td class="td-in-well numero">{{ arCondicion.precioPeso }}</td>
             <td class="titulo"><b>PRECIO UNIDAD:</b></td>
-            {{ validarTipo(arCondicion.precioUnidad) }}
+            <td class="td-in-well numero">{{ arCondicion.precioUnidad }}</td>
         </tr>
         <tr>
             <td class="titulo"><b>PRECIO ADICIONAL:</b></td>
-            {{ validarTipo(arCondicion.precioAdicional) }}
+            <td class="td-in-well numero">{{ arCondicion.precioAdicional }}</td>
             <td class="titulo"><b>PRECIO GENERAL:</b></td>
-            {{ validarTipo(arCondicion.precioGeneral) }}
+            <td class="td-in-well numero">{{ arCondicion.precioGeneral }}</td>
         </tr>
         <tr>
             <td class="titulo"><b>PERMITE RECAUDO:</b></td>
-            {{ validarTipo(arCondicion.permiteRecaudo) }}
+            <td class="td-in-well">{{ arCondicion.permiteRecaudo ? 'SI' : 'NO' }}</td>
             <td class="titulo"><b>REDONDEAR FLETE:</b></td>
-            {{ validarTipo(arCondicion.redondearFlete) }}
+            <td class="td-in-well">{{ arCondicion.redondearFlete ? 'SI' : 'NO'}}</td>
         </tr>
         <tr>
             <td class="titulo"><b>DESCUENTO PESO:</b></td>
-            <td class="td-in-well">{{ arCondicion.descuentoPeso }}</td>
+            <td class="td-in-well numero">{{ arCondicion.descuentoPeso }}</td>
             <td class="titulo"><b>DESCUENTO UNIDAD:</b></td>
-            <td class="td-in-well">{{ arCondicion.descuentoUnidad }}</td>
+            <td class="td-in-well numero">{{ arCondicion.descuentoUnidad }}</td>
         </tr>
         <tr>
             <td class="titulo"><b>PESO MINIMO:</b></td>
             <td class="td-in-well">{{ arCondicion.pesoMinimo }}</td>
             <td class="titulo"><b>LIMITAR DESCUENTO REEXPEDICION:</b></td>
-            {{ validarTipo(arCondicion.limitarDescuentoReexpedicion) }}
+            <td class="td-in-well">{{ arCondicion.limitarDescuentoReexpedicion ? 'SI' : 'NO' }}</td>
         </tr>
     </table>
     <a name="marcador"></a>

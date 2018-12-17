@@ -83,9 +83,9 @@
                 <td>{{ arRecibo.nombre }}</td>
                 <td class="numero">{{ arRecibo.vrPagoTotal | number_format(0, '.', ',') }}</td>
                 <td>{{ arRecibo.usuario }}</td>
-                {{ validarTipo(arRecibo.estadoAnulado) }}
-                {{ validarTipo(arRecibo.estadoAutorizado) }}
-                {{ validarTipo(arRecibo.estadoAprobado) }}
+                <td>{{ arRecibo.estadoAnulado }}</td>
+                <td>{{ arRecibo.estadoAutorizado }}</td>
+                <td>{{ arRecibo.estadoAprobado }}</td>
                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecibo.codigoReciboPk }}" /></td>
             </tr>
         {% endfor %}

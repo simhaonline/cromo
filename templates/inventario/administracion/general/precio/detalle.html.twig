@@ -4,7 +4,8 @@
     {{ notificar()|raw }}
     <div class="btn-toolbar">
         <div class="btn-group">
-            <a href="{{ path('inventario_administracion_general_precio_lista') }}" class="btn btn-default btn-sm">Volver</a>
+            <a href="{{ path('inventario_administracion_general_precio_lista') }}"
+               class="btn btn-default btn-sm">Volver</a>
         </div>
     </div>
     <br>
@@ -17,13 +18,13 @@
         </tr>
         <tr>
             <td class="titulo">COMPRA:</td>
-            {{ validarTipo(arPrecio.compra) }}
+            <td class="td-in-well">{{ arPrecio.compra }}</td>
             <td class="titulo">FECHA VENCE:</td>
-            {{ validarTipo(arPrecio.fechaVence | date('Y-m-d')) }}
+            <td class="td-in-well">{{ arPrecio.fechaVence | date('Y-m-d') }}</td>
         </tr>
         <tr>
             <td class="titulo">VENTA:</td>
-            {{ validarTipo(arPrecio.venta) }}
+            <td class="td-in-well numero">{{ arPrecio.venta }}</td>
             <td class="titulo"></td>
             <td></td>
         </tr>
@@ -61,30 +62,34 @@
                                 <td style="width: 100px;">{{ arPrecioDetalle.diasPromedioEntrega }}</td>
                                 <td class="numero">{{ arPrecioDetalle.vrPrecio | number_format }}</td>
                                 <td class="numero">{{ arPrecioDetalle.porcentajeIva }}</td>
-                                <td style="text-align: center;"><a href="javascript:abrirVentana3('{{ path('inventario_administracion_general_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': arPrecioDetalle.codigoPrecioDetallePk }) }}', 'precioDetalles', 600, 900)"><i class="fa fa-edit" style="font-size: large; color: black;"></i></a>
+                                <td style="text-align: center;"><a
+                                            href="javascript:abrirVentana3('{{ path('inventario_administracion_general_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': arPrecioDetalle.codigoPrecioDetallePk }) }}', 'precioDetalles', 600, 900)"><i
+                                                class="fa fa-edit" style="font-size: large; color: black;"></i></a>
                                 </td>
-                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPrecioDetalle.codigoPrecioDetallePk }}" /></td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                                       value="{{ arPrecioDetalle.codigoPrecioDetallePk }}"/>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                    <div class="btn-toolbar" style="float: right">
-                        <div class="btn-group">
-                            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-                        </div>
-                        <div class="btn-group">
-                            <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('inventario_administracion_general_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': 0 }) }}', 'precioDetalles', 600, 900)">Nuevo</a>
-                        </div>
-                        <div class="btn-group">
-                            {{ form_widget(form.btnEliminarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
-                        </div>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn btn-default btn-sm"
+                           href="javascript:abrirVentana3('{{ path('inventario_administracion_general_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': 0 }) }}', 'precioDetalles', 600, 900)">Nuevo</a>
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
     {{ form_end(form) }}
-    <a  class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Volver</a>
+    <a class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Volver</a>
 {% endblock %}

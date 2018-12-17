@@ -59,8 +59,8 @@
                 <td class="numero">{{ arGuia.pesoReal }}</td>
                 <td style="text-align: right"><input class="input-grid" type="text" name="txtFechaEntrega{{ arGuia.codigoGuiaPk }}" value="{{ "now"|date("Y/m/d") }}" size="20" style="text-align: right; width:80px" onclick="this.select()"/></td>
                 <td style="text-align: right"><input class="input-grid" type="text" name="txtHoraEntrega{{ arGuia.codigoGuiaPk }}"  value="{{ "now"|date("H:i") }}" size="10" style="text-align: right; width:40px" onclick="this.select()"/></td>
-                {{ validarTipo(arGuia.estadoNovedad) }}
-                {{ validarTipo(arGuia.estadoNovedadSolucion) }}
+                <td>{{ arGuia.estadoNovedad ? 'SI':'NO' }}</td>
+                <td>{{ arGuia.estadoNovedadSolucion ? 'SI':'NO' }}</td>
                 <td class="seleccion"><input type="checkbox" name="chkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}" /></td>
             </tr>
         {% endfor %}

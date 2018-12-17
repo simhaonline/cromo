@@ -27,12 +27,12 @@
                 <td>{{ arCondicion.porcentajeManejo }}</td>
                 <td>{{ arCondicion.manejoMinimoUnidad }}</td>
                 <td>{{ arCondicion.manejoMinimoDespacho }}</td>
-                {{ validarTipo(arCondicion.precioPeso) }}
-                {{ validarTipo(arCondicion.precioUnidad) }}
-                {{ validarTipo(arCondicion.precioAdicional) }}
-                <td>{{ arCondicion.descuentoPeso }}</td>
-                <td>{{ arCondicion.descuentoUnidad }}</td>
-                {{ validarTipo(arCondicion.permiteRecaudo) }}
+                <td class="numero">{{ arCondicion.precioPeso }}</td>
+                <td class="numero">{{ arCondicion.precioUnidad }}</td>
+                <td class="numero">{{ arCondicion.precioAdicional }}</td>
+                <td class="numero">{{ arCondicion.descuentoPeso }}</td>
+                <td class="numero">{{ arCondicion.descuentoUnidad }}</td>
+                <td>{{ arCondicion.permiteRecaudo ? 'SI' : 'NO' }}</td>
                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                        value="{{ arCondicion.codigoCondicionPk }}"/></td>
             </tr>

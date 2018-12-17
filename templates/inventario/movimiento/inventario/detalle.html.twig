@@ -133,10 +133,9 @@
                                 <input type="hidden"
                                        name="arrCodigo[]"
                                        value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}">
-                                {{ validarTipo(arMovimientoDetalle.codigoItemFk) }}
-                                {{ validarTipo(arMovimientoDetalle.itemNombre) }}
-                                {{ validarTipo(arMovimientoDetalle.itemReferencia) }}
-
+                                <td>{{ arMovimientoDetalle.codigoItemFk }}</td>
+                                <td>{{ arMovimientoDetalle.itemNombre }}</td>
+                                <td>{{ arMovimientoDetalle.itemReferencia }}</td>
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td>{{ arMovimientoDetalle.loteFk }}</td>
                                     <td>{{ arMovimientoDetalle.codigoBodegaFk }}</td>

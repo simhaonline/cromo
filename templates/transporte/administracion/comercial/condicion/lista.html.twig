@@ -41,12 +41,12 @@
                 <td style="text-align: center;">{{ arCondicion.porcentajeManejo }}</td>
                 <td style="text-align: center;">{{ arCondicion.manejoMinimoUnidad }}</td>
                 <td style="text-align: center;">{{ arCondicion.manejoMinimoDespacho }}</td>
-                {{ validarTipo(arCondicion.precioPeso) }}
-                {{ validarTipo(arCondicion.precioUnidad) }}
-                {{ validarTipo(arCondicion.precioAdicional) }}
+                <td class="numero">{{ arCondicion.precioPeso }}</td>
+                <td class="numero">{{ arCondicion.precioUnidad }}</td>
+                <td class="numero">{{ arCondicion.precioAdicional }}</td>
                 <td style="text-align: right;">{{ arCondicion.descuentoPeso }}</td>
                 <td style="text-align: right;">{{ arCondicion.descuentoUnidad }}</td>
-                {{ validarTipo(arCondicion.permiteRecaudo) }}
+                <td>{{ arCondicion.permiteRecaudo ? 'SI' : 'NO' }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('transporte_administracion_comercial_condicion_nuevo',{'id' : arCondicion.codigoCondicionPk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">

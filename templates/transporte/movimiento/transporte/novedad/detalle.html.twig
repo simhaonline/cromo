@@ -24,13 +24,13 @@
         </tr>
         <tr>
             <td class="titulo"><b>REPORTADO:</b></td>
-            {{ validarTipo(arNovedad.estadoReporte) }}
+            <td class="td-in-well">{{ arNovedad.estadoReporte ? 'SI' : 'NO' }}</td>
             <td class="titulo"><b>ATENDIDO:</b></td>
-            {{ validarTipo(arNovedad.estadoAtendido) }}
+            <td class="td-in-well">{{ arNovedad.estadoAtendido ? 'SI' : 'NO' }}</td>
         </tr>
         <tr>
             <td class="titulo"><b>SOLUCIONADO:</b></td>
-            {{ validarTipo(arNovedad.estadoSolucion) }}
+            <td class="td-in-well">{{ arNovedad.estadoSolucion ? 'SI' : 'NO' }}</td>
             <td class="titulo"><b></b></td>
             <td class="titulo"><b></b></td>
         </tr>

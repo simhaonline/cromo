@@ -24,21 +24,20 @@
             <tbody>
             {% for arUsuario in arUsuarios %}
                 <tr>
-                    {{ validarTipo(arUsuario.username) }}
-                    {{ validarTipo(arUsuario.codigoOperacionFk) }}
-                    {{ validarTipo(arUsuario.nombreCorto) }}
-                    {{ validarTipo(arUsuario.numeroIdentificacion)}}
-                    {{ validarTipo(arUsuario.cargo) }}
-                    {{ validarTipo(arUsuario.email) }}
-                    {{ validarTipo(arUsuario.telefono) }}
-                    {{ validarTipo(arUsuario.extension) }}
+                    <td>{{ arUsuario.username }}</td>
+                    <td>{{ arUsuario.codigoOperacionFk }}</td>
+                    <td>{{ arUsuario.nombreCorto }}</td>
+                    <td>{{ arUsuario.numeroIdentificacion }}</td>
+                    <td>{{ arUsuario.cargo }}</td>
+                    <td>{{ arUsuario.email }}</td>
+                    <td>{{ arUsuario.telefono }}</td>
+                    <td>{{ arUsuario.extension }}</td>
                     {% if arUsuario.roles.0 == 'ROLE_ADMIN' %}
-                        {{ validarTipo("ADMINISTRADOR") }}
-                        {% else %}
-                        {{ validarTipo("USUARIO")}}
+                        <td>ADMINISTRADOR</td>
+                    {% else %}
+                        <td>USUARIO</td>
                     {% endif %}
-                    {#{{ validarTipo(arUsuario.roles.0) }}#}
-                    {{ validarTipo(arUsuario.isActive) }}
+                    <td>{{ arUsuario.isActive ? 'SI':'NO' }}</td>
                     <td style="text-align: center;">
                         <a href="{{ path('general_seguridad_usuario_nuevo', {'hash' : encriptar( arUsuario.username)}) }}">
                             <i class="fa fa-edit" style="font-size: large; color:black">
@@ -53,7 +52,7 @@
                         </a>
                     </td>
                     <td style="text-align: center;">
-                        <a  title="Asignar permisos"
+                        <a title="Asignar permisos"
                            href="{{ path('general_seguridad_usuario_modelo_lista',{'hash' : encriptar(arUsuario.username)}) }}">
                             <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                             </i>
@@ -66,7 +65,8 @@
     </div>
     <div class="btn-toolbar">
         <div style="float: right;" class="btn-group">
-            <a class="btn btn-sm btn-default" href="{{ path('general_seguridad_usuario_nuevo',{'hash' : 0}) }}">Nuevo</a>
+            <a class="btn btn-sm btn-default"
+               href="{{ path('general_seguridad_usuario_nuevo',{'hash' : 0}) }}">Nuevo</a>
         </div>
         <div style="float: right;" class="btn-group">
             {{ form_widget(form.btnExcel) }}

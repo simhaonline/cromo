@@ -117,6 +117,11 @@ class CarCliente
     protected $recibosClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarAnticipo", mappedBy="clienteRel")
+     */
+    protected $anticiposClienteRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="carClientesIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
      */
@@ -133,6 +138,22 @@ class CarCliente
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     protected $ciudadRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -457,6 +478,22 @@ class CarCliente
     /**
      * @return mixed
      */
+    public function getAnticiposClienteRel()
+    {
+        return $this->anticiposClienteRel;
+    }
+
+    /**
+     * @param mixed $anticiposClienteRel
+     */
+    public function setAnticiposClienteRel($anticiposClienteRel): void
+    {
+        $this->anticiposClienteRel = $anticiposClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getIdentificacionRel()
     {
         return $this->identificacionRel;
@@ -501,7 +538,5 @@ class CarCliente
     {
         $this->ciudadRel = $ciudadRel;
     }
-
-
 
 }

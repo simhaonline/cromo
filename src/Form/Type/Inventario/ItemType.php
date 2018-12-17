@@ -77,6 +77,13 @@ class ItemType extends AbstractType
             ->add('descripcion', TextareaType::class, ['required' => false])
             ->add('stockMinimo', IntegerType::class, ['required' => false])
             ->add('stockMaximo', IntegerType::class, ['required' => false])
+            ->add('codigoCuentaVentaFk', TextType::class, ['required' => false])
+            ->add('codigoCuentaVentaDevolucionFk', TextType::class, ['required' => false])
+            ->add('codigoCuentaCompraFk', TextType::class, ['required' => false])
+            ->add('codigoCuentaCompraDevolucionFk', TextType::class, ['required' => false])
+            ->add('codigoCuentaCostoFk', TextType::class, ['required' => false])
+            ->add('codigoCuentaInventarioFk', TextType::class, ['required' => false])
+            ->add('codigoCuentaInventarioTransitoFk', TextType::class, ['required' => false])
             ->add('vrPrecioPredeterminado', IntegerType::class, ['required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);

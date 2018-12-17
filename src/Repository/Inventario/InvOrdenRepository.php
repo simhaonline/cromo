@@ -100,21 +100,26 @@ class InvOrdenRepository extends ServiceEntityRepository
         $arOrden->setVrTotal($totalGeneral);
         $em->persist($arOrden);
         $em->flush();
-    }    
-    
+    }
+
     /**
-     * @param $arOrden InvOrden
+     * @param $arOrden
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function aprobar($arOrden)
     {
         $em = $this->getEntityManager();
         $arOrdenTipo = $em->getRepository(InvOrdenTipo::class)->find($arOrden->getCodigoOrdenTipoFk());
         if (!$arOrden->getEstadoAprobado()) {
-            $arOrdenTipo->setConsecutivo($arOrdenTipo->getConsecutivo() + 1);
-            $em->persist($arOrdenTipo);
+            if($arOrden->getNumero() == 0 || $arOrden->getNumero() == "") {
+                $arOrdenTipo->setConsecutivo($arOrdenTipo->getConsecutivo() + 1);
+                $em->persist($arOrdenTipo);
+                $arOrden->setNumero($arOrdenTipo->getConsecutivo());
+            }
             $arOrden->setEstadoAprobado(1);
-            $arOrden->setNumero($arOrdenTipo->getConsecutivo());
             $em->persist($arOrden);
+
 
             $arOrdenDetalles = $em->getRepository(InvOrdenDetalle::class)->findBy(['codigoOrdenFk' => $arOrden->getCodigoOrdenPk()]);
             foreach ($arOrdenDetalles as $arOrdenDetalle) {

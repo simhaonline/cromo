@@ -4,6 +4,8 @@ namespace App\Controller\Financiero\Utilidad\Contabilidad\Intercambio;
 
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
+use App\Utilidades\Mensajes;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -11,23 +13,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Controller\Estructura\FuncionesController;
+
 class RegistroController extends Controller
 {
     /**
      * @param Request $request
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
      * @Route("/financiero/utilidad/contabilidad/intercambio/registro", name="financiero_utilidad_contabilidad_intercambio_registro")
      */
     public function lista(Request $request)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroFinCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
@@ -39,16 +40,15 @@ class RegistroController extends Controller
             ->add('txtNumeroReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroReferencia'), 'attr' => ['class' => 'form-control']])
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFinRegistroFiltroFecha')))
             ->add('chkTodos', CheckboxType::class, array('label' => 'Todos', 'required' => false, 'data' => $session->get('filtroFinRegistrosTodos')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFinRegistroFechaDesde'))])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => date_create($session->get('filtroFinRegistroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFinRegistroFechaHasta'))])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnDescargar', SubmitType::class, ['label' => 'Descargar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnGenerar', SubmitType::class, ['label' => 'Generar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnGenerar')->isClicked()  || $form->get('btnDescargar')->isClicked()) {
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnDescargar')->isClicked()) {
                 $session->set('filtroFinRegistrosTodos', $form->get('chkTodos')->getData());
                 $session->set('filtroFinCodigoTercero', $form->get('txtCodigoTercero')->getData());
                 $session->set('filtroFinComprobante', $form->get('txtComprobante')->getData());
@@ -57,25 +57,25 @@ class RegistroController extends Controller
                 $session->set('filtroFinCuenta', $form->get('txtCuenta')->getData());
                 $session->set('filtroFinCentroCosto', $form->get('txtCentroCosto')->getData());
                 $session->set('filtroFinNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
-                $session->set('filtroFinRegistroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroFinRegistroFechaDesde', $form->get('fechaDesde')->getData()->format('Y-m-d'));
                 $session->set('filtroFinRegistroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroFinRegistroFiltroFecha', $form->get('filtrarFecha')->getData());
-            }
-            if ($form->get('btnGenerar')->isClicked()) {
-                $this->ilimitada();
             }
             if ($form->get('btnDescargar')->isClicked()) {
                 $em->getRepository(FinRegistro::class)->aplicarIntercambio();
             }
 
         }
-        $arRegistros = $paginator->paginate($em->getRepository(FinRegistro::class)->listaIntercambio(), $request->query->getInt('page', 1),20);
+        $arRegistros = $paginator->paginate($em->getRepository(FinRegistro::class)->listaIntercambio(), $request->query->getInt('page', 1), 20);
         return $this->render('financiero/utilidad/contabilidad/intercambio/registro/registro.html.twig',
             ['arRegistros' => $arRegistros,
-            'form' => $form->createView()]);
+                'form' => $form->createView()]);
     }
 
-    private function ilimitada()
+    /**
+     * @Route("/financiero/utilidad/contabilidad/intercambio/registro/ilimitada", name="financiero_utilidad_contabilidad_intercambio_registro_ilimitada")
+     */
+    public function ilimitada()
     {
         $em = $this->getDoctrine()->getManager();
         $rutaTemporal = $em->getRepository(GenConfiguracion::class)->parametro('rutaTemporal');
@@ -85,8 +85,6 @@ class RegistroController extends Controller
         die("Problemas en la creacion del archivo plano");
         $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
         foreach ($arRegistros as $arRegistro) {
-            $valor = 0;
-            $naturaleza = "1";
             if ($arRegistro['naturaleza'] == "D") {
                 $valor = $arRegistro['vrDebito'];
                 $naturaleza = "1";
@@ -102,15 +100,15 @@ class RegistroController extends Controller
             if ($arRegistro['codigoTerceroFk']) {
                 $srtNit = $arRegistro['numeroIdentificacion'];
             }
-            $numero = $arRegistro['numeroPrefijo'].$arRegistro['numero'];
-            $numeroReferencia = $arRegistro['numeroReferenciaPrefijo'].$arRegistro['numeroReferencia'];
+            $numero = $arRegistro['numeroPrefijo'] . $arRegistro['numero'];
+            $numeroReferencia = $arRegistro['numeroReferenciaPrefijo'] . $arRegistro['numeroReferencia'];
             fputs($ar, $arRegistro['codigoCuentaFk'] . "\t");
             fputs($ar, FuncionesController::RellenarNr($arRegistro['codigoComprobanteFk'], "0", 5) . "\t");
             fputs($ar, $arRegistro['fecha']->format('m/d/Y') . "\t");
             fputs($ar, FuncionesController::RellenarNr($numero, "0", 9) . "\t");
             fputs($ar, FuncionesController::RellenarNr($numeroReferencia, "0", 9) . "\t");
             fputs($ar, $srtNit . "\t");
-            fputs($ar, $arRegistro['descripcion']. "\t");
+            fputs($ar, $arRegistro['descripcion'] . "\t");
             fputs($ar, $naturaleza . "\t");
             fputs($ar, $valor . "\t");
             fputs($ar, $arRegistro['vrBase'] . "\t");
@@ -130,6 +128,71 @@ class RegistroController extends Controller
         readfile($strArchivo);
         exit;
 
+    }
+
+    /**
+     * @author Andres Acevedo Cartagena
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/financiero/utilidad/contabilidad/intercambio/registro/worldOffice", name="financiero_utilidad_contabilidad_intercambio_registro_worldOffice")
+     */
+    public function worldOffice()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
+        if (count($arRegistros) > 0) {
+            $spreadsheet = new Spreadsheet();
+            $campos = [
+                'Documento',
+                'No.Documento',
+                'Cuenta_Contable',
+                'Nota',
+                'Tercero_Externo',
+                'Cheque_Numero',
+                'Banco_Cheque',
+                'Debito',
+                'Credito',
+                'Centro_Costo',
+                'Porcentaje_Retencion',
+                'Vencimiento',
+                'Vendedor',
+                'Empresa'
+            ];
+            $sheet = $spreadsheet->getActiveSheet();
+            $i = 0;
+            for ($j = 'A'; $j != 'O'; $j++) {
+                $spreadsheet->getActiveSheet()->getColumnDimension($j)->setAutoSize(true);
+                $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
+                $sheet->setCellValue($j . '1', strtoupper($campos[$i]));
+                $i++;
+            }
+            $j = 2;
+            /** @var  $arRegistro FinRegistro */
+            foreach ($arRegistros as $arRegistro) {
+                $sheet->setCellValue('A'.$j,'SI');
+                $sheet->setCellValue('B'.$j,$arRegistro['codigoComprobanteFk']);
+                $sheet->setCellValue('C'.$j,$arRegistro['codigoCuentaFk']);
+                $sheet->setCellValue('D'.$j,$arRegistro['descripcion']);
+                $sheet->setCellValue('E'.$j,$arRegistro['numeroIdentificacion']);
+                $sheet->setCellValue('F'.$j,'');
+                $sheet->setCellValue('G'.$j,'');
+                $sheet->setCellValue('H'.$j,$arRegistro['vrDebito']);
+                $sheet->setCellValue('I'.$j,$arRegistro['vrCredito']);
+                $sheet->setCellValue('J'.$j,$arRegistro['codigoCentroCostoFk']);
+                $sheet->setCellValue('K'.$j,'');
+                $sheet->setCellValue('L'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('Y-m-d') : '');
+                $sheet->setCellValue('M'.$j,'');
+                $sheet->setCellValue('N'.$j,$arRegistro['nombreCorto']);
+            }
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename='DetallesContables.xls'");
+            header('Cache-Control: max-age=0');
+
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
+            $writer->save('php://output');
+        } else {
+            Mensajes::error('El listado esta vacío, no hay nada que exportar');
+        }
     }
 
 }

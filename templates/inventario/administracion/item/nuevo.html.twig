@@ -13,100 +13,153 @@
                 <label for="form_codigoBarras" class="col-sm-2 control-label">Código de barras:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.codigoBarras,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.codigoBarras)}}
+                    {{ form_errors(form.codigoBarras) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_vrPrecioPredeterminado" class="col-sm-2 control-label">Precio predeterminado:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.vrPrecioPredeterminado,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.vrPrecioPredeterminado)}}
+                    {{ form_errors(form.vrPrecioPredeterminado) }}
                 </div>
                 <label for="form_porcentajeIva" class="col-sm-2 control-label">Porcentaje iva:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.porcentajeIva,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.porcentajeIva)}}
+                    {{ form_errors(form.porcentajeIva) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_stockMinimo" class="col-sm-2 control-label">Stock mínimo:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.stockMinimo,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.stockMinimo)}}
+                    {{ form_errors(form.stockMinimo) }}
                 </div>
                 <label for="form_porcentajeIva" class="col-sm-2 control-label">Stock maximo:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.stockMaximo,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.stockMaximo)}}
+                    {{ form_errors(form.stockMaximo) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_Modelo" class="col-sm-2 control-label">Modelo:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.modelo,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.modelo)}}
+                    {{ form_errors(form.modelo) }}
                 </div>
                 <label for="form_lineaRel" class="col-sm-2 control-label">Linea:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.lineaRel,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.lineaRel)}}
+                    {{ form_errors(form.lineaRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_grupoRel" class="col-sm-2 control-label">Grupo:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.grupoRel,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.grupoRel)}}
+                    {{ form_errors(form.grupoRel) }}
                 </div>
                 <label for="form_subgrupoRel" class="col-sm-2 control-label">Subgrupo:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.subgrupoRel,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.subgrupoRel)}}
+                    {{ form_errors(form.subgrupoRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_marca" class="col-sm-2 control-label">Marca:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.marcaRel,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.marcaRel)}}
+                    {{ form_errors(form.marcaRel) }}
                 </div>
                 <label for="form_referencia" class="col-sm-2 control-label">Referencia:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.referencia,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.referencia)}}
+                    {{ form_errors(form.referencia) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_afectaInventario" class="col-sm-2 control-label">Afecta inventario</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.afectaInventario) }}
-                    {{ form_errors(form.afectaInventario)}}
+                    {{ form_errors(form.afectaInventario) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_descripcion" class="col-sm-2 control-label">Descripción</label>
                 <div class="col-sm-8">
                     {{ form_widget(form.descripcion, {'attr':{'class':'form-control','rows':'10'}}) }}
-                    {{ form_errors(form.descripcion)}}
+                    {{ form_errors(form.descripcion) }}
                 </div>
             </div>
         </div>
     </div>
     <div class="panel panel-default">
-        <div class="panel-heading">Informacion comercial</div>
+        <div class="panel-heading">Información contabilidad</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_codigoCuentaVentaFk" class="col-sm-2 control-label">Cuenta venta:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.codigoCuentaVentaFk,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.codigoCuentaVentaFk) }}
+                </div>
+                <label for="form_codigoCuentaVentaDevolucionFk" class="col-sm-2 control-label">Cuenta venta
+                    devolucion:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.codigoCuentaVentaDevolucionFk,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.codigoCuentaVentaDevolucionFk) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_codigoCuentaCompraFk" class="col-sm-2 control-label">Cuenta compra:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.codigoCuentaCompraFk,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.codigoCuentaCompraFk) }}
+                </div>
+                <label for="form_codigoCuentaCompraDevolucionFk" class="col-sm-2 control-label">Cuenta compra
+                    devolucion:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.codigoCuentaCompraDevolucionFk,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.codigoCuentaCompraDevolucionFk) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_codigoCuentaCostoFk" class="col-sm-2 control-label">Cuenta costo:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.codigoCuentaCostoFk,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.codigoCuentaCostoFk) }}
+                </div>
+                <label for="form_codigoCuentaInventarioFk" class="col-sm-2 control-label">Cuenta inventario
+                    devolucion:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.codigoCuentaInventarioFk,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.codigoCuentaInventarioFk) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_codigoCuentaInventarioTransitoFk" class="col-sm-2 control-label">Cuenta inventario
+                    transito:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.codigoCuentaInventarioTransitoFk,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.codigoCuentaInventarioTransitoFk) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información comercial</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
                 <label for="form_lineaRel" class="col-sm-2 control-label">Retencion:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.impuestoRetencionRel,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.impuestoRetencionRel)}}
+                    {{ form_errors(form.impuestoRetencionRel) }}
                 </div>
             </div>
 
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('inventario_administracion_inventario_item_lista')}}">Cancelar</a>
+        <a class="btn btn-default btn-sm"
+           href="{{ path('inventario_administracion_inventario_item_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
         {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>

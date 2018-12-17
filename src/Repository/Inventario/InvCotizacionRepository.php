@@ -60,10 +60,12 @@ class InvCotizacionRepository extends ServiceEntityRepository
     {
         $arCotizacionTipo = $this->_em->getRepository(InvCotizacionTipo::class)->find($arCotizacion->getCodigoCotizacionTipoFk());
         if (!$arCotizacion->getEstadoAprobado()) {
-            $arCotizacionTipo->setConsecutivo($arCotizacionTipo->getConsecutivo() + 1);
+            if ($arCotizacion->getNumero() == 0 || $arCotizacion->getNumero() == "") {
+                $arCotizacionTipo->setConsecutivo($arCotizacionTipo->getConsecutivo() + 1);
+                $arCotizacion->setNumero($arCotizacionTipo->getConsecutivo());
+                $this->_em->persist($arCotizacionTipo);
+            }
             $arCotizacion->setEstadoAprobado(1);
-            $arCotizacion->setNumero($arCotizacionTipo->getConsecutivo());
-            $this->_em->persist($arCotizacionTipo);
             $this->_em->persist($arCotizacion);
             $this->_em->flush();
         }
@@ -79,7 +81,7 @@ class InvCotizacionRepository extends ServiceEntityRepository
         if ($arCotizacion->getEstadoAprobado() == 1) {
             $arCotizacion->setEstadoAnulado(1);
             $this->_em->persist($arCotizacion);
-            if(count($respuesta) == 0){
+            if (count($respuesta) == 0) {
                 $this->_em->flush();
             }
             return $respuesta;
@@ -142,7 +144,7 @@ class InvCotizacionRepository extends ServiceEntityRepository
                         $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
                     }
                 }
-                if($respuesta != ''){
+                if ($respuesta != '') {
                     Mensajes::error($respuesta);
                 } else {
                     $this->getEntityManager()->flush();
@@ -176,7 +178,7 @@ class InvCotizacionRepository extends ServiceEntityRepository
                 $vrSubtotal = $vrUnitario * $cantidad;
                 $vrIva = $vrSubtotal * ($porIva / 100);
                 $vrDcto = $vrSubtotal * ($porDcto / 100);
-                $vrTotal = $vrSubtotal + $vrIva- $vrDcto;
+                $vrTotal = $vrSubtotal + $vrIva - $vrDcto;
 
                 $vrTotalGlobal += $vrTotal;
                 $vrIvaGlobal += $vrIva;
@@ -220,9 +222,9 @@ class InvCotizacionRepository extends ServiceEntityRepository
             ->andWhere('m.estadoAnulado = 0');
         $query = $this->_em->createQuery($qb->getDQL());
         $resultado = $query->execute();
-        if(count($resultado) > 0){
+        if (count($resultado) > 0) {
             foreach ($resultado as $result) {
-                $respuesta[] = 'No se puede anular, el detalle con ID '.$codigoOrdenCompraDetalle. ' esta siendo utilizado en el movimiento con ID '.$result['codigoMovimientoFk'];
+                $respuesta[] = 'No se puede anular, el detalle con ID ' . $codigoOrdenCompraDetalle . ' esta siendo utilizado en el movimiento con ID ' . $result['codigoMovimientoFk'];
             }
         }
         return $respuesta;

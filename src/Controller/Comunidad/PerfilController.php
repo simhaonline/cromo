@@ -36,7 +36,7 @@ class PerfilController extends BaseController
         $informacionUsuario= [
             'nombreCorto'   =>$usuario->getNombreCorto(),
 //            'rol'           =>$usuario->getRoles()[0]=="ROLE_ADMIN"?"Administrador":"Usuario",
-//            'cargo'         =>$usuario->getCargo(),r4e
+            'cargo'         =>$usuario->getCargo()??"Cargo no especificado",
             'correo'        =>$usuario->getEmail(),
             'extension'     =>$usuario->getExtension(),
             'telefono'      =>$usuario->getTelefono(),
@@ -96,7 +96,7 @@ class PerfilController extends BaseController
 //        $unknown->getVoid();
 
 
-        return $this->render('comunidad/perfil.html.twig',[
+        return $this->render('comunidad/perfil2.html.twig',[
             'form'=>$form->createView(),
             'formBusqueda'=>$formBusqueda->createView(),
             'arUsuario'=>$informacionUsuario,

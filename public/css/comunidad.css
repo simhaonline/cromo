@@ -18,14 +18,14 @@
 }
 
 .user{
-    width: 48%;
-    border: 1px solid #E9EBEE;
+    width: 170px;
+    /*border: 1px solid #E9EBEE;*/
     display: flex;
     justify-content: space-between;
 }
 
 .user img{
-    width: 63px;
+    width: 35px;
 }
 
 .botonAmigos{

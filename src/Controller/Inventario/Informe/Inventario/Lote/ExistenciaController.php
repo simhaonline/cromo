@@ -60,7 +60,7 @@ class ExistenciaController extends ControllerListenerGeneral
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvInformeItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvInformeLote', $form->get('txtLote')->getData());
-                $session->set('filtroInvInformeFechaVence', $form->get('fechaVencimiento')->getData()->format('Y-m-d'));
+                $session->set('filtroInvInformeFechaVence', $form->get('fechaVencimiento')->getData()?$form->get('fechaVencimiento')->getData()->format('Y-m-d'):null);
                 $arBodega = $form->get('cboBodega')->getData();
                 if($arBodega != ''){
                     $session->set('filtroInvInformeLoteBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());

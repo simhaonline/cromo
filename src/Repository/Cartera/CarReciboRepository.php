@@ -713,4 +713,60 @@ class CarReciboRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function recaudo()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarRecibo::class, 'r')
+            ->select('r.codigoReciboPk')
+            ->addSelect('r.numero')
+            ->addSelect('rd.numeroFactura')
+            ->addSelect('rt.nombre AS tipo')
+            ->addSelect('r.fecha')
+            ->addSelect('r.fechaPago')
+            ->addSelect('cr.numeroIdentificacion AS nit')
+            ->addSelect('cr.nombreCorto AS clienteNombre')
+            ->addSelect('cta.nombre AS cuenta')
+            ->addSelect('r.codigoAsesorFk')
+            ->addSelect('r.usuario')
+            ->addSelect('rd.vrPago')
+            ->addSelect('a.nombre as asesor')
+            ->leftJoin('r.recibosDetallesRecibosRel', 'rd')
+            ->leftJoin('r.clienteRel','cr')
+            ->leftJoin('r.reciboTipoRel', 'rt')
+            ->leftJoin('r.cuentaRel', 'cta')
+            ->leftJoin('r.asesorRel', 'a')
+            ->where('r.codigoReciboPk <> 0')
+            ->andWhere('r.estadoAprobado = 1')
+            ->groupBy('r.codigoAsesorFk')
+            ->addGroupBy('r.codigoReciboPk')
+            ->addGroupBy('rd.numeroFactura')
+        ->addGroupBy('rd.vrPago');
+        $fecha =  new \DateTime('now');
+        if($session->get('filtroGenAsesor')) {
+            $queryBuilder->andWhere("r.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
+        }
+        if ($session->get('filtroCarInformeReciboTipo') != "") {
+            $queryBuilder->andWhere("r.codigoReciboTipoFk = '" . $session->get('filtroCarInformeReciboTipo')."'");
+        }
+        if ($session->get('filtroCarReciboNumero')) {
+            $queryBuilder->andWhere("r.numero = '{$session->get('filtroCarReciboNumero')}'");
+        }
+        if($session->get('filtroCarCodigoCliente')){
+            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroInformeReciboFechaDesde') != null) {
+                $queryBuilder->andWhere("r.fechaPago >= '{$session->get('filtroInformeReciboFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("r.fechaPago >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroInformeReciboFechaHasta') != null) {
+                $queryBuilder->andWhere("r.fechaPago <= '{$session->get('filtroInformeReciboFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("r.fechaPago <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        return $queryBuilder;
+    }
+
 }

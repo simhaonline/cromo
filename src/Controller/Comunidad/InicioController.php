@@ -8,10 +8,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class InicioController extends AbstractController
 {
     /**
-     * @Route("/social/general/inicio", name="social_general_inicio")
+     * @Route("/comunidad/general/inicio", name="comunidad_general_inicio")
      */
     public function index()
     {
-        return $this->render('social/inicio.html.twig');
+        return $this->render('comunidad/inicio.html.twig');
     }
 }

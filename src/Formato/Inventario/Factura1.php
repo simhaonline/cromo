@@ -133,6 +133,15 @@ class Factura1 extends \FPDF
 
         $this->SetXY(19, 58);
         $this->SetFont('Arial', 'B', 8);
+        $this->Cell(15, 4, 'DIRECCION:', 0, 0, 'L', 0);
+        $this->SetX(38);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getDireccion(), 0, 0, 'L', 0);
+        $this->SetX(128);
+        $this->Cell(73, 4, $arMovimiento->getSucursalRel() ? $arMovimiento->getSucursalRel()->getDireccion() : '', 0, 0, 'L', 0);
+
+        $this->SetXY(19, 61.5);
+        $this->SetFont('Arial', 'B', 8);
         $this->Cell(15, 4, 'TELEFONO:', 0, 0, 'L', 0);
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
@@ -143,16 +152,17 @@ class Factura1 extends \FPDF
             $direccion = $arMovimiento->getTerceroRel()->getDireccion();
         }
         $this->SetX(128);
-        $this->Cell(73, 4, $direccion, 0, 0, 'L', 0);
+        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getTelefono(), 0, 0, 'L', 0);
 
-        $this->SetXY(19, 61.5);
+        $this->SetXY(19, 64.5);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(15, 4, 'DIRECCION:', 0, 0, 'L', 0);
+        $this->Cell(15, 4, 'CIUDAD:', 0, 0, 'L', 0);
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getDireccion(), 0, 0, 'L', 0);
+        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getCiudadRel()->getNombre(), 0, 0, 'L', 0);
         $this->SetX(128);
         $this->Cell(73, 4, $arMovimiento->getSucursalRel() ? $arMovimiento->getSucursalRel()->getCiudadRel()->getNombre() : '', 0, 0, 'L', 0);
+
         $this->EncabezadoDetalles();
     }
 
@@ -322,7 +332,7 @@ class Factura1 extends \FPDF
         $this->Text(19.7, 182, 'OBSERVACIONES:');
         $this->SetXY(19.7, 184);
         $this->SetFont('Arial', '', 7.5);
-        $this->MultiCell(127, 3, strtoupper($arMovimiento->getComentarios()), 0, 'L');
+        $this->MultiCell(127, 3, utf8_decode(strtoupper($arMovimiento->getComentarios())), 0, 'L');
         $this->SetFont('Arial', 'B', 7.5);
         $this->Text(37.5, 248.5, 'REALIZAR PAGO EN LA CUENTA DE AHORROS BANCOLOMBIA NUMERO 58098786765 A NOMBRE DE  FILTRAMED S.A.S');
 

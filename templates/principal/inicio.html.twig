@@ -1,8 +1,235 @@
 {% extends 'base.html.twig' %}
 {% block content %}
+    {{ form_start(form) }}
     <div class="row">
-        <div class="col-lg-8">
-            Inicio general
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa-fw fa fa-home"></i> Dashboard <span>> Blog </span>
+            </h1>
+        </div>
+        <div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+            <ul id="sparks">
+                <li class="sparks-info">
+                    <h5> Dato 1 <span class="txt-color-blue">$47,171</span></h5>
+                    <div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
+                        1300, 1877, 2500, 2577, 2000, 2100, 3000, 2700, 3631, 2471, 2700, 3631
+                    </div>
+                </li>
+                <li class="sparks-info">
+                    <h5> Dato 2 <span class="txt-color-purple"><i class="fa fa-arrow-circle-up"
+                                                                  data-rel="bootstrap-tooltip"
+                                                                  title="Increased"></i>&nbsp;45%</span>
+                    </h5>
+                    <div class="sparkline txt-color-purple hidden-mobile hidden-md hidden-sm">
+                        110,150,300,130,400,240,220,310,220,300, 270, 210
+                    </div>
+                </li>
+                <li class="sparks-info">
+                    <h5> Dato 3 <span class="txt-color-greenDark"><i
+                                    class="fa fa-shopping-cart"></i>&nbsp;2447</span></h5>
+                    <div class="sparkline txt-color-greenDark hidden-mobile hidden-md hidden-sm">
+                        110,150,300,130,400,240,220,310,220,300, 270, 210
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-9">
+            <div class="well padding-10">
+                {% for arPost in arPosts %}
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="{{ arPost.imagenHtml }}" class="img-responsive" alt="img">
+                            <ul class="list-inline padding-10">
+                                <li>
+                                    <i class="fa fa-calendar"></i>
+                                    <a href="#"
+                                       style="font-size: 11px;color: grey!important;"> {{ mesATexto(arPost.fechaPublicacion | date('m')) }}, {{ arPost.fechaPublicacion | date('d') }}, {{ arPost.fechaPublicacion | date('Y') }}</a>
+                                </li>
+                                <li>
+                                    <i class="fa fa-comments"></i>
+                                    <a href="#"
+                                       style="font-size: 11px;color: grey!important;"> {{ arPost.numeroComentarios }}
+                                        Comentarios</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-8 padding-left-0">
+
+                            <h3 class="margin-top-0"><a href="#">{{ arPost.titulo }}</a><br>
+                                <small class="font-xs"><span
+                                            style="font-size: 14px;">Publicado por {{ arPost.autor }}</span>
+                                </small>
+                                <br>
+                                <small class="font-xs">
+                                    {% set tags = arPost.tags| split(',') %}
+                                    <span class="badge"
+                                          style="font-size: 10px;">Tags: </span>
+                                    {% for tag in tags %}
+                                        <span class="badge"
+                                              style="font-size: 10px;background-color: lightgrey;">{{ tag }} </span>
+                                    {% endfor %}
+                                </small>
+                            </h3>
+                            <p>
+                                {{ arPost.descripcion }}
+                            </p>
+                            <a class="btn btn-primary"
+                               onclick="actualizarModal('{{ arPost.codigoPostPk }}')"
+                               data-toggle="modal" data-target="#myModal">Leer más</a>
+                        </div>
+                    </div>
+                    <hr>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="well padding-10">
+                <h5 class="margin-top-0"><i class="fa fa-search"></i> Buscar...</h5>
+                <div class="input-group">
+                    {{ form_widget(form.txtBusqueda) }}
+                    <span class="input-group-btn">
+									<button class="btn btn-default" type="button">
+										<i class="fa fa-search"></i>
+									</button>
+                        </span>
+                </div>
+            </div>
+            <div class="well padding-10">
+                <h5 class="margin-top-0"><i class="fa fa-tags"></i> Tags mas populares:</h5>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href=""><span class="badge badge-info">Windows 8</span></a>
+                            </li>
+                            <li>
+                                <a href=""><span class="badge badge-info">C#</span></a>
+                            </li>
+                            <li>
+                                <a href=""><span class="badge badge-info">Windows Forms</span></a>
+                            </li>
+                            <li>
+                                <a href=""><span class="badge badge-info">WPF</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href=""><span class="badge badge-info">Bootstrap</span></a>
+                            </li>
+                            <li>
+                                <a href=""><span class="badge badge-info">Joomla!</span></a>
+                            </li>
+                            <li>
+                                <a href=""><span class="badge badge-info">CMS</span></a>
+                            </li>
+                            <li>
+                                <a href=""><span class="badge badge-info">Java</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="well padding-10">
+                <h5 class="margin-top-0"><i class="fa fa-thumbs-o-up"></i> Siguenos!</h5>
+                <ul class="no-padding no-margin list-unstyled">
+                    <li>
+                        <p class="no-margin">
+                            <a title="Facebook" href=""><span class="fa-stack fa-lg"><i
+                                            class="fa fa-square-o fa-stack-2x"></i><i
+                                            class="fa fa-facebook fa-stack-1x"></i></span></a>
+                            <a title="Twitter" href=""><span class="fa-stack fa-lg"><i
+                                            class="fa fa-square-o fa-stack-2x"></i><i
+                                            class="fa fa-twitter fa-stack-1x"></i></span></a>
+                            <a title="Google+" href=""><span class="fa-stack fa-lg"><i
+                                            class="fa fa-square-o fa-stack-2x"></i><i
+                                            class="fa fa-google-plus fa-stack-1x"></i></span></a>
+                            <a title="Linkedin" href=""><span class="fa-stack fa-lg"><i
+                                            class="fa fa-square-o fa-stack-2x"></i><i
+                                            class="fa fa-linkedin fa-stack-1x"></i></span></a>
+                            <a title="GitHub" href=""><span class="fa-stack fa-lg"><i
+                                            class="fa fa-square-o fa-stack-2x"></i><i
+                                            class="fa fa-github fa-stack-1x"></i></span></a>
+                            <a title="Bitbucket" href=""><span class="fa-stack fa-lg"><i
+                                            class="fa fa-square-o fa-stack-2x"></i><i
+                                            class="fa fa-bitbucket fa-stack-1x"></i></span></a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="well padding-10">
+                <h5 class="margin-top-0"><i class="fa fa-fire"></i> Posts mas populares:</h5>
+                <ul class="no-padding list-unstyled">
+                    <li>
+                        <a href="javascript:void(0);" class="margin-top-0">WPF vs. Windows Forms-Which is
+                            better?</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="padding-top-5 display-block">How to create responsive
+                            website with Bootstrap?</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="margin-top-5">The best Joomla! templates 2014</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="margin-top-5">ASP .NET cms list</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="margin-top-5">C# Hello, World! program</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="margin-top-5">Java random generator</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="well padding-10">
+                <h5 class="margin-top-0"><i class="fa fa-video-camera"></i> Videos destacados:</h5>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="list-group no-margin">
+                            <li class="list-group-item">
+                                <a href=""> <span class="badge pull-right">15</span> Photograph </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href=""> <span class="badge pull-right">30</span> Life style </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href=""> <span class="badge pull-right">9</span> Food </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href=""> <span class="badge pull-right">4</span> Travel world </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="margin-top-10">
+                            <iframe allowfullscreen="" frameborder="0" height="210"
+                                    src="http://player.vimeo.com/video/87025094" width="100%"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'modal/baseModal.html.twig' %}
+    {{ form_start(form) }}
+    <script>
+        function actualizarModal(id) {
+            $.ajax({
+                url: "{{ path('blog_descripcion') }}",
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    id: id
+                }, success: function (arrDatos) {
+                    let arrPost = JSON.parse(arrDatos);
+                    let modal = $(".modal-body");
+                    modal.html("<h3 style='color: cornflowerblue;'>" + arrPost.titulo + "</h3><p>" + arrPost.descripcion + "</p>");
+                }
+            });
+        }
+    </script>
 {% endblock %}

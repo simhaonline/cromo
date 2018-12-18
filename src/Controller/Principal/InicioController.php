@@ -2,21 +2,70 @@
 
 namespace App\Controller\Principal;
 
+use App\Entity\General\GenConfiguracion;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class InicioController extends Controller
 {
-   /**
-    * @Route("/", name="inicio")
-    */    
-    public function inicio(Request $request, TokenStorageInterface $user)
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/", name="inicio")
+     */
+    public function inicio(Request $request)
     {
-
         $em = $this->getDoctrine()->getManager();
-        return $this->render('principal/inicio.html.twig');
+        $arConfiguracion = $em->find(GenConfiguracion::class,1);
+        $form = $this->createFormBuilder()
+            ->add('txtBusqueda',TextType::class,['required' => false])
+            ->getForm();
+        $form->handleRequest($request);
+        $ch = curl_init($arConfiguracion->getWebServiceCesioUrl().'/api/contenido/post');
+        if($form->isSubmitted()){
+            $arrDatos['busqueda'] = $form->get('txtBusqueda')->getData();
+        } else {
+            $arrDatos['busqueda'] = '';
+        }
+        $arrDatos = json_encode($arrDatos);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $arrDatos);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($arrDatos))
+        );
+        $arPosts = json_decode(curl_exec($ch));
+
+        return $this->render('principal/inicio.html.twig',[
+            'arPosts' => $arPosts,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @Route("/blog/descripcion", name="blog_descripcion")
+     */
+    public function consultarDescripcion(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->query->get('id');
+        $arConfiguracion = $em->find(GenConfiguracion::class,1);
+        $ch = curl_init($arConfiguracion->getWebServiceCesioUrl().'/api/contenido/post/descripcion');
+        $arrDatos = json_encode(['id' => $id]);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $arrDatos);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($arrDatos))
+        );
+        $descripcion = curl_exec($ch);
+        return new JsonResponse($descripcion);
     }
 }
 

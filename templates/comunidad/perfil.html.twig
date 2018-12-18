@@ -10,9 +10,7 @@
 
         <div class="row">
             {{ form_start(formBusqueda) }}
-            {{ form_errors(formBusqueda) }}
             {% include ('comunidad/buscardor.html.twig') %}
-            {{ form_rest(formBusqueda) }}
             {{ form_end(formBusqueda) }}
             <div class="col-sm-10 col-lg-offset-1">
 
@@ -416,30 +414,7 @@
                         </div>
                 </div>
             </div>
-            {{ form_start(form, {'attr': {'class': 'form-horizontal'} }) }}
-            {{ form_errors(form) }}
-            <!--Modal administrador foto perfil-->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <img  style="width: 100%" src="{{ app.session.get('foto_perfil')}}" class="img-thumbnail"  id="previsualizar_foto">
-                        <div class="modal-body" style="text-align: center">
-                            <button type="button" class="btn btn-success" onclick="cambiarFotoPerfil()">Subir foto</button>
-                            {#<input id="foto_perfil_subir"  accept="image/*" type="file" style="display: none" name="files[]"/>#}
-                            {{ form_widget(form.foto_perfil_subir) }}
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            {#<button type="button" class="btn btn-primary">Guardar imagen</button>#}
-                            {{ form_widget(form.btnSubirFoto) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--endmodal-->
 
-            {{ form_rest(form) }}
-            {{ form_end(form) }}
 
             <!--modal registro a social-->
             <div class="modal fade" id="advertencia_social" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -460,6 +435,7 @@
         </div>
         <!-- END MAIN CONTENT -->
     </div>
+    {%  include('comunidad/fotoPerfil.html.twig') %}
     <!-- END MAIN PANEL -->
 
 {% endblock %}

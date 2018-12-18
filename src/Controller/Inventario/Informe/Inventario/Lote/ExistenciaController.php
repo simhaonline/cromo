@@ -40,7 +40,7 @@ class ExistenciaController extends ControllerListenerGeneral
             ->add('txtCodigoItem', TextType::class, array('data' => $session->get('filtroInvInformeItemCodigo'), 'required' => false))
             ->add('txtNombreItem', TextType::class, array('data' => $session->get('filtroInvInformeItemNombre'), 'required' => false , 'attr' => ['readonly' => 'readonly']))
             ->add('txtLote', TextType::class, ['required' => false, 'data' => $session->get('filtroInvLote')])
-//            ->add('fechaVencimiento', DateType::class, ['widget' => 'single_text', 'label' => 'Fecha vence: ',  'required' => false, 'data' => date_create($session->get('filtroInvInformeFechaVence'))])
+//            ->add('fechaVencimiento', DateType::class, ['widget' => 'single_text', 'label' => 'Fecha vence: ',  'required' => false, 'data' => $session->get('filtroInvInformeFechaVence')!==null?new \DateTime(date_create($session->get('filtroInvInformeFechaVence'))):null])
             ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))

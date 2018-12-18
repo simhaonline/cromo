@@ -28,10 +28,12 @@ class BuscarController extends BaseController
                 [
                     'attr'=>['class'=>'form-control'],
                     'required'=>false,
+                    'allow_extra_fields'=>true,
                     'data'=>$clave,
                 ])
             ->add('btnBuscar',SubmitType::class,[
                 'attr'=>['class'=>'btn btn-default btn-sm'],
+                'validation_groups'=>false,
                 'label'=>'Buscar'
             ])
             ->getForm();
@@ -45,6 +47,7 @@ class BuscarController extends BaseController
                 }
                 else{
                     Mensajes::error("Debes ingresar una palabra o frase para iniciar la busqueda");
+
                 }
             }
         }

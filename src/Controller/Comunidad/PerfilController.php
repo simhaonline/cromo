@@ -46,7 +46,8 @@ class PerfilController extends BaseController
             ->add('busqueda',TextType::class,
                 [
                     'attr'=>['class'=>'form-control'],
-                    'required'=>false
+                    'required'=>false,
+
                 ])
             ->add('btnBuscar',SubmitType::class,[
                 'attr'=>['class'=>'btn btn-default btn-sm'],

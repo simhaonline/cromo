@@ -105,8 +105,12 @@
             })
         });
 
+        $('#myModal').on('hidden.bs.modal', function () {
+            $(".modal-body").html("");
+        });
+
         function actualizarUrlVideo(urlVideo) {
-            $(".modal-body").html("<iframe name='video' width='100%' height='500' src=" + urlVideo + " > </iframe>");
+            $(".modal-body").html("<iframe name='video' id='video' width='100%' height='500' src=" + urlVideo + " > </iframe>");
         }
 
         function actualizarDetalle(id) {

@@ -27,7 +27,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, InvMovimientoDetalle::class);
     }
 
-    public function listaDetalle($codigoMovimiento, $tipo){
+    public function listaDetalle($codigoMovimiento, $tipo)
+    {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
             ->select('md.codigoMovimientoDetallePk')
             ->addSelect('md.codigoItemFk')
@@ -52,7 +53,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('i.referencia AS itemReferencia')
             ->leftJoin('md.itemRel', 'i')
             ->where('md.codigoMovimientoFk = ' . $codigoMovimiento);
-        if($tipo == "TRA") {
+        if ($tipo == "TRA") {
             $queryBuilder->andWhere('md.operacionInventario = 0');
         }
         return $queryBuilder->getQuery()->getResult();
@@ -128,7 +129,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         if ($this->contarDetalles($arMovimiento->getCodigoMovimientoPk()) > 0) {
             $arrBodega = $arrControles['arrBodega'];
             $arrBodegaDestino = [];
-            if($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
+            if ($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
                 $arrBodegaDestino = $arrControles['arrBodegaDestino'];
             }
 
@@ -143,7 +144,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             foreach ($arrCodigo as $codigoMovimientoDetalle) {
                 $arMovimientoDetalle = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->find($codigoMovimientoDetalle);
                 $arMovimientoDetalle->setCodigoBodegaFk($arrBodega[$codigoMovimientoDetalle]);
-                if($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
+                if ($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
                     $arMovimientoDetalle->setCodigoBodegaDestinoFk($arrBodegaDestino[$codigoMovimientoDetalle]);
                 }
                 $arMovimientoDetalle->setLoteFk($arrLote[$codigoMovimientoDetalle]);
@@ -196,7 +197,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->execute();
     }
 
-    public function listaRegenerarExistencia(){
+    public function listaRegenerarExistencia()
+    {
         $cantidad = 0;
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
             ->select('md.codigoItemFk')
@@ -215,7 +217,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $arrExistencias;
     }
 
-    public function listaRegenerarExistenciaItem(){
+    public function listaRegenerarExistenciaItem()
+    {
         $cantidad = 0;
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
             ->select('md.codigoItemFk')
@@ -254,7 +257,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         foreach ($arMovimientosDetalles as $arMovimientoDetalle) {
             $arLote = $em->getRepository(InvLote::class)->findOneBy(array('codigoItemFk' => $arMovimientoDetalle['codigoItemFk'],
                 'loteFk' => $arMovimientoDetalle['loteFk'], 'codigoBodegaFk' => $arMovimientoDetalle['codigoBodegaFk']));
-            if($arLote) {
+            if ($arLote) {
                 $arLote->setCantidadExistencia($arMovimientoDetalle['cantidad']);
                 $arLote->setCantidadDisponible($arMovimientoDetalle['cantidad'] - $arLote->getCantidadRemisionada());
                 $em->persist($arLote);
@@ -271,11 +274,10 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             $em->persist($arItem);
         }
 
-        if($mensajesError == "") {
+        if ($mensajesError == "") {
             $em->flush();
         }
     }
-
 
 
     public function listaRegenerarCostos($codigoItem)
@@ -374,6 +376,54 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function informeDetalles()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoMovimientoDetallePk')
+            ->addSelect('dt.nombre AS documentoTipo')
+            ->addSelect('m.fecha AS fechaMovimiento')
+            ->addSelect('m.numero AS movimientoNumero')
+            ->addSelect('md.cantidad')
+            ->addSelect('i.nombre AS item')
+            ->addSelect('i.referencia AS referenciaItem')
+            ->addSelect('md.codigoBodegaFk')
+            ->addSelect('md.loteFk')
+            ->addSelect('md.vrCosto')
+            ->leftJoin('md.movimientoRel', 'm')
+            ->leftJoin('m.documentoTipoRel', 'dt')
+            ->leftJoin('md.itemRel', 'i')
+            ->orderBy('m.fecha', 'DESC');
+        $fecha = new \DateTime('now');
+        if ($session->get('filtroInvItemCodigo')) {
+            $queryBuilder->andWhere("md.codigoItemFk = '{$session->get('filtroInvItemCodigo')}'");
+        }
+        if ($session->get('filtroInvLote') != '') {
+            $queryBuilder->andWhere("md.loteFk = '{$session->get('filtroInvLote')}' ");
+        }
+        if ($session->get('filtroInvBodega') != '') {
+            $queryBuilder->andWhere("md.codigoBodegaFk = '{$session->get('filtroInvBodega')}' ");
+        }
+        if ($session->get('filtroInvCodigoDocumento')) {
+            $queryBuilder->andWhere("m.codigoDocumentoFk = '{$session->get('filtroInvCodigoDocumento')}'");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroInvMovimientoFechaDesde') != null) {
+                $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroInvMovimientoFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("m.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroInvMovimientoFechaHasta') != null) {
+                $queryBuilder->andWhere("m.fecha <= '{$session->get('filtroInvMovimientoFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("m.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+
+
+        return $queryBuilder;
+    }
+
     public function registroFecha($codigoItem, $fechaHasta)
     {
         $session = new Session();
@@ -451,7 +501,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->select("SUM(md.cantidad)")
             ->leftJoin("md.movimientoRel", "m")
             ->where("md.codigoRemisionDetalleFk = {$codigoRemisionDetalle} ")
-        ->andWhere('m.estadoAutorizado = 1');
+            ->andWhere('m.estadoAutorizado = 1');
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         if ($resultado[1]) {
             $cantidad = $resultado[1];
@@ -459,7 +509,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $cantidad;
     }
 
-    public function validarDetalles($codigoMovimiento){
+    public function validarDetalles($codigoMovimiento)
+    {
         $cantidad = 0;
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
             ->select('md.codigoMovimientoDetallePk')
@@ -476,7 +527,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $arrDetalles;
     }
 
-    public function bodegaMovimiento($codigoMovimiento){
+    public function bodegaMovimiento($codigoMovimiento)
+    {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
             ->select('md.codigoBodegaFk')
             ->where('md.codigoMovimientoFk=' . $codigoMovimiento)
@@ -485,7 +537,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $arrDetalles;
     }
 
-    public function cuentaInventarioTransito($codigo){
+    public function cuentaInventarioTransito($codigo)
+    {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
             ->select('i.codigoCuentaInventarioTransitoFk')
             ->addSelect('SUM(md.vrSubtotal) as vrSubtotal')
@@ -499,10 +552,10 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
     public function actualizarImportacion($arMovimiento)
     {
         $em = $this->getEntityManager();
-        if(!$arMovimiento->getEstadoContabilizado()) {
+        if (!$arMovimiento->getEstadoContabilizado()) {
             $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
             foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-                if($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
+                if ($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
                     $arMovimientoDetalle->setVrPrecio($arMovimientoDetalle->getImportacionDetalleRel()->getVrPrecioLocalTotal());
                     $em->persist($arMovimientoDetalle);
                 }

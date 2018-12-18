@@ -549,6 +549,18 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $arrCuentas;
     }
 
+    public function retencionFacturaContabilizar($codigo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoImpuestoRetencionFk')
+            ->addSelect('SUM(md.vrRetencionFuente) as vrRetencionFuente')
+            ->where('md.codigoMovimientoFk = ' . $codigo)
+            ->andWhere('md.vrRetencionFuente > 0')
+            ->groupBy('md.codigoImpuestoRetencionFk');
+        $arrCuentas = $queryBuilder->getQuery()->getResult();
+        return $arrCuentas;
+    }
+
     public function actualizarImportacion($arMovimiento)
     {
         $em = $this->getEntityManager();

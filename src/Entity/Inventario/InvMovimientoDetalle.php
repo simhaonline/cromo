@@ -123,6 +123,11 @@ class InvMovimientoDetalle
     private $vrTotal = 0;
 
     /**
+     * @ORM\Column(name="vr_retencion_fuente", type="float", options={"default" : 0})
+     */
+    private $vrRetencionFuente = 0;
+
+    /**
      * @ORM\Column(name="operacion_inventario", type="smallint", nullable=true, options={"default" : 0})
      */
     private $operacionInventario = 0;
@@ -757,6 +762,22 @@ class InvMovimientoDetalle
     public function setMovimientosDetallesMovimientoDetalleRel( $movimientosDetallesMovimientoDetalleRel ): void
     {
         $this->movimientosDetallesMovimientoDetalleRel = $movimientosDetallesMovimientoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRetencionFuente()
+    {
+        return $this->vrRetencionFuente;
+    }
+
+    /**
+     * @param mixed $vrRetencionFuente
+     */
+    public function setVrRetencionFuente( $vrRetencionFuente ): void
+    {
+        $this->vrRetencionFuente = $vrRetencionFuente;
     }
 
 

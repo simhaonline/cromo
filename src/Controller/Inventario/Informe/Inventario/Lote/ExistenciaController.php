@@ -40,7 +40,7 @@ class ExistenciaController extends ControllerListenerGeneral
             ->add('txtCodigoItem', TextType::class, array('data' => $session->get('filtroInvInformeItemCodigo'), 'required' => false))
             ->add('txtNombreItem', TextType::class, array('data' => $session->get('filtroInvInformeItemNombre'), 'required' => false , 'attr' => ['readonly' => 'readonly']))
             ->add('txtLote', TextType::class, ['required' => false, 'data' => $session->get('filtroInvLote')])
-            ->add('fechaVencimiento', DateType::class, ['widget' => 'single_text', 'label' => 'Fecha vence: ',  'required' => false, 'data' => date_create($session->get('filtroInvInformeFechaVence'))])
+//            ->add('fechaVencimiento', DateType::class, ['widget' => 'single_text', 'label' => 'Fecha vence: ',  'required' => false, 'data' => date_create($session->get('filtroInvInformeFechaVence'))])
             ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
@@ -51,7 +51,7 @@ class ExistenciaController extends ControllerListenerGeneral
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvInformeItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvInformeLote', $form->get('txtLote')->getData());
-                $session->set('filtroInvInformeFechaVence', $form->get('fechaVencimiento')->getData());
+//                $session->set('filtroInvInformeFechaVence', $form->get('fechaVencimiento')->getData());
                 $arBodega = $form->get('cboBodega')->getData();
                 if($arBodega != ''){
                     $session->set('filtroInvInformeLoteBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());

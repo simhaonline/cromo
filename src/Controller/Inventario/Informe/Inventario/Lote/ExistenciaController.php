@@ -40,18 +40,27 @@ class ExistenciaController extends ControllerListenerGeneral
             ->add('txtCodigoItem', TextType::class, array('data' => $session->get('filtroInvInformeItemCodigo'), 'required' => false))
             ->add('txtNombreItem', TextType::class, array('data' => $session->get('filtroInvInformeItemNombre'), 'required' => false , 'attr' => ['readonly' => 'readonly']))
             ->add('txtLote', TextType::class, ['required' => false, 'data' => $session->get('filtroInvLote')])
-//            ->add('fechaVencimiento', DateType::class, ['widget' => 'single_text', 'label' => 'Fecha vence: ',  'required' => false, 'data' => $session->get('filtroInvInformeFechaVence')!==null?new \DateTime(date_create($session->get('filtroInvInformeFechaVence'))):null])
+            ->add('fechaVencimiento', DateType::class,
+                [
+                    'widget' => 'single_text',
+                    'format' => 'yyyy-MM-dd',
+                    'attr' => array('class' => 'date'),
+                    'label' => 'Fecha vence: ',
+                    'required' => false,
+                    'data' => $session->get('filtroInvInformeFechaVence')?new \DateTime($session->get('filtroInvInformeFechaVence')):null
+                ])
             ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvInformeItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvInformeLote', $form->get('txtLote')->getData());
-//                $session->set('filtroInvInformeFechaVence', $form->get('fechaVencimiento')->getData());
+                $session->set('filtroInvInformeFechaVence', $form->get('fechaVencimiento')->getData()?$form->get('fechaVencimiento')->getData()->format('Y-m-d'):null);
                 $arBodega = $form->get('cboBodega')->getData();
                 if($arBodega != ''){
                     $session->set('filtroInvInformeLoteBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());

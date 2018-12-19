@@ -110,7 +110,6 @@
             var html='';
             $(`.masComentarios-${key}`).html(html);
             var data={{ publicaciones|json_encode|raw }};
-            console.log(data[key]);
             for(var i=2;i<=data[key]['comentarios'].length;i++ ) {
                 html = `<li class='message message-reply'><img src='{{ asset('img/avatars/3.png') }}' class='online' alt='user'><span class='message-text'> <a href='javascript:void(0);' class='username'>Serman Syla</a>${data[key]['comentarios'][i]['texto']}</span><ul class='list-inline font-xs'><li><a href='javascript:void(0);' class='text-muted'>1 minute ago </a></li><li><a href='javascript:void(0);'class='text-success'><i class='fa fa-thumbs-up'></i></a></li></ul></li>`;
                 // html="<h1>holaaa</h1>"

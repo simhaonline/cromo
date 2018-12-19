@@ -10,7 +10,7 @@ class GenTareaPrioridad extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $arTareaPrioridad = $manager->getRepository(GenTarea::class)->find('CRI');
+        $arTareaPrioridad = $manager->getRepository('App:General\GenTareaPrioridad')->find('CRI');
         if(!$arTareaPrioridad){
             $arTareaPrioridad = new \App\Entity\General\GenTareaPrioridad();
             $arTareaPrioridad->setCodigoTareaPrioridadPk('CRI');
@@ -19,7 +19,7 @@ class GenTareaPrioridad extends Fixture
             $arTareaPrioridad->setIcono('fa fa-warning');
             $manager->persist($arTareaPrioridad);
         }
-        $arTareaPrioridad = $manager->getRepository(GenTarea::class)->find('IMP');
+        $arTareaPrioridad = $manager->getRepository('App:General\GenTareaPrioridad')->find('IMP');
         if(!$arTareaPrioridad){
             $arTareaPrioridad = new \App\Entity\General\GenTareaPrioridad();
             $arTareaPrioridad->setCodigoTareaPrioridadPk('IMP');

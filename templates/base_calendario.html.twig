@@ -1,1 +1,326 @@
-{% include('base_menu_inicio.html.twig') %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Cromo!{% endblock %}</title>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('css/general.css') }}">
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/bootstrap.min.css') }}">
+        <link rel="stylesheet" type="text/css" media="screen"
+              href="{{ asset('css/smartadmin-production-plugins.min.css') }}">
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/smartadmin-production.min.css') }}">
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/smartadmin-skins.min.css') }}">
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/demo.min.css') }}">
+        <link rel="shortcut icon" href="{{ asset('img/favicon/favicon.ico') }}" type="image/x-icon">
+        <link rel="icon" href="{{ asset('img/favicon/favicon.ico') }}" type="image/x-icon">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+        <link rel="apple-touch-icon" href="{{ asset('img/splash/sptouch-icon-iphone.png') }}">
+        <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/splash/touch-icon-ipad.png') }}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('img/splash/touch-icon-iphone-retina.png') }}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('img/splash/touch-icon-ipad-retina.png') }}">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-startup-image" href="{{ asset('img/splash/ipad-landscape.png') }}"
+              media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+        <link rel="apple-touch-startup-image" href="{{ asset('img/splash/ipad-portrait.png') }}"
+              media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+        <link rel="apple-touch-startup-image" href="{{ asset('img/splash/iphone.png') }}"
+              media="screen and (max-device-width: 320px)">
+        <link rel="stylesheet" href="{{ asset('css/comunidad.css') }}">
+
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('plugins/fontawesome/css/all.min.css') }}">
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/font-awesome.min.css') }}">
+        <style type="text/css">
+            td.titulo {
+                font-weight: bold;
+                background-color: #f5f5f5;
+            }
+        </style>
+
+    {% endblock %}
+</head>
+<body class="">
+
+{% include ('base_cabecera_navegacion.html.twig') %}
+<aside id="left-panel">
+
+    <!-- User info -->
+    <div class="login-info">
+				<span> <!-- User image size is adjusted inside CSS, it should stay as is -->
+
+					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
+						{#<img src="{{ asset('img/avatars/sunny.png') }}" alt="me" class="online"/>#}
+                        <img src="{{ app.session.get('foto_perfil')}}" alt="me" class="online" style="min-height: 25px"/>
+						<span>
+							{{ app.user.username }}
+						</span>
+						<i class="fa fa-angle-down"></i>
+					</a>
+
+				</span>
+    </div>
+    <!-- end user info -->
+    {% include 'base_opcion_calendario.html.twig' %}
+
+    <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
+
+</aside>
+<!-- END NAVIGATION -->
+
+<!-- #MAIN PANEL -->
+<div id="main" role="main">
+
+    <!-- RIBBON -->
+    <div id="ribbon">
+
+        <!-- breadcrumb -->
+
+        {% set arrRuta = app.request.attributes.get('_route')|split('_') %}
+
+        {% if arrRuta | length > 0 and arrRuta.0 is defined and arrRuta.0 != 'admin' %}
+            {#<div class="row">#}
+            {#<div class="col-lg-12">#}
+            {#<h3 class='page-header'>#}
+            <ol class="breadcrumb">
+                <li>{{ arrRuta.0 | capitalize }} {% if arrRuta.1 is defined %}{{ arrRuta.1 | capitalize }} {% endif %}</li>
+
+                {% if arrRuta.2 is defined %}
+                    <li>{{ arrRuta.2 | capitalize }}
+
+                        : {% if arrRuta.3 is defined %}{{ arrRuta.3 }} {% if arrRuta.4 is defined %}{{ arrRuta.4 }}{% endif %}{% endif %}
+                    </li>
+                {% endif %}
+                &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:abrirVentana3('{{ path('general_utilidad_general_reportar_lista',{'ruta' : app.request.attributes.get('_route') }) }}','reportarUnProblema',600,1200)" style="font-size: x-small; color: white!important;">
+                    Reportar <span class="fa fa-exclamation-triangle" style="color: white!important;"></span></a>&nbsp;&nbsp;
+            </ol>
+        {% endif %}
+
+    </div>
+    {{ notificar()|raw }}
+    <div style="padding: 6px 6px 6px 6px;">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+</div>
+<div class="page-footer">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <span class="txt-color-white">Cromo V.2 <span class="hidden-xs"> - Todos los derechos reservados</span> © 2017-2019</span>
+        </div>
+    </div>
+</div>
+<div id="shortcut">
+    <ul>
+        <li>
+            <a href="inbox.html" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i
+                            class="fa fa-envelope fa-4x"></i> <span>Mail <span class="label pull-right bg-color-darken">14</span></span> </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('calendario_lista') }}" class="jarvismetro-tile big-cubes bg-color-orangeDark"> <span
+                        class="iconbox"> <i class="fa fa-calendar fa-4x"></i> <span>Calendario</span> </span> </a>
+        </li>
+        <li>
+            <a href="gmap-xml.html" class="jarvismetro-tile big-cubes bg-color-purple"> <span class="iconbox"> <i
+                            class="fa fa-map-marker fa-4x"></i> <span>Maps</span> </span> </a>
+        </li>
+        <li>
+            <a href="invoice.html" class="jarvismetro-tile big-cubes bg-color-blueDark"> <span class="iconbox"> <i
+                            class="fa fa-book fa-4x"></i> <span>Invoice <span class="label pull-right bg-color-darken">99</span></span> </span>
+            </a>
+        </li>
+        <li>
+            <a href="gallery.html" class="jarvismetro-tile big-cubes bg-color-greenLight"> <span class="iconbox"> <i
+                            class="fa fa-picture-o fa-4x"></i> <span>Gallery </span> </span> </a>
+        </li>
+        <li>
+            <a href="{{ path('comunidad_perfil_ver') }}" class="jarvismetro-tile big-cubes selected bg-color-pinkDark">
+                <span class="iconbox"> <i class="fa fa-user fa-4x"></i> <span>Mi Perfil </span> </span> </a>
+        </li>
+    </ul>
+</div>
+<!-- END SHORTCUT AREA -->
+{% block javascripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        if (!window.jQuery) {
+            document.write('<script src="{{ asset('js/libs/jquery-3.2.1.min.js') }}"><\/script>');
+        }
+    </script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        if (!window.jQuery.ui) {
+            document.write('<script src="{{ asset('js/libs/jquery-ui.min.js') }}"><\/script>');
+        }
+    </script>
+    <!-- IMPORTANT: APP CONFIG -->
+    <script src="{{ asset('js/app.config.js') }}"></script>
+    <!-- BOOTSTRAP JS -->
+    <script src="{{ asset('js/plugin/jquery-touch/jquery.ui.touch-punch.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap/bootstrap.min.js') }}"></script>
+    <!-- CUSTOM NOTIFICATION -->
+    <script src="{{ asset('js/notification/SmartNotification.min.js') }}"></script>
+    <script src="{{ asset('js/smartwidgets/jarvis.widget.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/sparkline/jquery.sparkline.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/jquery-validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/masked-input/jquery.maskedinput.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.full.js') }}"></script>
+    <script src="{{ asset('js/plugin/bootstrap-slider/bootstrap-slider.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/msie-fix/jquery.mb.browser.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/fastclick/fastclick.min.js') }}"></script>
+    <script src="{{ asset('js/demo.min.js') }}"></script>
+    <script src="{{ asset('js/app.min.js') }}"></script>
+    <script src="{{ asset('js/moment.min.js') }}"></script>
+
+    <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
+    <!-- Voice command : plugin -->
+    <script src="{{ asset('js/speech/voicecommand.min.js') }}"></script>
+
+    <!-- SmartChat UI : plugin -->
+    <script src="{{ asset('js/smart-chat-ui/smart.chat.ui.min.js') }}"></script>
+    <script src="{{ asset('js/smart-chat-ui/smart.chat.manager.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/fullcalendar/fullcalendar.min.js') }}"></script>
+    <script src="{{ asset('js/fontawesome.min.js') }}"></script>
+    <script src="{{ asset('js/comunidad.js') }}"></script>
+
+    <script>
+        // DO NOT REMOVE : GLOBAL FUNCTIONS!
+        $(document).ready(function () {
+            pageSetUp();
+        });
+    </script>
+
+    <script src="{{ asset('js/general.js') }}"></script>
+    <script>
+        var guardarNotificacion = "";
+        $(document).ready(function () {
+
+            var notificacionesGeneral = $('.notificacionesGeneral');
+            var numeroNotificaciones = $('.numeroNotificaciones');
+            $.ajax({
+                url: "{{ path('general_administracion_notificacion_notificacion') }}",
+                type: "GET",
+                dataType: "JSON",
+                success: function (respuestas) {
+                    if (respuestas['notificacionesPendientes'] && respuestas['notificacionesPendientes'] > 0) {
+                        numeroNotificaciones.html(`(${respuestas['notificacionesPendientes']})`);
+                        notificacionesGeneral.append(respuestas['notificacionesPendientes']);
+                    }
+                    else {
+                        notificacionesGeneral.html(0);
+                        numeroNotificaciones.html(`(${0})`);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        function verificarNotificaciones() {
+            var notificaciones = $('.notificaciones');
+            var numeroNotificaciones = $('.numeroNotificaciones');
+            $.ajax({
+                url: "{{ path('general_administracion_notificacion_notificacion') }}",
+                type: "GET",
+                dataType: "JSON",
+                success: function (respuestas) {
+                    if (respuestas['notificacionesPendientes'] && respuestas['notificacionesPendientes'] > 0) {
+                        numeroNotificaciones.html(`(${respuestas['notificacionesPendientes']})`);
+                        notificaciones.html("<ul class='notificaciones notification-body' id='notificaciones'></ul>");
+                        $.each(respuestas['notificaciones'], (key, notificacion) => {
+                            if (key < 7) {
+                                notificaciones.append('<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >' + notificacion['nombre'] + '<span class="pull-right font-xs text-muted"><i>' + moment(notificacion['fecha'], "YYYYMMDDhms").fromNow() + '</i></span></span></span></li>');
+                                guardarNotificacion += '<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >' + notificacion['nombre'] + '<span class="pull-right font-xs text-muted"><i>' + moment(notificacion['fecha'], "YYYYMMDDhms").fromNow() + '</i></span></span></span></li>';
+                            }
+                        });
+                        if (guardarNotificacion !== "") {
+                            notificaciones.html(guardarNotificacion);
+                        }
+                        notificaciones.append('<li><a class="text-center" href="{{ path('general_administracion_notificacion__todasNotificaciones') }}"><strong>Ver todas </strong><i class="fa fa-angle-right"></i></a></li>');
+                    }
+                    else {
+                        if (guardarNotificacion !== "") {
+                            notificaciones.html(guardarNotificacion);
+                            notificaciones.append('<li><a class="text-center" href="{{ path('general_administracion_notificacion__todasNotificaciones') }}"><strong>Ver todas </strong><i class="fa fa-angle-right"></i></a></li>');
+                        }
+                        else {
+                            notificaciones.html('<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >Sin notificaciones</span></span></li>');
+                        }
+                    }
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+
+        function verNotificacionesPendientes() {
+            var numeroNotificaciones = $('.numeroNotificaciones');
+            var notificacionesGeneral = $('.notificacionesGeneral');
+            $.ajax({
+                url: "{{ path('general_administracion_notificacion_ver') }}",
+                type: "GET",
+                dataType: "JSON",
+                success: function (respuestas) {
+                    notificacionesGeneral.html(0);
+                    numeroNotificaciones.html(`(${0})`);
+                    if (guardarNotificacion !== "") {
+                        notificaciones.html(guardarNotificacion);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        //funcion para subir foto de perfil
+        function cambiarFotoPerfil() {
+            $("#form_foto_perfil_subir").trigger('click');
+        }
+
+        function foto_perfil_subir(evt) {
+            var foto_perfil_subir = evt.target.files; // FileList object
+            // Obtenemos la imagen del campo "file".
+
+            for (var i = 0, f; f = foto_perfil_subir[i]; i++) {
+                if (!f.type.match('image.*')) {
+                    continue;
+                }
+                var reader = new FileReader();
+
+                //Solo admitimos imágenes.
+
+                reader.onload = (function (theFile) {
+                    return function (e) {
+                        console.log(e.target.result);
+                        // Insertamos la imagen
+                        document.getElementById("previsualizar_foto").src = `${e.target.result}`;
+                    };
+                })(f);
+
+                reader.readAsDataURL(f);
+            }
+        }
+
+        //redSocial
+        function notificacionAmigos(){
+            document.getElementById('notificacion_amigo').style.display='block';
+
+        }
+
+        //endRedSocial
+
+        document.getElementById('form_foto_perfil_subir').addEventListener('change', foto_perfil_subir, false);
+
+    </script>
+
+{% endblock %}
+</body>
+</html>

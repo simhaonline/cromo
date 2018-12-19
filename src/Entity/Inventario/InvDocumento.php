@@ -120,6 +120,11 @@ class InvDocumento
     private $codigoCuentaProveedorFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_cliente_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaClienteFk;
+
+    /**
      * @ORM\Column(name="compra_extranjera", type="boolean", nullable=true, options={"default":false})
      */
     private $compraExtranjera = false;
@@ -501,6 +506,22 @@ class InvDocumento
     public function setCompraExtranjera($compraExtranjera): void
     {
         $this->compraExtranjera = $compraExtranjera;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaClienteFk()
+    {
+        return $this->codigoCuentaClienteFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaClienteFk
+     */
+    public function setCodigoCuentaClienteFk( $codigoCuentaClienteFk ): void
+    {
+        $this->codigoCuentaClienteFk = $codigoCuentaClienteFk;
     }
 
 

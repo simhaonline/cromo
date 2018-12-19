@@ -407,7 +407,7 @@ class InvRemisionRepository extends ServiceEntityRepository
     public function eliminar($arrSeleccionados)
     {
         $respuesta = '';
-        if (count($arrSeleccionados) > 0) {
+        if ($arrSeleccionados) {
             foreach ($arrSeleccionados as $codigo) {
                 $arRegistro = $this->getEntityManager()->getRepository(InvRemision::class)->find($codigo);
                 if ($arRegistro) {

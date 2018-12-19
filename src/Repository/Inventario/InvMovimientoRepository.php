@@ -226,7 +226,6 @@ class InvMovimientoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $respuesta = '';
-        $arrImpuestoRetenciones = array();
         $vrTotalBrutoGlobal = 0;
         $vrTotalGlobal = 0;
         $vrTotalNetoGlobal = 0;
@@ -236,6 +235,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $vrRetencionFuenteGlobal = 0;
         $vrRetencionIvaGlobal = 0;
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
+        $arrImpuestoRetenciones = $this->retencion($arMovimientoDetalles);
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             if($arMovimiento->getCodigoDocumentoTipoFk() == "SAL") {
                 $arMovimientoDetalle->setVrPrecio($arMovimientoDetalle->getVrCosto());
@@ -249,31 +249,32 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $vrIva = ($vrSubtotal * ($arMovimientoDetalle->getPorcentajeIva()) / 100);
             $vrTotalBruto = $vrSubtotal;
             $vrTotal = $vrTotalBruto + $vrIva;
+            $vrRetencionFuente = 0;
             $vrTotalGlobal += $vrTotal;
             $vrTotalBrutoGlobal += $vrTotalBruto;
             $vrDescuentoGlobal += $vrDescuento;
             $vrIvaGlobal += $vrIva;
             $vrSubtotalGlobal += $vrSubtotal;
-
+            if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC') {
+                if($arMovimientoDetalle->getCodigoImpuestoRetencionFk()) {
+                    if($arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['base'] == true) {
+                        $vrRetencionFuente = $vrSubtotal * $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['porcentaje'] / 100;
+                    }
+                }
+            }
+            $vrRetencionFuenteGlobal += $vrRetencionFuente;
             $arMovimientoDetalle->setVrSubtotal($vrSubtotal);
             $arMovimientoDetalle->setVrDescuento($vrDescuento);
             $arMovimientoDetalle->setVrIva($vrIva);
             $arMovimientoDetalle->setVrTotal($vrTotal);
-            if($arMovimientoDetalle->getCodigoImpuestoRetencionFk()) {
-                if (!array_key_exists($arMovimientoDetalle->getCodigoImpuestoRetencionFk(), $arrImpuestoRetenciones)) {
-                    $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()] =  array('codigo' => $arMovimientoDetalle->getCodigoImpuestoRetencionFk(),
-                        'valor' => $vrSubtotal);
-                } else {
-                    $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['valor'] += $vrSubtotal;
-                }
-            }
+            $arMovimientoDetalle->setVrRetencionFuente($vrRetencionFuente);
             $this->getEntityManager()->persist($arMovimientoDetalle);
         }
         //Calcular retenciones en Ventas
         if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC') {
 
             //Retencion en la fuente
-            if($arrImpuestoRetenciones) {
+            /*if($arrImpuestoRetenciones) {
                 foreach ($arrImpuestoRetenciones as $arrImpuestoRetencion) {
                     $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrImpuestoRetencion['codigo']);
                     if($arImpuesto) {
@@ -281,13 +282,6 @@ class InvMovimientoRepository extends ServiceEntityRepository
                             $vrRetencionFuenteGlobal += ($arrImpuestoRetencion['valor'] * $arImpuesto->getPorcentaje()) / 100;
                         }
                     }
-                }
-            }
-
-
-            /*if ($arMovimiento->getTerceroRel()->getRetencionFuente()) {
-                if ($vrTotalBrutoGlobal >= $arrConfiguracion['vrBaseRetencionFuenteVenta'] || $arMovimiento->getTerceroRel()->getRetencionFuenteSinBase()) {
-                    $vrRetencionFuenteGlobal = ($vrTotalBrutoGlobal * $arrConfiguracion['porcentajeRetencionFuente']) / 100;
                 }
             }*/
 
@@ -300,8 +294,6 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 }
             }
         }
-
-        //Calcular retenciones en la fuente
 
 
         $vrTotalNetoGlobal = $vrTotalGlobal - $vrRetencionFuenteGlobal - $vrRetencionIvaGlobal;
@@ -318,6 +310,36 @@ class InvMovimientoRepository extends ServiceEntityRepository
         } else {
             Mensajes::error($respuesta);
         }
+    }
+
+    private function retencion($arMovimientoDetalles) {
+        $em = $this->getEntityManager();
+        $arrImpuestoRetenciones = array();
+        foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+            if($arMovimientoDetalle->getCodigoImpuestoRetencionFk()) {
+                $vrPrecio = $arMovimientoDetalle->getVrPrecio() - (($arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getPorcentajeDescuento()) / 100);
+                $vrSubtotal = $vrPrecio * $arMovimientoDetalle->getCantidad();
+                if (!array_key_exists($arMovimientoDetalle->getCodigoImpuestoRetencionFk(), $arrImpuestoRetenciones)) {
+                    $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()] =  array('codigo' => $arMovimientoDetalle->getCodigoImpuestoRetencionFk(),
+                        'valor' => $vrSubtotal, 'base' => false, 'porcentaje' => 0);
+                } else {
+                    $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['valor'] += $vrSubtotal;
+                }
+            }
+        }
+
+        if($arrImpuestoRetenciones) {
+            foreach ($arrImpuestoRetenciones as $arrImpuestoRetencion) {
+                $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrImpuestoRetencion['codigo']);
+                if($arImpuesto) {
+                    if($arrImpuestoRetencion['valor'] >= $arImpuesto->getBase()) {
+                        $arrImpuestoRetenciones[$arrImpuestoRetencion['codigo']]['base'] = true;
+                        $arrImpuestoRetenciones[$arrImpuestoRetencion['codigo']]['porcentaje'] = $arImpuesto->getPorcentaje();
+                    }
+                }
+            }
+        }
+        return $arrImpuestoRetenciones;
     }
 
     /**
@@ -829,6 +851,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm')
             ->select('m.codigoMovimientoPk')
+            ->addSelect('m.codigoDocumentoTipoFk')
             ->addSelect('m.codigoTerceroFk')
             ->addSelect('m.numero')
             ->addSelect('m.fecha')
@@ -837,6 +860,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.vrSubtotal')
             ->addSelect('d.codigoComprobanteFk')
             ->addSelect('d.codigoCuentaProveedorFk')
+            ->addSelect('d.codigoCuentaClienteFk')
             ->leftJoin('m.documentoRel', 'd')
             ->where('m.codigoMovimientoPk = ' . $codigo);
         $arMovimiento = $queryBuilder->getQuery()->getSingleResult();
@@ -858,15 +882,41 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         }
                         $arComprobante = $em->getRepository(FinComprobante::class)->find($arMovimiento['codigoComprobanteFk']);
                         $arTercero = $em->getRepository(InvTercero::class)->terceroFinanciero($arMovimiento['codigoTerceroFk']);
+                        //Contabilizar entradas
+                        if($arMovimiento['codigoDocumentoTipoFk'] == "ENT") {
+                            //Cuenta inventario transito
+                            $arrInventariosTransito = $em->getRepository(InvMovimientoDetalle::class)->cuentaInventarioTransito($codigo);
+                            foreach ($arrInventariosTransito as $arrInventarioTransito) {
+                                if($arrInventarioTransito['codigoCuentaInventarioTransitoFk']) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arrInventarioTransito['codigoCuentaInventarioTransitoFk']);
+                                    if(!$arCuenta) {
+                                        $error = "No se encuentra la cuenta " . $arrInventarioTransito['codigoCuentaInventarioTransitoFk'];
+                                        break 2;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    $arRegistro->setNumero($arMovimiento['numero']);
+                                    $arRegistro->setFecha($arMovimiento['fecha']);
+                                    $arRegistro->setVrDebito($arrInventarioTransito['vrSubtotal']);
+                                    $arRegistro->setNaturaleza('D');
+                                    $arRegistro->setDescripcion('INVENTARIO TRANSITO');
+                                    $arRegistro->setCodigoModeloFk('InvMovimiento');
+                                    $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "No tiene configurada la cuenta de compra para el los item";
+                                    break;
+                                }
+                            }
 
-                        //Cuenta inventario transito
-                        $arrInventariosTransito = $em->getRepository(InvMovimientoDetalle::class)->cuentaInventarioTransito($codigo);
-                        foreach ($arrInventariosTransito as $arrInventarioTransito) {
-                            if($arrInventarioTransito['codigoCuentaInventarioTransitoFk']) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrInventarioTransito['codigoCuentaInventarioTransitoFk']);
+                            //Proveedor
+                            if($arMovimiento['codigoCuentaProveedorFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arMovimiento['codigoCuentaProveedorFk']);
                                 if(!$arCuenta) {
-                                    $error = "No se encuentra la cuenta " . $arrInventarioTransito['codigoCuentaInventarioTransitoFk'];
-                                    break 2;
+                                    $error = "No se encuentra la cuenta " . $arMovimiento['codigoCuentaProveedorFk'];
+                                    break;
                                 }
                                 $arRegistro = new FinRegistro();
                                 $arRegistro->setTerceroRel($arTercero);
@@ -874,40 +924,77 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 $arRegistro->setNumero($arMovimiento['numero']);
                                 $arRegistro->setFecha($arMovimiento['fecha']);
-                                $arRegistro->setVrDebito($arrInventarioTransito['vrSubtotal']);
-                                $arRegistro->setNaturaleza('D');
-                                $arRegistro->setDescripcion('INVENTARIO TRANSITO');
+                                $arRegistro->setVrCredito($arMovimiento['vrSubtotal']);
+                                $arRegistro->setNaturaleza('C');
+                                $arRegistro->setDescripcion('PROVEEDORES EXTRANJEROS');
                                 $arRegistro->setCodigoModeloFk('InvMovimiento');
                                 $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
                                 $em->persist($arRegistro);
                             } else {
-                                $error = "No tiene configurada la cuenta de compra para el los item";
+                                $error = "No tiene configurada la cuenta de proveedores en el documento";
                                 break;
                             }
                         }
 
-                        //Proveedor
-                        if($arMovimiento['codigoCuentaProveedorFk']) {
-                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arMovimiento['codigoCuentaProveedorFk']);
-                            if(!$arCuenta) {
-                                $error = "No se encuentra la cuenta " . $arMovimiento['codigoCuentaProveedorFk'];
+                        //Contabilizar facturas
+                        if($arMovimiento['codigoDocumentoTipoFk'] == "FAC") {
+                            //Cliente
+                            if($arMovimiento['codigoCuentaClienteFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arMovimiento['codigoCuentaClienteFk']);
+                                if(!$arCuenta) {
+                                    $error = "No se encuentra la cuenta " . $arMovimiento['codigoCuentaClienteFk'];
+                                    break;
+                                }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                $arRegistro->setNumero($arMovimiento['numero']);
+                                $arRegistro->setFecha($arMovimiento['fecha']);
+                                $arRegistro->setVrDebito($arMovimiento['vrSubtotal']);
+                                $arRegistro->setNaturaleza('D');
+                                $arRegistro->setDescripcion('CLIENTE');
+                                $arRegistro->setCodigoModeloFk('InvMovimiento');
+                                $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                $em->persist($arRegistro);
+                            } else {
+                                $error = "No tiene configurada la cuenta de cliente en el documento";
                                 break;
                             }
-                            $arRegistro = new FinRegistro();
-                            $arRegistro->setTerceroRel($arTercero);
-                            $arRegistro->setCuentaRel($arCuenta);
-                            $arRegistro->setComprobanteRel($arComprobante);
-                            $arRegistro->setNumero($arMovimiento['numero']);
-                            $arRegistro->setFecha($arMovimiento['fecha']);
-                            $arRegistro->setVrCredito($arMovimiento['vrSubtotal']);
-                            $arRegistro->setNaturaleza('C');
-                            $arRegistro->setDescripcion('PROVEEDORES EXTRANJEROS');
-                            $arRegistro->setCodigoModeloFk('InvMovimiento');
-                            $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
-                            $em->persist($arRegistro);
-                        } else {
-                            $error = "No tiene configurada la cuenta de proveedores en el documento";
-                            break;
+
+
+                            //Retenciones
+                            $arrRetenciones = $em->getRepository(InvMovimientoDetalle::class)->retencionFacturaContabilizar($codigo);
+                            foreach ($arrRetenciones as $arrRetencion) {
+                                if($arrRetencion['codigoImpuestoRetencionFk']) {
+                                    $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrRetencion['codigoImpuestoRetencionFk']);
+                                    if($arImpuesto) {
+                                        if($arImpuesto->getCodigoCuentaFk()) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arImpuesto->getCodigoCuentaFk());
+                                            if(!$arCuenta) {
+                                                $error = "No se encuentra la cuenta " . $arImpuesto->getCodigoCuentaFk();
+                                                break 2;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            $arRegistro->setNumero($arMovimiento['numero']);
+                                            $arRegistro->setFecha($arMovimiento['fecha']);
+                                            $arRegistro->setVrDebito($arrRetencion['vrRetencionFuente']);
+                                            $arRegistro->setNaturaleza('D');
+                                            $arRegistro->setDescripcion('IMPUESTO RETENCION FUENTE');
+                                            $arRegistro->setCodigoModeloFk('InvMovimiento');
+                                            $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "No tiene configurada la cuenta del impuesto de retencion";
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
                         }
 
                         $arMovimientoAct = $em->getRepository(InvMovimiento::class)->find($arMovimiento['codigoMovimientoPk']);

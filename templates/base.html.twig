@@ -4,53 +4,22 @@
     <meta charset="UTF-8">
     <title>{% block title %}Cromo!{% endblock %}</title>
     {% block stylesheets %}
-        <!-- Bootstrap Core CSS -->
-        {#<link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">#}
-        {#<link rel="stylesheet" href="{{ asset('vendor/metisMenu/metisMenu.min.css') }}">#}
-        {#<link rel="stylesheet" href="{{ asset('dist/css/sb-admin-2.css') }}">#}
-        {#<link rel="stylesheet" href="{{ asset('vendor/morrisjs/morris.css') }}">#}
-        {#<link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}">#}
-        {#<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.css') }}">#}
         <link rel="stylesheet" href="{{ asset('css/general.css') }}">
-        {#<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>#}
-
-        <!-- #CSS Links -->
-        <!-- Basic Styles -->
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/bootstrap.min.css') }}">
-        {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/font-awesome.min.css') }}">#}
-        {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/fontawesome5.6.min.css') }}">#}
         <link rel="stylesheet" type="text/css" media="screen"
               href="{{ asset('css/smartadmin-production-plugins.min.css') }}">
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/smartadmin-production.min.css') }}">
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/smartadmin-skins.min.css') }}">
-
-        <!-- We recommend you use "your_style.css" to override SmartAdmin
-             specific styles this will also ensure you retrain your customization with each SmartAdmin update.
-        <link rel="stylesheet" type="text/css" media="screen" href="css/your_style.css"> -->
-
-        <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/demo.min.css') }}">
-
-        <!-- #FAVICONS -->
         <link rel="shortcut icon" href="{{ asset('img/favicon/favicon.ico') }}" type="image/x-icon">
         <link rel="icon" href="{{ asset('img/favicon/favicon.ico') }}" type="image/x-icon">
-
-        <!-- #GOOGLE FONT -->
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
-
-        <!-- #APP SCREEN / ICONS -->
-        <!-- Specifying a Webpage Icon for Web Clip
-             Ref: https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
         <link rel="apple-touch-icon" href="{{ asset('img/splash/sptouch-icon-iphone.png') }}">
         <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/splash/touch-icon-ipad.png') }}">
         <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('img/splash/touch-icon-iphone-retina.png') }}">
         <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('img/splash/touch-icon-ipad-retina.png') }}">
-
-        <!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-        <!-- Startup image for web apps -->
         <link rel="apple-touch-startup-image" href="{{ asset('img/splash/ipad-landscape.png') }}"
               media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
         <link rel="apple-touch-startup-image" href="{{ asset('img/splash/ipad-portrait.png') }}"
@@ -73,10 +42,6 @@
 <body class="">
 
 {% include ('base_cabecera_navegacion.html.twig') %}
-
-<!-- #NAVIGATION -->
-<!-- Left panel : Navigation area -->
-<!-- Note: This width of the aside area can be adjusted through LESS/SASS variables -->
 <aside id="left-panel">
 
     <!-- User info -->
@@ -225,54 +190,21 @@
             </ol>
         {% endif %}
 
-        {#<ol class="breadcrumb">#}
-        {#<li>Home</li>#}
-        {#<li>Blank</li>#}
-        {#</ol>#}
-        <!-- end breadcrumb -->
-
-        <!-- You can also add more buttons to the
-        ribbon for further usability
-
-        Example below:
-
-        <span class="ribbon-button-alignment pull-right" style="margin-right:25px">
-            <a href="#" id="search" class="btn btn-ribbon hidden-xs" data-title="search"><i class="fa fa-grid"></i> Change Grid</a>
-            <span id="add" class="btn btn-ribbon hidden-xs" data-title="add"><i class="fa fa-plus"></i> Add</span>
-            <button id="search" class="btn btn-ribbon" data-title="search"><i class="fa fa-search"></i> <span class="hidden-mobile">Search</span></button>
-        </span> -->
-
     </div>
-    <!-- END RIBBON -->
-
-    <!-- #MAIN CONTENT -->
     {{ notificar()|raw }}
     <div style="padding: 6px 6px 6px 6px;">
         {% block content %}
 
         {% endblock %}
     </div>
-
-    <!-- END #MAIN CONTENT -->
-
 </div>
-<!-- END #MAIN PANEL -->
-
-<!-- #PAGE FOOTER -->
 <div class="page-footer">
     <div class="row">
         <div class="col-xs-12 col-sm-6">
             <span class="txt-color-white">Cromo V.2 <span class="hidden-xs"> - Todos los derechos reservados</span> © 2017-2019</span>
         </div>
     </div>
-    <!-- end row -->
 </div>
-<!-- END FOOTER -->
-
-<!-- SHORTCUT AREA : With large tiles (activated via clicking user name tag)
-Note: These tiles are completely responsive,
-you can add as many as you like
--->
 <div id="shortcut">
     <ul>
         <li>
@@ -305,18 +237,6 @@ you can add as many as you like
 </div>
 <!-- END SHORTCUT AREA -->
 {% block javascripts %}
-
-    {#<script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>#}
-    {#<script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>#}
-    {#<script src="{{ asset('vendor/metisMenu/metisMenu.min.js') }}"></script>#}
-    {#<script src="{{ asset('vendor/raphael/raphael.min.js') }}"></script>#}
-    {#<script src="{{ asset('vendor/morrisjs/morris.min.js') }}"></script>#}
-    {#<script src="{{ asset('../assets/data/morris-data.js') }}"></script>#}
-    {#<script src="{{ asset('dist/js/sb-admin-2.js') }}"></script>#}
-    {#<script src="{{ asset('plugins/select2/js/i18n/es.js') }}"></script>#}
-    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>#}
-    {#<script src="{{ asset('vendor/moment/moment.min.js') }}"></script>#}
-    {#<script src="{{ asset('plugins/select2/js/select2.full.js') }}"></script>#}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
         if (!window.jQuery) {

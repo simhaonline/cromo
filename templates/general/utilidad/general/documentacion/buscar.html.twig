@@ -6,7 +6,7 @@
             <a href="#busqueda" data-toggle="tab">Buscar <i class="fa fa-caret-down"></i></a>
         </li>
         <li id="li-detalle">
-            <a href="#detalle" data-toggle="tab" >Detalles</a>
+            <a href="#detalle" data-toggle="tab">Detalles</a>
         </li>
         <li>
             <a href="#" data-toggle="tab">Historial de busqueda</a>
@@ -37,7 +37,8 @@
             </h1>
             {% for arTema in arTemas %}
                 <div class="search-results clearfix smart-form">
-                    <h4><a href="#" onclick='actualizarDetalle("{{ arTema.contenidoHtml }}")'>{{ arTema.titulo }}</a></h4>
+                    <h4><a href="#" onclick='actualizarDetalle({{ arTema.codigoTemaPk }})'>{{ arTema.titulo }}</a>
+                    </h4>
                     <div>
                         {% set nombre = 'estrella-' ~ arTema.codigoTemaPk %}
                         <div data-id="{{ arTema.codigoTemaPk }}" class="rating display-inline calificar-estrellas"
@@ -104,19 +105,33 @@
             })
         });
 
+        $('#myModal').on('hidden.bs.modal', function () {
+            $(".modal-body").html("");
+        });
+
         function actualizarUrlVideo(urlVideo) {
-            $(".modal-body").html("<iframe name='video' width='100%' height='500' src=" + urlVideo + " > </iframe>");
+            $(".modal-body").html("<iframe name='video' id='video' width='100%' height='500' src=" + urlVideo + " > </iframe>");
         }
-        function actualizarDetalle(contenidoHtml) {
-            let liBusqueda = $("#li-busqueda");
-            let liDetalle = $("#li-detalle");
-            let panelBusqueda = $("#busqueda");
-            let panelDetalle = $("#detalle");
-            liBusqueda.attr('class','');
-            panelBusqueda.attr('class','tab-pane fade in');
-            liDetalle.attr('class','active');
-            panelDetalle.html(contenidoHtml);
-            panelDetalle.attr('class','tab-pane fade in active');
+
+        function actualizarDetalle(id) {
+            $.ajax({
+                url: "{{ path('documentacion_consultarHtml') }}",
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    id: id
+                }, success: function (contenidoHtml) {
+                    let liBusqueda = $("#li-busqueda");
+                    let liDetalle = $("#li-detalle");
+                    let panelBusqueda = $("#busqueda");
+                    let panelDetalle = $("#detalle");
+                    liBusqueda.attr('class', '');
+                    panelBusqueda.attr('class', 'tab-pane fade in');
+                    liDetalle.attr('class', 'active');
+                    panelDetalle.html(contenidoHtml);
+                    panelDetalle.attr('class', 'tab-pane fade in active');
+                }
+            });
         }
     </script>
 {% endblock %}

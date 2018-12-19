@@ -75,9 +75,26 @@ class DocumentacionController extends Controller
         return new JsonResponse($respuesta);
     }
 
-
-    public function detalles(){
-
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/documentacion/consultarHtml", name="documentacion_consultarHtml")
+     */
+    public function consultarHtml(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $arConfiguracion = $em->find(GenConfiguracion::class,1);
+        $arrDatos['id'] = $request->query->get('id');
+        $arrDatos = json_encode($arrDatos);
+        $ch = curl_init($arConfiguracion->getWebServiceCesioUrl().'/api/documentacion/consultarHtml');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $arrDatos);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($arrDatos))
+        );
+        $respuesta = json_decode(curl_exec($ch));
+        return new JsonResponse($respuesta);
     }
 }
 

@@ -68,11 +68,20 @@ class ItemType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Retencion:'
                 , 'required' => true])
+            ->add('impuestoIvaVentaRel', EntityType::class, [
+                'class' => 'App\Entity\General\GenImpuesto',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->where("i.codigoImpuestoTipoFk = 'I'")
+                        ->orderBy('i.nombre', 'DESC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Iva:'
+                , 'required' => true])
             ->add('nombre', TextType::class, ['required' => true])
             ->add('codigoBarras', TextType::class, ['required' => false])
             ->add('modelo', TextType::class, ['required' => false])
             ->add('referencia', TextType::class, ['required' => false])
-            ->add('porcentajeIva', IntegerType::class, ['required' => false])
             ->add('afectaInventario', CheckboxType::class, ['required' => false, 'label' => 'Afecta inventario'])
             ->add('descripcion', TextareaType::class, ['required' => false])
             ->add('stockMinimo', IntegerType::class, ['required' => false])

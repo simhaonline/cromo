@@ -63,6 +63,11 @@ class InvMovimientoDetalle
     private $codigoImpuestoRetencionFk;
 
     /**
+     * @ORM\Column(name="codigo_impuesto_iva_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoImpuestoIvaFk;
+
+    /**
      * @ORM\Column(name="cantidad", type="integer", options={"default" : 0})
      */
     private $cantidad = 0;
@@ -778,6 +783,22 @@ class InvMovimientoDetalle
     public function setVrRetencionFuente( $vrRetencionFuente ): void
     {
         $this->vrRetencionFuente = $vrRetencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImpuestoIvaFk()
+    {
+        return $this->codigoImpuestoIvaFk;
+    }
+
+    /**
+     * @param mixed $codigoImpuestoIvaFk
+     */
+    public function setCodigoImpuestoIvaFk( $codigoImpuestoIvaFk ): void
+    {
+        $this->codigoImpuestoIvaFk = $codigoImpuestoIvaFk;
     }
 
 

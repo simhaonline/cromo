@@ -77,6 +77,7 @@ class InvItemRepository extends ServiceEntityRepository
             ->addSelect('i.vrCostoPredeterminado')
             ->addSelect('i.vrPrecioPromedio')
             ->addSelect('m.nombre AS marcaNombre')
+            ->addSelect('i.codigoImpuestoIvaVentaFk')
             ->where('i.codigoItemPk <> 0')
             ->leftJoin('i.marcaRel', 'm')
         ->addOrderBy('i.codigoItemPk', 'ASC');

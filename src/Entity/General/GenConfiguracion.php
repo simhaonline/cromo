@@ -77,6 +77,26 @@ class GenConfiguracion
     private $codigoClienteOro;
 
     /**
+     * @ORM\Column(name="autoretencion_venta", type="boolean", options={"default" : false})
+     */
+    private $autoretencionVenta = false;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_autoretencion_venta_valor_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaAutoretencionVentaValorFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_autoretencion_venta_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaAutoretencionVentaFk;
+
+    /**
+     * @ORM\Column(name="porcentaje_autoretencion", type="float", nullable=true, options={"default" : 0})
+     */
+    private $porcentajeAutoretencion = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="GenCiudad", inversedBy="configuracionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -288,6 +308,70 @@ class GenConfiguracion
     public function setWebServiceCesioUrl($webServiceCesioUrl): void
     {
         $this->webServiceCesioUrl = $webServiceCesioUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAutoretencionVenta()
+    {
+        return $this->autoretencionVenta;
+    }
+
+    /**
+     * @param mixed $autoretencionVenta
+     */
+    public function setAutoretencionVenta( $autoretencionVenta ): void
+    {
+        $this->autoretencionVenta = $autoretencionVenta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaAutoretencionVentaValorFk()
+    {
+        return $this->codigoCuentaAutoretencionVentaValorFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaAutoretencionVentaValorFk
+     */
+    public function setCodigoCuentaAutoretencionVentaValorFk( $codigoCuentaAutoretencionVentaValorFk ): void
+    {
+        $this->codigoCuentaAutoretencionVentaValorFk = $codigoCuentaAutoretencionVentaValorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaAutoretencionVentaFk()
+    {
+        return $this->codigoCuentaAutoretencionVentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaAutoretencionVentaFk
+     */
+    public function setCodigoCuentaAutoretencionVentaFk( $codigoCuentaAutoretencionVentaFk ): void
+    {
+        $this->codigoCuentaAutoretencionVentaFk = $codigoCuentaAutoretencionVentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeAutoretencion()
+    {
+        return $this->porcentajeAutoretencion;
+    }
+
+    /**
+     * @param mixed $porcentajeAutoretencion
+     */
+    public function setPorcentajeAutoretencion( $porcentajeAutoretencion ): void
+    {
+        $this->porcentajeAutoretencion = $porcentajeAutoretencion;
     }
 
 

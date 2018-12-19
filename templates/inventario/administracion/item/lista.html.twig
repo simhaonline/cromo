@@ -33,6 +33,7 @@
             <th>NOMBRE</th>
             <th>REFERENCIA</th>
             <th>MARCA</th>
+            <th>IVA</th>
             <th title="Afecta inventario">AI</th>
             <th>EXI</th>
             <th>REM</th>
@@ -48,6 +49,7 @@
                 <td>{{ arItem.nombre }}</td>
                 <td>{{ arItem.referencia }}</td>
                 <td>{{ arItem.marcaNombre }}</td>
+                <td>{{ arItem.codigoImpuestoIvaVentaFk }}</td>
                 <td>{{ arItem.afectaInventario ? 'SI':'NO' }}</td>
                 <td class="numero">{{ arItem.cantidadExistencia | number_format }}</td>
                 <td class="numero">{{ arItem.cantidadRemisionada | number_format }}</td>

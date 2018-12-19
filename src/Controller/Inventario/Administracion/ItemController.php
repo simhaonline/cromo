@@ -76,15 +76,15 @@ class ItemController extends ControllerListenerGeneral
         $form = $this->createForm(ItemType::class, $arItem);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
+            if ($form->get('guardar')->isClicked() || $form->get('guardarnuevo')->isClicked()) {
+                $arItem->setPorcentajeIva($arItem->getImpuestoIvaVentaRel()->getPorcentaje());
                 $em->persist($arItem);
                 $em->flush();
-                return $this->redirect($this->generateUrl('inventario_administracion_inventario_item_detalle', ['id' => $arItem->getCodigoItemPk()]));
-            }
-            if ($form->get('guardarnuevo')->isClicked()) {
-                $em->persist($arItem);
-                $em->flush();
-                return $this->redirect($this->generateUrl('inventario_administracion_inventario_item_nuevo', ['id' => 0]));
+                if ($form->get('guardarnuevo')->isClicked()) {
+                    return $this->redirect($this->generateUrl('inventario_administracion_inventario_item_nuevo', ['id' => 0]));
+                } else {
+                    return $this->redirect($this->generateUrl('inventario_administracion_inventario_item_detalle', ['id' => $arItem->getCodigoItemPk()]));
+                }
             }
         }
         return $this->render('inventario/administracion/item/nuevo.html.twig', [

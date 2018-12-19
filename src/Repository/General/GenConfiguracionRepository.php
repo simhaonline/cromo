@@ -46,4 +46,16 @@ class GenConfiguracionRepository extends ServiceEntityRepository
 
     }
 
+    public function invLiquidarMovimiento()
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenConfiguracion::class, 'c')
+            ->select('c.autoretencionVenta')
+            ->addSelect('c.porcentajeAutoretencion')
+            ->addSelect('c.codigoCuentaAutoretencionVentaFk')
+            ->addSelect('c.codigoCuentaAutoretencionVentaValorFk')
+            ->where('c.codigoConfiguracionPk = 1');
+
+        return $queryBuilder->getQuery()->getSingleResult();
+    }
+
 }

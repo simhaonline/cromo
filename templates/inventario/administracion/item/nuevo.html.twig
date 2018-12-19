@@ -22,10 +22,9 @@
                     {{ form_widget(form.vrPrecioPredeterminado,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.vrPrecioPredeterminado) }}
                 </div>
-                <label for="form_porcentajeIva" class="col-sm-2 control-label">Porcentaje iva:</label>
+                <label for="form_porcentajeIva" class="col-sm-2 control-label"></label>
                 <div class="col-sm-3">
-                    {{ form_widget(form.porcentajeIva,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.porcentajeIva) }}
+
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -86,7 +85,7 @@
             <div class="form-group form-group-sm">
                 <label for="form_descripcion" class="col-sm-2 control-label">Descripción</label>
                 <div class="col-sm-8">
-                    {{ form_widget(form.descripcion, {'attr':{'class':'form-control','rows':'10'}}) }}
+                    {{ form_widget(form.descripcion, {'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.descripcion) }}
                 </div>
             </div>
@@ -147,6 +146,13 @@
     <div class="panel panel-default">
         <div class="panel-heading">Información comercial</div>
         <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_lineaRel" class="col-sm-2 control-label">Iva(Venta):</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.impuestoIvaVentaRel,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.impuestoIvaVentaRel) }}
+                </div>
+            </div>
             <div class="form-group form-group-sm">
                 <label for="form_lineaRel" class="col-sm-2 control-label">Retencion:</label>
                 <div class="col-sm-3">

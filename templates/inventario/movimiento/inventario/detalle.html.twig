@@ -77,6 +77,15 @@
             <td class="td-in-well"></td>
             <td class="titulo"></td>
             <td class="td-in-well" style="text-align: left;"></td>
+            <td class="titulo">AUTORETENCION:</td>
+            <td class="td-in-well"
+                style="text-align: right;">{{ arMovimiento.vrAutoretencion | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well" style="text-align: left;"></td>
             <td class="titulo">NETO:</td>
             <td class="td-in-well"
                 style="text-align: right;">{{ arMovimiento.vrNeto | number_format(0, '.', ',') }}</td>
@@ -111,7 +120,7 @@
                             <th>SUBTOTAL</th>
                             <th title="Porcentaje descuento">%D</th>
                             <th title="Descuento">DSC</th>
-                            <th>%IVA</th>
+                            <th>IVA</th>
                             <th>IVA</th>
                             <th title="Codigo de la retencion">RET</th>
                             <th>TOTAL</th>
@@ -205,15 +214,7 @@
                                                                            size="10"></td>
                                 {% endif %}
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrDescuento | number_format(0,'.',',') }}</td>
-                                {% if arMovimiento.estadoAutorizado %}
-                                    <td style="text-align: right;">{{ arMovimientoDetalle.porcentajeIva | number_format(0,'.',',') }}</td>
-                                {% else %}
-                                    <td style="text-align: center;"><input type="number"
-                                                                           name="arrIva[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                                                           value="{{ arMovimientoDetalle.porcentajeIva }}"
-                                                                           style="text-align: right; width:40px"
-                                                                           size="10"></td>
-                                {% endif %}
+                                <td>{{ arMovimientoDetalle.codigoImpuestoIvaFk }}</td>
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrIva | number_format(0,'.',',') }}</td>
                                 <td>{{ arMovimientoDetalle.codigoImpuestoRetencionFk }}</td>
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrTotal| number_format(0,'.',',') }}</td>

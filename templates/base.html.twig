@@ -116,6 +116,9 @@
         {% if arrRuta.0 == 'comunidad' %}
             {% include('base_menu_inicio.html.twig') %}
         {% endif %}
+        {% if arrRuta.0 == 'blog' %}
+            {% include('base_menu_inicio.html.twig') %}
+        {% endif %}
     {% elseif arrRuta.0 == 'administracion' %}
         {% set modulo = app.request.attributes.get('modulo') %}
         {% if modulo == 'inicio' %}
@@ -152,6 +155,7 @@
     {% include 'base_opcion_calendario.html.twig' %}
     {% include 'base_comunidad.html.twig' %}
     {% include 'base_documentacion.html.twig' %}
+    {% include 'base_blog.html.twig' %}
 
     <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
 

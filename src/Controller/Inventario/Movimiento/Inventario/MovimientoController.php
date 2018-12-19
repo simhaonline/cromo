@@ -387,6 +387,7 @@ class MovimientoController extends ControllerListenerGeneral
                                     $arMovimientoDetalle->setVrCosto($arItem->getVrCostoPromedio());
                                 }
                                 $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arItem->getCodigoImpuestoRetencionFk());
+                                $arMovimientoDetalle->setCodigoImpuestoIvaFk($arItem->getCodigoImpuestoIvaVentaFk());
                                 $arMovimientoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
                                 $em->persist($arMovimientoDetalle);
                             } else {
@@ -451,7 +452,8 @@ class MovimientoController extends ControllerListenerGeneral
                                     $arMovimientoDetalle->setVrPrecio($arOrdenDetalle->getVrPrecio());
                                     $arMovimientoDetalle->setPorcentajeDescuento($arOrdenDetalle->getPorcentajeDescuento());
                                     $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arOrdenDetalle->getItemRel()->getCodigoImpuestoRetencionFk());
-                                    $arMovimientoDetalle->setPorcentajeIva($arOrdenDetalle->getPorcentajeIva());
+                                    $arMovimientoDetalle->setPorcentajeIva($arOrdenDetalle->getItemRel()->getPorcentajeIva());
+                                    $arMovimientoDetalle->setCodigoImpuestoIvaFk($arOrdenDetalle->getItemRel()->getCodigoImpuestoIvaVentaFk());
                                     $arMovimientoDetalle->setOrdenDetalleRel($arOrdenDetalle);
                                     $em->persist($arMovimientoDetalle);
                                 } else {
@@ -516,7 +518,8 @@ class MovimientoController extends ControllerListenerGeneral
                                     $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
                                     $arMovimientoDetalle->setVrPrecio($arImportacionDetalle->getVrPrecioLocalTotal());
                                     //$arMovimientoDetalle->setPorcentajeDescuento($arImportacionDetalle->getPorcentajeDescuentoLocal());
-                                    $arMovimientoDetalle->setPorcentajeIva($arImportacionDetalle->getPorcentajeIvaLocal());
+                                    $arMovimientoDetalle->setPorcentajeIva($arImportacionDetalle->getItemRel()->getPorcentajeIva());
+                                    $arMovimientoDetalle->setCodigoImpuestoIvaFk($arImportacionDetalle->getItemRel()->getCodigoImpuestoIvaVentaFk());
                                     $arMovimientoDetalle->setImportacionDetalleRel($arImportacionDetalle);
                                     $em->persist($arMovimientoDetalle);
                                 } else {
@@ -579,7 +582,8 @@ class MovimientoController extends ControllerListenerGeneral
                                     $arMovimientoDetalle->setVrPrecio($arPedidoDetalle->getVrPrecio());
                                     $arMovimientoDetalle->setOperacionInventario($arMovimiento->getOperacionInventario());
                                     $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arPedidoDetalle->getItemRel()->getCodigoImpuestoRetencionFk());
-                                    $arMovimientoDetalle->setPorcentajeIva($arPedidoDetalle->getPorcentajeIva());
+                                    $arMovimientoDetalle->setPorcentajeIva($arPedidoDetalle->getItemRel()->getPorcentajeIva());
+                                    $arMovimientoDetalle->setCodigoImpuestoIvaFk($arPedidoDetalle->getItemRel()->getCodigoImpuestoIvaVentaFk());
                                     $arMovimientoDetalle->setPedidoDetalleRel($arPedidoDetalle);
                                     $em->persist($arMovimientoDetalle);
                                 } else {
@@ -657,7 +661,8 @@ class MovimientoController extends ControllerListenerGeneral
                                     $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
                                     $arMovimientoDetalle->setVrPrecio($arRemisionDetalle->getVrPrecio());
                                     $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arRemisionDetalle->getItemRel()->getCodigoImpuestoRetencionFk());
-                                    $arMovimientoDetalle->setPorcentajeIva($arRemisionDetalle->getPorcentajeIva());
+                                    $arMovimientoDetalle->setPorcentajeIva($arRemisionDetalle->getItemRel()->getPorcentajeIva());
+                                    $arMovimientoDetalle->setCodigoImpuestoIvaFk($arRemisionDetalle->getItemRel()->getCodigoImpuestoIvaVentaFk());
                                     $arMovimientoDetalle->setRemisionDetalleRel($arRemisionDetalle);
                                     $arMovimientoDetalle->setLoteFk($arRemisionDetalle->getLoteFk());
                                     $arMovimientoDetalle->setCodigoBodegaFk($arRemisionDetalle->getCodigoBodegaFk());
@@ -735,7 +740,8 @@ class MovimientoController extends ControllerListenerGeneral
                             $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
                             $arMovimientoDetalle->setVrPrecio($arMovimientoDetalleOrigen->getVrPrecio());
                             $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arMovimientoDetalleOrigen->getItemRel()->getCodigoImpuestoRetencionFk());
-                            $arMovimientoDetalle->setPorcentajeIva($arMovimientoDetalleOrigen->getPorcentajeIva());
+                            $arMovimientoDetalle->setPorcentajeIva($arMovimientoDetalleOrigen->getItemRel()->getPorcentajeIva());
+                            $arMovimientoDetalle->setCodigoImpuestoIvaFk($arMovimientoDetalleOrigen->getItemRel()->getCodigoImpuestoIvaVentaFk());
                             $arMovimientoDetalle->setMovimientoDetalleRel($arMovimientoDetalleOrigen);
                             $arMovimientoDetalle->setLoteFk($arMovimientoDetalleOrigen->getLoteFk());
                             $arMovimientoDetalle->setCodigoBodegaFk($arMovimientoDetalleOrigen->getCodigoBodegaFk());

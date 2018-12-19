@@ -128,6 +128,11 @@ class InvMovimiento
     private $vrRetencionIva = 0;
 
     /**
+     * @ORM\Column(name="vr_autoretencion", type="float")
+     */
+    private $vrAutoretencion = 0;
+
+    /**
      * @ORM\Column(name="comentarios", type="string", length=500, nullable=true)
      */
     private $comentarios;
@@ -818,6 +823,22 @@ class InvMovimiento
     public function setSucursalRel($sucursalRel): void
     {
         $this->sucursalRel = $sucursalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAutoretencion()
+    {
+        return $this->vrAutoretencion;
+    }
+
+    /**
+     * @param mixed $vrAutoretencion
+     */
+    public function setVrAutoretencion( $vrAutoretencion ): void
+    {
+        $this->vrAutoretencion = $vrAutoretencion;
     }
 
 

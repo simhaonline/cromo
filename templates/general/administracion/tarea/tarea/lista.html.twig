@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="table-responsive" style="padding:0px;">
+        {{ form_start(formBotonera) }}
+        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
+        {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
+        {{ form_end(formBotonera) }}
+    </div>
+{% endblock %}

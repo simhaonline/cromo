@@ -49,6 +49,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.codigoImportacionDetalleFk')
             ->addSelect('md.codigoMovimientoDetalleFk')
             ->addSelect('md.codigoImpuestoRetencionFk')
+            ->addSelect('md.codigoImpuestoIvaFk')
             ->addSelect('i.nombre AS itemNombre')
             ->addSelect('i.referencia AS itemReferencia')
             ->leftJoin('md.itemRel', 'i')
@@ -137,7 +138,6 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             $arrCantidad = $arrControles['arrCantidad'];
             $arrPrecio = $arrControles['arrValor'];
             $arrPorcentajeDescuento = $arrControles['arrDescuento'];
-            $arrPorcentajeIva = $arrControles['arrIva'];
             $arrCodigo = $arrControles['arrCodigo'];
             $arrFechaVencimiento = $arrControles['arrFechaVencimiento'];
             $mensajeError = "";
@@ -156,7 +156,6 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                     $arMovimientoDetalle->setVrCosto($arrPrecio[$codigoMovimientoDetalle]);
                 }
                 $arMovimientoDetalle->setPorcentajeDescuento($arrPorcentajeDescuento[$codigoMovimientoDetalle]);
-                $arMovimientoDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoMovimientoDetalle]);
                 $em->persist($arMovimientoDetalle);
             }
             if ($mensajeError == "") {
@@ -557,6 +556,30 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->where('md.codigoMovimientoFk = ' . $codigo)
             ->andWhere('md.vrRetencionFuente > 0')
             ->groupBy('md.codigoImpuestoRetencionFk');
+        $arrCuentas = $queryBuilder->getQuery()->getResult();
+        return $arrCuentas;
+    }
+
+    public function ivaFacturaContabilizar($codigo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoImpuestoIvaFk')
+            ->addSelect('SUM(md.vrIva) as vrIva')
+            ->where('md.codigoMovimientoFk = ' . $codigo)
+            ->andWhere('md.vrIva > 0')
+            ->groupBy('md.codigoImpuestoIvaFk');
+        $arrCuentas = $queryBuilder->getQuery()->getResult();
+        return $arrCuentas;
+    }
+
+    public function ventaFacturaContabilizar($codigo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('i.codigoCuentaVentaFk')
+            ->addSelect('SUM(md.vrSubtotal) as vrSubtotal')
+            ->leftJoin('md.itemRel', 'i')
+            ->where('md.codigoMovimientoFk = ' . $codigo)
+            ->groupBy('i.codigoCuentaVentaFk');
         $arrCuentas = $queryBuilder->getQuery()->getResult();
         return $arrCuentas;
     }

@@ -101,7 +101,12 @@ class Usuario implements UserInterface, \Serializable
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteOperacion", inversedBy="usuariosOperacionRel")
      * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
      */
-    private $operacionRel;
+    protected $operacionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\General\GenTarea", mappedBy="usuarioRecibeRel")
+     */
+    protected $genTareasUsuarioRecibeRel;
 
     public function __construct()
     {
@@ -111,16 +116,11 @@ class Usuario implements UserInterface, \Serializable
         // $this->salt = md5(uniqid('', true));
     }
 
-
-
     public function getUsername()
     {
         return $this->username;
     }
 
-    /**
-     * @param mixed $username
-     */
     public function setUsername($username)
     {
         $this->username = $username;
@@ -139,9 +139,6 @@ class Usuario implements UserInterface, \Serializable
         return $this->password;
     }
 
-    /**
-     * @param mixed $password
-     */
     public function setPassword($password)
     {
         $this->password = $password;
@@ -210,8 +207,6 @@ class Usuario implements UserInterface, \Serializable
     {
         $this->operacionRel = $operacionRel;
     }
-
-
 
     /**
      * @return mixed
@@ -349,18 +344,12 @@ class Usuario implements UserInterface, \Serializable
         return $this->notificacionesPendientes;
     }
 
-    /**
-     * @param mixed $notificacionesPendientes
-     */
     public function setNotificacionesPendientes($notificacionesPendientes)
     {
         $this->notificacionesPendientes = $notificacionesPendientes;
         return $this;
     }
 
-    /**
-     * @param mixed $rol
-     */
     public function setRol($rol)
     {
         $this->rol = $rol;
@@ -375,16 +364,10 @@ class Usuario implements UserInterface, \Serializable
         return $this->foto;
     }
 
-    /**
-     * @param mixed $foto
-     */
     public function setFoto($foto)
     {
         $this->foto = $foto;
         return $this;
     }
-
-
-
 }
 

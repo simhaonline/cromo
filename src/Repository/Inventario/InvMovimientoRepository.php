@@ -8,6 +8,7 @@ use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
+use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenImpuesto;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvBodegaUsuario;
@@ -234,6 +235,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $vrSubtotalGlobal = 0;
         $vrRetencionFuenteGlobal = 0;
         $vrRetencionIvaGlobal = 0;
+        $vrAutoretencion = 0;
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
         $arrImpuestoRetenciones = $this->retencion($arMovimientoDetalles);
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
@@ -293,6 +295,12 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $vrRetencionIvaGlobal = ($vrIvaGlobal * $arrConfiguracion['porcentajeRetencionIva']) / 100;
                 }
             }
+
+
+            $arrConfiguracionGeneral = $em->getRepository(GenConfiguracion::class)->invLiquidarMovimiento();
+            if($arrConfiguracionGeneral['autoretencionVenta']) {
+                $vrAutoretencion = $vrSubtotalGlobal * $arrConfiguracionGeneral['porcentajeAutoretencion'] / 100;
+            }
         }
 
 
@@ -304,6 +312,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $arMovimiento->setVrDescuento($vrDescuentoGlobal);
         $arMovimiento->setVrRetencionFuente($vrRetencionFuenteGlobal);
         $arMovimiento->setVrRetencionIva($vrRetencionIvaGlobal);
+        $arMovimiento->setVrAutoretencion($vrAutoretencion);
         $this->getEntityManager()->persist($arMovimiento);
         if ($respuesta == '') {
             $em->flush();
@@ -858,6 +867,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.estadoAprobado')
             ->addSelect('m.estadoContabilizado')
             ->addSelect('m.vrSubtotal')
+            ->addSelect('m.vrTotal')
+            ->addSelect('m.vrNeto')
+            ->addSelect('m.vrAutoretencion')
             ->addSelect('d.codigoComprobanteFk')
             ->addSelect('d.codigoCuentaProveedorFk')
             ->addSelect('d.codigoCuentaClienteFk')
@@ -951,7 +963,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 $arRegistro->setNumero($arMovimiento['numero']);
                                 $arRegistro->setFecha($arMovimiento['fecha']);
-                                $arRegistro->setVrDebito($arMovimiento['vrSubtotal']);
+                                $arRegistro->setVrDebito($arMovimiento['vrNeto']);
                                 $arRegistro->setNaturaleza('D');
                                 $arRegistro->setDescripcion('CLIENTE');
                                 $arRegistro->setCodigoModeloFk('InvMovimiento');
@@ -995,6 +1007,108 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 }
                             }
 
+                            //Autoretencion
+                            $arrConfiguracionGeneral = $em->getRepository(GenConfiguracion::class)->invLiquidarMovimiento();
+                            if($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk'] && $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk']);
+                                if(!$arCuenta) {
+                                    $error = "No se encuentra la cuenta " . $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk'];
+                                    break;
+                                }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                $arRegistro->setNumero($arMovimiento['numero']);
+                                $arRegistro->setFecha($arMovimiento['fecha']);
+                                $arRegistro->setVrDebito($arMovimiento['vrAutoretencion']);
+                                $arRegistro->setNaturaleza('D');
+                                $arRegistro->setDescripcion('AUTORETENCION');
+                                $arRegistro->setCodigoModeloFk('InvMovimiento');
+                                $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                $em->persist($arRegistro);
+
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk']);
+                                if(!$arCuenta) {
+                                    $error = "No se encuentra la cuenta " . $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk'];
+                                    break;
+                                }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                $arRegistro->setNumero($arMovimiento['numero']);
+                                $arRegistro->setFecha($arMovimiento['fecha']);
+                                $arRegistro->setVrCredito($arMovimiento['vrAutoretencion']);
+                                $arRegistro->setNaturaleza('C');
+                                $arRegistro->setDescripcion('AUTORETENCION');
+                                $arRegistro->setCodigoModeloFk('InvMovimiento');
+                                $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                $em->persist($arRegistro);
+
+                            } else {
+                                $error = "No tiene cuentas para autoretencion en configuracion general";
+                                break;
+                            }
+
+                            //Iva
+                            $arrIvas = $em->getRepository(InvMovimientoDetalle::class)->ivaFacturaContabilizar($codigo);
+                            foreach ($arrIvas as $arrIva) {
+                                if($arrIva['codigoImpuestoIvaFk']) {
+                                    $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrIva['codigoImpuestoIvaFk']);
+                                    if($arImpuesto) {
+                                        if($arImpuesto->getCodigoCuentaFk()) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arImpuesto->getCodigoCuentaFk());
+                                            if(!$arCuenta) {
+                                                $error = "No se encuentra la cuenta " . $arImpuesto->getCodigoCuentaFk();
+                                                break 2;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            $arRegistro->setNumero($arMovimiento['numero']);
+                                            $arRegistro->setFecha($arMovimiento['fecha']);
+                                            $arRegistro->setVrCredito($arrIva['vrIva']);
+                                            $arRegistro->setNaturaleza('C');
+                                            $arRegistro->setDescripcion('IVA');
+                                            $arRegistro->setCodigoModeloFk('InvMovimiento');
+                                            $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "No tiene configurada la cuenta del impuesto de retencion";
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            //Cuenta de ingreso / ventas
+                            $arrVentas = $em->getRepository(InvMovimientoDetalle::class)->ventaFacturaContabilizar($codigo);
+                            foreach ($arrVentas as $arrVenta) {
+                                if($arrVenta['codigoCuentaVentaFk']) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arrVenta['codigoCuentaVentaFk']);
+                                    if(!$arCuenta) {
+                                        $error = "No se encuentra la cuenta " . $arrVenta['codigoCuentaVentaFk'];
+                                        break 2;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    $arRegistro->setNumero($arMovimiento['numero']);
+                                    $arRegistro->setFecha($arMovimiento['fecha']);
+                                    $arRegistro->setVrCredito($arrVenta['vrSubtotal']);
+                                    $arRegistro->setNaturaleza('C');
+                                    $arRegistro->setDescripcion('VENTA DE PRODUCTOS');
+                                    $arRegistro->setCodigoModeloFk('InvMovimiento');
+                                    $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "No tiene configurada la cuenta de venta en item";
+                                    break;
+                                }
+                            }
                         }
 
                         $arMovimientoAct = $em->getRepository(InvMovimiento::class)->find($arMovimiento['codigoMovimientoPk']);

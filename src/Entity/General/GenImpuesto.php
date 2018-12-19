@@ -58,6 +58,11 @@ class GenImpuesto
     private $itemsImpuestoRetencionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvItem", mappedBy="impuestoIvaVentaRel")
+     */
+    private $itemsImpuestoIvaVentaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoImpuestoPk()
@@ -183,6 +188,22 @@ class GenImpuesto
     public function setCodigoCuentaFk( $codigoCuentaFk ): void
     {
         $this->codigoCuentaFk = $codigoCuentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemsImpuestoIvaVentaRel()
+    {
+        return $this->itemsImpuestoIvaVentaRel;
+    }
+
+    /**
+     * @param mixed $itemsImpuestoIvaVentaRel
+     */
+    public function setItemsImpuestoIvaVentaRel( $itemsImpuestoIvaVentaRel ): void
+    {
+        $this->itemsImpuestoIvaVentaRel = $itemsImpuestoIvaVentaRel;
     }
 
 

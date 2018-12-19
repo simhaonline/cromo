@@ -93,6 +93,11 @@ class InvItem
     private $codigoImpuestoRetencionFk;
 
     /**
+     * @ORM\Column(name="codigo_impuesto_iva_venta_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoImpuestoIvaVentaFk;
+
+    /**
      * @ORM\Column(name="modelo", type="string",length=50, nullable=true)
      */
     private $modelo;
@@ -228,6 +233,12 @@ class InvItem
      * @ORM\JoinColumn(name="codigo_impuesto_retencion_fk",referencedColumnName="codigo_impuesto_pk")
      */
     protected $impuestoRetencionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenImpuesto", inversedBy="itemsImpuestoIvaVentaRel")
+     * @ORM\JoinColumn(name="codigo_impuesto_iva_venta_fk",referencedColumnName="codigo_impuesto_pk")
+     */
+    protected $impuestoIvaVentaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvSolicitudDetalle", mappedBy="itemRel")
@@ -1077,6 +1088,38 @@ class InvItem
     public function setCodigoCuentaInventarioTransitoFk($codigoCuentaInventarioTransitoFk): void
     {
         $this->codigoCuentaInventarioTransitoFk = $codigoCuentaInventarioTransitoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImpuestoIvaVentaFk()
+    {
+        return $this->codigoImpuestoIvaVentaFk;
+    }
+
+    /**
+     * @param mixed $codigoImpuestoIvaVentaFk
+     */
+    public function setCodigoImpuestoIvaVentaFk( $codigoImpuestoIvaVentaFk ): void
+    {
+        $this->codigoImpuestoIvaVentaFk = $codigoImpuestoIvaVentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImpuestoIvaVentaRel()
+    {
+        return $this->impuestoIvaVentaRel;
+    }
+
+    /**
+     * @param mixed $impuestoIvaVentaRel
+     */
+    public function setImpuestoIvaVentaRel( $impuestoIvaVentaRel ): void
+    {
+        $this->impuestoIvaVentaRel = $impuestoIvaVentaRel;
     }
 
 

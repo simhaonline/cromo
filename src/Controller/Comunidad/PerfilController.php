@@ -96,7 +96,7 @@ class PerfilController extends BaseController
 //        $unknown->getVoid();
 
 
-        return $this->render('comunidad/perfil2.html.twig',[
+        return $this->render('comunidad/perfil.html.twig',[
             'form'=>$form->createView(),
             'formBusqueda'=>$formBusqueda->createView(),
             'arUsuario'=>$informacionUsuario,

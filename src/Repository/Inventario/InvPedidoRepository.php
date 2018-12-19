@@ -239,7 +239,7 @@ class InvPedidoRepository extends ServiceEntityRepository
     public function eliminar($arrSeleccionados)
     {
         $respuesta = '';
-        if (count($arrSeleccionados) > 0) {
+        if ($arrSeleccionados) {
             foreach ($arrSeleccionados as $codigo) {
                 $arRegistro = $this->getEntityManager()->getRepository(InvPedido::class)->find($codigo);
                 if ($arRegistro) {

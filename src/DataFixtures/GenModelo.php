@@ -84,6 +84,7 @@ class GenModelo extends Fixture
                 'GenReporte',
                 'GenRetencionTipo',
                 'GenSexo',
+                'GenTarea',
             )),
             array('modulo'=>'Inventario','modelo'=>array(
                 'InvBodega',

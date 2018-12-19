@@ -5,6 +5,7 @@ namespace App\Controller\Cartera\Informe\Recibo;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboTipo;
 use App\Entity\General\GenAsesor;
+use App\Formato\Cartera\Recaudo;
 use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,7 +51,7 @@ class RecaudoController extends Controller
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
-        if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+        if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked() || $form->get('btnPdf')) {
             $session->set('filtroCarReciboNumero', $form->get('txtNumero')->getData());
             $session->set('filtroInformeReciboFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
             $session->set('filtroInformeReciboFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
@@ -77,6 +78,10 @@ class RecaudoController extends Controller
         }
         if ($form->get('btnExcel')->isClicked()) {
             General::get()->setExportar($em->createQuery($em->getRepository(CarRecibo::class)->recaudo())->execute(), "Recaudo");
+        }
+        if ($form->get('btnPdf')->isClicked()) {
+            $formato = new Recaudo();
+            $formato->Generar($em);
         }
         $arRecibos = $paginator->paginate($em->getRepository(CarRecibo::class)->recaudo(), $request->query->getInt('page', 1), 30);
         return $this->render('cartera/informe/recibo/recaudo.html.twig', [

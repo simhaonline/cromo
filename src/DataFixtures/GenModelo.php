@@ -116,6 +116,8 @@ class GenModelo extends Fixture
                 'InvRemision',
                 'InvRemisionDetalle',
                 'InvRemisionTipo',
+                'InvServicio',
+                'InvServicioTipo',
                 'InvSolicitud',
                 'InvSolicitudDetalle',
                 'InvSolicitudTipo',

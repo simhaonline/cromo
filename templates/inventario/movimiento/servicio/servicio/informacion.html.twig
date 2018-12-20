@@ -1,0 +1,15 @@
+<table width="100%" class="table table-condensed table-bordered">
+    <tr>
+        <td class="titulo">CODIGO:</td>
+        <td class="td-in-well">{{ arServicio.codigoServicioPk }}</td>
+        <td class="titulo">TIPO:</td>
+        <td align="right">{{ arServicio.servicioTipoRel.nombre}}</td>
+        <td class="titulo">FECHA:</td>
+        <td class="td-in-well">{{ arServicio.fecha |date("Y/m/d") }}</td>
+    </tr>
+
+    <tr>
+        <td class="titulo">COMENTARIO:</td>
+        <td class="td-in-well" colspan="5">{{ arServicio.comentario }}</td>
+    </tr>
+</table>

@@ -67,49 +67,9 @@ class CarAnticipo
     private $fechaPago;
 
     /**
-     * @ORM\Column(name="vr_total_descueto", type="float")
-     */
-    private $vrTotalDescuento = 0;
-
-    /**
-     * @ORM\Column(name="vr_total_ajuste_peso", type="float")
-     */
-    private $vrTotalAjustePeso = 0;
-
-    /**
-     * @ORM\Column(name="vr_total_rete_ica", type="float")
-     */
-    private $vrTotalRetencionIca = 0;
-
-    /**
-     * @ORM\Column(name="vr_total_rete_iva", type="float")
-     */
-    private $vrTotalRetencionIva = 0;
-
-    /**
-     * @ORM\Column(name="vr_total_rete_fuente", type="float")
-     */
-    private $vrTotalRetencionFuente = 0;
-
-    /**
      * @ORM\Column(name="vr_pago", type="float")
      */
     private $vrPago = 0;
-
-    /**
-     * @ORM\Column(name="vr_pago_total", type="float")
-     */
-    private $vrPagoTotal = 0;
-
-    /**
-     * @ORM\Column(name="numero_referencia", type="integer", nullable=true)
-     */
-    private $numeroReferencia = 0;
-
-    /**
-     * @ORM\Column(name="numero_referencia_prefijo", type="string", length=20, nullable=true)
-     */
-    private $numeroReferenciaPrefijo;
 
     /**
      * @ORM\Column(name="codigo_tercero_fk", type="integer", nullable=true)
@@ -183,7 +143,7 @@ class CarAnticipo
     /**
      * @ORM\OneToMany(targetEntity="CarAnticipoDetalle", mappedBy="anticipoRel")
      */
-    protected $anticiposDetallesRecibosRel;
+    protected $anticiposDetallesRel;
 
     /**
      * @return array
@@ -348,86 +308,6 @@ class CarAnticipo
     /**
      * @return mixed
      */
-    public function getVrTotalDescuento()
-    {
-        return $this->vrTotalDescuento;
-    }
-
-    /**
-     * @param mixed $vrTotalDescuento
-     */
-    public function setVrTotalDescuento($vrTotalDescuento): void
-    {
-        $this->vrTotalDescuento = $vrTotalDescuento;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalAjustePeso()
-    {
-        return $this->vrTotalAjustePeso;
-    }
-
-    /**
-     * @param mixed $vrTotalAjustePeso
-     */
-    public function setVrTotalAjustePeso($vrTotalAjustePeso): void
-    {
-        $this->vrTotalAjustePeso = $vrTotalAjustePeso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalRetencionIca()
-    {
-        return $this->vrTotalRetencionIca;
-    }
-
-    /**
-     * @param mixed $vrTotalRetencionIca
-     */
-    public function setVrTotalRetencionIca($vrTotalRetencionIca): void
-    {
-        $this->vrTotalRetencionIca = $vrTotalRetencionIca;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalRetencionIva()
-    {
-        return $this->vrTotalRetencionIva;
-    }
-
-    /**
-     * @param mixed $vrTotalRetencionIva
-     */
-    public function setVrTotalRetencionIva($vrTotalRetencionIva): void
-    {
-        $this->vrTotalRetencionIva = $vrTotalRetencionIva;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalRetencionFuente()
-    {
-        return $this->vrTotalRetencionFuente;
-    }
-
-    /**
-     * @param mixed $vrTotalRetencionFuente
-     */
-    public function setVrTotalRetencionFuente($vrTotalRetencionFuente): void
-    {
-        $this->vrTotalRetencionFuente = $vrTotalRetencionFuente;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVrPago()
     {
         return $this->vrPago;
@@ -439,54 +319,6 @@ class CarAnticipo
     public function setVrPago($vrPago): void
     {
         $this->vrPago = $vrPago;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrPagoTotal()
-    {
-        return $this->vrPagoTotal;
-    }
-
-    /**
-     * @param mixed $vrPagoTotal
-     */
-    public function setVrPagoTotal($vrPagoTotal): void
-    {
-        $this->vrPagoTotal = $vrPagoTotal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumeroReferencia()
-    {
-        return $this->numeroReferencia;
-    }
-
-    /**
-     * @param mixed $numeroReferencia
-     */
-    public function setNumeroReferencia($numeroReferencia): void
-    {
-        $this->numeroReferencia = $numeroReferencia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumeroReferenciaPrefijo()
-    {
-        return $this->numeroReferenciaPrefijo;
-    }
-
-    /**
-     * @param mixed $numeroReferenciaPrefijo
-     */
-    public function setNumeroReferenciaPrefijo($numeroReferenciaPrefijo): void
-    {
-        $this->numeroReferenciaPrefijo = $numeroReferenciaPrefijo;
     }
 
     /**
@@ -700,28 +532,18 @@ class CarAnticipo
     /**
      * @return mixed
      */
-    public function getAnticiposDetallesRecibosRel()
+    public function getAnticiposDetallesRel()
     {
-        return $this->anticiposDetallesRecibosRel;
+        return $this->anticiposDetallesRel;
     }
 
     /**
-     * @param mixed $anticiposDetallesRecibosRel
+     * @param mixed $anticiposDetallesRel
      */
-    public function setAnticiposDetallesRecibosRel($anticiposDetallesRecibosRel): void
+    public function setAnticiposDetallesRel($anticiposDetallesRel): void
     {
-        $this->anticiposDetallesRecibosRel = $anticiposDetallesRecibosRel;
+        $this->anticiposDetallesRel = $anticiposDetallesRel;
     }
-
-
-
-    //    /**
-//     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinTercero", inversedBy="carRecibosTerceroRel")
-//     * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
-//     */
-//    protected $terceroRel;
-//
-
 
 
 

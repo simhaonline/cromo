@@ -26,6 +26,7 @@ class Remision2 extends \FPDF
         ob_clean();
         $pdf = new Remision2('P', 'mm', 'letter');
         $arRemision = $em->getRepository(InvRemision::class)->find($codigoRemision);
+        $numero = $arRemision->getNumero();
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Arial', '', 40);
@@ -38,7 +39,7 @@ class Remision2 extends \FPDF
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Remision_$codigoRemision.pdf", 'D');
+        $pdf->Output("Rem_$numero.pdf", 'D');
     }
 
     public function Header()

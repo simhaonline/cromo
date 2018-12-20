@@ -13,4 +13,18 @@ class CarAnticipoDetalleRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, CarAnticipoDetalle::class);
     }
+
+    public function lista($id)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarAnticipoDetalle::class, 'ad');
+        $queryBuilder
+            ->select('ad.codigoAnticipoDetallePk')
+            ->addSelect('ad.vrPago')
+            ->addSelect('ac.nombre AS concepto')
+            ->leftJoin('ad.anticipoConceptoRel', 'ac')
+            ->where('ad.codigoAnticipoFk = ' . $id);
+
+        return $queryBuilder;
+    }
 }

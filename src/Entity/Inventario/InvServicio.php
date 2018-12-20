@@ -22,7 +22,7 @@ class InvServicio
     private $fecha;
 
     /**
-     * @ORM\Column(name="codigo_servicio_tipo_fk", type="integer")
+     * @ORM\Column(name="codigo_servicio_tipo_fk", type="string", length=10)
      */
     private $codigoServicioTipoFk;
 

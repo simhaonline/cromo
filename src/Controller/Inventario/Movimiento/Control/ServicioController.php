@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Inventario\Movimiento\Servicio;
+namespace App\Controller\Inventario\Movimiento\Control;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -19,10 +19,10 @@ class ServicioController extends ControllerListenerGeneral
     protected $claseNombre = "InvServicio";
     protected $modulo   = "Inventario";
     protected $funcion  = "Movimiento";
-    protected $grupo    = "Servicio";
+    protected $grupo    = "Control";
     protected $nombre   = "Servicio";
     /**
-     * @Route("/inventario/movimiento/servicio/servicio/lista", name="inventario_movimiento_servicio_servicio_lista")
+     * @Route("/inventario/movimiento/control/servicio/lista", name="inventario_movimiento_control_servicio_lista")
      */
     public function lista(Request $request)
     {
@@ -45,10 +45,10 @@ class ServicioController extends ControllerListenerGeneral
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository('App:Inventario\InvServicio')->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('inventario_movimiento_servicio_servicio_lista'));
+                return $this->redirect($this->generateUrl('inventario_movimiento_control_servicio_lista'));
             }
         }
-        return $this->render('inventario/movimiento/servicio/servicio/lista.html.twig', [
+        return $this->render('inventario/movimiento/control/servicio/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -56,7 +56,7 @@ class ServicioController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/inventario/movimiento/servicio/servicio/nuevo/{id}", name="inventario_movimiento_servicio_servicio_nuevo")
+     * @Route("/inventario/movimiento/servicio/control/nuevo/{id}", name="inventario_movimiento_control_servicio_nuevo")
      */
     public function nuevo(Request $request, $id){
         $em = $this->getDoctrine()->getManager();
@@ -73,10 +73,10 @@ class ServicioController extends ControllerListenerGeneral
                 $arServicio->setComentario($form->get('comentario')->getData());
                 $em->persist($arServicio);
                 $em->flush();
-                return $this->redirect($this->generateUrl('inventario_movimiento_servicio_servicio_lista'));
+                return $this->redirect($this->generateUrl('inventario_movimiento_control_servicio_lista'));
             }
         }
-        return $this->render('inventario/movimiento/servicio/servicio/nuevo.html.twig', [
+        return $this->render('inventario/movimiento/control/servicio/nuevo.html.twig', [
             'arServicio' => $arServicio,
             'form' => $form->createView()]);
     }
@@ -85,7 +85,7 @@ class ServicioController extends ControllerListenerGeneral
     /**
      * @param Request $request
      * @param $id
-     * @Route("/inventario/movimiento/servicio/servicio/detalle/{id}", name="inventario_movimiento_servicio_servicio_detalle")
+     * @Route("/inventario/movimiento/control/servicio/detalle/{id}", name="inventario_movimiento_control_servicio_detalle")
      */
     public function detalle(Request $request, $id){
         $em = $this->getDoctrine()->getManager();
@@ -108,10 +108,10 @@ class ServicioController extends ControllerListenerGeneral
             if ($form->get('btnAnular')->isClicked()) {
 //                $em->getRepository(InvServicio::class)->anular($arServicio);
             }
-            return $this->redirect($this->generateUrl('inventario_movimiento_servicio_servicio_detalle',['id' => $arServicio->getCodigoServicioPk()]));
+            return $this->redirect($this->generateUrl('inventario_movimiento_control_servicio_detalle',['id' => $arServicio->getCodigoServicioPk()]));
         }
 
-        return $this->render('inventario/movimiento/servicio/servicio/detalle.html.twig', [
+        return $this->render('inventario/movimiento/control/servicio/detalle.html.twig', [
             'arServicio' => $arServicio,
             'form' => $form->createView()]);
 

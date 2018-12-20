@@ -20,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class ReporteNovedadController extends Controller
 {
    /**
-    * @Route("/transporte/informe/servicio/novedad/reporte/novedad", name="transporte_informe_servicio_novedad_reporte_novedad")
+    * @Route("/transporte/informe/control/novedad/reporte/novedad", name="transporte_informe_servicio_novedad_reporte_novedad")
     */    
     public function lista(Request $request)
     {

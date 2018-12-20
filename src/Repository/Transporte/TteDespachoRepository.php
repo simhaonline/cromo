@@ -643,7 +643,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                         }
                     }
                 } catch (Exception $e) {
-                    return "Error al conectar el servicio: " . $e;
+                    return "Error al conectar el control: " . $e;
                 }
             } else {
                 Mensajes::error("El despacho debe estar aprobado y sin anular");
@@ -1045,7 +1045,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                     }
                 }
             } catch (Exception $e) {
-                return "Error al conectar el servicio: " . $e;
+                return "Error al conectar el control: " . $e;
             }
         } else {
             Mensajes::error("El viaje ya fue cumplidor en el rndc");

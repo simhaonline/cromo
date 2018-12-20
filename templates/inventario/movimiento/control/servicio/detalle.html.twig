@@ -4,7 +4,7 @@
     <div class="btn-toolbar" style="float: left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('inventario_movimiento_servicio_servicio_lista') }}">Volver</a> &nbsp;&nbsp;
+               href="{{ path('inventario_movimiento_control_servicio_lista') }}">Volver</a> &nbsp;&nbsp;
         </div>
     </div>
     <div class="btn-toolbar" style="float:left">
@@ -18,6 +18,6 @@
         {% if arServicio.estadoAnulado == 1 %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    {% include 'inventario/movimiento/servicio/servicio/informacion.html.twig' %}
+    {% include 'inventario/movimiento/control/servicio/informacion.html.twig' %}
     {{ form_end(form) }}
 {% endblock %}

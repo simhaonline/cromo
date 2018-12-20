@@ -12,15 +12,11 @@ class InvServicioTipo
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer",name="codigo_servicio_tipo_pk", unique=true)
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\Column(type="string",name="codigo_servicio_tipo_pk", unique=true, length=10)
      */
     private $codigoServicioTipoPk;
 
-    /**
-     * @ORM\Column(name="nombre", type="string", length=30)
-     */
-    private $nombre;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvServicio", mappedBy="servicioTipoRel", cascade={"persist","remove"})
@@ -53,22 +49,7 @@ class InvServicioTipo
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getNombre()
-    {
-        return $this->nombre;
-    }
 
-    /**
-     * @param mixed $nombre
-     */
-    public function setNombre($nombre)
-    {
-        $this->nombre = $nombre;
-        return $this;
-    }
 
     /**
      * @return mixed

@@ -445,7 +445,7 @@ class TteGuia
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteServicio", inversedBy="guiasServicioRel")
      * @ORM\JoinColumn(name="codigo_servicio_fk", referencedColumnName="codigo_servicio_pk")
      * @Assert\NotBlank(
-     *     message="Debe seleccionar un servicio"
+     *     message="Debe seleccionar un control"
      * )
      */
     private $servicioRel;

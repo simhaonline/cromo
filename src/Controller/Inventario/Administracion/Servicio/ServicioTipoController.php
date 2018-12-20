@@ -9,6 +9,7 @@ use App\Controller\Estructura\GeneralEntityListener;
 use App\Entity\Inventario\InvServicioTipo;
 use App\Form\Type\Inventario\ServicioTipoType;
 use App\General\General;
+use App\Utilidades\Mensajes;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,7 +24,7 @@ class ServicioTipoController extends ControllerListenerGeneral
     protected $grupo    = "Servicio";
     protected $nombre   = "ServicioTipo";
     /**
-     * @Route("/inventario/administracion/servicio/serviciotipo/lista", name="inventario_administracion_servicio_serviciotipo_lista")
+     * @Route("/inventario/administracion/control/serviciotipo/lista", name="inventario_administracion_servicio_serviciotipo_lista")
      */
     public function lista(Request $request)
     {
@@ -57,7 +58,7 @@ class ServicioTipoController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/inventario/administracion/servicio/servicio/nuevo/{id}", name="inventario_administracion_servicio_serviciotipo_nuevo")
+     * @Route("/inventario/administracion/control/control/nuevo/{id}", name="inventario_administracion_servicio_serviciotipo_nuevo")
      */
     public function nuevo(Request $request, $id){
         $em = $this->getDoctrine()->getManager();
@@ -70,10 +71,16 @@ class ServicioTipoController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arServicioTipo->setNombre($form->get('nombre')->getData());
+                if($em->getRepository('App:Inventario\InvServicioTipo')->find($form->get('codigoServicioTipoPk')->getData())){
+                    Mensajes::error("Ya existe un Servicio tipo con ese mismo nombre");
+                }
+                else{
+
+                $arServicioTipo->setCodigoServicioTipoPk($form->get('codigoServicioTipoPk')->getData());
                 $em->persist($arServicioTipo);
                 $em->flush();
                 return $this->redirect($this->generateUrl('inventario_administracion_servicio_serviciotipo_lista'));
+                }
             }
         }
         return $this->render('inventario/administracion/servicio/serviciotipo/nuevo.html.twig', [
@@ -84,7 +91,7 @@ class ServicioTipoController extends ControllerListenerGeneral
     /**
      * @param Request $request
      * @param $id
-     * @Route("/inventario/administracion/servicio/servicio/detalle/{id}", name="inventario_administracion_servicio_serviciotipo_detalle")
+     * @Route("/inventario/administracion/control/control/detalle/{id}", name="inventario_administracion_servicio_serviciotipo_detalle")
      */
     public function detalle(Request $request, $id){
         return $this->redirect($this->generateUrl('inventario_administracion_servicio_serviciotipo_lista'));

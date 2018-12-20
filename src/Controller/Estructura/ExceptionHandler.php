@@ -48,7 +48,7 @@ class ExceptionHandler
      */
     private $codigoClienteOro;
     /**
-     * Url de la api para consumir el servicio web que almacenara el error en el sistema.
+     * Url de la api para consumir el control web que almacenara el error en el sistema.
      * @var string
      */
     private $urlWebService;

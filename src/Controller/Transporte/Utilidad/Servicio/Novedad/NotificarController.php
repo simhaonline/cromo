@@ -17,7 +17,7 @@ class NotificarController extends Controller
 {
 
    /**
-    * @Route("/transporte/uti/servicio/novedad/notificar", name="transporte_uti_servicio_novedad_notificar")
+    * @Route("/transporte/uti/control/novedad/notificar", name="transporte_uti_servicio_novedad_notificar")
     */    
     public function lista(Request $request, \Swift_Mailer $mailer)
     {

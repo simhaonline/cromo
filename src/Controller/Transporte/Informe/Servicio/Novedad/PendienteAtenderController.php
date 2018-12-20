@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityRepository;
 class PendienteAtenderController extends Controller
 {
    /**
-    * @Route("/transporte/inf/servicio/novedad/pendiente/atender", name="transporte_inf_servicio_novedad_pendiente_atender")
+    * @Route("/transporte/inf/control/novedad/pendiente/atender", name="transporte_inf_servicio_novedad_pendiente_atender")
     */    
     public function lista(Request $request)
     {

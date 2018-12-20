@@ -17,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 class NotificarEntregaController extends Controller
 {
    /**
-    * @Route("/transporte/utilidad/servicio/guia/entrega", name="transporte_utilidad_servicio_guia_entrega")
+    * @Route("/transporte/utilidad/control/guia/entrega", name="transporte_utilidad_servicio_guia_entrega")
     */    
     public function lista(Request $request, \Swift_Mailer $mailer)
     {

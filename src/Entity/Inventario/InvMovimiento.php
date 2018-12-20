@@ -218,22 +218,6 @@ class InvMovimiento
     protected $sucursalRel;
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoMovimientoPk()
@@ -244,7 +228,7 @@ class InvMovimiento
     /**
      * @param mixed $codigoMovimientoPk
      */
-    public function setCodigoMovimientoPk($codigoMovimientoPk): void
+    public function setCodigoMovimientoPk( $codigoMovimientoPk ): void
     {
         $this->codigoMovimientoPk = $codigoMovimientoPk;
     }
@@ -260,7 +244,7 @@ class InvMovimiento
     /**
      * @param mixed $codigoDocumentoFk
      */
-    public function setCodigoDocumentoFk($codigoDocumentoFk): void
+    public function setCodigoDocumentoFk( $codigoDocumentoFk ): void
     {
         $this->codigoDocumentoFk = $codigoDocumentoFk;
     }
@@ -276,7 +260,7 @@ class InvMovimiento
     /**
      * @param mixed $codigoFacturaTipoFk
      */
-    public function setCodigoFacturaTipoFk($codigoFacturaTipoFk): void
+    public function setCodigoFacturaTipoFk( $codigoFacturaTipoFk ): void
     {
         $this->codigoFacturaTipoFk = $codigoFacturaTipoFk;
     }
@@ -292,7 +276,7 @@ class InvMovimiento
     /**
      * @param mixed $codigoAsesorFk
      */
-    public function setCodigoAsesorFk($codigoAsesorFk): void
+    public function setCodigoAsesorFk( $codigoAsesorFk ): void
     {
         $this->codigoAsesorFk = $codigoAsesorFk;
     }
@@ -308,7 +292,7 @@ class InvMovimiento
     /**
      * @param mixed $codigoDocumentoTipoFk
      */
-    public function setCodigoDocumentoTipoFk($codigoDocumentoTipoFk): void
+    public function setCodigoDocumentoTipoFk( $codigoDocumentoTipoFk ): void
     {
         $this->codigoDocumentoTipoFk = $codigoDocumentoTipoFk;
     }
@@ -324,7 +308,7 @@ class InvMovimiento
     /**
      * @param mixed $codigoSucursalFk
      */
-    public function setCodigoSucursalFk($codigoSucursalFk): void
+    public function setCodigoSucursalFk( $codigoSucursalFk ): void
     {
         $this->codigoSucursalFk = $codigoSucursalFk;
     }
@@ -340,7 +324,7 @@ class InvMovimiento
     /**
      * @param mixed $numero
      */
-    public function setNumero($numero): void
+    public function setNumero( $numero ): void
     {
         $this->numero = $numero;
     }
@@ -356,7 +340,7 @@ class InvMovimiento
     /**
      * @param mixed $direccion
      */
-    public function setDireccion($direccion): void
+    public function setDireccion( $direccion ): void
     {
         $this->direccion = $direccion;
     }
@@ -372,7 +356,7 @@ class InvMovimiento
     /**
      * @param mixed $fecha
      */
-    public function setFecha($fecha): void
+    public function setFecha( $fecha ): void
     {
         $this->fecha = $fecha;
     }
@@ -388,7 +372,7 @@ class InvMovimiento
     /**
      * @param mixed $fechaVence
      */
-    public function setFechaVence($fechaVence): void
+    public function setFechaVence( $fechaVence ): void
     {
         $this->fechaVence = $fechaVence;
     }
@@ -404,7 +388,7 @@ class InvMovimiento
     /**
      * @param mixed $plazoPago
      */
-    public function setPlazoPago($plazoPago): void
+    public function setPlazoPago( $plazoPago ): void
     {
         $this->plazoPago = $plazoPago;
     }
@@ -420,7 +404,7 @@ class InvMovimiento
     /**
      * @param mixed $codigoTerceroFk
      */
-    public function setCodigoTerceroFk($codigoTerceroFk): void
+    public function setCodigoTerceroFk( $codigoTerceroFk ): void
     {
         $this->codigoTerceroFk = $codigoTerceroFk;
     }
@@ -436,7 +420,7 @@ class InvMovimiento
     /**
      * @param mixed $soporte
      */
-    public function setSoporte($soporte): void
+    public function setSoporte( $soporte ): void
     {
         $this->soporte = $soporte;
     }
@@ -452,7 +436,7 @@ class InvMovimiento
     /**
      * @param mixed $guia
      */
-    public function setGuia($guia): void
+    public function setGuia( $guia ): void
     {
         $this->guia = $guia;
     }
@@ -468,7 +452,7 @@ class InvMovimiento
     /**
      * @param mixed $ciudadFactura
      */
-    public function setCiudadFactura($ciudadFactura): void
+    public function setCiudadFactura( $ciudadFactura ): void
     {
         $this->ciudadFactura = $ciudadFactura;
     }
@@ -484,7 +468,7 @@ class InvMovimiento
     /**
      * @param mixed $vrIva
      */
-    public function setVrIva($vrIva): void
+    public function setVrIva( $vrIva ): void
     {
         $this->vrIva = $vrIva;
     }
@@ -500,7 +484,7 @@ class InvMovimiento
     /**
      * @param mixed $vrSubtotal
      */
-    public function setVrSubtotal($vrSubtotal): void
+    public function setVrSubtotal( $vrSubtotal ): void
     {
         $this->vrSubtotal = $vrSubtotal;
     }
@@ -516,7 +500,7 @@ class InvMovimiento
     /**
      * @param mixed $vrDescuento
      */
-    public function setVrDescuento($vrDescuento): void
+    public function setVrDescuento( $vrDescuento ): void
     {
         $this->vrDescuento = $vrDescuento;
     }
@@ -532,7 +516,7 @@ class InvMovimiento
     /**
      * @param mixed $vrNeto
      */
-    public function setVrNeto($vrNeto): void
+    public function setVrNeto( $vrNeto ): void
     {
         $this->vrNeto = $vrNeto;
     }
@@ -548,7 +532,7 @@ class InvMovimiento
     /**
      * @param mixed $vrTotal
      */
-    public function setVrTotal($vrTotal): void
+    public function setVrTotal( $vrTotal ): void
     {
         $this->vrTotal = $vrTotal;
     }
@@ -564,7 +548,7 @@ class InvMovimiento
     /**
      * @param mixed $vrRetencionFuente
      */
-    public function setVrRetencionFuente($vrRetencionFuente): void
+    public function setVrRetencionFuente( $vrRetencionFuente ): void
     {
         $this->vrRetencionFuente = $vrRetencionFuente;
     }
@@ -580,249 +564,9 @@ class InvMovimiento
     /**
      * @param mixed $vrRetencionIva
      */
-    public function setVrRetencionIva($vrRetencionIva): void
+    public function setVrRetencionIva( $vrRetencionIva ): void
     {
         $this->vrRetencionIva = $vrRetencionIva;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComentarios()
-    {
-        return $this->comentarios;
-    }
-
-    /**
-     * @param mixed $comentarios
-     */
-    public function setComentarios($comentarios): void
-    {
-        $this->comentarios = $comentarios;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUsuario()
-    {
-        return $this->usuario;
-    }
-
-    /**
-     * @param mixed $usuario
-     */
-    public function setUsuario($usuario): void
-    {
-        $this->usuario = $usuario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAutorizado()
-    {
-        return $this->estadoAutorizado;
-    }
-
-    /**
-     * @param mixed $estadoAutorizado
-     */
-    public function setEstadoAutorizado($estadoAutorizado): void
-    {
-        $this->estadoAutorizado = $estadoAutorizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAprobado()
-    {
-        return $this->estadoAprobado;
-    }
-
-    /**
-     * @param mixed $estadoAprobado
-     */
-    public function setEstadoAprobado($estadoAprobado): void
-    {
-        $this->estadoAprobado = $estadoAprobado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAnulado()
-    {
-        return $this->estadoAnulado;
-    }
-
-    /**
-     * @param mixed $estadoAnulado
-     */
-    public function setEstadoAnulado($estadoAnulado): void
-    {
-        $this->estadoAnulado = $estadoAnulado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoContabilizado()
-    {
-        return $this->estadoContabilizado;
-    }
-
-    /**
-     * @param mixed $estadoContabilizado
-     */
-    public function setEstadoContabilizado($estadoContabilizado): void
-    {
-        $this->estadoContabilizado = $estadoContabilizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOperacionInventario()
-    {
-        return $this->operacionInventario;
-    }
-
-    /**
-     * @param mixed $operacionInventario
-     */
-    public function setOperacionInventario($operacionInventario): void
-    {
-        $this->operacionInventario = $operacionInventario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGeneraCostoPromedio()
-    {
-        return $this->generaCostoPromedio;
-    }
-
-    /**
-     * @param mixed $generaCostoPromedio
-     */
-    public function setGeneraCostoPromedio($generaCostoPromedio): void
-    {
-        $this->generaCostoPromedio = $generaCostoPromedio;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDocumentoRel()
-    {
-        return $this->documentoRel;
-    }
-
-    /**
-     * @param mixed $documentoRel
-     */
-    public function setDocumentoRel($documentoRel): void
-    {
-        $this->documentoRel = $documentoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDocumentoTipoRel()
-    {
-        return $this->documentoTipoRel;
-    }
-
-    /**
-     * @param mixed $documentoTipoRel
-     */
-    public function setDocumentoTipoRel($documentoTipoRel): void
-    {
-        $this->documentoTipoRel = $documentoTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTerceroRel()
-    {
-        return $this->terceroRel;
-    }
-
-    /**
-     * @param mixed $terceroRel
-     */
-    public function setTerceroRel($terceroRel): void
-    {
-        $this->terceroRel = $terceroRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAsesorRel()
-    {
-        return $this->asesorRel;
-    }
-
-    /**
-     * @param mixed $asesorRel
-     */
-    public function setAsesorRel($asesorRel): void
-    {
-        $this->asesorRel = $asesorRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturaTipoRel()
-    {
-        return $this->facturaTipoRel;
-    }
-
-    /**
-     * @param mixed $facturaTipoRel
-     */
-    public function setFacturaTipoRel($facturaTipoRel): void
-    {
-        $this->facturaTipoRel = $facturaTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMovimientosDetallesMovimientoRel()
-    {
-        return $this->movimientosDetallesMovimientoRel;
-    }
-
-    /**
-     * @param mixed $movimientosDetallesMovimientoRel
-     */
-    public function setMovimientosDetallesMovimientoRel($movimientosDetallesMovimientoRel): void
-    {
-        $this->movimientosDetallesMovimientoRel = $movimientosDetallesMovimientoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSucursalRel()
-    {
-        return $this->sucursalRel;
-    }
-
-    /**
-     * @param mixed $sucursalRel
-     */
-    public function setSucursalRel($sucursalRel): void
-    {
-        $this->sucursalRel = $sucursalRel;
     }
 
     /**
@@ -839,6 +583,246 @@ class InvMovimiento
     public function setVrAutoretencion( $vrAutoretencion ): void
     {
         $this->vrAutoretencion = $vrAutoretencion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarios()
+    {
+        return $this->comentarios;
+    }
+
+    /**
+     * @param mixed $comentarios
+     */
+    public function setComentarios( $comentarios ): void
+    {
+        $this->comentarios = $comentarios;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario( $usuario ): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado( $estadoAutorizado ): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado( $estadoAprobado ): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado( $estadoAnulado ): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado( $estadoContabilizado ): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionInventario()
+    {
+        return $this->operacionInventario;
+    }
+
+    /**
+     * @param mixed $operacionInventario
+     */
+    public function setOperacionInventario( $operacionInventario ): void
+    {
+        $this->operacionInventario = $operacionInventario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraCostoPromedio()
+    {
+        return $this->generaCostoPromedio;
+    }
+
+    /**
+     * @param mixed $generaCostoPromedio
+     */
+    public function setGeneraCostoPromedio( $generaCostoPromedio ): void
+    {
+        $this->generaCostoPromedio = $generaCostoPromedio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentoRel()
+    {
+        return $this->documentoRel;
+    }
+
+    /**
+     * @param mixed $documentoRel
+     */
+    public function setDocumentoRel( $documentoRel ): void
+    {
+        $this->documentoRel = $documentoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentoTipoRel()
+    {
+        return $this->documentoTipoRel;
+    }
+
+    /**
+     * @param mixed $documentoTipoRel
+     */
+    public function setDocumentoTipoRel( $documentoTipoRel ): void
+    {
+        $this->documentoTipoRel = $documentoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTerceroRel()
+    {
+        return $this->terceroRel;
+    }
+
+    /**
+     * @param mixed $terceroRel
+     */
+    public function setTerceroRel( $terceroRel ): void
+    {
+        $this->terceroRel = $terceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsesorRel()
+    {
+        return $this->asesorRel;
+    }
+
+    /**
+     * @param mixed $asesorRel
+     */
+    public function setAsesorRel( $asesorRel ): void
+    {
+        $this->asesorRel = $asesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaTipoRel()
+    {
+        return $this->facturaTipoRel;
+    }
+
+    /**
+     * @param mixed $facturaTipoRel
+     */
+    public function setFacturaTipoRel( $facturaTipoRel ): void
+    {
+        $this->facturaTipoRel = $facturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosDetallesMovimientoRel()
+    {
+        return $this->movimientosDetallesMovimientoRel;
+    }
+
+    /**
+     * @param mixed $movimientosDetallesMovimientoRel
+     */
+    public function setMovimientosDetallesMovimientoRel( $movimientosDetallesMovimientoRel ): void
+    {
+        $this->movimientosDetallesMovimientoRel = $movimientosDetallesMovimientoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSucursalRel()
+    {
+        return $this->sucursalRel;
+    }
+
+    /**
+     * @param mixed $sucursalRel
+     */
+    public function setSucursalRel( $sucursalRel ): void
+    {
+        $this->sucursalRel = $sucursalRel;
     }
 
 

@@ -38,7 +38,13 @@ class InvDocumentoTipo extends Fixture
             $arDocumentoTipo->setNombre('TRASLADO');
             $manager->persist($arDocumentoTipo);
         }
-
+        $arDocumentoTipo = $manager->getRepository('App:Inventario\InvDocumentoTipo')->find('COM');
+        if(!$arDocumentoTipo){
+            $arDocumentoTipo = new \App\Entity\Inventario\InvDocumentoTipo();
+            $arDocumentoTipo->setCodigoDocumentoTipoPk('COM');
+            $arDocumentoTipo->setNombre('COMPRA');
+            $manager->persist($arDocumentoTipo);
+        }
         $manager->flush();
     }
 }

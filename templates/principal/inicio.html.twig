@@ -1,5 +1,256 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    akjsdlasd
+    <article class="col-sm-12">
+        <div class="col-sm-6">
+            <div class="jarviswidget jarviswidget-color-blueDark">
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
+                    <h2> Mis eventos </h2>
+                    <div class="widget-toolbar">
+                        <div class="btn-group">
+                            <button class="btn dropdown-toggle btn-xs btn-default" data-toggle="dropdown">
+                                Mostrar <i class="fa fa-caret-down"></i>
+                            </button>
+                            <ul class="dropdown-menu js-status-update pull-right">
+                                <li>
+                                    <a href="javascript:void(0);" id="mes">Mes</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" id="agenda">Agenda</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" id="hoy">Hoy</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </header>
+                <div>
+                    <div class="widget-body no-padding">
+                        <div class="widget-body-toolbar">
+                            <div id="calendar-buttons">
+                                <div class="btn-group">
+                                    <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i
+                                                class="fa fa-chevron-left"></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i
+                                                class="fa fa-chevron-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="jarviswidget jarviswidget-color-blue" id="wid-id-4" data-widget-editbutton="false"
+                 data-widget-colorbutton="false">
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-check txt-color-white"></i> </span>
+                    <h2> Tareas</h2>
+                </header>
+                <div>
+                    {% set primero = true %}
+                    {% set terminadas = [] %}
+                    {% if arTareas %}
+                    <ul class="widget-body no-padding smart-form">
+                        {% for arTarea in arTareas %}
+                            {% if not arTarea.estadoTerminado %}
+                                {% if primero %}
+                                    {% set prioridad = arTarea.nombrePrioridad %}
+                                    <h5 class="todo-group-title"><i class="{{ arTarea.icono }}"></i> {{ arTarea.nombrePrioridad }}
+                                    </h5>
+                                    <ul class="todo" id="{{ prioridad }}">
+                                        <li id="{{ arTarea.codigoTareaPk }}">
+                                            <span class="handle">
+                                                <label class="checkbox">
+                                                   <i></i><input type="checkbox" name="checkbox-inline">
+                                                </label>
+                                            </span>
+                                            <p>
+                                                <strong>Ticket #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }} [
+                                                <a href="javascript:void(0);" class="font-xs">Ver más</a>]
+                                                <span class="text-muted">{{ arTarea.descripcion }} </span>
+                                                <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
+                                            </p>
+                                        </li>
+                                    {% set primero = false %}
+                                {% else %}
+                                    {% if prioridad == arTarea.nombrePrioridad %}
+                                        <li id="{{ arTarea.codigoTareaPk }}">
+                                            <span class="handle">
+                                                <label class="checkbox">
+                                                    <i></i><input type="checkbox" name="checkbox-inline">
+                                                </label>
+                                            </span>
+                                            <p>
+                                                <strong>Ticket #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }}
+                                                [<a href="javascript:void(0);" class="font-xs">Ver más</a>]
+                                                <span class="text-muted">{{ arTarea.descripcion }}</span>
+                                                <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
+                                            </p>
+                                        </li>
+                                    {% else %}
+                                        </ul>
+                                        {% set prioridad = arTarea.nombrePrioridad %}
+                                        <h5 class="todo-group-title"><i class="{{ arTarea.icono }}"></i> {{ arTarea.nombrePrioridad }}
+                                        </h5>
+                                            <ul class="todo" id="{{ prioridad }}">
+                                                <li id="{{ arTarea.codigoTareaPk }}">
+                                                    <span class="handle">
+                                                        <label class="checkbox">
+                                                            <i></i><input type="checkbox" name="checkbox-inline">
+                                                        </label>
+                                                    </span>
+                                                    <p>
+                                                        <strong>Ticket #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }}
+                                                        [<a href="javascript:void(0);" class="font-xs">Ver más</a>]
+                                                        <span class="text-muted">{{ arTarea.descripcion }} </span>
+                                                        <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
+                                                    </p>
+                                                </li>
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                                {% set terminadas = terminadas|merge([arTarea]) %}
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                        {% if terminadas %}
+                                <h5 class="todo-group-title"><i class="fa fa-check"></i> TERMINADAS
+                                </h5>
+                                <ul class="todo" id="terminadas">
+                                    {% for arTarea in terminadas %}
+                                    <li id="{{ arTarea.codigoTareaPk }}" class="complete">
+                                            <span class="handle">
+                                                <label class="checkbox">
+                                                   <i></i><input type="checkbox" name="checkbox-inline">
+                                                </label>
+                                            </span>
+                                        <p>
+                                            <strong>Ticket #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }} [
+                                            <a href="javascript:void(0);" class="font-xs">Ver más</a>]
+                                            <span class="text-muted">{{ arTarea.descripcion }} </span>
+                                            <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
+                                        </p>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                        {% endif %}
+
+                    {% else %}
+                        <h3 style="margin-top: -1px;"><span class="fa fa-check" style="color: green;"></span> No tienes tareas pendientes</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </article>
+    <div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    </div>
+    <script>
+        $(document).ready(function () {
+            cargarEvento();
+            cargarCalendario();
+        });
+
+        function cargarEvento() {
+            $.ajax({
+                url: "{{ path('calendario_evento_listar') }}",
+                type: "GET",
+                dataType: "JSON",
+                data: {},
+                success: function (eventos) {
+                    var calendario = $('#calendar');
+                    calendario.fullCalendar('removeEvents');
+                    $.each(eventos, function (key, valor) {
+                        var objetoEvento = {
+                            title: valor.title,
+                            start: new Date(valor.start),
+                            end: new Date(valor.end),
+                            description: valor.description,
+                            className: valor.classname,
+                            icon: valor.icon,
+                            pk: valor.pk
+                        };
+                        calendario.fullCalendar('renderEvent', objetoEvento, true);
+                    });
+                },
+            });
+        }
+
+        $('.todo .checkbox > input[type="checkbox"]').click(function () {
+            let $this = $(this).parent().parent().parent();
+            if ($(this).prop('checked')) {
+                $.ajax({
+                    url: "{{ path('tarea_tarminar') }}",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: {
+                        id: $this.attr('id')
+                    },
+                    success: function (respuesta) {
+                        $this.addClass("complete");
+                        $(this).parent().hide();
+                        // once clicked - add class, copy to memory then remove and add to sortable3
+                        $this.slideUp(500, function () {
+                            $this.clone().prependTo("#terminadas").effect("highlight", {}, 800);
+                            $this.remove();
+                        });
+                    },
+                });
+            }
+        });
+
+        function cargarCalendario() {
+            pageSetUp();
+            "use strict";
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'title',
+                    center: 'month,agendaWeek,agendaDay',
+                    right: 'prev,today,next'
+                },
+                editable: false,
+                droppable: false,
+
+                eventRender: function (event, element, icon) {
+                    if (!event.description == "") {
+                        element.find('.fc-title').append("<br/><span class='ultra-light'>" + event.description +
+                            "</span>");
+                    }
+                    if (!event.icon == "") {
+                        element.find('.fc-title').append(
+                            "<i class='air air-top-right fa " + event.icon + " '></i>");
+                    }
+                }
+            });
+            /* hide default buttons */
+            $('.fc-right, .fc-center').hide();
+            $('#calendar-buttons #btn-prev').click(function () {
+                $('.fc-prev-button').click();
+                return false;
+            });
+            $('#calendar-buttons #btn-next').click(function () {
+                $('.fc-next-button').click();
+                return false;
+            });
+            $('#calendar-buttons #btn-today').click(function () {
+                $('.fc-today-button').click();
+                return false;
+            });
+            //Cambia el tipo de vista
+            $('#mes').click(function () {
+                $('#calendar').fullCalendar('changeView', 'month');
+            });
+            $('#agenda').click(function () {
+                $('#calendar').fullCalendar('changeView', 'agendaWeek');
+            });
+            $('#hoy').click(function () {
+                $('#calendar').fullCalendar('changeView', 'agendaDay');
+            });
+        }
+    </script>
     {% include 'modal/baseModal.html.twig' %}
 {% endblock %}

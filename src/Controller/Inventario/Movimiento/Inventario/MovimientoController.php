@@ -163,6 +163,7 @@ class MovimientoController extends ControllerListenerGeneral
                         $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
                         $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
                         $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
+                        $arMovimiento->setCompra($arDocumento->getCompra());
                         $em->persist($arMovimiento);
                         $em->flush();
                         return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));

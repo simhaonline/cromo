@@ -27,6 +27,11 @@ class CarAnticipoDetalle
     private $codigoAnticipoFk;
 
     /**
+     * @ORM\Column(name="codigo_anticipo_concepto_fk", type="string", length=10,  nullable=true)
+     */
+    private $codigoAnticipoConceptoFk;
+
+    /**
      * @ORM\Column(name="vr_pago", type="float", nullable=true)
      */
     private $vrPago = 0;
@@ -42,330 +47,16 @@ class CarAnticipoDetalle
     private $operacion = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarAnticipo", inversedBy="anticiposDetallesRecibosRel")
+     * @ORM\ManyToOne(targetEntity="CarAnticipo", inversedBy="anticiposDetallesRel")
      * @ORM\JoinColumn(name="codigo_anticipo_fk", referencedColumnName="codigo_anticipo_pk")
      */
     protected $anticipoRel;
 
     /**
-     * @return mixed
+     * @ORM\ManyToOne(targetEntity="CarAnticipoConcepto", inversedBy="anticiposDetallesConceptosRel")
+     * @ORM\JoinColumn(name="codigo_anticipo_concepto_fk", referencedColumnName="codigo_anticipo_concepto_pk")
      */
-    public function getCodigoReciboDetallePk()
-    {
-        return $this->codigoReciboDetallePk;
-    }
-
-    /**
-     * @param mixed $codigoReciboDetallePk
-     */
-    public function setCodigoReciboDetallePk($codigoReciboDetallePk): void
-    {
-        $this->codigoReciboDetallePk = $codigoReciboDetallePk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoReciboFk()
-    {
-        return $this->codigoReciboFk;
-    }
-
-    /**
-     * @param mixed $codigoReciboFk
-     */
-    public function setCodigoReciboFk($codigoReciboFk): void
-    {
-        $this->codigoReciboFk = $codigoReciboFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaCobrarFk()
-    {
-        return $this->codigoCuentaCobrarFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaCobrarFk
-     */
-    public function setCodigoCuentaCobrarFk($codigoCuentaCobrarFk): void
-    {
-        $this->codigoCuentaCobrarFk = $codigoCuentaCobrarFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaCobrarTipoFk()
-    {
-        return $this->codigoCuentaCobrarTipoFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaCobrarTipoFk
-     */
-    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
-    {
-        $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaCobrarAplicacionFk()
-    {
-        return $this->codigoCuentaCobrarAplicacionFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaCobrarAplicacionFk
-     */
-    public function setCodigoCuentaCobrarAplicacionFk($codigoCuentaCobrarAplicacionFk): void
-    {
-        $this->codigoCuentaCobrarAplicacionFk = $codigoCuentaCobrarAplicacionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumeroFactura()
-    {
-        return $this->numeroFactura;
-    }
-
-    /**
-     * @param mixed $numeroFactura
-     */
-    public function setNumeroFactura($numeroFactura): void
-    {
-        $this->numeroFactura = $numeroFactura;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumeroDocumentoAplicacion()
-    {
-        return $this->numeroDocumentoAplicacion;
-    }
-
-    /**
-     * @param mixed $numeroDocumentoAplicacion
-     */
-    public function setNumeroDocumentoAplicacion($numeroDocumentoAplicacion): void
-    {
-        $this->numeroDocumentoAplicacion = $numeroDocumentoAplicacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrDescuento()
-    {
-        return $this->vrDescuento;
-    }
-
-    /**
-     * @param mixed $vrDescuento
-     */
-    public function setVrDescuento($vrDescuento): void
-    {
-        $this->vrDescuento = $vrDescuento;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrAjustePeso()
-    {
-        return $this->vrAjustePeso;
-    }
-
-    /**
-     * @param mixed $vrAjustePeso
-     */
-    public function setVrAjustePeso($vrAjustePeso): void
-    {
-        $this->vrAjustePeso = $vrAjustePeso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrRetencionIca()
-    {
-        return $this->vrRetencionIca;
-    }
-
-    /**
-     * @param mixed $vrRetencionIca
-     */
-    public function setVrRetencionIca($vrRetencionIca): void
-    {
-        $this->vrRetencionIca = $vrRetencionIca;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrRetencionIva()
-    {
-        return $this->vrRetencionIva;
-    }
-
-    /**
-     * @param mixed $vrRetencionIva
-     */
-    public function setVrRetencionIva($vrRetencionIva): void
-    {
-        $this->vrRetencionIva = $vrRetencionIva;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrRetencionFuente()
-    {
-        return $this->vrRetencionFuente;
-    }
-
-    /**
-     * @param mixed $vrRetencionFuente
-     */
-    public function setVrRetencionFuente($vrRetencionFuente): void
-    {
-        $this->vrRetencionFuente = $vrRetencionFuente;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrPago()
-    {
-        return $this->vrPago;
-    }
-
-    /**
-     * @param mixed $vrPago
-     */
-    public function setVrPago($vrPago): void
-    {
-        $this->vrPago = $vrPago;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrPagoAfectar()
-    {
-        return $this->vrPagoAfectar;
-    }
-
-    /**
-     * @param mixed $vrPagoAfectar
-     */
-    public function setVrPagoAfectar($vrPagoAfectar): void
-    {
-        $this->vrPagoAfectar = $vrPagoAfectar;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUsuario()
-    {
-        return $this->usuario;
-    }
-
-    /**
-     * @param mixed $usuario
-     */
-    public function setUsuario($usuario): void
-    {
-        $this->usuario = $usuario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOperacion()
-    {
-        return $this->operacion;
-    }
-
-    /**
-     * @param mixed $operacion
-     */
-    public function setOperacion($operacion): void
-    {
-        $this->operacion = $operacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReciboRel()
-    {
-        return $this->reciboRel;
-    }
-
-    /**
-     * @param mixed $reciboRel
-     */
-    public function setReciboRel($reciboRel): void
-    {
-        $this->reciboRel = $reciboRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuentaCobrarRel()
-    {
-        return $this->cuentaCobrarRel;
-    }
-
-    /**
-     * @param mixed $cuentaCobrarRel
-     */
-    public function setCuentaCobrarRel($cuentaCobrarRel): void
-    {
-        $this->cuentaCobrarRel = $cuentaCobrarRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuentaCobrarTipoRel()
-    {
-        return $this->cuentaCobrarTipoRel;
-    }
-
-    /**
-     * @param mixed $cuentaCobrarTipoRel
-     */
-    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
-    {
-        $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuentaCobrarAplicacionRel()
-    {
-        return $this->cuentaCobrarAplicacionRel;
-    }
-
-    /**
-     * @param mixed $cuentaCobrarAplicacionRel
-     */
-    public function setCuentaCobrarAplicacionRel($cuentaCobrarAplicacionRel): void
-    {
-        $this->cuentaCobrarAplicacionRel = $cuentaCobrarAplicacionRel;
-    }
+    protected $anticipoConceptoRel;
 
     /**
      * @return array
@@ -418,6 +109,70 @@ class CarAnticipoDetalle
     /**
      * @return mixed
      */
+    public function getCodigoAnticipoConceptoFk()
+    {
+        return $this->codigoAnticipoConceptoFk;
+    }
+
+    /**
+     * @param mixed $codigoAnticipoConceptoFk
+     */
+    public function setCodigoAnticipoConceptoFk($codigoAnticipoConceptoFk): void
+    {
+        $this->codigoAnticipoConceptoFk = $codigoAnticipoConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPago()
+    {
+        return $this->vrPago;
+    }
+
+    /**
+     * @param mixed $vrPago
+     */
+    public function setVrPago($vrPago): void
+    {
+        $this->vrPago = $vrPago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacion()
+    {
+        return $this->operacion;
+    }
+
+    /**
+     * @param mixed $operacion
+     */
+    public function setOperacion($operacion): void
+    {
+        $this->operacion = $operacion;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getAnticipoRel()
     {
         return $this->anticipoRel;
@@ -429,6 +184,22 @@ class CarAnticipoDetalle
     public function setAnticipoRel($anticipoRel): void
     {
         $this->anticipoRel = $anticipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnticipoConceptoRel()
+    {
+        return $this->anticipoConceptoRel;
+    }
+
+    /**
+     * @param mixed $anticipoConceptoRel
+     */
+    public function setAnticipoConceptoRel($anticipoConceptoRel): void
+    {
+        $this->anticipoConceptoRel = $anticipoConceptoRel;
     }
 
 

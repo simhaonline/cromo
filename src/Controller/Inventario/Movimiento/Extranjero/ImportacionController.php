@@ -266,7 +266,10 @@ class ImportacionController extends ControllerListenerGeneral
     /**
      * @param Request $request
      * @param $id
+     * @param $codigoImportacion
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/extranjero/importacion/costo/nuevo/{id}/{codigoImportacion}", name="inventario_movimiento_extranjero_importacion_costo_nuevo")
      */
     public function costoNuevo(Request $request, $id, $codigoImportacion)

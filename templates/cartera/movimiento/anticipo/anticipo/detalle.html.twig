@@ -8,87 +8,49 @@
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            <a  class="btn btn-default btn-sm" href="{{ path('cartera_movimiento_anticipo_anticipo_lista') }}">Volver</a>
+            <a class="btn btn-default btn-sm" href="{{ path('cartera_movimiento_anticipo_anticipo_lista') }}">Volver</a>
         </div>
         <div class="btn-group">
-            {{ form_widget(form.btnAutorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnDesautorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnAprobar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnAnular,  { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular el registro?")'} }) }}
+            {#{{ form_widget(form.btnAutorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}#}
+            {#{{ form_widget(form.btnDesautorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}#}
+            {#{{ form_widget(form.btnAprobar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}#}
+            {#{{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}#}
+            {#{{ form_widget(form.btnAnular,  { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular el registro?")'} }) }}#}
         </div>
     </div>
     <div style="float:right">
-        {% if arAnticipo.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
-        {% if arAnticipo.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
-        {% if arAnticipo.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {#{% if arAnticipo.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}#}
+        {#{% if arAnticipo.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}#}
+        {#{% if arAnticipo.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}#}
     </div>
-    <br /><br />
+    <br/><br/>
     {% include 'cartera/movimiento/anticipo/anticipo/informacion.html.twig' %}
     <table class="table table-striped table-bordered table-condensed tabla-datos">
         <thead>
         <tr>
             <th>ID</th>
-            <th>NUMERO</th>
-            <th>NUMERO_A</th>
-            <th>TIPO</th>
-            <th>DESCUENTO</th>
-            <th>AJUSTE PESO</th>
-            <th>RTE ICA</th>
-            <th>RTE IVA</th>
-            <th>RTE FUENTE</th>
+            <th>CONCEPTO</th>
             <th>PAGO</th>
-            <th>TOTAL</th>
-            <th></th>
-            <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
         <tbody>
-        {% for arAnticipoDetalle in arAnticipoDetalle %}
+        {% for arAnticipoDetalle in arAnticipoDetalles %}
             <tr>
-                <td>{{ arAnticipoDetalle.codigoReciboDetallePk  }}<input type="hidden" name="LblCodigo[]" value="{{ arReciboDetalle.codigoReciboDetallePk }}"></td>
-                <td>{{ arAnticipoDetalle.numeroFactura  }}</td>
-                <td>{{ arAnticipoDetalle.numeroDocumentoAplicacion  }}</td>
-                <td>{{ arAnticipoDetalle.cuentaCobrarTipoRel.nombre |default('')  }}</td>
-                {#{% if arRecibo.estadoAutorizado == 0 %}#}
-                    {#<td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrDescuento{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrDescuento  }}" size="6" style="width:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>#}
-                    {#<td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrAjustePeso{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrAjustePeso  }}" size="6" style="width:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>#}
-                    {#<td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrRetencionIca{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrRetencionIca  }}" size="6" style="width:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>#}
-                    {#<td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrRetencionIva{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrRetencionIva  }}" size="6" style="width:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>#}
-                    {#<td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrRetencionFuente{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrRetencionFuente  }}" size="6" style="height:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>#}
-                    {#<td style="text-align: right"><input style="text-align: right" type="text" name="TxtValorPago{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrPago  }}" size="10" style="height:100px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>#}
-                    {#<td style="text-align: right">{{ arReciboDetalle.vrPagoAfectar | number_format(0, '.', ',') }}</td>#}
-                    {#<td style="text-align: center"><a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('cartera_movimiento_recibo_recibo_detalle_aplicar', {'id': arReciboDetalle.codigoReciboDetallePk }) }}', 'AgregarNuevoDetalle', 600, 900)">Aplicar</a></td>#}
-                {#{% else %}#}
-                    {#<td style="text-align: right">{{ arReciboDetalle.vrDescuento | number_format(0, '.', ',') }}</td>#}
-                    {#<td style="text-align: right">{{ arReciboDetalle.vrAjustePeso | number_format(0, '.', ',') }}</td>#}
-                    {#<td style="text-align: right">{{ arReciboDetalle.vrRetencionIca | number_format(0, '.', ',') }}</td>#}
-                    {#<td style="text-align: right">{{ arReciboDetalle.vrRetencionIva | number_format(0, '.', ',') }}</td>#}
-                    {#<td style="text-align: right">{{ arReciboDetalle.vrRetencionFuente | number_format(0, '.', ',') }}</td>#}
-                    {#<td style="text-align: right">{{ arReciboDetalle.vrPago | number_format(0, '.', ',') }}</td>#}
-                    {#<td style="text-align: right">{{ arReciboDetalle.vrPagoAfectar | number_format(0, '.', ',') }}</td>#}
-                    {#<td style="text-align: right"></td>#}
-                {#{% endif %}#}
-                {#<td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arReciboDetalle.codigoReciboDetallePk }}" /></td>#}
+                <td>{{ arAnticipoDetalle.codigoAnticipoDetallePk }}</td>
+                <td>{{ arAnticipoDetalle.concepto }}</td>
+                <td>{{ arAnticipoDetalle.vrPago }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    <div class="separador-1"></div>
     <div class="btn-toolbar" style="float: right">
-        <div class="separador-1"></div>
-        <div class="btn-toolbar" style="float: right">
-            <div class="btn-group">
-                {% if arAnticipo.estadoAutorizado == 0 %}
-                    <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('cartera_movimiento_recibo_recibo_detalle_nuevo', {'id': arAnticipo.codigoAnticipoPk }) }}', 'AgregarNuevoDetalle', 600, 900)">Nuevo</a>
-                {% endif %}
-            </div>
-            <div class="btn-group">
-                {{ form_widget(form.btnActualizarDetalle, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            </div>
-            <div class="btn-group">
-                {{ form_widget(form.btnEliminarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
-            </div>
-
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="javascript:abrirVentana3('{{ path('cartera_movimiento_anticipo_anticipo_detalle_nuevo', {'codigoAnticipo': arAnticipo.codigoAnticipoPk,'id': 0 }) }}', 'anticipoDetalle', 600, 900)">Nuevo</a>
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnEliminarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
         </div>
     </div>
     {{ form_end(form) }}

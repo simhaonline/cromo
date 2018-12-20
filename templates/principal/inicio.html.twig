@@ -50,49 +50,34 @@
                     <h2> Tareas</h2>
                 </header>
                 <div>
+                    {% set primero = true %}
+                    {% set terminadas = [] %}
+                    {% if arTareas %}
                     <ul class="widget-body no-padding smart-form">
-                        {% set primero = true %}
                         {% for arTarea in arTareas %}
-                            {% if primero %}
-                                {% set prioridad = arTarea.nombrePrioridad %}
-                        <h5 class="todo-group-title"><i class="{{ arTarea.icono }}"></i> {{ arTarea.nombrePrioridad }}</h5>
-                                <ul class="todo">
-                                <li>
-                                    <span class="handle">
-                                        <label class="checkbox">
-                                           <i></i><input type="checkbox" name="checkbox-inline">
-                                        </label>
-                                    </span>
-                                    <p>
-                                        <strong>Ticket #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }} [<a
-                                                href="javascript:void(0);" class="font-xs">Ver más</a>] <span
-                                                class="text-muted">{{ arTarea.descripcion }} </span>
-                                        <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
-                                    </p>
-                                </li>
-                                {% set primero = false %}
-                            {% else %}
-                                {% if prioridad == arTarea.nombrePrioridad %}
-                                    <li>
-                                        <span class="handle">
-                                            <label class="checkbox">
-                                                <i></i><input type="checkbox" name="checkbox-inline">
-                                            </label>
-                                        </span>
-                                        <p>
-                                            <strong>Ticket #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }}
-                                            [<a
-                                                    href="javascript:void(0);" class="font-xs">Ver más</a>] <span
-                                                    class="text-muted">{{ arTarea.descripcion }}</span>
-                                            <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
-                                        </p>
-                                    </li>
-                                {% else %}
-                                    </ul>
+                            {% if not arTarea.estadoTerminado %}
+                                {% if primero %}
                                     {% set prioridad = arTarea.nombrePrioridad %}
-                                    <h5 class="todo-group-title"><i class="{{ arTarea.icono }}"></i> {{ arTarea.nombrePrioridad }}</h5>
-                                    <ul class="todo">
-                                        <li>
+                                    <h5 class="todo-group-title"><i class="{{ arTarea.icono }}"></i> {{ arTarea.nombrePrioridad }}
+                                    </h5>
+                                    <ul class="todo" id="{{ prioridad }}">
+                                        <li id="{{ arTarea.codigoTareaPk }}">
+                                            <span class="handle">
+                                                <label class="checkbox">
+                                                   <i></i><input type="checkbox" name="checkbox-inline">
+                                                </label>
+                                            </span>
+                                            <p>
+                                                <strong>Ticket #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }} [
+                                                <a href="javascript:void(0);" class="font-xs">Ver más</a>]
+                                                <span class="text-muted">{{ arTarea.descripcion }} </span>
+                                                <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
+                                            </p>
+                                        </li>
+                                    {% set primero = false %}
+                                {% else %}
+                                    {% if prioridad == arTarea.nombrePrioridad %}
+                                        <li id="{{ arTarea.codigoTareaPk }}">
                                             <span class="handle">
                                                 <label class="checkbox">
                                                     <i></i><input type="checkbox" name="checkbox-inline">
@@ -100,19 +85,64 @@
                                             </span>
                                             <p>
                                                 <strong>Ticket #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }}
-                                                [<a
-                                                        href="javascript:void(0);" class="font-xs">Ver más</a>] <span
-                                                        class="text-muted">{{ arTarea.descripcion }} </span>
+                                                [<a href="javascript:void(0);" class="font-xs">Ver más</a>]
+                                                <span class="text-muted">{{ arTarea.descripcion }}</span>
                                                 <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
                                             </p>
                                         </li>
+                                    {% else %}
+                                        </ul>
+                                        {% set prioridad = arTarea.nombrePrioridad %}
+                                        <h5 class="todo-group-title"><i class="{{ arTarea.icono }}"></i> {{ arTarea.nombrePrioridad }}
+                                        </h5>
+                                            <ul class="todo" id="{{ prioridad }}">
+                                                <li id="{{ arTarea.codigoTareaPk }}">
+                                                    <span class="handle">
+                                                        <label class="checkbox">
+                                                            <i></i><input type="checkbox" name="checkbox-inline">
+                                                        </label>
+                                                    </span>
+                                                    <p>
+                                                        <strong>Ticket #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }}
+                                                        [<a href="javascript:void(0);" class="font-xs">Ver más</a>]
+                                                        <span class="text-muted">{{ arTarea.descripcion }} </span>
+                                                        <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
+                                                    </p>
+                                                </li>
+                                    {% endif %}
                                 {% endif %}
+                            {% else %}
+                                {% set terminadas = terminadas|merge([arTarea]) %}
                             {% endif %}
                         {% endfor %}
-                    </ul>
+                        </ul>
+                        {% if terminadas %}
+                                <h5 class="todo-group-title"><i class="fa fa-check"></i> TERMINADAS
+                                </h5>
+                                <ul class="todo" id="terminadas">
+                                    {% for arTarea in terminadas %}
+                                    <li id="{{ arTarea.codigoTareaPk }}" class="complete">
+                                            <span class="handle">
+                                                <label class="checkbox">
+                                                   <i></i><input type="checkbox" name="checkbox-inline">
+                                                </label>
+                                            </span>
+                                        <p>
+                                            <strong>Ticket #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }} [
+                                            <a href="javascript:void(0);" class="font-xs">Ver más</a>]
+                                            <span class="text-muted">{{ arTarea.descripcion }} </span>
+                                            <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
+                                        </p>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                        {% endif %}
+
+                    {% else %}
+                        <h3 style="margin-top: -1px;"><span class="fa fa-check" style="color: green;"></span> No tienes tareas pendientes</h3>
+                    {% endif %}
                 </div>
             </div>
-        </div>
         </div>
     </article>
     <div>
@@ -124,6 +154,7 @@
             cargarEvento();
             cargarCalendario();
         });
+
         function cargarEvento() {
             $.ajax({
                 url: "{{ path('calendario_evento_listar') }}",
@@ -148,23 +179,30 @@
                 },
             });
         }
-        $('.todo .checkbox > input[type="checkbox"]').click(function() {
-            var $this = $(this).parent().parent().parent();
+
+        $('.todo .checkbox > input[type="checkbox"]').click(function () {
+            let $this = $(this).parent().parent().parent();
             if ($(this).prop('checked')) {
-                $this.addClass("complete");
-
-                $(this).parent().hide();
-
-                // once clicked - add class, copy to memory then remove and add to sortable3
-                $this.slideUp(500, function() {
-                    $this.clone().prependTo("#sortable3").effect("highlight", {}, 800);
-                    $this.remove();
-                    countTasks();
+                $.ajax({
+                    url: "{{ path('tarea_tarminar') }}",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: {
+                        id: $this.attr('id')
+                    },
+                    success: function (respuesta) {
+                        $this.addClass("complete");
+                        $(this).parent().hide();
+                        // once clicked - add class, copy to memory then remove and add to sortable3
+                        $this.slideUp(500, function () {
+                            $this.clone().prependTo("#terminadas").effect("highlight", {}, 800);
+                            $this.remove();
+                        });
+                    },
                 });
-            } else {
-                // insert undo code here...
             }
         });
+
         function cargarCalendario() {
             pageSetUp();
             "use strict";
@@ -184,8 +222,7 @@
                     }
                     if (!event.icon == "") {
                         element.find('.fc-title').append(
-                            "<i class='air air-bottom-right fa " + event.icon + " '></i>" +
-                            "<i class='air air-top-right fa fa-trash-o' id='" + event.pk + "' onclick='eliminar(this.id)'></i>");
+                            "<i class='air air-top-right fa " + event.icon + " '></i>");
                     }
                 }
             });

@@ -25,5 +25,20 @@ class InicioController extends Controller
             'arTareas' => $arTareas
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/tarea/terminar", name="tarea_tarminar")
+     */
+    public function terminarTarea(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->query->get('id');
+        $arTarea = $em->find(GenTarea::class,$id);
+        $arTarea->setEstadoTerminado(1);
+        $em->persist($arTarea);
+        $em->flush();
+        return new JsonResponse(true);
+    }
 }
 

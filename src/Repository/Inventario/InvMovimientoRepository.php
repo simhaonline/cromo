@@ -257,7 +257,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $vrDescuentoGlobal += $vrDescuento;
             $vrIvaGlobal += $vrIva;
             $vrSubtotalGlobal += $vrSubtotal;
-            if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC') {
+            if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC' || $arMovimiento->getCodigoDocumentoTipoFk() == 'COM') {
                 if($arMovimientoDetalle->getCodigoImpuestoRetencionFk()) {
                     if($arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['base'] == true) {
                         $vrRetencionFuente = $vrSubtotal * $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['porcentaje'] / 100;
@@ -274,19 +274,6 @@ class InvMovimientoRepository extends ServiceEntityRepository
         }
         //Calcular retenciones en Ventas
         if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC') {
-
-            //Retencion en la fuente
-            /*if($arrImpuestoRetenciones) {
-                foreach ($arrImpuestoRetenciones as $arrImpuestoRetencion) {
-                    $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrImpuestoRetencion['codigo']);
-                    if($arImpuesto) {
-                        if($arrImpuestoRetencion['valor'] >= $arImpuesto->getBase()) {
-                            $vrRetencionFuenteGlobal += ($arrImpuestoRetencion['valor'] * $arImpuesto->getPorcentaje()) / 100;
-                        }
-                    }
-                }
-            }*/
-
             //Liquidar retencion de iva para las ventas, solo los grandes contribuyentes y entidades del estado nos retienen 50% iva
             $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->liquidarMovimiento();
             if ($arMovimiento->getTerceroRel()->getRetencionIva() == 1) {
@@ -895,7 +882,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         $arComprobante = $em->getRepository(FinComprobante::class)->find($arMovimiento['codigoComprobanteFk']);
                         $arTercero = $em->getRepository(InvTercero::class)->terceroFinanciero($arMovimiento['codigoTerceroFk']);
                         //Contabilizar entradas
-                        if($arMovimiento['codigoDocumentoTipoFk'] == "ENT") {
+                        if($arMovimiento['codigoDocumentoTipoFk'] == "COM") {
                             //Cuenta inventario transito
                             $arrInventariosTransito = $em->getRepository(InvMovimientoDetalle::class)->cuentaInventarioTransito($codigo);
                             foreach ($arrInventariosTransito as $arrInventarioTransito) {

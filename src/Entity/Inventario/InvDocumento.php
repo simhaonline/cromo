@@ -151,7 +151,7 @@ class InvDocumento
     /**
      * @param mixed $codigoDocumentoPk
      */
-    public function setCodigoDocumentoPk($codigoDocumentoPk): void
+    public function setCodigoDocumentoPk( $codigoDocumentoPk ): void
     {
         $this->codigoDocumentoPk = $codigoDocumentoPk;
     }
@@ -167,7 +167,7 @@ class InvDocumento
     /**
      * @param mixed $nombre
      */
-    public function setNombre($nombre): void
+    public function setNombre( $nombre ): void
     {
         $this->nombre = $nombre;
     }
@@ -183,7 +183,7 @@ class InvDocumento
     /**
      * @param mixed $codigoDocumentoTipoFk
      */
-    public function setCodigoDocumentoTipoFk($codigoDocumentoTipoFk): void
+    public function setCodigoDocumentoTipoFk( $codigoDocumentoTipoFk ): void
     {
         $this->codigoDocumentoTipoFk = $codigoDocumentoTipoFk;
     }
@@ -199,7 +199,7 @@ class InvDocumento
     /**
      * @param mixed $abreviatura
      */
-    public function setAbreviatura($abreviatura): void
+    public function setAbreviatura( $abreviatura ): void
     {
         $this->abreviatura = $abreviatura;
     }
@@ -215,7 +215,7 @@ class InvDocumento
     /**
      * @param mixed $operacionInventario
      */
-    public function setOperacionInventario($operacionInventario): void
+    public function setOperacionInventario( $operacionInventario ): void
     {
         $this->operacionInventario = $operacionInventario;
     }
@@ -231,7 +231,7 @@ class InvDocumento
     /**
      * @param mixed $operacionComercial
      */
-    public function setOperacionComercial($operacionComercial): void
+    public function setOperacionComercial( $operacionComercial ): void
     {
         $this->operacionComercial = $operacionComercial;
     }
@@ -247,7 +247,7 @@ class InvDocumento
     /**
      * @param mixed $generaCartera
      */
-    public function setGeneraCartera($generaCartera): void
+    public function setGeneraCartera( $generaCartera ): void
     {
         $this->generaCartera = $generaCartera;
     }
@@ -263,7 +263,7 @@ class InvDocumento
     /**
      * @param mixed $generaTesoreria
      */
-    public function setGeneraTesoreria($generaTesoreria): void
+    public function setGeneraTesoreria( $generaTesoreria ): void
     {
         $this->generaTesoreria = $generaTesoreria;
     }
@@ -279,7 +279,7 @@ class InvDocumento
     /**
      * @param mixed $consecutivo
      */
-    public function setConsecutivo($consecutivo): void
+    public function setConsecutivo( $consecutivo ): void
     {
         $this->consecutivo = $consecutivo;
     }
@@ -295,7 +295,7 @@ class InvDocumento
     /**
      * @param mixed $generaCostoPromedio
      */
-    public function setGeneraCostoPromedio($generaCostoPromedio): void
+    public function setGeneraCostoPromedio( $generaCostoPromedio ): void
     {
         $this->generaCostoPromedio = $generaCostoPromedio;
     }
@@ -311,7 +311,7 @@ class InvDocumento
     /**
      * @param mixed $codigoCuentaCobrarTipoFk
      */
-    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
+    public function setCodigoCuentaCobrarTipoFk( $codigoCuentaCobrarTipoFk ): void
     {
         $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
     }
@@ -327,7 +327,7 @@ class InvDocumento
     /**
      * @param mixed $adicionar
      */
-    public function setAdicionar($adicionar): void
+    public function setAdicionar( $adicionar ): void
     {
         $this->adicionar = $adicionar;
     }
@@ -343,7 +343,7 @@ class InvDocumento
     /**
      * @param mixed $adicionarImportacion
      */
-    public function setAdicionarImportacion($adicionarImportacion): void
+    public function setAdicionarImportacion( $adicionarImportacion ): void
     {
         $this->adicionarImportacion = $adicionarImportacion;
     }
@@ -359,7 +359,7 @@ class InvDocumento
     /**
      * @param mixed $adicionarPedido
      */
-    public function setAdicionarPedido($adicionarPedido): void
+    public function setAdicionarPedido( $adicionarPedido ): void
     {
         $this->adicionarPedido = $adicionarPedido;
     }
@@ -375,7 +375,7 @@ class InvDocumento
     /**
      * @param mixed $adicionarRemision
      */
-    public function setAdicionarRemision($adicionarRemision): void
+    public function setAdicionarRemision( $adicionarRemision ): void
     {
         $this->adicionarRemision = $adicionarRemision;
     }
@@ -391,7 +391,7 @@ class InvDocumento
     /**
      * @param mixed $adicionarOrden
      */
-    public function setAdicionarOrden($adicionarOrden): void
+    public function setAdicionarOrden( $adicionarOrden ): void
     {
         $this->adicionarOrden = $adicionarOrden;
     }
@@ -407,7 +407,7 @@ class InvDocumento
     /**
      * @param mixed $notaCredito
      */
-    public function setNotaCredito($notaCredito): void
+    public function setNotaCredito( $notaCredito ): void
     {
         $this->notaCredito = $notaCredito;
     }
@@ -423,7 +423,7 @@ class InvDocumento
     /**
      * @param mixed $contabilizar
      */
-    public function setContabilizar($contabilizar): void
+    public function setContabilizar( $contabilizar ): void
     {
         $this->contabilizar = $contabilizar;
     }
@@ -439,41 +439,9 @@ class InvDocumento
     /**
      * @param mixed $codigoComprobanteFk
      */
-    public function setCodigoComprobanteFk($codigoComprobanteFk): void
+    public function setCodigoComprobanteFk( $codigoComprobanteFk ): void
     {
         $this->codigoComprobanteFk = $codigoComprobanteFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDocumentoTipoRel()
-    {
-        return $this->documentoTipoRel;
-    }
-
-    /**
-     * @param mixed $documentoTipoRel
-     */
-    public function setDocumentoTipoRel($documentoTipoRel): void
-    {
-        $this->documentoTipoRel = $documentoTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMovimientosDocumentoRel()
-    {
-        return $this->movimientosDocumentoRel;
-    }
-
-    /**
-     * @param mixed $movimientosDocumentoRel
-     */
-    public function setMovimientosDocumentoRel($movimientosDocumentoRel): void
-    {
-        $this->movimientosDocumentoRel = $movimientosDocumentoRel;
     }
 
     /**
@@ -487,25 +455,9 @@ class InvDocumento
     /**
      * @param mixed $codigoCuentaProveedorFk
      */
-    public function setCodigoCuentaProveedorFk($codigoCuentaProveedorFk): void
+    public function setCodigoCuentaProveedorFk( $codigoCuentaProveedorFk ): void
     {
         $this->codigoCuentaProveedorFk = $codigoCuentaProveedorFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCompraExtranjera()
-    {
-        return $this->compraExtranjera;
-    }
-
-    /**
-     * @param mixed $compraExtranjera
-     */
-    public function setCompraExtranjera($compraExtranjera): void
-    {
-        $this->compraExtranjera = $compraExtranjera;
     }
 
     /**
@@ -522,6 +474,54 @@ class InvDocumento
     public function setCodigoCuentaClienteFk( $codigoCuentaClienteFk ): void
     {
         $this->codigoCuentaClienteFk = $codigoCuentaClienteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompraExtranjera()
+    {
+        return $this->compraExtranjera;
+    }
+
+    /**
+     * @param mixed $compraExtranjera
+     */
+    public function setCompraExtranjera( $compraExtranjera ): void
+    {
+        $this->compraExtranjera = $compraExtranjera;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentoTipoRel()
+    {
+        return $this->documentoTipoRel;
+    }
+
+    /**
+     * @param mixed $documentoTipoRel
+     */
+    public function setDocumentoTipoRel( $documentoTipoRel ): void
+    {
+        $this->documentoTipoRel = $documentoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosDocumentoRel()
+    {
+        return $this->movimientosDocumentoRel;
+    }
+
+    /**
+     * @param mixed $movimientosDocumentoRel
+     */
+    public function setMovimientosDocumentoRel( $movimientosDocumentoRel ): void
+    {
+        $this->movimientosDocumentoRel = $movimientosDocumentoRel;
     }
 
 

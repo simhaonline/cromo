@@ -601,4 +601,24 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         }
 
     }
+
+
+    public function detallesFormato($codigoNotaCredito){
+        // 'ncd' = nota credito detalle
+        // 'ncm' = nota credito movimiento
+        return $this->_em->createQueryBuilder()->from(InvMovimientoDetalle::class,'ncd')
+            ->select('ncd.codigoMovimientoDetallePk')
+            ->addSelect('ncm.numero')
+            ->addSelect('m.numero as numeroFactura')
+            ->addSelect('i.nombre')
+            ->addSelect('ncd.loteFk')
+            ->addSelect('ncd.cantidad')
+            ->addSelect('ncd.vrSubtotal')
+            ->addSelect('ncd.vrIva')
+            ->leftJoin('ncd.movimientoDetalleRel','md')
+            ->leftJoin('ncd.movimientoRel','ncm')
+            ->leftJoin('ncd.itemRel','i')
+            ->leftJoin('md.movimientoRel','m')
+            ->where('ncd.codigoMovimientoFk ='. $codigoNotaCredito)->getQuery()->execute();
+    }
 }

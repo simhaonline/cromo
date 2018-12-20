@@ -60,7 +60,7 @@
 				</span>
     </div>
     <!-- end user info -->
-
+    {% include 'base_dashboard.html.twig' %}
     {% set arrRuta = app.request.attributes.get('_route')|split('_') %}
     {% set modulo = '' %}
     {% set funcion = '' %}
@@ -283,6 +283,11 @@
     <script src="{{ asset('js/plugin/moment/moment.min.js') }}"></script>
     <script src="{{ asset('js/plugin/fullcalendar/fullcalendar.min.js') }}"></script>
     <script src="{{ asset('js/fontawesome.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugin/flot/jquery.flot.cust.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/flot/jquery.flot.resize.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/flot/jquery.flot.time.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/flot/jquery.flot.tooltip.min.js') }}"></script>
 
     <script>
         // DO NOT REMOVE : GLOBAL FUNCTIONS!

@@ -23,10 +23,11 @@ public static function getApi($ruta){
         'aceptarAmigo'      =>'/api/comunidad/aceptarAmigo/',
         'solicitudes'       =>'/api/comunidad/solicitudesPendientes/',
         'misAmigos'         =>'/api/comunidad/misAmigos/',
-        'misPublicaciones'  =>'/api/comunidad/pubicacion/misPublicaciones/'
+        'misPublicaciones'  =>'/api/comunidad/publicacion/misPublicaciones/',
+        'crearPublicacion'  =>'/api/comunidad/publicacion/crear/'
     ];
 
-    return $api[$ruta];
+    return $ruta!="todas"?$api[$ruta]:$api;
 }
 
 }

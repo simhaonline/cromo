@@ -23,6 +23,8 @@ class BuscarController extends BaseController
         $dominio=$this->getDoctrine()->getRepository('App:General\GenConfiguracion')->find(1)->getDominio();
         $dominio="@".$dominio??"";
         $arPerfil=FuncionesController::solicitudesGet(ApiComunidad::getApi('buscarAmigos').$usuario.$dominio.'/'.$clave);
+        $datos=json_encode(['datos'=>['estado'=>'']]);
+        $conexion= FuncionesController::solicitudesPost($datos,ApiComunidad::getApi('conexion') .$usuario.$dominio);
         $em=$this->getDoctrine()->getManager();
         $misSolicitudes=BuscarController::misSolicitudesPendientes($usuario.$dominio);
         $formBusqueda=$this->createFormBuilder()
@@ -63,6 +65,7 @@ class BuscarController extends BaseController
             'username'=>$usuario,
             'formBusqueda'=>$formBusqueda->createView(),
             'misSolicitudes'=>$misSolicitudes['datos'],
+            'conexion'=>$conexion,
         ]);
     }
 

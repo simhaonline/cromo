@@ -28,15 +28,17 @@ class PerfilController extends BaseController
     {
         $em=$this->getDoctrine()->getManager();
         $dominio=$this->getDoctrine()->getRepository('App:General\GenConfiguracion')->find(1)->getDominio();
+
         $dominio="@".$dominio??"";
         $usuario=$this->container->get('security.token_storage')->getToken()->getUser();
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $datos=json_encode(['datos'=>['estado'=>'']]);
-        $dato=json_encode(['datos'=>['maximo_resultado'=>10]]);
+        $dato=json_encode(['datos'=>['maximo_resultado'=>20]]);
         $conexion= FuncionesController::solicitudesPost($datos,ApiComunidad::getApi('conexion') .$usuario->getUsername().$dominio);
         $amigos= FuncionesController::solicitudesPost($dato,ApiComunidad::getApi('misAmigos') .$usuario->getUsername().$dominio);
         $publicaciones=(new PublicacionController())->misPublicaciones($usuario->getUsername().$dominio);
+        $api=
         $informacionUsuario= [
             'nombreCorto'   =>$usuario->getNombreCorto(),
 //            'rol'           =>$usuario->getRoles()[0]=="ROLE_ADMIN"?"Administrador":"Usuario",
@@ -61,7 +63,7 @@ class PerfilController extends BaseController
             ])
             ->getForm();
         $formBusqueda->handleRequest($request);
-        $misSolicitudes=(new BuscarController())->misSolicitudesPendientes($usuario->getUsername());
+        $misSolicitudes=(new BuscarController())->misSolicitudesPendientes($usuario->getUsername().$dominio);
         if($formBusqueda->isSubmitted() && $formBusqueda->isValid()){
             if($formBusqueda->get('btnBuscar')->isSubmitted()){
                 if($formBusqueda->get('busqueda')->getData()!=""){
@@ -109,8 +111,12 @@ class PerfilController extends BaseController
             'conexion'=>$conexion,
             'misSolicitudes'=>$misSolicitudes['datos'],
             'amigos'=>$amigos['datos'],
+            'numerosAmigos'=>$amigos['numeroAmigos'],
             'publicaciones'=>$publicaciones['datos'],
             'dominio'=>$dominio,
+            'servidor'=>$em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl(),
+            'api'=>ApiComunidad::getApi('todas'),
+            'username'=>$usuario->getUsername().$dominio
         ]);
     }
 
@@ -137,12 +143,7 @@ class PerfilController extends BaseController
         return $this->redirect($this->generateUrl('comunidad_perfil_ver'));
     }
 
-    /**
-     * @Route("/comunidad/perfil/verAmigos/{$username}", name="comunidad_perfil_verAmigos")
-     */
-    public function verAmigos(){
 
-    }
 
 
 }

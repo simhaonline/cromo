@@ -469,6 +469,19 @@
         </div>
     </div>
     <!--endmodal-->
+    <!--modal registro a social-->
+    <div class="modal fade" id="advertencia_social" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <span>Se esta conectando por primera vez a la social... esta de acuerdo...?</span>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <a href="{{ path('comunidad_perfil_conexion',{'username': app.user.username,'registro':'true'})}}"  type="button" class="btn btn-primary">Aceptar</a>
+                    {#{{ form_widget(form.btnSubirFoto) }}#}
+                </div>
+            </div>
+        </div>
+    </div>
 
     {{ form_rest(form) }}
     {{ form_end(form) }}
@@ -479,6 +492,47 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+        //funcion para subir foto de perfil
+        function cambiarFotoPerfil() {
+            $("#form_foto_perfil_subir").trigger('click');
+        }
+
+        function foto_perfil_subir(evt) {
+            var foto_perfil_subir = evt.target.files; // FileList object
+            // Obtenemos la imagen del campo "file".
+
+            for (var i = 0, f; f = foto_perfil_subir[i]; i++) {
+                if (!f.type.match('image.*')) {
+                    continue;
+                }
+                var reader = new FileReader();
+
+                //Solo admitimos imágenes.
+
+                reader.onload = (function (theFile) {
+                    return function (e) {
+                        console.log(e.target.result);
+                        // Insertamos la imagen
+                        document.getElementById("previsualizar_foto").src = `${e.target.result}`;
+                    };
+                })(f);
+
+                reader.readAsDataURL(f);
+            }
+        }
+
+        //redSocial
+        function notificacionAmigos(){
+            document.getElementById('notificacion_amigo').style.display='block';
+
+        }
+
+        //endRedSocial
+
+        document.getElementById('form_foto_perfil_subir').addEventListener('change', foto_perfil_subir, false);
+
+
+
         var aux=0;
         var auxAmigos=20;
         function  amigos(){

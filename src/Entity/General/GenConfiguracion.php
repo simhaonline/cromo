@@ -72,6 +72,11 @@ class GenConfiguracion
     private $webServiceCesioUrl;
 
     /**
+     * @ORM\Column(name="dominio", type="string", nullable=true)
+     */
+    private $dominio;
+
+    /**
      * @ORM\Column(name="codigo_cliente_oro", type="integer", nullable=true)
      */
     private $codigoClienteOro;
@@ -373,6 +378,25 @@ class GenConfiguracion
     {
         $this->porcentajeAutoretencion = $porcentajeAutoretencion;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDominio()
+    {
+        return $this->dominio;
+    }
+
+    /**
+     * @param mixed $dominio
+     */
+    public function setDominio($dominio)
+    {
+        $this->dominio = $dominio;
+        return $this;
+    }
+
+
 
 
 }

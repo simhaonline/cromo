@@ -378,44 +378,6 @@
             });
         }
 
-        //funcion para subir foto de perfil
-        function cambiarFotoPerfil() {
-            $("#form_foto_perfil_subir").trigger('click');
-        }
-
-        function foto_perfil_subir(evt) {
-            var foto_perfil_subir = evt.target.files; // FileList object
-            // Obtenemos la imagen del campo "file".
-
-            for (var i = 0, f; f = foto_perfil_subir[i]; i++) {
-                if (!f.type.match('image.*')) {
-                    continue;
-                }
-                var reader = new FileReader();
-
-                //Solo admitimos imágenes.
-
-                reader.onload = (function (theFile) {
-                    return function (e) {
-                        console.log(e.target.result);
-                        // Insertamos la imagen
-                        document.getElementById("previsualizar_foto").src = `${e.target.result}`;
-                    };
-                })(f);
-
-                reader.readAsDataURL(f);
-            }
-        }
-
-        //redSocial
-        function notificacionAmigos(){
-            document.getElementById('notificacion_amigo').style.display='block';
-
-        }
-
-        //endRedSocial
-
-        document.getElementById('form_foto_perfil_subir').addEventListener('change', foto_perfil_subir, false);
 
     </script>
 

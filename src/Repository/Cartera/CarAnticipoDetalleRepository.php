@@ -27,4 +27,29 @@ class CarAnticipoDetalleRepository extends ServiceEntityRepository
 
         return $queryBuilder;
     }
+
+    /**
+     * @param $arrSeleccionados
+     * @return string
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        $em = $this->getEntityManager();
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados AS $codigo) {
+                $ar = $em->getRepository(CarAnticipoDetalle::class)->find($codigo);
+                if ($ar) {
+                    $em->remove($ar);
+                }
+            }
+            try {
+                $em->flush();
+            } catch (\Exception $exception) {
+                $respuesta = 'No se puede eliminar, el registro esta siendo utilizado en el sistema';
+            }
+        }
+        return $respuesta;
+    }
 }

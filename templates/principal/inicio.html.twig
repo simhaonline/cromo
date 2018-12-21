@@ -295,44 +295,42 @@
         </div>
     </article>
     <article class="col-sm-12">
-        <div class="col-sm-6">
-            <div class="jarviswidget jarviswidget-color-blueDark">
-                <header>
-                    <span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
-                    <h2> Mis eventos </h2>
-                    <div class="widget-toolbar">
-                        <div class="btn-group">
-                            <button class="btn dropdown-toggle btn-xs btn-default" data-toggle="dropdown">
-                                Mostrar <i class="fa fa-caret-down"></i>
-                            </button>
-                            <ul class="dropdown-menu js-status-update pull-right">
-                                <li>
-                                    <a href="javascript:void(0);" id="mes">Mes</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" id="agenda">Agenda</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" id="hoy">Hoy</a>
-                                </li>
-                            </ul>
-                        </div>
+        <div class="jarviswidget jarviswidget-color-blueDark col-sm-6">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
+                <h2> Mis eventos </h2>
+                <div class="widget-toolbar">
+                    <div class="btn-group">
+                        <button class="btn dropdown-toggle btn-xs btn-default" data-toggle="dropdown">
+                            Mostrar <i class="fa fa-caret-down"></i>
+                        </button>
+                        <ul class="dropdown-menu js-status-update pull-right">
+                            <li>
+                                <a href="javascript:void(0);" id="mes">Mes</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" id="agenda">Agenda</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" id="hoy">Hoy</a>
+                            </li>
+                        </ul>
                     </div>
-                </header>
-                <div>
-                    <div class="widget-body no-padding">
-                        <div class="widget-body-toolbar">
-                            <div id="calendar-buttons">
-                                <div class="btn-group">
-                                    <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i
-                                                class="fa fa-chevron-left"></i></a>
-                                    <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i
-                                                class="fa fa-chevron-right"></i></a>
-                                </div>
+                </div>
+            </header>
+            <div>
+                <div class="widget-body no-padding">
+                    <div class="widget-body-toolbar">
+                        <div id="calendar-buttons">
+                            <div class="btn-group">
+                                <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i
+                                            class="fa fa-chevron-left"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i
+                                            class="fa fa-chevron-right"></i></a>
                             </div>
                         </div>
-                        <div id="calendar"></div>
                     </div>
+                    <div id="calendar"></div>
                 </div>
             </div>
         </div>
@@ -360,14 +358,14 @@
                             </h5>
                             <ul class="todo" id="{{ prioridad }}">
                             <li id="{{ arTarea.codigoTareaPk }}">
-                                                    <span class="handle">
-                                                        <label class="checkbox">
-                                                           <i></i><input type="checkbox" name="checkbox-inline">
-                                                        </label>
-                                                    </span>
+                                <span class="handle">
+                                    <label class="checkbox">
+                                       <i></i><input type="checkbox" name="checkbox-inline">
+                                    </label>
+                                </span>
                                 <p>
                                     <strong>Tarea #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }} [
-                                    <a href="javascript:void(0);" class="font-xs">Ver más</a>]
+                                    <a href="javascript:void(0);"  class="font-xs" onclick="actualizarModal('{{ arTarea.descripcion }}','{{ arTarea.titulo }}')" data-toggle="modal" data-target="#myModal">Ver más</a>]
                                     <span class="text-muted">{{ arTarea.descripcion | slice(0,40) }}... </span>
                                     <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
                                 </p>
@@ -376,14 +374,14 @@
                         {% else %}
                             {% if prioridad == arTarea.nombrePrioridad %}
                             <li id="{{ arTarea.codigoTareaPk }}">
-                                                    <span class="handle">
-                                                        <label class="checkbox">
-                                                            <i></i><input type="checkbox" name="checkbox-inline">
-                                                        </label>
-                                                    </span>
+                                <span class="handle">
+                                    <label class="checkbox">
+                                        <i></i><input type="checkbox" name="checkbox-inline">
+                                    </label>
+                                </span>
                                 <p>
                                     <strong>Tarea #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }}
-                                    [<a href="javascript:void(0);" class="font-xs">Ver más</a>]
+                                    <a href="javascript:void(0);" class="font-xs" onclick="actualizarModal('{{ arTarea.descripcion }}','{{ arTarea.titulo }}')" data-toggle="modal" data-target="#myModal">Ver más</a>]
                                     <span class="text-muted">{{ arTarea.descripcion| slice(0,40) }}... </span>
                                     <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
                                 </p>
@@ -397,15 +395,15 @@
                             </h5>
                             <ul class="todo" id="{{ prioridad }}">
                                 <li id="{{ arTarea.codigoTareaPk }}">
-                                                            <span class="handle">
-                                                                <label class="checkbox">
-                                                                    <i></i><input type="checkbox"
-                                                                                  name="checkbox-inline">
-                                                                </label>
-                                                            </span>
+                                    <span class="handle">
+                                        <label class="checkbox">
+                                            <i></i><input type="checkbox"
+                                                          name="checkbox-inline">
+                                        </label>
+                                    </span>
                                     <p>
                                         <strong>Tarea #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }}
-                                        [<a href="javascript:void(0);" class="font-xs">Ver más</a>]
+                                        <a href="javascript:void(0);" class="font-xs" onclick="actualizarModal('{{ arTarea.descripcion }}','{{ arTarea.titulo }}')" data-toggle="modal" data-target="#myModal">Ver más</a>]
                                         <span class="text-muted">{{ arTarea.descripcion| slice(0,40) }}... </span>
                                         <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
                                     </p>
@@ -427,15 +425,15 @@
                                     <ul class="todo" id="terminadas">
                                         {% for arTarea in terminadas %}
                                             <li id="{{ arTarea.codigoTareaPk }}" class="complete">
-                                                    <span class="handle">
-                                                        <label class="checkbox">
-                                                           <i></i><input type="checkbox" name="checkbox-inline">
-                                                        </label>
-                                                    </span>
+                                                <span class="handle" style="display: none;">
+                                                    <label class="checkbox">
+                                                       <i></i><input type="checkbox" name="checkbox-inline">
+                                                    </label>
+                                                </span>
                                                 <p>
                                                     <strong>Tarea #{{ arTarea.codigoTareaPk }}</strong>
                                                     - {{ arTarea.titulo }} [
-                                                    <a href="javascript:void(0);" class="font-xs">Ver más</a>]
+                                                    [<a href="javascript:void(0);" class="font-xs" onclick="actualizarModal('{{ arTarea.descripcion }}','{{ arTarea.titulo }}')" data-toggle="modal" data-target="#myModal">Ver más</a>]
                                                     <span class="text-muted">{{ arTarea.descripcion | slice(0,40) }}
                                                         ... </span>
                                                     <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
@@ -501,6 +499,11 @@
             });
         }
 
+        function actualizarModal(descripcion, titulo) {
+            $(".modal-body").html("<p>"+descripcion+"</p>");
+            $(".modal-header").html("<h4>"+titulo+"</h4>");
+        }
+
         function countTasks() {
             $('.todo-group-title').each(function () {
                 let $this = $(this);
@@ -526,9 +529,9 @@
                         $this.addClass("complete");
                         $(this).parent().hide();
                         $this.slideUp(500, function () {
+                            $this.children('.handle').css('display','none');
                             $this.clone().prependTo("#terminadas").effect("highlight", {}, 800);
                             $this.remove();
-                            // countTasks();
                         });
                     },
                 });

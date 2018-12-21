@@ -120,18 +120,18 @@ class NotaCredito extends \FPDF {
 
     public function Body($pdf) {
         $arMovimiento = self::$em->getRepository('App:Inventario\InvMovimiento')->find(self::$codigoNotaCredito);
-        $arNotaCreditoDetalle = self::$em->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => self::$codigoNotaCredito]);
+        $arNotaCreditoDetalle = self::$em->getRepository(InvMovimientoDetalle::class)->detallesFormato(self::$codigoNotaCredito);
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         if($arNotaCreditoDetalle) {
             foreach ($arNotaCreditoDetalle as $arNotasCreditoDetalle) {
-                $pdf->Cell(10, 4, $arNotasCreditoDetalle->getCodigoMovimientoDetallePk(), 1, 0, 'L');
-                $pdf->Cell(20, 4, $arNotasCreditoDetalle->getMovimientoRel()->getNumero(), 1, 0, 'L');
-                $pdf->Cell(70, 4, utf8_decode($arNotasCreditoDetalle->getItemRel()->getNombre()), 1, 0, 'L');
-                $pdf->Cell(30, 4, $arNotasCreditoDetalle->getLoteFk(), 1, 0, 'L');
-                $pdf->Cell(10, 4, $arNotasCreditoDetalle->getCantidad(), 1, 0, 'C');
-                $pdf->Cell(25, 4, number_format($arNotasCreditoDetalle->getVrSubtotal()), 1, 0, 'R');
-                $pdf->Cell(25, 4, number_format($arNotasCreditoDetalle->getVrIva()), 1, 0, 'R');
+                $pdf->Cell(10, 4, $arNotasCreditoDetalle['codigoMovimientoDetallePk'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arNotasCreditoDetalle['numeroFactura'], 1, 0, 'L');
+                $pdf->Cell(70, 4, utf8_decode($arNotasCreditoDetalle['nombre']), 1, 0, 'L');
+                $pdf->Cell(30, 4, $arNotasCreditoDetalle['loteFk'], 1, 0, 'L');
+                $pdf->Cell(10, 4, $arNotasCreditoDetalle['cantidad'], 1, 0, 'C');
+                $pdf->Cell(25, 4, number_format($arNotasCreditoDetalle['vrSubtotal']), 1, 0, 'R');
+                $pdf->Cell(25, 4, number_format($arNotasCreditoDetalle['vrIva']), 1, 0, 'R');
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 50);
             }

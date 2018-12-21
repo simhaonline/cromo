@@ -100,12 +100,12 @@ class RecogidaType extends AbstractType {
     {
 
         $campos = '[
-            {"child":"codigoClienteFk",                 "tipo":"TextType",   "propiedades":{"label":"Cliente"}},
-            {"child":"codigoRecogidaPk",                "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"estadoProgramado",                "tipo":"ChoiceType",   "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAutorizado",                "tipo":"ChoiceType",   "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",                  "tipo":"ChoiceType",   "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",                   "tipo":"ChoiceType",   "propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
+            {"child":"codigoClienteFk", "tipo":"TextType",  "propiedades":{"label":"Cliente"}},
+            {"child":"codigoRecogidaPk","tipo":"TextType",  "propiedades":{"label":"Codigo"}},
+            {"child":"estadoProgramado","tipo":"ChoiceType","propiedades":{"label":"Programado", "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAutorizado","tipo":"ChoiceType","propiedades":{"label":"Autorizado", "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",  "tipo":"ChoiceType","propiedades":{"label":"Aprobado",   "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",   "tipo":"ChoiceType","propiedades":{"label":"Anulado",    "choices":{"SI":true,"NO":false}}}
         ]';
 
         return $campos;

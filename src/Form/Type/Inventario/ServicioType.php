@@ -39,7 +39,7 @@ class ServicioType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoServicioPk",                        "tipo":"pk",        "ayuda":"Codigo control",                           "titulo":"ID"},
-            {"campo":"codigoServicioTipoFk",                    "tipo":"texto",     "ayuda":"Tipo Servicio",                            "titulo":"TIPO"},
+            {"campo":"servicioTipoRel.nombre",                  "tipo":"texto",     "ayuda":"Tipo Servicio",                            "titulo":"TIPO",            "relacion":""},
             {"campo":"fecha",                                   "tipo":"fecha",     "ayuda":"Fecha",                                    "titulo":"FECHA"},
             {"campo":"comentario",                              "tipo":"texto",     "ayuda":"Comentario",                               "titulo":"COMENTARIO"},
             {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},

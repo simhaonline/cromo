@@ -1,7 +1,8 @@
 <div class="col-sm-12 col-md-12 col-lg-6" >
 
     <form method="post" class="well padding-bottom-10" onsubmit="return false;">
-        <textarea rows="2" class="form-control" placeholder="¿Qué estas pensando?"></textarea>
+        {% if conexion.usuario %}
+        <textarea  rows="2" class="form-control" placeholder="¿Qué estas pensando?"></textarea>
         <div class="margin-top-10">
             <button type="submit" class="btn btn-sm btn-primary pull-right">
                 Publicar
@@ -11,6 +12,18 @@
             <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar foto"><i class="fa fa-camera"></i></a>
             <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar archivo"><i class="fa fa-file"></i></a>
         </div>
+            {% else %}
+                <textarea disabled rows="2" class="form-control" placeholder="¿Qué estas pensando?"></textarea>
+                <div class="margin-top-10">
+                    <button disabled type="submit" class="btn btn-sm btn-primary pull-right">
+                        Publicar
+                    </button>
+                    <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Localizacion"><i class="fa fa-location-arrow"></i></a>
+                    <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Voz"><i class="fa fa-microphone"></i></a>
+                    <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar foto"><i class="fa fa-camera"></i></a>
+                    <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar archivo"><i class="fa fa-file"></i></a>
+                </div>
+        {% endif %}
     </form>
     {% for keyPub, publicacion in publicaciones %}
         <div class="timeline-seperator text-center"> <span>{{ publicacion.fecha }}</span>

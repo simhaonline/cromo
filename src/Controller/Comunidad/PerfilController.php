@@ -17,22 +17,26 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PerfilController extends BaseController
 {
+
+
+
     /**
      * @Route("/comunidad/perfil/ver", name="comunidad_perfil_ver")
      * @param $usuario Usuario
      */
     public function verPerfil(Request $request)
     {
-
         $em=$this->getDoctrine()->getManager();
+        $dominio=$this->getDoctrine()->getRepository('App:General\GenConfiguracion')->find(1)->getDominio();
+        $dominio="@".$dominio??"";
         $usuario=$this->container->get('security.token_storage')->getToken()->getUser();
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $datos=json_encode(['datos'=>['estado'=>'']]);
         $dato=json_encode(['datos'=>['maximo_resultado'=>10]]);
-        $conexion= FuncionesController::solicitudesPost($datos,ApiComunidad::getApi('conexion') .$usuario->getUsername());
-        $amigos= FuncionesController::solicitudesPost($dato,ApiComunidad::getApi('misAmigos') .$usuario->getUsername());
-        $publicaciones=(new PublicacionController())->misPublicaciones($usuario->getUsername());
+        $conexion= FuncionesController::solicitudesPost($datos,ApiComunidad::getApi('conexion') .$usuario->getUsername().$dominio);
+        $amigos= FuncionesController::solicitudesPost($dato,ApiComunidad::getApi('misAmigos') .$usuario->getUsername().$dominio);
+        $publicaciones=(new PublicacionController())->misPublicaciones($usuario->getUsername().$dominio);
         $informacionUsuario= [
             'nombreCorto'   =>$usuario->getNombreCorto(),
 //            'rol'           =>$usuario->getRoles()[0]=="ROLE_ADMIN"?"Administrador":"Usuario",
@@ -47,11 +51,13 @@ class PerfilController extends BaseController
                 [
                     'attr'=>['class'=>'form-control'],
                     'required'=>false,
+                    'disabled'=>$conexion['usuario'] && $conexion['usuario']!==""?false:true
 
                 ])
             ->add('btnBuscar',SubmitType::class,[
                 'attr'=>['class'=>'btn btn-default btn-sm'],
-                'label'=>'Buscar'
+                'label'=>'Buscar',
+                'disabled'=>$conexion['usuario'] && $conexion['usuario']!==""?false:true
             ])
             ->getForm();
         $formBusqueda->handleRequest($request);
@@ -103,7 +109,8 @@ class PerfilController extends BaseController
             'conexion'=>$conexion,
             'misSolicitudes'=>$misSolicitudes['datos'],
             'amigos'=>$amigos['datos'],
-            'publicaciones'=>$publicaciones['datos']
+            'publicaciones'=>$publicaciones['datos'],
+            'dominio'=>$dominio,
         ]);
     }
 
@@ -111,16 +118,19 @@ class PerfilController extends BaseController
      * @Route("/comunidad/perfil/conexion/{username}/{registro}", name="comunidad_perfil_conexion")
      */
     public function conexionUsuario($username, $registro=false){
+        $dominio=$this->getDoctrine()->getRepository('App:General\GenConfiguracion')->find(1)->getDominio();
+        $dominio="@".$dominio??"";
+        $usuario=$this->container->get('security.token_storage')->getToken()->getUser();
         $em=$this->getDoctrine()->getManager();
         set_time_limit(0);
         ini_set("memory_limit", -1);
         if($registro=='true'){
         $nombreCorto=$em->getRepository('App:Seguridad\Usuario')->find($username)->getNombreCorto();
         $datos=json_encode(['datos'=>['clave'=>'123456','nombreCorto'=>$nombreCorto]]);
-            FuncionesController::solicitudesPost($datos,ApiComunidad::getApi('conexion').$username);
+            FuncionesController::solicitudesPost($datos,ApiComunidad::getApi('conexion').$username.$dominio);
         }
         else{
-            FuncionesController::solicitudesPost([],ApiComunidad::getApi('conexion').$username);
+            FuncionesController::solicitudesPost([],ApiComunidad::getApi('conexion').$username.$dominio);
         }
 
 

@@ -14,7 +14,8 @@ class ServicioTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoServicioTipoPk',TextType::class, array('required' => false))
+            ->add('codigoServicioTipoPk',TextType::class, array('required' => true))
+            ->add('nombre',TextType::class, array('required' => true))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
     }
 
@@ -28,7 +29,8 @@ class ServicioTipoType extends AbstractType
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
-            {"campo":"codigoServicioTipoPk",                                        "tipo":"pk",         "ayuda":"Codigo control tipo",                 "titulo":"ID"}
+            {"campo":"codigoServicioTipoPk",                                        "tipo":"pk",         "ayuda":"Codigo control tipo",                 "titulo":"ID"},
+            {"campo":"nombre",                                                      "tipo":"texto",      "ayuda":"Nombre",                              "titulo":"Nombre"}
         ]';
         return $campos;
 
@@ -38,7 +40,8 @@ class ServicioTipoType extends AbstractType
     {
 
         $campos = '[
-            {"child":"codigoServicioTipoPk",                "tipo":"TextType",      "propiedades":{"label":"Codigo"},     "operador":"like"}
+            {"child":"codigoServicioTipoPk",                "tipo":"TextType",      "propiedades":{"label":"Codigo"},     "operador":"like"},
+            {"child":"nombre",                              "tipo":"TextType",      "propiedades":{"label":"Nombre"},     "operador":"like"}
         ]';
 
         return $campos;

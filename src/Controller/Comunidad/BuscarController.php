@@ -20,9 +20,11 @@ class BuscarController extends BaseController
     public function buscar(Request $request, $clave)
     {
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
-        $arPerfil=FuncionesController::solicitudesGet(ApiComunidad::getApi('buscarAmigos').$usuario.'/'.$clave);
+        $dominio=$this->getDoctrine()->getRepository('App:General\GenConfiguracion')->find(1)->getDominio();
+        $dominio="@".$dominio??"";
+        $arPerfil=FuncionesController::solicitudesGet(ApiComunidad::getApi('buscarAmigos').$usuario.$dominio.'/'.$clave);
         $em=$this->getDoctrine()->getManager();
-        $misSolicitudes=BuscarController::misSolicitudesPendientes($usuario);
+        $misSolicitudes=BuscarController::misSolicitudesPendientes($usuario.$dominio);
         $formBusqueda=$this->createFormBuilder()
             ->add('busqueda',TextType::class,
                 [
@@ -70,7 +72,9 @@ class BuscarController extends BaseController
      */
     public function enviarSolicitud($usernameSolicitado, $clave){
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
-        $enviarSolicitud=FuncionesController::solicitudesGet(ApiComunidad::getApi('enviarSolicitud').$usuario.'/'.$usernameSolicitado);
+        $dominio=$this->getDoctrine()->getRepository('App:General\GenConfiguracion')->find(1)->getDominio();
+        $dominio="@".$dominio??"";
+        $enviarSolicitud=FuncionesController::solicitudesGet(ApiComunidad::getApi('enviarSolicitud').$usuario.$dominio.'/'.$usernameSolicitado);
         if($enviarSolicitud['estado']){
             return $this->redirect($this->generateUrl('comunidad_buscar_general',['clave'=>$clave]));
         }
@@ -80,8 +84,10 @@ class BuscarController extends BaseController
      * @Route("/comunidad/buscar/eliminarAmigo/{usernameSolicitado}/{clave}", name="comunidad_eliminar_amigo")
      */
     public function eliminarAmigo($usernameSolicitado, $clave){
+        $dominio=$this->getDoctrine()->getRepository('App:General\GenConfiguracion')->find(1)->getDominio();
+        $dominio="@".$dominio??"";
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
-        $eliminarAmigo=FuncionesController::solicitudesGet(ApiComunidad::getApi('eliminarAmigo').$usuario.'/'.$usernameSolicitado);
+        $eliminarAmigo=FuncionesController::solicitudesGet(ApiComunidad::getApi('eliminarAmigo').$usuario.$dominio.'/'.$usernameSolicitado);
         if($eliminarAmigo['estado']){
             return $this->redirect($this->generateUrl('comunidad_buscar_general',['clave'=>$clave]));
         }
@@ -92,9 +98,11 @@ class BuscarController extends BaseController
      * @Route("/comunidad/buscar/agregarAmigo/{usernameSolicitado}/{clave}/{notificacion}", name="comunidad_agregar_amigo")
      */
     public function agregarAmigo($usernameSolicitado, $clave, $notificacion=false){
+        $dominio=$this->getDoctrine()->getRepository('App:General\GenConfiguracion')->find(1)->getDominio();
+        $dominio="@".$dominio??"";
         $notificacion=(boolean)$notificacion;
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
-        $agregarAmigo=FuncionesController::solicitudesGet(ApiComunidad::getApi('aceptarAmigo').$usuario.'/'.$usernameSolicitado);
+        $agregarAmigo=FuncionesController::solicitudesGet(ApiComunidad::getApi('aceptarAmigo').$usuario.$dominio.'/'.$usernameSolicitado);
         if($agregarAmigo['estado'] && !$notificacion){
             return $this->redirect($this->generateUrl('comunidad_buscar_general',['clave'=>$clave]));
         }
@@ -107,8 +115,10 @@ class BuscarController extends BaseController
      * @Route("/comunidad/buscar/cancelarSolicitud/{usernameSolicitado}/{clave}", name="comunidad_cancelar_solicitud")
      */
     public function cancelarSolicitud($usernameSolicitado, $clave){
+        $dominio=$this->getDoctrine()->getRepository('App:General\GenConfiguracion')->find(1)->getDominio();
+        $dominio="@".$dominio??"";
         $usuario=$this->get('security.token_storage')->getToken()->getUsername();
-        $cancelarSolicitud=FuncionesController::solicitudesGet(ApiComunidad::getApi('cancelarSolicitud').$usuario.'/'.$usernameSolicitado);
+        $cancelarSolicitud=FuncionesController::solicitudesGet(ApiComunidad::getApi('cancelarSolicitud').$usuario.$dominio.'/'.$usernameSolicitado);
         if($cancelarSolicitud['estado']){
             return $this->redirect($this->generateUrl('comunidad_buscar_general',['clave'=>$clave]));
         }

@@ -17,6 +17,10 @@ class InvServicioTipo
      */
     private $codigoServicioTipoPk;
 
+    /**
+     * @ORM\Column(name="nombre", type="string", length=50, nullable=false)
+     */
+    private $nombre;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvServicio", mappedBy="servicioTipoRel", cascade={"persist","remove"})
@@ -65,6 +69,23 @@ class InvServicioTipo
     public function setServicioServicioTipoRel($servicioServicioTipoRel)
     {
         $this->servicioServicioTipoRel = $servicioServicioTipoRel;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
         return $this;
     }
 

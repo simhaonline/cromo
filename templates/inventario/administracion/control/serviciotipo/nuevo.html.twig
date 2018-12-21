@@ -5,9 +5,13 @@
         <div class="panel-heading">Informacion general</div>
         <div class="panel-body">
             <div class="form-group">
-                <label class="col-sm-2 control-label">Nombre:</label>
-                <div class="col-sm-6">
+                <label class="col-sm-2 control-label">Codigo:</label>
+                <div class="col-sm-4">
                     {{ form_widget(form.codigoServicioTipoPk, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
 
@@ -16,7 +20,7 @@
     </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm"
-           href="{{ path('inventario_administracion_servicio_serviciotipo_lista') }}">Cancelar</a>
+           href="{{ path('inventario_administracion_control_serviciotipo_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}

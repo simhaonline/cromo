@@ -8,11 +8,14 @@
             <div class="widget-body">
                 {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
                 <div class="form-group form-group-sm">
-                    <label for="form_txtCodigoDespachoRecogida" class="col-sm-1 control-label">Codigo:</label>
-                    <div class="col-sm-6">
+                    <label  class="col-sm-1 control-label">Codigo:</label>
+                    <div class="col-sm-4">
                         {{ form_widget(formFiltro.codigoServicioTipoPk) }}
                     </div>
-
+                    <label  class="col-sm-1 control-label">Nombre:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(formFiltro.nombre) }}
+                    </div>
                 </div>
                 {{ form_end(formFiltro) }}
             </div>

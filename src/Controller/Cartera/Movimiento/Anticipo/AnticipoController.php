@@ -118,6 +118,10 @@ class AnticipoController extends ControllerListenerGeneral
     }
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Doctrine\ORM\ORMException
      * @Route("/cartera/movimiento/anticipo/anticipo/detalle/{id}", name="cartera_movimiento_anticipo_anticipo_detalle")
      */
     public function detalle(Request $request, $id)
@@ -127,11 +131,21 @@ class AnticipoController extends ControllerListenerGeneral
         $arAnticipo = $em->getRepository(CarAnticipo::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('btnAutorizar', SubmitType::class, array('label' => 'Autorizar', 'attr' => ['class' => 'btn btn-sm btn-default']))
+            ->add('btnAprobar', SubmitType::class,  array('label' => 'Aprobar', 'attr' => ['class' => 'btn btn-sm btn-default']))
+            ->add('btnDesautorizar', SubmitType::class,  array('label' => 'Desautorizar', 'attr' => ['class' => 'btn btn-sm btn-default']))
+            ->add('btnImprimir', SubmitType::class,  array('label' => 'Imprimir', 'attr' => ['class' => 'btn btn-sm btn-default']))
+            ->add('btnAnular', SubmitType::class, array('label' => 'Anular', 'attr' => ['class' => 'btn btn-sm btn-default']))
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnEliminarDetalle')->isClicked()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             $em->getRepository(CarAnticipoDetalle::class)->eliminar($arrSeleccionados);
+        }
+        if ($form->get('btnAutorizar')->isClicked()) {
+            $em->getRepository(CarAnticipo::class)->autorizar($arAnticipo);
+            $em->getRepository(CarAnticipo::class)->liquidar($arAnticipo);
+            return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
         }
 
         $arAnticipoDetalles = $paginator->paginate($em->getRepository(CarAnticipoDetalle::class)->lista($id), $request->query->getInt('page', 1), 70);

@@ -78,6 +78,9 @@
             <div class="btn-group">
                 {{ form_widget(form.btnEntrega, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             </div>
+            <div class="btn-group">
+                <a href="javascript:abrirVentana3('{{ path('transporte_proceso_transporte_guia_entrega_archivo') }}','cargarGuias',600,900)" class="btn btn-default btn-sm">Cargar guías</a>
+            </div>
         </div>
     </div>
     {{ form_rest(form) }}

@@ -1,0 +1,45 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+         data-widget-fullscreenbutton="true">
+        <header>
+            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+            <h2>Lista</h2>
+        </header>
+        <div>
+            <div class="widget-body no-padding">
+                <div class="panel-body">
+                    <br>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-2"></label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.flArchivo) }}
+                        </div>
+                        <label for="" class="control-label col-sm-2">Soporte:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.chkSoporte) }}
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <img src="{{ asset('img/guias/cargarEntrega.png') }}">
+                    </div>
+                    <div class="col-sm-5">
+                        <cite style="color: grey;font-size: 11px;"> ~ Los campos <strong> guía </strong> (numero de la guía), <strong>fecha</strong>  y <strong>hora </strong>   son obligatorios ~</cite>
+                        <br>
+                        <cite style="color: grey;font-size: 11px;"> ~ Ingresar la fecha con una comilla simple <strong>( ' )</strong> y en formato <strong>Y-m-d</strong> (eg. <strong>'</strong>2018-01-25 ) ~ </cite>
+                        <br>
+                        <cite style="color: grey;font-size: 11px;"> ~ Ingresar la hora con una comilla simple <strong>( ' )</strong> y en formato <strong> H:i:s </strong> (eg. <strong>'</strong>15:25:12 ) ~ </cite>
+                        <br>
+                        <cite style="color: grey;font-size: 11px;"> ~ El archivo debera de contener solo <strong>UNA</strong> página ~ </cite>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {{ form_widget(form.btnEntregar) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+

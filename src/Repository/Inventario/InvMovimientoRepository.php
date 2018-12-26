@@ -65,7 +65,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         if ($session->get('filtroInvMovimientoCodigo') != "") {
             $queryBuilder->andWhere("m.codigoMovimientoPk = " . $session->get('filtroInvMovimientoCodigo'));
         }
-        if($session->get('filtroInvCodigoTercero')){
+        if ($session->get('filtroInvCodigoTercero')) {
             $queryBuilder->andWhere("m.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
         }
         switch ($session->get('filtroInvMovimientoEstadoAutorizado')) {
@@ -84,7 +84,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("m.estadoAprobado = 1");
                 break;
         }
-        if($session->get('filtroGenAsesor')) {
+        if ($session->get('filtroGenAsesor')) {
             $queryBuilder->andWhere("m.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
         }
         $queryBuilder->orderBy('m.estadoAprobado', 'ASC');
@@ -122,7 +122,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         if ($session->get('filtroInvMovimientoCodigo') != "") {
             $queryBuilder->andWhere("m.codigoMovimientoPk = " . $session->get('filtroInvMovimientoCodigo'));
         }
-        if($session->get('filtroInvCodigoTercero')){
+        if ($session->get('filtroInvCodigoTercero')) {
             $queryBuilder->andWhere("m.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
         }
         switch ($session->get('filtroInvMovimientoEstadoAutorizado')) {
@@ -141,7 +141,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("m.estadoAprobado = 1");
                 break;
         }
-        if($session->get('filtroGenAsesor')) {
+        if ($session->get('filtroGenAsesor')) {
             $queryBuilder->andWhere("m.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
         }
         $queryBuilder->orderBy('m.estadoAprobado', 'ASC');
@@ -183,33 +183,33 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $em->persist($arMovimiento);
                 $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
                 foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-                    if($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
+                    if ($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
                         $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($arMovimientoDetalle->getCodigoImportacionDetalleFk());
                         $arImportacionDetalle->setCantidadAfectada($arImportacionDetalle->getCantidadAfectada() + $arMovimientoDetalle->getCantidad());
                         $arImportacionDetalle->setCantidadPendiente($arImportacionDetalle->getCantidad() - $arImportacionDetalle->getCantidadAfectada());
                         $em->persist($arImportacionDetalle);
                     }
-                    if($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
+                    if ($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
                         $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($arMovimientoDetalle->getCodigoRemisionDetalleFk());
                         $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada() + $arMovimientoDetalle->getCantidad());
                         $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad() - $arRemisionDetalle->getCantidadAfectada());
                         $em->persist($arRemisionDetalle);
                     }
-                    if($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
+                    if ($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
                         $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
                         $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() + $arMovimientoDetalle->getCantidad());
                         $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
                         $em->persist($arPedidoDetalle);
                     }
-                    if($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
+                    if ($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
                         $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenDetalleFk());
                         $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() + $arMovimientoDetalle->getCantidad());
                         $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
                         $em->persist($arOrdenDetalle);
-                    }                    
+                    }
                 }
                 $em->flush();
-                if($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
+                if ($arMovimiento->getCodigoDocumentoTipoFk() == "TRA") {
                     $this->generarDetallesTraslado($arMovimiento);
                 }
             } else {
@@ -239,11 +239,11 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
         $arrImpuestoRetenciones = $this->retencion($arMovimientoDetalles);
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-            if($arMovimiento->getCodigoDocumentoTipoFk() == "SAL") {
+            if ($arMovimiento->getCodigoDocumentoTipoFk() == "SAL") {
                 $arMovimientoDetalle->setVrPrecio($arMovimientoDetalle->getVrCosto());
             }
             $vrPrecio = $arMovimientoDetalle->getVrPrecio() - (($arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getPorcentajeDescuento()) / 100);
-            if($arMovimiento->getGeneraCostoPromedio()) {
+            if ($arMovimiento->getGeneraCostoPromedio()) {
                 $arMovimientoDetalle->setVrCosto($vrPrecio);
             }
             $vrSubtotal = $vrPrecio * $arMovimientoDetalle->getCantidad();
@@ -258,8 +258,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $vrIvaGlobal += $vrIva;
             $vrSubtotalGlobal += $vrSubtotal;
             if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC' || $arMovimiento->getCodigoDocumentoTipoFk() == 'COM') {
-                if($arMovimientoDetalle->getCodigoImpuestoRetencionFk()) {
-                    if($arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['base'] == true) {
+                if ($arMovimientoDetalle->getCodigoImpuestoRetencionFk()) {
+                    if ($arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['base'] == true) {
                         $vrRetencionFuente = $vrSubtotal * $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['porcentaje'] / 100;
                     }
                 }
@@ -278,14 +278,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->liquidarMovimiento();
             if ($arMovimiento->getTerceroRel()->getRetencionIva() == 1) {
                 //Validacion acordada con Luz Dary de que las devoluciones tambien validen la base
-                if ($vrIvaGlobal >=  $arrConfiguracion['vrBaseRetencionIvaVenta']) {
+                if ($vrIvaGlobal >= $arrConfiguracion['vrBaseRetencionIvaVenta']) {
                     $vrRetencionIvaGlobal = ($vrIvaGlobal * $arrConfiguracion['porcentajeRetencionIva']) / 100;
                 }
             }
 
 
             $arrConfiguracionGeneral = $em->getRepository(GenConfiguracion::class)->invLiquidarMovimiento();
-            if($arrConfiguracionGeneral['autoretencionVenta']) {
+            if ($arrConfiguracionGeneral['autoretencionVenta']) {
                 $vrAutoretencion = $vrSubtotalGlobal * $arrConfiguracionGeneral['porcentajeAutoretencion'] / 100;
             }
         }
@@ -308,15 +308,16 @@ class InvMovimientoRepository extends ServiceEntityRepository
         }
     }
 
-    private function retencion($arMovimientoDetalles) {
+    private function retencion($arMovimientoDetalles)
+    {
         $em = $this->getEntityManager();
         $arrImpuestoRetenciones = array();
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-            if($arMovimientoDetalle->getCodigoImpuestoRetencionFk()) {
+            if ($arMovimientoDetalle->getCodigoImpuestoRetencionFk()) {
                 $vrPrecio = $arMovimientoDetalle->getVrPrecio() - (($arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getPorcentajeDescuento()) / 100);
                 $vrSubtotal = $vrPrecio * $arMovimientoDetalle->getCantidad();
                 if (!array_key_exists($arMovimientoDetalle->getCodigoImpuestoRetencionFk(), $arrImpuestoRetenciones)) {
-                    $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()] =  array('codigo' => $arMovimientoDetalle->getCodigoImpuestoRetencionFk(),
+                    $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()] = array('codigo' => $arMovimientoDetalle->getCodigoImpuestoRetencionFk(),
                         'valor' => $vrSubtotal, 'base' => false, 'porcentaje' => 0);
                 } else {
                     $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['valor'] += $vrSubtotal;
@@ -324,11 +325,11 @@ class InvMovimientoRepository extends ServiceEntityRepository
             }
         }
 
-        if($arrImpuestoRetenciones) {
+        if ($arrImpuestoRetenciones) {
             foreach ($arrImpuestoRetenciones as $arrImpuestoRetencion) {
                 $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrImpuestoRetencion['codigo']);
-                if($arImpuesto) {
-                    if($arrImpuestoRetencion['valor'] >= $arImpuesto->getBase()) {
+                if ($arImpuesto) {
+                    if ($arrImpuestoRetencion['valor'] >= $arImpuesto->getBase()) {
                         $arrImpuestoRetenciones[$arrImpuestoRetencion['codigo']]['base'] = true;
                         $arrImpuestoRetenciones[$arrImpuestoRetencion['codigo']]['porcentaje'] = $arImpuesto->getPorcentaje();
                     }
@@ -343,7 +344,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function desautorizar($arMovimiento) {
+    public function desautorizar($arMovimiento)
+    {
         $em = $this->getEntityManager();
         if ($arMovimiento->getEstadoAutorizado() == 1 && $arMovimiento->getEstadoAprobado() == 0) {
             //Se define que mueve inventario es al aprobar
@@ -352,25 +354,25 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $em->persist($arMovimiento);
             $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
             foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
-                if($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
+                if ($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
                     $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($arMovimientoDetalle->getCodigoImportacionDetalleFk());
                     $arImportacionDetalle->setCantidadAfectada($arImportacionDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
                     $arImportacionDetalle->setCantidadPendiente($arImportacionDetalle->getCantidad() - $arImportacionDetalle->getCantidadAfectada());
                     $em->persist($arImportacionDetalle);
                 }
-                if($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
+                if ($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
                     $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($arMovimientoDetalle->getCodigoRemisionDetalleFk());
                     $arRemisionDetalle->setCantidadAfectada($arRemisionDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
                     $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad() - $arRemisionDetalle->getCantidadAfectada());
                     $em->persist($arRemisionDetalle);
                 }
-                if($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
+                if ($arMovimientoDetalle->getCodigoPedidoDetalleFk()) {
                     $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arMovimientoDetalle->getCodigoPedidoDetalleFk());
                     $arPedidoDetalle->setCantidadAfectada($arPedidoDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
                     $arPedidoDetalle->setCantidadPendiente($arPedidoDetalle->getCantidad() - $arPedidoDetalle->getCantidadAfectada());
                     $em->persist($arPedidoDetalle);
                 }
-                if($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
+                if ($arMovimientoDetalle->getCodigoOrdenDetalleFk()) {
                     $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($arMovimientoDetalle->getCodigoOrdenDetalleFk());
                     $arOrdenDetalle->setCantidadAfectada($arOrdenDetalle->getCantidadAfectada() - $arMovimientoDetalle->getCantidad());
                     $arOrdenDetalle->setCantidadPendiente($arOrdenDetalle->getCantidad() - $arOrdenDetalle->getCantidadAfectada());
@@ -379,7 +381,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             }
 
             $em->flush();
-            if($arMovimiento->getCodigoDocumentoTipoFk() == 'TRA'){
+            if ($arMovimiento->getCodigoDocumentoTipoFk() == 'TRA') {
                 $this->eliminarDetallesTraslado($arMovimiento);
             }
         } else {
@@ -402,7 +404,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
 
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $arItem = $this->getEntityManager()->getRepository(InvItem::class)->find($arMovimientoDetalle->getCodigoItemFk());
-            if($arItem->getAfectaInventario() == 1) {
+            if ($arItem->getAfectaInventario() == 1) {
                 $arLote = $this->getEntityManager()->getRepository(InvLote::class)
                     ->findOneBy(['loteFk' => $arMovimientoDetalle->getLoteFk(), 'codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $arMovimientoDetalle->getCodigoBodegaFk()]);
                 if (!$arLote) {
@@ -422,32 +424,32 @@ class InvMovimientoRepository extends ServiceEntityRepository
 
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $arItem = $this->getEntityManager()->getRepository(InvItem::class)->find($arMovimientoDetalle->getCodigoItemFk());
-            if($arItem->getAfectaInventario() == 1) {
+            if ($arItem->getAfectaInventario() == 1) {
                 //Se hace en el detalle porque los traslados tienen un registro 1 y otro -1
                 $operacionTransaccion = $arMovimientoDetalle->getOperacionInventario() * $tipo;
                 $arLote = $this->getEntityManager()->getRepository(InvLote::class)
                     ->findOneBy(['loteFk' => $arMovimientoDetalle->getLoteFk(), 'codigoItemFk' => $arMovimientoDetalle->getCodigoItemFk(), 'codigoBodegaFk' => $arMovimientoDetalle->getCodigoBodegaFk()]);
                 if (!$arLote) {
-                    if($arMovimientoDetalle->getOperacionInventario() == -1) {
+                    if ($arMovimientoDetalle->getOperacionInventario() == -1) {
                         Mensajes::error("El lote especificado en el detalle id " . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " no existe");
                         $validacion = false;
                         break;
                     }
                 }
 
-                if($operacionTransaccion == -1 ) {
+                if ($operacionTransaccion == -1) {
                     $disponible = $arLote->getCantidadDisponible();
-                    if($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
+                    if ($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
                         $disponible += $arMovimientoDetalle->getCantidad();
                     }
-                    if($arMovimientoDetalle->getCantidad() > $disponible) {
-                        Mensajes::error("Detalle " . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ": La cantidad disponible [" . $arLote->getCantidadDisponible() . "] del lote: " . $arMovimientoDetalle->getLoteFk() ." es insuficiente para la salida de [" . $arMovimientoDetalle->getCantidad() . "]");
+                    if ($arMovimientoDetalle->getCantidad() > $disponible) {
+                        Mensajes::error("Detalle " . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ": La cantidad disponible [" . $arLote->getCantidadDisponible() . "] del lote: " . $arMovimientoDetalle->getLoteFk() . " es insuficiente para la salida de [" . $arMovimientoDetalle->getCantidad() . "]");
                         $validacion = false;
                         break;
                     }
                 }
-                if($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
-                    if($operacionTransaccion == -1) {
+                if ($arMovimientoDetalle->getCodigoRemisionDetalleFk()) {
+                    if ($operacionTransaccion == -1) {
                         $arLote->setCantidadRemisionada($arLote->getCantidadRemisionada() - $arMovimientoDetalle->getCantidad());
                         $arItem->setCantidadRemisionada($arItem->getCantidadRemisionada() - $arMovimientoDetalle->getCantidad());
                     } else {
@@ -465,11 +467,11 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $em->persist($arLote);
                 $arMovimientoDetalle->setCantidadSaldo($cantidadSaldo);
                 $arMovimientoDetalle->setCantidadOperada($cantidadOperada);
-                if($tipo == 1) {
-                    if($arMovimiento->getGeneraCostoPromedio()) {
-                        if($existenciaAnterior != 0) {
+                if ($tipo == 1) {
+                    if ($arMovimiento->getGeneraCostoPromedio()) {
+                        if ($existenciaAnterior != 0) {
                             $precioBruto = $arMovimientoDetalle->getVrPrecio() - (($arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getPorcentajeDescuento()) / 100);
-                            if($cantidadSaldo != 0) {
+                            if ($cantidadSaldo != 0) {
                                 $costoPromedio = (($existenciaAnterior * $costoPromedio) + (($arMovimientoDetalle->getCantidad() * $precioBruto))) / $cantidadSaldo;
                             }
                         } else {
@@ -497,11 +499,11 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arMovimiento->getEstadoAprobado() && !$arMovimiento->getEstadoAnulado() && !$arMovimiento->getEstadoContabilizado()) {
             $validarCartera = true;
-            if($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
+            if ($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
                 $validarCartera = $em->getRepository(CarCuentaCobrar::class)->anularExterno('INV', $arMovimiento->getCodigoMovimientoPk());
             }
-            if($validarCartera) {
-                if($this->afectar($arMovimiento, -1)) {
+            if ($validarCartera) {
+                if ($this->afectar($arMovimiento, -1)) {
                     $arMovimiento->setVrSubtotal(0);
                     $arMovimiento->setVrIva(0);
                     $arMovimiento->setVrTotal(0);
@@ -561,21 +563,21 @@ class InvMovimientoRepository extends ServiceEntityRepository
             if ($arMovimiento->getCodigoDocumentoTipoFk() == "FAC") {
                 $arLote = $this->getEntityManager()->getRepository(InvLote::class)
                     ->findOneBy(['loteFk' => $arMovimientoDetalle['loteFk'], 'codigoItemFk' => $arMovimientoDetalle['codigoItemFk']]);
-                $arItem =  $this->getEntityManager()->getRepository(InvItem::class)
+                $arItem = $this->getEntityManager()->getRepository(InvItem::class)
                     ->findOneBy(['codigoItemPk' => $arMovimientoDetalle['codigoItemFk']]);
-                if($arItem->getAfectaInventario() == true){
+                if ($arItem->getAfectaInventario() == true) {
                     if (!$arLote) {
-                        $respuesta = 'El lote especificado en el detalle id ' .  $arMovimientoDetalle['codigoMovimientoDetallePk'] . ' no existe.';
+                        $respuesta = 'El lote especificado en el detalle id ' . $arMovimientoDetalle['codigoMovimientoDetallePk'] . ' no existe.';
                     }
 
                 }
             }
         }
 
-        if($respuesta == "") {
+        if ($respuesta == "") {
             $respuesta = $this->validarCantidadesAfectar($arMovimiento->getCodigoMovimientoPk());
         }
-        if($respuesta == "") {
+        if ($respuesta == "") {
             $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->validarDetalles();
             $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->validarDetalles($arMovimiento->getCodigoMovimientoPk());
             foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
@@ -606,34 +608,36 @@ class InvMovimientoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arDocumento = $em->getRepository(InvDocumento::class)->find($arMovimiento->getCodigoDocumentoFk());
-        if($arMovimiento->getFacturaTipoRel()!= ''){
+        if ($arMovimiento->getFacturaTipoRel() != '') {
             $arFacturaTipo = $em->getRepository(InvFacturaTipo::class)->find($arMovimiento->getCodigoFacturaTipoFk());
         }
         if ($arMovimiento->getEstadoAprobado() == 0) {
-            if($this->afectar($arMovimiento, 1)) {
+            if ($this->afectar($arMovimiento, 1)) {
                 $stringFecha = $arMovimiento->getFecha()->format('Y-m-d');
                 $plazo = $arMovimiento->getTerceroRel()->getPlazoPago();
 
                 $fechaVencimiento = date_create($stringFecha);
                 $fechaVencimiento->modify("+ " . (string)$plazo . " day");
                 $arMovimiento->setFechaVence($fechaVencimiento);
-                if($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC'){
-                    $arMovimiento->setNumero($arFacturaTipo->getConsecutivo());
-                }else {
-                    $arMovimiento->setNumero($arDocumento->getConsecutivo());
-                }
-                $arMovimiento->setEstadoAprobado(1);
-                $arMovimiento->setFecha(new \DateTime('now'));
-                $this->getEntityManager()->persist($arMovimiento);
-                if($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC'){
-                    $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo()+ 1);
-                } else {
-                    $arDocumento->setConsecutivo($arDocumento->getConsecutivo() + 1);
-                }
-                $this->getEntityManager()->persist($arDocumento);
+                if ($arMovimiento->getNumero() == 0 || $arMovimiento->getNumero() == "") {
+                    if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC') {
+                        $arMovimiento->setNumero($arFacturaTipo->getConsecutivo());
+                    } else {
+                        $arMovimiento->setNumero($arDocumento->getConsecutivo());
+                    }
+                    $arMovimiento->setEstadoAprobado(1);
+                    $arMovimiento->setFecha(new \DateTime('now'));
+                    $this->getEntityManager()->persist($arMovimiento);
 
-                if($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
-                    $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arMovimiento->getTerceroRel()->getCodigoIdentificacionFk(),'numeroIdentificacion' => $arMovimiento->getTerceroRel()->getNumeroIdentificacion()]);
+                    if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC') {
+                        $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo() + 1);
+                    } else {
+                        $arDocumento->setConsecutivo($arDocumento->getConsecutivo() + 1);
+                    }
+                    $this->getEntityManager()->persist($arDocumento);
+                }
+                if ($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
+                    $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arMovimiento->getTerceroRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arMovimiento->getTerceroRel()->getNumeroIdentificacion()]);
                     if (!$arClienteCartera) {
                         $arClienteCartera = new CarCliente();
                         $arClienteCartera->setFormaPagoRel($arMovimiento->getTerceroRel()->getFormaPagoRel());
@@ -675,7 +679,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $this->getEntityManager()->flush();
             }
         } else {
-           Mensajes::error("El movimiento ya fue aprobado aprobado");
+            Mensajes::error("El movimiento ya fue aprobado aprobado");
         }
     }
 
@@ -718,7 +722,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $em->flush();
     }
 
-    private function validarCantidadesAfectar($codigoMovimiento) {
+    private function validarCantidadesAfectar($codigoMovimiento)
+    {
         $em = $this->getEntityManager();
         $respuesta = "";
         //Validar importaciones
@@ -732,16 +737,16 @@ class InvMovimientoRepository extends ServiceEntityRepository
         if ($arrResultado) {
             foreach ($arrResultado as $arrElemento) {
                 $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($arrElemento['codigoImportacionDetalleFk']);
-                if($arImportacionDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
+                if ($arImportacionDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
                     $respuesta = "La importacion detalle " . $arrElemento['codigoImportacionDetalleFk'] . " tiene pendiente " . $arImportacionDetalle->getCantidadPendiente() .
                         " y no son suficientes para afectar " . $arrElemento['cantidad'];
                     break;
                 }
             }
         }
-        
+
         //Validar pedidos
-        if($respuesta == "") {
+        if ($respuesta == "") {
             $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
                 ->select('md.codigoPedidoDetalleFk')
                 ->addSelect("SUM(md.cantidad) AS cantidad")
@@ -752,7 +757,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             if ($arrResultado) {
                 foreach ($arrResultado as $arrElemento) {
                     $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($arrElemento['codigoPedidoDetalleFk']);
-                    if($arPedidoDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
+                    if ($arPedidoDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
                         $respuesta = "El pedido detalle " . $arrElemento['codigoPedidoDetalleFk'] . " tiene pendiente " . $arPedidoDetalle->getCantidadPendiente() .
                             " y no son suficientes para afectar " . $arrElemento['cantidad'];
                         break;
@@ -762,7 +767,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         }
 
         //Validar orden
-        if($respuesta == "") {
+        if ($respuesta == "") {
             $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
                 ->select('md.codigoOrdenDetalleFk')
                 ->addSelect("SUM(md.cantidad) AS cantidad")
@@ -773,7 +778,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             if ($arrResultado) {
                 foreach ($arrResultado as $arrElemento) {
                     $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($arrElemento['codigoOrdenDetalleFk']);
-                    if($arOrdenDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
+                    if ($arOrdenDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
                         $respuesta = "La orden detalle " . $arrElemento['codigoOrdenDetalleFk'] . " tiene pendiente " . $arOrdenDetalle->getCantidadPendiente() .
                             " y no son suficientes para afectar " . $arrElemento['cantidad'];
                         break;
@@ -783,7 +788,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         }
 
         //Validar remision
-        if($respuesta == "") {
+        if ($respuesta == "") {
             $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
                 ->select('md.codigoRemisionDetalleFk')
                 ->addSelect("SUM(md.cantidad) AS cantidad")
@@ -794,7 +799,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             if ($arrResultado) {
                 foreach ($arrResultado as $arrElemento) {
                     $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($arrElemento['codigoRemisionDetalleFk']);
-                    if($arRemisionDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
+                    if ($arRemisionDetalle->getCantidadPendiente() < $arrElemento['cantidad']) {
                         $respuesta = "La remision detalle " . $arrElemento['codigoRemisionDetalleFk'] . " tiene pendiente " . $arRemisionDetalle->getCantidadPendiente() .
                             " y no son suficientes para afectar " . $arrElemento['cantidad'];
                         break;
@@ -803,7 +808,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             }
         }
 
-        
+
         return $respuesta;
     }
 
@@ -833,7 +838,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
                     }
                 }
-                if($respuesta != ''){
+                if ($respuesta != '') {
                     Mensajes::error($respuesta);
                 } else {
                     $this->getEntityManager()->flush();
@@ -873,22 +878,22 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $error = "";
             foreach ($arr AS $codigo) {
                 $arMovimiento = $em->getRepository(InvMovimiento::class)->registroContabilizar($codigo);
-                if($arMovimiento) {
-                    if($arMovimiento['estadoAprobado'] == 1 && $arMovimiento['estadoContabilizado'] == 0) {
-                        if(!$arMovimiento['codigoComprobanteFk']) {
+                if ($arMovimiento) {
+                    if ($arMovimiento['estadoAprobado'] == 1 && $arMovimiento['estadoContabilizado'] == 0) {
+                        if (!$arMovimiento['codigoComprobanteFk']) {
                             $error = "El comprobante no esta configurado";
                             break;
                         }
                         $arComprobante = $em->getRepository(FinComprobante::class)->find($arMovimiento['codigoComprobanteFk']);
                         $arTercero = $em->getRepository(InvTercero::class)->terceroFinanciero($arMovimiento['codigoTerceroFk']);
                         //Contabilizar entradas
-                        if($arMovimiento['codigoDocumentoTipoFk'] == "COM") {
+                        if ($arMovimiento['codigoDocumentoTipoFk'] == "COM") {
                             //Cuenta inventario transito
                             $arrInventariosTransito = $em->getRepository(InvMovimientoDetalle::class)->cuentaInventarioTransito($codigo);
                             foreach ($arrInventariosTransito as $arrInventarioTransito) {
-                                if($arrInventarioTransito['codigoCuentaInventarioTransitoFk']) {
+                                if ($arrInventarioTransito['codigoCuentaInventarioTransitoFk']) {
                                     $arCuenta = $em->getRepository(FinCuenta::class)->find($arrInventarioTransito['codigoCuentaInventarioTransitoFk']);
-                                    if(!$arCuenta) {
+                                    if (!$arCuenta) {
                                         $error = "No se encuentra la cuenta " . $arrInventarioTransito['codigoCuentaInventarioTransitoFk'];
                                         break 2;
                                     }
@@ -911,9 +916,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
                             }
 
                             //Proveedor
-                            if($arMovimiento['codigoCuentaProveedorFk']) {
+                            if ($arMovimiento['codigoCuentaProveedorFk']) {
                                 $arCuenta = $em->getRepository(FinCuenta::class)->find($arMovimiento['codigoCuentaProveedorFk']);
-                                if(!$arCuenta) {
+                                if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta " . $arMovimiento['codigoCuentaProveedorFk'];
                                     break;
                                 }
@@ -936,11 +941,11 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         }
 
                         //Contabilizar facturas
-                        if($arMovimiento['codigoDocumentoTipoFk'] == "FAC") {
+                        if ($arMovimiento['codigoDocumentoTipoFk'] == "FAC") {
                             //Cliente
-                            if($arMovimiento['codigoCuentaClienteFk']) {
+                            if ($arMovimiento['codigoCuentaClienteFk']) {
                                 $arCuenta = $em->getRepository(FinCuenta::class)->find($arMovimiento['codigoCuentaClienteFk']);
-                                if(!$arCuenta) {
+                                if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta " . $arMovimiento['codigoCuentaClienteFk'];
                                     break;
                                 }
@@ -965,12 +970,12 @@ class InvMovimientoRepository extends ServiceEntityRepository
                             //Retenciones
                             $arrRetenciones = $em->getRepository(InvMovimientoDetalle::class)->retencionFacturaContabilizar($codigo);
                             foreach ($arrRetenciones as $arrRetencion) {
-                                if($arrRetencion['codigoImpuestoRetencionFk']) {
+                                if ($arrRetencion['codigoImpuestoRetencionFk']) {
                                     $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrRetencion['codigoImpuestoRetencionFk']);
-                                    if($arImpuesto) {
-                                        if($arImpuesto->getCodigoCuentaFk()) {
+                                    if ($arImpuesto) {
+                                        if ($arImpuesto->getCodigoCuentaFk()) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($arImpuesto->getCodigoCuentaFk());
-                                            if(!$arCuenta) {
+                                            if (!$arCuenta) {
                                                 $error = "No se encuentra la cuenta " . $arImpuesto->getCodigoCuentaFk();
                                                 break 2;
                                             }
@@ -996,9 +1001,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
 
                             //Autoretencion
                             $arrConfiguracionGeneral = $em->getRepository(GenConfiguracion::class)->invLiquidarMovimiento();
-                            if($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk'] && $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk']) {
+                            if ($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk'] && $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk']) {
                                 $arCuenta = $em->getRepository(FinCuenta::class)->find($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk']);
-                                if(!$arCuenta) {
+                                if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta " . $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk'];
                                     break;
                                 }
@@ -1016,7 +1021,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $em->persist($arRegistro);
 
                                 $arCuenta = $em->getRepository(FinCuenta::class)->find($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk']);
-                                if(!$arCuenta) {
+                                if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta " . $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk'];
                                     break;
                                 }
@@ -1041,12 +1046,12 @@ class InvMovimientoRepository extends ServiceEntityRepository
                             //Iva
                             $arrIvas = $em->getRepository(InvMovimientoDetalle::class)->ivaFacturaContabilizar($codigo);
                             foreach ($arrIvas as $arrIva) {
-                                if($arrIva['codigoImpuestoIvaFk']) {
+                                if ($arrIva['codigoImpuestoIvaFk']) {
                                     $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrIva['codigoImpuestoIvaFk']);
-                                    if($arImpuesto) {
-                                        if($arImpuesto->getCodigoCuentaFk()) {
+                                    if ($arImpuesto) {
+                                        if ($arImpuesto->getCodigoCuentaFk()) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($arImpuesto->getCodigoCuentaFk());
-                                            if(!$arCuenta) {
+                                            if (!$arCuenta) {
                                                 $error = "No se encuentra la cuenta " . $arImpuesto->getCodigoCuentaFk();
                                                 break 2;
                                             }
@@ -1073,9 +1078,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
                             //Cuenta de ingreso / ventas
                             $arrVentas = $em->getRepository(InvMovimientoDetalle::class)->ventaFacturaContabilizar($codigo);
                             foreach ($arrVentas as $arrVenta) {
-                                if($arrVenta['codigoCuentaVentaFk']) {
+                                if ($arrVenta['codigoCuentaVentaFk']) {
                                     $arCuenta = $em->getRepository(FinCuenta::class)->find($arrVenta['codigoCuentaVentaFk']);
-                                    if(!$arCuenta) {
+                                    if (!$arCuenta) {
                                         $error = "No se encuentra la cuenta " . $arrVenta['codigoCuentaVentaFk'];
                                         break 2;
                                     }
@@ -1107,7 +1112,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     break;
                 }
             }
-            if($error == "") {
+            if ($error == "") {
                 $em->flush();
             } else {
                 Mensajes::error($error);

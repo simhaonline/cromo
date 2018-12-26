@@ -47,7 +47,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->addSelect('dr.estadoAprobado')
             ->addSelect('dr.estadoAnulado')
             ->where('dr.codigoDespachoRecogidaPk <> 0')
-        ->leftJoin('dr.conductorRel', 'cond');
+            ->leftJoin('dr.conductorRel', 'cond');
         $fecha = new \DateTime('now');
         if ($session->get('filtroTteDespachoRecogidaFiltroFecha') == true) {
             if ($session->get('filtroTteDespachoRecogidaFechaDesde') != null) {
@@ -61,22 +61,22 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("dr.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
         }
-        if($session->get('filtroTteOperacion') != ''){
+        if ($session->get('filtroTteOperacion') != '') {
             $queryBuilder->andWhere("dr.codigoOperacionFk = '{$session->get('filtroTteOperacion')}'");
         }
-        if($session->get('filtroTteCodigoDespachoRecogida') != ''){
+        if ($session->get('filtroTteCodigoDespachoRecogida') != '') {
             $queryBuilder->andWhere("dr.codigoDespachoRecogidaPk = '{$session->get('filtroTteCodigoDespachoRecogida')}'");
         }
-        if($session->get('filtroTteNumeroDespachoRecogida') != ''){
+        if ($session->get('filtroTteNumeroDespachoRecogida') != '') {
             $queryBuilder->andWhere("dr.numero = '{$session->get('filtroTteNumeroDespachoRecogida')}'");
         }
-        if($session->get('filtroTteDespachoRecogidaVehiculoCodigo') != ''){
+        if ($session->get('filtroTteDespachoRecogidaVehiculoCodigo') != '') {
             $queryBuilder->andWhere("dr.codigoVehiculoFk = '{$session->get('filtroTteDespachoRecogidaVehiculoCodigo')}'");
         }
-        if($session->get('filtroTteDespachoRecogidaEstadoAprobado') != ''){
+        if ($session->get('filtroTteDespachoRecogidaEstadoAprobado') != '') {
             $queryBuilder->andWhere("dr.estadoAprobado = {$session->get('filtroTteDespachoRecogidaEstadoAprobado')}");
         }
-        if($session->get('filtroTteDespachoRecogidaEstadoAutorizado') != ''){
+        if ($session->get('filtroTteDespachoRecogidaEstadoAutorizado') != '') {
             $queryBuilder->andWhere("dr.estadoAutorizado = {$session->get('filtroTteDespachoRecogidaEstadoAutorizado')}");
         }
         $queryBuilder->orderBy('dr.fecha', 'DESC');
@@ -105,7 +105,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                         $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
                     }
                 }
-                if($respuesta != ''){
+                if ($respuesta != '') {
                     Mensajes::error($respuesta);
                 } else {
                     $this->getEntityManager()->flush();
@@ -191,8 +191,9 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function autorizar($arDespachoRecogida){
-        if($this->getEntityManager()->getRepository(TteRecogida::class)->contarDetalles($arDespachoRecogida->getCodigoDespachoRecogidaPk()) > 0){
+    public function autorizar($arDespachoRecogida)
+    {
+        if ($this->getEntityManager()->getRepository(TteRecogida::class)->contarDetalles($arDespachoRecogida->getCodigoDespachoRecogidaPk()) > 0) {
             $arDespachoRecogida->setEstadoAutorizado(1);
             $this->getEntityManager()->persist($arDespachoRecogida);
             $this->getEntityManager()->flush();
@@ -206,7 +207,8 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function desautorizar($arDespachoRecogida){
+    public function desautorizar($arDespachoRecogida)
+    {
         $arDespachoRecogida->setEstadoAutorizado(0);
         $this->getEntityManager()->persist($arDespachoRecogida);
         $this->getEntityManager()->flush();
@@ -217,18 +219,23 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function aprobar($arDespachoRecogida){
+    public function aprobar($arDespachoRecogida)
+    {
         $em = $this->getEntityManager();
-        if($arDespachoRecogida->getEstadoAutorizado()){
-            if ($arDespachoRecogida->getNumero() == 0 || $arDespachoRecogida->getNumero() == NULL) {
-                $arDespachoRecogidaTipo = $em->getRepository(TteDespachoRecogidaTipo::class)->find($arDespachoRecogida->getCodigoDespachoRecogidaTipoFk());
-                $arDespachoRecogida->setNumero($arDespachoRecogidaTipo->getConsecutivo());
-                $arDespachoRecogidaTipo->setConsecutivo($arDespachoRecogidaTipo->getConsecutivo() + 1);
-                $em->persist($arDespachoRecogidaTipo);
+        if ($arDespachoRecogida->getEstadoAutorizado() == 1 && $arDespachoRecogida->getEstadoAprobado() == 0) {
+            if ($arDespachoRecogida) {
+                if ($arDespachoRecogida->getNumero() == 0 || $arDespachoRecogida->getNumero() == NULL) {
+                    $arDespachoRecogidaTipo = $em->getRepository(TteDespachoRecogidaTipo::class)->find($arDespachoRecogida->getCodigoDespachoRecogidaTipoFk());
+                    $arDespachoRecogida->setNumero($arDespachoRecogidaTipo->getConsecutivo());
+                    $arDespachoRecogidaTipo->setConsecutivo($arDespachoRecogidaTipo->getConsecutivo() + 1);
+                    $em->persist($arDespachoRecogidaTipo);
+                }
+                $arDespachoRecogida->setEstadoAprobado(1);
+                $em->persist($arDespachoRecogida);
+                $em->flush();
+            } else {
+                Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
             }
-            $arDespachoRecogida->setEstadoAprobado(1);
-            $em->persist($arDespachoRecogida);
-            $em->flush();
         }
     }
 
@@ -237,8 +244,9 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function anular($arDespachoRecogida){
-        if($arDespachoRecogida->getEstadoAprobado()){
+    public function anular($arDespachoRecogida)
+    {
+        if ($arDespachoRecogida->getEstadoAprobado()) {
             $arDespachoRecogida->setEstadoAnulado(0);
             $this->getEntityManager()->persist($arDespachoRecogida);
             $this->getEntityManager()->flush();

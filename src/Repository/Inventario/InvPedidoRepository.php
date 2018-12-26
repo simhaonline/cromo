@@ -10,6 +10,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Utilidades\Mensajes;
+
 class InvPedidoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -20,7 +21,7 @@ class InvPedidoRepository extends ServiceEntityRepository
     public function lista()
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPedido::class,'p')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPedido::class, 'p')
             ->leftJoin('p.terceroRel', 't')
             ->leftJoin('p.pedidoTipoRel', 'pt')
             ->select('p.codigoPedidoPk')
@@ -37,14 +38,14 @@ class InvPedidoRepository extends ServiceEntityRepository
             ->addSelect('p.usuario')
             ->addSelect('t.nombreCorto AS terceroNombreCorto')
             ->where('p.codigoPedidoPk <> 0')
-            ->orderBy('p.codigoPedidoPk','DESC');
-        if($session->get('filtroInvNumeroPedido')) {
+            ->orderBy('p.codigoPedidoPk', 'DESC');
+        if ($session->get('filtroInvNumeroPedido')) {
             $queryBuilder->andWhere("p.numero = {$session->get('filtroInvNumeroPedido')}");
         }
-        if($session->get('filtroInvPedidoTipo')) {
+        if ($session->get('filtroInvPedidoTipo')) {
             $queryBuilder->andWhere("p.codigoPedidoTipoFk = '{$session->get('filtroInvPedidoTipo')}'");
         }
-        if($session->get('filtroInvCodigoTercero')){
+        if ($session->get('filtroInvCodigoTercero')) {
             $queryBuilder->andWhere("p.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
         }
         return $queryBuilder;
@@ -94,12 +95,12 @@ class InvPedidoRepository extends ServiceEntityRepository
      */
     public function autorizar($arPedido)
     {
-        if(!$arPedido->getEstadoAutorizado()) {
-            $registros = $this->getEntityManager()->createQueryBuilder()->from(InvPedidoDetalle::class,'pd')
+        if (!$arPedido->getEstadoAutorizado()) {
+            $registros = $this->getEntityManager()->createQueryBuilder()->from(InvPedidoDetalle::class, 'pd')
                 ->select('COUNT(pd.codigoPedidoDetallePk) AS registros')
                 ->where('pd.codigoPedidoFk = ' . $arPedido->getCodigoPedidoPk())
                 ->getQuery()->getSingleResult();
-            if($registros['registros'] > 0) {
+            if ($registros['registros'] > 0) {
                 $arPedido->setEstadoAutorizado(1);
                 $this->getEntityManager()->persist($arPedido);
                 $this->getEntityManager()->flush();
@@ -118,10 +119,10 @@ class InvPedidoRepository extends ServiceEntityRepository
      */
     public function desautorizar($arPedido)
     {
-        if($arPedido->getEstadoAutorizado()) {
-                $arPedido->setEstadoAutorizado(0);
-                $this->getEntityManager()->persist($arPedido);
-                $this->getEntityManager()->flush();
+        if ($arPedido->getEstadoAutorizado()) {
+            $arPedido->setEstadoAutorizado(0);
+            $this->getEntityManager()->persist($arPedido);
+            $this->getEntityManager()->flush();
 
         } else {
             Mensajes::error('El documento no esta autorizado');
@@ -135,12 +136,14 @@ class InvPedidoRepository extends ServiceEntityRepository
      */
     public function aprobar($arPedido)
     {
-        if($arPedido->getEstadoAutorizado() == 1 && $arPedido->getEstadoAprobado() == 0) {
-            $arPedidoTipo = $this->getEntityManager()->getRepository(InvPedidoTipo::class)->find($arPedido->getCodigoPedidoTipoFk());
-            if($arPedidoTipo){
-                $arPedidoTipo->setConsecutivo($arPedidoTipo->getConsecutivo() + 1);
-                $arPedido->setNumero($arPedidoTipo->getConsecutivo());
-                $this->getEntityManager()->persist($arPedidoTipo);
+        if ($arPedido->getEstadoAutorizado() == 1 && $arPedido->getEstadoAprobado() == 0) {
+            if ($arPedido->getNumero() == 0 || $arPedido->getNumero() == "") {
+                $arPedidoTipo = $this->getEntityManager()->getRepository(InvPedidoTipo::class)->find($arPedido->getCodigoPedidoTipoFk());
+                if ($arPedidoTipo) {
+                    $arPedidoTipo->setConsecutivo($arPedidoTipo->getConsecutivo() + 1);
+                    $arPedido->setNumero($arPedidoTipo->getConsecutivo());
+                    $this->getEntityManager()->persist($arPedidoTipo);
+                }
             }
             $arPedido->setEstadoAprobado(1);
             $this->getEntityManager()->persist($arPedido);
@@ -159,10 +162,10 @@ class InvPedidoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $validacion = true;
-        if($arPedido->getEstadoAprobado() == 1 && $arPedido->getEstadoAnulado() == 0) {
+        if ($arPedido->getEstadoAprobado() == 1 && $arPedido->getEstadoAnulado() == 0) {
             $arPedidoDetalles = $em->getRepository(InvPedidoDetalle::class)->findBy(array('codigoPedidoFk' => $arPedido->getCodigoPedidoPk()));
             foreach ($arPedidoDetalles as $arPedidoDetalle) {
-                if($arPedidoDetalle->getCantidadAfectada() > 0) {
+                if ($arPedidoDetalle->getCantidadAfectada() > 0) {
                     Mensajes::error("No se puede anular el documento porque uno de sus detalles es usado");
                     $validacion = false;
                     break;
@@ -177,7 +180,7 @@ class InvPedidoRepository extends ServiceEntityRepository
                 $arPedidoDetalle->setVrPrecio(0);
                 $em->persist($arPedidoDetalle);
             }
-            if($validacion == true) {
+            if ($validacion == true) {
                 $arPedido->setEstadoAnulado(1);
                 $arPedido->setVrSubtotal(0);
                 $arPedido->setVrIva(0);
@@ -198,17 +201,18 @@ class InvPedidoRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function actualizarDetalles($codigoPedido, $arrControles){
+    public function actualizarDetalles($codigoPedido, $arrControles)
+    {
         $em = $this->getEntityManager();
-        if($this->contarDetalles($codigoPedido) > 0){
+        if ($this->contarDetalles($codigoPedido) > 0) {
             $arrCantidad = $arrControles['TxtCantidad'];
             $arrPrecio = $arrControles['TxtPrecio'];
             $arrCodigo = $arrControles['TxtCodigo'];
             foreach ($arrCodigo as $codigo) {
                 $arPedidoDetalle = $em->getRepository(InvPedidoDetalle::class)->find($codigo);
-                $arPedidoDetalle->setCantidad( $arrCantidad[$codigo] != '' ? $arrCantidad[$codigo] :0 );
-                $arPedidoDetalle->setCantidadPendiente( $arrCantidad[$codigo] != '' ? $arrCantidad[$codigo] :0 );
-                $arPedidoDetalle->setVrPrecio( $arrPrecio[$codigo] != '' ? $arrPrecio[$codigo] : 0);
+                $arPedidoDetalle->setCantidad($arrCantidad[$codigo] != '' ? $arrCantidad[$codigo] : 0);
+                $arPedidoDetalle->setCantidadPendiente($arrCantidad[$codigo] != '' ? $arrCantidad[$codigo] : 0);
+                $arPedidoDetalle->setVrPrecio($arrPrecio[$codigo] != '' ? $arrPrecio[$codigo] : 0);
                 $em->persist($arPedidoDetalle);
             }
         }
@@ -257,7 +261,7 @@ class InvPedidoRepository extends ServiceEntityRepository
                         $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
                     }
                 }
-                if($respuesta != ''){
+                if ($respuesta != '') {
                     Mensajes::error($respuesta);
                 } else {
                     $this->getEntityManager()->flush();

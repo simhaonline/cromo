@@ -77,13 +77,17 @@
                 {{ form_widget(form.btnFiltrar) }}
                 <div class="btn-group btn-group-sm">
                     <div class="dropdown">
-                        <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="generar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="generar"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             Generar
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="generar">
-                            <li><a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro_ilimitada') }}">Ilimitada</a></li>
-                            <li><a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro_worldOffice') }}">World Office</a></li>
+                            <li><a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro_ilimitada') }}">Ilimitada</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('financiero_utilidad_contabilidad_intercambio_registro_worldOffice') }}">World
+                                    Office</a></li>
                         </ul>
                     </div>
                 </div>
@@ -133,22 +137,21 @@
             </tr>
         {% endfor %}
     </table>
-    <div>
-        <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRegistros.getTotalItemCount }}</span>
-            </div>
-        </div>
-
-        <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-            {{ knp_pagination_render(arRegistros) }}
-        </div>
-        <div class="btn-toolbar" style="float: right">
-            <div class="btn-group">
-                {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            </div>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arRegistros.getTotalItemCount }}
+            </span>
         </div>
     </div>
-
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
+    <br>
+    <br>
+    <br>
     {{ form_end(form) }}
 {% endblock %}
 

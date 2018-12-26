@@ -183,6 +183,7 @@ class RegistroController extends Controller
                 $sheet->setCellValue('L'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('Y-m-d') : '');
                 $sheet->setCellValue('M'.$j,'');
                 $sheet->setCellValue('N'.$j,$arRegistro['nombreCorto']);
+                $j++;
             }
             header('Content-Type: application/vnd.ms-excel');
             header("Content-Disposition: attachment;filename='DetallesContables.xls'");

@@ -5,7 +5,7 @@
         {% for llave,datos in arMovimientos %}
             <tr>
                 {% for key,dato in datos %}
-                    {{ validarTipo(dato) }}
+                    <td>{{ dato }}</td>
                 {% endfor %}
             </tr>
         {% endfor %}

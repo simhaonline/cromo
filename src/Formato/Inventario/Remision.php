@@ -91,11 +91,10 @@ class Remision extends \FPDF
         $this->SetXY(10, $intY + 12);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, "COMENTARIO", 1, 0, 'L', 1);
+        $this->Text(11, 55, "COMENTARIO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-//        $this->Cell(160, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
-        $this->MultiCell(160, 4, $arRemision->getComentario(), 1, 'L');
+        $this->MultiCell(190, 4,  "                               ". utf8_decode($arRemision->getComentario()), 1, 'L');
 
         $this->EncabezadoDetalles();
 
@@ -112,10 +111,10 @@ class Remision extends \FPDF
         $this->SetFont('', 'B', 7);
 
         //creamos la cabecera de la tabla.
-        $w = array(15, 35, 15, 30, 30, 15, 25, 25);
+        $w = array(10, 85, 15, 20, 15, 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
-                $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
+                $this->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
             else
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
 
@@ -140,14 +139,14 @@ class Remision extends \FPDF
         //$w = array(15, 35, 15, 30, 30, 15, 25, 25);
         //$header = array('COD', 'ITEM', 'CANT', 'MARCA', 'PRECIO', 'IVA', 'SUBTOTAL', 'TOTAL');
         foreach ($arRemisionDetalles as $arRemisionDetalle) {
-            $pdf->Cell(15, 4, $arRemisionDetalle->getCodigoRemisionDetallePk(), 1, 0, 'L');
-            $pdf->Cell(35, 4, utf8_decode($arRemisionDetalle->getItemRel()->getNombre()), 1, 0, 'L');
+            $pdf->Cell(10, 4, $arRemisionDetalle->getCodigoRemisionDetallePk(), 1, 0, 'L');
+            $pdf->Cell(85, 4, utf8_decode($arRemisionDetalle->getItemRel()->getNombre()), 1, 0, 'L');
             $pdf->Cell(15, 4, $arRemisionDetalle->getCantidad(), 1, 0, 'C');
-            $pdf->Cell(30, 4, $arRemisionDetalle->getItemRel()->getMarcaRel()->getNombre(), 1, 0, 'C');
-            $pdf->Cell(30, 4, number_format($arRemisionDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'C');
-            $pdf->Cell(15, 4, number_format($arRemisionDetalle->getVrIva(), 0, '.', ','), 1, 0, 'C');
-            $pdf->Cell(25, 4, number_format($arRemisionDetalle->getVrSubtotal(), 0, '.', ','), 1, 0, 'C');
-            $pdf->Cell(25, 4, number_format($arRemisionDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'C');
+            $pdf->Cell(20, 4, $arRemisionDetalle->getItemRel()->getMarcaRel()->getNombre(), 1, 0, 'C');
+            $pdf->Cell(15, 4, number_format($arRemisionDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($arRemisionDetalle->getVrIva(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($arRemisionDetalle->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($arRemisionDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

@@ -62,7 +62,7 @@ class ServicioTipoController extends ControllerListenerGeneral
      */
     public function nuevo(Request $request, $id){
         $em = $this->getDoctrine()->getManager();
-        if ($id === 0) {
+        if ($id == 0) {
             $arServicioTipo = new InvServicioTipo();
         } else {
             $arServicioTipo = $em->getRepository(InvServicioTipo::class)->find($id);
@@ -71,7 +71,7 @@ class ServicioTipoController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if($em->getRepository('App:Inventario\InvServicioTipo')->find($form->get('codigoServicioTipoPk')->getData()) && $id===0){
+                if($em->getRepository('App:Inventario\InvServicioTipo')->find($form->get('codigoServicioTipoPk')->getData()) && $id==0){
                     Mensajes::error("Ya existe un Servicio tipo con ese mismo nombre");
                 }
                 else{

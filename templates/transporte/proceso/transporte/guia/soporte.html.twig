@@ -67,6 +67,9 @@
     </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
+            <a href="javascript:abrirVentana3('{{ path('transporte_proceso_transporte_guia_soporte_archivo') }}','cargarSoporte',600,900)" class="btn btn-sm btn-default">Soporte excel</a>
+        </div>
+        <div class="btn-group">
             {{ form_widget(form.btnSoporte, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
     </div>

@@ -831,8 +831,10 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arGuia->setFechaEntrega($fechaHora);
                         $arGuia->setEstadoEntregado(1);
                         if (isset($arrControles['chkSoporte']) && $arrControles['chkSoporte']) {
-                            $arGuia->setEstadoSoporte(1);
-                            $arGuia->setFechaSoporte(new  \DateTime('now'));
+                            if(!$arGuia->getEstadoSoporte()){
+                                $arGuia->setEstadoSoporte(1);
+                                $arGuia->setFechaSoporte(new  \DateTime('now'));
+                            }
                         }
                         $em->persist($arGuia);
                     }
@@ -855,9 +857,13 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($arrGuias) {
             foreach ($arrGuias AS $codigoGuia) {
                 $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-                $arGuia->setFechaSoporte(new \DateTime("now"));
-                $arGuia->setEstadoSoporte(1);
-                $em->persist($arGuia);
+                if($arGuia){
+                    if($arGuia->getEstadoDespachado() && $arGuia->getEstadoEntregado() && !$arGuia->getEstadoSoporte()){
+                        $arGuia->setFechaSoporte(new \DateTime("now"));
+                        $arGuia->setEstadoSoporte(1);
+                        $em->persist($arGuia);
+                    }
+                }
             }
             $em->flush();
         }

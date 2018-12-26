@@ -95,19 +95,19 @@ class EntregaController extends Controller
                         $highestRow = $worksheet->getHighestRow();
                         for ($row = 2; $row <= $highestRow; ++$row) {
                             $cell = $worksheet->getCellByColumnAndRow(1, $row);
-                            if($cell->getValue() != ''){
+                            if ($cell->getValue() != '') {
                                 $arrCargas [$i]['guia'] = $cell->getValue();
                             } else {
                                 $arrSinNumero[] = $cell->getRow();
                             }
                             $cell = $worksheet->getCellByColumnAndRow(2, $row);
-                            if($cell->getValue() != ''){
+                            if ($cell->getValue() != '') {
                                 $arrCargas [$i]['fecha'] = $cell->getValue();
                             } else {
                                 $arrSinFecha[] = $cell->getRow();
                             }
                             $cell = $worksheet->getCellByColumnAndRow(3, $row);
-                            if($cell->getValue() != ''){
+                            if ($cell->getValue() != '') {
                                 $arrCargas [$i]['hora'] = $cell->getValue();
                             } else {
                                 $arrSinHora[] = $cell->getRow();
@@ -115,18 +115,18 @@ class EntregaController extends Controller
                             $i++;
                         }
                     }
-                    if(count($arrSinNumero) > 0){
-                        Mensajes::error('Las siguientes filas no tienen numero de guia: '. implode(', ', $arrSinNumero));
-                    } elseif(count($arrSinFecha)){
-                        Mensajes::error('Las siguientes filas no tienen fecha de entrega: '. implode(', ', $arrSinFecha));
-                    } elseif (count($arrSinHora)){
-                        Mensajes::error('Las siguientes filas no tienen hora de entrega: '. implode(', ', $arrSinHora));
+                    if (count($arrSinNumero) > 0) {
+                        Mensajes::error('Las siguientes filas no tienen id de guia: ' . implode(', ', $arrSinNumero));
+                    } elseif (count($arrSinFecha)) {
+                        Mensajes::error('Las siguientes filas no tienen fecha de entrega: ' . implode(', ', $arrSinFecha));
+                    } elseif (count($arrSinHora)) {
+                        Mensajes::error('Las siguientes filas no tienen hora de entrega: ' . implode(', ', $arrSinHora));
                     } else {
                         if ($arrCargas) {
                             foreach ($arrCargas as $arrCarga) {
                                 $arrCarga['fecha'] = str_replace("'", '', $arrCarga['fecha']);
                                 $arrCarga['hora'] = str_replace("'", '', $arrCarga['hora']);
-                                $arGuia = $em->getRepository(TteGuia::class)->findOneBy(['numero' => $arrCarga['guia']]);
+                                $arGuia = $em->find(TteGuia::class, $arrCarga['guia']);
                                 if ($arGuia) {
                                     if ($arGuia->getEstadoDespachado() && !$arGuia->getEstadoEntregado()) {
                                         $arGuia->setEstadoEntregado(1);
@@ -142,8 +142,8 @@ class EntregaController extends Controller
                                 }
                             }
                         }
-                        if(count($arrNoEncontrado) > 0){
-                            Mensajes::error('Las guías con los siguientes numero no fueron encontradas: '.implode(', ',$arrNoEncontrado));
+                        if (count($arrNoEncontrado) > 0) {
+                            Mensajes::error('Las guías con los siguientes numero no fueron encontradas: ' . implode(', ', $arrNoEncontrado));
                         } else {
                             $em->flush();
                             echo "<script language='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

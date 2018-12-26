@@ -2,7 +2,6 @@
 
     <div class="well padding-bottom-10" >
         {% if conexion.usuario %}
-            {#<input type="hidden" name="token" value="{{ csrf_token('crear-publicacion') }}" />#}
             <textarea  rows="2" class="form-control publicar" onkeydown="inputPublicacion()" onkeyup="inputPublicacion()" placeholder="¿Qué estas pensando?"></textarea>
             <div class="margin-top-10">
                 <button disabled type="button" onclick="crearPublicacion()" class="btn btn-sm btn-primary pull-right btnPublicar">
@@ -70,17 +69,20 @@
                             <li>
                                 <a href="javascript:void(0);" class="text-success"><i class="fa fa-thumbs-up"></i> {% if publicacion.meGusta>0%}({{ publicacion.meGusta }}){% endif %}</a>
                             </li>
+
                             <li>
-                                <a href="javascript:void(0);" class="text-muted">{% if publicacion.totalComentarios>2 %}<a style="color: black; cursor: pointer" onclick="verComentarios({{ keyPub }})">Ver todos los comentarios </a>({{ publicacion.totalComentarios }}){% endif %}</a>
+                                <a href="javascript:void(0);" class="text-muted"><a style="color: black; cursor: pointer" onclick="verComentarios({{ publicacion.publicacion }},{{ keyPub }})">Ver todos los comentarios </a><div class="totalComentarios-{{ publicacion.publicacion }}" style="display: -webkit-inline-flex">({{ publicacion.totalComentarios }})</div></a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
-                            </li>
+                            {%  if publicacion.usuario == username %}
+                                <li>
+                                    <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
+                                </li>
+                            {% endif %}
                         </ul>
-                        <div class="publicaciones">
+                        <div class="publicaciones-{{publicacion.publicacion}}">
                             {% if publicacion.comentarios|length>0 %}
                                 {% for key, comentario in publicacion.comentarios%}
                                     {% if key<2 %}
@@ -95,19 +97,28 @@
                                                 <li>
                                                     <a href="javascript:void(0);" class="text-success"><i class="fa fa-thumbs-up"></i></a>
                                                 </li>
+
+                                                {%  if comentario.usuario == username %}
+                                                    <li>
+                                                        <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
+                                                    </li>
+                                                {% endif %}
                                             </ul>
 
                                         </li>
                                     {% endif %}
                                 {% endfor %}
                             {% endif %}
-                            <div class="masComentarios-{{keyPub}}">
+                            <div class="masComentarios-{{publicacion.publicacion}}">
                             </div>
                             <li  style="margin-top: 1em;">
                                 <div class="input-group wall-comment-reply">
-                                    <input id="btn-input" type="text" class="form-control comentar-{{keyPub}}" placeholder="Comentar...">
+                                    <input id="btn-input" type="text" class="form-control comentar-{{publicacion.publicacion}}" placeholder="Comentar..."  onkeydown="inputComentar({{publicacion.publicacion}})" onkeyup="inputComentar({{publicacion.publicacion}})">
                                     <span class="input-group-btn">
-                            <button class="btn btn-primary" id="btn-chat" onclick="crearComentario({{ publicacion.publicacion }}, {{keyPub}})">
+                            <button disabled class="btn btn-primary btnComentar-{{publicacion.publicacion}}" id="btn-chat" onclick="crearComentario({{ publicacion.publicacion }}, {{keyPub}})">
 							    <i class="fas fa-play"></i>
 							</button> </span>
                                 </div>
@@ -129,14 +140,14 @@
         var api={{ api|json_encode|raw}};
         var username="{{username }}";
         var auxPublicacion=0;
-        function verComentarios(key){
+        function verComentarios(codigo, key){
             var html='';
-            $(`.masComentarios-${key}`).html(html);
+            $(`.masComentarios-${codigo}`).html(html);
             var data={{ publicaciones|json_encode|raw }};
             for(var i=2;i<=data[key]['comentarios'].length;i++ ) {
                 html = `<li class='message message-reply'><img src='{{ asset('img/avatars/3.png') }}' class='online' alt='user'><span class='message-text'> <a href='javascript:void(0);' class='username'>Serman Syla</a>${data[key]['comentarios'][i]['texto']}</span><ul class='list-inline font-xs'><li><a href='javascript:void(0);' class='text-muted'>1 minute ago </a></li><li><a href='javascript:void(0);'class='text-success'><i class='fa fa-thumbs-up'></i></a></li></ul></li>`;
                 // html="<h1>holaaa</h1>"
-                $(`.masComentarios-${key}`).append(html);
+                $(`.masComentarios-${codigo}`).append(html);
             }
         }
 
@@ -149,14 +160,14 @@
                 url: `${servidor}${api['crearComentario']}${username}`,
                 type: "POST",
                 dataType: "json",
-                data: JSON.stringify({datos:{texto:$(`.comentar-${key}`).val(),comentario:codigoPublicacion}}),
+                data: JSON.stringify({datos:{texto:$(`.comentar-${codigoPublicacion}`).val(),comentario:codigoPublicacion}}),
                 success: function (respuestas) {
                     if(respuestas.estado){
 
 
                         html=`<li class="message message-reply">
                                             <img src="{{ asset('img/avatars/3.png') }}" class="online" alt="user">
-                                            <span class="message-text"> <a href="javascript:void(0);" class="username">Serman Syla</a> ${respuestas.data.texto}</span>
+                                            <span class="message-text"> <a href="javascript:void(0);" class="username">Serman Syla</a> ${respuestas.datos.texto}</span>
 
                                             <ul class="list-inline font-xs">
                                                 <li>
@@ -165,11 +176,19 @@
                                                 <li>
                                                     <a href="javascript:void(0);" class="text-success"><i class="fa fa-thumbs-up"></i></a>
                                                 </li>
+                                                <li>
+                                                        <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
+                                                    </li>
                                             </ul>
 
                                         </li>`;
-                        $(`.publicaciones`).prepend(html);
-                        $(`.comentar-${key}`).val("");
+                        $(`.publicaciones-${codigoPublicacion}`).prepend(html);
+                        $(`.totalComentarios-${codigoPublicacion}`).html("");
+                        $(`.totalComentarios-${codigoPublicacion}`).append(`${respuestas.datos.totalComentarios}`);
+                        $(`.comentar-${codigoPublicacion}`).val("");
                     }
                     else{
                         $(".btnPublicar").prop("disabled",false);
@@ -291,8 +310,15 @@
             else{
                 $(".btnPublicar").prop("disabled",true);
             }
+        }
 
-
-        } //A
+        function inputComentar(codigoPublicacion) {
+            if($(`.comentar-${codigoPublicacion}`).val().length >0){
+                $(`.btnComentar-${codigoPublicacion}`).prop("disabled",false);
+            }
+            else{
+                $(`.btnComentar-${codigoPublicacion}`).prop("disabled",true);
+            }
+        }
     </script>
 {% endblock %}

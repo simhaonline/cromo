@@ -1,10 +1,11 @@
 <div class="col-sm-12 col-md-12 col-lg-6" >
 
-    <form method="post" class="well padding-bottom-10" onsubmit="return false;">
+    <div class="well padding-bottom-10" >
         {% if conexion.usuario %}
+            {#<input type="hidden" name="token" value="{{ csrf_token('crear-publicacion') }}" />#}
             <textarea  rows="2" class="form-control publicar" onkeydown="inputPublicacion()" onkeyup="inputPublicacion()" placeholder="¿Qué estas pensando?"></textarea>
             <div class="margin-top-10">
-                <button disabled type="submit" onclick="crearPublicacion()" class="btn btn-sm btn-primary pull-right btnPublicar">
+                <button disabled type="button" onclick="crearPublicacion()" class="btn btn-sm btn-primary pull-right btnPublicar">
                     Publicar
                 </button>
                 <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Localizacion"><i class="fa fa-location-arrow"></i></a>
@@ -24,6 +25,7 @@
                 <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar archivo"><i class="fa fa-file"></i></a>
             </div>
         {% endif %}
+        <div class="publicacionNueva">
         {% for keyPub, publicacion in publicaciones %}
             <div class="timeline-seperator text-center"> <span>{{ publicacion.fecha }}</span>
                 <div class="btn-group pull-right">
@@ -116,10 +118,14 @@
             </div>
 
         {%  endfor%}
-
+        </div>
     </div>
+
+
+
     {% block javascripts %}
     <script>
+        var auxPublicacion=0;
         function verComentarios(key){
             var html='';
             $(`.masComentarios-${key}`).html(html);
@@ -132,17 +138,105 @@
         }
 
         function crearPublicacion() {
+            // var token= $('input[name="token"]').val();
+            $(".btnPublicar").prop("disabled",true);
             var servidor="{{servidor}}";
             var api={{ api|json_encode|raw}};
             var username="{{username }}";
+            var data={{ publicaciones|json_encode|raw }};
+            {#alert("{{ servidor ~ api['crearPublicacion'] ~ username }}");#}
+            {#return false;#}
             $.ajax({
+                headers:{
+                    // 'X-CSRF-TOKEN': token,
+                    'Content-type': 'application/json',
+                },
                 url: `${servidor}${api['crearPublicacion']}${username}`,
                 type: "POST",
                 dataType: "json",
-                data: JSON.stringify({data:{texto:$(".publicar").val()}}),
+                data: JSON.stringify({datos:{texto:$(".publicar").val()}}),
                 success: function (respuestas) {
-                    console.log(respuestas);
-                    // $('#csrf_token').val(respuestas.token);
+                    if(respuestas.estado){
+                        $(".btnPublicar").prop("disabled",false);
+                        if(auxPublicacion===0){
+                            auxPublicacion=data.length;
+                        }
+                        html=`<div class="timeline-seperator text-center"><span>${respuestas.datos.fecha}</span>
+                <div class="btn-group pull-right">
+                    <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><span class="caret single"></span></a>
+                    <ul class="dropdown-menu text-left">
+                        <li>
+                            <a href="javascript:void(0);">Hide this post</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">Hide future posts from this user</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">Mark as spam</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="chat-body no-padding profile-message">
+                <ul>
+                    <li class="message">
+                        <img src="{{ app.session.get('foto_perfil') }}" class="online foto_perfil" alt="sunny">
+                        <span class="message-text" style="width: 100%">
+                                                <a style="
+                                                        display: flex;
+                                                        cursor: auto;
+                                                        justify-content: end;
+                                                        width: 100%;
+                                                        padding-right: 4em;
+                                                        color: #3276b1;"
+                                                   href="javascript:void(0);"
+                                                   class="username">
+                                                    {{ arUsuario.nombreCorto }}
+                                                    <small class="text-muted ultra-light" style="display: flex;margin-left: auto;"> Hace ${respuestas.datos.tiempoTranscurrido}</small>
+                                                </a>
+                            ${ respuestas.datos.texto }
+                                            </span>
+                    </li>
+                    <ul class="list-inline font-xs" style="padding-left: 7.5em;">
+                        <li>
+                            <a href="javascript:void(0);" class="text-info"><i class="fa fa-reply"></i> Compartir</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="text-success"><i class="fa fa-thumbs-up"></i> ${respuestas.datos.meGusta>0?"("+respuestas.datos.meGusta+")":"" }</a>
+                        </li>
+                        <li>
+                         <a href="javascript:void(0);" class="text-muted">${respuestas.datos.totalComentarios>2?`<a style="color: black; cursor: pointer" onclick="verComentarios(${auxPublicacion})">Ver todos los comentarios </a>(${respuestas.datos.totalComentarios})`:""}
+                            {#<a href="javascript:void(0);" class="text-muted">${publicacion.totalComentarios>2:"<a style='color: black; cursor: pointer' onclick='verComentarios("${auxPublicacion+1}")'>Ver todos los comentarios </a>({{ publicacion.totalComentarios }})" }{% endif %}</a>#}
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
+                        </li>
+                    </ul>
+                    <div class="publicaciones">
+                        <div class="masComentarios-${auxPublicacion}">
+                        </div>
+                        <li  style="margin-top: 1em;">
+                            <div class="input-group wall-comment-reply">
+                                <input id="btn-input" type="text" class="form-control" placeholder="Comentar...">
+                                <span class="input-group-btn">
+                            <button class="btn btn-primary" id="btn-chat">
+							    <i class="fas fa-play"></i>
+							</button> </span>
+                            </div>
+                        </li>
+                    </div>
+                </ul>
+
+            </div>`;
+                        $(`.publicacionNueva`).prepend(html);
+                        $(`.publicar`).val("");
+                    }
+                    else{
+                        $(".btnPublicar").prop("disabled",false);
+                    }
                 },
                 error: function (error) {
                     console.log(error);

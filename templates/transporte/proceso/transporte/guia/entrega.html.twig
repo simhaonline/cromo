@@ -76,20 +76,20 @@
         </div>
         <div class="btn-toolbar" style="float: right">
             <div class="btn-group">
-                {{ form_widget(form.btnEntrega, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                <a href="javascript:abrirVentana3('{{ path('transporte_proceso_transporte_guia_entrega_archivo') }}','cargarGuias',600,900)" class="btn btn-default btn-sm">Entregar excel</a>
             </div>
             <div class="btn-group">
-                <a href="javascript:abrirVentana3('{{ path('transporte_proceso_transporte_guia_entrega_archivo') }}','cargarGuias',600,900)" class="btn btn-default btn-sm">Cargar guías</a>
+                {{ form_widget(form.btnEntrega, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             </div>
         </div>
     </div>
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
     <br /><br />
     <input type="text" id="txtGuiaCodigo"><button id="btnEntregaIndividual">Entregar</button>
     <input type="date" id="txtFecha" name="fecha" value="{{ "now"|date("Y-m-d") }}">
     <input type="time" id="txtHora" name="hora" value="{{ "now"|date("H:i") }}">
     <label><input type="checkbox" id="chkSoporte" name="chkSoporte" value="si"> Soporte</label>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

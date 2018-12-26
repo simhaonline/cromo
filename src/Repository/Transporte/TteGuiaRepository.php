@@ -823,13 +823,17 @@ class TteGuiaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arrGuias) {
-            if (count($arrGuias) > 0) {
+            if ($arrGuias) {
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
                     if ($arGuia->getEstadoDespachado() == 1 && $arGuia->getEstadoEntregado() == 0) {
                         $fechaHora = date_create($arrControles['txtFechaEntrega' . $codigoGuia] . " " . $arrControles['txtHoraEntrega' . $codigoGuia]);
                         $arGuia->setFechaEntrega($fechaHora);
                         $arGuia->setEstadoEntregado(1);
+                        if (isset($arrControles['chkSoporte']) && $arrControles['chkSoporte']) {
+                            $arGuia->setEstadoSoporte(1);
+                            $arGuia->setFechaSoporte(new  \DateTime('now'));
+                        }
                         $em->persist($arGuia);
                     }
                 }
@@ -849,15 +853,13 @@ class TteGuiaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arrGuias) {
-            if (count($arrGuias) > 0) {
-                foreach ($arrGuias AS $codigoGuia) {
-                    $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-                    $arGuia->setFechaSoporte(new \DateTime("now"));
-                    $arGuia->setEstadoSoporte(1);
-                    $em->persist($arGuia);
-                }
-                $em->flush();
+            foreach ($arrGuias AS $codigoGuia) {
+                $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+                $arGuia->setFechaSoporte(new \DateTime("now"));
+                $arGuia->setEstadoSoporte(1);
+                $em->persist($arGuia);
             }
+            $em->flush();
         }
         return true;
     }
@@ -1653,7 +1655,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $arDespachoDetalle->setUnidades($arGuia->getUnidades());
                 $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
                 $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                if($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
+                if ($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
                     $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
                 } else {
                     $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
@@ -1713,7 +1715,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $arDespachoDetalle->setUnidades($arGuia->getUnidades());
                 $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
                 $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                if($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
+                if ($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
                     $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
                 } else {
                     $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());

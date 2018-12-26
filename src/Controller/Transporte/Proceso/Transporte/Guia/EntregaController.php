@@ -133,6 +133,7 @@ class EntregaController extends Controller
                                         $arGuia->setFechaEntrega(date_create($arrCarga['fecha'] . ' ' . $arrCarga['hora']));
                                         if ($form->get('chkSoporte')->getData()) {
                                             $arGuia->setEstadoSoporte(1);
+                                            $arGuia->setFechaSoporte(new \DateTime('now'));
                                         }
                                         $em->persist($arGuia);
                                     }

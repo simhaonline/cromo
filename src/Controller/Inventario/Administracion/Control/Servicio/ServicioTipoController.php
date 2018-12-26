@@ -10,6 +10,7 @@ use App\Entity\Inventario\InvServicioTipo;
 use App\Form\Type\Inventario\ServicioTipoType;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use function PHPSTORM_META\type;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -62,7 +63,7 @@ class ServicioTipoController extends ControllerListenerGeneral
      */
     public function nuevo(Request $request, $id){
         $em = $this->getDoctrine()->getManager();
-        if ($id == 0) {
+        if ($id == "0" ) {
             $arServicioTipo = new InvServicioTipo();
         } else {
             $arServicioTipo = $em->getRepository(InvServicioTipo::class)->find($id);

@@ -105,9 +105,9 @@
                             </div>
                             <li  style="margin-top: 1em;">
                                 <div class="input-group wall-comment-reply">
-                                    <input id="btn-input" type="text" class="form-control" placeholder="Comentar...">
+                                    <input id="btn-input" type="text" class="form-control comentar-{{keyPub}}" placeholder="Comentar...">
                                     <span class="input-group-btn">
-                            <button class="btn btn-primary" id="btn-chat">
+                            <button class="btn btn-primary" id="btn-chat" onclick="crearComentario({{ publicacion.publicacion }}, {{keyPub}})">
 							    <i class="fas fa-play"></i>
 							</button> </span>
                                 </div>
@@ -125,6 +125,9 @@
 
     {% block javascripts %}
     <script>
+        var servidor="{{servidor}}";
+        var api={{ api|json_encode|raw}};
+        var username="{{username }}";
         var auxPublicacion=0;
         function verComentarios(key){
             var html='';
@@ -137,15 +140,52 @@
             }
         }
 
+        function crearComentario(codigoPublicacion, key){
+            $.ajax({
+                headers:{
+                    // 'X-CSRF-TOKEN': token,
+                    'Content-type': 'application/json',
+                },
+                url: `${servidor}${api['crearComentario']}${username}`,
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify({datos:{texto:$(`.comentar-${key}`).val(),comentario:codigoPublicacion}}),
+                success: function (respuestas) {
+                    if(respuestas.estado){
+
+
+                        html=`<li class="message message-reply">
+                                            <img src="{{ asset('img/avatars/3.png') }}" class="online" alt="user">
+                                            <span class="message-text"> <a href="javascript:void(0);" class="username">Serman Syla</a> ${respuestas.data.texto}</span>
+
+                                            <ul class="list-inline font-xs">
+                                                <li>
+                                                    <a href="javascript:void(0);" class="text-muted">1 minute ago </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0);" class="text-success"><i class="fa fa-thumbs-up"></i></a>
+                                                </li>
+                                            </ul>
+
+                                        </li>`;
+                        $(`.publicaciones`).prepend(html);
+                        $(`.comentar-${key}`).val("");
+                    }
+                    else{
+                        $(".btnPublicar").prop("disabled",false);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
         function crearPublicacion() {
             // var token= $('input[name="token"]').val();
             $(".btnPublicar").prop("disabled",true);
-            var servidor="{{servidor}}";
-            var api={{ api|json_encode|raw}};
-            var username="{{username }}";
+
             var data={{ publicaciones|json_encode|raw }};
-            {#alert("{{ servidor ~ api['crearPublicacion'] ~ username }}");#}
-            {#return false;#}
             $.ajax({
                 headers:{
                     // 'X-CSRF-TOKEN': token,

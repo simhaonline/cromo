@@ -103,69 +103,69 @@ class Factura3 extends \FPDF
         }
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 44);
+        $this->SetXY(76, 25);
         $this->Cell(15, 4, 'SEMANTICA DIGITAL SAS', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 48);
+        $this->SetXY(82, 29);
         $this->Cell(15, 4, 'NIT  901192048-4', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 52);
+        $this->SetXY(61, 33);
         $this->Cell(15, 4, 'CALLE 84 NUMERO 58 - 50 ITAGUI APTO 1414', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 56);
+        $this->SetXY(85, 37);
         $this->Cell(15, 4, 'TEL 3220770  ', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 63);
+        $this->SetXY(18.5, 44);
         $this->Cell(15, 4, 'CLIENTE:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
         $this->SetX(52);
         $this->Cell(15, 4, utf8_decode($arMovimiento->getTerceroRel()->getNombreCorto()), 0, 0, 'L', 0);
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 67);
+        $this->SetXY(18.5, 48);
         $this->Cell(15, 4, 'NIT:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
         $this->SetX(52);
         $this->Cell(15, 4, utf8_decode($arMovimiento->getTerceroRel()->getNumeroIdentificacion()), 0, 0, 'L', 0);
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 71);
+        $this->SetXY(18.5, 52);
         $this->Cell(15, 4, 'DIRECCION:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
         $this->SetX(52);
         $this->Cell(15, 4, utf8_decode($arMovimiento->getTerceroRel()->getDireccion()), 0, 0, 'L', 0);
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 75);
+        $this->SetXY(18.5, 56);
         $this->Cell(15, 4, 'CIUDAD:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
         $this->SetX(52);
         $this->Cell(15, 4, utf8_decode($arMovimiento->getTerceroRel()->getCiudadRel()->getNombre()), 0, 0, 'L', 0);
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 79);
+        $this->SetXY(18.5, 60);
         $this->Cell(15, 4, 'TELEFONO:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
         $this->SetX(52);
         $this->Cell(15, 4, utf8_decode($arMovimiento->getTerceroRel()->getTelefono()), 0, 0, 'L', 0);
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 83);
+        $this->SetXY(18.5, 64);
         $this->Cell(15, 4, 'SOPORTE:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
         $this->SetX(52);
         $this->Cell(15, 4, utf8_decode($arMovimiento->getSoporte()), 0, 0, 'L', 0);
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(18.5, 87);
+        $this->SetXY(18.5, 68);
         $this->Cell(15, 4, 'COMENTARIOS:', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
         $this->SetX(52);

@@ -72,13 +72,12 @@ class EntregaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnEntregar')->isClicked()) {
-//                $ruta = $em->getRepository(GenConfiguracion::class)->parametro('rutaTemporal');
-                $ruta = "/var/www/temporal/";
+                $ruta = $em->getRepository(GenConfiguracion::class)->parametro('rutaTemporal');
+                //$ruta = "/var/www/temporal/";
                 if (!$ruta) {
                     Mensajes::error('Debe de ingresar una ruta temporal en la configuracion general del sistema');
                     echo "<script language='Javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
-//                $ruta = "/var/www/temporal/";
                 $form['flArchivo']->getData()->move($ruta, "archivo.xls");
                 $rutaArchivo = $ruta . "archivo.xls";
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::load($rutaArchivo);
@@ -123,7 +122,7 @@ class EntregaController extends Controller
                     } elseif (count($arrSinHora)){
                         Mensajes::error('Las siguientes filas no tienen hora de entrega: '. implode(', ', $arrSinHora));
                     } else {
-                        if (count($arrCargas) > 0) {
+                        if ($arrCargas) {
                             foreach ($arrCargas as $arrCarga) {
                                 $arrCarga['fecha'] = str_replace("'", '', $arrCarga['fecha']);
                                 $arrCarga['hora'] = str_replace("'", '', $arrCarga['hora']);

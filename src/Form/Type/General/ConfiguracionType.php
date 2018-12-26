@@ -16,11 +16,11 @@ class ConfiguracionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nit', NumberType::class, ['required' => true])
+            ->add('nit', TextType::class, ['required' => true])
             ->add('digitoVerificacion', NumberType::class, ['required' => true])
             ->add('nombre', TextType::class, ['required' => true])
             ->add('rutaTemporal', TextType::class, ['required' => true])
-            ->add('telefono', NumberType::class, ['required' => true])
+            ->add('telefono', TextType::class, ['required' => true])
             ->add('direccion', TextType::class, ['required' => true])
             ->add('codigoClienteOro', IntegerType::class, ['required' => true])
             ->add('webServiceOroUrl', TextType::class, ['required' => false])

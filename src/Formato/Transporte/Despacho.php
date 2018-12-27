@@ -6,14 +6,42 @@ use App\Entity\General\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteGuia;
 use App\Utilidades\Estandares;
-
+include_once(realpath(__DIR__ . "/../../../public/plugins/phpqrcode/phpqrcode/qrlib.php"));
 class Despacho extends \FPDF {
     public static $em;
     public static $codigoDespacho;
 
+    public function codigoQr(){
+        //Declaramos una carpeta temporal para guardar la imagenes generadas
+        $dir = __DIR__.'/../../../public/img/qrtemp/';
+//        dump($dir);
+        //Si no existe la carpeta la creamos
+        if (!file_exists($dir))
+            mkdir($dir,0777);
+
+
+
+        //Declaramos la ruta y nombre del archivo a generar
+        $filename = $dir.'qrTest.png';
+
+
+        //Parametros de Configuración
+
+        $tamano = 10; //Tamaño de Pixel
+        $level = 'L'; //Precisión Baja
+        $framSize = 3; //Tamaño en blanco
+        $contenido = "Hola mundo"; //Texto
+
+        //Enviamos los parametros a la Función para generar código QR
+        \QRcode::png($contenido, $filename, $level, $tamano, $framSize);
+//        dump($dir.basename($filename));
+        return $dir.basename($filename);
+    }
+
     public function Generar($em, $codigoDespacho) {
         ob_clean();
         //$em = $miThis->getDoctrine()->getManager();
+        $this->codigoQr();
         self::$em = $em;
         self::$codigoDespacho = $codigoDespacho;
         $pdf = new Despacho();
@@ -21,7 +49,7 @@ class Despacho extends \FPDF {
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("TteDespacho$codigoDespacho.pdf", 'D');
+        $pdf->Output("TteDespacho$codigoDespacho.pdf", 'I');
     }
 
     public function Header() {

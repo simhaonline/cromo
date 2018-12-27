@@ -34,4 +34,20 @@ class TteDesembarcoRepository extends ServiceEntityRepository
         }
         return $qb;
     }
+
+    public function guia($codigoGuia): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT
+                  ds.codigoDesembarcoPk,
+                  ds.codigoGuiaFk,
+                  ds.codigoDespachoFk,
+                  ds.fecha
+        FROM App\Entity\Transporte\TteDesembarco ds
+        WHERE ds.codigoGuiaFk = :codigoGuia'
+        )->setParameter('codigoGuia', $codigoGuia);
+
+        return $query->execute();
+    }
 }

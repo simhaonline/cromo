@@ -200,10 +200,26 @@ class FormatoMovimiento extends \FPDF
             $pdf->SetFont('Arial', 'B', 8);
             $pdf->SetFillColor(236, 236, 236);
             $pdf->Cell(140, 4, "", 0, 0, 'R');
-            $pdf->Cell(25, 4, "TOTAL NETO", 1, 0, 'L', true);
+            $pdf->Cell(25, 4, "TOTAL", 1, 0, 'L', true);
             $pdf->SetFont('Arial', '', 8);
             $pdf->SetFillColor(255, 255, 255);
             $pdf->Cell(25, 4, number_format($arMovimiento->getVrTotal(), 2, '.', ','), 1, 0, 'R');
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 8);
+            $pdf->SetFillColor(236, 236, 236);
+            $pdf->Cell(140, 4, "", 0, 0, 'R');
+            $pdf->Cell(25, 4, "RTE FUENTE", 1, 0, 'L', true);
+            $pdf->SetFont('Arial', '', 8);
+            $pdf->SetFillColor(255, 255, 255);
+            $pdf->Cell(25, 4, number_format(round($arMovimiento->getVrRetencionFuente()), 2, '.', ','), 1, 0, 'R');
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 8);
+            $pdf->SetFillColor(236, 236, 236);
+            $pdf->Cell(140, 4, "", 0, 0, 'R');
+            $pdf->Cell(25, 4, "TOTAL GENERAL", 1, 0, 'L', true);
+            $pdf->SetFont('Arial', '', 8);
+            $pdf->SetFillColor(255, 255, 255);
+            $pdf->Cell(25, 4, number_format(round($arMovimiento->getVrNeto()), 2, '.', ','), 1, 0, 'R');
         }
     }
 

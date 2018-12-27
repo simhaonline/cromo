@@ -6,12 +6,14 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteDesembarco;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteNovedad;
 use App\Entity\Transporte\TteOperacion;
+use App\Entity\Transporte\TteRedespacho;
 use App\Entity\Transporte\TteServicio;
 use App\Form\Type\Transporte\GuiaType;
 use App\Form\Type\Transporte\NovedadType;
@@ -154,12 +156,16 @@ class GuiaController extends ControllerListenerGeneral
         }
         $arNovedades = $this->getDoctrine()->getRepository(TteNovedad::class)->guia($id);
         $arDespachoDetalles = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->guia($id);
+        $arRedespachos = $this->getDoctrine()->getRepository(TteRedespacho::class)->guia($id);
+        $arDesembarcos = $this->getDoctrine()->getRepository( TteDesembarco::class)->guia($id);
         $arFacturaDetalles = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->guia($id);
         return $this->render('transporte/movimiento/transporte/guia/detalle.html.twig', [
             'arGuia' => $arGuia,
             'arNovedades' => $arNovedades,
             'arDespachoDetalles' => $arDespachoDetalles,
             'arFacturaDetalles' => $arFacturaDetalles,
+            'arRedespachos' => $arRedespachos,
+            'arDesembarcos' => $arDesembarcos,
             'clase' => array('clase'=>'tte_guia', 'codigo' => $id),
             'form' => $form->createView()]);
     }

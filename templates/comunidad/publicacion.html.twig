@@ -67,7 +67,7 @@
                                 <a href="javascript:void(0);" class="text-info"><i class="fa fa-reply"></i> Compartir</a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);" class="text-success"><i class="fa fa-thumbs-up"></i> {% if publicacion.meGusta>0%}({{ publicacion.meGusta }}){% endif %}</a>
+                                <a href="javascript:void(0);" onclick="meGustaPublicacion({{ publicacion.publicacion }})" class="text-success"><i class="fa fa-thumbs-up"></i><div class="megustaPublicacion-{{ publicacion.publicacion }}" style="display: -webkit-inline-flex">{% if publicacion.meGusta>0%}({{ publicacion.meGusta }}){% endif %}</div> </a>
                             </li>
 
                             <li>
@@ -169,8 +169,6 @@
                 data: JSON.stringify({datos:{texto:$(`.comentar-${codigoPublicacion}`).val(),comentario:codigoPublicacion}}),
                 success: function (respuestas) {
                     if(respuestas.estado){
-
-
                         html=`<li class="message message-reply">
                                             <img src="{{ asset('img/avatars/3.png') }}" class="online" alt="user">
                                             <span class="message-text"> <a href="javascript:void(0);" class="username">{{ arUsuario.nombreCorto }}</a> ${respuestas.datos.texto}</span>
@@ -202,7 +200,7 @@
                     }
                 },
                 error: function (error) {
-                    console.log(error);
+                    // console.log(error);
                 }
             });
         }
@@ -268,7 +266,7 @@
                             <a href="javascript:void(0);" class="text-info"><i class="fa fa-reply"></i> Compartir</a>
                         </li>
                         <li>
-                            <a href="javascript:void(0);" class="text-success"><i class="fa fa-thumbs-up"></i> ${respuestas.datos.meGusta>0?"("+respuestas.datos.meGusta+")":"" }</a>
+                            <a href="javascript:void(0);" onclick="meGustaPublicacion(${respuestas.datos.publicacion})" class="text-success"><i class="fa fa-thumbs-up"></i><div style="display: -webkit-inline-flex" class="megustaPublicacion-${respuestas.datos.publicacion}"> ${respuestas.datos.meGusta>0?"("+respuestas.datos.meGusta+")":"" }<div></a>
                         </li>
                         <li>
                          <a href="javascript:void(0);" class="text-muted">${respuestas.datos.totalComentarios>2?`<a style="color: black; cursor: pointer" onclick="verComentarios(${auxPublicacion})">Ver todos los comentarios </a>(${respuestas.datos.totalComentarios})`:""}
@@ -305,7 +303,7 @@
                     }
                 },
                 error: function (error) {
-                    console.log(error);
+                    // console.log(error);
                 }
             });
         }
@@ -326,6 +324,32 @@
             else{
                 $(`.btnComentar-${codigoPublicacion}`).prop("disabled",true);
             }
+        }
+
+        function meGustaPublicacion(codigoPublicacion) {
+            $.ajax({
+                headers: {
+                    // 'X-CSRF-TOKEN': token,
+                    'Content-type': 'application/json',
+                },
+                url: `${servidor}${api['meGustaPublicacion']}${username}/${codigoPublicacion}`,
+                type: "GET",
+                dataType: "json",
+                success: function (respuestas) {
+                    if(respuestas.estado){
+                    if(respuestas.datos.meGustas>0){
+                    $(`.megustaPublicacion-${codigoPublicacion}`).html(`(${respuestas.datos.meGustas})`);
+                    }
+                    else{
+                    $(`.megustaPublicacion-${codigoPublicacion}`).html("");
+                    }
+                    }
+
+                },
+                error: function (error) {
+                    // console.log(error);
+                }
+            });
         }
     </script>
 {% endblock %}

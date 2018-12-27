@@ -15,18 +15,19 @@ return $instance;
 
 public static function getApi($ruta){
     $api=[
-        'conexion'          =>'/api/comunidad/conexion/',
-        'buscarAmigos'      =>'/api/comunidad/busqueda/',
-        'enviarSolicitud'   =>'/api/comunidad/enviarSolicitud/',
-        'cancelarSolicitud' =>'/api/comunidad/cancelarSolicitud/',
-        'eliminarAmigo'     =>'/api/comunidad/eliminarAmigo/',
-        'aceptarAmigo'      =>'/api/comunidad/aceptarAmigo/',
-        'solicitudes'       =>'/api/comunidad/solicitudesPendientes/',
-        'misAmigos'         =>'/api/comunidad/misAmigos/',
-        'misPublicaciones'  =>'/api/comunidad/publicacion/misPublicaciones/',
-        'publicaciones'     =>'/api/comunidad/publicacion/publicaciones/',
-        'crearPublicacion'  =>'/api/comunidad/publicacion/crear/',
-        'crearComentario'   =>'/api/comunidad/publicacion/comentario/crear/'
+        'conexion'                  =>'/api/comunidad/conexion/',
+        'buscarAmigos'              =>'/api/comunidad/busqueda/',
+        'enviarSolicitud'           =>'/api/comunidad/enviarSolicitud/',
+        'cancelarSolicitud'         =>'/api/comunidad/cancelarSolicitud/',
+        'eliminarAmigo'             =>'/api/comunidad/eliminarAmigo/',
+        'aceptarAmigo'              =>'/api/comunidad/aceptarAmigo/',
+        'solicitudes'               =>'/api/comunidad/solicitudesPendientes/',
+        'misAmigos'                 =>'/api/comunidad/misAmigos/',
+        'misPublicaciones'          =>'/api/comunidad/publicacion/misPublicaciones/',
+        'publicaciones'             =>'/api/comunidad/publicacion/publicaciones/',
+        'crearPublicacion'          =>'/api/comunidad/publicacion/crear/',
+        'crearComentario'           =>'/api/comunidad/publicacion/comentario/crear/',
+        'meGustaPublicacion'        =>'/api/comunidad/publicacion/meGusta/'
     ];
 
     return $ruta!="todas"?$api[$ruta]:$api;

@@ -193,7 +193,7 @@
                                         </li>`;
                         $(`.publicaciones-${codigoPublicacion}`).prepend(html);
                         $(`.totalComentarios-${codigoPublicacion}`).html("");
-                        $(`.totalComentarios-${codigoPublicacion}`).append(`${respuestas.datos.totalComentarios}`);
+                        $(`.totalComentarios-${codigoPublicacion}`).append(`(${respuestas.datos.totalComentarios})`);
                         $(`.comentar-${codigoPublicacion}`).val("");
                         $(`.btnComentar-${codigoPublicacion}`).prop("disabled",true);
                     }

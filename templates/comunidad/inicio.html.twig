@@ -1,7 +1,20 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {% include('/comunidad/buscardor.html.twig') %}
-    <div class="col-sm-12 col-md-12  col-lg-12" >
-    {% include ('comunidad/publicacion.html.twig') %}
+    <div>
+        {{ form_start(formBusqueda) }}
+        {% include ('comunidad/buscardor.html.twig') %}
+        {{ form_end(formBusqueda) }}
+        <div class="col-sm-12 col-md-12  col-lg-12" >
+            {% include ('comunidad/publicacion.html.twig') %}
+        </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function notificacionAmigos(){
+            document.getElementById('notificacion_amigo').style.display='block';
+
+        }
+    </script>
 {% endblock %}

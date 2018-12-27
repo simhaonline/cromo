@@ -502,6 +502,11 @@ class TteGuia
     protected $redespachosGuiaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteDesembarco", mappedBy="guiaRel")
+     */
+    protected $desembarcosGuiaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoGuiaPk()
@@ -512,7 +517,7 @@ class TteGuia
     /**
      * @param mixed $codigoGuiaPk
      */
-    public function setCodigoGuiaPk( $codigoGuiaPk ): void
+    public function setCodigoGuiaPk($codigoGuiaPk): void
     {
         $this->codigoGuiaPk = $codigoGuiaPk;
     }
@@ -528,7 +533,7 @@ class TteGuia
     /**
      * @param mixed $numero
      */
-    public function setNumero( $numero ): void
+    public function setNumero($numero): void
     {
         $this->numero = $numero;
     }
@@ -544,7 +549,7 @@ class TteGuia
     /**
      * @param mixed $codigoGuiaTipoFk
      */
-    public function setCodigoGuiaTipoFk( $codigoGuiaTipoFk ): void
+    public function setCodigoGuiaTipoFk($codigoGuiaTipoFk): void
     {
         $this->codigoGuiaTipoFk = $codigoGuiaTipoFk;
     }
@@ -560,7 +565,7 @@ class TteGuia
     /**
      * @param mixed $codigoOperacionIngresoFk
      */
-    public function setCodigoOperacionIngresoFk( $codigoOperacionIngresoFk ): void
+    public function setCodigoOperacionIngresoFk($codigoOperacionIngresoFk): void
     {
         $this->codigoOperacionIngresoFk = $codigoOperacionIngresoFk;
     }
@@ -576,7 +581,7 @@ class TteGuia
     /**
      * @param mixed $codigoOperacionCargoFk
      */
-    public function setCodigoOperacionCargoFk( $codigoOperacionCargoFk ): void
+    public function setCodigoOperacionCargoFk($codigoOperacionCargoFk): void
     {
         $this->codigoOperacionCargoFk = $codigoOperacionCargoFk;
     }
@@ -592,7 +597,7 @@ class TteGuia
     /**
      * @param mixed $codigoClienteFk
      */
-    public function setCodigoClienteFk( $codigoClienteFk ): void
+    public function setCodigoClienteFk($codigoClienteFk): void
     {
         $this->codigoClienteFk = $codigoClienteFk;
     }
@@ -608,7 +613,7 @@ class TteGuia
     /**
      * @param mixed $codigoCiudadOrigenFk
      */
-    public function setCodigoCiudadOrigenFk( $codigoCiudadOrigenFk ): void
+    public function setCodigoCiudadOrigenFk($codigoCiudadOrigenFk): void
     {
         $this->codigoCiudadOrigenFk = $codigoCiudadOrigenFk;
     }
@@ -624,7 +629,7 @@ class TteGuia
     /**
      * @param mixed $codigoCiudadDestinoFk
      */
-    public function setCodigoCiudadDestinoFk( $codigoCiudadDestinoFk ): void
+    public function setCodigoCiudadDestinoFk($codigoCiudadDestinoFk): void
     {
         $this->codigoCiudadDestinoFk = $codigoCiudadDestinoFk;
     }
@@ -640,7 +645,7 @@ class TteGuia
     /**
      * @param mixed $documentoCliente
      */
-    public function setDocumentoCliente( $documentoCliente ): void
+    public function setDocumentoCliente($documentoCliente): void
     {
         $this->documentoCliente = $documentoCliente;
     }
@@ -656,7 +661,7 @@ class TteGuia
     /**
      * @param mixed $relacionCliente
      */
-    public function setRelacionCliente( $relacionCliente ): void
+    public function setRelacionCliente($relacionCliente): void
     {
         $this->relacionCliente = $relacionCliente;
     }
@@ -672,7 +677,7 @@ class TteGuia
     /**
      * @param mixed $remitente
      */
-    public function setRemitente( $remitente ): void
+    public function setRemitente($remitente): void
     {
         $this->remitente = $remitente;
     }
@@ -688,7 +693,7 @@ class TteGuia
     /**
      * @param mixed $nombreDestinatario
      */
-    public function setNombreDestinatario( $nombreDestinatario ): void
+    public function setNombreDestinatario($nombreDestinatario): void
     {
         $this->nombreDestinatario = $nombreDestinatario;
     }
@@ -704,7 +709,7 @@ class TteGuia
     /**
      * @param mixed $direccionDestinatario
      */
-    public function setDireccionDestinatario( $direccionDestinatario ): void
+    public function setDireccionDestinatario($direccionDestinatario): void
     {
         $this->direccionDestinatario = $direccionDestinatario;
     }
@@ -720,7 +725,7 @@ class TteGuia
     /**
      * @param mixed $telefonoDestinatario
      */
-    public function setTelefonoDestinatario( $telefonoDestinatario ): void
+    public function setTelefonoDestinatario($telefonoDestinatario): void
     {
         $this->telefonoDestinatario = $telefonoDestinatario;
     }
@@ -736,7 +741,7 @@ class TteGuia
     /**
      * @param mixed $fechaIngreso
      */
-    public function setFechaIngreso( $fechaIngreso ): void
+    public function setFechaIngreso($fechaIngreso): void
     {
         $this->fechaIngreso = $fechaIngreso;
     }
@@ -752,7 +757,7 @@ class TteGuia
     /**
      * @param mixed $fechaDespacho
      */
-    public function setFechaDespacho( $fechaDespacho ): void
+    public function setFechaDespacho($fechaDespacho): void
     {
         $this->fechaDespacho = $fechaDespacho;
     }
@@ -768,7 +773,7 @@ class TteGuia
     /**
      * @param mixed $fechaEntrega
      */
-    public function setFechaEntrega( $fechaEntrega ): void
+    public function setFechaEntrega($fechaEntrega): void
     {
         $this->fechaEntrega = $fechaEntrega;
     }
@@ -784,7 +789,7 @@ class TteGuia
     /**
      * @param mixed $fechaCumplido
      */
-    public function setFechaCumplido( $fechaCumplido ): void
+    public function setFechaCumplido($fechaCumplido): void
     {
         $this->fechaCumplido = $fechaCumplido;
     }
@@ -800,7 +805,7 @@ class TteGuia
     /**
      * @param mixed $fechaSoporte
      */
-    public function setFechaSoporte( $fechaSoporte ): void
+    public function setFechaSoporte($fechaSoporte): void
     {
         $this->fechaSoporte = $fechaSoporte;
     }
@@ -816,7 +821,7 @@ class TteGuia
     /**
      * @param mixed $fechaFactura
      */
-    public function setFechaFactura( $fechaFactura ): void
+    public function setFechaFactura($fechaFactura): void
     {
         $this->fechaFactura = $fechaFactura;
     }
@@ -832,7 +837,7 @@ class TteGuia
     /**
      * @param mixed $unidades
      */
-    public function setUnidades( $unidades ): void
+    public function setUnidades($unidades): void
     {
         $this->unidades = $unidades;
     }
@@ -848,7 +853,7 @@ class TteGuia
     /**
      * @param mixed $pesoReal
      */
-    public function setPesoReal( $pesoReal ): void
+    public function setPesoReal($pesoReal): void
     {
         $this->pesoReal = $pesoReal;
     }
@@ -864,7 +869,7 @@ class TteGuia
     /**
      * @param mixed $pesoVolumen
      */
-    public function setPesoVolumen( $pesoVolumen ): void
+    public function setPesoVolumen($pesoVolumen): void
     {
         $this->pesoVolumen = $pesoVolumen;
     }
@@ -880,7 +885,7 @@ class TteGuia
     /**
      * @param mixed $pesoFacturado
      */
-    public function setPesoFacturado( $pesoFacturado ): void
+    public function setPesoFacturado($pesoFacturado): void
     {
         $this->pesoFacturado = $pesoFacturado;
     }
@@ -896,7 +901,7 @@ class TteGuia
     /**
      * @param mixed $vrDeclara
      */
-    public function setVrDeclara( $vrDeclara ): void
+    public function setVrDeclara($vrDeclara): void
     {
         $this->vrDeclara = $vrDeclara;
     }
@@ -912,7 +917,7 @@ class TteGuia
     /**
      * @param mixed $vrFlete
      */
-    public function setVrFlete( $vrFlete ): void
+    public function setVrFlete($vrFlete): void
     {
         $this->vrFlete = $vrFlete;
     }
@@ -928,7 +933,7 @@ class TteGuia
     /**
      * @param mixed $vrManejo
      */
-    public function setVrManejo( $vrManejo ): void
+    public function setVrManejo($vrManejo): void
     {
         $this->vrManejo = $vrManejo;
     }
@@ -944,7 +949,7 @@ class TteGuia
     /**
      * @param mixed $vrRecaudo
      */
-    public function setVrRecaudo( $vrRecaudo ): void
+    public function setVrRecaudo($vrRecaudo): void
     {
         $this->vrRecaudo = $vrRecaudo;
     }
@@ -960,7 +965,7 @@ class TteGuia
     /**
      * @param mixed $vrAbono
      */
-    public function setVrAbono( $vrAbono ): void
+    public function setVrAbono($vrAbono): void
     {
         $this->vrAbono = $vrAbono;
     }
@@ -976,7 +981,7 @@ class TteGuia
     /**
      * @param mixed $vrCobroEntrega
      */
-    public function setVrCobroEntrega( $vrCobroEntrega ): void
+    public function setVrCobroEntrega($vrCobroEntrega): void
     {
         $this->vrCobroEntrega = $vrCobroEntrega;
     }
@@ -992,7 +997,7 @@ class TteGuia
     /**
      * @param mixed $vrCostoReexpedicion
      */
-    public function setVrCostoReexpedicion( $vrCostoReexpedicion ): void
+    public function setVrCostoReexpedicion($vrCostoReexpedicion): void
     {
         $this->vrCostoReexpedicion = $vrCostoReexpedicion;
     }
@@ -1008,7 +1013,7 @@ class TteGuia
     /**
      * @param mixed $estadoImpreso
      */
-    public function setEstadoImpreso( $estadoImpreso ): void
+    public function setEstadoImpreso($estadoImpreso): void
     {
         $this->estadoImpreso = $estadoImpreso;
     }
@@ -1024,7 +1029,7 @@ class TteGuia
     /**
      * @param mixed $estadoEmbarcado
      */
-    public function setEstadoEmbarcado( $estadoEmbarcado ): void
+    public function setEstadoEmbarcado($estadoEmbarcado): void
     {
         $this->estadoEmbarcado = $estadoEmbarcado;
     }
@@ -1040,7 +1045,7 @@ class TteGuia
     /**
      * @param mixed $estadoDespachado
      */
-    public function setEstadoDespachado( $estadoDespachado ): void
+    public function setEstadoDespachado($estadoDespachado): void
     {
         $this->estadoDespachado = $estadoDespachado;
     }
@@ -1056,7 +1061,7 @@ class TteGuia
     /**
      * @param mixed $estadoEntregado
      */
-    public function setEstadoEntregado( $estadoEntregado ): void
+    public function setEstadoEntregado($estadoEntregado): void
     {
         $this->estadoEntregado = $estadoEntregado;
     }
@@ -1072,7 +1077,7 @@ class TteGuia
     /**
      * @param mixed $estadoAutorizado
      */
-    public function setEstadoAutorizado( $estadoAutorizado ): void
+    public function setEstadoAutorizado($estadoAutorizado): void
     {
         $this->estadoAutorizado = $estadoAutorizado;
     }
@@ -1088,7 +1093,7 @@ class TteGuia
     /**
      * @param mixed $estadoAprobado
      */
-    public function setEstadoAprobado( $estadoAprobado ): void
+    public function setEstadoAprobado($estadoAprobado): void
     {
         $this->estadoAprobado = $estadoAprobado;
     }
@@ -1104,7 +1109,7 @@ class TteGuia
     /**
      * @param mixed $estadoSoporte
      */
-    public function setEstadoSoporte( $estadoSoporte ): void
+    public function setEstadoSoporte($estadoSoporte): void
     {
         $this->estadoSoporte = $estadoSoporte;
     }
@@ -1120,7 +1125,7 @@ class TteGuia
     /**
      * @param mixed $estadoCumplido
      */
-    public function setEstadoCumplido( $estadoCumplido ): void
+    public function setEstadoCumplido($estadoCumplido): void
     {
         $this->estadoCumplido = $estadoCumplido;
     }
@@ -1136,7 +1141,7 @@ class TteGuia
     /**
      * @param mixed $estadoRecaudoDevolucion
      */
-    public function setEstadoRecaudoDevolucion( $estadoRecaudoDevolucion ): void
+    public function setEstadoRecaudoDevolucion($estadoRecaudoDevolucion): void
     {
         $this->estadoRecaudoDevolucion = $estadoRecaudoDevolucion;
     }
@@ -1152,7 +1157,7 @@ class TteGuia
     /**
      * @param mixed $estadoRecaudoCobro
      */
-    public function setEstadoRecaudoCobro( $estadoRecaudoCobro ): void
+    public function setEstadoRecaudoCobro($estadoRecaudoCobro): void
     {
         $this->estadoRecaudoCobro = $estadoRecaudoCobro;
     }
@@ -1168,7 +1173,7 @@ class TteGuia
     /**
      * @param mixed $estadoFacturado
      */
-    public function setEstadoFacturado( $estadoFacturado ): void
+    public function setEstadoFacturado($estadoFacturado): void
     {
         $this->estadoFacturado = $estadoFacturado;
     }
@@ -1184,7 +1189,7 @@ class TteGuia
     /**
      * @param mixed $estadoFacturaGenerada
      */
-    public function setEstadoFacturaGenerada( $estadoFacturaGenerada ): void
+    public function setEstadoFacturaGenerada($estadoFacturaGenerada): void
     {
         $this->estadoFacturaGenerada = $estadoFacturaGenerada;
     }
@@ -1200,7 +1205,7 @@ class TteGuia
     /**
      * @param mixed $estadoAnulado
      */
-    public function setEstadoAnulado( $estadoAnulado ): void
+    public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
     }
@@ -1216,7 +1221,7 @@ class TteGuia
     /**
      * @param mixed $estadoNovedad
      */
-    public function setEstadoNovedad( $estadoNovedad ): void
+    public function setEstadoNovedad($estadoNovedad): void
     {
         $this->estadoNovedad = $estadoNovedad;
     }
@@ -1232,7 +1237,7 @@ class TteGuia
     /**
      * @param mixed $estadoNovedadSolucion
      */
-    public function setEstadoNovedadSolucion( $estadoNovedadSolucion ): void
+    public function setEstadoNovedadSolucion($estadoNovedadSolucion): void
     {
         $this->estadoNovedadSolucion = $estadoNovedadSolucion;
     }
@@ -1248,7 +1253,7 @@ class TteGuia
     /**
      * @param mixed $estadoFacturaExportado
      */
-    public function setEstadoFacturaExportado( $estadoFacturaExportado ): void
+    public function setEstadoFacturaExportado($estadoFacturaExportado): void
     {
         $this->estadoFacturaExportado = $estadoFacturaExportado;
     }
@@ -1264,7 +1269,7 @@ class TteGuia
     /**
      * @param mixed $estadoContabilizadoRecaudo
      */
-    public function setEstadoContabilizadoRecaudo( $estadoContabilizadoRecaudo ): void
+    public function setEstadoContabilizadoRecaudo($estadoContabilizadoRecaudo): void
     {
         $this->estadoContabilizadoRecaudo = $estadoContabilizadoRecaudo;
     }
@@ -1280,7 +1285,7 @@ class TteGuia
     /**
      * @param mixed $codigoDespachoFk
      */
-    public function setCodigoDespachoFk( $codigoDespachoFk ): void
+    public function setCodigoDespachoFk($codigoDespachoFk): void
     {
         $this->codigoDespachoFk = $codigoDespachoFk;
     }
@@ -1296,7 +1301,7 @@ class TteGuia
     /**
      * @param mixed $codigoCumplidoFk
      */
-    public function setCodigoCumplidoFk( $codigoCumplidoFk ): void
+    public function setCodigoCumplidoFk($codigoCumplidoFk): void
     {
         $this->codigoCumplidoFk = $codigoCumplidoFk;
     }
@@ -1312,7 +1317,7 @@ class TteGuia
     /**
      * @param mixed $codigoRecaudoDevolucionFk
      */
-    public function setCodigoRecaudoDevolucionFk( $codigoRecaudoDevolucionFk ): void
+    public function setCodigoRecaudoDevolucionFk($codigoRecaudoDevolucionFk): void
     {
         $this->codigoRecaudoDevolucionFk = $codigoRecaudoDevolucionFk;
     }
@@ -1328,7 +1333,7 @@ class TteGuia
     /**
      * @param mixed $codigoRecaudoCobroFk
      */
-    public function setCodigoRecaudoCobroFk( $codigoRecaudoCobroFk ): void
+    public function setCodigoRecaudoCobroFk($codigoRecaudoCobroFk): void
     {
         $this->codigoRecaudoCobroFk = $codigoRecaudoCobroFk;
     }
@@ -1344,7 +1349,7 @@ class TteGuia
     /**
      * @param mixed $codigoFacturaFk
      */
-    public function setCodigoFacturaFk( $codigoFacturaFk ): void
+    public function setCodigoFacturaFk($codigoFacturaFk): void
     {
         $this->codigoFacturaFk = $codigoFacturaFk;
     }
@@ -1360,7 +1365,7 @@ class TteGuia
     /**
      * @param mixed $codigoFacturaPlanillaFk
      */
-    public function setCodigoFacturaPlanillaFk( $codigoFacturaPlanillaFk ): void
+    public function setCodigoFacturaPlanillaFk($codigoFacturaPlanillaFk): void
     {
         $this->codigoFacturaPlanillaFk = $codigoFacturaPlanillaFk;
     }
@@ -1376,7 +1381,7 @@ class TteGuia
     /**
      * @param mixed $codigoRutaFk
      */
-    public function setCodigoRutaFk( $codigoRutaFk ): void
+    public function setCodigoRutaFk($codigoRutaFk): void
     {
         $this->codigoRutaFk = $codigoRutaFk;
     }
@@ -1392,7 +1397,7 @@ class TteGuia
     /**
      * @param mixed $ordenRuta
      */
-    public function setOrdenRuta( $ordenRuta ): void
+    public function setOrdenRuta($ordenRuta): void
     {
         $this->ordenRuta = $ordenRuta;
     }
@@ -1408,7 +1413,7 @@ class TteGuia
     /**
      * @param mixed $factura
      */
-    public function setFactura( $factura ): void
+    public function setFactura($factura): void
     {
         $this->factura = $factura;
     }
@@ -1424,7 +1429,7 @@ class TteGuia
     /**
      * @param mixed $codigoServicioFk
      */
-    public function setCodigoServicioFk( $codigoServicioFk ): void
+    public function setCodigoServicioFk($codigoServicioFk): void
     {
         $this->codigoServicioFk = $codigoServicioFk;
     }
@@ -1440,7 +1445,7 @@ class TteGuia
     /**
      * @param mixed $codigoProductoFk
      */
-    public function setCodigoProductoFk( $codigoProductoFk ): void
+    public function setCodigoProductoFk($codigoProductoFk): void
     {
         $this->codigoProductoFk = $codigoProductoFk;
     }
@@ -1456,7 +1461,7 @@ class TteGuia
     /**
      * @param mixed $codigoEmpaqueFk
      */
-    public function setCodigoEmpaqueFk( $codigoEmpaqueFk ): void
+    public function setCodigoEmpaqueFk($codigoEmpaqueFk): void
     {
         $this->codigoEmpaqueFk = $codigoEmpaqueFk;
     }
@@ -1472,7 +1477,7 @@ class TteGuia
     /**
      * @param mixed $codigoCondicionFk
      */
-    public function setCodigoCondicionFk( $codigoCondicionFk ): void
+    public function setCodigoCondicionFk($codigoCondicionFk): void
     {
         $this->codigoCondicionFk = $codigoCondicionFk;
     }
@@ -1488,7 +1493,7 @@ class TteGuia
     /**
      * @param mixed $reexpedicion
      */
-    public function setReexpedicion( $reexpedicion ): void
+    public function setReexpedicion($reexpedicion): void
     {
         $this->reexpedicion = $reexpedicion;
     }
@@ -1504,7 +1509,7 @@ class TteGuia
     /**
      * @param mixed $cortesia
      */
-    public function setCortesia( $cortesia ): void
+    public function setCortesia($cortesia): void
     {
         $this->cortesia = $cortesia;
     }
@@ -1520,7 +1525,7 @@ class TteGuia
     /**
      * @param mixed $mercanciaPeligrosa
      */
-    public function setMercanciaPeligrosa( $mercanciaPeligrosa ): void
+    public function setMercanciaPeligrosa($mercanciaPeligrosa): void
     {
         $this->mercanciaPeligrosa = $mercanciaPeligrosa;
     }
@@ -1536,7 +1541,7 @@ class TteGuia
     /**
      * @param mixed $usuario
      */
-    public function setUsuario( $usuario ): void
+    public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
     }
@@ -1552,7 +1557,7 @@ class TteGuia
     /**
      * @param mixed $empaqueReferencia
      */
-    public function setEmpaqueReferencia( $empaqueReferencia ): void
+    public function setEmpaqueReferencia($empaqueReferencia): void
     {
         $this->empaqueReferencia = $empaqueReferencia;
     }
@@ -1568,7 +1573,7 @@ class TteGuia
     /**
      * @param mixed $tipoLiquidacion
      */
-    public function setTipoLiquidacion( $tipoLiquidacion ): void
+    public function setTipoLiquidacion($tipoLiquidacion): void
     {
         $this->tipoLiquidacion = $tipoLiquidacion;
     }
@@ -1584,7 +1589,7 @@ class TteGuia
     /**
      * @param mixed $comentario
      */
-    public function setComentario( $comentario ): void
+    public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
     }
@@ -1600,7 +1605,7 @@ class TteGuia
     /**
      * @param mixed $guiaTipoRel
      */
-    public function setGuiaTipoRel( $guiaTipoRel ): void
+    public function setGuiaTipoRel($guiaTipoRel): void
     {
         $this->guiaTipoRel = $guiaTipoRel;
     }
@@ -1616,7 +1621,7 @@ class TteGuia
     /**
      * @param mixed $operacionIngresoRel
      */
-    public function setOperacionIngresoRel( $operacionIngresoRel ): void
+    public function setOperacionIngresoRel($operacionIngresoRel): void
     {
         $this->operacionIngresoRel = $operacionIngresoRel;
     }
@@ -1632,7 +1637,7 @@ class TteGuia
     /**
      * @param mixed $operacionCargoRel
      */
-    public function setOperacionCargoRel( $operacionCargoRel ): void
+    public function setOperacionCargoRel($operacionCargoRel): void
     {
         $this->operacionCargoRel = $operacionCargoRel;
     }
@@ -1648,7 +1653,7 @@ class TteGuia
     /**
      * @param mixed $clienteRel
      */
-    public function setClienteRel( $clienteRel ): void
+    public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
     }
@@ -1664,7 +1669,7 @@ class TteGuia
     /**
      * @param mixed $ciudadOrigenRel
      */
-    public function setCiudadOrigenRel( $ciudadOrigenRel ): void
+    public function setCiudadOrigenRel($ciudadOrigenRel): void
     {
         $this->ciudadOrigenRel = $ciudadOrigenRel;
     }
@@ -1680,7 +1685,7 @@ class TteGuia
     /**
      * @param mixed $ciudadDestinoRel
      */
-    public function setCiudadDestinoRel( $ciudadDestinoRel ): void
+    public function setCiudadDestinoRel($ciudadDestinoRel): void
     {
         $this->ciudadDestinoRel = $ciudadDestinoRel;
     }
@@ -1696,7 +1701,7 @@ class TteGuia
     /**
      * @param mixed $despachoRel
      */
-    public function setDespachoRel( $despachoRel ): void
+    public function setDespachoRel($despachoRel): void
     {
         $this->despachoRel = $despachoRel;
     }
@@ -1712,7 +1717,7 @@ class TteGuia
     /**
      * @param mixed $cumplidoRel
      */
-    public function setCumplidoRel( $cumplidoRel ): void
+    public function setCumplidoRel($cumplidoRel): void
     {
         $this->cumplidoRel = $cumplidoRel;
     }
@@ -1728,7 +1733,7 @@ class TteGuia
     /**
      * @param mixed $recaudoDevolucionRel
      */
-    public function setRecaudoDevolucionRel( $recaudoDevolucionRel ): void
+    public function setRecaudoDevolucionRel($recaudoDevolucionRel): void
     {
         $this->recaudoDevolucionRel = $recaudoDevolucionRel;
     }
@@ -1744,7 +1749,7 @@ class TteGuia
     /**
      * @param mixed $recaudoCobroRel
      */
-    public function setRecaudoCobroRel( $recaudoCobroRel ): void
+    public function setRecaudoCobroRel($recaudoCobroRel): void
     {
         $this->recaudoCobroRel = $recaudoCobroRel;
     }
@@ -1760,7 +1765,7 @@ class TteGuia
     /**
      * @param mixed $facturaRel
      */
-    public function setFacturaRel( $facturaRel ): void
+    public function setFacturaRel($facturaRel): void
     {
         $this->facturaRel = $facturaRel;
     }
@@ -1776,7 +1781,7 @@ class TteGuia
     /**
      * @param mixed $rutaRel
      */
-    public function setRutaRel( $rutaRel ): void
+    public function setRutaRel($rutaRel): void
     {
         $this->rutaRel = $rutaRel;
     }
@@ -1792,7 +1797,7 @@ class TteGuia
     /**
      * @param mixed $facturaPlanillaRel
      */
-    public function setFacturaPlanillaRel( $facturaPlanillaRel ): void
+    public function setFacturaPlanillaRel($facturaPlanillaRel): void
     {
         $this->facturaPlanillaRel = $facturaPlanillaRel;
     }
@@ -1808,7 +1813,7 @@ class TteGuia
     /**
      * @param mixed $servicioRel
      */
-    public function setServicioRel( $servicioRel ): void
+    public function setServicioRel($servicioRel): void
     {
         $this->servicioRel = $servicioRel;
     }
@@ -1824,7 +1829,7 @@ class TteGuia
     /**
      * @param mixed $productoRel
      */
-    public function setProductoRel( $productoRel ): void
+    public function setProductoRel($productoRel): void
     {
         $this->productoRel = $productoRel;
     }
@@ -1840,7 +1845,7 @@ class TteGuia
     /**
      * @param mixed $empaqueRel
      */
-    public function setEmpaqueRel( $empaqueRel ): void
+    public function setEmpaqueRel($empaqueRel): void
     {
         $this->empaqueRel = $empaqueRel;
     }
@@ -1856,7 +1861,7 @@ class TteGuia
     /**
      * @param mixed $condicionRel
      */
-    public function setCondicionRel( $condicionRel ): void
+    public function setCondicionRel($condicionRel): void
     {
         $this->condicionRel = $condicionRel;
     }
@@ -1872,7 +1877,7 @@ class TteGuia
     /**
      * @param mixed $recibosGuiaRel
      */
-    public function setRecibosGuiaRel( $recibosGuiaRel ): void
+    public function setRecibosGuiaRel($recibosGuiaRel): void
     {
         $this->recibosGuiaRel = $recibosGuiaRel;
     }
@@ -1888,7 +1893,7 @@ class TteGuia
     /**
      * @param mixed $despachosDetallesGuiaRel
      */
-    public function setDespachosDetallesGuiaRel( $despachosDetallesGuiaRel ): void
+    public function setDespachosDetallesGuiaRel($despachosDetallesGuiaRel): void
     {
         $this->despachosDetallesGuiaRel = $despachosDetallesGuiaRel;
     }
@@ -1904,7 +1909,7 @@ class TteGuia
     /**
      * @param mixed $facturasDetallesGuiaRel
      */
-    public function setFacturasDetallesGuiaRel( $facturasDetallesGuiaRel ): void
+    public function setFacturasDetallesGuiaRel($facturasDetallesGuiaRel): void
     {
         $this->facturasDetallesGuiaRel = $facturasDetallesGuiaRel;
     }
@@ -1920,7 +1925,7 @@ class TteGuia
     /**
      * @param mixed $novedadesGuiaRel
      */
-    public function setNovedadesGuiaRel( $novedadesGuiaRel ): void
+    public function setNovedadesGuiaRel($novedadesGuiaRel): void
     {
         $this->novedadesGuiaRel = $novedadesGuiaRel;
     }
@@ -1936,7 +1941,7 @@ class TteGuia
     /**
      * @param mixed $guiasDetallesGuiaRel
      */
-    public function setGuiasDetallesGuiaRel( $guiasDetallesGuiaRel ): void
+    public function setGuiasDetallesGuiaRel($guiasDetallesGuiaRel): void
     {
         $this->guiasDetallesGuiaRel = $guiasDetallesGuiaRel;
     }
@@ -1952,11 +1957,24 @@ class TteGuia
     /**
      * @param mixed $redespachosGuiaRel
      */
-    public function setRedespachosGuiaRel( $redespachosGuiaRel ): void
+    public function setRedespachosGuiaRel($redespachosGuiaRel): void
     {
         $this->redespachosGuiaRel = $redespachosGuiaRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDesembarcosGuiaRel()
+    {
+        return $this->desembarcosGuiaRel;
+    }
 
-
+    /**
+     * @param mixed $desembarcosGuiaRel
+     */
+    public function setDesembarcosGuiaRel($desembarcosGuiaRel): void
+    {
+        $this->desembarcosGuiaRel = $desembarcosGuiaRel;
+    }
 }

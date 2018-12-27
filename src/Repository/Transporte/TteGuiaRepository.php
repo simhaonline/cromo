@@ -10,6 +10,7 @@ use App\Entity\General\GenFormaPago;
 use App\Entity\General\GenIdentificacion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteCumplido;
+use App\Entity\Transporte\TteDesembarco;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteFactura;
@@ -260,6 +261,34 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->andWhere('g.estadoSoporte = 0')
             ->andWhere('g.estadoAnulado = 0');
         $queryBuilder->orderBy('g.codigoGuiaPk', 'DESC');
+        return $queryBuilder;
+    }
+
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function listaDesembarco()
+    {
+        $session = new Session();
+        $queryBuilder = [];
+        if ($session->get('filtroTteDespachoCodigo')) {
+            $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+                ->select('g.codigoGuiaPk')
+                ->addSelect('g.numero')
+                ->addSelect('g.fechaIngreso')
+                ->addSelect('g.codigoOperacionIngresoFk')
+                ->addSelect('g.codigoOperacionCargoFk')
+                ->addSelect('c.nombreCorto AS clienteNombre')
+                ->addSelect('cd.nombre AS ciudadDestino')
+                ->addSelect('g.unidades')
+                ->addSelect('g.pesoReal')
+                ->leftJoin('g.clienteRel', 'c')
+                ->leftJoin('g.ciudadDestinoRel', 'cd')
+                ->where('g.codigoDespachoFk = ' . $session->get('filtroTteDespachoCodigo'))
+                ->andWhere('g.estadoDespachado = 1')
+                ->andWhere('g.estadoAnulado = 0');
+            $queryBuilder->orderBy('g.codigoGuiaPk', 'DESC');
+        }
         return $queryBuilder;
     }
 
@@ -831,7 +860,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arGuia->setFechaEntrega($fechaHora);
                         $arGuia->setEstadoEntregado(1);
                         if (isset($arrControles['chkSoporte']) && $arrControles['chkSoporte']) {
-                            if(!$arGuia->getEstadoSoporte()){
+                            if (!$arGuia->getEstadoSoporte()) {
                                 $arGuia->setEstadoSoporte(1);
                                 $arGuia->setFechaSoporte(new  \DateTime('now'));
                             }
@@ -857,8 +886,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($arrGuias) {
             foreach ($arrGuias AS $codigoGuia) {
                 $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-                if($arGuia){
-                    if($arGuia->getEstadoDespachado() && $arGuia->getEstadoEntregado() && !$arGuia->getEstadoSoporte()){
+                if ($arGuia) {
+                    if ($arGuia->getEstadoDespachado() && $arGuia->getEstadoEntregado() && !$arGuia->getEstadoSoporte()) {
                         $arGuia->setFechaSoporte(new \DateTime("now"));
                         $arGuia->setEstadoSoporte(1);
                         $em->persist($arGuia);
@@ -2197,7 +2226,9 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     /**
      * @param $codigoGuia
-     * @return array
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function guiaCliente($codigoGuia)
     {
@@ -2218,4 +2249,36 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getSingleResult();
     }
 
+    /**
+     * @param $arrCodigoGuia array
+     */
+    public function desembarco($arrCodigoGuia)
+    {
+        $em = $this->_em;
+        if ($arrCodigoGuia) {
+            foreach ($arrCodigoGuia as $codigoGuia) {
+                $arGuia = $em->find(TteGuia::class, $codigoGuia);
+                if ($arGuia) {
+                    if ($arGuia->getEstadoDespachado() && $arGuia->getCodigoDespachoFk() && !$arGuia->getEstadoAnulado()) {
+                        $arDesembarco = new TteDesembarco();
+                        $arGuia->setFechaDespacho(null);
+                        $arGuia->setFechaCumplido(null);
+                        $arGuia->setFechaEntrega(null);
+                        $arGuia->setFechaSoporte(null);
+                        $arGuia->setEstadoDespachado(0);
+                        $arGuia->setEstadoEmbarcado(0);
+                        $arGuia->setEstadoEntregado(0);
+                        $arGuia->setEstadoSoporte(0);
+                        $arDesembarco->setDespachoRel($arGuia->getDespachoRel());
+                        $arDesembarco->setGuiaRel($arGuia);
+                        $arDesembarco->setFecha(new \DateTime('now'));
+                        $arGuia->setCodigoDespachoFk(null);
+                        $em->persist($arGuia);
+                        $em->persist($arDesembarco);
+                        $em->flush();
+                    }
+                }
+            }
+        }
+    }
 }

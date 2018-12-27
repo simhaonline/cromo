@@ -1,4 +1,4 @@
-<div class="col-sm-12 col-md-12 col-lg-6" >
+
 
     <div class="well padding-bottom-10" >
         {% if conexion.usuario %}
@@ -56,7 +56,7 @@
                                                         color: #3276b1;"
                                                    href="javascript:void(0);"
                                                    class="username">
-                                                    {{ arUsuario.nombreCorto }}
+                                                    {{ publicacion.nombre}}
                                                     <small class="text-muted ultra-light" style="display: flex;margin-left: auto;"> Hace {{ publicacion.tiempoTranscurrido }}</small>
                                                 </a>
                                 {{ publicacion.texto }}
@@ -130,7 +130,6 @@
 
             {%  endfor%}
         </div>
-    </div>
 
 
 
@@ -196,6 +195,7 @@
                         $(`.totalComentarios-${codigoPublicacion}`).html("");
                         $(`.totalComentarios-${codigoPublicacion}`).append(`${respuestas.datos.totalComentarios}`);
                         $(`.comentar-${codigoPublicacion}`).val("");
+                        $(`.btnComentar-${codigoPublicacion}`).prop("disabled",true);
                     }
                     else{
                         $(".btnPublicar").prop("disabled",false);
@@ -281,7 +281,7 @@
                             <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
                         </li>
                     </ul>
-                    <div class="publicaciones">
+                    <div class="publicaciones-${respuestas.datos.publicacion}">
                         <div class="masComentarios-${auxPublicacion}">
                         </div>
                         <li  style="margin-top: 1em;">

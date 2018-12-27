@@ -24,6 +24,7 @@ public static function getApi($ruta){
         'solicitudes'       =>'/api/comunidad/solicitudesPendientes/',
         'misAmigos'         =>'/api/comunidad/misAmigos/',
         'misPublicaciones'  =>'/api/comunidad/publicacion/misPublicaciones/',
+        'publicaciones'     =>'/api/comunidad/publicacion/publicaciones/',
         'crearPublicacion'  =>'/api/comunidad/publicacion/crear/',
         'crearComentario'   =>'/api/comunidad/publicacion/comentario/crear/'
     ];

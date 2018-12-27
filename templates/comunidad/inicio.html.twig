@@ -1,8 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <div class="row">
-        <div class="col-lg-8">
-            Comunidad
-        </div>
+    {% include('/comunidad/buscardor.html.twig') %}
+    <div class="col-sm-12 col-md-12  col-lg-12" >
+    {% include ('comunidad/publicacion.html.twig') %}
     </div>
 {% endblock %}

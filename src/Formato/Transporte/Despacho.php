@@ -49,7 +49,7 @@ class Despacho extends \FPDF {
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("TteDespacho$codigoDespacho.pdf", 'I');
+        $pdf->Output("TteDespacho$codigoDespacho.pdf", 'D');
     }
 
     public function Header() {

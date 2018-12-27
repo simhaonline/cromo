@@ -88,7 +88,7 @@
                                     {% if key<2 %}
                                         <li class="message message-reply">
                                             <img src="{{ asset('img/avatars/3.png') }}" class="online" alt="user">
-                                            <span class="message-text"> <a href="javascript:void(0);" class="username">Serman Syla</a> {{ comentario.texto }}</span>
+                                            <span class="message-text"> <a href="javascript:void(0);" class="username">{{ comentario.nombre }}</a> {{ comentario.texto }}</span>
 
                                             <ul class="list-inline font-xs">
                                                 <li>
@@ -140,12 +140,19 @@
         var api={{ api|json_encode|raw}};
         var username="{{username }}";
         var auxPublicacion=0;
+        var data={{ publicaciones|json_encode|raw }};
         function verComentarios(codigo, key){
             var html='';
             $(`.masComentarios-${codigo}`).html(html);
-            var data={{ publicaciones|json_encode|raw }};
             for(var i=2;i<=data[key]['comentarios'].length;i++ ) {
-                html = `<li class='message message-reply'><img src='{{ asset('img/avatars/3.png') }}' class='online' alt='user'><span class='message-text'> <a href='javascript:void(0);' class='username'>Serman Syla</a>${data[key]['comentarios'][i]['texto']}</span><ul class='list-inline font-xs'><li><a href='javascript:void(0);' class='text-muted'>1 minute ago </a></li><li><a href='javascript:void(0);'class='text-success'><i class='fa fa-thumbs-up'></i></a></li></ul></li>`;
+                html = `<li class='message message-reply'><img src='{{ asset('img/avatars/3.png') }}' class='online' alt='user'><span class='message-text'> <a href='javascript:void(0);' class='username'>${data[key]['comentarios'][i].nombre}</a>${data[key]['comentarios'][i]['texto']}</span><ul class='list-inline font-xs'><li><a href='javascript:void(0);' class='text-muted'>1 minute ago </a></li><li><a href='javascript:void(0);'class='text-success'><i class='fa fa-thumbs-up'></i></a></li>
+                ${username===data[key]['comentarios'][i].usuario?`<li>
+                <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
+                </li>
+                <li>
+                <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
+                </li>`:""}
+                </ul></li>`;
                 // html="<h1>holaaa</h1>"
                 $(`.masComentarios-${codigo}`).append(html);
             }
@@ -167,7 +174,7 @@
 
                         html=`<li class="message message-reply">
                                             <img src="{{ asset('img/avatars/3.png') }}" class="online" alt="user">
-                                            <span class="message-text"> <a href="javascript:void(0);" class="username">Serman Syla</a> ${respuestas.datos.texto}</span>
+                                            <span class="message-text"> <a href="javascript:void(0);" class="username">{{ arUsuario.nombreCorto }}</a> ${respuestas.datos.texto}</span>
 
                                             <ul class="list-inline font-xs">
                                                 <li>
@@ -279,9 +286,9 @@
                         </div>
                         <li  style="margin-top: 1em;">
                             <div class="input-group wall-comment-reply">
-                                <input id="btn-input" type="text" class="form-control" placeholder="Comentar...">
+                                <input id="btn-input" type="text" class="form-control comentar-${respuestas.datos.publicacion}" placeholder="Comentar..." onkeydown="inputComentar(${respuestas.datos.publicacion})" onkeyup="inputComentar(${respuestas.datos.publicacion})">
                                 <span class="input-group-btn">
-                            <button class="btn btn-primary" id="btn-chat">
+                            <button disabled class="btn btn-primary btnComentar-${respuestas.datos.publicacion}" id="btn-chat" onClick="crearComentario(${respuestas.datos.publicacion},${data.length})">
 							    <i class="fas fa-play"></i>
 							</button> </span>
                             </div>

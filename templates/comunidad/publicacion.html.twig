@@ -95,7 +95,7 @@
                                                     <a href="javascript:void(0);" class="text-muted">1 minute ago </a>
                                                 </li>
                                                 <li>
-                                                    <a href="javascript:void(0);" class="text-success"><i class="fa fa-thumbs-up"></i></a>
+                                                    <a href="javascript:void(0);" onclick="meGustaComentario({{ comentario.comentario }})"  class="text-success"><i class="fa fa-thumbs-up"></i><div class="megustaComentario-{{ comentario.comentario }}" style="display: -webkit-inline-flex"></div></a>
                                                 </li>
 
                                                 {%  if comentario.usuario == username %}
@@ -178,7 +178,7 @@
                                                     <a href="javascript:void(0);" class="text-muted">1 minute ago </a>
                                                 </li>
                                                 <li>
-                                                    <a href="javascript:void(0);" class="text-success"><i class="fa fa-thumbs-up"></i></a>
+                                                    <a href="javascript:void(0);" onclick="meGustaComentario(${respuestas.datos.comentario})" class="text-success"><i class="fa fa-thumbs-up"></i><div class="megustaComentario-${ respuestas.datos.comentario }" style="display: -webkit-inline-flex"></div></a>
                                                 </li>
                                                 <li>
                                                         <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
@@ -343,6 +343,32 @@
                     else{
                     $(`.megustaPublicacion-${codigoPublicacion}`).html("");
                     }
+                    }
+
+                },
+                error: function (error) {
+                    // console.log(error);
+                }
+            });
+        }
+
+        function meGustaComentario(codigoComentario) {
+            $.ajax({
+                headers: {
+                    // 'X-CSRF-TOKEN': token,
+                    'Content-type': 'application/json',
+                },
+                url: `${servidor}${api['meGustaComentario']}${username}/${codigoComentario}`,
+                type: "GET",
+                dataType: "json",
+                success: function (respuestas) {
+                    if(respuestas.estado){
+                        if(respuestas.datos.meGustas>0){
+                            $(`.megustaComentario-${codigoComentario}`).html(`(${respuestas.datos.meGustas})`);
+                        }
+                        else{
+                            $(`.megustaComentario-${codigoComentario}`).html("");
+                        }
                     }
 
                 },

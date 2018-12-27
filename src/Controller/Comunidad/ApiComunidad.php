@@ -27,7 +27,8 @@ public static function getApi($ruta){
         'publicaciones'             =>'/api/comunidad/publicacion/publicaciones/',
         'crearPublicacion'          =>'/api/comunidad/publicacion/crear/',
         'crearComentario'           =>'/api/comunidad/publicacion/comentario/crear/',
-        'meGustaPublicacion'        =>'/api/comunidad/publicacion/meGusta/'
+        'meGustaPublicacion'        =>'/api/comunidad/publicacion/meGusta/',
+        'meGustaComentario'         =>'/api/comunidad/comentario/meGusta/'
     ];
 
     return $ruta!="todas"?$api[$ruta]:$api;

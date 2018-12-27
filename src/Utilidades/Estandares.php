@@ -108,7 +108,7 @@ final class Estandares
         }
         //INFORMACIÓN EMPRESA
         $pdf->Cell(100, 7, utf8_decode($titulo), 0, 0, 'C', 1);
-        $pdf->Image('../public/img/qrtemp/qrTest.png',160,10,40,25);
+
         $pdf->SetXY(53, 18);
         $pdf->SetFont('Arial', 'B', 9);
         $pdf->Cell(20, 4, "EMPRESA:", 0, 0, 'L', 1);

@@ -2,6 +2,7 @@
 
 namespace App\Formato\Transporte;
 
+use App\Entity\General\GenConfiguracion;
 use App\Entity\General\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteGuia;
@@ -11,9 +12,14 @@ class Despacho extends \FPDF {
     public static $em;
     public static $codigoDespacho;
 
-    public function codigoQr(){
+    /**
+     * @param $dir GenConfiguracion
+     * @return string
+     */
+    public function codigoQr($em){
+
         //Declaramos una carpeta temporal para guardar la imagenes generadas
-        $dir = __DIR__.'/../../../public/img/qrtemp/';
+        $dir = $em->getRepository('App\Entity\General\GenConfiguracion')->find(1)->getRutaTemporal();
 //        dump($dir);
         //Si no existe la carpeta la creamos
         if (!file_exists($dir))
@@ -41,7 +47,7 @@ class Despacho extends \FPDF {
     public function Generar($em, $codigoDespacho) {
         ob_clean();
         //$em = $miThis->getDoctrine()->getManager();
-        $this->codigoQr();
+        $this->codigoQr($em);
         self::$em = $em;
         self::$codigoDespacho = $codigoDespacho;
         $pdf = new Despacho();
@@ -59,6 +65,7 @@ class Despacho extends \FPDF {
         //Logo
 
         Estandares::generarEncabezado($this,'ORDEN DE DESPACHO', self::$em);
+        $this->Image(self::$em->getRepository('App\Entity\General\GenConfiguracion')->find(1)->getRutaTemporal().'qrTest.png',160,10,40,25);
         $arDespacho = new TteDespacho();
         $arDespacho = self::$em->getRepository(TteDespacho::class)->find(self::$codigoDespacho);
         $this->SetFillColor(236, 236, 236);

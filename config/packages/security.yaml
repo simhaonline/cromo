@@ -37,6 +37,7 @@ security:
             logout:
                 path:   /logout
                 target: /login
+                handlers: [App\Controller\Estructura\LogoutController]
             
     access_control:
         - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

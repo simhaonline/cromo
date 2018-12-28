@@ -1,9 +1,17 @@
 <nav>
     <ul>
+        {% if licencia |length <=0 %}
         <li class="top-menu-invisible">
-            <a href="#"><i class="fa fa-sm fa-fw fa-cubes txt-color-white"></i> <span class="menu-item-parent">
+            <a disabled href="#" class="cursor-not-allowed"><i class="fa fa-sm fa-fw fa-cubes txt-color-white"></i> <span class="menu-item-parent">
                     Aplicaciones</span><span class="fa arrow"></span></a>
             <ul>
+            </ul>
+        </li>
+                {% else%}
+                    <li class="top-menu-invisible">
+                        <a href="#"><i class="fa fa-sm fa-fw fa-cubes txt-color-white"></i> <span class="menu-item-parent">
+                    Aplicaciones</span><span class="fa arrow"></span></a>
+                        <ul>
                 {% if licencia.transporte%}
                 <li>
                     <a href="{{ path('transporte_general_general_inicio_ver') }}"><i class="fa fa-road"></i> Transporte</a>
@@ -54,7 +62,9 @@
                     <a href="{{ path('general_general_inicio') }}"><i class="fa fa-support fa-fw"></i> General</a>
                 </li>
                 {% endif %}
+
             </ul>
         </li>
+                {% endif %}
     </ul>
 </nav>

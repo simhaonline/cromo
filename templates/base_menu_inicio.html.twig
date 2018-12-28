@@ -2,10 +2,12 @@
     <ul>
         {% if licencia |length <=0 %}
         <li class="top-menu-invisible">
-            <a disabled href="#" class="cursor-not-allowed"><i class="fa fa-sm fa-fw fa-cubes txt-color-white"></i> <span class="menu-item-parent">
-                    Aplicaciones</span><span class="fa arrow"></span></a>
-            <ul>
-            </ul>
+            <a disabled href="#" style="    display: flex;flex-direction: row;align-items: center;justify-content: space-between;" class="cursor-not-allowed">
+                <div><i class="fa fa-sm fa-fw fa-cubes txt-color-white"></i>
+                    <span class="menu-item-parent">Aplicaciones</span><span class="fa arrow"></span></div>
+                <i style="font-size: 11px" class="fa fa-plus-square-o"></i>
+            </a>
+
         </li>
                 {% else%}
                     <li class="top-menu-invisible">

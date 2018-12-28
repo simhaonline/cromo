@@ -29,6 +29,8 @@ class ConfiguracionController extends Controller
             if ($form->get('guardar')->isClicked()) {
 
                 //datos estaticos para licencia (prueba)
+                if($em->getRepository('App:General\GenConfiguracion')->find(1)->getCodigoLicenciaFk()!=$form->get('codigoLicenciaFk')->getData()){
+
                 $arLicencia=(new GenLicencia())
                     ->setCodigoLicenciaPk($form->get('codigoLicenciaFk')->getData())
                     ->setFechaActivacion(new \DateTime('now'))
@@ -38,6 +40,7 @@ class ConfiguracionController extends Controller
 
                 //fin prueba
                 $em->persist($arLicencia);
+                }
                 $em->persist($arConfiguracion);
                 $em->flush();
                 Mensajes::info('Se guardo la configuracion con exito');

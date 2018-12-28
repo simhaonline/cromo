@@ -53,6 +53,16 @@ class Usuario implements UserInterface, \Serializable
     private $telefono;
 
     /**
+     * @ORM\Column(name="fecha_ultimo_ingreso", type="datetime",nullable=true)
+     */
+    private $fechaUltimoIngreso;
+
+    /**
+     * @ORM\Column(name="numero_conexiones", type="integer", options={"default" : 0},nullable=true)
+     */
+    private $numeroConexiones = 0;
+
+    /**
      * @ORM\Column(name="extension", type="string", length=10,nullable=true)
      */
     private $extension;
@@ -195,6 +205,22 @@ class Usuario implements UserInterface, \Serializable
     /**
      * @return mixed
      */
+    public function getNumeroConexiones()
+    {
+        return $this->numeroConexiones;
+    }
+
+    /**
+     * @param mixed $numeroConexiones
+     */
+    public function setNumeroConexiones($numeroConexiones): void
+    {
+        $this->numeroConexiones = $numeroConexiones;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getOperacionRel()
     {
         return $this->operacionRel;
@@ -206,6 +232,55 @@ class Usuario implements UserInterface, \Serializable
     public function setOperacionRel($operacionRel): void
     {
         $this->operacionRel = $operacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaUltimoIngreso()
+    {
+        return $this->fechaUltimoIngreso;
+    }
+
+    /**
+     * @param mixed $fechaUltimoIngreso
+     */
+    public function setFechaUltimoIngreso($fechaUltimoIngreso): void
+    {
+        $this->fechaUltimoIngreso = $fechaUltimoIngreso;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getFechaUltimaConexion()
+    {
+        return $this->fechaUltimaConexion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenTareasUsuarioRecibeRel()
+    {
+        return $this->genTareasUsuarioRecibeRel;
+    }
+
+    /**
+     * @param mixed $genTareasUsuarioRecibeRel
+     */
+    public function setGenTareasUsuarioRecibeRel($genTareasUsuarioRecibeRel): void
+    {
+        $this->genTareasUsuarioRecibeRel = $genTareasUsuarioRecibeRel;
+    }
+
+    /**
+     * @param mixed $fechaUltimaConexion
+     */
+    public function setFechaUltimaConexion($fechaUltimaConexion): void
+    {
+        $this->fechaUltimaConexion = $fechaUltimaConexion;
     }
 
     /**

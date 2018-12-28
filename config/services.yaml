@@ -24,6 +24,9 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    App\Controller\Estructura\LogoutController:
+        class: App\Controller\Estructura\LogoutController
+
     ## Captura de eventos del log extendido.
     general.entity.listener:
         class: App\Controller\Estructura\GeneralEntityListener
@@ -57,4 +60,10 @@ services:
         class:  App\Controller\Estructura\ControllerSession
         tags:
             - {name: kernel.event_listener, event: security.interactive_login, method: setDatosSession}
+        arguments: ['@security.token_storage']
+
+    App\Controller\Estructura\LoginController:
+        class:  App\Controller\Estructura\LoginController
+        tags:
+            - {name: kernel.event_listener, event: security.interactive_login, method: login}
         arguments: ['@security.token_storage']

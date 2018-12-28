@@ -7,47 +7,17 @@ use App\Entity\General\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteGuia;
 use App\Utilidades\Estandares;
-include_once(realpath(__DIR__ . "/../../../public/plugins/phpqrcode/phpqrcode/qrlib.php"));
+
 class Despacho extends \FPDF {
     public static $em;
     public static $codigoDespacho;
 
-    /**
-     * @param $dir GenConfiguracion
-     * @return string
-     */
-    public function codigoQr($em){
 
-        //Declaramos una carpeta temporal para guardar la imagenes generadas
-        $dir = $em->getRepository('App\Entity\General\GenConfiguracion')->find(1)->getRutaTemporal();
-//        dump($dir);
-        //Si no existe la carpeta la creamos
-        if (!file_exists($dir))
-            mkdir($dir,0777);
-
-
-
-        //Declaramos la ruta y nombre del archivo a generar
-        $filename = $dir.'qrTest.png';
-
-
-        //Parametros de Configuración
-
-        $tamano = 10; //Tamaño de Pixel
-        $level = 'L'; //Precisión Baja
-        $framSize = 3; //Tamaño en blanco
-        $contenido = "Hola mundo"; //Texto
-
-        //Enviamos los parametros a la Función para generar código QR
-        \QRcode::png($contenido, $filename, $level, $tamano, $framSize);
-//        dump($dir.basename($filename));
-        return $dir.basename($filename);
-    }
 
     public function Generar($em, $codigoDespacho) {
         ob_clean();
         //$em = $miThis->getDoctrine()->getManager();
-        $this->codigoQr($em);
+
         self::$em = $em;
         self::$codigoDespacho = $codigoDespacho;
         $pdf = new Despacho();
@@ -65,7 +35,6 @@ class Despacho extends \FPDF {
         //Logo
 
         Estandares::generarEncabezado($this,'ORDEN DE DESPACHO', self::$em);
-        $this->Image(self::$em->getRepository('App\Entity\General\GenConfiguracion')->find(1)->getRutaTemporal().'qrTest.png',160,10,40,25);
         $arDespacho = new TteDespacho();
         $arDespacho = self::$em->getRepository(TteDespacho::class)->find(self::$codigoDespacho);
         $this->SetFillColor(236, 236, 236);

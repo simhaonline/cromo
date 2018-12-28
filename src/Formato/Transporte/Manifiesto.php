@@ -2,6 +2,7 @@
 
 namespace App\Formato\Transporte;
 
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\General\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
@@ -36,7 +37,7 @@ class Manifiesto extends \FPDF {
         } catch (\Exception $exception) {
         }
 
-        //$this->Image('../public/img/empresa/logo.jpg', 90, 30, 40, 15);
+        $this->Image(FuncionesController::codigoQr(), 265, 10, 10, 10);
         $this->SetFont('Arial', 'b', 14);
         $this->Text(90, 15, "MANIFIESTO ELECTRONICO DE CARGA");
         $this->Text(90, 20, $arConfiguracion->getNombre());
@@ -64,12 +65,12 @@ class Manifiesto extends \FPDF {
         $this->SetXY(190, 33);
         $this->Cell(50, 5, "AUTORIZACION:", 1, 0, 'L', 1);
         $this->Cell(35, 5, $arDespacho->getNumeroRndc(), 1, 0, 'R', 1);
-        $this->Text(245, 14, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+        $this->Text(245, 24, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
 
         $this->SetXY(190, 38);
         $this->Cell(50, 5, "NUMERO:", 1, 0, 'L', 1);
         $this->Cell(35, 5, $arDespacho->getCodigoDespachoPk(), 1, 0, 'R', 1);
-        $this->Text(245, 14, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+        $this->Text(245, 24, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
 
         $this->EncabezadoDetalles();
     }

@@ -95,7 +95,7 @@
                                                     <a href="javascript:void(0);" class="text-muted">1 minute ago </a>
                                                 </li>
                                                 <li>
-                                                    <a href="javascript:void(0);" onclick="meGustaComentario({{ comentario.comentario }})"  class="text-success"><i class="fa fa-thumbs-up"></i><div class="megustaComentario-{{ comentario.comentario }}" style="display: -webkit-inline-flex"></div></a>
+                                                    <a href="javascript:void(0);" onclick="meGustaComentario({{ comentario.comentario }})"  class="text-success"><i class="fa fa-thumbs-up"></i><div class="megustaComentario-{{ comentario.comentario }}" style="display: -webkit-inline-flex">{% if comentario.meGusta>0%}({{ comentario.meGusta }}){% endif %}</div></a>
                                                 </li>
 
                                                 {%  if comentario.usuario == username %}

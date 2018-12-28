@@ -4,6 +4,7 @@ namespace  App\Controller\Estructura;
 
 
 use App\Entity\Seguridad\Usuario;
+use App\Utilidades\BaseDatos;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -24,8 +25,30 @@ class ControllerSession extends Controller
      */
     public function setDatosSession()
     {
+        $em=BaseDatos::getEm();
         $session = new Session();
         $usuario=$this->user->getToken()->getUser();
+        $arLicencia=$em->createQueryBuilder()
+            ->from('App:General\GenLicencia','licencia')
+            ->addSelect('licencia.cartera')
+            ->addSelect('licencia.compra')
+            ->addSelect('licencia.documental')
+            ->addSelect('licencia.financiero')
+            ->addSelect('licencia.general')
+            ->addSelect('licencia.inventario')
+            ->addSelect('licencia.recursoHumano')
+            ->addSelect('licencia.seguridad')
+            ->addSelect('licencia.transporte')
+            ->addSelect('licencia.fechaValidaHasta')
+            ->where("licencia.codigoLicenciaPk='{$em->getRepository('App:General\GenConfiguracion')->find(1)->getCodigoLicenciaFk()}'")
+            ->getQuery()->getOneOrNullResult();
+
+        if($arLicencia && $arLicencia['fechaValidaHasta']>=(new \DateTime('now'))){
+            $session->set("licencia",$arLicencia);
+        }
+        else{
+            $session->set("licencia",[]);
+        }
         if($usuario->getFoto()){
             $foto="data:image/'jpeg';base64,".base64_encode(stream_get_contents($usuario->getFoto()));
         }

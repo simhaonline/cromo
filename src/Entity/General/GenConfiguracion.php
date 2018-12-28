@@ -102,6 +102,12 @@ class GenConfiguracion
     private $porcentajeAutoretencion = 0;
 
     /**
+     * @ORM\Column(name="codigo_licencia_fk", type="string", nullable=true, length=100)
+     */
+    private $codigoLicenciaFk;
+
+
+    /**
      * @ORM\ManyToOne(targetEntity="GenCiudad", inversedBy="configuracionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -396,7 +402,22 @@ class GenConfiguracion
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoLicenciaFk()
+    {
+        return $this->codigoLicenciaFk;
+    }
 
+    /**
+     * @param mixed $codigoLicenciaFk
+     */
+    public function setCodigoLicenciaFk($codigoLicenciaFk)
+    {
+        $this->codigoLicenciaFk = $codigoLicenciaFk;
+        return $this;
+    }
 
 
 }

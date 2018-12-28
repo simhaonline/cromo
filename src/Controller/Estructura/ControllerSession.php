@@ -39,6 +39,7 @@ class ControllerSession extends Controller
             ->addSelect('licencia.recursoHumano')
             ->addSelect('licencia.seguridad')
             ->addSelect('licencia.transporte')
+            ->addSelect('licencia.turno')
             ->addSelect('licencia.fechaValidaHasta')
             ->where("licencia.codigoLicenciaPk='{$em->getRepository('App:General\GenConfiguracion')->find(1)->getCodigoLicenciaFk()}'")
             ->getQuery()->getOneOrNullResult();

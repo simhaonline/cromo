@@ -71,7 +71,10 @@ class GenLicencia
      */
     private $transporte=false;
 
-
+    /**
+     * @ORM\Column(name="turno",type="boolean", options={"default":false}, nullable=true)
+     */
+    private $turno=false;
 
     /**
      * @return mixed
@@ -276,6 +279,24 @@ class GenLicencia
         $this->transporte = $transporte;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTurno()
+    {
+        return $this->turno;
+    }
+
+    /**
+     * @param mixed $turno
+     */
+    public function setTurno($turno)
+    {
+        $this->turno = $turno;
+        return $this;
+    }
+
 
 
 }

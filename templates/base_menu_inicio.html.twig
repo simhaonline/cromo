@@ -4,38 +4,56 @@
             <a href="#"><i class="fa fa-sm fa-fw fa-cubes txt-color-white"></i> <span class="menu-item-parent">
                     Aplicaciones</span><span class="fa arrow"></span></a>
             <ul>
+                {% if licencia.transporte%}
                 <li>
                     <a href="{{ path('transporte_general_general_inicio_ver') }}"><i class="fa fa-road"></i> Transporte</a>
                 </li>
+                {% endif %}
+                {% if licencia.recursoHumano%}
                 <li>
                     <a href="{{ path('recursohumano_general_general_inicio_ver') }}"><i class="fa fa-users"></i> Recurso
                         humano</a>
                 </li>
+                {% endif %}
+                {% if licencia.turno%}
                 <li>
                     <a href="{{ path('turno_general_general_inicio_ver') }}"><i class="fa fa-calendar"></i> Turno</a>
                 </li>
+                {% endif %}
+                {% if licencia.cartera%}
                 <li>
                     <a href="{{ path('cartera_general_general_inicio_ver') }}"><i class="fa fa-credit-card-alt"></i>
                         Cartera</a>
                 </li>
+                {% endif %}
+                {% if licencia.compra%}
                 <li>
                     <a href="{{ path('compra_general_general_inicio_ver') }}"><i class="fa fa-shopping-bag"></i> Compra</a>
                 </li>
+                {% endif %}
+                {% if licencia.inventario%}
                 <li>
                     <a href="{{ path('inventario_general_general_inicio_ver') }}"><i class="fa fa-cube fa-fw"></i>
                         Inventario</a>
                 </li>
+                {% endif %}
+                {% if licencia.financiero%}
                 <li>
                     <a href="{{ path('financiero_general_general_inicio_ver') }}"><i class="fa fa-calculator fa-fw"></i>
                         Financiero</a>
                 </li>
+                {% endif %}
+                {% if licencia.documental%}
                 <li>
                     <a href="{{ path('documental_general_general_inicio_ver') }}"><i class="fa fa-file fa-fw"></i>
                         Documental</a>
                 </li>
+                {% endif %}
+                {% if licencia.general%}
                 <li>
                     <a href="{{ path('general_general_inicio') }}"><i class="fa fa-support fa-fw"></i> General</a>
                 </li>
+                {% endif %}
             </ul>
         </li>
     </ul>

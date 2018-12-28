@@ -66,6 +66,7 @@
     {% set funcion = '' %}
     {% set grupo = '' %}
     {% set entidad = '' %}
+    {% set licencia = app.session.get('licencia')%}
     {% if arrRuta | length > 0 and arrRuta.0 is defined and arrRuta.0 != 'administracion' %}
         {% set modulo = arrRuta.0 %}
         {% if arrRuta | length > 1 and arrRuta.1 is defined %}
@@ -83,7 +84,7 @@
         {% if arrRuta.0 == 'inicio' %}
             {% include('base_menu_inicio.html.twig') %}
         {% endif %}
-        {% if arrRuta.0 == 'transporte' %}
+        {% if arrRuta.0 == 'transporte'%}
             {% include('base_transporte.html.twig') %}
         {% endif %}
         {% if arrRuta.0 == 'recursohumano' %}
@@ -92,7 +93,7 @@
         {% if arrRuta.0 == 'turno' %}
             {% include('base_turno.html.twig') %}
         {% endif %}
-        {% if arrRuta.0 == 'cartera' %}
+        {% if arrRuta.0 == 'cartera'%}
             {% include('base_cartera.html.twig') %}
         {% endif %}
         {% if arrRuta.0 == 'compra' %}

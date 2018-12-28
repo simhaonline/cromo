@@ -1,0 +1,46 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {% set codigoModelo = app.request.attributes.get('codigoModelo') %}
+    {% set codigoMovimiento = app.request.attributes.get('codigoMovimiento') %}
+    {{ form_start(form,{'attr' : {'class' : 'form-horizontal'}}) }}
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+         data-widget-fullscreenbutton="true" style="margin-bottom: 9px;">
+        <header>
+            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+            <h2>Comentario nuevo</h2>
+        </header>
+        <div>
+            <div class="widget-body no-padding">
+                <div class="panel-body">
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1">Modelo:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.codigoModeloFk) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1">Movimiento:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.codigoMovimientoFk) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1">Descripción:</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.descripcion) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-group" style="float: right;">
+        {{ form_widget(form.guardar) }}
+    </div>
+    <div class="btn-group" style="float: left;">
+        <a href="{{ path('general_utilidad_general_comentario_lista',{'codigoModelo' : codigoModelo,'codigoMovimiento' : codigoMovimiento}) }}"
+           class="btn btn-sm btn-default">Volver</a>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

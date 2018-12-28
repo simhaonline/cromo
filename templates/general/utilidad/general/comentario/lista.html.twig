@@ -1,0 +1,32 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {% set codigoModelo = app.request.attributes.get('codigoModelo') %}
+    {% set codigoMovimiento = app.request.attributes.get('codigoMovimiento') %}
+    <h4>Comentarios</h4>
+    <hr>
+    {% for arMovimientoComentario in arMovimientoComentarios %}
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+             data-widget-fullscreenbutton="true" style="margin-bottom: 9px;">
+            <a style="float: right;padding-top: 8px;padding-right: 5px;"
+               href="{{ path('general_utilidad_general_comentario_nuevo',{ 'codigoModelo': codigoModelo,'codigoMovimiento': codigoMovimiento,'id' : arMovimientoComentario.codigoMovimientoComentarioPk }) }}">
+                <span class="fa fa-edit" style="color: white;font-size: medium;"></span>
+            </a>
+            <header>
+                <span class="widget-icon"><i class="fa fa-comment"></i></span>
+                <h2>Comentario # {{ arMovimientoComentario.codigoMovimientoComentarioPk }}</h2>
+            </header>
+            <div class="no-padding">
+                <div class="panel-body">
+                    {{ arMovimientoComentario.descripcion }} <cite style="font-size: 11px;color: grey;">- Registrado
+                        por <strong>{{ arMovimientoComentario.codigoUsuario }}</strong>
+                        el {{ arMovimientoComentario.fecha | date('l')|replace(dia) }} {{ arMovimientoComentario.fecha |date('d') }} de {{ arMovimientoComentario.fecha |date('M')|replace(mes)  }} del {{  arMovimientoComentario.fecha |date('Y') }} a las {{  arMovimientoComentario.fecha |date('H:i:s') }}
+                        - <span class="fa fa-info-circle" title="La hora de registro del comentario esta en formato de 24h"></span></cite>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <div class="btn-group" style="float: right;">
+        <a href="{{ path('general_utilidad_general_comentario_nuevo',{ 'codigoModelo': codigoModelo,'codigoMovimiento': codigoMovimiento,'id' : 0}) }}"
+           class="btn btn-sm btn-default">Nuevo</a>
+    </div>
+{% endblock %}

@@ -53,9 +53,9 @@ class Usuario implements UserInterface, \Serializable
     private $telefono;
 
     /**
-     * @ORM\Column(name="fecha_ultima_conexion", type="datetime",nullable=true)
+     * @ORM\Column(name="fecha_ultimo_ingreso", type="datetime",nullable=true)
      */
-    private $fechaUltimaConexion;
+    private $fechaUltimoIngreso;
 
     /**
      * @ORM\Column(name="numero_conexiones", type="integer", options={"default" : 0},nullable=true)
@@ -233,6 +233,23 @@ class Usuario implements UserInterface, \Serializable
     {
         $this->operacionRel = $operacionRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaUltimoIngreso()
+    {
+        return $this->fechaUltimoIngreso;
+    }
+
+    /**
+     * @param mixed $fechaUltimoIngreso
+     */
+    public function setFechaUltimoIngreso($fechaUltimoIngreso): void
+    {
+        $this->fechaUltimoIngreso = $fechaUltimoIngreso;
+    }
+
 
     /**
      * @return mixed

@@ -36,7 +36,7 @@ class GenLogConexionRepository extends ServiceEntityRepository
         $em = $this->_em;
         $arUsuario = $em->getRepository(Usuario::class)->find($token->getUsername());
         if($arUsuario){
-            $arUsuario->setFechaUltimaConexion(new \DateTime('now'));
+            $arUsuario->setFechaUltimoIngreso(new \DateTime('now'));
             $em->persist($arUsuario);
             $em->flush();
         }

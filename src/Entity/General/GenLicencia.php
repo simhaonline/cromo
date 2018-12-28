@@ -27,6 +27,11 @@ class GenLicencia
     private $fechaValidaHasta;
 
     /**
+     * @ORM\Column(name="numero_usuarios", type="integer", nullable=false)
+     */
+    private $numeroUsuarios;
+
+    /**
      * @ORM\Column(name="cartera",type="boolean", options={"default":false}, nullable=true)
      */
     private $cartera=false;
@@ -297,7 +302,22 @@ class GenLicencia
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getNumeroUsuarios()
+    {
+        return $this->numeroUsuarios;
+    }
 
+    /**
+     * @param mixed $numeroUsuarios
+     */
+    public function setNumeroUsuarios($numeroUsuarios)
+    {
+        $this->numeroUsuarios = $numeroUsuarios;
+        return $this;
+    }
 
 }
 

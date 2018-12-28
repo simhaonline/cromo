@@ -101,10 +101,7 @@ class GenConfiguracion
      */
     private $porcentajeAutoretencion = 0;
 
-    /**
-     * @ORM\Column(name="codigo_licencia_fk", type="string", nullable=true, length=100)
-     */
-    private $codigoLicenciaFk;
+
 
 
     /**
@@ -402,22 +399,7 @@ class GenConfiguracion
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCodigoLicenciaFk()
-    {
-        return $this->codigoLicenciaFk;
-    }
 
-    /**
-     * @param mixed $codigoLicenciaFk
-     */
-    public function setCodigoLicenciaFk($codigoLicenciaFk)
-    {
-        $this->codigoLicenciaFk = $codigoLicenciaFk;
-        return $this;
-    }
 
 
 }

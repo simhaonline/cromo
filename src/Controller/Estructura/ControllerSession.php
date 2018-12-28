@@ -41,11 +41,11 @@ class ControllerSession extends Controller
             ->addSelect('licencia.transporte')
             ->addSelect('licencia.turno')
             ->addSelect('licencia.fechaValidaHasta')
-            ->where("licencia.codigoLicenciaPk='{$em->getRepository('App:General\GenConfiguracion')->find(1)->getCodigoLicenciaFk()}'")
-            ->getQuery()->getOneOrNullResult();
+            ->addSelect('licencia.codigoLicenciaPk')
+            ->getQuery()->getResult();
 
-        if($arLicencia && $arLicencia['fechaValidaHasta']>=(new \DateTime('now'))){
-            $session->set("licencia",$arLicencia);
+        if($arLicencia){
+            $session->set("licencia",$arLicencia[0]);
         }
         else{
             $session->set("licencia",[]);

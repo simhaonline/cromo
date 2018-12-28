@@ -1,7 +1,8 @@
 <nav>
     <ul>
         {% if licencia |length <=0 %}
-        <li class="top-menu-invisible">
+
+            <li class="top-menu-invisible">
             <a disabled href="#" style="    display: flex;flex-direction: row;align-items: center;justify-content: space-between;" class="cursor-not-allowed">
                 <div><i class="fa fa-sm fa-fw fa-cubes txt-color-white"></i>
                     <span class="menu-item-parent">Aplicaciones</span><span class="fa arrow"></span></div>
@@ -9,6 +10,7 @@
             </a>
 
         </li>
+
                 {% else%}
                     <li class="top-menu-invisible">
                         <a href="#"><i class="fa fa-sm fa-fw fa-cubes txt-color-white"></i> <span class="menu-item-parent">

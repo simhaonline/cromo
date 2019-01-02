@@ -84,12 +84,12 @@
         </div>
     </div>
     <br /><br />
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
     <input type="text" id="txtGuiaCodigo"><button id="btnEntregaIndividual">Entregar</button>
     <input type="date" id="txtFecha" name="fecha" value="{{ "now"|date("Y-m-d") }}">
     <input type="time" id="txtHora" name="hora" value="{{ "now"|date("H:i") }}">
     <label><input type="checkbox" id="chkSoporte" name="chkSoporte" value="si"> Soporte</label>
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

@@ -3,7 +3,7 @@
     <div class="row">
         <!-- /.col-lg-12 -->
     </div>
-    <table width="100%" class="table table-condensed table-bordered">
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
         <tr>
             <td class="titulo"><b>CODIGO CONDICION:</b></td>
             <td class="td-in-well">{{ arCondicion.codigoCondicionPk }}</td>
@@ -53,10 +53,6 @@
             <td class="td-in-well">{{ arCondicion.limitarDescuentoReexpedicion ? 'SI' : 'NO' }}</td>
         </tr>
     </table>
-    <a name="marcador"></a>
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#contrato" data-toggle="tab">#</a></li>
-    </ul>
     </br>
     <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_comercial_condicion_lista') }}">Volver</a>
 {% endblock %}

@@ -12,26 +12,8 @@
                href="{{ path('transporte_administracion_comercial_precio_lista') }}">Volver</a>
         </div>
     </div>
-    <br>
-    <br>
-    <table width="100%" class="table table-condensed table-bordered">
-        <tr>
-            <td class="titulo"><b>CODIGO:</b></td>
-            <td class="td-in-well">{{ arPrecio.codigoPrecioPk }}</td>
-            <td class="titulo"><b>NOMBRE</b></td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arPrecio.nombre }}</td>
-        </tr>
-        <tr>
-            <td class="titulo"><b>FECHA VENCE:</b></td>
-            <td class="td-in-well">{{ arPrecio.fechaVence | date ('Y-m-d') }}</td>
-            <td class="titulo"><b></b></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="titulo"><b>COMENTARIOS:</b></td>
-            <td class="td-in-well" colspan="7">{{ arPrecio.comentario }}</td>
-        </tr>
-    </table>
+    <br><br>
+    {% include 'transporte/administracion/comercial/precio/informacion.html.twig' %}
     <a name="marcador"></a>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#contrato" data-toggle="tab">Detalle</a></li>
@@ -40,7 +22,7 @@
         <div class="tab-pane active" id="guias">
             <div id="detalles" style="width: 100%"><br>
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
                         <thead>
                         <tr>
                             <th><p data-toggle="tooltip" data-placement="top" title="PORCENTAJE MANEJO">ID</p></th>
@@ -51,7 +33,8 @@
                             <th><p data-toggle="tooltip" data-placement="top" title="VALOR UNIDAD">UND</p>
                             <th><p data-toggle="tooltip" data-placement="top" title="PESO TOPE">PESO TOPE</p>
                             <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO TOPE">VR PESO TOPE</p>
-                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO TOPE ADICION">VR PESO TOPE ADIC</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO TOPE ADICION">VR PESO
+                                    TOPE ADIC</p>
                             <th><p data-toggle="tooltip" data-placement="top" title="MINIMO">MINIMO</p>
                             <th></th>
                             <th></th>
@@ -65,39 +48,41 @@
                                 <td>{{ arPrecioDetalle.nombre }}</td>
                                 <td>{{ arPrecioDetalle.ciudadOrigen }}</td>
                                 <td>{{ arPrecioDetalle.ciudadDestino }}</td>
-                                <td style="text-align: right;">{{ arPrecioDetalle.vrPeso | number_format(0, '.', ',')  }}</td>
+                                <td style="text-align: right;">{{ arPrecioDetalle.vrPeso | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right;">{{ arPrecioDetalle.vrUnidad | number_format(0, '.', ',') }}</td>
                                 <td>{{ arPrecioDetalle.pesoTope }}</td>
-                                <td style="text-align: right;">{{ arPrecioDetalle.vrPesoTope | number_format(0, '.', ',')  }}</td>
-                                <td style="text-align: right;">{{ arPrecioDetalle.vrPesoTopeAdicional | number_format(0, '.', ',')  }}</td>
+                                <td style="text-align: right;">{{ arPrecioDetalle.vrPesoTope | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right;">{{ arPrecioDetalle.vrPesoTopeAdicional | number_format(0, '.', ',') }}</td>
                                 <td>{{ arPrecioDetalle.minimo }}</td>
                                 <td style="text-align: center;">
                                     <a href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': arPrecioDetalle.codigoPrecioDetallePk }) }}', 'precioDetalles', 600, 900)">
-                                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
+                                        <i title="Editar el registro" class="fa fa-edit"
+                                           style="font-size: large;color: black;">
                                         </i>
                                     </a>
                                 </td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
-                                value="{{ arPrecioDetalle.codigoPrecioDetallePk }}"/></td>
+                                                                       value="{{ arPrecioDetalle.codigoPrecioDetallePk }}"/>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
                 <div class="btn-group" style="float: left">
-                    <div class="btn-group" style="float: left">
-                        <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arPrecioDetalles.getTotalItemCount }}</span>
-                        </div>
+                    <div class="btn btn-default btn-sm">Registros
+                        <span class="badge">{{ arPrecioDetalles.getTotalItemCount }}
+            </span>
                     </div>
                 </div>
-                <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+                <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
                     {{ knp_pagination_render(arPrecioDetalles) }}
                 </div>
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
                         <a class="btn btn-default btn-sm"
-                        href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': 0 }) }}', 'precioDetalles', 600, 900)">Nuevo</a>
+                           href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': 0 }) }}', 'precioDetalles', 600, 900)">Nuevo</a>
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnEliminarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}

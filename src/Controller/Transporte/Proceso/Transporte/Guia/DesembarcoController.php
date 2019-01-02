@@ -32,7 +32,6 @@ class DesembarcoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroTteDespachoCodigo', $form->get('txtDespachoCodigo')->getData());
-                $em->getRepository(TteGuia::class)->listaDesembarco();
             }
             if($form->get('btnDesembarco')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

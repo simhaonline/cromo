@@ -40,7 +40,7 @@ class CondicionController extends ControllerListenerGeneral
         if ($form->get('btnFiltrar')->isClicked()) {
             $session->set('filtroNombreCondicion', $form->get('txtNombre')->getData());
         }
-        $arCondiciones = $paginator->paginate($em->getRepository(TteCondicion::class)->lista(), $request->query->getInt('page', 1),10);
+        $arCondiciones = $paginator->paginate($em->getRepository(TteCondicion::class)->lista(), $request->query->getInt('page', 1),50);
         return $this->render('transporte/administracion/comercial/condicion/lista.html.twig',
             ['arCondiciones' => $arCondiciones,
             'form' => $form->createView()

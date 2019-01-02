@@ -132,15 +132,16 @@ class AnticipoController extends ControllerListenerGeneral
         $form = $this->createFormBuilder()
             ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
             ->add('btnAutorizar', SubmitType::class, array('label' => 'Autorizar', 'attr' => ['class' => 'btn btn-sm btn-default']))
-            ->add('btnAprobar', SubmitType::class,  array('label' => 'Aprobar', 'attr' => ['class' => 'btn btn-sm btn-default']))
-            ->add('btnDesautorizar', SubmitType::class,  array('label' => 'Desautorizar', 'attr' => ['class' => 'btn btn-sm btn-default']))
-            ->add('btnImprimir', SubmitType::class,  array('label' => 'Imprimir', 'attr' => ['class' => 'btn btn-sm btn-default']))
+            ->add('btnAprobar', SubmitType::class, array('label' => 'Aprobar', 'attr' => ['class' => 'btn btn-sm btn-default']))
+            ->add('btnDesautorizar', SubmitType::class, array('label' => 'Desautorizar', 'attr' => ['class' => 'btn btn-sm btn-default']))
+            ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir', 'attr' => ['class' => 'btn btn-sm btn-default']))
             ->add('btnAnular', SubmitType::class, array('label' => 'Anular', 'attr' => ['class' => 'btn btn-sm btn-default']))
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnEliminarDetalle')->isClicked()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             $em->getRepository(CarAnticipoDetalle::class)->eliminar($arrSeleccionados);
+            $em->getRepository(CarAnticipo::class)->liquidar($id);
         }
         if ($form->get('btnAutorizar')->isClicked()) {
             $em->getRepository(CarAnticipo::class)->autorizar($arAnticipo);
@@ -188,14 +189,15 @@ class AnticipoController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $anticipoConceptoRel = $form->get('anticipoConceptoRel')->getData();
-                if ($form->get('guardar')->isClicked()) {
-                    $arAnticipoDetalle->setAnticipoConceptoRel($anticipoConceptoRel);
-                    $arAnticipoDetalle->setVrPago($form->get('vrPago')->getData());
-                    $arAnticipoDetalle->setAnticipoRel($arAnticipo);
-                    $em->persist($arAnticipoDetalle);
-                    $em->flush();
-                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-                }
+            if ($form->get('guardar')->isClicked()) {
+                $arAnticipoDetalle->setAnticipoConceptoRel($anticipoConceptoRel);
+                $arAnticipoDetalle->setVrPago($form->get('vrPago')->getData());
+                $arAnticipoDetalle->setAnticipoRel($arAnticipo);
+                $em->persist($arAnticipoDetalle);
+                $em->flush();
+                $em->getRepository(CarAnticipo::class)->liquidar($codigoAnticipo);
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
         }
         return $this->render('cartera/movimiento/anticipo/anticipo/detalleNuevo.html.twig', [
             'form' => $form->createView()

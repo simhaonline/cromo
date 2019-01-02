@@ -654,4 +654,21 @@ class CarAnticipoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function liquidar($codigoAnticipo)
+    {
+        $em = $this->getEntityManager();
+        $arAnticipo = $em->getRepository(CarAnticipo::class)->find($codigoAnticipo);
+        $arAnticipoDetalles = $em->getRepository(CarAnticipoDetalle::class)->findBy(['codigoAnticipoFk' => $codigoAnticipo]);
+        $pagoTotalGeneral = 0;
+        foreach ($arAnticipoDetalles as $arAnticipoDetalle) {
+            $arAnticipoDetalleAct = $em->getRepository(CarAnticipoDetalle::class)->find($arAnticipoDetalle->getCodigoAnticipoDetallePk());
+            $subtotal = $arAnticipoDetalle->getVrPago();
+            $pagoTotalGeneral += $subtotal;
+            $arAnticipoDetalleAct->setVrPago($subtotal);
+            $em->persist($arAnticipoDetalleAct);
+        }
+        $arAnticipo->setVrPago($pagoTotalGeneral);
+        $em->persist($arAnticipo);
+        $em->flush();
+    }
 }

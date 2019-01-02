@@ -305,7 +305,13 @@ class TteFacturaRepository extends ServiceEntityRepository
         return true;
     }
 
-
+    /**
+     * @param $arrDetalles
+     * @param $arFactura TteFactura
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function retirarDetalle($arrDetalles, $arFactura): bool
     {
         $em = $this->getEntityManager();

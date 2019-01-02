@@ -95,16 +95,16 @@
                                                 <div class="form-bootstrapWizard">
                                                     <ul class="bootstrapWizard form-wizard">
                                                         <li class="active" data-target="#step1">
-                                                            <a href="#tab1" data-toggle="tab"> <span style="border: 0px solid #55606E;" class="step">1</span> <span class="title">Informacion</span> </a>
+                                                            <a style="pointer-events: none" href="#tab1"  data-toggle="tab"> <span style="border: 0px solid #55606E;" class="step">1</span> <span class="title">Informacion</span> </a>
                                                         </li>
                                                         <li data-target="#step2">
-                                                            <a href="#tab2" data-toggle="tab"> <span style="border: 0px solid #55606E;" class="step">2</span> <span class="title">Licencia</span> </a>
+                                                            <a style="pointer-events: none" href="#tab2"  data-toggle="tab"> <span style="border: 0px solid #55606E;" class="step">2</span> <span class="title">Licencia</span> </a>
                                                         </li>
                                                         <li data-target="#step3">
-                                                            <a href="#tab3" data-toggle="tab"> <span style="border: 0px solid #55606E;" class="step">3</span> <span class="title">Detalles</span> </a>
+                                                            <a style="pointer-events: none" href="#tab3" data-toggle="tab"> <span style="border: 0px solid #55606E;" class="step">3</span> <span class="title">Detalles</span> </a>
                                                         </li>
                                                         <li data-target="#step4">
-                                                            <a href="#tab4" data-toggle="tab"> <span style="border: 0px solid #55606E;" class="step">4</span> <span class="title">Confirmacion</span> </a>
+                                                            <a style="pointer-events: none" href="#tab4" data-toggle="tab"> <span style="border: 0px solid #55606E;" class="step">4</span> <span class="title">Confirmacion</span> </a>
                                                         </li>
                                                     </ul>
                                                     <div class="clearfix"></div>
@@ -115,41 +115,56 @@
                                                         <h3><strong>Paso 1 </strong> - Informacion</h3>
 
                                                         <div class="row">
-                                                                <div class="col-md-12">
+                                                            <div class="col-md-12">
                                                                     <span>
                                                                         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
                                                                     </span>
-                                                                </div>
+                                                            </div>
                                                         </div>
 
                                                     </div>
                                                     <div class="tab-pane" id="tab2">
                                                         <br>
                                                         <h3><strong>Paso 2</strong> - Clave licencia</h3>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="alert alert-info fade in">
+                                                                    <button class="close" data-dismiss="alert">
+                                                                        ×
+                                                                    </button>
+                                                                    <i class="fa-fw fa fa-info"></i>
+                                                                    <strong>Ayuda!</strong> Por favor ingresa el codigo de licencia del producto que adquirió.
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fas fa-key fa-lg fa-fw"></i></span>
+                                                                        <input class="form-control input-lg" onkeyup="inputLicencia()" onkeydown="inputLicencia()"  placeholder="" type="text" name="key" id="key">
 
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
 
                                                     </div>
                                                     <div class="tab-pane" id="tab3">
                                                         <br>
                                                         <h3><strong>Paso 3</strong> - Detalles licencia</h3>
-                                                        <div class="alert alert-info fade in">
-                                                            <button class="close" data-dismiss="alert">
-                                                                ×
-                                                            </button>
-                                                            <i class="fa-fw fa fa-info"></i>
-                                                            <strong>Info!</strong> Place an info message box if you wish.
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>This is a label</label>
-                                                            <input class="form-control input-lg" placeholder="Another input box here..." type="text" name="etc" id="etc">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <span>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="tab-pane" id="tab4">
                                                         <br>
                                                         <h3><strong>Paso 4</strong> - Confirmación</h3>
                                                         <br>
-                                                        <h1 class="text-center text-success"><strong><i class="fa fa-check fa-lg"></i> Complete</strong></h1>
-                                                        <h4 class="text-center">Click next to finish</h4>
+                                                        <div style="margin-bottom: 20px" class="text-center text-success"><i style="font-size: 100px" class="fa fa-check-circle fa-lg"></i> </div>
+                                                        <h4  class="text-center">Click en activar para finalizar</h4>
                                                         <br>
                                                         <br>
                                                     </div>
@@ -167,9 +182,11 @@
                                                                     <!--<li class="next last">
                                                                     <a href="javascript:void(0);" class="btn btn-lg btn-primary"> Last </a>
                                                                     </li>-->
-                                                                    <li class="next">
-                                                                        <a href="javascript:void(0);" class="btn btn-lg txt-color-darken"> Siguiente </a>
-                                                                    </li>
+                                                                    <div class="finish">
+                                                                        <li class="next">
+                                                                            <a  href="javascript:void(0);" class="btn btn-lg txt-color-darken"> Siguiente </a>
+                                                                        </li>
+                                                                    </div>
                                                                 </ul>
                                                             </div>
                                                         </div>
@@ -230,7 +247,7 @@
 <script>
 
     // DO NOT REMOVE : GLOBAL FUNCTIONS!
-
+    var datosLicencia=[];
     $(document).ready(function() {
 
         pageSetUp();
@@ -239,21 +256,89 @@
 
         //Bootstrap Wizard Validations
 
+        var $validator = $("#wizard-1").validate({
+
+            rules: {
+                key: {
+                    required: true
+                }
+            },
+
+            messages: {
+                key: "Por favor ingresa la clave del producto"
+            },
+
+            highlight: function (element) {
+
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                // console.log(error);
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
 
 
         $('#bootstrap-wizard-1').bootstrapWizard({
             'tabClass': 'form-wizard',
             'onNext': function (tab, navigation, index) {
                 var $valid = $("#wizard-1").valid();
-                if (!$valid) {
-                    $validator.focusInvalid();
-                    return false;
-                } else {
-                    $('#bootstrap-wizard-1').find('.form-wizard').children('li').eq(index - 1).addClass(
-                        'complete');
-                    $('#bootstrap-wizard-1').find('.form-wizard').children('li').eq(index - 1).find('.step')
-                        .html('<i class="fa fa-check"></i>');
+                if(index-1===1 && $valid){
+
+                    if(!JSON.parse(activar().responseText).estado){
+                        $("#key").closest('.form-group').removeClass('has-success').addClass('has-error');
+                        if ($("#key").parent('.input-group').length) {
+
+                            // if(!document.getElementById("error2")){
+
+                                $(`<span id="error2" class="help-block">Por favor ingresa una clave de producto valida</span>`).insertAfter($("#key").parent());
+                            // }
+                            // else{
+                            //     $("#error2").css("color","block");
+                            // }
+                        } else {
+                            $(`<span id="error2" class="help-block">Por favor ingresa una clave de producto valida</span>`).insertAfter($("#key"));
+                        }
+                        return false;
+                    }
+                    else{
+                        $('#bootstrap-wizard-1').find('.form-wizard').children('li').eq(index - 1).addClass(
+                            'complete');
+                        $('#bootstrap-wizard-1').find('.form-wizard').children('li').eq(index - 1).find('.step')
+                            .html('<i class="fa fa-check"></i>');
+                    }
+
                 }
+                else{
+
+                    if (!$valid) {
+                        $validator.focusInvalid();
+                        return false;
+                    } else {
+
+                        // alert("aqui");
+
+                        $('#bootstrap-wizard-1').find('.form-wizard').children('li').eq(index - 1).addClass(
+                            'complete');
+                        $('#bootstrap-wizard-1').find('.form-wizard').children('li').eq(index - 1).find('.step')
+                            .html('<i class="fa fa-check"></i>');
+
+                    }
+
+                    if(index-1===2){
+                        $('.finish').html(`<li style="float:right"><a  onclick="activarLicenciaLocal()"  class="btn btn-lg txt-color-darken"> Activar </a></li>`)
+                    }
+                }
+
             }
         });
 
@@ -276,6 +361,69 @@
 
 
     })
+
+
+
+    function activar() {
+        var servidor="{{servidor}}";
+        {#var api={{ api|json_encode|raw}};#}
+        var clave = $('#key').val();
+        return  $.ajax({
+            headers: {
+                // 'X-CSRF-TOKEN': token,
+                'Content-type': 'application/json',
+            },
+            async:false,
+            url: `${servidor}${"/api/licencia/activar"}`,
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify({datos:{clave:clave}}),
+            success: function (respuestas) {
+                // console.log(respuestas);
+                if(respuestas.estado){
+                    datosLicencia=respuestas.datos;
+                }
+                // JSON.parse(respuestas);
+                return respuestas;
+            },
+            error: function (error) {
+                // console.log(error);
+                return error;
+            }
+        });
+
+
+    }
+
+    function inputLicencia() {
+        if ($("#key").val().length <= 0) {
+            $("#error2").remove();
+        }
+        else{
+            $("#error2").remove();
+        }
+    }
+
+    function activarLicenciaLocal(){
+        // console.log(datosLicencia);
+        $.ajax({
+
+            url: "{{path('activar_licencia_local')}}",
+            type: "POST",
+            dataType: "json",
+            data: {datos:datosLicencia},
+            success: function (respuestas) {
+                console.log("aqui");
+                window.location="{{ path('login') }}";
+                return respuestas;
+            },
+            error: function (error) {
+                // console.log(error);
+                return error;
+            }
+        });
+    }
+
 
 </script>
 </body>

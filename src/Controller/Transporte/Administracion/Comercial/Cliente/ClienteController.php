@@ -53,9 +53,9 @@ class ClienteController extends ControllerListenerGeneral
                 $session->set('filtroTteNombreCliente', null);
             }
         }
-        $arCliente = $paginator->paginate($em->getRepository(TteCliente::class)->lista(), $request->query->getInt('page', 1),20);
+        $arClientes = $paginator->paginate($em->getRepository(TteCliente::class)->lista(), $request->query->getInt('page', 1),50);
         return $this->render('transporte/administracion/comercial/cliente/lista.html.twig',
-            ['arCliente' => $arCliente,
+            ['arClientes' => $arClientes,
             'form' => $form->createView()]);
     }
 

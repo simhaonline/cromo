@@ -35,7 +35,7 @@
             <tr>
                 <td>{{ arAnticipoDetalle.codigoAnticipoDetallePk }}</td>
                 <td>{{ arAnticipoDetalle.concepto }}</td>
-                <td>{{ arAnticipoDetalle.vrPago }}</td>
+                <td class="numero">{{ arAnticipoDetalle.vrPago | number_format}}</td>
                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                        value="{{ arAnticipoDetalle.codigoAnticipoDetallePk }}"/>
                 </td>

@@ -34,19 +34,9 @@ class CarAnticipoTipo
     private $consecutivo = 0;
 
     /**
-     * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoComprobanteFk;
-
-    /**
      * @ORM\Column(name="orden", type="integer", nullable=true, unique=true)
      */
     private $orden = 0;
-
-    /**
-     * @ORM\Column(name="cruce_cuentas", type="boolean", nullable=true, options={"default" : false})
-     */
-    private $cruceCuentas = 0;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarAnticipo", mappedBy="anticipoTipoRel")
@@ -120,22 +110,6 @@ class CarAnticipoTipo
     /**
      * @return mixed
      */
-    public function getCodigoComprobanteFk()
-    {
-        return $this->codigoComprobanteFk;
-    }
-
-    /**
-     * @param mixed $codigoComprobanteFk
-     */
-    public function setCodigoComprobanteFk($codigoComprobanteFk): void
-    {
-        $this->codigoComprobanteFk = $codigoComprobanteFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getOrden()
     {
         return $this->orden;
@@ -147,22 +121,6 @@ class CarAnticipoTipo
     public function setOrden($orden): void
     {
         $this->orden = $orden;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCruceCuentas()
-    {
-        return $this->cruceCuentas;
-    }
-
-    /**
-     * @param mixed $cruceCuentas
-     */
-    public function setCruceCuentas($cruceCuentas): void
-    {
-        $this->cruceCuentas = $cruceCuentas;
     }
 
     /**
@@ -180,7 +138,6 @@ class CarAnticipoTipo
     {
         $this->anticiposAnticipoTipoRel = $anticiposAnticipoTipoRel;
     }
-
 
 
 

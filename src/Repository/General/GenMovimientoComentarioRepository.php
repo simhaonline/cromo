@@ -18,6 +18,8 @@ class GenMovimientoComentarioRepository extends ServiceEntityRepository
         return $this->_em->createQueryBuilder()->from(GenMovimientoComentario::class, 'mc')
             ->select('mc')
             ->where("mc.codigoModeloFk = '{$codigoModelo}'")
-            ->andWhere("mc.codigoMovimientoFk = {$codigoMovimiento}")->getQuery()->execute();
+            ->andWhere("mc.codigoMovimientoFk = {$codigoMovimiento}")
+            ->orderBy("mc.fecha",'ASC')
+            ->getQuery()->execute();
     }
 }

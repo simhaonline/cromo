@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class GenMovimientoComentario
 {
     public $infoLog = [
-        "primaryKey" => "codigo_movimiento_comentario_pk",
+        "primaryKey" => "codigoMovimientoComentarioPk",
         "todos"     => true,
     ];
 
@@ -34,9 +34,9 @@ class GenMovimientoComentario
     private $codigoModeloFk;
 
     /**
-     * @ORM\Column(name="descripcion", type="text", nullable=true)
+     * @ORM\Column(name="comentario", type="text", nullable=true)
      */
-    private $descripcion;
+    private $comentario;
 
     /**
      * @ORM\Column(name="fecha", type="datetime", nullable=true)
@@ -99,17 +99,17 @@ class GenMovimientoComentario
     /**
      * @return mixed
      */
-    public function getDescripcion()
+    public function getComentario()
     {
-        return $this->descripcion;
+        return $this->comentario;
     }
 
     /**
-     * @param mixed $descripcion
+     * @param mixed $comentario
      */
-    public function setDescripcion($descripcion): void
+    public function setComentario($comentario): void
     {
-        $this->descripcion = $descripcion;
+        $this->comentario = $comentario;
     }
 
     /**

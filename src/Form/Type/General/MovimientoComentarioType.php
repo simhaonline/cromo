@@ -15,10 +15,8 @@ class MovimientoComentarioType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoMovimientoFk', TextType::class,['attr' => ['readonly' => 'readonly']])
-            ->add('codigoModeloFk', TextType::class,['attr' => ['readonly' => 'readonly']])
-            ->add('descripcion', TextareaType::class, ['attr' => ['rows' => '6']])
-            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('comentario', TextareaType::class, ['attr' => ['rows' => '1','placeholder' => 'Escribe un comentario...','style' => '-webkit-border-radius: 50px!important;-moz-border-radius: 50px!important;border-radius: 50px!important;']])
+            ->add('comentar',SubmitType::class,['attr' => ['class' => 'btn btn-sm btn-primary','style' => 'border-radius:10px;']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

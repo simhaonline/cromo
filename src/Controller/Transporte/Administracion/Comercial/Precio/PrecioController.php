@@ -29,7 +29,7 @@ class PrecioController extends ControllerListenerGeneral
     public function lista(Request $request)
     {
         $paginator = $this->get('knp_paginator');
-        $arPrecios = $paginator->paginate($this->getDoctrine()->getRepository(TtePrecio::class)->lista(), $request->query->getInt('page', 1), 10);
+        $arPrecios = $paginator->paginate($this->getDoctrine()->getRepository(TtePrecio::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('transporte/administracion/comercial/precio/lista.html.twig', ['arPrecios' => $arPrecios]);
     }
 

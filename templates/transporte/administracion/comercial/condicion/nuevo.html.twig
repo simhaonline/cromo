@@ -9,7 +9,7 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.nombre, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                 </div>
-                <label for="form_precioRel" class="col-sm-2 control-label">Precio:</label>
+                <label for="form_precioRel" class="col-sm-2 control-label">Lista de precio:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.precioRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
                 </div>
@@ -25,13 +25,13 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_manejoMinimoDespacho" class="col-sm-2 control-label">Manejo minimo unidad:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.manejoMinimoDespacho, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
                 <label for="form_pesoMinimo" class="col-sm-2 control-label">Peso minimo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.pesoMinimo, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+                <label for="form_manejoMinimoDespacho" class="col-sm-2 control-label">Manejo minimo despacho:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.manejoMinimoDespacho, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

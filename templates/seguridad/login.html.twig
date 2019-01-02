@@ -37,8 +37,9 @@
     {#<div>#}
         {##}
     {#</div>#}
+    {% if licencia==null%}
     <span id="extr-page-header-space"> <span class="hidden-mobile hidden-xs">Activar licencia</span> <a style="font-size: 23px;" href="{{ path('activar_licencia') }}"><li class="fas fa-key"></li></a> </span>
-
+    {% endif %}
 </header>
 
 <div id="main" role="main">

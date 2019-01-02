@@ -405,7 +405,6 @@
     }
 
     function activarLicenciaLocal(){
-        // console.log(datosLicencia);
         $.ajax({
 
             url: "{{path('activar_licencia_local')}}",
@@ -413,7 +412,6 @@
             dataType: "json",
             data: {datos:datosLicencia},
             success: function (respuestas) {
-                console.log("aqui");
                 window.location="{{ path('login') }}";
                 return respuestas;
             },

@@ -68,13 +68,16 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>FECHA</th>
                 <th>TIPO</th>
                 <th>NUMERO</th>
-                <th>CANTIDAD</th>
+                <th>FECHA</th>
                 <th>ITEM</th>
+                <th>NOMBRE</th>
                 <th>REFERENCIA</th>
                 <th>LOTE</th>
+                <th>CANTIDAD</th>
+                <th>PRECIO</th>
+                <th>SUBTOTAL</th>
                 <th>COSTO</th>
             </tr>
             </thead>
@@ -82,14 +85,17 @@
             {% for arMovimientoDetalle in arMovimientosDetalles %}
                 <tr>
                     <td>{{ arMovimientoDetalle.codigoMovimientoDetallePk }}</td>
-                    <td>{{ arMovimientoDetalle.fechaMovimiento | date('Y-m-d') }}</td>
                     <td>{{ arMovimientoDetalle.documentoTipo }}</td>
                     <td>{{ arMovimientoDetalle.movimientoNumero }}</td>
-                    <td>{{ arMovimientoDetalle.cantidad }}</td>
-                    <td>{{ arMovimientoDetalle.item }}</td>
+                    <td>{{ arMovimientoDetalle.fechaMovimiento | date('Y-m-d') }}</td>
+                    <td>{{ arMovimientoDetalle.codigoItemFk }}</td>
+                    <td>{{ arMovimientoDetalle.itemNombre }}</td>
                     <td>{{ arMovimientoDetalle.referenciaItem }}</td>
                     <td>{{ arMovimientoDetalle.loteFk }}</td>
-                    <td class="numero">{{ arMovimientoDetalle.vrCosto }}</td>
+                    <td>{{ arMovimientoDetalle.cantidad }}</td>
+                    <td class="numero">{{ arMovimientoDetalle.vrPrecio | number_format(0,'.',',') }}</td>
+                    <td class="numero">{{ arMovimientoDetalle.vrSubtotal | number_format(0,'.',',') }}</td>
+                    <td class="numero">{{ arMovimientoDetalle.vrCosto | number_format(0,'.',',') }}</td>
                 </tr>
             {% endfor %}
             </tbody>

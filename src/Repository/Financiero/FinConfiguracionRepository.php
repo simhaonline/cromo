@@ -17,11 +17,8 @@ class FinConfiguracionRepository extends ServiceEntityRepository
 
     public function intercambioDatos()
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenConfiguracion::class, 'c')
-            ->select('c.autoretencionVenta')
-            ->addSelect('c.porcentajeAutoretencion')
-            ->addSelect('c.codigoCuentaAutoretencionVentaFk')
-            ->addSelect('c.codigoCuentaAutoretencionVentaValorFk')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinConfiguracion::class, 'c')
+            ->select('c.codigoEmpresaIntercambio')
             ->where('c.codigoConfiguracionPk = 1');
 
         return $queryBuilder->getQuery()->getSingleResult();

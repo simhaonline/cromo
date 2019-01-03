@@ -847,6 +847,15 @@ class InvMovimientoRepository extends ServiceEntityRepository
         }
     }
 
+    public function terceroContabilizar($codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm')
+            ->select('m.codigoTerceroFk')
+            ->where('m.codigoMovimientoPk = ' . $codigo);
+        $arMovimiento = $queryBuilder->getQuery()->getSingleResult();
+        return $arMovimiento;
+    }
     public function registroContabilizar($codigo)
     {
         $session = new Session();
@@ -876,6 +885,15 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arr) {
             $error = "";
+            //Crear los terceros antes del proceso
+            foreach ($arr AS $codigo) {
+                $arMovimiento = $em->getRepository(InvMovimiento::class)->terceroContabilizar($codigo);
+                if ($arMovimiento) {
+                    $em->getRepository(InvTercero::class)->terceroFinanciero($arMovimiento['codigoTerceroFk']);
+                }
+            }
+            $em->flush();
+
             foreach ($arr AS $codigo) {
                 $arMovimiento = $em->getRepository(InvMovimiento::class)->registroContabilizar($codigo);
                 if ($arMovimiento) {

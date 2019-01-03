@@ -255,6 +255,10 @@ class GenModelo extends Fixture
                 'TteTipoCombustible',
                 'TteVehiculo',
             )),
+            array('modulo'=>'Crm','modelo'=>array(
+               'CrmVista',
+               'CrmVistaTipo',
+            )),
         );
         foreach ($arrayGenModulo as $arrGenModulo){
             foreach ($arrGenModulo['modelo'] as $arrGenModelo){

@@ -93,6 +93,9 @@ abstract class BaseController extends Controller
                         case 'Rhu':
                             $modulo = 'RecursoHumano';
                             break;
+                        case 'Crm':
+                            $modulo = 'Crm';
+                            break;
                     }
                     $em=$this->getDoctrine()->getManager();
                     $entidad = $campo['propiedades']['class'];

@@ -10,7 +10,7 @@ class FinConfiguracion extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $arFinConfiguracion= $manager->getRepository('App:General\FinConfiguracion')->find(1);
+        $arFinConfiguracion= $manager->getRepository('App:Financiero\FinConfiguracion')->find(1);
         if(!$arFinConfiguracion){
             $arFinConfiguracion = new \App\Entity\Financiero\FinConfiguracion();
             $arFinConfiguracion->setCodigoConfiguracionPk(1);

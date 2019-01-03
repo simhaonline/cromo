@@ -48,7 +48,9 @@ class VistaController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Vista");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository('App:Crm\CrmVista')->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('crm_movimiento_control_vista_lista'));
             }
         }
 

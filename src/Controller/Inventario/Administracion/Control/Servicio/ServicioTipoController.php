@@ -72,8 +72,12 @@ class ServicioTipoController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if($em->getRepository('App:Inventario\InvServicioTipo')->find($form->get('codigoServicioTipoPk')->getData()) && $id==0){
+                if($em->getRepository('App:Inventario\InvServicioTipo')->find($form->get('codigoServicioTipoPk')->getData()) && $id=="0"){
                     Mensajes::error("Ya existe un Servicio tipo con ese mismo nombre");
+                }
+                else{
+                if($em->getRepository('App:Inventario\InvServicio')->findBy(['codigoServicioTipoFk'=>$id])){
+                    Mensajes::error("No se puede actualizar el codigo, el servicio tipo esta siendo utilizada");
                 }
                 else{
 
@@ -82,6 +86,7 @@ class ServicioTipoController extends ControllerListenerGeneral
                 $em->persist($arServicioTipo);
                 $em->flush();
                 return $this->redirect($this->generateUrl('inventario_administracion_control_serviciotipo_lista'));
+                }
                 }
             }
         }

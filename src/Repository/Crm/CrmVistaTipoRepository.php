@@ -3,6 +3,7 @@
 namespace App\Repository\Crm;
 
 use App\Entity\Crm\CrmVistaTipo;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -17,6 +18,28 @@ class CrmVistaTipoRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, CrmVistaTipo::class);
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(CrmVistaTipo::class)->find($codigo);
+                if ($arRegistro) {
+                    $arServicio=$this->getEntityManager()->getRepository('App:Crm\CrmVista')->findBy(['codigoVistaTipoFk'=>$codigo]);
+                    if($arServicio){
+                        $respuesta='No se puede eliminar el registro, esta siendo utilizado en uno o mas vistas';
+                    }
+                    if ($respuesta != '') {
+                        Mensajes::error($respuesta);
+                    } else {
+                        $this->getEntityManager()->remove($arRegistro);
+                        $this->getEntityManager()->flush();
+                    }
+                }
+            }
+        }
     }
 
 //    /**

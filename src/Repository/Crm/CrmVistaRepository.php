@@ -3,6 +3,7 @@
 namespace App\Repository\Crm;
 
 use App\Entity\Crm\CrmVista;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -17,6 +18,31 @@ class CrmVistaRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, CrmVista::class);
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(CrmVista::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() != 0) {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                    if ($respuesta != '') {
+                        Mensajes::error($respuesta);
+                    } else {
+                        $this->getEntityManager()->remove($arRegistro);
+                        $this->getEntityManager()->flush();
+                    }
+                }
+            }
+        }
     }
 
 //    /**

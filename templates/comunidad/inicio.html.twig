@@ -1,12 +1,15 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <div style="margin-top: 10px">
-        {{ form_start(formBusqueda) }}
-        {% include ('comunidad/buscardor.html.twig') %}
-        {{ form_end(formBusqueda) }}
-        <div class="col-sm-12 col-md-12  col-lg-12" >
-            {% include ('comunidad/publicacion.html.twig') %}
+    <div id="content" style="margin-top: 10px; width: 100%">
+        <div class="row">
+            {{ form_start(formBusqueda) }}
+            {% include ('comunidad/buscardor.html.twig') %}
+            {{ form_end(formBusqueda) }}
+            <div class="col-sm-12 col-md-12  col-lg-12" >
+                {% include ('comunidad/publicacion.html.twig') %}
+            </div>
         </div>
+
     </div>
 {% endblock %}
 {% block javascripts %}

@@ -40,6 +40,7 @@ class TerceroController extends ControllerListenerGeneral
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroInvTerceroCodigo'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroInvTerceroNombre'), 'attr' => ['class' => 'form-control', 'readonly' => 'readonly']])
+            ->add('txtNombreTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvNombreTercero'), 'attr' => ['class' => 'form-control']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-default btn-sm']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-danger btn-sm', 'style' => 'float:right']])
@@ -48,6 +49,7 @@ class TerceroController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvTerceroCodigo', $form->get('txtCodigo')->getData());
+                $session->set('filtroInvNombreTercero', $form->get('txtNombreTercero')->getData());
                 if ($session->get('filtroInvTerceroCodigo') != '') {
                     $session->set('filtroInvTerceroNombre', $form->get('txtNombre')->getData());
                 } else {

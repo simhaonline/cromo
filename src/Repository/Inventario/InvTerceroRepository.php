@@ -53,6 +53,9 @@ class InvTerceroRepository extends ServiceEntityRepository
             if ($session->get('filtroInvTerceroNombre') != '') {
                 $queryBuilder->andWhere("t.nombreCorto LIKE '%{$session->get('filtroInvTerceroNombre')}%'");
             }
+        if ($session->get('filtroInvNombreTercero') != '') {
+            $queryBuilder->andWhere("t.nombreCorto LIKE '%{$session->get('filtroInvNombreTercero')}%'");
+        }
             if ($session->get('filtroInvTerceroIdentificacion') != '') {
                 $queryBuilder->andWhere("t.numeroIdentificacion = {$session->get('filtroInvTerceroIdentificacion')}");
             }

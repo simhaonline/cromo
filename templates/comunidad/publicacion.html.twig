@@ -1,51 +1,52 @@
 
 
-    <div class="well padding-bottom-10" >
-        {% if conexion.usuario %}
-            <textarea  rows="2" class="form-control publicar" onkeydown="inputPublicacion()" onkeyup="inputPublicacion()" placeholder="¿Qué estas pensando?"></textarea>
-            <div class="margin-top-10">
-                <button disabled type="button" onclick="crearPublicacion()" class="btn btn-sm btn-primary pull-right btnPublicar">
-                    Publicar
-                </button>
-                <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Localizacion"><i class="fa fa-location-arrow"></i></a>
-                <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Voz"><i class="fa fa-microphone"></i></a>
-                <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar foto"><i class="fa fa-camera"></i></a>
-                <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar archivo"><i class="fa fa-file"></i></a>
-            </div>
-        {% else %}
-            <textarea disabled rows="2" class="form-control" placeholder="¿Qué estas pensando?"></textarea>
-            <div class="margin-top-10">
-                <button disabled type="submit" class="btn btn-sm btn-primary pull-right">
-                    Publicar
-                </button>
-                <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Localizacion"><i class="fa fa-location-arrow"></i></a>
-                <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Voz"><i class="fa fa-microphone"></i></a>
-                <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar foto"><i class="fa fa-camera"></i></a>
-                <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar archivo"><i class="fa fa-file"></i></a>
-            </div>
-        {% endif %}
-        <div class="publicacionNueva">
-            {% for keyPub, publicacion in publicaciones %}
-                <div class="timeline-seperator text-center"> <span>{{ publicacion.fecha }}</span>
-                    <div class="btn-group pull-right">
-                        <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><span class="caret single"></span></a>
-                        <ul class="dropdown-menu text-left">
-                            <li>
-                                <a href="javascript:void(0);">Hide this post</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">Hide future posts from this user</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">Mark as spam</a>
-                            </li>
-                        </ul>
-                    </div>
+<div class="well padding-bottom-10" >
+    {% if conexion.usuario %}
+        <textarea  rows="2" class="form-control publicar" onkeydown="inputPublicacion()" onkeyup="inputPublicacion()" placeholder="¿Qué estas pensando?" maxlength="480"></textarea>
+        <div class="margin-top-10">
+            <button disabled type="button" onclick="crearPublicacion()" class="btn btn-sm btn-primary pull-right btnPublicar">
+                Publicar
+            </button>
+            <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Localizacion"><i class="fa fa-location-arrow"></i></a>
+            <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Voz"><i class="fa fa-microphone"></i></a>
+            <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar foto"><i class="fa fa-camera"></i></a>
+            <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar archivo"><i class="fa fa-file"></i></a>
+        </div>
+    {% else %}
+        <textarea disabled rows="2" class="form-control" placeholder="¿Qué estas pensando?" maxlength="480"></textarea>
+        <div class="margin-top-10">
+            <button disabled type="submit" class="btn btn-sm btn-primary pull-right">
+                Publicar
+            </button>
+            <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Localizacion"><i class="fa fa-location-arrow"></i></a>
+            <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Voz"><i class="fa fa-microphone"></i></a>
+            <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar foto"><i class="fa fa-camera"></i></a>
+            <a disabled href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="Agregar archivo"><i class="fa fa-file"></i></a>
+        </div>
+    {% endif %}
+    <div class="publicacionNueva">
+        {% for keyPub, publicacion in publicaciones %}
+            <div class="timeline-seperator text-center"> <span>{{ publicacion.fecha }}</span>
+                <div class="btn-group pull-right">
+                    <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><span class="caret single"></span></a>
+                    <ul class="dropdown-menu text-left">
+                        <li>
+                            <a href="javascript:void(0);">Hide this post</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">Hide future posts from this user</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">Mark as spam</a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="chat-body no-padding profile-message">
-                    <ul>
-                        <li class="message">
-                            <img src="{{ app.session.get('foto_perfil') }}" class="online foto_perfil" alt="sunny">
+            </div>
+            <div class="chat-body no-padding profile-message">
+                <ul>
+                    <li class="message">
+                        <img src="{{ app.session.get('foto_perfil') }}" class="online foto_perfil" alt="sunny">
+                        <div id="publicacion-{{publicacion.publicacion}}">
                             <span class="message-text" style="width: 100%">
                                                 <a style="
                                                         display: flex;
@@ -61,75 +62,99 @@
                                                 </a>
                                 {{ publicacion.texto }}
                                             </span>
+                        </div>
+                    </li>
+                    <ul class="list-inline font-xs" style="padding-left: 7.5em;">
+                        <li>
+                            <a href="javascript:void(0);" class="text-info"><i class="fa fa-reply"></i> Compartir</a>
                         </li>
-                        <ul class="list-inline font-xs" style="padding-left: 7.5em;">
-                            <li>
-                                <a href="javascript:void(0);" class="text-info"><i class="fa fa-reply"></i> Compartir</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" onclick="meGustaPublicacion({{ publicacion.publicacion }})" class="text-success"><i class="fa fa-thumbs-up"></i><div class="megustaPublicacion-{{ publicacion.publicacion }}" style="display: -webkit-inline-flex">{% if publicacion.meGusta>0%}({{ publicacion.meGusta }}){% endif %}</div> </a>
-                            </li>
+                        <li>
+                            <a href="javascript:void(0);" onclick="meGustaPublicacion({{ publicacion.publicacion }})" class="text-success"><i class="fa fa-thumbs-up"></i><div class="megustaPublicacion-{{ publicacion.publicacion }}" style="display: -webkit-inline-flex">{% if publicacion.meGusta>0%}({{ publicacion.meGusta }}){% endif %}</div> </a>
+                        </li>
 
+                        <li>
+                            <a href="javascript:void(0);" class="text-muted"><a style="color: black; cursor: pointer" onclick="verComentarios({{ publicacion.publicacion }},{{ keyPub }})">Ver todos los comentarios </a><div class="totalComentarios-{{ publicacion.publicacion }}" style="display: -webkit-inline-flex">({{ publicacion.totalComentarios }})</div></a>
+                        </li>
+                        {%  if publicacion.usuario == username %}
                             <li>
-                                <a href="javascript:void(0);" class="text-muted"><a style="color: black; cursor: pointer" onclick="verComentarios({{ publicacion.publicacion }},{{ keyPub }})">Ver todos los comentarios </a><div class="totalComentarios-{{ publicacion.publicacion }}" style="display: -webkit-inline-flex">({{ publicacion.totalComentarios }})</div></a>
+                                <a   onclick="editarPublicacion({{ publicacion.publicacion }})" style="cursor: pointer" class="text-primary"><i class="fas fa-edit text-primary"></i></a>
                             </li>
-                            {%  if publicacion.usuario == username %}
-                                <li>
-                                    <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                        <div class="publicaciones-{{publicacion.publicacion}}">
-                            {% if publicacion.comentarios|length>0 %}
-                                {% for key, comentario in publicacion.comentarios%}
-                                    {% if key<2 %}
-                                        <li class="message message-reply">
-                                            <img src="{{ asset('img/avatars/3.png') }}" class="online" alt="user">
-                                            <span class="message-text"> <a href="javascript:void(0);" class="username">{{ comentario.nombre }}</a> {{ comentario.texto }}</span>
+                            <li>
+                                <a href="javascript:void(0);" class="text-danger"><i class="fas fa-trash text-danger"></i></a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    <div class="publicaciones-{{publicacion.publicacion}}">
+                        {% if publicacion.comentarios|length>0 %}
+                            {% for key, comentario in publicacion.comentarios%}
+                                {% if key<2 %}
+                                    <li class="message message-reply">
+                                        <img src="{{ asset('img/avatars/3.png') }}" class="online" alt="user">
+                                        <span class="message-text"> <a href="javascript:void(0);" class="username">{{ comentario.nombre }}</a> {{ comentario.texto }}</span>
 
-                                            <ul class="list-inline font-xs">
+                                        <ul class="list-inline font-xs">
+                                            <li>
+                                                <a href="javascript:void(0);" class="text-muted">1 minute ago </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0);" onclick="meGustaComentario({{ comentario.comentario }})"  class="text-success"><i class="fa fa-thumbs-up"></i><div class="megustaComentario-{{ comentario.comentario }}" style="display: -webkit-inline-flex">{% if comentario.meGusta>0%}({{ comentario.meGusta }}){% endif %}</div></a>
+                                            </li>
+
+                                            {%  if comentario.usuario == username %}
                                                 <li>
-                                                    <a href="javascript:void(0);" class="text-muted">1 minute ago </a>
+                                                    <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
                                                 </li>
                                                 <li>
-                                                    <a href="javascript:void(0);" onclick="meGustaComentario({{ comentario.comentario }})"  class="text-success"><i class="fa fa-thumbs-up"></i><div class="megustaComentario-{{ comentario.comentario }}" style="display: -webkit-inline-flex">{% if comentario.meGusta>0%}({{ comentario.meGusta }}){% endif %}</div></a>
+                                                    <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
                                                 </li>
+                                            {% endif %}
+                                        </ul>
 
-                                                {%  if comentario.usuario == username %}
-                                                    <li>
-                                                        <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
-                                                    </li>
-                                                {% endif %}
-                                            </ul>
-
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                            <div class="masComentarios-{{publicacion.publicacion}}">
-                            </div>
-                            <li  style="margin-top: 1em;">
-                                <div class="input-group wall-comment-reply">
-                                    <input id="btn-input" type="text" class="form-control comentar-{{publicacion.publicacion}}" placeholder="Comentar..."  onkeydown="inputComentar({{publicacion.publicacion}})" onkeyup="inputComentar({{publicacion.publicacion}})">
-                                    <span class="input-group-btn">
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <div class="masComentarios-{{publicacion.publicacion}}">
+                        </div>
+                        <li  style="margin-top: 1em;">
+                            <div class="input-group wall-comment-reply">
+                                <input id="btn-input" type="text" class="form-control comentar-{{publicacion.publicacion}}" placeholder="Comentar..."  onkeydown="inputComentar({{publicacion.publicacion}})" onkeyup="inputComentar({{publicacion.publicacion}})">
+                                <span class="input-group-btn">
                             <button disabled class="btn btn-primary btnComentar-{{publicacion.publicacion}}" id="btn-chat" onclick="crearComentario({{ publicacion.publicacion }}, {{keyPub}})">
 							    <i class="fas fa-play"></i>
 							</button> </span>
-                                </div>
-                            </li>
-                        </div>
-                    </ul>
+                            </div>
+                        </li>
+                    </div>
+                </ul>
 
+            </div>
+
+        {%  endfor%}
+        <div class="modal fade editarPublicacion" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <div><h5 class="modal-title" id="exampleModalLabel">Editar publicación</h5></div>
+
+                        {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+                        {#<span aria-hidden="true">&times;</span>#}
+                        {#</button>#}
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="editarPublicacionInput" rows="2" class="form-control" onkeydown="inputPublicacionEditar()" onkeyup="inputPublicacionEditar()" placeholder="¿Qué estas pensando?" maxlength="480"></textarea>
+                        <input type="text" id="codigoPublicacionEdit" hidden>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button id="btnPublicarEditar"  type="button" class="btn btn-primary" onclick="actualizarPublicacion()">Editar</button>
+                    </div>
                 </div>
-
-            {%  endfor%}
+            </div>
         </div>
+    </div>
+
 
 
 
@@ -337,12 +362,12 @@
                 dataType: "json",
                 success: function (respuestas) {
                     if(respuestas.estado){
-                    if(respuestas.datos.meGustas>0){
-                    $(`.megustaPublicacion-${codigoPublicacion}`).html(`(${respuestas.datos.meGustas})`);
-                    }
-                    else{
-                    $(`.megustaPublicacion-${codigoPublicacion}`).html("");
-                    }
+                        if(respuestas.datos.meGustas>0){
+                            $(`.megustaPublicacion-${codigoPublicacion}`).html(`(${respuestas.datos.meGustas})`);
+                        }
+                        else{
+                            $(`.megustaPublicacion-${codigoPublicacion}`).html("");
+                        }
                     }
 
                 },
@@ -376,6 +401,81 @@
                     // console.log(error);
                 }
             });
+        }
+
+
+        function editarPublicacion(codigoPublicacion) {
+            $.ajax({
+                headers: {
+                    // 'X-CSRF-TOKEN': token,
+                    'Content-type': 'application/json',
+                },
+                url: `${servidor}${api['editarPublicacion']}${username}/${codigoPublicacion}`,
+                type: "GET",
+                dataType: "json",
+                success: function (respuestas) {
+                    if(respuestas.estado){
+
+                        $(".editarPublicacion").modal();
+                        $("textarea#editarPublicacionInput").val(respuestas.datos.textoPublicacion);
+                        $("#codigoPublicacionEdit").val(respuestas.datos.publicacion);
+                    }
+
+                },
+                error: function (error) {
+                    // console.log(error);
+                }
+            });
+        }
+
+        function actualizarPublicacion() {
+            var codigoPublicacion=$("#codigoPublicacionEdit").val();
+            $.ajax({
+                headers: {
+                    // 'X-CSRF-TOKEN': token,
+                    'Content-type': 'application/json',
+                },
+                url: `${servidor}${api['actualizarPublicacion']}${username}`,
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify({datos:{texto:$("textarea#editarPublicacionInput").val(),publicacion:codigoPublicacion}}),
+                success: function (respuestas) {
+                    if(respuestas.estado){
+                        $(`#publicacion-${codigoPublicacion}`).html(`<span class="message-text" style="width: 100%">
+                                                <a style="
+                                                        display: flex;
+                                                        cursor: auto;
+                                                        justify-content: end;
+                                                        width: 100%;
+                                                        padding-right: 4em;
+                                                        color: #3276b1;"
+                                                   href="javascript:void(0);"
+                                                   class="username">
+                                                    ${respuestas.datos.nombre}
+                                                    <small class="text-muted ultra-light" style="display: flex;margin-left: auto;"> Hace ${respuestas.datos.tiempoTranscurrido}</small>
+                                                </a>
+                                ${ respuestas.datos.textoPublicacion }
+                                            </span>`);
+                        $(".editarPublicacion").modal('hide');
+
+                    }
+
+                },
+                error: function (error) {
+                    // console.log(error);
+                }
+            });
+
+        }
+
+
+        function inputPublicacionEditar() {
+            if($("#editarPublicacionInput").val().length >0){
+                $("#btnPublicarEditar").prop("disabled",false);
+            }
+            else{
+                $("#btnPublicarEditar").prop("disabled",true);
+            }
         }
     </script>
 {% endblock %}

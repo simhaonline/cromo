@@ -38,7 +38,10 @@
         {##}
     {#</div>#}
     {% if licencia==null%}
-    <span id="extr-page-header-space"> <span class="hidden-mobile hidden-xs">Activar licencia</span> <a style="font-size: 23px;" href="{{ path('activar_licencia') }}"><li class="fas fa-key"></li></a> </span>
+        <span id="extr-page-header-space"> <span class="hidden-mobile hiddex-xs">¿Tiene una licencia?</span> <a href="{{ path('activar_licencia') }}" class="btn btn-danger">ACTIVAR LICENCIA</a> </span>
+        {% else %}
+            <span id="extr-page-header-space"> <span class="hidden-mobile hiddex-xs">¿Tiene una cuenta?</span> <a href="javascript:void(0);" class="btn btn-danger">CREAR CUENTA</a> </span>
+    {#<span id="extr-page-header-space"> <span class="hidden-mobile hidden-xs">Activar licencia</span> <a style="font-size: 23px;" href="{{ path('activar_licencia') }}"><li class="fas fa-key"></li></a> </span>#}
     {% endif %}
 </header>
 

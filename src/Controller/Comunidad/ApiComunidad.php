@@ -30,7 +30,11 @@ public static function getApi($ruta){
         'meGustaPublicacion'        =>'/api/comunidad/publicacion/meGusta/',
         'meGustaComentario'         =>'/api/comunidad/comentario/meGusta/',
         'editarPublicacion'         =>'/api/comunidad/publicacion/editar/',
-        'actualizarPublicacion'         =>'/api/comunidad/publicacion/actualizar/'
+        'editarComentario'          =>'/api/comunidad/comentario/editar/',
+        'actualizarPublicacion'     =>'/api/comunidad/publicacion/actualizar/',
+        'actualizarComentario'      =>'/api/comunidad/comentario/actualizar/',
+        'eliminarComentario'        =>'/api/comunidad/comentario/eliminar/',
+        'eliminarPublicacion'       =>'/api/comunidad/publicacion/eliminar/',
     ];
 
     return $ruta!="todas"?$api[$ruta]:$api;

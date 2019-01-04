@@ -26,6 +26,7 @@
     {% endif %}
     <div class="publicacionNueva">
         {% for keyPub, publicacion in publicaciones %}
+            <div id="publicacionCompleta-{{ publicacion.publicacion }}">
             <div class="timeline-seperator text-center"> <span>{{ publicacion.fecha }}</span>
                 <div class="btn-group pull-right">
                     <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><span class="caret single"></span></a>
@@ -80,7 +81,7 @@
                                 <a   onclick="editarPublicacion({{ publicacion.publicacion }})" style="cursor: pointer" class="text-primary"><i class="fas fa-edit text-primary"></i></a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);" class="text-danger"><i class="fas fa-trash text-danger"></i></a>
+                                <a href="javascript:void(0);" onclick="eliminarPublicacion({{ publicacion.publicacion }})" class="text-danger"><i class="fas fa-trash text-danger"></i></a>
                             </li>
                         {% endif %}
                     </ul>
@@ -88,9 +89,10 @@
                         {% if publicacion.comentarios|length>0 %}
                             {% for key, comentario in publicacion.comentarios%}
                                 {% if key<2 %}
+                                    <div id="comentarioCompleto-{{ comentario.comentario }}">
                                     <li class="message message-reply">
                                         <img src="{{ asset('img/avatars/3.png') }}" class="online" alt="user">
-                                        <span class="message-text"> <a href="javascript:void(0);" class="username">{{ comentario.nombre }}</a> {{ comentario.texto }}</span>
+                                        <div id="comentario-{{ comentario.comentario }}"><span class="message-text"> <a href="javascript:void(0);" class="username">{{ comentario.nombre }}</a> {{ comentario.texto }}</span></div>
 
                                         <ul class="list-inline font-xs">
                                             <li>
@@ -102,15 +104,16 @@
 
                                             {%  if comentario.usuario == username %}
                                                 <li>
-                                                    <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
+                                                    <a href="javascript:void(0);" onclick="editarComentario({{ comentario.comentario }})" class="text-primary"><i class="fas fa-edit text-primary"></i></a>
                                                 </li>
                                                 <li>
-                                                    <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
+                                                    <a href="javascript:void(0);" onclick="eliminarComentario({{ comentario.comentario }})" class="text-danger"><i class="fas fa-trash text-danger"></i></a>
                                                 </li>
                                             {% endif %}
                                         </ul>
 
                                     </li>
+                                    </div>
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
@@ -129,6 +132,7 @@
                 </ul>
 
             </div>
+            </div>
 
         {%  endfor%}
         <div class="modal fade editarPublicacion" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -144,11 +148,11 @@
                     </div>
                     <div class="modal-body">
                         <textarea id="editarPublicacionInput" rows="2" class="form-control" onkeydown="inputPublicacionEditar()" onkeyup="inputPublicacionEditar()" placeholder="¿Qué estas pensando?" maxlength="480"></textarea>
-                        <input type="text" id="codigoPublicacionEdit" hidden>
+                        <input type="text" id="codigoPublicacionEdit" hidden title="codigo">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button id="btnPublicarEditar"  type="button" class="btn btn-primary" onclick="actualizarPublicacion()">Editar</button>
+                        <button id="btnPublicarEditar"  type="button" class="btn btn-primary" >Editar</button>
                     </div>
                 </div>
             </div>
@@ -169,14 +173,14 @@
             var html='';
             $(`.masComentarios-${codigo}`).html(html);
             for(var i=2;i<=data[key]['comentarios'].length;i++ ) {
-                html = `<li class='message message-reply'><img src='{{ asset('img/avatars/3.png') }}' class='online' alt='user'><span class='message-text'> <a href='javascript:void(0);' class='username'>${data[key]['comentarios'][i].nombre}</a>${data[key]['comentarios'][i]['texto']}</span><ul class='list-inline font-xs'><li><a href='javascript:void(0);' class='text-muted'>1 minute ago </a></li><li><a href='javascript:void(0);'class='text-success'><i class='fa fa-thumbs-up'></i></a></li>
+                html = `<div id="comentarioCompleto-${data[key]['comentarios'][i].comentario}"><li class='message message-reply'><img src='{{ asset('img/avatars/3.png') }}' class='online' alt='user'><div id="comentario-${ data[key]['comentarios'][i].comentario }"><span class='message-text'> <a href='javascript:void(0);' class='username'>${data[key]['comentarios'][i].nombre}</a>${data[key]['comentarios'][i]['texto']}</span></div><ul class='list-inline font-xs'><li><a href='javascript:void(0);' class='text-muted'>1 minute ago </a></li><li><a href='javascript:void(0);'class='text-success'><i class='fa fa-thumbs-up'></i></a></li>
                 ${username===data[key]['comentarios'][i].usuario?`<li>
-                <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
+                <a href="javascript:void(0);" class="text-primary" onclick="editarComentario(${ data[key]['comentarios'][i].comentario })"><i class="fas fa-edit text-primary"></i></a>
                 </li>
                 <li>
-                <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
+                <a href="javascript:void(0);" class="text-danger" onclick="eliminarComentario(${data[key]['comentarios'][i].comentario})"><i class="fas fa-trash text-danger"></i></a>
                 </li>`:""}
-                </ul></li>`;
+                </ul></li></div>`;
                 // html="<h1>holaaa</h1>"
                 $(`.masComentarios-${codigo}`).append(html);
             }
@@ -194,9 +198,9 @@
                 data: JSON.stringify({datos:{texto:$(`.comentar-${codigoPublicacion}`).val(),comentario:codigoPublicacion}}),
                 success: function (respuestas) {
                     if(respuestas.estado){
-                        html=`<li class="message message-reply">
+                        html=`<div id="comentarioCompleto-${respuestas.datos.comentario}"><li class="message message-reply">
                                             <img src="{{ asset('img/avatars/3.png') }}" class="online" alt="user">
-                                            <span class="message-text"> <a href="javascript:void(0);" class="username">{{ arUsuario.nombreCorto }}</a> ${respuestas.datos.texto}</span>
+                                            <div id="comentario-${respuestas.datos.comentario}"><span class="message-text"> <a href="javascript:void(0);" class="username">{{ arUsuario.nombreCorto }}</a> ${respuestas.datos.texto}</span></div>
 
                                             <ul class="list-inline font-xs">
                                                 <li>
@@ -206,14 +210,14 @@
                                                     <a href="javascript:void(0);" onclick="meGustaComentario(${respuestas.datos.comentario})" class="text-success"><i class="fa fa-thumbs-up"></i><div class="megustaComentario-${ respuestas.datos.comentario }" style="display: -webkit-inline-flex"></div></a>
                                                 </li>
                                                 <li>
-                                                        <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
+                                                        <a href="javascript:void(0);" onclick="editarComentario(${respuestas.datos.comentario})" class="text-primary"><i class="fas fa-edit text-primary"></i></a>
                                                     </li>
                                                     <li>
-                                                        <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
+                                                        <a href="javascript:void(0);" onclick="eliminarComentario(${respuestas.datos.comentario})" class="text-danger"><i class="fas fa-trash text-danger"></i></a>
                                                     </li>
                                             </ul>
 
-                                        </li>`;
+                                        </li></div>`;
                         $(`.publicaciones-${codigoPublicacion}`).prepend(html);
                         $(`.totalComentarios-${codigoPublicacion}`).html("");
                         $(`.totalComentarios-${codigoPublicacion}`).append(`(${respuestas.datos.totalComentarios})`);
@@ -250,7 +254,7 @@
                         if(auxPublicacion===0){
                             auxPublicacion=data.length;
                         }
-                        html=`<div class="timeline-seperator text-center"><span>${respuestas.datos.fecha}</span>
+                        html=`<div id="publicacionCompleta-${respuestas.datos.publicacion}"><div class="timeline-seperator text-center"><span>${respuestas.datos.fecha}</span>
                 <div class="btn-group pull-right">
                     <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><span class="caret single"></span></a>
                     <ul class="dropdown-menu text-left">
@@ -270,6 +274,7 @@
                 <ul>
                     <li class="message">
                         <img src="{{ app.session.get('foto_perfil') }}" class="online foto_perfil" alt="sunny">
+                        <div id="publicacion-${respuestas.datos.publicacion}">
                         <span class="message-text" style="width: 100%">
                                                 <a style="
                                                         display: flex;
@@ -285,6 +290,7 @@
                                                 </a>
                             ${ respuestas.datos.texto }
                                             </span>
+                                            </div>
                     </li>
                     <ul class="list-inline font-xs" style="padding-left: 7.5em;">
                         <li>
@@ -296,12 +302,11 @@
                         <li>
                          <a href="javascript:void(0);" class="text-muted">${respuestas.datos.totalComentarios>2?`<a style="color: black; cursor: pointer" onclick="verComentarios(${auxPublicacion})">Ver todos los comentarios </a>(${respuestas.datos.totalComentarios})`:""}
                             {#<a href="javascript:void(0);" class="text-muted">${publicacion.totalComentarios>2:"<a style='color: black; cursor: pointer' onclick='verComentarios("${auxPublicacion+1}")'>Ver todos los comentarios </a>({{ publicacion.totalComentarios }})" }{% endif %}</a>#}
+                        </li><li>
+                            <a href="javascript:void(0);" onclick="editarPublicacion(${respuestas.datos.publicacion})" class="text-primary"><i class="fas fa-edit text-primary"></i></a>
                         </li>
                         <li>
-                            <a href="javascript:void(0);" class="text-primary"><li class="fas fa-edit text-primary"></li></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="text-danger"><li class="fas fa-trash text-danger"></li></a>
+                            <a href="javascript:void(0);" onclick="eliminarPublicacion(${respuestas.datos.publicacion})" class="text-danger"><i class="fas fa-trash text-danger"></i></a>
                         </li>
                     </ul>
                     <div class="publicaciones-${respuestas.datos.publicacion}">
@@ -319,7 +324,7 @@
                     </div>
                 </ul>
 
-            </div>`;
+            </div></div>`;
                         $(`.publicacionNueva`).prepend(html);
                         $(`.publicar`).val("");
                     }
@@ -405,6 +410,10 @@
 
 
         function editarPublicacion(codigoPublicacion) {
+            $("#btnPublicarEditar").unbind("click");
+            $("#btnPublicarEditar").bind("click",function () {
+                actualizarPublicacion();
+            });
             $.ajax({
                 headers: {
                     // 'X-CSRF-TOKEN': token,
@@ -419,6 +428,60 @@
                         $(".editarPublicacion").modal();
                         $("textarea#editarPublicacionInput").val(respuestas.datos.textoPublicacion);
                         $("#codigoPublicacionEdit").val(respuestas.datos.publicacion);
+                    }
+
+                },
+                error: function (error) {
+                    // console.log(error);
+                }
+            });
+        }
+
+        function editarComentario(codigoComentario){
+            $("#btnPublicarEditar").unbind("click");
+            $("#btnPublicarEditar").bind("click",function () {
+                actualizarComentario();
+            });
+            $.ajax({
+                headers: {
+                    // 'X-CSRF-TOKEN': token,
+                    'Content-type': 'application/json',
+                },
+                url: `${servidor}${api['editarComentario']}${username}/${codigoComentario}`,
+                type: "GET",
+                dataType: "json",
+                success: function (respuestas) {
+                    if(respuestas.estado){
+
+                        $(".editarPublicacion").modal();
+                        $("textarea#editarPublicacionInput").val(respuestas.datos.textoComentario);
+                        $("#codigoPublicacionEdit").val(respuestas.datos.comentario);
+                    }
+
+                },
+                error: function (error) {
+                    // console.log(error);
+                }
+            });
+
+        }
+
+        function actualizarComentario() {
+            var codigoComentario=$("#codigoPublicacionEdit").val();
+            $.ajax({
+                headers: {
+                    // 'X-CSRF-TOKEN': token,
+                    'Content-type': 'application/json',
+                },
+                url: `${servidor}${api['actualizarComentario']}${username}`,
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify({datos:{texto:$("textarea#editarPublicacionInput").val(),comentario:codigoComentario}}),
+                success: function (respuestas) {
+                    if(respuestas.estado){
+                        $(`#comentario-${codigoComentario}`).html(`<span class="message-text"> <a href="javascript:void(0);" class="username">${ respuestas.datos.nombre }</a> ${ respuestas.datos.textoPublicacion }</span>`);
+                        $(".editarPublicacion").modal('hide');
+
                     }
 
                 },
@@ -476,6 +539,48 @@
             else{
                 $("#btnPublicarEditar").prop("disabled",true);
             }
+        }
+
+        function eliminarComentario(codigoComentario) {
+            $.ajax({
+                headers: {
+                    // 'X-CSRF-TOKEN': token,
+                    'Content-type': 'application/json',
+                },
+                url: `${servidor}${api['eliminarComentario']}${username}/${codigoComentario}`,
+                type: "GET",
+                dataType: "json",
+                success: function (respuestas) {
+                    if(respuestas.estado){
+                        $(`#comentarioCompleto-${codigoComentario}`).remove();
+                        $(`.totalComentarios-${respuestas.datos.publicacion}`).html(`(${respuestas.datos.totalComentario})`)
+                    }
+                },
+                error: function (error) {
+                    // console.log(error);
+                }
+            });
+        }
+
+
+        function eliminarPublicacion(codigoPublicacion) {
+            $.ajax({
+                headers: {
+                    // 'X-CSRF-TOKEN': token,
+                    'Content-type': 'application/json',
+                },
+                url: `${servidor}${api['eliminarPublicacion']}${username}/${codigoPublicacion}`,
+                type: "GET",
+                dataType: "json",
+                success: function (respuestas) {
+                    if(respuestas.estado){
+                        $(`#publicacionCompleta-${codigoPublicacion}`).remove();
+                    }
+                },
+                error: function (error) {
+                    // console.log(error);
+                }
+            });
         }
     </script>
 {% endblock %}

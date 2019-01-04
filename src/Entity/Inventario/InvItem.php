@@ -202,6 +202,16 @@ class InvItem
     private $codigoCuentaInventarioTransitoFk;
 
     /**
+     * @ORM\Column(name="producto", type="boolean", nullable=true, options={"default":false})
+     */
+    private $producto = false;
+
+    /**
+     * @ORM\Column(name="servicio", type="boolean", nullable=true, options={"default":false})
+     */
+    private $servicio = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvMarca", inversedBy="itemsMarcaRel")
      * @ORM\JoinColumn(name="codigo_marca_fk",referencedColumnName="codigo_marca_pk")
      * @Assert\NotBlank(
@@ -1120,6 +1130,38 @@ class InvItem
     public function setImpuestoIvaVentaRel( $impuestoIvaVentaRel ): void
     {
         $this->impuestoIvaVentaRel = $impuestoIvaVentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProducto()
+    {
+        return $this->producto;
+    }
+
+    /**
+     * @param mixed $producto
+     */
+    public function setProducto($producto): void
+    {
+        $this->producto = $producto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServicio()
+    {
+        return $this->servicio;
+    }
+
+    /**
+     * @param mixed $servicio
+     */
+    public function setServicio($servicio): void
+    {
+        $this->servicio = $servicio;
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Financiero\Utilidad\Contabilidad\Intercambio;
 
+use App\Entity\Financiero\FinConfiguracion;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
 use App\Utilidades\Mensajes;
@@ -139,6 +140,7 @@ class RegistroController extends Controller
     public function worldOffice()
     {
         $em = $this->getDoctrine()->getManager();
+        $arrConfiguracion = $em->getRepository(FinConfiguracion::class)->intercambioDatos();
         $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
         if (count($arRegistros) > 0) {
             $spreadsheet = new Spreadsheet();
@@ -163,7 +165,7 @@ class RegistroController extends Controller
             ];
             $sheet = $spreadsheet->getActiveSheet();
             $i = 0;
-            for ($j = 'A'; $j != 'Q'; $j++) {
+            for ($j = 'A'; $j != 'R'; $j++) {
                 $spreadsheet->getActiveSheet()->getColumnDimension($j)->setAutoSize(true);
                 $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
                 $sheet->setCellValue($j . '1', strtoupper($campos[$i]));
@@ -188,7 +190,7 @@ class RegistroController extends Controller
                 $sheet->setCellValue('N'.$j,'');
                 $sheet->setCellValue('O'.$j, $arRegistro['codigoCentroCostoFk']);
                 $sheet->setCellValue('P'.$j,'');
-                $sheet->setCellValue('P'.$j,$arRegistro['nombreCorto']);
+                $sheet->setCellValue('Q'.$j,$arrConfiguracion['codigoEmpresaIntercambio']);
                 $j++;
             }
             header('Content-Type: application/vnd.ms-excel');

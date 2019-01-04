@@ -222,11 +222,15 @@
                                 <td>{{ arMovimientoDetalle.codigoPedidoDetalleFk }}</td>
                                 <td>{{ arMovimientoDetalle.codigoImportacionDetalleFk }}</td>
                                 <td>{{ arMovimientoDetalle.codigoMovimientoDetalleFk }}</td>
+                                {% if arMovimiento.estadoAutorizado  == 0 %}
                                 <td>
                                     <a href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_remision_distribucion_cargar',{'id' : arMovimientoDetalle.codigoMovimientoDetallePk }) }}','cargarDistribucion',400,600)">
                                         <li title="Carga rapida de datos" class="fa fa-bolt"
                                             style="color: black;font-size: large;"></li>
                                     </a></td>
+                                    {% else %}
+                                    <td></td>
+                                {% endif %}
                                 <td style="text-align: center;"><input type="checkbox" style="text-align: right;"
                                                                        name="ChkSeleccionar[]"
                                                                        value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/>

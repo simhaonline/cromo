@@ -24,6 +24,11 @@ class CarAnticipoTipo
     private $codigoAnticipoTipoPk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_cobrar_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCuentaCobrarTipoFk;
+
+    /**
      * @ORM\Column(name="nombre", type="string", length=50, nullable=true)
      */
     private $nombre;
@@ -42,6 +47,12 @@ class CarAnticipoTipo
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarAnticipo", mappedBy="anticipoTipoRel")
      */
     protected $anticiposAnticipoTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CarCuentaCobrarTipo", inversedBy="cuentaCobrarTipoRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_cobrar_tipo_fk", referencedColumnName="codigo_cuenta_cobrar_tipo_pk")
+     */
+    protected $cuentaCobrarTipoRel;
 
     /**
      * @return array
@@ -139,6 +150,36 @@ class CarAnticipoTipo
         $this->anticiposAnticipoTipoRel = $anticiposAnticipoTipoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCobrarTipoFk()
+    {
+        return $this->codigoCuentaCobrarTipoFk;
+    }
 
+    /**
+     * @param mixed $codigoCuentaCobrarTipoFk
+     */
+    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
+    {
+        $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaCobrarTipoRel()
+    {
+        return $this->cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaCobrarTipoRel
+     */
+    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
+    {
+        $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
+    }
 
 }

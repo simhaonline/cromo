@@ -43,14 +43,15 @@
         {% endfor %}
         </tbody>
     </table>
-    <div class="separador-1"></div>
     <div class="btn-toolbar" style="float: right">
+        {% if arAnticipo.estadoAutorizado == false %}
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
                href="javascript:abrirVentana3('{{ path('cartera_movimiento_anticipo_anticipo_detalle_nuevo', {'codigoAnticipo': arAnticipo.codigoAnticipoPk,'id': 0 }) }}', 'anticipoDetalle', 600, 900)">Nuevo</a>
         </div>
+        {% endif %}
         <div class="btn-group">
-            {{ form_widget(form.btnEliminarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+            {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
         </div>
     </div>
     {{ form_end(form) }}

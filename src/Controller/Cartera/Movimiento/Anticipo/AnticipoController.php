@@ -129,24 +129,36 @@ class AnticipoController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $arAnticipo = $em->getRepository(CarAnticipo::class)->find($id);
-        $form = $this->createFormBuilder()
-            ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
-            ->add('btnAutorizar', SubmitType::class, array('label' => 'Autorizar', 'attr' => ['class' => 'btn btn-sm btn-default']))
-            ->add('btnAprobar', SubmitType::class, array('label' => 'Aprobar', 'attr' => ['class' => 'btn btn-sm btn-default']))
-            ->add('btnDesautorizar', SubmitType::class, array('label' => 'Desautorizar', 'attr' => ['class' => 'btn btn-sm btn-default']))
-            ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir', 'attr' => ['class' => 'btn btn-sm btn-default']))
-            ->add('btnAnular', SubmitType::class, array('label' => 'Anular', 'attr' => ['class' => 'btn btn-sm btn-default']))
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->get('btnEliminarDetalle')->isClicked()) {
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-            $em->getRepository(CarAnticipoDetalle::class)->eliminar($arrSeleccionados);
-            $em->getRepository(CarAnticipo::class)->liquidar($id);
+        $form = Estandares::botonera($arAnticipo->getEstadoAutorizado(), $arAnticipo->getEstadoAprobado(), $arAnticipo->getEstadoAnulado());
+        $arrBtnActualizarDetalle = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        if ($arAnticipo->getEstadoAutorizado()) {
+            $arrBtnActualizarDetalle['disabled'] = true;
+            $arrBtnEliminar['disabled'] = true;
         }
-        if ($form->get('btnAutorizar')->isClicked()) {
-            $em->getRepository(CarAnticipo::class)->autorizar($arAnticipo);
-            $em->getRepository(CarAnticipo::class)->liquidar($arAnticipo);
-            return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
+        $form->add('btnActualizarDetalle', SubmitType::class, $arrBtnActualizarDetalle);
+        $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arrControles = $request->request->all();
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(CarAnticipo::class)->autorizar($arAnticipo);
+                $em->getRepository(CarAnticipo::class)->liquidar($arAnticipo);
+                return $this->redirect($this->generateUrl('cartera_movimiento_anticipo_anticipo_detalle', array('id' => $id)));
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository(CarAnticipo::class)->desautorizar($arAnticipo);
+                return $this->redirect($this->generateUrl('cartera_movimiento_anticipo_anticipo_detalle', array('id' => $id)));
+            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(CarAnticipo::class)->aprobar($arAnticipo);
+                return $this->redirect($this->generateUrl('cartera_movimiento_anticipo_anticipo_detalle', array('id' => $id)));
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(CarAnticipoDetalle::class)->eliminar($arAnticipo, $arrDetallesSeleccionados);
+                $em->getRepository(CarAnticipo::class)->liquidar($id);
+            }
         }
 
         $arAnticipoDetalles = $paginator->paginate($em->getRepository(CarAnticipoDetalle::class)->lista($id), $request->query->getInt('page', 1), 70);

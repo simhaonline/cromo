@@ -96,7 +96,7 @@ class CarReciboRepository extends ServiceEntityRepository
                             $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
                             $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
                             $arCuentaCobrarAplicacion->setVrSaldo($saldo);
-                            $arCuentaCobrarAplicacion->setvRSaldoOperado($saldoOperado);
+                            $arCuentaCobrarAplicacion->setVrSaldoOperado($saldoOperado);
                             $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
                             $em->persist($arCuentaCobrarAplicacion);
                             //Cuenta por cobrar

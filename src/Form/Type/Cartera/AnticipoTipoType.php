@@ -3,6 +3,8 @@
 namespace App\Form\Type\Cartera;
 
 use App\Entity\Cartera\CarAnticipoTipo;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -18,8 +20,18 @@ class AnticipoTipoType extends AbstractType
         $builder
             ->add('codigoAnticipoTipoPk', TextType::class, ['label'=> 'Codigo anticipo tipo pk', 'required' => true])
             ->add('nombre', TextType::class, ['label' => 'Nombre', 'required' => true])
+            ->add('cuentaCobrarTipoRel',EntityType::class,[
+                'class' => 'App\Entity\Cartera\CarCuentaCobrarTipo',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('cct')
+                        ->orderBy('cct.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Cuenta cobrar tipo:',
+                'required' => true
+            ])
             ->add('consecutivo', NumberType::class, ['label' => 'Consecutivo','required' => true])
-            ->add('orden', IntegerType::class)
+            ->add('orden', IntegerType::class, ['label' => 'Orden', 'required' => true])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

@@ -2,22 +2,22 @@
 
 namespace App\Repository\Crm;
 
-use App\Entity\Crm\CrmVistaTipo;
+use App\Entity\Crm\CrmVisitaTipo;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method CrmVistaTipo|null find($id, $lockMode = null, $lockVersion = null)
- * @method CrmVistaTipo|null findOneBy(array $criteria, array $orderBy = null)
- * @method CrmVistaTipo[]    findAll()
- * @method CrmVistaTipo[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CrmVisitaTipo|null find($id, $lockMode = null, $lockVersion = null)
+ * @method CrmVisitaTipo|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CrmVisitaTipo[]    findAll()
+ * @method CrmVisitaTipo[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CrmVistaTipoRepository extends ServiceEntityRepository
+class CrmVisitaTipoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, CrmVistaTipo::class);
+        parent::__construct($registry, CrmVisitaTipo::class);
     }
 
     public function eliminar($arrSeleccionados)
@@ -25,11 +25,11 @@ class CrmVistaTipoRepository extends ServiceEntityRepository
         $respuesta = '';
         if ($arrSeleccionados) {
             foreach ($arrSeleccionados as $codigo) {
-                $arRegistro = $this->getEntityManager()->getRepository(CrmVistaTipo::class)->find($codigo);
+                $arRegistro = $this->getEntityManager()->getRepository(CrmVisitaTipo::class)->find($codigo);
                 if ($arRegistro) {
-                    $arServicio=$this->getEntityManager()->getRepository('App:Crm\CrmVista')->findBy(['codigoVistaTipoFk'=>$codigo]);
+                    $arServicio=$this->getEntityManager()->getRepository('App:Crm\CrmVisita')->findBy(['codigoVisitaTipoFk'=>$codigo]);
                     if($arServicio){
-                        $respuesta='No se puede eliminar el registro, esta siendo utilizado en uno o mas vistas';
+                        $respuesta='No se puede eliminar el registro, esta siendo utilizado en uno o mas visitas';
                     }
                     if ($respuesta != '') {
                         Mensajes::error($respuesta);
@@ -43,7 +43,7 @@ class CrmVistaTipoRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return CrmVistaTipo[] Returns an array of CrmVistaTipo objects
+//     * @return CrmVisitaTipo[] Returns an array of CrmVisitaTipo objects
 //     */
     /*
     public function findByExampleField($value)
@@ -60,7 +60,7 @@ class CrmVistaTipoRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?CrmVistaTipo
+    public function findOneBySomeField($value): ?CrmVisitaTipo
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.exampleField = :val')

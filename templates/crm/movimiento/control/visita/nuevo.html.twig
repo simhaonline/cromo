@@ -7,7 +7,7 @@
             <div class="form-group form-group-sm">
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Tipo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.vistaTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.visitaTipoRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
 
             </div>
@@ -22,7 +22,7 @@
     </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm"
-           href="{{ path('crm_movimiento_control_vista_lista') }}">Cancelar</a>
+           href="{{ path('crm_movimiento_control_visita_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}

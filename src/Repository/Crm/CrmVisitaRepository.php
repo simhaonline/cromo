@@ -2,22 +2,22 @@
 
 namespace App\Repository\Crm;
 
-use App\Entity\Crm\CrmVista;
+use App\Entity\Crm\CrmVisita;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method CrmVista|null find($id, $lockMode = null, $lockVersion = null)
- * @method CrmVista|null findOneBy(array $criteria, array $orderBy = null)
- * @method CrmVista[]    findAll()
- * @method CrmVista[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CrmVisita|null find($id, $lockMode = null, $lockVersion = null)
+ * @method CrmVisita|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CrmVisita[]    findAll()
+ * @method CrmVisita[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CrmVistaRepository extends ServiceEntityRepository
+class CrmVisitaRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, CrmVista::class);
+        parent::__construct($registry, CrmVisita::class);
     }
 
     public function eliminar($arrSeleccionados)
@@ -25,7 +25,7 @@ class CrmVistaRepository extends ServiceEntityRepository
         $respuesta = '';
         if ($arrSeleccionados) {
             foreach ($arrSeleccionados as $codigo) {
-                $arRegistro = $this->getEntityManager()->getRepository(CrmVista::class)->find($codigo);
+                $arRegistro = $this->getEntityManager()->getRepository(CrmVisita::class)->find($codigo);
                 if ($arRegistro) {
                     if ($arRegistro->getEstadoAprobado() == 0) {
                         if ($arRegistro->getEstadoAutorizado() != 0) {
@@ -46,7 +46,7 @@ class CrmVistaRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return CrmVista[] Returns an array of CrmVista objects
+//     * @return CrmVisita[] Returns an array of CrmVisita objects
 //     */
     /*
     public function findByExampleField($value)
@@ -63,7 +63,7 @@ class CrmVistaRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?CrmVista
+    public function findOneBySomeField($value): ?CrmVisita
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.exampleField = :val')

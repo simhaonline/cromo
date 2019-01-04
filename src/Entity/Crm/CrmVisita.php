@@ -5,21 +5,21 @@ namespace App\Entity\Crm;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Crm\CrmVistaRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Crm\CrmVisitaRepository")
  */
-class CrmVista
+class CrmVisita
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer", name="codigo_vista_pk", unique=true)
+     * @ORM\Column(type="integer", name="codigo_visita_pk", unique=true)
      */
-    private $codigoVistaPk;
+    private $codigoVisitaPk;
 
     /**
-     * @ORM\Column(name="codigo_vista_tipo_fk", type="string", length=20, nullable=false)
+     * @ORM\Column(name="codigo_visita_tipo_fk", type="string", length=20, nullable=false)
      */
-    private $codigoVistaTipoFk;
+    private $codigoVisitaTipoFk;
 
     /**
      * @ORM\Column(name="fecha", type="datetime")
@@ -47,42 +47,42 @@ class CrmVista
     private $estadoAutorizado=false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Crm\CrmVistaTipo", inversedBy="vistaVistaTipoRel")
-     * @ORM\JoinColumn(name="codigo_vista_tipo_fk", referencedColumnName="codigo_vista_tipo_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Crm\CrmVisitaTipo", inversedBy="visitaVisitaTipoRel")
+     * @ORM\JoinColumn(name="codigo_visita_tipo_fk", referencedColumnName="codigo_visita_tipo_pk")
      */
-    protected $vistaTipoRel;
+    protected $visitaTipoRel;
 
     /**
      * @return mixed
      */
-    public function getCodigoVistaPk()
+    public function getCodigoVisitaPk()
     {
-        return $this->codigoVistaPk;
+        return $this->codigoVisitaPk;
     }
 
     /**
-     * @param mixed $codigoVistaPk
+     * @param mixed $codigoVisitaPk
      */
-    public function setCodigoVistaPk($codigoVistaPk)
+    public function setCodigoVisitaPk($codigoVisitaPk)
     {
-        $this->codigoVistaPk = $codigoVistaPk;
+        $this->codigoVisitaPk = $codigoVisitaPk;
         return $this;
     }
 
     /**
      * @return mixed
      */
-    public function getCodigoVistaTipoFk()
+    public function getCodigoVisitaTipoFk()
     {
-        return $this->codigoVistaTipoFk;
+        return $this->codigoVisitaTipoFk;
     }
 
     /**
-     * @param mixed $codigoVistaTipoFk
+     * @param mixed $codigoVisitaTipoFk
      */
-    public function setCodigoVistaTipoFk($codigoVistaTipoFk)
+    public function setCodigoVisitaTipoFk($codigoVisitaTipoFk)
     {
-        $this->codigoVistaTipoFk = $codigoVistaTipoFk;
+        $this->codigoVisitaTipoFk = $codigoVisitaTipoFk;
         return $this;
     }
 
@@ -123,17 +123,17 @@ class CrmVista
     /**
      * @return mixed
      */
-    public function getVistaTipoRel()
+    public function getVisitaTipoRel()
     {
-        return $this->vistaTipoRel;
+        return $this->visitaTipoRel;
     }
 
     /**
-     * @param mixed $vistaTipoRel
+     * @param mixed $visitaTipoRel
      */
-    public function setVistaTipoRel($vistaTipoRel)
+    public function setVisitaTipoRel($visitaTipoRel)
     {
-        $this->vistaTipoRel = $vistaTipoRel;
+        $this->visitaTipoRel = $visitaTipoRel;
         return $this;
     }
 

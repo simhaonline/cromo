@@ -1,29 +1,29 @@
 <?php
 
-namespace App\Controller\Crm\Movimiento\Control\Vista;
+namespace App\Controller\Crm\Movimiento\Control\Visita;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
-use App\Entity\Crm\CrmVista;
-use App\Form\Type\Crm\VistaType;
+use App\Entity\Crm\CrmVisita;
+use App\Form\Type\Crm\VisitaType;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class VistaController extends ControllerListenerGeneral
+class VisitaController extends ControllerListenerGeneral
 {
-    protected $clase= CrmVista::class;
-    protected $claseNombre = "CrmVista";
+    protected $clase= CrmVisita::class;
+    protected $claseNombre = "CrmVisita";
     protected $modulo = "Crm";
     protected $funcion = "Movimiento";
     protected $grupo = "Control";
-    protected $nombre = "Vista";
+    protected $nombre = "Visita";
 
     /**
-     * @Route("/crm/movimiento/control/vista/lista", name="crm_movimiento_control_vista_lista")
+     * @Route("/crm/movimiento/control/visita/lista", name="crm_movimiento_control_visita_lista")
      */
     public function lista(Request $request)
     {
@@ -45,16 +45,16 @@ class VistaController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Vista");
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Visita");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository('App:Crm\CrmVista')->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('crm_movimiento_control_vista_lista'));
+                $em->getRepository('App:Crm\CrmVisita')->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('crm_movimiento_control_visita_lista'));
             }
         }
 
-        return $this->render('crm/movimiento/control/vista/lista.html.twig', [
+        return $this->render('crm/movimiento/control/visita/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -64,45 +64,45 @@ class VistaController extends ControllerListenerGeneral
     /**
      * @param Request $request
      * @param $id
-     * @Route("/crm/movimiento/control/vista/nuevo/{id}", name="crm_movimiento_control_vista_nuevo")
+     * @Route("/crm/movimiento/control/visita/nuevo/{id}", name="crm_movimiento_control_visita_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         if ($id == 0) {
-            $arVista = new CrmVista();
-            $arVista->setFecha(new \DateTime('now'));
+            $arVisita = new CrmVisita();
+            $arVisita->setFecha(new \DateTime('now'));
         } else {
-            $arVista= $em->getRepository(CrmVista::class)->find($id);
+            $arVisita= $em->getRepository(CrmVisita::class)->find($id);
         }
-        $form = $this->createForm(VistaType::class, $arVista);
+        $form = $this->createForm(VisitaType::class, $arVisita);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arVista->setComentarios($form->get('comentarios')->getData());
-                $em->persist($arVista);
+                $arVisita->setComentarios($form->get('comentarios')->getData());
+                $em->persist($arVisita);
                 $em->flush();
-                return $this->redirect($this->generateUrl('crm_movimiento_control_vista_lista'));
+                return $this->redirect($this->generateUrl('crm_movimiento_control_visita_lista'));
             }
         }
-        return $this->render('crm/movimiento/control/vista/nuevo.html.twig', [
-            'arServicio' => $arVista,
+        return $this->render('crm/movimiento/control/visita/nuevo.html.twig', [
+            'arServicio' => $arVisita,
             'form' => $form->createView()]);
     }
 
     /**
      * @param Request $request
      * @param $id
-     * @Route("/crm/movimiento/control/vista/detalle/{id}", name="crm_movimiento_control_vista_detalle")
+     * @Route("/crm/movimiento/control/visita/detalle/{id}", name="crm_movimiento_control_visita_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arVista = $em->getRepository(CrmVista::class)->find($id);
-        $form = Estandares::botonera($arVista->getEstadoAutorizado(),$arVista->getEstadoAprobado(),$arVista->getEstadoAnulado());
+        $arVisita = $em->getRepository(CrmVisita::class)->find($id);
+        $form = Estandares::botonera($arVisita->getEstadoAutorizado(),$arVisita->getEstadoAprobado(),$arVisita->getEstadoAnulado());
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-                $formato = new CrmVista();
+                $formato = new CrmVisita();
 //                $formato->Generar($em, $id);
             }
             if ($form->get('btnAutorizar')->isClicked()) {
@@ -117,11 +117,11 @@ class VistaController extends ControllerListenerGeneral
             if ($form->get('btnAnular')->isClicked()) {
 //                $em->getRepository(InvServicio::class)->anular($arServicio);
             }
-            return $this->redirect($this->generateUrl('crm_movimiento_control_vista_detalle',['id' => $arVista->getCodigoServicioPk()]));
+            return $this->redirect($this->generateUrl('crm_movimiento_control_visita_detalle',['id' => $arVisita->getCodigoServicioPk()]));
         }
 
-        return $this->render('crm/movimiento/control/vista/detalle.html.twig', [
-            'arVista' => $arVista,
+        return $this->render('crm/movimiento/control/visita/detalle.html.twig', [
+            'arVisita' => $arVisita,
             'form' => $form->createView()]);
 
     }

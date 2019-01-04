@@ -45,6 +45,74 @@ class CrmVisitaRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param $arVisita CrmVisita
+     */
+    public function autorizar($arVisita)
+    {
+        $em = $this->getEntityManager();
+        if($arVisita->getEstadoAutorizado() == 0) {
+
+                $arVisita->setEstadoAutorizado(1);
+                $em->persist($arVisita);
+                $em->flush();
+
+        } else {
+            Mensajes::error('La visita ya esta autorizado');
+        }
+    }
+
+    /**
+     * @param $arVisita CrmVisita
+     */
+    public function desautorizar($arVisita){
+        $em = $this->getEntityManager();
+        if($arVisita->getEstadoAutorizado() == 1) {
+
+            $arVisita->setEstadoAutorizado(0);
+            $em->persist($arVisita);
+            $em->flush();
+
+        } else {
+            Mensajes::error('La visita ya esta desautorizada');
+        }
+    }
+
+    /**
+     * @param $arVisita CrmVisita
+     */
+    public function aprobar($arVisita){
+        $em = $this->getEntityManager();
+        if($arVisita->getEstadoAutorizado() == 1 ) {
+            if($arVisita->getEstadoAprobado() == 0){
+                $arVisita->setEstadoAprobado(1);
+                $em->persist($arVisita);
+                $em->flush();
+            }else{
+                Mensajes::error('La visita ya esta aprobada');
+            }
+
+        } else {
+            Mensajes::error('La visita ya esta desautorizada');
+        }
+    }
+
+    public function anular($arVisita){
+        $em = $this->getEntityManager();
+        if($arVisita->getEstadoAutorizado() == 1 ) {
+            if($arVisita->getEstadoAnulado() == 0){
+                $arVisita->setEstadoAnulado(1);
+                $em->persist($arVisita);
+                $em->flush();
+            }else{
+                Mensajes::error('La visita ya esta anulado');
+            }
+
+        } else {
+            Mensajes::error('La visita no esta autorizada');
+        }
+    }
+
 //    /**
 //     * @return CrmVisita[] Returns an array of CrmVisita objects
 //     */

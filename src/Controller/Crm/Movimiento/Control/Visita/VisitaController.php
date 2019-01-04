@@ -7,6 +7,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Crm\CrmVisita;
 use App\Form\Type\Crm\VisitaType;
+use App\Formato\Crm\Visita;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,7 +83,7 @@ class VisitaController extends ControllerListenerGeneral
                 $arVisita->setComentarios($form->get('comentarios')->getData());
                 $em->persist($arVisita);
                 $em->flush();
-                return $this->redirect($this->generateUrl('crm_movimiento_control_visita_lista'));
+                return $this->redirect($this->generateUrl('crm_movimiento_control_visita_detalle',['id'=>$arVisita->getCodigoVisitaPk()]));
             }
         }
         return $this->render('crm/movimiento/control/visita/nuevo.html.twig', [
@@ -100,24 +101,25 @@ class VisitaController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arVisita = $em->getRepository(CrmVisita::class)->find($id);
         $form = Estandares::botonera($arVisita->getEstadoAutorizado(),$arVisita->getEstadoAprobado(),$arVisita->getEstadoAnulado());
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-                $formato = new CrmVisita();
-//                $formato->Generar($em, $id);
+                $formato = new Visita();
+                $formato->Generar($em, $id);
             }
             if ($form->get('btnAutorizar')->isClicked()) {
-//                $em->getRepository(InvServicio::class)->autorizar($arServicio);
+                $em->getRepository('App\Entity\Crm\CrmVisita')->autorizar($arVisita);
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-//                $em->getRepository(InvServicio::class)->desautorizar($arServicio);
+                $em->getRepository('App\Entity\Crm\CrmVisita')->desautorizar($arVisita);
             }
             if ($form->get('btnAprobar')->isClicked()) {
-//                $em->getRepository(InvServicio::class)->aprobar($arServicio);
+               $em->getRepository('App\Entity\Crm\CrmVisita')->aprobar($arVisita);
             }
             if ($form->get('btnAnular')->isClicked()) {
-//                $em->getRepository(InvServicio::class)->anular($arServicio);
+               $em->getRepository('App\Entity\Crm\CrmVisita')->anular($arVisita);
             }
-            return $this->redirect($this->generateUrl('crm_movimiento_control_visita_detalle',['id' => $arVisita->getCodigoServicioPk()]));
+            return $this->redirect($this->generateUrl('crm_movimiento_control_visita_detalle',['id' => $arVisita->getCodigoVisitaPk()]));
         }
 
         return $this->render('crm/movimiento/control/visita/detalle.html.twig', [

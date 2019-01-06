@@ -10,9 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 class GenLicencia
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\Column(type="string", name="codigo_licencia_pk", unique=true, length=100)
+     * @ORM\Id
+     * @ORM\Column(name="codigo_licencia_pk", type="string", length=20, nullable=false)
      */
     private $codigoLicenciaPk;
 
@@ -97,10 +96,9 @@ class GenLicencia
     /**
      * @param mixed $codigoLicenciaPk
      */
-    public function setCodigoLicenciaPk($codigoLicenciaPk)
+    public function setCodigoLicenciaPk( $codigoLicenciaPk ): void
     {
         $this->codigoLicenciaPk = $codigoLicenciaPk;
-        return $this;
     }
 
     /**
@@ -114,10 +112,9 @@ class GenLicencia
     /**
      * @param mixed $fechaActivacion
      */
-    public function setFechaActivacion($fechaActivacion)
+    public function setFechaActivacion( $fechaActivacion ): void
     {
         $this->fechaActivacion = $fechaActivacion;
-        return $this;
     }
 
     /**
@@ -131,10 +128,25 @@ class GenLicencia
     /**
      * @param mixed $fechaValidaHasta
      */
-    public function setFechaValidaHasta($fechaValidaHasta)
+    public function setFechaValidaHasta( $fechaValidaHasta ): void
     {
         $this->fechaValidaHasta = $fechaValidaHasta;
-        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroUsuarios()
+    {
+        return $this->numeroUsuarios;
+    }
+
+    /**
+     * @param mixed $numeroUsuarios
+     */
+    public function setNumeroUsuarios( $numeroUsuarios ): void
+    {
+        $this->numeroUsuarios = $numeroUsuarios;
     }
 
     /**
@@ -148,10 +160,9 @@ class GenLicencia
     /**
      * @param mixed $cartera
      */
-    public function setCartera($cartera)
+    public function setCartera( $cartera ): void
     {
         $this->cartera = $cartera;
-        return $this;
     }
 
     /**
@@ -165,10 +176,9 @@ class GenLicencia
     /**
      * @param mixed $compra
      */
-    public function setCompra($compra)
+    public function setCompra( $compra ): void
     {
         $this->compra = $compra;
-        return $this;
     }
 
     /**
@@ -182,10 +192,9 @@ class GenLicencia
     /**
      * @param mixed $documental
      */
-    public function setDocumental($documental)
+    public function setDocumental( $documental ): void
     {
         $this->documental = $documental;
-        return $this;
     }
 
     /**
@@ -199,10 +208,9 @@ class GenLicencia
     /**
      * @param mixed $financiero
      */
-    public function setFinanciero($financiero)
+    public function setFinanciero( $financiero ): void
     {
         $this->financiero = $financiero;
-        return $this;
     }
 
     /**
@@ -216,10 +224,9 @@ class GenLicencia
     /**
      * @param mixed $general
      */
-    public function setGeneral($general)
+    public function setGeneral( $general ): void
     {
         $this->general = $general;
-        return $this;
     }
 
     /**
@@ -233,10 +240,9 @@ class GenLicencia
     /**
      * @param mixed $inventario
      */
-    public function setInventario($inventario)
+    public function setInventario( $inventario ): void
     {
         $this->inventario = $inventario;
-        return $this;
     }
 
     /**
@@ -250,10 +256,9 @@ class GenLicencia
     /**
      * @param mixed $recursoHumano
      */
-    public function setRecursoHumano($recursoHumano)
+    public function setRecursoHumano( $recursoHumano ): void
     {
         $this->recursoHumano = $recursoHumano;
-        return $this;
     }
 
     /**
@@ -267,10 +272,9 @@ class GenLicencia
     /**
      * @param mixed $seguridad
      */
-    public function setSeguridad($seguridad)
+    public function setSeguridad( $seguridad ): void
     {
         $this->seguridad = $seguridad;
-        return $this;
     }
 
     /**
@@ -284,10 +288,9 @@ class GenLicencia
     /**
      * @param mixed $transporte
      */
-    public function setTransporte($transporte)
+    public function setTransporte( $transporte ): void
     {
         $this->transporte = $transporte;
-        return $this;
     }
 
     /**
@@ -301,10 +304,9 @@ class GenLicencia
     /**
      * @param mixed $turno
      */
-    public function setTurno($turno)
+    public function setTurno( $turno ): void
     {
         $this->turno = $turno;
-        return $this;
     }
 
     /**
@@ -318,30 +320,12 @@ class GenLicencia
     /**
      * @param mixed $crm
      */
-    public function setCrm($crm)
+    public function setCrm( $crm ): void
     {
         $this->crm = $crm;
-        return $this;
     }
 
 
-
-    /**
-     * @return mixed
-     */
-    public function getNumeroUsuarios()
-    {
-        return $this->numeroUsuarios;
-    }
-
-    /**
-     * @param mixed $numeroUsuarios
-     */
-    public function setNumeroUsuarios($numeroUsuarios)
-    {
-        $this->numeroUsuarios = $numeroUsuarios;
-        return $this;
-    }
 
 }
 

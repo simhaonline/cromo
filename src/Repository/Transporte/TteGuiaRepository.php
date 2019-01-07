@@ -348,6 +348,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.codigoProductoFk')
             ->addSelect('g.empaqueReferencia')
             ->addSelect('g.codigoCiudadDestinoFk')
+            ->addSelect('g.codigoServicioFk')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->orderBy('g.codigoCiudadDestinoFk')

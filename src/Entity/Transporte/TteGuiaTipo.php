@@ -37,6 +37,11 @@ class TteGuiaTipo
     private $consecutivo = 0;
 
     /**
+     * @ORM\Column(name="consecutivo_factura", type="integer", nullable=true)
+     */
+    private $consecutivoFactura = 0;
+
+    /**
      * @ORM\Column(name="codigo_factura_tipo_fk", type="string", length=20, nullable=true)
      */
     private $codigoFacturaTipoFk;
@@ -312,6 +317,21 @@ class TteGuiaTipo
         $this->cortesia = $cortesia;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getConsecutivoFactura()
+    {
+        return $this->consecutivoFactura;
+    }
+
+    /**
+     * @param mixed $consecutivoFactura
+     */
+    public function setConsecutivoFactura($consecutivoFactura): void
+    {
+        $this->consecutivoFactura = $consecutivoFactura;
+    }
 
 
 }

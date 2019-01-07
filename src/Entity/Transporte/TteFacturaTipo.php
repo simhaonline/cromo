@@ -32,6 +32,11 @@ class TteFacturaTipo
     private $consecutivo = 0;
 
     /**
+     * @ORM\Column(name="consecutivo_factura", type="integer", nullable=true)
+     */
+    private $consecutivoFactura = 0;
+
+    /**
      * @ORM\Column(name="resolucion_facturacion", type="text", nullable=true)
      */
     private $resolucionFacturacion;
@@ -476,6 +481,22 @@ class TteFacturaTipo
     public function setNaturalezaCuentaIngresoTercero( $naturalezaCuentaIngresoTercero ): void
     {
         $this->naturalezaCuentaIngresoTercero = $naturalezaCuentaIngresoTercero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConsecutivoFactura()
+    {
+        return $this->consecutivoFactura;
+    }
+
+    /**
+     * @param mixed $consecutivoFactura
+     */
+    public function setConsecutivoFactura( $consecutivoFactura ): void
+    {
+        $this->consecutivoFactura = $consecutivoFactura;
     }
 
 

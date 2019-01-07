@@ -356,6 +356,11 @@ class TteGuia
     private $tipoLiquidacion;
 
     /**
+     * @ORM\Column(name="numeroFactura", type="integer", nullable=true)
+     */
+    private $numeroFactura;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -1977,4 +1982,22 @@ class TteGuia
     {
         $this->desembarcosGuiaRel = $desembarcosGuiaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroFactura()
+    {
+        return $this->numeroFactura;
+    }
+
+    /**
+     * @param mixed $numeroFactura
+     */
+    public function setNumeroFactura( $numeroFactura ): void
+    {
+        $this->numeroFactura = $numeroFactura;
+    }
+
+
 }

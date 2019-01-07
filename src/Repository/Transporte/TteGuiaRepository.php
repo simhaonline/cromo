@@ -962,7 +962,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arFactura->setOperacionComercial($arFactura->getFacturaTipoRel()->getOperacionComercial());
                         $arFactura->setCodigoFacturaClaseFk('FA');
                         $arFactura->setOperacionRel($arGuia->getOperacionIngresoRel());
-                        $arFactura->setNumero($arGuia->getNumero());
+                        $arFactura->setNumero($arGuia->getNumeroFactura());
                         $arFactura->setFecha($arGuia->getFechaIngreso());
                         $arFactura->setFechaVence($arGuia->getFechaIngreso());
                         $total = $arGuia->getVrFlete() + $arGuia->getVrManejo();

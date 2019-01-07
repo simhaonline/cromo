@@ -80,7 +80,9 @@ class DespachoController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Despacho");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteDespacho::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_lista'));
             }
         }
 
@@ -144,11 +146,7 @@ class DespachoController extends ControllerListenerGeneral
                                 }
                                 $em->persist($arDespacho);
                                 $em->flush();
-                                if ($form->get('guardarnuevo')->isClicked()) {
-                                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_nuevo', array('id' => 0)));
-                                } else {
-                                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $arDespacho->getCodigoDespachoPk())));
-                                }
+                                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $arDespacho->getCodigoDespachoPk())));
                             } else {
                                 Mensajes::error('No se ha encontrado un vehiculo con el codigo ingresado');
                             }

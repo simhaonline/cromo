@@ -1642,6 +1642,59 @@ class TteGuiaRepository extends ServiceEntityRepository
      * @return array
      * @throws \Doctrine\ORM\ORMException
      */
+    public function apiDesembarco($codigoGuia, $arOperacion)
+    {
+        $em = $this->getEntityManager();
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        if ($arGuia) {
+            if ($arGuia->getEstadoDespachado() == 1) {
+                if ($arGuia->getEstadoEntregado() == 0) {
+                    $arDesembarco = new TteDesembarco();
+                    $arGuia->setFechaDespacho(null);
+                    $arGuia->setFechaCumplido(null);
+                    $arGuia->setFechaEntrega(null);
+                    $arGuia->setFechaSoporte(null);
+                    $arGuia->setEstadoDespachado(0);
+                    $arGuia->setEstadoEmbarcado(0);
+                    $arGuia->setEstadoEntregado(0);
+                    $arGuia->setEstadoSoporte(0);
+                    $arGuia->setOperacionCargoRel($arOperacion);
+                    $arDesembarco->setDespachoRel($arGuia->getDespachoRel());
+                    $arDesembarco->setGuiaRel($arGuia);
+                    $arDesembarco->setFecha(new \DateTime('now'));
+                    $arGuia->setCodigoDespachoFk(null);
+                    $em->persist($arGuia);
+                    $em->persist($arDesembarco);
+                    $em->flush();
+                    return [
+                        'error' => false,
+                        'mensaje' => '',
+                    ];
+                } else {
+                    return [
+                        'error' => true,
+                        'mensaje' => 'La guia no puede estar entregada previamente',
+                    ];
+                }
+            } else {
+                return [
+                    'error' => true,
+                    'mensaje' => 'La guia no esta despachada',
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'mensaje' => "La guia " . $codigoGuia . " no existe",
+            ];
+        }
+    }
+
+    /**
+     * @param $codigoGuia
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function apiSoporte($codigoGuia)
     {
         $em = $this->getEntityManager();
@@ -2259,14 +2312,14 @@ class TteGuiaRepository extends ServiceEntityRepository
     /**
      * @param $arrCodigoGuia array
      */
-    public function desembarco($arrCodigoGuia)
+    public function desembarco($arrCodigoGuia, $arOperacion)
     {
         $em = $this->_em;
         if ($arrCodigoGuia) {
             foreach ($arrCodigoGuia as $codigoGuia) {
                 $arGuia = $em->find(TteGuia::class, $codigoGuia);
                 if ($arGuia) {
-                    if ($arGuia->getEstadoDespachado() && $arGuia->getCodigoDespachoFk() && !$arGuia->getEstadoAnulado()) {
+                    if ($arGuia->getEstadoDespachado() && $arGuia->getCodigoDespachoFk() && !$arGuia->getEstadoAnulado() && !$arGuia->getEstadoSoporte() && !$arGuia->getEstadoEntregado() && !$arGuia->getEstadoFacturaGenerada()) {
                         $arDesembarco = new TteDesembarco();
                         $arGuia->setFechaDespacho(null);
                         $arGuia->setFechaCumplido(null);
@@ -2276,6 +2329,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arGuia->setEstadoEmbarcado(0);
                         $arGuia->setEstadoEntregado(0);
                         $arGuia->setEstadoSoporte(0);
+                        $arGuia->setOperacionCargoRel($arOperacion);
                         $arDesembarco->setDespachoRel($arGuia->getDespachoRel());
                         $arDesembarco->setGuiaRel($arGuia);
                         $arDesembarco->setFecha(new \DateTime('now'));

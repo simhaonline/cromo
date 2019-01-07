@@ -23,7 +23,7 @@ class Factura extends \FPDF {
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("TteFactura$codigoFactura.pdf", 'D');
+        $pdf->Output("Factura$codigoFactura.pdf", 'D');
     }
 
     public function Header() {

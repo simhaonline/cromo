@@ -78,8 +78,8 @@ class GuiaType extends AbstractType {
     {
         $campos = '[
             {"campo":"codigoGuiaPk",                            "tipo":"pk",        "ayuda":"Codigo de guia",                           "titulo":"GUIA"},
-            {"campo":"codigoOperacionIngresoFk",                "tipo":"texto",     "ayuda":"Codigo operacion",                         "titulo":"IO"},
-            {"campo":"codigoOperacionCargoFk",                  "tipo":"texto",     "ayuda":"Codigo operacion cargo",                   "titulo":"OC"},
+            {"campo":"codigoOperacionIngresoFk",                "tipo":"texto",     "ayuda":"Operacion ingreso",                         "titulo":"OI"},
+            {"campo":"codigoOperacionCargoFk",                  "tipo":"texto",     "ayuda":"Operacion cargo",                   "titulo":"OC"},
             {"campo":"codigoServicioFk",                        "tipo":"texto",     "ayuda":"Codigo control",                          "titulo":"SER"},
             {"campo":"codigoGuiaTipoFk",                        "tipo":"texto",     "ayuda":"Codigo guia tipo",                         "titulo":"TIPO"},
             {"campo":"numero",                                  "tipo":"entero",    "ayuda":"Numero",                                   "titulo":"NUMERO"},

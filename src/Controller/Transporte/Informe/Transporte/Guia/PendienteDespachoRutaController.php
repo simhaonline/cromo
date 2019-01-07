@@ -66,6 +66,12 @@ class PendienteDespachoRutaController extends Controller
         } else {
             $session->set('filtroTteCodigoServicio', null);
         }
+        $arOperacionCargo = $form->get('operacionCargoRel')->getData();
+        if ($arOperacionCargo) {
+            $session->set('filtroTteCodigoOperacionCargo', $arOperacionCargo->getCodigoOperacionPk());
+        } else {
+            $session->set('filtroTteCodigoOperacionCargo', null);
+        }
         $session->set('filtroTteMostrarDevoluciones', $form->get('ChkMostrarDevoluciones')->getData());
         if ($form->get('txtCodigoCliente')->getData() != '') {
             $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
@@ -110,12 +116,30 @@ class PendienteDespachoRutaController extends Controller
         if ($session->get('filtroTteCodigoServicio')) {
             $arrayPropiedadesServicio['data'] = $em->getReference("App\Entity\Transporte\TteServicio", $session->get('filtroTteCodigoServicio'));
         }
+
+        $arrayPropiedadesOperacionCargo = array(
+            'class' => 'App\Entity\Transporte\TteOperacion',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('o')
+                    ->orderBy('o.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""
+        );
+        if ($session->get('filtroTteCodigoOperacionCargo')) {
+            $arrayPropiedadesOperacionCargo['data'] = $em->getReference("App\Entity\Transporte\TteOperacion", $session->get('filtroTteCodigoOperacionCargo'));
+        }
+
         $form = $this->createFormBuilder()
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('ChkMostrarDevoluciones', CheckboxType::class, array('label' => false, 'required' => false, 'data' => $session->get('filtroTteMostrarDevoluciones')))
             ->add('rutaRel', EntityType::class, $arrayPropiedadesRuta)
             ->add('servicioRel', EntityType::class, $arrayPropiedadesServicio)
+            ->add('operacionCargoRel', EntityType::class, $arrayPropiedadesOperacionCargo)
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('BtnFiltrar', SubmitType::class, array('label' => 'Filtrar'))

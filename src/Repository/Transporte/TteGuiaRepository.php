@@ -1151,12 +1151,16 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteCodigoServicio')) {
             $queryBuilder->andWhere("g.codigoServicioFk = '{$session->get('filtroTteCodigoServicio')}'");
         }
+        if ($session->get('filtroTteCodigoOperacionCargo')) {
+            $queryBuilder->andWhere("g.codigoOperacionCargoFk = '{$session->get('filtroTteCodigoOperacionCargo')}'");
+        }
         if (!$session->get('filtroTteMostrarDevoluciones')) {
             $queryBuilder->andWhere("g.codigoServicioFk <> 'DEV'");
         }
         if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("g.codigoClienteFk = '{$session->get('filtroTteCodigoCliente')}'");
         }
+
         $queryBuilder->orderBy('g.codigoRutaFk')
             ->addOrderBy('g.codigoCiudadDestinoFk');
 

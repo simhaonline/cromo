@@ -54,6 +54,7 @@ class FacturaType extends AbstractType {
     {
         $campos = '[
             {"campo":"codigoFacturaPk",                         "tipo":"pk",        "ayuda":"Codigo de factura",                        "titulo":"ID"},
+            {"campo":"codigoFacturaClaseFk",                    "tipo":"texto",     "ayuda":"Clase",                                    "titulo":"CLA"},
             {"campo":"facturaTipoRel.nombre",                   "tipo":"texto",     "ayuda":"Tipo factura",                             "titulo":"TIPO",                "relacion":""},
             {"campo":"numero",                                  "tipo":"entero",    "ayuda":"Numero",                                   "titulo":"NUMERO"},
             {"campo":"fecha",                                   "tipo":"fecha",     "ayuda":"Fecha",                                    "titulo":"FECHA"},
@@ -62,11 +63,10 @@ class FacturaType extends AbstractType {
             {"campo":"vrFlete",                                 "tipo":"moneda",    "ayuda":"Valor flete",                              "titulo":"FLETE"},
             {"campo":"vrManejo",                                "tipo":"moneda",    "ayuda":"Valor manejo",                             "titulo":"MANEJO"},
             {"campo":"vrSubtotal",                              "tipo":"moneda",    "ayuda":"Subtotal",                                 "titulo":"SUBTOTAL"},
-            {"campo":"vrTotal",                                 "tipo":"moneda",    "ayuda":"Total",                                    "titulo":"TOTAL"},
+            {"campo":"vrTotal",                                 "tipo":"moneda",    "ayuda":"Total",                                    "titulo":"TOTAL"},           
             {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},
             {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},
-            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"},
-            {"campo":"codigoFacturaClaseFk",                    "tipo":"texto",     "ayuda":"Clase",                                    "titulo":"Clase"}
+            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"}            
         ]';
         return $campos;
 

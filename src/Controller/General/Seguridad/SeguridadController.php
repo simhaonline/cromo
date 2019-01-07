@@ -141,13 +141,13 @@ class SeguridadController extends Controller
                     }
                 }
                 $em->persist($arUsuario);
-                try {
+                //try {
                     $em->flush();
                     return $this->redirect($this->generateUrl('general_seguridad_usuario_lista'));
-                } catch (\Exception $e) {
-                    Mensajes::error('El usuario ingresado ya se encuentra registrado');
+                //} catch (\Exception $e) {
+                    //Mensajes::error('El usuario ingresado ya se encuentra registrado');
 
-                }
+                //}
             }
         }
         return $this->render('general/seguridad/nuevo.html.twig', [

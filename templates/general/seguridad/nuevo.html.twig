@@ -60,6 +60,10 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.boolActivo) }}
                 </div>
+                <label class="col-sm-2 control-label">Clave escritorio:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtClaveEscritorio, { 'attr': {'class': 'form-control','placeholder':'Clave escritorio'} }) }}
+                </div>
             </div>
             <hr>
             <div class="form-group form-group-sm">

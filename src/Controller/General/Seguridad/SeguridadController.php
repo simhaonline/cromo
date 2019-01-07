@@ -110,6 +110,7 @@ class SeguridadController extends Controller
             ->add('txtIdentificacion', NumberType::class, ['data' => $arUsuario->getNumeroIdentificacion(),'required' => false])
             ->add('txtTelefono', TextType::class, ['data' => $arUsuario->getTelefono(),'required' => false])
             ->add('txtExtension', TextType::class, ['data' => $arUsuario->getExtension(),'required' => false])
+            ->add('txtClaveEscritorio', TextType::class, ['data' => $arUsuario->getClaveEscritorio(),'required' => false])
             ->add('cboRol', ChoiceType::class, ['data' => $arUsuario->getRoles()[0],'required' => true, 'choices'=>array('Usuario'=>"ROLE_USER",'Administrador'=>"ROLE_ADMIN")])
             ->add('txtNuevaClave', PasswordType::class, $arrPropiedadesClaves)
             ->add('txtConfirmacionClave', PasswordType::class, $arrPropiedadesClaves)
@@ -129,6 +130,7 @@ class SeguridadController extends Controller
                 $arUsuario->setNombreCorto($form->get('txtNombreCorto')->getData());
                 $arUsuario->setTelefono($form->get('txtTelefono')->getData());
                 $arUsuario->setExtension($form->get('txtExtension')->getData());
+                $arUsuario->setClaveEscritorio($form->get('txtClaveEscritorio')->getData());
                 $arUsuario->setOperacionRel($form->get('operacionRel')->getData());
                 $arUsuario->setRol($form->get('cboRol')->getData());
                 if ($id === 0) {

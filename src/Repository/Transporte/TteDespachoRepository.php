@@ -767,7 +767,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
                 if (substr($errorRespuesta, 0, 9) != "DUPLICADO") {
                     $retorno = false;
-                    Mensajes::error($errorRespuesta);
+                    Mensajes::error($errorRespuesta . " Reportando tercero identificacion: " . $arrTercero['identificacion']);
                     break;
                 }
             }

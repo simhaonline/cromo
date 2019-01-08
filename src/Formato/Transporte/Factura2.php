@@ -70,7 +70,7 @@ class Factura2 extends \FPDF {
         $this->Cell(39, 6, "FACTURA DE VENTA", 1, 0, 'l', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetXY(160, $y+6);
-        $this->Cell(39, 6, "No.". " ". $arFactura->getFacturaTipoRel()->getPrefijo() . " " . $arFactura->getNumero(), 1, 0, 'l', 1);
+        $this->Cell(39, 6, " ". $arFactura->getFacturaTipoRel()->getPrefijo() . " " . $arFactura->getNumero(), 1, 0, 'l', 1);
 
         $this->SetFont('Arial', 'B', 10);
         $this->SetFillColor(170, 170, 170);

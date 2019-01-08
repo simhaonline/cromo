@@ -96,21 +96,21 @@
             </tr>
         {% endfor %}
     </table>
-
     <div class="btn-group" style="float: left">
-        <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arGuiasPendientes.getTotalItemCount }}</span>
-            </div>
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arGuiasPendientes.getTotalItemCount }}
+            </span>
         </div>
     </div>
-    <div class="btn-toolbar" style="float: right">
-        <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-            {{ knp_pagination_render(arGuiasPendientes) }}
-        </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arGuiasPendientes) }}
+    </div>
+    <div class="btn-group" style="float: right">
         <div class="btn-group">
             {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
         </div>
     </div>
+    <br /><br />
     {{ form_end(form) }}
 {% endblock %}
 

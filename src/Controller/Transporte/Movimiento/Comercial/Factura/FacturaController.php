@@ -164,8 +164,10 @@ class FacturaController extends ControllerListenerGeneral
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $arrControles = $request->request->all();
-                $em->getRepository(TteFacturaDetalle::class)->actualizarDetalles($arrControles, $form, $arFactura);
-                $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($id);
+                if(isset($arrControles['arrCodigo'])){
+                    $em->getRepository(TteFacturaDetalle::class)->actualizarDetalles($arrControles, $form, $arFactura);
+                    $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($id);
+                }
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {

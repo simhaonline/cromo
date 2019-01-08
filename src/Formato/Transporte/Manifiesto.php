@@ -21,7 +21,7 @@ class Manifiesto extends \FPDF {
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Manifiesto$codigoDespacho.pdf", 'I');
+        $pdf->Output("Manifiesto$codigoDespacho.pdf", 'D');
     }
 
     public function Header() {

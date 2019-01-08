@@ -25,6 +25,7 @@
                 <div class="form-group form-group-sm">
                     <label class="col-sm-1 control-label">Origen:</label>
                     <div class="col-sm-5">
+                        {#{% include ('estructura/movimiento/buscaCiudadOrigenTransporteDespacho.html.twig') %}#}
                         {{ form_widget(formFiltro.codigoCiudadOrigenFk, { 'attr': {'class': 'form-control to-select-2'} }) }}
                     </div>
                     <label class="col-sm-1 control-label">Tipo:</label>

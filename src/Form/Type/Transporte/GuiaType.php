@@ -124,6 +124,9 @@ class GuiaType extends AbstractType {
             {"child":"fechaIngresoHasta",               "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
             {"child":"codigoFacturaFk",                 "tipo":"TextType",   "propiedades":{"label":"Factura"}},
             {"child":"estadoFacturado",                 "tipo":"ChoiceType", "propiedades":{"label":"Facturado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoDespachado",                "tipo":"ChoiceType", "propiedades":{"label":"Despachado",   "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoNovedad",                   "tipo":"ChoiceType", "propiedades":{"label":"Novedad",   "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoNovedadSolucion",           "tipo":"ChoiceType", "propiedades":{"label":"Novedad solucionada",   "choices":{"SI":true,"NO":false}}},
             {"child":"remitente",                       "tipo":"TextType",   "propiedades":{"label":"Remitente"}}
         ]';
 

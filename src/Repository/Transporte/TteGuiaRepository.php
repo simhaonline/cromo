@@ -275,26 +275,31 @@ class TteGuiaRepository extends ServiceEntityRepository
         $id = $session->get('filtroTteDespachoCodigo');
         if ($id) {
             $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
-            if ($arDespacho->getEstadoAprobado()) {
-                $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
-                    ->select('g.codigoGuiaPk')
-                    ->addSelect('g.numero')
-                    ->addSelect('g.fechaIngreso')
-                    ->addSelect('g.codigoOperacionIngresoFk')
-                    ->addSelect('g.codigoOperacionCargoFk')
-                    ->addSelect('c.nombreCorto AS clienteNombre')
-                    ->addSelect('cd.nombre AS ciudadDestino')
-                    ->addSelect('g.unidades')
-                    ->addSelect('g.pesoReal')
-                    ->leftJoin('g.clienteRel', 'c')
-                    ->leftJoin('g.ciudadDestinoRel', 'cd')
-                    ->where('g.codigoDespachoFk = ' . $id)
-                    ->andWhere('g.estadoDespachado = 1')
-                    ->andWhere('g.estadoAnulado = 0');
-                $queryBuilder->orderBy('g.codigoGuiaPk', 'DESC');
+            if($arDespacho) {
+                if ($arDespacho->getEstadoAprobado()) {
+                    $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+                        ->select('g.codigoGuiaPk')
+                        ->addSelect('g.numero')
+                        ->addSelect('g.fechaIngreso')
+                        ->addSelect('g.codigoOperacionIngresoFk')
+                        ->addSelect('g.codigoOperacionCargoFk')
+                        ->addSelect('c.nombreCorto AS clienteNombre')
+                        ->addSelect('cd.nombre AS ciudadDestino')
+                        ->addSelect('g.unidades')
+                        ->addSelect('g.pesoReal')
+                        ->leftJoin('g.clienteRel', 'c')
+                        ->leftJoin('g.ciudadDestinoRel', 'cd')
+                        ->where('g.codigoDespachoFk = ' . $id)
+                        ->andWhere('g.estadoDespachado = 1')
+                        ->andWhere('g.estadoAnulado = 0');
+                    $queryBuilder->orderBy('g.codigoGuiaPk', 'DESC');
+                } else {
+                    Mensajes::error('El despacho no esta aprobado y no se puede desembarcar');
+                }
             } else {
-                Mensajes::error('El despacho no esta aprobado y no se puede desembarcar');
+                Mensajes::error('El despacho no existe');
             }
+
         }
         return $queryBuilder;
     }

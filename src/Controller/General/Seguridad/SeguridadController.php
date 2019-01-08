@@ -145,15 +145,29 @@ class SeguridadController extends Controller
                     } else {
                         $arUsuario->setPassword(password_hash($claveNueva, PASSWORD_BCRYPT));
                     }
-                }
-                $em->persist($arUsuario);
-                //try {
-                    $em->flush();
-                    return $this->redirect($this->generateUrl('general_seguridad_usuario_lista'));
-                //} catch (\Exception $e) {
-                    //Mensajes::error('El usuario ingresado ya se encuentra registrado');
 
-                //}
+
+                }
+
+                    if($id === 0){
+                        $arUsuarioExistente=$em->getRepository('App:Seguridad\Usuario')->find($form->get('txtUser')->getData());
+                        if($arUsuarioExistente){
+                            Mensajes::error("Ya existe un usuario con el Nombre de usuario '{$form->get('txtUser')->getData()}'");
+                        }
+                    }
+                    else{
+                        $em->persist($arUsuario);
+                        //try {
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('general_seguridad_usuario_lista'));
+                        //} catch (\Exception $e) {
+                        //Mensajes::error('El usuario ingresado ya se encuentra registrado');
+
+                        //}
+                    }
+
+
+
             }
         }
         return $this->render('general/seguridad/nuevo.html.twig', [

@@ -362,8 +362,7 @@ class DespachoController extends ControllerListenerGeneral
                 }
             }
         }
-        $codigoOperacionCargo = $this->getUser()->getOperacionRel()->getCodigoOperacionPk();
-        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->despachoPendiente($codigoOperacionCargo), $request->query->getInt('page', 1), 30);
+        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->despachoPendiente($arDespacho->getCodigoOperacionFk()), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
     }
 

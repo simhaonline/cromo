@@ -35,7 +35,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class GuiaController extends ControllerListenerGeneral
 {
-    protected $clase= TteGuia::class;
+    protected $clase = TteGuia::class;
     protected $claseNombre = "TteGuia";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
@@ -64,13 +64,13 @@ class GuiaController extends ControllerListenerGeneral
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Guias");
+                $this->exportarExcel($datos['queryBuilder']);
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
 
@@ -157,7 +157,7 @@ class GuiaController extends ControllerListenerGeneral
         $arNovedades = $this->getDoctrine()->getRepository(TteNovedad::class)->guia($id);
         $arDespachoDetalles = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->guia($id);
         $arRedespachos = $this->getDoctrine()->getRepository(TteRedespacho::class)->guia($id);
-        $arDesembarcos = $this->getDoctrine()->getRepository( TteDesembarco::class)->guia($id);
+        $arDesembarcos = $this->getDoctrine()->getRepository(TteDesembarco::class)->guia($id);
         $arFacturaDetalles = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->guia($id);
         return $this->render('transporte/movimiento/transporte/guia/detalle.html.twig', [
             'arGuia' => $arGuia,
@@ -166,7 +166,7 @@ class GuiaController extends ControllerListenerGeneral
             'arFacturaDetalles' => $arFacturaDetalles,
             'arRedespachos' => $arRedespachos,
             'arDesembarcos' => $arDesembarcos,
-            'clase' => array('clase'=>'tte_guia', 'codigo' => $id),
+            'clase' => array('clase' => 'tte_guia', 'codigo' => $id),
             'form' => $form->createView()]);
     }
 
@@ -219,7 +219,7 @@ class GuiaController extends ControllerListenerGeneral
         $form = $this->createFormBuilder()
             ->add('solucion', TextareaType::class, array('label' => 'Solucion'))
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
-        ->getForm();
+            ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arNovedad->setEstadoSolucion(1);
@@ -233,8 +233,8 @@ class GuiaController extends ControllerListenerGeneral
             $em->flush();
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
-        return $this->render('transporte/movimiento/transporte/guia/novedadSolucion.html.twig', array (
-        'form' => $form->createView()));
+        return $this->render('transporte/movimiento/transporte/guia/novedadSolucion.html.twig', array(
+            'form' => $form->createView()));
     }
 }
 

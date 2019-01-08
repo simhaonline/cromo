@@ -106,6 +106,37 @@ class GuiaType extends AbstractType {
 
     }
 
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoGuiaPk",                            "tipo":"pk",        "ayuda":"Codigo de guia",                           "titulo":"GUIA"},
+            {"campo":"codigoOperacionIngresoFk",                "tipo":"texto",     "ayuda":"Operacion ingreso",                         "titulo":"OI"},
+            {"campo":"codigoOperacionCargoFk",                  "tipo":"texto",     "ayuda":"Operacion cargo",                   "titulo":"OC"},
+            {"campo":"codigoServicioFk",                        "tipo":"texto",     "ayuda":"Codigo control",                          "titulo":"SER"},
+            {"campo":"codigoGuiaTipoFk",                        "tipo":"texto",     "ayuda":"Codigo guia tipo",                         "titulo":"TIPO"},
+            {"campo":"numero",                                  "tipo":"entero",    "ayuda":"Numero",                                   "titulo":"NUMERO"},
+            {"campo":"documentoCliente",                        "tipo":"entero",    "ayuda":"Documento cliente",                        "titulo":"DOC"},
+            {"campo":"fechaIngreso",                            "tipo":"fecha",     "ayuda":"Fecha ingreso",                            "titulo":"FECHA"},
+            {"campo":"clienteRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Nombre cliente",                           "titulo":"CLIENTE",         "relacion":""},
+            {"campo":"ciudadDestinoRel.nombre",                 "tipo":"texto",     "ayuda":"Ciudad destino",                           "titulo":"DESTINO",         "relacion":""},
+            {"campo":"unidades",                                "tipo":"moneda",    "ayuda":"Unidades",                                 "titulo":"UND"},                                
+            {"campo":"pesoReal",                                "tipo":"moneda",    "ayuda":"Peso real",                                "titulo":"PES"},                                
+            {"campo":"pesoVolumen",                             "tipo":"moneda",    "ayuda":"Peso volumen",                             "titulo":"VOL"},
+            {"campo":"vrFlete",                                 "tipo":"moneda",    "ayuda":"Valor flete",                              "titulo":"FLETE"},
+            {"campo":"vrManejo",                                "tipo":"moneda",    "ayuda":"Valor manejo",                             "titulo":"MANEJO"},
+            {"campo":"vrRecaudo",                               "tipo":"moneda",    "ayuda":"Valor recaudo",                            "titulo":"REC"},
+            {"campo":"estadoImpreso",                           "tipo":"bool",      "ayuda":"Impresa",                                  "titulo":"I"},
+            {"campo":"estadoEmbarcado",                         "tipo":"bool",      "ayuda":"Embarcada sin despachar",                  "titulo":"B"},
+            {"campo":"estadoDespachado",                        "tipo":"bool",      "ayuda":"Despachada",                               "titulo":"D"},
+            {"campo":"estadoEntregado",                         "tipo":"bool",      "ayuda":"Entregada",                                "titulo":"E"},
+            {"campo":"estadoSoporte",                           "tipo":"bool",      "ayuda":"Soporte de entrega",                       "titulo":"S"},
+            {"campo":"estadoCumplido",                          "tipo":"bool",      "ayuda":"Cumplido entregado al cliente",            "titulo":"C"},
+            {"campo":"estadoFacturado",                         "tipo":"bool",      "ayuda":"Facturado",                                "titulo":"F"},
+            {"campo":"estadoNovedad",                           "tipo":"bool",      "ayuda":"Con novedad",                              "titulo":"N"}
+        ]';
+        return $campos;
+
+    }
 
     public function getEstructuraPropiedadesFiltro()
     {

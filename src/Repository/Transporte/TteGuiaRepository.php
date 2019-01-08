@@ -465,7 +465,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->where('tg.estadoDespachado = 0')
             ->andWhere('tg.estadoEmbarcado = 0')
             ->andWhere('tg.estadoImpreso = 1')
-            ->andWhere('tg.estadoAnulado = 0');
+            ->andWhere('tg.estadoAnulado = 0')
+            ->andWhere("tg.codigoOperacionCargoFk ='" . $codigoOperacionCargo . "'");
         if ($session->get('filtroTteDespachoGuiaNumero') != '') {
             $queryBuilder->andWhere("tg.numero =  {$session->get('filtroTteDespachoGuiaNumero')}");
         }
@@ -1745,39 +1746,46 @@ class TteGuiaRepository extends ServiceEntityRepository
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         if ($arGuia && $arDespacho) {
             if ($arGuia->getEstadoEmbarcado() == 0 && $arGuia->getCodigoDespachoFk() == null) {
-                $arGuia->setDespachoRel($arDespacho);
-                $arGuia->setEstadoEmbarcado(1);
-                $em->persist($arGuia);
+                if($arDespacho->getCodigoOperacionFk() == $arGuia->getCodigoOperacionCargoFk()) {
+                    $arGuia->setDespachoRel($arDespacho);
+                    $arGuia->setEstadoEmbarcado(1);
+                    $em->persist($arGuia);
 
-                $arDespachoDetalle = new TteDespachoDetalle();
-                $arDespachoDetalle->setDespachoRel($arDespacho);
-                $arDespachoDetalle->setGuiaRel($arGuia);
-                $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
-                $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
-                $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
-                $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
-                $arDespachoDetalle->setVrCobroEntrega($arGuia->getVrCobroEntrega());
-                $arDespachoDetalle->setUnidades($arGuia->getUnidades());
-                $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
-                $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                if ($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
-                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                    $arDespachoDetalle = new TteDespachoDetalle();
+                    $arDespachoDetalle->setDespachoRel($arDespacho);
+                    $arDespachoDetalle->setGuiaRel($arGuia);
+                    $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
+                    $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
+                    $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
+                    $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
+                    $arDespachoDetalle->setVrCobroEntrega($arGuia->getVrCobroEntrega());
+                    $arDespachoDetalle->setUnidades($arGuia->getUnidades());
+                    $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
+                    $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                    if ($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
+                        $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                    } else {
+                        $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                    }
+                    $em->persist($arDespachoDetalle);
+
+                    $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
+                    $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
+                    $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
+                    $arDespacho->setPesoCosto($arDespacho->getPesoCosto() + $arDespachoDetalle->getPesoCosto());
+                    $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
+                    $em->persist($arDespacho);
+                    $em->flush();
+                    return [
+                        'error' => false,
+                        'mensaje' => '',
+                    ];
                 } else {
-                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                    return [
+                        'error' => true,
+                        'mensaje' => "La guia esta a cargo de la operacion " . $arGuia->getCodigoOperacionCargoFk() . " no puede ser despachada con la operacion " . $arDespacho->getCodigoOperacionFk(),
+                    ];
                 }
-                $em->persist($arDespachoDetalle);
-
-                $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
-                $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
-                $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
-                $arDespacho->setPesoCosto($arDespacho->getPesoCosto() + $arDespachoDetalle->getPesoCosto());
-                $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
-                $em->persist($arDespacho);
-                $em->flush();
-                return [
-                    'error' => false,
-                    'mensaje' => '',
-                ];
             } else {
                 return [
                     'error' => true,
@@ -1804,40 +1812,47 @@ class TteGuiaRepository extends ServiceEntityRepository
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         if ($arDespacho) {
             if ($arGuia) {
-                $arGuia = $em->getRepository(TteGuia::class)->find($arGuia->getCodigoGuiaPk());
-                $arGuia->setDespachoRel($arDespacho);
-                $arGuia->setEstadoEmbarcado(1);
-                $em->persist($arGuia);
+                if($arDespacho->getCodigoOperacionFk() == $arGuia->getCodigoOperacionCargoFk()) {
+                    $arGuia = $em->getRepository(TteGuia::class)->find($arGuia->getCodigoGuiaPk());
+                    $arGuia->setDespachoRel($arDespacho);
+                    $arGuia->setEstadoEmbarcado(1);
+                    $em->persist($arGuia);
 
-                $arDespachoDetalle = new TteDespachoDetalle();
-                $arDespachoDetalle->setDespachoRel($arDespacho);
-                $arDespachoDetalle->setGuiaRel($arGuia);
-                $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
-                $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
-                $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
-                $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
-                $arDespachoDetalle->setVrCobroEntrega($arGuia->getVrCobroEntrega());
-                $arDespachoDetalle->setUnidades($arGuia->getUnidades());
-                $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
-                $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                if ($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
-                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                    $arDespachoDetalle = new TteDespachoDetalle();
+                    $arDespachoDetalle->setDespachoRel($arDespacho);
+                    $arDespachoDetalle->setGuiaRel($arGuia);
+                    $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
+                    $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
+                    $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
+                    $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
+                    $arDespachoDetalle->setVrCobroEntrega($arGuia->getVrCobroEntrega());
+                    $arDespachoDetalle->setUnidades($arGuia->getUnidades());
+                    $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
+                    $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                    if ($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
+                        $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                    } else {
+                        $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                    }
+                    $em->persist($arDespachoDetalle);
+
+                    $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
+                    $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
+                    $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
+                    $arDespacho->setPesoCosto($arDespacho->getPesoCosto() + $arDespachoDetalle->getPesoCosto());
+                    $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
+                    $em->persist($arDespacho);
+                    $em->flush();
+                    return [
+                        'error' => false,
+                        'mensaje' => '',
+                    ];
                 } else {
-                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                    return [
+                        'error' => true,
+                        'mensaje' => "La guia esta a cargo de la operacion " . $arGuia->getCodigoOperacionCargoFk() . " no puede ser despachada con la operacion " . $arDespacho->getCodigoOperacionFk(),
+                    ];
                 }
-                $em->persist($arDespachoDetalle);
-
-                $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
-                $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
-                $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
-                $arDespacho->setPesoCosto($arDespacho->getPesoCosto() + $arDespachoDetalle->getPesoCosto());
-                $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
-                $em->persist($arDespacho);
-                $em->flush();
-                return [
-                    'error' => false,
-                    'mensaje' => '',
-                ];
             } else {
                 return [
                     'error' => true,

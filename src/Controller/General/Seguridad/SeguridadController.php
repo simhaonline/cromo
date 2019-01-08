@@ -154,17 +154,18 @@ class SeguridadController extends Controller
                         if($arUsuarioExistente){
                             Mensajes::error("Ya existe un usuario con el Nombre de usuario '{$form->get('txtUser')->getData()}'");
                         }
-                    }
-                    else{
-                        $em->persist($arUsuario);
-                        //try {
-                        $em->flush();
-                        return $this->redirect($this->generateUrl('general_seguridad_usuario_lista'));
-                        //} catch (\Exception $e) {
-                        //Mensajes::error('El usuario ingresado ya se encuentra registrado');
+                        else{
+                            $em->persist($arUsuario);
+                            //try {
+                            $em->flush();
+                            return $this->redirect($this->generateUrl('general_seguridad_usuario_lista'));
+                            //} catch (\Exception $e) {
+                            //Mensajes::error('El usuario ingresado ya se encuentra registrado');
 
-                        //}
+                            //}
+                        }
                     }
+
 
 
 

@@ -57,10 +57,8 @@ class Factura2 extends \FPDF {
         $this->SetFont('Arial', 'b', 10);
         $this->Cell(25, 5, utf8_decode($arConfiguracion->getNit()."-".$arConfiguracion->getDigitoVerificacion()), 0, 0, 'l', 1);
         $this->SetFont('Arial', '', 8);
-        $this->SetXY(70, 25);
+        $this->SetXY(65, 27);
         $this->Cell(25, 4, $arFactura->getFacturaTipoRel()->getResolucionFacturacion(), 0, 0, 'l', 1);
-        $this->SetXY(75, 28);
-        $this->Cell(25, 4, utf8_decode('Numeracion habilitada de 40001 - 48000'), 0, 0, 'l', 1);
         $this->SetXY(85, 31);
         $this->SetFont('Arial', 'b', 10);
         $this->Cell(25, 4, utf8_decode('Regimen comun'), 0, 0, 'l', 1);
@@ -105,9 +103,9 @@ class Factura2 extends \FPDF {
         $this->Cell(39, 6, "VENCE", 1, 0, 'C', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetXY(160, $y+22);
-        $this->Cell(13, 5, $arFactura->getFecha()->format('d'), 1, 0, 'C', 1);
-        $this->Cell(13, 5, $arFactura->getFecha()->format('m'), 1, 0, 'C', 1);
-        $this->Cell(13, 5, $arFactura->getFecha()->format('Y'), 1, 0, 'C', 1);
+        $this->Cell(13, 5, $arFactura->getFechaVence()->format('d'), 1, 0, 'C', 1);
+        $this->Cell(13, 5, $arFactura->getFechaVence()->format('m'), 1, 0, 'C', 1);
+        $this->Cell(13, 5, $arFactura->getFechaVence()->format('Y'), 1, 0, 'C', 1);
         $this->SetFont('Arial', 'B', 10);
         $this->SetFillColor(170, 170, 170);
         $this->SetXY(160, $y+27);
@@ -126,19 +124,19 @@ class Factura2 extends \FPDF {
 
         $arFactura = new TteFactura();
         $arFactura = self::$em->getRepository(TteFactura::class)->find(self::$codigoFactura);
-        $this->SetFont('Arial', '', 10);
+        $this->SetFont('Arial', '', 8);
         $y = 44;
         $this->Rect(10, 38, 100, 30);
         $this->Text(12, $y, utf8_decode("SEÑOR(ES):"));
-        $this->Text(45, $y, utf8_decode($arFactura->getClienteRel()->getNombreCorto()));
+        $this->Text(35, $y, utf8_decode($arFactura->getClienteRel()->getNombreCorto()));
         $this->Text(12, $y+5, utf8_decode("NIT:"));
-        $this->Text(45, $y+5, $arFactura->getClienteRel()->getNumeroIdentificacion() . "-" . $arFactura->getClienteRel()->getDigitoVerificacion());
+        $this->Text(35, $y+5, $arFactura->getClienteRel()->getNumeroIdentificacion() . "-" . $arFactura->getClienteRel()->getDigitoVerificacion());
         $this->Text(12, $y+10, utf8_decode("DIRECCION:"));
-        $this->Text(45, $y+10, utf8_decode($arFactura->getClienteRel()->getDireccion()));
+        $this->Text(35, $y+10, utf8_decode(substr($arFactura->getClienteRel()->getDireccion(), 0, 43)));
         $this->Text(12, $y+15, utf8_decode("CIUDAD:"));
-        $this->Text(45, $y+15, "MEDELLIN");
+        $this->Text(35, $y+15, utf8_decode($arFactura->getClienteRel()->getCiudadRel()->getNombre()));
         $this->Text(12, $y+20, utf8_decode("TELEFONO:"));
-        $this->Text(45, $y+20, utf8_decode($arFactura->getClienteRel()->getTelefono()));
+        $this->Text(35, $y+20, utf8_decode($arFactura->getClienteRel()->getTelefono()));
         $this->EncabezadoDetalles();
 
     }

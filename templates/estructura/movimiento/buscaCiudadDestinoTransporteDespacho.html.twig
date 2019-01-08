@@ -4,15 +4,15 @@
         <div class="row">
             <div class="col-lg-2">
                 <div class="input-group">
-                    {{ form_widget(formFiltro.codigoCiudadOrigenFk) }}
+                    {{ form_widget(formFiltro.codigoCiudadDestinoFk) }}
                 </div>
             </div>
             <div class="col-lg-10">
                 <div class="input-group">
                     {#{{ form_widget(formFiltro.txtNombreCorto) }}#}
-                    <input id="form_txtNombreCiudad" class="form-control" readonly>
+                    <input id="form_txtNombreCiudadDestino" class="form-control" readonly>
                     <span class="input-group-btn">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_ciudad', {'campoNombre': 'form_txtNombreCiudad','campoCodigo':'form_codigoCiudadOrigenFk' }) }}', 'buscarCiudadOrigen', 600, 900)">Buscar</a>
+                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_ciudad_destino', {'campoNombre': 'form_txtNombreCiudadDestino','campoCodigo':'form_codigoCiudadDestinoFk' }) }}', 'buscarCiudadDestino', 600, 900)">Buscar</a>
                     </span>
                 </div>
             </div>

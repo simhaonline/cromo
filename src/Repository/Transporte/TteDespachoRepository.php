@@ -555,6 +555,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         d.vrDescuentoCargue,
         d.vrSaldo,
         d.vrDescuentoPapeleria,
+        d.comentario,
         c.numeroIdentificacion AS conductorIdentificacion,
         c.nombreCorto AS conductorNombre,
         c.direccion AS conductorDireccion,

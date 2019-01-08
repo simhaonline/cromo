@@ -21,7 +21,7 @@ class Manifiesto extends \FPDF {
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Manifiesto$codigoDespacho.pdf", 'D');
+        $pdf->Output("Manifiesto$codigoDespacho.pdf", 'I');
     }
 
     public function Header() {
@@ -263,6 +263,10 @@ class Manifiesto extends \FPDF {
         $pdf->Rect($x+140, $y, 20, $alto1);
         $pdf->Rect($x+160, $y, 20, $alto1);
         $pdf->Rect($x+180, $y, 80, 30);
+        $pdf->SetFont('Arial', 'b', 7);
+        $pdf->setXY(195, $y);
+        $pdf->MultiCell(80, 8, substr($arDespacho['comentario'],0,230).(strlen($arDespacho['comentario'])>230?"...":""), 0, 'L');
+
         $yt += 5;
         $pdf->Text(20, $yt, "VALOR TOTAL DEL VIAJE:");
         $pdf->Text(120, $yt, "LUGAR:");

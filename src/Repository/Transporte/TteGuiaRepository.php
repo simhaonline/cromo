@@ -2344,7 +2344,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             foreach ($arrCodigoGuia as $codigoGuia) {
                 $arGuia = $em->find(TteGuia::class, $codigoGuia);
                 if ($arGuia) {
-                    if ($arGuia->getEstadoDespachado() && $arGuia->getCodigoDespachoFk() && !$arGuia->getEstadoAnulado() && !$arGuia->getEstadoSoporte() && !$arGuia->getEstadoEntregado() && !$arGuia->getEstadoFacturaGenerada()) {
+                    if ($arGuia->getEstadoDespachado() && $arGuia->getCodigoDespachoFk() && !$arGuia->getEstadoAnulado() && !$arGuia->getEstadoSoporte() && !$arGuia->getEstadoEntregado()) {
                         $arDesembarco = new TteDesembarco();
                         $arGuia->setFechaDespacho(null);
                         $arGuia->setFechaCumplido(null);

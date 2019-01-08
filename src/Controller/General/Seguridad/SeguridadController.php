@@ -104,7 +104,11 @@ class SeguridadController extends Controller
             ),
                 'disabled'=> $arUsuario->getUsername()?true:false
             ])
-            ->add('txtEmail', TextType::class, ['data' => $arUsuario->getEmail()])
+            ->add('txtEmail', TextType::class, ['data' => $arUsuario->getEmail(),'required'=>true,'constraints'=>array(
+                new NotBlank(array("message"=>"El email es obligatorio")),
+                new Regex(array('pattern'=>"/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i",'message'=>"El email es invalido")),
+            ),
+                ])
             ->add('txtCargo', TextType::class, ['data' => $arUsuario->getCargo(),'required' => false])
             ->add('txtNombreCorto', TextType::class, ['data' => $arUsuario->getNombreCorto(),'required' => false])
             ->add('txtIdentificacion', NumberType::class, ['data' => $arUsuario->getNumeroIdentificacion(),'required' => false])

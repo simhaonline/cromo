@@ -15,6 +15,7 @@
                 <label class="col-sm-2 control-label">Email:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtEmail, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.txtEmail)}}
                 </div>
             </div>
             <div class="form-group form-group-sm">

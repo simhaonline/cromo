@@ -40,7 +40,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.codigoGuiaTipoFk, 
         g.numero,
         g.documentoCliente, 
-        g.fechaIngreso,
+        g.fechaIngreso,        
         g.codigoOperacionIngresoFk,
         g.codigoOperacionCargoFk, 
         c.nombreCorto AS clienteNombreCorto,  
@@ -436,7 +436,7 @@ class TteGuiaRepository extends ServiceEntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function despachoPendiente()
+    public function despachoPendiente($codigoOperacionCargo)
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')

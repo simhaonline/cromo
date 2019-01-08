@@ -60,7 +60,7 @@ class VehiculoType extends AbstractType
                 'label' => 'Marca:'
             ])
             ->add('tipoCombustibleRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\Transporte\TteTipoCombustible',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('tc')

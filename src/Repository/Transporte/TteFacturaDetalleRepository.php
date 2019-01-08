@@ -145,10 +145,12 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         g.vrDeclara,
         fd.vrFlete + fd.vrManejo AS vrTotal,
         g.nombreDestinatario,                      
-        cd.nombre AS ciudadDestino
+        cd.nombre AS ciudadDestino,
+        co.nombre AS ciudadOrigen
         FROM App\Entity\Transporte\TteFacturaDetalle fd 
         LEFT JOIN fd.guiaRel g      
         LEFT JOIN g.ciudadDestinoRel cd
+        LEFT JOIN g.ciudadOrigenRel co
         WHERE fd.codigoFacturaFk = :codigoFactura and fd.codigoFacturaPlanillaFk IS NULL'
         )->setParameter('codigoFactura', $codigoFactura);
 

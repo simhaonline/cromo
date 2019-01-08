@@ -21,6 +21,7 @@ use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
 
+use App\Formato\Transporte\Factura2;
 use App\Formato\Transporte\ListaFactura;
 use App\Formato\Transporte\NotaCredito;
 use App\General\General;
@@ -129,12 +130,18 @@ class FacturaController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
+                $codigoFactura = $em->getRepository(TteConfiguracion::class)->find(1)->getCodigoFormato();
                 if ($arFactura->getCodigoFacturaTipoFk() == 'NC') {
                     $formato = new NotaCredito();
                     $formato->Generar($em, $id);
                 } else {
-                    $formato = new Factura();
-                    $formato->Generar($em, $id);
+                    if ($codigoFactura == 1) {
+                        $formato = new Factura();
+                        $formato->Generar($em, $id);
+                    } else {
+                        $formato = new Factura2();
+                        $formato->Generar($em, $id);
+                    }
                 }
             }
             if ($form->get('btnAutorizar')->isClicked()) {

@@ -92,6 +92,30 @@ class TteCiudadRepository extends ServiceEntityRepository
         if ($session->get('filtroTteCiudadNombre') != '') {
             $qb->andWhere("c.nombre LIKE '%{$session->get('filtroTteCiudadNombre')}%'");
         }
+
+        if ($session->get('filtroTteCiudadCodigo') != '') {
+            $qb->andWhere("c.codigoCiudadPk ='{$session->get('filtroTteCiudadCodigo')}'");
+        }
         return $qb->getDQL();
     }
+
+    public function listaDqlCiudadDestino()
+    {
+        $session = new Session();
+        $qb = $this->getEntityManager()->createQueryBuilder()->from(TteCiudad::class, 'c')
+            ->select('c.codigoCiudadPk')
+            ->addSelect('c.nombre')
+//            ->addSelect('c.nombre')
+//            ->where('c.codigoConductorPk <> 0')
+            ->orderBy('c.nombre');
+        if ($session->get('filtroTteCiudadNombreDestino') != '') {
+            $qb->andWhere("c.nombre LIKE '%{$session->get('filtroTteCiudadNombreDestino')}%'");
+        }
+
+        if ($session->get('filtroTteCiudadCodigoDestino') != '') {
+            $qb->andWhere("c.codigoCiudadPk ='{$session->get('filtroTteCiudadCodigoDestino')}'");
+        }
+        return $qb->getDQL();
+    }
+
 }

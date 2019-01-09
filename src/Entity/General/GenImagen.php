@@ -20,7 +20,7 @@ class GenImagen
     private $codigoImagenPk;
 
     /**
-     * @ORM\Column(type="longblob", name="imagen", nullable=true)
+     * @ORM\Column(type="blob", name="imagen", nullable=true)
      */
     private $imagen;
 

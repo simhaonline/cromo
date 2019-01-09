@@ -55,10 +55,13 @@ class Guia extends \FPDF
     {
         $em = BaseDatos::getEm();
         $y = 20;
+        $cont = 0;
         $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
         if(self::$masivo){
-            $arGuias = $em->getRepository(TteGuia::class)->imprimirGuiaMasivo();
+            $arGuias = $em->getRepository(TteGuia::class)->imprimirGuiaMasivo()->getQuery()->execute();
+            $act = count($arGuias);
             foreach ($arGuias as $arGuia) {
+                $act--;
                 $y = 20;
                 for ($i = 0; $i <= 3; $i++) {
                     try {
@@ -255,7 +258,9 @@ class Guia extends \FPDF
 
                     $y += 68;
                 }
-                $pdf->SetAutoPageBreak(true, 20);
+                if($act > 0){
+                    $pdf->AddPage();
+                }
             }
         } else {
             $arGuia = $em->getRepository(TteGuia::class)->imprimirGuia(self::$codigoGuia);

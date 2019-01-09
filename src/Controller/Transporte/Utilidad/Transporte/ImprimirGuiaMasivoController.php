@@ -29,13 +29,17 @@ class ImprimirGuiaMasivoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtGuiaNumeroDesde', TextType::class, array('label' => 'Numero desde', 'data' => $session->get('filtroNumeroDesde')))
-            ->add('txtGuiaNumeroHasta', TextType::class, array('label' => 'Numero hasta', 'data' => $session->get('filtroNumeroHasta')))
+            ->add('txtGuiaNumeroDesde', TextType::class, array('required' => false, 'data' => $session->get('filtroNumeroDesde')))
+            ->add('txtGuiaNumeroHasta', TextType::class, array('required' => false, 'data' => $session->get('filtroNumeroHasta')))
+            ->add('txtCodigoDespacho', TextType::class, array('required' => false, 'data' => $session->get('filtroCodigoDespacho')))
             ->add('btnGenerar', SubmitType::class, array('label' => 'Generar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('btnGenerar')->isClicked()){
+                $session->set('filtroNumeroDesde', $form->get('txtGuiaNumeroDesde')->getData());
+                $session->set('filtroNumeroHasta', $form->get('txtGuiaNumeroHasta')->getData());
+                $session->set('filtroCodigoDespacho', $form->get('txtCodigoDespacho')->getData());
                 $objFormato = new Guia();
                 $objFormato->Generar($em, '', true);
             }

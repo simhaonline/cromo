@@ -2420,8 +2420,6 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     public function imprimirGuiaMasivo()
     {
-        set_time_limit(0);
-        ini_set("memory_limit", -1);
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
             ->select('g.codigoGuiaPk')
@@ -2462,6 +2460,9 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroNumeroHasta') != "") {
             $queryBuilder->andWhere("g.numero <= " . $session->get('filtroNumeroHasta'));
         }
-        return $queryBuilder->getQuery()->getResult();
+        if ($session->get('filtroCodigoDespacho') != "") {
+            $queryBuilder->andWhere("g.codigoDespachoFk = " . $session->get('filtroCodigoDespacho'));
+        }
+        return $queryBuilder;
     }
 }

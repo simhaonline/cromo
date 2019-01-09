@@ -736,10 +736,10 @@ class TteDespachoRepository extends ServiceEntityRepository
                                     <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
                                     <CODTIPOIDTERCERO>" . $arrTercero['identificacionTipo'] . "</CODTIPOIDTERCERO>
                                     <NUMIDTERCERO>" . $arrTercero['identificacion'] . "</NUMIDTERCERO>
-                                    <NOMIDTERCERO>" . $arrTercero['nombre1'] . "</NOMIDTERCERO>";
+                                    <NOMIDTERCERO>" . utf8_decode($arrTercero['nombre1']) . "</NOMIDTERCERO>";
             if ($arrTercero['identificacionTipo'] == "C") {
-                $strPoseedorXML .= "<PRIMERAPELLIDOIDTERCERO>" . $arrTercero['apellido1'] . "</PRIMERAPELLIDOIDTERCERO>
-                                                            <SEGUNDOAPELLIDOIDTERCERO>" . $arrTercero['apellido2'] . "</SEGUNDOAPELLIDOIDTERCERO>";
+                $strPoseedorXML .= "<PRIMERAPELLIDOIDTERCERO>" . utf8_decode($arrTercero['apellido1']) . "</PRIMERAPELLIDOIDTERCERO>
+                                                            <SEGUNDOAPELLIDOIDTERCERO>" . utf8_decode($arrTercero['apellido2']) . "</SEGUNDOAPELLIDOIDTERCERO>";
             }
             $strPoseedorXML .= "<CODSEDETERCERO>" . $arrTercero['codigoSede'] . "</CODSEDETERCERO>";
             $strPoseedorXML .= "<NOMSEDETERCERO>" . $arrTercero['nombreSede'] . "</NOMSEDETERCERO>";
@@ -750,7 +750,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $strPoseedorXML .= "<NUMCELULARPERSONA>" . $arrTercero['movil'] . "</NUMCELULARPERSONA>";
             }
             $strPoseedorXML .= "
-                                                        <NOMENCLATURADIRECCION>" . $arrTercero['direccion'] . "</NOMENCLATURADIRECCION>
+                                                        <NOMENCLATURADIRECCION>" . utf8_decode($arrTercero['direccion']) . "</NOMENCLATURADIRECCION>
                                                         <CODMUNICIPIORNDC>" . $arrTercero['codigoCiudad'] . "</CODMUNICIPIORNDC>";
             if ($arrTercero['conductor'] == 1) {
                 $strPoseedorXML .= "

@@ -151,7 +151,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         LEFT JOIN fd.guiaRel g      
         LEFT JOIN g.ciudadDestinoRel cd
         LEFT JOIN g.ciudadOrigenRel co
-        WHERE fd.codigoFacturaFk = :codigoFactura and fd.codigoFacturaPlanillaFk IS NULL'
+        WHERE fd.codigoFacturaFk = :codigoFactura and fd.codigoFacturaPlanillaFk IS NULL ORDER BY g.numero ASC'
         )->setParameter('codigoFactura', $codigoFactura);
 
         return $query->execute();

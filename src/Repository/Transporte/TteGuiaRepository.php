@@ -1011,6 +1011,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arCuentaCobrar->setNumeroReferencia($arGuia->getCodigoDespachoFk());
                         $arCuentaCobrar->setCodigoDocumento($arFactura->getCodigoFacturaPk());
                         $arCuentaCobrar->setNumeroDocumento($arFactura->getNumero());
+                        $arCuentaCobrar->setSoporte($arGuia->getNumero());
                         $arCuentaCobrar->setVrSubtotal($arFactura->getVrSubtotal());
                         $arCuentaCobrar->setVrTotal($arFactura->getVrTotal());
                         $arCuentaCobrar->setVrSaldo($arFactura->getVrTotal());

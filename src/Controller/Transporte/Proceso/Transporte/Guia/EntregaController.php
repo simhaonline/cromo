@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Proceso\Transporte\Guia;
 
 use App\Entity\General\GenConfiguracion;
+use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteGuia;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -40,6 +41,12 @@ class EntregaController extends Controller
                 $session = new session;
                 $session->set('filtroTteDespachoCodigo', $form->get('txtDespachoCodigo')->getData());
                 $codigoDespacho = $form->get('txtDespachoCodigo')->getData();
+                $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
+                if($arDespacho) {
+                    if(!$arDespacho->getEstadoAutorizado()) {
+                        Mensajes::error("El despacho no esta autorizado, no puede cambiar el estado entregado de las guias");
+                    }
+                }
             }
             if ($form->get('btnEntrega')->isClicked()) {
                 $arrGuias = $request->request->get('chkSeleccionar');

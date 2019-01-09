@@ -2,6 +2,8 @@
 
 namespace App\Entity\General;
 
+use App\Controller\Estructura\LongBlobType;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GenImagen
 {
+
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="NONE")
@@ -17,7 +21,7 @@ class GenImagen
     private $codigoImagenPk;
 
     /**
-     * @ORM\Column(type="blob", name="imagen", nullable=true)
+     * @ORM\Column(type="longblob", name="imagen", nullable=true)
      */
     private $imagen;
 
@@ -25,6 +29,7 @@ class GenImagen
      * @ORM\Column(type="string", length=5, name="extension", nullable=true)
      */
     private $extension;
+
 
     /**
      * @return mixed

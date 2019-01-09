@@ -13,12 +13,17 @@ class Factura2 extends \FPDF
 {
     public static $em;
     public static $codigoFactura;
+    public static $imagen;
+    public static $extension;
 
     public function Generar($em, $codigoFactura)
     {
         ob_clean();
         self::$em = $em;
         self::$codigoFactura = $codigoFactura;
+        $logo = self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+        self::$imagen = "data:image/'{$logo->getExtension()}';base64," . base64_encode(stream_get_contents($logo->getImagen()));
+        self::$extension = $logo->getExtension();
         $pdf = new Factura2();
         $pdf->AliasNbPages();
         $pdf->AddPage();
@@ -31,19 +36,16 @@ class Factura2 extends \FPDF
     {
         $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
         $arFactura = self::$em->getRepository('App:Transporte\TteFactura')->find(self::$codigoFactura);
-        //$this->Image('../public/img/empresa/logo.jpg', 10, 8, 40, 18);
+//        $this->Image('../public/img/empresa/iso9001.jpg', 10, 8, 40, 18);
         try {
-            $logo=self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
-            if($logo ){
-
-                $this->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 10, 8, 40, 18,$logo->getExtension());
+            if (self::$imagen) {
+                $this->Image(self::$imagen, 10, 8, 40, 18, self::$extension);
             }
         } catch (\Exception $exception) {
         }
         $this->SetFont('Arial', 'b', 9);
         $this->SetFillColor(272, 272, 272);
         $this->Text(15, 25, '');
-
         $this->SetFont('Arial', 'b', 10);
         $this->SetXY(112, 10);
         $this->Cell(30, 4, utf8_decode($arConfiguracion->getNombre()), 0, 0, 'l', 1);

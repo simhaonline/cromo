@@ -41,7 +41,7 @@ class DesembarcoController extends Controller
                 }
             }
         }
-        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaDesembarco(), $request->query->getInt('page', 1), 100);
+        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaDesembarco(), $request->query->getInt('page', 1), 500);
         return $this->render('transporte/proceso/transporte/guia/desembarco.html.twig', [
             'form' => $form->createView(),
             'arGuias' => $arGuias

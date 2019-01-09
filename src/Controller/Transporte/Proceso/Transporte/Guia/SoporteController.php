@@ -48,7 +48,7 @@ class SoporteController extends Controller
                 $codigoDespacho = $form->get('txtDespachoCodigo')->getData();
             }
         }
-        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaSoporte($codigoDespacho), $request->query->getInt('page', 1), 30);
+        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaSoporte($codigoDespacho), $request->query->getInt('page', 1), 500);
         return $this->render('transporte/proceso/transporte/guia/soporte.html.twig', [
             'arGuias' => $arGuias,
             'form' => $form->createView()

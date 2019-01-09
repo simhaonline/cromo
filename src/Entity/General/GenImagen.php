@@ -2,8 +2,7 @@
 
 namespace App\Entity\General;
 
-use App\Controller\Estructura\LongBlobType;
-use Doctrine\DBAL\Types\Type;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**

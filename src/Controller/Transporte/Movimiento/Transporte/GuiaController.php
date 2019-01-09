@@ -17,6 +17,7 @@ use App\Entity\Transporte\TteRedespacho;
 use App\Entity\Transporte\TteServicio;
 use App\Form\Type\Transporte\GuiaType;
 use App\Form\Type\Transporte\NovedadType;
+use App\Formato\Transporte\Guia;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -142,12 +143,13 @@ class GuiaController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-                $respuesta = $em->getRepository(TteGuia::class)->imprimir($id);
-                if ($respuesta) {
-                    $em->flush();
-                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_detalle', array('id' => $id)));
-                }
-
+                $formato = new Guia();
+                $formato->Generar($em, $id);
+//                $respuesta = $em->getRepository(TteGuia::class)->imprimir($id);
+//                if ($respuesta) {
+//                    $em->flush();
+//                    return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_detalle', array('id' => $id)));
+//                }
             }
             if ($form->get('btnRetirarNovedad')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

@@ -386,28 +386,30 @@ class Manifiesto extends \FPDF {
                     $pdf->Text(256, $yt, utf8_decode("Dueño poliza"));
 
                     $y += 5;
-                    $pdf->Rect($x, $y, 25, $alto2);
-                    $pdf->Rect($x+25, $y, 25, $alto2);
-                    $pdf->Rect($x+50, $y, 25, $alto2);
+                    $pdf->Rect($x, $y, 17, $alto2);
+                    $pdf->Rect($x+17, $y, 23, $alto2);
+                    $pdf->Rect($x+40, $y, 10, $alto2);
                     $pdf->Rect($x+75, $y, 25, $alto2);
                     $pdf->Rect($x+100, $y, 30, $alto2);
                     $pdf->Rect($x+130, $y, 65, $alto2);
                     $pdf->Rect($x+195, $y, 45, $alto2);
                     $pdf->Rect($x+240, $y, 20, $alto2);
                     $yt += 5;
-                    $pdf->Text(17, $yt, "Nro Remesa");
-                    $pdf->Text(43, $yt, "UnidadMedida");
-                    $pdf->Text(70, $yt, "Cantidad");
-                    $pdf->Text(92, $yt, "Poblacion");
-                    $pdf->Text(118, $yt, "Empaque");
+                    $pdf->Text(16, $yt, "Remesa");
+                    $pdf->Text(34, $yt, utf8_decode("Número"));
+                    $pdf->Text(58, $yt, "UM");
+                    $pdf->Text(72, $yt, "Cantidad");
+                    $pdf->Text(95, $yt, "Poblacion");
+                    $pdf->Text(122, $yt, "Empaque");
                     $pdf->Text(155, $yt, "NIT/CC Nombre/Razon Social");
                     $pdf->Text(212, $yt, "NIT/CC Nombre/Razon Social");
                     $pdf->SetFont('Arial', '', 7);
                     $indice = 0;
 
                 }
-                $pdf->Cell(25, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
-                $pdf->Cell(25, 4, "KILO", 1, 0, 'L');
+                $pdf->Cell(17, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
+                $pdf->Cell(23, 4, $arGuia['numero'], 1, 0, 'L');
+                $pdf->Cell(10, 4, "KILO", 1, 0, 'L');
                 $pdf->Cell(25, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'L');
                 $pdf->Cell(25, 4, substr(utf8_decode($arGuia['ciudadDestino']),0,20), 1, 0, 'L');
                 $pdf->Cell(30, 4, 'VARIOS', 1, 0, 'L');
@@ -442,7 +444,7 @@ class Manifiesto extends \FPDF {
         $this->Text(10, 274, "C.C.:     ______________________ de ____________________");
 
         $this->Text(105, 260, "EMPRESA: _____________________________________________");
-        
+
         $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }

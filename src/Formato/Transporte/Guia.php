@@ -50,16 +50,16 @@ class Guia extends \FPDF
         $arGuia = $em->getRepository(TteGuia::class)->imprimirGuia(self::$codigoGuia);
         $y = 20;
         for ($i = 0; $i <= 3; $i++) {
-            try {
-                $logo = self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
-                if ($logo) {
-                    $this->Image("data:image/'{$logo->getExtension()}';base64," . base64_encode(stream_get_contents($logo->getImagen())), 12, $y - 20, 30, 20, $logo->getExtension());
-                }
-            } catch (\Exception $exception) {
-            }
+//            $logo = self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+//            $pdf->Image("data:image/'{$logo->getExtension()}';base64," . base64_encode(stream_get_contents($logo->getImagen())), 12, $y - 19, 40, 20, $logo->getExtension());
+//            try {
+//                if ($logo) {
+//                }
+//            } catch (\Exception $exception) {
+//            }
             $pdf->SetFont('Arial', 'B', 15);
-            $pdf->SetXY(188, $y-8);
-            $pdf->Cell(30,4, utf8_decode($arGuia['numero']), 0,'C', 1);
+            $pdf->SetXY(168, $y-8);
+            $pdf->Cell(30,4, '100000000', 0, 0, 'R');
             $pdf->SetXY(10, $y);
             $pdf->SetFillColor(272, 272, 272);
             $pdf->SetFont('Arial', 'B', 8);

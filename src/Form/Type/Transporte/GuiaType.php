@@ -117,22 +117,23 @@ class GuiaType extends AbstractType {
             {"campo":"numero",                                  "tipo":"entero",    "ayuda":"Numero",                                   "titulo":"NUMERO"},
             {"campo":"documentoCliente",                        "tipo":"entero",    "ayuda":"Documento cliente",                        "titulo":"DOC"},
             {"campo":"fechaIngreso",                            "tipo":"fecha",     "ayuda":"Fecha ingreso",                            "titulo":"FECHA"},
+            {"campo":"fechaEntrega",                            "tipo":"fecha",     "ayuda":"Fecha entrega",                            "titulo":"ENTREGA"},
             {"campo":"clienteRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Nombre cliente",                           "titulo":"CLIENTE",         "relacion":""},
+            {"campo":"nombreDestinatario",                  "tipo":"texto",     "ayuda":"Destinatario",                           "titulo":"DESTINATARIO"},
             {"campo":"ciudadDestinoRel.nombre",                 "tipo":"texto",     "ayuda":"Ciudad destino",                           "titulo":"DESTINO",         "relacion":""},
             {"campo":"unidades",                                "tipo":"moneda",    "ayuda":"Unidades",                                 "titulo":"UND"},                                
             {"campo":"pesoReal",                                "tipo":"moneda",    "ayuda":"Peso real",                                "titulo":"PES"},                                
             {"campo":"pesoVolumen",                             "tipo":"moneda",    "ayuda":"Peso volumen",                             "titulo":"VOL"},
             {"campo":"vrFlete",                                 "tipo":"moneda",    "ayuda":"Valor flete",                              "titulo":"FLETE"},
             {"campo":"vrManejo",                                "tipo":"moneda",    "ayuda":"Valor manejo",                             "titulo":"MANEJO"},
-            {"campo":"vrRecaudo",                               "tipo":"moneda",    "ayuda":"Valor recaudo",                            "titulo":"REC"},
-            {"campo":"estadoImpreso",                           "tipo":"bool",      "ayuda":"Impresa",                                  "titulo":"I"},
-            {"campo":"estadoEmbarcado",                         "tipo":"bool",      "ayuda":"Embarcada sin despachar",                  "titulo":"B"},
-            {"campo":"estadoDespachado",                        "tipo":"bool",      "ayuda":"Despachada",                               "titulo":"D"},
-            {"campo":"estadoEntregado",                         "tipo":"bool",      "ayuda":"Entregada",                                "titulo":"E"},
-            {"campo":"estadoSoporte",                           "tipo":"bool",      "ayuda":"Soporte de entrega",                       "titulo":"S"},
-            {"campo":"estadoCumplido",                          "tipo":"bool",      "ayuda":"Cumplido entregado al cliente",            "titulo":"C"},
-            {"campo":"estadoFacturado",                         "tipo":"bool",      "ayuda":"Facturado",                                "titulo":"F"},
-            {"campo":"estadoNovedad",                           "tipo":"bool",      "ayuda":"Con novedad",                              "titulo":"N"}
+            {"campo":"vrRecaudo",                               "tipo":"moneda",    "ayuda":"Valor recaudo",                            "titulo":"REC"},            
+            {"campo":"estadoEmbarcado",                         "tipo":"bool",      "ayuda":"Embarcada sin despachar",                  "titulo":"EMB"},
+            {"campo":"estadoDespachado",                        "tipo":"bool",      "ayuda":"Despachada",                               "titulo":"DES"},
+            {"campo":"estadoEntregado",                         "tipo":"bool",      "ayuda":"Entregada",                                "titulo":"ENT"},
+            {"campo":"estadoSoporte",                           "tipo":"bool",      "ayuda":"Soporte de entrega",                       "titulo":"SOP"},
+            {"campo":"estadoCumplido",                          "tipo":"bool",      "ayuda":"Cumplido entregado al cliente",            "titulo":"CUM"},
+            {"campo":"estadoFacturado",                         "tipo":"bool",      "ayuda":"Facturado",                                "titulo":"FAC"},
+            {"campo":"estadoNovedad",                           "tipo":"bool",      "ayuda":"Con novedad",                              "titulo":"NOV"}
         ]';
         return $campos;
 

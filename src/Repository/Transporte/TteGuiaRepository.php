@@ -39,6 +39,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.codigoServicioFk,
         g.codigoGuiaTipoFk, 
         g.numero,
+        g.numeroFactura,
         g.documentoCliente, 
         g.fechaIngreso,        
         g.codigoOperacionIngresoFk,
@@ -207,6 +208,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->select('g.codigoGuiaPk')
             ->addSelect('g.codigoGuiaTipoFk')
             ->addSelect('g.numero')
+            ->addSelect('g.numeroFactura')
             ->addSelect('g.fechaIngreso')
             ->addSelect('g.codigoOperacionIngresoFk')
             ->addSelect('g.codigoOperacionCargoFk')
@@ -233,7 +235,9 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
             $queryBuilder->andWhere("g.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");
         }
-
+        if ($session->get('filtroTteGuiaCodigoOperacionIngreso')) {
+            $queryBuilder->andWhere("g.codigoOperacionIngresoFk = '" . $session->get('filtroTteGuiaCodigoOperacionIngreso') . "'");
+        }
         return $queryBuilder;
     }
 
@@ -2366,5 +2370,49 @@ class TteGuiaRepository extends ServiceEntityRepository
                 }
             }
         }
+    }
+
+    /**
+     * @param $codigoGuia
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function imprimirGuia($codigoGuia){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.remitente')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.direccionDestinatario')
+            ->addSelect('g.telefonoDestinatario')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.comentario')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.vrCobroEntrega')
+            ->addSelect('g.vrDeclara')
+            ->addSelect('g.numero')
+            ->addSelect('co.nombre AS ciudadOrigen')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('gt.nombre AS guiaTipo')
+            ->addSelect('c.codigoIdentificacionFk')
+            ->addSelect('c.numeroIdentificacion')
+            ->addSelect('c.codigoFormaPagoFk')
+            ->addSelect('c.digitoVerificacion')
+            ->addSelect('c.nombreCorto')
+            ->addSelect('c.plazoPago')
+            ->addSelect('c.direccion AS direccionCliente')
+            ->addSelect('c.telefono AS telefonoCliente')
+            ->addSelect('c.correo')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadOrigenRel', 'co')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.guiaTipoRel', 'gt')
+            ->where('g.codigoGuiaPk = ' . $codigoGuia);
+        return $queryBuilder->getQuery()->getSingleResult();
     }
 }

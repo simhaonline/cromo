@@ -27,6 +27,7 @@
         <li><a href="#redespachos" data-toggle="tab">Redespachos</a></li>
         <li><a href="#facturas" data-toggle="tab">Facturas</a></li>
         <li><a href="#desembarco" data-toggle="tab">Desembarco</a></li>
+        <li><a href="#recibos" data-toggle="tab">Recibo</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="novedades">
@@ -209,6 +210,34 @@
                                 <td>{{ arDesembarco.codigoGuiaFk }}</td>
                                 <td>{{ arDesembarco.codigoDespachoFk }}</td>
                                 <td>{{ arDesembarco.fecha | date('Y-m-d') }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="separador-1"></div>
+
+            </div>
+        </div>
+        <div class="tab-pane" id="recibos">
+            <div id="recibos" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>GUIA</th>
+                            <th>TIPO</th>
+                            <th>FECHA</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arRecibo in arRecibos %}
+                            <tr>
+                                <td>{{ arRecibo.codigoReciboPk }}</td>
+                                <td>{{ arRecibo.codigoGuiaFk }}</td>
+                                <td>{{ arRecibo.codigoReciboTipoFk }}</td>
+                                <td>{{ arRecibo.fecha | date('Y-m-d') }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>

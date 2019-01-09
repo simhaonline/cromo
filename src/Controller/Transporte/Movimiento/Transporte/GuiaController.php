@@ -13,6 +13,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteNovedad;
 use App\Entity\Transporte\TteOperacion;
+use App\Entity\Transporte\TteRecibo;
 use App\Entity\Transporte\TteRedespacho;
 use App\Entity\Transporte\TteServicio;
 use App\Form\Type\Transporte\GuiaType;
@@ -161,6 +162,7 @@ class GuiaController extends ControllerListenerGeneral
         $arRedespachos = $this->getDoctrine()->getRepository(TteRedespacho::class)->guia($id);
         $arDesembarcos = $this->getDoctrine()->getRepository(TteDesembarco::class)->guia($id);
         $arFacturaDetalles = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->guia($id);
+        $arRecibos = $this->getDoctrine()->getRepository(TteRecibo::class)->guia($id);
         return $this->render('transporte/movimiento/transporte/guia/detalle.html.twig', [
             'arGuia' => $arGuia,
             'arNovedades' => $arNovedades,
@@ -168,6 +170,7 @@ class GuiaController extends ControllerListenerGeneral
             'arFacturaDetalles' => $arFacturaDetalles,
             'arRedespachos' => $arRedespachos,
             'arDesembarcos' => $arDesembarcos,
+            'arRecibos'     => $arRecibos,
             'clase' => array('clase' => 'tte_guia', 'codigo' => $id),
             'form' => $form->createView()]);
     }

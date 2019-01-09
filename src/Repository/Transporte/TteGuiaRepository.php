@@ -235,7 +235,9 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
             $queryBuilder->andWhere("g.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");
         }
-
+        if ($session->get('filtroTteGuiaCodigoOperacionIngreso')) {
+            $queryBuilder->andWhere("g.codigoOperacionIngresoFk = '" . $session->get('filtroTteGuiaCodigoOperacionIngreso') . "'");
+        }
         return $queryBuilder;
     }
 

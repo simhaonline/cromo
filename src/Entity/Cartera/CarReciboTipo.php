@@ -39,7 +39,7 @@ class CarReciboTipo
     private $codigoComprobanteFk;
 
     /**
-     * @ORM\Column(name="orden", type="integer", nullable=true, unique=true)
+     * @ORM\Column(name="orden", type="integer", nullable=true)
      */
     private $orden = 0;
 

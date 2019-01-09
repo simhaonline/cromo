@@ -85,7 +85,7 @@ class Guia extends \FPDF
                     $pdf->SetFillColor(272, 272, 272);
                     $pdf->SetXY(22, $y);
                     $pdf->SetFont('Arial', '', 8);
-                    $pdf->Cell(49, 6, $arGuia['fechaIngreso']->format('d') . ',' . FuncionesController::mesEspanol($arGuia['fechaIngreso']->format('j')) . 'de' . $arGuia['fechaIngreso']->format('Y'), 'TRB', 0, 'L', 1);
+                    $pdf->Cell(49, 6, $arGuia['fechaIngreso']->format('Y-m-d'), 'TRB', 0, 'L', 1);
 
                     $pdf->SetXY(71, $y);
                     $pdf->SetFillColor(272, 272, 272);
@@ -286,7 +286,7 @@ class Guia extends \FPDF
                 $pdf->SetFillColor(272, 272, 272);
                 $pdf->SetXY(22, $y);
                 $pdf->SetFont('Arial', '', 8);
-                $pdf->Cell(49, 6, $arGuia['fechaIngreso']->format('d') . ',' . FuncionesController::mesEspanol($arGuia['fechaIngreso']->format('j')) . 'de' . $arGuia['fechaIngreso']->format('Y'), 'TRB', 0, 'L', 1);
+                $pdf->Cell(49, 6, $arGuia['fechaIngreso']->format('Y-m-d'), 'TRB', 0, 'L', 1);
 
                 $pdf->SetXY(71, $y);
                 $pdf->SetFillColor(272, 272, 272);

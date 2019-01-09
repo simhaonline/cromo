@@ -59,7 +59,7 @@ class Guia extends \FPDF
 //            }
             $pdf->SetFont('Arial', 'B', 15);
             $pdf->SetXY(168, $y-8);
-            $pdf->Cell(30,4, '100000000', 0, 0, 'R');
+            $pdf->Cell(30,4, $arGuia['numero'], 0, 0, 'R');
             $pdf->SetXY(10, $y);
             $pdf->SetFillColor(272, 272, 272);
             $pdf->SetFont('Arial', 'B', 8);

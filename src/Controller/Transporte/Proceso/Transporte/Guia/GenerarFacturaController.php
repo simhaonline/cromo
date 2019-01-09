@@ -48,7 +48,7 @@ class GenerarFacturaController extends Controller
                 $respuesta = $this->getDoctrine()->getRepository(TteGuia::class)->generarFactura($arrGuias, $this->getUser()->getUsername());
             }
         }
-        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaGenerarFactura(), $request->query->getInt('page', 1), 100);
+        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaGenerarFactura(), $request->query->getInt('page', 1), 500);
         return $this->render('transporte/proceso/transporte/guia/generarFactura.html.twig', [
             'arGuias' => $arGuias,
             'form' => $form->createView()

@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteGuia;
 use App\Formato\Transporte\Guia;
 use App\General\General;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,11 +38,16 @@ class ImprimirGuiaMasivoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('btnGenerar')->isClicked()){
-                $session->set('filtroNumeroDesde', $form->get('txtGuiaNumeroDesde')->getData());
-                $session->set('filtroNumeroHasta', $form->get('txtGuiaNumeroHasta')->getData());
-                $session->set('filtroCodigoDespacho', $form->get('txtCodigoDespacho')->getData());
-                $objFormato = new Guia();
-                $objFormato->Generar($em, '', true);
+                $arrDatos = $form->getData();
+                if(($arrDatos['txtGuiaNumeroDesde'] != '' && $arrDatos['txtGuiaNumeroHasta'] != '') || $arrDatos['txtCodigoDespacho'] != ''){
+                    $session->set('filtroNumeroDesde', $form->get('txtGuiaNumeroDesde')->getData());
+                    $session->set('filtroNumeroHasta', $form->get('txtGuiaNumeroHasta')->getData());
+                    $session->set('filtroCodigoDespacho', $form->get('txtCodigoDespacho')->getData());
+                    $objFormato = new Guia();
+                    $objFormato->Generar($em, '', true);
+                } else {
+                    Mensajes::error('Debe llenar el filtro por numero o por codigo de despacho');
+                }
             }
         }
         return $this->render('transporte/utilidad/transporte/imprimirGuiaMasivo/lista.html.twig', [

@@ -65,7 +65,11 @@ class Guia extends \FPDF
             $pdf->SetFont('Arial', 'B', 15);
             $pdf->SetXY(168, $y-8);
             $pdf->Cell(30,4, $arGuia['numero'], 0, 0, 'R');
-            $pdf->Text(60, $y-20, '');
+            $pdf->SetFont('Arial', '', 8);
+            $pdf->Text(55, $y-13, utf8_decode($arConfiguracion->getNombre()));
+            $pdf->Text(55, $y-9, utf8_decode($arConfiguracion->getNit(). "-" . $arConfiguracion->getDigitoVerificacion()));
+            $pdf->Text(55, $y-5, utf8_decode($arConfiguracion->getDireccion()));
+            $pdf->Text(55, $y-1, utf8_decode($arConfiguracion->getTelefono()));
             $pdf->SetXY(10, $y);
             $pdf->SetFillColor(272, 272, 272);
             $pdf->SetFont('Arial', 'B', 8);
@@ -244,7 +248,7 @@ class Guia extends \FPDF
             $pdf->SetFont('Arial', 'B', 8);
             $pdf->Cell(83, 6, utf8_decode("CC NIT.                                                       FECHA HORA"), 'LBR', 0, 'L', 1);
 
-            $y += 65;
+            $y += 68;
         }
 
 

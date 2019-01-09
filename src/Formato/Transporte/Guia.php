@@ -15,6 +15,8 @@ class Guia extends \FPDF
 
     public static $em;
     public static $codigoGuia;
+    public static $imagen;
+    public static $extension;
 
 
     public function Generar($em, $codigoGuia)
@@ -24,6 +26,9 @@ class Guia extends \FPDF
         self::$em = $em;
         self::$codigoGuia = $codigoGuia;
         $pdf = new Guia();
+        $logo = self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+        self::$imagen="data:image/'{$logo->getExtension()}';base64," . base64_encode(stream_get_contents($logo->getImagen()));
+        self::$extension=$logo->getExtension();
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
@@ -48,18 +53,19 @@ class Guia extends \FPDF
     {
         $em = BaseDatos::getEm();
         $arGuia = $em->getRepository(TteGuia::class)->imprimirGuia(self::$codigoGuia);
+        $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
         $y = 20;
         for ($i = 0; $i <= 3; $i++) {
-//            $logo = self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
-//            $pdf->Image("data:image/'{$logo->getExtension()}';base64," . base64_encode(stream_get_contents($logo->getImagen())), 12, $y - 19, 40, 20, $logo->getExtension());
-//            try {
-//                if ($logo) {
-//                }
-//            } catch (\Exception $exception) {
-//            }
+            try {
+                if (self::$imagen) {
+                    $pdf->Image(self::$imagen, 10,  $y-16, 40, 15,self::$extension);
+                }
+            } catch (\Exception $exception) {
+            }
             $pdf->SetFont('Arial', 'B', 15);
             $pdf->SetXY(168, $y-8);
             $pdf->Cell(30,4, $arGuia['numero'], 0, 0, 'R');
+            $pdf->Text(60, $y-20, '');
             $pdf->SetXY(10, $y);
             $pdf->SetFillColor(272, 272, 272);
             $pdf->SetFont('Arial', 'B', 8);

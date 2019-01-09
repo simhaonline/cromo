@@ -39,6 +39,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.codigoServicioFk,
         g.codigoGuiaTipoFk, 
         g.numero,
+        g.numeroFactura,
         g.documentoCliente, 
         g.fechaIngreso,        
         g.codigoOperacionIngresoFk,
@@ -207,6 +208,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->select('g.codigoGuiaPk')
             ->addSelect('g.codigoGuiaTipoFk')
             ->addSelect('g.numero')
+            ->addSelect('g.numeroFactura')
             ->addSelect('g.fechaIngreso')
             ->addSelect('g.codigoOperacionIngresoFk')
             ->addSelect('g.codigoOperacionCargoFk')

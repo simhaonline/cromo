@@ -67,7 +67,6 @@ class ConductorType extends AbstractType
         ]);
     }
 
-
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
@@ -80,11 +79,13 @@ class ConductorType extends AbstractType
         return $campos;
 
     }
+
     public function getEstructuraPropiedadesFiltro()
     {
 
         $campos = '[
-            {"child":"nombreCorto",                     "tipo":"TextType",   "propiedades":{"label":"Nombre"},      "operador":"like"}
+            {"child":"nombreCorto",                     "tipo":"TextType",   "propiedades":{"label":"Nombre"},      "operador":"like"},
+            {"child":"numeroIdentificacion",            "tipo":"TextType",   "propiedades":{"label":"Identificación"},      "operador":"="}
         ]';
 
         return $campos;

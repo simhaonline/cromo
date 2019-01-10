@@ -27,7 +27,10 @@
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.codigoGuiaPk, { 'attr': {'class': 'form-control'} }) }}
                     </div>
-                    <label class="col-sm-3 control-label"></label>
+                    <label for="form_codigoDespachoFk" class="col-sm-1 control-label">Despacho:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.codigoDespachoFk, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
                     <label for="form_txtNumero" class="col-sm-1 control-label">Numero:</label>
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.numero, { 'attr': {'class': 'form-control'} }) }}

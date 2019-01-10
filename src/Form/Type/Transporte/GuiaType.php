@@ -150,6 +150,7 @@ class GuiaType extends AbstractType {
             {"child":"codigoOperacionCargoFk",          "tipo":"EntityType", "propiedades":{"class":"TteOperacion", "choice_label":"nombre","label":"TODOS"},       "pk":"codigoOperacionPk"},
             {"child":"codigoServicioFk",                "tipo":"EntityType", "propiedades":{"class":"TteServicio",  "choice_label":"nombre","label":"TODOS"}},
             {"child":"codigoGuiaPk",                    "tipo":"TextType",   "propiedades":{"label":"Guía"}},
+            {"child":"codigoDespachoFk",                "tipo":"TextType",   "propiedades":{"label":"Despacho"}},
             {"child":"numero",                          "tipo":"TextType",   "propiedades":{"label":"Numero"}},
             {"child":"documentoCliente",                "tipo":"TextType",   "propiedades":{"label":"Documento"},       "operador":"like"},
             {"child":"fechaIngresoDesde",               "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},

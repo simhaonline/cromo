@@ -58,6 +58,11 @@ class Usuario implements UserInterface, \Serializable
     private $fechaUltimoIngreso;
 
     /**
+     * @ORM\Column(name="skype", type="string", length=100, nullable=true)
+     */
+    private $skype;
+
+    /**
      * @ORM\Column(name="numero_conexiones", type="integer", options={"default" : 0},nullable=true)
      */
     private $numeroConexiones = 0;
@@ -444,5 +449,24 @@ class Usuario implements UserInterface, \Serializable
         $this->foto = $foto;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSkype()
+    {
+        return $this->skype;
+    }
+
+    /**
+     * @param mixed $skype
+     */
+    public function setSkype($skype)
+    {
+        $this->skype = $skype;
+        return $this;
+    }
+
+
 }
 

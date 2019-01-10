@@ -45,6 +45,8 @@ class PerfilController extends BaseController
             'correo'        =>$usuario->getEmail(),
             'extension'     =>$usuario->getExtension(),
             'telefono'      =>$usuario->getTelefono(),
+            'skype'         =>$usuario->getSkype(),
+            'ultimaConexion'=>$usuario->getFechaUltimoIngreso()?$usuario->getFechaUltimoIngreso()->format("Y-m-d H:i A"):"",
         ];
 
         $formBusqueda=$this->createFormBuilder()

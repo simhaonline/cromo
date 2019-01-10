@@ -40,7 +40,7 @@ class NotificarEstadoController extends Controller
                         'form' => $form->createView()]);
                     $message = (new \Swift_Message('Reporte estado guias'))
                         ->setFrom('infologicuartas@gmail.com')
-                        ->setTo("alexcebav@gmail.com")
+                        ->setTo("$destinatario")
                         ->setBody(
                             $cuerpo,
                             'text/html'

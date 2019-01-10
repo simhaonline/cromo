@@ -544,6 +544,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         d.unidades,
         d.pesoReal,
         d.pesoVolumen,
+        d.cantidad,
         d.vrFlete,
         d.vrManejo,
         d.vrDeclara,

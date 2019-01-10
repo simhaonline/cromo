@@ -2593,4 +2593,19 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
+    public function estadoGuiaCliente(){
+        $em = $this->getEntityManager();
+        $session=new Session();
+        $filtro=$session->get('notificarEstadoCliente')?"WHERE g.codigoClienteFk='{$session->get('notificarEstadoCliente')}'":"";
+        $arGuiaEstado = $em->createQuery(
+            "SELECT COUNT(g.codigoGuiaPk) as guias,
+            g.codigoClienteFk,
+                c.nombreCorto as cliente
+        FROM App\Entity\Transporte\TteGuia g 
+        LEFT JOIN g.clienteRel c
+            {$filtro}
+        GROUP BY g.codigoClienteFk");
+        return $arGuiaEstado->execute();
+    }
 }

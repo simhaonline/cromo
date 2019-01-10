@@ -39,6 +39,8 @@ final class General
      */
     public function setExportar($arrDatos, $nombre)
     {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
         if (count($arrDatos) > 0) {
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();

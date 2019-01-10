@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                <div class="col-sm-11">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtCodigoCliente) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                {{ form_widget(form.txtNombreCorto) }}
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Desde:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.filtrarFecha) }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.btnFiltrar) }}
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>TIPO</th>
+            <th>CLIENTE</th>
+            <th>GUIA</th>
+            <th>FECHA</th>
+            <th>SERV</th>
+            <th>OI</th>
+            <th>OC</th>
+            <th>NUMERO</th>
+            <th>DOCUMENTO</th>
+            <th>DESTINO</th>
+            <th>UND</th>
+            <th>PES</th>
+            <th>VOL</th>
+            <th>DECLARADO</th>
+            <th>FLETE</th>
+            <th>MANEJO</th>
+        </thead>
+        <tbody>
+        {% set codigoCliente = '' %}
+        {% for arGuiaPendiente in arGuiasPendientes %}
+            {% if codigoCliente != arGuiaPendiente.codigoClienteFk %}
+                {% set codigoCliente = arGuiaPendiente.codigoClienteFk %}
+                <tr>
+                    <th>{{ arGuiaPendiente.clienteNombreCorto }}</th>
+                </tr>
+            {% endif %}
+            <tr>
+                <td>{{ arGuiaPendiente.codigoGuiaTipoFk }}</td>
+                <td>{{ arGuiaPendiente.clienteNombreCorto }}</td>
+                <td>{{ arGuiaPendiente.codigoGuiaPk }}</td>
+                <td>{{ arGuiaPendiente.fechaIngreso | date('Y-m-d') }}</td>
+                <td>{{ arGuiaPendiente.codigoServicioFk }}</td>
+                <td>{{ arGuiaPendiente.codigoOperacionIngresoFk }}</td>
+                <td>{{ arGuiaPendiente.codigoOperacionCargoFk }}</td>
+                <td>{{ arGuiaPendiente.numero }}</td>
+                <td>{{ arGuiaPendiente.documentoCliente }}</td>
+                <td>{{ arGuiaPendiente.ciudadDestino }}</td>
+                <td class="numero">{{ arGuiaPendiente.unidades }}</td>
+                <td class="numero">{{ arGuiaPendiente.pesoReal }}</td>
+                <td class="numero">{{ arGuiaPendiente.pesoVolumen }}</td>
+                <td class="numero">{{ arGuiaPendiente.vrDeclara | number_format }}</td>
+                <td class="numero">{{ arGuiaPendiente.vrFlete | number_format }}</td>
+                <td class="numero">{{ arGuiaPendiente.vrManejo | number_format }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arGuiasPendientes.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arGuiasPendientes) }}
+    </div>
+    <div class="btn-group" style="float: right">
+        <div class="btn-group">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+    </div>
+    <br /><br />
+    {{ form_end(form) }}
+{% endblock %}
+

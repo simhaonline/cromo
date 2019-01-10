@@ -2315,6 +2315,58 @@ class TteGuiaRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return mixed
+     */
+    public function informeFacturaPendienteCliente()
+    {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.codigoClienteFk')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.vrDeclara')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.codigoGuiaTipoFk')
+            ->addSelect('g.codigoServicioFk')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.estadoFacturaGenerada = 0')
+            ->andWhere('g.estadoAnulado = 0')
+            ->andWhere('g.factura = 0')
+            ->andWhere('g.cortesia = 0')
+            ->orderBy('g.codigoClienteFk', 'ASC');
+        $fecha = new \DateTime('now');
+        if ($session->get('filtroTteCodigoCliente')) {
+            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if ($session->get('filtroFecha') == true) {
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("g.fechaIngreso >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("g.fechaIngreso >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("g.fechaIngreso <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("g.fechaIngreso <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        return $queryBuilder;
+    }
+
+    /**
      * @param $codigoGuia
      * @return mixed
      * @throws \Doctrine\ORM\NoResultException
@@ -2462,6 +2514,44 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         if ($session->get('filtroCodigoDespacho') != "") {
             $queryBuilder->andWhere("g.codigoDespachoFk = " . $session->get('filtroCodigoDespacho'));
+        }
+        return $queryBuilder;
+    }
+
+    public function entregaFecha(){
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(TteGuia::class,'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.fechaEntrega')
+            ->addSelect('dg.fechaRegistro')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.codigoDespachoFk')
+            ->addSelect('(dg.numero) AS manifiesto')
+            ->addSelect('ct.movil')
+            ->addSelect('ct.nombreCorto AS conductor')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.estadoNovedad')
+            ->addSelect('g.estadoNovedadSolucion')
+            ->addSelect('g.estadoCumplido')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.despachoRel', 'dg')
+            ->leftJoin('dg.conductorRel', 'ct')
+            ->where('g.estadoEntregado = 1')
+            ->orderBy('g.fechaEntrega');
+        if($session->get('filtroFechaEntregaDesde')){
+            $queryBuilder->andWhere('g.fechaEntrega >= '."'{$session->get('filtroFechaEntregaDesde')}'");
+        }
+        if($session->get('filtroFechaEntregaHasta')){
+            $queryBuilder->andWhere('g.fechaEntrega <= '."'{$session->get('filtroFechaEntregaHasta')}'");
         }
         return $queryBuilder;
     }

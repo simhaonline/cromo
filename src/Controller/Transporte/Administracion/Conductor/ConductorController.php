@@ -27,7 +27,9 @@ class ConductorController extends ControllerListenerGeneral
 
     /**
      * @param Request $request
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/administracion/conductor/lista", name="transporte_administracion_transporte_conductor_lista")
      */
     public function lista(Request $request)

@@ -82,7 +82,7 @@ class CiudadType extends AbstractType
     {
 
         $campos = '[
-            {"child":"nombre",               "tipo":"TextType",   "propiedades":{"label":"Nombre"}}
+            {"child":"nombre",               "tipo":"TextType",   "propiedades":{"label":"Nombre"},       "operador":"like"}
         ]';
 
         return $campos;
@@ -103,5 +103,12 @@ class CiudadType extends AbstractType
             {"campo":"codigoInterface",     "tipo":"texto",     "ayuda":"Codigo interface",        "titulo":"CODIGO INTERFACE"},
             {"campo":"reexpedicion",        "tipo":"bool",   "ayuda":"Reexpedicion",            "titulo":"REEXPEDICION"}
         ]';
+    }
+
+    public function getOrdenamiento(){
+        $campos ='[
+            {"campo":"nombre","tipo":"ASC"}
+        ]';
+        return $campos;
     }
 }

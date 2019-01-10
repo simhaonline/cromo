@@ -20,6 +20,7 @@ class CiudadController extends ControllerListenerGeneral
     protected $funcion = "Administracion";
     protected $grupo = "General";
     protected $nombre = "Ciudad";
+
     /**
      * @Route("/transporte/administracion/general/ciudad/lista", name="transporte_administracion_general_ciudad_lista")
      */
@@ -41,7 +42,8 @@ class CiudadController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Ciudad");//cambiar
+//                General::get()->setExportarE($em->createQuery($datos['queryBuilder'])->execute(), "Ciudad");//cambiar
+                $this->exportarExcel($datos['queryBuilder']);
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -97,6 +99,11 @@ class CiudadController extends ControllerListenerGeneral
      */
     public function detalle(Request $request, $id)
     {
+        $em = $this->getDoctrine()->getManager();
+        $arCiudad = $em->getRepository(TteCiudad::class)->find($id);
 
+        return $this->render('transporte/administracion/general/ciudad/detalle.html.twig',[
+            'arCiudad'=>$arCiudad,
+        ]);
     }
 }

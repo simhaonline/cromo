@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteCiudad;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -116,6 +117,24 @@ class TteCiudadRepository extends ServiceEntityRepository
             $qb->andWhere("c.codigoCiudadPk ='{$session->get('filtroTteCiudadCodigoDestino')}'");
         }
         return $qb->getDQL();
+    }
+
+    public function eliminar($arrSeleccionados){
+        $respuesta = '';
+        try{
+            if ($arrSeleccionados) {
+                foreach ($arrSeleccionados as $codigo) {
+                    $arRegistro = $this->getEntityManager()->getRepository(TteCiudad::class)->find($codigo);
+                    if ($arRegistro) {
+                        $this->getEntityManager()->remove($arRegistro);
+                        $this->getEntityManager()->flush();
+                    }
+                }
+            }
+        }catch (\Exception $exception){
+            Mensajes::error("El registro esta siendo utilizado en el sistema");
+        }
+
     }
 
 }

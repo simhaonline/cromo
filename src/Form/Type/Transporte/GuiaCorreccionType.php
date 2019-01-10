@@ -3,7 +3,9 @@
 namespace App\Form\Type\Transporte;
 
 use App\Entity\Transporte\TteCiudad;
+use App\Entity\Transporte\TteOperacion;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -23,11 +25,36 @@ class GuiaCorreccionType extends AbstractType {
             ->add('vrDeclara', NumberType::class)
             ->add('vrFlete', NumberType::class)
             ->add('vrManejo', NumberType::class)
+            ->add('fechaIngreso', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
+            ->add('ciudadOrigenRel',EntityType::class,[
+                'class' => TteCiudad::class,
+                'query_builder' => function(EntityRepository $er){
+                    return $er->createQueryBuilder('er')
+                        ->orderBy('er.nombre');
+                },'choice_label' => 'nombre',
+                'required' => true
+            ])
             ->add('ciudadDestinoRel',EntityType::class,[
                 'class' => TteCiudad::class,
                 'query_builder' => function(EntityRepository $er){
                     return $er->createQueryBuilder('er')
                         ->orderBy('er.nombre');
+                },'choice_label' => 'nombre',
+                'required' => true
+            ])
+            ->add('operacionIngresoRel',EntityType::class,[
+                'class' => TteOperacion::class,
+                'query_builder' => function(EntityRepository $er){
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.nombre');
+                },'choice_label' => 'nombre',
+                'required' => true
+            ])
+            ->add('operacionCargoRel',EntityType::class,[
+                'class' => TteOperacion::class,
+                'query_builder' => function(EntityRepository $er){
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.nombre');
                 },'choice_label' => 'nombre',
                 'required' => true
             ])

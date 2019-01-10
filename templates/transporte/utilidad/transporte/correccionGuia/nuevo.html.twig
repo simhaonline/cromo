@@ -37,10 +37,10 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Ciudad destino:</label>
+                <label class="col-sm-2 control-label">Ciudad origen:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.ciudadDestinoRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.ciudadDestinoRel) }}
+                    {{ form_widget(form.ciudadOrigenRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.ciudadOrigenRel) }}
                 </div>
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Declara:</label>
                 <div class="col-sm-4">
@@ -49,13 +49,38 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label"></label>
+                <label class="col-sm-2 control-label">Ciudad destino:</label>
                 <div class="col-sm-4">
+                    {{ form_widget(form.ciudadDestinoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.ciudadDestinoRel) }}
                 </div>
                 <label class="col-sm-2 control-label">Manejo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.vrManejo, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.vrManejo) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Operacion(Ing):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.operacionIngresoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.operacionIngresoRel) }}
+                </div>
+                <label class="col-sm-2 control-label">Fecha ingreso:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaIngreso, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.fechaIngreso) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Operacion(Car):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.operacionCargoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.operacionCargoRel) }}
+                </div>
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
                 </div>
             </div>
         </div>

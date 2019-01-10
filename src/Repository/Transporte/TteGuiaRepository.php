@@ -2555,4 +2555,42 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
+    public function soporteFecha(){
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(TteGuia::class,'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.fechaSoporte')
+            ->addSelect('dg.fechaRegistro')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.codigoDespachoFk')
+            ->addSelect('(dg.numero) AS manifiesto')
+            ->addSelect('ct.movil')
+            ->addSelect('ct.nombreCorto AS conductor')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.estadoNovedad')
+            ->addSelect('g.estadoNovedadSolucion')
+            ->addSelect('g.estadoCumplido')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.despachoRel', 'dg')
+            ->leftJoin('dg.conductorRel', 'ct')
+            ->where('g.estadoSoporte = 1')
+            ->orderBy('g.fechaSoporte','DESC');
+        if($session->get('filtroFechaSoporteDesde')){
+            $queryBuilder->andWhere('g.fechaSoporte >= '."'{$session->get('filtroFechaSoporteDesde')}'");
+        }
+        if($session->get('filtroFechaSoporteHasta')){
+            $queryBuilder->andWhere('g.fechaSoporte <= '."'{$session->get('filtroFechaSoporteHasta')}'");
+        }
+        return $queryBuilder;
+    }
 }

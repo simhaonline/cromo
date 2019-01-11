@@ -38,6 +38,12 @@ security:
                 path:   /logout
                 target: /login
                 handlers: [App\Controller\Estructura\LogoutController]
+
+            guard:
+                authenticators:
+                    - App\Controller\Estructura\AutenticarToken
+
+
             
     access_control:
         - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -47,3 +53,5 @@ security:
         - { path: /administrador, roles: ROLE_ADMIN }
         - { path: /.*, roles: ROLE_USER }
         - { path: /.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /transporte/api/externo/.*, roles: ROLE_USER }
+#        - { path: /transporte/api/.*, roles: ROLE_API }

@@ -77,18 +77,22 @@ final class Estandares
             ->getForm();
     }
 
-    public static function botoneraLista(){
+    public static function botoneraLista()
+    {
         return self::getForm()->createBuilder()
-            ->add('btnEliminar',SubmitType::class,['label' => 'Eliminar','attr' => ['class' => 'btn-sm btn btn-danger']])
-            ->add('btnExcel',SubmitType::class,['label' => 'Excel','attr' => ['class' => 'btn-sm btn btn-deafult']])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn-sm btn btn-danger']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn-sm btn btn-deafult']])
             ->getForm();
     }
 
     /**
      * @param $pdf
      * @param string $titulo
+     * @param $em
+     * @param null $imagen
+     * @param null $extension
      */
-    public static function generarEncabezado($pdf, $titulo = ' ',$em)
+    public static function generarEncabezado($pdf, $titulo = ' ', $em, $imagen = null, $extension = null)
     {
         /** @var  $arConfiguracion GenConfiguracion */
         $arConfiguracion = BaseDatos::getEm()->getRepository(GenConfiguracion::class)->find(1);
@@ -100,9 +104,8 @@ final class Estandares
         //Logo
         $pdf->SetXY(53, 10);
         try {
-            $logo=$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
-            if($logo ){
-                $pdf->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 12, 13, 40, 25,$logo->getExtension());
+            if ($imagen) {
+                $pdf->Image($imagen, 10, 8, 40, 18, $extension);
             }
         } catch (\Exception $exception) {
         }

@@ -6,6 +6,7 @@ use App\Controller\Estructura\MensajesController;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaTipo;
+use App\Formato\Financiero\Auxiliar1;
 use App\Formato\Transporte\ControlFactura;
 use App\Formato\Transporte\FacturaInforme;
 use App\General\General;
@@ -22,6 +23,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class AuxiliarController extends Controller
 {
     /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/financiero/informe/contabilidad/auxiliar", name="financiero_informe_contabilidad_auxiliar_lista")
      */
     public function lista(Request $request)
@@ -42,6 +47,7 @@ class AuxiliarController extends Controller
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFinRegistroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFinRegistroFechaHasta'))])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnPdf', SubmitType::class, ['label' => 'Pdf', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -59,7 +65,11 @@ class AuxiliarController extends Controller
                 $session->set('filtroFinRegistroFiltroFecha', $form->get('filtrarFecha')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-//                General::get()->setExportar($em->createQuery($em->getRepository(FinRegistro::class)->registros())->execute(), "Registros");
+                General::get()->setExportar($em->createQuery($em->getRepository(FinRegistro::class)->auxiliar())->execute(), "Registros");
+            }
+            if ($form->get('btnPdf')->isClicked()) {
+                $objMensaje = new Auxiliar1();
+                $objMensaje->Generar($em);
             }
         }
         $query = $this->getDoctrine()->getRepository(FinRegistro::class)->auxiliar();

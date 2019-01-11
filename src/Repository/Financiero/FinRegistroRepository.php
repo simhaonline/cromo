@@ -84,25 +84,28 @@ class FinRegistroRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
             ->select('r.codigoRegistroPk AS id')
             ->addSelect('r.numero')
-            ->addSelect('r.codigoCuentaFk')
+            ->addSelect('r.codigoCuentaFk as cuenta')
             ->addSelect('r.numeroPrefijo')
+            ->addSelect('r.codigoDocumento')
             ->addSelect('r.numeroReferencia')
             ->addSelect('r.numeroReferenciaPrefijo')
             ->addSelect('r.fecha')
             ->addSelect('r.codigoComprobanteFk AS idComprobante')
             ->addSelect('c.nombre AS comprobante')
-            ->addSelect('r.codigoCuentaFk AS cuenta')
+            ->addSelect('cu.nombre AS cuentaNombre')
             ->addSelect('r.codigoCentroCostoFk AS c_c')
             ->addSelect('t.numeroIdentificacion AS nit')
-            ->addSelect('t.nombreCorto AS tercero')
+            ->addSelect('t.nombreCorto')
             ->addSelect('r.vrDebito')
             ->addSelect('r.vrCredito')
             ->addSelect('r.vrBase')
             ->addSelect('r.descripcion')
             ->leftJoin('r.terceroRel', 't')
             ->leftJoin('r.comprobanteRel', 'c')
+            ->leftJoin('r.cuentaRel', 'cu')
             ->where('r.codigoRegistroPk <> 0')
-            ->orderBy('r.codigoCuentaFk', 'DESC');
+            ->orderBy('r.codigoCuentaFk', 'DESC')
+            ->addOrderBy('r.fecha', 'DESC');
         $fecha = new \DateTime('now');
         if ($session->get('filtroFinCodigoTercero')) {
             $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroFinCodigoTercero')}");

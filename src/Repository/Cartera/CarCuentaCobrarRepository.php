@@ -276,7 +276,6 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->where('cc.vrSaldo <> 0')
             ->orderBy('c.nombreCorto', 'ASC')
             ->addOrderBy('cc.rango', 'ASC')
-
             ->addOrderBy('cc.numeroDocumento', 'ASC');
 
         $fecha =  new \DateTime('now');

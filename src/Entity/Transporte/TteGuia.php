@@ -522,9 +522,10 @@ class TteGuia
     /**
      * @param mixed $codigoGuiaPk
      */
-    public function setCodigoGuiaPk( $codigoGuiaPk ): void
+    public function setCodigoGuiaPk( $codigoGuiaPk )
     {
         $this->codigoGuiaPk = $codigoGuiaPk;
+        return $this;
     }
 
     /**

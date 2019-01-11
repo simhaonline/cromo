@@ -18,9 +18,24 @@ class ApiExternoController extends FOSRestController
      */
     public function crearGuia(Request $request)
     {
+        $datos=json_decode($request->getContent(), true);
+        $em=$this->getDoctrine()->getManager();
+
+        try{
+            $arGuia=(new TteGuia())
+                ->setCodigoGuiaPk($datos['codigoGuia']);
+
+            $em->persist($arGuia);
+            $em->flush();
+        }catch (\Exception $exception){
+            return [
+                'estado'=>false,
+                'mensaje'=>$exception->getMessage(),
+            ];
+        }
 
         return [
-            'hola'
+            'estado'=>true,
         ];
     }
 }

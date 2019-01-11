@@ -260,4 +260,18 @@ class FinRegistroRepository extends ServiceEntityRepository
             ->addOrderBy('r.codigoComprobanteFk', 'DESC');
         return $queryBuilder;
     }
+
+    public function analizarInconsistencias($fechaDesde, $fechaHasta){
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
+            ->select('r.codigoRegistroPk')
+            ->addSelect('r.numero')
+            ->addSelect('r.codigoComprobanteFk')
+            ->addSelect('r.vrCredito')
+            ->addSelect('r.vrDebito')
+            ->where("r.fecha >= '" . $fechaDesde . " 00:00:00'")
+            ->andWhere("r.fecha <= '" . $fechaHasta . " 23:59:59'")
+            ->orderBy('r.numero');
+        return $queryBuilder;
+    }
 }

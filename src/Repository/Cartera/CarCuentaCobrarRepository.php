@@ -332,4 +332,26 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         }
         return $respuesta;
     }
+
+    public function crearReciboMasivoLista(){
+        $em=$this->getEntityManager();
+        $session=new Session();
+
+        $arCrearReciboMasivo=$em->createQueryBuilder()
+            ->from('App:Cartera\CarCuentaCobrar','ccc')
+            ->leftJoin('ccc.clienteRel','c')
+            ->leftJoin('ccc.cuentaCobrarTipoRel','cct')
+            ->addSelect("ccc.codigoCuentaCobrarPk")
+            ->addSelect("cct.nombre as tipo")
+            ->addSelect("c.nombreCorto")
+            ->addSelect("ccc.fecha")
+            ->addSelect("ccc.fechaVence")
+            ->addSelect("ccc.vrTotal")
+            ->andWhere("ccc.vrSaldo >= 0");
+        if($session->get('crearReciboMasivoCuentaCobrarTipo')){
+            $arCrearReciboMasivo->andWhere("ccc.codigoCuentaCobrarTipoFk='{$session->get("crearReciboMasivoCuentaCobrarTipo")}'");
+        }
+
+        return $arCrearReciboMasivo->getQuery()->execute();
+    }
 }

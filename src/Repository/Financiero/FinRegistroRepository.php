@@ -46,6 +46,71 @@ class FinRegistroRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroFinCodigoTercero')}");
         }
         if ($session->get('filtroFinComprobante') != '') {
+            $queryBuilder->andWhere("r.codigoComprobanteFk = '{$session->get('filtroFinComprobante')}'");
+        }
+        if ($session->get('filtroFinNumeroDesde') != '') {
+            $queryBuilder->andWhere("r.numero >= {$session->get('filtroFinNumeroDesde')}");
+        }
+        if ($session->get('filtroFinNumeroHasta') != '') {
+            $queryBuilder->andWhere("r.numero <= {$session->get('filtroFinNumeroHasta')}");
+        }
+        if ($session->get('filtroFinCuenta') != '') {
+            $queryBuilder->andWhere("r.codigoCuentaFk = '{$session->get('filtroFinCuenta')}'");
+        }
+        if ($session->get('filtroFinCentroCosto') != '') {
+            $queryBuilder->andWhere("r.codigoCentroCostoFk = '{$session->get('filtroFinCentroCosto')}'");
+        }
+        if ($session->get('filtroFinNumeroReferencia') != '') {
+            $queryBuilder->andWhere("r.numeroReferencia = {$session->get('filtroFinNumeroReferencia')}");
+        }
+        if ($session->get('filtroFinRegistroFiltroFecha') == true) {
+            if ($session->get('filtroFinRegistroFechaDesde') != null) {
+                $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroFinRegistroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("r.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFinRegistroFechaHasta') != null) {
+                $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroFinRegistroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("r.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        return $queryBuilder;
+    }
+
+    public function auxiliar()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
+            ->select('r.codigoRegistroPk AS id')
+            ->addSelect('r.numero')
+            ->addSelect('r.codigoCuentaFk as cuenta')
+            ->addSelect('r.numeroPrefijo')
+            ->addSelect('r.codigoDocumento')
+            ->addSelect('r.numeroReferencia')
+            ->addSelect('r.numeroReferenciaPrefijo')
+            ->addSelect('r.fecha')
+            ->addSelect('r.codigoComprobanteFk AS idComprobante')
+            ->addSelect('c.nombre AS comprobante')
+            ->addSelect('cu.nombre AS cuentaNombre')
+            ->addSelect('r.codigoCentroCostoFk AS c_c')
+            ->addSelect('t.numeroIdentificacion AS nit')
+            ->addSelect('t.nombreCorto')
+            ->addSelect('r.vrDebito')
+            ->addSelect('r.vrCredito')
+            ->addSelect('r.vrBase')
+            ->addSelect('r.descripcion')
+            ->leftJoin('r.terceroRel', 't')
+            ->leftJoin('r.comprobanteRel', 'c')
+            ->leftJoin('r.cuentaRel', 'cu')
+            ->where('r.codigoRegistroPk <> 0')
+            ->orderBy('r.codigoCuentaFk', 'DESC')
+            ->addOrderBy('r.fecha', 'DESC');
+        $fecha = new \DateTime('now');
+        if ($session->get('filtroFinCodigoTercero')) {
+            $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroFinCodigoTercero')}");
+        }
+        if ($session->get('filtroFinComprobante') != '') {
             $queryBuilder->andWhere("r.codigoComprobanteFk = {$session->get('filtroFinComprobante')}");
         }
         if ($session->get('filtroFinNumeroDesde') != '') {

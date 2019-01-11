@@ -296,7 +296,8 @@ class InvImportacionRepository extends ServiceEntityRepository
             ->leftJoin('i.terceroRel', 't')
             ->leftJoin('i.importacionTipoRel', 'it')
             ->leftJoin('i.monedaRel', 'm')
-            ->where("i.estadoAprobado = 1 ");
+            ->where("i.estadoAprobado = 1 ")
+        ->andWhere('i.estadoContabilizado=0');
         if ($session->get('filtroInvImportacionNumero') != "") {
             $queryBuilder->andWhere("i.numero = " . $session->get('filtroInvImportacionNumero'));
         }

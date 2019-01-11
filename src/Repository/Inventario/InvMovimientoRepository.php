@@ -115,6 +115,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->leftJoin('m.terceroRel', 't')
             ->leftJoin('m.documentoRel', 'd')
             ->where("m.estadoAprobado = 1 ")
+            ->andWhere('m.estadoContabilizado = 0')
             ->andWhere('d.contabilizar = 1');
         if ($session->get('filtroInvMovimientoNumero') != "") {
             $queryBuilder->andWhere("m.numero = " . $session->get('filtroInvMovimientoNumero'));

@@ -56,7 +56,7 @@ class CuentaCobrar extends \FPDF {
 
 
         $em = BaseDatos::getEm();
-        $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->carteraEdadesCliente()->getQuery()->getResult();
+        $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->estadoCuenta()->getQuery()->getResult();
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         $saldoGeneral = 0;

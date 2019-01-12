@@ -60,7 +60,7 @@ class AutenticarToken extends AbstractGuardAuthenticator
 
 // if a User object, checkCredentials() is called
         return $this->em->getRepository(Usuario::class)
-            ->findOneBy(['username'=>$informacionUsuario['username'],'claveEscritorio'=>$informacionUsuario['clave']]);
+            ->findOneBy(['username'=>$informacionUsuario['username']]);
     }
 
     public function checkCredentials($credentials, UserInterface $user)

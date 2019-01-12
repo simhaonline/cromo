@@ -306,6 +306,58 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function estadoCuenta()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
+            ->select('cc.codigoCuentaCobrarPk')
+            ->addSelect('cc.codigoClienteFk')
+            ->addSelect('cc.codigoCuentaCobrarTipoFk')
+            ->addSelect('cc.numeroDocumento')
+            ->addSelect('cc.vrTotal')
+            ->addSelect('cc.vrSaldoOperado')
+            ->addSelect('cc.vrAbono')
+            ->addSelect('cc.diasVencimiento')
+            ->addSelect('cc.plazo')
+            ->addSelect('cc.rango')
+            ->addSelect('cc.fecha')
+            ->addSelect('cc.fechaVence')
+            ->addSelect('c.nombreCorto as clienteNombre')
+            ->addSelect('c.numeroIdentificacion')
+            ->join('cc.clienteRel','c')
+            ->join('cc.cuentaCobrarTipoRel', 'cct')
+            ->where('cc.vrSaldo <> 0')
+            ->orderBy('c.nombreCorto', 'ASC')
+            ->addOrderBy('cc.fecha', 'ASC');
+
+        $fecha =  new \DateTime('now');
+        if ($session->get('filtroCarCuentaCobrarTipo') != "") {
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo')."'");
+        }
+        if($session->get('filtroCarNumeroReferencia') != ''){
+            $queryBuilder->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
+        }
+        if($session->get('filtroCarCuentaCobrarNumero') != ''){
+            $queryBuilder->andWhere("cc.numeroDocumento = {$session->get('filtroCarCuentaCobrarNumero')}");
+        }
+        if($session->get('filtroCarCodigoCliente')){
+            $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("cc.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("cc.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("cc.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        return $queryBuilder;
+    }
+
     public function anularExterno($modulo, $codigoDocumento)
     {
         $respuesta = true;

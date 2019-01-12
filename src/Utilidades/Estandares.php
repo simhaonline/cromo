@@ -20,8 +20,6 @@ final class Estandares
         global $kernel;
         $this->form = $kernel->getContainer()->get("form.factory");
         $this->router = $kernel->getContainer()->get("router");
-
-
     }
 
     private static function getInstance()
@@ -98,8 +96,6 @@ final class Estandares
     {
         /** @var  $arConfiguracion GenConfiguracion */
         $arConfiguracion = BaseDatos::getEm()->getRepository(GenConfiguracion::class)->find(1);
-
-
         $pdf->SetFont('Arial', '', 5);
         $date = new \DateTime('now');
         $pdf->Text(168, 8, $date->format('Y-m-d H:i:s') . ' [Cromo | ERP]');

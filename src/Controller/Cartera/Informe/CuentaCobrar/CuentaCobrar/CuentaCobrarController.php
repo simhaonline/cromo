@@ -38,7 +38,7 @@ class CuentaCobrarController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
+            ->add('btnPdf', SubmitType::class, array('label' => 'Estado cuenta'))
             ->add('btnGenerarVencimientos', SubmitType::class, array('label' => 'Generar rango'))
             ->add('btnCarteraEdadesCliente', SubmitType::class, array('label' => 'Cartera edades'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))

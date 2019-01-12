@@ -56,7 +56,7 @@ class CuentaCobrar extends \FPDF {
 
 
         $em = BaseDatos::getEm();
-        $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->carteraEdadesCliente()->getQuery()->getResult();
+        $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->estadoCuenta()->getQuery()->getResult();
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         $saldoGeneral = 0;
@@ -95,7 +95,15 @@ class CuentaCobrar extends \FPDF {
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }
+        $pdf->SetX(145);
+        $pdf->Cell(25, 4, "TOTAL:", 'LRB', 0, 'L');
+        $pdf->Cell(30, 4, number_format($saldo), 'LRB', 0, 'R');
+        $pdf->Ln(4);
 
+        $pdf->SetX(145);
+        $pdf->Cell(25, 4, "TOTAL GENERAL:", 'LRB', 0, 'L');
+        $pdf->Cell(30, 4, number_format($saldoGeneral), 'LRB', 0, 'R');
+        $pdf->Ln(4);
 
     }
 

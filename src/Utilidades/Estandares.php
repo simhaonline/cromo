@@ -104,8 +104,10 @@ final class Estandares
         //Logo
         $pdf->SetXY(53, 10);
         try {
-            if ($imagen) {
-                $pdf->Image($imagen, 10, 8, 40, 18, $extension);
+            //No quitar, el logo debe venir de esta entidad - Mario
+            $logo=$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+            if($logo ){
+                $pdf->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 12, 13, 40, 25,$logo->getExtension());
             }
         } catch (\Exception $exception) {
         }

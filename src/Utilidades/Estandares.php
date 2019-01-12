@@ -14,12 +14,14 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 final class Estandares
 {
-
+    public static $imagen;
     private function __construct()
     {
         global $kernel;
         $this->form = $kernel->getContainer()->get("form.factory");
         $this->router = $kernel->getContainer()->get("router");
+
+
     }
 
     private static function getInstance()
@@ -96,6 +98,8 @@ final class Estandares
     {
         /** @var  $arConfiguracion GenConfiguracion */
         $arConfiguracion = BaseDatos::getEm()->getRepository(GenConfiguracion::class)->find(1);
+
+
         $pdf->SetFont('Arial', '', 5);
         $date = new \DateTime('now');
         $pdf->Text(168, 8, $date->format('Y-m-d H:i:s') . ' [Cromo | ERP]');
@@ -103,9 +107,10 @@ final class Estandares
         $pdf->SetFont('Arial', 'B', 10);
         //Logo
         $pdf->SetXY(53, 10);
+
         try {
-            if ($imagen) {
-                $pdf->Image($imagen, 10, 8, 40, 18, $extension);
+            if(self::getLogo($em) ){
+                $pdf->Image(self::getLogo($em)['imagen'], 12, 13, 40, 25,self::getLogo($em)['extension']);
             }
         } catch (\Exception $exception) {
         }
@@ -125,6 +130,29 @@ final class Estandares
         $pdf->SetXY(53, 30);
         $pdf->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
         $pdf->Cell(100, 4, $arConfiguracion ? $arConfiguracion->getTelefono() : '', 0, 0, 'L', 0);
+    }
+
+    public function getLogo($em){
+        try {
+            $logo=$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+            if($logo ){
+                if(!self::$imagen){
+
+                $imagenBase64=base64_encode(stream_get_contents($logo->getImagen()));
+                $imagen="data:image/'{$logo->getExtension()}';base64,".$imagenBase64;
+                    self::$imagen=$imagen;
+                }else{
+
+                $imagen=self::$imagen;
+                }
+
+                return [
+                    'imagen'=>$imagen,
+                    'extension'=>$logo->getExtension(),
+                ];
+            }
+        } catch (\Exception $exception) {
+        }
     }
 
 }

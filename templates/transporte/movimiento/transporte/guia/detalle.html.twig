@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ notificar()|raw }}
     <div class="btn-toolbar" style="float:left">
         <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_guia_lista') }}">Volver</a>
         <div class="btn-group">
@@ -19,173 +20,20 @@
         {% if arGuia.estadoAnulado == 1 %}<span class="label label-default">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    <table width="100%" class="table table-condensed table-bordered">
-        <tr>
-            <td class="titulo">ID:</td>
-            <td class="td-in-well">{{ arGuia.codigoGuiaPk }}</td>
-            <td class="titulo">INGRESO:</td>
-            <td class="td-in-well">{{ arGuia.fechaIngreso |date("Y-m-d H:i:s") }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">UNIDADES:</td>
-            <td align="right">{{ arGuia.unidades | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arGuia.numero }}</td>
-            <td class="titulo">DESPACHO:</td>
-            <td class="td-in-well">{{ arGuia.fechaDespacho |date("Y-m-d H:i:s") }}</td>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arGuia.codigoDespachoFk }}</td>
-            <td class="titulo">PESO:</td>
-            <td align="right">{{ arGuia.pesoReal | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">TIPO:</td>
-            <td class="td-in-well">{{ arGuia.guiaTipoRel.nombre }}</td>
-            <td class="titulo">ENTREGA:</td>
-            <td class="td-in-well">{{ arGuia.fechaEntrega |date("Y-m-d H:i:s") }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">VOLUMEN:</td>
-            <td align="right">{{ arGuia.pesoVolumen | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">OPERACION(ING)</td>
-            <td class="td-in-well">{{ arGuia.operacionIngresoRel.nombre | default('') }}</td>
-            <td class="titulo">CUMPLIDO:</td>
-            <td class="td-in-well">{{ arGuia.fechaCumplido |date("Y-m-d H:i:s") }}</td>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arGuia.codigoCumplidoFk }}</td>
-            </td>
-            <td class="titulo">PESO(FAC):</td>
-            <td align="right">{{ arGuia.pesoFacturado | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">OPERACION(CAR)</td>
-            <td class="td-in-well">{{ arGuia.operacionCargoRel.nombre | default('') }}</td>
-            <td class="titulo">SOPORTE:</td>
-            <td class="td-in-well">{{ arGuia.fechaSoporte |date("Y-m-d H:i:s") }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">FLETE:</td>
-            <td align="right">{{ arGuia.vrFlete | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">CLIENTE:</td>
-            <td class="td-in-well">{{ arGuia.clienteRel.nombreCorto }}</td>
-            <td class="titulo">FACTURA:</td>
-            <td class="td-in-well">{{ arGuia.fechaFactura |date("Y-m-d H:i:s") }}</td>
-            <td class="titulo">NUMERO:</td>
-            <td class="td-in-well">{{ arGuia.codigoFacturaFk }}</td>
-            <td class="titulo">DECLARADO:</td>
-            <td align="right">{{ arGuia.vrDeclara | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">REMITENTE:</td>
-            <td class="td-in-well">{{ arGuia.remitente }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">MANEJO:</td>
-            <td align="right">{{ arGuia.vrManejo | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">SERVICIO:</td>
-            <td class="td-in-well">{{ arGuia.servicioRel.nombre }}</td>
-            <td class="titulo">ORIGEN:</td>
-            <td class="td-in-well">{{ arGuia.ciudadOrigenRel.nombre | default('') }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">RECAUDO:</td>
-            <td align="right">{{ arGuia.vrRecaudo | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">RUTA:</td>
-            <td class="td-in-well">{{ arGuia.rutaRel.nombre | default('') }}</td>
-            <td class="titulo">DESTINO:</td>
-            <td class="td-in-well">{{ arGuia.ciudadDestinoRel.nombre | default('') }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo">ABONOS:</td>
-            <td align="right">{{ arGuia.vrAbono | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">PRODUCTO:</td>
-            <td class="td-in-well">{{ arGuia.productoRel.nombre | default('') }}</td>
-            <td class="titulo">FACTURA:</td>
-            <td class="td-in-well">{% if arGuia.factura == 1 %}SI{% else %}NO{% endif %}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td align="right"></td>
-        </tr>
-        <tr>
-            <td class="titulo">EMPAQUE:</td>
-            <td class="td-in-well">{{ arGuia.empaqueRel.nombre }}</td>
-            <td class="titulo">REEXPEDICION:</td>
-            <td class="td-in-well">{% if arGuia.reexpedicion == 1 %}SI{% else %}NO{% endif %}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td align="right"></td>
-        </tr>
-        <tr>
-            <td class="titulo">DOCUMENTO:</td>
-            <td class="td-in-well">{{ arGuia.documentoCliente }}</td>
-            <td class="titulo">CUMPLIDO</td>
-            <td class="td-in-well">{{ arGuia.codigoCumplidoFk }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td align="right"></td>
-        </tr>
-        <tr>
-            <td class="titulo">DESTINATARIO:</td>
-            <td class="td-in-well">{{ arGuia.nombreDestinatario }}</td>
-            <td class="titulo">USUARIO:</td>
-            <td class="td-in-well">{{ arGuia.usuario }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td align="right"></td>
-        </tr>
-        <tr>
-            <td class="titulo">DIRECCION:</td>
-            <td class="td-in-well">{{ arGuia.direccionDestinatario }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td align="right"></td>
-        </tr>
-        <tr>
-            <td class="titulo">TELEFONO:</td>
-            <td class="td-in-well">{{ arGuia.telefonoDestinatario }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td align="right"></td>
-        </tr>
-        <tr>
-            <td class="titulo">COMENTARIO:</td>
-            <td class="td-in-well" colspan="5">{{ arGuia.comentario }}</td>
-        </tr>
-    </table>
+    {% include 'transporte/movimiento/transporte/guia/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#novedades" data-toggle="tab">Novedades</a></li>
         <li><a href="#despachos" data-toggle="tab">Despachos</a></li>
+        <li><a href="#redespachos" data-toggle="tab">Redespachos</a></li>
         <li><a href="#facturas" data-toggle="tab">Facturas</a></li>
+        <li><a href="#desembarco" data-toggle="tab">Desembarco</a></li>
+        <li><a href="#recibos" data-toggle="tab">Recibo</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="novedades">
             <div id="detalles" style="width: 100%"><br>
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -244,7 +92,7 @@
         <div class="tab-pane" id="despachos">
             <div id="despachos" style="width: 100%"><br>
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -279,10 +127,38 @@
 
             </div>
         </div>
+        <div class="tab-pane" id="redespachos">
+            <div id="redespachos" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>GUIA</th>
+                            <th>DESPACHO</th>
+                            <th>FECHA</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arRedespacho in arRedespachos %}
+                            <tr>
+                                <td>{{ arRedespacho.codigoRedespachoPk }}</td>
+                                <td>{{ arRedespacho.codigoGuiaFk }}</td>
+                                <td>{{ arRedespacho.codigoDespachoFk }}</td>
+                                <td>{{ arRedespacho.fecha | date('Y-m-d') }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="separador-1"></div>
+
+            </div>
+        </div>
         <div class="tab-pane" id="facturas">
             <div id="despachos" style="width: 100%"><br>
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -306,6 +182,62 @@
                                 <td>{{ arFacturaDetalle.codigoFacturaPlanillaFk }}</td>
                                 <td style="text-align: right">{{ arFacturaDetalle.vrFlete | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arFacturaDetalle.vrManejo | number_format(0, '.', ',') }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="separador-1"></div>
+
+            </div>
+        </div>
+        <div class="tab-pane" id="desembarco">
+            <div id="redespachos" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>GUIA</th>
+                            <th>DESPACHO</th>
+                            <th>FECHA</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arDesembarco in arDesembarcos %}
+                            <tr>
+                                <td>{{ arDesembarco.codigoDesembarcoPk }}</td>
+                                <td>{{ arDesembarco.codigoGuiaFk }}</td>
+                                <td>{{ arDesembarco.codigoDespachoFk }}</td>
+                                <td>{{ arDesembarco.fecha | date('Y-m-d') }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="separador-1"></div>
+
+            </div>
+        </div>
+        <div class="tab-pane" id="recibos">
+            <div id="recibos" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>GUIA</th>
+                            <th>TIPO</th>
+                            <th>FECHA</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arRecibo in arRecibos %}
+                            <tr>
+                                <td>{{ arRecibo.codigoReciboPk }}</td>
+                                <td>{{ arRecibo.codigoGuiaFk }}</td>
+                                <td>{{ arRecibo.codigoReciboTipoFk }}</td>
+                                <td>{{ arRecibo.fecha | date('Y-m-d') }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>

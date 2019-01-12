@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteCiudad;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -79,4 +80,61 @@ class TteCiudadRepository extends ServiceEntityRepository
         }
         return $array;
     }
+
+    public function listaDql()
+    {
+        $session = new Session();
+        $qb = $this->getEntityManager()->createQueryBuilder()->from(TteCiudad::class, 'c')
+            ->select('c.codigoCiudadPk')
+            ->addSelect('c.nombre')
+//            ->addSelect('c.nombre')
+//            ->where('c.codigoConductorPk <> 0')
+            ->orderBy('c.nombre');
+        if ($session->get('filtroTteCiudadNombre') != '') {
+            $qb->andWhere("c.nombre LIKE '%{$session->get('filtroTteCiudadNombre')}%'");
+        }
+
+        if ($session->get('filtroTteCiudadCodigo') != '') {
+            $qb->andWhere("c.codigoCiudadPk ='{$session->get('filtroTteCiudadCodigo')}'");
+        }
+        return $qb->getDQL();
+    }
+
+    public function listaDqlCiudadDestino()
+    {
+        $session = new Session();
+        $qb = $this->getEntityManager()->createQueryBuilder()->from(TteCiudad::class, 'c')
+            ->select('c.codigoCiudadPk')
+            ->addSelect('c.nombre')
+//            ->addSelect('c.nombre')
+//            ->where('c.codigoConductorPk <> 0')
+            ->orderBy('c.nombre');
+        if ($session->get('filtroTteCiudadNombreDestino') != '') {
+            $qb->andWhere("c.nombre LIKE '%{$session->get('filtroTteCiudadNombreDestino')}%'");
+        }
+
+        if ($session->get('filtroTteCiudadCodigoDestino') != '') {
+            $qb->andWhere("c.codigoCiudadPk ='{$session->get('filtroTteCiudadCodigoDestino')}'");
+        }
+        return $qb->getDQL();
+    }
+
+    public function eliminar($arrSeleccionados){
+        $respuesta = '';
+        try{
+            if ($arrSeleccionados) {
+                foreach ($arrSeleccionados as $codigo) {
+                    $arRegistro = $this->getEntityManager()->getRepository(TteCiudad::class)->find($codigo);
+                    if ($arRegistro) {
+                        $this->getEntityManager()->remove($arRegistro);
+                        $this->getEntityManager()->flush();
+                    }
+                }
+            }
+        }catch (\Exception $exception){
+            Mensajes::error("El registro esta siendo utilizado en el sistema");
+        }
+
+    }
+
 }

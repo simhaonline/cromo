@@ -60,7 +60,7 @@ class VehiculoType extends AbstractType
                 'label' => 'Marca:'
             ])
             ->add('tipoCombustibleRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\Transporte\TteTipoCombustible',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('tc')
@@ -115,7 +115,7 @@ class VehiculoType extends AbstractType
             ->add('pesoVacio',NumberType::class,['required' => true,'label' => 'Peso vacio:'])
             ->add('capacidad',TextType::class,['required' => true,'label' => 'Capacidad:'])
             ->add('celular',TextType::class,['required' => false,'label' => 'Celular:'])
-            ->add('registroNacionalCarga',NumberType::class,['required' => true,'label' => 'RNDC:'])
+            ->add('registroNacionalCarga',TextType::class,['required' => true,'label' => 'RNDC:'])
             ->add('numeroPoliza',NumberType::class,['required' => true,'label' => 'Numero poliza:'])
             ->add('fechaVencePoliza', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('fechaVenceTecnicomecanica', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
@@ -137,11 +137,15 @@ class VehiculoType extends AbstractType
         $campos = '[
             {"campo":"codigoVehiculoPk",                        "tipo":"pk",        "ayuda":"Codigo de vehiculo",                       "titulo":"ID"},
             {"campo":"placa",                                   "tipo":"texto",     "ayuda":"placa",                                    "titulo":"PLACA"},
-            {"campo":"placaRemolque",                           "tipo":"texto",     "ayuda":"Placa remolque",                           "titulo":"PLACA REMOLQUE"},
+            {"campo":"placaRemolque",                           "tipo":"texto",     "ayuda":"Placa remolque",                           "titulo":"REM"},
             {"campo":"marcaRel.nombre",                         "tipo":"texto",     "ayuda":"Marca",                                    "titulo":"MARCA",                   "relacion":""},
             {"campo":"modelo",                                  "tipo":"texto",     "ayuda":"Modelo",                                   "titulo":"MODELO"},
             {"campo":"motor",                                   "tipo":"texto",     "ayuda":"Motor",                                    "titulo":"MOTOR"},
-            {"campo":"numeroEjes",                              "tipo":"entero",    "ayuda":"Numero ejes",                              "titulo":"NUMERO EJES"}
+            {"campo":"numeroEjes",                              "tipo":"entero",    "ayuda":"Numero ejes",                              "titulo":"EJES"},
+            {"campo":"celular",                                   "tipo":"texto",     "ayuda":"Celular",                                    "titulo":"CELULAR"},
+            {"campo":"fechaVencePoliza",                            "tipo":"fecha",     "ayuda":"Fecha vence poliza",                            "titulo":"F_POL"},
+            {"campo":"poseedorRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Poseedor del vehiculo",                           "titulo":"POSEEDOR",         "relacion":""},
+            {"campo":"propietarioRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Propietario",                           "titulo":"PROPIETARIO",         "relacion":""}
         ]';
         return $campos;
 

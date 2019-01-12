@@ -53,7 +53,7 @@ class ConductorType extends AbstractType
             ->add('fechaVenceLicencia', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('barrio',TextType::class,['required' => true,'label' => 'Barrio:'])
             ->add('alias',TextType::class,['required' => false,'label' => 'Alias:'])
-            ->add('codigoVehiculo',TextType::class,['required' => true,'label' => 'Codigo vehiculo:'])
+            ->add('codigoVehiculo',TextType::class,['required' => false,'label' => 'Codigo vehiculo:'])
             ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
@@ -67,7 +67,6 @@ class ConductorType extends AbstractType
         ]);
     }
 
-
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
@@ -80,11 +79,13 @@ class ConductorType extends AbstractType
         return $campos;
 
     }
+
     public function getEstructuraPropiedadesFiltro()
     {
 
         $campos = '[
-            {"child":"nombreCorto",                     "tipo":"TextType",   "propiedades":{"label":"Nombre"},      "operador":"like"}
+            {"child":"nombreCorto",                     "tipo":"TextType",   "propiedades":{"label":"Nombre"},      "operador":"like"},
+            {"child":"numeroIdentificacion",            "tipo":"TextType",   "propiedades":{"label":"Identificación"},      "operador":"="}
         ]';
 
         return $campos;

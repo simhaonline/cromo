@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Utilidad\Transporte;
 
+use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteGuia;
@@ -14,10 +15,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class CorreccionGuiaController extends Controller
+class CorreccionGuiaController extends ControllerListenerGeneral
 {
+    protected $proceso = "0005";
+    protected $procestoTipo = "U";
+    protected $nombreProceso = "CorreccionGuias";
+    protected $modulo = "Transporte";
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -39,7 +44,7 @@ class CorreccionGuiaController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()){
+            if ($form->get('btnFiltrar')->isClicked()) {
                 $session = new session;
                 $session->set('filtroTteGuiaDocumento', $form->get('txtDocumento')->getData());
                 $session->set('filtroTteGuiaNumero', $form->get('txtNumero')->getData());
@@ -65,6 +70,10 @@ class CorreccionGuiaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $arGuia = $em->getRepository(TteGuia::class)->find($id);
+        if ($arGuia->getEstadoFacturado()) {
+            Mensajes::error('La guia se encuentra facturada, no se puede editar');
+            return $this->redirect($this->generateUrl('transporte_utilidad_transporte_correccion_guia_lista'));
+        }
         $form = $this->createForm(GuiaCorreccionType::class, $arGuia);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {

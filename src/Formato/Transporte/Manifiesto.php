@@ -2,19 +2,26 @@
 
 namespace App\Formato\Transporte;
 
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\General\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteGuia;
 
 class Manifiesto extends \FPDF {
+
     public static $em;
     public static $codigoDespacho;
+    public static $imagen;
+    public static $extension;
 
     public function Generar($em, $codigoDespacho) {
         ob_clean();
         self::$em = $em;
         self::$codigoDespacho = $codigoDespacho;
+        $logo = self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+        self::$imagen = "data:image/'{$logo->getExtension()}';base64," . base64_encode(stream_get_contents($logo->getImagen()));
+        self::$extension = $logo->getExtension();
         $pdf = new Manifiesto('L');
         $pdf->AliasNbPages();
         $pdf->AddPage();
@@ -28,15 +35,12 @@ class Manifiesto extends \FPDF {
         $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->find(1);
         $this->Image('../public/img/recursos/transporte/logo_min_transporte.jpg', 15, 10, 70, 38);
         try {
-            $logo=self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
-            if($logo ){
-
-                $this->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 90, 30, 40, 15,$logo->getExtension());
+            if (self::$imagen) {
+                $this->Image(self::$imagen, 90, 30, 40, 15, self::$extension);
             }
         } catch (\Exception $exception) {
         }
-
-        //$this->Image('../public/img/empresa/logo.jpg', 90, 30, 40, 15);
+        $this->Image(FuncionesController::codigoQr(), 265, 10, 10, 10);
         $this->SetFont('Arial', 'b', 14);
         $this->Text(90, 15, "MANIFIESTO ELECTRONICO DE CARGA");
         $this->Text(90, 20, $arConfiguracion->getNombre());
@@ -44,7 +48,7 @@ class Manifiesto extends \FPDF {
         $this->SetFont('Arial', 'b', 9);
         $this->Text(138, 35, $arConfiguracion->getDireccion());
         $this->Text(138, 40, $arConfiguracion->getTelefono());
-        $this->Text(138, 45, "MEDELLIN - ANTIOQUIA");
+        $this->Text(138, 45, utf8_decode($arConfiguracion->getCiudadRel()->getNombre() . " - " . $arConfiguracion->getCiudadRel()->getDepartamentoRel()->getNOmbre()));
 
         $this->SetFont('Arial', 'b', 5);
         $this->SetXY(190, 10);
@@ -64,12 +68,12 @@ class Manifiesto extends \FPDF {
         $this->SetXY(190, 33);
         $this->Cell(50, 5, "AUTORIZACION:", 1, 0, 'L', 1);
         $this->Cell(35, 5, $arDespacho->getNumeroRndc(), 1, 0, 'R', 1);
-        $this->Text(245, 14, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+        $this->Text(245, 24, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
 
         $this->SetXY(190, 38);
         $this->Cell(50, 5, "NUMERO:", 1, 0, 'L', 1);
         $this->Cell(35, 5, $arDespacho->getCodigoDespachoPk(), 1, 0, 'R', 1);
-        $this->Text(245, 14, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+        $this->Text(245, 24, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
 
         $this->EncabezadoDetalles();
     }
@@ -237,12 +241,21 @@ class Manifiesto extends \FPDF {
         $pdf->Text(208, $yt, "NIT/CC Nombre/Razon Social");
 
 
+        $pdf->Rect(211, $y+15, 28, 5);
+        $pdf->SetFont('Arial', 'b', 8);
+        $pdf->Text(212, $y+18, "GUIAS:");
+        $pdf->setXY(239, $yt+17);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell(25, 5, $arDespacho['vrCobroEntrega'], 1, 0, 'R');
+
         $y += 5;
         $pdf->Rect($x, $y, 260, $alto3);
+        $pdf->Rect(211, $y+15, 28, 5);
+        $pdf->SetFont('Arial', 'b', 8);
         $pdf->Text(212, $y+18, "COBRO ENTREGA:");
-        $pdf->setXY(232, $yt+17);
+        $pdf->setXY(239, $yt+12);
         $pdf->SetFont('Arial', '', 8);
-        $pdf->Cell(25, 4, $arDespacho['vrCobroEntrega'], 0, 0, 'R');
+        $pdf->Cell(25, 5, $arDespacho['cantidad'], 1, 0, 'R');
 
         $y += 20;
         $pdf->Rect($x, $y, 100, $alto2);
@@ -262,6 +275,10 @@ class Manifiesto extends \FPDF {
         $pdf->Rect($x+140, $y, 20, $alto1);
         $pdf->Rect($x+160, $y, 20, $alto1);
         $pdf->Rect($x+180, $y, 80, 30);
+        $pdf->SetFont('Arial', 'b', 7);
+        $pdf->setXY(195, $y);
+        $pdf->MultiCell(80, 8, substr($arDespacho['comentario'],0,230).(strlen($arDespacho['comentario'])>230?"...":""), 0, 'L');
+
         $yt += 5;
         $pdf->Text(20, $yt, "VALOR TOTAL DEL VIAJE:");
         $pdf->Text(120, $yt, "LUGAR:");
@@ -381,29 +398,34 @@ class Manifiesto extends \FPDF {
                     $pdf->Text(256, $yt, utf8_decode("Dueño poliza"));
 
                     $y += 5;
-                    $pdf->Rect($x, $y, 25, $alto2);
-                    $pdf->Rect($x+25, $y, 25, $alto2);
-                    $pdf->Rect($x+50, $y, 25, $alto2);
+                    $pdf->Rect($x, $y, 17, $alto2);
+                    $pdf->Rect($x+17, $y, 23, $alto2);
+                    $pdf->Rect($x+40, $y, 10, $alto2);
+                    $pdf->Rect($x+50, $y, 14, $alto2);
                     $pdf->Rect($x+75, $y, 25, $alto2);
                     $pdf->Rect($x+100, $y, 30, $alto2);
                     $pdf->Rect($x+130, $y, 65, $alto2);
                     $pdf->Rect($x+195, $y, 45, $alto2);
                     $pdf->Rect($x+240, $y, 20, $alto2);
                     $yt += 5;
-                    $pdf->Text(17, $yt, "Nro Remesa");
-                    $pdf->Text(43, $yt, "UnidadMedida");
-                    $pdf->Text(70, $yt, "Cantidad");
-                    $pdf->Text(92, $yt, "Poblacion");
-                    $pdf->Text(118, $yt, "Empaque");
+                    $pdf->Text(16, $yt, "Remesa");
+                    $pdf->Text(34, $yt, utf8_decode("Número"));
+                    $pdf->Text(58, $yt, "UM");
+                    $pdf->Text(70, $yt, "FEC");
+                    $pdf->Text(81, $yt, "CANT");
+                    $pdf->Text(95, $yt, "Poblacion");
+                    $pdf->Text(122, $yt, "Empaque");
                     $pdf->Text(155, $yt, "NIT/CC Nombre/Razon Social");
                     $pdf->Text(212, $yt, "NIT/CC Nombre/Razon Social");
                     $pdf->SetFont('Arial', '', 7);
                     $indice = 0;
 
                 }
-                $pdf->Cell(25, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
-                $pdf->Cell(25, 4, "KILO", 1, 0, 'L');
-                $pdf->Cell(25, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'L');
+                $pdf->Cell(17, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
+                $pdf->Cell(23, 4, $arGuia['numero'], 1, 0, 'L');
+                $pdf->Cell(10, 4, "KILO", 1, 0, 'L');
+                $pdf->Cell(14, 4, '2018-01-31', 1, 0, 'L');
+                $pdf->Cell(11, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'L');
                 $pdf->Cell(25, 4, substr(utf8_decode($arGuia['ciudadDestino']),0,20), 1, 0, 'L');
                 $pdf->Cell(30, 4, 'VARIOS', 1, 0, 'L');
                 $pdf->Cell(65, 4, substr(utf8_decode($arGuia['clienteNombre']),0,20), 1, 0, 'L');
@@ -437,7 +459,7 @@ class Manifiesto extends \FPDF {
         $this->Text(10, 274, "C.C.:     ______________________ de ____________________");
 
         $this->Text(105, 260, "EMPRESA: _____________________________________________");
-        
+
         $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }

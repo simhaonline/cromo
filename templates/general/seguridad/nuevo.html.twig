@@ -15,6 +15,7 @@
                 <label class="col-sm-2 control-label">Email:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtEmail, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.txtEmail)}}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -59,6 +60,10 @@
                 <label class="col-sm-2 control-label">Activo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.boolActivo) }}
+                </div>
+                <label class="col-sm-2 control-label">Clave escritorio:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtClaveEscritorio, { 'attr': {'class': 'form-control','placeholder':'Clave escritorio'} }) }}
                 </div>
             </div>
             <hr>

@@ -78,8 +78,8 @@ class GuiaType extends AbstractType {
     {
         $campos = '[
             {"campo":"codigoGuiaPk",                            "tipo":"pk",        "ayuda":"Codigo de guia",                           "titulo":"GUIA"},
-            {"campo":"codigoOperacionIngresoFk",                "tipo":"texto",     "ayuda":"Codigo operacion",                         "titulo":"IO"},
-            {"campo":"codigoOperacionCargoFk",                  "tipo":"texto",     "ayuda":"Codigo operacion cargo",                   "titulo":"OC"},
+            {"campo":"codigoOperacionIngresoFk",                "tipo":"texto",     "ayuda":"Operacion ingreso",                         "titulo":"OI"},
+            {"campo":"codigoOperacionCargoFk",                  "tipo":"texto",     "ayuda":"Operacion cargo",                   "titulo":"OC"},
             {"campo":"codigoServicioFk",                        "tipo":"texto",     "ayuda":"Codigo control",                          "titulo":"SER"},
             {"campo":"codigoGuiaTipoFk",                        "tipo":"texto",     "ayuda":"Codigo guia tipo",                         "titulo":"TIPO"},
             {"campo":"numero",                                  "tipo":"entero",    "ayuda":"Numero",                                   "titulo":"NUMERO"},
@@ -93,6 +93,7 @@ class GuiaType extends AbstractType {
             {"campo":"vrFlete",                                 "tipo":"moneda",    "ayuda":"Valor flete",                              "titulo":"FLETE"},
             {"campo":"vrManejo",                                "tipo":"moneda",    "ayuda":"Valor manejo",                             "titulo":"MANEJO"},
             {"campo":"vrRecaudo",                               "tipo":"moneda",    "ayuda":"Valor recaudo",                            "titulo":"REC"},
+            {"campo":"codigoDespachoFk",                        "tipo":"entero",    "ayuda":"Codigo del despacho",                       "titulo":"DES"},
             {"campo":"estadoImpreso",                           "tipo":"bool",      "ayuda":"Impresa",                                  "titulo":"I"},
             {"campo":"estadoEmbarcado",                         "tipo":"bool",      "ayuda":"Embarcada sin despachar",                  "titulo":"B"},
             {"campo":"estadoDespachado",                        "tipo":"bool",      "ayuda":"Despachada",                               "titulo":"D"},
@@ -106,6 +107,38 @@ class GuiaType extends AbstractType {
 
     }
 
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoGuiaPk",                            "tipo":"pk",        "ayuda":"Codigo de guia",                           "titulo":"GUIA"},
+            {"campo":"codigoOperacionIngresoFk",                "tipo":"texto",     "ayuda":"Operacion ingreso",                         "titulo":"OI"},
+            {"campo":"codigoOperacionCargoFk",                  "tipo":"texto",     "ayuda":"Operacion cargo",                   "titulo":"OC"},
+            {"campo":"codigoServicioFk",                        "tipo":"texto",     "ayuda":"Codigo control",                          "titulo":"SER"},
+            {"campo":"codigoGuiaTipoFk",                        "tipo":"texto",     "ayuda":"Codigo guia tipo",                         "titulo":"TIPO"},
+            {"campo":"numero",                                  "tipo":"entero",    "ayuda":"Numero",                                   "titulo":"NUMERO"},
+            {"campo":"documentoCliente",                        "tipo":"entero",    "ayuda":"Documento cliente",                        "titulo":"DOC"},
+            {"campo":"fechaIngreso",                            "tipo":"fecha",     "ayuda":"Fecha ingreso",                            "titulo":"FECHA"},
+            {"campo":"fechaEntrega",                            "tipo":"fecha",     "ayuda":"Fecha entrega",                            "titulo":"ENTREGA"},
+            {"campo":"clienteRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Nombre cliente",                           "titulo":"CLIENTE",         "relacion":""},
+            {"campo":"nombreDestinatario",                  "tipo":"texto",     "ayuda":"Destinatario",                           "titulo":"DESTINATARIO"},
+            {"campo":"ciudadDestinoRel.nombre",                 "tipo":"texto",     "ayuda":"Ciudad destino",                           "titulo":"DESTINO",         "relacion":""},
+            {"campo":"unidades",                                "tipo":"moneda",    "ayuda":"Unidades",                                 "titulo":"UND"},                                
+            {"campo":"pesoReal",                                "tipo":"moneda",    "ayuda":"Peso real",                                "titulo":"PES"},                                
+            {"campo":"pesoVolumen",                             "tipo":"moneda",    "ayuda":"Peso volumen",                             "titulo":"VOL"},
+            {"campo":"vrFlete",                                 "tipo":"moneda",    "ayuda":"Valor flete",                              "titulo":"FLETE"},
+            {"campo":"vrManejo",                                "tipo":"moneda",    "ayuda":"Valor manejo",                             "titulo":"MANEJO"},
+            {"campo":"vrRecaudo",                               "tipo":"moneda",    "ayuda":"Valor recaudo",                            "titulo":"REC"},            
+            {"campo":"estadoEmbarcado",                         "tipo":"bool",      "ayuda":"Embarcada sin despachar",                  "titulo":"EMB"},
+            {"campo":"estadoDespachado",                        "tipo":"bool",      "ayuda":"Despachada",                               "titulo":"DES"},
+            {"campo":"estadoEntregado",                         "tipo":"bool",      "ayuda":"Entregada",                                "titulo":"ENT"},
+            {"campo":"estadoSoporte",                           "tipo":"bool",      "ayuda":"Soporte de entrega",                       "titulo":"SOP"},
+            {"campo":"estadoCumplido",                          "tipo":"bool",      "ayuda":"Cumplido entregado al cliente",            "titulo":"CUM"},
+            {"campo":"estadoFacturado",                         "tipo":"bool",      "ayuda":"Facturado",                                "titulo":"FAC"},
+            {"campo":"estadoNovedad",                           "tipo":"bool",      "ayuda":"Con novedad",                              "titulo":"NOV"}
+        ]';
+        return $campos;
+
+    }
 
     public function getEstructuraPropiedadesFiltro()
     {
@@ -118,12 +151,16 @@ class GuiaType extends AbstractType {
             {"child":"codigoOperacionCargoFk",          "tipo":"EntityType", "propiedades":{"class":"TteOperacion", "choice_label":"nombre","label":"TODOS"},       "pk":"codigoOperacionPk"},
             {"child":"codigoServicioFk",                "tipo":"EntityType", "propiedades":{"class":"TteServicio",  "choice_label":"nombre","label":"TODOS"}},
             {"child":"codigoGuiaPk",                    "tipo":"TextType",   "propiedades":{"label":"Guía"}},
+            {"child":"codigoDespachoFk",                "tipo":"TextType",   "propiedades":{"label":"Despacho"}},
             {"child":"numero",                          "tipo":"TextType",   "propiedades":{"label":"Numero"}},
             {"child":"documentoCliente",                "tipo":"TextType",   "propiedades":{"label":"Documento"},       "operador":"like"},
             {"child":"fechaIngresoDesde",               "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
             {"child":"fechaIngresoHasta",               "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
             {"child":"codigoFacturaFk",                 "tipo":"TextType",   "propiedades":{"label":"Factura"}},
             {"child":"estadoFacturado",                 "tipo":"ChoiceType", "propiedades":{"label":"Facturado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoDespachado",                "tipo":"ChoiceType", "propiedades":{"label":"Despachado",   "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoNovedad",                   "tipo":"ChoiceType", "propiedades":{"label":"Novedad",   "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoNovedadSolucion",           "tipo":"ChoiceType", "propiedades":{"label":"Novedad solucionada",   "choices":{"SI":true,"NO":false}}},
             {"child":"remitente",                       "tipo":"TextType",   "propiedades":{"label":"Remitente"}}
         ]';
 

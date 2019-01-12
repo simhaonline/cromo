@@ -1,0 +1,22 @@
+<h4>Este correo se envia automaticamente, por favor no responder</h4>
+<h4>A continuacion le relaciono los estados de guia:</h4>
+<table border="1">
+    <tr>
+        <th>DOC</th>
+        <th>GUIA</th>
+        <th>ESTADO NOVEDAD</th>
+        <th>ESTADO DESPACHADO</th>
+        <th>ESTADO CUMPLIDO</th>
+        <th>ESTADO ENTREGADO</th>
+    </tr>
+    {% for arGuiaEstado in arGuiaEstados %}
+        <tr>
+            <td>{{ arGuiaEstado.clienteRel.numeroIdentificacion }}</td>
+            <td>{{ arGuiaEstado.codigoGuiaPk }}</td>
+            <td class="estado">{{ arGuiaEstado.estadoNovedad ?'SI':'NO'}}</td>
+            <td class="estado">{{ arGuiaEstado.estadoDespachado?'SI':'NO' }}</td>
+            <td class="estado">{{ arGuiaEstado.estadoCumplido?'SI':'NO' }}</td>
+            <td class="estado">{{ arGuiaEstado.estadoEntregado ?'SI':'NO'}}</td>
+        </tr>
+    {% endfor %}
+</table>

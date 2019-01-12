@@ -2,6 +2,7 @@
 
 namespace App\Formato\Transporte;
 
+use App\Entity\General\GenConfiguracion;
 use App\Entity\General\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteGuia;
@@ -11,9 +12,12 @@ class Despacho extends \FPDF {
     public static $em;
     public static $codigoDespacho;
 
+
+
     public function Generar($em, $codigoDespacho) {
         ob_clean();
         //$em = $miThis->getDoctrine()->getManager();
+
         self::$em = $em;
         self::$codigoDespacho = $codigoDespacho;
         $pdf = new Despacho();
@@ -64,7 +68,7 @@ class Despacho extends \FPDF {
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(103, 5, $arDespacho->getCodigoVehiculoFk(), 1, 0, 'R', 1);
-        $this->SetFont('Arial', 'B', 8);
+        $this->SetFont('Arial', 'B', 7);
 
         $this->EncabezadoDetalles();
 
@@ -73,14 +77,14 @@ class Despacho extends \FPDF {
     public function EncabezadoDetalles() {
         $this->Ln(12);
         $this->SetX(5);
-        $header = array('TIPO', 'GUIA', 'FECHA','CLIENTE','DESTINATARIO', 'DIRECCION', 'EMP', 'UND', 'PES');
+        $header = array('TP', 'GUIA', 'FECHA', 'SER', 'NUMERO','CLIENTE','DESTINATARIO', 'DIRECCION', 'EMP', 'UND', 'PES');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(8, 25, 10, 38, 50, 35, 10, 10, 10);
+        $w = array(8, 20, 10, 7, 20, 32, 40, 35, 10, 10, 10);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -96,7 +100,7 @@ class Despacho extends \FPDF {
     public function Body($pdf) {
         $arGuias = self::$em->getRepository(TteGuia::class)->despachoOrden(self::$codigoDespacho);
         $pdf->SetX(5);
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Arial', '', 6);
         if($arGuias) {
             $numeroGuias = count($arGuias);
             $indiceGuia = 0;
@@ -110,11 +114,13 @@ class Despacho extends \FPDF {
             foreach ($arGuias as $arGuia) {
                 $pdf->SetX(5);
                 $pdf->Cell(8, 4, $arGuia['codigoGuiaTipoFk'], 1, 0, 'L');
-                $pdf->Cell(25, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
                 $pdf->Cell(10, 4, $arGuia['fechaIngreso']->format('m-d'), 1, 0, 'L');
-                $pdf->Cell(38, 4, substr(utf8_decode($arGuia['clienteNombre']),0,20), 1, 0, 'L');
-                $pdf->Cell(50, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,20), 1, 0, 'L');
-                $pdf->Cell(35, 4, substr(utf8_decode($arGuia['direccionDestinatario']),0,20), 1, 0, 'L');
+                $pdf->Cell(7, 4, $arGuia['codigoServicioFk'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arGuia['numero'], 1, 0, 'L');
+                $pdf->Cell(32, 4, substr(utf8_decode($arGuia['clienteNombre']),0,20), 1, 0, 'L');
+                $pdf->Cell(40, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,28), 1, 0, 'L');
+                $pdf->Cell(35, 4, substr(utf8_decode($arGuia['direccionDestinatario']),0,25), 1, 0, 'L');
                 $pdf->Cell(10, 4, $arGuia['empaqueReferencia'], 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
@@ -140,7 +146,7 @@ class Despacho extends \FPDF {
                 }
                 if($imprimirTotalGrupo) {
                     $pdf->SetX(5);
-                    $pdf->Cell(176, 4, "TOTAL CIUDAD: ". $arGuia['ciudadDestino'], 1, 0, 'L');
+                    $pdf->Cell(182, 4, "TOTAL CIUDAD: ". $arGuia['ciudadDestino'], 1, 0, 'L');
                     $pdf->Cell(10, 4, $unidades, 1, 0, 'R');
                     $pdf->Cell(10, 4, $peso, 1, 0, 'R');
                     $pdf->Ln();
@@ -152,7 +158,7 @@ class Despacho extends \FPDF {
 
             }
             $pdf->SetX(5);
-            $pdf->Cell(176, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(182, 4, 'TOTAL', 1, 0, 'L');
             $pdf->Cell(10, 4, $unidadesTotal, 1, 0, 'R');
             $pdf->Cell(10, 4, $pesoTotal, 1, 0, 'R');
             $pdf->SetX(5);

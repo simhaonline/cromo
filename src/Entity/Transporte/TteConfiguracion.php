@@ -83,6 +83,16 @@ class TteConfiguracion
     private $codigoComprobanteIntermediacionFk;
 
     /**
+     * @ORM\Column(name="codigo_formato", type="integer")
+     */
+    private $codigoFormato = 0;
+
+    /**
+     * @ORM\Column(name="numero_unico_guia", type="boolean", options={"default" : false})
+     */
+    private $numeroUnicoGuia = false;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -290,6 +300,53 @@ class TteConfiguracion
         $this->codigoComprobanteIntermediacionFk = $codigoComprobanteIntermediacionFk;
     }
 
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFormato()
+    {
+        return $this->codigoFormato;
+    }
+
+    /**
+     * @param mixed $codigoFormato
+     */
+    public function setCodigoFormato($codigoFormato): void
+    {
+        $this->codigoFormato = $codigoFormato;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroUnicoGuia()
+    {
+        return $this->numeroUnicoGuia;
+    }
+
+    /**
+     * @param mixed $numeroUnicoGuia
+     */
+    public function setNumeroUnicoGuia( $numeroUnicoGuia ): void
+    {
+        $this->numeroUnicoGuia = $numeroUnicoGuia;
+    }
 
 
 

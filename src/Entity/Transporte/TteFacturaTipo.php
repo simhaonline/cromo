@@ -257,6 +257,22 @@ class TteFacturaTipo
     /**
      * @return mixed
      */
+    public function getCodigoCuentaIngresoTerceroFk()
+    {
+        return $this->codigoCuentaIngresoTerceroFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaIngresoTerceroFk
+     */
+    public function setCodigoCuentaIngresoTerceroFk( $codigoCuentaIngresoTerceroFk ): void
+    {
+        $this->codigoCuentaIngresoTerceroFk = $codigoCuentaIngresoTerceroFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoCuentaIngresoFleteFk()
     {
         return $this->codigoCuentaIngresoFleteFk;
@@ -284,6 +300,22 @@ class TteFacturaTipo
     public function setCodigoCuentaIngresoManejoFk( $codigoCuentaIngresoManejoFk ): void
     {
         $this->codigoCuentaIngresoManejoFk = $codigoCuentaIngresoManejoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNaturalezaCuentaIngresoTercero()
+    {
+        return $this->naturalezaCuentaIngresoTercero;
+    }
+
+    /**
+     * @param mixed $naturalezaCuentaIngresoTercero
+     */
+    public function setNaturalezaCuentaIngresoTercero( $naturalezaCuentaIngresoTercero ): void
+    {
+        $this->naturalezaCuentaIngresoTercero = $naturalezaCuentaIngresoTercero;
     }
 
     /**
@@ -445,40 +477,6 @@ class TteFacturaTipo
     {
         $this->intermediacionesDetallesFacturaTipoRel = $intermediacionesDetallesFacturaTipoRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaIngresoTerceroFk()
-    {
-        return $this->codigoCuentaIngresoTerceroFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaIngresoTerceroFk
-     */
-    public function setCodigoCuentaIngresoTerceroFk( $codigoCuentaIngresoTerceroFk ): void
-    {
-        $this->codigoCuentaIngresoTerceroFk = $codigoCuentaIngresoTerceroFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNaturalezaCuentaIngresoTercero()
-    {
-        return $this->naturalezaCuentaIngresoTercero;
-    }
-
-    /**
-     * @param mixed $naturalezaCuentaIngresoTercero
-     */
-    public function setNaturalezaCuentaIngresoTercero( $naturalezaCuentaIngresoTercero ): void
-    {
-        $this->naturalezaCuentaIngresoTercero = $naturalezaCuentaIngresoTercero;
-    }
-
-
 
 
 

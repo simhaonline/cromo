@@ -54,4 +54,19 @@ class TteReciboRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+
+    public function guia($id){
+        $em = $this->getEntityManager();
+        $arRecibo = $em->createQueryBuilder()
+            ->from('App:Transporte\TteRecibo','r')
+            ->select('r.codigoReciboPk')
+            ->addSelect("r.codigoGuiaFk")
+            ->addSelect('r.codigoReciboTipoFk')
+            ->addSelect('r.fecha')
+            ->andWhere("r.codigoGuiaFk='{$id}'")
+            ->getQuery()->getResult();
+
+        return $arRecibo;
+    }
+
 }

@@ -296,7 +296,8 @@ class InvImportacionRepository extends ServiceEntityRepository
             ->leftJoin('i.terceroRel', 't')
             ->leftJoin('i.importacionTipoRel', 'it')
             ->leftJoin('i.monedaRel', 'm')
-            ->where("i.estadoAprobado = 1 ");
+            ->where("i.estadoAprobado = 1 ")
+        ->andWhere('i.estadoContabilizado=0');
         if ($session->get('filtroInvImportacionNumero') != "") {
             $queryBuilder->andWhere("i.numero = " . $session->get('filtroInvImportacionNumero'));
         }
@@ -389,7 +390,7 @@ class InvImportacionRepository extends ServiceEntityRepository
                                 $arRegistro->setCodigoDocumento($arImportacion['codigoImportacionPk']);
                                 $em->persist($arRegistro);
                             } else {
-                                $error = "No tiene configurada la cuenta de compra para el los item de esta importacion";
+                                $error = "No tiene configurada la cuenta de compra para los item de esta importacion";
                                 break;
                             }
                         }
@@ -423,7 +424,7 @@ class InvImportacionRepository extends ServiceEntityRepository
                                 $arRegistro->setCodigoDocumento($arImportacion['codigoImportacionPk']);
                                 $em->persist($arRegistro);
                             } else {
-                                $error = "No tiene configurada la cuenta de compra para el los item de esta importacion";
+                                $error = "No tiene configurada la cuenta de inventario en transito para los item de esta importacion";
                                 break;
                             }
                         }

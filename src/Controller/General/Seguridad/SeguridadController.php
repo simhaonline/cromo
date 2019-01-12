@@ -104,12 +104,17 @@ class SeguridadController extends Controller
             ),
                 'disabled'=> $arUsuario->getUsername()?true:false
             ])
-            ->add('txtEmail', TextType::class, ['data' => $arUsuario->getEmail()])
+            ->add('txtEmail', TextType::class, ['data' => $arUsuario->getEmail(),'required'=>true,'constraints'=>array(
+                new NotBlank(array("message"=>"El email es obligatorio")),
+                new Regex(array('pattern'=>"/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i",'message'=>"El email es invalido")),
+            ),
+                ])
             ->add('txtCargo', TextType::class, ['data' => $arUsuario->getCargo(),'required' => false])
             ->add('txtNombreCorto', TextType::class, ['data' => $arUsuario->getNombreCorto(),'required' => false])
             ->add('txtIdentificacion', NumberType::class, ['data' => $arUsuario->getNumeroIdentificacion(),'required' => false])
             ->add('txtTelefono', TextType::class, ['data' => $arUsuario->getTelefono(),'required' => false])
             ->add('txtExtension', TextType::class, ['data' => $arUsuario->getExtension(),'required' => false])
+            ->add('txtClaveEscritorio', TextType::class, ['data' => $arUsuario->getClaveEscritorio(),'required' => false])
             ->add('cboRol', ChoiceType::class, ['data' => $arUsuario->getRoles()[0],'required' => true, 'choices'=>array('Usuario'=>"ROLE_USER",'Administrador'=>"ROLE_ADMIN")])
             ->add('txtNuevaClave', PasswordType::class, $arrPropiedadesClaves)
             ->add('txtConfirmacionClave', PasswordType::class, $arrPropiedadesClaves)
@@ -129,6 +134,7 @@ class SeguridadController extends Controller
                 $arUsuario->setNombreCorto($form->get('txtNombreCorto')->getData());
                 $arUsuario->setTelefono($form->get('txtTelefono')->getData());
                 $arUsuario->setExtension($form->get('txtExtension')->getData());
+                $arUsuario->setClaveEscritorio($form->get('txtClaveEscritorio')->getData());
                 $arUsuario->setOperacionRel($form->get('operacionRel')->getData());
                 $arUsuario->setRol($form->get('cboRol')->getData());
                 if ($id === 0) {
@@ -139,15 +145,27 @@ class SeguridadController extends Controller
                     } else {
                         $arUsuario->setPassword(password_hash($claveNueva, PASSWORD_BCRYPT));
                     }
-                }
-                $em->persist($arUsuario);
-                try {
-                    $em->flush();
-                    return $this->redirect($this->generateUrl('general_seguridad_usuario_lista'));
-                } catch (\Exception $e) {
-                    Mensajes::error('El usuario ingresado ya se encuentra registrado');
+
 
                 }
+
+                    if($id === 0){
+                        $arUsuarioExistente=$em->getRepository('App:Seguridad\Usuario')->find($form->get('txtUser')->getData());
+                        if($arUsuarioExistente){
+                            Mensajes::error("Ya existe un usuario con el Nombre de usuario '{$form->get('txtUser')->getData()}'");
+                        }else{
+                            $em->persist($arUsuario);
+                            $em->flush();
+                            return $this->redirect($this->generateUrl('general_seguridad_usuario_lista'));
+                        }
+
+                    }else{
+                        $em->persist($arUsuario);
+                        $em->flush();
+
+                        return $this->redirect($this->generateUrl('general_seguridad_usuario_lista'));
+                    }
+
             }
         }
         return $this->render('general/seguridad/nuevo.html.twig', [

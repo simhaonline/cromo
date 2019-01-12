@@ -6,6 +6,7 @@ use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteGuia;
 use App\Utilidades\BaseDatos;
+use App\Utilidades\Estandares;
 
 
 class PendienteDespachoRuta extends \FPDF {
@@ -25,80 +26,12 @@ class PendienteDespachoRuta extends \FPDF {
     }
 
     public function Header() {
-//        $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
-//        $arFactura = self::$em->getRepository('App:Transporte\TteFactura')->find(self::$codigoFactura);
-//        $this->Image('../public/img/empresa/logo.jpg', 10, 8, 40, 18);
-//        $this->Image('../public/img/empresa/veritas.jpeg', 110, 8, 50, 25);
-//        $this->SetFont('Arial', 'b', 9);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->Text(15, 25, '');
-//
-//        $this->SetFont('Arial', 'b', 13);
-//        $this->SetXY(57, 12);
-//        $this->Cell(30, 6, utf8_decode($arConfiguracion->getNombre()), 0, 0, 'l', 1);
-//        $this->SetFont('Arial', '', 10);
-//        $this->SetXY(64, 17);
-//        $this->Cell(30, 6, utf8_decode($arConfiguracion->getDireccion()), 0, 0, 'l', 1);
-//        $this->SetXY(72, 22);
-//        $this->Cell(30, 6, utf8_decode($arConfiguracion->getTelefono()), 0, 0, 'l', 1);
-//        $this->SetXY(10, 29);
-//        $this->SetFont('Arial', 'b', 10);
-//        $this->Cell(25, 5, utf8_decode("NIT."), 0, 0, 'l', 1);
-//        $this->SetXY(20, 29);
-//        $this->SetFont('Arial', 'b', 10);
-//        $this->Cell(25, 5, utf8_decode($arConfiguracion->getNit()."-".$arConfiguracion->getDigitoVerificacion()), 0, 0, 'l', 1);
-//        $this->SetFont('Arial', '', 8);
-//        $this->SetXY(50, 30);
-//        $this->Cell(25, 5, utf8_decode("SOMOS REGIMEN COMUN NO RESPONSABLES DE IVA"), 0, 0, 'l', 1);
-//
-//        $y = 20;
-//        $this->SetFont('Arial', 'B', 10);
-//        $this->SetFillColor(170, 170, 170);
-//        $this->SetXY(160, $y);
-//        $this->Cell(39, 6, "FACTURA DE VENTA", 1, 0, 'l', 1);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->SetXY(160, $y+6);
-//        $this->Cell(39, 6, "No". "  ". $arFactura->getNumero(), 1, 0, 'l', 1);
-//
-//        $this->SetFont('Arial', 'B', 10);
-//        $this->SetFillColor(170, 170, 170);
-//        $this->SetXY(160, $y+15);
-//        $this->Cell(39, 6, "FECHA", 1, 0, 'C', 1);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->SetXY(160, $y+20);
-//        $this->Cell(13, 7, $arFactura->getFecha()->format('d'), 1, 0, 'C', 1);
-//        $this->Cell(13, 7, $arFactura->getFecha()->format('m'), 1, 0, 'C', 1);
-//        $this->Cell(13, 7, $arFactura->getFecha()->format('Y'), 1, 0, 'C', 1);
-//        $this->SetFont('Arial', 'B', 10);
-//        $this->SetFillColor(170, 170, 170);
-//        $this->SetXY(160, $y+27);
-//        $this->Cell(39, 6, "VENCE", 1, 0, 'C', 1);
-//        $this->SetFillColor(272, 272, 272);
-//        $this->SetXY(160, $y+33);
-//        $this->Cell(13, 7, $arFactura->getFechaVence()->format('d'), 1, 0, 'C', 1);
-//        $this->Cell(13, 7, $arFactura->getFechaVence()->format('m'), 1, 0, 'C', 1);
-//        $this->Cell(13, 7, $arFactura->getFechaVence()->format('Y'), 1, 0, 'C', 1);
-//        $this->SetFillColor(170, 170, 170);
-//        $this->SetXY(160, $y+40);
-//        $this->Cell(13, 6, "DIA", 1, 0, 'C', 1);
-//        $this->Cell(13, 6, "MES", 1, 0, 'C', 1);
-//        $this->Cell(13, 6, utf8_decode("AÑO"), 1, 0, 'C', 1);
-//
-//        $arFactura = new TteFactura();
-//        $arFactura = self::$em->getRepository(TteFactura::class)->find(self::$codigoFactura);
-//        $this->SetFont('Arial', '', 10);
-//        $y = 42;
-//        $this->Rect(10, 36, 140, 30);
-//        $this->Text(12, $y, utf8_decode("SEÑOR(ES):"));
-//        $this->Text(45, $y, utf8_decode($arFactura->getClienteRel()->getNombreCorto()));
-//        $this->Text(12, $y+5, utf8_decode("NIT:"));
-//        $this->Text(45, $y+5, utf8_decode($arFactura->getClienteRel()->getNumeroIdentificacion()));
-//        $this->Text(12, $y+10, utf8_decode("DIRECCION:"));
-//        $this->Text(45, $y+10, utf8_decode($arFactura->getClienteRel()->getDireccion()));
-//        $this->Text(12, $y+15, utf8_decode("CIUDAD:"));
-//        $this->Text(45, $y+15, "MEDELLIN");
-//        $this->Text(12, $y+20, utf8_decode("TELEFONO:"));
-//        $this->Text(45, $y+20, utf8_decode($arFactura->getClienteRel()->getTelefono()));
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 10);
+        //Logo
+
+        Estandares::generarEncabezado($this,'PENDIENTE DESPACHO RUTA', self::$em);
+        $this->Ln(16);
         $this->EncabezadoDetalles();
 
     }

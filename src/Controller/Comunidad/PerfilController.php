@@ -38,7 +38,6 @@ class PerfilController extends BaseController
         $conexion= FuncionesController::solicitudesPost($datos,ApiComunidad::getApi('conexion') .$usuario->getUsername().$dominio);
         $amigos= FuncionesController::solicitudesPost($dato,ApiComunidad::getApi('misAmigos') .$usuario->getUsername().$dominio);
         $publicaciones=(new PublicacionController())->misPublicaciones($usuario->getUsername().$dominio);
-        $api=
         $informacionUsuario= [
             'nombreCorto'   =>$usuario->getNombreCorto(),
 //            'rol'           =>$usuario->getRoles()[0]=="ROLE_ADMIN"?"Administrador":"Usuario",
@@ -46,6 +45,8 @@ class PerfilController extends BaseController
             'correo'        =>$usuario->getEmail(),
             'extension'     =>$usuario->getExtension(),
             'telefono'      =>$usuario->getTelefono(),
+            'skype'         =>$usuario->getSkype(),
+            'ultimaConexion'=>$usuario->getFechaUltimoIngreso()?$usuario->getFechaUltimoIngreso()->format("Y-m-d H:i A"):"",
         ];
 
         $formBusqueda=$this->createFormBuilder()

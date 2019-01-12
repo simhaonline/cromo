@@ -22,7 +22,7 @@ class ServicioType extends AbstractType
                     return $er->createQueryBuilder('st')
                         ->orderBy('st.codigoServicioTipoPk', 'ASC');
                 },
-                'choice_label' => 'codigoServicioTipoPk',
+                'choice_label' => 'nombre',
             ))
             ->add('comentario',TextareaType::class, array('required' => false))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
@@ -56,7 +56,7 @@ class ServicioType extends AbstractType
 
         $campos = '[
             {"child":"codigoServicioPk",                "tipo":"TextType",      "propiedades":{"label":"Codigo"}},
-            {"child":"codigoServicioTipoFk",            "tipo":"EntityType",    "propiedades":{"class":"InvServicioTipo",   "choice_label":"codigoServicioTipoPk","label":"TODOS"}},
+            {"child":"codigoServicioTipoFk",            "tipo":"EntityType",    "propiedades":{"class":"InvServicioTipo",   "choice_label":"nombre","label":"TODOS"}},
             {"child":"estadoAutorizado",                "tipo":"ChoiceType",    "propiedades":{"label":"Autorizado",        "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAprobado",                  "tipo":"ChoiceType",    "propiedades":{"label":"Aprobado",          "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAnulado",                   "tipo":"ChoiceType",    "propiedades":{"label":"Anulado",           "choices":{"SI":true,"NO":false}}},

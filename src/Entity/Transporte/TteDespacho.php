@@ -341,6 +341,27 @@ class TteDespacho
     protected $redespachosDespachoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteDesembarco", mappedBy="despachoRel")
+     */
+    protected $desembarcosDespachoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoDespachoPk()
@@ -615,6 +636,22 @@ class TteDespacho
     /**
      * @return mixed
      */
+    public function getPesoCosto()
+    {
+        return $this->pesoCosto;
+    }
+
+    /**
+     * @param mixed $pesoCosto
+     */
+    public function setPesoCosto($pesoCosto): void
+    {
+        $this->pesoCosto = $pesoCosto;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrDeclara()
     {
         return $this->vrDeclara;
@@ -759,6 +796,22 @@ class TteDespacho
     /**
      * @return mixed
      */
+    public function getVrTotalNeto()
+    {
+        return $this->vrTotalNeto;
+    }
+
+    /**
+     * @param mixed $vrTotalNeto
+     */
+    public function setVrTotalNeto($vrTotalNeto): void
+    {
+        $this->vrTotalNeto = $vrTotalNeto;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrDescuentoPapeleria()
     {
         return $this->vrDescuentoPapeleria;
@@ -882,6 +935,22 @@ class TteDespacho
     public function setVrCosto($vrCosto): void
     {
         $this->vrCosto = $vrCosto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoBase()
+    {
+        return $this->vrCostoBase;
+    }
+
+    /**
+     * @param mixed $vrCostoBase
+     */
+    public function setVrCostoBase($vrCostoBase): void
+    {
+        $this->vrCostoBase = $vrCostoBase;
     }
 
     /**
@@ -1287,38 +1356,6 @@ class TteDespacho
     /**
      * @return mixed
      */
-    public function getVrTotalNeto()
-    {
-        return $this->vrTotalNeto;
-    }
-
-    /**
-     * @param mixed $vrTotalNeto
-     */
-    public function setVrTotalNeto($vrTotalNeto): void
-    {
-        $this->vrTotalNeto = $vrTotalNeto;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPesoCosto()
-    {
-        return $this->pesoCosto;
-    }
-
-    /**
-     * @param mixed $pesoCosto
-     */
-    public function setPesoCosto( $pesoCosto ): void
-    {
-        $this->pesoCosto = $pesoCosto;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getRedespachosDespachoRel()
     {
         return $this->redespachosDespachoRel;
@@ -1327,7 +1364,7 @@ class TteDespacho
     /**
      * @param mixed $redespachosDespachoRel
      */
-    public function setRedespachosDespachoRel( $redespachosDespachoRel ): void
+    public function setRedespachosDespachoRel($redespachosDespachoRel): void
     {
         $this->redespachosDespachoRel = $redespachosDespachoRel;
     }
@@ -1335,19 +1372,17 @@ class TteDespacho
     /**
      * @return mixed
      */
-    public function getVrCostoBase()
+    public function getDesembarcosDespachoRel()
     {
-        return $this->vrCostoBase;
+        return $this->desembarcosDespachoRel;
     }
 
     /**
-     * @param mixed $vrCostoBase
+     * @param mixed $desembarcosDespachoRel
      */
-    public function setVrCostoBase( $vrCostoBase ): void
+    public function setDesembarcosDespachoRel($desembarcosDespachoRel): void
     {
-        $this->vrCostoBase = $vrCostoBase;
+        $this->desembarcosDespachoRel = $desembarcosDespachoRel;
     }
-
-
 }
 

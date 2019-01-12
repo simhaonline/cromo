@@ -63,8 +63,7 @@ class DespachoType extends AbstractType {
             ->add('vrDescuentoCargue', NumberType::class)
             ->add('vrDescuentoEstampilla', NumberType::class)
             ->add('comentario',TextareaType::class, array('required' => false))
-            ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
-                ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));
+            ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
     }
 
     /**
@@ -95,7 +94,8 @@ class DespachoType extends AbstractType {
             {"campo":"pesoReal",                                "tipo":"moneda",    "ayuda":"Peso real",                                "titulo":"PES"},
             {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},
             {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},
-            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"}
+            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"},
+            {"campo":"usuario",                                 "tipo":"texto",     "ayuda":"Usuario",                                  "titulo":"USUARIO"}
         ]';
         return $campos;
 
@@ -110,8 +110,8 @@ class DespachoType extends AbstractType {
             {"child":"codigoDespachoPk",                "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
             {"child":"numero",                          "tipo":"TextType",   "propiedades":{"label":"Numero"}},
             {"child":"codigoVehiculoFk",                "tipo":"TextType",   "propiedades":{"label":"Numero"}},
-            {"child":"codigoCiudadOrigenFk",            "tipo":"EntityType", "propiedades":{"class":"TteCiudad",        "choice_label":"nombre",    "label":"TODOS"}},
-            {"child":"codigoCiudadDestinoFk",           "tipo":"EntityType", "propiedades":{"class":"TteCiudad",        "choice_label":"nombre",    "label":"TODOS"}},
+            {"child":"codigoCiudadOrigenFk",            "tipo":"TextType",   "propiedades":{"label":"Origen"}},
+            {"child":"codigoCiudadDestinoFk",           "tipo":"TextType",   "propiedades":{"label":"Destino"}},
             {"child":"codigoDespachoTipoFk",            "tipo":"EntityType", "propiedades":{"class":"TteDespachoTipo",  "choice_label":"nombre",    "label":"TODOS"}},
             {"child":"codigoOperacionFk",               "tipo":"EntityType", "propiedades":{"class":"TteOperacion",     "choice_label":"nombre",    "label":"TODOS"}},
             {"child":"fechaSalidaDesde",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},

@@ -544,6 +544,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         d.unidades,
         d.pesoReal,
         d.pesoVolumen,
+        d.cantidad,
         d.vrFlete,
         d.vrManejo,
         d.vrDeclara,
@@ -555,6 +556,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         d.vrDescuentoCargue,
         d.vrSaldo,
         d.vrDescuentoPapeleria,
+        d.comentario,
         c.numeroIdentificacion AS conductorIdentificacion,
         c.nombreCorto AS conductorNombre,
         c.direccion AS conductorDireccion,
@@ -735,10 +737,10 @@ class TteDespachoRepository extends ServiceEntityRepository
                                     <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
                                     <CODTIPOIDTERCERO>" . $arrTercero['identificacionTipo'] . "</CODTIPOIDTERCERO>
                                     <NUMIDTERCERO>" . $arrTercero['identificacion'] . "</NUMIDTERCERO>
-                                    <NOMIDTERCERO>" . $arrTercero['nombre1'] . "</NOMIDTERCERO>";
+                                    <NOMIDTERCERO>" . utf8_decode($arrTercero['nombre1']) . "</NOMIDTERCERO>";
             if ($arrTercero['identificacionTipo'] == "C") {
-                $strPoseedorXML .= "<PRIMERAPELLIDOIDTERCERO>" . $arrTercero['apellido1'] . "</PRIMERAPELLIDOIDTERCERO>
-                                                            <SEGUNDOAPELLIDOIDTERCERO>" . $arrTercero['apellido2'] . "</SEGUNDOAPELLIDOIDTERCERO>";
+                $strPoseedorXML .= "<PRIMERAPELLIDOIDTERCERO>" . utf8_decode($arrTercero['apellido1']) . "</PRIMERAPELLIDOIDTERCERO>
+                                                            <SEGUNDOAPELLIDOIDTERCERO>" . utf8_decode($arrTercero['apellido2']) . "</SEGUNDOAPELLIDOIDTERCERO>";
             }
             $strPoseedorXML .= "<CODSEDETERCERO>" . $arrTercero['codigoSede'] . "</CODSEDETERCERO>";
             $strPoseedorXML .= "<NOMSEDETERCERO>" . $arrTercero['nombreSede'] . "</NOMSEDETERCERO>";
@@ -749,7 +751,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $strPoseedorXML .= "<NUMCELULARPERSONA>" . $arrTercero['movil'] . "</NUMCELULARPERSONA>";
             }
             $strPoseedorXML .= "
-                                                        <NOMENCLATURADIRECCION>" . $arrTercero['direccion'] . "</NOMENCLATURADIRECCION>
+                                                        <NOMENCLATURADIRECCION>" . utf8_decode($arrTercero['direccion']) . "</NOMENCLATURADIRECCION>
                                                         <CODMUNICIPIORNDC>" . $arrTercero['codigoCiudad'] . "</CODMUNICIPIORNDC>";
             if ($arrTercero['conductor'] == 1) {
                 $strPoseedorXML .= "
@@ -767,7 +769,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
                 if (substr($errorRespuesta, 0, 9) != "DUPLICADO") {
                     $retorno = false;
-                    Mensajes::error($errorRespuesta);
+                    Mensajes::error($errorRespuesta . " Reportando tercero identificacion: " . $arrTercero['identificacion']);
                     break;
                 }
             }

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Financiero\Utilidad\Contabilidad\Intercambio;
 
+use App\Entity\Financiero\FinConfiguracion;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
 use App\Utilidades\Mensajes;
@@ -139,28 +140,32 @@ class RegistroController extends Controller
     public function worldOffice()
     {
         $em = $this->getDoctrine()->getManager();
+        $arrConfiguracion = $em->getRepository(FinConfiguracion::class)->intercambioDatos();
         $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
         if (count($arRegistros) > 0) {
             $spreadsheet = new Spreadsheet();
             $campos = [
-                'Documento',
-                'No.Documento',
-                'Cuenta_Contable',
-                'Nota',
-                'Tercero_Externo',
-                'Cheque_Numero',
-                'Banco_Cheque',
+                'TipoDocumento',
+                'Prefijo',
+                'NumeroDocumento',
+                'Cuenta',
                 'Debito',
                 'Credito',
-                'Centro_Costo',
-                'Porcentaje_Retencion',
+                'Tercero_Externo',
                 'Vencimiento',
-                'Vendedor',
-                'Empresa'
+                'Nota',
+                'FormaPago',
+                'Verificado',
+                'BancoCheque',
+                'AbonaCheque',
+                'PorcentajeRetencion',
+                'CentroCosto',
+                'Cheque',
+                'Empresa',
             ];
             $sheet = $spreadsheet->getActiveSheet();
             $i = 0;
-            for ($j = 'A'; $j != 'O'; $j++) {
+            for ($j = 'A'; $j != 'R'; $j++) {
                 $spreadsheet->getActiveSheet()->getColumnDimension($j)->setAutoSize(true);
                 $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
                 $sheet->setCellValue($j . '1', strtoupper($campos[$i]));
@@ -169,20 +174,24 @@ class RegistroController extends Controller
             $j = 2;
             /** @var  $arRegistro FinRegistro */
             foreach ($arRegistros as $arRegistro) {
-                $sheet->setCellValue('A'.$j,'SI');
-                $sheet->setCellValue('B'.$j,$arRegistro['codigoComprobanteFk']);
-                $sheet->setCellValue('C'.$j,$arRegistro['codigoCuentaFk']);
-                $sheet->setCellValue('D'.$j,$arRegistro['descripcion']);
-                $sheet->setCellValue('E'.$j,$arRegistro['numeroIdentificacion']);
-                $sheet->setCellValue('F'.$j,'');
-                $sheet->setCellValue('G'.$j,'');
-                $sheet->setCellValue('H'.$j,$arRegistro['vrDebito']);
-                $sheet->setCellValue('I'.$j,$arRegistro['vrCredito']);
-                $sheet->setCellValue('J'.$j,$arRegistro['codigoCentroCostoFk']);
+                $sheet->setCellValue('A'.$j, $arRegistro['codigoComprobanteFk']);
+                $sheet->setCellValue('B'.$j,'');
+                $sheet->setCellValue('C'.$j,$arRegistro['numero']);
+                $sheet->setCellValue('D'.$j,$arRegistro['codigoCuentaFk']);
+                $sheet->setCellValue('E'.$j,$arRegistro['vrDebito']);
+                $sheet->setCellValue('F'.$j,$arRegistro['vrCredito']);
+                $sheet->setCellValue('G'.$j,$arRegistro['numeroIdentificacion']);
+                $sheet->setCellValue('H'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('Y-m-d') : '');
+                $sheet->setCellValue('I'.$j, $arRegistro['descripcion']);
+                $sheet->setCellValue('J'.$j,'');
                 $sheet->setCellValue('K'.$j,'');
-                $sheet->setCellValue('L'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('Y-m-d') : '');
+                $sheet->setCellValue('L'.$j,'');
                 $sheet->setCellValue('M'.$j,'');
-                $sheet->setCellValue('N'.$j,$arRegistro['nombreCorto']);
+                $sheet->setCellValue('N'.$j,'');
+                $sheet->setCellValue('O'.$j, $arRegistro['codigoCentroCostoFk']);
+                $sheet->setCellValue('P'.$j,'');
+                $sheet->setCellValue('Q'.$j,$arrConfiguracion['codigoEmpresaIntercambio']);
+                $j++;
             }
             header('Content-Type: application/vnd.ms-excel');
             header("Content-Disposition: attachment;filename='DetallesContables.xls'");

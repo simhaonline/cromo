@@ -47,5 +47,48 @@ class TteRedespachoRepository extends ServiceEntityRepository
 
     }
 
+//    public function guia($codigoGuia): array
+//    {
+//        $em = $this->getEntityManager();
+//        $query = $em->createQuery(
+//            'SELECT rd.codigoRedespachoPk,
+//                  rd.codigoDespachoFk,
+//                  rd.fecha
+//        FROM App\Entity\Transporte\TteRedespacho rd
+//        LEFT JOIN rd.despachoRel d
+//        WHERE rd.codigoGuiaFk = :codigoGuia'
+//        )->setParameter('codigoGuia', $codigoGuia);
+//
+//        return $query->execute();
+//    }
+
+//    public function guia($codigoGuia)
+//    {
+//        $session = new Session();
+//        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRedespacho::class, 'rd')
+//            ->select('rd.codigoRedespachoPk')
+//            ->addSelect('rd.codigoGuiaFk')
+//            ->leftJoin('rd.redespachoDespachoRel', 'd')
+//            ->leftJoin('rd.redespachoGuiaRel', 'g')
+//            ->where('rd.codigoGuiaFk = ' . $codigoGuia);
+//        $queryBuilder->orderBy('rd.codigoGuiaFk', 'DESC');
+//        return $queryBuilder->getQuery()->getResult();
+//    }
+
+    public function guia($codigoGuia): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT
+                  rd.codigoRedespachoPk,
+                  rd.codigoGuiaFk,
+                  rd.codigoDespachoFk,
+                  rd.fecha
+        FROM App\Entity\Transporte\TteRedespacho rd 
+        WHERE rd.codigoGuiaFk = :codigoGuia'
+        )->setParameter('codigoGuia', $codigoGuia);
+
+        return $query->execute();
+    }
 }
 

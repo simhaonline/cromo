@@ -66,6 +66,7 @@
     {% set funcion = '' %}
     {% set grupo = '' %}
     {% set entidad = '' %}
+    {% set licencia = app.session.get('licencia')%}
     {% if arrRuta | length > 0 and arrRuta.0 is defined and arrRuta.0 != 'administracion' %}
         {% set modulo = arrRuta.0 %}
         {% if arrRuta | length > 1 and arrRuta.1 is defined %}
@@ -83,7 +84,7 @@
         {% if arrRuta.0 == 'inicio' %}
             {% include('base_menu_inicio.html.twig') %}
         {% endif %}
-        {% if arrRuta.0 == 'transporte' %}
+        {% if arrRuta.0 == 'transporte'%}
             {% include('base_transporte.html.twig') %}
         {% endif %}
         {% if arrRuta.0 == 'recursohumano' %}
@@ -92,7 +93,7 @@
         {% if arrRuta.0 == 'turno' %}
             {% include('base_turno.html.twig') %}
         {% endif %}
-        {% if arrRuta.0 == 'cartera' %}
+        {% if arrRuta.0 == 'cartera'%}
             {% include('base_cartera.html.twig') %}
         {% endif %}
         {% if arrRuta.0 == 'compra' %}
@@ -112,6 +113,9 @@
         {% endif %}
         {% if arrRuta.0 == 'documentacion' %}
             {% include('base_menu_inicio.html.twig') %}
+        {% endif %}
+        {% if arrRuta.0 == 'crm' %}
+            {% include('base_crm.html.twig') %}
         {% endif %}
         {% if arrRuta.0 == 'comunidad' %}
             {% include('base_menu_inicio.html.twig') %}
@@ -147,6 +151,9 @@
         {% endif %}
         {% if modulo == 'documental' %}
             {% include('base_documental.html.twig') %}
+        {% endif %}
+        {% if modulo == 'crm' %}
+            {% include('base_crm.html.twig') %}
         {% endif %}
         {% if modulo == 'general' %}
             {% include('base_general.html.twig') %}
@@ -190,7 +197,7 @@
                 {#<!-- /.col-lg-12 -->#}
                 {#</div>#}
                 &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:abrirVentana3('{{ path('general_utilidad_general_reportar_lista',{'ruta' : app.request.attributes.get('_route') }) }}','reportarUnProblema',600,1200)" style="font-size: x-small; color: white!important;">
-                    Reportar <span class="fa fa-exclamation-triangle" style="color: white!important;"></span></a>&nbsp;&nbsp;
+                    <span class="fa fa-exclamation-triangle" style="color: white!important;" title="Reportar"></span></a>&nbsp;&nbsp;
             </ol>
         {% endif %}
 

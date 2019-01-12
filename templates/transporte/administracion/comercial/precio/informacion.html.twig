@@ -1,0 +1,18 @@
+<table width="100%" class="table table-condensed table-bordered tabla-informacion">
+    <tr>
+        <td class="titulo"><b>CODIGO:</b></td>
+        <td class="td-in-well">{{ arPrecio.codigoPrecioPk }}</td>
+        <td class="titulo"><b>NOMBRE</b></td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arPrecio.nombre }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"><b>FECHA VENCE:</b></td>
+        <td class="td-in-well">{{ arPrecio.fechaVence | date ('Y-m-d') }}</td>
+        <td class="titulo"><b></b></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="titulo"><b>COMENTARIOS:</b></td>
+        <td class="td-in-well" colspan="7">{{ arPrecio.comentario }}</td>
+    </tr>
+</table>

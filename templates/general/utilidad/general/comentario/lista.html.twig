@@ -1,0 +1,62 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {% set codigoModelo = app.request.attributes.get('codigoModelo') %}
+    {% set codigoMovimiento = app.request.attributes.get('codigoMovimiento') %}
+    {{ form_start(form) }}
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+         data-widget-fullscreenbutton="true" style="margin-bottom: 9px;">
+        <header>
+            <span class="widget-icon"><i class="fa fa-comment"></i></span>
+            <h2>Comentarios</h2>
+            <input type="hidden" name="idComentario" id="idComentario">
+        </header>
+        <div class="no-padding">
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    <div class="col-sm-11">
+                        {{ form_widget(form.comentario) }}
+                    </div>
+                    <div class="col-sm-1" style="padding-left: 0px;">
+                        {{ form_widget(form.comentar) }}
+                    </div>
+                </div>
+                <br><br><br>
+                {% for arMovimientoComentario in arMovimientoComentarios %}
+                    <cite style="font-size: 11px;color: grey;">
+                        {{ arMovimientoComentario.fecha | date('l')|replace(dia) }} {{ arMovimientoComentario.fecha |date('d') }}
+                        de {{ arMovimientoComentario.fecha |date('M')|replace(mes) }}
+                        del {{ arMovimientoComentario.fecha |date('Y') }} a
+                        las {{ arMovimientoComentario.fecha |date('H:i:s') }}
+                        - <span class="fa fa-info-circle"
+                                title="La hora de registro del comentario esta en formato de 24h"></span>
+                        <a href="javascript:editarComentario('{{ arMovimientoComentario.codigoMovimientoComentarioPk }}','{{ arMovimientoComentario.comentario|replace({"'" : "&"}) }}');">
+                        <span class="fa fa-edit" style="float: right;font-size: 14px;color: black;"></span>
+                        </a>
+                    </cite>
+                    <br>
+                    <br>
+                    <div style="background-color: #f2f2f2;border-radius:10px;">
+                        <p style="padding: 4px 4px 4px 4px;">
+                            <a href="javascript:void(0);"
+                               style="font-size: 15px;">{{ arMovimientoComentario.codigoUsuario }}</a>
+                            {{ arMovimientoComentario.comentario }}
+                        </p>
+                    </div>
+                    <hr>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function editarComentario(pk, comentario) {
+            let inputComentario = $('#movimiento_comentario_comentario');
+            let inputPk = $('#idComentario');
+            inputComentario.html(comentario);
+            inputPk.val(pk);
+        }
+    </script>
+{% endblock %}

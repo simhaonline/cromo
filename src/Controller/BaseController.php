@@ -20,23 +20,22 @@ abstract class BaseController extends Controller
     /**
      * @return array
      */
-    protected function getDatosLista($filtro=false)
+    protected function getDatosLista($filtro = false)
     {
 
         $paginator = $this->get('knp_paginator');
         $nombreRepositorio = "App:{$this->modulo}\\{$this->claseNombre}";
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
         $campos = json_decode($namespaceType::getEstructuraPropiedadesLista());
-        if(!$filtro){
-        $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos);
-        }
-        else{
+        if (!$filtro) {
+            $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos);
+        } else {
             $camposFiltro = json_decode($namespaceType::getEstructuraPropiedadesFiltro(), true);
             $queryBuilder = $this->getGenerarQueryConFiltro($nombreRepositorio, $camposFiltro);
         }
         /** @var  $queryBuilder QueryBuilder */
         return [
-            'queryBuilder'=>$queryBuilder,
+            'queryBuilder' => $queryBuilder,
             'ruta' => strtolower($this->modulo) . "_" . strtolower($this->funcion) . "_" . strtolower($this->grupo) . "_" . strtolower($this->nombre),
             'arrCampos' => $campos,
             'arDatos' => $paginator->paginate($queryBuilder->getQuery(), $this->request->query->getInt('page', 1), 30)
@@ -53,16 +52,16 @@ abstract class BaseController extends Controller
         $form = $this->createFormBuilder();
         if ($campos) {
             foreach ($campos as $campo) {
-                if(isset($campo['relacion'])){
-                    $relacion=explode('.', $campo['child']);
-                    $campo['child']=$relacion[0].$relacion[1];
+                if (isset($campo['relacion'])) {
+                    $relacion = explode('.', $campo['child']);
+                    $campo['child'] = $relacion[0] . $relacion[1];
                 }
 
                 $tipoNombre = $campo['tipo'];
                 $tipo = "Symfony\\Component\Form\Extension\\Core\\Type\\{$tipoNombre}";
                 if ($campo['tipo'] == "EntityType") {
                     $modulo = '';
-                    switch (substr($campo['propiedades']['class'],0,3)){
+                    switch (substr($campo['propiedades']['class'], 0, 3)) {
                         case 'Inv':
                             $modulo = 'Inventario';
                             break;
@@ -93,8 +92,11 @@ abstract class BaseController extends Controller
                         case 'Rhu':
                             $modulo = 'RecursoHumano';
                             break;
+                        case 'Crm':
+                            $modulo = 'Crm';
+                            break;
                     }
-                    $em=$this->getDoctrine()->getManager();
+                    $em = $this->getDoctrine()->getManager();
                     $entidad = $campo['propiedades']['class'];
                     $nombreRepositorio = "App:{$modulo}\\{$entidad}";
                     $form->add($campo['child'], EntityType::class,
@@ -104,24 +106,22 @@ abstract class BaseController extends Controller
                             'class' => $nombreRepositorio,
                             'choice_label' => $campo['propiedades']['choice_label'],
                             'placeholder' => "TODO",
-                            'data'=>$session->get($this->claseNombre . "_" . $campo['child'])?$em->getReference($nombreRepositorio,$session->get($this->claseNombre . "_" . $campo['child'])):"",
+                            'data' => $session->get($this->claseNombre . "_" . $campo['child']) ? $em->getReference($nombreRepositorio, $session->get($this->claseNombre . "_" . $campo['child'])) : "",
 
                         ]);
                 } else if ($campo['tipo'] == "DateType") {
                     $form->add($campo['child'], $tipo,
                         [
                             'required' => false,
-                            'data' => $session->get($this->claseNombre . "_" . $campo['child']) ? new \DateTime($session->get($this->claseNombre . "_" . $campo['child'])):null,
+                            'data' => $session->get($this->claseNombre . "_" . $campo['child']) ? new \DateTime($session->get($this->claseNombre . "_" . $campo['child'])) : null,
                             'widget' => 'single_text',
                             'format' => 'yyyy-MM-dd',
                             'attr' => array('class' => 'date')
                         ]);
-                }
-                 else if ($campo['tipo'] != "SubmitType" && $campo['tipo'] != "CheckboxType" && $campo['tipo'] != "ChoiceType") {
+                } else if ($campo['tipo'] != "SubmitType" && $campo['tipo'] != "CheckboxType" && $campo['tipo'] != "ChoiceType") {
 
                     $form->add($campo['child'], $tipo, ['label' => $campo['propiedades']['label'], 'required' => false, 'data' => $session->get($this->claseNombre . "_" . $campo['child']) ?? ""]);
-                }
-                else {
+                } else {
                     if ($campo['tipo'] == "ChoiceType") {
 
                         $form->add($campo['child'], ChoiceType::class, ['label' => $campo['propiedades']['label'], 'required' => false, 'data' => $session->get($this->claseNombre . "_" . $campo['child']), 'placeholder' => 'TODO', 'attr' => ['class' => 'form-control'], 'choices' => $campo['propiedades']['choices']]);
@@ -271,7 +271,7 @@ abstract class BaseController extends Controller
                 $queryBuilder->addSelect('e.' . $campo->campo);
             } elseif (isset($campo->relacion)) {
                 $arrRel = explode('.', $campo->campo);
-                $alias = $arrRel[0]. 'Rel' . $arrRel[1];
+                $alias = $arrRel[0] . 'Rel' . $arrRel[1];
                 if (!$this->validarRelacion($arrRelaciones, $arrRel[0])) {
                     $arrRelaciones[] = $arrRel[0];
                     $queryBuilder->leftJoin('e.' . $arrRel[0], $arrRel[0]);
@@ -300,17 +300,16 @@ abstract class BaseController extends Controller
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
 
         $camposTabla = json_decode($namespaceType::getEstructuraPropiedadesLista());
-        $formType=new $namespaceType;
-        if(method_exists($formType,"getOrdenamiento")){
-            $camposOrdenamiento=json_decode($namespaceType::getOrdenamiento());
+        $formType = new $namespaceType;
+        if (method_exists($formType, "getOrdenamiento")) {
+            $camposOrdenamiento = json_decode($namespaceType::getOrdenamiento());
         }
-        foreach ($camposTabla as $camposT){
-            if(!isset($camposT->relacion)){
-            $queryBuilder->addSelect('e.' . $camposT->campo);
-            }
-            else{
+        foreach ($camposTabla as $camposT) {
+            if (!isset($camposT->relacion)) {
+                $queryBuilder->addSelect('e.' . $camposT->campo);
+            } else {
                 $arrRel = explode('.', $camposT->campo);
-                $alias = $arrRel[0]. 'Rel' . $arrRel[1];
+                $alias = $arrRel[0] . 'Rel' . $arrRel[1];
                 if (!$this->validarRelacion($arrRelaciones, $arrRel[0])) {
                     $arrRelaciones[] = $arrRel[0];
                     $queryBuilder->leftJoin('e.' . $arrRel[0], $arrRel[0]);
@@ -321,21 +320,19 @@ abstract class BaseController extends Controller
             }
         }
         foreach ($campos as $campo) {
-            if(isset($campo['relacion'])){
-                $relacion=explode('.', $campo['child']);
-                $filtro = $session->get($claseNombre . "_" . $relacion[0].$relacion[1]);
-            }
-            else{
+            if (isset($campo['relacion'])) {
+                $relacion = explode('.', $campo['child']);
+                $filtro = $session->get($claseNombre . "_" . $relacion[0] . $relacion[1]);
+            } else {
                 $filtro = $session->get($claseNombre . "_" . $campo['child']);
             }
             if (!isset($campo['relacion'])) {
-                if(strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha"){
-                    $queryBuilder->addSelect('e.' . (substr($campo['child'], 0, strlen($campo['child'])-5)));
+                if (strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha") {
+                    $queryBuilder->addSelect('e.' . (substr($campo['child'], 0, strlen($campo['child']) - 5)));
 
-                }
-                else{
+                } else {
 
-                $queryBuilder->addSelect('e.' . $campo['child']);
+                    $queryBuilder->addSelect('e.' . $campo['child']);
                 }
             } elseif (isset($campo['relacion'])) {
                 $arrRel = explode('.', $campo['child']);
@@ -344,22 +341,20 @@ abstract class BaseController extends Controller
                     $arrRelaciones[] = $arrRel[0];
                     $queryBuilder->leftJoin('e.' . $arrRel[0], $arrRel[0]);
                     $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
-                } else{
+                } else {
                     $queryBuilder->addSelect($arrRel[0] . '.' . $arrRel[1] . ' AS ' . $alias);
                 }
 
-                if($claseNombre) {
+                if ($claseNombre) {
                     if ($filtro != "" && $filtro != null) {
-                        if(isset($campo['operador'])){
-                            if($campo['operador']=="like"){
+                        if (isset($campo['operador'])) {
+                            if ($campo['operador'] == "like") {
                                 $queryBuilder->andWhere($arrRel[0] . '.' . $arrRel[1] . " LIKE '%{$filtro}%'");
-                            }
-                            else{
+                            } else {
 
                                 $queryBuilder->andWhere($arrRel[0] . '.' . $arrRel[1] . "{$campo['operador']} {$filtro}");
                             }
-                        }
-                        else {
+                        } else {
 
                             $queryBuilder->andWhere($arrRel[0] . '.' . $arrRel[1] . "={$filtro}");
                         }
@@ -370,43 +365,39 @@ abstract class BaseController extends Controller
             if ($claseNombre && !isset($campo['relacion'])) {
 
                 if (strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha") {
-                    $campoExplode=substr($campo['child'], 0, strlen($campo['child'])-5);
+                    $campoExplode = substr($campo['child'], 0, strlen($campo['child']) - 5);
                     $fecha = $session->get($claseNombre . "_" . $campo['child']);
-                    if ($fecha!==null) {
-                        if(substr($campo['child'],  -5)==="Desde"){
-                        $queryBuilder->andWhere('e.' . $campoExplode . ">='{$fecha} 00:00:00'");
-                        }
-                        else{
+                    if ($fecha !== null) {
+                        if (substr($campo['child'], -5) === "Desde") {
+                            $queryBuilder->andWhere('e.' . $campoExplode . ">='{$fecha} 00:00:00'");
+                        } else {
                             $queryBuilder->andWhere('e.' . $campoExplode . "<='{$fecha} 23:59:59'");
                         }
                     }
                 } else {
                     if ($filtro !== "" && $filtro !== null) {
-                        if(isset($campo['operador'])){
-                            if($campo['operador']=="like"){
-                                $queryBuilder->andWhere('e.'.$campo['child']. " LIKE '%{$filtro}%'");
-                            }
-                            else{
+                        if (isset($campo['operador'])) {
+                            if ($campo['operador'] == "like") {
+                                $queryBuilder->andWhere('e.' . $campo['child'] . " LIKE '%{$filtro}%'");
+                            } else {
 
-                                $queryBuilder->andWhere('e.'.$campo['child']. " {$campo['operador']} {$filtro}");
+                                $queryBuilder->andWhere('e.' . $campo['child'] . " {$campo['operador']} {$filtro}");
                             }
-                        }
-                        else {
+                        } else {
 
-                            $queryBuilder->andWhere('e.'.$campo['child'] . "='{$filtro}'");
+                            $queryBuilder->andWhere('e.' . $campo['child'] . "='{$filtro}'");
                         }
 
                     }
                 }
             }
         }
-        if(isset($camposOrdenamiento)){
-            foreach ($camposOrdenamiento as $ordenamiento){
-                $queryBuilder->addOrderBy('e.'.$ordenamiento->campo,$ordenamiento->tipo);
+        if (isset($camposOrdenamiento)) {
+            foreach ($camposOrdenamiento as $ordenamiento) {
+                $queryBuilder->addOrderBy('e.' . $ordenamiento->campo, $ordenamiento->tipo);
             }
-        }
-        else if(isset($camposTabla) && count($camposTabla)>0){
-            $queryBuilder->orderBy('e.'.$camposTabla[0]->campo,'DESC');
+        } else if (isset($camposTabla) && count($camposTabla) > 0) {
+            $queryBuilder->orderBy('e.' . $camposTabla[0]->campo, 'DESC');
         }
 
         return $queryBuilder;
@@ -431,5 +422,35 @@ abstract class BaseController extends Controller
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param $queryBuilder
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    protected function exportarExcel($queryBuilder)
+    {
+        $arrCondiciones = [];
+        $arrPartes = (array)$queryBuilder->getDQLParts()['where'];
+        foreach ($arrPartes as $arrParte) {
+            if (is_array($arrParte)) {
+                $arrCondiciones = $arrParte;
+            }
+        }
+        $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
+        $nombreRepositorio = "App:{$this->modulo}\\{$this->claseNombre}";
+        $campos = json_decode($namespaceType::getEstructuraPropiedadesExportar());
+        $queryBuilder = $this->getGenerarQuery($nombreRepositorio, $campos);
+        $primero = true;
+        foreach ($arrCondiciones as $arrCondicion){
+            if($primero){
+                $queryBuilder->where($arrCondicion);
+                $primero = false;
+            } else {
+                $queryBuilder->andWhere($arrCondicion);
+            }
+        }
+        $this->generarExcel($campos, $queryBuilder->getQuery()->execute(), $this->nombre);
     }
 }

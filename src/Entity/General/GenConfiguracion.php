@@ -101,6 +101,9 @@ class GenConfiguracion
      */
     private $porcentajeAutoretencion = 0;
 
+
+
+
     /**
      * @ORM\ManyToOne(targetEntity="GenCiudad", inversedBy="configuracionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")

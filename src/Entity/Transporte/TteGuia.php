@@ -356,6 +356,11 @@ class TteGuia
     private $tipoLiquidacion;
 
     /**
+     * @ORM\Column(name="numero_factura", type="integer", nullable=true)
+     */
+    private $numeroFactura;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -502,6 +507,11 @@ class TteGuia
     protected $redespachosGuiaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteDesembarco", mappedBy="guiaRel")
+     */
+    protected $desembarcosGuiaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoGuiaPk()
@@ -512,9 +522,10 @@ class TteGuia
     /**
      * @param mixed $codigoGuiaPk
      */
-    public function setCodigoGuiaPk( $codigoGuiaPk ): void
+    public function setCodigoGuiaPk( $codigoGuiaPk )
     {
         $this->codigoGuiaPk = $codigoGuiaPk;
+        return $this;
     }
 
     /**
@@ -1576,6 +1587,22 @@ class TteGuia
     /**
      * @return mixed
      */
+    public function getNumeroFactura()
+    {
+        return $this->numeroFactura;
+    }
+
+    /**
+     * @param mixed $numeroFactura
+     */
+    public function setNumeroFactura( $numeroFactura ): void
+    {
+        $this->numeroFactura = $numeroFactura;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -1955,6 +1982,22 @@ class TteGuia
     public function setRedespachosGuiaRel( $redespachosGuiaRel ): void
     {
         $this->redespachosGuiaRel = $redespachosGuiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDesembarcosGuiaRel()
+    {
+        return $this->desembarcosGuiaRel;
+    }
+
+    /**
+     * @param mixed $desembarcosGuiaRel
+     */
+    public function setDesembarcosGuiaRel( $desembarcosGuiaRel ): void
+    {
+        $this->desembarcosGuiaRel = $desembarcosGuiaRel;
     }
 
 

@@ -18,10 +18,10 @@
                         {{ form_errors(form.digitoVerificacion) }}
                     </div>
                 </div>
-                <label for="form_fechaVence" class="col-sm-1 control-label">Nombre corto:</label>
+                <label for="form_fechaVence" class="col-sm-2 control-label">Identificacion tipo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.nombreCorto) }}
-                    {{ form_errors(form.nombreCorto) }}
+                    {{ form_widget(form.identificacionRel) }}
+                    {{ form_errors(form.identificacionRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -30,6 +30,25 @@
                     {{ form_widget(form.nombres) }}
                     {{ form_errors(form.nombres) }}
                 </div>
+                <label for="form_fechaVence" class="col-sm-2 control-label">Nombre corto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombreCorto) }}
+                    {{ form_errors(form.nombreCorto) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaVence" class="col-sm-2 control-label">Primer apellido:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.apellido1) }}
+                    {{ form_errors(form.apellido1) }}
+                </div>
+                <label for="form_fechaVence" class="col-sm-2 control-label">Segundo apellido:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.apellido2) }}
+                    {{ form_errors(form.apellido2) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="form_nombre" class="col-sm-2 control-label">Cliente</label>
                 <div class="col-sm-1">
                     {{ form_widget(form.cliente) }}
@@ -39,18 +58,6 @@
                 <div class="col-sm-2">
                     {{ form_widget(form.proveedor) }}
                     {{ form_errors(form.proveedor) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_fechaVence" class="col-sm-2 control-label">Primer apellido:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.apellido1) }}
-                    {{ form_errors(form.apellido1) }}
-                </div>
-                <label for="form_fechaVence" class="col-sm-1 control-label">Segundo apellido:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.apellido2) }}
-                    {{ form_errors(form.apellido2) }}
                 </div>
             </div>
             <hr>

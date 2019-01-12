@@ -11,7 +11,7 @@ class GenModulo extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $arrayGenModulo=array('Cartera','Compra','Documental','Financiero','General','Inventario','Recurso Humano','Seguridad','Transporte');
+        $arrayGenModulo=array('Cartera','Compra','Documental','Financiero','General','Inventario','Recurso Humano','Seguridad','Transporte','Crm');
         foreach ($arrayGenModulo as $arrGenModulo){
             $arGenModulo = $manager->getRepository('App:General\GenModulo')->find($arrGenModulo);
             if(!$arGenModulo) {

@@ -81,6 +81,11 @@ class CarCuentaCobrarTipo
     protected $recibosDetallesCuentaCobrarTipoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="CarAnticipoTipo", mappedBy="cuentaCobrarTipoRel")
+     */
+    protected $cuentaCobrarTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaCobrarTipoPk()
@@ -286,6 +291,38 @@ class CarCuentaCobrarTipo
     public function setPrefijo($prefijo): void
     {
         $this->prefijo = $prefijo;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaCobrarTipoRel()
+    {
+        return $this->cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaCobrarTipoRel
+     */
+    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
+    {
+        $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
     }
 
 

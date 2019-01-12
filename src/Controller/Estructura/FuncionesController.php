@@ -8,6 +8,7 @@ use App\Utilidades\BaseDatos;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Session\Session;
+include_once(realpath(__DIR__ . "/../../../public/plugins/phpqrcode/phpqrcode/qrlib.php"));
 
 /**
  * Class Mensajes
@@ -230,5 +231,70 @@ final class FuncionesController
                 'error'=>$exception->getMessage(),
             ];
         }
+    }
+
+
+    /**
+     * @param
+     * @return string
+     */
+    public static function codigoQr(){
+        $em=BaseDatos::getEm();
+
+        //Declaramos una carpeta temporal para guardar la imagenes generadas
+        $dir = $em->getRepository('App\Entity\General\GenConfiguracion')->find(1)->getRutaTemporal();
+//        dump($dir);
+        //Si no existe la carpeta la creamos
+        if (!file_exists($dir))
+            mkdir($dir,0777);
+
+
+
+        //Declaramos la ruta y nombre del archivo a generar
+        $filename = $dir.'qrTest.png';
+
+
+        //Parametros de Configuración
+
+        $tamano = 10; //Tamaño de Pixel
+        $level = 'L'; //Precisión Baja
+        $framSize = 3; //Tamaño en blanco
+        $contenido = "Hola mundo"; //Texto
+
+        //Enviamos los parametros a la Función para generar código QR
+        \QRcode::png($contenido, $filename, $level, $tamano, $framSize);
+//        dump($dir.basename($filename));
+        return $dir.basename($filename);
+    }
+
+    public static function mesEspanol($mesNumero){
+        $mesTexto = '';
+        switch ($mesNumero){
+            case 1: $mesTexto = "Enero";
+                break;
+            case 2: $mesTexto = "Febrero";
+                break;
+            case 3: $mesTexto = "Marzo";
+                break;
+            case 4: $mesTexto = "Abril";
+                break;
+            case 5: $mesTexto = "Mayo";
+                break;
+            case 6: $mesTexto = "Junio";
+                break;
+            case 7: $mesTexto = "Julio";
+                break;
+            case 8: $mesTexto = "Agosto";
+                break;
+            case 9: $mesTexto = "Septiembre";
+                break;
+            case 10: $mesTexto = "Octubre";
+                break;
+            case 11: $mesTexto = "Novimienbre";
+                break;
+            case 12: $mesTexto = "Diciembre";
+                break;
+        }
+        return $mesTexto;
     }
 }

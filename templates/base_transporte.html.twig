@@ -153,7 +153,7 @@
                         <li>
                             <a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'departamento'}) }}">Departamento</a>
                         </li>
-                        <li><a href="{{ path('administracion_lista',{'modulo':'transporte','entidad':'ciudad'}) }}">Ciudad</a>
+                        <li><a href="{{ path('transporte_administracion_general_ciudad_lista') }}">Ciudad</a>
                         </li>
                     </ul>
                     <!-- /.nav-third-level -->
@@ -215,18 +215,12 @@
                         <li>
                             <a href="#">Guia <span class="fa arrow"></span></a>
                             <ul>
-                                <li><a href="{{ path('transporte_proceso_transporte_guia_entrega') }}">Entrega
-                                        guia</a></li>
-                                <li><a href="{{ path('transporte_proceso_transporte_guia_soporte') }}">Soporte
-                                        guia</a></li>
-                                <li>
-                                    <a href="{{ path('transporte_proceso_transporte_guia_redespacho') }}">Re-despacho</a>
-                                </li>
-                                <li><a href="{{ path('transporte_proceso_transporte_guia_cortesia') }}">Cortesia</a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('transporte_proceso_transporte_guia_generarfactura') }}">Generar
-                                        factura</a></li>
+                                <li><a href="{{ path('transporte_proceso_transporte_guia_entrega') }}">Entrega guia</a></li>
+                                <li><a href="{{ path('transporte_proceso_transporte_guia_soporte') }}">Soporte guia</a></li>
+                                <li><a href="{{ path('transporte_proceso_transporte_guia_redespacho') }}">Re-despacho</a></li>
+                                <li><a href="{{ path('transporte_proceso_transporte_guia_desembarco') }}">Desembarco</a></li>
+                                <li><a href="{{ path('transporte_proceso_transporte_guia_cortesia') }}">Cortesía</a></li>
+                                <li><a href="{{ path('transporte_proceso_transporte_guia_generarfactura') }}">Generar factura</a></li>
                             </ul>
                         </li>
                         <li>
@@ -290,6 +284,8 @@
                                 novedad</a></li>
                         <li><a href="{{ path('transporte_utilidad_servicio_guia_entrega') }}">Notificar
                                 entrega</a></li>
+                        <li><a href="{{ path('transporte_uti_servicio_novedad_notificar_estado') }}">Notificar
+                                estado</a></li>
                     </ul>
                     <!-- /.nav-third-level -->
                 </li>
@@ -303,6 +299,8 @@
                                 info. guias</a></li>
                         <li><a href="{{ path('transporte_proceso_transporte_precio_reexpedicion') }}">Precio
                                 reexpedicion</a></li>
+                        <li><a href="{{ path('transporte_utilidad_transporte_imprimirGuiaMasivo_lista') }}">Imprimir guia
+                                masivo</a></li>
                     </ul>
                     <!-- /.nav-third-level -->
                 </li>
@@ -354,27 +352,16 @@
                         <li>
                             <a href="#">Guia <span class="fa arrow"></span></a>
                             <ul>
-                                <li>
-                                    <a href="{{ path('transporte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho
-                                        pendiente ruta</a></li>
-                                <li>
-                                    <a href="{{ path('transporte_informe_transporte_guia_pendiente_conductor') }}">Pendiente
-                                        conductor</a></li>
-                                <li><a href="{{ path('transporte_informe_transporte_guia_pendiente_soporte') }}">Pendiente
-                                        soporte</a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('transporte_informe_transporte_guia_pendiente_entrega') }}">Pendiente
-                                        entrega</a></li>
-                                <li>
-                                    <a href="{{ path('transporte_informe_transporte_guia_guias_cliente') }}">Guias
-                                        cliente</a></li>
-                                <li>
-                                    <a href="{{ path('transporte_informe_transporte_guia_pendiente_recaudo_devolucion') }}">Pendiente
-                                        recaudo devolucion</a></li>
-                                <li>
-                                    <a href="{{ path('transporte_informe_transporte_guia_pendiente_recaudo_cobro') }}">Pendiente
-                                        recaudo cobro</a></li>
+                                <li><a href="{{ path('transporte_inf_transporte_guia_pendiente_despacho_ruta') }}">Despacho pendiente ruta</a></li>
+                                <li><a href="{{ path('transporte_informe_transporte_guia_pendiente_conductor') }}">Pendiente conductor</a></li>
+                                <li><a href="{{ path('transporte_informe_transporte_guia_pendiente_soporte') }}">Pendiente soporte</a></li>
+                                <li><a href="{{ path('transporte_informe_transporte_guia_pendiente_entrega') }}">Pendiente entrega</a></li>
+                                <li><a href="{{ path('transporte_informe_transporte_guia_guias_cliente') }}">Guias cliente</a></li>
+                                <li><a href="{{ path('transporte_informe_transporte_guia_desembarco') }}">Desembarco</a></li>
+                                <li><a href="{{ path('transporte_informe_transporte_guia_pendiente_recaudo_devolucion') }}">Pendiente recaudo devolución</a></li>
+                                <li><a href="{{ path('transporte_informe_transporte_guia_pendiente_recaudo_cobro') }}">Pendiente recaudo cobro</a></li>
+                                <li><a href="{{ path('transporte_informe_transporte_guia_entrega_fecha') }}">Entrega por fecha</a></li>
+                                <li><a href="{{ path('transporte_informe_transporte_guia_soporte_fecha') }}">Soporte por fecha</a></li>
                             </ul>
                         </li>
                         <li>
@@ -400,13 +387,11 @@
                 <li>
                     <a href="#">Comercial <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('transporte_informe_comercial_guia_produccion') }}">Produccion(cliente)</a>
-                        </li>
+                        <li><a href="{{ path('transporte_informe_comercial_guia_produccion') }}">Produccion(cliente)</a></li>
                         <li><a href="{{ path('transporte_informe_comercial_facturacion_factura') }}">Factura</a></li>
-                        <li><a href="{{ path('transporte_informe_comercial_facturacion_detalle') }}">Facturadetalle</a>
-                        </li>
-                        <li><a href="{{ path('transporte_informe_comercial_facturacion_pendienteFactura') }}">Pendientefacturar</a>
-                        </li>
+                        <li><a href="{{ path('transporte_informe_comercial_facturacion_detalle') }}">Factura detalle</a></li>
+                        <li><a href="{{ path('transporte_informe_comercial_facturacion_pendienteFactura') }}">Pendiente facturar</a></li>
+                        <li><a href="{{ path('transporte_informe_comercial_facturacion_pendienteFacturaCliente') }}">Pendiente facturar(cliente)</a></li>
                     </ul>
                 </li>
                 <li>

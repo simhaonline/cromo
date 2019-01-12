@@ -94,12 +94,12 @@
                                                     </li>
                                                     <li>
                                                         <p class="text-muted">
-                                                            <i class="fa fa-skype"></i>&nbsp;&nbsp;<span class="txt-color-darken">miSkype</span>
+                                                            <i class="fa fa-skype"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{ arUsuario.skype }}</span>
                                                         </p>
                                                     </li>
                                                     <li>
                                                         <p class="text-muted">
-                                                            <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span class="txt-color-darken">Free after <a href="javascript:void(0);" rel="tooltip" title="" data-placement="top" data-original-title="Create an Appointment">4:30 PM</a></span>
+                                                            <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span class="txt-color-darken">Ultima conexion <a href="javascript:void(0);" rel="tooltip" title="" data-placement="top" data-original-title="Create an Appointment">{{ arUsuario.ultimaConexion }}</a></span>
                                                         </p>
                                                     </li>
                                                 </ul>
@@ -246,7 +246,9 @@
                             </div>
 
                         </div>
+                        <div class="col-sm-12 col-md-12 col-lg-6" >
                         {% include ('comunidad/publicacion.html.twig') %}
+                        </div>
                     </div>
 
                 </div>
@@ -255,7 +257,6 @@
             </div>
 
         </div>
-
         <!-- end row -->
 
     </div>
@@ -318,7 +319,7 @@
     <!--modal registro a social-->
     <div class="modal fade" id="advertencia_social" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            {% if dominio!=null and dominio!=""%}
+            {% if dominio!=null and dominio!="@"%}
                 <div class="modal-content" style="text-align: center;font-size: 16px;padding-top: 27px;flex-direction: column;display: flex;">
                     <span style="margin-bottom: 3px">Se esta conectando por primera vez a la comunidad...</span>
                     <span>¿Estás de acuerdo?</span>

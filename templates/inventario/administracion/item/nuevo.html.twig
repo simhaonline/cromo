@@ -83,6 +83,15 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-3"><input type="radio" name="tipo"
+                                             value="1" {{ arItem.producto == true?"checked='checked'":"" }}>Producto
+                </div>
+                <div class="col-sm-3"><input type="radio" name="tipo"
+                                             value="2" {{ arItem.servicio == true?"checked='checked'":"" }}>Servicio
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="form_descripcion" class="col-sm-2 control-label">Descripción</label>
                 <div class="col-sm-8">
                     {{ form_widget(form.descripcion, {'attr':{'class':'form-control'}}) }}

@@ -24,6 +24,11 @@ class CarAnticipoTipo
     private $codigoAnticipoTipoPk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_cobrar_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCuentaCobrarTipoFk;
+
+    /**
      * @ORM\Column(name="nombre", type="string", length=50, nullable=true)
      */
     private $nombre;
@@ -34,24 +39,20 @@ class CarAnticipoTipo
     private $consecutivo = 0;
 
     /**
-     * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoComprobanteFk;
-
-    /**
      * @ORM\Column(name="orden", type="integer", nullable=true, unique=true)
      */
     private $orden = 0;
 
     /**
-     * @ORM\Column(name="cruce_cuentas", type="boolean", nullable=true, options={"default" : false})
-     */
-    private $cruceCuentas = 0;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarAnticipo", mappedBy="anticipoTipoRel")
      */
     protected $anticiposAnticipoTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CarCuentaCobrarTipo", inversedBy="cuentaCobrarTipoRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_cobrar_tipo_fk", referencedColumnName="codigo_cuenta_cobrar_tipo_pk")
+     */
+    protected $cuentaCobrarTipoRel;
 
     /**
      * @return array
@@ -120,22 +121,6 @@ class CarAnticipoTipo
     /**
      * @return mixed
      */
-    public function getCodigoComprobanteFk()
-    {
-        return $this->codigoComprobanteFk;
-    }
-
-    /**
-     * @param mixed $codigoComprobanteFk
-     */
-    public function setCodigoComprobanteFk($codigoComprobanteFk): void
-    {
-        $this->codigoComprobanteFk = $codigoComprobanteFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getOrden()
     {
         return $this->orden;
@@ -147,22 +132,6 @@ class CarAnticipoTipo
     public function setOrden($orden): void
     {
         $this->orden = $orden;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCruceCuentas()
-    {
-        return $this->cruceCuentas;
-    }
-
-    /**
-     * @param mixed $cruceCuentas
-     */
-    public function setCruceCuentas($cruceCuentas): void
-    {
-        $this->cruceCuentas = $cruceCuentas;
     }
 
     /**
@@ -181,7 +150,36 @@ class CarAnticipoTipo
         $this->anticiposAnticipoTipoRel = $anticiposAnticipoTipoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCobrarTipoFk()
+    {
+        return $this->codigoCuentaCobrarTipoFk;
+    }
 
+    /**
+     * @param mixed $codigoCuentaCobrarTipoFk
+     */
+    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
+    {
+        $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getCuentaCobrarTipoRel()
+    {
+        return $this->cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaCobrarTipoRel
+     */
+    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
+    {
+        $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
+    }
 
 }

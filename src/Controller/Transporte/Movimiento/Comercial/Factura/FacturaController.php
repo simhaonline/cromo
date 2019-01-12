@@ -21,6 +21,7 @@ use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
 
+use App\Formato\Transporte\Factura2;
 use App\Formato\Transporte\ListaFactura;
 use App\Formato\Transporte\NotaCredito;
 use App\General\General;
@@ -38,7 +39,7 @@ use App\Utilidades\Mensajes;
 
 class FacturaController extends ControllerListenerGeneral
 {
-    protected $clase= TteFactura::class;
+    protected $clase = TteFactura::class;
     protected $claseNombre = "TteFactura";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
@@ -47,8 +48,10 @@ class FacturaController extends ControllerListenerGeneral
 
     /**
      * @param Request $request
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws \Doctrine\ORM\ORMException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/movimiento/comercial/factura/lista", name="transporte_movimiento_comercial_factura_lista")
      */
     public function lista(Request $request)
@@ -56,16 +59,16 @@ class FacturaController extends ControllerListenerGeneral
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
-        $formBotonera->add('btnPdf','Symfony\Component\Form\Extension\Core\Type\SubmitType',[
-           'attr'=>['class'=>'btn btn-default btn-sm'],
-            'label'=>'Pdf'
+        $formBotonera->add('btnPdf', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
+            'attr' => ['class' => 'btn btn-default btn-sm'],
+            'label' => 'Pdf'
         ]);
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
         $datos = $this->getDatosLista(true);
@@ -94,24 +97,31 @@ class FacturaController extends ControllerListenerGeneral
     }
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/movimiento/comercial/factura/detalle/{id}", name="transporte_movimiento_comercial_factura_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arFactura = $em->getRepository(TteFactura::class)->find($id);
-        $paginator  = $this->get('knp_paginator');
-        $form = Estandares::botonera($arFactura->getEstadoAutorizado(),$arFactura->getEstadoAprobado(),$arFactura->getEstadoAnulado());
+        $paginator = $this->get('knp_paginator');
+        $form = Estandares::botonera($arFactura->getEstadoAutorizado(), $arFactura->getEstadoAprobado(), $arFactura->getEstadoAnulado());
         $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnRetirarPlanilla = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBotonActualizar = array('label' => 'Actualizar', 'disabled' => false);
         $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
-        if($arFactura->getEstadoAutorizado()){
+        if ($arFactura->getEstadoAutorizado()) {
             $arrBtnRetirar['disabled'] = true;
             $arrBtnRetirarPlanilla['disabled'] = true;
             $arrBotonActualizar['disabled'] = true;
         }
-        if($arFactura->getCodigoFacturaClaseFk() == 'NC') {
+        if ($arFactura->getCodigoFacturaClaseFk() == 'NC') {
             $arrBotonActualizar['disabled'] = true;
         }
         $form->add('btnRetirarGuia', SubmitType::class, $arrBtnRetirar)
@@ -120,12 +130,18 @@ class FacturaController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
-                if($arFactura->getCodigoFacturaTipoFk() == 'NC'){
+                $codigoFactura = $em->getRepository(TteConfiguracion::class)->find(1)->getCodigoFormato();
+                if ($arFactura->getCodigoFacturaTipoFk() == 'NC') {
                     $formato = new NotaCredito();
                     $formato->Generar($em, $id);
                 } else {
-                    $formato = new Factura();
-                    $formato->Generar($em, $id);
+                    if ($codigoFactura == 1) {
+                        $formato = new Factura();
+                        $formato->Generar($em, $id);
+                    } else {
+                        $formato = new Factura2();
+                        $formato->Generar($em, $id);
+                    }
                 }
             }
             if ($form->get('btnAutorizar')->isClicked()) {
@@ -148,14 +164,16 @@ class FacturaController extends ControllerListenerGeneral
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $arrControles = $request->request->all();
-                $em->getRepository(TteFacturaDetalle::class)->actualizarDetalles($arrControles, $form, $arFactura);
-                $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($id);
+                if(isset($arrControles['arrCodigo'])){
+                    $em->getRepository(TteFacturaDetalle::class)->actualizarDetalles($arrControles, $form, $arFactura);
+                    $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($id);
+                }
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarDetalle($arrGuias, $arFactura);
-                if($respuesta) {
+                if ($respuesta) {
                     $em->getRepository(TteFactura::class)->liquidar($id);
                     $em->flush();
                 }
@@ -164,11 +182,16 @@ class FacturaController extends ControllerListenerGeneral
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TteFacturaDetalle::class)->factura($id), "Facturas $id");
             }
+            if ($form->get('btnRetirarPlanilla')->isClicked()) {
+                $arrPlanillas = $request->request->get('ChkSeleccionarPlanilla');
+                $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->retirarPlanilla($arrPlanillas);
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
+            }
         }
         $query = $this->getDoctrine()->getRepository(TteFacturaPlanilla::class)->listaFacturaDetalle($id);
-        $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1),50);
+        $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
         $query = $this->getDoctrine()->getRepository(TteFacturaOtro::class)->listaFacturaDetalle($id);
-        $arFacturaOtros = $paginator->paginate($query, $request->query->getInt('page', 1),50);
+        $arFacturaOtros = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
         $arFacturaDetalles = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->factura($id);
         return $this->render('transporte/movimiento/comercial/factura/detalle.html.twig', [
             'arFactura' => $arFactura,
@@ -232,10 +255,10 @@ class FacturaController extends ControllerListenerGeneral
     public function detalleAdicionarGuiaCumplido(Request $request, $codigoFactura, $codigoFacturaPlanilla)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $arFacturaPlanilla = NULL;
-        if($codigoFacturaPlanilla != 0) {
+        if ($codigoFacturaPlanilla != 0) {
             $arFacturaPlanilla = $em->getRepository(TteFacturaPlanilla::class)->find($codigoFacturaPlanilla);
         }
 
@@ -250,11 +273,11 @@ class FacturaController extends ControllerListenerGeneral
                     $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->retencionTransporte();
                     foreach ($arrSeleccionados AS $codigo) {
                         $arGuias = $em->getRepository(TteGuia::class)->findBy(array('codigoCumplidoFk' => $codigo, 'estadoFacturaGenerada' => 0, 'estadoFacturado' => 0));
-                        if($arGuias) {
+                        if ($arGuias) {
                             foreach ($arGuias as $arGuiaCumplido) {
                                 $arGuia = $em->getRepository(TteGuia::class)->find($arGuiaCumplido->getCodigoGuiaPk());
-                                if($arGuia->getEstadoFacturaGenerada() == 0 && $arGuia->getEstadoFacturado() == 0) {
-                                    if($arFacturaPlanilla) {
+                                if ($arGuia->getEstadoFacturaGenerada() == 0 && $arGuia->getEstadoFacturado() == 0) {
+                                    if ($arFacturaPlanilla) {
                                         $arGuia->setFacturaPlanillaRel($arFacturaPlanilla);
                                     }
                                     $arGuia->setFacturaRel($arFactura);
@@ -263,7 +286,7 @@ class FacturaController extends ControllerListenerGeneral
 
                                     $arFacturaDetalle = new TteFacturaDetalle();
                                     $arFacturaDetalle->setFacturaRel($arFactura);
-                                    if($arFacturaPlanilla) {
+                                    if ($arFacturaPlanilla) {
                                         $arFacturaDetalle->setFacturaPlanillaRel($arFacturaPlanilla);
                                     }
                                     $arFacturaDetalle->setGuiaRel($arGuia);
@@ -297,10 +320,10 @@ class FacturaController extends ControllerListenerGeneral
     public function detalleAdicionarGuiaArchivo(Request $request, $codigoFactura, $codigoFacturaPlanilla)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $arFacturaPlanilla = NULL;
-        if($codigoFacturaPlanilla != 0) {
+        if ($codigoFacturaPlanilla != 0) {
             $arFacturaPlanilla = $em->getRepository(TteFacturaPlanilla::class)->find($codigoFacturaPlanilla);
         }
 
@@ -337,16 +360,16 @@ class FacturaController extends ControllerListenerGeneral
                     }
                     if (count($arrCargas) > 0) {
                         foreach ($arrCargas as $arrCarga) {
-                            $guia = $arrCarga['codigoGuia'] . " " .  $arrCarga['documento'];
+                            $guia = $arrCarga['codigoGuia'] . " " . $arrCarga['documento'];
                             $arGuia = null;
-                            if($arrCarga['codigoGuia'] != "") {
+                            if ($arrCarga['codigoGuia'] != "") {
                                 $arGuia = $em->getRepository(TteGuia::class)->findOneBy(array(
                                     'codigoGuiaPk' => $arrCarga['codigoGuia'],
                                     'codigoClienteFk' => $arFactura->getCodigoClienteFk(),
                                     'estadoFacturaGenerada' => 0,
                                     'codigoFacturaFk' => null,
                                     'estadoAnulado' => 0));
-                            } elseif ($arrCarga['documento'] != ""){
+                            } elseif ($arrCarga['documento'] != "") {
                                 $arGuia = $em->getRepository(TteGuia::class)->findOneBy(array(
                                     'documentoCliente' => $arrCarga['documento'],
                                     'codigoClienteFk' => $arFactura->getCodigoClienteFk(),
@@ -354,9 +377,9 @@ class FacturaController extends ControllerListenerGeneral
                                     'codigoFacturaFk' => null,
                                     'estadoAnulado' => 0));
                             }
-                            if($arGuia) {
+                            if ($arGuia) {
                                 $arGuia = $em->getRepository(TteGuia::class)->find($arGuia->getCodigoGuiaPk());
-                                if($arFacturaPlanilla) {
+                                if ($arFacturaPlanilla) {
                                     $arGuia->setFacturaPlanillaRel($arFacturaPlanilla);
                                 }
                                 $arGuia->setFacturaRel($arFactura);
@@ -365,7 +388,7 @@ class FacturaController extends ControllerListenerGeneral
 
                                 $arFacturaDetalle = new TteFacturaDetalle();
                                 $arFacturaDetalle->setFacturaRel($arFactura);
-                                if($arFacturaPlanilla) {
+                                if ($arFacturaPlanilla) {
                                     $arFacturaDetalle->setFacturaPlanillaRel($arFacturaPlanilla);
                                 }
                                 $arFacturaDetalle->setGuiaRel($arGuia);
@@ -398,7 +421,7 @@ class FacturaController extends ControllerListenerGeneral
     public function detalleAdicionarGuiaPlanilla(Request $request, $codigoFactura, $codigoFacturaPlanilla)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $arFacturaPlanilla = $em->getRepository(TteFacturaPlanilla::class)->find($codigoFacturaPlanilla);
         $form = $this->createFormBuilder()
@@ -408,12 +431,12 @@ class FacturaController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
-                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                echo "<script language='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
             if ($form->get('btnRetirar')->isClicked()) {
                 $arrGuias = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarDetallePlanilla($arrGuias, $arFactura);
-                if($respuesta) {
+                if ($respuesta) {
                     $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
                     $em->flush();
                 }
@@ -437,9 +460,8 @@ class FacturaController extends ControllerListenerGeneral
     public function detalleAdicionarPlanilla(Request $request, $codigoFactura, $id)
     {
         $em = $this->getDoctrine()->getManager();
-
         $arFacturaPlanilla = new TteFacturaPlanilla();
-        if($id != 0) {
+        if ($id != 0) {
             $arFacturaPlanilla = $em->getRepository(TteFacturaPlanilla::class)->find($id);
         } else {
             $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
@@ -451,11 +473,12 @@ class FacturaController extends ControllerListenerGeneral
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arFacturaPlanilla);
                 $em->flush();
-                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                echo "<script language='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarPlanilla.html.twig',
-            ['form' => $form->createView()]);
+        return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarPlanilla.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -466,25 +489,25 @@ class FacturaController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $objFunciones = new FuncionesController();
         $arFactura = new TteFactura();
-        if($id != 0) {
+        if ($id != 0) {
             $arFactura = $em->getRepository(TteFactura::class)->find($id);
         } else {
             $arFactura->setCodigoFacturaClaseFk($clase);
         }
 
-        if($clase == "FA") {
+        if ($clase == "FA") {
             $form = $this->createForm(FacturaType::class, $arFactura);
         }
-        if($clase == "NC") {
+        if ($clase == "NC") {
             $form = $this->createForm(FacturaNotaCreditoType::class, $arFactura);
         }
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $txtCodigoCliente = $request->request->get('txtCodigoCliente');
-            if($txtCodigoCliente != '') {
+            if ($txtCodigoCliente != '') {
                 $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
-                if($arCliente) {
+                if ($arCliente) {
                     $arFactura->setClienteRel($arCliente);
                     if ($id == 0) {
                         $arFactura->setUsuario($this->getUser()->getUsername());
@@ -495,7 +518,7 @@ class FacturaController extends ControllerListenerGeneral
                     }
                     $fecha = new \DateTime('now');
                     $arFactura->setFecha($fecha);
-                    $arFactura->setFechaVence($arFactura->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha,$arFactura->getPlazoPago()));
+                    $arFactura->setFechaVence($arFactura->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha, $arFactura->getPlazoPago()));
                     $arFactura->setOperacionComercial($arFactura->getFacturaTipoRel()->getOperacionComercial());
                     $em->persist($arFactura);
                     $em->flush();
@@ -503,12 +526,12 @@ class FacturaController extends ControllerListenerGeneral
                 }
             }
         }
-        if($clase == "FA") {
+        if ($clase == "FA") {
             return $this->render('transporte/movimiento/comercial/factura/nuevo.html.twig', [
                 'arFactura' => $arFactura,
                 'form' => $form->createView()]);
         }
-        if($clase == "NC") {
+        if ($clase == "NC") {
             return $this->render('transporte/movimiento/comercial/factura/nuevoNotaCredito.html.twig', [
                 'arFactura' => $arFactura,
                 'form' => $form->createView()]);
@@ -522,7 +545,7 @@ class FacturaController extends ControllerListenerGeneral
     public function detalleAdicionarGuiaNc(Request $request, $codigoFactura)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))

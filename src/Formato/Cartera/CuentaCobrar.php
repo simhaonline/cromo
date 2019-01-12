@@ -53,21 +53,45 @@ class CuentaCobrar extends \FPDF {
     }
 
     public function Body($pdf) {
+
+
         $em = BaseDatos::getEm();
-        $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->lista()->getQuery()->getResult();
+        $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->carteraEdadesCliente()->getQuery()->getResult();
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
+        $saldoGeneral = 0;
+        $saldo = 0;
+        $primerCliente = true;
         foreach ($arCuentasCobrar as $arCuentaCobrar) {
-            $pdf->Cell(30, 4, $arCuentaCobrar['tipo'], 'LRB', 0, 'L');
+            if($primerCliente){
+                $pdf->Cell(190,4, $arCuentaCobrar['clienteNombre'],1,0,'L');
+                $primerCliente = false;
+                $cliente = $arCuentaCobrar['codigoClienteFk'];
+                $pdf->Ln(4);
+            }
+            if($arCuentaCobrar['codigoClienteFk'] != $cliente){
+                $pdf->SetX(155);
+                $pdf->Cell(15, 4, "TOTAL:", 'LRB', 0, 'L');
+                $pdf->Cell(30, 4, number_format($saldo), 'LRB', 0, 'R');
+
+                $pdf->Ln(4);
+                $pdf->Cell(190,4,$arCuentaCobrar['clienteNombre'],1,0,'L');
+                $cliente = $arCuentaCobrar['codigoClienteFk'];
+                $saldo = 0;
+                $pdf->Ln(4);
+            }
+            $pdf->Cell(30, 4, $arCuentaCobrar['codigoCuentaCobrarTipoFk'], 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arCuentaCobrar['numeroDocumento'], 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arCuentaCobrar['numeroIdentificacion'], 'LRB', 0, 'L');
-            $pdf->Cell(45, 4, substr($arCuentaCobrar['nombreCorto'],0,28), 'LRB', 0, 'L');
+            $pdf->Cell(45, 4, substr($arCuentaCobrar['clienteNombre'],0,28), 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arCuentaCobrar['fecha']->format('Y-m-d'), 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arCuentaCobrar['fechaVence']->format('Y-m-d'), 'LRB', 0, 'R');
             $pdf->Cell(10, 4, $arCuentaCobrar['plazo'], 'LRB', 0, 'R');
             $pdf->Cell(15, 4, number_format($arCuentaCobrar['vrTotal']), 'LRB', 0, 'R');
             $pdf->Cell(15, 4, number_format($arCuentaCobrar['vrAbono']), 'LRB', 0, 'R');
             $pdf->Cell(15, 4, number_format($arCuentaCobrar['vrSaldoOperado']), 'LRB', 0, 'R');
+            $saldo += $arCuentaCobrar['vrSaldoOperado'];
+            $saldoGeneral += $arCuentaCobrar['vrSaldoOperado'];
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

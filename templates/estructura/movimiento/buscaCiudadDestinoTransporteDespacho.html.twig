@@ -1,0 +1,21 @@
+<div class="form-group form-group-sm">
+    {#<label for="txtCodigoConductor" class="col-sm-1 control-label">Origen:</label>#}
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="input-group">
+                    {{ form_widget(formFiltro.codigoCiudadDestinoFk) }}
+                </div>
+            </div>
+            <div class="col-lg-10">
+                <div class="input-group">
+                    {#{{ form_widget(formFiltro.txtNombreCorto) }}#}
+                    <input id="form_txtNombreCiudadDestino" class="form-control" readonly>
+                    <span class="input-group-btn">
+                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_ciudad_destino', {'campoNombre': 'form_txtNombreCiudadDestino','campoCodigo':'form_codigoCiudadDestinoFk' }) }}', 'buscarCiudadDestino', 600, 900)">Buscar</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

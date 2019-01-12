@@ -10,6 +10,7 @@ use App\Entity\General\GenFormaPago;
 use App\Entity\General\GenIdentificacion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteCumplido;
+use App\Entity\Transporte\TteDesembarco;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteFactura;
@@ -38,8 +39,9 @@ class TteGuiaRepository extends ServiceEntityRepository
         g.codigoServicioFk,
         g.codigoGuiaTipoFk, 
         g.numero,
+        g.numeroFactura,
         g.documentoCliente, 
-        g.fechaIngreso,
+        g.fechaIngreso,        
         g.codigoOperacionIngresoFk,
         g.codigoOperacionCargoFk, 
         c.nombreCorto AS clienteNombreCorto,  
@@ -206,6 +208,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->select('g.codigoGuiaPk')
             ->addSelect('g.codigoGuiaTipoFk')
             ->addSelect('g.numero')
+            ->addSelect('g.numeroFactura')
             ->addSelect('g.fechaIngreso')
             ->addSelect('g.codigoOperacionIngresoFk')
             ->addSelect('g.codigoOperacionCargoFk')
@@ -232,7 +235,9 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
             $queryBuilder->andWhere("g.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");
         }
-
+        if ($session->get('filtroTteGuiaCodigoOperacionIngreso')) {
+            $queryBuilder->andWhere("g.codigoOperacionIngresoFk = '" . $session->get('filtroTteGuiaCodigoOperacionIngreso') . "'");
+        }
         return $queryBuilder;
     }
 
@@ -260,6 +265,46 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->andWhere('g.estadoSoporte = 0')
             ->andWhere('g.estadoAnulado = 0');
         $queryBuilder->orderBy('g.codigoGuiaPk', 'DESC');
+        return $queryBuilder;
+    }
+
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function listaDesembarco()
+    {
+        $em = $this->_em;
+        $session = new Session();
+        $queryBuilder = [];
+        $id = $session->get('filtroTteDespachoCodigo');
+        if ($id) {
+            $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
+            if ($arDespacho) {
+                if ($arDespacho->getEstadoAprobado()) {
+                    $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+                        ->select('g.codigoGuiaPk')
+                        ->addSelect('g.numero')
+                        ->addSelect('g.fechaIngreso')
+                        ->addSelect('g.codigoOperacionIngresoFk')
+                        ->addSelect('g.codigoOperacionCargoFk')
+                        ->addSelect('c.nombreCorto AS clienteNombre')
+                        ->addSelect('cd.nombre AS ciudadDestino')
+                        ->addSelect('g.unidades')
+                        ->addSelect('g.pesoReal')
+                        ->leftJoin('g.clienteRel', 'c')
+                        ->leftJoin('g.ciudadDestinoRel', 'cd')
+                        ->where('g.codigoDespachoFk = ' . $id)
+                        ->andWhere('g.estadoDespachado = 1')
+                        ->andWhere('g.estadoAnulado = 0');
+                    $queryBuilder->orderBy('g.codigoGuiaPk', 'DESC');
+                } else {
+                    Mensajes::error('El despacho no esta aprobado y no se puede desembarcar');
+                }
+            } else {
+                Mensajes::error('El despacho no existe');
+            }
+
+        }
         return $queryBuilder;
     }
 
@@ -312,6 +357,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.codigoProductoFk')
             ->addSelect('g.empaqueReferencia')
             ->addSelect('g.codigoCiudadDestinoFk')
+            ->addSelect('g.codigoServicioFk')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->orderBy('g.codigoCiudadDestinoFk')
@@ -399,7 +445,7 @@ class TteGuiaRepository extends ServiceEntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function despachoPendiente()
+    public function despachoPendiente($codigoOperacionCargo)
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
@@ -423,7 +469,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->where('tg.estadoDespachado = 0')
             ->andWhere('tg.estadoEmbarcado = 0')
             ->andWhere('tg.estadoImpreso = 1')
-            ->andWhere('tg.estadoAnulado = 0');
+            ->andWhere('tg.estadoAnulado = 0')
+            ->andWhere("tg.codigoOperacionCargoFk ='" . $codigoOperacionCargo . "'");
         if ($session->get('filtroTteDespachoGuiaNumero') != '') {
             $queryBuilder->andWhere("tg.numero =  {$session->get('filtroTteDespachoGuiaNumero')}");
         }
@@ -823,13 +870,19 @@ class TteGuiaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arrGuias) {
-            if (count($arrGuias) > 0) {
+            if ($arrGuias) {
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
                     if ($arGuia->getEstadoDespachado() == 1 && $arGuia->getEstadoEntregado() == 0) {
                         $fechaHora = date_create($arrControles['txtFechaEntrega' . $codigoGuia] . " " . $arrControles['txtHoraEntrega' . $codigoGuia]);
                         $arGuia->setFechaEntrega($fechaHora);
                         $arGuia->setEstadoEntregado(1);
+                        if (isset($arrControles['chkSoporte']) && $arrControles['chkSoporte']) {
+                            if (!$arGuia->getEstadoSoporte()) {
+                                $arGuia->setEstadoSoporte(1);
+                                $arGuia->setFechaSoporte(new  \DateTime('now'));
+                            }
+                        }
                         $em->persist($arGuia);
                     }
                 }
@@ -849,15 +902,17 @@ class TteGuiaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arrGuias) {
-            if (count($arrGuias) > 0) {
-                foreach ($arrGuias AS $codigoGuia) {
-                    $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-                    $arGuia->setFechaSoporte(new \DateTime("now"));
-                    $arGuia->setEstadoSoporte(1);
-                    $em->persist($arGuia);
+            foreach ($arrGuias AS $codigoGuia) {
+                $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+                if ($arGuia) {
+                    if ($arGuia->getEstadoDespachado() && $arGuia->getEstadoEntregado() && !$arGuia->getEstadoSoporte()) {
+                        $arGuia->setFechaSoporte(new \DateTime("now"));
+                        $arGuia->setEstadoSoporte(1);
+                        $em->persist($arGuia);
+                    }
                 }
-                $em->flush();
             }
+            $em->flush();
         }
         return true;
     }
@@ -918,7 +973,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arFactura->setOperacionComercial($arFactura->getFacturaTipoRel()->getOperacionComercial());
                         $arFactura->setCodigoFacturaClaseFk('FA');
                         $arFactura->setOperacionRel($arGuia->getOperacionIngresoRel());
-                        $arFactura->setNumero($arGuia->getNumero());
+                        $arFactura->setNumero($arGuia->getNumeroFactura());
                         $arFactura->setFecha($arGuia->getFechaIngreso());
                         $arFactura->setFechaVence($arGuia->getFechaIngreso());
                         $total = $arGuia->getVrFlete() + $arGuia->getVrManejo();
@@ -956,6 +1011,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arCuentaCobrar->setNumeroReferencia($arGuia->getCodigoDespachoFk());
                         $arCuentaCobrar->setCodigoDocumento($arFactura->getCodigoFacturaPk());
                         $arCuentaCobrar->setNumeroDocumento($arFactura->getNumero());
+                        $arCuentaCobrar->setSoporte($arGuia->getNumero());
                         $arCuentaCobrar->setVrSubtotal($arFactura->getVrSubtotal());
                         $arCuentaCobrar->setVrTotal($arFactura->getVrTotal());
                         $arCuentaCobrar->setVrSaldo($arFactura->getVrTotal());
@@ -1107,12 +1163,16 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteCodigoServicio')) {
             $queryBuilder->andWhere("g.codigoServicioFk = '{$session->get('filtroTteCodigoServicio')}'");
         }
+        if ($session->get('filtroTteCodigoOperacionCargo')) {
+            $queryBuilder->andWhere("g.codigoOperacionCargoFk = '{$session->get('filtroTteCodigoOperacionCargo')}'");
+        }
         if (!$session->get('filtroTteMostrarDevoluciones')) {
             $queryBuilder->andWhere("g.codigoServicioFk <> 'DEV'");
         }
         if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("g.codigoClienteFk = '{$session->get('filtroTteCodigoCliente')}'");
         }
+
         $queryBuilder->orderBy('g.codigoRutaFk')
             ->addOrderBy('g.codigoCiudadDestinoFk');
 
@@ -1598,6 +1658,59 @@ class TteGuiaRepository extends ServiceEntityRepository
      * @return array
      * @throws \Doctrine\ORM\ORMException
      */
+    public function apiDesembarco($codigoGuia, $arOperacion)
+    {
+        $em = $this->getEntityManager();
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        if ($arGuia) {
+            if ($arGuia->getEstadoDespachado() == 1) {
+                if ($arGuia->getEstadoEntregado() == 0) {
+                    $arDesembarco = new TteDesembarco();
+                    $arGuia->setFechaDespacho(null);
+                    $arGuia->setFechaCumplido(null);
+                    $arGuia->setFechaEntrega(null);
+                    $arGuia->setFechaSoporte(null);
+                    $arGuia->setEstadoDespachado(0);
+                    $arGuia->setEstadoEmbarcado(0);
+                    $arGuia->setEstadoEntregado(0);
+                    $arGuia->setEstadoSoporte(0);
+                    $arGuia->setOperacionCargoRel($arOperacion);
+                    $arDesembarco->setDespachoRel($arGuia->getDespachoRel());
+                    $arDesembarco->setGuiaRel($arGuia);
+                    $arDesembarco->setFecha(new \DateTime('now'));
+                    $arGuia->setCodigoDespachoFk(null);
+                    $em->persist($arGuia);
+                    $em->persist($arDesembarco);
+                    $em->flush();
+                    return [
+                        'error' => false,
+                        'mensaje' => '',
+                    ];
+                } else {
+                    return [
+                        'error' => true,
+                        'mensaje' => 'La guia no puede estar entregada previamente',
+                    ];
+                }
+            } else {
+                return [
+                    'error' => true,
+                    'mensaje' => 'La guia no esta despachada',
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'mensaje' => "La guia " . $codigoGuia . " no existe",
+            ];
+        }
+    }
+
+    /**
+     * @param $codigoGuia
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function apiSoporte($codigoGuia)
     {
         $em = $this->getEntityManager();
@@ -1638,39 +1751,46 @@ class TteGuiaRepository extends ServiceEntityRepository
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         if ($arGuia && $arDespacho) {
             if ($arGuia->getEstadoEmbarcado() == 0 && $arGuia->getCodigoDespachoFk() == null) {
-                $arGuia->setDespachoRel($arDespacho);
-                $arGuia->setEstadoEmbarcado(1);
-                $em->persist($arGuia);
+                if ($arDespacho->getCodigoOperacionFk() == $arGuia->getCodigoOperacionCargoFk()) {
+                    $arGuia->setDespachoRel($arDespacho);
+                    $arGuia->setEstadoEmbarcado(1);
+                    $em->persist($arGuia);
 
-                $arDespachoDetalle = new TteDespachoDetalle();
-                $arDespachoDetalle->setDespachoRel($arDespacho);
-                $arDespachoDetalle->setGuiaRel($arGuia);
-                $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
-                $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
-                $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
-                $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
-                $arDespachoDetalle->setVrCobroEntrega($arGuia->getVrCobroEntrega());
-                $arDespachoDetalle->setUnidades($arGuia->getUnidades());
-                $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
-                $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                if($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
-                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                    $arDespachoDetalle = new TteDespachoDetalle();
+                    $arDespachoDetalle->setDespachoRel($arDespacho);
+                    $arDespachoDetalle->setGuiaRel($arGuia);
+                    $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
+                    $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
+                    $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
+                    $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
+                    $arDespachoDetalle->setVrCobroEntrega($arGuia->getVrCobroEntrega());
+                    $arDespachoDetalle->setUnidades($arGuia->getUnidades());
+                    $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
+                    $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                    if ($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
+                        $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                    } else {
+                        $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                    }
+                    $em->persist($arDespachoDetalle);
+
+                    $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
+                    $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
+                    $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
+                    $arDespacho->setPesoCosto($arDespacho->getPesoCosto() + $arDespachoDetalle->getPesoCosto());
+                    $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
+                    $em->persist($arDespacho);
+                    $em->flush();
+                    return [
+                        'error' => false,
+                        'mensaje' => '',
+                    ];
                 } else {
-                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                    return [
+                        'error' => true,
+                        'mensaje' => "La guia esta a cargo de la operacion " . $arGuia->getCodigoOperacionCargoFk() . " no puede ser despachada con la operacion " . $arDespacho->getCodigoOperacionFk(),
+                    ];
                 }
-                $em->persist($arDespachoDetalle);
-
-                $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
-                $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
-                $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
-                $arDespacho->setPesoCosto($arDespacho->getPesoCosto() + $arDespachoDetalle->getPesoCosto());
-                $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
-                $em->persist($arDespacho);
-                $em->flush();
-                return [
-                    'error' => false,
-                    'mensaje' => '',
-                ];
             } else {
                 return [
                     'error' => true,
@@ -1697,40 +1817,47 @@ class TteGuiaRepository extends ServiceEntityRepository
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         if ($arDespacho) {
             if ($arGuia) {
-                $arGuia = $em->getRepository(TteGuia::class)->find($arGuia->getCodigoGuiaPk());
-                $arGuia->setDespachoRel($arDespacho);
-                $arGuia->setEstadoEmbarcado(1);
-                $em->persist($arGuia);
+                if ($arDespacho->getCodigoOperacionFk() == $arGuia->getCodigoOperacionCargoFk()) {
+                    $arGuia = $em->getRepository(TteGuia::class)->find($arGuia->getCodigoGuiaPk());
+                    $arGuia->setDespachoRel($arDespacho);
+                    $arGuia->setEstadoEmbarcado(1);
+                    $em->persist($arGuia);
 
-                $arDespachoDetalle = new TteDespachoDetalle();
-                $arDespachoDetalle->setDespachoRel($arDespacho);
-                $arDespachoDetalle->setGuiaRel($arGuia);
-                $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
-                $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
-                $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
-                $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
-                $arDespachoDetalle->setVrCobroEntrega($arGuia->getVrCobroEntrega());
-                $arDespachoDetalle->setUnidades($arGuia->getUnidades());
-                $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
-                $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                if($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
-                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                    $arDespachoDetalle = new TteDespachoDetalle();
+                    $arDespachoDetalle->setDespachoRel($arDespacho);
+                    $arDespachoDetalle->setGuiaRel($arGuia);
+                    $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
+                    $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
+                    $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
+                    $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
+                    $arDespachoDetalle->setVrCobroEntrega($arGuia->getVrCobroEntrega());
+                    $arDespachoDetalle->setUnidades($arGuia->getUnidades());
+                    $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
+                    $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                    if ($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
+                        $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                    } else {
+                        $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                    }
+                    $em->persist($arDespachoDetalle);
+
+                    $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
+                    $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
+                    $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
+                    $arDespacho->setPesoCosto($arDespacho->getPesoCosto() + $arDespachoDetalle->getPesoCosto());
+                    $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
+                    $em->persist($arDespacho);
+                    $em->flush();
+                    return [
+                        'error' => false,
+                        'mensaje' => '',
+                    ];
                 } else {
-                    $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                    return [
+                        'error' => true,
+                        'mensaje' => "La guia esta a cargo de la operacion " . $arGuia->getCodigoOperacionCargoFk() . " no puede ser despachada con la operacion " . $arDespacho->getCodigoOperacionFk(),
+                    ];
                 }
-                $em->persist($arDespachoDetalle);
-
-                $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
-                $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
-                $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
-                $arDespacho->setPesoCosto($arDespacho->getPesoCosto() + $arDespachoDetalle->getPesoCosto());
-                $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
-                $em->persist($arDespacho);
-                $em->flush();
-                return [
-                    'error' => false,
-                    'mensaje' => '',
-                ];
             } else {
                 return [
                     'error' => true,
@@ -2188,8 +2315,62 @@ class TteGuiaRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return mixed
+     */
+    public function informeFacturaPendienteCliente()
+    {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.codigoClienteFk')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.vrDeclara')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.codigoGuiaTipoFk')
+            ->addSelect('g.codigoServicioFk')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.estadoFacturaGenerada = 0')
+            ->andWhere('g.estadoAnulado = 0')
+            ->andWhere('g.factura = 0')
+            ->andWhere('g.cortesia = 0')
+            ->orderBy('g.codigoClienteFk', 'ASC');
+        $fecha = new \DateTime('now');
+        if ($session->get('filtroTteCodigoCliente')) {
+            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if ($session->get('filtroFecha') == true) {
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("g.fechaIngreso >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("g.fechaIngreso >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("g.fechaIngreso <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("g.fechaIngreso <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        return $queryBuilder;
+    }
+
+    /**
      * @param $codigoGuia
-     * @return array
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function guiaCliente($codigoGuia)
     {
@@ -2210,4 +2391,221 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getSingleResult();
     }
 
+    /**
+     * @param $arrCodigoGuia array
+     */
+    public function desembarco($arrCodigoGuia, $arOperacion)
+    {
+        $em = $this->_em;
+        if ($arrCodigoGuia) {
+            foreach ($arrCodigoGuia as $codigoGuia) {
+                $arGuia = $em->find(TteGuia::class, $codigoGuia);
+                if ($arGuia) {
+                    if ($arGuia->getEstadoDespachado() && $arGuia->getCodigoDespachoFk() && !$arGuia->getEstadoAnulado() && !$arGuia->getEstadoSoporte() && !$arGuia->getEstadoEntregado()) {
+                        $arDesembarco = new TteDesembarco();
+                        $arGuia->setFechaDespacho(null);
+                        $arGuia->setFechaCumplido(null);
+                        $arGuia->setFechaEntrega(null);
+                        $arGuia->setFechaSoporte(null);
+                        $arGuia->setEstadoDespachado(0);
+                        $arGuia->setEstadoEmbarcado(0);
+                        $arGuia->setEstadoEntregado(0);
+                        $arGuia->setEstadoSoporte(0);
+                        $arGuia->setOperacionCargoRel($arOperacion);
+                        $arDesembarco->setDespachoRel($arGuia->getDespachoRel());
+                        $arDesembarco->setGuiaRel($arGuia);
+                        $arDesembarco->setFecha(new \DateTime('now'));
+                        $arGuia->setCodigoDespachoFk(null);
+                        $em->persist($arGuia);
+                        $em->persist($arDesembarco);
+                        $em->flush();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $codigoGuia
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function imprimirGuia($codigoGuia)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.remitente')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.direccionDestinatario')
+            ->addSelect('g.telefonoDestinatario')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.comentario')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.vrCobroEntrega')
+            ->addSelect('g.vrDeclara')
+            ->addSelect('g.numero')
+            ->addSelect('co.nombre AS ciudadOrigen')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('gt.nombre AS guiaTipo')
+            ->addSelect('c.codigoIdentificacionFk')
+            ->addSelect('c.numeroIdentificacion')
+            ->addSelect('c.codigoFormaPagoFk')
+            ->addSelect('c.digitoVerificacion')
+            ->addSelect('c.nombreCorto')
+            ->addSelect('c.plazoPago')
+            ->addSelect('c.direccion AS direccionCliente')
+            ->addSelect('c.telefono AS telefonoCliente')
+            ->addSelect('c.correo')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadOrigenRel', 'co')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.guiaTipoRel', 'gt')
+            ->where('g.codigoGuiaPk = ' . $codigoGuia);
+        return $queryBuilder->getQuery()->getSingleResult();
+    }
+
+    public function imprimirGuiaMasivo()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.remitente')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.direccionDestinatario')
+            ->addSelect('g.telefonoDestinatario')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.comentario')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.vrCobroEntrega')
+            ->addSelect('g.vrDeclara')
+            ->addSelect('g.numero')
+            ->addSelect('co.nombre AS ciudadOrigen')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('gt.nombre AS guiaTipo')
+            ->addSelect('c.codigoIdentificacionFk')
+            ->addSelect('c.numeroIdentificacion')
+            ->addSelect('c.codigoFormaPagoFk')
+            ->addSelect('c.digitoVerificacion')
+            ->addSelect('c.nombreCorto')
+            ->addSelect('c.plazoPago')
+            ->addSelect('c.direccion AS direccionCliente')
+            ->addSelect('c.telefono AS telefonoCliente')
+            ->addSelect('c.correo')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadOrigenRel', 'co')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.guiaTipoRel', 'gt')
+            ->where('g.codigoGuiaPk <> 0');
+        if ($session->get('filtroNumeroDesde') != "") {
+            $queryBuilder->andWhere("g.numero >= " . $session->get('filtroNumeroDesde'));
+        }
+        if ($session->get('filtroNumeroHasta') != "") {
+            $queryBuilder->andWhere("g.numero <= " . $session->get('filtroNumeroHasta'));
+        }
+        if ($session->get('filtroCodigoDespacho') != "") {
+            $queryBuilder->andWhere("g.codigoDespachoFk = " . $session->get('filtroCodigoDespacho'));
+        }
+        return $queryBuilder;
+    }
+
+    public function entregaFecha(){
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(TteGuia::class,'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.fechaEntrega')
+            ->addSelect('dg.fechaRegistro')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.codigoDespachoFk')
+            ->addSelect('(dg.numero) AS manifiesto')
+            ->addSelect('ct.movil')
+            ->addSelect('ct.nombreCorto AS conductor')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.estadoNovedad')
+            ->addSelect('g.estadoNovedadSolucion')
+            ->addSelect('g.estadoCumplido')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.despachoRel', 'dg')
+            ->leftJoin('dg.conductorRel', 'ct')
+            ->where('g.estadoEntregado = 1')
+            ->orderBy('g.fechaEntrega');
+        if($session->get('filtroFechaEntregaDesde')){
+            $queryBuilder->andWhere('g.fechaEntrega >= '."'{$session->get('filtroFechaEntregaDesde')}'");
+        }
+        if($session->get('filtroFechaEntregaHasta')){
+            $queryBuilder->andWhere('g.fechaEntrega <= '."'{$session->get('filtroFechaEntregaHasta')}'");
+        }
+        return $queryBuilder;
+    }
+
+    public function soporteFecha(){
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(TteGuia::class,'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.fechaSoporte')
+            ->addSelect('dg.fechaRegistro')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.codigoDespachoFk')
+            ->addSelect('(dg.numero) AS manifiesto')
+            ->addSelect('ct.movil')
+            ->addSelect('ct.nombreCorto AS conductor')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.estadoNovedad')
+            ->addSelect('g.estadoNovedadSolucion')
+            ->addSelect('g.estadoCumplido')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.despachoRel', 'dg')
+            ->leftJoin('dg.conductorRel', 'ct')
+            ->where('g.estadoSoporte = 1')
+            ->orderBy('g.fechaSoporte','DESC');
+        if($session->get('filtroFechaSoporteDesde')){
+            $queryBuilder->andWhere('g.fechaSoporte >= '."'{$session->get('filtroFechaSoporteDesde')}'");
+        }
+        if($session->get('filtroFechaSoporteHasta')){
+            $queryBuilder->andWhere('g.fechaSoporte <= '."'{$session->get('filtroFechaSoporteHasta')}'");
+        }
+        return $queryBuilder;
+    }
+
+    public function estadoGuiaCliente(){
+        $em = $this->getEntityManager();
+        $session=new Session();
+        $filtro=$session->get('notificarEstadoCliente')?"WHERE g.codigoClienteFk='{$session->get('notificarEstadoCliente')}'":"";
+        $arGuiaEstado = $em->createQuery(
+            "SELECT COUNT(g.codigoGuiaPk) as guias,
+            g.codigoClienteFk,
+                c.nombreCorto as cliente
+        FROM App\Entity\Transporte\TteGuia g 
+        LEFT JOIN g.clienteRel c
+            {$filtro}
+        GROUP BY g.codigoClienteFk");
+        return $arGuiaEstado->execute();
+    }
 }

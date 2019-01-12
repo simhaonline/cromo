@@ -4,7 +4,9 @@ namespace App\Repository\Transporte;
 
 
 use App\Entity\Transporte\TteFacturaDetalle;
+use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -98,8 +100,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
 
     /**
      * @param $arrControles array
-     * @param $arFactura TteFactura
-     * @param $form FormInterface
+     * @param $form
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -144,18 +145,21 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         g.vrDeclara,
         fd.vrFlete + fd.vrManejo AS vrTotal,
         g.nombreDestinatario,                      
-        cd.nombre AS ciudadDestino
+        cd.nombre AS ciudadDestino,
+        co.nombre AS ciudadOrigen
         FROM App\Entity\Transporte\TteFacturaDetalle fd 
         LEFT JOIN fd.guiaRel g      
         LEFT JOIN g.ciudadDestinoRel cd
-        WHERE fd.codigoFacturaFk = :codigoFactura and fd.codigoFacturaPlanillaFk IS NULL'
+        LEFT JOIN g.ciudadOrigenRel co
+        WHERE fd.codigoFacturaFk = :codigoFactura and fd.codigoFacturaPlanillaFk IS NULL ORDER BY g.numero ASC'
         )->setParameter('codigoFactura', $codigoFactura);
 
         return $query->execute();
 
     }
 
-    public function detalle(){
+    public function detalle()
+    {
 
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFacturaDetalle::class, 'fd')
@@ -178,14 +182,14 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
             ->leftJoin('f.facturaTipoRel', 'ft')
             ->leftJoin('f.clienteRel', 'c')
             ->leftJoin('fd.guiaRel', 'g');
-        $fecha =  new \DateTime('now');
-        if($session->get('filtroTteCodigoCliente')){
+        $fecha = new \DateTime('now');
+        if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
         }
-        if($session->get('filtroNumeroFactura')){
+        if ($session->get('filtroNumeroFactura')) {
             $queryBuilder->andWhere("f.numero = {$session->get('filtroNumeroFactura')}");
         }
-        if($session->get('filtroFecha') == true){
+        if ($session->get('filtroFecha') == true) {
             if ($session->get('filtroFechaDesde') != null) {
                 $queryBuilder->andWhere("f.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
             } else {
@@ -213,4 +217,43 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getSingleResult();
     }
 
+    /**
+     * @param $arrPlanillas
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function retirarPlanilla($arrPlanillas)
+    {
+        $em = $this->_em;
+        if ($arrPlanillas) {
+            $arrRespuesta = [];
+            foreach ($arrPlanillas as $codigoPlanilla) {
+                $arPlanilla = $em->find(TteFacturaPlanilla::class, $codigoPlanilla);
+                $arFacturaDetalles = $em->getRepository(TteFacturaDetalle::class)->contarDetallesPlanilla($codigoPlanilla);
+                if ($arFacturaDetalles[1] > 0) {
+                    $arrRespuesta[] = $arPlanilla->getCodigoFacturaPlanillaPk();
+                } else {
+                    $em->remove($arPlanilla);
+                }
+            }
+            if (count($arrRespuesta) == 0) {
+                $em->flush();
+            } else {
+                Mensajes::error('Las siguientes planillas no se pueden eliminar, tienen registros asociados: ' . implode(',', $arrRespuesta));
+            }
+        }
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    private function contarDetallesPlanilla($id)
+    {
+        return $this->_em->createQueryBuilder()
+            ->from(TteFacturaDetalle::class, 'fd')
+            ->select('COUNT(fd.codigoFacturaDetallePk)')
+            ->where('fd.codigoFacturaPlanillaFk = ' . $id)->getQuery()->getOneOrNullResult();
+
+    }
 }

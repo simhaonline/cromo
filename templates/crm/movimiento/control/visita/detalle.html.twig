@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="btn-toolbar" style="float: left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('crm_movimiento_control_visita_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <div style="float:right">
+        {% if arVisita.estadoAutorizado == 1 %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arVisita.estadoAprobado == 1 %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arVisita.estadoAnulado == 1 %}<span class="label label-danger">Anulado</span>{% endif %}
+    </div>
+    <br/><br/>
+    {% include 'crm/movimiento/control/visita/informacion.html.twig' %}
+    {{ form_end(form) }}
+{% endblock %}

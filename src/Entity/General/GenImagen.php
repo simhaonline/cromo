@@ -2,6 +2,7 @@
 
 namespace App\Entity\General;
 
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GenImagen
 {
+
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="NONE")
@@ -17,7 +20,7 @@ class GenImagen
     private $codigoImagenPk;
 
     /**
-     * @ORM\Column(type="blob", length=500, name="imagen", nullable=true)
+     * @ORM\Column(type="blob", name="imagen", nullable=true)
      */
     private $imagen;
 
@@ -25,6 +28,7 @@ class GenImagen
      * @ORM\Column(type="string", length=5, name="extension", nullable=true)
      */
     private $extension;
+
 
     /**
      * @return mixed

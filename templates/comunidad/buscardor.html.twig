@@ -1,10 +1,10 @@
-<div class="col-lg-offset-1 col-lg-10" style=" align-items: center; display: flex; margin-bottom: 1%">
+<div class="col-lg-offset-1 col-lg-10" style=" align-items: center; display: flex; margin-bottom: 1%; margin-top: 10px">
     <div class="col-md-1">
         <a class="cursor-pointer " href="{{ path('comunidad_perfil_ver') }}" style="display: flex"><i class="fas fa-user-circle" style="font-size: 20px; margin-right: 5px"></i> Perfil</a>
     </div>
     <div class="col-md-1">
         {% if conexion.usuario %}
-            <a class="cursor-pointer " style="display: flex" ><i class="fas fa-blog" style="font-size: 20px; margin-right: 5px"></i> Post</a>
+            <a href="{{ path('comunidad_general_inicio') }}" class="cursor-pointer " style="display: flex" ><i class="fas fa-blog" style="font-size: 20px; margin-right: 5px"></i> Post</a>
         {% else %}
             <a class="cursor-not-allowed" style="display: flex;"><i class="fas fa-blog" style="font-size: 20px; margin-right: 5px"></i> Post</a>
         {% endif %}

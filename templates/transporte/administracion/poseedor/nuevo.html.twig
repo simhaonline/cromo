@@ -60,12 +60,13 @@
                     {{ form_widget(form.direccion, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                 </div>
 
+            </div>
         </div>
-    </div>
-    <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_poseedor_lista') }}">Cancelar</a>
-        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
-        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        <div class="modal-footer">
+            <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_poseedor_lista') }}">Cancelar</a>
+            {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+            {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        </div>
     </div>
     {{ form_end(form) }}
 {% endblock %}

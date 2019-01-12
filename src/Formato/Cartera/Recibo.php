@@ -65,10 +65,10 @@ class Recibo extends \FPDF {
         $this->Cell(66, 6, $arRecibo->getClienteRel()->getNumeroIdentificacion() , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "FECHA:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "TIPO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6,  $arRecibo->getFecha()->format('Y-m-d') , 1, 0, 'L', 1);
+        $this->Cell(65, 6,  $arRecibo->getReciboTipoRel()->getNombre() , 1, 0, 'L', 1);
         //linea 3
         $this->SetXY(10, 52);
         $this->SetFillColor(200, 200, 200);
@@ -79,10 +79,11 @@ class Recibo extends \FPDF {
         $this->Cell(66, 6, $arRecibo->getClienteRel()->getDireccion() , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "FECHA PAGO:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "FECHA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6,$arRecibo->getFechaPago()->format('Y-m-d'), 1, 0, 'L', 1);
+        $this->Cell(65, 6,  $arRecibo->getFecha()->format('Y-m-d') , 1, 0, 'L', 1);
+
         //linea 4
         $this->SetXY(10, 58);
         $this->SetFillColor(200, 200, 200);
@@ -93,10 +94,11 @@ class Recibo extends \FPDF {
         $this->Cell(66, 6, $arRecibo->getClienteRel()->getTelefono() , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "PAGO:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "FECHA PAGO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, number_format($arRecibo->getVrPago()), 1, 0, 'R', 1);
+        $this->Cell(65, 6,$arRecibo->getFechaPago()->format('Y-m-d'), 1, 0, 'L', 1);
+
 
         //linea 5
         $this->SetXY(10, 64);
@@ -108,10 +110,10 @@ class Recibo extends \FPDF {
         $this->Cell(66, 6, $arRecibo->getCuentaRel()->getNombre() , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "TOTAL", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "PAGO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, number_format($arRecibo->getVrPagoTotal()), 1, 0, 'R', 1);
+        $this->Cell(65, 6, number_format($arRecibo->getVrPago()), 1, 0, 'R', 1);
 
         //linea 6
         $this->SetXY(10, 70);
@@ -123,10 +125,10 @@ class Recibo extends \FPDF {
         $this->Cell(66, 6, $arRecibo->getSoporte() , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "TOTAL", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, '', 1, 0, 'R', 1);
+        $this->Cell(65, 6, number_format($arRecibo->getVrPagoTotal()), 1, 0, 'R', 1);
 
         //linea 7
         $this->SetXY(10, 76);

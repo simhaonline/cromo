@@ -38,10 +38,10 @@ class PoseedorType extends AbstractType
                 'label' => 'Ciudad:'
             ])
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
-            ->add('correo',TextType::class,['required' => true,'label' => 'Nombre corto:'])
+            ->add('correo',TextType::class,['required' => false,'label' => 'Nombre corto:'])
             ->add('nombre1',TextType::class,['required' => true,'label' => 'Primer nombre:'])
             ->add('nombre2',TextType::class,['required' => false,'label' => 'Segundo nombre:'])
-            ->add('apellido1',TextType::class,['required' => true,'label' => 'Primer apellido:'])
+            ->add('apellido1',TextType::class,['required' => false,'label' => 'Primer apellido:'])
             ->add('apellido2',TextType::class,['required' => false,'label' => 'Segundo apellido:'])
             ->add('direccion',TextType::class,['required' => true,'label' => 'Direccion:'])
             ->add('telefono',NumberType::class,['required' => false,'label' => 'Telefono:'])

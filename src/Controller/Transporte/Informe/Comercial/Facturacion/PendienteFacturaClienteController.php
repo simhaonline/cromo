@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Informe\Comercial\Facturacion;
 
 use App\Entity\Transporte\TteGuia;
+use App\Formato\Transporte\PendienteFacturaCliente;
 use App\General\General;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,6 +33,7 @@ class PendienteFacturaClienteController extends Controller
         $session = new Session();
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
@@ -55,6 +57,11 @@ class PendienteFacturaClienteController extends Controller
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->informeFacturaPendienteCliente())->execute(), "Pendiente por facturar");
+            }
+
+            if($form->get('btnPdf')->isClicked()){
+                $formato = new PendienteFacturaCliente();
+                $formato->Generar($em);
             }
         }
         $arGuiasPendientes = $paginator->paginate($this->getDoctrine()->getRepository(TteGuia::class)->informeFacturaPendienteCliente(), $request->query->getInt('page', 1), 500);

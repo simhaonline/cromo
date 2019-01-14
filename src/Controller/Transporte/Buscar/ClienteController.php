@@ -15,9 +15,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class ClienteController extends Controller
 {
    /**
-    * @Route("/transporte/bus/cliente/{campoCodigo}/{campoNombre}", name="transporte_bus_cliente")
+    * @Route("/transporte/bus/cliente/{campoCodigo}/{campoNombre}/{campoDireccion}/{campoTelefono}", name="transporte_bus_cliente", defaults={"campoDireccion"="1","campoTelefono"="1"})
     */    
-    public function lista(Request $request, $campoCodigo, $campoNombre)
+    public function lista(Request $request, $campoCodigo, $campoNombre, $campoDireccion="1",$campoTelefono="1")
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
@@ -40,6 +40,8 @@ class ClienteController extends Controller
             'arClientes' => $arClientes,
             'campoCodigo' => $campoCodigo,
             'campoNombre' => $campoNombre,
+            'campoDireccion' => $campoDireccion,
+            'campoTelefono' => $campoTelefono,
             'form' => $form->createView()
         ));
     }

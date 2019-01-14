@@ -51,6 +51,8 @@ class RecogidaType extends AbstractType {
                 'choice_label' => 'nombre',
                 'label' => 'Ciudad:'
             ])
+            ->add("direccion",TextType::class,['required'=>true])
+            ->add("telefono",TextType::class,['required'=>true])
             ->add('fecha', DateTimeType::class)
             ->add('unidades', NumberType::class)
             ->add('pesoReal', NumberType::class)

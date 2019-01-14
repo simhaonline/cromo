@@ -28,11 +28,21 @@
                                                readOnly="ReadOnly"/>
                                         <span class="input-group-btn">
                                         <a class="btn btn-default btn-sm"
-                                           href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'txtCodigoCliente', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                           href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'txtCodigoCliente', 'campoNombre': 'txtNombreCorto','campoDireccion':'App_recogida_direccion','campoTelefono':'App_recogida_telefono' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                     </span>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="form_sectorRel" class="col-sm-2 control-label">Direccion:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.direccion) }}
+                        </div>
+                        <label for="form_sectorRel" class="col-sm-2 control-label">Telefono:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.telefono) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">

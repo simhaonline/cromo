@@ -92,7 +92,7 @@ final class Estandares
      * @param null $imagen
      * @param null $extension
      */
-    public static function generarEncabezado($pdf, $titulo = ' ', $em, $imagen = null, $extension = null)
+    public static function generarEncabezado($pdf, $titulo = ' ', $em)
     {
         /** @var  $arConfiguracion GenConfiguracion */
         $arConfiguracion = BaseDatos::getEm()->getRepository(GenConfiguracion::class)->find(1);
@@ -105,8 +105,8 @@ final class Estandares
         $pdf->SetXY(53, 10);
 
         try {
-            if(self::getLogo($em) ){
-                $pdf->Image(self::getLogo($em)['imagen'], 12, 13, 40, 25,self::getLogo($em)['extension']);
+            if(self::getLogo(BaseDatos::getEm()) ){
+                $pdf->Image(self::getLogo(BaseDatos::getEm())['imagen'], 12, 13, 40, 25,self::getLogo(BaseDatos::getEm())['extension']);
             }
         } catch (\Exception $exception) {
         }

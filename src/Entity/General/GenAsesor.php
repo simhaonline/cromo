@@ -78,6 +78,11 @@ class GenAsesor
     protected $anticipoAsesorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteCliente", mappedBy="asesorRel", cascade={"persist","remove"})
+     */
+    protected $asesorAsesorRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoAsesorPk()

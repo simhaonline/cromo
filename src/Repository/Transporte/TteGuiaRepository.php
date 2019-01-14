@@ -1213,6 +1213,37 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+
+    public function informeProduccionAsesor($fechaDesde, $fechaHasta)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->from("App:Transporte\TteGuia", 'g')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('c.asesorRel', 'a')
+            ->select('c.codigoAsesorFk')
+            ->addSelect('g.mercanciaPeligrosa')
+            ->addSelect('a.nombre AS asesorNombre')
+            ->addSelect('SUM(g.vrFlete) AS vrFlete')
+            ->addSelect('SUM(g.vrManejo) AS vrManejo')
+            ->addSelect('SUM(g.unidades) AS unidades')
+            ->addSelect('SUM(g.pesoReal) AS pesoReal')
+            ->addSelect('SUM(g.vrFlete + g.vrManejo) AS total')
+            ->where("g.fechaIngreso >= '" . $fechaDesde . " 00:00:00'")
+            ->andWhere("g.fechaIngreso <= '" . $fechaHasta . " 23:59:59'")
+            ->groupBy('c.codigoAsesorFk')
+            ->addGroupBy('c.nombreCorto')
+            ->addGroupBy('g.mercanciaPeligrosa')
+            ->orderBy('SUM(g.vrFlete)', 'DESC');
+        if ($session->get('filtroMercanciaPeligrosa')) {
+            $queryBuilder->andWhere("g.mercanciaPeligrosa = 1");
+        }
+        if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
+            $queryBuilder->andWhere("g.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");
+        }
+        return $queryBuilder;
+    }
+
     /**
      * @param $fechaDesde
      * @param $fechaHasta

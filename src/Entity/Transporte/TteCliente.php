@@ -22,6 +22,12 @@ class TteCliente
      */
     private $codigoClientePk;
 
+
+    /**
+     * @ORM\Column(name="codigo_asesor_fk", type="integer", nullable=true)
+     */
+    private $codigoAsesorFk;
+
     /**
      * @ORM\Column(name="codigo_identificacion_fk", type="string", length=3, nullable=true)
      */
@@ -190,6 +196,12 @@ class TteCliente
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionDetalle", mappedBy="clienteRel")
      */
     protected $intermediacionesDetallesClienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="asesorAsesorRel")
+     * @ORM\JoinColumn(name="codigo_asesor_fk",referencedColumnName="codigo_asesor_pk")
+     */
+    protected $asesorRel;
 
     /**
      * @return mixed
@@ -733,6 +745,40 @@ class TteCliente
     public function setIntermediacionesDetallesClienteRel( $intermediacionesDetallesClienteRel ): void
     {
         $this->intermediacionesDetallesClienteRel = $intermediacionesDetallesClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAsesorFk()
+    {
+        return $this->codigoAsesorFk;
+    }
+
+    /**
+     * @param mixed $codigoAsesorFk
+     */
+    public function setCodigoAsesorFk($codigoAsesorFk)
+    {
+        $this->codigoAsesorFk = $codigoAsesorFk;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsesorRel()
+    {
+        return $this->asesorRel;
+    }
+
+    /**
+     * @param mixed $asesorRel
+     */
+    public function setAsesorRel($asesorRel)
+    {
+        $this->asesorRel = $asesorRel;
+        return $this;
     }
 
 

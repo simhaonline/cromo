@@ -405,4 +405,5 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
 
         return $arCrearReciboMasivo->getQuery()->execute();
     }
+    
 }

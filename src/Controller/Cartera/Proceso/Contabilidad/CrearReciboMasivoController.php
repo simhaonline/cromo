@@ -3,6 +3,7 @@
 namespace App\Controller\Cartera\Proceso\Contabilidad;
 
 use App\Entity\Cartera\CarCuentaCobrarTipo;
+use App\Entity\Cartera\CarRecibo;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -24,6 +25,7 @@ class CrearReciboMasivoController extends Controller
         $form = $this->createFormBuilder()
             ->add('cboCuentaCobrarTipoRel',EntityType::class,$em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
             ->add('btnFiltrar',SubmitType::class,['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']])
+            ->add('btnReciboCaja',SubmitType::class,['label' => "Recibo caja", 'attr' => ['class' => 'btn btn-default btn-sm', 'style' => 'float:right']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -34,6 +36,22 @@ class CrearReciboMasivoController extends Controller
                 } else {
                     $session->set('filtroCarReciboCodigoReciboTipo', null);
                 }
+            }
+
+            if ($form->get('btnReciboCaja')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if($arrSeleccionados){
+                    foreach ($arrSeleccionados as $arrSeleccionado){
+                        $arCuentaCobrar=$em->getRepository('App:Cartera\CarCuentaCobrar')->find($arrSeleccionado);
+                        if($arCuentaCobrar){
+                            $arReciboTipo=$em->getRepository('App:Cartera\CarReciboTipo')->find("RC");
+                            $arRecibo=(new CarRecibo())
+                                ->setReciboTipoRel($arReciboTipo)
+                                ->setFecha(new \DateTime('now'));
+                        }
+                    }
+                }
+                return $this->redirect($this->generateUrl('cartera_proceso_contabilidad_crearrecibomasivo_lista'));
             }
         }
         $arCrearReciboMasivos=$paginator->paginate($em->getRepository('App:Cartera\CarCuentaCobrar')->crearReciboMasivoLista(), $request->query->getInt('page', 1),100);

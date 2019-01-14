@@ -219,9 +219,10 @@ class CarRecibo
     /**
      * @param mixed $fecha
      */
-    public function setFecha( $fecha ): void
+    public function setFecha( $fecha )
     {
         $this->fecha = $fecha;
+        return $this;
     }
 
     /**
@@ -651,9 +652,10 @@ class CarRecibo
     /**
      * @param mixed $reciboTipoRel
      */
-    public function setReciboTipoRel( $reciboTipoRel ): void
+    public function setReciboTipoRel( $reciboTipoRel )
     {
         $this->reciboTipoRel = $reciboTipoRel;
+        return $this;
     }
 
     /**

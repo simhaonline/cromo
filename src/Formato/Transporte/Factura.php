@@ -228,7 +228,7 @@ class Factura extends \FPDF {
         $this->Cell(190, 10, 'VALOR EN LETRAS:', 1, 2, 'L');
         $this->SetXY(45, 230);
         $this->SetFont('Arial','', 9);
-        $this->Cell(155, 10, strtoupper($vrTotalLetras = self::devolverNumeroLetras($arFactura->getVrTotal())), 0, 2, 'L');
+        $this->Cell(155, 10, strtoupper($vrTotalLetras = self::devolverNumeroLetras(round($arFactura->getVrTotal()))), 0, 2, 'L');
         $this->SetXY(10, 240);
         $this->SetFont('Arial','B', 9);
         $this->Cell(190, 10, 'OBSERVACIONES:', 1, 2, 'L');

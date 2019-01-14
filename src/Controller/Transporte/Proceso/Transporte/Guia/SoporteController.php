@@ -66,13 +66,13 @@ class SoporteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
             ->add('flArchivo', FileType::class)
-            ->add('btnEntregar', SubmitType::class, ['label' => 'Entregar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnEntregar', SubmitType::class, ['label' => 'Soporte', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnEntregar')->isClicked()) {
-//                $ruta = $em->getRepository(GenConfiguracion::class)->parametro('rutaTemporal');
-                $ruta = "/var/www/temporal/";
+                $ruta = $em->getRepository(GenConfiguracion::class)->parametro('rutaTemporal');
+                //$ruta = "/var/www/temporal/";
                 if (!$ruta) {
                     Mensajes::error('Debe de ingresar una ruta temporal en la configuracion general del sistema');
                     echo "<script language='Javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

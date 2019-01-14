@@ -19,7 +19,7 @@ class TteRecogidaProgramadaRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT rp.codigoRecogidaProgramadaPk, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad,
             rp.anunciante, rp.hora, rp.codigoOperacionFk, rp.direccion, rp.telefono
-        FROM App\Entity\RecogidaProgramada rp 
+        FROM App\Entity\Transporte\TteRecogidaProgramada rp 
         LEFT JOIN rp.clienteRel c
         LEFT JOIN rp.ciudadRel co'
         );

@@ -15,9 +15,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ProgramadaController extends Controller
 {
-   /**
-    * @Route("/transporte/proceso/recogida/recogida/programada", name="transporte_proceso_recogida_recogida_programada")
-    */    
+    /**
+     * @Route("/transporte/proceso/recogida/recogida/programada", name="transporte_proceso_recogida_recogida_programada")
+     */
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -50,7 +50,7 @@ class ProgramadaController extends Controller
         }
         $query = $this->getDoctrine()->getRepository(TteRecogidaProgramada::class)->lista();
         $arRecogidasProgramadas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('proceso/recogida/recogida/programada.html.twig', ['arRecogidasProgramadas' => $arRecogidasProgramadas, 'form' => $form->createView()]);
+        return $this->render('transporte/proceso/recogida/recogida/programada.html.twig', ['arRecogidasProgramadas' => $arRecogidasProgramadas, 'form' => $form->createView()]);
     }
 
     /**
@@ -64,7 +64,7 @@ class ProgramadaController extends Controller
             $arRecogidaProgramada->setHora(new \DateTime('now'));
         }
 
-        $form = $this->createForm(RecogidaProgramadaType::class, $arRecogidaProgramada);
+        $form = $this->createForm(\App\Form\Type\Transporte\RecogidaProgramadaType::class, $arRecogidaProgramada);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arRecogidaProgramada = $form->getData();
@@ -77,14 +77,17 @@ class ProgramadaController extends Controller
                     $em->persist($arRecogidaProgramada);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {
-                        return $this->redirect($this->generateUrl('pro_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
-                    } else {
-                        return $this->redirect($this->generateUrl('pro_recogida_recogida_programada'));
+                        return $this->redirect($this->generateUrl('transporte_proceso_recogida_recogida_nuevo', array('codigoRecogida' => 0)));
+                    }
+
+                    if($form->get('guardar')->isClicked()){
+                        return $this->redirect($this->generateUrl('transporte_proceso_recogida_recogida_programada'));
+
                     }
                 }
             }
         }
-        return $this->render('proceso/recogida/recogida/nuevo.html.twig', ['arRecogidaProgramada' => $arRecogidaProgramada,'form' => $form->createView()]);
+        return $this->render('transporte/proceso/recogida/recogida/nuevo.html.twig', ['arRecogidaProgramada' => $arRecogidaProgramada,'form' => $form->createView()]);
     }
 }
 

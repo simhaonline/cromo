@@ -242,21 +242,35 @@ class Manifiesto extends \FPDF {
         $pdf->Text(208, $yt, "NIT/CC Nombre/Razon Social");
 
 
-        $pdf->Rect(211, $y+15, 28, 5);
-        $pdf->SetFont('Arial', 'b', 8);
-        $pdf->Text(212, $y+18, "GUIAS:");
-        $pdf->setXY(239, $yt+17);
+
+        $pdf->Rect(211, $y+9, 28, 4);
+        $pdf->Text(212, $y+12, "UNIDADES:");
+        $pdf->setXY(239, $yt+10);
         $pdf->SetFont('Arial', '', 8);
-        $pdf->Cell(25, 5, $arDespacho['vrCobroEntrega'], 1, 0, 'R');
+        $pdf->Cell(25, 4, $arDespacho['pesoReal'], 1, 0, 'R');
+
+        $pdf->Rect(211, $y+13, 28, 4);
+        $pdf->Text(212, $y+16, "PESO:");
+        $pdf->setXY(239, $yt+6);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell(25, 4, $arDespacho['unidades'], 1, 0, 'R');
+
+
+        $pdf->Rect(211, $y+17, 28, 4);
+        $pdf->SetFont('Arial', 'b', 8);
+        $pdf->Text(212, $y+20, "GUIAS:");
+        $pdf->setXY(239, $yt+18);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell(25, 4, number_format($arDespacho['vrCobroEntrega'], 0, '.', ','), 1, 0, 'R');
 
         $y += 5;
         $pdf->Rect($x, $y, 260, $alto3);
-        $pdf->Rect(211, $y+15, 28, 5);
+        $pdf->Rect(211, $y+16, 28, 4);
         $pdf->SetFont('Arial', 'b', 8);
-        $pdf->Text(212, $y+18, "COBRO ENTREGA:");
-        $pdf->setXY(239, $yt+12);
+        $pdf->Text(212, $y+19, "COBRO ENTREGA:");
+        $pdf->setXY(239, $yt+14);
         $pdf->SetFont('Arial', '', 8);
-        $pdf->Cell(25, 5, $arDespacho['cantidad'], 1, 0, 'R');
+        $pdf->Cell(25, 4, $arDespacho['cantidad'], 1, 0, 'R');
 
         $y += 20;
         $pdf->Rect($x, $y, 100, $alto2);

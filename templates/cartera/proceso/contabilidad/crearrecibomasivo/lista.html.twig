@@ -87,11 +87,11 @@
         <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
             {{ knp_pagination_render(arCrearReciboMasivos) }}
         </div>
-        {#<div class="btn-toolbar" style="float: right">#}
-            {#<div class="btn-group">#}
-                {#{{ form_widget(form.btnContabilizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}#}
-            {#</div>#}
-        {#</div>#}
+        <div class="btn-toolbar" style="float: right">
+            <div class="btn-group">
+                {{ form_widget(form.btnReciboCaja, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            </div>
+        </div>
     </div>
     {{ form_end(form) }}
     <br /> <br />

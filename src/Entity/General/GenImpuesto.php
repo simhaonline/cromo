@@ -47,6 +47,11 @@ class GenImpuesto
     private $codigoCuentaFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_devolucion_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaDevolucionFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenImpuestoTipo", inversedBy="impuestosImpuestoTipoRel")
      * @ORM\JoinColumn(name="codigo_impuesto_tipo_fk", referencedColumnName="codigo_impuesto_tipo_pk")
      */
@@ -204,6 +209,22 @@ class GenImpuesto
     public function setItemsImpuestoIvaVentaRel( $itemsImpuestoIvaVentaRel ): void
     {
         $this->itemsImpuestoIvaVentaRel = $itemsImpuestoIvaVentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaDevolucionFk()
+    {
+        return $this->codigoCuentaDevolucionFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaDevolucionFk
+     */
+    public function setCodigoCuentaDevolucionFk( $codigoCuentaDevolucionFk ): void
+    {
+        $this->codigoCuentaDevolucionFk = $codigoCuentaDevolucionFk;
     }
 
 

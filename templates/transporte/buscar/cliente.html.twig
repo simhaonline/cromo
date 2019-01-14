@@ -1,10 +1,19 @@
 {% extends 'base_sin_menu.html.twig' %}
 {% block content %}
     <script language="javascript">
-        function selTercero(codigo, nombre, campoCodigo, campoNombre)
+        function selTercero(codigo, nombre,direccion,telefono, campoCodigo, campoNombre,campoDireccion, campoTelefono)
         {
             opener.document.getElementById(campoCodigo).value = codigo;
             opener.document.getElementById(campoNombre).value = nombre;
+            if(campoDireccion!=="1"){
+
+            opener.document.getElementById(campoDireccion).value = direccion;
+            }
+            if(campoTelefono!=="1"){
+
+                opener.document.getElementById(campoTelefono).value = telefono;
+            }
+
             opener.document.getElementById(campoCodigo).focus();
             self.close();
         }
@@ -50,7 +59,7 @@
                 <td><input type="hidden" name="LblCodigo[]" value="{{ arClientes.codigoClientePk }}">{{ arClientes.codigoClientePk }} </td>
                 <td>{{ arClientes.numeroIdentificacion  }}</td>
                 <td>{{ arClientes.nombreCorto }}</td>
-                <td style="text-align: center"><a href="javascript:selTercero('{{ arClientes.codigoClientePk }}','{{ arClientes.nombreCorto }}','{{ campoCodigo }}','{{ campoNombre }}')" ><i class="fa fa-check-circle-o" style="font-size: large;color: black;"></i></a>
+                <td style="text-align: center"><a href="javascript:selTercero('{{ arClientes.codigoClientePk }}','{{ arClientes.nombreCorto }}','{{ arClientes.direccion }}','{{ arClientes.telefono }}','{{ campoCodigo }}','{{ campoNombre }}','{{ campoDireccion }}','{{ campoTelefono }}')" ><i class="fa fa-check-circle-o" style="font-size: large;color: black;"></i></a>
                     </td>
             </tr>
         {% endfor %}

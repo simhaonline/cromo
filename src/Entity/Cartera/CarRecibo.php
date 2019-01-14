@@ -332,9 +332,10 @@ class CarRecibo
     /**
      * @param mixed $fechaPago
      */
-    public function setFechaPago( $fechaPago ): void
+    public function setFechaPago( $fechaPago )
     {
         $this->fechaPago = $fechaPago;
+        return $this;
     }
 
     /**
@@ -428,9 +429,10 @@ class CarRecibo
     /**
      * @param mixed $vrPago
      */
-    public function setVrPago( $vrPago ): void
+    public function setVrPago( $vrPago )
     {
         $this->vrPago = $vrPago;
+        return $this;
     }
 
     /**
@@ -444,9 +446,10 @@ class CarRecibo
     /**
      * @param mixed $vrPagoTotal
      */
-    public function setVrPagoTotal( $vrPagoTotal ): void
+    public function setVrPagoTotal( $vrPagoTotal )
     {
         $this->vrPagoTotal = $vrPagoTotal;
+        return $this;
     }
 
     /**
@@ -620,9 +623,10 @@ class CarRecibo
     /**
      * @param mixed $usuario
      */
-    public function setUsuario( $usuario ): void
+    public function setUsuario( $usuario )
     {
         $this->usuario = $usuario;
+        return $this;
     }
 
     /**
@@ -636,9 +640,10 @@ class CarRecibo
     /**
      * @param mixed $clienteRel
      */
-    public function setClienteRel( $clienteRel ): void
+    public function setClienteRel( $clienteRel )
     {
         $this->clienteRel = $clienteRel;
+        return $this;
     }
 
     /**
@@ -669,9 +674,10 @@ class CarRecibo
     /**
      * @param mixed $cuentaRel
      */
-    public function setCuentaRel( $cuentaRel ): void
+    public function setCuentaRel( $cuentaRel )
     {
         $this->cuentaRel = $cuentaRel;
+        return $this;
     }
 
     /**

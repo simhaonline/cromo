@@ -211,9 +211,10 @@ class CarReciboDetalle
     /**
      * @param mixed $numeroFactura
      */
-    public function setNumeroFactura($numeroFactura): void
+    public function setNumeroFactura($numeroFactura)
     {
         $this->numeroFactura = $numeroFactura;
+        return $this;
     }
 
     /**
@@ -307,9 +308,10 @@ class CarReciboDetalle
     /**
      * @param mixed $vrRetencionFuente
      */
-    public function setVrRetencionFuente($vrRetencionFuente): void
+    public function setVrRetencionFuente($vrRetencionFuente)
     {
         $this->vrRetencionFuente = $vrRetencionFuente;
+        return $this;
     }
 
     /**
@@ -323,9 +325,10 @@ class CarReciboDetalle
     /**
      * @param mixed $vrPago
      */
-    public function setVrPago($vrPago): void
+    public function setVrPago($vrPago)
     {
         $this->vrPago = $vrPago;
+        return $this;
     }
 
     /**
@@ -339,9 +342,10 @@ class CarReciboDetalle
     /**
      * @param mixed $vrPagoAfectar
      */
-    public function setVrPagoAfectar($vrPagoAfectar): void
+    public function setVrPagoAfectar($vrPagoAfectar)
     {
         $this->vrPagoAfectar = $vrPagoAfectar;
+        return $this;
     }
 
     /**
@@ -371,9 +375,10 @@ class CarReciboDetalle
     /**
      * @param mixed $operacion
      */
-    public function setOperacion($operacion): void
+    public function setOperacion($operacion)
     {
         $this->operacion = $operacion;
+        return $this;
     }
 
     /**
@@ -387,9 +392,10 @@ class CarReciboDetalle
     /**
      * @param mixed $reciboRel
      */
-    public function setReciboRel($reciboRel): void
+    public function setReciboRel($reciboRel)
     {
         $this->reciboRel = $reciboRel;
+        return $this;
     }
 
     /**
@@ -403,9 +409,10 @@ class CarReciboDetalle
     /**
      * @param mixed $cuentaCobrarRel
      */
-    public function setCuentaCobrarRel($cuentaCobrarRel): void
+    public function setCuentaCobrarRel($cuentaCobrarRel)
     {
         $this->cuentaCobrarRel = $cuentaCobrarRel;
+        return $this;
     }
 
     /**
@@ -419,9 +426,10 @@ class CarReciboDetalle
     /**
      * @param mixed $cuentaCobrarTipoRel
      */
-    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
+    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel)
     {
         $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
+        return $this;
     }
 
     /**

@@ -4,6 +4,8 @@ namespace App\Controller\Cartera\Proceso\Contabilidad;
 
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarRecibo;
+use App\Entity\Cartera\CarReciboDetalle;
+use App\Utilidades\Mensajes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -11,13 +13,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 //use Symfony\Component\HttpKernel\Tests\Controller;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class CrearReciboMasivoController extends Controller
 {
     /**
      * @Route("/cartera/proceso/contabilidad/crearrecibomasivo/lista", name="cartera_proceso_contabilidad_crearrecibomasivo_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, TokenStorageInterface $user)
     {
         $em=$this->getDoctrine()->getManager();
         $session=new Session();
@@ -45,11 +48,35 @@ class CrearReciboMasivoController extends Controller
                         $arCuentaCobrar=$em->getRepository('App:Cartera\CarCuentaCobrar')->find($arrSeleccionado);
                         if($arCuentaCobrar){
                             $arReciboTipo=$em->getRepository('App:Cartera\CarReciboTipo')->find("RC");
+//                            $arCuenta=$em->getRepository('App:General\GenCuenta')->find($arCuentaCobrar->getCuentaCobrarTipoRel())
                             $arRecibo=(new CarRecibo())
                                 ->setReciboTipoRel($arReciboTipo)
-                                ->setFecha(new \DateTime('now'));
+                                ->setFecha(new \DateTime('now'))
+                                ->setFechaPago($arCuentaCobrar->getFechaVence())
+                                ->setClienteRel($arCuentaCobrar->getClienteRel())
+//                                ->setCuentaRel()
+                                ->setVrPago($arCuentaCobrar->getVrSaldo())
+                                ->setVrPagoTotal($arCuentaCobrar->getVrTotal())
+                                ->setUsuario($user->getToken()->getUsername());
+
+                            $arReciboDetalle = (new CarReciboDetalle())
+                                ->setReciboRel($arRecibo)
+                                ->setCuentaCobrarRel($arCuentaCobrar)
+                                ->setVrRetencionFuente($arCuentaCobrar->getVrRetencionFuente())
+                                ->setVrPago($arCuentaCobrar->getVrSaldo())
+                                ->setVrPagoAfectar($arCuentaCobrar->getVrSaldo())
+                                ->setNumeroFactura($arCuentaCobrar->getNumeroDocumento())
+                                ->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel())
+                                ->setOperacion(1);
+
+                            $em->persist($arReciboDetalle);
+                            $em->persist($arRecibo);
                         }
                     }
+                    $em->flush();
+                }
+                else{
+                    Mensajes::error("No ha seleccionado cuenta por cobrar");
                 }
                 return $this->redirect($this->generateUrl('cartera_proceso_contabilidad_crearrecibomasivo_lista'));
             }

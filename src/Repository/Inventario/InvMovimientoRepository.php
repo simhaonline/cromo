@@ -875,6 +875,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('d.codigoComprobanteFk')
             ->addSelect('d.codigoCuentaProveedorFk')
             ->addSelect('d.codigoCuentaClienteFk')
+            ->addSelect('d.notaCredito')
             ->leftJoin('m.documentoRel', 'd')
             ->where('m.codigoMovimientoPk = ' . $codigo);
         $arMovimiento = $queryBuilder->getQuery()->getSingleResult();
@@ -974,8 +975,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 $arRegistro->setNumero($arMovimiento['numero']);
                                 $arRegistro->setFecha($arMovimiento['fecha']);
-                                $arRegistro->setVrDebito($arMovimiento['vrNeto']);
-                                $arRegistro->setNaturaleza('D');
+                                if($arMovimiento['notaCredito']) {
+                                    $arRegistro->setVrCredito($arMovimiento['vrNeto']);
+                                    $arRegistro->setNaturaleza('C');
+                                } else {
+                                    $arRegistro->setVrDebito($arMovimiento['vrNeto']);
+                                    $arRegistro->setNaturaleza('D');
+                                }
+
                                 $arRegistro->setDescripcion('CLIENTE');
                                 $arRegistro->setCodigoModeloFk('InvMovimiento');
                                 $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
@@ -985,7 +992,6 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 break;
                             }
 
-
                             //Retenciones
                             $arrRetenciones = $em->getRepository(InvMovimientoDetalle::class)->retencionFacturaContabilizar($codigo);
                             foreach ($arrRetenciones as $arrRetencion) {
@@ -994,6 +1000,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                     if ($arImpuesto) {
                                         if ($arImpuesto->getCodigoCuentaFk()) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($arImpuesto->getCodigoCuentaFk());
+                                            if($arMovimiento['notaCredito']) {
+                                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arImpuesto->getCodigoCuentaDevolucionFk());
+                                            }
                                             if (!$arCuenta) {
                                                 $error = "No se encuentra la cuenta " . $arImpuesto->getCodigoCuentaFk();
                                                 break 2;
@@ -1004,8 +1013,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                             $arRegistro->setComprobanteRel($arComprobante);
                                             $arRegistro->setNumero($arMovimiento['numero']);
                                             $arRegistro->setFecha($arMovimiento['fecha']);
-                                            $arRegistro->setVrDebito($arrRetencion['vrRetencionFuente']);
-                                            $arRegistro->setNaturaleza('D');
+                                            if($arMovimiento['notaCredito']) {
+                                                $arRegistro->setVrCredito($arrRetencion['vrRetencionFuente']);
+                                                $arRegistro->setNaturaleza('C');
+                                            } else {
+                                                $arRegistro->setVrDebito($arrRetencion['vrRetencionFuente']);
+                                                $arRegistro->setNaturaleza('D');
+                                            }
+
                                             $arRegistro->setDescripcion('IMPUESTO RETENCION FUENTE');
                                             $arRegistro->setCodigoModeloFk('InvMovimiento');
                                             $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
@@ -1032,8 +1047,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 $arRegistro->setNumero($arMovimiento['numero']);
                                 $arRegistro->setFecha($arMovimiento['fecha']);
-                                $arRegistro->setVrDebito($arMovimiento['vrAutoretencion']);
-                                $arRegistro->setNaturaleza('D');
+                                if($arMovimiento['notaCredito']) {
+                                    $arRegistro->setVrCredito($arMovimiento['vrAutoretencion']);
+                                    $arRegistro->setNaturaleza('C');
+                                } else {
+                                    $arRegistro->setVrDebito($arMovimiento['vrAutoretencion']);
+                                    $arRegistro->setNaturaleza('D');
+                                }
+
                                 $arRegistro->setDescripcion('AUTORETENCION');
                                 $arRegistro->setCodigoModeloFk('InvMovimiento');
                                 $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
@@ -1050,8 +1071,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 $arRegistro->setNumero($arMovimiento['numero']);
                                 $arRegistro->setFecha($arMovimiento['fecha']);
-                                $arRegistro->setVrCredito($arMovimiento['vrAutoretencion']);
-                                $arRegistro->setNaturaleza('C');
+                                if($arMovimiento['notaCredito']) {
+                                    $arRegistro->setVrDebito($arMovimiento['vrAutoretencion']);
+                                    $arRegistro->setNaturaleza('D');
+                                } else {
+                                    $arRegistro->setVrCredito($arMovimiento['vrAutoretencion']);
+                                    $arRegistro->setNaturaleza('C');
+                                }
+
                                 $arRegistro->setDescripcion('AUTORETENCION');
                                 $arRegistro->setCodigoModeloFk('InvMovimiento');
                                 $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
@@ -1080,8 +1107,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                             $arRegistro->setComprobanteRel($arComprobante);
                                             $arRegistro->setNumero($arMovimiento['numero']);
                                             $arRegistro->setFecha($arMovimiento['fecha']);
-                                            $arRegistro->setVrCredito($arrIva['vrIva']);
-                                            $arRegistro->setNaturaleza('C');
+                                            if($arMovimiento['notaCredito']) {
+                                                $arRegistro->setVrDebito($arrIva['vrIva']);
+                                                $arRegistro->setNaturaleza('D');
+                                            } else {
+                                                $arRegistro->setVrCredito($arrIva['vrIva']);
+                                                $arRegistro->setNaturaleza('C');
+                                            }
+
                                             $arRegistro->setDescripcion('IVA');
                                             $arRegistro->setCodigoModeloFk('InvMovimiento');
                                             $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
@@ -1095,12 +1128,16 @@ class InvMovimientoRepository extends ServiceEntityRepository
                             }
 
                             //Cuenta de ingreso / ventas
-                            $arrVentas = $em->getRepository(InvMovimientoDetalle::class)->ventaFacturaContabilizar($codigo);
+                            if($arMovimiento['notaCredito']) {
+                                $arrVentas = $em->getRepository(InvMovimientoDetalle::class)->ventaDevolucionFacturaContabilizar($codigo);
+                            } else {
+                                $arrVentas = $em->getRepository(InvMovimientoDetalle::class)->ventaFacturaContabilizar($codigo);
+                            }
                             foreach ($arrVentas as $arrVenta) {
-                                if ($arrVenta['codigoCuentaVentaFk']) {
-                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arrVenta['codigoCuentaVentaFk']);
+                                if ($arrVenta['codigoCuentaFk']) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arrVenta['codigoCuentaFk']);
                                     if (!$arCuenta) {
-                                        $error = "No se encuentra la cuenta " . $arrVenta['codigoCuentaVentaFk'];
+                                        $error = "No se encuentra la cuenta " . $arrVenta['codigoCuentaFk'];
                                         break 2;
                                     }
                                     $arRegistro = new FinRegistro();
@@ -1109,8 +1146,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                     $arRegistro->setComprobanteRel($arComprobante);
                                     $arRegistro->setNumero($arMovimiento['numero']);
                                     $arRegistro->setFecha($arMovimiento['fecha']);
-                                    $arRegistro->setVrCredito($arrVenta['vrSubtotal']);
-                                    $arRegistro->setNaturaleza('C');
+                                    if($arMovimiento['notaCredito']) {
+                                        $arRegistro->setVrDebito($arrVenta['vrSubtotal']);
+                                        $arRegistro->setNaturaleza('D');
+                                    } else {
+                                        $arRegistro->setVrCredito($arrVenta['vrSubtotal']);
+                                        $arRegistro->setNaturaleza('C');
+                                    }
+
                                     $arRegistro->setDescripcion('VENTA DE PRODUCTOS');
                                     $arRegistro->setCodigoModeloFk('InvMovimiento');
                                     $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);

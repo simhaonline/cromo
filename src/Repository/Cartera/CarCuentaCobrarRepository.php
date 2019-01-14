@@ -85,8 +85,6 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
             ->select('cc.codigoCuentaCobrarPk')
-            ->leftJoin('cc.clienteRel','cl')
-            ->leftJoin('cc.cuentaCobrarTipoRel','cct')
             ->addSelect('cc.numeroDocumento')
             ->addSelect('cc.codigoCuentaCobrarTipoFk')
             ->addSelect('cc.numeroReferencia')
@@ -104,9 +102,12 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.vrSaldoOperado')
             ->addSelect('cc.comentario')
             ->leftJoin('cc.asesorRel', 'a')
+            ->leftJoin('cc.clienteRel','cl')
+            ->leftJoin('cc.cuentaCobrarTipoRel','cct')
             ->where('cc.codigoCuentaCobrarPk <> 0')
             ->andWhere('cc.vrSaldo > 0')
-            ->orderBy('cc.codigoCuentaCobrarPk', 'DESC');
+            ->orderBy('cl.nombreCorto', 'ASC')
+            ->addOrderBy('cc.fecha', 'ASC');
         $fecha =  new \DateTime('now');
         if ($session->get('filtroCarCuentaCobrarTipo') != "") {
             $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo')."'");

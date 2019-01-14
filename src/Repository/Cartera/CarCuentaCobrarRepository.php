@@ -399,8 +399,8 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect("ccc.fechaVence")
             ->addSelect("ccc.vrTotal")
             ->andWhere("ccc.vrSaldo >= 0");
-        if($session->get('crearReciboMasivoCuentaCobrarTipo')){
-            $arCrearReciboMasivo->andWhere("ccc.codigoCuentaCobrarTipoFk='{$session->get("crearReciboMasivoCuentaCobrarTipo")}'");
+        if($session->get('filtroCarReciboCodigoReciboTipo')){
+            $arCrearReciboMasivo->andWhere("ccc.codigoCuentaCobrarTipoFk='{$session->get("filtroCarReciboCodigoReciboTipo")}'");
         }
 
         return $arCrearReciboMasivo->getQuery()->execute();

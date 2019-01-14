@@ -30,9 +30,9 @@ class CrearReciboMasivoController extends Controller
             if ($form->get('btnFiltrar')->isClicked()) {
                 $arCuentaCobrarTipo = $form->get('cboCuentaCobrarTipoRel')->getData();
                 if ($arCuentaCobrarTipo) {
-                    $session->set('filtroCarCuentaCobrarTipo', $arCuentaCobrarTipo->getCodigoCuentaCobrarTipoPk());
+                    $session->set('filtroCarReciboCodigoReciboTipo', $arCuentaCobrarTipo->getCodigoCuentaCobrarTipoPk());
                 } else {
-                    $session->set('filtroCarCuentaCobrarTipo', null);
+                    $session->set('filtroCarReciboCodigoReciboTipo', null);
                 }
             }
         }

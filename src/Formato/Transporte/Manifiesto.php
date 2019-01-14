@@ -83,6 +83,7 @@ class Manifiesto extends \FPDF {
     }
 
     public function Body($pdf) {
+        $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->find(1);
         $arDespacho = self::$em->getRepository(TteDespacho::class)->dqlImprimirManifiesto(self::$codigoDespacho);
         $pdf->SetFont('Arial', 'b', 8);
         $x = 15;
@@ -307,7 +308,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(20, $yt, "RETENCION ICA:");
         $pdf->Text(120, $yt, "CARGUE PAGADO POR:");
         $pdf->SetFont('Arial', '', 8);
-        $pdf->Text(120, $yt+5, "LOGICUARTAS SAS");
+        $pdf->Text(120, $yt+5, utf8_decode($arConfiguracion->getNombre()));
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
         $pdf->Cell(25, 4, $arDespacho['vrIndustriaComercio'], 0, 0, 'R');
@@ -333,7 +334,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(20, $yt, "VALOR ANTICIPO:");
         $pdf->Text(120, $yt, "DESCARGUE PAGADO POR:");
         $pdf->SetFont('Arial', '', 8);
-        $pdf->Text(120, $yt+5, "LOGICUARTAS SAS");
+        $pdf->Text(120, $yt+5, utf8_decode($arConfiguracion->getNombre()));
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
         $pdf->Cell(25, 4, $arDespacho['vrAnticipo'], 0, 0, 'R');

@@ -2325,7 +2325,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->andWhere('g.estadoAnulado = 0')
             ->andWhere('g.factura = 0')
             ->andWhere('g.cortesia = 0')
-            ->orderBy('g.fechaIngreso', 'ASC');
+            ->orderBy('c.nombreCorto', 'ASC')
+            ->addOrderBy('g.fechaIngreso', 'ASC');
         $fecha = new \DateTime('now');
         if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");

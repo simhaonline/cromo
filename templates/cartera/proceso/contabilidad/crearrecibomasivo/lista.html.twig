@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {#{{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}#}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {% include('cartera/proceso/contabilidad/crearrecibomasivo/filtro.html.twig') %}
     {#<div class="panel panel-default">#}
         {#<div class="panel-heading">Filtros</div>#}
         {#<div class="panel-body">#}
@@ -60,14 +61,7 @@
             <th>FECHA</th>
             <th>FECHA PAGO</th>
             <th>TOTAL</th>
-            {#<th>NUMERO</th>#}
-            {#<th>NIT</th>#}
-            {#<th>CUENTA</th>#}
-            {#<th>USUARIO</th>#}
-            {#<th>ANU</th>#}
-            {#<th>AUT</th>#}
-            {#<th>APR</th>#}
-            {#<th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>#}
+            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
         <tbody>
@@ -79,25 +73,18 @@
                 <td>{{ arCrearReciboMasivo.fecha | date('Y-m-d') }}</td>
                 <td>{{ arCrearReciboMasivo.fechaVence | date('Y-m-d') }}</td>
                 <td class="numero">{{ arCrearReciboMasivo.vrTotal | number_format(0, '.', ',') }}</td>
-                {#<td>{{ arRecibo.numero }}</td>#}
-                {#<td>{{ arRecibo.numeroIdentificacion }}</td>#}
-                {#<td>{{ arRecibo.nombreCorto }}</td>#}
-                {#<td>{{ arRecibo.nombre }}</td>#}
-                {#<td>{{ arRecibo.usuario }}</td>#}
-                {#<td>{{ arRecibo.estadoAnulado }}</td>#}
-                {#<td>{{ arRecibo.estadoAutorizado }}</td>#}
-                {#<td>{{ arRecibo.estadoAprobado }}</td>#}
-                {#<td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecibo.codigoReciboPk }}" /></td>#}
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arCrearReciboMasivo.codigoCuentaCobrarPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     <div>
         <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCrearReciboMasivos.getTotalItemCount }}</span></div>
+            <div class="btn-group" style="float: left">
+                <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCrearReciboMasivos.getTotalItemCount }}</span></div>
+            </div>
         </div>
-
-        <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+        <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
             {{ knp_pagination_render(arCrearReciboMasivos) }}
         </div>
         {#<div class="btn-toolbar" style="float: right">#}
@@ -106,7 +93,7 @@
             {#</div>#}
         {#</div>#}
     </div>
-    {#{{ form_end(form) }}#}
+    {{ form_end(form) }}
     <br /> <br />
 {% endblock %}
 

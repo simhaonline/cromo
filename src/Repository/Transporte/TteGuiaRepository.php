@@ -1615,6 +1615,16 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.estadoCumplido as cumplido')
             ->addSelect('g.fechaCumplido as fechaCumplido')
             ->addSelect('g.estadoNovedad as novedad')
+            ->addSelect('g.unidades')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.remitente')
+            ->addSelect('co.nombre as ciudadOrigen')
+            ->addSelect('cd.nombre as ciudadDestino')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.telefonoDestinatario')
+            ->addSelect('g.direccionDestinatario')
+            ->leftJoin('g.ciudadOrigenRel', 'co')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->where("g.codigoGuiaPk = " . $codigoGuia);
         return $queryBuilder->getQuery()->getResult();
     }

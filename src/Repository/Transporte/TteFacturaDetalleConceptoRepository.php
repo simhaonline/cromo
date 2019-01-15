@@ -21,14 +21,20 @@ class TteFacturaDetalleConceptoRepository extends ServiceEntityRepository
 
     public function listaFacturaDetalle($codigoFactura)
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFacturaDetalleConcepto::class, 'fcd');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFacturaDetalleConcepto::class, 'fdc');
         $queryBuilder
-            ->select('fcd.codigoFacturaDetalleConceptoPk')
-            ->addSelect('fcd.cantidad')
-            ->addSelect('fcd.vrValor')
-            ->addSelect('fc.nombre AS concepto')
-            ->leftJoin('fcd.facturaConceptoRel', 'fc')
-            ->where('fcd.codigoFacturaFk = ' . $codigoFactura);
+            ->select('fdc.codigoFacturaDetalleConceptoPk')
+            ->addSelect('fdc.cantidad')
+            ->addSelect('fdc.vrPrecio')
+            ->addSelect('fdc.vrIva')
+            ->addSelect('fdc.vrSubtotal')
+            ->addSelect('fdc.vrTotal')
+            ->addSelect('fdc.porcentajeIva')
+            ->addSelect('fcd.nombre AS concepto')
+            ->addSelect('fcd.codigoImpuestoIvaVentaFk')
+            ->addSelect('fcd.codigoImpuestoRetencionFk')
+            ->leftJoin('fdc.facturaConceptoDetalleRel', 'fcd')
+            ->where('fdc.codigoFacturaFk = ' . $codigoFactura);
         return $queryBuilder;
     }
 

@@ -7,6 +7,7 @@ use App\Entity\General\GenConfiguracion;
 use App\Entity\General\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteGuia;
+use App\Utilidades\BaseDatos;
 
 class Manifiesto extends \FPDF {
 
@@ -32,6 +33,7 @@ class Manifiesto extends \FPDF {
 
     public function Header() {
         $arDespacho = self::$em->getRepository(TteDespacho::class)->find(self::$codigoDespacho);
+        /** @var  $arConfiguracion GenConfiguracion */
         $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->find(1);
         $this->Image('../public/img/recursos/transporte/logo_min_transporte.jpg', 15, 10, 70, 38);
         try {
@@ -40,7 +42,8 @@ class Manifiesto extends \FPDF {
             }
         } catch (\Exception $exception) {
         }
-        $this->Image(FuncionesController::codigoQr(), 265, 10, 10, 10);
+        $contenido = $this->contenidoQr($arDespacho , $arConfiguracion->getNombre());
+        $this->Image(FuncionesController::codigoQr($contenido), 265, 10, 10, 10);
         $this->SetFont('Arial', 'b', 14);
         $this->Text(90, 15, "MANIFIESTO ELECTRONICO DE CARGA");
         $this->Text(90, 20, $arConfiguracion->getNombre());
@@ -441,7 +444,7 @@ class Manifiesto extends \FPDF {
                 $pdf->Cell(17, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
                 $pdf->Cell(23, 4, $arGuia['numero'], 1, 0, 'L');
                 $pdf->Cell(10, 4, "KILO", 1, 0, 'L');
-                $pdf->Cell(14, 4, '2018-01-31', 1, 0, 'L');
+                $pdf->Cell(14, 4, $arGuia['fechaIngreso']->format('Y-m-d'), 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'L');
                 $pdf->Cell(26, 4, substr(utf8_decode($arGuia['ciudadDestino']),0,20), 1, 0, 'L');
@@ -480,6 +483,26 @@ class Manifiesto extends \FPDF {
 
         $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+    }
+
+    /**
+     * @param $arDespacho TteDespacho
+     * @return string
+     */
+    private function contenidoQr($arDespacho, $nombreEmpresa){
+        $contenido =  "MEC:{$arDespacho->getNumeroRndc()}\n";
+        $contenido .= "Fecha:{$arDespacho->getFechaRegistro()->format('Y-m-d')}\n";
+        $contenido .= "Placa:{$arDespacho->getVehiculoRel()->getPlaca()}\n";
+        $contenido .= "Remolque:{$arDespacho->getVehiculoRel()->getPlacaRemolque()}\n";
+        $contenido .= "Orig:{$arDespacho->getCiudadOrigenRel()->getNombre()}\n";
+        $contenido .= "Dest:{$arDespacho->getCiudadDestinoRel()->getNombre()}\n";
+        $contenido .= "Mercancia:{'VARIOS'}\n";
+        $contenido .= "Conductor:{$arDespacho->getConductorRel()->getNombreCorto()}\n";
+        $contenido .= "Empresa:{$nombreEmpresa}\n";
+        $contenido .= "Obs:{$arDespacho->getComentario()}\n";
+        $contenido .= "Seguro:\n";
+
+        return $contenido;
     }
 }
 

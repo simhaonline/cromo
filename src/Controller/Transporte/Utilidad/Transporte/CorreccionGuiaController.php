@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Utilidad\Transporte;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenConfiguracion;
+use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaCarga;
 use App\Form\Type\Transporte\GuiaCorreccionType;
@@ -79,7 +80,8 @@ class CorreccionGuiaController extends ControllerListenerGeneral
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 if ($form->get('guardar')->isClicked()) {
-                    $arGuia = $form->getData();
+                    $arCliente = $em->find(TteCliente::class, $arGuia->getCodigoClienteFk());
+                    $arGuia->setClienteRel($arCliente);
                     $em->persist($arGuia);
                     $em->flush();
                 }

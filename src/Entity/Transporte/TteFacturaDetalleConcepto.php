@@ -40,12 +40,37 @@ class TteFacturaDetalleConcepto
     /**
      * @ORM\Column(name="vr_precio", type="float", options={"default" : 0})
      */
-    private $vrValor = 0;
+    private $vrPrecio = 0;
+
+    /**
+     * @ORM\Column(name="vr_subtotal", type="float", options={"default" : 0})
+     */
+    private $vrSubtotal = 0;
+
+    /**
+     * @ORM\Column(name="vr_iva", type="float", options={"default" : 0})
+     */
+    private $vrIva = 0;
+
+    /**
+     * @ORM\Column(name="vr_total", type="float", options={"default" : 0})
+     */
+    private $vrTotal = 0;
+
+    /**
+     * @ORM\Column(name="porcentaje_iva", type="float", options={"default" : 0})
+     */
+    private $porcentajeIva = 0;
 
     /**
      * @ORM\Column(name="codigo_impuesto_retencion_fk", type="string", length=3, nullable=true)
      */
     private $codigoImpuestoRetencionFk;
+
+    /**
+     * @ORM\Column(name="codigo_impuesto_iva_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoImpuestoIvaFk;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteFactura", inversedBy="facturasDetallesConcetosFacturaRel")
@@ -54,26 +79,10 @@ class TteFacturaDetalleConcepto
     private $facturaRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteFacturaConcepto", inversedBy="facturasDetallesConcetosRel")
-     * @ORM\JoinColumn(name="codigo_factura_concepto_fk", referencedColumnName="codigo_factura_concepto_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteFacturaConceptoDetalle", inversedBy="facturasDetallesConcetosFacturaConceptoDetalleRel")
+     * @ORM\JoinColumn(name="codigo_factura_concepto_detalle_fk", referencedColumnName="codigo_factura_concepto_detalle_pk")
      */
-    private $facturaConceptoRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
+    private $facturaConceptoDetalleRel;
 
     /**
      * @return mixed
@@ -86,7 +95,7 @@ class TteFacturaDetalleConcepto
     /**
      * @param mixed $codigoFacturaDetalleConceptoPk
      */
-    public function setCodigoFacturaDetalleConceptoPk($codigoFacturaDetalleConceptoPk): void
+    public function setCodigoFacturaDetalleConceptoPk( $codigoFacturaDetalleConceptoPk ): void
     {
         $this->codigoFacturaDetalleConceptoPk = $codigoFacturaDetalleConceptoPk;
     }
@@ -102,7 +111,7 @@ class TteFacturaDetalleConcepto
     /**
      * @param mixed $codigoFacturaFk
      */
-    public function setCodigoFacturaFk($codigoFacturaFk): void
+    public function setCodigoFacturaFk( $codigoFacturaFk ): void
     {
         $this->codigoFacturaFk = $codigoFacturaFk;
     }
@@ -118,7 +127,7 @@ class TteFacturaDetalleConcepto
     /**
      * @param mixed $codigoFacturaConceptoFk
      */
-    public function setCodigoFacturaConceptoFk($codigoFacturaConceptoFk): void
+    public function setCodigoFacturaConceptoFk( $codigoFacturaConceptoFk ): void
     {
         $this->codigoFacturaConceptoFk = $codigoFacturaConceptoFk;
     }
@@ -126,17 +135,81 @@ class TteFacturaDetalleConcepto
     /**
      * @return mixed
      */
-    public function getVrValor()
+    public function getCantidad()
     {
-        return $this->vrValor;
+        return $this->cantidad;
     }
 
     /**
-     * @param mixed $vrValor
+     * @param mixed $cantidad
      */
-    public function setVrValor($vrValor): void
+    public function setCantidad( $cantidad ): void
     {
-        $this->vrValor = $vrValor;
+        $this->cantidad = $cantidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPrecio()
+    {
+        return $this->vrPrecio;
+    }
+
+    /**
+     * @param mixed $vrPrecio
+     */
+    public function setVrPrecio( $vrPrecio ): void
+    {
+        $this->vrPrecio = $vrPrecio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSubtotal()
+    {
+        return $this->vrSubtotal;
+    }
+
+    /**
+     * @param mixed $vrSubtotal
+     */
+    public function setVrSubtotal( $vrSubtotal ): void
+    {
+        $this->vrSubtotal = $vrSubtotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIva()
+    {
+        return $this->vrIva;
+    }
+
+    /**
+     * @param mixed $vrIva
+     */
+    public function setVrIva( $vrIva ): void
+    {
+        $this->vrIva = $vrIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotal()
+    {
+        return $this->vrTotal;
+    }
+
+    /**
+     * @param mixed $vrTotal
+     */
+    public function setVrTotal( $vrTotal ): void
+    {
+        $this->vrTotal = $vrTotal;
     }
 
     /**
@@ -150,7 +223,7 @@ class TteFacturaDetalleConcepto
     /**
      * @param mixed $codigoImpuestoRetencionFk
      */
-    public function setCodigoImpuestoRetencionFk($codigoImpuestoRetencionFk): void
+    public function setCodigoImpuestoRetencionFk( $codigoImpuestoRetencionFk ): void
     {
         $this->codigoImpuestoRetencionFk = $codigoImpuestoRetencionFk;
     }
@@ -166,7 +239,7 @@ class TteFacturaDetalleConcepto
     /**
      * @param mixed $facturaRel
      */
-    public function setFacturaRel($facturaRel): void
+    public function setFacturaRel( $facturaRel ): void
     {
         $this->facturaRel = $facturaRel;
     }
@@ -174,35 +247,50 @@ class TteFacturaDetalleConcepto
     /**
      * @return mixed
      */
-    public function getFacturaConceptoRel()
+    public function getFacturaConceptoDetalleRel()
     {
-        return $this->facturaConceptoRel;
+        return $this->facturaConceptoDetalleRel;
     }
 
     /**
-     * @param mixed $facturaConceptoRel
+     * @param mixed $facturaConceptoDetalleRel
      */
-    public function setFacturaConceptoRel($facturaConceptoRel): void
+    public function setFacturaConceptoDetalleRel( $facturaConceptoDetalleRel ): void
     {
-        $this->facturaConceptoRel = $facturaConceptoRel;
+        $this->facturaConceptoDetalleRel = $facturaConceptoDetalleRel;
     }
 
     /**
      * @return mixed
      */
-    public function getCantidad()
+    public function getPorcentajeIva()
     {
-        return $this->cantidad;
+        return $this->porcentajeIva;
     }
 
     /**
-     * @param mixed $cantidad
+     * @param mixed $porcentajeIva
      */
-    public function setCantidad($cantidad): void
+    public function setPorcentajeIva( $porcentajeIva ): void
     {
-        $this->cantidad = $cantidad;
+        $this->porcentajeIva = $porcentajeIva;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoImpuestoIvaFk()
+    {
+        return $this->codigoImpuestoIvaFk;
+    }
+
+    /**
+     * @param mixed $codigoImpuestoIvaFk
+     */
+    public function setCodigoImpuestoIvaFk( $codigoImpuestoIvaFk ): void
+    {
+        $this->codigoImpuestoIvaFk = $codigoImpuestoIvaFk;
+    }
 
 
 }

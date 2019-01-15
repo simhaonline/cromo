@@ -18,6 +18,7 @@ use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
 
+use App\Form\Type\Transporte\FacturaDetalleConceptoType;
 use App\Form\Type\Transporte\FacturaNotaCreditoType;
 use App\Form\Type\Transporte\FacturaPlanillaType;
 use App\Form\Type\Transporte\FacturaType;
@@ -119,11 +120,13 @@ class FacturaController extends ControllerListenerGeneral
         $form = Estandares::botonera($arFactura->getEstadoAutorizado(), $arFactura->getEstadoAprobado(), $arFactura->getEstadoAnulado());
         $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnRetirarPlanilla = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnRetirarConcepto = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBotonActualizar = array('label' => 'Actualizar', 'disabled' => false);
         $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
         if ($arFactura->getEstadoAutorizado()) {
             $arrBtnRetirar['disabled'] = true;
             $arrBtnRetirarPlanilla['disabled'] = true;
+            $arrBtnRetirarConcepto['disabled'] = true;
             $arrBotonActualizar['disabled'] = true;
         }
         if ($arFactura->getCodigoFacturaClaseFk() == 'NC') {
@@ -131,7 +134,8 @@ class FacturaController extends ControllerListenerGeneral
         }
         $form->add('btnRetirarGuia', SubmitType::class, $arrBtnRetirar)
             ->add('btnRetirarPlanilla', SubmitType::class, $arrBtnRetirarPlanilla)
-            ->add('btnActualizar', SubmitType::class, $arrBotonActualizar);
+            ->add('btnActualizar', SubmitType::class, $arrBotonActualizar)
+            ->add('btnRetirarConcepto', SubmitType::class, $arrBtnRetirarConcepto);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
@@ -184,6 +188,16 @@ class FacturaController extends ControllerListenerGeneral
                 }
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }
+            if ($form->get('btnRetirarConcepto')->isClicked()) {
+                $arrConceptos = $request->request->get('ChkSeleccionarConcepto');
+                $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarConcepto($arrConceptos, $arFactura);
+                if ($respuesta) {
+                    $em->getRepository(TteFactura::class)->liquidar($id);
+                    $em->flush();
+                }
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
+            }
+
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TteFacturaDetalle::class)->factura($id), "Facturas $id");
             }
@@ -196,13 +210,13 @@ class FacturaController extends ControllerListenerGeneral
         $query = $this->getDoctrine()->getRepository(TteFacturaPlanilla::class)->listaFacturaDetalle($id);
         $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
         $query = $this->getDoctrine()->getRepository(TteFacturaDetalleConcepto::class)->listaFacturaDetalle($id);
-        $arFacturaConceptos = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
+        $arFacturaDetallesConceptos = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
         $arFacturaDetalles = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->factura($id);
         return $this->render('transporte/movimiento/comercial/factura/detalle.html.twig', [
             'arFactura' => $arFactura,
             'arFacturaDetalles' => $arFacturaDetalles,
             'arFacturaPlanillas' => $arFacturaPlanillas,
-            'arFacturaConceptos' => $arFacturaConceptos,
+            'arFacturaDetallesConceptos' => $arFacturaDetallesConceptos,
             'form' => $form->createView()]);
     }
 
@@ -598,40 +612,34 @@ class FacturaController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/concepto/{codigoFactura}", name="transporte_movimiento_comercial_factura_detalle_adicionar_concepto")
+     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/concepto/{codigoFactura}/{codigoFacturaDetalleConcepto}", name="transporte_movimiento_comercial_factura_detalle_adicionar_concepto")
      */
-    public function detalleAdicionarConcepto(Request $request, $codigoFactura)
+    public function detalleAdicionarConcepto(Request $request, $codigoFactura, $codigoFacturaDetalleConcepto=0)
     {
         $em = $this->getDoctrine()->getManager();
-        $arFacturaDetalleConcepto = new TteFacturaDetalleConcepto();
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
-        $form = $this->createFormBuilder()
-            ->add('facturaConceptoRel', EntityType::class, [
-                'class' => 'App\Entity\Transporte\TteFacturaConcepto',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('fc')
-                        ->orderBy('fc.nombre');
-                },
-                'choice_label' => 'nombre',
-                'required' => true,
-            ])
-            ->add('vrValor', IntegerType::class, array('required' => true))
-            ->add('cantidad', IntegerType::class, array('required' => true))
-            ->add('guardar', SubmitType::class, array('label' => 'Guardar'))
-            ->getForm();
+        $arFacturaDetalleConcepto = new TteFacturaDetalleConcepto();
+        if ($codigoFacturaDetalleConcepto != 0) {
+            $arFacturaDetalleConcepto = $em->getRepository(TteFactura::class)->find($codigoFacturaDetalleConcepto);
+        }
+        $form = $this->createForm(FacturaDetalleConceptoType::class, $arFacturaDetalleConcepto);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $facturaConceptoRel = $form->get('facturaConceptoRel')->getData();
-            if ($form->get('guardar')->isClicked()) {
-                $arFacturaDetalleConcepto->setFacturaConceptoRel($facturaConceptoRel);
-                $arFacturaDetalleConcepto->setCantidad($form->get('cantidad')->getData());
-                $arFacturaDetalleConcepto->setVrValor($form->get('vrValor')->getData());
-                $arFacturaDetalleConcepto->setFacturaRel($arFactura);
-                $em->persist($arFacturaDetalleConcepto);
-                $em->flush();
-                $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
-                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-            }
+            $arFacturaDetalleConcepto->setFacturaRel($arFactura);
+            $subtotal = $arFacturaDetalleConcepto->getCantidad() * $arFacturaDetalleConcepto->getVrPrecio();
+            $porcentajeIva = $arFacturaDetalleConcepto->getFacturaConceptoDetalleRel()->getImpuestoIvaVentaRel()->getPorcentaje();
+            $iva = $subtotal * $porcentajeIva / 100;
+            $total = $subtotal + $iva;
+            $arFacturaDetalleConcepto->setPorcentajeIva($porcentajeIva);
+            $arFacturaDetalleConcepto->setVrSubtotal($subtotal);
+            $arFacturaDetalleConcepto->setVrIva($iva);
+            $arFacturaDetalleConcepto->setVrTotal($total);
+            $arFacturaDetalleConcepto->setCodigoImpuestoRetencionFk($arFacturaDetalleConcepto->getCodigoImpuestoRetencionFk());
+            $arFacturaDetalleConcepto->setCodigoImpuestoIvaFk($arFacturaDetalleConcepto->getCodigoImpuestoIvaFk());
+            $em->persist($arFacturaDetalleConcepto);
+            $em->flush();
+            $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarConcepto.html.twig', [
             'form' => $form->createView()

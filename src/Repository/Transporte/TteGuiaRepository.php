@@ -1531,11 +1531,12 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     /**
      * @param $codigoGuia
+     * @param $redespachoMotivo
      * @return bool
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function redespacho($codigoGuia): bool
+    public function redespacho($codigoGuia, $redespachoMotivo): bool
     {
         $em = $this->getEntityManager();
         $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
@@ -1555,6 +1556,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                 //Se crea el redespacho;
                 $arRedespacho->setFecha(new \DateTime('now'));
                 $arRedespacho->setRedespachoGuiaRel($arGuia);
+                $arRedespacho->setRedespachoMotivoRel($redespachoMotivo);
                 $em->persist($arRedespacho);
                 $em->flush();
                 Mensajes::success("La guia se activo para redespacho");

@@ -43,15 +43,15 @@ class Manifiesto extends \FPDF {
         } catch (\Exception $exception) {
         }
         $contenido = $this->contenidoQr($arDespacho , $arConfiguracion->getNombre());
-        $this->Image(FuncionesController::codigoQr($contenido), 265, 10, 10, 10);
+        $this->Image(FuncionesController::codigoQr($contenido), 244, 5, 33, 33);
         $this->SetFont('Arial', 'b', 14);
         $this->Text(90, 15, "MANIFIESTO ELECTRONICO DE CARGA");
         $this->Text(90, 20, $arConfiguracion->getNombre());
         $this->Text(90, 25, "NIT: " . $arConfiguracion->getNit());
         $this->SetFont('Arial', 'b', 9);
-        $this->Text(138, 35, $arConfiguracion->getDireccion());
-        $this->Text(138, 40, $arConfiguracion->getTelefono());
-        $this->Text(138, 45, utf8_decode($arConfiguracion->getCiudadRel()->getNombre() . " - " . $arConfiguracion->getCiudadRel()->getDepartamentoRel()->getNOmbre()));
+        $this->Text(138, 38, substr($arConfiguracion->getDireccion(),0, 55));
+        $this->Text(138, 43, $arConfiguracion->getTelefono());
+        $this->Text(138, 48, utf8_decode($arConfiguracion->getCiudadRel()->getNombre() . " - " . $arConfiguracion->getCiudadRel()->getDepartamentoRel()->getNOmbre()));
 
         $this->SetFont('Arial', 'b', 5);
         $this->SetXY(190, 10);
@@ -63,20 +63,20 @@ class Manifiesto extends \FPDF {
         $this->MultiCell(50, 2, utf8_decode($texto));
 
         $this->SetFillColor(236, 236, 236);
-        $this->SetFont('Arial', '', 14);
-        $this->SetXY(190, 28);
-        $this->Cell(50, 5, "MANIFIESTO:", 1, 0, 'L', 1);
-        $this->Cell(35, 5, $arDespacho->getNumero(), 1, 0, 'R', 1);
+        $this->SetFont('Arial', 'b', 8);
+        $this->SetXY(211, 39);
+        $this->Cell(30, 3.5, "MANIFIESTO:", 1, 0, 'L', 1);
+        $this->Cell(34, 3.5, $arDespacho->getNumero(), 1, 0, 'R', 1);
 
-        $this->SetXY(190, 33);
-        $this->Cell(50, 5, "AUTORIZACION:", 1, 0, 'L', 1);
-        $this->Cell(35, 5, $arDespacho->getNumeroRndc(), 1, 0, 'R', 1);
-        $this->Text(245, 24, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+        $this->SetXY(211, 42.5);
+        $this->Cell(30, 3.5, "AUTORIZACION:", 1, 0, 'L', 1);
+        $this->Cell(34, 3.5, $arDespacho->getNumeroRndc(), 1, 0, 'R', 1);
+//        $this->Text(245, 24, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
 
-        $this->SetXY(190, 38);
-        $this->Cell(50, 5, "NUMERO:", 1, 0, 'L', 1);
-        $this->Cell(35, 5, $arDespacho->getCodigoDespachoPk(), 1, 0, 'R', 1);
-        $this->Text(245, 24, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+        $this->SetXY(211, 46);
+        $this->Cell(30, 3.5, "NUMERO:", 1, 0, 'L', 1);
+        $this->Cell(34, 3.5, $arDespacho->getCodigoDespachoPk(), 1, 0, 'R', 1);
+//        $this->Text(245, 24, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
 
         $this->EncabezadoDetalles();
     }
@@ -490,16 +490,17 @@ class Manifiesto extends \FPDF {
      * @return string
      */
     private function contenidoQr($arDespacho, $nombreEmpresa){
+        $observaciones = substr($arDespacho->getComentario(),0, 20);
         $contenido =  "MEC:{$arDespacho->getNumeroRndc()}\n";
         $contenido .= "Fecha:{$arDespacho->getFechaRegistro()->format('Y-m-d')}\n";
         $contenido .= "Placa:{$arDespacho->getVehiculoRel()->getPlaca()}\n";
         $contenido .= "Remolque:{$arDespacho->getVehiculoRel()->getPlacaRemolque()}\n";
         $contenido .= "Orig:{$arDespacho->getCiudadOrigenRel()->getNombre()}\n";
         $contenido .= "Dest:{$arDespacho->getCiudadDestinoRel()->getNombre()}\n";
-        $contenido .= "Mercancia:{'VARIOS'}\n";
+        $contenido .= "Mercancia:'VARIOS'\n";
         $contenido .= "Conductor:{$arDespacho->getConductorRel()->getNombreCorto()}\n";
         $contenido .= "Empresa:{$nombreEmpresa}\n";
-        $contenido .= "Obs:{$arDespacho->getComentario()}\n";
+        $contenido .= "Obs:{$observaciones}\n";
         $contenido .= "Seguro:\n";
 
         return $contenido;

@@ -40,7 +40,22 @@ class TteFacturaDetalleConcepto
     /**
      * @ORM\Column(name="vr_precio", type="float", options={"default" : 0})
      */
-    private $vrValor = 0;
+    private $vrPrecio = 0;
+
+    /**
+     * @ORM\Column(name="vr_subtotal", type="float", options={"default" : 0})
+     */
+    private $vrSubtotal = 0;
+
+    /**
+     * @ORM\Column(name="vr_iva", type="float", options={"default" : 0})
+     */
+    private $vrIva = 0;
+
+    /**
+     * @ORM\Column(name="vr_total", type="float", options={"default" : 0})
+     */
+    private $vrTotal = 0;
 
     /**
      * @ORM\Column(name="codigo_impuesto_retencion_fk", type="string", length=3, nullable=true)
@@ -126,17 +141,65 @@ class TteFacturaDetalleConcepto
     /**
      * @return mixed
      */
-    public function getVrValor()
+    public function getVrPrecio()
     {
-        return $this->vrValor;
+        return $this->vrPrecio;
     }
 
     /**
-     * @param mixed $vrValor
+     * @param mixed $vrPrecio
      */
-    public function setVrValor( $vrValor ): void
+    public function setVrPrecio( $vrPrecio ): void
     {
-        $this->vrValor = $vrValor;
+        $this->vrPrecio = $vrPrecio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSubtotal()
+    {
+        return $this->vrSubtotal;
+    }
+
+    /**
+     * @param mixed $vrSubtotal
+     */
+    public function setVrSubtotal( $vrSubtotal ): void
+    {
+        $this->vrSubtotal = $vrSubtotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIva()
+    {
+        return $this->vrIva;
+    }
+
+    /**
+     * @param mixed $vrIva
+     */
+    public function setVrIva( $vrIva ): void
+    {
+        $this->vrIva = $vrIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotal()
+    {
+        return $this->vrTotal;
+    }
+
+    /**
+     * @param mixed $vrTotal
+     */
+    public function setVrTotal( $vrTotal ): void
+    {
+        $this->vrTotal = $vrTotal;
     }
 
     /**
@@ -186,7 +249,6 @@ class TteFacturaDetalleConcepto
     {
         $this->facturaConceptoDetalleRel = $facturaConceptoDetalleRel;
     }
-
 
 
 }

@@ -16,26 +16,7 @@ class FacturaConceptoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('impuestoIvaVentaRel',EntityType::class,[
-                'required' => false,
-                'class' => 'App\Entity\General\GenImpuesto',
-                'query_builder' => function (EntityRepository $er) use ($options) {
-                    return $er->createQueryBuilder('ft')
-                        ->orderBy('ft.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'Impuesto iva:',
-            ])
-            ->add('impuestoRetencionRel',EntityType::class,[
-                'required' => false,
-                'class' => 'App\Entity\General\GenImpuesto',
-                'query_builder' => function (EntityRepository $er) use ($options) {
-                    return $er->createQueryBuilder('ft')
-                        ->orderBy('ft.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'Impuesto retencion:',
-            ])
+
             ->add('codigoFacturaConceptoPk',TextType::class,['required' => true,'label' => 'Codigo factura concepto:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])

@@ -189,12 +189,12 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for arFacturaConcepto in arFacturaConceptos %}
+                        {% for arFacturaDetalleConcepto in arFacturaDetallesConceptos %}
                             <tr>
-                                <td>{{ arFacturaConcepto.codigoFacturaDetalleConceptoPk }}</td>
-                                <td>{{ arFacturaConcepto.concepto }}</td>
-                                <td>{{ arFacturaConcepto.cantidad }}</td>
-                                <td class="numero">{{ arFacturaConcepto.vrValor | number_format }}</td>
+                                <td>{{ arFacturaDetalleConcepto.codigoFacturaDetalleConceptoPk }}</td>
+                                <td>{{ arFacturaDetalleConcepto.concepto }}</td>
+                                <td>{{ arFacturaDetalleConcepto.cantidad }}</td>
+                                <td class="numero">{{ arFacturaDetalleConcepto.vrPrecio | number_format }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -204,7 +204,7 @@
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
                         {% if arFactura.estadoAutorizado == 0 %}
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_concepto', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo</a>
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_concepto', {'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaDetalleConcepto' : 0 }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
 

@@ -229,14 +229,6 @@ class TteFacturaRepository extends ServiceEntityRepository
         $manejoGeneral = 0;
         $cantidadGeneral = 0;
         $retencionFuenteGlobal = 0;
-        /*$query = $em->createQuery(
-            'SELECT COUNT(fd.codigoFacturaDetallePk) as cantidad, SUM(fd.unidades+0) as unidades, SUM(fd.pesoReal+0) as pesoReal,
-            SUM(fd.pesoVolumen+0) as pesoVolumen, SUM(fd.vrFlete+0) as vrFlete, SUM(fd.vrManejo+0) as vrManejo
-        FROM App\Entity\Transporte\TteFacturaDetalle fd
-        WHERE fd.codigoFacturaFk = :codigoFactura')
-            ->setParameter('codigoFactura', $id);
-        $arrGuias = $query->getSingleResult();
-        $vrSubtotal = intval($arrGuias['vrFlete']) + intval($arrGuias['vrManejo']);*/
 
         $arFacturaDetalles = $this->getEntityManager()->getRepository(TteFacturaDetalle::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()]);
         foreach ($arFacturaDetalles as $arFacturaDetalle) {
@@ -255,6 +247,12 @@ class TteFacturaRepository extends ServiceEntityRepository
                 }
             }
             //$this->getEntityManager()->persist($arMovimientoDetalle);
+        }
+
+        $arFacturaDetalleConceptos = $this->getEntityManager()->getRepository(TteFacturaDetalleConcepto::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()]);
+        foreach ($arFacturaDetalleConceptos as $arFacturaDetalleConcepto) {
+            //$subtotal = $arFacturaDetalleConcepto->getVrSub
+            //$subTotalGeneral += $subTotal;
         }
         //Retencion en la fuente
         if($arrImpuestoRetenciones) {
@@ -302,14 +300,6 @@ class TteFacturaRepository extends ServiceEntityRepository
             $em->persist($arFacturaPlanillaAct);
         }
 
-        //Facturas concepto
-
-        $arFacturaConceptos = $em->getRepository(TteFacturaDetalleConcepto::class)->findBy(array('codigoFacturaFk' => $id));
-        $subTotalConcepto = 0;
-        foreach ($arFacturaConceptos as $arFacturaConcepto) {
-            $subTotalConcepto =  $arFacturaConcepto->getCantidad() * $arFacturaConcepto->getVrValor();
-        }
-        $arFactura->setVrSubtotal($subTotalConcepto);
 
         $em->flush();
         return true;

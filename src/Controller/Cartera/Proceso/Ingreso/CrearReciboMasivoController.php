@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Cartera\Proceso\Contabilidad;
+namespace App\Controller\Cartera\Proceso\Ingreso;
 
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarRecibo;
@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class CrearReciboMasivoController extends Controller
 {
     /**
-     * @Route("/cartera/proceso/contabilidad/crearrecibomasivo/lista", name="cartera_proceso_contabilidad_crearrecibomasivo_lista")
+     * @Route("/cartera/proceso/ingreso/recibomasivo/lista", name="cartera_proceso_ingreso_recibomasivo_lista")
      */
     public function lista(Request $request, TokenStorageInterface $user)
     {
@@ -78,12 +78,12 @@ class CrearReciboMasivoController extends Controller
                 else{
                     Mensajes::error("No ha seleccionado cuenta por cobrar");
                 }
-                return $this->redirect($this->generateUrl('cartera_proceso_contabilidad_crearrecibomasivo_lista'));
+                return $this->redirect($this->generateUrl('cartera_proceso_ingreso_recibomasivo_lista'));
             }
         }
-        $arCrearReciboMasivos=$paginator->paginate($em->getRepository('App:Cartera\CarCuentaCobrar')->crearReciboMasivoLista(), $request->query->getInt('page', 1),100);
+        $arCuentasCobrar=$paginator->paginate($em->getRepository('App:Cartera\CarCuentaCobrar')->crearReciboMasivoLista(), $request->query->getInt('page', 1),100);
         return $this->render('cartera/proceso/contabilidad/crearrecibomasivo/lista.html.twig', [
-            'arCrearReciboMasivos' => $arCrearReciboMasivos,
+            'arCuentasCobrar' => $arCuentasCobrar,
             'form'                 => $form->createView()
         ]);
     }

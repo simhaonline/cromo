@@ -57,23 +57,27 @@
         <tr>
             <th>ID</th>
             <th>TIPO</th>
-            <th>CLIENTE</th>
+            <th>NUMERO</th>
+            <th title="Numero referencia">NUM_REF</th>
             <th>FECHA</th>
-            <th>FECHA PAGO</th>
-            <th>TOTAL</th>
+            <th>VENCE</th>
+            <th>CLIENTE</th>
+            <th>SALDO</th>
             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
         <tbody>
-        {% for arCrearReciboMasivo in arCrearReciboMasivos %}
+        {% for arCuentaCobrar in arCuentasCobrar %}
             <tr>
-                <td>{{ arCrearReciboMasivo.codigoCuentaCobrarPk }}</td>
-                <td>{{ arCrearReciboMasivo.tipo }}</td>
-                <td>{{ arCrearReciboMasivo.nombreCorto }}</td>
-                <td>{{ arCrearReciboMasivo.fecha | date('Y-m-d') }}</td>
-                <td>{{ arCrearReciboMasivo.fechaVence | date('Y-m-d') }}</td>
-                <td class="numero">{{ arCrearReciboMasivo.vrTotal | number_format(0, '.', ',') }}</td>
-                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arCrearReciboMasivo.codigoCuentaCobrarPk }}" /></td>
+                <td>{{ arCuentaCobrar.codigoCuentaCobrarPk }}</td>
+                <td>{{ arCuentaCobrar.tipo }}</td>
+                <td>{{ arCuentaCobrar.numeroDocumento }}</td>
+                <td>{{ arCuentaCobrar.numeroReferencia }}</td>
+                <td>{{ arCuentaCobrar.fecha | date('Y-m-d') }}</td>
+                <td>{{ arCuentaCobrar.fechaVence | date('Y-m-d') }}</td>
+                <td>{{ arCuentaCobrar.nombreCorto }}</td>
+                <td class="numero">{{ arCuentaCobrar.vrSaldo | number_format(0, '.', ',') }}</td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arCuentaCobrar.codigoCuentaCobrarPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -81,11 +85,11 @@
     <div>
         <div class="btn-group" style="float: left">
             <div class="btn-group" style="float: left">
-                <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCrearReciboMasivos.getTotalItemCount }}</span></div>
+                <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCuentasCobrar.getTotalItemCount }}</span></div>
             </div>
         </div>
         <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-            {{ knp_pagination_render(arCrearReciboMasivos) }}
+            {{ knp_pagination_render(arCuentasCobrar) }}
         </div>
         <div class="btn-toolbar" style="float: right">
             <div class="btn-group">

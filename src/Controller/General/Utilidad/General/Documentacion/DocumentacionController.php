@@ -88,8 +88,9 @@ class DocumentacionController extends Controller
         $arConfiguracion = $em->find(GenConfiguracion::class, 1);
         $arrDatos['id'] = $request->query->get('id');
         $arrDatos = json_encode($arrDatos);
+
         $ch = curl_init($arConfiguracion->getWebServiceCesioUrl() . '/api/documentacion/consultarHtml');
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $arrDatos);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(

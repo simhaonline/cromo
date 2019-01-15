@@ -207,6 +207,11 @@ class TteFactura
     protected $facturasOtrosFacturaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaDetalleConcepto", mappedBy="facturaRel")
+     */
+    protected $facturasDetallesConcetosFacturaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoFacturaPk()
@@ -796,6 +801,38 @@ class TteFactura
     public function setFacturasOtrosFacturaRel( $facturasOtrosFacturaRel ): void
     {
         $this->facturasOtrosFacturaRel = $facturasOtrosFacturaRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesConcetosFacturaRel()
+    {
+        return $this->facturasDetallesConcetosFacturaRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesConcetosFacturaRel
+     */
+    public function setFacturasDetallesConcetosFacturaRel($facturasDetallesConcetosFacturaRel): void
+    {
+        $this->facturasDetallesConcetosFacturaRel = $facturasDetallesConcetosFacturaRel;
     }
 
 

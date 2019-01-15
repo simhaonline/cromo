@@ -9,7 +9,9 @@ use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteFactura;
+use App\Entity\Transporte\TteFacturaConcepto;
 use App\Entity\Transporte\TteFacturaDetalle;
+use App\Entity\Transporte\TteFacturaDetalleConcepto;
 use App\Entity\Transporte\TteFacturaOtro;
 use App\Entity\Transporte\TteFacturaPlanilla;
 
@@ -27,6 +29,9 @@ use App\Formato\Transporte\NotaCredito;
 use App\General\General;
 use App\Utilidades\Estandares;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -190,14 +195,14 @@ class FacturaController extends ControllerListenerGeneral
         }
         $query = $this->getDoctrine()->getRepository(TteFacturaPlanilla::class)->listaFacturaDetalle($id);
         $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
-        $query = $this->getDoctrine()->getRepository(TteFacturaOtro::class)->listaFacturaDetalle($id);
-        $arFacturaOtros = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
+        $query = $this->getDoctrine()->getRepository(TteFacturaDetalleConcepto::class)->listaFacturaDetalle($id);
+        $arFacturaConceptos = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
         $arFacturaDetalles = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->factura($id);
         return $this->render('transporte/movimiento/comercial/factura/detalle.html.twig', [
             'arFactura' => $arFactura,
             'arFacturaDetalles' => $arFacturaDetalles,
             'arFacturaPlanillas' => $arFacturaPlanillas,
-            'arFacturaOtros' => $arFacturaOtros,
+            'arFacturaConceptos' => $arFacturaConceptos,
             'form' => $form->createView()]);
     }
 
@@ -590,6 +595,47 @@ class FacturaController extends ControllerListenerGeneral
         return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarFactura.html.twig', [
             'arFacturas' => $arFacturas,
             'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/concepto/{codigoFactura}", name="transporte_movimiento_comercial_factura_detalle_adicionar_concepto")
+     */
+    public function detalleAdicionarConcepto(Request $request, $codigoFactura)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arFacturaDetalleConcepto = new TteFacturaDetalleConcepto();
+        $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+        $form = $this->createFormBuilder()
+            ->add('facturaConceptoRel', EntityType::class, [
+                'class' => 'App\Entity\Transporte\TteFacturaConcepto',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('fc')
+                        ->orderBy('fc.nombre');
+                },
+                'choice_label' => 'nombre',
+                'required' => true,
+            ])
+            ->add('vrValor', IntegerType::class, array('required' => true))
+            ->add('cantidad', IntegerType::class, array('required' => true))
+            ->add('guardar', SubmitType::class, array('label' => 'Guardar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $facturaConceptoRel = $form->get('facturaConceptoRel')->getData();
+            if ($form->get('guardar')->isClicked()) {
+                $arFacturaDetalleConcepto->setFacturaConceptoRel($facturaConceptoRel);
+                $arFacturaDetalleConcepto->setCantidad($form->get('cantidad')->getData());
+                $arFacturaDetalleConcepto->setVrValor($form->get('vrValor')->getData());
+                $arFacturaDetalleConcepto->setFacturaRel($arFactura);
+                $em->persist($arFacturaDetalleConcepto);
+                $em->flush();
+                $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarConcepto.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
 

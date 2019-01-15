@@ -14,6 +14,7 @@ use App\Entity\Financiero\FinTercero;
 use App\Entity\General\GenImpuesto;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteFacturaDetalle;
+use App\Entity\Transporte\TteFacturaDetalleConcepto;
 use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteFacturaTipo;
 use App\Utilidades\Mensajes;
@@ -301,6 +302,15 @@ class TteFacturaRepository extends ServiceEntityRepository
             $em->persist($arFacturaPlanillaAct);
         }
 
+        //Facturas concepto
+
+        $arFacturaConceptos = $em->getRepository(TteFacturaDetalleConcepto::class)->findBy(array('codigoFacturaFk' => $id));
+        $subTotalConcepto = 0;
+        foreach ($arFacturaConceptos as $arFacturaConcepto) {
+            $subTotalConcepto =  $arFacturaConcepto->getCantidad() * $arFacturaConcepto->getVrValor();
+        }
+        $arFactura->setVrSubtotal($subTotalConcepto);
+
         $em->flush();
         return true;
     }
@@ -365,7 +375,9 @@ class TteFacturaRepository extends ServiceEntityRepository
      */
     public function autorizar($arFactura)
     {
-        if (count($this->getEntityManager()->getRepository(TteFacturaDetalle::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()])) > 0) {
+        $cantDetalles = count($this->getEntityManager()->getRepository(TteFacturaDetalle::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()]));
+        $cantDetallesConcepto = count($this->getEntityManager()->getRepository(TteFacturaDetalleConcepto::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()]));
+        if ($cantDetalles > 0  || $cantDetallesConcepto > 0) {
             $arFactura->setEstadoAutorizado(1);
             $this->getEntityManager()->persist($arFactura);
             $this->getEntityManager()->flush();

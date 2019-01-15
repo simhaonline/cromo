@@ -47,6 +47,15 @@ class GenImpuesto
     private $codigoCuentaFk;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFactura", mappedBy="impuestoRetencionRel")
+     */
+    private $facturaConceptosImpuestoRetencionRel;
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFactura", mappedBy="impuestoIvaVentaRel")
+     */
+    private $facturaConceptosImpuestoIvaVentaRel;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_devolucion_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaDevolucionFk;
@@ -66,6 +75,22 @@ class GenImpuesto
      * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvItem", mappedBy="impuestoIvaVentaRel")
      */
     private $itemsImpuestoIvaVentaRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -150,6 +175,70 @@ class GenImpuesto
     /**
      * @return mixed
      */
+    public function getCodigoCuentaFk()
+    {
+        return $this->codigoCuentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaFk
+     */
+    public function setCodigoCuentaFk($codigoCuentaFk): void
+    {
+        $this->codigoCuentaFk = $codigoCuentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaConceptosImpuestoRetencionRel()
+    {
+        return $this->facturaConceptosImpuestoRetencionRel;
+    }
+
+    /**
+     * @param mixed $facturaConceptosImpuestoRetencionRel
+     */
+    public function setFacturaConceptosImpuestoRetencionRel($facturaConceptosImpuestoRetencionRel): void
+    {
+        $this->facturaConceptosImpuestoRetencionRel = $facturaConceptosImpuestoRetencionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaConceptosImpuestoIvaVentaRel()
+    {
+        return $this->facturaConceptosImpuestoIvaVentaRel;
+    }
+
+    /**
+     * @param mixed $facturaConceptosImpuestoIvaVentaRel
+     */
+    public function setFacturaConceptosImpuestoIvaVentaRel($facturaConceptosImpuestoIvaVentaRel): void
+    {
+        $this->facturaConceptosImpuestoIvaVentaRel = $facturaConceptosImpuestoIvaVentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaDevolucionFk()
+    {
+        return $this->codigoCuentaDevolucionFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaDevolucionFk
+     */
+    public function setCodigoCuentaDevolucionFk($codigoCuentaDevolucionFk): void
+    {
+        $this->codigoCuentaDevolucionFk = $codigoCuentaDevolucionFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getImpuestoTipoRel()
     {
         return $this->impuestoTipoRel;
@@ -182,22 +271,6 @@ class GenImpuesto
     /**
      * @return mixed
      */
-    public function getCodigoCuentaFk()
-    {
-        return $this->codigoCuentaFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaFk
-     */
-    public function setCodigoCuentaFk( $codigoCuentaFk ): void
-    {
-        $this->codigoCuentaFk = $codigoCuentaFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getItemsImpuestoIvaVentaRel()
     {
         return $this->itemsImpuestoIvaVentaRel;
@@ -206,26 +279,11 @@ class GenImpuesto
     /**
      * @param mixed $itemsImpuestoIvaVentaRel
      */
-    public function setItemsImpuestoIvaVentaRel( $itemsImpuestoIvaVentaRel ): void
+    public function setItemsImpuestoIvaVentaRel($itemsImpuestoIvaVentaRel): void
     {
         $this->itemsImpuestoIvaVentaRel = $itemsImpuestoIvaVentaRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaDevolucionFk()
-    {
-        return $this->codigoCuentaDevolucionFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaDevolucionFk
-     */
-    public function setCodigoCuentaDevolucionFk( $codigoCuentaDevolucionFk ): void
-    {
-        $this->codigoCuentaDevolucionFk = $codigoCuentaDevolucionFk;
-    }
 
 
 }

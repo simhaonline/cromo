@@ -1219,27 +1219,27 @@ class TteGuiaRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->from("App:Transporte\TteGuia", 'g')
-            ->leftJoin('g.clienteRel', 'c')
-            ->leftJoin('c.asesorRel', 'a')
             ->select('c.codigoAsesorFk')
-            ->addSelect('g.mercanciaPeligrosa')
             ->addSelect('a.nombre AS asesorNombre')
+            ->addSelect('c.nombreCorto AS clienteNombre')
             ->addSelect('SUM(g.vrFlete) AS vrFlete')
             ->addSelect('SUM(g.vrManejo) AS vrManejo')
             ->addSelect('SUM(g.unidades) AS unidades')
             ->addSelect('SUM(g.pesoReal) AS pesoReal')
             ->addSelect('SUM(g.vrFlete + g.vrManejo) AS total')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('c.asesorRel', 'a')
             ->where("g.fechaIngreso >= '" . $fechaDesde . " 00:00:00'")
             ->andWhere("g.fechaIngreso <= '" . $fechaHasta . " 23:59:59'")
             ->groupBy('c.codigoAsesorFk')
             ->addGroupBy('c.nombreCorto')
-            ->addGroupBy('g.mercanciaPeligrosa')
-            ->orderBy('SUM(g.vrFlete)', 'DESC');
-        if ($session->get('filtroMercanciaPeligrosa')) {
-            $queryBuilder->andWhere("g.mercanciaPeligrosa = 1");
-        }
+            ->orderBy('c.codigoAsesorFk')
+            ->addOrderBy('SUM(g.vrFlete)', 'DESC');
         if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
             $queryBuilder->andWhere("g.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");
+        }
+        if ($session->get('filtroTteGuiaCodigoAsesor')) {
+            $queryBuilder->andWhere("c.codigoAsesorFk = '" . $session->get('filtroTteGuiaCodigoAsesor') . "'");
         }
         return $queryBuilder;
     }

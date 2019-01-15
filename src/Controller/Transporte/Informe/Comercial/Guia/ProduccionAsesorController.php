@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Informe\Comercial\Guia;
 
+use App\Entity\General\GenAsesor;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Formato\Transporte\ProduccionAsesor;
@@ -32,8 +33,8 @@ class ProduccionAsesorController extends Controller
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $fecha])
-            ->add('chkMercanciaPeligrosa', CheckboxType::class, array('label' => ' ','required' => false, 'data' => $session->get('filtroMercanciaPeligrosa')))
             ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
+            ->add('cboAsesorRel', EntityType::class, $em->getRepository(GenAsesor::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
@@ -48,9 +49,14 @@ class ProduccionAsesorController extends Controller
                     } else {
                         $session->set('filtroTteGuiaCodigoGuiaTipo', null);
                     }
+                    $arAsesor = $form->get('cboAsesorRel')->getData();
+                    if ($arAsesor) {
+                        $session->set('filtroTteGuiaCodigoAsesor', $arAsesor->getCodigoAsesorPk());
+                    } else {
+                        $session->set('filtroTteGuiaCodigoAsesor', null);
+                    }
                     $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
                     $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
-                    $session->set('filtroMercanciaPeligrosa', $form->get('chkMercanciaPeligrosa')->getData());
                     $queryBuilder = $this->getDoctrine()->getRepository(TteGuia::class)->informeProduccionAsesor($fechaDesde, $fechaHasta);
                     $arGuias = $queryBuilder->getQuery()->getResult();
                     $arGuias = $paginator->paginate($arGuias, $request->query->getInt('page', 1), 1000);

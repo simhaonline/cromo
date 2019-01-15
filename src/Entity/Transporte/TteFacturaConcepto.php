@@ -27,36 +27,9 @@ class TteFacturaConcepto
     private $nombre;
 
     /**
-     * @ORM\Column(name="codigo_impuesto_retencion_fk", type="string", length=3, nullable=true)
-     */
-    private $codigoImpuestoRetencionFk;
-
-    /**
-     * @ORM\Column(name="codigo_impuesto_iva_venta_fk", type="string", length=3, nullable=true)
-     */
-    private $codigoImpuestoIvaVentaFk;
-
-    /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="facturaConceptoRel")
      */
     protected $facturasFacturaConceptoRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaDetalleConcepto", mappedBy="facturaConceptoRel")
-     */
-    protected $facturasDetallesConcetosRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenImpuesto", inversedBy="facturaConceptosImpuestoRetencionRel")
-     * @ORM\JoinColumn(name="codigo_impuesto_retencion_fk",referencedColumnName="codigo_impuesto_pk")
-     */
-    protected $impuestoRetencionRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenImpuesto", inversedBy="facturaConceptosImpuestoIvaVentaRel")
-     * @ORM\JoinColumn(name="codigo_impuesto_iva_venta_fk",referencedColumnName="codigo_impuesto_pk")
-     */
-    protected $impuestoIvaVentaRel;
 
     /**
      * @return mixed
@@ -106,101 +79,7 @@ class TteFacturaConcepto
         $this->facturasFacturaConceptoRel = $facturasFacturaConceptoRel;
     }
 
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
 
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturasDetallesConcetosRel()
-    {
-        return $this->facturasDetallesConcetosRel;
-    }
-
-    /**
-     * @param mixed $facturasDetallesConcetosRel
-     */
-    public function setFacturasDetallesConcetosRel($facturasDetallesConcetosRel): void
-    {
-        $this->facturasDetallesConcetosRel = $facturasDetallesConcetosRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoImpuestoRetencionFk()
-    {
-        return $this->codigoImpuestoRetencionFk;
-    }
-
-    /**
-     * @param mixed $codigoImpuestoRetencionFk
-     */
-    public function setCodigoImpuestoRetencionFk($codigoImpuestoRetencionFk): void
-    {
-        $this->codigoImpuestoRetencionFk = $codigoImpuestoRetencionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoImpuestoIvaVentaFk()
-    {
-        return $this->codigoImpuestoIvaVentaFk;
-    }
-
-    /**
-     * @param mixed $codigoImpuestoIvaVentaFk
-     */
-    public function setCodigoImpuestoIvaVentaFk($codigoImpuestoIvaVentaFk): void
-    {
-        $this->codigoImpuestoIvaVentaFk = $codigoImpuestoIvaVentaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getImpuestoRetencionRel()
-    {
-        return $this->impuestoRetencionRel;
-    }
-
-    /**
-     * @param mixed $impuestoRetencionRel
-     */
-    public function setImpuestoRetencionRel($impuestoRetencionRel): void
-    {
-        $this->impuestoRetencionRel = $impuestoRetencionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getImpuestoIvaVentaRel()
-    {
-        return $this->impuestoIvaVentaRel;
-    }
-
-    /**
-     * @param mixed $impuestoIvaVentaRel
-     */
-    public function setImpuestoIvaVentaRel($impuestoIvaVentaRel): void
-    {
-        $this->impuestoIvaVentaRel = $impuestoIvaVentaRel;
-    }
 
 
 

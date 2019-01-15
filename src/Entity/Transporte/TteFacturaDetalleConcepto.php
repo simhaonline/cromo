@@ -54,26 +54,10 @@ class TteFacturaDetalleConcepto
     private $facturaRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteFacturaConcepto", inversedBy="facturasDetallesConcetosRel")
-     * @ORM\JoinColumn(name="codigo_factura_concepto_fk", referencedColumnName="codigo_factura_concepto_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteFacturaConceptoDetalle", inversedBy="facturasDetallesConcetosFacturaConceptoDetalleRel")
+     * @ORM\JoinColumn(name="codigo_factura_concepto_detalle_fk", referencedColumnName="codigo_factura_concepto_detalle_pk")
      */
-    private $facturaConceptoRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
+    private $facturaConceptoDetalleRel;
 
     /**
      * @return mixed
@@ -86,7 +70,7 @@ class TteFacturaDetalleConcepto
     /**
      * @param mixed $codigoFacturaDetalleConceptoPk
      */
-    public function setCodigoFacturaDetalleConceptoPk($codigoFacturaDetalleConceptoPk): void
+    public function setCodigoFacturaDetalleConceptoPk( $codigoFacturaDetalleConceptoPk ): void
     {
         $this->codigoFacturaDetalleConceptoPk = $codigoFacturaDetalleConceptoPk;
     }
@@ -102,7 +86,7 @@ class TteFacturaDetalleConcepto
     /**
      * @param mixed $codigoFacturaFk
      */
-    public function setCodigoFacturaFk($codigoFacturaFk): void
+    public function setCodigoFacturaFk( $codigoFacturaFk ): void
     {
         $this->codigoFacturaFk = $codigoFacturaFk;
     }
@@ -118,9 +102,25 @@ class TteFacturaDetalleConcepto
     /**
      * @param mixed $codigoFacturaConceptoFk
      */
-    public function setCodigoFacturaConceptoFk($codigoFacturaConceptoFk): void
+    public function setCodigoFacturaConceptoFk( $codigoFacturaConceptoFk ): void
     {
         $this->codigoFacturaConceptoFk = $codigoFacturaConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
+    }
+
+    /**
+     * @param mixed $cantidad
+     */
+    public function setCantidad( $cantidad ): void
+    {
+        $this->cantidad = $cantidad;
     }
 
     /**
@@ -134,7 +134,7 @@ class TteFacturaDetalleConcepto
     /**
      * @param mixed $vrValor
      */
-    public function setVrValor($vrValor): void
+    public function setVrValor( $vrValor ): void
     {
         $this->vrValor = $vrValor;
     }
@@ -150,7 +150,7 @@ class TteFacturaDetalleConcepto
     /**
      * @param mixed $codigoImpuestoRetencionFk
      */
-    public function setCodigoImpuestoRetencionFk($codigoImpuestoRetencionFk): void
+    public function setCodigoImpuestoRetencionFk( $codigoImpuestoRetencionFk ): void
     {
         $this->codigoImpuestoRetencionFk = $codigoImpuestoRetencionFk;
     }
@@ -166,7 +166,7 @@ class TteFacturaDetalleConcepto
     /**
      * @param mixed $facturaRel
      */
-    public function setFacturaRel($facturaRel): void
+    public function setFacturaRel( $facturaRel ): void
     {
         $this->facturaRel = $facturaRel;
     }
@@ -174,33 +174,17 @@ class TteFacturaDetalleConcepto
     /**
      * @return mixed
      */
-    public function getFacturaConceptoRel()
+    public function getFacturaConceptoDetalleRel()
     {
-        return $this->facturaConceptoRel;
+        return $this->facturaConceptoDetalleRel;
     }
 
     /**
-     * @param mixed $facturaConceptoRel
+     * @param mixed $facturaConceptoDetalleRel
      */
-    public function setFacturaConceptoRel($facturaConceptoRel): void
+    public function setFacturaConceptoDetalleRel( $facturaConceptoDetalleRel ): void
     {
-        $this->facturaConceptoRel = $facturaConceptoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCantidad()
-    {
-        return $this->cantidad;
-    }
-
-    /**
-     * @param mixed $cantidad
-     */
-    public function setCantidad($cantidad): void
-    {
-        $this->cantidad = $cantidad;
+        $this->facturaConceptoDetalleRel = $facturaConceptoDetalleRel;
     }
 
 

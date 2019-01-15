@@ -47,15 +47,6 @@ class GenImpuesto
     private $codigoCuentaFk;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFactura", mappedBy="impuestoRetencionRel")
-     */
-    private $facturaConceptosImpuestoRetencionRel;
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFactura", mappedBy="impuestoIvaVentaRel")
-     */
-    private $facturaConceptosImpuestoIvaVentaRel;
-
-    /**
      * @ORM\Column(name="codigo_cuenta_devolucion_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaDevolucionFk;
@@ -77,20 +68,13 @@ class GenImpuesto
     private $itemsImpuestoIvaVentaRel;
 
     /**
-     * @return array
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaConceptoDetalle", mappedBy="impuestoRetencionRel")
      */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
+    private $facturasConceptosDetallesImpuestoRetencionRel;
     /**
-     * @param array $infoLog
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaConceptoDetalle", mappedBy="impuestoIvaVentaRel")
      */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
+    private $facturasConceptosDetallesImpuestoIvaVentaRel;
 
     /**
      * @return mixed
@@ -103,7 +87,7 @@ class GenImpuesto
     /**
      * @param mixed $codigoImpuestoPk
      */
-    public function setCodigoImpuestoPk($codigoImpuestoPk): void
+    public function setCodigoImpuestoPk( $codigoImpuestoPk ): void
     {
         $this->codigoImpuestoPk = $codigoImpuestoPk;
     }
@@ -119,7 +103,7 @@ class GenImpuesto
     /**
      * @param mixed $codigoImpuestoTipoFk
      */
-    public function setCodigoImpuestoTipoFk($codigoImpuestoTipoFk): void
+    public function setCodigoImpuestoTipoFk( $codigoImpuestoTipoFk ): void
     {
         $this->codigoImpuestoTipoFk = $codigoImpuestoTipoFk;
     }
@@ -135,7 +119,7 @@ class GenImpuesto
     /**
      * @param mixed $nombre
      */
-    public function setNombre($nombre): void
+    public function setNombre( $nombre ): void
     {
         $this->nombre = $nombre;
     }
@@ -151,7 +135,7 @@ class GenImpuesto
     /**
      * @param mixed $porcentaje
      */
-    public function setPorcentaje($porcentaje): void
+    public function setPorcentaje( $porcentaje ): void
     {
         $this->porcentaje = $porcentaje;
     }
@@ -167,7 +151,7 @@ class GenImpuesto
     /**
      * @param mixed $base
      */
-    public function setBase($base): void
+    public function setBase( $base ): void
     {
         $this->base = $base;
     }
@@ -183,41 +167,9 @@ class GenImpuesto
     /**
      * @param mixed $codigoCuentaFk
      */
-    public function setCodigoCuentaFk($codigoCuentaFk): void
+    public function setCodigoCuentaFk( $codigoCuentaFk ): void
     {
         $this->codigoCuentaFk = $codigoCuentaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturaConceptosImpuestoRetencionRel()
-    {
-        return $this->facturaConceptosImpuestoRetencionRel;
-    }
-
-    /**
-     * @param mixed $facturaConceptosImpuestoRetencionRel
-     */
-    public function setFacturaConceptosImpuestoRetencionRel($facturaConceptosImpuestoRetencionRel): void
-    {
-        $this->facturaConceptosImpuestoRetencionRel = $facturaConceptosImpuestoRetencionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturaConceptosImpuestoIvaVentaRel()
-    {
-        return $this->facturaConceptosImpuestoIvaVentaRel;
-    }
-
-    /**
-     * @param mixed $facturaConceptosImpuestoIvaVentaRel
-     */
-    public function setFacturaConceptosImpuestoIvaVentaRel($facturaConceptosImpuestoIvaVentaRel): void
-    {
-        $this->facturaConceptosImpuestoIvaVentaRel = $facturaConceptosImpuestoIvaVentaRel;
     }
 
     /**
@@ -231,7 +183,7 @@ class GenImpuesto
     /**
      * @param mixed $codigoCuentaDevolucionFk
      */
-    public function setCodigoCuentaDevolucionFk($codigoCuentaDevolucionFk): void
+    public function setCodigoCuentaDevolucionFk( $codigoCuentaDevolucionFk ): void
     {
         $this->codigoCuentaDevolucionFk = $codigoCuentaDevolucionFk;
     }
@@ -247,7 +199,7 @@ class GenImpuesto
     /**
      * @param mixed $impuestoTipoRel
      */
-    public function setImpuestoTipoRel($impuestoTipoRel): void
+    public function setImpuestoTipoRel( $impuestoTipoRel ): void
     {
         $this->impuestoTipoRel = $impuestoTipoRel;
     }
@@ -263,7 +215,7 @@ class GenImpuesto
     /**
      * @param mixed $itemsImpuestoRetencionRel
      */
-    public function setItemsImpuestoRetencionRel($itemsImpuestoRetencionRel): void
+    public function setItemsImpuestoRetencionRel( $itemsImpuestoRetencionRel ): void
     {
         $this->itemsImpuestoRetencionRel = $itemsImpuestoRetencionRel;
     }
@@ -279,10 +231,43 @@ class GenImpuesto
     /**
      * @param mixed $itemsImpuestoIvaVentaRel
      */
-    public function setItemsImpuestoIvaVentaRel($itemsImpuestoIvaVentaRel): void
+    public function setItemsImpuestoIvaVentaRel( $itemsImpuestoIvaVentaRel ): void
     {
         $this->itemsImpuestoIvaVentaRel = $itemsImpuestoIvaVentaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasConceptosDetallesImpuestoRetencionRel()
+    {
+        return $this->facturasConceptosDetallesImpuestoRetencionRel;
+    }
+
+    /**
+     * @param mixed $facturasConceptosDetallesImpuestoRetencionRel
+     */
+    public function setFacturasConceptosDetallesImpuestoRetencionRel( $facturasConceptosDetallesImpuestoRetencionRel ): void
+    {
+        $this->facturasConceptosDetallesImpuestoRetencionRel = $facturasConceptosDetallesImpuestoRetencionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasConceptosDetallesImpuestoIvaVentaRel()
+    {
+        return $this->facturasConceptosDetallesImpuestoIvaVentaRel;
+    }
+
+    /**
+     * @param mixed $facturasConceptosDetallesImpuestoIvaVentaRel
+     */
+    public function setFacturasConceptosDetallesImpuestoIvaVentaRel( $facturasConceptosDetallesImpuestoIvaVentaRel ): void
+    {
+        $this->facturasConceptosDetallesImpuestoIvaVentaRel = $facturasConceptosDetallesImpuestoIvaVentaRel;
+    }
+
 
 
 

@@ -21,6 +21,7 @@ class GuiaCorreccionType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
+            ->add('codigoClienteFk', TextType::class)
             ->add('documentoCliente', TextType::class)
             ->add('vrDeclara', NumberType::class)
             ->add('vrFlete', NumberType::class)
